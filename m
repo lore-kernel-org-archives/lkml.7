@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE6D20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621702084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6v0XXqM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UFOAt6sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfCZHod (ORCPT
+        id S1731126AbfCZHoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:44:33 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41864 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfCZHod (ORCPT
+        Tue, 26 Mar 2019 03:44:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45666 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfCZHox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:44:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so2253162pfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:44:32 -0700 (PDT)
+        Tue, 26 Mar 2019 03:44:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bf11so1244300plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=guX9JjzludzjpfbhyDia6d8Kx5PRCAeJ16z/HP1EEq8=;
-        b=Z6v0XXqM7DONOBaYbfDIEbQF39dWcHODW3NiueK5leRqOl31GAH3JjWOtt5LUV58Wn
-         SEksRJkRoXrHkTuur7PzDZekWyCXNpjPgMtaInVdGo+1XuXVBtSMezQfxsEUasvUC8yW
-         pb0w+3/lBkkJvXQqJ0Mfb7e47wM46xol6Qo6I=
+        bh=WN5U6KXN7zp8x4sdlZnFG53yaxOCJgECjRiQIMNvhe4=;
+        b=UFOAt6syz/ZSn9uIr/iXNruJy5QF6TB7LHi1oriFBi4EylajNF97/WfREzpHKa82YZ
+         7AK4IEuXOymOKLSon2OhbPSj+oAjSuIzk2YCUfnkcaWaDoCeiIkLbJwSQ7fRF5u/WnM4
+         FxE0o4fhSyaKX0O3Mw2JwLkmxLvnSXdMAGBqc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=guX9JjzludzjpfbhyDia6d8Kx5PRCAeJ16z/HP1EEq8=;
-        b=bzy8yUfeSwH4MWmqw/uy6xqTF7GXK/iZFHQUrqOclcMlqpU6+lmpPAN/tuy2TxakLO
-         Z1IdPlD95T3qMoX0flZlLbCCIff1YfT19gHQlWEqSwhJZaiSpp8S+2nvtkFgIZdm6gp8
-         Cia4+Bbc1FhKxqfaNh0wP2Ft+aDA6DSbUPxig2knahtXW6O/0FnP4Ik5iDk9VQTb6ToQ
-         wlSSejjoWZ0261be586/4GCsQfcJhAV6RMgObxJJ08Zt/p4FZCRS+ak56CMrfX6wN78z
-         vfr5msBzDQYOt1MPm3r1OjEu2/tvJ2rmtWc1rUwA8iEPwuP4EtN3i0SjCl6HbI5KVO47
-         bKpg==
-X-Gm-Message-State: APjAAAUv58EVXF5MAmPyF+UTUrC3RBIrS2Y3hn0Xph+2Zd8ZRiH72/HT
-        DyiSqYWoqCY1J8k73rZhAGQ0xQ==
-X-Google-Smtp-Source: APXvYqyaJId/+xlnGKhyV500nOy9o4V1J2JSBRH2FN7nRJEBNWH3MDDTL/+Rtka8ilCknE+BJPh64w==
-X-Received: by 2002:a62:e502:: with SMTP id n2mr28662586pff.242.1553586272232;
-        Tue, 26 Mar 2019 00:44:32 -0700 (PDT)
+        bh=WN5U6KXN7zp8x4sdlZnFG53yaxOCJgECjRiQIMNvhe4=;
+        b=bfRhQHrm5Sj/ms+J+IspDV4F0Co/q/UAd9D8wHSA4x5tmRPHr8Pmot+PTByfPutzQ/
+         L3/0RkEh9cDICrhokMRLCZlCEpHUfBbIorpNOxHDaMOfnsWWzgvXX1zLI6Jn1z0x38Fj
+         u2XDKKBRULs/U2ZaHUX58BJOzKLzM58An0C4snS7mOQft/TQNazw7oMseEpssFIP7geW
+         NErfNGCFDMlzAWIQjPTrEbSh8uU2Z2jyhLIIoLRMgbM5uPi8i1JdpDXzeg414ALERK/3
+         zwOwAKGcZGyDWeMly5jPJ7PRZ6AMK0/tz3LKS0VXFv/rlUzlvVuWlMFF10ht04TemmDO
+         16+A==
+X-Gm-Message-State: APjAAAUVLowBkzRGS6nlV1cXu81CwCn5VhVIBmrTJaiigQNwdTm7NYm1
+        c9PyF/PkRq3zZUHFVWmt0b/p0w==
+X-Google-Smtp-Source: APXvYqwqCuWrtEbTSXcTCIzjkhkrreh05C7B3xpiMWN2Bew7wwyKI1ojX0PNg+zVbEG7jYLBc9RpFA==
+X-Received: by 2002:a17:902:e20e:: with SMTP id ce14mr16000701plb.193.1553586293140;
+        Tue, 26 Mar 2019 00:44:53 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id n9sm19716753pff.43.2019.03.26.00.44.29
+        by smtp.gmail.com with ESMTPSA id p14sm35710708pgn.34.2019.03.26.00.44.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 00:44:31 -0700 (PDT)
+        Tue, 26 Mar 2019 00:44:52 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
+To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH] media: mtk-vcodec: fix access to incorrect planes member
-Date:   Tue, 26 Mar 2019 16:44:23 +0900
-Message-Id: <20190326074423.123864-1-acourbot@chromium.org>
+Subject: [PATCH] media: mtk-vcodec: remove ready_to_display
+Date:   Tue, 26 Mar 2019 16:44:46 +0900
+Message-Id: <20190326074446.123945-1-acourbot@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,93 +71,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem
-buffer helpers") fixed the return types for mem2mem buffer helper
-functions by changing a few local variables from vb2_buffer to
-vb2_v4l2_buffer. However, it left a few accesses to vb2_buffer::planes
-as-is, accidentally turning them into accesses to
-vb2_v4l2_buffer::planes and resulting in values being read from/written
-to the wrong place.
-
-Fix this by inserting vb2_buf into these accesses so they mimic their
-original behavior.
-
-Fixes: 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem buffer helpers")
+This member is never read throughout the code, so remove it.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |  4 ++--
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 5 -----
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h | 2 --
+ 2 files changed, 7 deletions(-)
 
 diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index a85c7cc8328e..e20b340855e7 100644
+index e20b340855e7..710dcebb42b3 100644
 --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
 +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -388,7 +388,7 @@ static void mtk_vdec_worker(struct work_struct *work)
- 	}
- 	buf.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
- 	buf.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
--	buf.size = (size_t)src_buf->planes[0].bytesused;
-+	buf.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
- 	if (!buf.va) {
- 		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
- 		mtk_v4l2_err("[%d] id=%d src_addr is NULL!!",
-@@ -1155,7 +1155,7 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+@@ -133,8 +133,6 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
+ 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
+ 					ctx->picinfo.c_bs_sz);
  
- 	src_mem.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
- 	src_mem.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
--	src_mem.size = (size_t)src_buf->planes[0].bytesused;
-+	src_mem.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
- 	mtk_v4l2_debug(2,
- 			"[%d] buf id=%d va=%p dma=%pad size=%zx",
- 			ctx->id, src_buf->vb2_buf.index,
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index c6b48b5925fb..50351adafc47 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -894,7 +894,7 @@ static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
- 
- 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		while ((dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx))) {
--			dst_buf->planes[0].bytesused = 0;
-+			dst_buf->vb2_buf.planes[0].bytesused = 0;
- 			v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
+-		dstbuf->ready_to_display = true;
+-
+ 		mtk_v4l2_debug(2,
+ 				"[%d]status=%x queue id=%d to done_list %d",
+ 				ctx->id, disp_frame_buffer->status,
+@@ -1122,11 +1120,9 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+ 			v4l2_m2m_buf_queue(ctx->m2m_ctx, vb2_v4l2);
+ 			buf->queued_in_vb2 = true;
+ 			buf->queued_in_v4l2 = true;
+-			buf->ready_to_display = false;
+ 		} else {
+ 			buf->queued_in_vb2 = false;
+ 			buf->queued_in_v4l2 = true;
+-			buf->ready_to_display = false;
  		}
+ 		mutex_unlock(&ctx->lock);
+ 		return;
+@@ -1253,7 +1249,6 @@ static int vb2ops_vdec_buf_init(struct vb2_buffer *vb)
+ 
+ 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+ 		buf->used = false;
+-		buf->ready_to_display = false;
+ 		buf->queued_in_v4l2 = false;
  	} else {
-@@ -947,7 +947,7 @@ static int mtk_venc_encode_header(void *priv)
+ 		buf->lastframe = false;
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
+index dc4fc1df63c5..e4984edec4f8 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
+@@ -45,7 +45,6 @@ struct vdec_fb {
+  * @list:	link list
+  * @used:	Capture buffer contain decoded frame data and keep in
+  *			codec data structure
+- * @ready_to_display:	Capture buffer not display yet
+  * @queued_in_vb2:	Capture buffer is queue in vb2
+  * @queued_in_v4l2:	Capture buffer is in v4l2 driver, but not in vb2
+  *			queue yet
+@@ -60,7 +59,6 @@ struct mtk_video_dec_buf {
+ 	struct list_head	list;
  
- 	bs_buf.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
- 	bs_buf.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
--	bs_buf.size = (size_t)dst_buf->planes[0].length;
-+	bs_buf.size = (size_t)dst_buf->vb2_buf.planes[0].length;
- 
- 	mtk_v4l2_debug(1,
- 			"[%d] buf id=%d va=0x%p dma_addr=0x%llx size=%zu",
-@@ -976,7 +976,7 @@ static int mtk_venc_encode_header(void *priv)
- 	}
- 
- 	ctx->state = MTK_STATE_HEADER;
--	dst_buf->planes[0].bytesused = enc_result.bs_size;
-+	dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
- 	v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
- 
- 	return 0;
-@@ -1107,12 +1107,12 @@ static void mtk_venc_worker(struct work_struct *work)
- 
- 	if (ret) {
- 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_ERROR);
--		dst_buf->planes[0].bytesused = 0;
-+		dst_buf->vb2_buf.planes[0].bytesused = 0;
- 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
- 		mtk_v4l2_err("venc_if_encode failed=%d", ret);
- 	} else {
- 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_DONE);
--		dst_buf->planes[0].bytesused = enc_result.bs_size;
-+		dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
- 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
- 		mtk_v4l2_debug(2, "venc_if_encode bs size=%d",
- 				 enc_result.bs_size);
+ 	bool	used;
+-	bool	ready_to_display;
+ 	bool	queued_in_vb2;
+ 	bool	queued_in_v4l2;
+ 	bool	lastframe;
 -- 
 2.21.0.392.gf8f6787159e-goog
 
