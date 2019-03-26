@@ -2,43 +2,43 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85203C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C9FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3D720830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FB520857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfCZJLk (ORCPT
+        id S1731318AbfCZJLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:11:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1722 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726285AbfCZJLf (ORCPT
+        Tue, 26 Mar 2019 05:11:42 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54397 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730919AbfCZJLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:11:35 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q95mot004983;
-        Tue, 26 Mar 2019 10:11:23 +0100
+        Tue, 26 Mar 2019 05:11:36 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q96fXs017529;
+        Tue, 26 Mar 2019 10:11:18 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddht8x6p-1
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhbgd12-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 26 Mar 2019 10:11:23 +0100
+        Tue, 26 Mar 2019 10:11:18 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 228D442;
-        Tue, 26 Mar 2019 09:11:23 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EE0084DE4;
-        Tue, 26 Mar 2019 09:11:22 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
- 2019 10:11:22 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 43A383F;
+        Tue, 26 Mar 2019 09:11:18 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1A42F4DD5;
+        Tue, 26 Mar 2019 09:11:18 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 26 Mar
+ 2019 10:11:17 +0100
 Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
  (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
- 2019 10:11:22 +0100
+ 2019 10:11:17 +0100
 From:   Ludovic Barre <ludovic.Barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -50,12 +50,10 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V3 4/5] mmc: mmci: stm32: define get_dctrl_cfg
-Date:   Tue, 26 Mar 2019 10:11:09 +0100
-Message-ID: <1553591470-31419-5-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH V3 0/5] mmc: mmci: add get_datactrl_cfg callback
+Date:   Tue, 26 Mar 2019 10:11:05 +0100
+Message-ID: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
-References: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.0.237]
@@ -68,69 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch defines get_dctrl_cfg callback for sdmmc variant.
-sdmmc variant has specific stm32 transfer modes.
-sdmmc data transfer mode selection could be:
--Block data transfer ending on block count.
--SDIO multibyte data transfer.
--MMC Stream data transfer (not used).
--Block data transfer ending with STOP_TRANSMISSION command.
+This patch series adds get_datactrl_cfg callback in mmci_host_ops
+to allow to get datactrl configuration specific at variant.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci.h             |  5 +++++
- drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+)
+change V3:
+-keep the common functions in mmci_start_data. define
+function used by some variants like an helper
+(example mmci_dctrl_blks used by mmci and sdmmc).
+-To be consistent rename callback for ux500v2 
 
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index c614ea7..fd24fdb 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -131,6 +131,11 @@
- /* Control register extensions in the Qualcomm versions */
- #define MCI_DPSM_QCOM_DATA_PEND	BIT(17)
- #define MCI_DPSM_QCOM_RX_DATA_PEND BIT(20)
-+/* Control register extensions in STM32 versions */
-+#define MCI_DPSM_STM32_MODE_BLOCK	(0 << 2)
-+#define MCI_DPSM_STM32_MODE_SDIO	(1 << 2)
-+#define MCI_DPSM_STM32_MODE_STREAM	(2 << 2)
-+#define MCI_DPSM_STM32_MODE_BLOCK_STOP	(3 << 2)
- 
- #define MMCIDATACNT		0x030
- #define MMCISTATUS		0x034
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index cfbfc6f..8e83ae6 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -265,10 +265,28 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
- 	}
- }
- 
-+static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
-+{
-+	u32 datactrl;
-+
-+	datactrl = mmci_dctrl_blksz(host);
-+
-+	if (host->mmc->card && mmc_card_sdio(host->mmc->card) &&
-+	    host->data->blocks == 1)
-+		datactrl |= MCI_DPSM_STM32_MODE_SDIO;
-+	else if (host->data->stop && !host->mrq->sbc)
-+		datactrl |= MCI_DPSM_STM32_MODE_BLOCK_STOP;
-+	else
-+		datactrl |= MCI_DPSM_STM32_MODE_BLOCK;
-+
-+	return datactrl;
-+}
-+
- static struct mmci_host_ops sdmmc_variant_ops = {
- 	.validate_data = sdmmc_idma_validate_data,
- 	.prep_data = sdmmc_idma_prep_data,
- 	.unprep_data = sdmmc_idma_unprep_data,
-+	.get_datactrl_cfg = sdmmc_get_dctrl_cfg,
- 	.dma_setup = sdmmc_idma_setup,
- 	.dma_start = sdmmc_idma_start,
- 	.dma_finalize = sdmmc_idma_finalize,
+change V2:
+-This V2 has been rebased on
+"mmc: mmci: Cleanup some variant related code" series
+-add helpers functions to define default datactrl value,
+each variant could use these helpers to define datactrl
+and adds their specific bits.
+-use static in qcom and stm32
+-regroup mmci_(ux500v2)variant_init in header file
+to avoid checkpatch warning:
+"WARNING: externs should be avoided in .c files"
+-remove unused variant properties:
+ "datactrl_dpsm_enable"
+ "blksz_datactrl16"
+ "blksz_datactrl4"
+
+Ludovic Barre (5):
+  mmc: mmci: add get_datactrl_cfg callback and helper functions
+  mmc: mmci: define get_dctrl_cfg for legacy variant
+  mmc: mmci: qcom: define get_dctrl_cfg
+  mmc: mmci: stm32: define get_dctrl_cfg
+  mmc: mmci: replace blksz_datactrlXX by get_datactrl_cfg callback
+
+ drivers/mmc/host/mmci.c             | 57 ++++++++++++++++---------------------
+ drivers/mmc/host/mmci.h             | 21 +++++++++-----
+ drivers/mmc/host/mmci_qcom_dml.c    |  6 ++++
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++
+ 4 files changed, 63 insertions(+), 39 deletions(-)
+
 -- 
 2.7.4
 
