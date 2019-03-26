@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6605C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE29C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638462086C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34F12087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582479;
-	bh=IvVIh/oRc4HrYVT3U8mOp6qSb4Twg7k2OEllCBsU8O8=;
+	s=default; t=1553582483;
+	bh=l2QbowQy6zA1owO0UPm7m7cIMUDnxON+kBq13NZmw1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/Cb1gJuSf13U/zM8weeDvFtf+nRdd4Q1CqoagxaiQVc/4PtYJQO59wpxZYe9pVbZ
-	 qMay3LvHJzJ0arAHt7Avenfk0jhKazkjLUntL0xn3LFXcUVyVDUz+PPSZOXgpQIfdS
-	 jx1zoPQ8KBwcw6pBcIxv8Q06tE1m0skYgWm+8VZA=
+	b=WRKWBiiWp+/UIlUgpDOMvEtGpwgzHvYnYBAjujOK0ZfLHwcBO19AseBgi5s39IBeB
+	 qz8kMoXSUwzDBPI4QnU7VG7bRJnPgJpiShhEAYU2bz+pjem4KUvHez+5q0eBa1oN7E
+	 5scfdG0mldHMLDWBzANRc1U4Iy169OtlpFGyGGLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbfCZGk7 (ORCPT
+        id S1732525AbfCZGlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbfCZGkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:40:52 -0400
+        id S1732465AbfCZGk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:58 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1311C2070B;
-        Tue, 26 Mar 2019 06:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9F722070B;
+        Tue, 26 Mar 2019 06:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582450;
-        bh=IvVIh/oRc4HrYVT3U8mOp6qSb4Twg7k2OEllCBsU8O8=;
+        s=default; t=1553582457;
+        bh=l2QbowQy6zA1owO0UPm7m7cIMUDnxON+kBq13NZmw1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yV4K76xpPziOa56KljznjLpaoEPeMwqejGELEwq2xMnkT2UySghjNDA2mqAMNyT/R
-         WBwuCMWl01OptQ5XjDuShWcWqLj1A75CnPVQDeW5r5V3ZR0VnbWafJlOV5o/wgUf9T
-         bBQtdUyHkWBX9R6RxwJHPvo5pgetKCojFkp4Mhzs=
+        b=w7eoTwah5YRde9o8eHH2cmNMoo2PtgXljOgEZQ7Ntl5CIqrk5QKNA3eMj2ufRgAif
+         NkXmPMj/YHduS2yJ2uxJjAj+sCfzlc1/drd4qgeR1YM5v6cSk87r+KTHkJg3pR/VT8
+         fB9LVpBx9z1OMLcQXr+2bOlfBzj1Zh5mux/sG8hA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.0 43/52] f2fs: fix to avoid deadlock of atomic file operations
-Date:   Tue, 26 Mar 2019 15:30:30 +0900
-Message-Id: <20190326042703.269132852@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.0 45/52] netfilter: ebtables: remove BUGPRINT messages
+Date:   Tue, 26 Mar 2019 15:30:32 +0900
+Message-Id: <20190326042703.370455074@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -65,228 +65,361 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 48432984d718c95cf13e26d487c2d1b697c3c01f upstream.
+commit d824548dae220820bdf69b2d1561b7c4b072783f upstream.
 
-Thread A				Thread B
-- __fput
- - f2fs_release_file
-  - drop_inmem_pages
-   - mutex_lock(&fi->inmem_lock)
-   - __revoke_inmem_pages
-    - lock_page(page)
-					- open
-					- f2fs_setattr
-					- truncate_setsize
-					 - truncate_inode_pages_range
-					  - lock_page(page)
-					  - truncate_cleanup_page
-					   - f2fs_invalidate_page
-					    - drop_inmem_page
-					    - mutex_lock(&fi->inmem_lock);
+They are however frequently triggered by syzkaller, so remove them.
 
-We may encounter above ABBA deadlock as reported by Kyungtae Kim:
+ebtables userspace should never trigger any of these, so there is little
+value in making them pr_debug (or ratelimited).
 
-I'm reporting a bug in linux-4.17.19: "INFO: task hung in
-drop_inmem_page" (no reproducer)
-
-I think this might be somehow related to the following:
-https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
-
-=========================================
-INFO: task syz-executor7:10822 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D27024 10822   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
- __mutex_lock_common kernel/locking/mutex.c:833 [inline]
- __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
- mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
- drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
- f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
- do_invalidatepage mm/truncate.c:165 [inline]
- truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
- truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
- truncate_inode_pages mm/truncate.c:478 [inline]
- truncate_pagecache+0x6d/0x90 mm/truncate.c:801
- truncate_setsize+0x81/0xa0 mm/truncate.c:826
- f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
- notify_change+0xa62/0xe80 fs/attr.c:313
- do_truncate+0x12e/0x1e0 fs/open.c:63
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
-INFO: task syz-executor7:10858 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D28880 10858   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
- rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
- call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
- __down_write arch/x86/include/asm/rwsem.h:142 [inline]
- down_write+0x58/0xa0 kernel/locking/rwsem.c:72
- inode_lock include/linux/fs.h:713 [inline]
- do_truncate+0x120/0x1e0 fs/open.c:61
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
-INFO: task syz-executor5:10829 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor5   D28760 10829   6308 0x80000002
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- io_schedule+0x21/0x80 kernel/sched/core.c:5179
- wait_on_page_bit_common mm/filemap.c:1100 [inline]
- __lock_page+0x2b5/0x390 mm/filemap.c:1273
- lock_page include/linux/pagemap.h:483 [inline]
- __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
- drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
- f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
- __fput+0x2c7/0x780 fs/file_table.c:209
- ____fput+0x1a/0x20 fs/file_table.c:243
- task_work_run+0x151/0x1d0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x8ba/0x30a0 kernel/exit.c:865
- do_group_exit+0x13b/0x3a0 kernel/exit.c:968
- get_signal+0x6bb/0x1650 kernel/signal.c:2482
- do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
- do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
-RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
-
-This patch tries to use trylock_page to mitigate such deadlock condition
-for fix.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/segment.c |   43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+ net/bridge/netfilter/ebtables.c |  131 +++++++++++-----------------------------
+ 1 file changed, 39 insertions(+), 92 deletions(-)
 
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -215,7 +215,8 @@ void f2fs_register_inmem_page(struct ino
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -31,10 +31,6 @@
+ /* needed for logical [in,out]-dev filtering */
+ #include "../br_private.h"
+ 
+-#define BUGPRINT(format, args...) printk("kernel msg: ebtables bug: please "\
+-					 "report to author: "format, ## args)
+-/* #define BUGPRINT(format, args...) */
+-
+ /* Each cpu has its own set of counters, so there is no need for write_lock in
+  * the softirq
+  * For reading or updating the counters, the user context needs to
+@@ -466,8 +462,6 @@ static int ebt_verify_pointers(const str
+ 				/* we make userspace set this right,
+ 				 * so there is no misunderstanding
+ 				 */
+-				BUGPRINT("EBT_ENTRY_OR_ENTRIES shouldn't be set "
+-					 "in distinguisher\n");
+ 				return -EINVAL;
+ 			}
+ 			if (i != NF_BR_NUMHOOKS)
+@@ -485,18 +479,14 @@ static int ebt_verify_pointers(const str
+ 			offset += e->next_offset;
+ 		}
+ 	}
+-	if (offset != limit) {
+-		BUGPRINT("entries_size too small\n");
++	if (offset != limit)
+ 		return -EINVAL;
+-	}
+ 
+ 	/* check if all valid hooks have a chain */
+ 	for (i = 0; i < NF_BR_NUMHOOKS; i++) {
+ 		if (!newinfo->hook_entry[i] &&
+-		   (valid_hooks & (1 << i))) {
+-			BUGPRINT("Valid hook without chain\n");
++		   (valid_hooks & (1 << i)))
+ 			return -EINVAL;
+-		}
+ 	}
+ 	return 0;
  }
- 
- static int __revoke_inmem_pages(struct inode *inode,
--				struct list_head *head, bool drop, bool recover)
-+				struct list_head *head, bool drop, bool recover,
-+				bool trylock)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct inmem_pages *cur, *tmp;
-@@ -227,7 +228,16 @@ static int __revoke_inmem_pages(struct i
- 		if (drop)
- 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
- 
--		lock_page(page);
-+		if (trylock) {
-+			/*
-+			 * to avoid deadlock in between page lock and
-+			 * inmem_lock.
-+			 */
-+			if (!trylock_page(page))
-+				continue;
-+		} else {
-+			lock_page(page);
-+		}
- 
- 		f2fs_wait_on_page_writeback(page, DATA, true, true);
- 
-@@ -318,13 +328,19 @@ void f2fs_drop_inmem_pages(struct inode
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
--	mutex_lock(&fi->inmem_lock);
--	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
--	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
--	if (!list_empty(&fi->inmem_ilist))
--		list_del_init(&fi->inmem_ilist);
--	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
--	mutex_unlock(&fi->inmem_lock);
-+	while (!list_empty(&fi->inmem_pages)) {
-+		mutex_lock(&fi->inmem_lock);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, true);
-+
-+		if (list_empty(&fi->inmem_pages)) {
-+			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
-+			if (!list_empty(&fi->inmem_ilist))
-+				list_del_init(&fi->inmem_ilist);
-+			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
-+		}
-+		mutex_unlock(&fi->inmem_lock);
-+	}
- 
- 	clear_inode_flag(inode, FI_ATOMIC_FILE);
- 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
-@@ -429,12 +445,15 @@ retry:
- 		 * recovery or rewrite & commit last transaction. For other
- 		 * error number, revoking was done by filesystem itself.
+@@ -523,26 +513,20 @@ ebt_check_entry_size_and_hooks(const str
+ 		/* this checks if the previous chain has as many entries
+ 		 * as it said it has
  		 */
--		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
-+		err = __revoke_inmem_pages(inode, &revoke_list,
-+						false, true, false);
+-		if (*n != *cnt) {
+-			BUGPRINT("nentries does not equal the nr of entries "
+-				 "in the chain\n");
++		if (*n != *cnt)
+ 			return -EINVAL;
+-		}
++
+ 		if (((struct ebt_entries *)e)->policy != EBT_DROP &&
+ 		   ((struct ebt_entries *)e)->policy != EBT_ACCEPT) {
+ 			/* only RETURN from udc */
+ 			if (i != NF_BR_NUMHOOKS ||
+-			   ((struct ebt_entries *)e)->policy != EBT_RETURN) {
+-				BUGPRINT("bad policy\n");
++			   ((struct ebt_entries *)e)->policy != EBT_RETURN)
+ 				return -EINVAL;
+-			}
+ 		}
+ 		if (i == NF_BR_NUMHOOKS) /* it's a user defined chain */
+ 			(*udc_cnt)++;
+-		if (((struct ebt_entries *)e)->counter_offset != *totalcnt) {
+-			BUGPRINT("counter_offset != totalcnt");
++		if (((struct ebt_entries *)e)->counter_offset != *totalcnt)
+ 			return -EINVAL;
+-		}
+ 		*n = ((struct ebt_entries *)e)->nentries;
+ 		*cnt = 0;
+ 		return 0;
+@@ -550,15 +534,13 @@ ebt_check_entry_size_and_hooks(const str
+ 	/* a plain old entry, heh */
+ 	if (sizeof(struct ebt_entry) > e->watchers_offset ||
+ 	   e->watchers_offset > e->target_offset ||
+-	   e->target_offset >= e->next_offset) {
+-		BUGPRINT("entry offsets not in right order\n");
++	   e->target_offset >= e->next_offset)
+ 		return -EINVAL;
+-	}
++
+ 	/* this is not checked anywhere else */
+-	if (e->next_offset - e->target_offset < sizeof(struct ebt_entry_target)) {
+-		BUGPRINT("target size too small\n");
++	if (e->next_offset - e->target_offset < sizeof(struct ebt_entry_target))
+ 		return -EINVAL;
+-	}
++
+ 	(*cnt)++;
+ 	(*totalcnt)++;
+ 	return 0;
+@@ -678,18 +660,15 @@ ebt_check_entry(struct ebt_entry *e, str
+ 	if (e->bitmask == 0)
+ 		return 0;
  
- 		/* drop all uncommitted pages */
--		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, false);
- 	} else {
--		__revoke_inmem_pages(inode, &revoke_list, false, false);
-+		__revoke_inmem_pages(inode, &revoke_list,
-+						false, false, false);
+-	if (e->bitmask & ~EBT_F_MASK) {
+-		BUGPRINT("Unknown flag for bitmask\n");
++	if (e->bitmask & ~EBT_F_MASK)
+ 		return -EINVAL;
+-	}
+-	if (e->invflags & ~EBT_INV_MASK) {
+-		BUGPRINT("Unknown flag for inv bitmask\n");
++
++	if (e->invflags & ~EBT_INV_MASK)
+ 		return -EINVAL;
+-	}
+-	if ((e->bitmask & EBT_NOPROTO) && (e->bitmask & EBT_802_3)) {
+-		BUGPRINT("NOPROTO & 802_3 not allowed\n");
++
++	if ((e->bitmask & EBT_NOPROTO) && (e->bitmask & EBT_802_3))
+ 		return -EINVAL;
+-	}
++
+ 	/* what hook do we belong to? */
+ 	for (i = 0; i < NF_BR_NUMHOOKS; i++) {
+ 		if (!newinfo->hook_entry[i])
+@@ -748,13 +727,11 @@ ebt_check_entry(struct ebt_entry *e, str
+ 	t->u.target = target;
+ 	if (t->u.target == &ebt_standard_target) {
+ 		if (gap < sizeof(struct ebt_standard_target)) {
+-			BUGPRINT("Standard target size too big\n");
+ 			ret = -EFAULT;
+ 			goto cleanup_watchers;
+ 		}
+ 		if (((struct ebt_standard_target *)t)->verdict <
+ 		   -NUM_STANDARD_TARGETS) {
+-			BUGPRINT("Invalid standard target\n");
+ 			ret = -EFAULT;
+ 			goto cleanup_watchers;
+ 		}
+@@ -813,10 +790,9 @@ static int check_chainloops(const struct
+ 		if (strcmp(t->u.name, EBT_STANDARD_TARGET))
+ 			goto letscontinue;
+ 		if (e->target_offset + sizeof(struct ebt_standard_target) >
+-		   e->next_offset) {
+-			BUGPRINT("Standard target size too big\n");
++		   e->next_offset)
+ 			return -1;
+-		}
++
+ 		verdict = ((struct ebt_standard_target *)t)->verdict;
+ 		if (verdict >= 0) { /* jump to another chain */
+ 			struct ebt_entries *hlp2 =
+@@ -825,14 +801,12 @@ static int check_chainloops(const struct
+ 				if (hlp2 == cl_s[i].cs.chaininfo)
+ 					break;
+ 			/* bad destination or loop */
+-			if (i == udc_cnt) {
+-				BUGPRINT("bad destination\n");
++			if (i == udc_cnt)
+ 				return -1;
+-			}
+-			if (cl_s[i].cs.n) {
+-				BUGPRINT("loop\n");
++
++			if (cl_s[i].cs.n)
+ 				return -1;
+-			}
++
+ 			if (cl_s[i].hookmask & (1 << hooknr))
+ 				goto letscontinue;
+ 			/* this can't be 0, so the loop test is correct */
+@@ -865,24 +839,21 @@ static int translate_table(struct net *n
+ 	i = 0;
+ 	while (i < NF_BR_NUMHOOKS && !newinfo->hook_entry[i])
+ 		i++;
+-	if (i == NF_BR_NUMHOOKS) {
+-		BUGPRINT("No valid hooks specified\n");
++	if (i == NF_BR_NUMHOOKS)
+ 		return -EINVAL;
+-	}
+-	if (newinfo->hook_entry[i] != (struct ebt_entries *)newinfo->entries) {
+-		BUGPRINT("Chains don't start at beginning\n");
++
++	if (newinfo->hook_entry[i] != (struct ebt_entries *)newinfo->entries)
+ 		return -EINVAL;
+-	}
++
+ 	/* make sure chains are ordered after each other in same order
+ 	 * as their corresponding hooks
+ 	 */
+ 	for (j = i + 1; j < NF_BR_NUMHOOKS; j++) {
+ 		if (!newinfo->hook_entry[j])
+ 			continue;
+-		if (newinfo->hook_entry[j] <= newinfo->hook_entry[i]) {
+-			BUGPRINT("Hook order must be followed\n");
++		if (newinfo->hook_entry[j] <= newinfo->hook_entry[i])
+ 			return -EINVAL;
+-		}
++
+ 		i = j;
  	}
  
- 	return err;
+@@ -900,15 +871,11 @@ static int translate_table(struct net *n
+ 	if (ret != 0)
+ 		return ret;
+ 
+-	if (i != j) {
+-		BUGPRINT("nentries does not equal the nr of entries in the "
+-			 "(last) chain\n");
++	if (i != j)
+ 		return -EINVAL;
+-	}
+-	if (k != newinfo->nentries) {
+-		BUGPRINT("Total nentries is wrong\n");
++
++	if (k != newinfo->nentries)
+ 		return -EINVAL;
+-	}
+ 
+ 	/* get the location of the udc, put them in an array
+ 	 * while we're at it, allocate the chainstack
+@@ -942,7 +909,6 @@ static int translate_table(struct net *n
+ 		   ebt_get_udc_positions, newinfo, &i, cl_s);
+ 		/* sanity check */
+ 		if (i != udc_cnt) {
+-			BUGPRINT("i != udc_cnt\n");
+ 			vfree(cl_s);
+ 			return -EFAULT;
+ 		}
+@@ -1042,7 +1008,6 @@ static int do_replace_finish(struct net
+ 		goto free_unlock;
+ 
+ 	if (repl->num_counters && repl->num_counters != t->private->nentries) {
+-		BUGPRINT("Wrong nr. of counters requested\n");
+ 		ret = -EINVAL;
+ 		goto free_unlock;
+ 	}
+@@ -1118,15 +1083,12 @@ static int do_replace(struct net *net, c
+ 	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
+ 		return -EFAULT;
+ 
+-	if (len != sizeof(tmp) + tmp.entries_size) {
+-		BUGPRINT("Wrong len argument\n");
++	if (len != sizeof(tmp) + tmp.entries_size)
+ 		return -EINVAL;
+-	}
+ 
+-	if (tmp.entries_size == 0) {
+-		BUGPRINT("Entries_size never zero\n");
++	if (tmp.entries_size == 0)
+ 		return -EINVAL;
+-	}
++
+ 	/* overflow check */
+ 	if (tmp.nentries >= ((INT_MAX - sizeof(struct ebt_table_info)) /
+ 			NR_CPUS - SMP_CACHE_BYTES) / sizeof(struct ebt_counter))
+@@ -1153,7 +1115,6 @@ static int do_replace(struct net *net, c
+ 	}
+ 	if (copy_from_user(
+ 	   newinfo->entries, tmp.entries, tmp.entries_size) != 0) {
+-		BUGPRINT("Couldn't copy entries from userspace\n");
+ 		ret = -EFAULT;
+ 		goto free_entries;
+ 	}
+@@ -1194,10 +1155,8 @@ int ebt_register_table(struct net *net,
+ 
+ 	if (input_table == NULL || (repl = input_table->table) == NULL ||
+ 	    repl->entries == NULL || repl->entries_size == 0 ||
+-	    repl->counters != NULL || input_table->private != NULL) {
+-		BUGPRINT("Bad table data for ebt_register_table!!!\n");
++	    repl->counters != NULL || input_table->private != NULL)
+ 		return -EINVAL;
+-	}
+ 
+ 	/* Don't add one table to multiple lists. */
+ 	table = kmemdup(input_table, sizeof(struct ebt_table), GFP_KERNEL);
+@@ -1235,13 +1194,10 @@ int ebt_register_table(struct net *net,
+ 				((char *)repl->hook_entry[i] - repl->entries);
+ 	}
+ 	ret = translate_table(net, repl->name, newinfo);
+-	if (ret != 0) {
+-		BUGPRINT("Translate_table failed\n");
++	if (ret != 0)
+ 		goto free_chainstack;
+-	}
+ 
+ 	if (table->check && table->check(newinfo, table->valid_hooks)) {
+-		BUGPRINT("The table doesn't like its own initial data, lol\n");
+ 		ret = -EINVAL;
+ 		goto free_chainstack;
+ 	}
+@@ -1252,7 +1208,6 @@ int ebt_register_table(struct net *net,
+ 	list_for_each_entry(t, &net->xt.tables[NFPROTO_BRIDGE], list) {
+ 		if (strcmp(t->name, table->name) == 0) {
+ 			ret = -EEXIST;
+-			BUGPRINT("Table name already exists\n");
+ 			goto free_unlock;
+ 		}
+ 	}
+@@ -1320,7 +1275,6 @@ static int do_update_counters(struct net
+ 		goto free_tmp;
+ 
+ 	if (num_counters != t->private->nentries) {
+-		BUGPRINT("Wrong nr of counters\n");
+ 		ret = -EINVAL;
+ 		goto unlock_mutex;
+ 	}
+@@ -1447,10 +1401,8 @@ static int copy_counters_to_user(struct
+ 	if (num_counters == 0)
+ 		return 0;
+ 
+-	if (num_counters != nentries) {
+-		BUGPRINT("Num_counters wrong\n");
++	if (num_counters != nentries)
+ 		return -EINVAL;
+-	}
+ 
+ 	counterstmp = vmalloc(array_size(nentries, sizeof(*counterstmp)));
+ 	if (!counterstmp)
+@@ -1496,15 +1448,11 @@ static int copy_everything_to_user(struc
+ 	   (tmp.num_counters ? nentries * sizeof(struct ebt_counter) : 0))
+ 		return -EINVAL;
+ 
+-	if (tmp.nentries != nentries) {
+-		BUGPRINT("Nentries wrong\n");
++	if (tmp.nentries != nentries)
+ 		return -EINVAL;
+-	}
+ 
+-	if (tmp.entries_size != entries_size) {
+-		BUGPRINT("Wrong size\n");
++	if (tmp.entries_size != entries_size)
+ 		return -EINVAL;
+-	}
+ 
+ 	ret = copy_counters_to_user(t, oldcounters, tmp.counters,
+ 					tmp.num_counters, nentries);
+@@ -1576,7 +1524,6 @@ static int do_ebt_get_ctl(struct sock *s
+ 		}
+ 		mutex_unlock(&ebt_mutex);
+ 		if (copy_to_user(user, &tmp, *len) != 0) {
+-			BUGPRINT("c2u Didn't work\n");
+ 			ret = -EFAULT;
+ 			break;
+ 		}
 
 
