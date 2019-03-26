@@ -2,152 +2,76 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7584EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2879EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B38420863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1BF2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="WnGfmgUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbfCZPoM (ORCPT
+        id S1731661AbfCZPrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:44:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42566 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732081AbfCZPnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:43:39 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so11439651wrx.9;
-        Tue, 26 Mar 2019 08:43:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SPzWbhECY7YRkPD8wQD2k8BCrJ5/QV8ZXJkGLDDU2L0=;
-        b=ncVE8rkq/n1A67myzgwnFUzNucvV3hKzR/tucMtxSXujncsbGDRWxDmSF8yOl13zo9
-         B5WomgbLcuQmMlOOwxz7Ps3NDA32bvjyFRM641/z9eYdwbUrImoSPpbFkClc+tCXK4+p
-         Fb26XGzahMc8HlLytPLLPbRsZf52rAdUEEe/omnEv4sfwylO7eEarE+lGgNGkwyKkV/o
-         voxGerJ4vzXix9VgypfzGQiSkwgPcABBhDvr5fGLynhWacJJ7ZLIvvJJcUQIehJMieln
-         B/4cBSnPhPbLzUtuRxIlO6Ed1sPujvVWJJibzqr7vnNOdSMV8PlWZZNZ73z/T6uXAbeY
-         SWYg==
-X-Gm-Message-State: APjAAAVh/NEknIZ19TjG2xGUzG2WYhTRMI0x75cCLYVOp3ksZ5L14ruH
-        0NodVSmV8xWS6usZiWOQY2le2Fhl
-X-Google-Smtp-Source: APXvYqz97HmUfZ4jRD1ZJO/Dh2VEMCvIkqj/m06N1yVXykpicQQv1eMzBnv1HBPFY/p+9lq86Kkkcg==
-X-Received: by 2002:adf:afee:: with SMTP id y46mr19649646wrd.217.1553615017059;
-        Tue, 26 Mar 2019 08:43:37 -0700 (PDT)
-Received: from oberon.eng.vmware.com ([146.247.46.5])
-        by smtp.gmail.com with ESMTPSA id n11sm31927685wrt.63.2019.03.26.08.43.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 08:43:35 -0700 (PDT)
-From:   Tzvetomir Stoyanov <tstoyanov@vmware.com>
-To:     rostedt@goodmis.org
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/8] tools/perf,tools/lib/traceevent: rename "pevent" member of struct tep_event_filter to "tep"
-Date:   Tue, 26 Mar 2019 17:43:26 +0200
-Message-Id: <20190326154328.28718-7-tstoyanov@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190326154328.28718-1-tstoyanov@vmware.com>
-References: <20190326154328.28718-1-tstoyanov@vmware.com>
+        Tue, 26 Mar 2019 11:47:17 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36918 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731374AbfCZPrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:47:17 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D4ED41EC0104;
+        Tue, 26 Mar 2019 16:47:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553615236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=rbczpiy8yZiVoMpgtFDjWCR7U46lNRe4EfbgAA+wZTU=;
+        b=WnGfmgUwKuOW5E/DnUBrb1ttHZl2SzpY2bgnG/Ghwcv2Pddli+qZyb3iUDZVjd24tyEk7m
+        3Y5gMVlxi3QLzBbaX/iLWslBvB6b9irxNwTkdNy4vahmTDUkEHgFrvc+kMne/9okfhwqiq
+        NPEnJkmdMSF0HmjVHUEECDvCqGhygUo=
+Date:   Tue, 26 Mar 2019 16:47:19 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        "clemej@gmail.com" <clemej@gmail.com>
+Subject: Re: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Message-ID: <20190326154719.GL1867@zn.tnic>
+References: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
+ <20190326075651.GB1867@zn.tnic>
+ <SN6PR12MB2639C80DA928C41AA678DFB6F85F0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2639C80DA928C41AA678DFB6F85F0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames "pevent" member of the struct tep_event_filter to "tep".
-This makes the struct consistent with the chosen naming convention:
-tep (trace event parser), instead of the old pevent.
+On Tue, Mar 26, 2019 at 11:41:05AM +0000, Ghannam, Yazen wrote:
+> They don't apply cleanly to v4.14 anymore because of the recent header change.
+> 
+> I figured they would need to be fixed up and submitted separately to older stable
+> versions. Is that okay?
 
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
----
- tools/lib/traceevent/event-parse.h  |  2 +-
- tools/lib/traceevent/parse-filter.c | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+Ah yes, right.
 
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index d98362ff4bb1..17fb8d2dd081 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -718,7 +718,7 @@ struct tep_filter_type {
- #define TEP_FILTER_ERROR_BUFSZ  1024
- 
- struct tep_event_filter {
--	struct tep_handle	*pevent;
-+	struct tep_handle	*tep;
- 	int			filters;
- 	struct tep_filter_type	*event_filters;
- 	char			error_buffer[TEP_FILTER_ERROR_BUFSZ];
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 231e9cae5729..1d2f1343090d 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -154,7 +154,7 @@ add_filter_type(struct tep_event_filter *filter, int id)
- 
- 	filter_type = &filter->event_filters[i];
- 	filter_type->event_id = id;
--	filter_type->event = tep_find_event(filter->pevent, id);
-+	filter_type->event = tep_find_event(filter->tep, id);
- 	filter_type->filter = NULL;
- 
- 	filter->filters++;
-@@ -175,7 +175,7 @@ struct tep_event_filter *tep_filter_alloc(struct tep_handle *tep)
- 		return NULL;
- 
- 	memset(filter, 0, sizeof(*filter));
--	filter->pevent = tep;
-+	filter->tep = tep;
- 	tep_ref(tep);
- 
- 	return filter;
-@@ -1257,7 +1257,7 @@ static void filter_init_error_buf(struct tep_event_filter *filter)
- enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
- 					 const char *filter_str)
- {
--	struct tep_handle *pevent = filter->pevent;
-+	struct tep_handle *pevent = filter->tep;
- 	struct event_list *event;
- 	struct event_list *events = NULL;
- 	const char *filter_start;
-@@ -1380,7 +1380,7 @@ int tep_filter_strerror(struct tep_event_filter *filter, enum tep_errno err,
- 		return 0;
- 	}
- 
--	return tep_strerror(filter->pevent, err, buf, buflen);
-+	return tep_strerror(filter->tep, err, buf, buflen);
- }
- 
- /**
-@@ -1443,7 +1443,7 @@ void tep_filter_reset(struct tep_event_filter *filter)
- 
- void tep_filter_free(struct tep_event_filter *filter)
- {
--	tep_unref(filter->pevent);
-+	tep_unref(filter->tep);
- 
- 	tep_filter_reset(filter);
- 
-@@ -1465,7 +1465,7 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 	/* Can't assume that the pevent's are the same */
- 	sys = filter_type->event->system;
- 	name = filter_type->event->name;
--	event = tep_find_event_by_name(filter->pevent, sys, name);
-+	event = tep_find_event_by_name(filter->tep, sys, name);
- 	if (!event)
- 		return -1;
- 
-@@ -1875,7 +1875,7 @@ int tep_event_filtered(struct tep_event_filter *filter, int event_id)
- enum tep_errno tep_filter_match(struct tep_event_filter *filter,
- 				struct tep_record *record)
- {
--	struct tep_handle *pevent = filter->pevent;
-+	struct tep_handle *pevent = filter->tep;
- 	struct tep_filter_type *filter_type;
- 	int event_id;
- 	int ret;
+Thx.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
