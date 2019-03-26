@@ -6,46 +6,54 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D41C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20264C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B0420866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57AA2086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582119;
-	bh=LTRSSPUv7S4MNjBZrPFVvzhGW3NhPxuMDC/u8pKVC3U=;
+	s=default; t=1553582123;
+	bh=fnroCBWhzEpe1XRMnfZdJz2SvjsDbiywAyVQWI1ZeZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lisaLk5PhUh/TgAjCGthyVKvmcsREY1mAI7qVyB5poD0RRuDQEi6ITlYkOz72qbys
-	 TCgKccPtb7WG1EjpQSCtn3G7tdIfl74oaZbZX2pCReiiqgKszUT5YbBUVoDxa7uK9B
-	 QYKbbezANTPTvgEi2B9CTnQ4+vIocelEDRAeGuQ0=
+	b=ghBBB64lFt1t3locpHSNC+09AKdhvm+XrMdaWwiaTfieYRIvMkCYyThnyyk3LeDaQ
+	 yTUSB/Iac+cJRfnrtQgLTX/QOMuF3DH0VEwSgmGirBQkKEzDg+BGua8i9vyVVCMqGt
+	 SYIhTzWAIPtzVUdk9H22SavXCmM/+kpoUeCQh0kY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbfCZGfR (ORCPT
+        id S1732040AbfCZGfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46600 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731383AbfCZGfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:16 -0400
+        id S1731612AbfCZGfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:20 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D9220866;
-        Tue, 26 Mar 2019 06:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFEF020823;
+        Tue, 26 Mar 2019 06:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582116;
-        bh=LTRSSPUv7S4MNjBZrPFVvzhGW3NhPxuMDC/u8pKVC3U=;
+        s=default; t=1553582119;
+        bh=fnroCBWhzEpe1XRMnfZdJz2SvjsDbiywAyVQWI1ZeZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u9RD4JSrYEYg6vuWah89RZk0k5qrkMhqCa+rVins/xmVuJ5PotVcxRzLWtPI651om
-         vAH/rqRpD1Qt2Koqx5UO2pWrq4X6CBUcQWPAnEC1Y4Lmp1xpq5DA6xuzrYd8Mc+7hh
-         P6pCRdc2DoQ50WtmOZhFsOQfmDEDqJupcKdfYl8w=
+        b=BeLJxlykyqPIzhQ99XBjXq9x7FUXYz9Vy8HfPASZtdeNH0OSs1vtthPOGZFqfN22Z
+         pkeIwe63vpAqyx3xEMUX38xK3CW4YcjbEF1p1MBUhP1cOnoqZC9gXNQbOidnvHasll
+         jv5G3dN60T9bgdyJvSu9HenSTD1NAQgGwD/Bjn5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 41/41] ath10k: avoid possible string overflow
-Date:   Tue, 26 Mar 2019 15:30:18 +0900
-Message-Id: <20190326042652.119179406@linuxfoundation.org>
+        stable@vger.kernel.org, Jules Maselbas <jules.maselbas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Dietmar Eggermann <dietmar.eggemann@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Stephen Kyle <stephen.kyle@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, nd@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 38/41] sched/cpufreq/schedutil: Fix error path mutex unlock
+Date:   Tue, 26 Mar 2019 15:30:15 +0900
+Message-Id: <20190326042651.965892960@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -64,39 +72,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jules Maselbas <jules.maselbas@arm.com>
 
-commit 6707ba0105a2d350710bc0a537a98f49eb4b895d upstream.
+commit 1b5d43cfb69759d8ef8d30469cea31d0c037aed5 upstream.
 
-The way that 'strncat' is used here raised a warning in gcc-8:
+This patch prevents the 'global_tunables_lock' mutex from being
+unlocked before being locked.  This mutex is not locked if the
+sugov_kthread_create() function fails.
 
-drivers/net/wireless/ath/ath10k/wmi.c: In function 'ath10k_wmi_tpc_stats_final_disp_tables':
-drivers/net/wireless/ath/ath10k/wmi.c:4649:4: error: 'strncat' output truncated before terminating nul copying as many bytes from a string as its length [-Werror=stringop-truncation]
-
-Effectively, this is simply a strcat() but the use of strncat() suggests
-some form of overflow check. Regardless of whether this might actually
-overflow, using strlcat() instead of strncat() avoids the warning and
-makes the code more robust.
-
-Fixes: bc64d05220f3 ("ath10k: debugfs support to get final TPC stats for 10.4 variants")
+Signed-off-by: Jules Maselbas <jules.maselbas@arm.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Redpath <chris.redpath@arm.com>
+Cc: Dietmar Eggermann <dietmar.eggemann@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Stephen Kyle <stephen.kyle@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: nd@arm.com
+Link: http://lkml.kernel.org/r/20180329144301.38419-1-jules.maselbas@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/wmi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/cpufreq_schedutil.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -4309,7 +4309,7 @@ static void ath10k_tpc_config_disp_table
- 							    rate_code[i],
- 							    type);
- 			snprintf(buff, sizeof(buff), "%8d ", tpc[j]);
--			strncat(tpc_value, buff, strlen(buff));
-+			strlcat(tpc_value, buff, sizeof(tpc_value));
- 		}
- 		tpc_stats->tpc_table[type].pream_idx[i] = pream_idx;
- 		tpc_stats->tpc_table[type].rate_code[i] = rate_code[i];
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -605,10 +605,9 @@ fail:
+ 
+ stop_kthread:
+ 	sugov_kthread_stop(sg_policy);
+-
+-free_sg_policy:
+ 	mutex_unlock(&global_tunables_lock);
+ 
++free_sg_policy:
+ 	sugov_policy_free(sg_policy);
+ 
+ disable_fast_switch:
 
 
