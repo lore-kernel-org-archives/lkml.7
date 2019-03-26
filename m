@@ -4,109 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE88C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3546C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0AC20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEE8B20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553603405;
-	bh=sQM5jiXixK+TRDZp1EAAOo+9HgawHweRTNi+g/sfHoc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s5glUZ0gXi3BBC2Mb+8wnzX1YV2xjAU/XqalPDY+CmNeWS+m9xw77hxsyjjZ/DPoE
-	 45NL0TsmrPIARXVi1KwJlYWI0QjTh1IBuURExpSLILha7j64jFlCbTkfDSLXv41Qd6
-	 Ba9Pz1L6JawYkUZAzNTpCQPcq7aguM4UK1jjBZKc=
+	s=default; t=1553603408;
+	bh=nG+AjfW2v/WigS6GEWf326+mLXC24GNNmUiAjqH2PNQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=l2/liDLCG61ZSWg9LDAouxRc/vy5sSYYCVK075hc46xl3iDyx2Il8e/EGAR4XcdTA
+	 S591dkNJ/F9Os9CgVpy/yPlNqurtsCb8o0rSAHG+iiWaqtO2oSH27xfyu8KeDs1LD8
+	 +BgGBRN6xkb0p4pgUgNEH1p04aVBzV+LRrGyQRGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfCZMaD (ORCPT
+        id S1731466AbfCZMaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfCZMaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:30:03 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 541F32075E;
-        Tue, 26 Mar 2019 12:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553603402;
-        bh=sQM5jiXixK+TRDZp1EAAOo+9HgawHweRTNi+g/sfHoc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xhZC2++NWBiXNXmdSXrpYb1M0HosHFRHAsRrGl+eSqgsAOxJpxtO7GrXy7xTnJ8bv
-         UJWKjcHU5xyzizH4d/CifKUT7Jmvm7rzMXa1DYFNfqHBdo7e6IL/TvGyaoIpqIkxVO
-         btrP1dkjJOnp828VwDufoLIZ0enWzb8MeOdPLvFs=
-Date:   Tue, 26 Mar 2019 21:29:57 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     jmorris@namei.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 22/27] Lock down kprobes
-Message-Id: <20190326212957.f5b518990c14cf21262bfdcc@kernel.org>
-In-Reply-To: <20190325220954.29054-23-matthewgarrett@google.com>
-References: <20190325220954.29054-1-matthewgarrett@google.com>
-        <20190325220954.29054-23-matthewgarrett@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 26 Mar 2019 08:30:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34100 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfCZMaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:30:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v10so5383174oib.1;
+        Tue, 26 Mar 2019 05:30:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bKFsGo/ttivgOKUNw4rZdOkvZUPF43wnTAj2jqCStXQ=;
+        b=YtfHH+SH4qnGdEoMJ3+BtAwiCcjKG/b7L5gz5wRyh89aGR5nJRbSbTUO/7CcAKTBAY
+         Mx99o+U0LGriKNg4YfHSB6bNVWKbln+zWQelrMV8uWr607l3scsD/kRSNg6nPM725EfZ
+         sRaUUhjmEUQUeHUWLi4UI7/5lVe+WISZ2Sh488CDQBwKVrIjmEdY0iW8EZtBKESyAkxE
+         lyayH+S9BYHXJ1LQ8RbGxL3En6n8GVSZ1FgBQpAlvf0+tIUmmihwLRjQmt0OrIrQOF2t
+         p9KNVsgifNh4HKD7SYfX0NVcE5SyUg+ojVWLdNreh+sf180CFq3h2pEwII3Qh+sgJAd4
+         DUcA==
+X-Gm-Message-State: APjAAAVw+JacVa8lWhVHjsdZR0uZ5CMTgWAbowf0aLI8QG/Xg0z4EipT
+        1VCJVm0DqPNeh0W+rKxgv6aAObBXaNHeb2c042A=
+X-Google-Smtp-Source: APXvYqwSMeRZLa0ioYVYEfgka3lDoxmsvTntKTC1njH2Yw61dhvZrCz4E2BeFRIDn8X3GnnHKqYwf8y207Z7lJhCQ4Q=
+X-Received: by 2002:aca:355:: with SMTP id 82mr15543265oid.30.1553603405803;
+ Tue, 26 Mar 2019 05:30:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190326120213.28633-1-leon@kernel.org>
+In-Reply-To: <20190326120213.28633-1-leon@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 Mar 2019 13:29:54 +0100
+Message-ID: <CAJZ5v0jbb+fEWWHdnZEKNOhUy=ZTsDMxy7Rwahp8O-jpBy-K9w@mail.gmail.com>
+Subject: Re: [PATCH -next] x86/apic: Reduce print level of CPU limit announcement
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86 <x86@kernel.org>, Leon Romanovsky <leonro@mellanox.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 15:09:49 -0700
-Matthew Garrett <matthewgarrett@google.com> wrote:
+On Tue, Mar 26, 2019 at 1:02 PM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> From: Leon Romanovsky <leonro@mellanox.com>
+>
+> Kernel is booted with less possible CPUs (possible_cpus kernel boot
+> option) than available CPUs will have prints like this:
+>
+> [    1.131039] APIC: NR_CPUS/possible_cpus limit of 8 reached. Processor 55/0x1f ignored.
+> [    1.132228] ACPI: Unable to map lapic to logical cpu number
+>
+> Those warnings are printed for every not-enabled CPU and on the systems
+> with large number of such CPUs, we see a lot of those prints for default
+> print level.
+>
+> Simple conversion of those prints to be in debug level removes them
+> while leaving the option to debug system.
 
-> From: David Howells <dhowells@redhat.com>
-> 
-> Disallow the creation of kprobes when the kernel is locked down by
-> preventing their registration.  This prevents kprobes from being used to
-> access kernel memory, either to make modifications or to steal crypto data.
+But generally dynamic debug must be enabled in order for pr_debug()
+prints to be visible which is kind of cumbersome to do via the command
+line.
 
-Hmm, if you enforce signature check of modules, those modules
-should be allowed to use kprobes?
-I think we should introduce some kind of trust inheritance from
-signed (trusted) modules.
-
-Thank you,
-
-> 
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-> Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: davem@davemloft.net
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 > ---
->  kernel/kprobes.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index f4ddfdd2d07e..6f66cca8e2c6 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1552,6 +1552,9 @@ int register_kprobe(struct kprobe *p)
->  	struct module *probed_mod;
->  	kprobe_opcode_t *addr;
->  
-> +	if (kernel_is_locked_down("Use of kprobes"))
-> +		return -EPERM;
-> +
->  	/* Adjust probe address from symbol */
->  	addr = kprobe_addr(p);
->  	if (IS_ERR(addr))
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
-> 
+>  arch/x86/kernel/acpi/boot.c | 2 +-
+>  arch/x86/kernel/apic/apic.c | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+> index 8dcbf6890714..3ef8ab89c02d 100644
+> --- a/arch/x86/kernel/acpi/boot.c
+> +++ b/arch/x86/kernel/acpi/boot.c
+> @@ -770,7 +770,7 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
+>
+>         cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
+>         if (cpu < 0) {
+> -               pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
+> +               pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
 
+And this one is printed sometimes when something really goes wrong
+which may be really hard to debug otherwise, so there is value in the
+info level here.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Would it be possible to avoid printing it just in some cases?
+
+>                 return cpu;
+>         }
+>
+> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> index b7bcdd781651..8c2a487b5216 100644
+> --- a/arch/x86/kernel/apic/apic.c
+> +++ b/arch/x86/kernel/apic/apic.c
+> @@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
+>         if (num_processors >= nr_cpu_ids) {
+>                 int thiscpu = max + disabled_cpus;
+>
+> -               pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
+> -                          "reached. Processor %d/0x%x ignored.\n",
+> -                          max, thiscpu, apicid);
+> +               pr_debug(
+> +                       "APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
+> +                       max, thiscpu, apicid);
+
+I completely agree with this change, though.
+
+>
+>                 disabled_cpus++;
+>                 return -EINVAL;
+> --
