@@ -2,112 +2,203 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6360C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BB8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8979C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DBF206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ohkc212Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHln7p/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbfCZSqR (ORCPT
+        id S1732603AbfCZSrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:46:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41783 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731755AbfCZSqQ (ORCPT
+        Tue, 26 Mar 2019 14:47:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42970 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732121AbfCZSrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:46:16 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k8so12084586lja.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:46:15 -0700 (PDT)
+        Tue, 26 Mar 2019 14:47:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g3so12143433wrx.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L/3OBAKAOSO/1AIbYk5hXO8vRD4tZbOgI5tqSvL0l7U=;
-        b=ohkc212Z0MDOWMPvd2KYwtXD7YLmxpPPxtlSRClo8I8cN3Dca36DbP7x2tVo2J6ZfX
-         diU5jBi5juJXNVvFqyL19nSjySh7zbIKt/QhOi0tgstxsHmbMfSaaGQwTWmBTPlk6+FL
-         S93E58jVWyHh2p+2MbofNoE5lgtzx6WuSmu2w=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=OVnmi5wOmW/zqZlcYVO518iIu1tVVP8uQRVyAqiy7oY=;
+        b=VHln7p/7dzcclv7f8UmDVD3BppLy11ME8RGrCrVtRlgxIpI5Rp7hFLK2T8GUHiyWoO
+         ykqnMuDH5j2Aw9UOM7u6NtAjpn3XblexzBYSqqJMvcDeEi9f4PrJTv9xFGNClOfc0zGK
+         fxeoy0A8ToRBpH1bq5OHlrN+Lzc4kskWM/tX+pJGQR2FQ5Z1To/IlI3ZD0RbLH4vuTDp
+         lGavKXCc2MuvdWObczA/FrSuO9jUkX+hQzdtO4BnZc19dDYvN6VelhIzLU9iVSinA+gG
+         Xi6nrbg4mPBHf5VYtmhn6Q2WRPiL1+RCuzPsNfUBr4/LpG05Qy3Dz5xj1pH2wMj4Zrs+
+         hs5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L/3OBAKAOSO/1AIbYk5hXO8vRD4tZbOgI5tqSvL0l7U=;
-        b=Q9pWa5lIvQ9O081ee+DL7BvSzdXa+GPP4Fla8vu5QajsqeH73vfMcNAL7BBCeX7nKt
-         tlGnZN7m3GXy1uho7WKQHO5BEk5o4ThO8kezS729P2m2bVzn7VPxSs4jVgi/Ng4ogSSS
-         xg5Gkt67rqkCT4i1dKr/NcNDWmwv71+noQP/x6j/QjhyaHh/V5wn6bpIVtCDjy6EKMZU
-         5+a4HCcNct4ZwIL7xs5aW7XzS9b9UAMKwy3xIlGtYvAnCF8fETRNOvjk7sdieBRldCI6
-         vVPAKhBC5v4ANIkLCAcau4HoPEbJ6x3hbdanjfHcKKguqoZxkCOBajqtHHSY08IN+cje
-         psGw==
-X-Gm-Message-State: APjAAAWbyvCvSWmOyYqJw2/n3YlW3SvROgic4A75+QopbNO00iMUSopJ
-        DjpSGSojet0WjNtLoJglwzGTHXyZUyw=
-X-Google-Smtp-Source: APXvYqzqxzWjnwkpQj7T8lYHScL0DwVDQCqM0RawWqGhRg4nQwjHDF46ncUA/GfWUUIpcPYS8JA08w==
-X-Received: by 2002:a05:651c:cb:: with SMTP id 11mr17273618ljr.101.1553625974238;
-        Tue, 26 Mar 2019 11:46:14 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id a7sm2631190lfo.8.2019.03.26.11.46.10
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OVnmi5wOmW/zqZlcYVO518iIu1tVVP8uQRVyAqiy7oY=;
+        b=dUQOHkRAHSsWoDU4mXaJ9dbmlUBWALMFlOG+zIA8PKJd3QVQiRdVbgCHKtE5LDIZ3N
+         LKMAGtjT1guu2S6Xu4FFGPYM1bsXhZlYFrYZrOPcs2L9VLVLLebOAbGwZu8lsnfbZtDA
+         hpoqc4efW87QPtyOEmF/K8YhPE4gIrHCJAouG0vbno3oVimIgngL3e1EXfiTRTEXFdxm
+         EC8NYTUQzrA4yrOpmPChUQAz4ynvRTWL+B1WDmp2slwzJCPIlSU8rNZNpcStKaHRT0dG
+         +p+oxAM9GqYdNFCE/BFoS/R+Xw742weSgqU89lRTAAIiLd6hN/avn5tV87s2jYMOcVOe
+         RatA==
+X-Gm-Message-State: APjAAAVmagbBsfOVCu4zMaaVfRRH3Feg49T6LqaXrjHLc2imAfrtSRIV
+        FBvbo3emL9n/Y6aGQyw8J1RUmtwl
+X-Google-Smtp-Source: APXvYqx/TWCl6XgjEQpg4Myqfm0feJf42g5AYK7v0n88Bbp40Y0b6mWukQ3uEdN4f4jiXud+HAXKvg==
+X-Received: by 2002:a5d:6b0d:: with SMTP id v13mr22441291wrw.284.1553626039979;
+        Tue, 26 Mar 2019 11:47:19 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id z1sm10417953wrs.52.2019.03.26.11.47.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 11:46:11 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id d18so9481082lfn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:46:10 -0700 (PDT)
-X-Received: by 2002:ac2:598b:: with SMTP id w11mr17028560lfn.139.1553625970009;
- Tue, 26 Mar 2019 11:46:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190222225345.69084-1-briannorris@chromium.org>
- <C908FF06-43F1-4A5C-B80F-0982315DDB6A@holtmann.org> <CA+ASDXOG43dRtqzZJuA4ixVvfpt-Wd1rUVMMG3QFRnNGOmY5GA@mail.gmail.com>
-In-Reply-To: <CA+ASDXOG43dRtqzZJuA4ixVvfpt-Wd1rUVMMG3QFRnNGOmY5GA@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 26 Mar 2019 11:45:57 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMePkQDRfaSwNGnRYyGdsuvfUCXBtDK79o2mP=1hdNQUA@mail.gmail.com>
-Message-ID: <CA+ASDXMePkQDRfaSwNGnRYyGdsuvfUCXBtDK79o2mP=1hdNQUA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] Bluetooth: btusb: add QCA6174A compatible properties
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Bluetooth mailing list 
-        <linux-bluetooth@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 26 Mar 2019 11:47:19 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, Dalit Ben Zoor <dbenzoor@habana.ai>
+Subject: [PATCH] habanalabs: add device status option to INFO IOCTL
+Date:   Tue, 26 Mar 2019 20:47:15 +0200
+Message-Id: <20190326184715.13456-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 1:34 PM Brian Norris <briannorris@chromium.org> wrote:
-> On Tue, Feb 26, 2019 at 11:53 PM Marcel Holtmann <marcel@holtmann.org> wrote:
-> > all 3 patches have been applied to bluetooth-next tree.
->
-> Thanks! I failed to repeat my comment from v1:
->
-> """
-> This patch is also required to make this stable, but since it's not
-> really tied to the device tree, and it's an existing bug, I sent it
-> separately:
->
->   https://lore.kernel.org/patchwork/patch/1044896/
->   Subject: Bluetooth: btusb: request wake pin with NOAUTOEN
-> """
->
-> Can you take this one too? Otherwise Scarlet will be less stable
-> (possible interrupt storm at boot).
+From: Dalit Ben Zoor <dbenzoor@habana.ai>
 
-Ping? RK3399/Scarlet is currently in bad shape on v5.1-rc2, since it
-doesn't have the interrupt storm fix.
+This patch adds a new opcode to INFO IOCTL that returns the device status.
 
-I'll ping on that patch directly too.
+This will allow users to query the device status in order to avoid sending
+command submissions while device is in reset.
 
-Brian
+Signed-off-by: Dalit Ben Zoor <dbenzoor@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/device.c           | 15 +++++++++++++++
+ drivers/misc/habanalabs/habanalabs.h       |  1 +
+ drivers/misc/habanalabs/habanalabs_ioctl.c | 19 +++++++++++++++++++
+ include/uapi/misc/habanalabs.h             | 12 ++++++++++++
+ 4 files changed, 47 insertions(+)
+
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index c51d1062d0bc..e3797f582436 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -10,6 +10,7 @@
+ #include <linux/pci.h>
+ #include <linux/sched/signal.h>
+ #include <linux/hwmon.h>
++#include <uapi/misc/habanalabs.h>
+ 
+ #define HL_PLDM_PENDING_RESET_PER_SEC	(HL_PENDING_RESET_PER_SEC * 10)
+ 
+@@ -21,6 +22,20 @@ bool hl_device_disabled_or_in_reset(struct hl_device *hdev)
+ 		return false;
+ }
+ 
++enum hl_device_status hl_device_status(struct hl_device *hdev)
++{
++	enum hl_device_status status;
++
++	if (hdev->disabled)
++		status = HL_DEVICE_STATUS_MALFUNCTION;
++	else if (atomic_read(&hdev->in_reset))
++		status = HL_DEVICE_STATUS_IN_RESET;
++	else
++		status = HL_DEVICE_STATUS_OPERATIONAL;
++
++	return status;
++};
++
+ static void hpriv_release(struct kref *ref)
+ {
+ 	struct hl_fpriv *hpriv;
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index e9253d937bfc..fd7fcdf7050f 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -1272,6 +1272,7 @@ static inline bool hl_mem_area_crosses_range(u64 address, u32 size,
+ 
+ int hl_device_open(struct inode *inode, struct file *filp);
+ bool hl_device_disabled_or_in_reset(struct hl_device *hdev);
++enum hl_device_status hl_device_status(struct hl_device *hdev);
+ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
+ 		enum hl_asic_type asic_type, int minor);
+ void destroy_hdev(struct hl_device *hdev);
+diff --git a/drivers/misc/habanalabs/habanalabs_ioctl.c b/drivers/misc/habanalabs/habanalabs_ioctl.c
+index 37f9de8e7404..9000ff615805 100644
+--- a/drivers/misc/habanalabs/habanalabs_ioctl.c
++++ b/drivers/misc/habanalabs/habanalabs_ioctl.c
+@@ -12,6 +12,21 @@
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+ 
++static int device_status_info(struct hl_device *hdev, struct hl_info_args *args)
++{
++	struct hl_info_device_status dev_stat = {0};
++	u32 size = args->return_size;
++	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
++
++	if ((!size) || (!out))
++		return -EINVAL;
++
++	dev_stat.status = hl_device_status(hdev);
++
++	return copy_to_user(out, &dev_stat,
++			min((size_t)size, sizeof(dev_stat))) ? -EFAULT : 0;
++}
++
+ static int hw_ip_info(struct hl_device *hdev, struct hl_info_args *args)
+ {
+ 	struct hl_info_hw_ip_info hw_ip = {0};
+@@ -105,6 +120,10 @@ static int hl_info_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	struct hl_device *hdev = hpriv->hdev;
+ 	int rc;
+ 
++	/* We want to return device status even if it disabled or in reset */
++	if (args->op == HL_INFO_DEVICE_STATUS)
++		return device_status_info(hdev, args);
++
+ 	if (hl_device_disabled_or_in_reset(hdev)) {
+ 		dev_warn_ratelimited(hdev->dev,
+ 			"Device is disabled or in reset. Can't execute INFO IOCTL\n");
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index ab1957e31077..993a79edad73 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -45,11 +45,18 @@ enum goya_queue_id {
+ 	GOYA_QUEUE_ID_SIZE
+ };
+ 
++enum hl_device_status {
++	HL_DEVICE_STATUS_OPERATIONAL,
++	HL_DEVICE_STATUS_IN_RESET,
++	HL_DEVICE_STATUS_MALFUNCTION
++};
++
+ /* Opcode for management ioctl */
+ #define HL_INFO_HW_IP_INFO	0
+ #define HL_INFO_HW_EVENTS	1
+ #define HL_INFO_DRAM_USAGE	2
+ #define HL_INFO_HW_IDLE		3
++#define HL_INFO_DEVICE_STATUS	4
+ 
+ #define HL_INFO_VERSION_MAX_LEN	128
+ 
+@@ -82,6 +89,11 @@ struct hl_info_hw_idle {
+ 	__u32 pad;
+ };
+ 
++struct hl_info_device_status {
++	__u32 status;
++	__u32 pad;
++};
++
+ struct hl_info_args {
+ 	/* Location of relevant struct in userspace */
+ 	__u64 return_pointer;
+-- 
+2.17.1
+
