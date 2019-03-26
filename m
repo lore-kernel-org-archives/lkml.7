@@ -2,139 +2,113 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78377C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E42C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448362087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFDC2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbfCZV53 (ORCPT
+        id S1732474AbfCZV7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:57:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60469 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfCZV53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:57:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 14:57:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
-   d="scan'208";a="156056825"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2019 14:57:27 -0700
-Date:   Tue, 26 Mar 2019 14:57:27 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Huang, Kai" <kai.huang@intel.com>
-Cc:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        Tue, 26 Mar 2019 17:59:15 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:46402 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726782AbfCZV7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:59:15 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QLrtvZ021168;
+        Tue, 26 Mar 2019 21:58:48 GMT
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2rfsy2h8kx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 Mar 2019 21:58:48 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id AEB8360;
+        Tue, 26 Mar 2019 21:58:47 +0000 (UTC)
+Received: from [16.214.194.75] (unknown [16.214.194.75])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 1284149;
+        Tue, 26 Mar 2019 21:58:45 +0000 (UTC)
+Subject: Re: [PATCH 3/6] bitmap_parselist: rework input string parser
+To:     Yuri Norov <ynorov@marvell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yury Norov <yury.norov@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Svahn, Kai" <kai.svahn@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v19,RESEND 08/27] x86/cpu/intel: Detect SGX support and
- update caps appropriately
-Message-ID: <20190326215727.GG3757@linux.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-9-jarkko.sakkinen@linux.intel.com>
- <1553602654.17255.15.camel@intel.com>
- <20190326142719.GC3757@linux.intel.com>
- <105F7BF4D0229846AF094488D65A0989356F307D@PGSMSX112.gar.corp.intel.com>
+        Mike Travis <travis@sgi.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190325210748.6571-1-ynorov@marvell.com>
+ <20190325210748.6571-4-ynorov@marvell.com>
+ <20190326101045.GT9224@smile.fi.intel.com>
+ <MN2PR18MB30862D49744CFC6FEAD78177CB5F0@MN2PR18MB3086.namprd18.prod.outlook.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <ae8abbbe-108d-93bd-99d6-251e0d1f36ac@hpe.com>
+Date:   Tue, 26 Mar 2019 14:58:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <105F7BF4D0229846AF094488D65A0989356F307D@PGSMSX112.gar.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <MN2PR18MB30862D49744CFC6FEAD78177CB5F0@MN2PR18MB3086.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 02:25:52PM -0700, Huang, Kai wrote:
-> > 
-> > That being said, this in no way impacts KVM's ability to virtualize SGX, e.g.
-> > KVM can directly do CPUID and {RD,WR}MSR to probe the capabilities of the
-> > platform as needed.
+
+
+On 3/26/2019 2:09 PM, Yuri Norov wrote:
+> + Mike Travis <travis@sgi.com>
+> + Thomas Gleixner <tglx@linutronix.de>
 > 
-> I am not following. KVM can do whatever it wants, but it cannot change the
-> fact that KVM guest cannot run intel enclave if platform's MSRs are
-> configured to 3rd party and locked.
+> ----------------------------------------------------------------------
+> On Tue, Mar 26, 2019 at 12:07:45AM +0300, Yury Norov wrote:
+>>> The requirement for this rework is to keep the __bitmap_parselist()
+>>> copy-less and single-pass but make it more readable and maintainable by
+>>> splitting into logical parts and removing explicit nested cycles and
+>>> opaque local variables.
+>>>
+>>> __bitmap_parselist() can parse userspace inputs and therefore we cannot
+>>> use simple_strtoul() to parse numbers.
 > 
-> Or am I misunderstanding?
-
-What does that have to do with this patch?  The only thing this patch does
-is clear a *software* bit that says "SGX LC is enabled" so that the kernel
-can make the reasonable assumption that the MSRs are writable when
-X86_FEATURE_SGX_LC=1.
-
+>> So, all above depends to what memory we access kernel / user space.
+>> Perhaps we can get copy of memory of a given size and then parse it in kernel space always?
 > 
-> > 
-> > > My opition is we already have enough cases that violates HW behavior
-> > > in SGX virtualization, let's not have one more.
-> > 
-> > What are the other cases?
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
 > 
-> One example is EPCM + EPC should be power of 2.
+> What I missed during rework is that we have only one caller of *parselist_user  -
+> it's write_irq_affinity() introduced by Mike Travis in kernel/irq/proc.c. It doesn't look
+> like a hot path as it's file operations handler. If no objections from Mike or Thomas,
 
-Again, that's a micro-architecture detail due to the use of range registers
-to carve out the EPC.  The only thing the SDM states regarding size and
-alignment is:
+No objections from me as long as you can still change irq affinity using 
+a cpulist instead of a cpumask.
 
-  The EPC is divided into EPC pages. An EPC page is 4KB in size and always
-  aligned on a 4KB boundary.
+Thanks,
+Mike Travis
 
-> And EPC migration (sudden loss of EPC).
 
-Unfortunate, yes, but it does not violate the architecture in any way.
-You can argue that it adds a wrinkle that isn't explicitly documented
-in the SDM, but virtualization is full of things like that.
-
-> And if we apply some policy to restrict enclave during EINIT trap, etc.
->
-> But those are not the point. I should probably have not mentioned them.
+> I think it would make sense to copy_from_user() the userspace data at the beginning
+> in sake of simplicity of __bitmap_parselist(), as you suggested above.
 > 
-> > 
-> > > Besides, why do we "need an additional flag to track whether or not
-> > > Launch Control is truly enabled"? Doesn't driver only need to know
-> > > whether MSRs are writable?
-> > 
-> > Yes, and that's why we're overloading X86_FEATURE_SGX_LC to be set if and
-> > only if SGX_LC is supported *and* enabled, e.g. so that the kernel can simply
-> > check X86_FEATURE_SGX_LC without having to also probe the MSRs.
+> Yury
 > 
-> OK.
-> 
-> But IMO if what I mentioned above is correct, then that part should
-> overweight the benefit you can get here.
-
-Half dozen of one, six of the other.  If we clear the flag, then KVM has
-to manually probe the MSRs.  If we don't clear the flag, then the driver
-has to manually probe the MSRs.
-
-Alternatively we could add another flag, but then we end up with
-X86_FEATURE_SGX_LC and X86_FEATURE_SGX_LE_PUBKEY_HASH_WRITABLE, or maybe
-X86_FEATURE_SGX_LC_REALLY_TRULY_ENABLED.
-
-> 
-> Anyway who cares to do less/more thing in driver probe?
-
-Exactly.  KVM will probe the MSRs once during its own loading.
