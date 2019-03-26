@@ -2,1109 +2,266 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,UPPERCASE_75_100 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAB2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EC2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570EE2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PiXcWGel"
+	by mail.kernel.org (Postfix) with ESMTP id 084002075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553582758;
+	bh=VDjgQR6rKMaW7/BbdSm+AeiNq+uh0WMlYeDv7qlbnjA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mfJmDt50VJ6RFjoxGY0mNLFQ0xEHIxlGp16n9HaI17ikhirdrGtt+aosqt1KMppLX
+	 ku9OSjxUKD5Lh4OUsVpUp4GeLMdbZeCm3uPoxwkXSPVCe1LNHkq4j831tasZhePOF+
+	 a1yGQ+4IMVlh4192v6V7Hmy/nothk1+cSoYYfcHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731903AbfCZGpw (ORCPT
+        id S1731778AbfCZGd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:45:52 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42281 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731535AbfCZGpu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:45:50 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b7so3246502lfg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 23:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yUydjSnBDdjcsA1ZQPOHJdnstPNQZFp3d3hmDMq+wCw=;
-        b=PiXcWGelXq56nxC3WhgOf2ch3iZw1fIfezDASx/hcjcyfxTlsPLwGWdROacm4w/Mdn
-         9PuIny+nZLuEoNqa87scUsKWuctBBEcvTvMECIHHEksuolJlRyBqb4ZL1XqOtFeRlMjK
-         kIheNOhbiqPUz9Ipc0EtE3BPtNbHd0SLnICX3/gAe2RpRD/QSMGequA+78qyM+8jdzL5
-         aodj3QblWw/IpdcNI0XhY6XcVFv1Ca2+VjSXlSV4exNKAodZxOkMk2BBze2Q4e2r/gfA
-         prHqDdjD1XEtfxMIV9Kln2hZvclSBIv08aka60hcCb+skhwvUHqOWvew4UdPxT4WIkRK
-         sasw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yUydjSnBDdjcsA1ZQPOHJdnstPNQZFp3d3hmDMq+wCw=;
-        b=mzMGofegdhNxIUWG85RND/xrrdpEejsL/YzhEW9cXvhUvKZPeHC4q2Y5vZjQr5N3ZG
-         xexjcCYxYM0wL2oeYo9bLVnKe9d435s9K7b0jx4BdClW6w/qtnYwogNf8PkR1ap0bXZl
-         7wsWRLA+T8428TfPP8fv9PfGRkB+90e5+Q+VPO1adxzk1HMq+NfQfKOLTSvFZVlRML57
-         5ojfVwc0goI7ugOl6/nPk5LwU0PdV4q7qENxyXiU1UTcsfq0o5gCOSOW3cf4J2PuK8jF
-         Qkmd+IXDB9V6YMropXlxQ51H+AfCIrbkGJ9C5ao0htpWVR/dUPHV2raQrloH3Z0XcTuy
-         b4eA==
-X-Gm-Message-State: APjAAAUMkON2WxP1ZeTQlE57FAUGJr18yQqePY5wrOPi+a051c8B4Mbh
-        vH7G0Dw/5amfp/DeJudON73B2ig+KsBNYgvUjBLzVA==
-X-Google-Smtp-Source: APXvYqzOnKbSaEKP+bGe0O5NT/8ToDqGZ0ljbEMddzf4hymuR8vAhvwB43bwPSkw8MGrohBaFitZOmRiWIdKK6OlE6U=
-X-Received: by 2002:a05:6512:1ca:: with SMTP id f10mr8363894lfp.136.1553582748124;
- Mon, 25 Mar 2019 23:45:48 -0700 (PDT)
+        Tue, 26 Mar 2019 02:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731760AbfCZGdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:55 -0400
+Received: from localhost (unknown [104.132.152.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5B320856;
+        Tue, 26 Mar 2019 06:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553582034;
+        bh=VDjgQR6rKMaW7/BbdSm+AeiNq+uh0WMlYeDv7qlbnjA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dT4v4VaO9/prdiBobIEMxuDG8i0d/yAKtD28mswEizslMyoz2cjjhBjJkSpUtaFfS
+         O/mZIQLNdyWieLCrJXFlSJO9NKSHOgabKm1g4AXP4gdoeNVqdzk1ZqNDtPEoiwJxBL
+         gIhzyePrQ4YPhmOc8k6OyWUIQeOFs9l+5yGFSMMU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/41] 4.14.109-stable review
+Date:   Tue, 26 Mar 2019 15:29:37 +0900
+Message-Id: <20190326042649.889479098@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com> <mvmbm1zueya.fsf@suse.de>
-In-Reply-To: <mvmbm1zueya.fsf@suse.de>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Tue, 26 Mar 2019 12:15:11 +0530
-Message-ID: <CAJ2_jOFuw2uu7Et1cOkKpaEwVofR5nD_v-rkOgFZbACK4BvHhg@mail.gmail.com>
-Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
-To:     Andreas Schwab <schwab@suse.de>
-Cc:     Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.109-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.109-rc1
+X-KernelTest-Deadline: 2019-03-28T04:26+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'On Mon, Mar 25, 2019 at 9:24 PM Andreas Schwab <schwab@suse.de> wrote:
->
->
-> I still don't see any improvement.  FYI, this is the patch I use for the
-> device tree:
->
-
-I am sharing you my test environment which has been working for me so
-that you can duplicate at your end
-
-I have tested the patch on Linux v5.0-rc1 commit id:
-bfeffd155283772bbe78c6a05dec7c0128ee500c
-with additional board related patches which can be found at
-dev/yashs/pwm_5.0-rc1 branch of:
-https://github.com/yashshah7/riscv-linux.git
-
-I have compiled the dt file (found at above repo) and replaced the
-compiled dtb file with 'fsbl/ux00_fsbl.dtb' and re-build fsbl.bin.
-Make sure your dt file changes are getting reflected on target under
-'/proc/device-tree/'
-
-Below is the .config file content:
-
-#
-# Automatically generated file; DO NOT EDIT.
-# Linux/riscv 5.0.0-rc1 Kernel Configuration
-#
-
-#
-# Compiler: riscv64-unknown-elf-gcc (GCC) 7.2.0
-#
-CONFIG_CC_IS_GCC=y
-CONFIG_GCC_VERSION=70200
-CONFIG_CLANG_VERSION=0
-CONFIG_CC_HAS_ASM_GOTO=y
-CONFIG_IRQ_WORK=y
-CONFIG_THREAD_INFO_IN_TASK=y
-
-#
-# General setup
-#
-CONFIG_INIT_ENV_ARG_LIMIT=32
-CONFIG_LOCALVERSION=""
-CONFIG_LOCALVERSION_AUTO=y
-CONFIG_BUILD_SALT=""
-CONFIG_DEFAULT_HOSTNAME="(none)"
-CONFIG_SWAP=y
-CONFIG_SYSVIPC=y
-CONFIG_SYSVIPC_SYSCTL=y
-CONFIG_POSIX_MQUEUE=y
-CONFIG_POSIX_MQUEUE_SYSCTL=y
-CONFIG_CROSS_MEMORY_ATTACH=y
-
-#
-# IRQ subsystem
-#
-CONFIG_GENERIC_IRQ_SHOW=y
-CONFIG_IRQ_DOMAIN=y
-CONFIG_GENERIC_MSI_IRQ=y
-CONFIG_SPARSE_IRQ=y
-CONFIG_GENERIC_IRQ_MULTI_HANDLER=y
-CONFIG_GENERIC_CLOCKEVENTS=y
-
-#
-# Timers subsystem
-#
-CONFIG_HZ_PERIODIC=y
-CONFIG_PREEMPT_NONE=y
-
-#
-# CPU/Task time and stats accounting
-#
-CONFIG_TICK_CPU_ACCOUNTING=y
-CONFIG_CPU_ISOLATION=y
-
-#
-# RCU Subsystem
-#
-CONFIG_TREE_RCU=y
-CONFIG_SRCU=y
-CONFIG_TREE_SRCU=y
-CONFIG_RCU_STALL_COMMON=y
-CONFIG_RCU_NEED_SEGCBLIST=y
-CONFIG_BUILD_BIN2C=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-CONFIG_LOG_BUF_SHIFT=17
-CONFIG_LOG_CPU_MAX_BUF_SHIFT=12
-CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=13
-CONFIG_GENERIC_SCHED_CLOCK=y
-CONFIG_ARCH_SUPPORTS_INT128=y
-CONFIG_CGROUPS=y
-CONFIG_CGROUP_SCHED=y
-CONFIG_FAIR_GROUP_SCHED=y
-CONFIG_CFS_BANDWIDTH=y
-CONFIG_CGROUP_BPF=y
-CONFIG_SOCK_CGROUP_DATA=y
-CONFIG_NAMESPACES=y
-CONFIG_UTS_NS=y
-CONFIG_IPC_NS=y
-CONFIG_USER_NS=y
-CONFIG_PID_NS=y
-CONFIG_NET_NS=y
-CONFIG_CHECKPOINT_RESTORE=y
-CONFIG_BLK_DEV_INITRD=y
-CONFIG_INITRAMFS_SOURCE=""
-CONFIG_RD_GZIP=y
-CONFIG_RD_BZIP2=y
-CONFIG_RD_LZMA=y
-CONFIG_RD_XZ=y
-CONFIG_RD_LZO=y
-CONFIG_RD_LZ4=y
-CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y
-CONFIG_SYSCTL=y
-CONFIG_ANON_INODES=y
-CONFIG_SYSCTL_EXCEPTION_TRACE=y
-CONFIG_BPF=y
-CONFIG_EXPERT=y
-CONFIG_MULTIUSER=y
-CONFIG_SYSFS_SYSCALL=y
-CONFIG_FHANDLE=y
-CONFIG_POSIX_TIMERS=y
-CONFIG_PRINTK=y
-CONFIG_BUG=y
-CONFIG_ELF_CORE=y
-CONFIG_BASE_FULL=y
-CONFIG_FUTEX=y
-CONFIG_FUTEX_PI=y
-CONFIG_HAVE_FUTEX_CMPXCHG=y
-CONFIG_EPOLL=y
-CONFIG_SIGNALFD=y
-CONFIG_TIMERFD=y
-CONFIG_EVENTFD=y
-CONFIG_SHMEM=y
-CONFIG_AIO=y
-CONFIG_ADVISE_SYSCALLS=y
-CONFIG_MEMBARRIER=y
-CONFIG_KALLSYMS=y
-CONFIG_KALLSYMS_BASE_RELATIVE=y
-CONFIG_BPF_SYSCALL=y
-CONFIG_HAVE_PERF_EVENTS=y
-
-#
-# Kernel Performance Events And Counters
-#
-CONFIG_VM_EVENT_COUNTERS=y
-CONFIG_SLUB_DEBUG=y
-CONFIG_COMPAT_BRK=y
-CONFIG_SLUB=y
-CONFIG_SLAB_MERGE_DEFAULT=y
-CONFIG_SLUB_CPU_PARTIAL=y
-CONFIG_64BIT=y
-CONFIG_RISCV=y
-CONFIG_MMU=y
-CONFIG_ZONE_DMA32=y
-CONFIG_PAGE_OFFSET=0xffffffe000000000
-CONFIG_STACKTRACE_SUPPORT=y
-CONFIG_TRACE_IRQFLAGS_SUPPORT=y
-CONFIG_RWSEM_GENERIC_SPINLOCK=y
-CONFIG_GENERIC_BUG=y
-CONFIG_GENERIC_BUG_RELATIVE_POINTERS=y
-CONFIG_GENERIC_CALIBRATE_DELAY=y
-CONFIG_GENERIC_CSUM=y
-CONFIG_GENERIC_HWEIGHT=y
-CONFIG_PGTABLE_LEVELS=3
-
-#
-# Platform type
-#
-CONFIG_ARCH_RV64I=y
-CONFIG_CMODEL_MEDANY=y
-CONFIG_MODULE_SECTIONS=y
-CONFIG_MAXPHYSMEM_128GB=y
-CONFIG_SMP=y
-CONFIG_NR_CPUS=8
-CONFIG_TUNE_GENERIC=y
-CONFIG_RISCV_ISA_C=y
-CONFIG_RISCV_ISA_A=y
-CONFIG_FPU=y
-
-#
-# Kernel features
-#
-CONFIG_HZ_250=y
-CONFIG_HZ=250
-
-#
-# Boot options
-#
-CONFIG_CMDLINE="console=ttySIF0,115200 ignore_loglevel debug"
-CONFIG_CMDLINE_FALLBACK=y
-
-#
-# General architecture-dependent options
-#
-CONFIG_HAVE_64BIT_ALIGNED_ACCESS=y
-CONFIG_HAVE_ARCH_TRACEHOOK=y
-CONFIG_HAVE_DMA_CONTIGUOUS=y
-CONFIG_GENERIC_SMP_IDLE_THREAD=y
-CONFIG_HAVE_CLK=y
-CONFIG_CC_HAS_STACKPROTECTOR_NONE=y
-CONFIG_HAVE_VIRT_CPU_ACCOUNTING_GEN=y
-CONFIG_HAVE_MOD_ARCH_SPECIFIC=y
-CONFIG_MODULES_USE_ELF_RELA=y
-CONFIG_CLONE_BACKWARDS=y
-
-#
-# GCOV-based kernel profiling
-#
-CONFIG_PLUGIN_HOSTCC="g++"
-CONFIG_RT_MUTEXES=y
-CONFIG_BASE_SMALL=0
-CONFIG_MODULES=y
-CONFIG_MODULE_UNLOAD=y
-CONFIG_BLOCK=y
-CONFIG_BLK_SCSI_REQUEST=y
-CONFIG_BLK_DEV_BSG=y
-
-#
-# Partition Types
-#
-CONFIG_MSDOS_PARTITION=y
-CONFIG_EFI_PARTITION=y
-CONFIG_BLK_MQ_PCI=y
-CONFIG_BLK_MQ_VIRTIO=y
-
-#
-# IO Schedulers
-#
-CONFIG_MQ_IOSCHED_DEADLINE=y
-CONFIG_MQ_IOSCHED_KYBER=y
-CONFIG_INLINE_SPIN_UNLOCK_IRQ=y
-CONFIG_INLINE_READ_UNLOCK=y
-CONFIG_INLINE_READ_UNLOCK_IRQ=y
-CONFIG_INLINE_WRITE_UNLOCK=y
-CONFIG_INLINE_WRITE_UNLOCK_IRQ=y
-
-#
-# Executable file formats
-#
-CONFIG_BINFMT_ELF=y
-CONFIG_ELFCORE=y
-CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS=y
-CONFIG_BINFMT_SCRIPT=y
-CONFIG_COREDUMP=y
-
-#
-# Memory Management options
-#
-CONFIG_FLATMEM=y
-CONFIG_FLAT_NODE_MEM_MAP=y
-CONFIG_HAVE_MEMBLOCK_NODE_MAP=y
-CONFIG_SPLIT_PTLOCK_CPUS=4
-CONFIG_COMPACTION=y
-CONFIG_MIGRATION=y
-CONFIG_PHYS_ADDR_T_64BIT=y
-CONFIG_DEFAULT_MMAP_MIN_ADDR=4096
-CONFIG_ARCH_HAS_PTE_SPECIAL=y
-CONFIG_NET=y
-CONFIG_SKB_EXTENSIONS=y
-
-#
-# Networking options
-#
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_XFRM=y
-CONFIG_INET=y
-CONFIG_IP_MULTICAST=y
-CONFIG_IP_ADVANCED_ROUTER=y
-CONFIG_IP_PNP=y
-CONFIG_IP_PNP_DHCP=y
-CONFIG_IP_PNP_BOOTP=y
-CONFIG_IP_PNP_RARP=y
-CONFIG_NET_IP_TUNNEL=y
-CONFIG_INET_TUNNEL=y
-CONFIG_INET_XFRM_MODE_TRANSPORT=y
-CONFIG_INET_XFRM_MODE_TUNNEL=y
-CONFIG_INET_XFRM_MODE_BEET=y
-CONFIG_INET_DIAG=y
-CONFIG_INET_TCP_DIAG=y
-CONFIG_TCP_CONG_CUBIC=y
-CONFIG_DEFAULT_TCP_CONG="cubic"
-CONFIG_IPV6=y
-CONFIG_INET6_XFRM_MODE_TRANSPORT=y
-CONFIG_INET6_XFRM_MODE_TUNNEL=y
-CONFIG_INET6_XFRM_MODE_BEET=y
-CONFIG_IPV6_SIT=y
-CONFIG_IPV6_NDISC_NODETYPE=y
-CONFIG_HAVE_NET_DSA=y
-CONFIG_DNS_RESOLVER=y
-CONFIG_NETLINK_DIAG=y
-CONFIG_RPS=y
-CONFIG_RFS_ACCEL=y
-CONFIG_XPS=y
-CONFIG_NET_RX_BUSY_POLL=y
-CONFIG_BQL=y
-CONFIG_NET_FLOW_LIMIT=y
-
-#
-# Network testing
-#
-CONFIG_WIRELESS=y
-
-#
-# CFG80211 needs to be enabled for MAC80211
-#
-CONFIG_MAC80211_STA_HASH_MAX_SIZE=0
-CONFIG_DST_CACHE=y
-CONFIG_GRO_CELLS=y
-CONFIG_MAY_USE_DEVLINK=y
-CONFIG_FAILOVER=y
-
-#
-# Device Drivers
-#
-CONFIG_HAVE_PCI=y
-CONFIG_PCI=y
-CONFIG_PCI_DOMAINS=y
-CONFIG_PCI_DOMAINS_GENERIC=y
-CONFIG_PCI_MSI=y
-CONFIG_PCI_QUIRKS=y
-
-#
-# Cadence PCIe controllers support
-#
-CONFIG_PCIE_XILINX=y
-
-#
-# Generic Driver Options
-#
-CONFIG_UEVENT_HELPER=y
-CONFIG_UEVENT_HELPER_PATH=""
-CONFIG_DEVTMPFS=y
-CONFIG_STANDALONE=y
-CONFIG_PREVENT_FIRMWARE_BUILD=y
-
-#
-# Firmware loader
-#
-CONFIG_FW_LOADER=y
-CONFIG_EXTRA_FIRMWARE=""
-CONFIG_ALLOW_DEV_COREDUMP=y
-CONFIG_GENERIC_CPU_DEVICES=y
-CONFIG_DMA_SHARED_BUFFER=y
-
-#
-# Bus devices
-#
-CONFIG_DTC=y
-CONFIG_OF=y
-CONFIG_OF_FLATTREE=y
-CONFIG_OF_EARLY_FLATTREE=y
-CONFIG_OF_KOBJ=y
-CONFIG_OF_ADDRESS=y
-CONFIG_OF_IRQ=y
-CONFIG_OF_NET=y
-CONFIG_OF_MDIO=y
-CONFIG_BLK_DEV=y
-CONFIG_CDROM=y
-CONFIG_BLK_DEV_LOOP=y
-CONFIG_BLK_DEV_LOOP_MIN_COUNT=8
-CONFIG_VIRTIO_BLK=y
-
-#
-# SCSI device support
-#
-CONFIG_SCSI_MOD=y
-CONFIG_SCSI=y
-CONFIG_SCSI_DMA=y
-CONFIG_SCSI_PROC_FS=y
-
-#
-# SCSI support type (disk, tape, CD-ROM)
-#
-CONFIG_BLK_DEV_SD=y
-CONFIG_BLK_DEV_SR=y
-
-#
-# SCSI Transports
-#
-CONFIG_SCSI_LOWLEVEL=y
-CONFIG_ATA=y
-CONFIG_ATA_VERBOSE_ERROR=y
-CONFIG_SATA_PMP=y
-
-#
-# Controllers with non-SFF native interface
-#
-CONFIG_SATA_AHCI=y
-CONFIG_SATA_MOBILE_LPM_POLICY=0
-CONFIG_SATA_AHCI_PLATFORM=y
-CONFIG_ATA_SFF=y
-
-#
-# SFF controllers with custom DMA interface
-#
-CONFIG_ATA_BMDMA=y
-
-#
-# IEEE 1394 (FireWire) support
-#
-CONFIG_NETDEVICES=y
-CONFIG_NET_CORE=y
-CONFIG_VIRTIO_NET=y
-
-#
-# Distributed Switch Architecture drivers
-#
-CONFIG_ETHERNET=y
-CONFIG_NET_VENDOR_3COM=y
-CONFIG_NET_VENDOR_ADAPTEC=y
-CONFIG_NET_VENDOR_AGERE=y
-CONFIG_NET_VENDOR_ALACRITECH=y
-CONFIG_NET_VENDOR_ALTEON=y
-CONFIG_NET_VENDOR_AMAZON=y
-CONFIG_NET_VENDOR_AMD=y
-CONFIG_NET_VENDOR_AQUANTIA=y
-CONFIG_NET_VENDOR_ARC=y
-CONFIG_NET_VENDOR_ATHEROS=y
-CONFIG_NET_VENDOR_AURORA=y
-CONFIG_NET_VENDOR_BROADCOM=y
-CONFIG_NET_VENDOR_BROCADE=y
-CONFIG_NET_VENDOR_CADENCE=y
-CONFIG_MACB=y
-CONFIG_MACB_USE_HWSTAMP=y
-CONFIG_NET_VENDOR_CAVIUM=y
-CONFIG_CAVIUM_PTP=y
-CONFIG_NET_VENDOR_CHELSIO=y
-CONFIG_NET_VENDOR_CISCO=y
-CONFIG_NET_VENDOR_CORTINA=y
-CONFIG_NET_VENDOR_DEC=y
-CONFIG_NET_VENDOR_DLINK=y
-CONFIG_NET_VENDOR_EMULEX=y
-CONFIG_NET_VENDOR_EZCHIP=y
-CONFIG_NET_VENDOR_HP=y
-CONFIG_NET_VENDOR_HUAWEI=y
-CONFIG_NET_VENDOR_I825XX=y
-CONFIG_NET_VENDOR_INTEL=y
-CONFIG_E1000E=y
-CONFIG_NET_VENDOR_MARVELL=y
-CONFIG_NET_VENDOR_MELLANOX=y
-CONFIG_NET_VENDOR_MICREL=y
-CONFIG_NET_VENDOR_MICROCHIP=y
-CONFIG_NET_VENDOR_MICROSEMI=y
-CONFIG_NET_VENDOR_MYRI=y
-CONFIG_NET_VENDOR_NATSEMI=y
-CONFIG_NET_VENDOR_NETERION=y
-CONFIG_NET_VENDOR_NETRONOME=y
-CONFIG_NET_VENDOR_NI=y
-CONFIG_NET_VENDOR_8390=y
-CONFIG_NET_VENDOR_NVIDIA=y
-CONFIG_NET_VENDOR_OKI=y
-CONFIG_NET_VENDOR_PACKET_ENGINES=y
-CONFIG_NET_VENDOR_QLOGIC=y
-CONFIG_NET_VENDOR_QUALCOMM=y
-CONFIG_NET_VENDOR_RDC=y
-CONFIG_NET_VENDOR_REALTEK=y
-CONFIG_R8169=y
-CONFIG_NET_VENDOR_RENESAS=y
-CONFIG_NET_VENDOR_ROCKER=y
-CONFIG_NET_VENDOR_SAMSUNG=y
-CONFIG_NET_VENDOR_SEEQ=y
-CONFIG_NET_VENDOR_SOLARFLARE=y
-CONFIG_NET_VENDOR_SILAN=y
-CONFIG_NET_VENDOR_SIS=y
-CONFIG_NET_VENDOR_SMSC=y
-CONFIG_NET_VENDOR_SOCIONEXT=y
-CONFIG_NET_VENDOR_STMICRO=y
-CONFIG_NET_VENDOR_SUN=y
-CONFIG_NET_VENDOR_SYNOPSYS=y
-CONFIG_NET_VENDOR_TEHUTI=y
-CONFIG_NET_VENDOR_TI=y
-CONFIG_NET_VENDOR_VIA=y
-CONFIG_NET_VENDOR_WIZNET=y
-CONFIG_MDIO_DEVICE=y
-CONFIG_MDIO_BUS=y
-CONFIG_PHYLIB=y
-CONFIG_SWPHY=y
-
-#
-# MII PHY device drivers
-#
-CONFIG_FIXED_PHY=y
-CONFIG_MICROSEMI_PHY=y
-CONFIG_REALTEK_PHY=y
-CONFIG_USB_NET_DRIVERS=y
-CONFIG_WLAN=y
-CONFIG_WLAN_VENDOR_ADMTEK=y
-CONFIG_WLAN_VENDOR_ATH=y
-CONFIG_WLAN_VENDOR_ATMEL=y
-CONFIG_WLAN_VENDOR_BROADCOM=y
-CONFIG_WLAN_VENDOR_CISCO=y
-CONFIG_WLAN_VENDOR_INTEL=y
-CONFIG_WLAN_VENDOR_INTERSIL=y
-CONFIG_WLAN_VENDOR_MARVELL=y
-CONFIG_WLAN_VENDOR_MEDIATEK=y
-CONFIG_WLAN_VENDOR_RALINK=y
-CONFIG_WLAN_VENDOR_REALTEK=y
-CONFIG_WLAN_VENDOR_RSI=y
-CONFIG_WLAN_VENDOR_ST=y
-CONFIG_WLAN_VENDOR_TI=y
-CONFIG_WLAN_VENDOR_ZYDAS=y
-CONFIG_WLAN_VENDOR_QUANTENNA=y
-
-#
-# Enable WiMAX (Networking options) to see the WiMAX drivers
-#
-CONFIG_NET_FAILOVER=y
-
-#
-# Input device support
-#
-CONFIG_INPUT=y
-CONFIG_INPUT_LEDS=y
-
-#
-# Userland interfaces
-#
-CONFIG_INPUT_MOUSEDEV=y
-CONFIG_INPUT_MOUSEDEV_SCREEN_X=1024
-CONFIG_INPUT_MOUSEDEV_SCREEN_Y=768
-
-#
-# Input Device Drivers
-#
-CONFIG_INPUT_KEYBOARD=y
-CONFIG_KEYBOARD_ATKBD=y
-CONFIG_INPUT_MOUSE=y
-CONFIG_MOUSE_PS2=y
-CONFIG_MOUSE_PS2_ALPS=y
-CONFIG_MOUSE_PS2_BYD=y
-CONFIG_MOUSE_PS2_LOGIPS2PP=y
-CONFIG_MOUSE_PS2_SYNAPTICS=y
-CONFIG_MOUSE_PS2_SYNAPTICS_SMBUS=y
-CONFIG_MOUSE_PS2_CYPRESS=y
-CONFIG_MOUSE_PS2_TRACKPOINT=y
-CONFIG_MOUSE_PS2_FOCALTECH=y
-CONFIG_MOUSE_PS2_SMBUS=y
-
-#
-# Hardware I/O ports
-#
-CONFIG_SERIO=y
-CONFIG_SERIO_SERPORT=y
-CONFIG_SERIO_LIBPS2=y
-
-#
-# Character devices
-#
-CONFIG_TTY=y
-CONFIG_VT=y
-CONFIG_CONSOLE_TRANSLATIONS=y
-CONFIG_VT_CONSOLE=y
-CONFIG_HW_CONSOLE=y
-CONFIG_VT_HW_CONSOLE_BINDING=y
-CONFIG_UNIX98_PTYS=y
-CONFIG_LEGACY_PTYS=y
-CONFIG_LEGACY_PTY_COUNT=256
-CONFIG_DEVMEM=y
-
-#
-# Serial drivers
-#
-CONFIG_SERIAL_EARLYCON=y
-CONFIG_SERIAL_8250=y
-CONFIG_SERIAL_8250_DEPRECATED_OPTIONS=y
-CONFIG_SERIAL_8250_CONSOLE=y
-CONFIG_SERIAL_8250_PCI=y
-CONFIG_SERIAL_8250_EXAR=y
-CONFIG_SERIAL_8250_NR_UARTS=4
-CONFIG_SERIAL_8250_RUNTIME_UARTS=4
-CONFIG_SERIAL_OF_PLATFORM=y
-
-#
-# Non-8250 serial port support
-#
-CONFIG_SERIAL_CORE=y
-CONFIG_SERIAL_CORE_CONSOLE=y
-CONFIG_SERIAL_SIFIVE=y
-CONFIG_SERIAL_SIFIVE_CONSOLE=y
-CONFIG_HVC_DRIVER=y
-CONFIG_HVC_RISCV_SBI=y
-CONFIG_HW_RANDOM=m
-CONFIG_DEVPORT=y
-
-#
-# I2C support
-#
-CONFIG_I2C=y
-CONFIG_I2C_BOARDINFO=y
-CONFIG_I2C_COMPAT=y
-CONFIG_I2C_HELPER_AUTO=y
-CONFIG_I2C_ALGOBIT=y
-
-#
-# Enable PHYLIB and NETWORK_PHY_TIMESTAMPING to see the additional clocks.
-#
-CONFIG_POWER_SUPPLY=y
-CONFIG_HWMON=y
-
-#
-# Native drivers
-#
-CONFIG_SSB_POSSIBLE=y
-CONFIG_BCMA_POSSIBLE=y
-
-#
-# Graphics support
-#
-CONFIG_VGA_ARB=y
-CONFIG_VGA_ARB_MAX_GPUS=16
-CONFIG_DRM=y
-CONFIG_DRM_KMS_HELPER=y
-CONFIG_DRM_KMS_FB_HELPER=y
-CONFIG_DRM_FBDEV_EMULATION=y
-CONFIG_DRM_FBDEV_OVERALLOC=100
-CONFIG_DRM_TTM=y
-
-#
-# I2C encoder or helper chips
-#
-CONFIG_DRM_RADEON=y
-
-#
-# ACP (Audio CoProcessor) Configuration
-#
-
-#
-# AMD Library routines
-#
-CONFIG_DRM_PANEL=y
-
-#
-# Display Panels
-#
-CONFIG_DRM_BRIDGE=y
-CONFIG_DRM_PANEL_BRIDGE=y
-
-#
-# Display Interface Bridges
-#
-CONFIG_DRM_PANEL_ORIENTATION_QUIRKS=y
-
-#
-# Frame buffer Devices
-#
-CONFIG_FB_CMDLINE=y
-CONFIG_FB_NOTIFY=y
-CONFIG_FB=y
-CONFIG_FB_CFB_FILLRECT=y
-CONFIG_FB_CFB_COPYAREA=y
-CONFIG_FB_CFB_IMAGEBLIT=y
-CONFIG_FB_SYS_FILLRECT=y
-CONFIG_FB_SYS_COPYAREA=y
-CONFIG_FB_SYS_IMAGEBLIT=y
-CONFIG_FB_SYS_FOPS=y
-CONFIG_FB_DEFERRED_IO=y
-
-#
-# Frame buffer hardware drivers
-#
-CONFIG_BACKLIGHT_LCD_SUPPORT=y
-CONFIG_LCD_CLASS_DEVICE=m
-CONFIG_BACKLIGHT_CLASS_DEVICE=y
-CONFIG_BACKLIGHT_GENERIC=y
-CONFIG_HDMI=y
-
-#
-# Console display driver support
-#
-CONFIG_VGA_CONSOLE=y
-CONFIG_DUMMY_CONSOLE=y
-CONFIG_DUMMY_CONSOLE_COLUMNS=80
-CONFIG_DUMMY_CONSOLE_ROWS=25
-CONFIG_FRAMEBUFFER_CONSOLE=y
-CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
-
-#
-# HID support
-#
-CONFIG_HID=y
-CONFIG_HID_GENERIC=y
-
-#
-# USB HID support
-#
-CONFIG_USB_HID=y
-
-#
-# I2C HID support
-#
-CONFIG_USB_OHCI_LITTLE_ENDIAN=y
-CONFIG_USB_SUPPORT=y
-CONFIG_USB_COMMON=y
-CONFIG_USB_ARCH_HAS_HCD=y
-CONFIG_USB=y
-CONFIG_USB_PCI=y
-
-#
-# Miscellaneous USB options
-#
-CONFIG_USB_DEFAULT_PERSIST=y
-
-#
-# USB Host Controller Drivers
-#
-CONFIG_USB_XHCI_HCD=y
-CONFIG_USB_XHCI_PCI=y
-CONFIG_USB_XHCI_PLATFORM=y
-CONFIG_USB_EHCI_HCD=y
-CONFIG_USB_EHCI_TT_NEWSCHED=y
-CONFIG_USB_EHCI_PCI=y
-CONFIG_USB_EHCI_HCD_PLATFORM=y
-CONFIG_USB_OHCI_HCD=y
-CONFIG_USB_OHCI_HCD_PCI=y
-CONFIG_USB_OHCI_HCD_PLATFORM=y
-
-#
-# also be needed; see USB_STORAGE Help for more info
-#
-CONFIG_USB_STORAGE=y
-CONFIG_USB_UAS=y
-
-#
-# USB Physical Layer drivers
-#
-CONFIG_NEW_LEDS=y
-CONFIG_LEDS_CLASS=y
-
-#
-# LED drivers
-#
-CONFIG_LEDS_PWM=y
-
-#
-# LED Triggers
-#
-CONFIG_LEDS_TRIGGERS=y
-CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-
-#
-# iptables trigger is under Netfilter config (LED target)
-#
-CONFIG_LEDS_TRIGGER_PANIC=y
-CONFIG_LEDS_TRIGGER_NETDEV=y
-
-#
-# DMABUF options
-#
-CONFIG_SYNC_FILE=y
-CONFIG_VIRTIO=y
-CONFIG_VIRTIO_MENU=y
-CONFIG_VIRTIO_MMIO=y
-
-#
-# Microsoft Hyper-V guest support
-#
-CONFIG_CLKDEV_LOOKUP=y
-CONFIG_HAVE_CLK_PREPARE=y
-CONFIG_COMMON_CLK=y
-
-#
-# Common Clock Framework
-#
-CONFIG_CLK_ANALOGBITS_WRPLL_CLN28HPC=y
-CONFIG_CLK_SIFIVE=y
-CONFIG_CLK_SIFIVE_FU540_PRCI=y
-
-#
-# Clock Source drivers
-#
-CONFIG_TIMER_OF=y
-CONFIG_TIMER_PROBE=y
-CONFIG_RISCV_TIMER=y
-CONFIG_IOMMU_SUPPORT=y
-
-#
-# Xilinx SoC drivers
-#
-CONFIG_PWM=y
-CONFIG_PWM_SYSFS=y
-CONFIG_PWM_SIFIVE=y
-
-#
-# IRQ chip support
-#
-CONFIG_IRQCHIP=y
-CONFIG_ARM_GIC_MAX_NR=1
-CONFIG_SIFIVE_PLIC=y
-
-#
-# PHY Subsystem
-#
-CONFIG_RAS=y
-
-#
-# File systems
-#
-CONFIG_FS_IOMAP=y
-CONFIG_EXT4_FS=y
-CONFIG_EXT4_USE_FOR_EXT2=y
-CONFIG_EXT4_FS_POSIX_ACL=y
-CONFIG_JBD2=y
-CONFIG_FS_MBCACHE=y
-CONFIG_FS_POSIX_ACL=y
-CONFIG_EXPORTFS=y
-CONFIG_FILE_LOCKING=y
-CONFIG_MANDATORY_FILE_LOCKING=y
-CONFIG_FSNOTIFY=y
-CONFIG_DNOTIFY=y
-CONFIG_INOTIFY_USER=y
-CONFIG_AUTOFS4_FS=y
-CONFIG_AUTOFS_FS=y
-
-#
-# DOS/FAT/NT Filesystems
-#
-CONFIG_FAT_FS=y
-CONFIG_MSDOS_FS=y
-CONFIG_VFAT_FS=y
-CONFIG_FAT_DEFAULT_CODEPAGE=437
-CONFIG_FAT_DEFAULT_IOCHARSET="iso8859-1"
-
-#
-# Pseudo filesystems
-#
-CONFIG_PROC_FS=y
-CONFIG_PROC_SYSCTL=y
-CONFIG_PROC_PAGE_MONITOR=y
-CONFIG_PROC_CHILDREN=y
-CONFIG_KERNFS=y
-CONFIG_SYSFS=y
-CONFIG_TMPFS=y
-CONFIG_TMPFS_POSIX_ACL=y
-CONFIG_TMPFS_XATTR=y
-CONFIG_MEMFD_CREATE=y
-CONFIG_MISC_FILESYSTEMS=y
-CONFIG_NETWORK_FILESYSTEMS=y
-CONFIG_NFS_FS=y
-CONFIG_NFS_V2=y
-CONFIG_NFS_V3=y
-CONFIG_NFS_V4=y
-CONFIG_NFS_V4_1=y
-CONFIG_NFS_V4_2=y
-CONFIG_PNFS_FILE_LAYOUT=y
-CONFIG_PNFS_FLEXFILE_LAYOUT=m
-CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN="kernel.org"
-CONFIG_ROOT_NFS=y
-CONFIG_NFS_USE_KERNEL_DNS=y
-CONFIG_GRACE_PERIOD=y
-CONFIG_LOCKD=y
-CONFIG_LOCKD_V4=y
-CONFIG_NFS_COMMON=y
-CONFIG_SUNRPC=y
-CONFIG_SUNRPC_GSS=y
-CONFIG_SUNRPC_BACKCHANNEL=y
-CONFIG_NLS=y
-CONFIG_NLS_DEFAULT="iso8859-1"
-
-#
-# Security options
-#
-CONFIG_KEYS=y
-CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR=y
-CONFIG_DEFAULT_SECURITY_DAC=y
-CONFIG_DEFAULT_SECURITY=""
-CONFIG_CRYPTO=y
-
-#
-# Crypto core or helper
-#
-CONFIG_CRYPTO_ALGAPI=y
-CONFIG_CRYPTO_ALGAPI2=y
-CONFIG_CRYPTO_AEAD=m
-CONFIG_CRYPTO_AEAD2=y
-CONFIG_CRYPTO_BLKCIPHER=m
-CONFIG_CRYPTO_BLKCIPHER2=y
-CONFIG_CRYPTO_HASH=y
-CONFIG_CRYPTO_HASH2=y
-CONFIG_CRYPTO_RNG=m
-CONFIG_CRYPTO_RNG2=y
-CONFIG_CRYPTO_RNG_DEFAULT=m
-CONFIG_CRYPTO_AKCIPHER2=y
-CONFIG_CRYPTO_KPP2=y
-CONFIG_CRYPTO_ACOMP2=y
-CONFIG_CRYPTO_MANAGER=m
-CONFIG_CRYPTO_MANAGER2=y
-CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
-CONFIG_CRYPTO_NULL=m
-CONFIG_CRYPTO_NULL2=y
-CONFIG_CRYPTO_WORKQUEUE=y
-CONFIG_CRYPTO_ENGINE=m
-
-#
-# Authenticated Encryption with Associated Data
-#
-CONFIG_CRYPTO_ECHAINIV=m
-
-#
-# Hash modes
-#
-CONFIG_CRYPTO_HMAC=m
-
-#
-# Digest
-#
-CONFIG_CRYPTO_CRC32C=y
-CONFIG_CRYPTO_SHA256=m
-
-#
-# Ciphers
-#
-CONFIG_CRYPTO_AES=y
-
-#
-# Random Number Generation
-#
-CONFIG_CRYPTO_DRBG_MENU=m
-CONFIG_CRYPTO_DRBG_HMAC=y
-CONFIG_CRYPTO_DRBG=m
-CONFIG_CRYPTO_JITTERENTROPY=m
-CONFIG_CRYPTO_USER_API=y
-CONFIG_CRYPTO_USER_API_HASH=y
-CONFIG_CRYPTO_HW=y
-CONFIG_CRYPTO_DEV_VIRTIO=m
-
-#
-# Library routines
-#
-CONFIG_BITREVERSE=y
-CONFIG_RATIONAL=y
-CONFIG_GENERIC_STRNCPY_FROM_USER=y
-CONFIG_GENERIC_STRNLEN_USER=y
-CONFIG_GENERIC_NET_UTILS=y
-CONFIG_GENERIC_PCI_IOMAP=y
-CONFIG_CRC16=y
-CONFIG_CRC32=y
-CONFIG_CRC32_SLICEBY8=y
-CONFIG_ZLIB_INFLATE=y
-CONFIG_LZO_DECOMPRESS=y
-CONFIG_LZ4_DECOMPRESS=y
-CONFIG_XZ_DEC=y
-CONFIG_XZ_DEC_X86=y
-CONFIG_XZ_DEC_POWERPC=y
-CONFIG_XZ_DEC_IA64=y
-CONFIG_XZ_DEC_ARM=y
-CONFIG_XZ_DEC_ARMTHUMB=y
-CONFIG_XZ_DEC_SPARC=y
-CONFIG_XZ_DEC_BCJ=y
-CONFIG_DECOMPRESS_GZIP=y
-CONFIG_DECOMPRESS_BZIP2=y
-CONFIG_DECOMPRESS_LZMA=y
-CONFIG_DECOMPRESS_XZ=y
-CONFIG_DECOMPRESS_LZO=y
-CONFIG_DECOMPRESS_LZ4=y
-CONFIG_INTERVAL_TREE=y
-CONFIG_ASSOCIATIVE_ARRAY=y
-CONFIG_HAS_IOMEM=y
-CONFIG_HAS_IOPORT_MAP=y
-CONFIG_HAS_DMA=y
-CONFIG_NEED_DMA_MAP_STATE=y
-CONFIG_ARCH_DMA_ADDR_T_64BIT=y
-CONFIG_HAVE_GENERIC_DMA_COHERENT=y
-CONFIG_SWIOTLB=y
-CONFIG_SGL_ALLOC=y
-CONFIG_CPU_RMAP=y
-CONFIG_DQL=y
-CONFIG_GLOB=y
-CONFIG_NLATTR=y
-CONFIG_LIBFDT=y
-CONFIG_OID_REGISTRY=y
-CONFIG_FONT_SUPPORT=y
-CONFIG_FONT_8x8=y
-CONFIG_FONT_8x16=y
-CONFIG_SG_POOL=y
-CONFIG_SBITMAP=y
-
-#
-# printk and dmesg options
-#
-CONFIG_PRINTK_TIME=y
-CONFIG_CONSOLE_LOGLEVEL_DEFAULT=7
-CONFIG_CONSOLE_LOGLEVEL_QUIET=4
-CONFIG_MESSAGE_LOGLEVEL_DEFAULT=4
-
-#
-# Compile-time checks and compiler options
-#
-CONFIG_ENABLE_MUST_CHECK=y
-CONFIG_FRAME_WARN=2048
-CONFIG_SECTION_MISMATCH_WARN_ONLY=y
-CONFIG_ARCH_WANT_FRAME_POINTERS=y
-CONFIG_FRAME_POINTER=y
-CONFIG_DEBUG_KERNEL=y
-
-#
-# Memory Debugging
-#
-CONFIG_CC_HAS_KASAN_GENERIC=y
-CONFIG_CC_HAS_SANCOV_TRACE_PC=y
-
-#
-# Debug Lockups and Hangs
-#
-CONFIG_PANIC_ON_OOPS_VALUE=0
-CONFIG_PANIC_TIMEOUT=0
-CONFIG_SCHED_DEBUG=y
-
-#
-# Lock Debugging (spinlocks, mutexes, etc...)
-#
-CONFIG_DEBUG_BUGVERBOSE=y
-
-#
-# RCU Debugging
-#
-CONFIG_RCU_CPU_STALL_TIMEOUT=21
-CONFIG_HAVE_FUNCTION_TRACER=y
-CONFIG_HAVE_FUNCTION_GRAPH_TRACER=y
-CONFIG_HAVE_DYNAMIC_FTRACE=y
-CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS=y
-CONFIG_HAVE_FTRACE_MCOUNT_RECORD=y
-CONFIG_TRACING_SUPPORT=y
-CONFIG_FTRACE=y
-CONFIG_BRANCH_PROFILE_NONE=y
-CONFIG_RUNTIME_TESTING_MENU=y
-
-- Yash
-> Andreas.
->
-> --
-> Andreas Schwab, SUSE Labs, schwab@suse.de
-> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-> "And now for something completely different."
+This is the start of the stable review cycle for the 4.14.109 release.
+There are 41 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
+
+Responses should be made by Thu Mar 28 04:26:32 UTC 2019.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.109-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.109-rc1
+
+Arnd Bergmann <arnd@arndb.de>
+    ath10k: avoid possible string overflow
+
+Baolin Wang <baolin.wang@linaro.org>
+    power: supply: charger-manager: Fix incorrect return value
+
+Enric Balletbo i Serra <enric.balletbo@collabora.com>
+    pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
+
+Jules Maselbas <jules.maselbas@arm.com>
+    sched/cpufreq/schedutil: Fix error path mutex unlock
+
+Baolin Wang <baolin.wang@linaro.org>
+    rtc: Fix overflow when converting time64_t to rtc_time
+
+Kishon Vijay Abraham I <kishon@ti.com>
+    PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()
+
+Niklas Cassel <niklas.cassel@axis.com>
+    PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be writable
+
+Niklas Cassel <niklas.cassel@axis.com>
+    PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+
+kehuanlin <chgokhl@gmail.com>
+    scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
+
+Andrey Konovalov <andreyknvl@google.com>
+    USB: core: only clean up what we allocated
+
+Peter Zijlstra <peterz@infradead.org>
+    lib/int_sqrt: optimize small argument
+
+Hui Wang <hui.wang@canonical.com>
+    ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda - Record the current power state before suspend/resume calls
+
+Vlastimil Babka <vbabka@suse.cz>
+    mm, mempolicy: fix uninit memory access
+
+Waiman Long <longman@redhat.com>
+    locking/lockdep: Add debug_locks check in __lock_downgrade()
+
+Jann Horn <jannh@google.com>
+    x86/unwind: Add hardcoded ORC entry for NULL
+
+Jann Horn <jannh@google.com>
+    x86/unwind: Handle NULL pointer calls better in frame unwinder
+
+Florian Westphal <fw@strlen.de>
+    netfilter: ebtables: remove BUGPRINT messages
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm: Reorder set_property_atomic to avoid returning with an active ww_ctx
+
+Kefeng Wang <wangkefeng.wang@huawei.com>
+    Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+
+Jeremy Cline <jcline@redhat.com>
+    Bluetooth: hci_ldisc: Initialize hci_dev before open()
+
+Myungho Jung <mhjungk@gmail.com>
+    Bluetooth: Fix decrementing reference count twice in releasing socket
+
+Myungho Jung <mhjungk@gmail.com>
+    Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
+
+Hans Verkuil <hverkuil@xs4all.nl>
+    media: v4l2-ctrls.c/uvc: zero v4l2_event
+
+zhangyi (F) <yi.zhang@huawei.com>
+    ext4: brelse all indirect buffer in ext4_ind_remove_space()
+
+Lukas Czerner <lczerner@redhat.com>
+    ext4: fix data corruption caused by unaligned direct AIO
+
+Jiufei Xue <jiufei.xue@linux.alibaba.com>
+    ext4: fix NULL pointer dereference while journal is aborted
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    ALSA: x86: Fix runtime PM for hdmi-lpe-audio
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    objtool: Move objtool_file struct off the stack
+
+Adrian Hunter <adrian.hunter@intel.com>
+    perf probe: Fix getting the kernel map
+
+Chen Jie <chenjie6@huawei.com>
+    futex: Ensure that futex address is aligned in handle_futex_death()
+
+Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+    scsi: ibmvscsi: Fix empty event pool access during host removal
+
+Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+    scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
+
+Archer Yan <ayan@wavecomp.com>
+    MIPS: Fix kernel crash for R6 in jump label branch function
+
+Yasha Cherikovsky <yasha.che3@gmail.com>
+    MIPS: Ensure ELF appended dtb is relocated
+
+Yifeng Li <tomli@tomli.me>
+    mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
+
+Jan Kara <jack@suse.cz>
+    udf: Fix crash on IO error during truncate
+
+Ilya Dryomov <idryomov@gmail.com>
+    libceph: wait for latest osdmap in ceph_monc_blacklist_add()
+
+Stanislaw Gruszka <sgruszka@redhat.com>
+    iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
+
+Thomas Zimmermann <tzimmermann@suse.de>
+    drm/vmwgfx: Don't double-free the mode stored in par->set_mode
+
+Arnd Bergmann <arnd@arndb.de>
+    mmc: pxamci: fix enum type confusion
+
+
+-------------
+
+Diffstat:
+
+ Makefile                               |   4 +-
+ arch/mips/include/asm/jump_label.h     |   8 +-
+ arch/mips/kernel/vmlinux.lds.S         |  12 +--
+ arch/mips/loongson64/lemote-2f/irq.c   |   2 +-
+ arch/x86/include/asm/unwind.h          |   6 ++
+ arch/x86/kernel/unwind_frame.c         |  25 ++++++-
+ arch/x86/kernel/unwind_orc.c           |  17 +++++
+ drivers/bluetooth/hci_h4.c             |   4 +
+ drivers/bluetooth/hci_ldisc.c          |  24 +++---
+ drivers/gpu/drm/drm_mode_object.c      |   5 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_fb.c     |  12 +--
+ drivers/iommu/amd_iommu.c              |   7 +-
+ drivers/media/usb/uvc/uvc_ctrl.c       |   2 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c   |   2 +-
+ drivers/mmc/host/pxamci.c              |   2 +-
+ drivers/net/wireless/ath/ath10k/wmi.c  |   2 +-
+ drivers/pci/dwc/pcie-designware-ep.c   |  12 ++-
+ drivers/pci/dwc/pcie-designware.h      |   1 +
+ drivers/pci/endpoint/pci-epc-core.c    |  10 ---
+ drivers/pci/endpoint/pci-epf-core.c    |   4 +-
+ drivers/power/supply/charger-manager.c |   3 +-
+ drivers/rtc/rtc-lib.c                  |   6 +-
+ drivers/scsi/ibmvscsi/ibmvscsi.c       |  23 +++++-
+ drivers/scsi/ufs/ufshcd.c              |  14 ++--
+ drivers/usb/core/config.c              |   9 ++-
+ drivers/video/backlight/pwm_bl.c       |   9 ++-
+ fs/ext4/ext4_jbd2.h                    |   2 +-
+ fs/ext4/file.c                         |   2 +-
+ fs/ext4/indirect.c                     |  12 ++-
+ fs/udf/truncate.c                      |   3 +
+ include/linux/ceph/libceph.h           |   2 +
+ kernel/futex.c                         |   4 +
+ kernel/locking/lockdep.c               |   3 +
+ kernel/sched/cpufreq_schedutil.c       |   3 +-
+ lib/int_sqrt.c                         |   3 +
+ mm/mempolicy.c                         |   2 +-
+ net/bluetooth/hci_sock.c               |   3 +-
+ net/bridge/netfilter/ebtables.c        | 131 ++++++++++-----------------------
+ net/ceph/ceph_common.c                 |  18 ++++-
+ net/ceph/mon_client.c                  |   9 +++
+ sound/pci/hda/hda_codec.c              |  57 +++++++++++++-
+ sound/x86/intel_hdmi_audio.c           |   1 -
+ tools/objtool/check.c                  |   3 +-
+ tools/perf/util/probe-event.c          |   6 +-
+ 44 files changed, 303 insertions(+), 186 deletions(-)
+
+
