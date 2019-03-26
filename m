@@ -2,162 +2,85 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3381EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CF3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F4020857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC45120828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DChi02bh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TIXozBzw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KJu7T09D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfCZHzh (ORCPT
+        id S1731133AbfCZH4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:55:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59474 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfCZHzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:55:37 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1884560DB4; Tue, 26 Mar 2019 07:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553586936;
-        bh=g4S0i5dvyZ22w0F8xBZyNOt510QlGaxzGA/D3ELUe90=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=DChi02bhuC0sTwZwp8g3dLJOIe3yvW50jKblCnd8yB71BJ51hoIZoCialeR8V5ZKZ
-         jZf7iFck6fxL/XcrDkcNyzpH14ygWPAQI/npzigjDTB576SzdCTy65zrP3ZtnHzroz
-         gYi3Vrw8FC4iuRkHcdPBSf1Zpf85MBqf8X2liVoA=
-Received: from x230.qca.qualcomm.com (176-93-125-176.bb.dnainternet.fi [176.93.125.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 26 Mar 2019 03:56:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48632 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730377AbfCZH4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 03:56:50 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F5F460A4E;
-        Tue, 26 Mar 2019 07:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553586935;
-        bh=g4S0i5dvyZ22w0F8xBZyNOt510QlGaxzGA/D3ELUe90=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=TIXozBzwfBJCxtnOpEqk6WGKdaipm0WXrns0Trr/HHbbOpE5uze+NwgS8QDB/ZX4O
-         zT9w8YLA+npZ0NlFtMBdUnZbj/ozvDXtUudLtzCQsXfwHVh8WDJMWNvQPB+97cVv8D
-         vXKJiXGAJ2CVMVeiBLhCX27wcZUHfhLPlqwEcaeA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F5F460A4E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v5 03/18] wlcore: simplify/fix/optimize reg_ch_conf_pending operations
-References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
-        <1552431636-31511-4-git-send-email-fenghua.yu@intel.com>
-        <87a7hxzjda.fsf@purkki.adurom.net>
-        <20190314231614.GA41447@romley-ivt3.sc.intel.com>
-        <02f06de8-ebb2-24ff-27e1-f697cadc02c4@redhat.com>
-Date:   Tue, 26 Mar 2019 09:55:29 +0200
-In-Reply-To: <02f06de8-ebb2-24ff-27e1-f697cadc02c4@redhat.com> (Paolo
-        Bonzini's message of "Fri, 15 Mar 2019 18:17:06 +0100")
-Message-ID: <877ecmjci6.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0DA631EC09B1;
+        Tue, 26 Mar 2019 08:56:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553587009;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=mJ8dR8Rj2Lm/4xUAuT7rGzb0r6dIei9lVzT84mXYsAE=;
+        b=KJu7T09D3kjX1GxIrfH0Et1IRttA3IZK71lyBmZMWp5borlhPp93oBvlo1H47ZZInXseOg
+        vJPK1u2IJEP2wp4uecOxSo40EID4F/lmRNUweZ8fMQqB8FKNycmdm+Xi14tm6UAMdeX705
+        HuL0kv8AeR3t+85NNY/06ANkG/VKZag=
+Date:   Tue, 26 Mar 2019 08:56:51 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "rafal@milecki.pl" <rafal@milecki.pl>,
+        "clemej@gmail.com" <clemej@gmail.com>
+Subject: Re: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Message-ID: <20190326075651.GB1867@zn.tnic>
+References: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Mon, Mar 25, 2019 at 04:34:22PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> Some systems may report spurious MCA errors. In general, spurious MCA
+> errors may be disabled by clearing a particular bit in MCA_CTL. However,
+> clearing a bit in MCA_CTL may not be recommended for some errors, so the
+> only option is to ignore them.
+> 
+> An MCA error is printed and handled after it has been added to the MCE
+> event pool. So an MCA error can be ignored by not adding it to the pool.
+> 
+> Define a default function that does not filter any errors.
+> 
+> Check if an MCA error should be filtered out when adding it to the MCE
+> event pool.
+> 
+> Cc: <stable@vger.kernel.org> # 5.0.x
 
-> On 15/03/19 00:16, Fenghua Yu wrote:
->> Hi, Valo,
->> 
->> On Thu, Mar 14, 2019 at 03:16:33PM +0200, Kalle Valo wrote:
->>> Fenghua Yu <fenghua.yu@intel.com> writes:
->>>
->>>> From: Paolo Bonzini <pbonzini@redhat.com>
->>>>
->>>> Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
->>>> wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
->>>> to a bitmap is incorrect for big-endian architectures.
->>>>
->>>> When looking at it I observed that:
->>>>
->>>> - operations on reg_ch_conf_pending is always under the wl_lock mutex,
->>>> so set_bit is overkill
->>>>
->>>> - the only case where reg_ch_conf_pending is accessed a u32 at a time is
->>>> unnecessary too.
->>>>
->>>> This patch cleans up everything in this area, and changes tmp_ch_bitmap
->>>> to have the proper alignment.
->>>>
->>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->>>> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
->>>
->>> [...]
->>>
->>>>  int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>>>  {
->>>>  	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
->>>>  	int ret = 0, i, b, ch_bit_idx;
->>>> -	u32 tmp_ch_bitmap[2];
->>>> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
->>>>  	struct wiphy *wiphy = wl->hw->wiphy;
->>>>  	struct ieee80211_supported_band *band;
->>>>  	bool timeout = false;
->>>
->>> [...]
->>>
->>>> @@ -1754,8 +1751,8 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>>>  		goto out;
->>>>  	}
->>>>  
->>>> -	cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
->>>> -	cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
->>>> +	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
->>>> +	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
->>>
->>> Will sparse still be happy? AFAICS you are now assigning u32 to __le32:
->>>
->>> struct wl12xx_cmd_regdomain_dfs_config {
->>>        struct wl1271_cmd_header header;
->>>
->>>        __le32 ch_bit_map1;
->>>        __le32 ch_bit_map2;
->> 
->> Discussion between Peter and Paolo (https://lkml.org/lkml/2019/3/4/521)
->> may answer your question.
->
-> No, Kalle is right.  You do need to change
->
-> -	u32 tmp_ch_bitmap[2];
-> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
->
-> into
->
-> -	u32 tmp_ch_bitmap[2];
-> +	__le32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
->
-> The assignment from wl->reg_ch_conf_pending to tmp_ch_bitmap is fine
-> because it goes through memcpy.
-
-Thanks for confirming, I'll then drop patch 3 and wait for a new
-version. IMHO it would be easier to submit this patch separately to
-linux-wireless, no need to have within this bigger patchset.
+The old version of the patches had 4.14.x here as a kernel version. Why
+change?
 
 -- 
-Kalle Valo
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
