@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AA9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE8EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68ADA2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCB320863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="MHeUsr3b"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="hylVb4Gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbfCZKwm (ORCPT
+        id S1731267AbfCZKwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:52:42 -0400
-Received: from mailout.micron.com ([137.201.242.129]:57086 "EHLO
+        Tue, 26 Mar 2019 06:52:37 -0400
+Received: from mailout.micron.com ([137.201.242.129]:55846 "EHLO
         mailout.micron.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfCZKwl (ORCPT
+        with ESMTP id S1730804AbfCZKwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:52:41 -0400
-Received: from mail.micron.com (bowex36b.micron.com [137.201.84.100])
-        by mailout.micron.com (8.14.4/8.14.6) with ESMTP id x2QAq0FC021932;
-        Tue, 26 Mar 2019 04:52:00 -0600
-Received: from bowex17c.micron.com (137.201.21.211) by bowex36b.micron.com
- (137.201.84.100) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
- 2019 04:51:59 -0600
+        Tue, 26 Mar 2019 06:52:37 -0400
+Received: from mail.micron.com (bowex36e.micron.com [137.201.85.221])
+        by mailout.micron.com (8.14.4/8.14.6) with ESMTP id x2QAq5Nw001032;
+        Tue, 26 Mar 2019 04:52:05 -0600
+Received: from BOWEX17H.micron.com (137.201.20.32) by bowex36e.micron.com
+ (137.201.85.221) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 04:52:05 -0600
 Received: from NAM03-CO1-obe.outbound.protection.outlook.com (137.201.20.7) by
- bowex17c.micron.com (137.201.21.211) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 26 Mar 2019 04:51:59 -0600
+ BOWEX17H.micron.com (137.201.20.32) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 26 Mar 2019 04:52:05 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bWfwYNt8y0qwDEwgQzGpXIxvc9AnaxwFm0waCR2RPPk=;
- b=MHeUsr3b2zuJ+nsJmxrGfz94Dhhw1qEcM8huScjBK+Yp0SBTrCxPSBPbr4JwyVU/Ha4ms5hu+I2nN+HVs68bedBKEEyUMrYnG1xYR09K9Xar03/P5ZkdNkdUzN4fS10LdHZaZ9nGFWpGWOxNufwHN+vRl5GdihkWcwiikT9wofU=
+ bh=WN3tLBKUoMu+JZ2j4Ko/ZNOfQvIR738ht3zxVwtgbl4=;
+ b=hylVb4GyFy2/+OZLdHHykTlJUeoICr2Emuk1bjkaYsOqLUfsbSovHdW/zn+/O0pDVPTWvn9clwmdwLTXa0b3V1iwPhfBRhk2Ezo/B8kqhPLv4DP7QcyagWkUc7Nh+03l8MxUbQfow+DMi3RMSVBrdl1fbBw2qqmrfeaqKhCRF4s=
 Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
- MN2PR08MB5759.namprd08.prod.outlook.com (20.179.86.15) with Microsoft SMTP
+ MN2PR08MB5856.namprd08.prod.outlook.com (20.179.87.87) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.19; Tue, 26 Mar 2019 10:51:56 +0000
+ 15.20.1750.15; Tue, 26 Mar 2019 10:52:01 +0000
 Received: from MN2PR08MB5951.namprd08.prod.outlook.com
  ([fe80::c561:284f:9768:a4af]) by MN2PR08MB5951.namprd08.prod.outlook.com
  ([fe80::c561:284f:9768:a4af%7]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
- 10:51:56 +0000
+ 10:52:01 +0000
 From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
 To:     Boris Brezillon <bbrezillon@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -54,19 +54,13 @@ CC:     Richard Weinberger <richard@nod.at>,
         David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
         "Marek Vasut" <marek.vasut@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Christophe Kerello <christophe.kerello@st.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        "Bean Huo (beanhuo)" <beanhuo@micron.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>
-Subject: [PATCH 2/4] mtd: nand: Move ONFI code into nand/ directory
-Thread-Topic: [PATCH 2/4] mtd: nand: Move ONFI code into nand/ directory
-Thread-Index: AdTjwLylLmaJhZFZS7aXTwK2bTqhxw==
-Date:   Tue, 26 Mar 2019 10:51:56 +0000
-Message-ID: <MN2PR08MB59511F374C25C091FF6EB316B85F0@MN2PR08MB5951.namprd08.prod.outlook.com>
+        Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: [PATCH 3/4] mtd: spinand: Enabled support to detect parameter page
+Thread-Topic: [PATCH 3/4] mtd: spinand: Enabled support to detect parameter
+ page
+Thread-Index: AdTjwSAFDW7WB7gARZuMWrsA2XWYYg==
+Date:   Tue, 26 Mar 2019 10:52:00 +0000
+Message-ID: <MN2PR08MB5951E8D99AA1FBD972131388B85F0@MN2PR08MB5951.namprd08.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -75,80 +69,219 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=sshivamurthy@micron.com; 
 x-originating-ip: [165.225.81.69]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 866db253-1fff-45c8-611d-08d6b1d910b1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:MN2PR08MB5759;
-x-ms-traffictypediagnostic: MN2PR08MB5759:|MN2PR08MB5759:
-x-microsoft-antispam-prvs: <MN2PR08MB57593E5B4CC77166FC15ED85B85F0@MN2PR08MB5759.namprd08.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 6e28bbcd-3bb5-4fc5-ca1b-08d6b1d91364
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MN2PR08MB5856;
+x-ms-traffictypediagnostic: MN2PR08MB5856:|MN2PR08MB5856:
+x-microsoft-antispam-prvs: <MN2PR08MB58569F569A83CEFCBBBDE0D9B85F0@MN2PR08MB5856.namprd08.prod.outlook.com>
 x-forefront-prvs: 09888BC01D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(366004)(376002)(136003)(199004)(189003)(26005)(9686003)(97736004)(99286004)(71190400001)(55016002)(81156014)(71200400001)(55236004)(6506007)(2906002)(81166006)(7416002)(102836004)(8676002)(7736002)(476003)(486006)(74316002)(14454004)(305945005)(2201001)(7696005)(186003)(86362001)(105586002)(316002)(478600001)(106356001)(33656002)(25786009)(66066001)(5660300002)(4326008)(6116002)(6436002)(3846002)(52536014)(8936002)(256004)(110136005)(68736007)(2501003)(54906003)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5759;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(189003)(486006)(476003)(186003)(52536014)(5660300002)(2501003)(26005)(53936002)(25786009)(102836004)(55236004)(66066001)(6436002)(97736004)(9686003)(478600001)(55016002)(2201001)(33656002)(86362001)(14454004)(2906002)(6116002)(3846002)(14444005)(305945005)(99286004)(71190400001)(71200400001)(8676002)(105586002)(81156014)(81166006)(106356001)(7736002)(68736007)(316002)(256004)(7696005)(74316002)(110136005)(54906003)(6506007)(8936002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5856;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: micron.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hxDTIMXc6ROQZxkzoXK4utLZTqa4cyXCMB94101rLAbiu82svyJ72yeg/m1Q055PKnlrz/c0c6VG3ARUKO1DbEY8+qRD3G97UGJ915tOi9YUbFC/3xewAjZAWfpTVUV0m9oD2xqnQjzBQdaIymPcNevBokgMnzu4q+PeydsX68j3+SB4S0+FNOQnC/I1VmfQA5m30OrLXhk/uX5Ytx8A4PzMbB1ngRppbdB2r1dcvQvgb8ruV29USAMtVgf425qKObQPP7IwN4cmhmUgu3Oe8z/iBrTCZ4sztiz6Y3reTvtQoIJe8bhRx8AqB2ZzgNwiz5iG+7lFhF/ZJRIHkpxBSBRE6FEH06dnW9svBRSmoWyxD+AXLmm7h1slMoRd4q6+nC68vGxvQfYgLqSfrhgASZTpygd0x1jJRHdiBv9gUm8=
+x-microsoft-antispam-message-info: 1Qv8po5J3CmliLiYRAOnSevKeTfHH7hyMLsnf9Aizz0RBUuxy3wJ8mes59t+Vz6gkwTABhBMYyQtnGsDgANaQ/ph6T5w/7WZ2lArBbzI7CPDnRe/zit0Jep9UZJUTPQoZyp+m6fkvgWtKi+uypP4kUX/0VpjgXemD0f+jgIkGiknyVfIWHFBwrxpQhRS+qWFfl8HgSoorfYIV+v6D6F0YKjVTXhQF7cgKwfyJ+jNq+yknHCjoFSdNwz1XSwWYNO8pUV9bEGX6llgmvZJkdwk7Jia+wj9ULPLlai+UpuzSshOotmFzoVuRoeXQjZSjmDb6yPD6adbLNp/WjW6CvA1emMBQlijXOVQSDYovdeme2dMF8fFiVTiDzLkEV7YcqHWBm9oqm0jtudt/Kty0EGFJdVnhYQ9/dXrQZecAbeCU3o=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 866db253-1fff-45c8-611d-08d6b1d910b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 10:51:56.3902
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e28bbcd-3bb5-4fc5-ca1b-08d6b1d91364
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 10:52:00.8844
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5759
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5856
 X-OriginatorOrg: micron.com
 X-TM-AS-Product-Ver: SMEX-12.0.0.1782-8.200.1013-24512.005
-X-TM-AS-Result: No--3.041000-0.000000-31
-X-TM-AS-MatchedID: 105640-701604-700016-121588-701669-188019-121336-702931-1
-        48004-148007-148020-148050-42000-42003-63
+X-TM-AS-Result: No--5.858500-0.000000-31
+X-TM-AS-MatchedID: 700038-704156-702762-708797-701618-700251-700648-700016-7
+        00270-188019-706290-708712-700398-300010-701594-780052-851458-702911-701604
+        -702426-847298-701384-707663-702898-709908-700811-105250-706561-702037-7000
+        23-700059-148004-148007-148020-148050-42000-42003-63
 X-TM-AS-User-Approved-Sender: Yes
 X-TM-AS-User-Blocked-Sender: No
 X-MT-CheckInternalSenderRule: True
-X-Scanned-By: MIMEDefang 2.78 on 137.201.130.65
+X-Scanned-By: MIMEDefang 2.78 on 137.201.82.98
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move generic ONFI code to nand/ directory, which can be used by SPI
-NAND layer.
+Some of the SPI NAND devices has parameter page which is similar to ONFI
+table.
+
+But, it may not be self sufficient to propagate all the required
+parameters. Fixup function has been added in struct manufacturer to
+accommodate this.
 
 Signed-off-by: Shivamurthy Shastri <sshivamurthy@micron.com>
 ---
- drivers/mtd/nand/Makefile                    | 2 +-
- drivers/mtd/nand/{raw/nand_onfi.c =3D> onfi.c} | 0
- drivers/mtd/nand/raw/Makefile                | 1 -
- 3 files changed, 1 insertion(+), 2 deletions(-)
- rename drivers/mtd/nand/{raw/nand_onfi.c =3D> onfi.c} (100%)
+ drivers/mtd/nand/spi/core.c | 113 +++++++++++++++++++++++++++++++++++-
+ include/linux/mtd/spinand.h |   5 ++
+ 2 files changed, 117 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
-index 9772e781534d..1b43a911aa4a 100644
---- a/drivers/mtd/nand/Makefile
-+++ b/drivers/mtd/nand/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+index 985ad52cdaa7..40882a1d2bc1 100644
+--- a/drivers/mtd/nand/spi/core.c
++++ b/drivers/mtd/nand/spi/core.c
+@@ -574,6 +574,108 @@ static int spinand_lock_block(struct spinand_device *=
+spinand, u8 lock)
+ 	return spinand_write_reg_op(spinand, REG_BLOCK_LOCK, lock);
+ }
 =20
--nandcore-objs :=3D core.o bbt.o
-+nandcore-objs :=3D core.o bbt.o onfi.o
- obj-$(CONFIG_MTD_NAND_CORE) +=3D nandcore.o
++/**
++ * spinand_read_param_page_op - Read parameter page operation
++ * @spinand: the spinand device
++ * @page: page number where parameter page tables can be found
++ * @parameters: buffer used to store the parameter page
++ * @len: length of the buffer
++ *
++ * Read parameter page
++ *
++ * Returns 0 on success, a negative error code otherwise.
++ */
++static int spinand_parameter_page_read(struct nand_device *base,
++				       u8 page, void *buf, unsigned int len)
++{
++	struct spinand_device *spinand =3D nand_to_spinand(base);
++	struct spi_mem_op pread_op =3D SPINAND_PAGE_READ_OP(page);
++	struct spi_mem_op pread_cache_op =3D
++				SPINAND_PAGE_READ_FROM_CACHE_OP(false,
++								0,
++								1,
++								buf,
++								len);
++	u8 feature;
++	u8 status;
++	int ret;
++
++	if (len && !buf)
++		return -EINVAL;
++
++	ret =3D spinand_read_reg_op(spinand, REG_CFG,
++				  &feature);
++	if (ret)
++		return ret;
++
++	/* CFG_OTP_ENABLE is used to enable parameter page access */
++	feature |=3D CFG_OTP_ENABLE;
++
++	spinand_write_reg_op(spinand, REG_CFG, feature);
++
++	ret =3D spi_mem_exec_op(spinand->spimem, &pread_op);
++	if (ret)
++		return ret;
++
++	ret =3D spinand_wait(spinand, &status);
++	if (ret < 0)
++		return ret;
++
++	ret =3D spi_mem_exec_op(spinand->spimem, &pread_cache_op);
++	if (ret)
++		return ret;
++
++	ret =3D spinand_read_reg_op(spinand, REG_CFG,
++				  &feature);
++	if (ret)
++		return ret;
++
++	feature &=3D ~CFG_OTP_ENABLE;
++
++	spinand_write_reg_op(spinand, REG_CFG, feature);
++
++	return 1;
++}
++
++static int check_version(struct nand_device *base,
++			 struct nand_onfi_params *p, int *onfi_version)
++{
++	/**
++	 * SPI NAND do not support ONFI standard
++	 * But, parameter page looks same as ONFI table
++	 */
++	if (!le16_to_cpu(p->revision))
++		*onfi_version =3D 0;
++
++	return 1;
++}
++
++static int spinand_intf_data(struct nand_device *base,
++			     struct nand_onfi_params *p)
++{
++	struct spinand_device *spinand =3D nand_to_spinand(base);
++
++	/**
++	 *	Manufacturers may interpret the parameter page differently
++	 */
++	if (spinand->manufacturer->ops->fixup_param_page)
++		spinand->manufacturer->ops->fixup_param_page(spinand, p);
++
++	return 1;
++}
++
++static int spinand_param_page_detect(struct spinand_device *spinand)
++{
++	struct nand_device *base =3D spinand_to_nand(spinand);
++
++	base->helper.page =3D 0x01;
++	base->helper.check_revision =3D check_version;
++	base->helper.parameter_page_read =3D spinand_parameter_page_read;
++	base->helper.init_intf_data =3D spinand_intf_data;
++
++	return nand_onfi_detect(base);
++}
++
+ static int spinand_read_page(struct spinand_device *spinand,
+ 			     const struct nand_page_io_req *req)
+ {
+@@ -896,7 +998,7 @@ static void spinand_manufacturer_cleanup(struct spinand=
+_device *spinand)
+ 		return spinand->manufacturer->ops->cleanup(spinand);
+ }
 =20
- obj-y	+=3D onenand/
-diff --git a/drivers/mtd/nand/raw/nand_onfi.c b/drivers/mtd/nand/onfi.c
-similarity index 100%
-rename from drivers/mtd/nand/raw/nand_onfi.c
-rename to drivers/mtd/nand/onfi.c
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 898e90508a3a..3467bbb4a51a 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -59,7 +59,6 @@ obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+=3D stm32_fmc2_nand.o
- obj-$(CONFIG_MTD_NAND_MESON)		+=3D meson_nand.o
+-static const struct spi_mem_op *
++const struct spi_mem_op *
+ spinand_select_op_variant(struct spinand_device *spinand,
+ 			  const struct spinand_op_variants *variants)
+ {
+@@ -1012,6 +1114,15 @@ static int spinand_detect(struct spinand_device *spi=
+nand)
+ 		return ret;
+ 	}
 =20
- nand-objs :=3D nand_base.o nand_legacy.o nand_bbt.o nand_timings.o nand_id=
-s.o
--nand-objs +=3D nand_onfi.o
- nand-objs +=3D nand_jedec.o
- nand-objs +=3D nand_amd.o
- nand-objs +=3D nand_esmt.o
++	if (!spinand->base.memorg.pagesize) {
++		ret =3D spinand_param_page_detect(spinand);
++		if (ret < 0) {
++			dev_err(dev, "no parameter page for %*phN\n",
++				SPINAND_MAX_ID_LEN, spinand->id.data);
++			return ret;
++		}
++	}
++
+ 	if (nand->memorg.ntargets > 1 && !spinand->select_target) {
+ 		dev_err(dev,
+ 			"SPI NANDs with more than one die must implement ->select_target()\n");
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index d093d237fba8..57b3b5b075f2 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -179,6 +179,8 @@ struct spinand_manufacturer_ops {
+ 	int (*detect)(struct spinand_device *spinand);
+ 	int (*init)(struct spinand_device *spinand);
+ 	void (*cleanup)(struct spinand_device *spinand);
++	void (*fixup_param_page)(struct spinand_device *spinand,
++				 struct nand_onfi_params *p);
+ };
+=20
+ /**
+@@ -429,4 +431,7 @@ int spinand_match_and_init(struct spinand_device *dev,
+ int spinand_upd_cfg(struct spinand_device *spinand, u8 mask, u8 val);
+ int spinand_select_target(struct spinand_device *spinand, unsigned int tar=
+get);
+=20
++const struct spi_mem_op *spinand_select_op_variant(struct spinand_device *=
+spinand,
++	   const struct spinand_op_variants *variants);
++
+ #endif /* __LINUX_MTD_SPINAND_H */
 --=20
 2.17.1
 
