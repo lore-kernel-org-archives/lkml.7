@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41194C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE8220896
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B4B2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Hs3GPYML"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="iE4ICotU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732510AbfCZSXh (ORCPT
+        id S1732537AbfCZSXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:23:37 -0400
-Received: from mout.gmx.net ([212.227.17.20]:49709 "EHLO mout.gmx.net"
+        Tue, 26 Mar 2019 14:23:42 -0400
+Received: from mout.gmx.net ([212.227.15.18]:47061 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbfCZSXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:23:34 -0400
+        id S1731531AbfCZSXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 14:23:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1553624601;
-        bh=cziDXRLYbTTSnQxzKs9LbCTKltOWXhpJdvZvkNJOfCw=;
+        s=badeba3b8450; t=1553624604;
+        bh=HU96eXhK5KbTymKNaAh+dmLrxXkha17vvULgbKpL0Cs=;
         h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Hs3GPYMLz+u4az0oHIO9ydi4eTkfroDuE/wq0esVvEp3Tm9Sb9vASXwLrBSOfIB7E
-         1ercLA98PiRZHgNHfNF79PzwjTug3JmYUQLu4V71a4BQNHepwYeGoajNX+gzEjVUmy
-         p2r7+4B3B/Hu/cb496YbOaqNInK8mlPORZNipPpc=
+        b=iE4ICotUIylPV8U/mrvLMirHNN7fffetrxvTajvo4SH3Iu93cnD1derYrRKZ5Y9r5
+         dIsW03mojj1M4esFpf2h8NBh4dmEsuJomB9xGfv3dO9e855AmjFsLd8DduGSDoUmQ0
+         IBgBEFdshVJomexPEMocdiMzp/nxSuPWKBwtNmQo=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx103
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MYwQh-1hUUDj3uJH-00VdqV; Tue, 26
- Mar 2019 19:23:21 +0100
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx003
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0LzcIM-1gv9P422b4-014osi; Tue, 26
+ Mar 2019 19:23:24 +0100
 From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 To:     linux-clk@vger.kernel.org
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -47,122 +47,204 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         Michael Grzeschik <m.grzeschik@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH v2 1/2] clk: imx5: Fix i.MX50 mainbus clock registers
-Date:   Tue, 26 Mar 2019 19:22:57 +0100
-Message-Id: <20190326182258.21945-2-j.neuschaefer@gmx.net>
+Subject: [PATCH v2 2/2] clk: imx5: Fix i.MX50 ESDHC clock registers
+Date:   Tue, 26 Mar 2019 19:22:58 +0100
+Message-Id: <20190326182258.21945-3-j.neuschaefer@gmx.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190326182258.21945-1-j.neuschaefer@gmx.net>
 References: <20190326182258.21945-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8gaCm0iUeJvgJXIqxMW2Iez3IF+HrF7aeGnhsSZnJC3aKB1Vuhy
- /t5DXb1hNnaIAkabFx/jffI/h79dPxUe4t6y7toLGrxI0i4hgsCvAcp47wAjEqe8esSlBO5
- zPzTwOyZ1NafsYAf8tr8Nvlazhjq2JAlbGlthgyRwi032xACOjX/AokbwQlMjFr0yLxvyaX
- TdzTF4fJmVY6iDRQ1aXFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lAGShuKM7Ww=:V9e8zrj32yUKCt2JftmzZ+
- e7mSpLcD8Y1EvF/1OqXPAMT0atyZDRV8a/QNIeC9uJx4EwDjr5wX9YsW+gkD+TE8zNX8jYOzW
- NN1x9x/5no5nIbjfoIrGhbYoLr7I/1Ee40fXJtSPKhkIYZeM8od/7EiPJ72gLl1v3pkXJsfYh
- 74sZpcKSxnJvWVST4ur2vjuI/Q96hNx1gRKqNjHwNYJWBk0MqmRUCRsIFU9FxKvyaoQDdOKJN
- ywa/BqNzMKS1zgqpG8P93klEnNOJvu923Jl8eSCRYadfkTi9HQiHtFQUR6ttqxPCFv04Jj9mM
- kJyvMsyOb2Ux5xRA/xsbb3dEGSB42fNSXwDZ9YT4V7K43aPEHy5Twgcs3g3nbsuuHy0OQ0/U+
- vP/481v8eghXEVwatHTZHD4siYyDiUFDltJfi3DM6CpLfZftiY9FuE+OSxzO+ypJKrQvI0CAi
- zKdJIwmxQO9T6H8aGJjg0mANtkB1lWrYxtVFzvi/jH+smklgPfpLPVUn6nQexTpP6SH1FOakW
- 7X62LyV6t+v0HPenBavj+1kVFNJ9dbnbX46+tnB+U2kN6vdZAwzZ+W93hrb4gz1VNIcjV8IIO
- rUaqNZIcUF4Acd3H3qTPDjR+Nk6RxYDI5WdZOVXjc5xQhVsj6+TjAf/BNB5+7179psgB74ETe
- Ju6DaN3tuglt80FRL9liManengKKO0OpxJeol+NrcZNlqlQyK5Wm8MIZbzbqng9g5kH4Pk727
- yo19FW03X2iwWiaNWp2v0Q1PyBfBwJeWcqYj+ZutN0BnosW0QVhm2V6D25JAcwR5LHefp/a76
- K0XNmUr1NP+J/btPairDl9c4JZlPSuXYSakfHWnrMrzmhMHe2ccjRPQFIMz/pwLPR5iLO+heX
- HPJOqEof61pRNsywGJDEotsX2LxlzH5aFawxAa97J+kuCnqJM/Ntp1bZWEQA/UJwHtlRcNNBl
- ZzkfIfVwgLg==
+X-Provags-ID: V03:K1:jwLXZMpo8BdC/AT/9cyth6U7aau0byCCrz1HFeoEQCXkfhnu6sm
+ Rzl2xuDI9PzlUJzk8uMRAJfWpwfXdwg7E+qzUVc98FOQKPfov7YWNO7gVbScoylpvlbcZ2d
+ XxuKnb6Fw5QmNe8XlBq+7kTOXgDbLVaUVg8fprHmHzZDc0m3pT1F/Dc3snNg+6wRibJAS+Y
+ DAkTQLz+711pFlW/6mByw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:y0Q0bttFAK8=:+tVAqr2NCWMQuaU5pOO3E7
+ LxVtEQXUJDEOkkh0Hi2ey+vuuuNAOAsMxd8xaMLL0Ph23HjTWTLJZAqPHAH0ACAQ8DmlTN66t
+ Q9gRKqRE2LgIUhiyuofrNGFGzFXgP9WwLXgBjRokGUrSTR9hF4u7SPrNNGD42xSKhbDcy/5DR
+ K3mllSMjXplIbvs41HNAr/5H3AJYQvLnbdqtuQoeiYZJ40y2F14iYTONSajNJpq3TbAed1G3N
+ fwiQuQKZ8s83D4jrYT5rSkiiAT79hwa8a5PyBwfwUVYtLhwPCiqz0B/+cJ/VWWVRuuKPqBTQ7
+ xuZs98SEiu3MzEy5rsfv855e+1T6ZFzWyv7QZQgmn3K9zGgg2NdCrvqAsDtfZaisq+6EstVtx
+ CQZxfunaePaO8oQQqMRsz2YOOGRRkqxrXtFpQGJ4Nd9Mcn6Hs2bRdHhgBopv1CnFRegwW2Fje
+ BeYdmikJQgV6Zr6qvI8JSFDKvh5fhE3uVy+Z1mOGVzKaGV5FvQVnwMI39/OmTigokhmQt6v3Q
+ qDZOhehkEBmSGNFGRf2PJQD9iiM/d3dZy7aGN7k/4gEC/l8DqWPQVRP9gsRXG+D8D0UsOdlyK
+ zw2sMDbGWRUxOhfoyKGxaxVbJInQylu829VSnpeFZVPPAnFnO2/aq7eQZE9trdwdeJ5jcs5uf
+ NEIJCPlxcKqqFDaSbcdpvaxg37xq763ZzXb/mUwpQF/bt5IM1y7NIzSGSqgwiYHc0+tq2oqxH
+ /k3m1oS/UoC64Fujp1Q8eboliIaxqjPPViA+CHijvF3tDgvBkKF8UiDAC9ypGN4jEBDivnV+N
+ KmiYtI82AVYXXgjoyYhBZdsh+7WFZKS/SshZw+PsRiQAPJczSA6AL2/36uyMLNJNhwMWeDF5p
+ k0B3kVbig54gspZ2uQDyZ2JVVsoQ51EiGwQBnRRvXrF3e4A3Zrujx4jIH6PDu98yGc/mgh3MN
+ g2ytNA+eC/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX50 does not have a periph_apm clock. Instead, the main bus clock
-(a.k.a. periph_clk) comes directly from a MUX between pll1_sw, pll2_sw,
-pll3_sw, and lp_apm.
+The MUX bits for esdhc_{a,c,d}_sel are shifted by one bit within CSCMR1,
+because esdhc_b_sel (ESDHC3_CLK_SEL in the Reference Manual) is extended
+by one bit.
 
 Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 =2D--
 v2:
 - Split into two patches, as suggested by Aisheng Dong
+- Extended the commit message slightly
 
 v1:
 https://lore.kernel.org/lkml/20190318231737.8459-1-j.neuschaefer@gmx.net/
-
- drivers/clk/imx/clk-imx51-imx53.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+=2D--
+ drivers/clk/imx/clk-imx51-imx53.c | 40 +++++++++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/clk/imx/clk-imx51-imx53.c b/drivers/clk/imx/clk-imx51=
 -imx53.c
-index e91c826bce70..3c188aa37cd7 100644
+index 3c188aa37cd7..c85ebd74a8a5 100644
 =2D-- a/drivers/clk/imx/clk-imx51-imx53.c
 +++ b/drivers/clk/imx/clk-imx51-imx53.c
-@@ -164,10 +164,6 @@ static void __init mx5_clocks_common_init(void __iome=
-m *ccm_base)
- 	clk[IMX5_CLK_CKIH1]		=3D imx_obtain_fixed_clock("ckih1", 0);
- 	clk[IMX5_CLK_CKIH2]		=3D imx_obtain_fixed_clock("ckih2", 0);
+@@ -187,16 +187,10 @@ static void __init mx5_clocks_common_init(void __iom=
+em *ccm_base)
+ 	clk[IMX5_CLK_UART_PRED]		=3D imx_clk_divider("uart_pred", "uart_sel", MX=
+C_CCM_CSCDR1, 3, 3);
+ 	clk[IMX5_CLK_UART_ROOT]		=3D imx_clk_divider("uart_root", "uart_pred", M=
+XC_CCM_CSCDR1, 0, 3);
 
--	clk[IMX5_CLK_PERIPH_APM]	=3D imx_clk_mux("periph_apm", MXC_CCM_CBCMR, 12=
-, 2,
--						periph_apm_sel, ARRAY_SIZE(periph_apm_sel));
--	clk[IMX5_CLK_MAIN_BUS]		=3D imx_clk_mux("main_bus", MXC_CCM_CBCDR, 25, 1=
-,
--						main_bus_sel, ARRAY_SIZE(main_bus_sel));
- 	clk[IMX5_CLK_PER_LP_APM]	=3D imx_clk_mux("per_lp_apm", MXC_CCM_CBCMR, 1,=
- 1,
- 						per_lp_apm_sel, ARRAY_SIZE(per_lp_apm_sel));
- 	clk[IMX5_CLK_PER_PRED1]		=3D imx_clk_divider("per_pred1", "per_lp_apm", =
-MXC_CCM_CBCDR, 6, 2);
-@@ -342,6 +338,13 @@ static void __init mx50_clocks_init(struct device_nod=
+-	clk[IMX5_CLK_ESDHC_A_SEL]	=3D imx_clk_mux("esdhc_a_sel", MXC_CCM_CSCMR1,=
+ 20, 2,
+-						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
+-	clk[IMX5_CLK_ESDHC_B_SEL]	=3D imx_clk_mux("esdhc_b_sel", MXC_CCM_CSCMR1,=
+ 16, 2,
+-						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
+ 	clk[IMX5_CLK_ESDHC_A_PRED]	=3D imx_clk_divider("esdhc_a_pred", "esdhc_a_=
+sel", MXC_CCM_CSCDR1, 16, 3);
+ 	clk[IMX5_CLK_ESDHC_A_PODF]	=3D imx_clk_divider("esdhc_a_podf", "esdhc_a_=
+pred", MXC_CCM_CSCDR1, 11, 3);
+ 	clk[IMX5_CLK_ESDHC_B_PRED]	=3D imx_clk_divider("esdhc_b_pred", "esdhc_b_=
+sel", MXC_CCM_CSCDR1, 22, 3);
+ 	clk[IMX5_CLK_ESDHC_B_PODF]	=3D imx_clk_divider("esdhc_b_podf", "esdhc_b_=
+pred", MXC_CCM_CSCDR1, 19, 3);
+-	clk[IMX5_CLK_ESDHC_C_SEL]	=3D imx_clk_mux("esdhc_c_sel", MXC_CCM_CSCMR1,=
+ 19, 1, esdhc_c_sel, ARRAY_SIZE(esdhc_c_sel));
+-	clk[IMX5_CLK_ESDHC_D_SEL]	=3D imx_clk_mux("esdhc_d_sel", MXC_CCM_CSCMR1,=
+ 18, 1, esdhc_d_sel, ARRAY_SIZE(esdhc_d_sel));
+
+ 	clk[IMX5_CLK_EMI_SEL]		=3D imx_clk_mux("emi_sel", MXC_CCM_CBCDR, 26, 1,
+ 						emi_slow_sel, ARRAY_SIZE(emi_slow_sel));
+@@ -307,10 +301,6 @@ static void __init mx5_clocks_common_init(void __iome=
+m *ccm_base)
+ 	clk_register_clkdev(clk[IMX5_CLK_CPU_PODF], NULL, "cpu0");
+ 	clk_register_clkdev(clk[IMX5_CLK_GPC_DVFS], "gpc_dvfs", NULL);
+
+-	/* Set SDHC parents to be PLL2 */
+-	clk_set_parent(clk[IMX5_CLK_ESDHC_A_SEL], clk[IMX5_CLK_PLL2_SW]);
+-	clk_set_parent(clk[IMX5_CLK_ESDHC_B_SEL], clk[IMX5_CLK_PLL2_SW]);
+-
+ 	/* move usb phy clk to 24MHz */
+ 	clk_set_parent(clk[IMX5_CLK_USB_PHY_SEL], clk[IMX5_CLK_OSC]);
+ }
+@@ -347,6 +337,12 @@ static void __init mx50_clocks_init(struct device_nod=
 e *np)
 
- 	mx5_clocks_common_init(ccm_base);
-
-+	/*
-+	 * This clock is called periph_clk in the i.MX50 Reference Manual, but
-+	 * it comes closest in scope to the main_bus_clk of i.MX51 and i.MX53
-+	 */
-+	clk[IMX5_CLK_MAIN_BUS]          =3D imx_clk_mux("main_bus", MXC_CCM_CBCD=
-R, 25, 2,
-+						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
-+
  	clk[IMX5_CLK_LP_APM]		=3D imx_clk_mux("lp_apm", MXC_CCM_CCSR, 10, 1,
  						lp_apm_sel, ARRAY_SIZE(lp_apm_sel));
++	clk[IMX5_CLK_ESDHC_A_SEL]	=3D imx_clk_mux("esdhc_a_sel", MXC_CCM_CSCMR1,=
+ 21, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_B_SEL]	=3D imx_clk_mux("esdhc_b_sel", MXC_CCM_CSCMR1,=
+ 16, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_C_SEL]	=3D imx_clk_mux("esdhc_c_sel", MXC_CCM_CSCMR1,=
+ 20, 1, esdhc_c_sel, ARRAY_SIZE(esdhc_c_sel));
++	clk[IMX5_CLK_ESDHC_D_SEL]	=3D imx_clk_mux("esdhc_d_sel", MXC_CCM_CSCMR1,=
+ 19, 1, esdhc_d_sel, ARRAY_SIZE(esdhc_d_sel));
  	clk[IMX5_CLK_ESDHC1_PER_GATE]	=3D imx_clk_gate2("esdhc1_per_gate", "esdh=
 c_a_podf", MXC_CCM_CCGR3, 2);
-@@ -410,6 +413,10 @@ static void __init mx51_clocks_init(struct device_nod=
+ 	clk[IMX5_CLK_ESDHC2_PER_GATE]	=3D imx_clk_gate2("esdhc2_per_gate", "esdh=
+c_c_sel", MXC_CCM_CCGR3, 6);
+ 	clk[IMX5_CLK_ESDHC3_PER_GATE]	=3D imx_clk_gate2("esdhc3_per_gate", "esdh=
+c_b_podf", MXC_CCM_CCGR3, 10);
+@@ -375,6 +371,10 @@ static void __init mx50_clocks_init(struct device_nod=
 e *np)
+ 	clk_data.clk_num =3D ARRAY_SIZE(clk);
+ 	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
 
- 	mx5_clocks_common_init(ccm_base);
-
-+	clk[IMX5_CLK_PERIPH_APM]	=3D imx_clk_mux("periph_apm", MXC_CCM_CBCMR, 12=
-, 2,
-+						periph_apm_sel, ARRAY_SIZE(periph_apm_sel));
-+	clk[IMX5_CLK_MAIN_BUS]		=3D imx_clk_mux("main_bus", MXC_CCM_CBCDR, 25, 1=
-,
-+						main_bus_sel, ARRAY_SIZE(main_bus_sel));
- 	clk[IMX5_CLK_LP_APM]		=3D imx_clk_mux("lp_apm", MXC_CCM_CCSR, 9, 1,
- 						lp_apm_sel, ARRAY_SIZE(lp_apm_sel));
- 	clk[IMX5_CLK_IPU_DI0_SEL]	=3D imx_clk_mux_flags("ipu_di0_sel", MXC_CCM_C=
-SCMR2, 26, 3,
-@@ -506,6 +513,10 @@ static void __init mx53_clocks_init(struct device_nod=
++	/* Set SDHC parents to be PLL2 */
++	clk_set_parent(clk[IMX5_CLK_ESDHC_A_SEL], clk[IMX5_CLK_PLL2_SW]);
++	clk_set_parent(clk[IMX5_CLK_ESDHC_B_SEL], clk[IMX5_CLK_PLL2_SW]);
++
+ 	/* set SDHC root clock to 200MHZ*/
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_A_PODF], 200000000);
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_B_PODF], 200000000);
+@@ -429,6 +429,12 @@ static void __init mx51_clocks_init(struct device_nod=
 e *np)
+ 						mx51_tve_sel, ARRAY_SIZE(mx51_tve_sel));
+ 	clk[IMX5_CLK_TVE_GATE]		=3D imx_clk_gate2("tve_gate", "tve_sel", MXC_CCM=
+_CCGR2, 30);
+ 	clk[IMX5_CLK_TVE_PRED]		=3D imx_clk_divider("tve_pred", "pll3_sw", MXC_C=
+CM_CDCDR, 28, 3);
++	clk[IMX5_CLK_ESDHC_A_SEL]	=3D imx_clk_mux("esdhc_a_sel", MXC_CCM_CSCMR1,=
+ 20, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_B_SEL]	=3D imx_clk_mux("esdhc_b_sel", MXC_CCM_CSCMR1,=
+ 16, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_C_SEL]	=3D imx_clk_mux("esdhc_c_sel", MXC_CCM_CSCMR1,=
+ 19, 1, esdhc_c_sel, ARRAY_SIZE(esdhc_c_sel));
++	clk[IMX5_CLK_ESDHC_D_SEL]	=3D imx_clk_mux("esdhc_d_sel", MXC_CCM_CSCMR1,=
+ 18, 1, esdhc_d_sel, ARRAY_SIZE(esdhc_d_sel));
+ 	clk[IMX5_CLK_ESDHC1_PER_GATE]	=3D imx_clk_gate2("esdhc1_per_gate", "esdh=
+c_a_podf", MXC_CCM_CCGR3, 2);
+ 	clk[IMX5_CLK_ESDHC2_PER_GATE]	=3D imx_clk_gate2("esdhc2_per_gate", "esdh=
+c_b_podf", MXC_CCM_CCGR3, 6);
+ 	clk[IMX5_CLK_ESDHC3_PER_GATE]	=3D imx_clk_gate2("esdhc3_per_gate", "esdh=
+c_c_sel", MXC_CCM_CCGR3, 10);
+@@ -459,6 +465,10 @@ static void __init mx51_clocks_init(struct device_nod=
+e *np)
+ 	/* set the usboh3 parent to pll2_sw */
+ 	clk_set_parent(clk[IMX5_CLK_USBOH3_SEL], clk[IMX5_CLK_PLL2_SW]);
 
- 	mx5_clocks_common_init(ccm_base);
++	/* Set SDHC parents to be PLL2 */
++	clk_set_parent(clk[IMX5_CLK_ESDHC_A_SEL], clk[IMX5_CLK_PLL2_SW]);
++	clk_set_parent(clk[IMX5_CLK_ESDHC_B_SEL], clk[IMX5_CLK_PLL2_SW]);
++
+ 	/* set SDHC root clock to 166.25MHZ*/
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_A_PODF], 166250000);
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_B_PODF], 166250000);
+@@ -538,6 +548,12 @@ static void __init mx53_clocks_init(struct device_nod=
+e *np)
+ 						mx53_tve_ext_sel, ARRAY_SIZE(mx53_tve_ext_sel), CLK_SET_RATE_PARENT=
+);
+ 	clk[IMX5_CLK_TVE_GATE]		=3D imx_clk_gate2("tve_gate", "tve_pred", MXC_CC=
+M_CCGR2, 30);
+ 	clk[IMX5_CLK_TVE_PRED]		=3D imx_clk_divider("tve_pred", "tve_ext_sel", M=
+XC_CCM_CDCDR, 28, 3);
++	clk[IMX5_CLK_ESDHC_A_SEL]	=3D imx_clk_mux("esdhc_a_sel", MXC_CCM_CSCMR1,=
+ 20, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_B_SEL]	=3D imx_clk_mux("esdhc_b_sel", MXC_CCM_CSCMR1,=
+ 16, 2,
++						standard_pll_sel, ARRAY_SIZE(standard_pll_sel));
++	clk[IMX5_CLK_ESDHC_C_SEL]	=3D imx_clk_mux("esdhc_c_sel", MXC_CCM_CSCMR1,=
+ 19, 1, esdhc_c_sel, ARRAY_SIZE(esdhc_c_sel));
++	clk[IMX5_CLK_ESDHC_D_SEL]	=3D imx_clk_mux("esdhc_d_sel", MXC_CCM_CSCMR1,=
+ 18, 1, esdhc_d_sel, ARRAY_SIZE(esdhc_d_sel));
+ 	clk[IMX5_CLK_ESDHC1_PER_GATE]	=3D imx_clk_gate2("esdhc1_per_gate", "esdh=
+c_a_podf", MXC_CCM_CCGR3, 2);
+ 	clk[IMX5_CLK_ESDHC2_PER_GATE]	=3D imx_clk_gate2("esdhc2_per_gate", "esdh=
+c_c_sel", MXC_CCM_CCGR3, 6);
+ 	clk[IMX5_CLK_ESDHC3_PER_GATE]	=3D imx_clk_gate2("esdhc3_per_gate", "esdh=
+c_b_podf", MXC_CCM_CCGR3, 10);
+@@ -600,6 +616,10 @@ static void __init mx53_clocks_init(struct device_nod=
+e *np)
+ 	clk_data.clk_num =3D ARRAY_SIZE(clk);
+ 	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
 
-+	clk[IMX5_CLK_PERIPH_APM]	=3D imx_clk_mux("periph_apm", MXC_CCM_CBCMR, 12=
-, 2,
-+						periph_apm_sel, ARRAY_SIZE(periph_apm_sel));
-+	clk[IMX5_CLK_MAIN_BUS]		=3D imx_clk_mux("main_bus", MXC_CCM_CBCDR, 25, 1=
-,
-+						main_bus_sel, ARRAY_SIZE(main_bus_sel));
- 	clk[IMX5_CLK_LP_APM]		=3D imx_clk_mux("lp_apm", MXC_CCM_CCSR, 10, 1,
- 						lp_apm_sel, ARRAY_SIZE(lp_apm_sel));
- 	clk[IMX5_CLK_LDB_DI1_DIV_3_5]	=3D imx_clk_fixed_factor("ldb_di1_div_3_5"=
-, "ldb_di1_sel", 2, 7);
++	/* Set SDHC parents to be PLL2 */
++	clk_set_parent(clk[IMX5_CLK_ESDHC_A_SEL], clk[IMX5_CLK_PLL2_SW]);
++	clk_set_parent(clk[IMX5_CLK_ESDHC_B_SEL], clk[IMX5_CLK_PLL2_SW]);
++
+ 	/* set SDHC root clock to 200MHZ*/
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_A_PODF], 200000000);
+ 	clk_set_rate(clk[IMX5_CLK_ESDHC_B_PODF], 200000000);
 =2D-
 2.20.1
 
