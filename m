@@ -2,108 +2,140 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54857C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7510DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F62C2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otOL9Mov"
+	by mail.kernel.org (Postfix) with ESMTP id 47DA32070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731718AbfCZQ4H (ORCPT
+        id S1731583AbfCZQ5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:56:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33640 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfCZQ4H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:56:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bg8so1905524plb.0;
-        Tue, 26 Mar 2019 09:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=z8cXnutfyg4Hwio09am68L70RiRqzsguuMWJ8tGeGUs=;
-        b=otOL9MovmFWHsmzOibEaV6aJOA5IVev5xZgc2pgWhm9/tDvW/43GLG3jL6Brn6iEI/
-         +PWbWex4BZg2W1lXVLVP/nTu7XS4HmBFJNxxMngncNjYNvltRsfq0/SnheRJfphXy2/J
-         WgIIrriEJ7mgxRbqMGZ8gVVFUHnAQJlbkE3+wQq0ADMp3nIXHTd0Q9vZ6KDJdEmOM7x1
-         OtA2pSLtCtK4iYTXXzncQdypqc++YJXXye04RhpGiDpl1zvkjephBXzP7HenjfUj0GDB
-         7t1lK4cv7n0KxhZGnzjn0XWTC56pmJrECgC/hadR3qjMMuqhNQVuvecqKh8n9bfH7UeC
-         d2ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=z8cXnutfyg4Hwio09am68L70RiRqzsguuMWJ8tGeGUs=;
-        b=sIR6639l4qllh7LedXIkpvmRqH6xc4SotghyKOjwZ3keWVHdKwhNTTknQwtykXZVME
-         BXxxqdy+fAh3CV44b021XipiFRxN91DHUindxS6O5LyV3zS6w9N2k+i8cWCXVstouGGO
-         e1UdyY/GbdEFu+gSNxAfmv2QFLo466Yq3pfRljLPaNWPgROdDAqnKXgdDeK0tcW91uYi
-         WQCYt14/cwYZqIyIUi6Y8481c0Fqswb5unj/6nDkk0nmQs8GfLdhNDoTYMskjIYMGjgN
-         OPo04vnHnV6P03hWW2ViD8qg1r3+UvkUYkGiKNrKMxMokqpWK4U6ydVQ72OqiQYCbU1Q
-         fy1g==
-X-Gm-Message-State: APjAAAVHHOEiZ6tVu1M3IO/mxdQ6wBDG3AtM4W0TPCqcB+0VTznHHE02
-        bfMfv8fJNJvNPfMjqDcHwjk=
-X-Google-Smtp-Source: APXvYqy8jxA/ewweRWPoStr5colZvDBBkiFRkIOH5jfw4/CiZer8LsJ3YF7T8oRrMKdV34Zx6XfdjQ==
-X-Received: by 2002:a17:902:9a98:: with SMTP id w24mr31815705plp.247.1553619366722;
-        Tue, 26 Mar 2019 09:56:06 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id z128sm40016066pfz.107.2019.03.26.09.56.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 09:56:06 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, bjorn.andersson@linaro.org,
-        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
-Date:   Tue, 26 Mar 2019 09:55:54 -0700
-Message-Id: <20190326165554.17266-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 Mar 2019 12:57:48 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40828 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727492AbfCZQ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:57:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E30D7374;
+        Tue, 26 Mar 2019 09:57:46 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55A393F614;
+        Tue, 26 Mar 2019 09:57:44 -0700 (PDT)
+Subject: Re: [PATCH v7 2/4] perf/smmuv3: Add arm64 smmuv3 pmu driver
+To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        lorenzo.pieralisi@arm.com
+Cc:     andrew.murray@arm.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com, mark.rutland@arm.com, guohanjun@huawei.com,
+        john.garry@huawei.com, pabba@codeaurora.org,
+        vkilari@codeaurora.org, rruigrok@codeaurora.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
+        neil.m.leeder@gmail.com
+References: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
+ <20190326151753.19384-3-shameerali.kolothum.thodi@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fa89c332-d420-8fef-5034-518e60571bd9@arm.com>
+Date:   Tue, 26 Mar 2019 16:57:42 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190326151753.19384-3-shameerali.kolothum.thodi@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to commit edfc3722cfef ("HID: quirks: Fix keyboard + touchpad on
-Toshiba Click Mini not working"), the Lenovo Miix 630 has a combo
-keyboard/touchpad device with vid:pid of 04F3:0400, which is shared with
-Elan touchpads.  The combo on the Miix 630 has an ACPI id of QTEC0001,
-which is not claimed by the elan_i2c driver, so key on that similar to
-what was done for the Toshiba Click Mini.
+Hi Shameer,
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+On 26/03/2019 15:17, Shameer Kolothum wrote:
+[...]
+> +static int smmu_pmu_apply_event_filter(struct smmu_pmu *smmu_pmu,
+> +				       struct perf_event *event, int idx)
+> +{
+> +	u32 span, sid;
+> +	unsigned int num_ctrs = smmu_pmu->num_counters;
+> +	bool filter_en = !!get_filter_enable(event);
+> +
+> +	span = filter_en ? get_filter_span(event) :
+> +			   SMMU_PMCG_DEFAULT_FILTER_SPAN;
+> +	sid = filter_en ? get_filter_stream_id(event) :
+> +			   SMMU_PMCG_DEFAULT_FILTER_SID;
+> +
+> +	/* Support individual filter settings */
+> +	if (!smmu_pmu->global_filter) {
+> +		smmu_pmu_set_event_filter(event, idx, span, sid);
+> +		return 0;
+> +	}
+> +
+> +	/* Requested settings same as current global settings*/
+> +	if (span == smmu_pmu->global_filter_span &&
+> +	    sid == smmu_pmu->global_filter_sid)
+> +		return 0;
+> +
+> +	if (!bitmap_empty(smmu_pmu->used_counters, num_ctrs))
+> +		return -EAGAIN;
+> +
+> +	if (idx == 0) {
+> +		smmu_pmu_set_event_filter(event, idx, span, sid);
+> +		smmu_pmu->global_filter_span = span;
+> +		smmu_pmu->global_filter_sid = sid;
+> +		return 0;
+> +	}
+
+When I suggested dropping the check of idx, I did mean removing it 
+entirely, not just moving it further down ;)
+
+Nothing to worry about though, I'll just leave this here for Will to 
+consider applying on top or squashing.
+
+Thanks,
+Robin.
+
+----->8-----
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH] perf/smmuv3: Relax global filter constraint a little
+
+Although the current behaviour of smmu_pmu_get_event_idx() effectively
+ensures that the first-allocated counter will be counter 0, there's no
+need to strictly enforce that in smmu_pmu_apply_event_filter(). All that
+matters is that we only ever touch the global filter settings in
+SMMU_PMCG_SMR0 and SMMU_PMCG_EVTYPER0 while no counters are active.
+
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/hid/hid-quirks.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+  drivers/perf/arm_smmuv3_pmu.c | 11 ++++-------
+  1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 1148d8c0816a..77ffba48cc73 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -715,7 +715,6 @@ static const struct hid_device_id hid_ignore_list[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DEALEXTREAME, USB_DEVICE_ID_DEALEXTREAME_RADIO_SI4701) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EARTHMATE) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EM_LT20) },
--	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, 0x0400) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ESSENTIAL_REALITY, USB_DEVICE_ID_ESSENTIAL_REALITY_P5) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC5UH) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC4UM) },
-@@ -996,6 +995,10 @@ bool hid_ignore(struct hid_device *hdev)
- 		if (hdev->product == 0x0401 &&
- 		    strncmp(hdev->name, "ELAN0800", 8) != 0)
- 			return true;
-+		/* Same with product id 0x0400 */
-+		if (hdev->product == 0x0400 &&
-+		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-+			return true;
- 		break;
- 	}
- 
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 6b3c0ed7ad71..23045ead6de1 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -286,14 +286,11 @@ static int smmu_pmu_apply_event_filter(struct 
+smmu_pmu *smmu_pmu,
+  	if (!bitmap_empty(smmu_pmu->used_counters, num_ctrs))
+  		return -EAGAIN;
+
+-	if (idx == 0) {
+-		smmu_pmu_set_event_filter(event, idx, span, sid);
+-		smmu_pmu->global_filter_span = span;
+-		smmu_pmu->global_filter_sid = sid;
+-		return 0;
+-	}
++	smmu_pmu_set_event_filter(event, 0, span, sid);
++	smmu_pmu->global_filter_span = span;
++	smmu_pmu->global_filter_sid = sid;
+
+-	return -EAGAIN;
++	return 0;
+  }
+
+  static int smmu_pmu_get_event_idx(struct smmu_pmu *smmu_pmu,
 -- 
-2.17.1
-
+2.20.1.dirty
