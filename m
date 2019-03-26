@@ -2,269 +2,202 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9749BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84C4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578632070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xVmHjKTG"
+	by mail.kernel.org (Postfix) with ESMTP id 764DB2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfCZQHe (ORCPT
+        id S1731842AbfCZQHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:07:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45744 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfCZQHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 12:07:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bf11so1850529plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QJ1htOgLKMIjpEqiqEqAcf/VdDwidl5sIsLdfwmDN0A=;
-        b=xVmHjKTGlw+QUZFp19EcARGAeF8sCBEWC1M+hH27FRGy9plVZdgB1HFO1Wd1F14HFK
-         yi1/GjjKBYGchV5smReb870JAIJWXrSbcbaELDbN8TEcLbIVkxFO4dw7RChD4JMzoicH
-         2esPVCN8ksUNi+FSO/i1f8olFTwSEUCFfVPks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QJ1htOgLKMIjpEqiqEqAcf/VdDwidl5sIsLdfwmDN0A=;
-        b=ksav2FdyfbzhZ139f97zBXy6wphJIKgqo01UsJbqSr8AE+bxQ0m3OsptMF/xFNouzj
-         NQYe66yBR9of/C7POz1UGVKqjmqzqbQqqbhLvsCCuQNtOVPMci5J3ZuYZJlxCB/GwAUd
-         eQpc2OU7M5YKWHN1T1JSYxi4F/R2upsCVrCTRzhGyQREoIf1arMX6GnQ1rKxQoGIM/sS
-         E/fL+IWToPgP2sqVNmtaVRTsnfJ+rSttidEm691ZLUoUoeeHNboqFxFLxCZKKtUvRHS3
-         4iQlO0CPnIlmO+YGjyVki6LGsf7EzjAXRTiZI3+DoaaW4A/NR1G2VjJlhvsSXAxhBFma
-         EMLA==
-X-Gm-Message-State: APjAAAVoaeVlhfqJcXb5AM1IJrN5F5iC2Dclr0N38e/XzVoO7a+eOfhu
-        VKwYjAaDPDvV8pnNPkIuiBkGgg==
-X-Google-Smtp-Source: APXvYqwKgWHYay0G489CW+ILPiDiR3AIzfQ8PFapEaKakajr7sAYKQiQB+pdhIRJd4H5RTP9KWNN2w==
-X-Received: by 2002:a17:902:e85:: with SMTP id 5mr32119928plx.13.1553616451877;
-        Tue, 26 Mar 2019 09:07:31 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e1sm24679452pfn.73.2019.03.26.09.07.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 09:07:30 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 12:07:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Andy Lutomirski <luto@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        bl0pbl33p@gmail.com, "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        cyphar@cyphar.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: [PATCH 2/4] pid: add pidctl()
-Message-ID: <20190326160729.GA76870@google.com>
-References: <20190325162052.28987-1-christian@brauner.io>
- <20190325162052.28987-3-christian@brauner.io>
- <CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from mx2.suse.de ([195.135.220.15]:38108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfCZQHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:07:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0D56EAC0C;
+        Tue, 26 Mar 2019 16:07:31 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 17:07:30 +0100
+Message-ID: <s5h7ecl62m5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     "Lee, Chun-Yi" <jlee@suse.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: Downgrade "EFI_MEMMAP is not enabled" message
+In-Reply-To: <CAKv+Gu-C08VWKD8HrGfFMgQ+LxxXKtPEjGyJpwQoSu63zT_ZOQ@mail.gmail.com>
+References: <20190301134033.2100-1-tiwai@suse.de>
+        <CAKv+Gu_d7fZuFmu6e5v4WFta11qVRkaKZWdt4X33JRLe3BwHZw@mail.gmail.com>
+        <s5ha7ieels3.wl-tiwai@suse.de>
+        <CAKv+Gu91QeeFHXfp4ShM2z1hbypwnoRKzZQQ3Sktk1sASXvR6Q@mail.gmail.com>
+        <s5h5zt2el6d.wl-tiwai@suse.de>
+        <CAKv+Gu-gp+Hvd-ZcZC-ZRQOHpinj_mXx-L6fTUkKWSXd0UwC+g@mail.gmail.com>
+        <s5hpnrad38j.wl-tiwai@suse.de>
+        <s5himw564l0.wl-tiwai@suse.de>
+        <CAKv+Gu-C08VWKD8HrGfFMgQ+LxxXKtPEjGyJpwQoSu63zT_ZOQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 07:18:42PM +0100, Jann Horn wrote:
-> On Mon, Mar 25, 2019 at 5:21 PM Christian Brauner <christian@brauner.io> wrote:
-> > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
-> > I quote Konstantins original patchset first that has already been acked and
-> > picked up by Eric before and whose functionality is preserved in this
-> > syscall:
-> [...]
-> > +
-> > +static struct pid_namespace *get_pid_ns_by_fd(int fd)
-> > +{
-> > +       struct pid_namespace *pidns = ERR_PTR(-EINVAL);
-> > +
-> > +       if (fd >= 0) {
-> > +#ifdef CONFIG_PID_NS
-> > +               struct ns_common *ns;
-> > +               struct file *file = proc_ns_fget(fd);
-> > +               if (IS_ERR(file))
-> > +                       return ERR_CAST(file);
-> > +
-> > +               ns = get_proc_ns(file_inode(file));
-> > +               if (ns->ops->type == CLONE_NEWPID)
-> > +                       pidns = get_pid_ns(
-> > +                               container_of(ns, struct pid_namespace, ns));
+On Tue, 26 Mar 2019 17:04:30 +0100,
+Ard Biesheuvel wrote:
 > 
-> This increments the refcount of the pidns...
+> On Tue, 26 Mar 2019 at 16:25, Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Fri, 01 Mar 2019 16:27:24 +0100,
+> > Takashi Iwai wrote:
+> > >
+> > > On Fri, 01 Mar 2019 15:57:03 +0100,
+> > > Ard Biesheuvel wrote:
+> > > >
+> > > > On Fri, 1 Mar 2019 at 15:14, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > >
+> > > > > On Fri, 01 Mar 2019 15:02:23 +0100,
+> > > > > Ard Biesheuvel wrote:
+> > > > > >
+> > > > > > On Fri, 1 Mar 2019 at 15:01, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > > >
+> > > > > > > On Fri, 01 Mar 2019 14:53:39 +0100,
+> > > > > > > Ard Biesheuvel wrote:
+> > > > > > > >
+> > > > > > > > On Fri, 1 Mar 2019 at 14:40, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > > > > >
+> > > > > > > > > Since 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes
+> > > > > > > > > when mapping the FB"), efifb_probe() checks its memory range via
+> > > > > > > > > efi_mem_desc_lookup(), and this leads to a spurious error message
+> > > > > > > > > "EFI_MEMMAP is not enabled" at every boot on KVM.  This is quite
+> > > > > > > > > annoying since the error message appears even if you set "quiet" boot
+> > > > > > > > > option.
+> > > > > > > > >
+> > > > > > > > > Actually there are only a few places that call efi_mem_desc_lookup()
+> > > > > > > > > function, and the other callers do give the explicit error messages
+> > > > > > > > > when the function returns an error in anyway.  That is, the error
+> > > > > > > > > message in the function is more or less moot.
+> > > > > > > > >
+> > > > > > > > > So let's downgrade the error message for stop annoying users.
+> > > > > > > > >
+> > > > > > > > > Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+> > > > > > > > > Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1127339
+> > > > > > > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/firmware/efi/efi.c | 2 +-
+> > > > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > > > > > > > index 55b77c576c42..50ac33097458 100644
+> > > > > > > > > --- a/drivers/firmware/efi/efi.c
+> > > > > > > > > +++ b/drivers/firmware/efi/efi.c
+> > > > > > > > > @@ -409,7 +409,7 @@ int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+> > > > > > > > >         efi_memory_desc_t *md;
+> > > > > > > > >
+> > > > > > > > >         if (!efi_enabled(EFI_MEMMAP)) {
+> > > > > > > > > -               pr_err_once("EFI_MEMMAP is not enabled.\n");
+> > > > > > > > > +               pr_debug("EFI_MEMMAP is not enabled.\n");
+> > > > > > > > >                 return -EINVAL;
+> > > > > > > > >         }
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > efifb_probe() only calls efi_mem_desc_lookup() if
+> > > > > > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI, which only gets
+> > > > > > > > assigned on a EFI boot.
+> > > > > > > >
+> > > > > > > > So even though I don't object to the patch as is, I would like to
+> > > > > > > > understand where this error message is coming from, given that it
+> > > > > > > > means that you are running on a UEFI system without the EFI memory
+> > > > > > > > map.
+> > > > > > > >
+> > > > > > > > Is this system booting via GRUB in EFI mode?
+> > > > > > >
+> > > > > > > No, it's booted in legacy boot mode.  But the primary fb is efifb, and
+> > > > > > > that's why the message appears.
+> > > > > > >
+> > > > > >
+> > > > > > So how are we ending up with
+> > > > > >
+> > > > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI
+> > > > > >
+> > > > > > ??
+> > > > >
+> > > > > Ah, sorry, my description was too ambiguous.
+> > > > >
+> > > > > Actually our GRUB2 default setup boots the Linux kernel with linuxefi.
+> > > > > What I meant was that I invoked qemu-kvm without any -bios option, so
+> > > > > it's no EFI BIOS.
+> > > > >
+> > > >
+> > > > Some from the link here
+> > > >
+> > > > https://openqa.opensuse.org/tests/864184/file/journal_check-full_journal.log
+> > > >
+> > > > I got
+> > > >
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: probing for efifb
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efi: EFI_MEMMAP is not enabled.
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: fbcon: Taking over console
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: No BGRT, not showing boot graphics
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: framebuffer at 0xfc000000,
+> > > > using 1408k, total 1408k
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: mode is 800x600x24,
+> > > > linelength=2400, pages=1
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: scrolling: redraw
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: efifb: Truecolor: size=0:8:8:8,
+> > > > shift=0:16:8:0
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: Console: switching to colour frame
+> > > > buffer device 100x37
+> > > > Feb 27 13:13:41 linux-e2c3 kernel: fb0: EFI VGA frame buffer device
+> > > >
+> > > > So if we are doing legacy, there is something else that is taking,
+> > > > GRUB perhaps, that is taking the framebuffer parameters and putting
+> > > > them in screen_info and marking them as VIDEO_TYPE_EFI.
+> > > >
+> > > > If this is a reasonable thing to do, it implies that the efifb driver
+> > > > may run on otherwise non-EFI systems, and if this is the case, I'd
+> > > > rather fix it like this:
+> > > >
+> > > > diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> > > > index ba906876cc45..9e529cc2b4ff 100644
+> > > > --- a/drivers/video/fbdev/efifb.c
+> > > > +++ b/drivers/video/fbdev/efifb.c
+> > > > @@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
+> > > >         info->apertures->ranges[0].base = efifb_fix.smem_start;
+> > > >         info->apertures->ranges[0].size = size_remap;
+> > > >
+> > > > -       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> > > > +       if (efi_enabled(EFI_BOOT) &&
+> > > > +           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> > > >                 if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+> > > >                     (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+> > > >                         pr_err("efifb: video memory @ 0x%lx spans
+> > > > multiple EFI memory regions\n",
+> > > >
+> > > > Could you please confirm whether this works around the issue as well?
+> > >
+> > > Yeah, that makes sense, and I confirmed that your patch worked.
+> > > Both EFI_BOOT and EFI_MEMMAP are 0 on the default boot.
+> > >
+> > > Reported-and-tested-by: Takashi Iwai <tiwai@suse.de>
+> >
+> > Ard, what is the status of this fix?
+> >
 > 
-> > +
-> > +               fput(file);
-> > +#endif
-> > +       } else {
-> > +               pidns = task_active_pid_ns(current);
-> 
-> ... but this doesn't. That's pretty subtle; could you please put a
-> comment on top of this function that points this out? Or even better,
-> change the function to always take a reference, so that the caller
-> doesn't have to worry about figuring this out.
-> 
-> > +       }
-> > +
-> > +       return pidns;
-> > +}
-> [...]
-> > +SYSCALL_DEFINE5(pidctl, unsigned int, cmd, pid_t, pid, int, source, int, target,
-> > +               unsigned int, flags)
-> > +{
-> > +       struct pid_namespace *source_ns = NULL, *target_ns = NULL;
-> > +       struct pid *struct_pid;
-> > +       pid_t result;
-> > +
-> > +       switch (cmd) {
-> > +       case PIDCMD_QUERY_PIDNS:
-> > +               if (pid != 0)
-> > +                       return -EINVAL;
-> > +               pid = 1;
-> > +               /* fall through */
-> > +       case PIDCMD_QUERY_PID:
-> > +               if (flags != 0)
-> > +                       return -EINVAL;
-> > +               break;
-> > +       case PIDCMD_GET_PIDFD:
-> > +               if (flags & ~PIDCTL_CLOEXEC)
-> > +                       return -EINVAL;
-> > +               break;
-> > +       default:
-> > +               return -EOPNOTSUPP;
-> > +       }
-> > +
-> > +       source_ns = get_pid_ns_by_fd(source);
-> > +       result = PTR_ERR(source_ns);
-> 
-> I very much dislike using PTR_ERR() on pointers before checking
-> whether they contain an error value or not. I understand that the
-> result of this won't actually be used, but it still seems weird to
-> have what is essentially a cast of a potentially valid pointer to a
-> potentially smaller integer here.
-> 
-> Could you maybe move the PTR_ERR() into the error branch? Like so:
-> 
-> if (IS_ERR(source_ns)) {
->   result = PTR_ERR(source_ns);
->   goto err_source;
-> }
+> I will get it queued for v5.2
 
-FWIW, thought of mentioning that once the get_pid_ns_by_fd can be modified to
-always take a reference on the ns, a further simplifcation here could be:
-
-if (IS_ERR(source_ns)) {
-	result = PTR_ERR(source_ns);
-	source_ns = NULL;
-	goto error;
-}
-
-if (IS_ERR(target_ns)) {
-	result = PTR_ERR(target_ns);
-	target_ns = NULL;
-	goto error;
-}
-
-And the error patch can be simplified as well which also avoids the "if (target)"
-issues Jan mentioned in the error path:
-
-error:
-	if (source_ns)
-		put_pid_ns(source_ns);
-	if (target_ns)
-		put_pid_ns(target_ns);
-	return result;
-
- 
-> > +       if (IS_ERR(source_ns))
-> > +               goto err_source;
-> > +
-> > +       target_ns = get_pid_ns_by_fd(target);
-> > +       result = PTR_ERR(target_ns);
-> > +       if (IS_ERR(target_ns))
-> > +               goto err_target;
-> > +
-> > +       if (cmd == PIDCMD_QUERY_PIDNS) {
-> > +               result = pidns_related(source_ns, target_ns);
-> > +       } else {
-> > +               rcu_read_lock();
-> > +               struct_pid = find_pid_ns(pid, source_ns);
-> 
-> find_pid_ns() doesn't take a reference on its return value, the return
-> value is only pinned into memory by the RCU read-side critical
-> section...
-> 
-> > +               result = struct_pid ? pid_nr_ns(struct_pid, target_ns) : -ESRCH;
-> > +               rcu_read_unlock();
-> 
-> ... which ends here, making struct_pid a dangling pointer...
-> 
-> > +
-> > +               if (cmd == PIDCMD_GET_PIDFD) {
-> > +                       int cloexec = (flags & PIDCTL_CLOEXEC) ? O_CLOEXEC : 0;
-> > +                       if (result > 0)
-> > +                               result = pidfd_create_fd(struct_pid, cloexec);
-> 
-> ... and then here you continue to use struct_pid. That seems bogus.
-
-Absolutely.
-
-> > +                       else if (result == 0)
-> > +                               result = -ENOENT;
-> 
-> You don't need to have flags for this for new syscalls, you can just
-> make everything O_CLOEXEC; if someone wants to preserve an fd across
-> execve(), they can just clear that bit with fcntl(). (I thiiink it was
-> Andy Lutomirski who said that before regarding another syscall? But my
-> memory of that is pretty foggy, might've been someone else.)
-
-Agreed, I also was going to say the same, about the flags.
-
-thanks,
-
- - Joel
+OK great, just let me know if you submitted the patch.  Then I'm going
+to merge to (open)SUSE kernels for addressing the reported issue.
 
 
-> 
-> > +               }
-> > +       }
-> > +
-> > +       if (target)
-> > +               put_pid_ns(target_ns);
-> > +err_target:
-> > +       if (source)
-> > +               put_pid_ns(source_ns);
-> 
-> I think you probably intended to check for "if (target >= 0)" and "if
-> (source >= 0)" instead of these conditions, matching the condition in
-> get_pid_ns_by_fd()? The current code looks as if it will leave the
-> refcount one too high when used with target==0 or source==0, and leave
-> the refcount one too low when used with target==-1 or source==-1.
-> Anyway, as stated above, I think it would be simpler to
-> unconditionally take a reference instead.
-> 
-> > +err_source:
-> > +       return result;
-> > +}
+Thanks!
+
+Takashi
