@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7598AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFE4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4640A2086C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA8020863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582319;
-	bh=x3Mi4ezUKPk706ty9nGyMs3+lbzbM3DzZvA6MPbL3UY=;
+	s=default; t=1553582323;
+	bh=1OaqqUXJDrI7dfSfYr7b/X6MysTBFQofNoFwE/0B3Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lXsVZJyMupc6O+uhgEj1pBJTICoIslMSyB2cJSfvkFy7WcB98nXd7i1spWP+M9VT
-	 SBc50KL3/nndXCO3Z3kA5AWbn4KCaVhAG3tuI3oWFBUaA2XeOv5oDBJ4kGQzJGD/+n
-	 bmAaD1iUKdHLoNSoIiVYJw7GTYwumb2Nk+yvprZc=
+	b=O78jzvAgT5lVN6LMTbOW4RQstlbmmMbpjEPrjIGQfimpYCe51by3v4sJvMbirMF+C
+	 pOuXGac+JDVOPjRAsAjDW3ruyWjnVj1pFwo1jdvYmXZvhNQoK5O9lYufRsj7mctpNn
+	 1Bvx0AJGwOFbt/iubxGiiCWoaQ1JL8ASi8iBkGbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfCZGih (ORCPT
+        id S1732584AbfCZGil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732245AbfCZGic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:32 -0400
+        id S1732245AbfCZGii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:38 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E40A42086C;
-        Tue, 26 Mar 2019 06:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FBB42070B;
+        Tue, 26 Mar 2019 06:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582311;
-        bh=x3Mi4ezUKPk706ty9nGyMs3+lbzbM3DzZvA6MPbL3UY=;
+        s=default; t=1553582317;
+        bh=1OaqqUXJDrI7dfSfYr7b/X6MysTBFQofNoFwE/0B3Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1vRJLrZ628Qn+pbdXUq8hzRwnJpky8er54lhkXttZLE/b/DOU4CiajIiaud0mxoc9
-         pbGVUUCFrsVXUpPl+yn9uBN6BVxp/lZAY+O0SAOhGXbIM87IRNvlRniVHMq4FesGR+
-         cTJQhdXP8/9B7MOTw/mFG//9ySXsTr1bMxo0TUI8=
+        b=aImW/nvqdFV5xUrXye90R+e/VI279iWl49R9n7bad4mMt+OqxuTwy9NKog8wJaX+K
+         PdvEUe7/QzrKW+qUtDzPiwWVkyhVbYm5yUTXz3jzIcIG7XZfMFgl/sFneBXTyeXnwc
+         6Fq7oX3R7woFXlw/RxCV8BLgSUQ0Ik4UK+/elNLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 02/52] ALSA: firewire-motu: use version field of unit directory to identify model
-Date:   Tue, 26 Mar 2019 15:29:49 +0900
-Message-Id: <20190326042701.088533815@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.0 04/52] mmc: alcor: fix DMA reads
+Date:   Tue, 26 Mar 2019 15:29:51 +0900
+Message-Id: <20190326042701.190923076@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -64,94 +65,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Daniel Drake <drake@endlessm.com>
 
-commit 2d012c65a9ca26a0ef87ea0a42f1653dd37155f5 upstream.
+commit 5ea47691bd99e1100707ec63364aff72324e2af4 upstream.
 
-Current ALSA firewire-motu driver uses the value of 'model' field
-of unit directory in configuration ROM for modalias for MOTU
-FireWire models. However, as long as I checked, Pre8 and
-828mk3(Hybrid) have the same value for the field (=0x100800).
+Setting max_blk_count to 1 here was causing the mmc block layer
+to always use the MMC_READ_SINGLE_BLOCK command here, which the
+driver does not DMA-accelerate.
 
-unit            | version   | model
---------------- | --------- | ----------
-828mkII         | 0x000003  | 0x101800
-Traveler        | 0x000009  | 0x107800
-Pre8            | 0x00000f  | 0x100800 <-
-828mk3(FW)      | 0x000015  | 0x106800
-AudioExpress    | 0x000033  | 0x104800
-828mk3(Hybrid)  | 0x000035  | 0x100800 <-
+Drop the max_blk_ settings here. The mmc host defaults suffice,
+along with the max_segs and max_seg_size settings, which I have
+now documented in more detail.
 
-When updating firmware for MOTU 8pre FireWire from v1.0.0 to v1.0.3,
-I got change of the value from 0x100800 to 0x103800. On the other
-hand, the value of 'version' field is fixed to 0x00000f. As a quick
-glance, the higher 12 bits of the value of 'version' field represent
-firmware version, while the lower 12 bits is unknown.
+Now each MMC command reads 4 512-byte blocks, using DMA instead of
+PIO. On my SD card, this increases read performance (measured with dd)
+from 167kb/sec to 4.6mb/sec.
 
-By induction, the value of 'version' field represents actual model.
-
-This commit changes modalias to match the value of 'version' field,
-instead of 'model' field. For degug, long name of added sound card
-includes hexadecimal value of 'model' field.
-
-Fixes: 6c5e1ac0e144 ("ALSA: firewire-motu: add support for Motu Traveler")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: http://lkml.kernel.org/r/CAD8Lp47L5T3jnAjBiPs1cQ+yFA3L6LJtgFvMETnBrY63-Zdi2g@mail.gmail.com
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Reviewed-by: Oleksij Rempel <linux@rempel-privat.de>
+Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/motu.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/mmc/host/alcor.c |   25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -36,7 +36,7 @@ static void name_card(struct snd_motu *m
- 	fw_csr_iterator_init(&it, motu->unit->directory);
- 	while (fw_csr_iterator_next(&it, &key, &val)) {
- 		switch (key) {
--		case CSR_VERSION:
-+		case CSR_MODEL:
- 			version = val;
- 			break;
- 		}
-@@ -46,7 +46,7 @@ static void name_card(struct snd_motu *m
- 	strcpy(motu->card->shortname, motu->spec->name);
- 	strcpy(motu->card->mixername, motu->spec->name);
- 	snprintf(motu->card->longname, sizeof(motu->card->longname),
--		 "MOTU %s (version:%d), GUID %08x%08x at %s, S%d",
-+		 "MOTU %s (version:%06x), GUID %08x%08x at %s, S%d",
- 		 motu->spec->name, version,
- 		 fw_dev->config_rom[3], fw_dev->config_rom[4],
- 		 dev_name(&motu->unit->device), 100 << fw_dev->max_speed);
-@@ -237,20 +237,20 @@ static const struct snd_motu_spec motu_a
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
--			  IEEE1394_MATCH_MODEL_ID |	\
--			  IEEE1394_MATCH_SPECIFIER_ID,	\
-+			  IEEE1394_MATCH_SPECIFIER_ID |	\
-+			  IEEE1394_MATCH_VERSION,	\
- 	.vendor_id	= OUI_MOTU,			\
--	.model_id	= model,			\
- 	.specifier_id	= OUI_MOTU,			\
-+	.version	= model,			\
- 	.driver_data	= (kernel_ulong_t)data,		\
+--- a/drivers/mmc/host/alcor.c
++++ b/drivers/mmc/host/alcor.c
+@@ -1044,14 +1044,27 @@ static void alcor_init_mmc(struct alcor_
+ 	mmc->caps2 = MMC_CAP2_NO_SDIO;
+ 	mmc->ops = &alcor_sdc_ops;
+ 
+-	/* Hardware cannot do scatter lists */
++	/* The hardware does DMA data transfer of 4096 bytes to/from a single
++	 * buffer address. Scatterlists are not supported, but upon DMA
++	 * completion (signalled via IRQ), the original vendor driver does
++	 * then immediately set up another DMA transfer of the next 4096
++	 * bytes.
++	 *
++	 * This means that we need to handle the I/O in 4096 byte chunks.
++	 * Lacking a way to limit the sglist entries to 4096 bytes, we instead
++	 * impose that only one segment is provided, with maximum size 4096,
++	 * which also happens to be the minimum size. This means that the
++	 * single-entry sglist handled by this driver can be handed directly
++	 * to the hardware, nice and simple.
++	 *
++	 * Unfortunately though, that means we only do 4096 bytes I/O per
++	 * MMC command. A future improvement would be to make the driver
++	 * accept sg lists and entries of any size, and simply iterate
++	 * through them 4096 bytes at a time.
++	 */
+ 	mmc->max_segs = AU6601_MAX_DMA_SEGMENTS;
+ 	mmc->max_seg_size = AU6601_MAX_DMA_BLOCK_SIZE;
+-
+-	mmc->max_blk_size = mmc->max_seg_size;
+-	mmc->max_blk_count = mmc->max_segs;
+-
+-	mmc->max_req_size = mmc->max_seg_size * mmc->max_segs;
++	mmc->max_req_size = mmc->max_seg_size;
  }
  
- static const struct ieee1394_device_id motu_id_table[] = {
--	SND_MOTU_DEV_ENTRY(0x101800, &motu_828mk2),
--	SND_MOTU_DEV_ENTRY(0x107800, &snd_motu_spec_traveler),
--	SND_MOTU_DEV_ENTRY(0x106800, &motu_828mk3),	/* FireWire only. */
--	SND_MOTU_DEV_ENTRY(0x100800, &motu_828mk3),	/* Hybrid. */
--	SND_MOTU_DEV_ENTRY(0x104800, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000003, &motu_828mk2),
-+	SND_MOTU_DEV_ENTRY(0x000009, &snd_motu_spec_traveler),
-+	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
-+	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
-+	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
+ static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
 
 
