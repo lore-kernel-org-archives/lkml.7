@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA424C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC25C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5D7205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB797205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="bq/BZra0"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CUo8nHTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731876AbfCZQoB (ORCPT
+        id S1731754AbfCZQqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:44:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44626 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZQoA (ORCPT
+        Tue, 26 Mar 2019 12:46:40 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42704 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCZQqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:44:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id x10so11324916edh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:43:58 -0700 (PDT)
+        Tue, 26 Mar 2019 12:46:40 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x61so5716680edc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:46:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nXA+Zc94jeiwxcjEMbXHEF8ZsU3HvIEy2/wORExzlsI=;
-        b=bq/BZra0vOCmLOlVieAJFyf7+DBsZgqOJq1ZUC4eztSOtrOlsP3aIAdU2+v4D+O35t
-         YIpRT1VED+M1y+cq01AmWAh33M2uOh1Q3pLyV6KrhSEo5jiYSBt+uv+30Rc1SWRAFqEf
-         7Dn2iXdhDQtGwuC5YZybe+0JUewMkNXZpDOLauhQlpF2GodCeV+Yii2Kz8WP4GPBntTq
-         pxi6R0u66HhuVTahROKvEeeBdi4c4TAUqiQtm1BRwkAZ6JRUSvocR0KQVFs2Vaf9ijkK
-         yvVcbCMa1eTpwvzBmjJ/Z9eZAANf7FyfE8ax3uD07cUESsb6nBcx7woK5pN8d6SZrdTK
-         bF4g==
+        bh=CUnsG4nZFUqlK9xMVi9XxULBtSGFwWhB5AMNqq5lCZ8=;
+        b=CUo8nHTi1akTKAjwBghAYXcl0jRTdTclaEgYc3ltfrOnEzpTnmoh45F82+lfSt2ebH
+         JWud442HMi86C3kPXWbG5yJbGD6OFUXNXbnD1tnic4gvge0CSQY137gKReHZgkSKUsA4
+         CSnagauy1blVftDXr6F7PY+hFBqUZFwsAipR0ZDQ+DwV5hRdIMgftBu05hhPNwjrwzIX
+         fjDU3XO69bkOi6m+LCJ9FM2FJWKGtCen7yb9f4UcSMTAM/USGhpFdPon2Sj7UBqhEDQQ
+         bcuBb8Hd8cgt/FtbWqrJD3PbicXn7qnDEjIuu6FDHV9cQWe0oWi5Z1+ZrbIDkkm9NoP1
+         Y8Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nXA+Zc94jeiwxcjEMbXHEF8ZsU3HvIEy2/wORExzlsI=;
-        b=Q6/nkQssiHaZ7TAspUOya5Tk9F7Q5fwwMY3GADEbOSS67fQiqZtr00JsJ3jv+OvqPm
-         u/Z5iMUQoaXiXUJR++jAz8ySWAEjPp34/AyzXwVRazw50LkvnGfJmxv76CdqgZ4eTiy8
-         uvb1MN+u+4vHBM0D+vpy9jHduYuAnEDttdjG6YtGOfsWng+WGAjTfVncUFJAsNgaD6Sg
-         XhpQM77CJ/0gcUhAF+t9wo/M/tiD1ZmKdyWU0jEy1AVA7EzJInp6vvCSez6I9Jo4xwIu
-         mxQ7YAiAHsHKxWAJTvXYQUQbzt8dhpU0CmNb/xEbQjizxrMRHQU7IKO4nJCXxsCo/a8b
-         KBjA==
-X-Gm-Message-State: APjAAAXoQ0zqDxfI5yTARqzFbTp2mALtDDfzhL+DQFkNd2JYpDr1sbsH
-        GVuPL/zFRhC6mrVeb1Hr2BRiMg==
-X-Google-Smtp-Source: APXvYqyRi2MN4G+2So+BkVBpkaAc5x2YFAqdWZsJUZduLWUFlW0uzEHgf/Of2mDTGnPoWafiEcsSPw==
-X-Received: by 2002:a17:906:33c5:: with SMTP id w5mr18240582eja.61.1553618638292;
-        Tue, 26 Mar 2019 09:43:58 -0700 (PDT)
+        bh=CUnsG4nZFUqlK9xMVi9XxULBtSGFwWhB5AMNqq5lCZ8=;
+        b=S3FPU7uDoBi/Dsux70sBkZ9UJ3D66b7gqdZBKuS0xknKa97EQ7iEd9FydRdhYuITS3
+         OSUrripfhbYJi9NV9WTXGySKaj/SqY2kSw9v4LTLtWmbcvkdodwjGmk7ABpIgoOw1y0k
+         QruQ/zpC2q7awajv9EOKKRLcV6bcEZuZq+5MbMxM3iyPIbPWBIXKPz2zprZzFEjti35u
+         ILUKAkxYl18+ultOLEtdTl8cJ1W6hTmy15Zfg78HGJ8UzOiEyEeEBCk3Qd6+9p29IcPQ
+         KMCp7d2UQvowHKCa3R3FoiBeoSFNx7SnpKEQEP/g4FE8YUllJazV17JlPmZttLEqgQlZ
+         moNw==
+X-Gm-Message-State: APjAAAWrGY7oUgdIyqAqM59LYTRFnmWmJXwBmSFLK7wCxp6LeAci3GeH
+        bwbEd/gYUn4uV7sx7zCuH4P4Xw==
+X-Google-Smtp-Source: APXvYqyc/OSfNgonVmP3tdVpWcIEur2tYtwTNAB60u+LUrDohjVqNFCS6ShjAtKSTelJeMnrnmiZRA==
+X-Received: by 2002:a50:cccc:: with SMTP id b12mr21233010edj.94.1553618798235;
+        Tue, 26 Mar 2019 09:46:38 -0700 (PDT)
 Received: from brauner.io (x59cc895e.dyn.telefonica.de. [89.204.137.94])
-        by smtp.gmail.com with ESMTPSA id t1sm120165eds.27.2019.03.26.09.43.56
+        by smtp.gmail.com with ESMTPSA id l44sm6297030edb.37.2019.03.26.09.46.36
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 26 Mar 2019 09:43:57 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 17:43:55 +0100
+        Tue, 26 Mar 2019 09:46:37 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:46:35 +0100
 From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jann Horn <jannh@google.com>,
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
         David Howells <dhowells@redhat.com>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
@@ -80,25 +80,25 @@ Cc:     Jann Horn <jannh@google.com>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Joel Fernandes <joel@joelfernandes.org>
 Subject: Re: [PATCH v1 2/4] pid: add pidctl()
-Message-ID: <20190326164354.qecuzkqz6ic2433i@brauner.io>
+Message-ID: <20190326164634.ba5dko6weazp3zyd@brauner.io>
 References: <20190326155513.26964-1-christian@brauner.io>
  <20190326155513.26964-3-christian@brauner.io>
  <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
  <20190326162337.o256x7hiodu2qfyg@brauner.io>
  <20190326163142.4eh5qpgiqvygf26w@brauner.io>
  <20190326163452.uku4bgkessxzxvai@brauner.io>
- <CAKOZuetcp=UPRWDkLUxLTmu-vqdN6qSmN9=0uP8MUuwyLoYfEA@mail.gmail.com>
+ <CALCETrXdyTxJZBXR02Dd=fnZYNLxFYgiJfnJCONBK5khy7JPVQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKOZuetcp=UPRWDkLUxLTmu-vqdN6qSmN9=0uP8MUuwyLoYfEA@mail.gmail.com>
+In-Reply-To: <CALCETrXdyTxJZBXR02Dd=fnZYNLxFYgiJfnJCONBK5khy7JPVQ@mail.gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 09:38:31AM -0700, Daniel Colascione wrote:
+On Tue, Mar 26, 2019 at 09:42:59AM -0700, Andy Lutomirski wrote:
 > On Tue, Mar 26, 2019 at 9:34 AM Christian Brauner <christian@brauner.io> wrote:
 > >
 > > On Tue, Mar 26, 2019 at 05:31:42PM +0100, Christian Brauner wrote:
@@ -141,18 +141,16 @@ On Tue, Mar 26, 2019 at 09:38:31AM -0700, Daniel Colascione wrote:
 > > probably rather:
 > >
 > > int pidfd = pidfd_open(-1, 4, PIDFD_TO_PROCFD);
-> > int procfd = pidfd_open(-1, 4, PROCFD_TO_PIDFD);
-> > int pidfd = pidfd_open(1234, -1, 0);
 > 
-> These three operations look like three related but distinct functions
-> to me, and in the second case, the "pidfd_open" name is a bit of a
-> misnomer. IMHO, the presence of an "operation name" field in any API
-> is usually a good indication that we're looking at a family of related
-> APIs, not a single coherent operation.
+> Do you mean:
+> 
+> int procrootfd = open("/proc", O_DIRECTORY | O_RDONLY);
+> int procfd = pidfd_open(procrootfd, pidfd, PIDFD_TO_PROCFD);
+> 
+> or do you have some other solution in mind to avoid the security problem?
 
-So I'm happy to accommodate the need for a clean api even though I
-disagree that what we have in pidctl() is unclean.
-But I will not start sending a pile of syscalls. There is nothing
-necessarily wrong to group related APIs together. By these standards the
-new mount API would need to be like 30 different syscalls, same for
-keyring management.
+Yes, we need the proc root obviously. I just jotted this down.
+
+We probably would need where one of the fds can refer to the proc root.
+
+pidfd_open(pid_t, int fd, int fd, 0)
