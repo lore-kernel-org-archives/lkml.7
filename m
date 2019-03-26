@@ -2,136 +2,194 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951FEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621702084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F6620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UFOAt6sy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="udfP7YcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbfCZHoy (ORCPT
+        id S1731106AbfCZHqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:44:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45666 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfCZHox (ORCPT
+        Tue, 26 Mar 2019 03:46:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38012 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfCZHqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:44:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bf11so1244300plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WN5U6KXN7zp8x4sdlZnFG53yaxOCJgECjRiQIMNvhe4=;
-        b=UFOAt6syz/ZSn9uIr/iXNruJy5QF6TB7LHi1oriFBi4EylajNF97/WfREzpHKa82YZ
-         7AK4IEuXOymOKLSon2OhbPSj+oAjSuIzk2YCUfnkcaWaDoCeiIkLbJwSQ7fRF5u/WnM4
-         FxE0o4fhSyaKX0O3Mw2JwLkmxLvnSXdMAGBqc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WN5U6KXN7zp8x4sdlZnFG53yaxOCJgECjRiQIMNvhe4=;
-        b=bfRhQHrm5Sj/ms+J+IspDV4F0Co/q/UAd9D8wHSA4x5tmRPHr8Pmot+PTByfPutzQ/
-         L3/0RkEh9cDICrhokMRLCZlCEpHUfBbIorpNOxHDaMOfnsWWzgvXX1zLI6Jn1z0x38Fj
-         u2XDKKBRULs/U2ZaHUX58BJOzKLzM58An0C4snS7mOQft/TQNazw7oMseEpssFIP7geW
-         NErfNGCFDMlzAWIQjPTrEbSh8uU2Z2jyhLIIoLRMgbM5uPi8i1JdpDXzeg414ALERK/3
-         zwOwAKGcZGyDWeMly5jPJ7PRZ6AMK0/tz3LKS0VXFv/rlUzlvVuWlMFF10ht04TemmDO
-         16+A==
-X-Gm-Message-State: APjAAAUVLowBkzRGS6nlV1cXu81CwCn5VhVIBmrTJaiigQNwdTm7NYm1
-        c9PyF/PkRq3zZUHFVWmt0b/p0w==
-X-Google-Smtp-Source: APXvYqwqCuWrtEbTSXcTCIzjkhkrreh05C7B3xpiMWN2Bew7wwyKI1ojX0PNg+zVbEG7jYLBc9RpFA==
-X-Received: by 2002:a17:902:e20e:: with SMTP id ce14mr16000701plb.193.1553586293140;
-        Tue, 26 Mar 2019 00:44:53 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id p14sm35710708pgn.34.2019.03.26.00.44.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 00:44:52 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH] media: mtk-vcodec: remove ready_to_display
-Date:   Tue, 26 Mar 2019 16:44:46 +0900
-Message-Id: <20190326074446.123945-1-acourbot@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 26 Mar 2019 03:46:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q7hx8s105827;
+        Tue, 26 Mar 2019 07:45:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=corp-2018-07-02;
+ bh=eDoMVVvxzjAeGpC/g/j/EEY/i7l9ZI6pwXrr5PXB4fs=;
+ b=udfP7YcBo8F9v/QuL1LJZ4n8hOTDaVqYHVIIGZiodo3IEcOFLsY0C89WoEMxWX2+UtXr
+ W3uzFW4fX4aTOVj+hSiIBn7EwuqUWAR+HJxzMoe8Ipaj3kwGbuaIIfgYZWNMS/tQQZYO
+ 5M+mECwoCbO+HnerUe7E6/q+fxwhBdvr0ibELDZ61Lwx9+OIAnSU3Ilif3b+JDYuLMQU
+ JY1hzPYWZt2MTqVruFSSmlGCpV7ktjyLokPAx5oZ9GT9/VWtCIkI3ZmnJcuuC1GQ0i1y
+ As5ZyKnHqmnwru86j5X46nmpNiSp2f1jtNhFR5V4zUoZcrQEddTt+donbLRG2O69uDek sg== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2130.oracle.com with ESMTP id 2re6g10jv1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 07:45:05 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q7j1ta011502
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 07:45:01 GMT
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2Q7imdx027791;
+        Tue, 26 Mar 2019 07:44:49 GMT
+Received: from abi.no.oracle.com (/141.143.213.38)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Mar 2019 00:44:48 -0700
+Message-ID: <a23e4d7f85b0c0daec25bb06ed3c4a1d078401d4.camel@oracle.com>
+Subject: Re: [RFC v4 08/17] kunit: test: add support for test abort
+From:   Knut Omang <knut.omang@oracle.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>, brakmo@fb.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, wfg@linux.intel.com
+Date:   Tue, 26 Mar 2019 08:44:41 +0100
+In-Reply-To: <CAFd5g44eqjN-nVCJuoeYFCxwVa5AorWiAnXe-tFCAc11zDgJFA@mail.gmail.com>
+References: <20190214213729.21702-1-brendanhiggins@google.com>
+         <20190214213729.21702-9-brendanhiggins@google.com>
+         <da1995fa-a362-dfe6-8184-7fcdf2b923e8@gmail.com>
+         <CAFd5g467OV8wTB7zEshgZw8g8=zoq0dLVfwx3wDH-8UA+9GWFA@mail.gmail.com>
+         <0124ed28-466c-e954-ddde-495419630a9f@gmail.com>
+         <CAFd5g47EDmsBWKNiW0jpHW2VG_GWCfe8UO+=ofgM2_ru+_UBQA@mail.gmail.com>
+         <118d89b7-d468-6d68-a48d-4d6d9cefd106@gmail.com>
+         <CAFd5g46AP9yZQ+z+60HGaZuqhJQmfSBw9+r62w4k=cGiMEkqLA@mail.gmail.com>
+         <e29d487f5ca0a5caf4723bc5d96b8a523a53a318.camel@oracle.com>
+         <CAFd5g44eqjN-nVCJuoeYFCxwVa5AorWiAnXe-tFCAc11zDgJFA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.4 (3.30.4-1.fc29) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This member is never read throughout the code, so remove it.
+On Mon, 2019-03-25 at 15:32 -0700, Brendan Higgins wrote:
+> On Fri, Mar 22, 2019 at 12:11 AM Knut Omang <knut.omang@oracle.com> wrote:
+> > On Thu, 2019-03-21 at 18:41 -0700, Brendan Higgins wrote:
+> > > On Thu, Mar 21, 2019 at 6:10 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> > > > On 2/27/19 11:42 PM, Brendan Higgins wrote:
+> > > > > On Tue, Feb 19, 2019 at 10:44 PM Frank Rowand <frowand.list@gmail.com>
+> > > > > wrote:
+> > > > > > On 2/19/19 7:39 PM, Brendan Higgins wrote:
+> > > > > > > On Mon, Feb 18, 2019 at 11:52 AM Frank Rowand <frowand.list@gmail.com>
+> > > > > > > wrote:
+> > > > > > > > On 2/14/19 1:37 PM, Brendan Higgins wrote:
+> < snip >
+> > > > > > > > kunit_abort() is what will be call as the result of an assert
+> > > > > > > > failure.
+> > > > > > > 
+> > > > > > > Yep. Does that need clarified somewhere.
+> > > > > > > > BUG(), which is a panic, which is crashing the system is not
+> > > > > > > > acceptable
+> > > > > > > > in the Linux kernel.  You will just annoy Linus if you submit this.
+> > > > > > > 
+> > > > > > > Sorry, I thought this was an acceptable use case since, a) this should
+> > > > > > > never be compiled in a production kernel, b) we are in a pretty bad,
+> > > > > > > unpredictable state if we get here and keep going. I think you might
+> > > > > > > have said elsewhere that you think "a" is not valid? In any case, I
+> > > > > > > can replace this with a WARN, would that be acceptable?
+> > > > > > 
+> > > > > > A WARN may or may not make sense, depending on the context.  It may
+> > > > > > be sufficient to simply report a test failure (as in the old version
+> > > > > > of case (2) below.
+> > > > > > 
+> > > > > > Answers to "a)" and "b)":
+> > > > > > 
+> > > > > > a) it might be in a production kernel
+> > > > > 
+> > > > > Sorry for a possibly stupid question, how might it be so? Why would
+> > > > > someone intentionally build unit tests into a production kernel?
+> > > > 
+> > > > People do things.  Just expect it.
+> > > 
+> > > Huh, alright. I will take your word for it then.
+> > 
+> > I have a better explanation: Production kernels have bugs, unfortunately.
+> > And sometimes those need to be investigated on systems than cannot be
+> > brought down or affected more than absolutely necessary, maybe via a third party
+> > doing the execution. A light weight, precise test (well tested ahead :) ) might
+> > be a way of proving or disproving assumptions that can lead to the development
+> > and application of a fix.
+> 
+> Sorry, you are not suggesting testing in production are you? To be
+> clear, I am not concerned about someone using testing, KUnit, or
+> whatever in a *production-like* environment: that's not what we are
+> talking about here. My assumption is that no one will deploy tests
+> into actual production.
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 5 -----
- drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h | 2 --
- 2 files changed, 7 deletions(-)
+And my take is that you should not make such assumptions.
+Even the cost of bringing down a "production-like" environment can be
+significant, and the test infrastructure shouldn't think of itself as 
+important enough to justify doing such things.
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-index e20b340855e7..710dcebb42b3 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
-@@ -133,8 +133,6 @@ static struct vb2_buffer *get_display_buffer(struct mtk_vcodec_ctx *ctx)
- 		vb2_set_plane_payload(&dstbuf->vb.vb2_buf, 1,
- 					ctx->picinfo.c_bs_sz);
- 
--		dstbuf->ready_to_display = true;
--
- 		mtk_v4l2_debug(2,
- 				"[%d]status=%x queue id=%d to done_list %d",
- 				ctx->id, disp_frame_buffer->status,
-@@ -1122,11 +1120,9 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
- 			v4l2_m2m_buf_queue(ctx->m2m_ctx, vb2_v4l2);
- 			buf->queued_in_vb2 = true;
- 			buf->queued_in_v4l2 = true;
--			buf->ready_to_display = false;
- 		} else {
- 			buf->queued_in_vb2 = false;
- 			buf->queued_in_v4l2 = true;
--			buf->ready_to_display = false;
- 		}
- 		mutex_unlock(&ctx->lock);
- 		return;
-@@ -1253,7 +1249,6 @@ static int vb2ops_vdec_buf_init(struct vb2_buffer *vb)
- 
- 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
- 		buf->used = false;
--		buf->ready_to_display = false;
- 		buf->queued_in_v4l2 = false;
- 	} else {
- 		buf->lastframe = false;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
-index dc4fc1df63c5..e4984edec4f8 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
-@@ -45,7 +45,6 @@ struct vdec_fb {
-  * @list:	link list
-  * @used:	Capture buffer contain decoded frame data and keep in
-  *			codec data structure
-- * @ready_to_display:	Capture buffer not display yet
-  * @queued_in_vb2:	Capture buffer is queue in vb2
-  * @queued_in_v4l2:	Capture buffer is in v4l2 driver, but not in vb2
-  *			queue yet
-@@ -60,7 +59,6 @@ struct mtk_video_dec_buf {
- 	struct list_head	list;
- 
- 	bool	used;
--	bool	ready_to_display;
- 	bool	queued_in_vb2;
- 	bool	queued_in_v4l2;
- 	bool	lastframe;
--- 
-2.21.0.392.gf8f6787159e-goog
+> > IMHO you're confusing "building into" with temporary applying, then removing
+> > again - like the difference between running a local user space program vs
+> > installing it under /usr and have it in everyone's PATH.
+> 
+> I don't really see the point of distinguishing between "building into"
+> and "temporary applying" in this case; that's part of my point. Maybe
+> it makes sense in whitebox end-to-end testing, but in the case of unit
+> testing, I don't think so.
+> 
+> > > > > > a') it is not acceptable in my development kernel either
+> > 
+> > I think one of the fundamental properties of a good test framework is that it
+> > should not require changes to the code under test by itself.
+> > 
+> 
+> Sure, but that has nothing to do with the environment the code/tests
+> are running in.
+
+Well, just that if the tests require a special environment to run, 
+you limit the usability of the tests in detecting or ruling out real issues.
+
+Thanks,
+Knut
+
+> 
+> < snip >
+> 
+> Cheers
 
