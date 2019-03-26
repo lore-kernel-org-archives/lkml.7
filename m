@@ -2,266 +2,529 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EC2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC92C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084002075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582758;
-	bh=VDjgQR6rKMaW7/BbdSm+AeiNq+uh0WMlYeDv7qlbnjA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mfJmDt50VJ6RFjoxGY0mNLFQ0xEHIxlGp16n9HaI17ikhirdrGtt+aosqt1KMppLX
-	 ku9OSjxUKD5Lh4OUsVpUp4GeLMdbZeCm3uPoxwkXSPVCe1LNHkq4j831tasZhePOF+
-	 a1yGQ+4IMVlh4192v6V7Hmy/nothk1+cSoYYfcHQ=
+	by mail.kernel.org (Postfix) with ESMTP id BBF922070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbfCZGd6 (ORCPT
+        id S1731684AbfCZGdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:33:32 -0400
+Received: from mx.socionext.com ([202.248.49.38]:11585 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731760AbfCZGdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:55 -0400
-Received: from localhost (unknown [104.132.152.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5B320856;
-        Tue, 26 Mar 2019 06:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582034;
-        bh=VDjgQR6rKMaW7/BbdSm+AeiNq+uh0WMlYeDv7qlbnjA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dT4v4VaO9/prdiBobIEMxuDG8i0d/yAKtD28mswEizslMyoz2cjjhBjJkSpUtaFfS
-         O/mZIQLNdyWieLCrJXFlSJO9NKSHOgabKm1g4AXP4gdoeNVqdzk1ZqNDtPEoiwJxBL
-         gIhzyePrQ4YPhmOc8k6OyWUIQeOFs9l+5yGFSMMU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/41] 4.14.109-stable review
-Date:   Tue, 26 Mar 2019 15:29:37 +0900
-Message-Id: <20190326042649.889479098@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.109-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.109-rc1
-X-KernelTest-Deadline: 2019-03-28T04:26+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1731664AbfCZGd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:28 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 26 Mar 2019 15:33:26 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 71778180BD4;
+        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 26 Mar 2019 15:33:26 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 211F71A15B7;
+        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
+Received: from M20VSDK.e01.socionext.com (unknown [10.213.118.34])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 0B069120487;
+        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
+From:   Shinji Kanematsu <kanematsu.shinji@socionext.com>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
+        orito.takao@socionext.com, sugaya.taichi@socionext.com,
+        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
+Subject: [PATCH 2/2] iio: counter: Add support for Milbeaut Updown Counter
+Date:   Tue, 26 Mar 2019 15:33:32 +0900
+Message-Id: <1553582012-13563-1-git-send-email-kanematsu.shinji@socionext.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.109 release.
-There are 41 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Add support for Milbeaut Updown Counter, that can be used as counter
+or quadrature encoder.
 
-Responses should be made by Thu Mar 28 04:26:32 UTC 2019.
-Anything received after that time might be too late.
+Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
+---
+ drivers/iio/counter/Kconfig               |  12 +
+ drivers/iio/counter/Makefile              |   1 +
+ drivers/iio/counter/milbeaut-updown.h     |  38 +++
+ drivers/iio/counter/milbeaut-updown_cnt.c | 385 ++++++++++++++++++++++++++++++
+ 4 files changed, 436 insertions(+)
+ create mode 100644 drivers/iio/counter/milbeaut-updown.h
+ create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.109-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.109-rc1
-
-Arnd Bergmann <arnd@arndb.de>
-    ath10k: avoid possible string overflow
-
-Baolin Wang <baolin.wang@linaro.org>
-    power: supply: charger-manager: Fix incorrect return value
-
-Enric Balletbo i Serra <enric.balletbo@collabora.com>
-    pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
-
-Jules Maselbas <jules.maselbas@arm.com>
-    sched/cpufreq/schedutil: Fix error path mutex unlock
-
-Baolin Wang <baolin.wang@linaro.org>
-    rtc: Fix overflow when converting time64_t to rtc_time
-
-Kishon Vijay Abraham I <kishon@ti.com>
-    PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()
-
-Niklas Cassel <niklas.cassel@axis.com>
-    PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be writable
-
-Niklas Cassel <niklas.cassel@axis.com>
-    PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
-
-kehuanlin <chgokhl@gmail.com>
-    scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-
-Andrey Konovalov <andreyknvl@google.com>
-    USB: core: only clean up what we allocated
-
-Peter Zijlstra <peterz@infradead.org>
-    lib/int_sqrt: optimize small argument
-
-Hui Wang <hui.wang@canonical.com>
-    ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda - Record the current power state before suspend/resume calls
-
-Vlastimil Babka <vbabka@suse.cz>
-    mm, mempolicy: fix uninit memory access
-
-Waiman Long <longman@redhat.com>
-    locking/lockdep: Add debug_locks check in __lock_downgrade()
-
-Jann Horn <jannh@google.com>
-    x86/unwind: Add hardcoded ORC entry for NULL
-
-Jann Horn <jannh@google.com>
-    x86/unwind: Handle NULL pointer calls better in frame unwinder
-
-Florian Westphal <fw@strlen.de>
-    netfilter: ebtables: remove BUGPRINT messages
-
-Chris Wilson <chris@chris-wilson.co.uk>
-    drm: Reorder set_property_atomic to avoid returning with an active ww_ctx
-
-Kefeng Wang <wangkefeng.wang@huawei.com>
-    Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
-
-Jeremy Cline <jcline@redhat.com>
-    Bluetooth: hci_ldisc: Initialize hci_dev before open()
-
-Myungho Jung <mhjungk@gmail.com>
-    Bluetooth: Fix decrementing reference count twice in releasing socket
-
-Myungho Jung <mhjungk@gmail.com>
-    Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
-
-Hans Verkuil <hverkuil@xs4all.nl>
-    media: v4l2-ctrls.c/uvc: zero v4l2_event
-
-zhangyi (F) <yi.zhang@huawei.com>
-    ext4: brelse all indirect buffer in ext4_ind_remove_space()
-
-Lukas Czerner <lczerner@redhat.com>
-    ext4: fix data corruption caused by unaligned direct AIO
-
-Jiufei Xue <jiufei.xue@linux.alibaba.com>
-    ext4: fix NULL pointer dereference while journal is aborted
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    ALSA: x86: Fix runtime PM for hdmi-lpe-audio
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    objtool: Move objtool_file struct off the stack
-
-Adrian Hunter <adrian.hunter@intel.com>
-    perf probe: Fix getting the kernel map
-
-Chen Jie <chenjie6@huawei.com>
-    futex: Ensure that futex address is aligned in handle_futex_death()
-
-Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-    scsi: ibmvscsi: Fix empty event pool access during host removal
-
-Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-    scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
-
-Archer Yan <ayan@wavecomp.com>
-    MIPS: Fix kernel crash for R6 in jump label branch function
-
-Yasha Cherikovsky <yasha.che3@gmail.com>
-    MIPS: Ensure ELF appended dtb is relocated
-
-Yifeng Li <tomli@tomli.me>
-    mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
-
-Jan Kara <jack@suse.cz>
-    udf: Fix crash on IO error during truncate
-
-Ilya Dryomov <idryomov@gmail.com>
-    libceph: wait for latest osdmap in ceph_monc_blacklist_add()
-
-Stanislaw Gruszka <sgruszka@redhat.com>
-    iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-
-Thomas Zimmermann <tzimmermann@suse.de>
-    drm/vmwgfx: Don't double-free the mode stored in par->set_mode
-
-Arnd Bergmann <arnd@arndb.de>
-    mmc: pxamci: fix enum type confusion
-
-
--------------
-
-Diffstat:
-
- Makefile                               |   4 +-
- arch/mips/include/asm/jump_label.h     |   8 +-
- arch/mips/kernel/vmlinux.lds.S         |  12 +--
- arch/mips/loongson64/lemote-2f/irq.c   |   2 +-
- arch/x86/include/asm/unwind.h          |   6 ++
- arch/x86/kernel/unwind_frame.c         |  25 ++++++-
- arch/x86/kernel/unwind_orc.c           |  17 +++++
- drivers/bluetooth/hci_h4.c             |   4 +
- drivers/bluetooth/hci_ldisc.c          |  24 +++---
- drivers/gpu/drm/drm_mode_object.c      |   5 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_fb.c     |  12 +--
- drivers/iommu/amd_iommu.c              |   7 +-
- drivers/media/usb/uvc/uvc_ctrl.c       |   2 +-
- drivers/media/v4l2-core/v4l2-ctrls.c   |   2 +-
- drivers/mmc/host/pxamci.c              |   2 +-
- drivers/net/wireless/ath/ath10k/wmi.c  |   2 +-
- drivers/pci/dwc/pcie-designware-ep.c   |  12 ++-
- drivers/pci/dwc/pcie-designware.h      |   1 +
- drivers/pci/endpoint/pci-epc-core.c    |  10 ---
- drivers/pci/endpoint/pci-epf-core.c    |   4 +-
- drivers/power/supply/charger-manager.c |   3 +-
- drivers/rtc/rtc-lib.c                  |   6 +-
- drivers/scsi/ibmvscsi/ibmvscsi.c       |  23 +++++-
- drivers/scsi/ufs/ufshcd.c              |  14 ++--
- drivers/usb/core/config.c              |   9 ++-
- drivers/video/backlight/pwm_bl.c       |   9 ++-
- fs/ext4/ext4_jbd2.h                    |   2 +-
- fs/ext4/file.c                         |   2 +-
- fs/ext4/indirect.c                     |  12 ++-
- fs/udf/truncate.c                      |   3 +
- include/linux/ceph/libceph.h           |   2 +
- kernel/futex.c                         |   4 +
- kernel/locking/lockdep.c               |   3 +
- kernel/sched/cpufreq_schedutil.c       |   3 +-
- lib/int_sqrt.c                         |   3 +
- mm/mempolicy.c                         |   2 +-
- net/bluetooth/hci_sock.c               |   3 +-
- net/bridge/netfilter/ebtables.c        | 131 ++++++++++-----------------------
- net/ceph/ceph_common.c                 |  18 ++++-
- net/ceph/mon_client.c                  |   9 +++
- sound/pci/hda/hda_codec.c              |  57 +++++++++++++-
- sound/x86/intel_hdmi_audio.c           |   1 -
- tools/objtool/check.c                  |   3 +-
- tools/perf/util/probe-event.c          |   6 +-
- 44 files changed, 303 insertions(+), 186 deletions(-)
-
+diff --git a/drivers/iio/counter/Kconfig b/drivers/iio/counter/Kconfig
+index bf1e559..a665f61 100644
+--- a/drivers/iio/counter/Kconfig
++++ b/drivers/iio/counter/Kconfig
+@@ -31,4 +31,16 @@ config STM32_LPTIMER_CNT
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called stm32-lptimer-cnt.
++
++config MILBEAUT_UPDOWN_CNT
++	tristate "Milbeaut Updown Counter driver"
++	depends on OF
++	depends on ARCH_MILBEAUT || COMPILE_TEST
++	help
++	  Select this option to enable Milbeaut Updown Counter quadrature encoder
++	  and counter driver.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called milbeaut-updown-cnt.
++
+ endmenu
+diff --git a/drivers/iio/counter/Makefile b/drivers/iio/counter/Makefile
+index 1b9a896..0cb708b 100644
+--- a/drivers/iio/counter/Makefile
++++ b/drivers/iio/counter/Makefile
+@@ -6,3 +6,4 @@
+ 
+ obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
+ obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
++obj-$(CONFIG_MILBEAUT_UPDOWN_CNT)	+= milbeaut-updown_cnt.o
+diff --git a/drivers/iio/counter/milbeaut-updown.h b/drivers/iio/counter/milbeaut-updown.h
+new file mode 100644
+index 0000000..9a038ad
+--- /dev/null
++++ b/drivers/iio/counter/milbeaut-updown.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Milbeaut Updown parent driver
++ * Copyright (C) 2019 Socionext Inc.
++ */
++
++#ifndef _LINUX_MILBEAUT_UPDOWN_H_
++#define _LINUX_MILBEAUT_UPDOWN_H_
++
++#define MLB_UPDOWN_UDCR		0x0		/* Updown Count Reg		*/
++#define MLB_UPDOWN_RCR		0x4		/* Reload Compare Reg	*/
++#define MLB_UPDOWN_CSR		0xC		/* Counter Status Reg	*/
++#define MLB_UPDOWN_CCR		0x14	/* Counter Control Reg	*/
++
++/* MLB_UPDOWN_CSR - bit fields */
++#define MLB_UPDOWN_CSTR		BIT(7)
++#define MLB_UPDOWN_UDIE		BIT(5)
++#define MLB_UPDOWN_CMPF		BIT(4)
++#define MLB_UPDOWN_OVFF		BIT(3)
++#define MLB_UPDOWN_UDFF		BIT(2)
++
++/* MLB_UPDOWN_CCR - bit fields */
++#define MLB_UPDOWN_FIXED	BIT(15)
++#define MLB_UPDOWN_CMS		GENMASK(11, 10)
++#define MLB_UPDOWN_CES		GENMASK(9, 8)
++#define MLB_UPDOWN_CTUT		BIT(6)
++#define MLB_UPDOWN_RLDE		BIT(4)
++
++/* MLB_UPDOWN max count value */
++#define MLB_UPDOWN_MAX_COUNT	0xFFFF
++
++/* MLB_UPDOWN rising edge detection */
++#define MLB_UPDOWN_RISING_EDGE		BIT(9)
++
++/* MLB_UPDOWN mode */
++#define MLB_UPDOWN_MODE		1
++
++#endif
+diff --git a/drivers/iio/counter/milbeaut-updown_cnt.c b/drivers/iio/counter/milbeaut-updown_cnt.c
+new file mode 100644
+index 0000000..a58709a
+--- /dev/null
++++ b/drivers/iio/counter/milbeaut-updown_cnt.c
+@@ -0,0 +1,385 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Milbeaut Updown counter driver
++ *
++ * Copyright (C) 2019 Socionext Inc.
++ *
++ */
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/iio/events.h>
++#include <linux/iio/iio.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include "milbeaut-updown.h"
++
++#define MILBEAUT_UPDOWN_IRQ_NAME		"milbeaut_updown_event"
++#define MILBEAUT_UPDOWN_MAX_REGISTER	0x1f
++
++static const struct regmap_config milbeaut_updown_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = sizeof(u32),
++	.max_register = MILBEAUT_UPDOWN_MAX_REGISTER,
++};
++struct milbeaut_updown_cnt {
++	struct device *dev;
++	struct regmap *regmap;
++	struct clk *clk;
++	u32 preset;
++	u32 polarity;
++	u32 quadrature_mode;
++};
++
++static int milbeaut_updown_is_enabled(struct milbeaut_updown_cnt *priv)
++{
++	u32 val;
++	int ret;
++
++	ret = regmap_read(priv->regmap, MLB_UPDOWN_CSR, &val);
++	if (ret)
++		return ret;
++
++	return FIELD_GET(MLB_UPDOWN_CSTR, val);
++}
++
++static int milbeaut_updown_setup(struct milbeaut_updown_cnt *priv,
++									int val)
++{
++	int ret;
++
++	if (val) {
++		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
++				MLB_UPDOWN_CMS | MLB_UPDOWN_RLDE,
++				FIELD_PREP(MLB_UPDOWN_CMS, priv->quadrature_mode) |
++				MLB_UPDOWN_RLDE);
++		if (ret)
++			return ret;
++
++		if (priv->quadrature_mode == MLB_UPDOWN_MODE) {
++			ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
++					MLB_UPDOWN_CES, MLB_UPDOWN_RISING_EDGE);
++			if (ret)
++				return ret;
++		}
++
++		ret = regmap_write(priv->regmap, MLB_UPDOWN_RCR, priv->preset);
++		if (ret)
++			return ret;
++
++		/* interrupt */
++		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
++						MLB_UPDOWN_UDIE, MLB_UPDOWN_UDIE);
++		if (ret)
++			return ret;
++
++		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
++			MLB_UPDOWN_CTUT | MLB_UPDOWN_FIXED,
++			MLB_UPDOWN_CTUT | MLB_UPDOWN_FIXED);
++		if (ret)
++			return ret;
++
++		val = MLB_UPDOWN_CSTR;
++	}
++
++	return regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
++								MLB_UPDOWN_CSTR, val);
++}
++
++static int milbeaut_updown_write_raw(struct iio_dev *indio_dev,
++				 struct iio_chan_spec const *chan,
++				 int val, int val2, long mask)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_ENABLE:
++		if (val < 0 || val > 1)
++			return -EINVAL;
++
++		ret = milbeaut_updown_is_enabled(priv);
++		if (val && ret)
++			return -EBUSY;
++
++		ret = milbeaut_updown_setup(priv, val);
++
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	return ret;
++}
++
++static int milbeaut_updown_read_raw(struct iio_dev *indio_dev,
++				struct iio_chan_spec const *chan,
++				int *val, int *val2, long mask)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++	u32 dat;
++	int ret;
++
++	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		ret = regmap_read(priv->regmap, MLB_UPDOWN_UDCR, &dat);
++		if (ret)
++			return ret;
++		*val = dat;
++		return IIO_VAL_INT;
++
++	case IIO_CHAN_INFO_ENABLE:
++		ret = milbeaut_updown_is_enabled(priv);
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return IIO_VAL_INT;
++
++	default:
++		return -EINVAL;
++	}
++}
++
++static const struct iio_info milbeaut_updown_cnt_iio_info = {
++	.read_raw = milbeaut_updown_read_raw,
++	.write_raw = milbeaut_updown_write_raw,
++};
++
++static const char *const milbeaut_updown_quadrature_modes[] = {
++	"non-quadrature",
++	"quadrature",
++};
++
++static int milbeaut_updown_get_quadrature_mode(struct iio_dev *indio_dev,
++					   const struct iio_chan_spec *chan)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++
++	return priv->quadrature_mode;
++}
++
++static int milbeaut_updown_set_quadrature_mode(struct iio_dev *indio_dev,
++					   const struct iio_chan_spec *chan,
++					   unsigned int type)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++
++	if (milbeaut_updown_is_enabled(priv))
++		return -EBUSY;
++
++	priv->quadrature_mode = type;
++
++	return 0;
++}
++
++static const struct iio_enum milbeaut_updown_quadrature_mode_en = {
++	.items = milbeaut_updown_quadrature_modes,
++	.num_items = ARRAY_SIZE(milbeaut_updown_quadrature_modes),
++	.get = milbeaut_updown_get_quadrature_mode,
++	.set = milbeaut_updown_set_quadrature_mode,
++};
++
++static const char * const milbeaut_updown_cnt_polarity[] = {
++	"rising-edge", "falling-edge", "both-edges",
++};
++
++static int milbeaut_updown_cnt_get_polarity(struct iio_dev *indio_dev,
++					const struct iio_chan_spec *chan)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++
++	return priv->polarity;
++}
++
++static int milbeaut_updown_cnt_set_polarity(struct iio_dev *indio_dev,
++					const struct iio_chan_spec *chan,
++					unsigned int type)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++
++	if (milbeaut_updown_is_enabled(priv))
++		return -EBUSY;
++
++	priv->polarity = type;
++
++	return 0;
++}
++
++static const struct iio_enum milbeaut_updown_cnt_polarity_en = {
++	.items = milbeaut_updown_cnt_polarity,
++	.num_items = ARRAY_SIZE(milbeaut_updown_cnt_polarity),
++	.get = milbeaut_updown_cnt_get_polarity,
++	.set = milbeaut_updown_cnt_set_polarity,
++};
++
++static ssize_t milbeaut_updown_cnt_get_preset(struct iio_dev *indio_dev,
++					  uintptr_t private,
++					  const struct iio_chan_spec *chan,
++					  char *buf)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++
++	return snprintf(buf, PAGE_SIZE, "%u\n", priv->preset);
++}
++
++static ssize_t milbeaut_updown_cnt_set_preset(struct iio_dev *indio_dev,
++					  uintptr_t private,
++					  const struct iio_chan_spec *chan,
++					  const char *buf, size_t len)
++{
++	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
++	u32 check_preset;
++	int ret;
++
++	if (milbeaut_updown_is_enabled(priv))
++		return -EBUSY;
++
++	ret = kstrtouint(buf, 0, &check_preset);
++	if (ret)
++		return ret;
++
++	if (check_preset > MLB_UPDOWN_MAX_COUNT)
++		return -EINVAL;
++
++	ret = kstrtouint(buf, 0, &priv->preset);
++	if (ret)
++		return ret;
++
++	return len;
++}
++
++static const struct iio_chan_spec_ext_info milbeaut_updown_cnt_ext_info[] = {
++	{
++		.name = "preset",
++		.shared = IIO_SEPARATE,
++		.read = milbeaut_updown_cnt_get_preset,
++		.write = milbeaut_updown_cnt_set_preset,
++	},
++	IIO_ENUM("polarity", IIO_SEPARATE, &milbeaut_updown_cnt_polarity_en),
++	IIO_ENUM_AVAILABLE("polarity", &milbeaut_updown_cnt_polarity_en),
++	{}
++};
++
++static const struct iio_event_spec milbeaut_updown_cnt_event = {
++	.type = IIO_EV_TYPE_ROC,
++	.dir = IIO_EV_DIR_RISING,
++	.mask_separate = BIT(IIO_EV_INFO_ENABLE),
++	.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
++};
++
++static const struct iio_chan_spec milbeaut_updown_cnt_channels = {
++	.type = IIO_COUNT,
++	.channel = 0,
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
++			      BIT(IIO_CHAN_INFO_ENABLE) |
++			      BIT(IIO_CHAN_INFO_SCALE),
++	.ext_info = milbeaut_updown_cnt_ext_info,
++	.indexed = 1,
++	.event_spec = &milbeaut_updown_cnt_event,
++	.num_event_specs = 1,
++};
++
++static irqreturn_t milbeaut_updown_event_handler(int irq, void *private)
++{
++	struct iio_dev *indio_dev = private;
++	struct milbeaut_updown_cnt *priv;
++	int ret;
++
++	priv = iio_priv(indio_dev);
++
++	ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
++			MLB_UPDOWN_CMPF | MLB_UPDOWN_OVFF | MLB_UPDOWN_UDFF,
++			0);
++	WARN_ON_ONCE(ret < 0);
++
++	iio_push_event(indio_dev,
++			       IIO_MOD_EVENT_CODE(IIO_INCLI, 0, 1,
++						  IIO_EV_TYPE_ROC, IIO_EV_DIR_RISING),
++			       iio_get_time_ns(indio_dev));
++
++	return IRQ_HANDLED;
++}
++
++static int milbeaut_updown_cnt_probe(struct platform_device *pdev)
++{
++	struct milbeaut_updown_cnt *priv;
++	struct iio_dev *indio_dev;
++	struct resource *res;
++	void __iomem *mmio;
++	int ret;
++	int irq;
++
++	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
++	if (!indio_dev)
++		return -ENOMEM;
++
++	priv = iio_priv(indio_dev);
++	priv->dev = &pdev->dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	mmio = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(mmio))
++		return PTR_ERR(mmio);
++
++	priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "mux", mmio,
++							  &milbeaut_updown_regmap_cfg);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
++
++	priv->preset = MLB_UPDOWN_MAX_COUNT;
++	ret = of_property_read_u32(priv->dev->of_node,
++				"cms_type", &priv->quadrature_mode);
++	if (ret)
++		return -ENODEV;
++
++	indio_dev->name = dev_name(&pdev->dev);
++	indio_dev->dev.parent = &pdev->dev;
++	indio_dev->dev.of_node = pdev->dev.of_node;
++	indio_dev->info = &milbeaut_updown_cnt_iio_info;
++	indio_dev->channels = &milbeaut_updown_cnt_channels;
++	indio_dev->num_channels = 1;
++
++	/* setting request irq */
++	irq = platform_get_irq(pdev, 0);
++	ret = devm_request_threaded_irq(&pdev->dev, irq,
++			NULL, milbeaut_updown_event_handler,
++			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++			MILBEAUT_UPDOWN_IRQ_NAME, indio_dev);
++	if (ret < 0) {
++		pr_err("%s request irq failed\n", __func__);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	return devm_iio_device_register(&pdev->dev, indio_dev);
++}
++
++static const struct of_device_id milbeaut_updown_cnt_of_match[] = {
++	{ .compatible = "socionext,milbeaut-updown-counter", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, milbeaut_updown_cnt_of_match);
++
++static struct platform_driver milbeaut_updown_cnt_driver = {
++	.probe = milbeaut_updown_cnt_probe,
++	.driver = {
++		.name = "milbeaut-updown-counter",
++		.of_match_table = milbeaut_updown_cnt_of_match,
++	},
++};
++module_platform_driver(milbeaut_updown_cnt_driver);
++
++MODULE_AUTHOR("Shinji Kanematsu <kanematsu.shinji@socionext.com>");
++MODULE_DESCRIPTION("Milbeaut Updown counter");
++MODULE_ALIAS("platform:milbeaut_updown_counter");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
 
