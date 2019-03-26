@@ -5,97 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D43C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B87C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2535720700
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5B220700
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbfCZVDM (ORCPT
+        id S1732572AbfCZVET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:03:12 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49374 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbfCZVDK (ORCPT
+        Tue, 26 Mar 2019 17:04:19 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35709 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732003AbfCZVET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:03:10 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h8tDq-0006HU-RS; Tue, 26 Mar 2019 22:03:03 +0100
-Date:   Tue, 26 Mar 2019 22:03:02 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        Tue, 26 Mar 2019 17:04:19 -0400
+X-Originating-IP: 88.3.237.213
+Received: from windsurf (213.red-88-3-237.dynamicip.rima-tde.net [88.3.237.213])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DBCA8FF809;
+        Tue, 26 Mar 2019 21:04:13 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 22:04:03 +0100
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH v2 03/14] x86/hpet: Calculate ticks-per-second in a
- separate function
-In-Reply-To: <1551283518-18922-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1903262201140.1789@nanos.tec.linutronix.de>
-References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Jan =?UTF-8?B?S3VuZHLDoXQ=?= <jan.kundrat@cesnet.cz>
+Subject: Re: [PATCH v2 3/5] gpio: use new gpio_set_config() helper in more
+ places
+Message-ID: <20190326220403.63e0b533@windsurf>
+In-Reply-To: <20190326200302.GA15712@roeck-us.net>
+References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
+        <20190207162859.26252-4-thomas.petazzoni@bootlin.com>
+        <20190316014352.GA6124@roeck-us.net>
+        <20190316144519.07805478@windsurf>
+        <20190326200302.GA15712@roeck-us.net>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019, Ricardo Neri wrote:
->  int hpet_alloc(struct hpet_data *hdp)
->  {
->  	u64 cap, mcfg;
-> @@ -845,7 +868,6 @@ int hpet_alloc(struct hpet_data *hdp)
->  	size_t siz;
->  	struct hpet __iomem *hpet;
->  	static struct hpets *last;
-> -	unsigned long period;
->  	unsigned long long temp;
->  	u32 remainder;
->  
-> @@ -881,6 +903,8 @@ int hpet_alloc(struct hpet_data *hdp)
->  
->  	cap = readq(&hpet->hpet_cap);
->  
-> +	temp = hpet_get_ticks_per_sec(cap);
+Hello Guenter,
 
-Just putting stuff to random places does not make the code any better.
+On Tue, 26 Mar 2019 13:03:02 -0700
+Guenter Roeck <linux@roeck-us.net> wrote:
 
->  	ntimer = ((cap & HPET_NUM_TIM_CAP_MASK) >> HPET_NUM_TIM_CAP_SHIFT) + 1;
->  
->  	if (hpetp->hp_ntimer != ntimer) {
-> @@ -897,11 +921,6 @@ int hpet_alloc(struct hpet_data *hdp)
->  
->  	last = hpetp;
->  
-> -	period = (cap & HPET_COUNTER_CLK_PERIOD_MASK) >>
-> -		HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
-> -	temp = 1000000000000000uLL; /* 10^15 femtoseconds per second */
-> -	temp += period >> 1; /* round */
-> -	do_div(temp, period);
->  	hpetp->hp_tick_freq = temp; /* ticks per second */
+> > I'll have a look. In the mean time, I'm fine with the patch being
+> > reverted.
+> 
+> The problem is still seen in the latest kernel as of last night, and
+> I did not see any further activities. Should I send a revert request ?
 
-What's wrong with the obvious:
+Sorry for not replying. I have not had the chance to investigate this
+further due to lack of time. Linus Walleij initially suggested to use
+gpio_set_config() in more places, but that doesn't to work as expected.
 
-       hpetp->hp_tick_freq = hpet_get_ticks_per_sec(cap);
+A revert patch has already been sent:
 
-Hmm?
+  https://lore.kernel.org/lkml/20190326044954.18671-1-andrew@aj.id.au/
 
-Thanks,
+Best regards,
 
-	tglx
+Thomas Petazzoni
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
