@@ -2,169 +2,138 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1348C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7BEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF5822075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891A22075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD8t/kKd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YoS3YtXw";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CUz5aKON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfCZOom (ORCPT
+        id S1731797AbfCZOq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:44:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35190 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCZOom (ORCPT
+        Tue, 26 Mar 2019 10:46:56 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:52740 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfCZOqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:44:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so13245825wmd.0;
-        Tue, 26 Mar 2019 07:44:40 -0700 (PDT)
+        Tue, 26 Mar 2019 10:46:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1553611618; x=1585147618;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=+yJTnse08eEvjb1BN2i1f3/CyXc/IDZi7/5d/nYz5gs=;
+  b=YoS3YtXw9W4Kic/MtpqcbWLhDIRmIRidRHo2F5pZYcYX63dW1k94L3oh
+   ngojSKlWIl1v4VM6ceThSm7CrRj4JLGRuQLvepyskC1/QY645a4S/ckh/
+   5/2gId0YPS323JOx64R9WZGlm5IKNF7Vc2FwGYoXAqpRMrFOo39/GFad/
+   +dvJU4N8TSFNovd9mmqUklu9ko6FuAYXoA8nyjQLidn4wzJbC2yy0+D8f
+   oW3PKo8AeSXtq9V69DEou9xGqNW+x3rx76QyMLL73wnp7cl4Yw0R+OYdI
+   tuLr2W1kHJBjmaue2XpYl3vac0T+lfZCrXZBFSEb+O66WKayp1nIRh+Gb
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,271,1549900800"; 
+   d="scan'208";a="203010702"
+Received: from mail-co1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.52])
+  by ob1.hgst.iphmx.com with ESMTP; 26 Mar 2019 22:48:14 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Vqy2Dy2bc2ahOyVVYsBMTFTMSbfvsk4qhtd2C/HsgM=;
-        b=UD8t/kKdjfYjFUaek/OnOn8pI6ma/NKXMPCCPxVs24wVQwGaDfazRlxd0BBjCKdj4N
-         qvGjhlMohF4FzaOQXEmi4jlShqSIEGRXwB5Ttd+VTHecIRrFNzqHQ8negbO07a9hAmfO
-         UwgirAyiZTUjy89NqdpQQkLPHbfKhnPUzEEKkA49+/v82nMTpWooB9Pi0KWNtuAWvFqy
-         XkjsXd6x0mwsPDem/LDBzxYnFTP+XFJnow8Z+D3R+Ep+Ilv+QRHbzBvWm2ueVfCbJIFp
-         RqNizNfa3C1Vp80kqRkvbGyBjmZzvpifJSSMGs5l8bnx+8a8fy/imlnOS+7N6682uvd9
-         sSUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Vqy2Dy2bc2ahOyVVYsBMTFTMSbfvsk4qhtd2C/HsgM=;
-        b=Db3wVEytWBCezxspRy4GOhR8m0df3w6kiam9kpiLmN8n5EHT9tsx5OtjeGV0EcV8fJ
-         AoDw28qv/vInla9sKqWfI7yAaiN9bi1e2uBi0Bk7D495ddD6fCqlqzPuwY/N5JpSzgoY
-         HYBcU6PyrQr450JZkzj+Nuz9wo6tw99tR3tXZoFlJmFOnhV1onKOY+1tLLk7Ltkk1+23
-         iOE4URNFVBFHmBsuCdhWZ7NpoCpUAFDknG9hC7+39S/ak6ruwvEuyE7AYM689YqpPdmt
-         n2fTt2IDpiZ2JdeGKK1UO19vkosmizPKqsT4fj6DHJ7waYhmb+j1YO0OY4QiztVEv8YO
-         HL3w==
-X-Gm-Message-State: APjAAAW/e/lk8aXeNZZep/aPnOrP9nQvGibbnF8DuY2bDonMysXlGjna
-        tOuJ+4+GYRpYK3jsSPFz2n+wuvu6
-X-Google-Smtp-Source: APXvYqz3rzy8GkHURLClJqIhDy+VpKhhYrBNVEXg7RL5Gr6xx9H2qhjjO5WYot9XSAI0nBunCcQVOw==
-X-Received: by 2002:a1c:ef08:: with SMTP id n8mr9343301wmh.142.1553611479777;
-        Tue, 26 Mar 2019 07:44:39 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id j184sm28745548wma.47.2019.03.26.07.44.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 07:44:38 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 15:44:37 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Randolph =?utf-8?Q?Maa=C3=9Fen?= <gaireg@gaireg.de>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] spi: tegra20-slink: change chip select action order
-Message-ID: <20190326144437.GA21654@ulmo>
-References: <20190326143050.26232-1-gaireg@gaireg.de>
+ d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JUv3wIAAda+s+twyZfuvkzfpQX88/iPNTAePOOXiB6c=;
+ b=CUz5aKONskD5tVDLeJTXmFAjSpjdg+noIfbDHm9sle1/b2/33qlHQjFc745ObH/MA5v8w1VxEPjl6cr5O6ApPETmxBb6mXgGCa+U8osT62F9cP7/oA2mctfePwOiD/ouzdtW7S5lMdgpAX3loi/437r46MAFfhWB5xGPlYMHXHU=
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
+ SN6PR04MB4973.namprd04.prod.outlook.com (52.135.114.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Tue, 26 Mar 2019 14:46:45 +0000
+Received: from SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::f4d4:a300:2010:195a]) by SN6PR04MB4925.namprd04.prod.outlook.com
+ ([fe80::f4d4:a300:2010:195a%3]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 14:46:45 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Aditya Pakki <pakki001@umn.edu>
+CC:     "kjlu@umn.edu" <kjlu@umn.edu>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Sharabi <ohad.sharabi@wdc.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: ufs: Check for return value of
+ create_singlethread_workqueue
+Thread-Topic: [PATCH] scsi: ufs: Check for return value of
+ create_singlethread_workqueue
+Thread-Index: AQHU3gaDl8WQlrHHhES1ZI3FpgE6x6YeBO6g
+Date:   Tue, 26 Mar 2019 14:46:45 +0000
+Message-ID: <SN6PR04MB4925D262CF042EAE14E38F59FC5F0@SN6PR04MB4925.namprd04.prod.outlook.com>
+References: <20190319034732.19559-1-pakki001@umn.edu>
+In-Reply-To: <20190319034732.19559-1-pakki001@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 877c7142-afe2-45ea-2131-08d6b1f9de7d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR04MB4973;
+x-ms-traffictypediagnostic: SN6PR04MB4973:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB497321E7BC1C35D8D69F0AFBFC5F0@SN6PR04MB4973.namprd04.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(7416002)(229853002)(7736002)(6436002)(68736007)(2906002)(66066001)(74316002)(76176011)(26005)(186003)(102836004)(6506007)(106356001)(8936002)(7696005)(105586002)(316002)(81166006)(52536014)(6116002)(3846002)(33656002)(478600001)(305945005)(81156014)(25786009)(8676002)(55016002)(9686003)(6246003)(4326008)(72206003)(53936002)(6916009)(5660300002)(2171002)(14454004)(97736004)(71190400001)(4744005)(476003)(71200400001)(99286004)(54906003)(256004)(86362001)(446003)(486006)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4973;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X88Xf5/5Ei8hvyJ4FpP0NeBincWLJLidqdOG3OcaS7SzS/v4c7nP+4kw/BAT4UrGjT7JyZcvRCA3L7tXpT8/J+5jfSeUgyn76QGbFQ2LcrumC+TVzoc1YK9esIGMa5wEZEVIzdZxWhF/rHo85d8ERt9ctj0zVIQ45E7ZWGiX/A4BT1rgqpn2NwTyKveVvjq2VaH726uw0/ir06hypLQY6dT4gd4atIIYtXqizKnv3029VMIPmtQJwH39R0/m4c5VHObzNKzMxZFb638NuydhgGzum5ZjHXwq9Wm1Kk9DJok7dVbpeITOqgNlRmCiZtMbkCl7gGSPbmwPVMlIQyF4kUyB2pmWfW8I7ATrI3mUb3m66X//ZMlZIn+jpcEB3QaR64MzeS32h/lvmWQ+1gndbkGH72YnNiUVi5wI8v0TlZk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Content-Disposition: inline
-In-Reply-To: <20190326143050.26232-1-gaireg@gaireg.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 877c7142-afe2-45ea-2131-08d6b1f9de7d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 14:46:45.6138
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4973
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 26, 2019 at 03:30:50PM +0100, Randolph Maa=C3=9Fen wrote:
-> To transfer via SPI the tegra20-slink driver first sets the command
-> register, which contains the chip select value, and after that the
-> command2 register, which contains the chip select line. This leads to a
-> small spike in the chip selct 0 line between the set of the value and
-> the selection of the chip select line.
+HI,
 >=20
-> This commit changes the order of the register writes so that first the
-> chip select line is chosen and then the value is set, removing the
-> spike.
+> In case create_singlethread_workqueue fails in ufshcd_init_scaling, the
+> patch returns the error upstream.
 >=20
-> Signed-off-by: Randolph Maa=C3=9Fen <gaireg@gaireg.de>
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 > ---
->  drivers/spi/spi-tegra20-slink.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
 
-Looks good to me. Adding Sowjanya who has been looking into SPI
-recently.
 
-Thierry
+>  out_remove_scsi_host:
+>  	scsi_remove_host(hba->host);
+> -exit_gating:
+> +exit_scaling:
+>  	ufshcd_exit_clk_scaling(hba);
+> +exit_gating:
+>  	ufshcd_exit_clk_gating(hba);
+There are calls to exit_gating which expects clk_scaling cleanup as well.
 
-> diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-sl=
-ink.c
-> index 1427f343b39a..6d4679126213 100644
-> --- a/drivers/spi/spi-tegra20-slink.c
-> +++ b/drivers/spi/spi-tegra20-slink.c
-> @@ -717,9 +717,6 @@ static int tegra_slink_start_transfer_one(struct spi_=
-device *spi,
->  	command2 =3D tspi->command2_reg;
->  	command2 &=3D ~(SLINK_RXEN | SLINK_TXEN);
-> =20
-> -	tegra_slink_writel(tspi, command, SLINK_COMMAND);
-> -	tspi->command_reg =3D command;
-> -
->  	tspi->cur_direction =3D 0;
->  	if (t->rx_buf) {
->  		command2 |=3D SLINK_RXEN;
-> @@ -729,9 +726,18 @@ static int tegra_slink_start_transfer_one(struct spi=
-_device *spi,
->  		command2 |=3D SLINK_TXEN;
->  		tspi->cur_direction |=3D DATA_DIR_TX;
->  	}
-> +
-> +	/*
-> +	 * Writing to the command2 register bevore the command register prevents
-> +	 * a spike in chip_select line 0. This selects the chip_select line
-> +	 * before changing the chip_select value.
-> +	 */
->  	tegra_slink_writel(tspi, command2, SLINK_COMMAND2);
->  	tspi->command2_reg =3D command2;
-> =20
-> +	tegra_slink_writel(tspi, command, SLINK_COMMAND);
-> +	tspi->command_reg =3D command;
-> +
->  	if (total_fifo_words > SLINK_FIFO_DEPTH)
->  		ret =3D tegra_slink_start_dma_based_transfer(tspi, t);
->  	else
-> --=20
-> 2.11.0
->=20
+Thanks,
+Avri
 
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature; name="signature.asc"
+>  out_disable:
+>  	hba->is_irq_enabled =3D false;
+> --
+> 2.17.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyaOtEACgkQ3SOs138+
-s6EE1A//Xgtd5RAaeIlQE1iF6N1TrDkckZBMA+MGB//cbClQCbyK/qoGPSCz+9hz
-yariyY0fQlISkIFU2WEHbsI+j5DnKQFZoL7+It+jFyjKDx133yqwCH2RvFVu3GRK
-S6NWE2LpRZyj2lCf3wa8YIOuY/vCylF4V8SHjXinhDwfYKkollLOj5tbh9y4vwTz
-wOcTBEEc2/TqTZQkMeCQcLrSWT1RgKLwMtSxw/8UlOtOAd+Q9WZ+/aRgfpk2aKH7
-WlmCCfdsT+Jg7i10S/vpXJpelGq6sgSB6oTsTFvyGyyLADMkeVfWjsLb67KKHPkQ
-FspCeXI+Gz8sPd3eSPpoF+6yBiXAWuQ3xIrk2TJW1ZhcqpIUGc91zHl5zmY9loLL
-Zej3ruowHgSMZLdNtw0EzZRqnDkOzz+itkvxPiKUa3T1hJtPierXmHoNlDU/mEtL
-uYaPB3CRNOTqXaZT8lcYfRSn15WvcvI4F5wXmQhTY6Dn9bHtt9+qK1mL0/IYGciz
-xwrc0E2IuBgwiQzn1EpmsMY++VmWYJuX+1qr2guc9Ol32Ki8cTaHlQ5pVs4x0p1e
-+8iAAPF6E3gxdLrJApbc1bgxJ6/EbuC/69bzH23nxQNxJ2A1+rRr41Ba9lYpGT9y
-0YceWTQZfq08wPve6U/pEUX913qYJUzAHL+181fUMs89rfdNmh4=
-=nMZ4
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
