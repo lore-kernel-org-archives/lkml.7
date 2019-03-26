@@ -2,113 +2,102 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCEFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0095A20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D962084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ipxJtVHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbfCZNvm (ORCPT
+        id S1731467AbfCZNwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:51:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9037 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZNvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:51:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 06:51:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="332158383"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2019 06:51:39 -0700
-Date:   Tue, 26 Mar 2019 04:45:34 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com
-Subject: Re: [RFC PATCH v4 0/8] This patch-set is to enable Guest CET support
-Message-ID: <20190325204533.GA12253@local-michael-cet-test.sh.intel.com>
-References: <20190318150351.15550-1-weijiang.yang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318150351.15550-1-weijiang.yang@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 26 Mar 2019 09:52:22 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:44242 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZNwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:52:21 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2QDheMM025966;
+        Tue, 26 Mar 2019 13:52:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=hlceh8J3UDHjopzvH0T6OmT5CXF+sN3ZUycoWQT6P2o=;
+ b=ipxJtVHVa8TePkRxY9VPWO/oNkzjmPCNqh9NxijVEQsVYVq8MvQbS929Nj8+8NnAadQw
+ tPT77xcbL4bJS3Tf4+RSCiT3LctyrFNwAdRvlz/s/q5DHrypZiTw8DtpnFiiErGMA/iZ
+ hDy8EfbmGt/Q8j0NHc4RVqRz+HRSc0I0OWEZB5LJYv/vCJbcYxAjGJ/Cb+O9alEl47SB
+ MwjzN6G1Ey/Ys6n+W2iMIDFfJYcElDTTepuboG3TOmxAq7CTO56k6F+lnenLlv03Q0Yd
+ cWDmHI7OsGZlnwXGfl/uPJGwrzOVZOZKKy8g90bg4BQ6jKQsJ7ePXrNHqly3Ir/Gs5a+ kg== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by aserp2130.oracle.com with ESMTP id 2re6g0tgbu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 13:52:12 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2QDqBpC027245
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 13:52:11 GMT
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2QDq9e2020614;
+        Tue, 26 Mar 2019 13:52:09 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Mar 2019 06:52:08 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CONFIG_DEBUG_VIRTUAL breaks boot on x86-32
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <4d5ee3b0-6d47-a8df-a6b3-54b0fba66ed7@linux.ee>
+Date:   Tue, 26 Mar 2019 07:52:07 -0600
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A1B7F481-4BF6-4441-8019-AE088F8A8939@oracle.com>
+References: <4d5ee3b0-6d47-a8df-a6b3-54b0fba66ed7@linux.ee>
+To:     Meelis Roos <mroos@linux.ee>
+X-Mailer: Apple Mail (2.3445.104.8)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=991 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:03:43PM +0800, Yang Weijiang wrote:
-> Control-flow Enforcement Technology (CET) provides protection against
-> return/jump-oriented programming (ROP) attacks. To make kvm Guest OS own
-> the capability, this patch-set is required. It enables CET related CPUID
-> report, xsaves/xrstors, vmx entry configuration etc. for Guest OS.
-> 
-> PATCH 1    : Define CET VMCS fields and bits.
-> PATCH 2/3  : Report CET feature support in CPUID.
-> PATCH 4    : Fix xsaves size calculation issue.
-> PATCH 5    : Pass through CET MSRs to Guest.
-> PATCH 6    : Set Guest CET state auto loading bit.
-> PATCH 7    : Load Guest fpu state when accessing CET XSAVES managed MSRs.
-> PATCH 8    : Add CET MSR user space access interface.
-> 
-> Changelog:
-> 
->  v4:
->  - Add Sean's patch for loading Guest fpu state before access XSAVES
->    managed CET MSRs.
->  - Melt down CET bits setting into CPUID configuration patch.
->  - Add VMX interface to query Host XSS.
->  - Check Host and Guest XSS support bits before set Guest XSS.
->  - Make Guest SHSTK and IBT feature enabling independent.
->  - Do not report CET support to Guest when Host CET feature is
->    Disabled.
-> 
->  v3:
->  - Modified patches to make Guest CET independent to Host enabling.
->  - Added patch 8 to add user space access for Guest CET MSR access.
->  - Modified code comments and patch description to reflect changes.
-> 
->  v2:
->  - Re-ordered patch sequence, combined one patch.
->  - Added more description for CET related VMCS fields.
->  - Added Host CET capability check while enabling Guest CET loading bit.
->  - Added Host CET capability check while reporting Guest CPUID(EAX=7,
->    EXC=0).
->  - Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
->  - Added Host and Guest XSS mask check while setting bits for Guest XSS.
-> 
-> 
-> Sean Christopherson (1):
->   KVM:x86: load guest fpu state when accessing MSRs managed by XSAVES
-> 
-> Yang Weijiang (7):
->   KVM:VMX: Define CET VMCS fields and bits
->   KVM:CPUID: Add CET CPUID support for Guest
->   KVM:CPUID: Fix xsaves area size calculation for CPUID.(EAX=0xD,ECX=1).
->   KVM:VMX: Pass through host CET related MSRs to Guest.
->   KVM:VMX: Load Guest CET via VMCS when CET is enabled in Guest
->   KVM:x86: Allow Guest to set supported bits in XSS
->   KVM:x86: Add user-space read/write interface for CET MSRs
-> 
->  arch/x86/include/asm/kvm_host.h  |  5 +-
->  arch/x86/include/asm/msr-index.h |  2 +
->  arch/x86/include/asm/vmx.h       |  8 +++
->  arch/x86/kvm/cpuid.c             | 53 ++++++++++++++------
->  arch/x86/kvm/vmx.c               | 86 ++++++++++++++++++++++++++++++--
->  arch/x86/kvm/x86.c               | 32 +++++++++++-
->  arch/x86/kvm/x86.h               |  4 ++
->  7 files changed, 167 insertions(+), 23 deletions(-)
-> 
-> -- 
-> 2.17.1
-Hi, Paolo and Sean,
-Do you have any comments on v4 patches?
+Does this still happen on 5.1-rc2?
+
+Do you have idea as to what max_low_pfn() gets set to on your system at =
+boot time?
+
+=46rom the screen shot I'm guessing it MIGHT be 0x373fe, but it's hard =
+to know for sure.
+
+
+> On Mar 21, 2019, at 2:22 PM, Meelis Roos <mroos@linux.ee> wrote:
+>=20
+> I tried to debug another problem and turned on most debug options for =
+memory.
+> The resulting kernel failed to boot.
+>=20
+> Bisecting the configurations led to CONFIG_DEBUG_VIRTUAL - if I turned =
+it on
+> in addition to some other debug options, the machine crashed with
+>=20
+> kernel BUG at arch/x86/mm/physaddr.c:79!
+>=20
+> Screenshot at http://kodu.ut.ee/~mroos/debug_virtual-boot-hang-1.jpg
+>=20
+> The machine was Athlon XP with VIA KT600 chipset and 2G RAM.
+>=20
+> --=20
+> Meelis Roos <mroos@linux.ee>
+>=20
+
