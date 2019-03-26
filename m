@@ -2,92 +2,88 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38349C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79F9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FF120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66CB20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:20:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="GKN6TdnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbfCZKTk (ORCPT
+        id S1731386AbfCZKUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:19:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21429 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfCZKTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:19:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 03:19:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="145311682"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 26 Mar 2019 03:19:35 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1h8jB7-0001ER-Ln; Tue, 26 Mar 2019 12:19:33 +0200
-Date:   Tue, 26 Mar 2019 12:19:33 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, akpm@linux-foundation.org,
-        linux-gpio@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v12 01/11] bitops: Introduce the for_each_set_clump8 macro
-Message-ID: <20190326101933.GW9224@smile.fi.intel.com>
-References: <cover.1553494625.git.vilhelm.gray@gmail.com>
- <9afc30a574ce3e6a86b51dd522146a1d2156dedd.1553494625.git.vilhelm.gray@gmail.com>
- <20190325093854.jzkkwaksxi7zvtrg@wunner.de>
- <20190326031422.GB3356@icarus>
- <20190326094345.v7l7xjvfs2scbvbv@wunner.de>
- <20190326100743.GA10005@icarus>
+        Tue, 26 Mar 2019 06:20:41 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37826 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCZKUl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:20:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so13636781wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oGDK3PbhKNJWW4lty9R1MVSikr2RPSdtx2bt/jj9n5c=;
+        b=GKN6TdnGEFVDK+EhCz92UnTLWLPDWnLzjzpWbd3Ytb07y1JBX43GSEnsRjHsTMUIL7
+         8DabvGAM2xqgqd/QI0pVg0lQcbRWPl2QHjJP90anVv0apkkOrHUwYtq7Zt+gM+2MwYZE
+         zj0F6jTQxbVwLkPQbzSG3W/X+ytb3u2ZS60KnTKP9MBagchF+61JYZRR0tlXESLejW1Y
+         4nX97a7m1PVyHmjaumUkzwyU3fZFyohMCHODsDM54w4rYYimEDKdlkkUAJkqEiB2nIzX
+         PqnFi0u07mDicHLTT+up5Cvarbe2zSEbt5vulyHVbTiAuE5NmX/MG+SaxX7095GMbU17
+         FgYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oGDK3PbhKNJWW4lty9R1MVSikr2RPSdtx2bt/jj9n5c=;
+        b=uNXLU9kFgRXm4FScm27a8gyrM+yzoki7TEypC5NV3fgXqF7G7wycmeZruYMNnQHA3H
+         Vkq9rjEDr1hQop2Z/OT0IyobD+Y8QiY7HP5djLAEfKj86TV7WuAQXPx2/uGmMqozq7Ad
+         zWfiPfMDBn6La1TGYtjW8yGDSJblPgL5d3XXAnLScieE1+sdy1r4Vx9ZVg7zgb2XY2uK
+         LMRGK3zFN8kBfRuMobDsibfD/mvoJ668MCmmxCi0KkCxHmMDpZjpc0FIeV1wlyGVFxC6
+         8R719O0DOK9u5FyKi1lmq8nH1yJbCMwSpfQcxQ8w5MoG8tG8ydddn1ByskwT/OFMqE93
+         H7pQ==
+X-Gm-Message-State: APjAAAUnb0u4/AU82xxO6kG/C0C/dDAXlQJp5gNF/Udy+WMoHY3G9NME
+        xtNtOLKlb0Q/FQbIZJURpjZGLQ==
+X-Google-Smtp-Source: APXvYqz8qLopzK822aHzhtvW7NFYnyoO2ZbWyWOkbIyLCnBWTfxIfCcF/tNuCbgpdmpS5vQAngKpFA==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr19135264wrs.278.1553595639234;
+        Tue, 26 Mar 2019 03:20:39 -0700 (PDT)
+Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
+        by smtp.gmail.com with ESMTPSA id x84sm1256184wmg.13.2019.03.26.03.20.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 03:20:38 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:09:51 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 02/22] netlink: introduce nla_put_bitfield32()
+Message-ID: <20190326100951.GB2230@nanopsycho>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <94ec4068f6767acabf6bd795818f5b7ce2dae00b.1553532199.git.mkubecek@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326100743.GA10005@icarus>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <94ec4068f6767acabf6bd795818f5b7ce2dae00b.1553532199.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 07:08:18PM +0900, William Breathitt Gray wrote:
-> On Tue, Mar 26, 2019 at 10:43:45AM +0100, Lukas Wunner wrote:
-> > On Tue, Mar 26, 2019 at 12:14:22PM +0900, William Breathitt Gray wrote:
+Mon, Mar 25, 2019 at 06:08:00PM CET, mkubecek@suse.cz wrote:
+>Similar to other data types, this helper puts NLA_BITFIELD32 attribute into
+>a netlink message. It takes separate value and selector arguments, if there
+>is a struct nla_bitfield32 already, one can use nla_put().
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-> > Why is it so complicated, does it allow passing in a start value
-> > that's not a multiple of 8?  Do you really need that?  I imagine
-> > a simplification is possible if that assumption can be made (and
-> > is spelled out in the kerneldoc).
-> 
-> That's a good point. Originally, I had envisioned the possibility of
-> calling bitmap_get_value8/bitmap_set_value8 at odd start offsets; this
-> would open up the possibility of a clump landing as a split between 2
-> words, thus requiring this complicated case handling code. However, I'm
-> not sure how often users would need this case; none of the drivers right
-> now require clumps at odd offsets.
-> 
-> Andy, would you have any objection to restricting the start offset
-> values for bitmap_get_value8/bitmap_set_value8 to multiples of 8? That
-> would prevent the split word case, and thus allow the implementation for
-> those functions to be a lot simpler.
-
-No, I have no objection.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Jiri Pirko <jiri@mellanox.com>
