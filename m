@@ -2,43 +2,43 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C9FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE423C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FB520857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0020830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbfCZJLm (ORCPT
+        id S1731389AbfCZJLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:11:42 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54397 "EHLO
+        Tue, 26 Mar 2019 05:11:49 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21831 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730919AbfCZJLg (ORCPT
+        by vger.kernel.org with ESMTP id S1731037AbfCZJLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:11:36 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q96fXs017529;
-        Tue, 26 Mar 2019 10:11:18 +0100
+        Tue, 26 Mar 2019 05:11:38 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q96ZwD025258;
+        Tue, 26 Mar 2019 10:11:24 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rddhbgd12-1
+        by mx07-00178001.pphosted.com with ESMTP id 2rddh7gcya-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 26 Mar 2019 10:11:18 +0100
+        Tue, 26 Mar 2019 10:11:24 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 43A383F;
-        Tue, 26 Mar 2019 09:11:18 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1A42F4DD5;
-        Tue, 26 Mar 2019 09:11:18 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 26 Mar
- 2019 10:11:17 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 174B33A;
+        Tue, 26 Mar 2019 09:11:24 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E50654DE4;
+        Tue, 26 Mar 2019 09:11:23 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 26 Mar
+ 2019 10:11:23 +0100
 Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
  (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
- 2019 10:11:17 +0100
+ 2019 10:11:23 +0100
 From:   Ludovic Barre <ludovic.Barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -50,10 +50,12 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V3 0/5] mmc: mmci: add get_datactrl_cfg callback
-Date:   Tue, 26 Mar 2019 10:11:05 +0100
-Message-ID: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
+Subject: [PATCH V3 5/5] mmc: mmci: replace blksz_datactrlXX by get_datactrl_cfg callback
+Date:   Tue, 26 Mar 2019 10:11:10 +0100
+Message-ID: <1553591470-31419-6-git-send-email-ludovic.Barre@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
+References: <1553591470-31419-1-git-send-email-ludovic.Barre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.0.237]
@@ -66,43 +68,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch series adds get_datactrl_cfg callback in mmci_host_ops
-to allow to get datactrl configuration specific at variant.
+This patch allows to get datactrl configuration specific
+at variant. This introduce more flexibility on datactlr
+value.
 
-change V3:
--keep the common functions in mmci_start_data. define
-function used by some variants like an helper
-(example mmci_dctrl_blks used by mmci and sdmmc).
--To be consistent rename callback for ux500v2 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c | 26 ++------------------------
+ drivers/mmc/host/mmci.h |  7 -------
+ 2 files changed, 2 insertions(+), 31 deletions(-)
 
-change V2:
--This V2 has been rebased on
-"mmc: mmci: Cleanup some variant related code" series
--add helpers functions to define default datactrl value,
-each variant could use these helpers to define datactrl
-and adds their specific bits.
--use static in qcom and stm32
--regroup mmci_(ux500v2)variant_init in header file
-to avoid checkpatch warning:
-"WARNING: externs should be avoided in .c files"
--remove unused variant properties:
- "datactrl_dpsm_enable"
- "blksz_datactrl16"
- "blksz_datactrl4"
-
-Ludovic Barre (5):
-  mmc: mmci: add get_datactrl_cfg callback and helper functions
-  mmc: mmci: define get_dctrl_cfg for legacy variant
-  mmc: mmci: qcom: define get_dctrl_cfg
-  mmc: mmci: stm32: define get_dctrl_cfg
-  mmc: mmci: replace blksz_datactrlXX by get_datactrl_cfg callback
-
- drivers/mmc/host/mmci.c             | 57 ++++++++++++++++---------------------
- drivers/mmc/host/mmci.h             | 21 +++++++++-----
- drivers/mmc/host/mmci_qcom_dml.c    |  6 ++++
- drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++
- 4 files changed, 63 insertions(+), 39 deletions(-)
-
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 4041e36..cd3a65c 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -57,7 +57,6 @@ static struct variant_data variant_arm = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 16,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.pwrreg_powerup		= MCI_PWR_UP,
+ 	.f_max			= 100000000,
+ 	.reversed_irq_handling	= true,
+@@ -77,7 +76,6 @@ static struct variant_data variant_arm_extended_fifo = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 16,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.pwrreg_powerup		= MCI_PWR_UP,
+ 	.f_max			= 100000000,
+ 	.mmcimask1		= true,
+@@ -97,7 +95,6 @@ static struct variant_data variant_arm_extended_fifo_hwfc = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 16,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.pwrreg_powerup		= MCI_PWR_UP,
+ 	.f_max			= 100000000,
+ 	.mmcimask1		= true,
+@@ -118,7 +115,6 @@ static struct variant_data variant_u300 = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 16,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio			= true,
+ 	.pwrreg_powerup		= MCI_PWR_ON,
+@@ -144,7 +140,6 @@ static struct variant_data variant_nomadik = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+@@ -173,7 +168,6 @@ static struct variant_data variant_ux500 = {
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+@@ -207,11 +201,9 @@ static struct variant_data variant_ux500v2 = {
+ 	.datactrl_mask_ddrmode	= MCI_DPSM_ST_DDRMODE,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+-	.blksz_datactrl16	= true,
+ 	.pwrreg_powerup		= MCI_PWR_ON,
+ 	.f_max			= 100000000,
+ 	.signal_direction	= true,
+@@ -242,7 +234,6 @@ static struct variant_data variant_stm32 = {
+ 	.irq_pio_mask		= MCI_IRQ_PIO_MASK,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.datactrl_mask_sdio	= MCI_DPSM_ST_SDIOEN,
+ 	.st_sdio		= true,
+ 	.st_clkdiv		= true,
+@@ -286,10 +277,8 @@ static struct variant_data variant_qcom = {
+ 	.cmdreg_srsp_crc	= MCI_CPSM_RESPONSE,
+ 	.cmdreg_srsp		= MCI_CPSM_RESPONSE,
+ 	.data_cmd_enable	= MCI_CPSM_QCOM_DATCMD,
+-	.blksz_datactrl4	= true,
+ 	.datalength_bits	= 24,
+ 	.datactrl_blocksz	= 11,
+-	.datactrl_dpsm_enable	= MCI_DPSM_ENABLE,
+ 	.pwrreg_powerup		= MCI_PWR_UP,
+ 	.f_max			= 208000000,
+ 	.explicit_mclk_control	= true,
+@@ -1004,7 +993,6 @@ static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
+ 	unsigned int datactrl, timeout, irqmask;
+ 	unsigned long long clks;
+ 	void __iomem *base;
+-	int blksz_bits;
+ 
+ 	dev_dbg(mmc_dev(host->mmc), "blksz %04x blks %04x flags %08x\n",
+ 		data->blksz, data->blocks, data->flags);
+@@ -1022,18 +1010,8 @@ static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
+ 	writel(timeout, base + MMCIDATATIMER);
+ 	writel(host->size, base + MMCIDATALENGTH);
+ 
+-	blksz_bits = ffs(data->blksz) - 1;
+-	BUG_ON(1 << blksz_bits != data->blksz);
+-
+-	if (variant->blksz_datactrl16)
+-		datactrl = variant->datactrl_dpsm_enable | (data->blksz << 16);
+-	else if (variant->blksz_datactrl4)
+-		datactrl = variant->datactrl_dpsm_enable | (data->blksz << 4);
+-	else
+-		datactrl = variant->datactrl_dpsm_enable | blksz_bits << 4;
+-
+-	if (data->flags & MMC_DATA_READ)
+-		datactrl |= MCI_DPSM_DIRECTION;
++	datactrl = host->ops->get_datactrl_cfg(host);
++	datactrl |= host->data->flags & MMC_DATA_READ ? MCI_DPSM_DIRECTION : 0;
+ 
+ 	if (host->mmc->card && mmc_card_sdio(host->mmc->card)) {
+ 		u32 clk;
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index fd24fdb..a7bc557 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -280,12 +280,8 @@ struct mmci_host;
+  * @st_clkdiv: true if using a ST-specific clock divider algorithm
+  * @stm32_clkdiv: true if using a STM32-specific clock divider algorithm
+  * @datactrl_mask_ddrmode: ddr mode mask in datactrl register.
+- * @blksz_datactrl16: true if Block size is at b16..b30 position in datactrl register
+- * @blksz_datactrl4: true if Block size is at b4..b16 position in datactrl
+- *		     register
+  * @datactrl_mask_sdio: SDIO enable mask in datactrl register
+  * @datactrl_blksz: block size in power of two
+- * @datactrl_dpsm_enable: enable value for DPSM
+  * @datactrl_first: true if data must be setup before send command
+  * @datacnt_useless: true if you could not use datacnt register to read
+  *		     remaining data
+@@ -330,14 +326,11 @@ struct variant_data {
+ 	unsigned int		datactrl_mask_ddrmode;
+ 	unsigned int		datactrl_mask_sdio;
+ 	unsigned int		datactrl_blocksz;
+-	unsigned int		datactrl_dpsm_enable;
+ 	u8			datactrl_first:1;
+ 	u8			datacnt_useless:1;
+ 	u8			st_sdio:1;
+ 	u8			st_clkdiv:1;
+ 	u8			stm32_clkdiv:1;
+-	u8			blksz_datactrl16:1;
+-	u8			blksz_datactrl4:1;
+ 	u32			pwrreg_powerup;
+ 	u32			f_max;
+ 	u8			signal_direction:1;
 -- 
 2.7.4
 
