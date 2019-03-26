@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63ACDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FA2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EADB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185CF20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582195;
-	bh=wFzS5vSRn/OuqLu8DxH+7c9y93CBhlvvL7ZmGTjxjUs=;
+	s=default; t=1553582197;
+	bh=8uj7vab7eLWwQzEEMuV5Vd7+BsFrz3c5XIgUnK5GOT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4Qll+Kq1FQuqNIqpQAy+YVHpfeTsw9Xk7ni9V04UQhJ7K/Qlx+RkXyrVpo5lRi1/
-	 iJLUizf4uieoqv0RjsCz3KsTuNJbDNJNc7JYtSlmpJzYZ7jq8kWSgbMkGkWPq69yB9
-	 XVO7r7UcJ9RBK7/Yl4Yt2alf2pN959Ul3wWn/kMM=
+	b=rgOp/MEcpk/lGrXEcTHBnaND3eFXPBCPWSLe05q94lODLhY+ulrj2X6y97ZI8hoxi
+	 UYWE+M9pGiXwkBsbvw6U8iVOka8fu17SHQDTVsZhAVrlS5vrnGKvIYnIY4OyNK6WFQ
+	 wPnKSXy+P0eF20Nh3hezC/cvOcXLNGyYEKMWVT88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbfCZGgd (ORCPT
+        id S1732237AbfCZGgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49060 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbfCZGga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:30 -0400
+        id S1731428AbfCZGgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:33 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250222070B;
-        Tue, 26 Mar 2019 06:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39EF2075E;
+        Tue, 26 Mar 2019 06:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582189;
-        bh=wFzS5vSRn/OuqLu8DxH+7c9y93CBhlvvL7ZmGTjxjUs=;
+        s=default; t=1553582193;
+        bh=8uj7vab7eLWwQzEEMuV5Vd7+BsFrz3c5XIgUnK5GOT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kb86dmMVd4D3qmRalUcvUX+MKVro1tnYDVrHCH6/hxzd0c/5lOt20LqRj1SnXYnWv
-         hnET53ZQx49ZT1lQJ/3bA1WUwypMz6xGOsNIBmleu4c0IFSCvGgdWd0AzjYOhAetNr
-         xzUxxYZsJEGOFNOBlf+UmYoPNOx68iJN7JTxbV4s=
+        b=Milhj0y30qd9fdWVEI6aHOD5OoYXTo/SGEgQZAuFZqZ5XEsiYDNMDFAq3KUXjBi3o
+         wocm4gI4ZtCKyX/5SAYYScj2FHWjmgEEoBWLmGoZUHO4SYXuLUaZDidLXOGSbgfVpn
+         bDfeB95EbOljPr9eL2CQC7Z5PPIgcTYef9piWiqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, stable@kernel.org
-Subject: [PATCH 4.19 28/45] ext4: brelse all indirect buffer in ext4_ind_remove_space()
-Date:   Tue, 26 Mar 2019 15:30:11 +0900
-Message-Id: <20190326042704.147890874@linuxfoundation.org>
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 29/45] media: v4l2-ctrls.c/uvc: zero v4l2_event
+Date:   Tue, 26 Mar 2019 15:30:12 +0900
+Message-Id: <20190326042704.204355050@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -65,70 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
+commit f45f3f753b0a3d739acda8e311b4f744d82dc52a upstream.
 
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
+Control events can leak kernel memory since they do not fully zero the
+event. The same code is present in both v4l2-ctrls.c and uvc_ctrl.c, so
+fix both.
 
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
+It appears that all other event code is properly zeroing the structure,
+it's these two places.
 
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
-
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reported-by: syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/indirect.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c     |    2 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1387,10 +1387,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+--- a/drivers/media/usb/uvc/uvc_ctrl.c
++++ b/drivers/media/usb/uvc/uvc_ctrl.c
+@@ -1212,7 +1212,7 @@ static void uvc_ctrl_fill_event(struct u
  
+ 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
+ 
+-	memset(ev->reserved, 0, sizeof(ev->reserved));
++	memset(ev, 0, sizeof(*ev));
+ 	ev->type = V4L2_EVENT_CTRL;
+ 	ev->id = v4l2_ctrl.id;
+ 	ev->u.ctrl.value = value;
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1379,7 +1379,7 @@ static u32 user_flags(const struct v4l2_
+ 
+ static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
+ {
+-	memset(ev->reserved, 0, sizeof(ev->reserved));
++	memset(ev, 0, sizeof(*ev));
+ 	ev->type = V4L2_EVENT_CTRL;
+ 	ev->id = ctrl->id;
+ 	ev->u.ctrl.changes = changes;
 
 
