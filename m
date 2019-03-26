@@ -4,40 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024CFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68388C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF0B20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338882075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582100;
-	bh=ym8NhhcEYpVTD27mr6dxTC0FNvE2Au2sKprPVieulgE=;
+	s=default; t=1553582106;
+	bh=eKPjG5RZoVn91nXw0hhZLiAf67wlvNhrqqY54zit7jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtSv0YmNrhjhbxQiHjxShZ46Yu9Q8iFEBx59VLYaa4XGELxJK2aFG+FzS3acGQ9ao
-	 a7Wcr/+XwoABUv93tT3t38ZMOhqm71/WHB7IGFw/n1OsfwFKGLLMedQUV67F5GD0Zp
-	 OCHMir/Mo/uX1O+twwkg4GrP6OzK5Pvzv21m2oXo=
+	b=TBwqj8CbxOBhilNgigqrpOdokWWX6HQrRCbd4oKH5SlEtRx1hHq/xCwF1m//6Mhna
+	 iH56n9bu/jt9k0gSskB2k3PKBq/vKiTC1gY8KKXM2codgLLmKa6n34Ng5tNADENbn7
+	 MWFBZTOWBvHFQAzRyCY/gWZ0D69RO/JrCl9b5Wpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731969AbfCZGe7 (ORCPT
+        id S1731312AbfCZGfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731956AbfCZGez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:55 -0400
+        id S1731961AbfCZGe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:58 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4872075E;
-        Tue, 26 Mar 2019 06:34:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB2E02070B;
+        Tue, 26 Mar 2019 06:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582094;
-        bh=ym8NhhcEYpVTD27mr6dxTC0FNvE2Au2sKprPVieulgE=;
+        s=default; t=1553582097;
+        bh=eKPjG5RZoVn91nXw0hhZLiAf67wlvNhrqqY54zit7jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aryPy/fRXqoItKYRojvqZjn1keEPXigKYO2KUAhsltC3/McdqCyiMwTGqurgI8BQJ
-         DbDvK8NDWcX/85zRgrv1vjcB6w71c36uO4PDT6kJnlLkc839k6usojHAqlOnI1SNWn
-         WWmqTItEH8OHfWKYZ6iB9ChigrtBabUjLD4ZPims=
+        b=IwEdEXYp2Ocm5KKiJkz1bIFINHrZSHwCft10akclAQFsOCsdi7RFXa95bJiVeC6Ed
+         E/1Qa2pdvpqxg63TZ1LvU4r5+7ktCAN/puRD8BWUvrx6JlYUrXgHYZWuP9ySA08AeW
+         mo382O99u0UNcytrwMbbDCVU5BtXpClZIiJp0Jp4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +52,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH 4.14 25/41] x86/unwind: Handle NULL pointer calls better in frame unwinder
-Date:   Tue, 26 Mar 2019 15:30:02 +0900
-Message-Id: <20190326042651.314480493@linuxfoundation.org>
+Subject: [PATCH 4.14 26/41] x86/unwind: Add hardcoded ORC entry for NULL
+Date:   Tue, 26 Mar 2019 15:30:03 +0900
+Message-Id: <20190326042651.358404094@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -74,38 +75,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jann Horn <jannh@google.com>
 
-commit f4f34e1b82eb4219d8eaa1c7e2e17ca219a6a2b5 upstream.
+commit ac5ceccce5501e43d217c596e4ee859f2a3fef79 upstream.
 
-When the frame unwinder is invoked for an oops caused by a call to NULL, it
-currently skips the parent function because BP still points to the parent's
-stack frame; the (nonexistent) current function only has the first half of
-a stack frame, and BP doesn't point to it yet.
+When the ORC unwinder is invoked for an oops caused by IP==0,
+it currently has no idea what to do because there is no debug information
+for the stack frame of NULL.
 
-Add a special case for IP==0 that calculates a fake BP from SP, then uses
-the real BP for the next frame.
-
-Note that this handles first_frame specially: Return information about the
-parent function as long as the saved IP is >=first_frame, even if the fake
-BP points below it.
+But if RIP is NULL, it is very likely that the last successfully executed
+instruction was an indirect CALL/JMP, and it is possible to unwind out in
+the same way as for the first instruction of a normal function. Hardcode
+a corresponding ORC entry.
 
 With an artificially-added NULL call in prctl_set_seccomp(), before this
 patch, the trace is:
 
 Call Trace:
- ? prctl_set_seccomp+0x3a/0x50
- __x64_sys_prctl+0x457/0x6f0
- ? __ia32_sys_prctl+0x750/0x750
- do_syscall_64+0x72/0x160
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ ? __x64_sys_prctl+0x402/0x680
+ ? __ia32_sys_prctl+0x6e0/0x6e0
+ ? __do_page_fault+0x457/0x620
+ ? do_syscall_64+0x6d/0x160
+ ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-After this patch, the trace is:
+After this patch, the trace looks like this:
 
 Call Trace:
- prctl_set_seccomp+0x3a/0x50
- __x64_sys_prctl+0x457/0x6f0
- ? __ia32_sys_prctl+0x750/0x750
- do_syscall_64+0x72/0x160
+ __x64_sys_prctl+0x402/0x680
+ ? __ia32_sys_prctl+0x6e0/0x6e0
+ ? __do_page_fault+0x457/0x620
+ do_syscall_64+0x6d/0x160
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+prctl_set_seccomp() still doesn't show up in the trace because for some
+reason, tail call optimization is only disabled in builds that use the
+frame pointer unwinder.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -117,78 +119,43 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 Cc: linux-kbuild@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190301031201.7416-1-jannh@google.com
+Link: https://lkml.kernel.org/r/20190301031201.7416-2-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/unwind.h  |    6 ++++++
- arch/x86/kernel/unwind_frame.c |   25 ++++++++++++++++++++++---
- 2 files changed, 28 insertions(+), 3 deletions(-)
+ arch/x86/kernel/unwind_orc.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/arch/x86/include/asm/unwind.h
-+++ b/arch/x86/include/asm/unwind.h
-@@ -23,6 +23,12 @@ struct unwind_state {
- #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
- 	bool got_irq;
- 	unsigned long *bp, *orig_sp, ip;
-+	/*
-+	 * If non-NULL: The current frame is incomplete and doesn't contain a
-+	 * valid BP. When looking for the next frame, use this instead of the
-+	 * non-existent saved BP.
-+	 */
-+	unsigned long *next_bp;
- 	struct pt_regs *regs;
- #else
- 	unsigned long *sp;
---- a/arch/x86/kernel/unwind_frame.c
-+++ b/arch/x86/kernel/unwind_frame.c
-@@ -320,10 +320,14 @@ bool unwind_next_frame(struct unwind_sta
- 	}
- 
- 	/* Get the next frame pointer: */
--	if (state->regs)
-+	if (state->next_bp) {
-+		next_bp = state->next_bp;
-+		state->next_bp = NULL;
-+	} else if (state->regs) {
- 		next_bp = (unsigned long *)state->regs->bp;
--	else
-+	} else {
- 		next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task, *state->bp);
-+	}
- 
- 	/* Move to the next frame if it's safe: */
- 	if (!update_stack_state(state, next_bp))
-@@ -398,6 +402,21 @@ void __unwind_start(struct unwind_state
- 
- 	bp = get_frame_pointer(task, regs);
- 
-+	/*
-+	 * If we crash with IP==0, the last successfully executed instruction
-+	 * was probably an indirect function call with a NULL function pointer.
-+	 * That means that SP points into the middle of an incomplete frame:
-+	 * *SP is a return pointer, and *(SP-sizeof(unsigned long)) is where we
-+	 * would have written a frame pointer if we hadn't crashed.
-+	 * Pretend that the frame is complete and that BP points to it, but save
-+	 * the real BP so that we can use it when looking for the next frame.
-+	 */
-+	if (regs && regs->ip == 0 &&
-+	    (unsigned long *)kernel_stack_pointer(regs) >= first_frame) {
-+		state->next_bp = bp;
-+		bp = ((unsigned long *)kernel_stack_pointer(regs)) - 1;
-+	}
-+
- 	/* Initialize stack info and make sure the frame data is accessible: */
- 	get_stack_info(bp, state->task, &state->stack_info,
- 		       &state->stack_mask);
-@@ -410,7 +429,7 @@ void __unwind_start(struct unwind_state
- 	 */
- 	while (!unwind_done(state) &&
- 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
--			state->bp < first_frame))
-+			(state->next_bp == NULL && state->bp < first_frame)))
- 		unwind_next_frame(state);
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -74,11 +74,28 @@ static struct orc_entry *orc_module_find
  }
- EXPORT_SYMBOL_GPL(__unwind_start);
+ #endif
+ 
++/*
++ * If we crash with IP==0, the last successfully executed instruction
++ * was probably an indirect function call with a NULL function pointer,
++ * and we don't have unwind information for NULL.
++ * This hardcoded ORC entry for IP==0 allows us to unwind from a NULL function
++ * pointer into its parent and then continue normally from there.
++ */
++static struct orc_entry null_orc_entry = {
++	.sp_offset = sizeof(long),
++	.sp_reg = ORC_REG_SP,
++	.bp_reg = ORC_REG_UNDEFINED,
++	.type = ORC_TYPE_CALL
++};
++
+ static struct orc_entry *orc_find(unsigned long ip)
+ {
+ 	if (!orc_init)
+ 		return NULL;
+ 
++	if (ip == 0)
++		return &null_orc_entry;
++
+ 	/* For non-init vmlinux addresses, use the fast lookup table: */
+ 	if (ip >= LOOKUP_START_IP && ip < LOOKUP_STOP_IP) {
+ 		unsigned int idx, start, stop;
 
 
