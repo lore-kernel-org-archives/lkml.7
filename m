@@ -2,80 +2,115 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37955C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A46FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC55920811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D590A2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbfCZXEC (ORCPT
+        id S1732797AbfCZXEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:04:02 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:49645 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731483AbfCZXEC (ORCPT
+        Tue, 26 Mar 2019 19:04:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731483AbfCZXEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:04:02 -0400
-Received: by mail-io1-f71.google.com with SMTP id z6so11571838ioh.16
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=yt+50zZPBRx4NLliJkGQS3+f9B8Up4ivzi1p9nl7nzw=;
-        b=SF7VGU7ZPL0N5N65Jmpq3P17AYO9JCwVdzZBzw0WsAKnI1ldvgDsZkLHJSuEIVlmcw
-         URT5qblNmECMe3ft7hDgq9pndhAjsogpYhU2+Rd3T2ygzWEpLSADa1oBuDTlBQ2ZiwX1
-         dGIY9PEm0d9AbBL6TDktsRpX3W3B1XB4PecYeS1Z0qa00yTmxVbI1x91rTnmUf1atNUw
-         lXnsH0Yl4cS+Xe906zDd03kLCA74CijzrXeeE6gkBw4b52nwGJ3t953ciPfPWir+MgxP
-         FmLzG34hEFDCzUt4KUXgKTUrJbm8vuQiIyejq+SoRRCsv9piYDeMoFOWzXZurvMEybxt
-         JpkA==
-X-Gm-Message-State: APjAAAX8epQecywTbN9SdytVF3EanGYGwKdxULkLUKKIeP6JiJHo4CpB
-        Rnk3jAvfKcJJgsuaaNdgFP355pWZhDTuq31UrCOoJr3OiGrc
-X-Google-Smtp-Source: APXvYqx0+I3YpDOMsU1txB3REddsbdqehe79PdpD/0XvzpXd8wdlqz81y54uz4A4lldS3xVXWiXPLrD9NBur+ETkIMNHC+SwTkNM
+        Tue, 26 Mar 2019 19:04:15 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QMri4V020429
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:04:13 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rftk1pg52-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:04:13 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 26 Mar 2019 23:04:13 -0000
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Mar 2019 23:04:08 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QN47xo8912896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 23:04:07 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62C1CB2064;
+        Tue, 26 Mar 2019 23:04:07 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4322AB205F;
+        Tue, 26 Mar 2019 23:04:07 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Mar 2019 23:04:07 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 58FFB16C60F3; Tue, 26 Mar 2019 16:04:08 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 16:04:08 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/4] Documentation updates for v5.2
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ca87:: with SMTP id a129mr10656299iog.187.1553641441254;
- Tue, 26 Mar 2019 16:04:01 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:04:01 -0700
-In-Reply-To: <00000000000003cadb05814f3284@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000036e81e058507565b@google.com>
-Subject: Re: INFO: rcu detected stall in __perf_sw_event
-From:   syzbot <syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        fthain@telegraphics.com.au, funaho@jurai.org, geert@linux-m68k.org,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, mingo@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032623-2213-0000-0000-0000036A6688
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000282; SDB=6.01180129; UDB=6.00617570; IPR=6.00960845;
+ MB=3.00026169; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:04:12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032623-2214-0000-0000-00005DCD84CC
+Message-Id: <20190326230408.GA17069@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=611 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hello!
 
-commit cf85d89562f39cc7ae73de54639f1915a9195b7a
-Author: Finn Thain <fthain@telegraphics.com.au>
-Date:   Fri May 25 07:34:36 2018 +0000
+This series contains documentation updates:
 
-     m68k/mac: Enable PDMA for PowerBook 500 series
+1.	Remove obsolete RCU update functions from RCU documentation.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226cb8b200000
-start commit:   b0314565 Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126cb8b200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1626cb8b200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
-dashboard link: https://syzkaller.appspot.com/bug?extid=a41ac89a0712acde0e84
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1707cd2f400000
+2.	Repair some whitespace damage, courtesy of Tycho Andersen.
 
-Reported-by: syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com
-Fixes: cf85d89562f3 ("m68k/mac: Enable PDMA for PowerBook 500 series")
+3.	Describe choice of rcu_dereference() APIs and __rcu usage.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+4.	Fix typos and otherwise modernize checklist.txt.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Design/Data-Structures/Data-Structures.html                 |    3 
+ Design/Expedited-Grace-Periods/Expedited-Grace-Periods.html |    4 
+ Design/Memory-Ordering/Tree-RCU-Memory-Ordering.html        |    5 
+ NMI-RCU.txt                                                 |   13 -
+ UP.txt                                                      |    6 
+ checklist.txt                                               |  119 +++++-------
+ rcu.txt                                                     |    8 
+ rcu_dereference.txt                                         |  103 ++++++++++
+ rcubarrier.txt                                              |   27 +-
+ whatisRCU.txt                                               |   10 -
+ 10 files changed, 199 insertions(+), 99 deletions(-)
+
