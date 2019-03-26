@@ -2,127 +2,68 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D5C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4192C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20EF21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCAB20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732226AbfCZTnW (ORCPT
+        id S1732319AbfCZTqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbfCZTnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:43:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2FD020823;
-        Tue, 26 Mar 2019 19:43:20 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 15:43:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/8] tools/perf,tools/lib/traceevent: Make traceevent
- APIs more consistent
-Message-ID: <20190326154318.70716fbb@gandalf.local.home>
-In-Reply-To: <20190326154328.28718-2-tstoyanov@vmware.com>
-References: <20190326154328.28718-1-tstoyanov@vmware.com>
-        <20190326154328.28718-2-tstoyanov@vmware.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 26 Mar 2019 15:46:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49680 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfCZTqw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:46:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2570514C652C3;
+        Tue, 26 Mar 2019 12:46:51 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 12:46:46 -0700 (PDT)
+Message-Id: <20190326.124646.505432518345625779.davem@davemloft.net>
+To:     mkubecek@suse.cz
+Cc:     netdev@vger.kernel.org, jakub.kicinski@netronome.com,
+        jiri@resnulli.us, andrew@lunn.ch, f.fainelli@gmail.com,
+        linville@tuxdriver.com, stephen@networkplumber.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 01/22] rtnetlink: provide permanent
+ hardware address in RTM_NEWLINK
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <16ffb1fbfa8f54de587ac52f4ff95e5034c590b4.1553532199.git.mkubecek@suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+        <16ffb1fbfa8f54de587ac52f4ff95e5034c590b4.1553532199.git.mkubecek@suse.cz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 26 Mar 2019 12:46:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 17:43:21 +0200
-Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Mon, 25 Mar 2019 18:07:57 +0100 (CET)
 
-> Rename some traceevent APIs for consistency:
-> 
-> tep_pid_is_registered() to tep_is_pid_registered()
-> tep_file_bigendian() to tep_is_file_bigendian()
->   to make the names and return values consistent with other tep_is_... APIs
-> 
-> tep_data_lat_fmt() to tep_data_latency_format()
->   to make the name more descriptive
-> 
-> tep_host_bigendian() to tep_is_bigendian()
-> tep_set_host_bigendian() to tep_set_local_bigendian()
-> tep_is_host_bigendian() to tep_is_local_bigendian()
->   "host" can be confused with VMs, and "local" is about the local
->   machine. All tep_is_..._bigendian(struct tep_handle *tep) APIs return
->   the saved data in the tep handle, while tep_is_bigendian() returns
->   the running machine's endianness.
-> 
-> All tep_is_... functions are modified to return bool value, instead of int.
-
-Much nicer ;-)
-
-> 
-> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> ---
->  tools/lib/traceevent/event-parse-api.c | 44 +++++++++++++-------------
->  tools/lib/traceevent/event-parse.c     | 26 +++++++--------
->  tools/lib/traceevent/event-parse.h     | 16 +++++-----
->  tools/lib/traceevent/plugin_kvm.c      |  4 +--
->  tools/perf/util/trace-event-read.c     |  2 +-
->  tools/perf/util/trace-event.c          |  4 +--
->  6 files changed, 48 insertions(+), 48 deletions(-)
-> 
-> diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
-> index 2ac8b44854ce..46670bb87051 100644
-> --- a/tools/lib/traceevent/event-parse-api.c
-> +++ b/tools/lib/traceevent/event-parse-api.c
-> @@ -88,7 +88,7 @@ void tep_clear_flag(struct tep_handle *tep, enum tep_flag flag)
->  bool tep_test_flag(struct tep_handle *tep, enum tep_flag flag)
->  {
->  	if (tep)
-> -		return (tep->flags & flag);
-> +		return !!(tep->flags & flag);
-
-This isn't needed. The fact hat this returns "bool", the compiler will
-handle thins the same regardless.
-
->  	return false;
->  }
+> @@ -1683,6 +1684,8 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
+>  	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
+>  		goto nla_put_failure;
 >  
-
-
-> @@ -306,14 +306,14 @@ void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
->   * tep_is_latency_format - get if the latency output format is configured
->   * @pevent: a handle to the tep_handle
->   *
-> - * This gets if the latency output format is configured
-> - * If @pevent is NULL, 0 is returned.
-> + * This returns true if the latency output format is configured
-> + * If @pevent is NULL, false is returned.
->   */
-> -int tep_is_latency_format(struct tep_handle *pevent)
-> +bool tep_is_latency_format(struct tep_handle *pevent)
->  {
->  	if (pevent)
-> -		return pevent->latency_format;
-> -	return 0;
-> +		return !!(pevent->latency_format);
-
-Same here.
-
-> +	return false;
->  }
+> +	if (nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
+> +		goto nla_put_failure;
 >  
->  /**
+>  	rcu_read_lock();
+>  	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
 
-The rest looks good.
+I guess, as Jiri says, we really do have to check if the driver
+actually set this before pushing the attribute out to userspace.
 
--- Steve
+But seriously, you chould just check for dev_addr_len zeros.
 
-
+All zeros is not a valid link address on any link type.
