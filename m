@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA8FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E85C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFFD2086C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2476E20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582005;
-	bh=5N2gRNPwChrWqvOWyPoR8dteqP7qSOqrJkYEa8mC2z8=;
+	s=default; t=1553582009;
+	bh=D7PFooKSnDfFmtpvBHvj6/QS15GnMMvxLkNUacJEwhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kh9pmQ8gNUSna5Phox9KTacOIJVdu7ACpvvRlC3KfjAhhavtGfY5uq0O8VElEJOJe
-	 R+9lLpx8LzUzhONFxJtD5w89zPuJiRILQVC4ml/t2+oMi5Ockyzrqm1/I6vZOFj8oU
-	 rfydx5j7e0uohLf2jNpMqMnHX0/4xIdwI3sZlkLg=
+	b=EeoiQIEY0UuvT9mLFHT6i4hiFY1XbQsHlf8vmPntGJjNjjx3y5hTCskN1jI6zVVeb
+	 75K01+hAQktipwG6stmkOB1ap9rlYWICiCKimv7Xu+lyeYQjLw2XpMmy0T/A5ASW+h
+	 yC6AR5GExzAj7eGa3e7Q516wDclFOm877P3kqYVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfCZGdY (ORCPT
+        id S1731119AbfCZGd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731639AbfCZGdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:21 -0400
+        id S1731639AbfCZGdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:25 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A01F20823;
-        Tue, 26 Mar 2019 06:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F6020823;
+        Tue, 26 Mar 2019 06:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582000;
-        bh=5N2gRNPwChrWqvOWyPoR8dteqP7qSOqrJkYEa8mC2z8=;
+        s=default; t=1553582004;
+        bh=D7PFooKSnDfFmtpvBHvj6/QS15GnMMvxLkNUacJEwhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OfvOA36lwa06TGkqaTEzbhTbqgy5RBGPYAFNmrkNFFXoPS+ldtGloSCPHhtl3xEZI
-         9wKiKQi6GTr903Omh2YBe83fUonGbG2U4/ur+7jVkLCSCbMjKVxwo0STqddKQKeqIE
-         ejlb12DlvwvCQuwOyCsK+eusvuIiovo5A2yLzhvs=
+        b=JNJToB6nAcQi2H/7Nh6qsX8RCxqWyK0QiFL9WPNxFBEjlneRGsTynJ/Thc//3z0F4
+         uuU7p56y2zuup+sVOgVNjY6s7lVURzC5lN+zPLtKulM4HI7Iou0iluGw0NYqRhPouK
+         1DBgzlxZ6qM/DPDLnztYtlAxo3z0CAXwxE2rOpL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <fsorenso@redhat.com>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.14 16/41] ext4: fix data corruption caused by unaligned direct AIO
-Date:   Tue, 26 Mar 2019 15:29:53 +0900
-Message-Id: <20190326042650.830644042@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, stable@kernel.org
+Subject: [PATCH 4.14 17/41] ext4: brelse all indirect buffer in ext4_ind_remove_space()
+Date:   Tue, 26 Mar 2019 15:29:54 +0900
+Message-Id: <20190326042650.873367823@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -65,79 +65,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 372a03e01853f860560eade508794dd274e9b390 upstream.
+commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
 
-Ext4 needs to serialize unaligned direct AIO because the zeroing of
-partial blocks of two competing unaligned AIOs can result in data
-corruption.
+All indirect buffers get by ext4_find_shared() should be released no
+mater the branch should be freed or not. But now, we forget to release
+the lower depth indirect buffers when removing space from the same
+higher depth indirect block. It will lead to buffer leak and futher
+more, it may lead to quota information corruption when using old quota,
+consider the following case.
 
-However it decides not to serialize if the potentially unaligned aio is
-past i_size with the rationale that no pending writes are possible past
-i_size. Unfortunately if the i_size is not block aligned and the second
-unaligned write lands past i_size, but still into the same block, it has
-the potential of corrupting the previous unaligned write to the same
-block.
+ - Create and mount an empty ext4 filesystem without extent and quota
+   features,
+ - quotacheck and enable the user & group quota,
+ - Create some files and write some data to them, and then punch hole
+   to some files of them, it may trigger the buffer leak problem
+   mentioned above.
+ - Disable quota and run quotacheck again, it will create two new
+   aquota files and write the checked quota information to them, which
+   probably may reuse the freed indirect block(the buffer and page
+   cache was not freed) as data block.
+ - Enable quota again, it will invoke
+   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
+   buffers and pagecache. Unfortunately, because of the buffer of quota
+   data block is still referenced, quota code cannot read the up to date
+   quota info from the device and lead to quota information corruption.
 
-This is (very simplified) reproducer from Frank
+This problem can be reproduced by xfstests generic/231 on ext3 file
+system or ext4 file system without extent and quota features.
 
-    // 41472 = (10 * 4096) + 512
-    // 37376 = 41472 - 4096
+This patch fix this problem by releasing the missing indirect buffers,
+in ext4_ind_remove_space().
 
-    ftruncate(fd, 41472);
-    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
-    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
-
-    io_submit(io_ctx, 1, &iocbs[1]);
-    io_submit(io_ctx, 1, &iocbs[2]);
-
-    io_getevents(io_ctx, 2, 2, events, NULL);
-
-Without this patch the 512B range from 40960 up to the start of the
-second unaligned write (41472) is going to be zeroed overwriting the data
-written by the first write. This is a data corruption.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-
-With this patch the data corruption is avoided because we will recognize
-the unaligned_aio and wait for the unwritten extent conversion.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-*
-0000b200
-
-Reported-by: Frank Sorenson <fsorenso@redhat.com>
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
-Cc: stable@vger.kernel.org
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/indirect.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -123,7 +123,7 @@ ext4_unaligned_aio(struct inode *inode,
- 	struct super_block *sb = inode->i_sb;
- 	int blockmask = sb->s_blocksize - 1;
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1387,10 +1387,14 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
++			while (partial > chain) {
++				BUFFER_TRACE(partial->bh, "call brelse");
++				brelse(partial->bh);
++			}
++			while (partial2 > chain2) {
++				BUFFER_TRACE(partial2->bh, "call brelse");
++				brelse(partial2->bh);
++			}
+ 			return 0;
+ 		}
  
--	if (pos >= i_size_read(inode))
-+	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
- 		return 0;
- 
- 	if ((pos | iov_iter_alignment(from)) & blockmask)
 
 
