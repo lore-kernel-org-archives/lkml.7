@@ -2,85 +2,82 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA50C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38CD20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C47B2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553563863;
+	bh=CIiGuw14V9Ne/GstDE3gc6mLNsCWg8WK7qCRAS8vVg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pabeEmoCnteh0KLREj1EHq6CGDVMz+R3anhHkN5tQ8v5M6sbw9rc+Es1rzGnTqMYn
+	 d4jR72L/pfS7QVo/vlb/Y6lewegn5ZTGPr6V9ilFDzo7qLjfrNbMQ85FqvC/QXoR5r
+	 GmmaY/MJxks/aDSTaNHtiz+EjzeeselHbc4/MyS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbfCZBaA (ORCPT
+        id S1730637AbfCZBbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 21:30:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:47516 "EHLO mga01.intel.com"
+        Mon, 25 Mar 2019 21:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbfCZBaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 21:30:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 18:29:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,270,1549958400"; 
-   d="scan'208";a="130144816"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 25 Mar 2019 18:29:58 -0700
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        Tom Murphy <tmurphy@arista.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
- iommu_get_resv_regions
-To:     James Sewart <jamessewart@arista.com>
-References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
- <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
- <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
- <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
- <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
- <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
- <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
-Date:   Tue, 26 Mar 2019 09:24:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1727427AbfCZBbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 21:31:00 -0400
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BFC20848;
+        Tue, 26 Mar 2019 01:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553563860;
+        bh=CIiGuw14V9Ne/GstDE3gc6mLNsCWg8WK7qCRAS8vVg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xhFH9rlvEeJEZz1bgYEfyQFuQAWXl0dbgKyyoAPYw63pi9NxhUV3eUfizh+2ocOAH
+         O9BIQIY1ya9coJM1OJEN3D62AjnBGYY+9ghAS+UPCs0RRuRsP1zlQAjCvEnjoVTIOU
+         C6x7UGTQDnQ4mB2K6HuYw2OfAsa9ujjaVSGyLOkg=
+Date:   Tue, 26 Mar 2019 10:30:53 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Waiman Long <longman@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BACKPORT 4.4.y 20/25] Hang/soft lockup in d_invalidate with
+ simultaneous calls
+Message-ID: <20190326013053.GA21198@kroah.com>
+References: <20190322154425.3852517-1-arnd@arndb.de>
+ <20190322154425.3852517-21-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322154425.3852517-21-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
-
-On 3/25/19 8:57 PM, James Sewart wrote:
->>> Theres an issue that if we choose to alloc a new resv_region with type
->>> IOMMU_RESV_DIRECT, we will need to refactor intel_iommu_put_resv_regions
->>> to free this entry type which means refactoring the rmrr regions in
->>> get_resv_regions. Should this work be in this patchset?
->> Do you mean the rmrr regions are not allocated in get_resv_regions, but
->> are freed in put_resv_regions? I think we should fix this in this patch
->> set since this might impact the device passthrough if we don't do it.
-> They’re not allocated and not freed currently, only type IOMMU_RESV_MSI is
-> freed in put_resv_regions. If we allocate a new resv_region with type
-> IOMMU_RESV_DIRECT for the isa region, then it won’t be freed. If we modify
-> put_resv_regions to free type IOMMU_RESV_DIRECT, then we will try to free
-> the static RMRR regions.
+On Fri, Mar 22, 2019 at 04:44:11PM +0100, Arnd Bergmann wrote:
+> From: Al Viro <viro@ZenIV.linux.org.uk>
 > 
-> Either the ISA region is static and not freed as with my implementation,
-> or the RMRR regions are converted to be allocated on each call to
-> get_resv_regions and freed in put_resv_regions.
+> It's not hard to trigger a bunch of d_invalidate() on the same
+> dentry in parallel.  They end up fighting each other - any
+> dentry picked for removal by one will be skipped by the rest
+> and we'll go for the next iteration through the entire
+> subtree, even if everything is being skipped.  Morevoer, we
+> immediately go back to scanning the subtree.  The only thing
+> we really need is to dissolve all mounts in the subtree and
+> as soon as we've nothing left to do, we can just unhash the
+> dentry and bugger off.
 > 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> (cherry picked from commit 81be24d263dbeddaba35827036d6f6787a59c2c3)
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  fs/dcache.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 
-By the way, there's another way in my mind. Let's add a new region type
-for LPC devices, e.x. IOMMU_RESV_LPC, and then handle it in the same way
-as those MSI regions. Just FYI.
-
-Best regards,
-Lu Baolu
+Also added to 4.9.y
