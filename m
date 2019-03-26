@@ -2,114 +2,108 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7600C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A11CC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C352084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C6A2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CB6mIR8Y"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="XHbpoHJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfCZIab (ORCPT
+        id S1731008AbfCZIe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:30:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44982 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfCZIaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:30:30 -0400
-Received: by mail-io1-f67.google.com with SMTP id u12so9998504iop.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 01:30:30 -0700 (PDT)
+        Tue, 26 Mar 2019 04:34:28 -0400
+Received: from mail-eopbgr1300072.outbound.protection.outlook.com ([40.107.130.72]:39936
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfCZIeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:34:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u96/XQWaO743CQx0zQrII7tRo50afqDt59PdQotFCIA=;
-        b=CB6mIR8YphRDYR2hBlUkNjK3fCHHG7rBfksisjzvUSwOf8gwtQIoG51aiGBThXiWU7
-         R+wFGVbUNbfKBXHBYLPLk02QgktT0mlOwrsX9hSD1R4nNIgBU23eJKMQZV167cDK0BWK
-         LKFKpY1F7j6EpRKYl4wV2SouwGPvPncbmFhTyh7iAxSK+cT+CG+euh8O2mQsiTFdeunT
-         zoE2xXNn8Ev/Xo8DtlPHRgzx/xFNaYfROnJY56D1hGJWi9vrB1UN3eg+2Nfet+4o/p1L
-         Yf+rFVwwbnKYnQ8XBGfFewlA9cU7e0XO2+YVSzITf6MlO5Y5L2hPYSSW0EPAyf8VJFKA
-         4c4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u96/XQWaO743CQx0zQrII7tRo50afqDt59PdQotFCIA=;
-        b=onDaLzNDaH11Mos+zqsSBkF23WS+Io0C+NtjYCgekBejC2FNJQT39NnghaGMRu6MB0
-         +/NRyD/Bvg0OUpmj8hjFAuUpi/2A3MXbZgz1FGTCmxU4lcJ6VuFtwoTCJLn9CU49rxAn
-         TF17tx0N4n46pkh5+na6Wk9Zwrb2xcpf87u3TUpqQwCpm94fTfKtsWTxvDa33RHo6wzd
-         nxu0qLOdLsu0uTHWbeGqp7/ybPLN/WbjVsR+F0PLDf5l1S2y85R3GHICQSugFFWH9kyy
-         c5nhXHt22qRNgInPBWrJsGYOeR/4xDzPKWo934XSgpYxhj6U24SkWvh4X3N0+JTkM+5P
-         8EBw==
-X-Gm-Message-State: APjAAAVN0jw8cscTxttdTOiFodGh9/8goDKFHa6+y7/Ime+fCXSWQX9u
-        7JILsJ/KIEzM8xs6HgvffGMQKU8WJ0EGnoAMGEfMVQ==
-X-Google-Smtp-Source: APXvYqyakt+XhEnLW8Dz1cBNdjuL8IrEMJDOAgPgsXzO2R9f19orCOVA+KtCuSot+00YXPHZnHoOMWrDDvZlVQMydgw=
-X-Received: by 2002:a5d:9457:: with SMTP id x23mr3564593ior.271.1553589029810;
- Tue, 26 Mar 2019 01:30:29 -0700 (PDT)
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CJi1wBv89/pqERKxkJrY7iOegis+ayi6V4u/t5aTaJo=;
+ b=XHbpoHJ57QgZ3jU9XMKdnslkm8lfFjBL7U1PX0ilkJBgOWYRaIv4gT7JxmwVsSKPdmcKP9tkpqYblzdwskzV7SmH3T4hP1+IJ1jUic7MbQYKgwWucRyXVNZsfQp5OdnetutNBT6i2lBXfWgee2u2FjSVMAJdENZj+h07yPuUW1s=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB3321.apcprd02.prod.outlook.com (20.177.81.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Tue, 26 Mar 2019 08:34:21 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 08:34:21 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Print map for total physical and virtual memory
+Thread-Topic: Print map for total physical and virtual memory
+Thread-Index: AQHU46nCeD1YOwMRP0e9ea2iKxtjwQ==
+Date:   Tue, 26 Mar 2019 08:34:20 +0000
+Message-ID: <SG2PR02MB3098F980E1EB299853AC46E6E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70c8df0c-9ad4-4d31-83f9-08d6b1c5d809
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB3321;
+x-ms-traffictypediagnostic: SG2PR02MB3321:|SG2PR02MB3321:
+x-microsoft-antispam-prvs: <SG2PR02MB332178D2087864A88801CA6EE85F0@SG2PR02MB3321.apcprd02.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(39850400004)(346002)(189003)(199004)(186003)(5660300002)(486006)(6116002)(105586002)(3846002)(52536014)(6436002)(66574012)(8936002)(86362001)(26005)(102836004)(305945005)(7736002)(55236004)(6506007)(66066001)(25786009)(81156014)(8676002)(81166006)(55016002)(74316002)(7696005)(110136005)(14444005)(316002)(14454004)(68736007)(256004)(478600001)(53936002)(2906002)(9686003)(78486014)(33656002)(476003)(5024004)(2501003)(97736004)(106356001)(71190400001)(71200400001)(44832011)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3321;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WFNt4OYHVwknG3Rntm4VSnvUp4WIJRNqUj9+1ZsLgLQzCP4ZmTvYc4k/h31T4EHz1nDLweqxOE1q73tEu7jonSp1jDnwalQAbqNYBWODVnr6bUyOhpNpgy//vGAPXkFp/xmf7tpvw6sqgcTzAp8C0spS9rwyeJuvQd88gp+rfBHFD8n4oOmz2mfzlqBaHgMq6kjAPVYr1FgMteiyiHTDJk7Ffor6ksz94NShWQR7Ycv/AUkIm1LhB54O7LhvCg2TgCXIB6I9oq/l+XM67Nj7Fj6KnB92E/HELo6q9hwZ0EuZAmFGgIxU7M9VlTQpUcQxML6MA9jv3BkHk0Llk0pUXGCVy9aJJ/uGoWmbKjEaFA8DZTHp9RVEzPn60H9JOgw/H4fC9Z9LjDkWXdL0gMOatbiZigxbFyVhnzxRetsdsT0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0000000000003749360584c395ba@google.com> <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
-In-Reply-To: <e3d9d95fd07502cccf8ef97ba7b2e2adb4eefbb3.camel@baylibre.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 26 Mar 2019 09:30:18 +0100
-Message-ID: <CACT4Y+ZWY973sS7645uo8gNsU+wOddutZttXzYc9DjvqfPjqgA@mail.gmail.com>
-Subject: Re: WARNING: bad unlock balance detected! (3)
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     syzbot <syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        linux-amlogic@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        netdev <netdev@vger.kernel.org>, robh+dt@kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70c8df0c-9ad4-4d31-83f9-08d6b1c5d809
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 08:34:20.8888
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3321
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 12:54 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> On Sat, 2019-03-23 at 07:14 -0700, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit ec01fb69ac8034ad6e839b31f9df167a110f868b
-> > Author: Jerome Brunet <jbrunet@baylibre.com>
-> > Date:   Wed Jan 16 17:59:47 2019 +0000
-> >
-> >      arm64: dts: meson: s400: fix emmc maximum rate
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10afb7cf200000
-> > start commit:   065b6c4c Merge tag 'devicetree-for-5.1' of git://git.kerne..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12afb7cf200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=14afb7cf200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4067c9a08ae046
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f3e3434787332dfc1c47
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a10577200000
-> >
-> > Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
-> > Fixes: ec01fb69ac80 ("arm64: dts: meson: s400: fix emmc maximum rate")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> Hi David,
->
-> I'm not sure I understand what the problem reported is but I don't think a DT
-> patch could be the cause of a locking issue on x86.
->
-> If I missed something, feel free to let me know.
+Hello,
 
-Hi Jerome,
+1. Is there any way to print whole physical and virtual memory map in kerne=
+l/user space ?
 
-I think you are right. It seems that other unrelated kernel bugs have
-diverged bisection into the wrong direction.
+2. Is there any way to print map of cma area reserved memory and movable pa=
+ges of cma area.
+
+3. Is there any way to know who pinned the pages from cma reserved area ?
+
+
+Regards,
+Pankaj
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
