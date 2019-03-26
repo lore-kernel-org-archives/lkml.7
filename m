@@ -2,106 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649B2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090B1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD9A20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE57C20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfCZJbA (ORCPT
+        id S1729760AbfCZJcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:31:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39470 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfCZJbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:31:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A2E5307D923;
-        Tue, 26 Mar 2019 09:31:00 +0000 (UTC)
-Received: from localhost (ovpn-12-21.pek2.redhat.com [10.72.12.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 838371001E6B;
-        Tue, 26 Mar 2019 09:30:59 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 17:30:57 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, rppt@linux.ibm.com, osalvador@suse.de,
-        willy@infradead.org, william.kucharski@oracle.com
-Subject: Re: [PATCH v2 1/4] mm/sparse: Clean up the obsolete code comment
-Message-ID: <20190326093057.GS3659@MiWiFi-R3L-srv>
-References: <20190326090227.3059-1-bhe@redhat.com>
- <20190326090227.3059-2-bhe@redhat.com>
- <20190326092324.GJ28406@dhcp22.suse.cz>
+        Tue, 26 Mar 2019 05:32:43 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:37840 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726258AbfCZJcn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:32:43 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q9On53010548;
+        Tue, 26 Mar 2019 04:32:39 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2rdh7jx2sx-1;
+        Tue, 26 Mar 2019 04:32:39 -0500
+Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
+        by mail1.cirrus.com (Postfix) with ESMTP id 49431611C8AC;
+        Tue, 26 Mar 2019 04:32:39 -0500 (CDT)
+Received: from imbe.wolfsonmicro.main (198.61.95.81) by EX17.ad.cirrus.com
+ (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Tue, 26 Mar 2019
+ 09:32:38 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
+ [198.61.86.93])        by imbe.wolfsonmicro.main (8.14.4/8.14.4) with ESMTP id
+ x2Q9WbJx007218;        Tue, 26 Mar 2019 09:32:37 GMT
+Date:   Tue, 26 Mar 2019 09:32:37 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Joe Perches <joe@perches.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, Lee Jones <lee.jones@linaro.org>
+Subject: Re: Bad file pattern in MAINTAINERS section 'CIRRUS LOGIC LOCHNAGAR
+ DRIVER'
+Message-ID: <20190326093237.GH46536@ediswmail.ad.cirrus.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190325212455.26003-1-joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190326092324.GJ28406@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 26 Mar 2019 09:31:00 +0000 (UTC)
+In-Reply-To: <20190325212455.26003-1-joe@perches.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/26/19 at 10:23am, Michal Hocko wrote:
-> On Tue 26-03-19 17:02:24, Baoquan He wrote:
-> > The code comment above sparse_add_one_section() is obsolete and
-> > incorrect, clean it up and write new one.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
+On Mon, Mar 25, 2019 at 02:24:55PM -0700, Joe Perches wrote:
+> A file pattern line in this section of the MAINTAINERS file in linux-next
+> does not have a match in the linux source files.
 > 
-> Please note that you need /** to start a kernel doc. Other than that.
+> This could occur because a matching filename was never added, was deleted
+> or renamed in some other commit.
+> 
+> The commits that added and if found renamed or removed the file pattern
+> are shown below.
+> 
+> Please fix this defect appropriately.
+> 
+> 1: ---------------------------------------------------------------------------
+> 
+> linux-next MAINTAINERS section:
+> 
+> 	3792	CIRRUS LOGIC LOCHNAGAR DRIVER
+> 	3793	M:	Charles Keepax <ckeepax@opensource.cirrus.com>
+> 	3794	M:	Richard Fitzgerald <rf@opensource.cirrus.com>
+> 	3795	L:	patches@opensource.cirrus.com
+> 	3796	S:	Supported
+> -->	3797	F:	drivers/clk/clk-lochnagar.c
+> 	3798	F:	drivers/mfd/lochnagar-i2c.c
+> 	3799	F:	drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+> 	3800	F:	drivers/regulator/lochnagar-regulator.c
+> 	3801	F:	sound/soc/codecs/lochnagar-sc.c
+> 	3802	F:	include/dt-bindings/clk/lochnagar.h
+> 	3803	F:	include/dt-bindings/pinctrl/lochnagar.h
+> 	3804	F:	include/linux/mfd/lochnagar*
+> 	3805	F:	Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
+> 	3806	F:	Documentation/devicetree/bindings/clock/cirrus,lochnagar.txt
+> 	3807	F:	Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+> 	3808	F:	Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
+> 	3809	F:	Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+> 
 
-I didn't find a template in coding-style.rst, and saw someone is using
-/*, others use /**. I will use '/**' instead. Thanks for telling.
+These files are currently in review and should hopefully be
+submitted soon. They have already seen review and are just
+waiting on the maintainers to get around to actually merging
+them.
 
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> > ---
-> > v1-v2:
-> >   Add comments to explain what the returned value means for
-> >   each error code.
-> > 
-> >  mm/sparse.c | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/mm/sparse.c b/mm/sparse.c
-> > index 69904aa6165b..b2111f996aa6 100644
-> > --- a/mm/sparse.c
-> > +++ b/mm/sparse.c
-> > @@ -685,9 +685,18 @@ static void free_map_bootmem(struct page *memmap)
-> >  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
-> >  
-> >  /*
-> > - * returns the number of sections whose mem_maps were properly
-> > - * set.  If this is <=0, then that means that the passed-in
-> > - * map was not consumed and must be freed.
-> > + * sparse_add_one_section - add a memory section
-> > + * @nid: The node to add section on
-> > + * @start_pfn: start pfn of the memory range
-> > + * @altmap: device page map
-> > + *
-> > + * This is only intended for hotplug.
-> > + *
-> > + * Returns:
-> > + *   0 on success.
-> > + *   Other error code on failure:
-> > + *     - -EEXIST - section has been present.
-> > + *     - -ENOMEM - out of memory.
-> >   */
-> >  int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
-> >  				     struct vmem_altmap *altmap)
-> > -- 
-> > 2.17.2
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+Thanks,
+Charles
