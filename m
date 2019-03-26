@@ -2,107 +2,96 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C795C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666A8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B18A2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tSJUbweK"
+	by mail.kernel.org (Postfix) with ESMTP id 2EAEF20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbfCZONf (ORCPT
+        id S1731744AbfCZOOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:13:35 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:39323 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731691AbfCZONe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:13:34 -0400
-Received: by mail-it1-f194.google.com with SMTP id 139so20197518ita.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 07:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L3m64orwlPvqN0L9P3flUz75pA7vREJUnHemqbnA/zw=;
-        b=tSJUbweK8v3iG7soWdlmbVq8OhCiDUrf2b/qwCbIFmGuwl8tdAOe1hDzeKzKuRCtKf
-         W42EP9yKgEYilXRU7mqZ4Nlv0TwOAJIMAE3a5fKgSmGCoJvSBcF1VO35ayHFrOwGcfTW
-         hjxjia38x28VDV/7oGM3ID8qnwUbflboMi+w68R3P12zThSvDnuEUf3Bx9MXfLEHn+0h
-         Wo15VfM5/o6wAJmd0+7plfB9FnDDIJkq02I4Mri0bqTsJJmrU9JfSfDLkm3+gTGnr+0Y
-         24YlBOlIRDeI3S64t2Eg2Pl4AxYtj6OHcQxBG7ndDPnINDOfE7wBKGzcGDG5RK4Y2cjO
-         G0jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L3m64orwlPvqN0L9P3flUz75pA7vREJUnHemqbnA/zw=;
-        b=B9GSbF/boMT4UJ1ns1K+fq8nrmzYRLmnNOgLv3QJRW2eiy/1p42n9nPivt1HkQUgK1
-         U4LyvzW6rOYDgFXlXM8Nxt+JVRhLv6CnDrIpG+m8t7SJ0ldU7JJ3bt3pOzd/P3wI5ab5
-         rM/thBlP1wJazxI8D7DJj1eZzG2P4BYChwfeE3Lqg+g8erVfrFmcZRFPssx8myN76HQr
-         Q2+lhxbFS5qVgcwk21+Po+zwDdRocQEfLnd+wj8eQdqGUXHKa4TIFUaH5P/M20WdBWfR
-         7Ub8NhDVgk/pCVkfTtFMoTkKCpXibDLHdjoWgpG9vC1vWG0AnZJD0vcMovywogJWWdNc
-         Yvqw==
-X-Gm-Message-State: APjAAAV/AX1FQDHKDm42Wlkpw/Peg2l7QPwVweIaEu0/me7Yw2vWuGYS
-        BB2T+JPav+4ndUgpKl/ahTZiTw==
-X-Google-Smtp-Source: APXvYqxCPEiBgJb/96puHSSERD5MG4/scpragodikUpNCTBaFT0JCdU+K4sZSSRBvlaQZdKzbDHjxw==
-X-Received: by 2002:a24:ac6b:: with SMTP id m43mr16530180iti.28.1553609613251;
-        Tue, 26 Mar 2019 07:13:33 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id k18sm8931430iob.60.2019.03.26.07.13.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 07:13:32 -0700 (PDT)
-Subject: Re: [PATCH BUGFIX IMPROVEMENT V3 0/9] lock, bfq: fix bugs, reduce
- exec time and boost performance
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, broonie@kernel.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        fra.fra.800@gmail.com, alessio.masola@gmail.com,
-        holger@applied-asynchrony.com
-References: <20190312085935.11340-1-paolo.valente@linaro.org>
- <E7E093AD-07CC-4B76-9675-14F0A7C4D8E1@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d8d37c06-c05c-8521-f79a-2fe1296149dd@kernel.dk>
-Date:   Tue, 26 Mar 2019 08:13:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 10:14:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40884 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbfCZOOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 10:14:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F344BAF99;
+        Tue, 26 Mar 2019 14:14:38 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 8391BDA8A5; Tue, 26 Mar 2019 15:15:51 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.1-rc3
+Date:   Tue, 26 Mar 2019 15:15:45 +0100
+Message-Id: <cover.1553608661.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <E7E093AD-07CC-4B76-9675-14F0A7C4D8E1@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 5:53 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 12 mar 2019, alle ore 09:59, Paolo Valente <paolo.valente@linaro.org> ha scritto:
->>
->> Hi,
->> this is the v3 of the series
->> https://lkml.org/lkml/2019/3/10/138
->> that fixes some bug affecting performance, reduces execution time a
->> little bit, and boosts throughput and responsiveness.
->>
->> The difference w.r.t. v2 are new fixes to the patch "block, bfq: print
->> SHARED instead of pid for shared queues in logs", after patient checks
->> and suggestions by Holger and Oleksandr.
->>
-> 
-> Hi Jens,
-> have you had time to look into this?
+Hi,
 
-Looks ok to me, I'll queue it up for 5.2.
+please pull the following tag to receive:
 
--- 
-Jens Axboe
+- fsync fixes: i_size for truncate vs fsync, dio vs buffered during
+  snapshotting, remove complicated but incomplete assertion
 
+- removed excessive warnigs, misreported device stats updates
+
+- fix raid56 page mapping for 32bit arch
+
+- fixes reported by static analyzer
+
+Thanks.
+
+----------------------------------------------------------------
+The following changes since commit d3865159ac7823f645d313fdbac0b256ac01eeb9:
+
+  btrfs: zstd: ensure reclaim timer is properly cleaned up (2019-02-27 17:45:04 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.1-rc2-tag
+
+for you to fetch changes up to 0ccc3876e4b2a1559a4dbe3126dda4459d38a83b:
+
+  Btrfs: fix assertion failure on fsync with NO_HOLES enabled (2019-03-20 19:53:39 +0100)
+
+----------------------------------------------------------------
+Andrea Righi (1):
+      btrfs: raid56: properly unmap parity page in finish_parity_scrub()
+
+David Sterba (1):
+      btrfs: don't report readahead errors and don't update statistics
+
+Filipe Manana (3):
+      Btrfs: fix incorrect file size after shrinking truncate and fsync
+      Btrfs: fix file corruption after snapshotting due to mix of buffered/DIO writes
+      Btrfs: fix assertion failure on fsync with NO_HOLES enabled
+
+Josef Bacik (1):
+      btrfs: remove WARN_ON in log_dir_items
+
+Nikolay Borisov (2):
+      btrfs: Fix bound checking in qgroup_trace_new_subtree_blocks
+      btrfs: Avoid possible qgroup_rsv_size overflow in btrfs_calculate_inode_block_rsv_size
+
+ fs/btrfs/extent-tree.c |  2 +-
+ fs/btrfs/qgroup.c      |  4 ++--
+ fs/btrfs/raid56.c      |  3 ++-
+ fs/btrfs/transaction.c | 49 +++++++++++++++++++++++++++++++++++++++++++------
+ fs/btrfs/tree-log.c    | 33 +++++++++++++++++++++++----------
+ fs/btrfs/volumes.c     |  2 +-
+ 6 files changed, 72 insertions(+), 21 deletions(-)
