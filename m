@@ -2,185 +2,419 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA51C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D25CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA1D2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F842070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbfCZPRS (ORCPT
+        id S1731874AbfCZPSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:17:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42183 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCZPRR (ORCPT
+        Tue, 26 Mar 2019 11:18:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40420 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726111AbfCZPSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:17:17 -0400
-Received: from mail-wm1-f71.google.com ([209.85.128.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1h8npE-0002v5-0t
-        for linux-kernel@vger.kernel.org; Tue, 26 Mar 2019 15:17:16 +0000
-Received: by mail-wm1-f71.google.com with SMTP id 16so6663282wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:17:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XCTT4HeI24lZ4s3NPPhbU2k8cL7vAe8DX3JDmVZbazM=;
-        b=Hri7cngtoKyYsqmAxqjtCirWHBTwU+pf8B8IuFgBU+4YKcC85p6ouMyM9Tr/e0GCOR
-         s/6wpPCbNhJZFDfKWT3HReAjVUNLPPwRx1dg3Eh7qSJW/U9N34klBXwF1tAs+sG4+vJP
-         SztMtsx3MRZIrYR+RCLN8sdiIFybJ1iuBlz8eX/Sb1mm6K5I79OE60niMACf4O+4onV3
-         00ZU773mXQkuRYlmmmPMQ6oThc70/mYjkGJYDVWgq7zZuQjc8/e8KTPkNzsa5UKsHNoZ
-         FMRRhdDnP07NklgifMyyVcRAwN06gwd3PaaqxFj9yLfrX+la6jLDUO0ixN5a8lqdh4nC
-         8MzQ==
-X-Gm-Message-State: APjAAAXUf41X7nDW6E8XynnCVt8+7iW2hGKLWf19/FBzqilpyp+lsQnr
-        K5n+aDuNAflUNsWCHon2Q7djC0kkvlc4p4KZ2n4//Nnzyu7YXpa50sOHyVPfUZyd8ospB0yuJz8
-        KPk2Xxjxu/fwynRuqL893mmGTnJTpepKMsEYRKni7qw==
-X-Received: by 2002:a5d:4e82:: with SMTP id e2mr21012580wru.164.1553613435338;
-        Tue, 26 Mar 2019 08:17:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxBivHfydn7RNtyhMoWS2CRXpu/+cBaGqpJDTh8Uwk5fIUH7OqwkveILOhcoG4eG45wE1pVvw==
-X-Received: by 2002:a5d:4e82:: with SMTP id e2mr21012571wru.164.1553613435168;
-        Tue, 26 Mar 2019 08:17:15 -0700 (PDT)
-Received: from localhost (host118-125-dynamic.3-87-r.retail.telecomitalia.it. [87.3.125.118])
-        by smtp.gmail.com with ESMTPSA id x192sm21091566wmf.48.2019.03.26.08.17.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 08:17:14 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:17:13 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, peterz@infradead.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip v3 04/10] x86/kprobes: Prohibit probing on IRQ
- handlers directly
-Message-ID: <20190326151713.GB27897@xps-13>
-References: <154998785011.31052.1475728497912659748.stgit@devbox>
- <154998796400.31052.8406236614820687840.stgit@devbox>
- <20190325172334.559f8c5b@gandalf.local.home>
- <20190326235052.793b81b121021020fb3b1e93@kernel.org>
+        Tue, 26 Mar 2019 11:18:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QFAlWe089321
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:18:22 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfngwutnp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:18:21 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 26 Mar 2019 15:18:20 -0000
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Mar 2019 15:18:16 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QFIF5O23330824
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 15:18:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A67F6B2068;
+        Tue, 26 Mar 2019 15:18:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 74E2FB2066;
+        Tue, 26 Mar 2019 15:18:15 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Mar 2019 15:18:15 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id F143716C3238; Tue, 26 Mar 2019 08:18:15 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 08:18:15 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     rostedt@goodmis.org, mingo@redhat.com, peterz@infradead.org,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, shaoyafang@didiglobal.com
+Subject: Re: [PATCH v2 3/3] rcu: validate arguments for rcu tracepoints
+Reply-To: paulmck@linux.ibm.com
+References: <1553602391-11926-1-git-send-email-laoar.shao@gmail.com>
+ <1553602391-11926-4-git-send-email-laoar.shao@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326235052.793b81b121021020fb3b1e93@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553602391-11926-4-git-send-email-laoar.shao@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032615-0072-0000-0000-000004108F50
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010818; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000282; SDB=6.01179974; UDB=6.00617477; IPR=6.00960690;
+ MB=3.00026164; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 15:18:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032615-0073-0000-0000-00004B9C6A95
+Message-Id: <20190326151815.GI4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:50:52PM +0900, Masami Hiramatsu wrote:
-> On Mon, 25 Mar 2019 17:23:34 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Mar 26, 2019 at 08:13:11PM +0800, Yafang Shao wrote:
+> When CONFIG_RCU_TRACE is not set, all these tracepoints are defined as
+> do-nothing macro.
+> We'd better make those inline functions that take proper arguments.
 > 
-> > On Wed, 13 Feb 2019 01:12:44 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > > Prohibit probing on IRQ handlers in irqentry_text because
-> > > if it interrupts user mode, at that point we haven't changed
-> > > to kernel space yet and which eventually leads a double fault.
-> > > E.g.
-> > > 
-> > >  # echo p apic_timer_interrupt > kprobe_events
-> > 
-> > Hmm, this breaks one of my tests (which I probe on do_IRQ).
-> 
-> OK, it seems this patch is a bit redundant, because
-> I found that these interrupt handler issue has been fixed
-> by Andrea's commit before merge this patch.
-> 
-> commit a50480cb6d61d5c5fc13308479407b628b6bc1c5
-> Author: Andrea Righi <righi.andrea@gmail.com>
-> Date:   Thu Dec 6 10:56:48 2018 +0100
-> 
->     kprobes/x86: Blacklist non-attachable interrupt functions
->     
->     These interrupt functions are already non-attachable by kprobes.
->     Blacklist them explicitly so that they can show up in
->     /sys/kernel/debug/kprobes/blacklist and tools like BCC can use this
->     additional information.
-> 
-> This description is a bit odd (maybe his patch is after mine?) I think
-> while updating this series, the patches were merged out of order.
-> Anyway, with above patch, the core problematic probe points are blacklisted.
+> As RCU_TRACE() is defined as do-nothing marco as well when
+> CONFIG_RCU_TRACE is not set, so we can clean it up.
 
-This is the previous thread when I posted my patch (not sure if it helps
-to figure out what happened - maybe it was just an out of order merge
-issue, like you said):
+How about this for the commit log?
 
-https://lkml.org/lkml/2018/12/6/212
+	Unless the CONFIG_RCU_TRACE kconfig option is set, almost all
+	of RCU's tracepoints are defined as empty macros.  It would
+	be better if these tracepoints could instead be empty inline
+	functions with proper arguments and type checking.  It would
+	also be good to get rid of the RCU_TRACE() macro, which
+	compiles its argument in CONFIG_RCU_TRACE=y kernels and
+	omits them otherwise.
 
-> 
-> > 
-> > It's been working for years.
-> > 
-> > 
-> > >  # echo 1 > events/kprobes/enable
-> > >  PANIC: double fault, error_code: 0x0
-> > >  CPU: 1 PID: 814 Comm: less Not tainted 4.20.0-rc3+ #30
-> > >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-> > >  RIP: 0010:error_entry+0x12/0xf0
-> > >  [snip]
-> > >  Call Trace:
-> > >   <ENTRY_TRAMPOLINE>
-> > >   ? native_iret+0x7/0x7
-> > >   ? async_page_fault+0x8/0x30
-> > >   ? trace_hardirqs_on_thunk+0x1c/0x1c
-> > >   ? error_entry+0x7c/0xf0
-> > >   ? async_page_fault+0x8/0x30
-> > >   ? native_iret+0x7/0x7
-> > >   ? int3+0xa/0x20
-> > >   ? trace_hardirqs_on_thunk+0x1c/0x1c
-> > >   ? error_entry+0x7c/0xf0
-> > >   ? int3+0xa/0x20
-> > >   ? apic_timer_interrupt+0x1/0x20
-> > >   </ENTRY_TRAMPOLINE>
-> > >  Kernel panic - not syncing: Machine halted.
-> > >  Kernel Offset: disabled
-> > 
-> > I'm not able to reproduce this (by removing this commit). 
-> 
-> I ensured that if I revert both of this patch and Andrea's patch,
-> I can reproduce this with probing on apic_timer_interrupt().
-> 
-> > I'm thinking something else may have changed, as I've been tracing
-> > interrupt entries for years, and interrupting userspace while doing
-> > this.
-> > 
-> > I've even added probes where ftrace isn't (where it uses an int3) and
-> > still haven't hit a problem.
-> > 
-> > I think this patch is swatting a symptom of a bug and not addressing
-> > the bug itself. Can you send me the config that triggers this?
-> 
-> Yes, it seems you're right. Andrea's commit specifically fixed the
-> issue and mine is redundant. (I'm not sure why do_IRQ is in 
-> __irqentry_text...)
+	This commit therefore creates a TRACE_EVENT_RCU macro that
+	is defined as TRACE_EVENT in CONFIG_RCU_TRACE=y kernels and
+	as the new TRACE_EVENT_NOP otherwise, which allows the
+	empty macros and the RCU_TRACE() macro to be eliminated.
 
-Not sure if there are specific reasons for that, but do_IRQ is part of
-__irqentry_text because it's explicitly marked with __irq_entry.
+With that:
 
+Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> ---
+>  include/trace/events/rcu.h | 81 ++++++++++++++--------------------------------
+>  kernel/rcu/rcu.h           |  9 ++----
+>  kernel/rcu/tree.c          |  8 ++---
+>  3 files changed, 31 insertions(+), 67 deletions(-)
 > 
-> So, Ingo, please revert this, since this bug already has been fixed by
-> commit a50480cb6d61 ("kprobes: x86_64: blacklist non-attachable interrupt
-> functions")
-> 
-> BTW, for further error investigation, I attached my kconfig which is
-> usually I'm testing (some options can be changed) on Qemu.
-> I'm using my mini-container shellscript ( https://github.com/mhiramat/mincs 
-> ) which supports qemu-container.
-> 
-> 
-> Thank you,
-> 
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index f0c4d10..e3f357b 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -7,6 +7,12 @@
+>  
+>  #include <linux/tracepoint.h>
+>  
+> +#ifdef CONFIG_RCU_TRACE
+> +#define TRACE_EVENT_RCU TRACE_EVENT
+> +#else
+> +#define TRACE_EVENT_RCU TRACE_EVENT_NOP
+> +#endif
+> +
+>  /*
+>   * Tracepoint for start/end markers used for utilization calculations.
+>   * By convention, the string is of the following forms:
+> @@ -35,8 +41,6 @@
+>  	TP_printk("%s", __entry->s)
+>  );
+>  
+> -#ifdef CONFIG_RCU_TRACE
+> -
+>  #if defined(CONFIG_TREE_RCU) || defined(CONFIG_PREEMPT_RCU)
+>  
+>  /*
+> @@ -62,7 +66,7 @@
+>   *	"end": End a grace period.
+>   *	"cpuend": CPU first notices a grace-period end.
+>   */
+> -TRACE_EVENT(rcu_grace_period,
+> +TRACE_EVENT_RCU(rcu_grace_period,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq, const char *gpevent),
+>  
+> @@ -101,7 +105,7 @@
+>   * "Cleanup": Clean up rcu_node structure after previous GP.
+>   * "CleanupMore": Clean up, and another GP is needed.
+>   */
+> -TRACE_EVENT(rcu_future_grace_period,
+> +TRACE_EVENT_RCU(rcu_future_grace_period,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq,
+>  		 unsigned long gp_seq_req, u8 level, int grplo, int grphi,
+> @@ -141,7 +145,7 @@
+>   * rcu_node structure, and the mask of CPUs that will be waited for.
+>   * All but the type of RCU are extracted from the rcu_node structure.
+>   */
+> -TRACE_EVENT(rcu_grace_period_init,
+> +TRACE_EVENT_RCU(rcu_grace_period_init,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq, u8 level,
+>  		 int grplo, int grphi, unsigned long qsmask),
+> @@ -186,7 +190,7 @@
+>   *	"endwake": Woke piggybackers up.
+>   *	"done": Someone else did the expedited grace period for us.
+>   */
+> -TRACE_EVENT(rcu_exp_grace_period,
+> +TRACE_EVENT_RCU(rcu_exp_grace_period,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gpseq, const char *gpevent),
+>  
+> @@ -218,7 +222,7 @@
+>   *	"nxtlvl": Advance to next level of rcu_node funnel
+>   *	"wait": Wait for someone else to do expedited GP
+>   */
+> -TRACE_EVENT(rcu_exp_funnel_lock,
+> +TRACE_EVENT_RCU(rcu_exp_funnel_lock,
+>  
+>  	TP_PROTO(const char *rcuname, u8 level, int grplo, int grphi,
+>  		 const char *gpevent),
+> @@ -269,7 +273,7 @@
+>   *	"WaitQueue": Enqueue partially done, timed wait for it to complete.
+>   *	"WokeQueue": Partial enqueue now complete.
+>   */
+> -TRACE_EVENT(rcu_nocb_wake,
+> +TRACE_EVENT_RCU(rcu_nocb_wake,
+>  
+>  	TP_PROTO(const char *rcuname, int cpu, const char *reason),
+>  
+> @@ -297,7 +301,7 @@
+>   * include SRCU), the grace-period number that the task is blocking
+>   * (the current or the next), and the task's PID.
+>   */
+> -TRACE_EVENT(rcu_preempt_task,
+> +TRACE_EVENT_RCU(rcu_preempt_task,
+>  
+>  	TP_PROTO(const char *rcuname, int pid, unsigned long gp_seq),
+>  
+> @@ -324,7 +328,7 @@
+>   * read-side critical section exiting that critical section.  Track the
+>   * type of RCU (which one day might include SRCU) and the task's PID.
+>   */
+> -TRACE_EVENT(rcu_unlock_preempted_task,
+> +TRACE_EVENT_RCU(rcu_unlock_preempted_task,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq, int pid),
+>  
+> @@ -353,7 +357,7 @@
+>   * whether there are any blocked tasks blocking the current grace period.
+>   * All but the type of RCU are extracted from the rcu_node structure.
+>   */
+> -TRACE_EVENT(rcu_quiescent_state_report,
+> +TRACE_EVENT_RCU(rcu_quiescent_state_report,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq,
+>  		 unsigned long mask, unsigned long qsmask,
+> @@ -396,7 +400,7 @@
+>   * state, which can be "dti" for dyntick-idle mode or "kick" when kicking
+>   * a CPU that has been in dyntick-idle mode for too long.
+>   */
+> -TRACE_EVENT(rcu_fqs,
+> +TRACE_EVENT_RCU(rcu_fqs,
+>  
+>  	TP_PROTO(const char *rcuname, unsigned long gp_seq, int cpu, const char *qsevent),
+>  
+> @@ -436,7 +440,7 @@
+>   * events use two separate counters, and that the "++=" and "--=" events
+>   * for irq/NMI will change the counter by two, otherwise by one.
+>   */
+> -TRACE_EVENT(rcu_dyntick,
+> +TRACE_EVENT_RCU(rcu_dyntick,
+>  
+>  	TP_PROTO(const char *polarity, long oldnesting, long newnesting, atomic_t dynticks),
+>  
+> @@ -468,7 +472,7 @@
+>   * number of lazy callbacks queued, and the fourth element is the
+>   * total number of callbacks queued.
+>   */
+> -TRACE_EVENT(rcu_callback,
+> +TRACE_EVENT_RCU(rcu_callback,
+>  
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp, long qlen_lazy,
+>  		 long qlen),
+> @@ -504,7 +508,7 @@
+>   * the fourth argument is the number of lazy callbacks queued, and the
+>   * fifth argument is the total number of callbacks queued.
+>   */
+> -TRACE_EVENT(rcu_kfree_callback,
+> +TRACE_EVENT_RCU(rcu_kfree_callback,
+>  
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset,
+>  		 long qlen_lazy, long qlen),
+> @@ -539,7 +543,7 @@
+>   * the total number of callbacks queued, and the fourth argument is
+>   * the current RCU-callback batch limit.
+>   */
+> -TRACE_EVENT(rcu_batch_start,
+> +TRACE_EVENT_RCU(rcu_batch_start,
+>  
+>  	TP_PROTO(const char *rcuname, long qlen_lazy, long qlen, long blimit),
+>  
+> @@ -569,7 +573,7 @@
+>   * The first argument is the type of RCU, and the second argument is
+>   * a pointer to the RCU callback itself.
+>   */
+> -TRACE_EVENT(rcu_invoke_callback,
+> +TRACE_EVENT_RCU(rcu_invoke_callback,
+>  
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp),
+>  
+> @@ -598,7 +602,7 @@
+>   * is the offset of the callback within the enclosing RCU-protected
+>   * data structure.
+>   */
+> -TRACE_EVENT(rcu_invoke_kfree_callback,
+> +TRACE_EVENT_RCU(rcu_invoke_kfree_callback,
+>  
+>  	TP_PROTO(const char *rcuname, struct rcu_head *rhp, unsigned long offset),
+>  
+> @@ -631,7 +635,7 @@
+>   * and the sixth argument (risk) is the return value from
+>   * rcu_is_callbacks_kthread().
+>   */
+> -TRACE_EVENT(rcu_batch_end,
+> +TRACE_EVENT_RCU(rcu_batch_end,
+>  
+>  	TP_PROTO(const char *rcuname, int callbacks_invoked,
+>  		 char cb, char nr, char iit, char risk),
+> @@ -673,7 +677,7 @@
+>   * callback address can be NULL.
+>   */
+>  #define RCUTORTURENAME_LEN 8
+> -TRACE_EVENT(rcu_torture_read,
+> +TRACE_EVENT_RCU(rcu_torture_read,
+>  
+>  	TP_PROTO(const char *rcutorturename, struct rcu_head *rhp,
+>  		 unsigned long secs, unsigned long c_old, unsigned long c),
+> @@ -721,7 +725,7 @@
+>   * The "cpu" argument is the CPU or -1 if meaningless, the "cnt" argument
+>   * is the count of remaining callbacks, and "done" is the piggybacking count.
+>   */
+> -TRACE_EVENT(rcu_barrier,
+> +TRACE_EVENT_RCU(rcu_barrier,
+>  
+>  	TP_PROTO(const char *rcuname, const char *s, int cpu, int cnt, unsigned long done),
+>  
+> @@ -748,41 +752,6 @@
+>  		  __entry->done)
+>  );
+>  
+> -#else /* #ifdef CONFIG_RCU_TRACE */
+> -
+> -#define trace_rcu_grace_period(rcuname, gp_seq, gpevent) do { } while (0)
+> -#define trace_rcu_future_grace_period(rcuname, gp_seq, gp_seq_req, \
+> -				      level, grplo, grphi, event) \
+> -				      do { } while (0)
+> -#define trace_rcu_grace_period_init(rcuname, gp_seq, level, grplo, grphi, \
+> -				    qsmask) do { } while (0)
+> -#define trace_rcu_exp_grace_period(rcuname, gqseq, gpevent) \
+> -	do { } while (0)
+> -#define trace_rcu_exp_funnel_lock(rcuname, level, grplo, grphi, gpevent) \
+> -	do { } while (0)
+> -#define trace_rcu_nocb_wake(rcuname, cpu, reason) do { } while (0)
+> -#define trace_rcu_preempt_task(rcuname, pid, gp_seq) do { } while (0)
+> -#define trace_rcu_unlock_preempted_task(rcuname, gp_seq, pid) do { } while (0)
+> -#define trace_rcu_quiescent_state_report(rcuname, gp_seq, mask, qsmask, level, \
+> -					 grplo, grphi, gp_tasks) do { } \
+> -	while (0)
+> -#define trace_rcu_fqs(rcuname, gp_seq, cpu, qsevent) do { } while (0)
+> -#define trace_rcu_dyntick(polarity, oldnesting, newnesting, dyntick) do { } while (0)
+> -#define trace_rcu_callback(rcuname, rhp, qlen_lazy, qlen) do { } while (0)
+> -#define trace_rcu_kfree_callback(rcuname, rhp, offset, qlen_lazy, qlen) \
+> -	do { } while (0)
+> -#define trace_rcu_batch_start(rcuname, qlen_lazy, qlen, blimit) \
+> -	do { } while (0)
+> -#define trace_rcu_invoke_callback(rcuname, rhp) do { } while (0)
+> -#define trace_rcu_invoke_kfree_callback(rcuname, rhp, offset) do { } while (0)
+> -#define trace_rcu_batch_end(rcuname, callbacks_invoked, cb, nr, iit, risk) \
+> -	do { } while (0)
+> -#define trace_rcu_torture_read(rcutorturename, rhp, secs, c_old, c) \
+> -	do { } while (0)
+> -#define trace_rcu_barrier(name, s, cpu, cnt, done) do { } while (0)
+> -
+> -#endif /* #else #ifdef CONFIG_RCU_TRACE */
+> -
+>  #endif /* _TRACE_RCU_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> index a393e24..2778e44 100644
+> --- a/kernel/rcu/rcu.h
+> +++ b/kernel/rcu/rcu.h
+> @@ -24,11 +24,6 @@
+>  #define __LINUX_RCU_H
+>  
+>  #include <trace/events/rcu.h>
+> -#ifdef CONFIG_RCU_TRACE
+> -#define RCU_TRACE(stmt) stmt
+> -#else /* #ifdef CONFIG_RCU_TRACE */
+> -#define RCU_TRACE(stmt)
+> -#endif /* #else #ifdef CONFIG_RCU_TRACE */
+>  
+>  /* Offset to allow for unmatched rcu_irq_{enter,exit}(). */
+>  #define DYNTICK_IRQ_NONIDLE	((LONG_MAX / 2) + 1)
+> @@ -229,12 +224,12 @@ static inline bool __rcu_reclaim(const char *rn, struct rcu_head *head)
+>  
+>  	rcu_lock_acquire(&rcu_callback_map);
+>  	if (__is_kfree_rcu_offset(offset)) {
+> -		RCU_TRACE(trace_rcu_invoke_kfree_callback(rn, head, offset);)
+> +		trace_rcu_invoke_kfree_callback(rn, head, offset);
+>  		kfree((void *)head - offset);
+>  		rcu_lock_release(&rcu_callback_map);
+>  		return true;
+>  	} else {
+> -		RCU_TRACE(trace_rcu_invoke_callback(rn, head);)
+> +		trace_rcu_invoke_callback(rn, head);
+>  		f = head->func;
+>  		WRITE_ONCE(head->func, (rcu_callback_t)0L);
+>  		f(head);
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 9180158..d2ad39f 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2329,14 +2329,14 @@ static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
+>   */
+>  int rcutree_dying_cpu(unsigned int cpu)
+>  {
+> -	RCU_TRACE(bool blkd;)
+> -	RCU_TRACE(struct rcu_data *rdp = this_cpu_ptr(&rcu_data);)
+> -	RCU_TRACE(struct rcu_node *rnp = rdp->mynode;)
+> +	bool blkd;
+> +	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> +	struct rcu_node *rnp = rdp->mynode;
+>  
+>  	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+>  		return 0;
+>  
+> -	RCU_TRACE(blkd = !!(rnp->qsmask & rdp->grpmask);)
+> +	blkd = !!(rnp->qsmask & rdp->grpmask);
+>  	trace_rcu_grace_period(rcu_state.name, rnp->gp_seq,
+>  			       blkd ? TPS("cpuofl") : TPS("cpuofl-bgp"));
+>  	return 0;
 > -- 
-> Masami Hiramatsu <mhiramat@kernel.org>
+> 1.8.3.1
+> 
 
-Thanks,
--Andrea
