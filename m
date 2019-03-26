@@ -2,473 +2,116 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4C7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A103C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F992063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2335D2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="L0y36vX7"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="aS3IM9hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbfCZQW5 (ORCPT
+        id S1731769AbfCZQXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:22:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41974 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCZQW4 (ORCPT
+        Tue, 26 Mar 2019 12:23:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37419 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730458AbfCZQXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:22:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so7414697wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:22:54 -0700 (PDT)
+        Tue, 26 Mar 2019 12:23:43 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v21so11317382edq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        d=brauner.io; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=TKNXdjyuTt9K9sJRon68zYgsWIf7ezt/9FMPfDno9to=;
-        b=L0y36vX7YwtAz/tCznR+RyX6R2QOvp/Prg/2qB/78m+3TDeojA63cRf/SwkwMFhuOw
-         /fK0KKbHIo2OEMKcRwWlOv53y8Y5+ZaSU1jAomIT8CvyrKgcwJAdzOOwHObLS4abOk3V
-         HekiIULutbDvktCwGaSqHI8/o+tbvLAGl137U84K4WXvYlbkqxR3d0wZbgBrWp78aWWn
-         7wUbBvU+dmswvctV6CCcvkRkC09ybPtVXCZYX7X6C6u2+rTVEcH99UyNiSYQZNLzhjCv
-         L+AdKDEheJ05h6V308vTKR0xA3d0xhPDFKnb962l55UbWF+DPC6Z1t9Sjdqk8VW8CqHv
-         accw==
+        bh=/f3zwl1dB21rcdrfBXeBdunL5xhvMrWPAPDl495IyQI=;
+        b=aS3IM9hR6/PivI8WcUGrqV+2AXvtLDzfx26v9VvUAaQh7z+g3/0Ju9bxwRW+Mjq/n9
+         Owc1vnVFhgYD30vvS2cioyn/sx8pbNVHlxHCdl7oYG2Ffiayd/sqy0BztTY4M+WZvtxD
+         LC7y7VygFw6K5930Mvm0lS071O4LwuB8UlguZ6EmTV5GUJUvI8k7ifJALza/jMSIfILO
+         k62O1jXuNxVXcej2yyWc2pFDxpSRIoKSi1KERZXUV97DRRveQlNBpYvz8/sEpVBQDPGm
+         99PL63xOfIN2jmCa4KwBrMSqCRTpnUKuNWzwM1NR5sceSRJkDX2nufo/D5yXZeTjJKAR
+         ELVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TKNXdjyuTt9K9sJRon68zYgsWIf7ezt/9FMPfDno9to=;
-        b=ZT9OkGwh3HWrS0P3HcUsp2YoqNF5/t1Pql2s9V2AROzF3tteU2wSKkYM5ZUeqA767a
-         kVMdaZ7Nqp1lkIziA2j1jRqD7u+ep0mDu7YNNfBgjMuWkPJmoGwn78Xkcoz86177rgP2
-         b0rPQVYf6UCVqADqduJLWkcSjvSwaPhZOA3Ot55tXvnfAK4MuaSUmRlAfomTGXxNJGwR
-         3V7T7UiK/ZrP90i3kWXo5+FG6gQZV3Tp4Zon5a23WSQzkPEueGSxXP7MkgJWV0FnhSQj
-         GrBTdBvrxYi6abZhPtsGADe+y6EtLvHKI8BK29z7GoMXfw4AJ/T16Dpl+/TonmbPKJSF
-         F5jA==
-X-Gm-Message-State: APjAAAW21buRuAg4KhbmkNeoExB9VWHS/TkTbw7DA8j/93iSycKdafa4
-        RZT46gBTNN0P8CjLlbSRYAQ4vQ==
-X-Google-Smtp-Source: APXvYqwqPTvpJiSlWVUhZoXmxxc4Tl5Jx8fEjb6UJuQFI7GjFw+bPR6UTaO8kuc+kOa6NcfbOkJrQQ==
-X-Received: by 2002:a5d:4843:: with SMTP id n3mr20089488wrs.256.1553617374158;
-        Tue, 26 Mar 2019 09:22:54 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id w21sm21574258wmc.4.2019.03.26.09.22.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 09:22:53 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 17:22:52 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 06/22] ethtool: helper functions for netlink
- interface
-Message-ID: <20190326162252.GB4958@nanopsycho.orion>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <043188fe4776b9420a11116af5e6bad8925b9ee7.1553532199.git.mkubecek@suse.cz>
- <20190326123815.GG2230@nanopsycho>
- <20190326141955.GL26076@unicorn.suse.cz>
+        bh=/f3zwl1dB21rcdrfBXeBdunL5xhvMrWPAPDl495IyQI=;
+        b=lvIhKZb9SkczK1zdAD/jl9bg25HorvGv+eNOa3VqNZl/ioQkYxpJemHIca1ydBz60M
+         Nxi51k8lqw+eGie+6oRIUU15EZRsIP0ZORDfAnVAgP5JCpm9AKli/zBxKX1mdZ6Cxr9G
+         kQa5QTvSQLT8K6vpR9pyvQqcAzhJh4oQjuw9gR12LDna90cxYcMpztkHZbT8udZuxwDx
+         9TPE5QTi4fF3jcHIjK1UodnaT7KJqEE88/vFrCxqiX12Z5tBS7BqSUWqCIaMlMo16sX3
+         mOTmHudy2i7Vs4WI+SKpRPSIpj51KKN7b60maUSngc8JPlkYf3KQSn6Ucm2RquB99G6r
+         VrkQ==
+X-Gm-Message-State: APjAAAW8d4yoKk7FtU4V5Mamu1/A6gyJuV9atB2Vwu/a5uSjKAeJlHf3
+        p7Lwtbn7TNfSrg3XEDIAtwfa3Q==
+X-Google-Smtp-Source: APXvYqyx3aTz7HpdPQOwOKdUfPPNiOcJaZOncwK1h1SCRKNH+V5LFVAVvVbWz7/wOKBasFQQr5Kcww==
+X-Received: by 2002:a50:ec86:: with SMTP id e6mr2820130edr.204.1553617422089;
+        Tue, 26 Mar 2019 09:23:42 -0700 (PDT)
+Received: from brauner.io (x59cc895e.dyn.telefonica.de. [89.204.137.94])
+        by smtp.gmail.com with ESMTPSA id t52sm1607446edd.54.2019.03.26.09.23.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 26 Mar 2019 09:23:41 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:23:38 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+Message-ID: <20190326162337.o256x7hiodu2qfyg@brauner.io>
+References: <20190326155513.26964-1-christian@brauner.io>
+ <20190326155513.26964-3-christian@brauner.io>
+ <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190326141955.GL26076@unicorn.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Mar 26, 2019 at 03:19:55PM CET, mkubecek@suse.cz wrote:
->On Tue, Mar 26, 2019 at 01:38:15PM +0100, Jiri Pirko wrote:
->> Mon, Mar 25, 2019 at 06:08:12PM CET, mkubecek@suse.cz wrote:
->> >+/* device specification */
->> >+
->> >+enum {
->> >+	ETHA_DEV_UNSPEC,
->> 
->> ETHNL/ETHA looks odd.
->> I would prefer prefix "ETHTOOL_* for everything in uapi:
->> ETHTOOL_CMD_* for commands.
->> ETHTOOL_ATTR_* for attributes.
->> 
->> Looks much nicer.
->
->Even with ETHA_ prefix, there are places where having to fit into
->80 columns makes the code hard to read. ETHTOOL_ATTR_ would make it
->even harder.
+On Tue, Mar 26, 2019 at 09:17:07AM -0700, Daniel Colascione wrote:
+> Thanks for the patch.
+> 
+> On Tue, Mar 26, 2019 at 8:55 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > I quote Konstantins original patchset first that has already been acked and
+> > picked up by Eric before and whose functionality is preserved in this
+> > syscall:
+> 
+> We still haven't had a much-needed conversation about splitting this
+> system call into smaller logical operations. It's important that we
+> address this point before this patch is merged and becomes permanent
+> kernel ABI.
 
-So cut the line. UAPI consistency is more important than to fit on a
-80cols line.
-
-ETH/ETHA is wrong prefix. This is "ETHTOOL". I can live with ETHTOOL_A_*
-for attributes.
-
-
->
->> >+static const struct nla_policy dev_policy[ETHA_DEV_MAX + 1] = {
->> 
->> ethnl_dev_policy. Please maintain the namespace if possible.
->> "dev_policy" looks way too generic if anyone sees it in the code.
->
->OK
->> >+	[ETHA_DEV_UNSPEC]	= { .type = NLA_REJECT },
->> >+	[ETHA_DEV_INDEX]	= { .type = NLA_U32 },
->> >+	[ETHA_DEV_NAME]		= { .type = NLA_NUL_STRING,
->> >+				    .len = IFNAMSIZ - 1 },
->> >+};
->> >+
->> >+/**
->> >+ * ethnl_dev_get() - get device identified by nested attribute
->> >+ * @info: genetlink info (also used for extack error reporting)
->> >+ * @nest: nest attribute with device identification
->> >+ *
->> >+ * Finds the network device identified by ETHA_DEV_INDEX (ifindex) or
->> >+ * ETHA_DEV_NAME (name) attributes in a nested attribute @nest. If both
->> >+ * are supplied, they must identify the same device. If successful, takes
->> >+ * a reference to the device which is to be released by caller.
->> >+ *
->> >+ * Return: pointer to the device if successful, ERR_PTR(err) on error
->> >+ */
->> >+struct net_device *ethnl_dev_get(struct genl_info *info, struct nlattr *nest)
->> 
->> I wonder, why you have this in nested attr? Aren't ifindex/ifname always
->> used as a handle for commands/notifications? Would be just in toplevel
->> (see devlink/nl80211)
->
->It makes things only slightly easier now but I would like to make the
->API as future proof as possible. If something needs to be added later
->(e.g. netns id) or something else changes (e.g. 64-bit ifindex), only
->one enum and these two helpers would need to be adjusted.
-
-You can still have the helper without the nest. So if you don't nest
-this, everything is the same, both helper and extra attr in enum.
-
-
->
->> >+	if (!nest) {
->> >+		ETHNL_SET_ERRMSG(info,
->> >+				 "mandatory device identification missing");
->> 
->> No need to wrap.
->
->OK
->
->> >+	ret = nla_parse_nested_strict(tb, ETHA_DEV_MAX, nest, dev_policy,
->> >+				      info->extack);
->> >+	if (ret < 0)
->> 
->> "if (ret)" is enough. "Returns 0 on success or a negative error code."
->
->OK
->
->> >+			if (strncmp(dev->name, nl_name, IFNAMSIZ)) {
->> >+				dev_put(dev);
->> >+				ETHNL_SET_ERRMSG(info,
->> >+						 "ifindex and ifname do not match");
->> 
->> No need to wrap.
->
->OK
->
->> >+/**
->> >+ * ethnl_fill_dev() - Put device identification nest into a message
->> >+ * @msg:      skb with the message
->> >+ * @dev:      network device to describe
->> >+ * @attrtype: attribute type to use for the nest
->> >+ *
->> >+ * Create a nested attribute with attributes describing given network device.
->> >+ * Clean up on error.
->> >+ *
->> >+ * Return: 0 on success, error value (-EMSGSIZE only) on error
->> >+ */
->> >+int ethnl_fill_dev(struct sk_buff *msg, struct net_device *dev, u16 attrtype)
->> >+{
->> >+	struct nlattr *nest;
->> >+	int ret = -EMSGSIZE;
->> >+
->> >+	nest = ethnl_nest_start(msg, attrtype);
->> >+	if (!nest)
->> >+		return -EMSGSIZE;
->> >+
->> >+	if (nla_put_u32(msg, ETHA_DEV_INDEX, (u32)dev->ifindex))
->> >+		goto err;
->> >+	if (nla_put_string(msg, ETHA_DEV_NAME, dev->name))
->> >+		goto err;
->> >+
->> >+	nla_nest_end(msg, nest);
->> >+	return 0;
->> >+err:
->> Usually this label is called "nla_put_failure". Same for the rest.
->> "err" could be confused with error return variable.
->> 
->> have "ret = -EMSGSIZE" here. Easier to follow the error path.
->
->OK
->
->> >+	nla_nest_cancel(msg, nest);
->> >+	return ret;
->> >+}
->> >+
->> >+/**
->> >+ * ethnl_reply_init() - Create skb for a reply and fill device identification
->> >+ * @payload: payload length (without netlink and genetlink header)
->> >+ * @dev:     device the reply is about (may be null)
->> >+ * @cmd:     ETHNL_CMD_* command for reply
->> >+ * @info:    genetlink info of the received packet we respond to
->> >+ * @ehdrp:   place to store payload pointer returned by genlmsg_new()
->> >+ *
->> >+ * Return: pointer to allocated skb on success, NULL on error
->> >+ */
->> >+struct sk_buff *ethnl_reply_init(size_t payload, struct net_device *dev, u8 cmd,
->> >+				 u16 dev_attrtype, struct genl_info *info,
->> >+				 void **ehdrp)
->> >+{
->> >+	struct sk_buff *rskb;
->> 
->> Could be just "skb", or "msg". You have "msg" in ethnl_fill_dev().
->> Please have it consistent.
->
->OK
->
->> >+	rskb = genlmsg_new(payload, GFP_KERNEL);
->> >+	if (!rskb) {
->> >+		ETHNL_SET_ERRMSG(info,
->> >+				 "failed to allocate reply message");
->> 
->> No need to wrap.
->
->OK
->
->> >+		int ret = ethnl_fill_dev(rskb, dev, dev_attrtype);
->> >+
->> >+		if (ret < 0)
->> 
->> "if (ret)" is enough.
->
->OK
->
->> >+
->> >+#define ETHNL_SET_ERRMSG(info, msg) \
->> >+	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
->> 
->> Why do you need this macro? Can info be null?
->
->The same functions are used for generating replies to GET requests (info
->is not null) and notifications (info is null, no extack).
-
-So again, could this be generic? GENL_SET_ERR_MSG() could accept null
-and ignore.
-
-
->
->> In general, macros like this should be avoided.
->
->At the expense of repeating the same patterns. In this case it would be
->acceptable but it would mean one more indentation level for lines with
->the error/warning messages.
-
-No if you move the check to lower layer.
-
-
->
->> >+static inline int ethnl_str_size(const char *s)
->> >+{
->> >+	return nla_total_size(strlen(s) + 1);
->> 
->> This looks like more generic helper, not tight to ethtool.
->
->OK
->
->> >+static inline int ethnl_str_ifne_size(const char *s)
->> 
->> Eh? "ifne"? What is this good for?
->
->It's for "if not empty". Structures like ethtool_drvinfo use fixed size
->char arrays for strings where empty string means the information is not
->available. So if the string is empty, netlink attribute is omitted.
->
->> >+{
->> >+	return s[0] ? ethnl_str_size(s) : 0;
->> >+}
->> >+
->> >+static inline int ethnl_put_str_ifne(struct sk_buff *skb, int attrtype,
->> >+				     const char *s)
->> >+{
->> >+	if (!s[0])
->> >+		return 0;
->> >+	return nla_put_string(skb, attrtype, s);
->> 
->> I don't like helpers like this. Do the check in the caller and put or
->> not put the string there. It's a single if.
->
->OK
->
->
->> >+static inline struct nlattr *ethnl_nest_start(struct sk_buff *skb,
->> >+					      int attrtype)
->> >+{
->> >+	return nla_nest_start(skb, attrtype | NLA_F_NESTED);
->> 
->> Please use nla_nest_start directly and avoid helpers like this.
->
->OK. It's one more thing to check (and forget) in many places, though.
->
->> >+static inline int ethnlmsg_parse(const struct nlmsghdr *nlh,
->> >+				 struct nlattr *tb[], int maxtype,
->> >+				 const struct nla_policy *policy,
->> >+				 struct genl_info *info)
->> >+{
->> >+	return nlmsg_parse_strict(nlh, GENL_HDRLEN, tb, maxtype, policy,
->> >+				  info ? info->extack : NULL);
->> 
->> Same thing, please use nlmsg_parse_strict directly.
->
->OK
->
->> >+/* ethnl_update_* return true if the value is changed */
->> >+static inline bool ethnl_update_u32(u32 *dst, struct nlattr *attr)
->> >+{
->> >+	u32 val;
->> >+
->> >+	if (!attr)
->> >+		return false;
->> >+	val = nla_get_u32(attr);
->> >+	if (*dst == val)
->> >+		return false;
->> >+
->> >+	*dst = val;
->> >+	return true;
->> >+}
->> >+
->> >+static inline bool ethnl_update_u8(u8 *dst, struct nlattr *attr)
->> >+{
->> >+	u8 val;
->> >+
->> >+	if (!attr)
->> >+		return false;
->> >+	val = nla_get_u8(attr);
->> >+	if (*dst == val)
->> >+		return false;
->> >+
->> >+	*dst = val;
->> >+	return true;
->> >+}
->> >+
->> >+/* update u32 value used as bool from NLA_U8 */
->> >+static inline bool ethnl_update_bool32(u32 *dst, struct nlattr *attr)
->> >+{
->> >+	u8 val;
->> >+
->> >+	if (!attr)
->> >+		return false;
->> >+	val = !!nla_get_u8(attr);
->> >+	if (!!*dst == val)
->> >+		return false;
->> >+
->> >+	*dst = val;
->> >+	return true;
->> >+}
->> >+
->> >+static inline bool ethnl_update_binary(u8 *dst, unsigned int len,
->> >+				       struct nlattr *attr)
->> >+{
->> >+	if (!attr)
->> >+		return false;
->> >+	if (nla_len(attr) < len)
->> >+		len = nla_len(attr);
->> >+	if (!memcmp(dst, nla_data(attr), len))
->> >+		return false;
->> >+
->> >+	memcpy(dst, nla_data(attr), len);
->> >+	return true;
->> >+}
->> >+
->> >+static inline bool ethnl_update_bitfield32(u32 *dst, struct nlattr *attr)
->> >+{
->> >+	struct nla_bitfield32 change;
->> >+	u32 newval;
->> >+
->> >+	if (!attr)
->> >+		return false;
->> >+	change = nla_get_bitfield32(attr);
->> >+	newval = (*dst & ~change.selector) | (change.value & change.selector);
->> >+	if (*dst == newval)
->> >+		return false;
->> >+
->> >+	*dst = newval;
->> >+	return true;
->> >+}
->> 
->> I don't understand puspose of these "update" helper functions. Try to
->> avoid them. In general, please try to avoid wrappers around netlink api.
->
->The purpose is to update a value according to a request attribute (if
->present) and tell caller if the value was actually modified. They are
->used like e.g.
->
->	mod = false;
->	if (ethnl_update_u32(&data.rx_pending, tb[ETHA_RING_RX_PENDING]))
->		mod = true;
->	if (ethnl_update_u32(&data.rx_mini_pending,
->			     tb[ETHA_RING_RX_MINI_PENDING]))
->		mod = true;
->	if (ethnl_update_u32(&data.rx_jumbo_pending,
->			     tb[ETHA_RING_RX_JUMBO_PENDING]))
->		mod = true;
->	if (ethnl_update_u32(&data.tx_pending, tb[ETHA_RING_TX_PENDING]))
->		mod = true;
->
->	if (!mod)
->		return 0;
->	/* call ethtool_ops handler and send notification */
->
->so that we can omit calling the handler and sending a notification if
->the request was no-op. Expanding the helpers here would make the code
->needlessly complicated and error prone.
-
-Got it. Makes sense.
-
-
->
->> >+static inline void warn_partial_info(struct genl_info *info)
->> >+{
->> >+	ETHNL_SET_ERRMSG(info, "not all requested data could be retrieved");
->> >+}
->> >+
->> >+/* Check user privileges explicitly to allow finer access control based on
->> >+ * context of the request or hiding part of the information from unprivileged
->> >+ * users
->> >+ */
->> >+static inline bool ethnl_is_privileged(struct sk_buff *skb)
->> >+{
->> >+	struct net *net = sock_net(skb->sk);
->> >+
->> >+	return netlink_ns_capable(skb, net->user_ns, CAP_NET_ADMIN);
->> 
->> Same here.
->
->It's still the same, helpers allow replacing repeating code patterns
->with just saying what you are doing. But this one is called only from
->one place so I can live without it.
-
-It is always a tradeoff. We have to be careful not to abuse it.
-
-
->
->> >+}
->> >+
->> >+/* total size of ETHA_*_DEV nested attribute; this is an upper estimate so that
->> >+ * we do not need to hold RTNL longer than necessary to prevent rename between
->> >+ * estimating the size and composing the message
->> >+ */
->> >+static inline unsigned int dev_ident_size(void)
->> 
->> You are missing "ethnl_" prefix.
->
->OK
->
->Michal
+I don't particularly mind splitting this into an additional syscall like
+e.g.  pidfd_open() but then we have - and yes, I know you'll say
+syscalls are cheap - translate_pid(), and pidfd_open(). What I like
+about this rn is that it connects both apis in a single syscall
+and allows pidfd retrieval across pid namespaces. So I guess we'll see
+what other people think.
