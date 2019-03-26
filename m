@@ -2,164 +2,99 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24D8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43653C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97F020651
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:50:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z14uX4f2"
+	by mail.kernel.org (Postfix) with ESMTP id 18E3E2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbfCZQum (ORCPT
+        id S1731516AbfCZQyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:50:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42591 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbfCZQum (ORCPT
+        Tue, 26 Mar 2019 12:54:04 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42498 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCZQyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:50:42 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w139so10472428oie.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jlvcTNFnmcegufVrQErIjtXY+Zg44N3gqJW/xOCBErQ=;
-        b=Z14uX4f2oKOPa3cvg3EtrxDW95HmPywK5QtPyFfwZenwe3qWvF4CafTgDOgj98O/0G
-         ppy/2Rs7PKhYcnxPZH4CR/n4TbubzvLzURUFiGKIqBdTTOJBq+NAoOnDsLBJ5eoduA2+
-         TCFcZ3++xFlkUY3sqHm8Jpm3recpOEh+1vnPNxwUl2wXg8b1mvNU5MEit8nXLsP6WJ/J
-         mgTETIxuD9kG8+wrNEKSPHlpyidfZppW7hR57vXiTd9gSplXMcREEH3x+MB+DgLiinJg
-         dFdGb/wqWRCHl28XYWou1F4xkfSatFt2+eHJRYN620bgn/Q0xxPZl7/DD/WsvohnVB36
-         mv+g==
+        Tue, 26 Mar 2019 12:54:04 -0400
+Received: by mail-qk1-f193.google.com with SMTP id b74so8043353qkg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:54:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jlvcTNFnmcegufVrQErIjtXY+Zg44N3gqJW/xOCBErQ=;
-        b=hSqDzOxQ2OmPisNT6nBh+SVjYxyRD6/UvzgsUSgxV0rTVO0phlA1oSmX73uymDnE16
-         tDNMtJtqIBTtItrGDttwJh4jBgrJvyV3PyEH16SU/tuWnJXRLiu7HnNXDhSJhyka+FSF
-         Grf8gnVp5dmpo0dT83UU7DJelkl9ihk/CuGhSHVUipuRne/xkEynu6MxgRcYT5SN1XXF
-         S0U1ITqFNRFuMs9KqgZZLvl7e7OA4wA+q3fTLBe7Vy2Xa0Ej810RFg9cdX3g6hEWh7Sn
-         N21wOfzp+pKoxZupMYwRw4HDJ9Pbc3/X6P9BqrAci5P9rSBDWsdwSfeDh/OxqRcM6nUm
-         2XWQ==
-X-Gm-Message-State: APjAAAVGQ33TRjeAfa9gVoCNLnSjQX3l79oggioeZheliP16BPgW3FwK
-        wOrQybfQBVzhOeJX4/ZUU1aqhP+ofEBIqSRJ+h2zRw==
-X-Google-Smtp-Source: APXvYqw2OwZceSFkaPzm84fjYSruZyYl+zr0oez4INgL7ajq/4R9MUZN7P+DkV9kf86reeoGevap4Knsga4G2on6Y7w=
-X-Received: by 2002:aca:c3d8:: with SMTP id t207mr16573467oif.117.1553619040234;
- Tue, 26 Mar 2019 09:50:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AT7xvjAWIyJCcePl132t7T+n+TzpQQuXNXm3pdI4blo=;
+        b=uRbPhYYIDiMv04qKSRSjhNHs8Fw2agg6a3DRRw5aByJ/GGImTFu2c9RAmjon+fE73T
+         ynX8k8y9YqZCHCtxPniAsJ91tmEyhu3tky5HRsfkKccD0RTTcT90B8qggDYcmbd7GNK7
+         hMiwQzvQ9erBf8R/qTv2jIibeD7RUNNQVLU3XGDp+JYgT8bQrV5/kQ0XOzEwaVLc+37h
+         +/3SIGzSO9FqW+64oeHNBocCVMs2lpCYTghS4x1R3l7UBayRNxy140YYLWCz0iwM12D5
+         Jg87ICBspXMn7hCvEOV3SMEQv5c/xx+ETsHKU/YO3RTLPneohrtre2lm7aEqFl8h6zSz
+         0o2g==
+X-Gm-Message-State: APjAAAW52wafS+m9YW9lJTqXWF6YxaoKi6Hn4hpYFab6nZaVst4xEId6
+        hS7Rhl7IJaGSId3fCCrWv7EDCA==
+X-Google-Smtp-Source: APXvYqx5UHQ8nanghfhzg0pFdZd+8kyMjawRO91F3JXx/Hibg1pKAb4WUAy68WuyCcKrcSt7axztAQ==
+X-Received: by 2002:a05:620a:1597:: with SMTP id d23mr25900044qkk.226.1553619243524;
+        Tue, 26 Mar 2019 09:54:03 -0700 (PDT)
+Received: from redhat.com ([66.187.232.66])
+        by smtp.gmail.com with ESMTPSA id o68sm10908092qkc.89.2019.03.26.09.54.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 09:54:02 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 12:53:59 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Alexey Kardashevskiy <aik@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        eric.auger@redhat.com, joro@8bytes.org,
+        tnowicki@caviumnetworks.com, kevin.tian@intel.com,
+        Lorenzo.Pieralisi@arm.com, bharat.bhushan@nxp.com,
+        Will.Deacon@arm.com, Robin.Murphy@arm.com, Marc.Zyngier@arm.com
+Subject: Re: [RFC PATCH] virtio_ring: Use DMA API if guest memory is encrypted
+Message-ID: <20190325084348-mutt-send-email-mst@kernel.org>
+References: <87zhrj8kcp.fsf@morokweng.localdomain>
+ <87womn8inf.fsf@morokweng.localdomain>
+ <20190129134750-mutt-send-email-mst@kernel.org>
+ <6c68f7f7-1b28-6eba-9b8b-2c32efac9701@redhat.com>
+ <20190129213137-mutt-send-email-mst@kernel.org>
+ <20190130074427.GA29516@lst.de>
 MIME-Version: 1.0
-References: <20190326155513.26964-1-christian@brauner.io> <20190326155513.26964-3-christian@brauner.io>
- <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
- <20190326162337.o256x7hiodu2qfyg@brauner.io> <20190326163142.4eh5qpgiqvygf26w@brauner.io>
- <20190326163452.uku4bgkessxzxvai@brauner.io> <CAKOZuetcp=UPRWDkLUxLTmu-vqdN6qSmN9=0uP8MUuwyLoYfEA@mail.gmail.com>
- <20190326164354.qecuzkqz6ic2433i@brauner.io>
-In-Reply-To: <20190326164354.qecuzkqz6ic2433i@brauner.io>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 26 Mar 2019 09:50:28 -0700
-Message-ID: <CAKOZueuXtWwC+U9-q3QG41p-fwjMxmujTUegmVkorLzFcY2-SA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] pid: add pidctl()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190130074427.GA29516@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 9:44 AM Christian Brauner <christian@brauner.io> wrote:
->
-> On Tue, Mar 26, 2019 at 09:38:31AM -0700, Daniel Colascione wrote:
-> > On Tue, Mar 26, 2019 at 9:34 AM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > On Tue, Mar 26, 2019 at 05:31:42PM +0100, Christian Brauner wrote:
-> > > > On Tue, Mar 26, 2019 at 05:23:37PM +0100, Christian Brauner wrote:
-> > > > > On Tue, Mar 26, 2019 at 09:17:07AM -0700, Daniel Colascione wrote:
-> > > > > > Thanks for the patch.
-> > > > > >
-> > > > > > On Tue, Mar 26, 2019 at 8:55 AM Christian Brauner <christian@brauner.io> wrote:
-> > > > > > >
-> > > > > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
-> > > > > > > I quote Konstantins original patchset first that has already been acked and
-> > > > > > > picked up by Eric before and whose functionality is preserved in this
-> > > > > > > syscall:
-> > > > > >
-> > > > > > We still haven't had a much-needed conversation about splitting this
-> > > > > > system call into smaller logical operations. It's important that we
-> > > > > > address this point before this patch is merged and becomes permanent
-> > > > > > kernel ABI.
-> > > > >
-> > > > > I don't particularly mind splitting this into an additional syscall like
-> > > > > e.g.  pidfd_open() but then we have - and yes, I know you'll say
-> > > > > syscalls are cheap - translate_pid(), and pidfd_open(). What I like
-> > > > > about this rn is that it connects both apis in a single syscall
-> > > > > and allows pidfd retrieval across pid namespaces. So I guess we'll see
-> > > > > what other people think.
-> > > >
-> > > > There's something to be said for
-> > > >
-> > > > pidfd_open(pid_t pid, int pidfd, unsigned int flags);
-> > > >
-> > > > /* get pidfd */
-> > > > int pidfd = pidfd_open(1234, -1, 0);
-> > > >
-> > > > /* convert to procfd */
-> > > > int procfd = pidfd_open(-1, 4, 0);
-> > > >
-> > > > /* convert to pidfd */
-> > > > int pidfd = pidfd_open(4, -1, 0);
-> > >
-> > > probably rather:
-> > >
-> > > int pidfd = pidfd_open(-1, 4, PIDFD_TO_PROCFD);
-> > > int procfd = pidfd_open(-1, 4, PROCFD_TO_PIDFD);
-> > > int pidfd = pidfd_open(1234, -1, 0);
-> >
-> > These three operations look like three related but distinct functions
-> > to me, and in the second case, the "pidfd_open" name is a bit of a
-> > misnomer. IMHO, the presence of an "operation name" field in any API
-> > is usually a good indication that we're looking at a family of related
-> > APIs, not a single coherent operation.
->
-> So I'm happy to accommodate the need for a clean api even though I
-> disagree that what we have in pidctl() is unclean.
-> But I will not start sending a pile of syscalls. There is nothing
-> necessarily wrong to group related APIs together.
+On Wed, Jan 30, 2019 at 08:44:27AM +0100, Christoph Hellwig wrote:
+> On Tue, Jan 29, 2019 at 09:36:08PM -0500, Michael S. Tsirkin wrote:
+> > This has been discussed ad nauseum. virtio is all about compatibility.
+> > Losing a couple of lines of code isn't worth breaking working setups.
+> > People that want "just use DMA API no tricks" now have the option.
+> > Setting a flag in a feature bit map is literally a single line
+> > of code in the hypervisor. So stop pushing for breaking working
+> > legacy setups and just fix it in the right place.
+> 
+> I agree with the legacy aspect.  What I am missing is an extremely
+> strong wording that says you SHOULD always set this flag for new
+> hosts, including an explanation why.
 
-In the email I sent just now, I identified several specific technical
-disadvantages arising from unnecessary grouping of system calls. We
-have historical evidence in the form of socketcall that this grouping
-tends to be regrettable. I don't recall your identifying any
-offsetting technical advantages. Did I miss something?
 
-> By these standards the
-> new mount API would need to be like 30 different syscalls, same for
-> keyring management.
+So as far as power is concerned, IIUC the issue they are struggling with is
+that some platforms do not support pass-through mode in the emulated IOMMU.
+Disabling PLATFORM_ACCESS is so far a way around that, unfortunately just for
+virtio devices.  I would like virtio-iommu to be able to address that need as
+well.
 
-Can you please point out the problem that would arise from splitting
-the mount and keyring APIs this way? One could have made the same
-argument about grouping socket operations, and this socket-operation
-grouping ended up being a mistake.
+-- 
+MST
