@@ -7,69 +7,68 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AD9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9545C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E4B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2B520823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ic2pO6Jr"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="v/VOm10t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbfCZTYi (ORCPT
+        id S1732680AbfCZTYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:24:38 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46896 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732244AbfCZTYg (ORCPT
+        Tue, 26 Mar 2019 15:24:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41916 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732244AbfCZTYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:24:36 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 9so8506609pfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:24:36 -0700 (PDT)
+        Tue, 26 Mar 2019 15:24:39 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y5so2084994plk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VpO+kH5n/TCwOCtL6i6LDDDwCLUmaIA5kDbeBwsenW8=;
-        b=ic2pO6JrvwEPAs1CnVuT7xWHP8ABOKGkFUt9H1s0OLBDzjFRw1epxg+DmzlHEGONnX
-         IixtodF2vh92KGgKTGRYdCz8Qfg7aK04HlZJQmLZZu6bgaA7wzxGBDOf24vFPGpVK2hJ
-         cmIfAFVEayqe/33wv7JRMHW2vxfovfoZ/Y5Ck=
+        bh=9xe2cnKgj2u/5e350AhnUZqGhZDwjch2potbZGjEHUM=;
+        b=v/VOm10tv19N25u4AXHbxwGBxHou9OBjaSYgwhqnd9yTlGqrc6cJ0pZyoTS1BIvrpJ
+         r4fvbu/5qL9sC0M4MnERILS/2oPRyhlTlSjFPLbSOdYmZsmuF67L3ISWgQOtHavmn9SM
+         H/DTQ/dbDqIiWwZd5Hi26iBq9B6ZYC65e3e2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VpO+kH5n/TCwOCtL6i6LDDDwCLUmaIA5kDbeBwsenW8=;
-        b=cVGxZgzIJAYrmph6toZmRhBbO0FqDTSpLSHD3khfOuMy/1aRZtkElInatngWW8CVMa
-         6PMg5NKnobdSyzGp+NvS0rmCuVuNy4EvUl+5lj+MLd55nM9spVaFaTfDj+dH8JgLOykZ
-         wehFQBxajug0FgP2dSL9VLWyJxBT/zZFqkzFkozKmoWxSwZb3YoMb+7wGQmWCQczZT1P
-         eVk7QmV1DDgouaWiXEN57vjk3JGe70LO1GZJK01r0+J7/XyeMxDL7qjTSmN3lQVS9mAX
-         Yyhdwj6HAxRzPwSl+5FLa/cHdk5xn7IHZ/r6m+AP2xxk66lHTb93M8hrqMFPdfEZVMpQ
-         JkLw==
-X-Gm-Message-State: APjAAAW4maXTLcIlg52XCfipBLB0RL2XAaRyxE7QwOYBuE4AzF5mQUZJ
-        U1u6k/HSsX7BpiRJzZfpmtgbOmGNGIM=
-X-Google-Smtp-Source: APXvYqxRuFbNRDdKaMGu2pfXId9tLkyI2m9Vc5ldX1d4DDCuVuNBaT6qoRUfJTbviF9W9099+n61Lg==
-X-Received: by 2002:a62:e502:: with SMTP id n2mr31731079pff.242.1553628275495;
-        Tue, 26 Mar 2019 12:24:35 -0700 (PDT)
+        bh=9xe2cnKgj2u/5e350AhnUZqGhZDwjch2potbZGjEHUM=;
+        b=RC4QXBrJNMMOUpHyS1683B2MXo0FJbafQq4CoUfkkMCnOtbRREYYOCb3UXbJ5G5s5F
+         wsriLPF2N6/6ls+f4GXplXCOJb4nQVWK3vqt2ns3li0oC60VjcQFfKQnWRzYsXkyEp6G
+         c8+laJBMTYJx2u2fPNTnxlZlNQbthFAH56oc2xTxh3r+AWsYXGVfSnhU0oR/U7X/Jqx7
+         popOGVZV+22z/JaRuiZpMtVShX/njlyuR6a7mn4FeHmP++bb8bXr8a+hYag5kyjHOY+T
+         CgJhH9PhA61jdCRq9UtNVBuZF/tzeHjz4uvOvhjQN96GSmECd94OXOVuEMu5VlgUVbQi
+         3eYw==
+X-Gm-Message-State: APjAAAWu8L5PfJmHgF9EEgZYTiUgyNO87ZG7/ApFarIwT9UaElrHSJ/t
+        3bnhZQ8yZ3RnbGCpvPHczMn5pk6YRVY=
+X-Google-Smtp-Source: APXvYqwMJ3hs4xED/sxyQLZzrjezrjuatGt1jM2/TtrZQmpPXSsOJnh8yMCjdjiUOwVv9nMh0rSFxQ==
+X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr32840752plb.186.1553628278149;
+        Tue, 26 Mar 2019 12:24:38 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l12sm36761889pgn.83.2019.03.26.12.24.33
+        by smtp.gmail.com with ESMTPSA id l12sm36761889pgn.83.2019.03.26.12.24.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:24:34 -0700 (PDT)
+        Tue, 26 Mar 2019 12:24:37 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        rcu@vger.kernel.org, byungchul.park@lge.com,
-        Ingo Molnar <mingo@redhat.com>,
+        byungchul.park@lge.com, Ingo Molnar <mingo@redhat.com>,
         Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         linux-kselftest@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
         Shuah Khan <shuah@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v2 3/4] rcutorture: Select from only online CPUs
-Date:   Tue, 26 Mar 2019 15:24:10 -0400
-Message-Id: <20190326192411.198070-3-joel@joelfernandes.org>
+Subject: [PATCH v2 4/4] rcutorture: Add cpu0 to the set of CPUs to add jitter
+Date:   Tue, 26 Mar 2019 15:24:11 -0400
+Message-Id: <20190326192411.198070-4-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190326192411.198070-1-joel@joelfernandes.org>
 References: <20190326192411.198070-1-joel@joelfernandes.org>
@@ -80,36 +79,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rcutorture jitter.sh script selects a random CPU but does not check
-if it is offline or online. This leads to taskset errors many times. On
-my machine, hyper threading is disabled so half the cores are offline
-causing taskset errors a lot of times. Let us fix this by checking from
-only the online CPUs on the system.
+jitter.sh currently does not add CPU0 to the list of CPUs for adding of
+jitter. Let us add it to this list even when it is not hot-pluggable.
 
-Cc: rcu@vger.kernel.org
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- tools/testing/selftests/rcutorture/bin/jitter.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rcutorture/bin/jitter.sh | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
-index 3633828375e3..47bd9829dc55 100755
+index 47bd9829dc55..26faf5824a1f 100755
 --- a/tools/testing/selftests/rcutorture/bin/jitter.sh
 +++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
-@@ -47,10 +47,11 @@ do
- 		exit 0;
- 	fi
+@@ -49,8 +49,12 @@ do
  
--	# Set affinity to randomly selected CPU
--	cpus=`ls /sys/devices/system/cpu/*/online |
-+	# Set affinity to randomly selected online CPU
-+	cpus=`grep 1 /sys/devices/system/cpu/*/online |
- 		sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
- 		grep -v '^0*$'`
+ 	# Set affinity to randomly selected online CPU
+ 	cpus=`grep 1 /sys/devices/system/cpu/*/online |
+-		sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
+-		grep -v '^0*$'`
++		sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//'`
 +
++	# Do not leave out poor old cpu0 which may not be hot-pluggable
++	if [ ! -f "/sys/devices/system/cpu/cpu0/online" ]; then
++		cpus="0 $cpus"
++	fi
+ 
  	cpumask=`awk -v cpus="$cpus" -v me=$me -v n=$n 'BEGIN {
  		srand(n + me + systime());
- 		ncpus = split(cpus, ca);
 -- 
 2.21.0.392.gf8f6787159e-goog
 
