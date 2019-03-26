@@ -2,254 +2,122 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35324C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCC320830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F260020830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CYvUaBzW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfCZIMr (ORCPT
+        id S1731291AbfCZINF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:12:47 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49724 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfCZIMp (ORCPT
+        Tue, 26 Mar 2019 04:13:05 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41530 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfCZINF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:12:45 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A24F63C00DD;
-        Tue, 26 Mar 2019 09:12:41 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KEtSQgcksQyD; Tue, 26 Mar 2019 09:12:35 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 55E203C00C4;
-        Tue, 26 Mar 2019 09:12:35 +0100 (CET)
-Received: from [10.72.93.172] (10.72.93.172) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
- 2019 09:12:34 +0100
-Subject: Re: [PATCH 04/10] ALSA: aloop: Use always spin_lock_irqsave() for
- cable->lock
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     <broonie@kernel.org>, <perex@perex.cz>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
- <1553529644-5654-5-git-send-email-twischer@de.adit-jv.com>
- <s5htvfr6iqh.wl-tiwai@suse.de>
- <237e2d2d-9a8f-a273-4c40-db2c670c6858@de.adit-jv.com>
- <s5hlg127uww.wl-tiwai@suse.de>
-From:   Timo Wischer <twischer@de.adit-jv.com>
-Message-ID: <3423ff53-7ee3-01e7-c4bf-a4f730fdfe94@de.adit-jv.com>
-Date:   Tue, 26 Mar 2019 09:12:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 04:13:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q7xGE9118688;
+        Tue, 26 Mar 2019 08:13:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=W7BnsQJKvVdGHz8muJQ6ayHXVrB4dnpkCPC4dIfX9hE=;
+ b=CYvUaBzWceElA9TJiOVQ+JJfPlsvYNh4QrM16tpgHE7qDICfxQGHYC6ls+CO4R3l62+C
+ fKzLtk4AO0HUBkbAJm41xcTI8nLCKUPpR13aVZwzP1pdHCipmRum5A1qZd8RpJVwoSuP
+ 2EhTVG07w/xPmauJtf0dIuQp5WncoG/kFCxv01MziUyY0jScyyYCSfsDMdBTHbyAh3/U
+ 2AcyAk0gMP/6Snh4fEyQiRcjtWHLC5xVyh1fRxrP1CNR29+zIavsJYnXspgoTuKNinHq
+ PopgkTyZp002JHbSZeBuZaaqk/HFHmeiZlcOxMECFvCtFTjo/9SnG9Ebnhu99GfdLhiv Dw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by aserp2130.oracle.com with ESMTP id 2re6g0rqb0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 08:13:01 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q8D0rm025865
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 08:13:00 GMT
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q8CxSn012935;
+        Tue, 26 Mar 2019 08:12:59 GMT
+Received: from kadam (/197.157.0.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Mar 2019 01:12:59 -0700
+Date:   Tue, 26 Mar 2019 11:12:51 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     qiaozhou <qiaozhou@asrmicro.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: add support for ASR AquilaC SoC
+Message-ID: <20190326081251.GE32613@kadam>
+References: <1553389083-13237-1-git-send-email-qiaozhou@asrmicro.com>
 MIME-Version: 1.0
-In-Reply-To: <s5hlg127uww.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.72.93.172]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553389083-13237-1-git-send-email-qiaozhou@asrmicro.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 17:58, Takashi Iwai wrote:
-> On Mon, 25 Mar 2019 17:40:23 +0100,
-> Timo Wischer wrote:
->> Best regards
->> Timo Wischer
->> Engineering Software Base (ADITG/ESB)
->>
->> Tel. +49 5121 49 6938
->> On 3/25/19 17:07, Takashi Iwai wrote:
->>
->>      On Mon, 25 Mar 2019 17:00:38 +0100,
->>      <twischer@de.adit-jv.com> wrote:
->>      
->>          From: Timo Wischer <twischer@de.adit-jv.com>
->>          
->>          to allow the usage of timer callbacks from interrupt context.
->>          For example the sound timer.
->>          
->>      The trigger callback is already irq-disabled.  And, open/close must
->>      not be irq-disabled OTOH.  So these changes must be superfluous.
->>      
->> Hello Takashi,
->>
->> could you explain why open/close must not be irq-disabled?
-> The open/close callbacks get called always in sleepable context where
-> you can use mutex & co gracefully.  The only non-sleepable (atomic)
-> context is pointer and trigger callbacks.  So it's safe to use
-> spin_lock() without irq in these callbacks.
-> OTOH, the rest (open, close,hw_params, hw_free, prepare) callbacks are
-> always sleepable, hence it's safe to use spin_lock_irq() (not
-> save/restore) variant.
->
-> When a driver declares as non-atomic via PCM flag, all callbacks
-> become sleepable, but this isn't the case for aloop driver.
->
->> I see a potential deadlock in case of free_cable() uses only spin_lock()
->> instead of spin_lock_irqsave().
->> For example the following will be executed:
->>
->> loopback_close()
->> free_cable()
->> spin_lock(&dpcm->cable->lock)
-> Which spin_lock() call?  The free_cable() calls spin_lock_irq().
->
->>>> Interrupted by jiffies timer IRQ before calling spin_unlock()
->> loopback_jiffies_timer_function()
->> spin_lock_irqsave(&dpcm->cable->lock)
->>>> DEADLOCK due to dpcm->cable->lock is already locked
->> Do you also see this deadlock or do you see any reason why this could not
->> happen?
-> If spin_lock_irq() is used in free_cable(), it must be OK.
->
->
-> Takashi
-Thanks for the detailed explanation.
 
-@all:
-Please simple ignore this patch.
+I'm not the right person to send this to...
 
-Best regards
+$ ./scripts/get_maintainer.pl -f arch/arm64/Kconfig.platforms
+Catalin Marinas <catalin.marinas@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
+Will Deacon <will.deacon@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
+linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE))
+linux-kernel@vger.kernel.org (open list)
 
-Timo
 
->
->
->> Best regards
->>
->> Timo
->>
->>      thanks,
->>      
->>      Takashi
->>
->>          Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
->>          ---
->>           sound/drivers/aloop.c | 33 +++++++++++++++++++--------------
->>           1 file changed, 19 insertions(+), 14 deletions(-)
->>          
->>          diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
->>          index 11e8ed6..c6217c4 100644
->>          --- a/sound/drivers/aloop.c
->>          +++ b/sound/drivers/aloop.c
->>          @@ -272,6 +272,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
->>                struct loopback_pcm *dpcm = runtime->private_data;
->>                struct loopback_cable *cable = dpcm->cable;
->>                int err = 0, stream = 1 << substream->stream;
->>          +     unsigned long flags;
->>           
->>                switch (cmd) {
->>                case SNDRV_PCM_TRIGGER_START:
->>          @@ -281,39 +282,39 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
->>                                      dpcm->last_jiffies = jiffies;
->>                                      dpcm->pcm_rate_shift = 0;
->>                                      dpcm->last_drift = 0;
->>          -                           spin_lock(&cable->lock);
->>          +                           spin_lock_irqsave(&cable->lock, flags);
->>                                      cable->running |= stream;
->>                                      cable->pause &= ~stream;
->>                                      err = loopback_timer_start(dpcm);
->>          -                           spin_unlock(&cable->lock);
->>          +                           spin_unlock_irqrestore(&cable->lock, flags);
->>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->>                                                            loopback_active_notify(dpcm);
->>                                      break;
->>                case SNDRV_PCM_TRIGGER_STOP:
->>          -                           spin_lock(&cable->lock);
->>          +                           spin_lock_irqsave(&cable->lock, flags);
->>                                      cable->running &= ~stream;
->>                                      cable->pause &= ~stream;
->>                                      err = loopback_timer_stop(dpcm);
->>          -                           spin_unlock(&cable->lock);
->>          +                           spin_unlock_irqrestore(&cable->lock, flags);
->>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->>                                                            loopback_active_notify(dpcm);
->>                                      break;
->>                case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
->>                case SNDRV_PCM_TRIGGER_SUSPEND:
->>          -                           spin_lock(&cable->lock);
->>          +                           spin_lock_irqsave(&cable->lock, flags);
->>                                      cable->pause |= stream;
->>                                      err = loopback_timer_stop(dpcm);
->>          -                           spin_unlock(&cable->lock);
->>          +                           spin_unlock_irqrestore(&cable->lock, flags);
->>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->>                                                            loopback_active_notify(dpcm);
->>                                      break;
->>                case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
->>                case SNDRV_PCM_TRIGGER_RESUME:
->>          -                           spin_lock(&cable->lock);
->>          +                           spin_lock_irqsave(&cable->lock, flags);
->>                                      dpcm->last_jiffies = jiffies;
->>                                      cable->pause &= ~stream;
->>                                      err = loopback_timer_start(dpcm);
->>          -                           spin_unlock(&cable->lock);
->>          +                           spin_unlock_irqrestore(&cable->lock, flags);
->>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->>                                                            loopback_active_notify(dpcm);
->>                                      break;
->>          @@ -557,12 +558,13 @@ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
->>           {
->>                struct snd_pcm_runtime *runtime = substream->runtime;
->>                struct loopback_pcm *dpcm = runtime->private_data;
->>          +     unsigned long flags;
->>                snd_pcm_uframes_t pos;
->>           
->>          -     spin_lock(&dpcm->cable->lock);
->>          +     spin_lock_irqsave(&dpcm->cable->lock, flags);
->>                loopback_pos_update(dpcm->cable);
->>                pos = dpcm->buf_pos;
->>          -     spin_unlock(&dpcm->cable->lock);
->>          +     spin_unlock_irqrestore(&dpcm->cable->lock, flags);
->>                return bytes_to_frames(runtime, pos);
->>           }
->>           
->>          @@ -679,10 +681,12 @@ static void free_cable(struct snd_pcm_substream *substream)
->>                if (!cable)
->>                                      return;
->>                if (cable->streams[!substream->stream]) {
->>          +                           unsigned long flags;
->>          +
->>                                      /* other stream is still alive */
->>          -                           spin_lock_irq(&cable->lock);
->>          +                           spin_lock_irqsave(&cable->lock, flags);
->>                                      cable->streams[substream->stream] = NULL;
->>          -                           spin_unlock_irq(&cable->lock);
->>          +                           spin_unlock_irqrestore(&cable->lock, flags);
->>                } else {
->>                                      /* free the cable */
->>                                      loopback->cables[substream->number][dev] = NULL;
->>          @@ -698,6 +702,7 @@ static int loopback_open(struct snd_pcm_substream *substream)
->>                struct loopback_cable *cable = NULL;
->>                int err = 0;
->>                int dev = get_cable_index(substream);
->>          +     unsigned long flags;
->>           
->>                mutex_lock(&loopback->cable_lock);
->>                dpcm = kzalloc(sizeof(*dpcm), GFP_KERNEL);
->>          @@ -753,9 +758,9 @@ static int loopback_open(struct snd_pcm_substream *substream)
->>                else
->>                                      runtime->hw = cable->hw;
->>           
->>          -     spin_lock_irq(&cable->lock);
->>          +     spin_lock_irqsave(&cable->lock, flags);
->>                cable->streams[substream->stream] = dpcm;
->>          -     spin_unlock_irq(&cable->lock);
->>          +     spin_unlock_irqrestore(&cable->lock, flags);
->>           
->>            unlock:
->>                if (err < 0) {
->>          --
->>          2.7.4
->>
->>
+On Sun, Mar 24, 2019 at 08:58:03AM +0800, qiaozhou wrote:
+> From: Qiao Zhou <qiaozhou@asrmicro.com>
+> 
+> Add ARCH_ASR
+
+You'll need to expand this.
+
+> 
+> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
+                 ^^^^^^^^
+Use Qiao Zhou so it matches the From header.
+
+
+> ---
+>  arch/arm64/Kconfig.platforms | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 70498a0..da8d43a 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -278,4 +278,10 @@ config ARCH_ZYNQMP
+>  	help
+>  	  This enables support for Xilinx ZynqMP Family
+>  
+> +config ARCH_ASR
+> +	bool "ASR Microelectronics chip Family"
+> +	select PINCTRL
+> +	help
+> +	  This enables support for ASR Microelectronics chip Family, including:
+> +	  - ASR 8751C SoC
+>  endmenu
+
+Was this supposed to be part of the patch you sent earlier?  You will
+need to resend that one as a v2 patch.
+
+regards,
+dan carpenter
+
