@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E3BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE87C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BE020866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAB920863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581913;
-	bh=WQazvZytY/u9BUTFT51rWmRpPSjH1O3qrDqKlobu6ns=;
+	s=default; t=1553581916;
+	bh=tEPTFH14pQM5GL8qMFkugEi9XfjTGrs5r/LpIHO+8Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KBK9W/uMHJB+TPBFCg9/5S4oAet1pmyHiDdnhb1/WqGgc1fUZnc884ZUuutRNm9V
-	 3JeNzxrG6cbrz9jCSi/CCaecXb2yVCbsZJdurQhaO6xrzfjhBD2cAtd5HpTDs43xjc
-	 X/sUKHCXup/2rrOrmIVqivn1HrYAIV/waw4BHAeE=
+	b=W4Hu3lNOr4DMtUwWvFBusJeTjZDUQoasY8dvjO7ldJxoyAqwfRoFlUMLaXm5KTqK9
+	 aEVX0LhHHY2qmHyM39tvZ0swv+s0Ij2N5jTX3yGtXS8hFTIQ/060GGUlGiibCRt2rZ
+	 kxqKPAazM2r2zMsav40EJhU/XAKdOKt1xupEyl2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfCZGbw (ORCPT
+        id S1731249AbfCZGby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:31:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731184AbfCZGbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:31:49 -0400
+        id S1731215AbfCZGbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:31:52 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7B2620823;
-        Tue, 26 Mar 2019 06:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396F220863;
+        Tue, 26 Mar 2019 06:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581908;
-        bh=WQazvZytY/u9BUTFT51rWmRpPSjH1O3qrDqKlobu6ns=;
+        s=default; t=1553581911;
+        bh=tEPTFH14pQM5GL8qMFkugEi9XfjTGrs5r/LpIHO+8Xk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kE8lDWkCk8q4PIFK/jKgpcto9RUJUfbK1dR6r/AJGVhw5lxO0x5WCyCadx+753OOK
-         1AJAu0h6Fii+5u6REvzJGRq6/pa6LX7bJP8tzTi/qmtO05WBlk1dJXl0Bmecv/QVdE
-         1kg/N0A0Mgkx9lJ4uhC2AudrqHZ/Z8nDzyaM8Vw8=
+        b=M6yP3+d6TSRtTcGQGQUDMS0pPECtfYvAk6oE4zMJVYbZsYckoNXuH31nRTs+trJYI
+         r31+hUZHgXaH4aNdPV+OrzZUp4Isf4DB6lHj9TgLAbSlk1i/+tKJboXplJUtJ3qGU/
+         02ewrysADeF3PpErNFP89IdbyLWoygYbkIQRlQSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, stable@kernel.org
-Subject: [PATCH 4.9 13/30] ext4: brelse all indirect buffer in ext4_ind_remove_space()
-Date:   Tue, 26 Mar 2019 15:29:52 +0900
-Message-Id: <20190326042608.023377961@linuxfoundation.org>
+        stable@vger.kernel.org, Qiao Zhou <qiaozhou@asrmicro.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 22/30] arm64: traps: disable irq in die()
+Date:   Tue, 26 Mar 2019 15:30:01 +0900
+Message-Id: <20190326042608.316746710@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -65,70 +65,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Qiao Zhou <qiaozhou@asrmicro.com>
 
-commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217 upstream.
+commit 6f44a0bacb79a03972c83759711832b382b1b8ac upstream.
 
-All indirect buffers get by ext4_find_shared() should be released no
-mater the branch should be freed or not. But now, we forget to release
-the lower depth indirect buffers when removing space from the same
-higher depth indirect block. It will lead to buffer leak and futher
-more, it may lead to quota information corruption when using old quota,
-consider the following case.
+In current die(), the irq is disabled for __die() handle, not
+including the possible panic() handling. Since the log in __die()
+can take several hundreds ms, new irq might come and interrupt
+current die().
 
- - Create and mount an empty ext4 filesystem without extent and quota
-   features,
- - quotacheck and enable the user & group quota,
- - Create some files and write some data to them, and then punch hole
-   to some files of them, it may trigger the buffer leak problem
-   mentioned above.
- - Disable quota and run quotacheck again, it will create two new
-   aquota files and write the checked quota information to them, which
-   probably may reuse the freed indirect block(the buffer and page
-   cache was not freed) as data block.
- - Enable quota again, it will invoke
-   vfs_load_quota_inode()->invalidate_bdev() to try to clean unused
-   buffers and pagecache. Unfortunately, because of the buffer of quota
-   data block is still referenced, quota code cannot read the up to date
-   quota info from the device and lead to quota information corruption.
+If the process calling die() holds some critical resource, and some
+other process scheduled later also needs it, then it would deadlock.
+The first panic will not be executed.
 
-This problem can be reproduced by xfstests generic/231 on ext3 file
-system or ext4 file system without extent and quota features.
+So here disable irq for the whole flow of die().
 
-This patch fix this problem by releasing the missing indirect buffers,
-in ext4_ind_remove_space().
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@kernel.org
+Signed-off-by: Qiao Zhou <qiaozhou@asrmicro.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/indirect.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/traps.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1385,10 +1385,14 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -266,10 +266,12 @@ void die(const char *str, struct pt_regs
+ {
+ 	struct thread_info *thread = current_thread_info();
+ 	int ret;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&die_lock, flags);
  
+ 	oops_enter();
+ 
+-	raw_spin_lock_irq(&die_lock);
+ 	console_verbose();
+ 	bust_spinlocks(1);
+ 	ret = __die(str, err, thread, regs);
+@@ -279,13 +281,15 @@ void die(const char *str, struct pt_regs
+ 
+ 	bust_spinlocks(0);
+ 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+-	raw_spin_unlock_irq(&die_lock);
+ 	oops_exit();
+ 
+ 	if (in_interrupt())
+ 		panic("Fatal exception in interrupt");
+ 	if (panic_on_oops)
+ 		panic("Fatal exception");
++
++	raw_spin_unlock_irqrestore(&die_lock, flags);
++
+ 	if (ret != NOTIFY_STOP)
+ 		do_exit(SIGSEGV);
+ }
 
 
