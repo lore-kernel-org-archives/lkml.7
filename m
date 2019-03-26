@@ -2,86 +2,129 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E874EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8389EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AC320857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5327B206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbfCZLTO (ORCPT
+        id S1731172AbfCZLWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:19:14 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15608 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726480AbfCZLS7 (ORCPT
+        Tue, 26 Mar 2019 07:22:08 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57936 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZLWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:18:59 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QB6l8W017864;
-        Tue, 26 Mar 2019 12:18:45 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rddhbh3xr-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 26 Mar 2019 12:18:45 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9112D31;
-        Tue, 26 Mar 2019 11:18:44 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 66AA95539;
-        Tue, 26 Mar 2019 11:18:44 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 Mar
- 2019 12:18:43 +0100
-Subject: Re: [PATCH 0/3] ARM: dts: stm32: IPCC mailbox support on STM32MP157c
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <1ab227d3-5024-021d-f11c-78e14a997804@st.com>
-Date:   Tue, 26 Mar 2019 12:18:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 07:22:07 -0400
+Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 42f8ab6b4ead0209; Tue, 26 Mar 2019 12:22:05 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: [PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
+Date:   Tue, 26 Mar 2019 12:18:00 +0100
+Message-ID: <2864116.v8IU97Resm@aspire.rjw.lan>
+In-Reply-To: <11953735.uMqeHy63Iu@aspire.rjw.lan>
+References: <11953735.uMqeHy63Iu@aspire.rjw.lan>
 MIME-Version: 1.0
-In-Reply-To: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_08:,,
- signatures=0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabien
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On 3/1/19 10:18 AM, Fabien Dessenne wrote:
-> Support IPCC mailbox on STM32MP157c-ed1 and STM32MP157a-dk1 boards.
-> 
-> Fabien Dessenne (3):
->    ARM: dts: stm32: add IPCC mailbox support on STM32MP157c
->    ARM: dts: stm32: enable IPCC mailbox support on STM32MP157c-ed1
->    ARM: dts: stm32: enable IPCC mailbox support on STM32MP157a-dk1
-> 
->   arch/arm/boot/dts/stm32mp157a-dk1.dts |  4 ++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts |  4 ++++
->   arch/arm/boot/dts/stm32mp157c.dtsi    | 15 +++++++++++++++
->   3 files changed, 23 insertions(+)
-> 
+There is not reason for the minimum iowait boost value in the
+schedutil cpufreq governor to depend on the available range of CPU
+frequencies.  In fact, that dependency is generally confusing,
+because it causes the iowait boost to behave somewhat differently
+on CPUs with the same maximum frequency and different minimum
+frequencies, for example.
 
-Series applied on stm32-next.
+For this reason, replace the min field in struct sugov_cpu
+with a constant and choose its values to be 1/8 of
+SCHED_CAPACITY_SCALE (for consistency with the intel_pstate
+driver's internal governor).
 
-Regards
-Alex
+[Note that policy->cpuinfo.max_freq will not be a constant any more
+ after a subsequent change, so this change is depended on by it.]
+
+Link: https://lore.kernel.org/lkml/20190305083202.GU32494@hirez.programming.kicks-ass.net/T/#ee20bdc98b7d89f6110c0d00e5c3ee8c2ced93c3d
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ kernel/sched/cpufreq_schedutil.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+Index: linux-pm/kernel/sched/cpufreq_schedutil.c
+===================================================================
+--- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
++++ linux-pm/kernel/sched/cpufreq_schedutil.c
+@@ -13,6 +13,8 @@
+ #include <linux/sched/cpufreq.h>
+ #include <trace/events/power.h>
+ 
++#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
++
+ struct sugov_tunables {
+ 	struct gov_attr_set	attr_set;
+ 	unsigned int		rate_limit_us;
+@@ -51,7 +53,6 @@ struct sugov_cpu {
+ 	u64			last_update;
+ 
+ 	unsigned long		bw_dl;
+-	unsigned long		min;
+ 	unsigned long		max;
+ 
+ 	/* The field below is for single-CPU policies only: */
+@@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct su
+ 	if (delta_ns <= TICK_NSEC)
+ 		return false;
+ 
+-	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
++	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
+ 	sg_cpu->iowait_boost_pending = set_iowait_boost;
+ 
+ 	return true;
+@@ -349,7 +350,7 @@ static void sugov_iowait_boost(struct su
+ 	}
+ 
+ 	/* First wakeup after IO: start with minimum boost */
+-	sg_cpu->iowait_boost = sg_cpu->min;
++	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
+ }
+ 
+ /**
+@@ -389,7 +390,7 @@ static unsigned long sugov_iowait_apply(
+ 		 * No boost pending; reduce the boost value.
+ 		 */
+ 		sg_cpu->iowait_boost >>= 1;
+-		if (sg_cpu->iowait_boost < sg_cpu->min) {
++		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
+ 			sg_cpu->iowait_boost = 0;
+ 			return util;
+ 		}
+@@ -826,9 +827,6 @@ static int sugov_start(struct cpufreq_po
+ 		memset(sg_cpu, 0, sizeof(*sg_cpu));
+ 		sg_cpu->cpu			= cpu;
+ 		sg_cpu->sg_policy		= sg_policy;
+-		sg_cpu->min			=
+-			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
+-			policy->cpuinfo.max_freq;
+ 	}
+ 
+ 	for_each_cpu(cpu, policy->cpus) {
+
