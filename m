@@ -2,84 +2,98 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C431C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBE1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D011E20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F772075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbfCZKJ6 (ORCPT
+        id S1730906AbfCZKKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:09:58 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:42045 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfCZKJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:09:58 -0400
-Received: by mail-vk1-f195.google.com with SMTP id j195so2658534vkj.9;
-        Tue, 26 Mar 2019 03:09:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HiPDhCGszdoXkG6HlbhMQsncGp7yRxk7ATjnwu9mtSI=;
-        b=TmyzBVLC6EPjJLkF5zYtBfvhYB88kQGzUtG55lLpJJ7x7dzhQyqwKsZOc6zxHFNLkD
-         aQS0CYfOVmhyZlPfBYdaE/hsjWsnPOHVEx41FJyjAZem3TjSJoLu3Y0RU82ZcQy5XlX7
-         UVA2Mbrmg4vXOF0TgW2JNixcoUKOiphTGaXflfosudsYSHSyRFk94nDgWnZ+P+cxTDPC
-         MuMBKwtWKdBv+q1fdBmGxe/wnDLICK+RgIw+d0uhtuOAqqV+IP8EhRtG2/m9NX+Oyudn
-         ggwwNR4SUqcGh/FQzPxrsqhEJWLTLQGPn3VP5/klU52QnWTT7g+C/i1GFIMJg90IF/GF
-         U33g==
-X-Gm-Message-State: APjAAAXK5D+3CDTNL4eqDyfnBtCQcGICw/hAAArfwx862bvpAv7blvDG
-        8ksFKrS0qkvvnckatOmf/i10CAiAU4vAgfthtqQ=
-X-Google-Smtp-Source: APXvYqznam6JKMLuhy/JCOry9qSbZRbnK4TTrK19byGNk/lODvPckj9prASa1CRkl6HgvB/5dTSGnweWtYHLSD5wF4I=
-X-Received: by 2002:a1f:a5d3:: with SMTP id o202mr17634118vke.40.1553594996905;
- Tue, 26 Mar 2019 03:09:56 -0700 (PDT)
+        Tue, 26 Mar 2019 06:10:09 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12092 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfCZKKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:10:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 03:10:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
+   d="scan'208";a="155871028"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2019 03:09:57 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h8j1o-00018Y-1k; Tue, 26 Mar 2019 12:09:56 +0200
+Date:   Tue, 26 Mar 2019 12:09:56 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] bitmap_parselist: don't calculate length of the
+ input string
+Message-ID: <20190326100956.GS9224@smile.fi.intel.com>
+References: <20190325210748.6571-1-ynorov@marvell.com>
+ <20190325210748.6571-2-ynorov@marvell.com>
 MIME-Version: 1.0
-References: <20190326095826.4987-1-jiada_wang@mentor.com> <20190326095826.4987-2-jiada_wang@mentor.com>
-In-Reply-To: <20190326095826.4987-2-jiada_wang@mentor.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 Mar 2019 11:09:45 +0100
-Message-ID: <CAMuHMdUOcPhy5D-RagprwZkqOOgNt+4bGfSLQzydydHBOt76kQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] arm64: dts: renesas: use extended audio dmac register
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325210748.6571-2-ynorov@marvell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:59 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> Basic audio dmac register only supports busif from 0 to 3,
-> in order to use busif4 ~ busif7, extended audio dmac register
-> need to be used.
->
-> This patch updates H3 (= r8a7795), M3-W (= r8a7796) and
-> M3-N (=r8a77965) to use extended audio dmac register set.
->
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+On Tue, Mar 26, 2019 at 12:07:43AM +0300, Yury Norov wrote:
+> bitmap_parselist() calculates length of the input string before passing
+> it to the __bitmap_parselist(). But the end-of-line condition is checked
+> for every character in __bitmap_parselist() anyway. So doing it in wrapper
+> is a simple waste of time.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This is not best change, I think. See my further comments.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
+> Signed-off-by: Yury Norov <ynorov@marvell.com>
+> ---
+>  lib/bitmap.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/lib/bitmap.c b/lib/bitmap.c
+> index 98872e9025da..ad1fb7e6ad0e 100644
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -614,10 +614,7 @@ static int __bitmap_parselist(const char *buf, unsigned int buflen,
+>  
+>  int bitmap_parselist(const char *bp, unsigned long *maskp, int nmaskbits)
+>  {
+> -	char *nl  = strchrnul(bp, '\n');
+> -	int len = nl - bp;
+> -
+> -	return __bitmap_parselist(bp, len, 0, maskp, nmaskbits);
+> +	return __bitmap_parselist(bp, UINT_MAX, 0, maskp, nmaskbits);
+>  }
+>  EXPORT_SYMBOL(bitmap_parselist);
+>  
+> -- 
+> 2.17.1
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
