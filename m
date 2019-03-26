@@ -2,112 +2,114 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD053C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DE4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62622075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F59820863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/d6Um+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfCZPgy (ORCPT
+        id S1731963AbfCZPjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:36:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726177AbfCZPgx (ORCPT
+        Tue, 26 Mar 2019 11:39:35 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34764 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfCZPjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:36:53 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QFXvgV077516
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:36:52 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfp4t2gy4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:36:51 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 26 Mar 2019 15:36:51 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 15:36:48 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QFakCp17235984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 15:36:47 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66FECB2071;
-        Tue, 26 Mar 2019 15:36:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49C6CB2064;
-        Tue, 26 Mar 2019 15:36:46 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 15:36:46 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CB18016C3238; Tue, 26 Mar 2019 08:36:46 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 08:36:46 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     NeilBrown <neilb@suse.com>, Thomas Graf <tgraf@suug.ch>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash
- bucket.
-Reply-To: paulmck@linux.ibm.com
-References: <155349021177.1111.15681654355431465791.stgit@noble.brown>
- <155349033961.1111.18247269615646768227.stgit@noble.brown>
- <20190326050320.gwk3tgtqwl5csivt@gondor.apana.org.au>
+        Tue, 26 Mar 2019 11:39:35 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b3so6875055pfd.1;
+        Tue, 26 Mar 2019 08:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K+UiSvBdlyg+pVKtZtRxa+/63GcEqfCdpK/DlPdzUPY=;
+        b=h/d6Um+OtH/8H44MsioiGjdtdiZGJyjoile/+zABEJ/sGeahx/D+XXw4oza+tw4ruq
+         2Wqmj/HkTk9d0OHgz4rfyWKcwfsIQKwWs4IAamYHrwtIpF+G2cJnJgqcL9o/6PzLeJhv
+         XazPVlJLdj7Zbbqbb5QfTlgJkHMxqlQ2Bqm5gvhebRyhvYe0oFuQ7mtjSY/5lfyECELP
+         VvEHvO4oJK7c9RV3XUd3Qjp/a4qHHZGqjiLUdOuffm+R1WHvOmQmaO7lnIoADeqSImlX
+         cCJMrFMphuJBnq+LajwjfUuALlow9KW7OSzSyRDOiwFjcMRexHEs1IJ/tw1YLPP2fpUq
+         R7ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K+UiSvBdlyg+pVKtZtRxa+/63GcEqfCdpK/DlPdzUPY=;
+        b=MQhDNxcUioeh2vzVKlys/PpltP5Q6F67V/mQc07e7zHC5cXLpF8fzT5XyHKzt19CZm
+         EGyTyLKEcq2hOvKaAqhC9dqcJ9f9hXMlO45B/5humpmt6RUPsOuft10vNtSKR2aMma1E
+         qQoURMO0PXIuZqG7rQIQhAe4to68ZXqYA5vsEfPdddbRGCZiXCzBwckZCqs8Z2OSOf11
+         qqId8j6ursGTtIIvEXNL5hwEUY/iT5IZEhBS9vEZcP19jzC2nytbDTrmSWPdXwUdoL5m
+         3pqXTlxRisIPTinXmOnITC5sy+9jnN6bYUjogHZjEjesRq/wcuvgOvKLaSoNJ0og+vSE
+         s1fA==
+X-Gm-Message-State: APjAAAVnPoufQC4x0Oo7ln6YGoKHt2x21SOM9fDbYVilycZG4aDVVJQG
+        0aHJVgkmXSVwsmObIaVS0FvLRz0C
+X-Google-Smtp-Source: APXvYqzMxh9gHcXhffehKhSLDr9hPbJ5cAefL5bLSmqzssU164Ixq8lpc/32pojs6vZ/TNP3FE5TSw==
+X-Received: by 2002:a63:4343:: with SMTP id q64mr139022pga.105.1553614774395;
+        Tue, 26 Mar 2019 08:39:34 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:68e1:6a44:f6ee:46a4? ([2601:282:800:fd80:68e1:6a44:f6ee:46a4])
+        by smtp.googlemail.com with ESMTPSA id c2sm35358767pfm.187.2019.03.26.08.39.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 08:39:33 -0700 (PDT)
+Subject: Re: [RFC 4/4] net/ipv4/fib: Don't synchronise_rcu() every 512Kb
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ido Schimmel <idosch@mellanox.com>, netdev@vger.kernel.org
+References: <20190326153026.24493-1-dima@arista.com>
+ <20190326153026.24493-5-dima@arista.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <2f911647-f35f-13c2-8177-2fb93147b0fa@gmail.com>
+Date:   Tue, 26 Mar 2019 09:39:31 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326050320.gwk3tgtqwl5csivt@gondor.apana.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032615-0064-0000-0000-000003C04506
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010818; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01179981; UDB=6.00617481; IPR=6.00960696;
- MB=3.00026164; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 15:36:50
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032615-0065-0000-0000-00003CD7D1CA
-Message-Id: <20190326153646.GL4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260108
+In-Reply-To: <20190326153026.24493-5-dima@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 01:03:20PM +0800, Herbert Xu wrote:
-> On Mon, Mar 25, 2019 at 04:05:39PM +1100, NeilBrown wrote:
-> >
-> > + * Sometimes we unlock a bucket by writing a new pointer there.  In that
-> > + * case we don't need to unlock, but we do need to reset state such as
-> > + * local_bh. For that we have rht_unlocked().  This doesn't include
-> > + * the memory barrier that bit_spin_unlock() provides, but rcu_assign_pointer()
-> > + * will have provided that.
+On 3/26/19 9:30 AM, Dmitry Safonov wrote:
+> Fib trie has a hard-coded sync_pages limit to call synchronise_rcu().
+> The limit is 128 pages or 512Kb (considering common case with 4Kb
+> pages).
 > 
-> Hmm, are you sure that's enough? IIRC rcu_assign_pointer only
-> provides a write barrier compared to the more complete (but one-way)
-> barrier that a spin-lock provides.
+> Unfortunately, at Arista we have use-scenarios with full view software
+> forwarding. At the scale of 100K and more routes even on 2 core boxes
+> the hard-coded limit starts actively shooting in the leg: lockup
+> detector notices that rtnl_lock is held for seconds.
+> First reason is previously broken MAX_WORK, that didn't limit pending
+> balancing work. While fixing it, I've noticed that the bottle-neck is
+> actually in the number of synchronise_rcu() calls.
+> 
+> I've tried to fix it with a patch to decrement number of tnodes in rcu
+> callback, but it hasn't much affected performance.
+> 
+> One possible way to "fix" it - provide another sysctl to control
+> sync_pages, but in my POV it's nasty - exposing another realisation
+> detail into user-space.
 
-Not seeing the code, I have no opinion on the safety in this case,
-but I did want to mention that rcu_assign_pointer() has been upgraded
-to a release store, so that it orders all prior accesses from the
-viewpoint of some other thread that just picked up the stored pointer
-via rcu_dereference().
+well, that was accepted last week. ;-)
 
-But you are quite right, rcu_assign_pointer() used to just do an
-smp_wmb().  It is now new and improved!  ;-)
+commit 9ab948a91b2c2abc8e82845c0e61f4b1683e3a4f
+Author: David Ahern <dsahern@gmail.com>
+Date:   Wed Mar 20 09:18:59 2019 -0700
 
-							Thanx, Paul
+    ipv4: Allow amount of dirty memory from fib resizing to be controllable
 
+
+Can you see how that change (should backport easily) affects your test
+case? From my perspective 16MB was the sweet spot.
