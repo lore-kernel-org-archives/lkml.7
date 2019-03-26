@@ -2,266 +2,168 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BF3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7741D2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903E12070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JA4N4BLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfCZHfF (ORCPT
+        id S1730998AbfCZHg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:35:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:13051 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfCZHfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:35:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 00:35:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="137314248"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 00:35:00 -0700
-Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20190215192033.24203-1-faiz_abbas@ti.com>
- <20190215192033.24203-2-faiz_abbas@ti.com>
- <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <65f24027-005a-4372-8819-45e6a360bfce@intel.com>
-Date:   Tue, 26 Mar 2019 09:33:44 +0200
+        Tue, 26 Mar 2019 03:36:28 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54364 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbfCZHg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 03:36:28 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2Q7aL3h069108;
+        Tue, 26 Mar 2019 02:36:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553585781;
+        bh=5qJL/qmrOcXdnOzu/kJK0NPOov44i/79ptf7hyIRijI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JA4N4BLXem17WNLYFiR0SkrF8lOvTN0UJjMQe7cjWXrSxaUoRkwNNgPFoqB6zMSbw
+         AJNz/g4uWeSLo3mCPGjrxaEtO44S+/mlKOna3BH4+q6rGgAn86zqQZVPYvmpfhSf+t
+         tQxy7XIcRcuu0wOnZaTTEpC3YYGuf28pUy05ph2c=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2Q7aL0i102716
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 Mar 2019 02:36:21 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 26
+ Mar 2019 02:36:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 26 Mar 2019 02:36:20 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2Q7aISA047448;
+        Tue, 26 Mar 2019 02:36:19 -0500
+Subject: Re: [PATCH] phy: phy-twl4030-usb: Fix cable state handling
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, NeilBrown <neilb@suse.com>
+References: <20190324232654.60812-1-tony@atomide.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <beb4e604-f6d0-0341-b2f8-263fa64ebeec@ti.com>
+Date:   Tue, 26 Mar 2019 13:05:27 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190324232654.60812-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/19 11:33 AM, Ulf Hansson wrote:
-> + Arnd, Grygorii
-> 
-> On Fri, 15 Feb 2019 at 20:17, Faiz Abbas <faiz_abbas@ti.com> wrote:
->>
->> sdhci.c has two bottom halves implemented. A threaded_irq for handling
->> card insert/remove operations and a tasklet for finishing mmc requests.
->> With the addition of external dma support, dmaengine APIs need to
->> terminate in non-atomic context before unmapping the dma buffers.
->>
->> To facilitate this, remove the finish_tasklet and move the call of
->> sdhci_request_done() to the threaded_irq() callback. Also move the
->> interrupt result variable to sdhci_host so it can be populated from
->> anywhere inside the sdhci_irq handler.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> 
-> Adrian, I think it makes sense to apply this patch, even if there is
-> very minor negative impact throughput wise.
-> 
-> To me, it doesn't seems like MMC/SD/SDIO has good justification for
-> using tasklets, besides from the legacy point of view, of course.
-> Instead, I think we should try to move all mmc hosts into using
-> threaded IRQs.
-> 
-> So, what do you think? Can you overlook the throughput drop and
-> instead we can try to recover this on top with other optimizations?
 
-I tend to favour good results as expressed here:
 
-	https://lkml.org/lkml/2007/6/22/360
-
-So I want to do optimization first.
-
-But performance is not the only problem with the patch.  Give me a few
-days and I will see what I can come up with.
-
+On 25/03/19 4:56 AM, Tony Lindgren wrote:
+> With the recent regulator changes I noticed new warnings on doing rmmod of
+> phy-twl4030-usb:
 > 
-> Kind regards
-> Uffe
+> WARNING: CPU: 0 PID: 1080 at drivers/regulator/core.c:2046 _regulator_put
+> ...
 > 
->> ---
->>  drivers/mmc/host/sdhci.c | 43 +++++++++++++++-------------------------
->>  drivers/mmc/host/sdhci.h |  2 +-
->>  2 files changed, 17 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index eba9bcc92ad3..20ed09b896d7 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -1232,7 +1232,7 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->>
->>         WARN_ON(i >= SDHCI_MAX_MRQS);
->>
->> -       tasklet_schedule(&host->finish_tasklet);
->> +       host->result = IRQ_WAKE_THREAD;
->>  }
->>
->>  static void sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->> @@ -2705,14 +2705,6 @@ static bool sdhci_request_done(struct sdhci_host *host)
->>         return false;
->>  }
->>
->> -static void sdhci_tasklet_finish(unsigned long param)
->> -{
->> -       struct sdhci_host *host = (struct sdhci_host *)param;
->> -
->> -       while (!sdhci_request_done(host))
->> -               ;
->> -}
->> -
->>  static void sdhci_timeout_timer(struct timer_list *t)
->>  {
->>         struct sdhci_host *host;
->> @@ -2995,11 +2987,12 @@ static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
->>
->>  static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>  {
->> -       irqreturn_t result = IRQ_NONE;
->>         struct sdhci_host *host = dev_id;
->>         u32 intmask, mask, unexpected = 0;
->>         int max_loops = 16;
->>
->> +       host->result = IRQ_NONE;
->> +
->>         spin_lock(&host->lock);
->>
->>         if (host->runtime_suspended && !sdhci_sdio_irq_enabled(host)) {
->> @@ -3009,7 +3002,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>
->>         intmask = sdhci_readl(host, SDHCI_INT_STATUS);
->>         if (!intmask || intmask == 0xffffffff) {
->> -               result = IRQ_NONE;
->> +               host->result = IRQ_NONE;
->>                 goto out;
->>         }
->>
->> @@ -3054,7 +3047,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>
->>                         host->thread_isr |= intmask & (SDHCI_INT_CARD_INSERT |
->>                                                        SDHCI_INT_CARD_REMOVE);
->> -                       result = IRQ_WAKE_THREAD;
->> +                       host->result = IRQ_WAKE_THREAD;
->>                 }
->>
->>                 if (intmask & SDHCI_INT_CMD_MASK)
->> @@ -3074,7 +3067,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>                     (host->ier & SDHCI_INT_CARD_INT)) {
->>                         sdhci_enable_sdio_irq_nolock(host, false);
->>                         host->thread_isr |= SDHCI_INT_CARD_INT;
->> -                       result = IRQ_WAKE_THREAD;
->> +                       host->result = IRQ_WAKE_THREAD;
->>                 }
->>
->>                 intmask &= ~(SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE |
->> @@ -3087,8 +3080,8 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>                         sdhci_writel(host, intmask, SDHCI_INT_STATUS);
->>                 }
->>  cont:
->> -               if (result == IRQ_NONE)
->> -                       result = IRQ_HANDLED;
->> +               if (host->result == IRQ_NONE)
->> +                       host->result = IRQ_HANDLED;
->>
->>                 intmask = sdhci_readl(host, SDHCI_INT_STATUS);
->>         } while (intmask && --max_loops);
->> @@ -3101,7 +3094,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
->>                 sdhci_dumpregs(host);
->>         }
->>
->> -       return result;
->> +       return host->result;
->>  }
->>
->>  static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
->> @@ -3131,6 +3124,12 @@ static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
->>                 spin_unlock_irqrestore(&host->lock, flags);
->>         }
->>
->> +       if (!isr) {
->> +               do {
->> +                       isr = !sdhci_request_done(host);
->> +               } while (isr);
->> +       }
->> +
->>         return isr ? IRQ_HANDLED : IRQ_NONE;
->>  }
->>
->> @@ -4212,12 +4211,6 @@ int __sdhci_add_host(struct sdhci_host *host)
->>         struct mmc_host *mmc = host->mmc;
->>         int ret;
->>
->> -       /*
->> -        * Init tasklets.
->> -        */
->> -       tasklet_init(&host->finish_tasklet,
->> -               sdhci_tasklet_finish, (unsigned long)host);
->> -
->>         timer_setup(&host->timer, sdhci_timeout_timer, 0);
->>         timer_setup(&host->data_timer, sdhci_timeout_data_timer, 0);
->>
->> @@ -4230,7 +4223,7 @@ int __sdhci_add_host(struct sdhci_host *host)
->>         if (ret) {
->>                 pr_err("%s: Failed to request IRQ %d: %d\n",
->>                        mmc_hostname(mmc), host->irq, ret);
->> -               goto untasklet;
->> +               return ret;
->>         }
->>
->>         ret = sdhci_led_register(host);
->> @@ -4263,8 +4256,6 @@ int __sdhci_add_host(struct sdhci_host *host)
->>         sdhci_writel(host, 0, SDHCI_INT_ENABLE);
->>         sdhci_writel(host, 0, SDHCI_SIGNAL_ENABLE);
->>         free_irq(host->irq, host);
->> -untasklet:
->> -       tasklet_kill(&host->finish_tasklet);
->>
->>         return ret;
->>  }
->> @@ -4326,8 +4317,6 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
->>         del_timer_sync(&host->timer);
->>         del_timer_sync(&host->data_timer);
->>
->> -       tasklet_kill(&host->finish_tasklet);
->> -
->>         if (!IS_ERR(mmc->supply.vqmmc))
->>                 regulator_disable(mmc->supply.vqmmc);
->>
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index 6cc9a3c2ac66..624d5aa01995 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -554,7 +554,7 @@ struct sdhci_host {
->>
->>         unsigned int desc_sz;   /* ADMA descriptor size */
->>
->> -       struct tasklet_struct finish_tasklet;   /* Tasklet structures */
->> +       irqreturn_t result;     /* Result of IRQ handler */
->>
->>         struct timer_list timer;        /* Timer for timeouts */
->>         struct timer_list data_timer;   /* Timer for data timeouts */
->> --
->> 2.19.2
->>
+> Turns out we can currently miss disconnect at least for cases where status
+> is 0 and linkstat is 0. And in that case doing rmmod phy-twl4030-usb will
+> produce the regulator_put() warning.
 > 
+> This is because the missed disconnect causes unbalanced PM runtime calls
+> and the regulators will be on exit.
+> 
+> Let's fix the issue by using an atomic flag for the cable state to make
+> sure that PM runtime won't get out of sync with the cable state. That
+> way we can also simplify the code a bit.
+> 
+> Note that we can also drop the old comments, those relate to issues that
+> the battery charger driver and musb driver is dealing with rather than
+> the USB PHY driver.
+> 
+> Cc: NeilBrown <neilb@suse.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 
+merged, thanks!
+
+-Kishon
+> ---
+>  drivers/phy/ti/phy-twl4030-usb.c | 35 ++++++++++++--------------------
+>  1 file changed, 13 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/phy/ti/phy-twl4030-usb.c b/drivers/phy/ti/phy-twl4030-usb.c
+> --- a/drivers/phy/ti/phy-twl4030-usb.c
+> +++ b/drivers/phy/ti/phy-twl4030-usb.c
+> @@ -172,6 +172,7 @@ struct twl4030_usb {
+>  
+>  	int			irq;
+>  	enum musb_vbus_id_status linkstat;
+> +	atomic_t		connected;
+>  	bool			vbus_supplied;
+>  	bool			musb_mailbox_pending;
+>  
+> @@ -575,39 +576,29 @@ static irqreturn_t twl4030_usb_irq(int irq, void *_twl)
+>  {
+>  	struct twl4030_usb *twl = _twl;
+>  	enum musb_vbus_id_status status;
+> -	bool status_changed = false;
+>  	int err;
+>  
+>  	status = twl4030_usb_linkstat(twl);
+>  
+>  	mutex_lock(&twl->lock);
+> -	if (status >= 0 && status != twl->linkstat) {
+> -		status_changed =
+> -			cable_present(twl->linkstat) !=
+> -			cable_present(status);
+> -		twl->linkstat = status;
+> -	}
+> +	twl->linkstat = status;
+>  	mutex_unlock(&twl->lock);
+>  
+> -	if (status_changed) {
+> -		/* FIXME add a set_power() method so that B-devices can
+> -		 * configure the charger appropriately.  It's not always
+> -		 * correct to consume VBUS power, and how much current to
+> -		 * consume is a function of the USB configuration chosen
+> -		 * by the host.
+> -		 *
+> -		 * REVISIT usb_gadget_vbus_connect(...) as needed, ditto
+> -		 * its disconnect() sibling, when changing to/from the
+> -		 * USB_LINK_VBUS state.  musb_hdrc won't care until it
+> -		 * starts to handle softconnect right.
+> -		 */
+> -		if (cable_present(status)) {
+> +	if (cable_present(status)) {
+> +		if (atomic_add_unless(&twl->connected, 1, 1)) {
+> +			dev_dbg(twl->dev, "%s: cable connected %i\n",
+> +				__func__, status);
+>  			pm_runtime_get_sync(twl->dev);
+> -		} else {
+> +			twl->musb_mailbox_pending = true;
+> +		}
+> +	} else {
+> +		if (atomic_add_unless(&twl->connected, -1, 0)) {
+> +			dev_dbg(twl->dev, "%s: cable disconnected %i\n",
+> +				__func__, status);
+>  			pm_runtime_mark_last_busy(twl->dev);
+>  			pm_runtime_put_autosuspend(twl->dev);
+> +			twl->musb_mailbox_pending = true;
+>  		}
+> -		twl->musb_mailbox_pending = true;
+>  	}
+>  	if (twl->musb_mailbox_pending) {
+>  		err = musb_mailbox(status);
+> 
