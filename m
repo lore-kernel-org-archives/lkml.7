@@ -2,414 +2,153 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E08C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB60CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A43D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B83B20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B9Yui+5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732429AbfCZQ1s (ORCPT
+        id S1732440AbfCZQ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:27:48 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40134 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfCZQ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:27:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04E7319F6;
-        Tue, 26 Mar 2019 09:27:45 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD5E93F614;
-        Tue, 26 Mar 2019 09:27:41 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v6 19/19] x86: mm: Convert dump_pagetables to use walk_page_range
-Date:   Tue, 26 Mar 2019 16:26:24 +0000
-Message-Id: <20190326162624.20736-20-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190326162624.20736-1-steven.price@arm.com>
-References: <20190326162624.20736-1-steven.price@arm.com>
+        Tue, 26 Mar 2019 12:27:56 -0400
+Received: from mout.gmx.net ([212.227.15.18]:50391 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732359AbfCZQ1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:27:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1553617614;
+        bh=nSVFcrPQYo+Yi46hXmioVjq43OqM2eOGHE7px4XpTV8=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=B9Yui+5R1JDqa35co7ep0REjnkUWwevChfhqDh6y2zKJm4kaG1I8xuqser52LPN6c
+         r2o+L9lXvTBgi4cTJ70BQcvwyK+L6gaw9jzXBjFVvRq9HQ6+WAPIOtx6RzrddaQxKX
+         Z0WXtP/gD5xAxlOfJDkkLnwl9irZDVsy9DcBk7lg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx003
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lg0wl-1gbi1l2CAl-00pbtG; Tue, 26
+ Mar 2019 17:26:54 +0100
+Date:   Tue, 26 Mar 2019 17:26:53 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] ARM: dts: imx50: Add Kobo Aura DTS
+Message-ID: <20190326162653.GD2095@latitude>
+References: <20190319152421.16179-1-j.neuschaefer@gmx.net>
+ <20190319152421.16179-3-j.neuschaefer@gmx.net>
+ <20190322013151.GR12513@dragon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TiqCXmo5T1hvSQQg"
+Content-Disposition: inline
+In-Reply-To: <20190322013151.GR12513@dragon>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:5Q8cM7b4ZIfQLtdy+33b9FqRfRr0NhNNXWc9wva1X+jmX+iYVmS
+ Ic3aGITljrWJPWDT4IIDr7SzZ1/Cme6oTDI58xPlIwPpwmM+fwTzTwowBOxU1uJwtZzpsHe
+ eXi7GyOyCjbgidCgLwcL/9vNw5uIEWCJHmi8k12HCQKrzsfB6EzlNqUlexRnpirC6fU0ZZ7
+ MOtyAd0aTytISNEryJTMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uRvbXfsGktk=:+zDcrvakFf406EvAD+H6js
+ AzcEqnH3GH7/LWNOqLSxjWmrVEASz8YSF88xm6/btEYSY6L8oHxVa9KVKyGUpx7kQxxnkHcPI
+ nJF5sIxH0zdLay0/P8n3365Z5+TayNuOLWhwsHpS60qX3lEL4vlAhg0sijMT1Up4Jh5THgZwL
+ 95XOWHw8vUVmsoC8cX8dIzvSBCRzni0Ev/q7OzBR2crRnEEyIKrvkaRs3KR9ek8memzisYwK6
+ vwsonoCbxOblMChiDEOZXeDzmobmupYEwi6xEsh/ielXpuZy5rbD8jdgOTuFsitkTCGsYH/MB
+ Vck/36JQOxZYnU4EXEHvFxNRCohbWKGt1ZnA5hGCwCDS7HcPc/TpwO994IgApNJqYMdpfaAMt
+ lfwbbPbQ9F//qnQicv6Tr/+YjVpWtQrOKpW50Y2XO6VwwctV2q2B94xus9DYYVE4x5AEREa6G
+ tv2LUkUU7roauc5mB+t6tQsNGRutCqx3a4AmctgRTjOLbq1S5+lSjwyoAOzCM+Y2JvmQXCiVQ
+ L+ZgHjLRzx2vpK52w3ArZoAu+hRnclT8/l9P95YJ/BRSAuexG3NyjpegRHi28htBahX+p56hb
+ JHXxMcq3/OXPTW/IoAczSK3kL9kq7HYSohLfaet8LBI03abViW2MXoaoVKNZUqCkJF1UqXaBx
+ LYWm7tdThz7NF8ViBUZ9kH2Qjjnl4VRJGV0llel5vb9NtN4hN0Gb9RFKW07YLe3qUQS84GgOj
+ V+nK0nOVng9U0n0gPiRKKKk0iHhHe8WFYfT5/YQqFPsehZ6mbwOLA+nw/SLerp5+9tZlUfxIK
+ ep82gfZBZGVg/zu4gQNXdrg42PdGUXSPqtAGctQ2bztUshAAu7UrCS1rvkXTJuBHbhLGthcYZ
+ ynXo/l+gYUctk144KMD+TiuxB58gPp0pMOIZk9KTNWNMrai5oJgHNZCQ3pGCPp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the new functionality in walk_page_range to remove the
-arch page walking code and use the generic code to walk the page tables.
 
-The effective permissions are passed down the chain using new fields
-in struct pg_state.
+--TiqCXmo5T1hvSQQg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The KASAN optimisation is implemented by including test_p?d callbacks
-which can decide to skip an entire tree of entries
+Hi, thanks for your comments. I'll address them in v2.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/mm/dump_pagetables.c | 280 ++++++++++++++++++----------------
- 1 file changed, 146 insertions(+), 134 deletions(-)
+On Fri, Mar 22, 2019 at 09:31:53AM +0800, Shawn Guo wrote:
+> On Tue, Mar 19, 2019 at 04:24:17PM +0100, Jonathan Neusch=C3=A4fer wrote:
+> > The Kobo Aura is an e-book reader released in 2013.
+[...]
+> > +	sd2_pwrseq: pwrseq {
+> > +		compatible =3D "mmc-pwrseq-simple";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_sd2_reset>;
+> > +
+>=20
+> Please do not have random newlines.
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index c0fbb9e5a790..f6b814aaddf7 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -33,6 +33,10 @@ struct pg_state {
- 	int level;
- 	pgprot_t current_prot;
- 	pgprotval_t effective_prot;
-+	pgprotval_t effective_prot_pgd;
-+	pgprotval_t effective_prot_p4d;
-+	pgprotval_t effective_prot_pud;
-+	pgprotval_t effective_prot_pmd;
- 	unsigned long start_address;
- 	unsigned long current_address;
- 	const struct addr_marker *marker;
-@@ -356,22 +360,21 @@ static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
- 	       ((prot1 | prot2) & _PAGE_NX);
- }
- 
--static void walk_pte_level(struct pg_state *st, pmd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
- {
--	int i;
--	pte_t *pte;
--	pgprotval_t prot, eff;
--
--	for (i = 0; i < PTRS_PER_PTE; i++) {
--		st->current_address = normalize_addr(P + i * PTE_LEVEL_MULT);
--		pte = pte_offset_map(&addr, st->current_address);
--		prot = pte_flags(*pte);
--		eff = effective_prot(eff_in, prot);
--		note_page(st, __pgprot(prot), eff, 5);
--		pte_unmap(pte);
--	}
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	prot = pte_flags(*pte);
-+	eff = effective_prot(st->effective_prot_pmd, prot);
-+	note_page(st, __pgprot(prot), eff, 5);
-+
-+	return 0;
- }
-+
- #ifdef CONFIG_KASAN
- 
- /*
-@@ -400,131 +403,152 @@ static inline bool kasan_page_table(struct pg_state *st, void *pt)
- }
- #endif
- 
--#if PTRS_PER_PMD > 1
--
--static void walk_pmd_level(struct pg_state *st, pud_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static int ptdump_test_pmd(unsigned long addr, unsigned long next,
-+			   pmd_t *pmd, struct mm_walk *walk)
- {
--	int i;
--	pmd_t *start, *pmd_start;
--	pgprotval_t prot, eff;
--
--	pmd_start = start = (pmd_t *)pud_page_vaddr(addr);
--	for (i = 0; i < PTRS_PER_PMD; i++) {
--		st->current_address = normalize_addr(P + i * PMD_LEVEL_MULT);
--		if (!pmd_none(*start)) {
--			prot = pmd_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pmd_large(*start) || !pmd_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 4);
--			} else if (!kasan_page_table(st, pmd_start)) {
--				walk_pte_level(st, *start, eff,
--					       P + i * PMD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 4);
--		start++;
--	}
-+	struct pg_state *st = walk->private;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, pmd))
-+		return 1;
-+	return 0;
- }
- 
--#else
--#define walk_pmd_level(s,a,e,p) walk_pte_level(s,__pmd(pud_val(a)),e,p)
--#undef pud_large
--#define pud_large(a) pmd_large(__pmd(pud_val(a)))
--#define pud_none(a)  pmd_none(__pmd(pud_val(a)))
--#endif
-+static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pmd_flags(*pmd);
-+	eff = effective_prot(st->effective_prot_pud, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pmd_large(*pmd))
-+		note_page(st, __pgprot(prot), eff, 4);
- 
--#if PTRS_PER_PUD > 1
-+	st->effective_prot_pmd = eff;
- 
--static void walk_pud_level(struct pg_state *st, p4d_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+	return 0;
-+}
-+
-+static int ptdump_test_pud(unsigned long addr, unsigned long next,
-+			   pud_t *pud, struct mm_walk *walk)
- {
--	int i;
--	pud_t *start, *pud_start;
--	pgprotval_t prot, eff;
--
--	pud_start = start = (pud_t *)p4d_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_PUD; i++) {
--		st->current_address = normalize_addr(P + i * PUD_LEVEL_MULT);
--		if (!pud_none(*start)) {
--			prot = pud_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pud_large(*start) || !pud_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 3);
--			} else if (!kasan_page_table(st, pud_start)) {
--				walk_pmd_level(st, *start, eff,
--					       P + i * PUD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 3);
-+	struct pg_state *st = walk->private;
- 
--		start++;
--	}
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, pud))
-+		return 1;
-+	return 0;
- }
- 
--#else
--#define walk_pud_level(s,a,e,p) walk_pmd_level(s,__pud(p4d_val(a)),e,p)
--#undef p4d_large
--#define p4d_large(a) pud_large(__pud(p4d_val(a)))
--#define p4d_none(a)  pud_none(__pud(p4d_val(a)))
--#endif
-+static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pud_flags(*pud);
-+	eff = effective_prot(st->effective_prot_p4d, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pud_large(*pud))
-+		note_page(st, __pgprot(prot), eff, 3);
-+
-+	st->effective_prot_pud = eff;
- 
--static void walk_p4d_level(struct pg_state *st, pgd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+	return 0;
-+}
-+
-+static int ptdump_test_p4d(unsigned long addr, unsigned long next,
-+			   p4d_t *p4d, struct mm_walk *walk)
- {
--	int i;
--	p4d_t *start, *p4d_start;
--	pgprotval_t prot, eff;
--
--	if (PTRS_PER_P4D == 1)
--		return walk_pud_level(st, __p4d(pgd_val(addr)), eff_in, P);
--
--	p4d_start = start = (p4d_t *)pgd_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_P4D; i++) {
--		st->current_address = normalize_addr(P + i * P4D_LEVEL_MULT);
--		if (!p4d_none(*start)) {
--			prot = p4d_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (p4d_large(*start) || !p4d_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 2);
--			} else if (!kasan_page_table(st, p4d_start)) {
--				walk_pud_level(st, *start, eff,
--					       P + i * P4D_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 2);
-+	struct pg_state *st = walk->private;
- 
--		start++;
--	}
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, p4d))
-+		return 1;
-+	return 0;
- }
- 
--#undef pgd_large
--#define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
--#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
-+static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = p4d_flags(*p4d);
-+	eff = effective_prot(st->effective_prot_pgd, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (p4d_large(*p4d))
-+		note_page(st, __pgprot(prot), eff, 2);
-+
-+	st->effective_prot_p4d = eff;
-+
-+	return 0;
-+}
- 
--static inline bool is_hypervisor_range(int idx)
-+static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
- {
--#ifdef CONFIG_X86_64
--	/*
--	 * A hole in the beginning of kernel address space reserved
--	 * for a hypervisor.
--	 */
--	return	(idx >= pgd_index(GUARD_HOLE_BASE_ADDR)) &&
--		(idx <  pgd_index(GUARD_HOLE_END_ADDR));
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pgd_flags(*pgd);
-+
-+#ifdef CONFIG_X86_PAE
-+	eff = _PAGE_USER | _PAGE_RW;
- #else
--	return false;
-+	eff = prot;
- #endif
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pgd_large(*pgd))
-+		note_page(st, __pgprot(prot), eff, 1);
-+
-+	st->effective_prot_pgd = eff;
-+
-+	return 0;
-+}
-+
-+static int ptdump_hole(unsigned long addr, unsigned long next,
-+		       struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	note_page(st, __pgprot(0), 0, -1);
-+
-+	return 0;
- }
- 
- static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 				       bool checkwx, bool dmesg)
- {
--	pgd_t *start = mm->pgd;
--	pgprotval_t prot, eff;
--	int i;
- 	struct pg_state st = {};
-+	struct mm_walk walk = {
-+		.mm		= mm,
-+		.pgd_entry	= ptdump_pgd_entry,
-+		.p4d_entry	= ptdump_p4d_entry,
-+		.pud_entry	= ptdump_pud_entry,
-+		.pmd_entry	= ptdump_pmd_entry,
-+		.pte_entry	= ptdump_pte_entry,
-+		.test_p4d	= ptdump_test_p4d,
-+		.test_pud	= ptdump_test_pud,
-+		.test_pmd	= ptdump_test_pmd,
-+		.pte_hole	= ptdump_hole,
-+		.private	= &st
-+	};
- 
- 	st.to_dmesg = dmesg;
- 	st.check_wx = checkwx;
-@@ -532,27 +556,15 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 	if (checkwx)
- 		st.wx_pages = 0;
- 
--	for (i = 0; i < PTRS_PER_PGD; i++) {
--		st.current_address = normalize_addr(i * PGD_LEVEL_MULT);
--		if (!pgd_none(*start) && !is_hypervisor_range(i)) {
--			prot = pgd_flags(*start);
--#ifdef CONFIG_X86_PAE
--			eff = _PAGE_USER | _PAGE_RW;
-+	down_read(&mm->mmap_sem);
-+#ifdef CONFIG_X86_64
-+	walk_page_range(0, PTRS_PER_PGD*PGD_LEVEL_MULT/2, &walk);
-+	walk_page_range(normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT/2), ~0,
-+			&walk);
- #else
--			eff = prot;
-+	walk_page_range(0, ~0, &walk);
- #endif
--			if (pgd_large(*start) || !pgd_present(*start)) {
--				note_page(&st, __pgprot(prot), eff, 1);
--			} else {
--				walk_p4d_level(&st, *start, eff,
--					       i * PGD_LEVEL_MULT);
--			}
--		} else
--			note_page(&st, __pgprot(0), 0, 1);
--
--		cond_resched();
--		start++;
--	}
-+	up_read(&mm->mmap_sem);
- 
- 	/* Flush out the last page */
- 	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--- 
-2.20.1
+Does that apply to all empty lines between properties?
 
+>=20
+> > +		reset-gpios =3D <&gpio4 17 GPIO_ACTIVE_LOW>;
+> > +	};
+> > +
+[...]
+> > +&iomuxc {
+> > +	pinctrl_uart2: uart2 {
+> > +		fsl,pins =3D <
+> > +			MX50_PAD_UART2_TXD__UART2_TXD_MUX	0x1e4
+> > +			MX50_PAD_UART2_RXD__UART2_RXD_MUX	0x1e4
+> > +		>;
+> > +	};
+> > +
+> > +	pinctrl_i2c1: i2c1 {
+>=20
+> Please sort these pinctrl nodes alphabetically.
+
+It doesn't make a difference here, but should I generally sort by name
+or by label in cases like this one?
+
+
+Jonathan Neusch=C3=A4fer
+
+--TiqCXmo5T1hvSQQg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyaUsUACgkQCDBEmo7z
+X9sy1RAAniEdi+8w5/NPyQRbEYP4cdEcBxUhgP9VZXT1QxAxFoRDcYYOF0HUmu2g
+qz5ppATEQ7+/rJZH9KTsOtNKEBW/+QjKs1gNa8ZYE9wWkF/LEz8twQHDv7VsmUbm
+KJSUIOvXDvJ2U8PXLZowPjsOP+I6N7BQkxOGr0pDBcpsrm3INNHZYOXKfRzc5ogU
+OuV6i9UDzS7/A/L2CORuOit/27R9iP0w8noLWgJdwW49Nx2lcnT9QXlFQYqAKvlY
+GV25ht7eNJuPrh1RVm40zh59WT3vYQHS3vyVYoI8heSWx5pP7YuHLRZvUJgahXQ6
+vn781Fz4zqp+7VqDscUk3xsy7K4oG0hsbBqBCUiyIsyz1ndAOEjbDoViCjfJRTeA
+e0cnEX2ZXkm8EknLOSkahcqp1lCthVHdjgd7Q98OAYRCX30uGLlvSgqChZ09kzRF
+RbUL/3EiLeJp58hXSMV0p9JH6ESVleiXmI5VGJT4LLI2SaQ6xtQM+dtta6w/CCsm
+gS16xfRL/znFp4+ZtDFwbInDH/RRj+WWGETruMnX4pLgx+TiEJ57kL0psqDwjGDF
+E8ha2On0qwh6x7VrjdGYvM/PeqkPxYYNJlsXZOUdpk0AQS0WDe/+jQvVIEXxQ9t/
+bi8rxYU3QZFZTT4rkl/wXGhL5bRn35FTqFtmX5SuSfYysJ8rMhg=
+=2tJW
+-----END PGP SIGNATURE-----
+
+--TiqCXmo5T1hvSQQg--
