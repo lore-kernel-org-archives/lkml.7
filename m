@@ -2,91 +2,112 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD622C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348FEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB8B2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AD12084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:40:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJ3UrwKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfCZBjy (ORCPT
+        id S1730790AbfCZBkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 21:39:54 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:58624 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbfCZBjy (ORCPT
+        Mon, 25 Mar 2019 21:40:24 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34379 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfCZBkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 21:39:54 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h8b4A-0004XR-65; Tue, 26 Mar 2019 01:39:50 +0000
-Date:   Tue, 26 Mar 2019 01:39:50 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: jffs2: fix use-after-free on symlink traversal
-Message-ID: <20190326013950.GV2217@ZenIV.linux.org.uk>
-References: <0000000000006946d2057bbd0eef@google.com>
- <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk>
- <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
- <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com>
- <20190325211405.GP2217@ZenIV.linux.org.uk>
- <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
- <20190325233731.GS2217@ZenIV.linux.org.uk>
- <20190326013858.GU2217@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326013858.GU2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 25 Mar 2019 21:40:24 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y6so822581plt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 18:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rN6an6BcrzqEETtbILhlhfnULtpHxjgScagIw1RjWdY=;
+        b=DJ3UrwKErDUDYEwQ+5qW/vyHnRUkzXOLHvDGPzVZOBpZygLIwqbd6ffjlh6aWoHABr
+         SgCatwXW6FHiRSwNKE0sbwH7TU8ycdGhvHmRlUhsQeSQiFxZGnxsQqrYxKydxJL99CmA
+         WWD4Ip2Mr3NZzTcZnu8tFMo7HGqqUDt2t9A46QrEx+FyiWUeQuocFOifxabXjIOBckEG
+         FYic90pe4dKQQKhpLD4pVM+tiG64EYAC6AnLJpsliDrVzdc5q12trM02qXy64D9M5AAU
+         ayX5GQMorTeeBqNmj/G+jWQ3Kp/gBFj/RH5WwxtidrQY8lY260UZI+JS7Ng0Q2D7o+4j
+         6S3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rN6an6BcrzqEETtbILhlhfnULtpHxjgScagIw1RjWdY=;
+        b=V64KiEhn+YZ6QTjcScytxd02xCbFrauJc8xqpz5pCg3tXP5eQHSdGYfok1t7i6BUBM
+         EySisYECuoKuI8ueG3XX7gH5ddIbWkn3Vw12Co45JhogP2BfkiCvzYEyEx1lHCr5arHX
+         5a+eq4blrVo2I6scxK5WBP8BmE90Pc3w+0khK90RNdCbZS5tpAMdMYkKZYJ9rE/pJNpW
+         GZGhooOgQWfd66B1nEjflwER2DmYPMK2jDxwveC3RJj2IYf9jhw615c39IfMYwBVPrZ9
+         qpKWkzTaeDuq/XlWjvZ5WOw35YGN6awK+4WpPY2g5Px1Jcvc6YAvmY9g9UddWAONPc81
+         Jvcg==
+X-Gm-Message-State: APjAAAXUB2cJ43icUPBBJXSm0rYSIUE8ue8iBQBIXT9CpGflBaf73tFT
+        5BX3Huy7kJVVXK5t/WWJjbU=
+X-Google-Smtp-Source: APXvYqx5FskUqOy7tN7D96FrYIbfwIVgthEV67gYTFYMNunq9B0FTyvHhpx80ESWBySNvaNfdxRmfw==
+X-Received: by 2002:a17:902:7610:: with SMTP id k16mr28726439pll.215.1553564423616;
+        Mon, 25 Mar 2019 18:40:23 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id m7sm41464119pgg.62.2019.03.25.18.40.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 18:40:22 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     rostedt@goodmis.org, mingo@redhat.com, peterz@infradead.org,
+        paulmck@linux.vnet.ibm.com, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org
+Cc:     shaoyafang@didiglobal.com, linux-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH 0/3] tracing: introduce TRACE_EVENT_NONE and use it
+Date:   Tue, 26 Mar 2019 09:40:04 +0800
+Message-Id: <1553564407-1162-1-git-send-email-laoar.shao@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-free the symlink body after the same RCU delay we have for freeing the 
-struct inode itself, so that traversal during RCU pathwalk wouldn't step 
-into freed memory.
+In this patchset, I introduce a new macro TRACE_EVENT_NONE(), which will
+define a tracepoint as a do-nothing inline function.
+	#define TRACE_EVENT_NONE(name, proto)			\
+		static inline void trace_##name(proto)		\
+		{ }						\
+		static inline bool trace_##name##_enabled(void)	\
+		{						\
+			return false;				\
+		}
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index 389ea53ea487..bccfc40b3a74 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index bb6ae387469f..05d892c79339 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
- 
- static void jffs2_destroy_inode(struct inode *inode)
+Let's take some example for why this macro is needed.
+
+- sched
+The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
+be not exposed to user if CONFIG_SCHEDSTATS is not set.
+We can place #ifdef in the kernel/sched/fair.c to fix it, but we don't want
+to sprinkle #ifdef.
+So with TRACE_EVENT_NONE(), we can fix it in include/trace/events/sched.h.
+
+- rcu
+When CONFIG_RCU_TRACE is not set, some rcu tracepoints are define as
+do-nothing macro without validating arguments, that is not proper.
+We should validate the arguments.
+
+Yafang Shao (3):
+  tracing: introduce TRACE_EVENT_NONE()
+  sched/fair: do not expose some tracepoints to user if
+    CONFIG_SCHEDSTATS is not set
+  rcu: validate arguments for rcu tracepoints
+
+ include/linux/tracepoint.h   |  8 +++++
+ include/trace/define_trace.h |  4 +++
+ include/trace/events/rcu.h   | 84 ++++++++++++++++++++++++++++----------------
+ include/trace/events/sched.h | 14 ++++++++
+ kernel/rcu/rcu.h             |  9 ++---
+ kernel/rcu/tree.c            |  8 ++---
+ 6 files changed, 86 insertions(+), 41 deletions(-)
+
+-- 
+1.8.3.1
+
