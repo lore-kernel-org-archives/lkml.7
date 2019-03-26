@@ -6,49 +6,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A549C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649DAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E982075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3106F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582735;
-	bh=dTe/+VBP+uK9EEcRhTpGkpbX1XfnOqLR8cqikRR8xXU=;
+	s=default; t=1553582747;
+	bh=CH6dk7fVzt5fi0KC1bqhmiQ266xLVgNZh9bY3aRNTQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItD+wfD16+TfuyCZgWbg0R/jJs+Qnq/f+WfxLmDsXR3Ju1PT6miQ+bTYHDKV5BRyb
-	 2ZI6dapUDHl3XK6AiEL/jz18dVILkOCMe/NapXhchC5eFYa8CJMLex52MaJOnGp/wt
-	 azYMt3S3ptI+GaTgnI1SAo2B/yR1hRrFkICprxJM=
+	b=QsBBmcB5L7qajrDD4K41RaVpn9Lf7LPySGCNiR1Pa/OlQcuJXRHY4L7rn8BfEJRKr
+	 cXOFKf6uIfkF9NBzolEBPVhciDr7NAd2jdAx+ycZ0UcMhCaTA7KalICC6/ZhFlYRDV
+	 FP6l8kodoDPPBxurI2lMuSSdqF8wVqWDliXeXS4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbfCZGe0 (ORCPT
+        id S1731812AbfCZGeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbfCZGeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:23 -0400
+        id S1731361AbfCZGeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:07 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C8F2206C0;
-        Tue, 26 Mar 2019 06:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FEB92070B;
+        Tue, 26 Mar 2019 06:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582062;
-        bh=dTe/+VBP+uK9EEcRhTpGkpbX1XfnOqLR8cqikRR8xXU=;
+        s=default; t=1553582045;
+        bh=CH6dk7fVzt5fi0KC1bqhmiQ266xLVgNZh9bY3aRNTQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrOiTSOQloz4IaYoiKPSiNbCXoi2WVSDiVBELDEovXbtqff19sDYMci3o5acdvWD4
-         Ha+M1UJNjsSrv8vryLBZxaA5LKTiDr/aE8hVGxhRBigGblrWdPQM6FaY0DvdEb5NHB
-         qwZ51w3q22frTsk51IvGTHkiGrQLvWSYgu/O59EE=
+        b=HVBS/XHqPCjpk4X38SS+fBbqje2KXQZswMeTou+03OKpkWTZ+NTVYuSeoeUsn5Ic2
+         aYlmLQ1D0YY1KXNCUVYI6UFW86RRgXVVcTskc7LqgZ+wALkvoFmmIfSgyUyP8hxDw3
+         Z2Nu54q5OtlMTO5UnW6XhXrM04XuCmv50e6CgLd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Niklas Cassel <niklas.cassel@axis.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joao Pinto <jpinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.14 34/41] PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
-Date:   Tue, 26 Mar 2019 15:30:11 +0900
-Message-Id: <20190326042651.750249866@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 29/41] ALSA: hda - Record the current power state before suspend/resume calls
+Date:   Tue, 26 Mar 2019 15:30:06 +0900
+Message-Id: <20190326042651.503009188@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -67,50 +63,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 099a95f3591ade29da52131895a3ba9f92a0e82c upstream.
+commit 98081ca62cbac31fb0f7efaf90b2e7384ce22257 upstream.
 
-Previously, dw_pcie_ep_set_msi() wrote all bits in the Message Control
-register, thus overwriting the PCI_MSI_FLAGS_64BIT bit.
-By clearing the PCI_MSI_FLAGS_64BIT bit, we break MSI
-on systems where the RC has set a 64 bit MSI address.
-Fix dw_pcie_ep_set_msi() so that it only sets MMC bits.
+Currently we deal with single codec and suspend codec callbacks for
+all S3, S4 and runtime PM handling.  But it turned out that we want
+distinguish the call patterns sometimes, e.g. for applying some init
+sequence only at probing and restoring from hibernate.
 
-Tested-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Joao Pinto <jpinto@synopsys.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This patch slightly modifies the common PM callbacks for HD-audio
+codec and stores the currently processed PM event in power_state of
+the codec's device.power field, which is currently unused.  The codec
+callback can take a look at this event value and judges which purpose
+it's being called.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/dwc/pcie-designware-ep.c |    4 +++-
- drivers/pci/dwc/pcie-designware.h    |    1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_codec.c |   43 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/dwc/pcie-designware-ep.c
-@@ -214,7 +214,9 @@ static int dw_pcie_ep_set_msi(struct pci
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -2900,6 +2900,7 @@ static void hda_call_codec_resume(struct
+ 		hda_jackpoll_work(&codec->jackpoll_work.work);
+ 	else
+ 		snd_hda_jack_report_sync(codec);
++	codec->core.dev.power.power_state = PMSG_ON;
+ 	atomic_dec(&codec->core.in_pm);
+ }
  
--	val = (encode_int << MSI_CAP_MMC_SHIFT);
-+	val = dw_pcie_readw_dbi(pci, MSI_MESSAGE_CONTROL);
-+	val &= ~MSI_CAP_MMC_MASK;
-+	val |= (encode_int << MSI_CAP_MMC_SHIFT) & MSI_CAP_MMC_MASK;
- 	dw_pcie_writew_dbi(pci, MSI_MESSAGE_CONTROL, val);
+@@ -2932,10 +2933,48 @@ static int hda_codec_runtime_resume(stru
+ }
+ #endif /* CONFIG_PM */
  
- 	return 0;
---- a/drivers/pci/dwc/pcie-designware.h
-+++ b/drivers/pci/dwc/pcie-designware.h
-@@ -99,6 +99,7 @@
- 
- #define MSI_MESSAGE_CONTROL		0x52
- #define MSI_CAP_MMC_SHIFT		1
-+#define MSI_CAP_MMC_MASK		(7 << MSI_CAP_MMC_SHIFT)
- #define MSI_CAP_MME_SHIFT		4
- #define MSI_CAP_MSI_EN_MASK		0x1
- #define MSI_CAP_MME_MASK		(7 << MSI_CAP_MME_SHIFT)
++#ifdef CONFIG_PM_SLEEP
++static int hda_codec_pm_suspend(struct device *dev)
++{
++	dev->power.power_state = PMSG_SUSPEND;
++	return pm_runtime_force_suspend(dev);
++}
++
++static int hda_codec_pm_resume(struct device *dev)
++{
++	dev->power.power_state = PMSG_RESUME;
++	return pm_runtime_force_resume(dev);
++}
++
++static int hda_codec_pm_freeze(struct device *dev)
++{
++	dev->power.power_state = PMSG_FREEZE;
++	return pm_runtime_force_suspend(dev);
++}
++
++static int hda_codec_pm_thaw(struct device *dev)
++{
++	dev->power.power_state = PMSG_THAW;
++	return pm_runtime_force_resume(dev);
++}
++
++static int hda_codec_pm_restore(struct device *dev)
++{
++	dev->power.power_state = PMSG_RESTORE;
++	return pm_runtime_force_resume(dev);
++}
++#endif /* CONFIG_PM_SLEEP */
++
+ /* referred in hda_bind.c */
+ const struct dev_pm_ops hda_codec_driver_pm = {
+-	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				pm_runtime_force_resume)
++#ifdef CONFIG_PM_SLEEP
++	.suspend = hda_codec_pm_suspend,
++	.resume = hda_codec_pm_resume,
++	.freeze = hda_codec_pm_freeze,
++	.thaw = hda_codec_pm_thaw,
++	.poweroff = hda_codec_pm_suspend,
++	.restore = hda_codec_pm_restore,
++#endif /* CONFIG_PM_SLEEP */
+ 	SET_RUNTIME_PM_OPS(hda_codec_runtime_suspend, hda_codec_runtime_resume,
+ 			   NULL)
+ };
 
 
