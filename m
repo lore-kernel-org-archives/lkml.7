@@ -2,80 +2,85 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268C4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5AFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022AA2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6212070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553613132;
+	bh=9K2v4+21nGzr54bKaKVVw3DJ5qmgz5aJJ+PlNxUo4tY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MbY/1VIgqporye9ZbDNWzFxDWD1aG5Wd8bV/9SGb1+JQZvYeCBrlPkZfJSvwm0rZh
+	 hkzI8aeP4cB1nFl4yFTh+kjm7yHxlnp6DWz98aU0tm1DifZQhjaa26WQVg+XtAZgMM
+	 /wzgaij2ivnPFbYNkGLnypBejhyBjLm3HxcAHGeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfCZPLz (ORCPT
+        id S1731959AbfCZPML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:11:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34646 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfCZPLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:11:55 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 447EC3092666;
-        Tue, 26 Mar 2019 15:11:55 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C76E2949B;
-        Tue, 26 Mar 2019 15:11:53 +0000 (UTC)
-Subject: Re: tools bugs: make clean deletes files in the git tree
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-References: <5ad376c1-c998-c0a0-9f47-af5f3ab26e35@intel.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <e2acad2c-9e2c-148a-ab62-f6882df77d3d@redhat.com>
-Date:   Tue, 26 Mar 2019 11:11:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 26 Mar 2019 11:12:11 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38809 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfCZPMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:12:10 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w137so10181958oiw.5;
+        Tue, 26 Mar 2019 08:12:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dJb7ydaU8hTdfO/iMVhL/H+QruagqPyslzxtLe17XYY=;
+        b=lB1wcWXNAT0png4DXFvtwy0XkHNFdmwgX4PsvMgsXD918szRojp1NFKresrKorW4j9
+         X/2YjEsbn0t5rD5RgVmzfLaEv4Pr+3W6IaOce/y/Eeh/zdb2qcj3wov1JvEYpwf4XQJo
+         KZOwawdhj/0+UD/18iUBDzBdbN04JrLy0NKnXUeYbMC53CefOAcMyxAhK3xEOezps839
+         NvgVl/kOKkClNMpKOS8hRfpuFeiooAdomgGAYVBLWv+q1jSFOgTJJzcPXk8Ek8zw8ypm
+         eowp0w/1UlLCYTlGNSUzT1b+irfve89LPML21AlnBjzIMNsALktQkKvpNfX2IzpEJK8n
+         LPrw==
+X-Gm-Message-State: APjAAAUtNcJbM9/MZSzoBLQIgV6mdhTw9h29hBWXqDUbWSYwLrW3aWl3
+        D52eDONatwsQDsxG6JOtWEVfBKA=
+X-Google-Smtp-Source: APXvYqwof3dapU2q+5bmoe+IXYJj/sPkPw5Q5N3NPNJA2gyQFPBHs4Mqt06cuMvJXnaA9PbRsBl9UA==
+X-Received: by 2002:aca:4507:: with SMTP id s7mr5586456oia.127.1553613129940;
+        Tue, 26 Mar 2019 08:12:09 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w141sm4818364oie.1.2019.03.26.08.12.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 08:12:09 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 10:12:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Cc:     robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com,
+        broonie@kernel.org, bbrezillon@kernel.org,
+        horms+renesas@verge.net.au, geert+renesas@glider.be,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, nagasuresh12@gmail.com,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: spi: Add device tree binding
+ documentation for Zynq QSPI controller
+Message-ID: <20190326151208.GA12727@bogus>
+References: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <5ad376c1-c998-c0a0-9f47-af5f3ab26e35@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 26 Mar 2019 15:11:55 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 4:45 AM, Adrian Hunter wrote:
-> Hi
+On Thu, 28 Feb 2019 12:31:53 +0530, Naga Sureshkumar Relli wrote:
+> This patch adds the dts binding document for Zynq SOC QSPI
+> controller.
 > 
-> Doing:
-> 
-> 	make -C tools clean
-> 
-> Results in:
-> 
-> 	git diff --stat
-> 	 tools/pci/pcitest.sh                                  |  72 ----------------
-> 	 tools/testing/selftests/livepatch/test-callbacks.sh   | 587 ----------------------------------------------------------------------------------------------------------------------------
-> 	 tools/testing/selftests/livepatch/test-livepatch.sh   | 168 ------------------------------------
-> 	 tools/testing/selftests/livepatch/test-shadow-vars.sh |  60 -------------
-> 	 4 files changed, 887 deletions(-)
-> 
-> i.e. 'make clean' seems to be deleting files that are in the git tree.
-> 
-> Regards
-> Adrian
+> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+> ---
+>  .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
 > 
 
-Hi Adrian -- thanks for the report.  I will fixup the livepatch 
-selftests Makefile and post a patch shortly.
-
--- Joe
+Reviewed-by: Rob Herring <robh@kernel.org>
