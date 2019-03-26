@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86841C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEACC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522F02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EF82070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582657;
-	bh=+wt6X4yFi9ylEUAOVBZ6g5Rn+eKa18mvplRd1O3cdnA=;
+	s=default; t=1553582667;
+	bh=OIIY9cq/mGI0d/5YgeG8GyVwxwxsR8M9wZg5JaLzJaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fTOydOREuTNMnMyBefQ4TkX1p3KHWtvmORYuQU29w1WdbhoUAcHgpHFBIPiCLXAcY
-	 RF6F7v5zdpiAzfa/InokMLKDZE5zOC22eoXmrpdyVKbGUo5bsOd5Q+7zRSD9F+2Mm3
-	 rkwMb/R6Yzl1GNzQVSoNJQqZu6Hdz7qtCNjL1+p8=
+	b=DP3CPlcmw4DowwUpsyRhNVXqS0SLL1YPeDtuvhG2WJxC8qSyKZ3bTNJQ2ySvRnqJ5
+	 K9vr6so8RwTdRW5zE8/5yqn9HlORN+Gc+44cg/olZ4BGnbHVgXRjCLUiBh7Mqn5FOi
+	 lJvTTqwiJY2Zs0ma5ptyogx4dX2PotfQX+GPoiIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbfCZGgK (ORCPT
+        id S1731993AbfCZGo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:44:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732141AbfCZGgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:06 -0400
+        id S1732092AbfCZGfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:55 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2485420823;
-        Tue, 26 Mar 2019 06:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5156920863;
+        Tue, 26 Mar 2019 06:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582165;
-        bh=+wt6X4yFi9ylEUAOVBZ6g5Rn+eKa18mvplRd1O3cdnA=;
+        s=default; t=1553582154;
+        bh=OIIY9cq/mGI0d/5YgeG8GyVwxwxsR8M9wZg5JaLzJaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIrYhojjgSo+2i7/LHc1CtcoY0ql1H9cX5mHPupcZnjDll/0VtfUIabhYy6RKwI/n
-         VUA0QS8HodjZy+fYqiy13BUDrxD44QbKpUypMxVcC3/tUwMi6rPKvo2IEzz0Z6c+jg
-         qYNL0FpVNso7thgnwSvFNbiVfwEfxUAydLD2XaKY=
+        b=t3u/SJaUUyN7+LmIX/TJfRSshHbuV1A/wkByBdWAZ/pPqzi9XqzoonOeB4T1+cefl
+         GPq7JWRRJPjgIUjzue7u73vxvwzSD2r9yJ9Eb+M992KRpytPgl8yORqKDxM6dsFKPN
+         ncmf/XK77ylAKjFEGLtTKFajE8wkpumNgNFeJnlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        Jason Dillaman <dillaman@redhat.com>
-Subject: [PATCH 4.19 09/45] libceph: wait for latest osdmap in ceph_monc_blacklist_add()
-Date:   Tue, 26 Mar 2019 15:29:52 +0900
-Message-Id: <20190326042703.162116636@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>,
+        Deepak Rawat <drawat@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.19 06/45] drm/vmwgfx: Dont double-free the mode stored in par->set_mode
+Date:   Tue, 26 Mar 2019 15:29:49 +0900
+Message-Id: <20190326042703.012264138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,95 +65,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-commit bb229bbb3bf63d23128e851a1f3b85c083178fa1 upstream.
+commit c2d311553855395764e2e5bf401d987ba65c2056 upstream.
 
-Because map updates are distributed lazily, an OSD may not know about
-the new blacklist for quite some time after "osd blacklist add" command
-is completed.  This makes it possible for a blacklisted but still alive
-client to overwrite a post-blacklist update, resulting in data
-corruption.
+When calling vmw_fb_set_par(), the mode stored in par->set_mode gets free'd
+twice. The first free is in vmw_fb_kms_detach(), the second is near the
+end of vmw_fb_set_par() under the name of 'old_mode'. The mode-setting code
+only works correctly if the mode doesn't actually change. Removing
+'old_mode' in favor of using par->set_mode directly fixes the problem.
 
-Waiting for latest osdmap in ceph_monc_blacklist_add() and thus using
-the post-blacklist epoch for all post-blacklist requests ensures that
-all such requests "wait" for the blacklist to come into force on their
-respective OSDs.
-
-Cc: stable@vger.kernel.org
-Fixes: 6305a3b41515 ("libceph: support for blacklisting clients")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Jason Dillaman <dillaman@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ceph/libceph.h |    2 ++
- net/ceph/ceph_common.c       |   18 +++++++++++++++++-
- net/ceph/mon_client.c        |    9 +++++++++
- 3 files changed, 28 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_fb.c |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -292,6 +292,8 @@ extern void ceph_destroy_client(struct c
- extern int __ceph_open_session(struct ceph_client *client,
- 			       unsigned long started);
- extern int ceph_open_session(struct ceph_client *client);
-+int ceph_wait_for_latest_osdmap(struct ceph_client *client,
-+				unsigned long timeout);
- 
- /* pagevec.c */
- extern void ceph_release_page_vector(struct page **pages, int num_pages);
---- a/net/ceph/ceph_common.c
-+++ b/net/ceph/ceph_common.c
-@@ -729,7 +729,6 @@ int __ceph_open_session(struct ceph_clie
- }
- EXPORT_SYMBOL(__ceph_open_session);
- 
--
- int ceph_open_session(struct ceph_client *client)
- {
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
+@@ -564,11 +564,9 @@ static int vmw_fb_set_par(struct fb_info
+ 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_PVSYNC)
+ 	};
+-	struct drm_display_mode *old_mode;
+ 	struct drm_display_mode *mode;
  	int ret;
-@@ -745,6 +744,23 @@ int ceph_open_session(struct ceph_client
- }
- EXPORT_SYMBOL(ceph_open_session);
  
-+int ceph_wait_for_latest_osdmap(struct ceph_client *client,
-+				unsigned long timeout)
-+{
-+	u64 newest_epoch;
-+	int ret;
-+
-+	ret = ceph_monc_get_version(&client->monc, "osdmap", &newest_epoch);
-+	if (ret)
-+		return ret;
-+
-+	if (client->osdc.osdmap->epoch >= newest_epoch)
-+		return 0;
-+
-+	ceph_osdc_maybe_request_map(&client->osdc);
-+	return ceph_monc_wait_osdmap(&client->monc, newest_epoch, timeout);
-+}
-+EXPORT_SYMBOL(ceph_wait_for_latest_osdmap);
+-	old_mode = par->set_mode;
+ 	mode = drm_mode_duplicate(vmw_priv->dev, &new_mode);
+ 	if (!mode) {
+ 		DRM_ERROR("Could not create new fb mode.\n");
+@@ -579,11 +577,7 @@ static int vmw_fb_set_par(struct fb_info
+ 	mode->vdisplay = var->yres;
+ 	vmw_guess_mode_timing(mode);
  
- static int __init init_ceph_lib(void)
- {
---- a/net/ceph/mon_client.c
-+++ b/net/ceph/mon_client.c
-@@ -922,6 +922,15 @@ int ceph_monc_blacklist_add(struct ceph_
- 	mutex_unlock(&monc->mutex);
+-	if (old_mode && drm_mode_equal(old_mode, mode)) {
+-		drm_mode_destroy(vmw_priv->dev, mode);
+-		mode = old_mode;
+-		old_mode = NULL;
+-	} else if (!vmw_kms_validate_mode_vram(vmw_priv,
++	if (!vmw_kms_validate_mode_vram(vmw_priv,
+ 					mode->hdisplay *
+ 					DIV_ROUND_UP(var->bits_per_pixel, 8),
+ 					mode->vdisplay)) {
+@@ -620,8 +614,8 @@ static int vmw_fb_set_par(struct fb_info
+ 	schedule_delayed_work(&par->local_work, 0);
  
- 	ret = wait_generic_request(req);
-+	if (!ret)
-+		/*
-+		 * Make sure we have the osdmap that includes the blacklist
-+		 * entry.  This is needed to ensure that the OSDs pick up the
-+		 * new blacklist before processing any future requests from
-+		 * this client.
-+		 */
-+		ret = ceph_wait_for_latest_osdmap(monc->client, 0);
-+
- out:
- 	put_generic_request(req);
- 	return ret;
+ out_unlock:
+-	if (old_mode)
+-		drm_mode_destroy(vmw_priv->dev, old_mode);
++	if (par->set_mode)
++		drm_mode_destroy(vmw_priv->dev, par->set_mode);
+ 	par->set_mode = mode;
+ 
+ 	mutex_unlock(&par->bo_mutex);
 
 
