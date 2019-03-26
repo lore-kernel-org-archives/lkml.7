@@ -2,115 +2,102 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA2BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19238C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D87D2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00E22084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbfCZJSo (ORCPT
+        id S1730804AbfCZJT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:18:44 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33268 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfCZJSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:18:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32967374;
-        Tue, 26 Mar 2019 02:18:43 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18073F614;
-        Tue, 26 Mar 2019 02:18:41 -0700 (PDT)
-Subject: Re: [PATCH] arm64: gic-v3: fix unexpected overwrite of spi/ppi/sgi
- prio
-To:     Wei Li <liwei391@huawei.com>, tglx@linutronix.de,
-        jason@lakedaemon.net, julien.thierry@arm.com
-Cc:     linux-kernel@vger.kernel.org, guohanjun@huawei.com,
-        huawei.libin@huawei.com
-References: <20190326081658.37450-1-liwei391@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <aa6b390c-d39e-cdd6-363b-d5a20a4d6feb@arm.com>
-Date:   Tue, 26 Mar 2019 09:18:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        Tue, 26 Mar 2019 05:19:56 -0400
+Received: from asrmicro.com ([210.13.118.86]:55188 "EHLO mail2012.asrmicro.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbfCZJT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:19:56 -0400
+Received: from [10.1.170.171] (10.1.170.171) by mail2012.asrmicro.com
+ (10.1.24.123) with Microsoft SMTP Server (TLS) id 15.0.847.32; Tue, 26 Mar
+ 2019 17:19:23 +0800
+Subject: Re: [PATCH] arm64: add support for ASR AquilaC SoC
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>
+References: <1553389083-13237-1-git-send-email-qiaozhou@asrmicro.com>
+ <20190326081251.GE32613@kadam>
+From:   qiaozhou <qiaozhou@asrmicro.com>
+Message-ID: <5f777fcb-291a-3144-9674-cb81848a4a85@asrmicro.com>
+Date:   Tue, 26 Mar 2019 17:19:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190326081658.37450-1-liwei391@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190326081251.GE32613@kadam>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.1.170.171]
+X-ClientProxiedBy: mail2012.asrmicro.com (10.1.24.123) To
+ mail2012.asrmicro.com (10.1.24.123)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 08:16, Wei Li wrote:
-> The priority config will be restored to the default value in the
-> notifiers of gic suspend. While the arm64 nmi-like interrupt has been
-> implemented by using priority since commit bc3c03ccb464 ("arm64: Enable
-> the support of pseudo-NMIs"), we need to do the save and restore exactly.
+
+
+On 2019/3/26 下午4:12, Dan Carpenter wrote:
 > 
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
->  drivers/irqchip/irq-gic.c | 22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
-
-You're complaining about an alleged bug in the GICv3 driver (which is
-always possible), and yet you're submitting a change to the GICv{1,2}
-driver, for which we don't support variable priorities.
-
-How does this fix anything? How have you tested this patch? What is the
-actual problem you're trying to paper over?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> I'm not the right person to send this to...
+> 
+> $ ./scripts/get_maintainer.pl -f arch/arm64/Kconfig.platforms
+> Catalin Marinas <catalin.marinas@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
+> Will Deacon <will.deacon@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
+> linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE))
+> linux-kernel@vger.kernel.org (open list)
+I'll send to Will and Catalin next time.
+> 
+> 
+> On Sun, Mar 24, 2019 at 08:58:03AM +0800, qiaozhou wrote:
+>> From: Qiao Zhou <qiaozhou@asrmicro.com>
+>>
+>> Add ARCH_ASR
+> 
+> You'll need to expand this.
+Yes, I'll add more description.
+> 
+>>
+>> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
+>                   ^^^^^^^^
+> Use Qiao Zhou so it matches the From header.
+ok.
+> 
+> 
+>> ---
+>>   arch/arm64/Kconfig.platforms | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>> index 70498a0..da8d43a 100644
+>> --- a/arch/arm64/Kconfig.platforms
+>> +++ b/arch/arm64/Kconfig.platforms
+>> @@ -278,4 +278,10 @@ config ARCH_ZYNQMP
+>>   	help
+>>   	  This enables support for Xilinx ZynqMP Family
+>>   
+>> +config ARCH_ASR
+>> +	bool "ASR Microelectronics chip Family"
+>> +	select PINCTRL
+>> +	help
+>> +	  This enables support for ASR Microelectronics chip Family, including:
+>> +	  - ASR 8751C SoC
+>>   endmenu
+> 
+> Was this supposed to be part of the patch you sent earlier?  You will
+> need to resend that one as a v2 patch.
+Yes. I'll send a v2 patch. thanks a lot for reviewing.
+> 
+> regards,
+> dan carpenter
+> 
