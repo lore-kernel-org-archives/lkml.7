@@ -2,59 +2,60 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2CDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783EAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F632070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343DA20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OocMpMMf"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="E9++stwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbfCZPz0 (ORCPT
+        id S1731827AbfCZPza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:55:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41473 "EHLO
+        Tue, 26 Mar 2019 11:55:30 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33819 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCZPz0 (ORCPT
+        with ESMTP id S1730441AbfCZPz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:55:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a25so11216347edc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:55:24 -0700 (PDT)
+        Tue, 26 Mar 2019 11:55:29 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x14so8570538eds.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jVhciA8a89NDVuDa/Yx+mTqlqgpVgbF9VqirSNRgANs=;
-        b=OocMpMMfTX/d9a1ru+lmSKj1yH0YBd5thEzFsnbmlvVe89rymIeYiyQ/6O0QWOeyzc
-         5TfySD1YTLYeIpHA0nsNzGFjXl9ZN1Y6KAev4sHz4ShA8Jzi2O+NQfR+sy61Fjiu3+jr
-         qRIu1AMD0s5mq5rshciNieoxa+YEN2FYjAFFhuIzZPYezOuzj/MYhy14HiXiZtfIonpm
-         4EyFaKr4jxoho8fpqg6qCqDTiXHdpdU1cOKZJjcfpaz+Q7vzDROszhwvqsfoBAJiIVKN
-         d0pansubjmoZCUo/VipXnxtFHv4JFs+2pLa3NiY1iWHRbfp8YRpRM2BszCigYapRPaws
-         589g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=v7tO6H54bJ5hB4z3JTq3f9M5Z/1F2gebkVsbuhakZJE=;
+        b=E9++stwYReq4A75uaOfyWkXNhWC0nFtwnVmvlwTheJWGexL2E08naVSguCXsMuF5iI
+         Pw/ryKzAkxmT1Vv9VAuERM5ILAYUrg7pMPCwskh/X6WtmoohRc6dJzudT7z+YOspKrCn
+         Wwn02BL8NyXTKP2KvoCVfvTeqXzxXmBFlHYzN8cP/qJvKP1YGqnC7sVnw7YWuZ8cgowd
+         xpHgSz/WptgyOQ8liKYK6tvk26V/KhUk/pKA8o21HgG1w87cBQSMOR+AIi0wyldxz5QP
+         wnB4bQys0KMAycp7HXUyeqR0cbTFoyA9LJen1HHpggKA2IMfchVzgsFDX6q88MX3vPMJ
+         9qQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jVhciA8a89NDVuDa/Yx+mTqlqgpVgbF9VqirSNRgANs=;
-        b=VsQbdXR8Kebw7f+P1+CnqfUX6roGuqtgDCOmqloEqP3oRCrm0cjBsK0ezbBo+AthFd
-         RJzFhSgAcfF9IH6Hqjn3oE2i97LHXBxDGV6sNFXUu2bEjWTL34Mg6NV7yb6ha9Y7Wqkj
-         nOto5TCMDQ5nim5cGeL/w5+V1Q1lZDb2Nd7+gDmx947faKK16y/6BY2LRHhMsb235IWc
-         pfjxCRcmLF/CjKp5kJE0c/4meA82RYkK493nMpSc0MEWz47zOds4b9m1XI2PTE3tSYSj
-         ubtd1VEnWcYtleR+G9rhZ7ORNSvNx7c4EIZwKJtoOyH+RjsbfyQfZJfjDTV2hPd/gNwK
-         Vc1w==
-X-Gm-Message-State: APjAAAWO7xES83eFwwV5DdU/9ZRFqY1e9FJGb69NraAL2g4OZKRX1Nva
-        /+iKRqSHCjxDRGUZLm5H3fTUHg==
-X-Google-Smtp-Source: APXvYqz8oqBeVh6MZUE0AGrHvAkTb7wWRz6uSXZ4rCTCGMrrbXhGVDQx61lhH4bxUV3+383hmIq/PQ==
-X-Received: by 2002:a50:add2:: with SMTP id b18mr21090841edd.43.1553615724069;
-        Tue, 26 Mar 2019 08:55:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=v7tO6H54bJ5hB4z3JTq3f9M5Z/1F2gebkVsbuhakZJE=;
+        b=pgRmE2d89BlqlvVn0iWdWh0Yx+aCoCvOnAe01STMJPwyJoNwE1LZxb46T2Yr1ybXQe
+         ZvgtMMdJrlpp2VBWb7alOOcrW/2sC+xMpmH4XIhAJSwbgV1sA3oxu/6L3+UjBlQQbftH
+         81HmR3wWsnM7yPSbFMl3SLbNQM91kGp7BBJgCE52s8ElykTnKoOg444T+WfLQ+Zwvegk
+         4VWhNyyFDjlNE3hekBvXQeDJPzTXFtcogkdPI112m5ItylS/rP+gvlK2A+QIdNPV2hgp
+         RIziTgfFNdnHuKjQE3T9M5CpNyFVgQvgYkwVgLvayV/hR/I/KbLR09+2f5T15GFoCvO+
+         UHiQ==
+X-Gm-Message-State: APjAAAUwaBi03nQqmBssv8ZLbnYIIXgiwPH4feYPOm8wrbSiCkLB7mfg
+        xVTUlnjtDVtRnJdn6zCKkpq1Eg==
+X-Google-Smtp-Source: APXvYqwVUsS60CBebarqLRwNnxdG/4Wjv3BQQKG1ZqTdQD8f7aP6Bo2Y+V6+A/20ijXHMSt+297lWw==
+X-Received: by 2002:aa7:d3cc:: with SMTP id o12mr19842374edr.115.1553615726687;
+        Tue, 26 Mar 2019 08:55:26 -0700 (PDT)
 Received: from localhost.localdomain (x59cc895e.dyn.telefonica.de. [89.204.137.94])
-        by smtp.gmail.com with ESMTPSA id k32sm6651057ede.97.2019.03.26.08.55.21
+        by smtp.gmail.com with ESMTPSA id k32sm6651057ede.97.2019.03.26.08.55.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 08:55:23 -0700 (PDT)
+        Tue, 26 Mar 2019 08:55:26 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
         dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
@@ -65,10 +66,12 @@ Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
         nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
         viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
         Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1 0/4] pid: add pidctl()
-Date:   Tue, 26 Mar 2019 16:55:09 +0100
-Message-Id: <20190326155513.26964-1-christian@brauner.io>
+Subject: [PATCH v1 1/4] Make anon_inodes unconditional
+Date:   Tue, 26 Mar 2019 16:55:10 +0100
+Message-Id: <20190326155513.26964-2-christian@brauner.io>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190326155513.26964-1-christian@brauner.io>
+References: <20190326155513.26964-1-christian@brauner.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,130 +79,309 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is v1 of this patchset with various minor fixes which are listed in
-the individual commits. Notably, pidfds are now O_CLOEXEC by default.
+From: David Howells <dhowells@redhat.com>
 
-The pidctl() syscalls builds on, extends, and improves translate_pid()
-[4] and serves as the natural connection between the pid-based and the
-pidfd-based api.
+Make the anon_inodes facility unconditional so that it can be used by core
+VFS code and the pidctl() syscall.
 
-I quote Konstantins original patchset first that has already been acked
-and picked up by Eric before and whose functionality is preserved in
-this syscall. Multiple people have asked when this patchset will be sent
-in for merging (cf. [1], [2]). It has recently been revived by
-Nagarathnam Muthusamy from Oracle [3].
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[christian@brauner.io: adapt commit message to mention pidctl()]
+Signed-off-by: Christian Brauner <christian@brauner.io>
+---
+ arch/arm/kvm/Kconfig       |  1 -
+ arch/arm64/kvm/Kconfig     |  1 -
+ arch/mips/kvm/Kconfig      |  1 -
+ arch/powerpc/kvm/Kconfig   |  1 -
+ arch/s390/kvm/Kconfig      |  1 -
+ arch/x86/Kconfig           |  1 -
+ arch/x86/kvm/Kconfig       |  1 -
+ drivers/base/Kconfig       |  1 -
+ drivers/char/tpm/Kconfig   |  1 -
+ drivers/dma-buf/Kconfig    |  1 -
+ drivers/gpio/Kconfig       |  1 -
+ drivers/iio/Kconfig        |  1 -
+ drivers/infiniband/Kconfig |  1 -
+ drivers/vfio/Kconfig       |  1 -
+ fs/Makefile                |  2 +-
+ fs/notify/fanotify/Kconfig |  1 -
+ fs/notify/inotify/Kconfig  |  1 -
+ init/Kconfig               | 10 ----------
+ 18 files changed, 1 insertion(+), 27 deletions(-)
 
-The intention of the original translate_pid() syscall was twofold:
-1. Provide translation of pids between pid namespaces especially for the
-   case of deeply nested pid namespaces.
-   The most obvious use-case is strace which has been waiting for this
-   feature for a while.
-2. Provide implicit pid namespace introspection
-
-Both functionalities are preserved. The latter task has been improved
-upon though. In the original version of the pachset passing pid as 1
-would allow to deterimine the relationship between the pid namespaces.
-This is inherhently racy. If pid 1 inside a pid namespace has died it
-would report false negatives. For example, if pid 1 inside of the target
-pid namespace already died, it would report that the target pid
-namespace cannot be reached from the source pid namespace because it
-couldn't find the pid inside of the target pid namespace and thus
-falsely report to the user that the two pid namespaces are not related.
-This problem is simple to avoid. In the new version we simply walk the
-list of ancestors and check whether the namespace are related to each
-other. By doing it this way we can reliably report what the relationship
-between two pid namespace file descriptors looks like.
-
-Additionally, this syscall has been extended to allow the retrieval of
-pidfds independent of procfs. These pidfds can e.g. be used with the new
-pidfd_send_signal() syscall we recently merged. The ability to retrieve
-pidfds independent of procfs had already been requested in the
-pidfd_send_signal patchset by e.g. Andrew [4] and later again by Alexey
-[5]. A use-case where a kernel is compiled without procfs but where
-pidfds are still useful has been outlined by Andy in [6]. Regular
-anon-inode based file descriptors are used that stash a reference to
-struct pid in file->private_data and drop that reference on close.
-
-With this pidctl() has three closely related functionalities that
-provide a natural connection between the pid-based and the pidfd-based
-api. To clarify the semantics and to make it easier for userspace to use
-the syscall it has a command argument and three commands clearly
-reflecting the functionalities (PIDCMD_QUERY_PID, PIDCMD_QUERY_PIDNS,
-PIDCMD_GET_PIDFD).
-
-Embedding the retrieval of pidfds into this syscall has two main
-advantages:
-- pidctl provides a natural and clean connection between the traditional
-  pid-based and the newer pidfd-based process API
-- allows the retrieval of pidfds for other pid namespaces while
-  enforcing that
-  - the caller must have been given access to two file descriptors
-    referring to target and source pid namespace
-  - the source pid namespace must be an ancestor of the target pid
-    namespace
-  - the pid must be translatable from the source pid namespace into the
-    target pid namespace
-
-Note that this patchset also includes Al's and David's commit to make anon
-inodes unconditional. The original intention is to make it possible to use
-anon inodes in core vfs functions. pidctl() has the same requirement so
-David suggested I sent this in alongside this patch. Both are informed of
-this.
-
-The syscall comes with extensive testing for all functionalities.
-
-/* References */
-[1]: https://lore.kernel.org/lkml/37b17950-b130-7933-99a1-4846c61c8555@oracle.com/
-[2]: https://lore.kernel.org/lkml/20181109034919.GA21681@altlinux.org/
-[3]: https://lore.kernel.org/lkml/37b17950-b130-7933-99a1-4846c61c8555@oracle.com/
-[4]: 3eb39f47934f9d5a3027fe00d906a45fe3a15fad
-[5]: https://lore.kernel.org/lkml/20190320203910.GA2842@avx2/
-[6]: https://lore.kernel.org/lkml/CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com/
-
-Thanks!
-Christian
-
-Christian Brauner (3):
-  pid: add pidctl()
-  signal: support pidctl() with pidfd_send_signal()
-  tests: add pidctl() tests
-
-David Howells (1):
-  Make anon_inodes unconditional
-
- arch/arm/kvm/Kconfig                        |   1 -
- arch/arm64/kvm/Kconfig                      |   1 -
- arch/mips/kvm/Kconfig                       |   1 -
- arch/powerpc/kvm/Kconfig                    |   1 -
- arch/s390/kvm/Kconfig                       |   1 -
- arch/x86/Kconfig                            |   1 -
- arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
- arch/x86/kvm/Kconfig                        |   1 -
- drivers/base/Kconfig                        |   1 -
- drivers/char/tpm/Kconfig                    |   1 -
- drivers/dma-buf/Kconfig                     |   1 -
- drivers/gpio/Kconfig                        |   1 -
- drivers/iio/Kconfig                         |   1 -
- drivers/infiniband/Kconfig                  |   1 -
- drivers/vfio/Kconfig                        |   1 -
- fs/Makefile                                 |   2 +-
- fs/notify/fanotify/Kconfig                  |   1 -
- fs/notify/inotify/Kconfig                   |   1 -
- include/linux/pid.h                         |   2 +
- include/linux/pid_namespace.h               |   8 +
- include/linux/syscalls.h                    |   2 +
- include/uapi/linux/wait.h                   |  14 +
- init/Kconfig                                |  10 -
- kernel/pid.c                                | 161 ++++++
- kernel/pid_namespace.c                      |  25 +
- kernel/signal.c                             |  29 +-
- kernel/sys_ni.c                             |   3 -
- tools/testing/selftests/pidfd/Makefile      |   2 +-
- tools/testing/selftests/pidfd/pidctl_test.c | 537 ++++++++++++++++++++
- 30 files changed, 765 insertions(+), 48 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/pidctl_test.c
-
+diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
+index 3f5320f46de2..f591026347a5 100644
+--- a/arch/arm/kvm/Kconfig
++++ b/arch/arm/kvm/Kconfig
+@@ -22,7 +22,6 @@ config KVM
+ 	bool "Kernel-based Virtual Machine (KVM) support"
+ 	depends on MMU && OF
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select ARM_GIC
+ 	select ARM_GIC_V3
+ 	select ARM_GIC_V3_ITS
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index a3f85624313e..a67121d419a2 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -23,7 +23,6 @@ config KVM
+ 	depends on OF
+ 	select MMU_NOTIFIER
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
+ 	select KVM_MMIO
+diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
+index 4528bc9c3cb1..eac25aef21e0 100644
+--- a/arch/mips/kvm/Kconfig
++++ b/arch/mips/kvm/Kconfig
+@@ -21,7 +21,6 @@ config KVM
+ 	depends on MIPS_FP_SUPPORT
+ 	select EXPORT_UASM
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select KVM_MMIO
+diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
+index bfdde04e4905..f53997a8ca62 100644
+--- a/arch/powerpc/kvm/Kconfig
++++ b/arch/powerpc/kvm/Kconfig
+@@ -20,7 +20,6 @@ if VIRTUALIZATION
+ config KVM
+ 	bool
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_EVENTFD
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select SRCU
+diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
+index 767453faacfc..1816ee48eadd 100644
+--- a/arch/s390/kvm/Kconfig
++++ b/arch/s390/kvm/Kconfig
+@@ -21,7 +21,6 @@ config KVM
+ 	prompt "Kernel-based Virtual Machine (KVM) support"
+ 	depends on HAVE_KVM
+ 	select PREEMPT_NOTIFIERS
+-	select ANON_INODES
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select HAVE_KVM_EVENTFD
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1f9b3cf437c..18f2c954464e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -44,7 +44,6 @@ config X86
+ 	#
+ 	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
+ 	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
+-	select ANON_INODES
+ 	select ARCH_32BIT_OFF_T			if X86_32
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_CLOCKSOURCE_INIT
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 72fa955f4a15..fc042419e670 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -27,7 +27,6 @@ config KVM
+ 	depends on X86_LOCAL_APIC
+ 	select PREEMPT_NOTIFIERS
+ 	select MMU_NOTIFIER
+-	select ANON_INODES
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_IRQFD
+ 	select IRQ_BYPASS_MANAGER
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 059700ea3521..03f067da12ee 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -174,7 +174,6 @@ source "drivers/base/regmap/Kconfig"
+ config DMA_SHARED_BUFFER
+ 	bool
+ 	default n
+-	select ANON_INODES
+ 	select IRQ_WORK
+ 	help
+ 	  This option enables the framework for buffer-sharing between
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 536e55d3919f..f3e4bc490cf0 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -157,7 +157,6 @@ config TCG_CRB
+ config TCG_VTPM_PROXY
+ 	tristate "VTPM Proxy Interface"
+ 	depends on TCG_TPM
+-	select ANON_INODES
+ 	---help---
+ 	  This driver proxies for an emulated TPM (vTPM) running in userspace.
+ 	  A device /dev/vtpmx is provided that creates a device pair
+diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+index 2e5a0faa2cb1..3fc9c2efc583 100644
+--- a/drivers/dma-buf/Kconfig
++++ b/drivers/dma-buf/Kconfig
+@@ -3,7 +3,6 @@ menu "DMABUF options"
+ config SYNC_FILE
+ 	bool "Explicit Synchronization Framework"
+ 	default n
+-	select ANON_INODES
+ 	select DMA_SHARED_BUFFER
+ 	---help---
+ 	  The Sync File Framework adds explicit syncronization via
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3f50526a771f..0f91600c27ae 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -12,7 +12,6 @@ config ARCH_HAVE_CUSTOM_GPIO_H
+ 
+ menuconfig GPIOLIB
+ 	bool "GPIO Support"
+-	select ANON_INODES
+ 	help
+ 	  This enables GPIO support through the generic GPIO library.
+ 	  You only need to enable this, if you also want to enable
+diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+index d08aeb41cd07..1dec0fecb6ef 100644
+--- a/drivers/iio/Kconfig
++++ b/drivers/iio/Kconfig
+@@ -4,7 +4,6 @@
+ 
+ menuconfig IIO
+ 	tristate "Industrial I/O support"
+-	select ANON_INODES
+ 	help
+ 	  The industrial I/O subsystem provides a unified framework for
+ 	  drivers for many different types of embedded sensors using a
+diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
+index a1fb840de45d..d318bab25860 100644
+--- a/drivers/infiniband/Kconfig
++++ b/drivers/infiniband/Kconfig
+@@ -25,7 +25,6 @@ config INFINIBAND_USER_MAD
+ 
+ config INFINIBAND_USER_ACCESS
+ 	tristate "InfiniBand userspace access (verbs and CM)"
+-	select ANON_INODES
+ 	depends on MMU
+ 	---help---
+ 	  Userspace InfiniBand access support.  This enables the
+diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
+index 9de5ed38da83..3798d77d131c 100644
+--- a/drivers/vfio/Kconfig
++++ b/drivers/vfio/Kconfig
+@@ -22,7 +22,6 @@ menuconfig VFIO
+ 	tristate "VFIO Non-Privileged userspace driver framework"
+ 	depends on IOMMU_API
+ 	select VFIO_IOMMU_TYPE1 if (X86 || S390 || ARM || ARM64)
+-	select ANON_INODES
+ 	help
+ 	  VFIO provides a framework for secure userspace device drivers.
+ 	  See Documentation/vfio.txt for more details.
+diff --git a/fs/Makefile b/fs/Makefile
+index 427fec226fae..35945f8139e6 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -25,7 +25,7 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
+ 
+ obj-y				+= notify/
+ obj-$(CONFIG_EPOLL)		+= eventpoll.o
+-obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
++obj-y				+= anon_inodes.o
+ obj-$(CONFIG_SIGNALFD)		+= signalfd.o
+ obj-$(CONFIG_TIMERFD)		+= timerfd.o
+ obj-$(CONFIG_EVENTFD)		+= eventfd.o
+diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
+index 735bfb2e9190..521dc91d2cb5 100644
+--- a/fs/notify/fanotify/Kconfig
++++ b/fs/notify/fanotify/Kconfig
+@@ -1,7 +1,6 @@
+ config FANOTIFY
+ 	bool "Filesystem wide access notification"
+ 	select FSNOTIFY
+-	select ANON_INODES
+ 	select EXPORTFS
+ 	default n
+ 	---help---
+diff --git a/fs/notify/inotify/Kconfig b/fs/notify/inotify/Kconfig
+index b981fc0c8379..0161c74e76e2 100644
+--- a/fs/notify/inotify/Kconfig
++++ b/fs/notify/inotify/Kconfig
+@@ -1,6 +1,5 @@
+ config INOTIFY_USER
+ 	bool "Inotify support for userspace"
+-	select ANON_INODES
+ 	select FSNOTIFY
+ 	default y
+ 	---help---
+diff --git a/init/Kconfig b/init/Kconfig
+index 4592bf7997c0..be8f97e37a76 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1171,9 +1171,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
+ config SYSCTL
+ 	bool
+ 
+-config ANON_INODES
+-	bool
+-
+ config HAVE_UID16
+ 	bool
+ 
+@@ -1378,14 +1375,12 @@ config HAVE_FUTEX_CMPXCHG
+ config EPOLL
+ 	bool "Enable eventpoll support" if EXPERT
+ 	default y
+-	select ANON_INODES
+ 	help
+ 	  Disabling this option will cause the kernel to be built without
+ 	  support for epoll family of system calls.
+ 
+ config SIGNALFD
+ 	bool "Enable signalfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the signalfd() system call that allows to receive signals
+@@ -1395,7 +1390,6 @@ config SIGNALFD
+ 
+ config TIMERFD
+ 	bool "Enable timerfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the timerfd() system call that allows to receive timer
+@@ -1405,7 +1399,6 @@ config TIMERFD
+ 
+ config EVENTFD
+ 	bool "Enable eventfd() system call" if EXPERT
+-	select ANON_INODES
+ 	default y
+ 	help
+ 	  Enable the eventfd() system call that allows to receive both
+@@ -1516,7 +1509,6 @@ config KALLSYMS_BASE_RELATIVE
+ # syscall, maps, verifier
+ config BPF_SYSCALL
+ 	bool "Enable bpf() system call"
+-	select ANON_INODES
+ 	select BPF
+ 	select IRQ_WORK
+ 	default n
+@@ -1533,7 +1525,6 @@ config BPF_JIT_ALWAYS_ON
+ 
+ config USERFAULTFD
+ 	bool "Enable userfaultfd() system call"
+-	select ANON_INODES
+ 	depends on MMU
+ 	help
+ 	  Enable the userfaultfd() system call that allows to intercept and
+@@ -1600,7 +1591,6 @@ config PERF_EVENTS
+ 	bool "Kernel performance events and counters"
+ 	default y if PROFILING
+ 	depends on HAVE_PERF_EVENTS
+-	select ANON_INODES
+ 	select IRQ_WORK
+ 	select SRCU
+ 	help
 -- 
 2.21.0
 
