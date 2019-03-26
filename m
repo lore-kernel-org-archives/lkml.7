@@ -2,217 +2,122 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F429C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349D3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3348520866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZqlK5KwN"
+	by mail.kernel.org (Postfix) with ESMTP id 0F2A020830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfCZJnJ (ORCPT
+        id S1731190AbfCZJns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:43:09 -0400
-Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:10787
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726248AbfCZJnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:43:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vYoz2NR5FxGxesMwqRYEwbXGwvIn+88o32QCYgOBmmQ=;
- b=ZqlK5KwN6o0YmKGKv7btjqudnbSGxxv9ULAJlaem/ff9aUgKCxUp2I51zP/L9nEB0NlsvX2Kmkc5oyYViBAQI+LbeCnRjnhlJ0z2+HXPg6lSq0Y4YK3PvyIA98yBVkHQpZ+dLLOc4MdMLlHNg97xUbJHEoh1BLFEhEgr2U+d/4g=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB3693.eurprd04.prod.outlook.com (52.134.15.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Tue, 26 Mar 2019 09:43:01 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::ddb1:9613:3e6d:eac5]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::ddb1:9613:3e6d:eac5%3]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
- 09:43:01 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Teo Hall <teo.hall@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Thread-Topic: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Thread-Index: AQHU47hNNps50UbnM0mW6a12KOqBSg==
-Date:   Tue, 26 Mar 2019 09:43:01 +0000
-Message-ID: <20190326094239.5910-3-daniel.baluta@nxp.com>
-References: <20190326094239.5910-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190326094239.5910-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0235.eurprd07.prod.outlook.com
- (2603:10a6:802:58::38) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d20061b9-fbaf-4785-a4cb-08d6b1cf6fe8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB3693;
-x-ms-traffictypediagnostic: VI1PR0402MB3693:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0402MB369377078F3BA146B8D43C66F95F0@VI1PR0402MB3693.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09888BC01D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(366004)(396003)(346002)(39860400002)(136003)(199004)(189003)(81166006)(6506007)(4326008)(1730700003)(25786009)(81156014)(966005)(66066001)(102836004)(76176011)(86362001)(5660300002)(2351001)(105586002)(1076003)(478600001)(8676002)(6512007)(14454004)(3846002)(99286004)(52116002)(6116002)(68736007)(50226002)(106356001)(6306002)(8936002)(36756003)(256004)(26005)(53936002)(5640700003)(44832011)(97736004)(7736002)(386003)(6436002)(2501003)(446003)(316002)(2616005)(6486002)(54906003)(476003)(6916009)(486006)(11346002)(71200400001)(305945005)(186003)(71190400001)(2906002)(32563001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3693;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FWOnUyOfi8cvTGRAiWmD8smN/dTGmAw6Hzdc2MQZ7fbcKP/kcl6vPgr7uoQJDXF8Ce1v5hq6UhSu4wQqgPWoVDtrVmERKkCPK/fcvZIPv+OwuQW7mXh+ZaF7erG8+YsHQj2Wk12yjBL/7Wygo5xdMUxWkcruCXRz0ivVLmnXvtXugO92wjKRF8jIfLc/lPlu6xew978FCaoOEYw7XWaK7Cxvwcp7wz/lmfwlr7weR45rS+LQwT/qB8sKNX634Ezb7QRNrxP9yuw0RRApKL7nqVn18FbXIcJE5OOIS8ENqjWt6HK/Bm3Trlf136HJBC/n855GtxKW6to+79zCGJiJpSLEg1sIQb2g2LQ+bu3Jp4WgSpyapjjh1xoS7NcuQGhHg3XIhoB7uGdPAz+Ybmoyiii6K+BtHkEOEmqa7xkHpRA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 Mar 2019 05:43:48 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:48909 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZJns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:43:48 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6E90D30000CE8;
+        Tue, 26 Mar 2019 10:43:45 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 43E411D601; Tue, 26 Mar 2019 10:43:45 +0100 (CET)
+Date:   Tue, 26 Mar 2019 10:43:45 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v12 01/11] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20190326094345.v7l7xjvfs2scbvbv@wunner.de>
+References: <cover.1553494625.git.vilhelm.gray@gmail.com>
+ <9afc30a574ce3e6a86b51dd522146a1d2156dedd.1553494625.git.vilhelm.gray@gmail.com>
+ <20190325093854.jzkkwaksxi7zvtrg@wunner.de>
+ <20190326031422.GB3356@icarus>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d20061b9-fbaf-4785-a4cb-08d6b1cf6fe8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 09:43:01.6250
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3693
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326031422.GB3356@icarus>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8QXP contains a total of 4 EDMA controllers of which
-two are primarily for audio components and the other two
-are for non-audio periperhals.
+On Tue, Mar 26, 2019 at 12:14:22PM +0900, William Breathitt Gray wrote:
+> On Mon, Mar 25, 2019 at 10:38:54AM +0100, Lukas Wunner wrote:
+> > On Mon, Mar 25, 2019 at 03:22:23PM +0900, William Breathitt Gray wrote:
+> > > +/**
+> > > + * find_next_clump8 - find next 8-bit clump with set bits in a memory region
+> > > + * @clump: location to store copy of found clump
+> > > + * @addr: address to base the search on
+> > > + * @offset: bit offset at which to start searching
+> > > + * @size: bitmap size in number of bits
+> > > + *
+> > > + * Returns the bit offset for the next set clump; the found clump value is
+> > > + * copied to the location pointed by @clump. If no bits are set, returns @size.
+> > > + */
+> > > +unsigned int find_next_clump8(unsigned long *const clump,
+> > > +			      const unsigned long *const addr,
+> > > +			      unsigned int offset, const unsigned int size)
+> > > +{
+> > > +	for (; offset < size; offset += 8) {
+> > > +		*clump = bitmap_get_value8(addr, size, offset);
+> > > +		if (!*clump)
+> > > +			continue;
+> > > +
+> > > +		return offset;
+> > > +	}
+> > > +
+> > > +	return size;
+> > > +}
+> > > +EXPORT_SYMBOL(find_next_clump8);
+> > 
+> > Just use find_first_bit() / find_next_bit() to use optimized arch-specific
+> > bitops instead of open-coding the iteration over the bitmap.
+> > 
+> > See max3191x_get_multiple() for an example.
+> 
+> Is this the sort of implementation you had in mind:
+> 
+>         offset = find_next_bit(addr, size, offset);
+>         if (offset == size)
+>                 return size;
+> 
+>         offset -= offset % 8;
+>         *clump = bitmap_get_value8(addr, size, offset);
+> 
+>         return offset;
 
-This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+Almost.  I'd use round_down() instead of "offset -= offset % 8".
+Then it's just a single cheap logical and operation at runtime.
 
-EDMA0 contains channels for:
-	* ASRC0
-	* ESAI0
-	* SPDIF0
-	* SAI0, SAI1, SAI2, SAI3
+I'd try to avoid copying around the clump value and use a pointer
+to u8 instead.
 
-EDMA1 contains channels for:
-	* ASRC1
-	* SAI4, SAI5
+I don't understand the calculations in bitmap_get_value8() at all.
+Why is it so complicated, does it allow passing in a start value
+that's not a multiple of 8?  Do you really need that?  I imagine
+a simplification is possible if that assumption can be made (and
+is spelled out in the kerneldoc).
 
-See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
 
-This patch is based on the dtsi file initially submitted by
-Teo Hall in i.MX NXP internal tree.
+> Should the offset and size parameters be redefined as unsigned long to
+> match the find_first_bit/find_next_bit function parameters?
 
-[1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+Yes, probably.  It's just the CPU's native length anyway.
 
-Cc: Teo Hall <teo.hall@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 0cb939861a60..9e959deb2499 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -182,6 +182,78 @@
- 			#clock-cells =3D <1>;
- 		};
-=20
-+		edma0: dma-controller@591f0000 {
-+			compatible =3D "fsl,imx8qm-edma";
-+			reg =3D <0x59200000 0x10000>,   /* asrc0 pair A input req */
-+				<0x59210000 0x10000>, /* asrc0 pair B input req */
-+				<0x59220000 0x10000>, /* asrc0 pair C input req */
-+				<0x59230000 0x10000>, /* asrc0 pair A output req */
-+				<0x59240000 0x10000>, /* asrc0 pair B output req */
-+				<0x59250000 0x10000>, /* asrc0 pair C output req */
-+				<0x59260000 0x10000>, /* esai0 rx */
-+				<0x59270000 0x10000>, /* esai0 tx */
-+				<0x59280000 0x10000>, /* spdif0 rx */
-+				<0x59290000 0x10000>, /* spdif0 tx */
-+				<0x592c0000 0x10000>, /* sai0 rx */
-+				<0x592d0000 0x10000>, /* sai0 tx */
-+				<0x592e0000 0x10000>, /* sai1 rx */
-+				<0x592f0000 0x10000>, /* sai1 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <14>;
-+			interrupts =3D <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,    /* asrc 0 */
-+					<GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>, /* esai0 */
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-+					<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-names =3D "edma0-chan0-rx", "edma0-chan1-rx", /* asrc0 */
-+					"edma0-chan2-rx", "edma0-chan3-tx",
-+					"edma0-chan4-tx", "edma0-chan5-tx",
-+					"edma0-chan6-rx", "edma0-chan7-tx",   /* esai0 */
-+					"edma0-chan8-rx", "edma0-chan9-tx",   /* spdif0 */
-+					"edma0-chan12-rx", "edma0-chan13-tx", /* sai0 */
-+					"edma0-chan14-rx", "edma0-chan15-tx", /* sai1 */
-+		};
-+
-+		edma1: dma-controller@599F0000 {
-+			compatible =3D "fsl,imx8qm-edma";
-+			reg =3D <0x0 0x59A00000 0x0 0x10000>, /* asrc1 */
-+				<0x0 0x59A10000 0x0 0x10000>,
-+				<0x0 0x59A20000 0x0 0x10000>,
-+				<0x0 0x59A30000 0x0 0x10000>,
-+				<0x0 0x59A40000 0x0 0x10000>,
-+				<0x0 0x59A50000 0x0 0x10000>,
-+				<0x0 0x59A80000 0x0 0x10000>, /* sai4 rx */
-+				<0x0 0x59A90000 0x0 0x10000>, /* sai4 tx */
-+				<0x0 0x59AA0000 0x0 0x10000>; /* sai5 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <9>;
-+			interrupts =3D <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>, /* asrc 1 */
-+					<GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 387 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>, /* sai4 */
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>; /* sai5 */
-+			interrupt-names =3D "edma1-chan0-rx", "edma1-chan1-rx", /* asrc1 */
-+					"edma1-chan2-rx", "edma1-chan3-tx",
-+					"edma1-chan4-tx", "edma1-chan5-tx",
-+					"edma1-chan8-rx", "edma1-chan9-tx", /* sai4 */
-+					"edma1-chan10-tx"; /* sai5 */
-+		};
-+
- 		adma_lpuart0: serial@5a060000 {
- 			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg =3D <0x5a060000 0x1000>;
---=20
-2.17.1
-
+Lukas
