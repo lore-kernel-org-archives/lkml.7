@@ -2,108 +2,113 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC46FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA62DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8226A20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEE320857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:44:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gwEU1KR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbfCZInw convert rfc822-to-8bit (ORCPT
+        id S1731303AbfCZIoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:43:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:30394 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730795AbfCZInv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:43:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 01:43:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="143872030"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Mar 2019 01:43:49 -0700
-Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 26 Mar 2019 01:43:48 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 26 Mar 2019 01:43:48 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.57]) with mapi id 14.03.0415.000;
- Tue, 26 Mar 2019 16:43:46 +0800
-From:   "He, Bo" <bo.he@intel.com>
-To:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Zhang, Jun" <jun.zhang@intel.com>,
-        "Xiao, Jin" <jin.xiao@intel.com>,
-        "Bai, Jie A" <jie.a.bai@intel.com>
-Subject: RE: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
- softirq and interrupt
-Thread-Topic: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
- softirq and interrupt
-Thread-Index: AQHU4KqYbVRqZb7atkmxHemt0KStl6YXzqyAgABueYCAA8MXgIABnYkA
-Date:   Tue, 26 Mar 2019 08:43:45 +0000
-Message-ID: <CD6925E8781EFD4D8E11882D20FC406D52A6526B@SHSMSX104.ccr.corp.intel.com>
-References: <20190322111210.465931067@linuxfoundation.org>
- <20190322111220.102008032@linuxfoundation.org>
- <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
- <20190323063315.GB31361@kroah.com> <20190325160017.GD4102@linux.ibm.com>
-In-Reply-To: <20190325160017.GD4102@linux.ibm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODMxZTY5NzMtYmRlYy00YTg1LWFlYTQtYWUyYjdjMWFlZDczIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYlIrWk5HXC9NTExmNWw3U25OWmRHVUFVa1Y1K0w1cXdNOGtzV25ub0FZeG1KY1VrSFRWYkpaWjFrSU43N09ESHEifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 26 Mar 2019 04:44:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38699 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfCZIoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:44:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id q14so9980641edr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 01:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fx4bc/xeU2icy5q3tRcX7R5j5vyIwYOf71aPeuGzsbk=;
+        b=gwEU1KR3zxtiCylhKYed0y7glzpT6oBSf5JMV7gKpvSIwOeGslL+XooNG6ZnEyZDYm
+         HLUOslro9GUEiPPmD8g1WEp2ryXy9AEUpYaohqTDy34tZXpSqZTxWSkqaHVMnMmrJYIa
+         5EYbOP5oLyqyRfki6+LZHCPK2rDoGyCVuZUZVnG6P6RKPKA2GTUpYx4cdi3Q3DTk1icZ
+         SHDtEv8sHOsPpCxmwcxsw2kvba+z3KINxWrkWqZMHXlifSz8xD5dIGRqvm4k4CXRJdV0
+         XK1cL+UjGVmBn5j5P/OMYbziTj5TateRBW3XPYqzpN6demf3g5IWYUDd8IK5jCY37qnt
+         jB9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fx4bc/xeU2icy5q3tRcX7R5j5vyIwYOf71aPeuGzsbk=;
+        b=blYlThZoS1zKBKc0kdzT12MT9UFSvPETzqOJTytkzooapqB/sqAUf+Diw+PC5pxbl2
+         g6LPy17yEVAknEzL7w06XMCOpQcWHrQ9VVKviIYj7Xlac9ioYp3qg/tP66Y7jbkZVEsg
+         3GXg6hqsiaaFBLK/9CVPFKrwZMqm7j0R3wbi+076UqF/G/XIL6vMrhWzPLT4eRwopIvI
+         sI/Rdvdv3P9LQ5nGZNzfx7btTUaZAUIZku1zgtCkOW+nuR6P2XYMQmROqOk4cdOYRTiv
+         4+cxPeS9vxKVRgpz26qrUZ4ie2sDdPBqR4hLT8VCpnmxNaLcMxlT983bV20KMGAuyDYc
+         XBDQ==
+X-Gm-Message-State: APjAAAVVhEK7N4GCmggn1A5BuQYdTFXZsq9qnnATL9GjBLvbpApb7DCR
+        0Xq291wpr4DTgjhehLgZ4CQcQYc6jI/QcjYVjS4Fwl+YIITZoQ==
+X-Google-Smtp-Source: APXvYqyGVfLO8IDDKcuLbTRKF4EtuCmDmbW+nv0Lr7fhNsh5xW2c4ofCD5NvzPVms8Z8NNhvxTSRgMO4g/zqfJ0oumY=
+X-Received: by 2002:a17:906:1942:: with SMTP id b2mr16877237eje.5.1553589852412;
+ Tue, 26 Mar 2019 01:44:12 -0700 (PDT)
 MIME-Version: 1.0
+References: <0000000000000e2b4e057c80822f@google.com> <000000000000bc42080584db9121@google.com>
+In-Reply-To: <000000000000bc42080584db9121@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 26 Mar 2019 09:43:59 +0100
+Message-ID: <CACT4Y+ZMfkB5kHnF5erCHtuEENLVdWGJtEME2-nx0_1+2ywe0A@mail.gmail.com>
+Subject: Re: general protection fault in freeary
+To:     syzbot <syzbot+9d8b6fa6ee7636f350c1@syzkaller.appspotmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, linux@dominikbrodowski.net,
+        manfred <manfred@colorfullife.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Paul:
-	I have tried on my PC and not hit any hang issue with RCU torture test for one hour, the configurations are like:
-OS: ubuntu 16.04
-kenrel: 3.18.136 + 3.18 rcu patch
-CPU:  Intel(R) Xeon(R) CPU E3-1225 V2 @ 3.20GHz
+On Sun, Mar 24, 2019 at 7:51 PM syzbot
+<syzbot+9d8b6fa6ee7636f350c1@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
+>
+> commit 86f690e8bfd124c38940e7ad58875ef383003348
+> Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date:   Thu Mar 29 12:15:13 2018 +0000
+>
+>      Merge tag 'stm-intel_th-for-greg-20180329' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/ash/stm into char-misc-next
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17d653a3200000
+> start commit:   74c4a24d Add linux-next specific files for 20181207
+> git tree:       linux-next
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=143653a3200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=103653a3200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6e9413388bf37bed
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9d8b6fa6ee7636f350c1
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e19da3400000
+>
+> Reported-by: syzbot+9d8b6fa6ee7636f350c1@syzkaller.appspotmail.com
+> Fixes: 86f690e8bfd1 ("Merge tag 'stm-intel_th-for-greg-20180329' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/ash/stm into char-misc-next")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
------Original Message-----
-From: Paul E. McKenney <paulmck@linux.ibm.com> 
-Sent: Tuesday, March 26, 2019 12:00 AM
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: He, Bo <bo.he@intel.com>; linux-kernel@vger.kernel.org; stable@vger.kernel.org; Zhang, Jun <jun.zhang@intel.com>; Xiao, Jin <jin.xiao@intel.com>; Bai, Jie A <jie.a.bai@intel.com>
-Subject: Re: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from softirq and interrupt
+Looking at the crash patterns in the bisection log it seems that this
+is a stack overflow/corruption in wb_workfn. There are other reports
+that suggest that simply causing OOM randomly corrupts kernel memory.
+The semget is only an easy way to cause OOMs.
+But since we now sandbox tests processes with sem sysctl and friends,
+I think we can close this report.
 
-On Sat, Mar 23, 2019 at 07:33:15AM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Mar 22, 2019 at 04:00:17PM +0000, He, Bo wrote:
-> > Hi, Greg:
-> > 	Can you hold on the 3.18-stable branch, it seems there are some issue, please see the comments from Paul:
-> > 
-> > Comments from Paul:
-> > I subjected all of the others to light rcutorture testing, which 
-> > they passed.  This v3.18 patch hung, however.  Trying it again with 
-> > stock
-> > v3.18 got the same hang, so I believe we can exonerate the patch and give it a good firm "maybe" on 3.18.
-> > 
-> > Worth paying special attention to further test results from 3.18.x, though!
-> 
-> Ok, I've dropped this from the 3.18.y queue now, thanks.
+#syz invalid
 
-Bo, if you know of a "y" for 3.18.y that would likely pass rcutorture testing, please let me know.
-
-							Thanx, Paul
-
+Though the kernel memory corruption on OOMs is still there.
