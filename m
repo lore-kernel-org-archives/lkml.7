@@ -2,123 +2,121 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124B7C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65305C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D039320863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392BD20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbfCZO1V (ORCPT
+        id S1731794AbfCZO2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:27:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:17908 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZO1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:27:21 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 07:27:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="144036064"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Mar 2019 07:27:19 -0700
-Date:   Tue, 26 Mar 2019 07:27:19 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Huang, Kai" <kai.huang@intel.com>
-Cc:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Svahn, Kai" <kai.svahn@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v19,RESEND 08/27] x86/cpu/intel: Detect SGX support and
- update caps appropriately
-Message-ID: <20190326142719.GC3757@linux.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-9-jarkko.sakkinen@linux.intel.com>
- <1553602654.17255.15.camel@intel.com>
+        Tue, 26 Mar 2019 10:28:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62979 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726111AbfCZO2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 10:28:18 -0400
+X-UUID: 83f15606239e4179a4e38f24af20ba58-20190326
+X-UUID: 83f15606239e4179a4e38f24af20ba58-20190326
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <ryder.lee@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 589441082; Tue, 26 Mar 2019 22:28:13 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 26 Mar 2019 22:28:11 +0800
+Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 26 Mar 2019 22:28:11 +0800
+From:   Ryder Lee <ryder.lee@mediatek.com>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>
+CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
+        Nelson Chang <nelson.chang@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>, Kai Lin <kai.lin@mediatek.com>,
+        Rorscha Yang <rorscha.yang@mediatek.com>,
+        Kyle Lee <kyle.lee@mediatek.com>,
+        Miller Shen <miller.shen@mediatek.com>,
+        Haipin Liang <haipin.liang@mediatek.com>,
+        <linux-wireless@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 0/4] Add support for MediaTek MT7615 wireless chipsets
+Date:   Tue, 26 Mar 2019 22:28:06 +0800
+Message-ID: <cover.1553607739.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553602654.17255.15.camel@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="y"
+Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:17:40AM -0700, Huang, Kai wrote:
-> On Wed, 2019-03-20 at 18:21 +0200, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Similar to other large Intel features such as VMX and TXT, SGX must be
-> > explicitly enabled in IA32_FEATURE_CONTROL MSR to be truly usable.
-> > Clear all SGX related capabilities if SGX is not fully enabled in
-> > IA32_FEATURE_CONTROL or if the SGX1 instruction set isn't supported
-> > (impossible on bare metal, theoretically possible in a VM if the VMM is
-> > doing something weird).
-> > 
-> > Like SGX itself, SGX Launch Control must be explicitly enabled via a
-> > flag in IA32_FEATURE_CONTROL. Clear the SGX_LC capability if Launch
-> > Control is not fully enabled (or obviously if SGX itself is disabled).
-> > 
-> > Note that clearing X86_FEATURE_SGX_LC creates a bit of a conundrum
-> > regarding the SGXLEPUBKEYHASH MSRs, as it may be desirable to read the
-> > MSRs even if they are not writable, e.g. to query the configured key,
-> > but clearing the capability leaves no breadcrum for discerning whether
-> > or not the MSRs exist.  But, such usage will be rare (KVM is the only
-> > known case at this time) and not performance critical, so it's not
-> > unreasonable to require the use of rdmsr_safe().  Clearing the cap bit
-> > eliminates the need for an additional flag to track whether or not
-> > Launch Control is truly enabled, which is what we care about the vast
-> > majority of the time.
-> 
-> [Resend. Somehow my last reply doesn't show up in my mailbox so not sure whether I sent it
-> successfully or not. Sorry if you receving duplicated mails.]
-> 
-> However this is not consistent with HW behavior. If LC feature flag is not present, then MSRs should
-> have hash of Intel's key, which is not always the case here, when you expose SGX to KVM. Enclave in
-> KVM guest will get unexpected EINIT error when launing Intel enclave, if on HW MSRs are configured
-> to 3rd party value but locked to readonly.
+This adds support for MediaTek MT7615E 4x4 802.11ac PCIe-based chipsets.
 
-Intel doesn't have a singular key.  The internal reset value of the LE
-pubkey hash MSRs is micro-architectural, i.e. can change without warning
-on any given processor.  All current processors with SGX support may use
-the same reset value, but it's not something that customers should/can
-rely on.
+In the legacy tx arch, we move and store the whole skb content to the
+on-device memory when we send packets via high speed interface. (i.e. PCIe)
 
-That being said, this in no way impacts KVM's ability to virtualize SGX,
-e.g. KVM can directly do CPUID and {RD,WR}MSR to probe the capabilities
-of the platform as needed.
+However, MT7615 and the following generation use a new tx arch called
+“cut-through”, which only passes the physical address to the hardware,
+and the packet engine will fetch the packets before transmission.
 
-> My opition is we already have enough cases that violates HW behavior in
-> SGX virtualization, let's not have one more.
+It saves on-chip memory for high throughput devices, and the token mechanism
+is used to manage the release of skb under this arch.
 
-What are the other cases?
+Detailed hardware information for this chip could be found on 
+https://wikidevi.com/wiki/MediaTek_MT7615
 
-> Besides, why do we "need an additional flag to track whether or not
-> Launch Control is truly enabled"? Doesn't driver only need to know whether
-> MSRs are writable?
+Ryder Lee (4):
+  mt76: add mac80211 driver for MT7615 PCIe-based chipsets
+  mt76: add unlikely() for dma_mapping_error() check
+  mt76: use macro for sn and seq_ctrl conversion
+  MAINTAINERS : update entry for mt76 wireless driver
 
-Yes, and that's why we're overloading X86_FEATURE_SGX_LC to be set if
-and only if SGX_LC is supported *and* enabled, e.g. so that the kernel
-can simply check X86_FEATURE_SGX_LC without having to also probe the MSRs.
+ MAINTAINERS                                        |    2 +
+ drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
+ drivers/net/wireless/mediatek/mt76/Makefile        |    1 +
+ drivers/net/wireless/mediatek/mt76/agg-rx.c        |    2 +-
+ drivers/net/wireless/mediatek/mt76/dma.c           |    8 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c    |    2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c   |    2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/Kconfig  |    7 +
+ drivers/net/wireless/mediatek/mt76/mt7615/Makefile |    5 +
+ drivers/net/wireless/mediatek/mt76/mt7615/dma.c    |  204 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |   97 ++
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h |   18 +
+ drivers/net/wireless/mediatek/mt76/mt7615/init.c   |  220 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c    |  760 +++++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.h    |  300 ++++
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c   |  498 ++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 1656 ++++++++++++++++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.h    |  520 ++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  195 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/pci.c    |  149 ++
+ drivers/net/wireless/mediatek/mt76/mt7615/regs.h   |  196 +++
+ drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    2 +-
+ 22 files changed, 4837 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Makefile
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/dma.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/init.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/main.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/pci.c
+ create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/regs.h
+
+-- 
+1.9.1
+
