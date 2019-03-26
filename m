@@ -2,106 +2,86 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0960C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8090F20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B068720823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553624331;
+	bh=Nfnzd4sdx9vZQ/RcUhXBnxvrFrkAtirD6220aVnMIUU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ofx+ZD2A5/uYrEuZe8MRt1jPvOrlV7yiteNBEw5oyIF3XMktqlwuQ5R9yHDWEV+wT
+	 asP5QvF2AW1Or24VLInPc+hbpp4SZWpoawJcpl8oDEYeRRttRaGMRxa+4hI4viTL9L
+	 AkgyyjvAk+3zWPueo+eNb4NXt2hobgpGd7DGzgRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732522AbfCZSRY (ORCPT
+        id S1732482AbfCZSSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:17:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58692 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732424AbfCZSRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:17:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1194EB02E;
-        Tue, 26 Mar 2019 18:17:21 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 75D4CE1404; Tue, 26 Mar 2019 19:17:20 +0100 (CET)
-Date:   Tue, 26 Mar 2019 19:17:20 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 08/22] ethtool: support for netlink
- notifications
-Message-ID: <20190326181720.GO26076@unicorn.suse.cz>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <3578e5f334acf11b84e75d0ee41c072340a7b085.1553532199.git.mkubecek@suse.cz>
- <20190326163400.GC4958@nanopsycho.orion>
+        Tue, 26 Mar 2019 14:18:50 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45058 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731904AbfCZSSu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 14:18:50 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m16so11624417edd.12;
+        Tue, 26 Mar 2019 11:18:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bsow1X4q7i7i6LGYg9TTZCc77skn5gkjBjb0nG6qTh0=;
+        b=S06fW6+Vc68JhbO2O8sGjQBcpsij7sqKANemcaZDdLfnQVZUc7AlJWBfbK1t9VJb9u
+         m2LckdhphjxSJ9p876wRnhR0k6YLY/coGtOVkRploKS3YSuhcp+trl0WDrLBM7aiV6V4
+         QVzjaQxOQZ07/+Z/Y2SbeIib9LYJu6paYfv8NIgDRUiNH6Cy7pQgVIzrNK1D+kH56wkL
+         PJEWapuQKbPaKXRIrXnY4pXePDGYfN0YPqda/p1iDSxjXaCd3yw4Du8lWThVFR3VMeVl
+         KeZCWlxF0WZQjPKsC1aTJ2qS7vGhe1yDrMFpr3J18a4aylo7kGX2N2SnorLbxsbps60x
+         zjFQ==
+X-Gm-Message-State: APjAAAXd/mBiHpzKgnmb7osOqIX0K4b9UWc5CUet3BkG3bBnJywLD6gl
+        CLLDXLKdzjf34bo3KXTULdIKco2EAdloqOwn8NY=
+X-Google-Smtp-Source: APXvYqzVw5QthfJaMGAusoK83QXzFzkNhkkZDC34WiWPY+JZSlhTmxVNiQqRd1pruZ9OiKZanE519ABh2LV+AWr4QoU=
+X-Received: by 2002:a50:89fa:: with SMTP id h55mr21083002edh.296.1553624328651;
+ Tue, 26 Mar 2019 11:18:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326163400.GC4958@nanopsycho.orion>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
+ <43f15c3d7b5e0fd7e3f257d4c0736200f6198971.1551160674.git.len.brown@intel.com> <20190307144552.GC19434@e105550-lin.cambridge.arm.com>
+In-Reply-To: <20190307144552.GC19434@e105550-lin.cambridge.arm.com>
+From:   Len Brown <lenb@kernel.org>
+Date:   Tue, 26 Mar 2019 14:18:37 -0400
+Message-ID: <CAJvTdKmmYSvwqbo35+ON8qauRTxAt5+nOkriFwcRVHkTmPtPcQ@mail.gmail.com>
+Subject: Re: [PATCH 05/14] cpu topology: Export die_id
+To:     Morten Rasmussen <morten.rasmussen@arm.com>
+Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
+        Len Brown <len.brown@intel.com>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:34:00PM +0100, Jiri Pirko wrote:
-> Mon, Mar 25, 2019 at 06:08:18PM CET, mkubecek@suse.cz wrote:
-> >+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
-> >+		    unsigned int cmd, u32 req_mask, const void *data)
-> >+{
-> >+	if (unlikely(!ethnl_ok))
-> 
-> Why do you need this?
+On Thu, Mar 7, 2019 at 9:45 AM Morten Rasmussen
+<morten.rasmussen@arm.com> wrote:
 
-If genetlink family registration fails, ethtool_notify() can be still
-called from other code (e.g. the ethtool ioctl interface). In such case,
-better bail out right away than fail somewhere later (probably after
-preparing the message which can't be sent anyway).
+> Can we add the details about die_id further down in cputopology.txt as
+> well?
 
-> >+		return;
-> >+	ASSERT_RTNL();
-> >+
-> >+	if (likely(cmd < ARRAY_SIZE(ethnl_notify_handlers) &&
-> >+		   ethnl_notify_handlers[cmd]))
-> >+		ethnl_notify_handlers[cmd](dev, extack, cmd, req_mask, data);
-> >+	else
-> >+		WARN_ONCE(1, "notification %u not implemented (dev=%s, req_mask=0x%x)\n",
-> >+			  cmd, netdev_name(dev), req_mask);
-> >+}
-> >+EXPORT_SYMBOL(ethtool_notify);
-> 
-> Please be consistent with prefixes. Rest of the code (most of it) has
-> prefix "ethnl".
+Done.
 
-The reason why I used ethtool_ prefix here was that this function is an
-entry point which can be called from anywhere and other code doesn't
-care if we are using netlink or something else. But as any caller would
-need to include <linux/ethtool_netlink.h> anyway to get the constants
-for cmd and req_mask, there is no point hiding the fact. I'll rename it
-to ethnl_notify().
+> > diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+> > --- a/arch/x86/include/asm/topology.h
+> > +++ b/arch/x86/include/asm/topology.h
+...
+> > +#define topology_die_id(cpu)                 (cpu_data(cpu).cpu_die_id)
+> >  #define topology_core_id(cpu)                        (cpu_data(cpu).cpu_core_id)
 
-> >diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-> >index b8a6cd3dc3e3..5f2299548915 100644
-> >--- a/net/ethtool/netlink.h
-> >+++ b/net/ethtool/netlink.h
-> >@@ -11,6 +11,8 @@
-> > #define ETHNL_SET_ERRMSG(info, msg) \
-> > 	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
-> > 
-> >+extern u32 ethnl_bcast_seq;
-> 
-> Why do you need to have this in header? Second, it is not used by
-> anything. Please don't introduce variables that are not used. Introduce
-> them only in patch where you use it.
+> The above is x86 specific and seems to fit better with the next patch in
+> the series.
 
-It's the same as with ethtool_genl_family. I'll make it static as well
-until it's used in some other file.
+No problem, I split that x86 line into a separate x86-specific patch.
 
-Michal
+thanks Morten,
+
+Len Brown, Intel Open Source Technology Center
