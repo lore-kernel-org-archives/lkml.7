@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A5AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2671CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601EF20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC02F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582296;
-	bh=5e8+6GoShf4X7zAQc83nvtQcCfJqsmWxkyfwWNVDOVM=;
+	s=default; t=1553582299;
+	bh=/LDEq/hv2vF6nHM7XhayFy+wwI4EyZaZv1Z0PyFwcBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zWPSk2Or4Y4mjGoV1rvIfO5zaJnDVGZxMgS4HVkZfeFQQrBpirTh8TlWN3Q9RLrtO
-	 sBzxarEPs1TFMrhpY9rFXoADEU44kzV7toyWKDBzmtJoyRE+coXpm2k2MfgyQZsrXn
-	 JckWS/ohTyU4QuTFo9lCQlLKclLyIAnI/a/XLauU=
+	b=Bwr0qU1fS5tWbazn3+0U4fRGKVf+X4OtkbgL2M+JxZma7o7rd+2ClK52HVGcUk0ii
+	 aQYLsdqrd4PK9Ck1oo5FFdBiqhDnL2M0DwP1Mjly6Nmodjnd77uszbLg7wFYnZikCz
+	 TQBJB+7wMnfXRqlAm9JMn3EZ7iMh8hz6UBub1CcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfCZGiO (ORCPT
+        id S1732510AbfCZGiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbfCZGiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:11 -0400
+        id S1730133AbfCZGiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:14 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCFC020863;
-        Tue, 26 Mar 2019 06:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476942070B;
+        Tue, 26 Mar 2019 06:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582290;
-        bh=5e8+6GoShf4X7zAQc83nvtQcCfJqsmWxkyfwWNVDOVM=;
+        s=default; t=1553582293;
+        bh=/LDEq/hv2vF6nHM7XhayFy+wwI4EyZaZv1Z0PyFwcBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQ3SJCIBFodmvZ6Pude5gCrF9rx2af7WKQMldXgXcMvOz4od0Fm2SC9LavjABxzUf
-         05JlVO2Jfc6f0HRU258WxfIMnY3qE4GkHbfVVsW8Il/jx0CyLcQq+pWGJxk8XbsN5x
-         iQNxwGxm6lOO9ra9B9uCEXvWmxkz0G+20l6TFgOc=
+        b=cjGHNcux/Z2RYTd0uXpZsiOIV8DCeMbPwOvLl2D7IjAbIGmBhNZbvYsqCt9DzS+y3
+         99ocw/NL+DPIvYJguA4jqnB2Ph98f00G+kr/nOOgnFeR4NBG4BzOg++VvCNgP3lkX8
+         ADmHJNTC5qeVxeRyvW+w1pmkV7SMuVv/s2P/TuIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.0 11/52] iommu/iova: Fix tracking of recently failed iova address
-Date:   Tue, 26 Mar 2019 15:29:58 +0900
-Message-Id: <20190326042701.509197091@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Jason Dillaman <dillaman@redhat.com>
+Subject: [PATCH 5.0 12/52] libceph: wait for latest osdmap in ceph_monc_blacklist_add()
+Date:   Tue, 26 Mar 2019 15:29:59 +0900
+Message-Id: <20190326042701.549507324@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -65,49 +64,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Robert Richter <rrichter@marvell.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 80ef4464d5e27408685e609d389663aad46644b9 upstream.
+commit bb229bbb3bf63d23128e851a1f3b85c083178fa1 upstream.
 
-If a 32 bit allocation request is too big to possibly succeed, it
-early exits with a failure and then should never update max32_alloc_
-size. This patch fixes current code, now the size is only updated if
-the slow path failed while walking the tree. Without the fix the
-allocation may enter the slow path again even if there was a failure
-before of a request with the same or a smaller size.
+Because map updates are distributed lazily, an OSD may not know about
+the new blacklist for quite some time after "osd blacklist add" command
+is completed.  This makes it possible for a blacklisted but still alive
+client to overwrite a post-blacklist update, resulting in data
+corruption.
 
-Cc: <stable@vger.kernel.org> # 4.20+
-Fixes: bee60e94a1e2 ("iommu/iova: Optimise attempts to allocate iova from 32bit address range")
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Waiting for latest osdmap in ceph_monc_blacklist_add() and thus using
+the post-blacklist epoch for all post-blacklist requests ensures that
+all such requests "wait" for the blacklist to come into force on their
+respective OSDs.
+
+Cc: stable@vger.kernel.org
+Fixes: 6305a3b41515 ("libceph: support for blacklisting clients")
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jason Dillaman <dillaman@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/iova.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/linux/ceph/libceph.h |    2 ++
+ net/ceph/ceph_common.c       |   18 +++++++++++++++++-
+ net/ceph/mon_client.c        |    9 +++++++++
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -207,8 +207,10 @@ static int __alloc_and_insert_iova_range
- 		curr_iova = rb_entry(curr, struct iova, node);
- 	} while (curr && new_pfn <= curr_iova->pfn_hi);
+--- a/include/linux/ceph/libceph.h
++++ b/include/linux/ceph/libceph.h
+@@ -294,6 +294,8 @@ extern void ceph_destroy_client(struct c
+ extern int __ceph_open_session(struct ceph_client *client,
+ 			       unsigned long started);
+ extern int ceph_open_session(struct ceph_client *client);
++int ceph_wait_for_latest_osdmap(struct ceph_client *client,
++				unsigned long timeout);
  
--	if (limit_pfn < size || new_pfn < iovad->start_pfn)
-+	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
-+		iovad->max32_alloc_size = size;
- 		goto iova32_full;
-+	}
- 
- 	/* pfn_lo will point to size aligned address if size_aligned is set */
- 	new->pfn_lo = new_pfn;
-@@ -222,7 +224,6 @@ static int __alloc_and_insert_iova_range
- 	return 0;
- 
- iova32_full:
--	iovad->max32_alloc_size = size;
- 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
- 	return -ENOMEM;
+ /* pagevec.c */
+ extern void ceph_release_page_vector(struct page **pages, int num_pages);
+--- a/net/ceph/ceph_common.c
++++ b/net/ceph/ceph_common.c
+@@ -738,7 +738,6 @@ int __ceph_open_session(struct ceph_clie
  }
+ EXPORT_SYMBOL(__ceph_open_session);
+ 
+-
+ int ceph_open_session(struct ceph_client *client)
+ {
+ 	int ret;
+@@ -754,6 +753,23 @@ int ceph_open_session(struct ceph_client
+ }
+ EXPORT_SYMBOL(ceph_open_session);
+ 
++int ceph_wait_for_latest_osdmap(struct ceph_client *client,
++				unsigned long timeout)
++{
++	u64 newest_epoch;
++	int ret;
++
++	ret = ceph_monc_get_version(&client->monc, "osdmap", &newest_epoch);
++	if (ret)
++		return ret;
++
++	if (client->osdc.osdmap->epoch >= newest_epoch)
++		return 0;
++
++	ceph_osdc_maybe_request_map(&client->osdc);
++	return ceph_monc_wait_osdmap(&client->monc, newest_epoch, timeout);
++}
++EXPORT_SYMBOL(ceph_wait_for_latest_osdmap);
+ 
+ static int __init init_ceph_lib(void)
+ {
+--- a/net/ceph/mon_client.c
++++ b/net/ceph/mon_client.c
+@@ -922,6 +922,15 @@ int ceph_monc_blacklist_add(struct ceph_
+ 	mutex_unlock(&monc->mutex);
+ 
+ 	ret = wait_generic_request(req);
++	if (!ret)
++		/*
++		 * Make sure we have the osdmap that includes the blacklist
++		 * entry.  This is needed to ensure that the OSDs pick up the
++		 * new blacklist before processing any future requests from
++		 * this client.
++		 */
++		ret = ceph_wait_for_latest_osdmap(monc->client, 0);
++
+ out:
+ 	put_generic_request(req);
+ 	return ret;
 
 
