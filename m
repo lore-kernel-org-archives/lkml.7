@@ -2,135 +2,150 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA08C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B447C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF8320823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E1D20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f2wela59"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n5S5Byyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbfCZCWc (ORCPT
+        id S1730982AbfCZCYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:22:32 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39869 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730533AbfCZCWc (ORCPT
+        Mon, 25 Mar 2019 22:24:03 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37376 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730625AbfCZCYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:22:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i17so7347977pfo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 19:22:32 -0700 (PDT)
+        Mon, 25 Mar 2019 22:24:03 -0400
+Received: by mail-it1-f193.google.com with SMTP id u65so8052516itc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 19:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I8HR9DuBJhNaxmVVRl5EY43j4mASUSOtl5OE+nBW5Ds=;
-        b=f2wela59lVLTnNvfKSfNFeUBfgRQQWHnhhkbAGaIxmhgl5NQValU4Wcx8YgeTYELii
-         0FXxNpAeJPkZ+u7OLIOFCx+Fuuy0dnNyTDZFcS6guQZpSf3W8rm9wXEdNoXOk6/oUk98
-         czgED0J56oKIWvGGebkeHHun5vjze+tz3OjqAuZ0kkKOL9l5DsD158mug1+pugVabE8S
-         /OI5bwa3moncNfg/eGF8ofTAo/PEKSp/FWv1R10eAnakKq1QdiJxfed76lFAwYJ2YK+/
-         Wd61JoizghCuDlPRsZ5FRwqvBAJgwKv1392BkqF1QWhwhoR3M1iNpNSjfCGVoerj5QBZ
-         s8/A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nj8RlsG0Gym4DkZxs0NUiHZ6pTdih2yEZQMM2Wc1LQ0=;
+        b=n5S5ByyotLz5AK9aSSibBTTwd7YWmgVATozn9AFvlpJxitMnLSNUb63r0K9qD2kUo2
+         bkbi9LDWQdHEifiXMISKlrtNv0dEAGGrok9i9j6a0wTIeN+KHb12h0hIGlxt+9Ng41Rd
+         m2inNbSlKuqtkkrhCwh3pZ4TSWig7895SGyG2bA69ajUJ4IARJL2MwL3J0ppgD/fR1QL
+         HPOaNtWM+apOKtsXH8zuiERnii5Ms1nA0GzM/W+yPdfA6UX2wmF8pHmJ205vNakSB4WA
+         3sn+2jvIdkns/RT78cZ+w4mOZhkshVAS15pRtTQZ7whOMHF6sDsn1t8OT1lbHkhkiWj+
+         pjjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=I8HR9DuBJhNaxmVVRl5EY43j4mASUSOtl5OE+nBW5Ds=;
-        b=t+G9Qf9T8okbnaPAjpfr2BFAYAOGHe0bdhcFdpWBxrBwCVbQpZaWp8jaIK1d4+Rxfg
-         P5lGk95ESe5sPJhAnMKsj4dWs+vYTYTSmp9yOc09FLx0rzX8OhK+PB28ToFjXbqU7+Lp
-         iPyhP2J/l6rQMI8ptIX8MWk1dEFUgYBKfuK6m8h/vpE95Ra6WJ7YGoRdKtnd0u/tHLbf
-         QDAaxjzPbeWmCr6yl8a0ZDWUxBFUTsUUyMdmR7YbIahi+M1fGr9QdZFDUusPV8Gbk0Qm
-         isxrtQUpwcKYcjdkzPfmAIapnQb+cpEWX/igJz+EyrrEOlJjsiJm9rcl/ziqrQb72KhZ
-         MpsA==
-X-Gm-Message-State: APjAAAX5L+47FQRGjPEYH7MQ0Z7YQ0AhXUc/dYMbjyrh2kTmULTthNyH
-        W6u4t2czxrM0qrFX52OzsHE4Romg6heru0Nq
-X-Google-Smtp-Source: APXvYqxMrnzvIodlWKnYIZ52mKHuMsjndPnaMV0Ag7lvje5+8e0ztu4qEOA2Wmx2SSs4JrywXk++vQ==
-X-Received: by 2002:a62:4d45:: with SMTP id a66mr1350207pfb.250.1553566951637;
-        Mon, 25 Mar 2019 19:22:31 -0700 (PDT)
-Received: from localhost (2001-b011-7001-1270-b809-36ef-31ed-7980.dynamic-ip6.hinet.net. [2001:b011:7001:1270:b809:36ef:31ed:7980])
-        by smtp.gmail.com with ESMTPSA id d69sm14379354pfg.26.2019.03.25.19.22.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 19:22:30 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 19:22:30 -0700 (PDT)
-X-Google-Original-Date: Mon, 25 Mar 2019 19:21:32 PDT (-0700)
-Subject:     Re: [PATCH v2] RISC-V: Always compile mm/init.c with cmodel=medany
-In-Reply-To: <CAAhSdy2-CX729tVuuZzArswpFEC_OeRXhwXtCaiNe53AuzqdTw@mail.gmail.com>
-CC:     Christoph Hellwig <hch@infradead.org>, alankao@andestech.com,
-        Anup Patel <Anup.Patel@wdc.com>, aou@eecs.berkeley.edu,
-        linux-kernel@vger.kernel.org, rppt@linux.ibm.com,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     anup@brainfault.org
-Message-ID: <mhng-8e00a3e3-5a69-4828-b7bb-2bf000199b48@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nj8RlsG0Gym4DkZxs0NUiHZ6pTdih2yEZQMM2Wc1LQ0=;
+        b=Dm70gwcE3Ut+3giXyCaOKNoDLgb4lHyp5qvXw+TQIlxVpUEq7x5dZeNNwBSpK472Ql
+         DIoP7e9T9BRZTWtdI1hnEpRVXaQjxYKezfaVbJD2gKUWcg7aHaNx8IYhhKLSfQC9RUty
+         6chbleXBk2KFK2F0bZwD99vtXCCZM3DFUZwGlJKc9ffNVvimJZGFSCi5oiA27ItGkS3i
+         bFsGBgsIjs59rqfF9cCxcd7mFQf5oGlyS/v2/mmXwKFPGs69D56CqEMtQGAkkXN4JE7J
+         eJMrVmDR9xtk+K68EdSalp92k0LcFA2eAf+duCoul8+RzdQ0AvLrQSMjl2xH6IblEq6P
+         +w2w==
+X-Gm-Message-State: APjAAAWmd0Vfx1zXuFvCHdGP7wm2CECCOHjCComdDfKv2unb3/lulQV9
+        ap669cMy4MxjuboxNjGNxrVtyCPYllZNBfe/54U=
+X-Google-Smtp-Source: APXvYqwwytIy++eB5xhZQWFtmw0Ko79gXY/BNMlbI166p3B+FHjhFkuDaFghA6ACYfZ+PChSNyGbBG+/0ZyaCBTYwPo=
+X-Received: by 2002:a05:660c:606:: with SMTP id i6mr1578070itk.154.1553567042873;
+ Mon, 25 Mar 2019 19:24:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <1553564407-1162-1-git-send-email-laoar.shao@gmail.com>
+ <1553564407-1162-3-git-send-email-laoar.shao@gmail.com> <20190325222105.637f7e23@oasis.local.home>
+In-Reply-To: <20190325222105.637f7e23@oasis.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 26 Mar 2019 10:23:26 +0800
+Message-ID: <CALOAHbDJgT6Uu8PWJKLxwz0wHJB9=YbkBN-KXqaniAEa=Pf=8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] sched/fair: do not expose some tracepoints to user if
+ CONFIG_SCHEDSTATS is not set
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mingo@redhat.com, Peter Zijlstra <peterz@infradead.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        josh@joshtriplett.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        shaoyafang@didiglobal.com, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 00:01:45 PDT (-0700), anup@brainfault.org wrote:
-> On Mon, Mar 25, 2019 at 12:18 PM Christoph Hellwig <hch@infradead.org> wrote:
->>
->> On Mon, Mar 25, 2019 at 01:25:50PM +0800, Alan Kao wrote:
->> > Hi Anup,
->> >
->> > Sorry for being late to the party.  I think one more thing should
->> > move together with setup_vm():
->>
->> Ah, I wonded about that yesterday but wasn't sure.  Maybe notrace
->> is a little cleaner?  Either way we should probably document both
->> the mcmodel and notrace assumptions in source comments for the next
->> person touching this code.
+On Tue, Mar 26, 2019 at 10:21 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> The setup_vm() should be allowed to call other functions within mm/init.c
-> so let's go with file-level notrace (just like how it was done) for
-> kernel/setup.c
+> On Tue, 26 Mar 2019 09:40:06 +0800
+> Yafang Shao <laoar.shao@gmail.com> wrote:
 >
-> I certainly add comments for setup_vm() based on all our findings so far.
+> > The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
+> > be not exposed to user if CONFIG_SCHEDSTATS is not set.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > ---
+> >  include/trace/events/sched.h | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > index 9a4bdfa..4686c7f 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -336,6 +336,7 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+> >                 __entry->pid, __entry->old_pid)
+> >  );
+> >
+> > +#ifdef CONFIG_SCHEDSTATS
+>
+> Instead of doing this #ifdef here, perhaps we should have at the top of the file:
+>
+> #ifdef CONFIG_SCHEDSTATS
+> # define TRACE_EVENT_SCHEDSTAT TRACE_EVENT
+> #else
+> # define TRACE_EVENT_SCHEDSTAT TRACE_EVENT_NOP
+> #endif
+>
+> And then switch the sched stat tracepoints from TRACE_EVENT to
+> use TRACE_EVENT_SCHEDSTAT.
+>
+> And if my magic macro hat is working while sitting on the shelf (don't
+> have time to put it on), then the TRACE_EVENT_SCHEDSTAT will work like
+> a TRACE_EVENT when enabled, and a TRACE_EVENT_NOP when not.
+>
+> Can you give that a try?
+>
+> If this works, you don't need to duplicate all the parameters again.
+>
 
-Sorry for being slow here, but this is the right approach: setup_vm is called
-before relocate, which means the page tables won't be set up correctly for
-absolute addressing.  We instead build setup_vm with medany, which causes all
-addressing to be PC-relative.  This is all a bit of a hack, but it's the only
-way we have to do this right now.
+You proposal seems like a better solution.
+I will have a try.
+Thanks for your suggestion.
 
-You should be able to add a preprocessor #error to check the code model with 
-something like this
-
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index b379a75ac6a6..d6fde6af8d75 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -172,6 +172,9 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
-        }
- }
-
-+#ifndef __riscv_cmodel_medany
-+#error "setup_vm() is called from head.S before relocate and must not make any absolute references."
-+#endif
- asmlinkage void __init setup_vm(void)
- {
-        extern char _start;
-
-Marking this notrace is the right thing to do, as it can't call into any 
-functions that aren't medany (there's probably other issues as well, since this 
-is so early).
-
-Sorry I missed this the first time around, I wasn't paying enough attention.
-
-Can someone add instructions for 32-bit boots to the QEMU wiki?  It sounds like 
-it's time to add that to the testing list...
-
-Thanks for digging in to this!
+-Yafang
 
 >
-> Regards,
-> Anup
+> >  /*
+> >   * XXX the below sched_stat tracepoints only apply to
+> > SCHED_OTHER/BATCH/IDLE
+> >   *     adding sched_stat support to SCHED_FIFO/RR would be welcome.
+> > @@ -395,6 +396,19 @@ static inline long
+> > __trace_sched_switch_state(bool preempt, struct task_struct *
+> > TP_PROTO(struct task_struct *tsk, u64 delay), TP_ARGS(tsk, delay));
+> >
+> > +#else /* CONFIG_SCHEDSTATS */
+> > +
+> > +TRACE_EVENT_NONE(sched_stat_wait,
+> > +              TP_PROTO(struct task_struct *tsk, u64 delay));
+> > +TRACE_EVENT_NONE(sched_stat_sleep,
+> > +              TP_PROTO(struct task_struct *tsk, u64 delay));
+> > +TRACE_EVENT_NONE(sched_stat_iowait,
+> > +              TP_PROTO(struct task_struct *tsk, u64 delay));
+> > +TRACE_EVENT_NONE(sched_stat_blocked,
+> > +              TP_PROTO(struct task_struct *tsk, u64 delay));
+> > +
+> > +#endif /* CONFIG_SCHEDSTATS */
+> > +
+> >  /*
+> >   * Tracepoint for accounting runtime (time the task is executing
+> >   * on a CPU).
+>
