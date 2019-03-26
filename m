@@ -2,142 +2,115 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2ECC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA2BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192A020857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="vtKla7/v"
+	by mail.kernel.org (Postfix) with ESMTP id 6D87D2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfCZJQQ (ORCPT
+        id S1730690AbfCZJSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:16:16 -0400
-Received: from mail-eopbgr1300057.outbound.protection.outlook.com ([40.107.130.57]:37952
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726258AbfCZJQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:16:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D88G+Vh5U3UtxzazzAqekvx4X29mAS8ojsGLDNKgfT8=;
- b=vtKla7/v3LR4Tgykdc1KFn6myJ2HwI2yMXTPeicaVrUICtB/RmvflByRxc7qZYVZhG2wMcX6Z2Ut4Nk8H0y/9VSrXVpzaBIMweFtfuAQYI0U5rVE/QULi4mL7yDw0pjF8HVB7yaKymmT9mISQRVtKz4yJeyoXKzegOLk+57On4Y=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB4249.apcprd02.prod.outlook.com (20.179.102.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.17; Tue, 26 Mar 2019 09:16:12 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
- 09:16:12 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>
-Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
-Thread-Topic: [External] Re: vmscan: Reclaim unevictable pages
-Thread-Index: AQHU3WaYCAMWaFadm0e/0+hd2XPYGaYRGYZ/gAAG5oCAAAD82oAAAx4AgAABDq2AAAzwgIAC47DNgAmAbsCAABOgAIAAA15X
-Date:   Tue, 26 Mar 2019 09:16:11 +0000
-Message-ID: <SG2PR02MB3098FAEA335228CFB56F1668E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-References: <SG2PR02MB3098E6F2C4BAEB56AE071EDCE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <0b86dbca-cbc9-3b43-e3b9-8876bcc24f22@suse.cz>
- <SG2PR02MB309841EA4764E675D4649139E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <56862fc0-3e4b-8d1e-ae15-0df32bf5e4c0@virtuozzo.com>
- <SG2PR02MB3098EEAF291BFD72F4163936E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <4c05dda3-9fdf-e357-75ed-6ee3f25c9e52@virtuozzo.com>
- <SG2PR02MB309869FC3A436C71B50FA57BE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <09b6ee71-0007-7f1d-ac80-7e05421e4ec6@virtuozzo.com>
- <SG2PR02MB309864258DBE630AD3AD2E10E8410@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB309824F3FCD9B0D1DF689390E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>,<20190326090142.GH28406@dhcp22.suse.cz>
-In-Reply-To: <20190326090142.GH28406@dhcp22.suse.cz>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0efc8f5-9ce2-41a8-65b8-08d6b1cbb0b2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB4249;
-x-ms-traffictypediagnostic: SG2PR02MB4249:|SG2PR02MB4249:
-x-microsoft-antispam-prvs: <SG2PR02MB4249BC2A7F5436F80FD23863E85F0@SG2PR02MB4249.apcprd02.prod.outlook.com>
-x-forefront-prvs: 09888BC01D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39850400004)(366004)(396003)(376002)(136003)(189003)(199004)(8936002)(52536014)(9686003)(476003)(74316002)(71200400001)(6116002)(105586002)(53936002)(54906003)(305945005)(6246003)(25786009)(55016002)(486006)(93886005)(316002)(33656002)(8676002)(5660300002)(11346002)(6506007)(7696005)(446003)(3846002)(6916009)(44832011)(68736007)(102836004)(53546011)(229853002)(55236004)(2906002)(14444005)(186003)(256004)(5024004)(106356001)(7736002)(76176011)(26005)(78486014)(81166006)(81156014)(14454004)(86362001)(6436002)(97736004)(66066001)(99286004)(66574012)(4326008)(478600001)(71190400001)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB4249;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 14gN9kp6Yz+7tFHuZSR99p9ClLUkIKrz2aMS1hw63XQd/c45+hOK31pobFsGftdBQ3cVie0ENPVZsJfTk46LQAujdxDBq9muwPSrRfCq/xFD7kG3QXAkZRCh4rkJk67I3ekuEehJaOVbPknNcbY6da2Ak6Eq7zoatGuWG7Aieb143/zsa9W0LEhJuyZ+NqsdvV0sBE7XklAXr1R4RMX3MuRm4WUkuQr6PRCjmpmBNHc1vcMx3l9w5q0JZ9GXi0kFVX3KnYsQkp7+evJgJJbz8jlEr9rlbwGDhmaC5HJvPoJX3G3s1f+VyftA2SnXzul637IyulLFqAf6duNBtLf8AFvb2wINbG/zWnmaC682lstnZuYSZgUPTaVuk3Fa/m8BtkgaDfId48g3ce4dRj4nQz2IiTwZRBlZlxbjcwWx3Zw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 Mar 2019 05:18:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33268 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfCZJSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:18:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32967374;
+        Tue, 26 Mar 2019 02:18:43 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18073F614;
+        Tue, 26 Mar 2019 02:18:41 -0700 (PDT)
+Subject: Re: [PATCH] arm64: gic-v3: fix unexpected overwrite of spi/ppi/sgi
+ prio
+To:     Wei Li <liwei391@huawei.com>, tglx@linutronix.de,
+        jason@lakedaemon.net, julien.thierry@arm.com
+Cc:     linux-kernel@vger.kernel.org, guohanjun@huawei.com,
+        huawei.libin@huawei.com
+References: <20190326081658.37450-1-liwei391@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <aa6b390c-d39e-cdd6-363b-d5a20a4d6feb@arm.com>
+Date:   Tue, 26 Mar 2019 09:18:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0efc8f5-9ce2-41a8-65b8-08d6b1cbb0b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 09:16:11.8621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB4249
+In-Reply-To: <20190326081658.37450-1-liwei391@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26/03/2019 08:16, Wei Li wrote:
+> The priority config will be restored to the default value in the
+> notifiers of gic suspend. While the arm64 nmi-like interrupt has been
+> implemented by using priority since commit bc3c03ccb464 ("arm64: Enable
+> the support of pseudo-NMIs"), we need to do the save and restore exactly.
+> 
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
 
-________________________________________
-From: Michal Hocko <mhocko@kernel.org>
-Sent: 26 March 2019 14:31
-To: Pankaj Suryawanshi
-Cc: Kirill Tkhai; Vlastimil Babka; aneesh.kumar@linux.ibm.com; linux-kernel=
-@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org; khandual@linux.vn=
-et.ibm.com
-Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+You're complaining about an alleged bug in the GICv3 driver (which is
+always possible), and yet you're submitting a change to the GICv{1,2}
+driver, for which we don't support variable priorities.
 
-[You were asked to use a reasonable quoting several times. This is
-really annoying because it turns the email thread into a complete mess]
+How does this fix anything? How have you tested this patch? What is the
+actual problem you're trying to paper over?
 
-[Already fix the email client, but dont know the reason for quoting Maybe a=
-ccount issue.]
+Thanks,
 
-On Tue 26-03-19 07:53:14, Pankaj Suryawanshi wrote:
-> Is there anyone who is familiar with this?  Please Comment.
-
-Not really. You are observing an unexpected behavior of the page reclaim
-which hasn't changed for quite some time. So I find more probable that
-your non-vanilla kernel is doing something unexpected. It would help if
-you could track down how does the unevictable page get down to the
-reclaim path. I assume this is a CMA page or something like that but
-those shouldn't get to the reclaim path AFIR.
-
-As i said earlier, i am using vanilla kernel 4.14.65.
---
-Michal Hocko
-SUSE Labs
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
+	M.
+-- 
+Jazz is not dead. It just smells funny...
