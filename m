@@ -2,78 +2,116 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B596C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DDDC10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C3520856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9C52070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfCZLkQ (ORCPT
+        id S1730697AbfCZLkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:40:16 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57958 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfCZLkQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:40:16 -0400
-Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id b1acf7c466be819c; Tue, 26 Mar 2019 12:40:13 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     lenb@kernel.org, viresh.kumar@linaro.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, pprakash@codeaurora.org,
-        wangxiongfeng2@huawei.com
-Subject: Re: [PATCH v2 0/2] Correct the processing for base_frequency
-Date:   Tue, 26 Mar 2019 12:38:17 +0100
-Message-ID: <3574470.KuU4jANTQq@aspire.rjw.lan>
-In-Reply-To: <20190325160440.7575-1-srinivas.pandruvada@linux.intel.com>
-References: <20190325160440.7575-1-srinivas.pandruvada@linux.intel.com>
+        Tue, 26 Mar 2019 07:40:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:34926 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfCZLkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:40:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2FCD1596;
+        Tue, 26 Mar 2019 04:40:54 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43E933F59C;
+        Tue, 26 Mar 2019 04:40:53 -0700 (PDT)
+Subject: Re: [PATCH v3] PCI: xilinx: Check for __get_free_pages() failure
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, pakki001@umn.edu,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190325215105.GB24180@google.com>
+ <20190325221909.26315-1-kjlu@umn.edu>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <377aa504-7bfa-4e8d-5db7-fce01c931e28@arm.com>
+Date:   Tue, 26 Mar 2019 11:40:51 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190325221909.26315-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, March 25, 2019 5:04:38 PM CET Srinivas Pandruvada wrote:
-> The base_frequency display in cpufreq sysfs for intel_pstate gets the
-> guaranteed ratio by reading CPPC guaranteed performance register as a
-> first preference before falling back to x86 MSR for Hardware P-state
-> Capabilities. The current code in cppc_acpi.c assumed that "guaranteed
-> performance register" can be an integer field, which is invalid as per
-> ACPI spec. So this change explicitly check for INTEGER values for
-> invalid BIOS/firmware and ignore. 
-> Also guaranteed performance register field is optional and when not
-> present, nominal performance can be used as the guaranteed performance.
-> But spec calls that this is true only in non-autonomous mode. So
-> no change is made in cppc_acpi.c to make nominal as guaranteed in this
-> case to avoid dependency on autonomous and non-autonomous mode. Instead
-> a change is added to intel_pstate driver, which is specific to x86 to
-> make nominal as guaranteed when guaranteed performance field is absent
-> or has invalid value.
-> Also we are working to clarify this non-autonomous mode requirement
-> through ACPI standard body.
-> 
-> v2:
-> Changes done as suggested by Rafael.
-> 
-> 
-> Srinivas Pandruvada (2):
->   ACPI / CPPC: Fix processing for guaranteed performance
->   cpufreq: intel_pstate: Also use cppc nominal_perf for base_frequency
-> 
->  drivers/acpi/cppc_acpi.c       | 9 +++++++--
->  drivers/cpufreq/intel_pstate.c | 5 ++++-
->  2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> 
+On 25/03/2019 22:19, Kangjie Lu wrote:
+> If __get_free_pages() fails, the patch returns -ENOMEM to avoid
 
-Both applied, thanks!
+As Bjorn suggested s/the patch returns/return/ would suffice and is
+slightly easier to read. But I'm happy either way.
 
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+> ---
+> v3: remove "unlikely", as suggested by Bjorn Helgaas.
+> v2: caller is redefined to accept the error code, as suggested by
+> Steven Price <steven.price@arm.com>
+> ---
+>  drivers/pci/controller/pcie-xilinx.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+> index 9bd1a35cd5d8..abc214e94f7c 100644
+> --- a/drivers/pci/controller/pcie-xilinx.c
+> +++ b/drivers/pci/controller/pcie-xilinx.c
+> @@ -336,14 +336,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+>   * xilinx_pcie_enable_msi - Enable MSI support
+>   * @port: PCIe port information
+>   */
+> -static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+> +static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+>  {
+>  	phys_addr_t msg_addr;
+>  
+>  	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
+> +	if (!port->msi_pages)
+> +		return -ENOMEM;
+> +
+>  	msg_addr = virt_to_phys((void *)port->msi_pages);
+>  	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>  	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
+> +
+> +	return 0;
+>  }
+>  
+>  /* INTx Functions */
+> @@ -498,6 +503,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>  	struct device *dev = port->dev;
+>  	struct device_node *node = dev->of_node;
+>  	struct device_node *pcie_intc_node;
+> +	int ret;
+>  
+>  	/* Setup INTx */
+>  	pcie_intc_node = of_get_next_child(node, NULL);
+> @@ -526,7 +532,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>  			return -ENODEV;
+>  		}
+>  
+> -		xilinx_pcie_enable_msi(port);
+> +		ret = xilinx_pcie_enable_msi(port);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	return 0;
+> 
 
