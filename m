@@ -4,62 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5235CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD88620823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235002070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582060;
-	bh=rXjFtthL8cGAlqzo83zPkhsGt2RchtB6KoJGCNPPNpk=;
+	s=default; t=1553582063;
+	bh=vD24KTYdgdJB3spyUTLMyzy0NJeiqJF0oQ4Yi7k3LRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VL9c1TzhnOH6hMCVJ/alpJif6iz8ObTMLqhqBGv9aG6T5uUnwaaibJ+g2sL8JFEr
-	 1g/faZ9oT32iy63ZF9dI9ysID/5ARu8FX4zTACzN2GGxq2CT4v7NArzrN8hCr/0fix
-	 U80PzFq3wnNgg7jGQZg4zEM8J1tIOiXHPuXLBK3M=
+	b=SxHmOnJBYJ17ND2BwrOo70lT0z3afx9iGMxzUkjdA30hrO8jq1Q+LYs1YKT32MY/o
+	 IjVDJXCI6MhmriuUZCA9SMk+N7Jc/oaqraKizs20Aljy9Ov7uif78aV6w2FcAkJade
+	 8AoI3iBCa8leNn+GArJXEiCnQHTzOuXAdcP7FI+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731837AbfCZGeS (ORCPT
+        id S1731843AbfCZGeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731822AbfCZGeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:14 -0400
+        id S1731441AbfCZGeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:17 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4047F2070B;
-        Tue, 26 Mar 2019 06:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B00C9206C0;
+        Tue, 26 Mar 2019 06:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582053;
-        bh=rXjFtthL8cGAlqzo83zPkhsGt2RchtB6KoJGCNPPNpk=;
+        s=default; t=1553582056;
+        bh=vD24KTYdgdJB3spyUTLMyzy0NJeiqJF0oQ4Yi7k3LRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F1spVo7hQQ9g3kKJMWRuLVnGQiHgZ5WrP+KIt+IH546AaqBQJUENJqTQoIdgQDh96
-         K1yUWbEGaXuR4ZOGygrbALnuUUIsmnKE9l2r+7JhZOAAxGArNU7YUtpaFVVstny9q9
-         enc7H0sF++/SAlcv+8bOIWzcIwf06RuMgPpldoBc=
+        b=NGVz+Z2vIhxBJ8Y0EUR8fN3A3l3QxYZE6/awsRK61KMjrvVS/+h8bbkHnjHGauPXJ
+         Ts53pefnpHlqPLjqDQyhecWfLYtSu+qIb438umxMfUi79P7fNvvEYlOeGNeBmLZ44B
+         sa/DcPEtxE5SmSvty3xwEh6qUrLczpH2LvxyJevg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anshul Garg <aksgarg1989@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Joe Perches <joe@perches.com>,
-        David Miller <davem@davemloft.net>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Davidson <md@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.14 31/41] lib/int_sqrt: optimize small argument
-Date:   Tue, 26 Mar 2019 15:30:08 +0900
-Message-Id: <20190326042651.600856386@linuxfoundation.org>
+Subject: [PATCH 4.14 32/41] USB: core: only clean up what we allocated
+Date:   Tue, 26 Mar 2019 15:30:09 +0900
+Message-Id: <20190326042651.655316226@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -78,94 +64,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-commit 3f3295709edea6268ff1609855f498035286af73 upstream.
+commit 32fd87b3bbf5f7a045546401dfe2894dbbf4d8c3 upstream.
 
-The current int_sqrt() computation is sub-optimal for the case of small
-@x.  Which is the interesting case when we're going to do cumulative
-distribution functions on idle times, which we assume to be a random
-variable, where the target residency of the deepest idle state gives an
-upper bound on the variable (5e6ns on recent Intel chips).
+When cleaning up the configurations, make sure we only free the number
+of configurations and interfaces that we could have allocated.
 
-In the case of small @x, the compute loop:
-
-	while (m != 0) {
-		b = y + m;
-		y >>= 1;
-
-		if (x >= b) {
-			x -= b;
-			y += m;
-		}
-		m >>= 2;
-	}
-
-can be reduced to:
-
-	while (m > x)
-		m >>= 2;
-
-Because y==0, b==m and until x>=m y will remain 0.
-
-And while this is computationally equivalent, it runs much faster
-because there's less code, in particular less branches.
-
-      cycles:                 branches:              branch-misses:
-
-OLD:
-
-hot:   45.109444 +- 0.044117  44.333392 +- 0.002254  0.018723 +- 0.000593
-cold: 187.737379 +- 0.156678  44.333407 +- 0.002254  6.272844 +- 0.004305
-
-PRE:
-
-hot:   67.937492 +- 0.064124  66.999535 +- 0.000488  0.066720 +- 0.001113
-cold: 232.004379 +- 0.332811  66.999527 +- 0.000488  6.914634 +- 0.006568
-
-POST:
-
-hot:   43.633557 +- 0.034373  45.333132 +- 0.002277  0.023529 +- 0.000681
-cold: 207.438411 +- 0.125840  45.333132 +- 0.002277  6.976486 +- 0.004219
-
-Averages computed over all values <128k using a LFSR to generate order.
-Cold numbers have a LFSR based branch trace buffer 'confuser' ran between
-each int_sqrt() invocation.
-
-Link: http://lkml.kernel.org/r/20171020164644.876503355@infradead.org
-Fixes: 30493cc9dddb ("lib/int_sqrt.c: optimize square root algorithm")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Suggested-by: Anshul Garg <aksgarg1989@gmail.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: David Miller <davem@davemloft.net>
-Cc: Matthew Wilcox <mawilcox@microsoft.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Michael Davidson <md@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/int_sqrt.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/core/config.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/lib/int_sqrt.c
-+++ b/lib/int_sqrt.c
-@@ -23,6 +23,9 @@ unsigned long int_sqrt(unsigned long x)
- 		return x;
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -768,18 +768,21 @@ void usb_destroy_configuration(struct us
+ 		return;
  
- 	m = 1UL << (BITS_PER_LONG - 2);
-+	while (m > x)
-+		m >>= 2;
-+
- 	while (m != 0) {
- 		b = y + m;
- 		y >>= 1;
+ 	if (dev->rawdescriptors) {
+-		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
++		for (i = 0; i < dev->descriptor.bNumConfigurations &&
++				i < USB_MAXCONFIG; i++)
+ 			kfree(dev->rawdescriptors[i]);
+ 
+ 		kfree(dev->rawdescriptors);
+ 		dev->rawdescriptors = NULL;
+ 	}
+ 
+-	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
++	for (c = 0; c < dev->descriptor.bNumConfigurations &&
++			c < USB_MAXCONFIG; c++) {
+ 		struct usb_host_config *cf = &dev->config[c];
+ 
+ 		kfree(cf->string);
+-		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
++		for (i = 0; i < cf->desc.bNumInterfaces &&
++				i < USB_MAXINTERFACES; i++) {
+ 			if (cf->intf_cache[i])
+ 				kref_put(&cf->intf_cache[i]->ref,
+ 					  usb_release_interface_cache);
 
 
