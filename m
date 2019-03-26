@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB441C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52DFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840812087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC6920811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733056AbfCZXlo (ORCPT
+        id S1733160AbfCZXmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:41:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732861AbfCZXlm (ORCPT
+        Tue, 26 Mar 2019 19:42:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60444 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732726AbfCZXlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:41:42 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNXW2l135108
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:41 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rft2r1191-1
+        Tue, 26 Mar 2019 19:41:44 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNXUdB117533
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:42 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rftkx7nqh-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:41 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:42 -0400
 Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 26 Mar 2019 23:41:40 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 26 Mar 2019 23:41:41 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:41:35 -0000
+        Tue, 26 Mar 2019 23:41:36 -0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNfYKm5505172
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNfZuJ24838330
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:41:34 GMT
+        Tue, 26 Mar 2019 23:41:35 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0DFCB205F;
+        by IMSVA (Postfix) with ESMTP id F0870B2071;
         Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3526B2065;
+        by IMSVA (Postfix) with ESMTP id C9D60B2073;
         Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8534A16C6094; Tue, 26 Mar 2019 16:41:35 -0700 (PDT)
+        id B0BA916C6130; Tue, 26 Mar 2019 16:41:35 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -58,20 +58,20 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 06/21] tools/memory-model: Make cmplitmushist.sh note timeouts
-Date:   Tue, 26 Mar 2019 16:41:18 -0700
+Subject: [PATCH tip/core/rcu 14/21] tools/memory-model: Hardware checking for check{,all}litmus.sh
+Date:   Tue, 26 Mar 2019 16:41:26 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326234114.GA23843@linux.ibm.com>
 References: <20190326234114.GA23843@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19032623-0072-0000-0000-00000410BC88
+x-cbid: 19032623-0040-0000-0000-000004D7B078
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180142; UDB=6.00617577; IPR=6.00960858;
+ PH=3.00000004; SC=3.00000282; SDB=6.01180142; UDB=6.00606765; IPR=6.00960858;
  MB=3.00026170; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:41:39
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-0073-0000-0000-00004B9D6317
-Message-Id: <20190326234133.24962-6-paulmck@linux.ibm.com>
+x-cbparentid: 19032623-0041-0000-0000-000008E2D1CC
+Message-Id: <20190326234133.24962-14-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -84,63 +84,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, cmplitmushist.sh treats timeouts (as in the "--timeout"
-argument) as "Missing Observation line".  This can be misleading because
-it is quite possible that running the test longer would have produced
-a verification.  This commit therefore changes cmplitmushist.sh to check
-for timeouts and to report them with "Timed out".
+This commit makes checklitmus.sh and checkalllitmus.sh check to see
+if a hardware verification was specified (via the --hw command-line
+argument, which sets the LKMM_HW_MAP_FILE environment variable).
+If so, the C-language litmus test is converted to the specified type
+of assembly-language litmus test and herd is run on it.  Hardware is
+permitted to be stronger than LKMM requires, so "Always" and "Never"
+verifications of "Sometimes" C-language litmus tests are forgiven.
 
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/cmplitmushist.sh | 22 +++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/memory-model/scripts/checkalllitmus.sh | 23 +++++------
+ tools/memory-model/scripts/checklitmus.sh    | 42 ++++++++++++++++++--
+ 2 files changed, 49 insertions(+), 16 deletions(-)
 
-diff --git a/tools/memory-model/scripts/cmplitmushist.sh b/tools/memory-model/scripts/cmplitmushist.sh
-index 0f498aeeccf5..b9c174dd8004 100755
---- a/tools/memory-model/scripts/cmplitmushist.sh
-+++ b/tools/memory-model/scripts/cmplitmushist.sh
-@@ -12,12 +12,30 @@ trap 'rm -rf $T' 0
- mkdir $T
- 
- # comparetest oldpath newpath
-+timedout=0
- perfect=0
- obsline=0
- noobsline=0
- obsresult=0
- badcompare=0
- comparetest () {
-+	if grep -q '^Command exited with non-zero status 124' $1 ||
-+	   grep -q '^Command exited with non-zero status 124' $2
-+	then
-+		if grep -q '^Command exited with non-zero status 124' $1 &&
-+		   grep -q '^Command exited with non-zero status 124' $2
-+		then
-+			echo Both runs timed out: $2
-+		elif grep -q '^Command exited with non-zero status 124' $1
-+		then
-+			echo Old run timed out: $2
-+		elif grep -q '^Command exited with non-zero status 124' $2
-+		then
-+			echo New run timed out: $2
-+		fi
-+		timedout=`expr "$timedout" + 1`
-+		return 0
-+	fi
- 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $1 > $T/oldout
- 	grep -v 'maxresident)k\|minor)pagefaults\|^Time' $2 > $T/newout
- 	if cmp -s $T/oldout $T/newout && grep -q '^Observation' $1
-@@ -78,6 +96,10 @@ if test "$obsresult" -ne 0
- then
- 	echo Matching Observation Always/Sometimes/Never result: $obsresult 1>&2
+diff --git a/tools/memory-model/scripts/checkalllitmus.sh b/tools/memory-model/scripts/checkalllitmus.sh
+index d43c6b91db30..1e7afd3a51e4 100755
+--- a/tools/memory-model/scripts/checkalllitmus.sh
++++ b/tools/memory-model/scripts/checkalllitmus.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0+
+ #
+ # Run herd7 tests on all .litmus files in the litmus-tests directory
+@@ -8,6 +8,11 @@
+ # "^^^".  It also outputs verification results to a file whose name is
+ # that of the specified litmus test, but with ".out" appended.
+ #
++# If the --hw argument is specified, this script translates the .litmus
++# C-language file to the specified type of assembly and verifies that.
++# But in this case, litmus tests using complex synchronization (such as
++# locking, RCU, and SRCU) are cheerfully ignored.
++#
+ # Usage:
+ #	checkalllitmus.sh
+ #
+@@ -38,21 +43,15 @@ then
+ 	( cd "$LKMM_DESTDIR"; sed -e 's/^/mkdir -p /' | sh )
  fi
-+if test "$timedout" -ne 0
-+then
-+	echo "!!!" Timed out: $timedout 1>&2
-+fi
- if test "$badcompare" -ne 0
+ 
+-# Find the checklitmus script.  If it is not where we expect it, then
+-# assume that the caller has the PATH environment variable set
+-# appropriately.
+-if test -x scripts/checklitmus.sh
+-then
+-	clscript=scripts/checklitmus.sh
+-else
+-	clscript=checklitmus.sh
+-fi
+-
+ # Run the script on all the litmus tests in the specified directory
+ ret=0
+ for i in $litmusdir/*.litmus
+ do
+-	if ! $clscript $i
++	if test -n "$LKMM_HW_MAP_FILE" && ! scripts/simpletest.sh $i
++	then
++		continue
++	fi
++	if ! scripts/checklitmus.sh $i
+ 	then
+ 		ret=1
+ 	fi
+diff --git a/tools/memory-model/scripts/checklitmus.sh b/tools/memory-model/scripts/checklitmus.sh
+index 11461ed40b5e..1922a5af2c17 100755
+--- a/tools/memory-model/scripts/checklitmus.sh
++++ b/tools/memory-model/scripts/checklitmus.sh
+@@ -6,6 +6,11 @@
+ # results to a file whose name is that of the specified litmus test, but
+ # with ".out" appended.
+ #
++# If the --hw argument is specified, this script translates the .litmus
++# C-language file to the specified type of assembly and verifies that.
++# But in this case, litmus tests using complex synchronization (such as
++# locking, RCU, and SRCU) are cheerfully ignored.
++#
+ # Usage:
+ #	checklitmus.sh file.litmus
+ #
+@@ -18,8 +23,6 @@
+ # Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+ 
+ litmus=$1
+-herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
+-
+ if test -f "$litmus" -a -r "$litmus"
  then
- 	echo "!!!" Result changed: $badcompare 1>&2
+ 	:
+@@ -28,7 +31,38 @@ else
+ 	exit 255
+ fi
+ 
+-echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
+-/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++if test -z "$LKMM_HW_MAP_FILE"
++then
++	# LKMM run
++	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
++	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
++else
++	# Hardware run
++
++	T=/tmp/checklitmushw.sh.$$
++	trap 'rm -rf $T' 0 2
++	mkdir $T
++
++	# Generate filenames
++	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
++	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
++	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
++	herdoptions="-model $LKMM_HW_CAT_FILE"
++	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
++	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
++
++	# Don't run on litmus tests with complex synchronization
++	if ! scripts/simpletest.sh $litmus
++	then
++		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
++		exit 254
++	fi
++
++	# Generate the assembly code and run herd on it.
++	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
++	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
++	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
++fi
+ 
+ scripts/judgelitmus.sh $litmus
 -- 
 2.17.1
 
