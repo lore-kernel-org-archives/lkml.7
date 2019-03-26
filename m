@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE87C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A64C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAB920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06BC20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581916;
-	bh=tEPTFH14pQM5GL8qMFkugEi9XfjTGrs5r/LpIHO+8Xk=;
+	s=default; t=1553581919;
+	bh=2b+COi1Be/8DesjcBZSZEjv9DzOv+LL10rhyBuaqpKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4Hu3lNOr4DMtUwWvFBusJeTjZDUQoasY8dvjO7ldJxoyAqwfRoFlUMLaXm5KTqK9
-	 aEVX0LhHHY2qmHyM39tvZ0swv+s0Ij2N5jTX3yGtXS8hFTIQ/060GGUlGiibCRt2rZ
-	 kxqKPAazM2r2zMsav40EJhU/XAKdOKt1xupEyl2w=
+	b=2DOQEk/xcovD4jblbNEwmShYXpXHY7t51qX4QYptXelxW+jcD/I9EART6RQj9s23l
+	 VePciDpemltBARFNDJr1+WK4pmtnWYcYAtHaLUu0jTwnQgwSonTggb0ltg+7Qex66h
+	 p3ih1StGd0O+0/S0dyZmvc36pRlu9tepjx4u0f1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfCZGby (ORCPT
+        id S1731273AbfCZGb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731215AbfCZGbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:31:52 -0400
+        id S1731215AbfCZGbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:31:55 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396F220863;
-        Tue, 26 Mar 2019 06:31:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BEF20823;
+        Tue, 26 Mar 2019 06:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581911;
-        bh=tEPTFH14pQM5GL8qMFkugEi9XfjTGrs5r/LpIHO+8Xk=;
+        s=default; t=1553581914;
+        bh=2b+COi1Be/8DesjcBZSZEjv9DzOv+LL10rhyBuaqpKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6yP3+d6TSRtTcGQGQUDMS0pPECtfYvAk6oE4zMJVYbZsYckoNXuH31nRTs+trJYI
-         r31+hUZHgXaH4aNdPV+OrzZUp4Isf4DB6lHj9TgLAbSlk1i/+tKJboXplJUtJ3qGU/
-         02ewrysADeF3PpErNFP89IdbyLWoygYbkIQRlQSM=
+        b=OpCAqUgmJnsP7baI/ZVY9xcT3m49gCGa66E1R2NsVaUeIovWntoW3LncYP077fBIx
+         f9hm6KRLVsoz5EzFtRHhal8Fedbs5PcJN3Oo88Xpc7bq4rpHDZfECwLpSQ0BQg0J32
+         3QybWaF4/U33QYS1TmFFbMoKRBQz6RMLRnD41d70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiao Zhou <qiaozhou@asrmicro.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Lanqing Liu <lanqing.liu@spreadtrum.com>,
+        Chunyan Zhang <chunyan.zhang@spreadtrum.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 22/30] arm64: traps: disable irq in die()
-Date:   Tue, 26 Mar 2019 15:30:01 +0900
-Message-Id: <20190326042608.316746710@linuxfoundation.org>
+Subject: [PATCH 4.9 23/30] serial: sprd: clear timeout interrupt only rather than all interrupts
+Date:   Tue, 26 Mar 2019 15:30:02 +0900
+Message-Id: <20190326042608.349539737@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -65,62 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Qiao Zhou <qiaozhou@asrmicro.com>
+From: Lanqing Liu <lanqing.liu@spreadtrum.com>
 
-commit 6f44a0bacb79a03972c83759711832b382b1b8ac upstream.
+commit 4350782570b919f254c1e083261a21c19fcaee90 upstream.
 
-In current die(), the irq is disabled for __die() handle, not
-including the possible panic() handling. Since the log in __die()
-can take several hundreds ms, new irq might come and interrupt
-current die().
+On Spreadtrum's serial device, nearly all of interrupts would be cleared
+by hardware except timeout interrupt.  This patch removed the operation
+of clearing all interrupt in irq handler, instead added an if statement
+to check if the timeout interrupt is supposed to be cleared.
 
-If the process calling die() holds some critical resource, and some
-other process scheduled later also needs it, then it would deadlock.
-The first panic will not be executed.
+Wrongly clearing timeout interrupt would lead to uart data stay in rx
+fifo, that means the driver cannot read them out anymore.
 
-So here disable irq for the whole flow of die().
-
-Signed-off-by: Qiao Zhou <qiaozhou@asrmicro.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/traps.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/tty/serial/sprd_serial.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -266,10 +266,12 @@ void die(const char *str, struct pt_regs
- {
- 	struct thread_info *thread = current_thread_info();
- 	int ret;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&die_lock, flags);
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -63,6 +63,7 @@
  
- 	oops_enter();
+ /* interrupt clear register */
+ #define SPRD_ICLR		0x0014
++#define SPRD_ICLR_TIMEOUT	BIT(13)
  
--	raw_spin_lock_irq(&die_lock);
- 	console_verbose();
- 	bust_spinlocks(1);
- 	ret = __die(str, err, thread, regs);
-@@ -279,13 +281,15 @@ void die(const char *str, struct pt_regs
+ /* line control register */
+ #define SPRD_LCR		0x0018
+@@ -298,7 +299,8 @@ static irqreturn_t sprd_handle_irq(int i
+ 		return IRQ_NONE;
+ 	}
  
- 	bust_spinlocks(0);
- 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
--	raw_spin_unlock_irq(&die_lock);
- 	oops_exit();
+-	serial_out(port, SPRD_ICLR, ~0);
++	if (ims & SPRD_IMSR_TIMEOUT)
++		serial_out(port, SPRD_ICLR, SPRD_ICLR_TIMEOUT);
  
- 	if (in_interrupt())
- 		panic("Fatal exception in interrupt");
- 	if (panic_on_oops)
- 		panic("Fatal exception");
-+
-+	raw_spin_unlock_irqrestore(&die_lock, flags);
-+
- 	if (ret != NOTIFY_STOP)
- 		do_exit(SIGSEGV);
- }
+ 	if (ims & (SPRD_IMSR_RX_FIFO_FULL |
+ 		SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT))
 
 
