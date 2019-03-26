@@ -6,49 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9B7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26413C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79D520856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E345D20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581999;
-	bh=c5SGd1d6ETVjNf12ZRnjEJPJ/Wi993hhDzL+jlmNdZs=;
+	s=default; t=1553582003;
+	bh=t6hSCGhL7bNg33Ds+QdPv4ltk03+HC89X94S7mqWXXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=peKLuKvokihSBLTPzcesKtGDvOoLSPrSORIFcjj/EACBNP7VM4pUFTAKtDRtcGstq
-	 0mp5zv4Lg9pzK9dryCTJV5ZDjkrl4qeghkX4wrK9CJEVFjtvfSx7I2pK934HFT6Pbw
-	 kcJ2WGV2GhuEYxiTRCSYT/H0CKvnYiI3imBC6UMQ=
+	b=Z1AgEMm1G6iK7ZV0cNhwsteap3kQw+RUUhbSYn++qV6xxKoCKk4NcdMpqL3vRo9L/
+	 rFukAszqH6fCX8dVkK7HOn1DMXgbmXE9gmEF+GoJazJ0DtiFzNv0qJU0y+MihxOmCk
+	 xBSgjewu9n+PR1J2Lzy8aAoSUpRf866eIRykGn64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfCZGdS (ORCPT
+        id S1731640AbfCZGdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfCZGdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:16 -0400
+        id S1731615AbfCZGdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:18 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CFA20856;
-        Tue, 26 Mar 2019 06:33:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C07422086C;
+        Tue, 26 Mar 2019 06:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581994;
-        bh=c5SGd1d6ETVjNf12ZRnjEJPJ/Wi993hhDzL+jlmNdZs=;
+        s=default; t=1553581997;
+        bh=t6hSCGhL7bNg33Ds+QdPv4ltk03+HC89X94S7mqWXXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqE6sha+9fwvZUvRQp37EalFxRhykolnCswbU74Gran+uRfH+OnmxeEToXmyOZJf5
-         HReB4NU2iW5jCd5KrUeFVf9z7L+AHlHeh1tXiQCwidTYhNTuDXhVuBcUkUUolKk7tT
-         sKXRtwUpHjYcPXTcxuoJyHIdDa7rrzin22JN9dPI=
+        b=0tmR31vqQnBLh57u3OtHLxDxx3Ttb+kiZ2x14FWPgxG1AX6kNVOF1zPnHUeVoBWkI
+         Iw1BKK0Y5ymWxjc2a63IK4KOfZ6p14mkFIlfBObXIXhyQZzoWMduE5zKAXQY4xdekA
+         U3P6VwRX3uMvT6EQ1Un05QGeQEtn3gQjmNNecLeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 4.14 14/41] ALSA: x86: Fix runtime PM for hdmi-lpe-audio
-Date:   Tue, 26 Mar 2019 15:29:51 +0900
-Message-Id: <20190326042650.745590731@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>, stable@kernel.org
+Subject: [PATCH 4.14 15/41] ext4: fix NULL pointer dereference while journal is aborted
+Date:   Tue, 26 Mar 2019 15:29:52 +0900
+Message-Id: <20190326042650.797471892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -67,40 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 8dfb839cfe737a17def8e5f88ee13c295230364a upstream.
+commit fa30dde38aa8628c73a6dded7cb0bba38c27b576 upstream.
 
-Commit 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as
-"no callbacks"") broke runtime PM with lpe audio. We can no longer
-runtime suspend the GPU since the sysfs  power/control for the
-lpe-audio device no longer exists and the device is considered
-always active. We can fix this by not marking the device as
-active.
+We see the following NULL pointer dereference while running xfstests
+generic/475:
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+PGD 8000000c84bad067 P4D 8000000c84bad067 PUD c84e62067 PMD 0
+Oops: 0000 [#1] SMP PTI
+CPU: 7 PID: 9886 Comm: fsstress Kdump: loaded Not tainted 5.0.0-rc8 #10
+RIP: 0010:ext4_do_update_inode+0x4ec/0x760
+...
+Call Trace:
+? jbd2_journal_get_write_access+0x42/0x50
+? __ext4_journal_get_write_access+0x2c/0x70
+? ext4_truncate+0x186/0x3f0
+ext4_mark_iloc_dirty+0x61/0x80
+ext4_mark_inode_dirty+0x62/0x1b0
+ext4_truncate+0x186/0x3f0
+? unmap_mapping_pages+0x56/0x100
+ext4_setattr+0x817/0x8b0
+notify_change+0x1df/0x430
+do_truncate+0x5e/0x90
+? generic_permission+0x12b/0x1a0
 
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Fixes: 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as "no callbacks"")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181024154825.18185-1-ville.syrjala@linux.intel.com
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Takashi Iwai <tiwai@suse.de>
+This is triggered because the NULL pointer handle->h_transaction was
+dereferenced in function ext4_update_inode_fsync_trans().
+I found that the h_transaction was set to NULL in jbd2__journal_restart
+but failed to attached to a new transaction while the journal is aborted.
+
+Fix this by checking the handle before updating the inode.
+
+Fixes: b436b9bef84d ("ext4: Wait for proper transaction commit on fsync")
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/x86/intel_hdmi_audio.c |    1 -
- 1 file changed, 1 deletion(-)
+ fs/ext4/ext4_jbd2.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/x86/intel_hdmi_audio.c
-+++ b/sound/x86/intel_hdmi_audio.c
-@@ -1887,7 +1887,6 @@ static int hdmi_lpe_audio_probe(struct p
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -387,7 +387,7 @@ static inline void ext4_update_inode_fsy
+ {
+ 	struct ext4_inode_info *ei = EXT4_I(inode);
  
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_mark_last_busy(&pdev->dev);
--	pm_runtime_set_active(&pdev->dev);
- 
- 	dev_dbg(&pdev->dev, "%s: handle pending notification\n", __func__);
- 	for_each_port(card_ctx, port) {
+-	if (ext4_handle_valid(handle)) {
++	if (ext4_handle_valid(handle) && !is_handle_aborted(handle)) {
+ 		ei->i_sync_tid = handle->h_transaction->t_tid;
+ 		if (datasync)
+ 			ei->i_datasync_tid = handle->h_transaction->t_tid;
 
 
