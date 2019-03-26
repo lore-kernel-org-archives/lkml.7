@@ -3,131 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B13C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A6FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6822075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3252075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731560AbfCZNbz (ORCPT
+        id S1731509AbfCZNcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:31:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:14026 "EHLO mga18.intel.com"
+        Tue, 26 Mar 2019 09:32:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34112 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfCZNbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:31:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 06:31:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="145353042"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002.jf.intel.com with ESMTP; 26 Mar 2019 06:31:52 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 2670F205E7; Tue, 26 Mar 2019 15:31:51 +0200 (EET)
-Date:   Tue, 26 Mar 2019 15:31:51 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190326133150.ioshrodjpwjdewzi@paasikivi.fi.intel.com>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-7-sakari.ailus@linux.intel.com>
- <8c6accab-9e0c-c2d4-ce93-ea3ede60f34e@rasmusvillemoes.dk>
- <20190326132450.GB9224@smile.fi.intel.com>
+        id S1726177AbfCZNcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:32:41 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 72C953082E91;
+        Tue, 26 Mar 2019 13:32:41 +0000 (UTC)
+Received: from treble (ovpn-120-253.rdu2.redhat.com [10.10.120.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6ECBD804B5;
+        Tue, 26 Mar 2019 13:32:38 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 08:32:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH] cpu/hotplug: Create SMT sysfs interface for all arches
+Message-ID: <20190326133236.lylrrbacznezybjm@treble>
+References: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
+ <alpine.DEB.2.21.1903242104280.1798@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190326132450.GB9224@smile.fi.intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <alpine.DEB.2.21.1903242104280.1798@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 26 Mar 2019 13:32:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy, Rasmus,
-
-Thanks for the comments.
-
-On Tue, Mar 26, 2019 at 03:24:50PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 26, 2019 at 02:11:35PM +0100, Rasmus Villemoes wrote:
-> > On 26/03/2019 13.41, Sakari Ailus wrote:
-> > > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> > > support printing full path of the node, including its name ("f") and only
-> > > the node's name ("P") in the printk family of functions. The two flags
-> > > have equivalent functionality to existing %pOF with the same two modifiers
-> > > ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> > > based systems is added by this patch.
-> 
-> > > +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
-> > > +		if (pass) {
-> > > +			if (buf < end)
-> > > +				*buf = ':';
-> > > +			buf++;
-> > > +		}
-> > > +
-> > > +		switch (*fmt) {
-> > > +		case 'f':	/* full_name */
-> > > +			buf = fwnode_gen_full_name(fwnode, buf, end);
-> > > +			break;
-> > > +		case 'P':	/* name */
-> > > +			buf = string(buf, end, fwnode_get_name(fwnode),
-> > > +				     str_spec);
-> > > +			break;
-> > > +		default:
-> > > +			break;
-> > > +		}
-> > > +	}
+On Sun, Mar 24, 2019 at 09:13:18PM +0100, Thomas Gleixner wrote:
+> On Fri, 1 Mar 2019, Josh Poimboeuf wrote:
+> > Make the /sys/devices/system/cpu/smt/* files available on all arches, so
+> > user space has a consistent way to detect whether SMT is enabled.
 > > 
-> > This seems awfully complicated. Why would anyone ever pass more than one
-> > of 'f' and 'P'? Why not just
-> > 
-> > switch(*fmt) {
-> > case 'P':
-> >    ...
-> > case 'f':
-> > default:
-> >    ...
-> > }
-> > 
-> > which avoids the loop and the strcspn. Or, drop the default: case and
-> > don't have logic at all for falling back to 'f' if neither is present.
-
-There are just two modifiers supported now ('f' and 'P') but should more be
-needed in the future, we'd need the loop again. This is basically modelled
-after %pOF implementation.
-
-I can simplify this if you both still think that's the way to go, and
-make the implementations diverge.
-
-> > 
-> > > +	return widen_string(buf, buf - buf_start, end, spec);
-> > > +}
+> > The 'control' file now shows 'notsupported' for architectures which
+> > don't yet have CONFIG_HOTPLUG_SMT.
 > 
-> My point as well (as per sent comments against previous version).
-> Sakari, can you add test cases at the same time?
+> I'm slowly crawling through my backlog ...
 > 
-> > >  			return device_node_string(buf, end, ptr, spec, fmt + 1);
+> > --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> > +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> > @@ -514,7 +514,8 @@ Description:	Control Symetric Multi Threading (SMT)
+> >  			 "on"		SMT is enabled
+> >  			 "off"		SMT is disabled
+> >  			 "forceoff"	SMT is force disabled. Cannot be changed.
+> > -			 "notsupported" SMT is not supported by the CPU
+> > +			 "notsupported" Runtime SMT toggling is not currently
+> > +					supported for the architecture
 > 
-> > > +			return fwnode_string(buf, end, ptr, spec, fmt + 1);
-> > 
-> > Why not pass fmt+2; we know that fmt+1 points at a 'w'. Just to avoid
-> > doing the fmt++ inside fwnode_string().
+> Second thoughts. I'm not really convinced that changing the meaning of
+> notsupported and in fact overloading it, is the right thing to do.
+> notsupported means now:
 > 
-> I guess in order to be consistent with existing %pOF case. But wouldn't be
-> better to fix %pOF for that sooner or later?
+>   CPU does not support it - OR - architecture does not support it
+> 
+> That's not pretty and we are surely not short of state space. There are
+> several options for handling this:
+> 
+>  1) Do not expose the state file, just expose the active file
+> 
+>  2) Expose the state file, but return -ENOTSUPP or some other sensible error
+>     code
+> 
+>  3) Expose the state file and let show return 'notimplemented' which is
+>     more accurate. That wouldn't even require to expand the state space
+>     enum. It just can be returned unconditionally.
 
-Agreed.
+Makes sense.  I like #3.  I can post another version.
 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Josh
