@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED8EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A352EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6792070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7301D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582574;
-	bh=2pKmOtflfT9brReXwJoAp345D4tnX/wbnaIzm+07Wdk=;
+	s=default; t=1553582587;
+	bh=lZmLUbu784og2lgEKXi8oJSsDN5/BsTg+fmpZ0d9N/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kAhRcTg/jbev1R97uQBRLLXU1+Jq4F4yagjGtb0ycpSBYQx3hJA9Ta8h5h8T9W4lt
-	 BbH26jx3ZG4w+ajeSn9wJtspsj53PGFr6YQ1jcz8JUUSuchbmyHgaOto48AkaF6OJu
-	 PwFnEo3QvvmVXqJnAixNXRblAV6mljRhbVkV3cTQ=
+	b=C6YJXk5mXyn7jlP2YvHJ1SyTOtG1ls+4coAt2WMj7G+jqL/5a6Th8ZcMGNGRJBr7F
+	 yjdnPk5BMFbiqEz5dksyL9TVxiJBcb3Lm+TyGfWaTcYO0ZxzoDANGsWUtTuOkuNsAO
+	 syco57r/F7acUSG4IiXfQfeNaFrYWO3b9Rm+pslk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732541AbfCZGia (ORCPT
+        id S1732474AbfCZGiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732051AbfCZGiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:24 -0400
+        id S1732176AbfCZGiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:00 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE2520863;
-        Tue, 26 Mar 2019 06:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AF172075E;
+        Tue, 26 Mar 2019 06:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582303;
-        bh=2pKmOtflfT9brReXwJoAp345D4tnX/wbnaIzm+07Wdk=;
+        s=default; t=1553582280;
+        bh=lZmLUbu784og2lgEKXi8oJSsDN5/BsTg+fmpZ0d9N/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XFGSJvyMreHpg+WLJFfOVqOCnZsaNrCwFHtI80mXE410Cny/RF0utIrRK4zjK1e63
-         sx8vLS6euUDH+cBbzmO1QSeQheLO+anzupEd/wzBAlnp4NComfBfPjVq2KsyOgrVcP
-         otu73pN+cBgmzsmWVU7em+m1xcEDglZNAXJBvdcA=
+        b=mW4ph59o3NhddQEiYYrHMRuJurN4QAuR64+zPxx+LpL/TneX2K60zSnSF2ujLvuSa
+         hPvjabiy414tgiygB1645QfxorlrZivaUsJgFAlFMYI/bFhFwIQNPT1dmpD1GN7Rkk
+         W9tpgsN6W4mAZmoNeuQDWGCYeVBei0IY2ZmTOqgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yasha Cherikovsky <yasha.che3@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
-Subject: [PATCH 5.0 15/52] MIPS: Ensure ELF appended dtb is relocated
-Date:   Tue, 26 Mar 2019 15:30:02 +0900
-Message-Id: <20190326042701.678153787@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f3ce716af730c8f96637@syzkaller.appspotmail.com,
+        Myungho Jung <mhjungk@gmail.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 35/45] RDMA/cma: Rollback source IP address if failing to acquire device
+Date:   Tue, 26 Mar 2019 15:30:18 +0900
+Message-Id: <20190326042704.515851977@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
-References: <20190326042700.963224437@linuxfoundation.org>
+In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
+References: <20190326042702.565683325@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,65 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Yasha Cherikovsky <yasha.che3@gmail.com>
+From: Myungho Jung <mhjungk@gmail.com>
 
-commit 3f0a53bc6482fb09770982a8447981260ea258dc upstream.
+commit 5fc01fb846bce8fa6d5f95e2625b8ce0f8e86810 upstream.
 
-This fixes booting with the combination of CONFIG_RELOCATABLE=y
-and CONFIG_MIPS_ELF_APPENDED_DTB=y.
+If cma_acquire_dev_by_src_ip() returns error in addr_handler(), the
+device state changes back to RDMA_CM_ADDR_BOUND but the resolved source
+IP address is still left. After that, if rdma_destroy_id() is called
+after rdma_listen(), the device is freed without removed from
+listen_any_list in cma_cancel_operation(). Revert to the previous IP
+address if acquiring device fails.
 
-Sections that appear after the relocation table are not relocated
-on system boot (except .bss, which has special handling).
-
-With CONFIG_MIPS_ELF_APPENDED_DTB, the dtb is part of the
-vmlinux ELF, so it must be relocated together with everything else.
-
-Fixes: 069fd766271d ("MIPS: Reserve space for relocation table")
-Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.7+
+Reported-by: syzbot+f3ce716af730c8f96637@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/vmlinux.lds.S |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/cma.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -140,6 +140,13 @@ SECTIONS
- 	PERCPU_SECTION(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
- #endif
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2854,13 +2854,22 @@ static void addr_handler(int status, str
+ {
+ 	struct rdma_id_private *id_priv = context;
+ 	struct rdma_cm_event event = {};
++	struct sockaddr *addr;
++	struct sockaddr_storage old_addr;
  
-+#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
-+	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
-+		*(.appended_dtb)
-+		KEEP(*(.appended_dtb))
-+	}
-+#endif
-+
- #ifdef CONFIG_RELOCATABLE
- 	. = ALIGN(4);
+ 	mutex_lock(&id_priv->handler_mutex);
+ 	if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_QUERY,
+ 			   RDMA_CM_ADDR_RESOLVED))
+ 		goto out;
  
-@@ -164,11 +171,6 @@ SECTIONS
- 	__appended_dtb = .;
- 	/* leave space for appended DTB */
- 	. += 0x100000;
--#elif defined(CONFIG_MIPS_ELF_APPENDED_DTB)
--	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
--		*(.appended_dtb)
--		KEEP(*(.appended_dtb))
--	}
- #endif
- 	/*
- 	 * Align to 64K in attempt to eliminate holes before the
+-	memcpy(cma_src_addr(id_priv), src_addr, rdma_addr_size(src_addr));
++	/*
++	 * Store the previous src address, so that if we fail to acquire
++	 * matching rdma device, old address can be restored back, which helps
++	 * to cancel the cma listen operation correctly.
++	 */
++	addr = cma_src_addr(id_priv);
++	memcpy(&old_addr, addr, rdma_addr_size(addr));
++	memcpy(addr, src_addr, rdma_addr_size(src_addr));
+ 	if (!status && !id_priv->cma_dev) {
+ 		status = cma_acquire_dev(id_priv, NULL);
+ 		if (status)
+@@ -2871,6 +2880,8 @@ static void addr_handler(int status, str
+ 	}
+ 
+ 	if (status) {
++		memcpy(addr, &old_addr,
++		       rdma_addr_size((struct sockaddr *)&old_addr));
+ 		if (!cma_comp_exch(id_priv, RDMA_CM_ADDR_RESOLVED,
+ 				   RDMA_CM_ADDR_BOUND))
+ 			goto out;
 
 
