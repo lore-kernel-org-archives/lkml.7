@@ -2,140 +2,226 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7510DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47DA32070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5482084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rMUjOLqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfCZQ5s (ORCPT
+        id S1731707AbfCZQ6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:57:48 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40828 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfCZQ5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:57:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E30D7374;
-        Tue, 26 Mar 2019 09:57:46 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55A393F614;
-        Tue, 26 Mar 2019 09:57:44 -0700 (PDT)
-Subject: Re: [PATCH v7 2/4] perf/smmuv3: Add arm64 smmuv3 pmu driver
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        lorenzo.pieralisi@arm.com
-Cc:     andrew.murray@arm.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com, mark.rutland@arm.com, guohanjun@huawei.com,
-        john.garry@huawei.com, pabba@codeaurora.org,
-        vkilari@codeaurora.org, rruigrok@codeaurora.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
-        neil.m.leeder@gmail.com
-References: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
- <20190326151753.19384-3-shameerali.kolothum.thodi@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <fa89c332-d420-8fef-5034-518e60571bd9@arm.com>
-Date:   Tue, 26 Mar 2019 16:57:42 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 12:58:15 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:17025 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729633AbfCZQ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:58:14 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44THPv5XQvz9tyyq;
+        Tue, 26 Mar 2019 17:58:11 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=rMUjOLqZ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mRPEEK1aMQ5F; Tue, 26 Mar 2019 17:58:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44THPv4Cmfz9tyyn;
+        Tue, 26 Mar 2019 17:58:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1553619491; bh=LD6hSdcwvQiyOzYMP5lSb0ibAdI5w/B0bCTvzjdJMOI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rMUjOLqZISmdIE6B1jHtMrvKQEmm5vf8LcThjXGq2uQq5zmFsrMSqhX0wMZorCflN
+         VvdQUOuwY4vEKk/LZROBr/v73HEkV1zvQ78GtkgVSZt/jS/eaJri/J7XoR09cUPO6r
+         zysNlRLaNu/T1pa6nA5aGrAf3ynsBBmA3yhzfW2Y=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F196D8B8DB;
+        Tue, 26 Mar 2019 17:58:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Yk3sBN4yLD5x; Tue, 26 Mar 2019 17:58:10 +0100 (CET)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 645E58B8D0;
+        Tue, 26 Mar 2019 17:58:09 +0100 (CET)
+Subject: Re: [PATCH v6 04/19] powerpc: mm: Add p?d_large() definitions
+To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190326162624.20736-1-steven.price@arm.com>
+ <20190326162624.20736-5-steven.price@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <8a2efe07-b99f-3caa-fab9-47e49043bf66@c-s.fr>
+Date:   Tue, 26 Mar 2019 17:58:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190326151753.19384-3-shameerali.kolothum.thodi@huawei.com>
+In-Reply-To: <20190326162624.20736-5-steven.price@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
 
-On 26/03/2019 15:17, Shameer Kolothum wrote:
-[...]
-> +static int smmu_pmu_apply_event_filter(struct smmu_pmu *smmu_pmu,
-> +				       struct perf_event *event, int idx)
+
+Le 26/03/2019 à 17:26, Steven Price a écrit :
+> walk_page_range() is going to be allowed to walk page tables other than
+> those of user space. For this it needs to know when it has reached a
+> 'leaf' entry in the page tables. This information is provided by the
+> p?d_large() functions/macros.
+> 
+> For powerpc pmd_large() was already implemented, so hoist it out of the
+> CONFIG_TRANSPARENT_HUGEPAGE condition and implement the other levels.
+> 
+> Also since we now have a pmd_large always implemented we can drop the
+> pmd_is_leaf() function.
+
+Wouldn't it be better to drop the pmd_is_leaf() in a second patch ?
+
+Christophe
+
+> 
+> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> CC: Paul Mackerras <paulus@samba.org>
+> CC: Michael Ellerman <mpe@ellerman.id.au>
+> CC: linuxppc-dev@lists.ozlabs.org
+> CC: kvm-ppc@vger.kernel.org
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/powerpc/include/asm/book3s/64/pgtable.h | 30 ++++++++++++++------
+>   arch/powerpc/kvm/book3s_64_mmu_radix.c       | 12 ++------
+>   2 files changed, 24 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> index 581f91be9dd4..f6d1ac8b832e 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -897,6 +897,12 @@ static inline int pud_present(pud_t pud)
+>   	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PRESENT));
+>   }
+>   
+> +#define pud_large	pud_large
+> +static inline int pud_large(pud_t pud)
 > +{
-> +	u32 span, sid;
-> +	unsigned int num_ctrs = smmu_pmu->num_counters;
-> +	bool filter_en = !!get_filter_enable(event);
+> +	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
+> +}
 > +
-> +	span = filter_en ? get_filter_span(event) :
-> +			   SMMU_PMCG_DEFAULT_FILTER_SPAN;
-> +	sid = filter_en ? get_filter_stream_id(event) :
-> +			   SMMU_PMCG_DEFAULT_FILTER_SID;
+>   extern struct page *pud_page(pud_t pud);
+>   extern struct page *pmd_page(pmd_t pmd);
+>   static inline pte_t pud_pte(pud_t pud)
+> @@ -940,6 +946,12 @@ static inline int pgd_present(pgd_t pgd)
+>   	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PRESENT));
+>   }
+>   
+> +#define pgd_large	pgd_large
+> +static inline int pgd_large(pgd_t pgd)
+> +{
+> +	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
+> +}
 > +
-> +	/* Support individual filter settings */
-> +	if (!smmu_pmu->global_filter) {
-> +		smmu_pmu_set_event_filter(event, idx, span, sid);
-> +		return 0;
-> +	}
+>   static inline pte_t pgd_pte(pgd_t pgd)
+>   {
+>   	return __pte_raw(pgd_raw(pgd));
+> @@ -1093,6 +1105,15 @@ static inline bool pmd_access_permitted(pmd_t pmd, bool write)
+>   	return pte_access_permitted(pmd_pte(pmd), write);
+>   }
+>   
+> +#define pmd_large	pmd_large
+> +/*
+> + * returns true for pmd migration entries, THP, devmap, hugetlb
+> + */
+> +static inline int pmd_large(pmd_t pmd)
+> +{
+> +	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+> +}
 > +
-> +	/* Requested settings same as current global settings*/
-> +	if (span == smmu_pmu->global_filter_span &&
-> +	    sid == smmu_pmu->global_filter_sid)
-> +		return 0;
-> +
-> +	if (!bitmap_empty(smmu_pmu->used_counters, num_ctrs))
-> +		return -EAGAIN;
-> +
-> +	if (idx == 0) {
-> +		smmu_pmu_set_event_filter(event, idx, span, sid);
-> +		smmu_pmu->global_filter_span = span;
-> +		smmu_pmu->global_filter_sid = sid;
-> +		return 0;
-> +	}
-
-When I suggested dropping the check of idx, I did mean removing it 
-entirely, not just moving it further down ;)
-
-Nothing to worry about though, I'll just leave this here for Will to 
-consider applying on top or squashing.
-
-Thanks,
-Robin.
-
------>8-----
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] perf/smmuv3: Relax global filter constraint a little
-
-Although the current behaviour of smmu_pmu_get_event_idx() effectively
-ensures that the first-allocated counter will be counter 0, there's no
-need to strictly enforce that in smmu_pmu_apply_event_filter(). All that
-matters is that we only ever touch the global filter settings in
-SMMU_PMCG_SMR0 and SMMU_PMCG_EVTYPER0 while no counters are active.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
-  drivers/perf/arm_smmuv3_pmu.c | 11 ++++-------
-  1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 6b3c0ed7ad71..23045ead6de1 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -286,14 +286,11 @@ static int smmu_pmu_apply_event_filter(struct 
-smmu_pmu *smmu_pmu,
-  	if (!bitmap_empty(smmu_pmu->used_counters, num_ctrs))
-  		return -EAGAIN;
-
--	if (idx == 0) {
--		smmu_pmu_set_event_filter(event, idx, span, sid);
--		smmu_pmu->global_filter_span = span;
--		smmu_pmu->global_filter_sid = sid;
--		return 0;
--	}
-+	smmu_pmu_set_event_filter(event, 0, span, sid);
-+	smmu_pmu->global_filter_span = span;
-+	smmu_pmu->global_filter_sid = sid;
-
--	return -EAGAIN;
-+	return 0;
-  }
-
-  static int smmu_pmu_get_event_idx(struct smmu_pmu *smmu_pmu,
--- 
-2.20.1.dirty
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>   extern pmd_t pfn_pmd(unsigned long pfn, pgprot_t pgprot);
+>   extern pmd_t mk_pmd(struct page *page, pgprot_t pgprot);
+> @@ -1119,15 +1140,6 @@ pmd_hugepage_update(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp,
+>   	return hash__pmd_hugepage_update(mm, addr, pmdp, clr, set);
+>   }
+>   
+> -/*
+> - * returns true for pmd migration entries, THP, devmap, hugetlb
+> - * But compile time dependent on THP config
+> - */
+> -static inline int pmd_large(pmd_t pmd)
+> -{
+> -	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
+> -}
+> -
+>   static inline pmd_t pmd_mknotpresent(pmd_t pmd)
+>   {
+>   	return __pmd(pmd_val(pmd) & ~_PAGE_PRESENT);
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> index f55ef071883f..1b57b4e3f819 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> @@ -363,12 +363,6 @@ static void kvmppc_pte_free(pte_t *ptep)
+>   	kmem_cache_free(kvm_pte_cache, ptep);
+>   }
+>   
+> -/* Like pmd_huge() and pmd_large(), but works regardless of config options */
+> -static inline int pmd_is_leaf(pmd_t pmd)
+> -{
+> -	return !!(pmd_val(pmd) & _PAGE_PTE);
+> -}
+> -
+>   static pmd_t *kvmppc_pmd_alloc(void)
+>   {
+>   	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
+> @@ -460,7 +454,7 @@ static void kvmppc_unmap_free_pmd(struct kvm *kvm, pmd_t *pmd, bool full,
+>   	for (im = 0; im < PTRS_PER_PMD; ++im, ++p) {
+>   		if (!pmd_present(*p))
+>   			continue;
+> -		if (pmd_is_leaf(*p)) {
+> +		if (pmd_large(*p)) {
+>   			if (full) {
+>   				pmd_clear(p);
+>   			} else {
+> @@ -593,7 +587,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
+>   	else if (level <= 1)
+>   		new_pmd = kvmppc_pmd_alloc();
+>   
+> -	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_is_leaf(*pmd)))
+> +	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_large(*pmd)))
+>   		new_ptep = kvmppc_pte_alloc();
+>   
+>   	/* Check if we might have been invalidated; let the guest retry if so */
+> @@ -662,7 +656,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
+>   		new_pmd = NULL;
+>   	}
+>   	pmd = pmd_offset(pud, gpa);
+> -	if (pmd_is_leaf(*pmd)) {
+> +	if (pmd_large(*pmd)) {
+>   		unsigned long lgpa = gpa & PMD_MASK;
+>   
+>   		/* Check if we raced and someone else has set the same thing */
+> 
