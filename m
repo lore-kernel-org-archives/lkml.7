@@ -2,86 +2,115 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7562FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85745C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485742147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485382075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:03:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INI2SKS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732324AbfCZUCq (ORCPT
+        id S1732567AbfCZUDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:02:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732032AbfCZUCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:02:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 894FD2075C;
-        Tue, 26 Mar 2019 20:02:45 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 16:02:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] tools/lib/traceevent: remove call to exit() from
- tep_filter_add_filter_str()
-Message-ID: <20190326160243.1d8da575@gandalf.local.home>
-In-Reply-To: <20190326154328.28718-9-tstoyanov@vmware.com>
-References: <20190326154328.28718-1-tstoyanov@vmware.com>
-        <20190326154328.28718-9-tstoyanov@vmware.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 26 Mar 2019 16:03:06 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41380 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfCZUDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 16:03:05 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so3125107pfd.8;
+        Tue, 26 Mar 2019 13:03:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UCNORsKkR6DTRgKLd7wxUec1B8EozazJHrB8dBBozXk=;
+        b=INI2SKS5Ug5LVJQ8KFm07rzF9dlcNMr5LUWk4Ux0jjXAajQSoDDEfkFNyCTE3lgdZ/
+         qWap56xLTVRncJFoFoURKuOg8CpD3zhvqPmLpKPCmNPxW6onfh+f+MyAxvK8cZE6Xc96
+         Rvg0HExV5zN2LfpnOBQyMYYIWW1yLwYNW6qFLCogju+Ze3tJi3+XIC+cuRDEo9vshtcJ
+         sPiwIeJDLvmU3j0cq66CXLrnM/dbWDuHGIfEiXdj2D9OoxkEWeum07kgEIW8vo6kgKxP
+         iwEElHmB6KymUFI2gMEtceQVLCI4OTvqBTICfh7deAYR3OayEujj9xltPLxDfuadPmnD
+         RdSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UCNORsKkR6DTRgKLd7wxUec1B8EozazJHrB8dBBozXk=;
+        b=TyZtIZMgi99DPfrttfXKu461c2HHyh8wesOP4JhbhmNFE99QBxD7gyvqU0UjeIrX/C
+         xIRa5hYki7C5WkdLuMzkgxY61eRNy3FYhzmFQLlLi0+5/1/v9vQYIUYKptg1riYDS7oI
+         ZSr7uY/s384nA7VbEBXMDT2U3F8F9m/zNg7CY3s67TT4Gynmr2jVZDjZ5HQlZb1/K8ZZ
+         8pPH9lWYzKpS68Vr4ys6CHFQg6dX7vqpMBFSlCoHG75OIgt8LvSUSqG979pyejTNee9s
+         pmeDGxXVXP7g6v7SU2TC9uTqdq4eBDEMiC2gMmoYz2+iug0bdPU/re1MjFlBwlv8QQIt
+         Qdxg==
+X-Gm-Message-State: APjAAAXPIkYEw7GI/BpMId1TpMAYTH/ZXn818rbJn2aywGn/y6mIATiD
+        dbTOeCA7CSvPVhQ1O6Em5Zc=
+X-Google-Smtp-Source: APXvYqw5PmxWbujer5FdunUKtwmfWmclJtMLM4JfJSAEMXxG9rziLjb3gTP9XtpnWP8oGtDyEA2MJA==
+X-Received: by 2002:a63:2c55:: with SMTP id s82mr24420765pgs.356.1553630584528;
+        Tue, 26 Mar 2019 13:03:04 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k124sm20080402pgc.65.2019.03.26.13.03.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 13:03:03 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 13:03:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>
+Subject: Re: [PATCH v2 3/5] gpio: use new gpio_set_config() helper in more
+ places
+Message-ID: <20190326200302.GA15712@roeck-us.net>
+References: <20190207162859.26252-1-thomas.petazzoni@bootlin.com>
+ <20190207162859.26252-4-thomas.petazzoni@bootlin.com>
+ <20190316014352.GA6124@roeck-us.net>
+ <20190316144519.07805478@windsurf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316144519.07805478@windsurf>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 17:43:28 +0200
-Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
-
-> This patch removes call to exit() from tep_filter_add_filter_str(). A library
-> function should not force the application to exit. In the current implementation
-> tep_filter_add_filter_str() calls exit() when a special "test_filters" mode is
-> set, used only for debugging purposes. When this mode is set and a filter is
-> added - its string is printed to the console and exit() is called. This patch
-> changes the logic - when in "test_filters" mode, the filter string is still
-> printed, but the exit() is not called. It is up to the application to track when
-> "test_filters" mode is set and to call exit, if needed.
-
-I applied this one too (after changing tep back to pevent so that it
-will apply without the other patches).
-
-I'll start testing these and then send them to Arnaldo when complete.
-
-Thanks!
-
--- Steve
-
+On Sat, Mar 16, 2019 at 02:45:19PM +0100, Thomas Petazzoni wrote:
+> Hello,
 > 
-> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> ---
->  tools/lib/traceevent/parse-filter.c | 3 ---
->  1 file changed, 3 deletions(-)
+> On Fri, 15 Mar 2019 18:43:52 -0700
+> Guenter Roeck <linux@roeck-us.net> wrote:
 > 
-> diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-> index 298694356277..552592d153fb 100644
-> --- a/tools/lib/traceevent/parse-filter.c
-> +++ b/tools/lib/traceevent/parse-filter.c
-> @@ -1346,9 +1346,6 @@ enum tep_errno tep_filter_add_filter_str(struct tep_event_filter *filter,
->  
->  	free_events(events);
->  
-> -	if (rtn >= 0 && tep->test_filters)
-> -		exit(0);
-> -
->  	return rtn;
->  }
->  
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index cf8a4402fef1..9762a836fec9 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -2762,7 +2762,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
+> > >  	}
+> > >  
+> > >  	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
+> > > -	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
+> > > +	return gpio_set_config(chip, gpio_chip_hwgpio(desc), config);  
+> > 
+> > Are you sure this is correct ? This patch results in a number of tracebacks
+> > in mainline. Reverting it fixes the problem.
+> > 
+> > gpio_set_config() seems to pack config, but it is already packed above.
+> > That seems a bit suspicious.
+> 
+> I'll have a look. In the mean time, I'm fine with the patch being
+> reverted.
+> 
 
+The problem is still seen in the latest kernel as of last night, and
+I did not see any further activities. Should I send a revert request ?
+
+Guenter
