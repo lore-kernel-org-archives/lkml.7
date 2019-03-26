@@ -4,48 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30618C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40C7206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD88620823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582055;
-	bh=w4rBr4hUC85N8My419lAaiBGuc/JLpx9Ct60cz7XXDI=;
+	s=default; t=1553582060;
+	bh=rXjFtthL8cGAlqzo83zPkhsGt2RchtB6KoJGCNPPNpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsIX8eVePo5PSG12w2X8TZyEJkZrVLTIvIKfBEDu0r30Wppr2/dau4NqMJLDA0lFu
-	 SwvRjMGZEoZylaFGfbZfWwllvvzni84fjx8Xu4m/Ana++LZ6ho56i048dArOdhW/oR
-	 aN/vZcjTnovVhvnMqgdt0OCBUbcEz/W4vgnRcj7Q=
+	b=1VL9c1TzhnOH6hMCVJ/alpJif6iz8ObTMLqhqBGv9aG6T5uUnwaaibJ+g2sL8JFEr
+	 1g/faZ9oT32iy63ZF9dI9ysID/5ARu8FX4zTACzN2GGxq2CT4v7NArzrN8hCr/0fix
+	 U80PzFq3wnNgg7jGQZg4zEM8J1tIOiXHPuXLBK3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbfCZGeN (ORCPT
+        id S1731837AbfCZGeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44458 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731403AbfCZGeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:10 -0400
+        id S1731822AbfCZGeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:14 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870CD20823;
-        Tue, 26 Mar 2019 06:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4047F2070B;
+        Tue, 26 Mar 2019 06:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582049;
-        bh=w4rBr4hUC85N8My419lAaiBGuc/JLpx9Ct60cz7XXDI=;
+        s=default; t=1553582053;
+        bh=rXjFtthL8cGAlqzo83zPkhsGt2RchtB6KoJGCNPPNpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ev/UptV/rIYsUVp/r3XoNnymEmDPEx3tztS71SqgHGM/7y00gRHSOyb6ipozzZaF8
-         iv7lVp8AOdzaaSHqIiVFL+2JUR+Hbu+pIOwzp3oXCjJ4H40G/BTESRZrNeheLFhoJw
-         JnuCyJOdMFOGBTEbMJ4nH1oPi8mJXnITvtiDQiw8=
+        b=F1spVo7hQQ9g3kKJMWRuLVnGQiHgZ5WrP+KIt+IH546AaqBQJUENJqTQoIdgQDh96
+         K1yUWbEGaXuR4ZOGygrbALnuUUIsmnKE9l2r+7JhZOAAxGArNU7YUtpaFVVstny9q9
+         enc7H0sF++/SAlcv+8bOIWzcIwf06RuMgPpldoBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 30/41] ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-Date:   Tue, 26 Mar 2019 15:30:07 +0900
-Message-Id: <20190326042651.549722608@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Anshul Garg <aksgarg1989@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Joe Perches <joe@perches.com>,
+        David Miller <davem@davemloft.net>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Davidson <md@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 31/41] lib/int_sqrt: optimize small argument
+Date:   Tue, 26 Mar 2019 15:30:08 +0900
+Message-Id: <20190326042651.600856386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -64,93 +78,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit b5a236c175b0d984552a5f7c9d35141024c2b261 upstream.
+commit 3f3295709edea6268ff1609855f498035286af73 upstream.
 
-Recently we found the audio jack detection stop working after suspend
-on many machines with Realtek codec. Sometimes the audio selection
-dialogue didn't show up after users plugged headhphone/headset into
-the headset jack, sometimes after uses plugged headphone/headset, then
-click the sound icon on the upper-right corner of gnome-desktop, it
-also showed the speaker rather than the headphone.
+The current int_sqrt() computation is sub-optimal for the case of small
+@x.  Which is the interesting case when we're going to do cumulative
+distribution functions on idle times, which we assume to be a random
+variable, where the target residency of the deepest idle state gives an
+upper bound on the variable (5e6ns on recent Intel chips).
 
-The root cause is that before suspend, the codec already call the
-runtime_suspend since this codec is not used by any apps, then in
-resume, it will not call runtime_resume for this codec. But for some
-realtek codec (so far, alc236, alc255 and alc891) with the specific
-BIOS, if it doesn't run runtime_resume after suspend, all codec
-functions including jack detection stop working anymore.
+In the case of small @x, the compute loop:
 
-This problem existed for a long time, but it was not exposed, that is
-because when problem happens, if users play sound or open
-sound-setting to check audio device, this will trigger calling to
-runtime_resume (via snd_hda_power_up), then the codec starts working
-again before users notice this problem.
+	while (m != 0) {
+		b = y + m;
+		y >>= 1;
 
-Since we don't know how many codec and BIOS combinations have this
-problem, to fix it, let the driver call runtime_resume for all codecs
-in pm_resume, maybe for some codecs, this is not needed, but it is
-harmless. After a codec is runtime resumed, if it is not used by any
-apps, it will be runtime suspended soon and furthermore we don't run
-suspend frequently, this change will not add much power consumption.
+		if (x >= b) {
+			x -= b;
+			y += m;
+		}
+		m >>= 2;
+	}
 
-Fixes: cc72da7d4d06 ("ALSA: hda - Use standard runtime PM for codec power-save control")
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+can be reduced to:
+
+	while (m > x)
+		m >>= 2;
+
+Because y==0, b==m and until x>=m y will remain 0.
+
+And while this is computationally equivalent, it runs much faster
+because there's less code, in particular less branches.
+
+      cycles:                 branches:              branch-misses:
+
+OLD:
+
+hot:   45.109444 +- 0.044117  44.333392 +- 0.002254  0.018723 +- 0.000593
+cold: 187.737379 +- 0.156678  44.333407 +- 0.002254  6.272844 +- 0.004305
+
+PRE:
+
+hot:   67.937492 +- 0.064124  66.999535 +- 0.000488  0.066720 +- 0.001113
+cold: 232.004379 +- 0.332811  66.999527 +- 0.000488  6.914634 +- 0.006568
+
+POST:
+
+hot:   43.633557 +- 0.034373  45.333132 +- 0.002277  0.023529 +- 0.000681
+cold: 207.438411 +- 0.125840  45.333132 +- 0.002277  6.976486 +- 0.004219
+
+Averages computed over all values <128k using a LFSR to generate order.
+Cold numbers have a LFSR based branch trace buffer 'confuser' ran between
+each int_sqrt() invocation.
+
+Link: http://lkml.kernel.org/r/20171020164644.876503355@infradead.org
+Fixes: 30493cc9dddb ("lib/int_sqrt.c: optimize square root algorithm")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Suggested-by: Anshul Garg <aksgarg1989@gmail.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: David Miller <davem@davemloft.net>
+Cc: Matthew Wilcox <mawilcox@microsoft.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Michael Davidson <md@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_codec.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ lib/int_sqrt.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -2934,6 +2934,20 @@ static int hda_codec_runtime_resume(stru
- #endif /* CONFIG_PM */
+--- a/lib/int_sqrt.c
++++ b/lib/int_sqrt.c
+@@ -23,6 +23,9 @@ unsigned long int_sqrt(unsigned long x)
+ 		return x;
  
- #ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
+ 	m = 1UL << (BITS_PER_LONG - 2);
++	while (m > x)
++		m >>= 2;
 +
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
- static int hda_codec_pm_suspend(struct device *dev)
- {
- 	dev->power.power_state = PMSG_SUSPEND;
-@@ -2943,7 +2957,7 @@ static int hda_codec_pm_suspend(struct d
- static int hda_codec_pm_resume(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESUME;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_freeze(struct device *dev)
-@@ -2955,13 +2969,13 @@ static int hda_codec_pm_freeze(struct de
- static int hda_codec_pm_thaw(struct device *dev)
- {
- 	dev->power.power_state = PMSG_THAW;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_restore(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESTORE;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- #endif /* CONFIG_PM_SLEEP */
- 
+ 	while (m != 0) {
+ 		b = y + m;
+ 		y >>= 1;
 
 
