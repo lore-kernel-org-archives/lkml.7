@@ -5,102 +5,117 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB106C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4A2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE12E206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C118F2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfCZVVc (ORCPT
+        id S1732369AbfCZVWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:21:32 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49480 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfCZVVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:21:32 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h8tUw-0006Zt-09; Tue, 26 Mar 2019 22:20:42 +0100
-Date:   Tue, 26 Mar 2019 22:20:41 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Don Zickus <dzickus@redhat.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Babu Moger <babu.moger@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Byungchul Park <byungchul.park@lge.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Christoffer Dall <cdall@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RFC PATCH v2 09/14] watchdog/hardlockup: Make arch_touch_nmi_watchdog()
- to hpet-based implementation
-In-Reply-To: <20190301011713.GA8058@ranerica-svr.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1903262219100.1789@nanos.tec.linutronix.de>
-References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-10-git-send-email-ricardo.neri-calderon@linux.intel.com> <20190227161758.GE4072@linux.ibm.com> <20190301011713.GA8058@ranerica-svr.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 26 Mar 2019 17:22:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:22806 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfCZVWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:22:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AE3AF30718C1;
+        Tue, 26 Mar 2019 21:22:35 +0000 (UTC)
+Received: from ovpn-118-18.phx2.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A6E9960160;
+        Tue, 26 Mar 2019 21:22:34 +0000 (UTC)
+Message-ID: <580c6c604d3915c105f076fc7f22ab5da98598fc.camel@redhat.com>
+Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
+From:   Scott Wood <swood@redhat.com>
+To:     Alan Tull <atull@kernel.org>
+Cc:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Date:   Tue, 26 Mar 2019 16:22:34 -0500
+In-Reply-To: <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+         <1553483264-5379-4-git-send-email-hao.wu@intel.com>
+         <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
+         <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
+         <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 26 Mar 2019 21:22:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019, Ricardo Neri wrote:
-> > > 
-> > > -#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
-> > > +#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF) || \
-> > > +    defined(CONFIG_X86_HARDLOCKUP_DETECTOR_HPET)
-> > 
-> > Why not instead make CONFIG_X86_HARDLOCKUP_DETECTOR_HPET select
-> > CONFIG_HARDLOCKUP_DETECTOR_PERF?  Keep the arch-specific details
-> > in the arch-specific files and all that.
+On Tue, 2019-03-26 at 14:33 -0500, Alan Tull wrote:
+> On Mon, Mar 25, 2019 at 5:58 PM Scott Wood <swood@redhat.com> wrote:
 > 
-> Thanks for your feedback, Paul! The HPET implementation does not use
-> perf. Thus, in my opinion is not correct for the HPET HLD to select
-> the perf implementation. Patch 8 of this series splits the perf-specific
-> code and the generic hardlockup detector code. Does this make sense?
+> Hi Scott,
+> 
+> > On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
+> > > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
+> > > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
+> > > > +
+> > > > +#include <asm/fpu/api.h>
+> > > > +
+> > > > +static inline void copy512(void *src, void __iomem *dst)
+> > > > +{
+> > > > +   kernel_fpu_begin();
+> > > > +
+> > > > +   asm volatile("vmovdqu64 (%0), %%zmm0;"
+> > > > +                "vmovntdq %%zmm0, (%1);"
+> > > > +                :
+> > > > +                : "r"(src), "r"(dst));
+> > > > +
+> > > > +   kernel_fpu_end();
+> > > > +}
+> > > 
+> > > Shouldn't there be some sort of check that AVX512 is actually
+> > > supported
+> > > on the running system?
+> > > 
+> > > Also, src should be const, and the asm statement should have a memory
+> > > clobber.
+> > > 
+> > > > +#else
+> > > > +static inline void copy512(void *src, void __iomem *dst)
+> > > > +{
+> > > > +   WARN_ON_ONCE(1);
+> > > > +}
+> > > > +#endif
+> > > 
+> > > Likewise, this will be called if a revision 2 device is used on non-
+> > > x86
+> > > (or on x86 with an old binutils).  The driver should fall back to 32-
+> > > bit
+> > > in such cases.
+> > 
+> > Sorry, I missed the comment about revision 2 only being on integrated
+> > devices -- but will that always be the case?  Seems worthwhile to check
+> > for
+> > AVX512 support anyway.  And there's still the possibility of being built
+> > with an old binutils such that CONFIG_AS_AVX512 is not set, or running
+> > on a
+> > kernel where avx512 was disabled via a boot option.
+> 
+> The code checks for CONFIG_AS_AVX512 above.
 
-That's what intermediate config symbols are for.
+That just indicates that binutils supports it.  Plus, the code does not
+check for CONFIG_AS_AVX512 when deciding whether to set pr_datawidth to 64
+(and thus call copy512), so you'll get a WARN_ON rather than falling back to
+32-bit.
 
-config HARDLOCKUP_DETECTOR_CORE
-       bool
+> What boot option are you referring to?
 
-And make both PERF and HPET select it.
+clearcpuid=304
 
-Thanks,
+-Scott
 
-	tglx
+
