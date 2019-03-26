@@ -2,115 +2,168 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83209C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CE5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE292075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471352075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ddjgq39Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHvJtvyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732044AbfCZRXn (ORCPT
+        id S1732097AbfCZRXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:23:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38278 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfCZRXn (ORCPT
+        Tue, 26 Mar 2019 13:23:53 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38803 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfCZRXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:23:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g37so1940513plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:23:43 -0700 (PDT)
+        Tue, 26 Mar 2019 13:23:53 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e80so12239220ote.5;
+        Tue, 26 Mar 2019 10:23:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=l19F8lJd5IdArfySDoFtGyFlcftIi55XoMtqQbgctkY=;
-        b=Ddjgq39Yp+OUaC/VdMUmib8F9+AVVPOeJWFH/q0LHlRbcU3bEVtW4HgJ6dCmMUSyRN
-         8QhEexMOLLjL1VHeT4Nyw2fOWBrDs8HNWf12octbjiSI6MdUAUODcmgBkD3Xm7w0GxdR
-         Kfiugswwo3myJ2tGRvwr/T0cDYE1zMjwxVzI7PIJWNyP15dg2Cvo7hjgTaVvc9ZjoZ+9
-         7vwe3VgwMmhiuJrT67wsnh56w1w2dx+Sip0kki3aDl5OR0VzH1u9b+hxypsrTK3/ix/7
-         hRDDbiRpVEsSkN4/fnnsAHvO6hxYip6Jqay5RPgevM3hAnJ7bF5RTUmF9Syd8RDPirAe
-         ZhSg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=POhWQIt+7MKKaB0xpr8RCC2Gi7vnEhrJDayyqfFtsbU=;
+        b=JHvJtvyJPNSo+HDI3O7LUbgFSAoKWqiK3xAPrdEDOHPmAjIxTX8HdIgpu5kRLeTYmG
+         D2ic5C23vN3pW7Bv3LMc1JMFV48cFhW850dIIrA+t8tO3t0Rh2MJ7D6EnJHRWz52o2M6
+         HrOC9eDL5XDADZCU+UX42MHeImCYJMqWbzTCR5P1ZT71eLBmRfrFX+iCW2kpflatDeNz
+         5nEx6raxwOSBU5+OQOI/WxTChZxGdUTcoiIJFo/0fwLfIXwSb+h1hYxTal7y6MFkMLzd
+         x4qig8zmA/8PrYol34fPVvhv7SoAEB18tnbojWbrAw8U20QcG/aOxkU8l+4U4VuHJAZM
+         a5hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=l19F8lJd5IdArfySDoFtGyFlcftIi55XoMtqQbgctkY=;
-        b=BB9huz8o43/Xp8jVV/VFV3I2ZFHHmiwHolzq/rkkf5VZ2aY02wp8WiPImUml+3wLQ7
-         +LUdihsvkEtPFnNd5gPgFN4SATgHPcS402ftnr2vYH9JouWTydyQed+Mg1zCBRxbJaF2
-         +svhy51Yh23IMtRB2qjrLS3bhdHSHJOTHhRyiRFEuIFTiroY/cY/o8/p4U8QGdx02OI+
-         a0DqigT6phdGeUfx0XwCTT3tB0A7ua0Wf/6a67icZlHbZJBlUQa6FZMS1M7QFcRCYY0X
-         0dQpyA9nD/jyzh8pzErhG2obDJcolF2Wij+Z0uIsH/aLHvHo/VbYgMHvilnAF7guh4uU
-         l55Q==
-X-Gm-Message-State: APjAAAWqacd3C6sjkSGcKaQ64QGl4Pz9E7oexBUDHZQpCerobiOMDvOy
-        leuVVP0FXQWPiHRbxf1+1X4=
-X-Google-Smtp-Source: APXvYqwqye670U+s9/HlBGXx39l4yXubaJAPM4MZp+yU2Sp4IU+zXuXF7VeO9TbRzaLuDsW/U7NSTw==
-X-Received: by 2002:a17:902:142:: with SMTP id 60mr32336145plb.191.1553621022777;
-        Tue, 26 Mar 2019 10:23:42 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v12sm4310670pfe.148.2019.03.26.10.23.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 10:23:41 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Curtis Malainey <cujomalainey@chromium.org>
-Subject: [PATCH] ASoC: core: Fix use-after-free after deferred card registration
-Date:   Tue, 26 Mar 2019 10:23:38 -0700
-Message-Id: <1553621018-8944-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=POhWQIt+7MKKaB0xpr8RCC2Gi7vnEhrJDayyqfFtsbU=;
+        b=oW5I8xh8sS16OWwLlzWwr5rZhDOheycD6C+RJXmSETtj1teS4zS6cGBdw1gFMzOubo
+         0G33WxbBTrrm0MbkNppm3qYYpcqWtit7+STxkHD+pCWJmVctyUA/Sff49pAd/a4qXa+d
+         VCzOqE2nZUhfjh3BgKA0aj4P3pzpdiR9pQFkpJjvcxJQ7qSOuVsbM1YSo32NAQZOJxtg
+         VGuEKJz/oQjO33S153vFN3VpGTGJeK3uz5SP6mUe4+gUlE7mSn9j5zeGWSVx0sttWG3D
+         1ZCXjDC6NqFwY0kTEpHrCYkbofBUNl6IsjYtLwRBQ1quvMNQP/t1bSvvUa9vDYZlDYuP
+         3VZQ==
+X-Gm-Message-State: APjAAAUAUWNfdOgR/TQVy5lWbq/GXOZLSHitAJdje5jLWUbxDwYZTyhB
+        7FqSXzJxmtv7SiYIHSLBO/I=
+X-Google-Smtp-Source: APXvYqxV49KQ0KIVmX2RkMEowFct5KcJJEg8z5my4fLysNPQXWdjr4S/z3f64Wxu3k1PqZri9cA2MQ==
+X-Received: by 2002:a9d:5e90:: with SMTP id f16mr23703768otl.276.1553621032105;
+        Tue, 26 Mar 2019 10:23:52 -0700 (PDT)
+Received: from nuclearis2-1.lan (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
+        by smtp.gmail.com with ESMTPSA id z12sm3047459otp.2.2019.03.26.10.23.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 10:23:51 -0700 (PDT)
+From:   Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To:     bhelgaas@google.com
+Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, scott.faasse@hpe.com, leo.duran@amd.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 0/2] PCI/AER: Consistently use _OSC to determine who owns AER
+Date:   Tue, 26 Mar 2019 12:23:40 -0500
+Message-Id: <20190326172343.28946-1-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.19.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If snd_soc_register_card() fails because one of its links fails
-to instantiate with -EPROBE_DEFER, and the to-be-registered link
-is a legacy link, a subsequent retry will trigger a use-after-free
-and quite often a system crash.
+This started as a nudge from Keith, who pointed out that it doesn't make sense
+to disable AER services when only one device has a FIRMWARE_FIRST HEST.
 
-Example:
+I won't re-phrase the points in the original patch [1]. The patch started a
+long discussion in the ACPI Software Working Group (ASWG). The nearly unanimous
+conclusion is that my original interpretation is correct.
 
-byt-max98090 byt-max98090: ASoC: failed to init link Baytrail Audio
-byt-max98090 byt-max98090: snd_soc_register_card failed -517
-....
-BUG: KASAN: use-after-free in snd_soc_init_platform+0x233/0x312
-Read of size 8 at addr ffff888067c43070 by task kworker/1:1/23
+I'd like to quote one of the tables that was produced as part of that
+conversation:
 
-snd_soc_init_platform() allocates memory attached to the card device.
-This memory is released when the card device is released. However,
-the pointer to the memory (dai_link->platforms) is only cleared from
-soc_cleanup_platform(), which is called from soc_cleanup_card_resources(),
-but not if snd_soc_register_card() fails early.
+(_OSC AER Control, HEST AER Structure FFS) = (0, 0)
+	* OSPM is prevented from writing to the PCI Express AER registers.
+	* OSPM has no guidance on how AER errors are being handled – but it
+	  does know that it is not in control of AER registers. PCI-e errors
+	  that make it to the OS (via NMI, etc) would be treated as spurious
+	  since access to the AER registers isn’t allowed for proper sourcing.
 
-Add the missing call to soc_cleanup_platform() in the error handling
-code of snd_soc_register_card() to fix the problem.
 
-Fixes: 78a24e10cd94 ("ASoC: soc-core: clear platform pointers on error")
-Cc: Curtis Malainey <cujomalainey@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- sound/soc/soc-core.c | 1 +
- 1 file changed, 1 insertion(+)
+(_OSC AER Control, HEST AER Structure FFS) = (0, 1)
+	* OSPM is prevented from writing to the PCI Express AER registers.
+	* OSPM is being given guidance that Firmware is handling AER errors and
+	  those interrupts are routed to the platform. Firmware may pass along
+	  error information via GHES
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 93d316d5bf8e..6bf9884d0863 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -2799,6 +2799,7 @@ int snd_soc_register_card(struct snd_soc_card *card)
- 		if (ret) {
- 			dev_err(card->dev, "ASoC: failed to init link %s\n",
- 				link->name);
-+			soc_cleanup_platform(card);
- 			mutex_unlock(&client_mutex);
- 			return ret;
- 		}
+
+(_OSC AER Control, HEST AER Structure FFS) = (0, Does not exist)
+	* OSPM is prevented from writing to the PCI Express AER registers.
+	* OSPM has no guidance on how AER errors are being handled – but it
+	  does know that it is not in control of AER registers. PCI-e errors
+	  that make it to the OS (via NMI, etc) would be treated as spurious
+	  since access to the AER registers isn’t allowed for proper sourcing.
+
+(_OSC AER Control, HEST AER Structure FFS) = (1, 0)
+	* OSPM is in control of writing to the PCI Express AER registers.
+	* OSPM is being given guidance that AER errors will interrupt the OS
+	  directly and that the OS is expected to handle all AER capability
+	  structure read/clears for the devices with this attribute (or all if
+	  the Global Bit is set.)
+
+(_OSC AER Control, HEST AER Structure FFS) = (1, 1)
+	* OSPM is in control of writing to the PCI Express AER registers.
+	* OSPM is being given guidance that although OS is in control of AER
+	  read/writes – the actual interrupt is being routed to the platform
+	  first.
+	* Subsequent fields with masks/enables should be performed by the OS
+	  during initialization on behalf of firmware. These are to be honoured
+	  in this mode because with FF, the firmware needs to be able to handle
+	  the errors it expects and not be given errors it was not expecting to
+	  handle.
+	* Firmware may pass along error information via GHES, or generate an OS
+	  interrupt and allow the OS to interrogate AER status directly via the
+	  AER capability structures.
+
+
+(_OSC AER Control, HEST AER Structure FFS) = (0, Does not exist)
+	* OSPM is in control of writing to the PCI Express AER registers.
+	* OSPM has no guidance from the platform and is in complete control of
+	  AER error handling.
+
+
+There may be one caveat. Someone mentioned in the original discussions that
+there may exist machines which make the assumption that HEST is authoritative,
+but did not identify any such machine. We should keep in mind that they may
+require a quirk.
+
+Alex
+
+
+[1] https://lkml.org/lkml/2018/11/16/202
+
+Changes since v1:
+ * Started 6-month conversation in ASWG
+ * Re-phrased commit message to reflect some of the points in ASWG discussion
+
+Alexandru Gagniuc (2):
+  PCI/AER: Do not use APEI/HEST to disable AER services globally
+  PCI/AER: Determine AER ownership based on _OSC instead of HEST
+
+ drivers/acpi/pci_root.c  |  9 +----
+ drivers/pci/pcie/aer.c   | 82 ++--------------------------------------
+ include/linux/pci-acpi.h |  6 ---
+ 3 files changed, 5 insertions(+), 92 deletions(-)
+
 -- 
-2.7.4
+2.19.2
 
