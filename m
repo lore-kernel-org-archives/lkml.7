@@ -2,133 +2,154 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B16C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67127C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2F320856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238FF20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="VIRmytdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbfCZKSB (ORCPT
+        id S1726042AbfCZKT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:18:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27400 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfCZKSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:18:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 03:18:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="143906223"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Mar 2019 03:17:59 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h8j9a-0001DU-8i; Tue, 26 Mar 2019 12:17:58 +0200
-Date:   Tue, 26 Mar 2019 12:17:58 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] tty: 8250: fix a missing check for pci_ioremap_bar
-Message-ID: <20190326101758.GV9224@smile.fi.intel.com>
-References: <20190325222147.13342-1-pakki001@umn.edu>
+        Tue, 26 Mar 2019 06:19:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33326 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfCZKT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:19:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q1so13642184wrp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nalx1nzr+fBfP7F8ULK+t2Evs+5aCa/1OuKEcltLpYE=;
+        b=VIRmytdtW122+F1btrJA9NjpP+YIzv+INrXUXR1XRZF5+Dzc9u+JbPColK/MEkmP/L
+         1hQEyBAVqHkyYrzc8koA5ahebSqfjOjmCDXXAC0l8inTrFgdwJp0vPXfvIUd8Q0zXOki
+         9wsIs38lBcW3/lcufmb7zEsAGE0WYM5hS64jx7bFH0u5+Tc99ZR2oiXEKNwUvutteWdX
+         iD8k0xaBKJYd0ko8PYGj0GSpqsJJf5FgJi+8rbLtw3QPB8O7XvxpWzrvQuKleL3d+YdC
+         Ov50y1BEaClH6A57YXPxPtji4b5gQxT+vuWpIYaLwu0TiD20suMaPdfMApCnY/Gcjjm7
+         OxCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nalx1nzr+fBfP7F8ULK+t2Evs+5aCa/1OuKEcltLpYE=;
+        b=YoC2LYYHhqkD1Zec6ZgSnQAHfz2388nedP4QqpWnTt7o4qL2t3di9e80kxuSHa2iWf
+         /xYWPv4MiEl+LGsQBPfj3UERMj4fwz+9G0GI6ncZjP7S5GmvpeltI9ttcMbyv60dWLjF
+         46Qo5OQua8R93Ea/FUs5uyXPkxXb7XD1dfq4AVxKDoExj7kQoMG3ic9MXSpGb9rAeobu
+         xnC2mYRXeEKg8pXvk4oo/9cyVmYsvwyjLb6Dh/Ut2iVoOKe2IHchWCeHAVtpOk/69S+V
+         TUKBDZTCM2e1YCKDk0qaUTeWvOU8JhinWh23pGwcFzWVwan8pE/PqRUCcI0YedNUqD1f
+         6ZWg==
+X-Gm-Message-State: APjAAAU+VSZYIYl69Xu5TYkkw397TRlktcFIzZSN/K7IYd7gbjUBmSTh
+        2qcmFYZnFppGkBTE/yrAOI+8X7zIIB0=
+X-Google-Smtp-Source: APXvYqzUJW4QsJb4mHayihX9wD4bOHAZBfy2FQ37tI2GPNsBN78TxZjO/W9xpwx2WeCtE3lWUh4glw==
+X-Received: by 2002:a5d:6050:: with SMTP id j16mr19365969wrt.253.1553595564736;
+        Tue, 26 Mar 2019 03:19:24 -0700 (PDT)
+Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
+        by smtp.gmail.com with ESMTPSA id e9sm14597477wrp.35.2019.03.26.03.19.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 03:19:23 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:08:36 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 01/22] rtnetlink: provide permanent hardware
+ address in RTM_NEWLINK
+Message-ID: <20190326100836.GA2230@nanopsycho>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <16ffb1fbfa8f54de587ac52f4ff95e5034c590b4.1553532199.git.mkubecek@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190325222147.13342-1-pakki001@umn.edu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <16ffb1fbfa8f54de587ac52f4ff95e5034c590b4.1553532199.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:21:46PM -0500, Aditya Pakki wrote:
-> pci_ioremap_bar could fail. The patch returns in case of failure to
-> acquire IOMEM. It also releases the acquired resource in the exit path.
+Mon, Mar 25, 2019 at 06:07:57PM CET, mkubecek@suse.cz wrote:
+>Permanent hardware address of a network device was traditionally provided
+>via ethtool ioctl interface but as Jiri Pirko pointed out in a review of
+>ethtool netlink interface, rtnetlink is much more suitable for it so let's
+>add it to the RTM_NEWLINK message.
+>
+>As permanent address is not modifiable, reject userspace requests
+>containing IFLA_PERM_ADDRESS attribute.
+>
+>Note: we already provide permanent hardware address for bond slaves;
+>unfortunately we cannot drop that attribute for backward compatibility
+>reasons.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>---
+> include/uapi/linux/if_link.h | 1 +
+> net/core/rtnetlink.c         | 4 ++++
+> 2 files changed, 5 insertions(+)
+>
+>diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+>index 5b225ff63b48..351ef746b8b0 100644
+>--- a/include/uapi/linux/if_link.h
+>+++ b/include/uapi/linux/if_link.h
+>@@ -167,6 +167,7 @@ enum {
+> 	IFLA_NEW_IFINDEX,
+> 	IFLA_MIN_MTU,
+> 	IFLA_MAX_MTU,
+>+	IFLA_PERM_ADDRESS,
+> 	__IFLA_MAX
+> };
+> 
+>diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
+>index a51cab95ba64..a72e8f4d777b 100644
+>--- a/net/core/rtnetlink.c
+>+++ b/net/core/rtnetlink.c
+>@@ -1026,6 +1026,7 @@ static noinline size_t if_nlmsg_size(const struct net_device *dev,
+> 	       + nla_total_size(4)  /* IFLA_CARRIER_DOWN_COUNT */
+> 	       + nla_total_size(4)  /* IFLA_MIN_MTU */
+> 	       + nla_total_size(4)  /* IFLA_MAX_MTU */
+>+	       + nla_total_size(MAX_ADDR_LEN) /* IFLA_PERM_ADDRESS */
+> 	       + 0;
+> }
+> 
+>@@ -1683,6 +1684,8 @@ static int rtnl_fill_ifinfo(struct sk_buff *skb,
+> 	    nla_put_s32(skb, IFLA_NEW_IFINDEX, new_ifindex) < 0)
+> 		goto nla_put_failure;
+> 
+>+	if (nla_put(skb, IFLA_PERM_ADDRESS, dev->addr_len, dev->perm_addr))
+>+		goto nla_put_failure;
 
-Thanks for an update.
-One comment below.
-
-After addressing it, take mine
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I don't think we should put permaddr if driver did not set it. 2
+solutions:
+1) provide a helper that driver will use to set the perm_addr. This
+   helper sets a "valid bit". Then you only put IFLA_PERM_ADDRESS
+   in case the "valid bit" is set.
+2) Assuming that no driver would set permaddr to all zeroes,
+   don't put IFLA_PERM_ADDRESS in case permadd is all zeroes.
 
 > 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> 	rcu_read_lock();
+> 	if (rtnl_fill_link_af(skb, dev, ext_filter_mask))
+>@@ -1742,6 +1745,7 @@ static const struct nla_policy ifla_policy[IFLA_MAX+1] = {
+> 	[IFLA_CARRIER_DOWN_COUNT] = { .type = NLA_U32 },
+> 	[IFLA_MIN_MTU]		= { .type = NLA_U32 },
+> 	[IFLA_MAX_MTU]		= { .type = NLA_U32 },
+>+	[IFLA_PERM_ADDRESS]	= { .type = NLA_REJECT },
+> };
 > 
-> ---
-> v5: change pci_iounmap to iounmap to pass kbuild errors in other arch
-> v4: Missed resource release in dma_probe failure.
-> v3: Change the order of pci_iounmap and dw_dma_remove
-> v2: Failed to release resource in exit path and incorrect code in non
-> DMA case, suggested by Andy Shevchenko
-> v1: Missed return by default in CONFIG_SERIAL_8250_DMA, suggested by
-> Jiri Slaby
-> ---
->  drivers/tty/serial/8250/8250_lpss.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_lpss.c b/drivers/tty/serial/8250/8250_lpss.c
-> index 53ca9ba6ab4b..c7c7bf5d7e5e 100644
-> --- a/drivers/tty/serial/8250/8250_lpss.c
-> +++ b/drivers/tty/serial/8250/8250_lpss.c
-> @@ -170,14 +170,18 @@ static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port)
->  	int ret;
->  
->  	chip->dev = &pdev->dev;
-> +	chip->pdata = &qrk_serial_dma_pdata;
->  	chip->irq = pci_irq_vector(pdev, 0);
->  	chip->regs = pci_ioremap_bar(pdev, 1);
-> -	chip->pdata = &qrk_serial_dma_pdata;
-> +	if (!chip->regs)
-> +		return;
->  
->  	/* Falling back to PIO mode if DMA probing fails */
->  	ret = dw_dma_probe(chip);
-> -	if (ret)
-> +	if (ret) {
-> +		iounmap(chip->regs);
->  		return;
-> +	}
->  
->  	pci_try_set_mwi(pdev);
->  
-> @@ -199,7 +203,10 @@ static void qrk_serial_exit_dma(struct lpss8250 *lpss)
->  
->  	if (!param->dma_dev)
->  		return;
-> +
->  	dw_dma_remove(&lpss->dma_chip);
-> +
-> +	iounmap(&lpss->dma_chip->regs);
-
-This is a bit fragile form of writing. Perhaps
-
-        struct dw_dma_chip *chip = &lpss->dma_chip;
-
-	...
-	dw_dma_remove(chip);
-
-	iounmap(chip->regs);
-
->  }
->  #else	/* CONFIG_SERIAL_8250_DMA */
->  static void qrk_serial_setup_dma(struct lpss8250 *lpss, struct uart_port *port) {}
-> -- 
-> 2.17.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> static const struct nla_policy ifla_info_policy[IFLA_INFO_MAX+1] = {
+>-- 
+>2.21.0
+>
