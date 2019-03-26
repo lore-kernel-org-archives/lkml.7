@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528EBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79CFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CFF20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A670C20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581963;
-	bh=Nt2YkjMrtUZ7eZwlX7JONgUPwP/zg5iNfWt8hrRX3ss=;
+	s=default; t=1553581966;
+	bh=yTH7VZ46a8LcmLsaDFjMi1fVibm1vd5pU9a5gsZIYK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Sv74h0ULSKoaA5I4na94WC/T7kXkhzRHbDBkWxtNKSD3NqitKfrlFP0cpNL/4+dB
-	 h1A1Y6Xm/ce1/vHKEW6ZIj8/qFYc0ZbnCie5oBokoO2VCBA4wvRWsTPZ94f2BEoKcj
-	 LHszLbqZ9b78RdpZAVfH5V3fxU8FrEwgKsPQ3304=
+	b=aW962YN6b6fRvq6L5Y2OsbaGQvwtRkpvme9JbAYiMGCpYk8W77i5j0ZtQgiBanbIE
+	 h+9Y5DCAv27GjsamQTNekPOTJ3lOs2uNPvhpOB/IgxvKzF9j/MZmCn5cNShOvuDzf7
+	 7b68pFTckI/zYFlxkztYcXvMT+Jap8QoGIaWAeRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731483AbfCZGcl (ORCPT
+        id S1731499AbfCZGcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42048 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbfCZGcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:32:39 -0400
+        id S1731477AbfCZGcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:32:42 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33AEA20857;
-        Tue, 26 Mar 2019 06:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 958A820856;
+        Tue, 26 Mar 2019 06:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581957;
-        bh=Nt2YkjMrtUZ7eZwlX7JONgUPwP/zg5iNfWt8hrRX3ss=;
+        s=default; t=1553581961;
+        bh=yTH7VZ46a8LcmLsaDFjMi1fVibm1vd5pU9a5gsZIYK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NBHCHCddV7hCL3Yoz/PUOrKgIQ6MAwyzNx+bQjW1G4RqOM5Jcn2eUZ0eXDV68dGd+
-         kXBds+X36t44pm+pBrjSw4baA9lJk1s1wzX7IINiOIT7JrwD/Nc4NM9vvdWDosiPzO
-         qkuJU030hY03tEs6uuqY4KQyDMJHYeRgKNDwP7Mk=
+        b=DHp3htAb14yu5vJwWhBsXpQ1gI8OQbJDA8v8Urcf9HLO8xjMDgVA2aP+ymI4SBvs5
+         S4bX0ujeR0R7s0/dukYd2qTEJZa7353YvNEor7/1El7P3MYUBlIi40TDpguKleb+yZ
+         RaCbjqeyrbQ76BMsLkicv3hKuVMRbNAnLG3Z7QOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 18/30] ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-Date:   Tue, 26 Mar 2019 15:29:57 +0900
-Message-Id: <20190326042608.185910736@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.9 19/30] tcp/dccp: drop SYN packets if accept queue is full
+Date:   Tue, 26 Mar 2019 15:29:58 +0900
+Message-Id: <20190326042608.219111978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -64,93 +68,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit b5a236c175b0d984552a5f7c9d35141024c2b261 upstream.
+commit 5ea8ea2cb7f1d0db15762c9b0bb9e7330425a071 upstream.
 
-Recently we found the audio jack detection stop working after suspend
-on many machines with Realtek codec. Sometimes the audio selection
-dialogue didn't show up after users plugged headhphone/headset into
-the headset jack, sometimes after uses plugged headphone/headset, then
-click the sound icon on the upper-right corner of gnome-desktop, it
-also showed the speaker rather than the headphone.
+Per listen(fd, backlog) rules, there is really no point accepting a SYN,
+sending a SYNACK, and dropping the following ACK packet if accept queue
+is full, because application is not draining accept queue fast enough.
 
-The root cause is that before suspend, the codec already call the
-runtime_suspend since this codec is not used by any apps, then in
-resume, it will not call runtime_resume for this codec. But for some
-realtek codec (so far, alc236, alc255 and alc891) with the specific
-BIOS, if it doesn't run runtime_resume after suspend, all codec
-functions including jack detection stop working anymore.
+This behavior is fooling TCP clients that believe they established a
+flow, while there is nothing at server side. They might then send about
+10 MSS (if using IW10) that will be dropped anyway while server is under
+stress.
 
-This problem existed for a long time, but it was not exposed, that is
-because when problem happens, if users play sound or open
-sound-setting to check audio device, this will trigger calling to
-runtime_resume (via snd_hda_power_up), then the codec starts working
-again before users notice this problem.
-
-Since we don't know how many codec and BIOS combinations have this
-problem, to fix it, let the driver call runtime_resume for all codecs
-in pm_resume, maybe for some codecs, this is not needed, but it is
-harmless. After a codec is runtime resumed, if it is not used by any
-apps, it will be runtime suspended soon and furthermore we don't run
-suspend frequently, this change will not add much power consumption.
-
-Fixes: cc72da7d4d06 ("ALSA: hda - Use standard runtime PM for codec power-save control")
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_codec.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ include/net/inet_connection_sock.h |    5 -----
+ net/dccp/ipv4.c                    |    8 +-------
+ net/dccp/ipv6.c                    |    2 +-
+ net/ipv4/tcp_input.c               |    8 +-------
+ 4 files changed, 3 insertions(+), 20 deletions(-)
 
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3038,6 +3038,20 @@ static int hda_codec_runtime_resume(stru
- #endif /* CONFIG_PM */
- 
- #ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
- static int hda_codec_pm_suspend(struct device *dev)
- {
- 	dev->power.power_state = PMSG_SUSPEND;
-@@ -3047,7 +3061,7 @@ static int hda_codec_pm_suspend(struct d
- static int hda_codec_pm_resume(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESUME;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -289,11 +289,6 @@ static inline int inet_csk_reqsk_queue_l
+ 	return reqsk_queue_len(&inet_csk(sk)->icsk_accept_queue);
  }
  
- static int hda_codec_pm_freeze(struct device *dev)
-@@ -3059,13 +3073,13 @@ static int hda_codec_pm_freeze(struct de
- static int hda_codec_pm_thaw(struct device *dev)
+-static inline int inet_csk_reqsk_queue_young(const struct sock *sk)
+-{
+-	return reqsk_queue_len_young(&inet_csk(sk)->icsk_accept_queue);
+-}
+-
+ static inline int inet_csk_reqsk_queue_is_full(const struct sock *sk)
  {
- 	dev->power.power_state = PMSG_THAW;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
+ 	return inet_csk_reqsk_queue_len(sk) >= sk->sk_max_ack_backlog;
+--- a/net/dccp/ipv4.c
++++ b/net/dccp/ipv4.c
+@@ -596,13 +596,7 @@ int dccp_v4_conn_request(struct sock *sk
+ 	if (inet_csk_reqsk_queue_is_full(sk))
+ 		goto drop;
  
- static int hda_codec_pm_restore(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESTORE;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- #endif /* CONFIG_PM_SLEEP */
+-	/*
+-	 * Accept backlog is full. If we have already queued enough
+-	 * of warm entries in syn queue, drop request. It is better than
+-	 * clogging syn queue with openreqs with exponentially increasing
+-	 * timeout.
+-	 */
+-	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1)
++	if (sk_acceptq_is_full(sk))
+ 		goto drop;
  
+ 	req = inet_reqsk_alloc(&dccp_request_sock_ops, sk, true);
+--- a/net/dccp/ipv6.c
++++ b/net/dccp/ipv6.c
+@@ -328,7 +328,7 @@ static int dccp_v6_conn_request(struct s
+ 	if (inet_csk_reqsk_queue_is_full(sk))
+ 		goto drop;
+ 
+-	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1)
++	if (sk_acceptq_is_full(sk))
+ 		goto drop;
+ 
+ 	req = inet_reqsk_alloc(&dccp6_request_sock_ops, sk, true);
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6374,13 +6374,7 @@ int tcp_conn_request(struct request_sock
+ 			goto drop;
+ 	}
+ 
+-
+-	/* Accept backlog is full. If we have already queued enough
+-	 * of warm entries in syn queue, drop request. It is better than
+-	 * clogging syn queue with openreqs with exponentially increasing
+-	 * timeout.
+-	 */
+-	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1) {
++	if (sk_acceptq_is_full(sk)) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_LISTENOVERFLOWS);
+ 		goto drop;
+ 	}
 
 
