@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FA2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC9DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185CF20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31472075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582197;
-	bh=8uj7vab7eLWwQzEEMuV5Vd7+BsFrz3c5XIgUnK5GOT0=;
+	s=default; t=1553582201;
+	bh=h7gJhUMgd56dqYERg24paTnOqXfOKdmt3Rsnfsfetjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgOp/MEcpk/lGrXEcTHBnaND3eFXPBCPWSLe05q94lODLhY+ulrj2X6y97ZI8hoxi
-	 UYWE+M9pGiXwkBsbvw6U8iVOka8fu17SHQDTVsZhAVrlS5vrnGKvIYnIY4OyNK6WFQ
-	 wPnKSXy+P0eF20Nh3hezC/cvOcXLNGyYEKMWVT88=
+	b=PxrNXe0iSUsdycpzIwMbQAQ6Wb191uyCseeGzGbR8VWq8eirTZl4ywch1ujvo/dqK
+	 1lfQkQiVqCUpJ9VmdP6+KX783anZAIgnQYu+L3Bds/LMnqNYWHeSr+HsgqRD4fyrV7
+	 kKxjVKy8yrjPoXzlf3TRMhU3Hz5vo3mzdqFOQDRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732237AbfCZGgf (ORCPT
+        id S1732251AbfCZGgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49132 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbfCZGgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:33 -0400
+        id S1731428AbfCZGgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:37 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B39EF2075E;
-        Tue, 26 Mar 2019 06:36:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BADF2070B;
+        Tue, 26 Mar 2019 06:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582193;
-        bh=8uj7vab7eLWwQzEEMuV5Vd7+BsFrz3c5XIgUnK5GOT0=;
+        s=default; t=1553582197;
+        bh=h7gJhUMgd56dqYERg24paTnOqXfOKdmt3Rsnfsfetjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Milhj0y30qd9fdWVEI6aHOD5OoYXTo/SGEgQZAuFZqZ5XEsiYDNMDFAq3KUXjBi3o
-         wocm4gI4ZtCKyX/5SAYYScj2FHWjmgEEoBWLmGoZUHO4SYXuLUaZDidLXOGSbgfVpn
-         bDfeB95EbOljPr9eL2CQC7Z5PPIgcTYef9piWiqA=
+        b=oS8UGmkRDB25QUInAOCXnw2MkbK+XVgYmfeOqfJHNL4RLx0uxn069bQ7M/hAIQ1Ih
+         OHMT0mO4ttKowo3cm/zoPJVUWHe42g/+mAoZwG4pxOK1qmTznHwExQRR5temgBpjRx
+         hs0zA1cMl5hafLHfFelWIkz8rRl01Oh75FXFWmWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 29/45] media: v4l2-ctrls.c/uvc: zero v4l2_event
-Date:   Tue, 26 Mar 2019 15:30:12 +0900
-Message-Id: <20190326042704.204355050@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+017a32f149406df32703@syzkaller.appspotmail.com,
+        Myungho Jung <mhjungk@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.19 30/45] Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
+Date:   Tue, 26 Mar 2019 15:30:13 +0900
+Message-Id: <20190326042704.256000231@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -66,49 +66,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Myungho Jung <mhjungk@gmail.com>
 
-commit f45f3f753b0a3d739acda8e311b4f744d82dc52a upstream.
+commit 1dc2d785156cbdc80806c32e8d2c7c735d0b4721 upstream.
 
-Control events can leak kernel memory since they do not fully zero the
-event. The same code is present in both v4l2-ctrls.c and uvc_ctrl.c, so
-fix both.
+h4_recv_buf() callers store the return value to socket buffer and
+recursively pass the buffer to h4_recv_buf() without protection. So,
+ERR_PTR returned from h4_recv_buf() can be dereferenced, if called again
+before setting the socket buffer to NULL from previous error. Check if
+skb is ERR_PTR in h4_recv_buf().
 
-It appears that all other event code is properly zeroing the structure,
-it's these two places.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: syzbot+017a32f149406df32703@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_ctrl.c     |    2 +-
- drivers/media/v4l2-core/v4l2-ctrls.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/bluetooth/h4_recv.h |    4 ++++
+ drivers/bluetooth/hci_h4.c  |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -1212,7 +1212,7 @@ static void uvc_ctrl_fill_event(struct u
- 
- 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
- 
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = v4l2_ctrl.id;
- 	ev->u.ctrl.value = value;
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1379,7 +1379,7 @@ static u32 user_flags(const struct v4l2_
- 
- static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
+--- a/drivers/bluetooth/h4_recv.h
++++ b/drivers/bluetooth/h4_recv.h
+@@ -60,6 +60,10 @@ static inline struct sk_buff *h4_recv_bu
+ 					  const struct h4_recv_pkt *pkts,
+ 					  int pkts_count)
  {
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = ctrl->id;
- 	ev->u.ctrl.changes = changes;
++	/* Check for error from previous call */
++	if (IS_ERR(skb))
++		skb = NULL;
++
+ 	while (count) {
+ 		int i, len;
+ 
+--- a/drivers/bluetooth/hci_h4.c
++++ b/drivers/bluetooth/hci_h4.c
+@@ -174,6 +174,10 @@ struct sk_buff *h4_recv_buf(struct hci_d
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	u8 alignment = hu->alignment ? hu->alignment : 1;
+ 
++	/* Check for error from previous call */
++	if (IS_ERR(skb))
++		skb = NULL;
++
+ 	while (count) {
+ 		int i, len;
+ 
 
 
