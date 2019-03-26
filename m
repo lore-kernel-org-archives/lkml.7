@@ -2,106 +2,114 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E353C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB39C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769272070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7562070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVSO81oH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbfCZRED (ORCPT
+        id S1731579AbfCZRF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:04:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48920 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfCZRED (ORCPT
+        Tue, 26 Mar 2019 13:05:27 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36272 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbfCZRF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:04:03 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h8pUV-000267-Ef; Tue, 26 Mar 2019 18:03:59 +0100
-Date:   Tue, 26 Mar 2019 18:03:59 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andi Kleen <andi@firstfloor.org>
-cc:     x86@kernel.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
- .text
-In-Reply-To: <20190321220009.29334-3-andi@firstfloor.org>
-Message-ID: <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de>
-References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-3-andi@firstfloor.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 26 Mar 2019 13:05:27 -0400
+Received: by mail-pg1-f195.google.com with SMTP id r124so8548126pgr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LsLe1HrF/ojJF1oDyTC8JucVDbgZ9e7bF+XA2994fJU=;
+        b=HVSO81oHItsZPvcbJ67VR6yV45MRAsWA+J1tUiXOtE3h691f6HhWfZHExLmfLhwfYr
+         ZjxhhXvXEGfn5We+2Ujif+pJU0WU35MFNxM371BD/6NXVKRdaQMDCCyEeBgB6Q+ccbL0
+         hqC4FnpcWX/ifac5uzbjfqc4vTjXytQRr/RvY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LsLe1HrF/ojJF1oDyTC8JucVDbgZ9e7bF+XA2994fJU=;
+        b=ZdXlp5jXSGVck7KvmMcweArynDp60OoL2zxPrJ8vjCQ0iwRu11mr6EBiZIT8Gq5Mcn
+         jdUsK90KhGulAsxQ7EWfKHNDROEyuDyCRuemvBnjwuWKSl/W+jKuPOHWMVpAbx6sMTgw
+         lUo4pknA8i0ahJiNsQxxJ5CJcQ6cSqn/a74KScrCqYRq0LpCADjmh+F51MXKGj1cZ2tR
+         cAyp7tIYhwF4Vwdl9rbuVI7LryycCMLLE2yV81Il+R9zYZkTTG/a2zI5TvzBAQ36OeJb
+         HFsS2YNL2NDEXEZ09Pf98MB+Yv8T1zI+NpwSix5tel8r1k/spZZeSgNNizL7vltxdjHR
+         zJCw==
+X-Gm-Message-State: APjAAAWy6xYpON7mC1bmnJvOeR/cd44GysCLLwERXRbVlpq5fS/Sz8aL
+        BndXIQjG/WjoT7rI2Wy34Koijg==
+X-Google-Smtp-Source: APXvYqwJ+aiJxRaHVGgXu51qkRdwnCCXFqPebaF1OBVulvgkjcwWYcEvaUacnP2JuOdtAOsBUmTRoA==
+X-Received: by 2002:a63:4346:: with SMTP id q67mr29516890pga.92.1553619926353;
+        Tue, 26 Mar 2019 10:05:26 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id u11sm22768433pfh.23.2019.03.26.10.05.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 26 Mar 2019 10:05:25 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Andy Gross <andy.gross@linaro.org>
+Cc:     Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] arm64: dts: msm8998: Add UFS phy reset
+Date:   Tue, 26 Mar 2019 10:05:18 -0700
+Message-Id: <20190326170518.157317-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-436328035-1553619839=:1789"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+With the new refactoring at [1], the UFS phy now controls its own
+destiny in toggling the phy reset bit within the UFS host controller.
+Add the DT pieces needed to 1) expose the reset controller from the
+HC, and 2) use it from the PHY. This series is based atop linux-next
+plus Marc's series at [2].
 
---8323329-436328035-1553619839=:1789
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Signed-off-by: Evan Green <evgreen@chromium.org>
 
-Andi,
+[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
+[2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
 
-On Thu, 21 Mar 2019, Andi Kleen wrote:
+---
+I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
+patch if it needs any fixups.
 
-> With gcc 8 toplevel assembler statements that do not mark themselves
-> as .text may end up in other sections.
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Which is clearly a change in behaviour. Is that intended or just yet
-another feature of GCC?
-
-Your subject says: 'x86, lto:'
-
-So is this a LTO related problem or is the section randomization
-independent of LTO?
-
-This wants to be clearly documented in the changelog.
-
-Aside of that the proper Subject prefix is either:
-
-    x86/asm/lto:
-
-or
-
-    x86/asm:
-
-dependent on the nature. Like it or not, but this has been the prefix x86
-uses for a very long time already.
-
-> I had boot crashes because
-> various assembler statements ended up in the middle of the initcall
-> section.
-> 
-> Always mark all the top level assembler statements as text
-> so that they switch to the right section.
-> 
-> For AMD "vide", which is only used on 32bit kernels, I also
-> marked it as 32bit only.
-
-Once more. See
-
-  https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
-
-  "Describe your changes in imperative mood, e.g. “make xyzzy do frotz”
-  instead of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to
-  do frotz”, as if you are giving orders to the codebase to change its
-  behaviour."
-
-This is the last time, I'm asking for this.
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 3d0aeb3211de..d59a2c5fe83a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -990,6 +990,7 @@
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&ufsphy_lanes>;
+ 			phy-names = "ufsphy";
++			#reset-cells = <1>;
+ 			lanes-per-direction = <2>;
+ 			power-domains = <&gcc UFS_GDSC>;
  
-Thanks,
+@@ -1039,6 +1040,7 @@
+ 				<&gcc GCC_UFS_CLKREF_CLK>,
+ 				<&gcc GCC_UFS_PHY_AUX_CLK>;
+ 
++			resets = <&ufshc 0>;
+ 			ufsphy_lanes: lanes@1da7400 {
+ 				reg = <0x01da7400 0x128>,
+ 				      <0x01da7600 0x1fc>,
+-- 
+2.20.1
 
-	tglx
---8323329-436328035-1553619839=:1789--
