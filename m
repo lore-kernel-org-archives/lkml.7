@@ -2,78 +2,78 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEC0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911DFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC0A20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6127B2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:43:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LATDvmGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbfCZMmu (ORCPT
+        id S1731577AbfCZMnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:42:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56854 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfCZMmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:42:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C00C301EA81;
-        Tue, 26 Mar 2019 12:42:49 +0000 (UTC)
-Received: from localhost (ovpn-12-21.pek2.redhat.com [10.72.12.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80B0B91D8B;
-        Tue, 26 Mar 2019 12:42:48 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 20:42:45 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mhocko@suse.com, rppt@linux.ibm.com,
-        osalvador@suse.de, william.kucharski@oracle.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 4/4] drivers/base/memory.c: Rename the misleading
- parameter
-Message-ID: <20190326124245.GA21943@MiWiFi-R3L-srv>
-References: <20190326090227.3059-1-bhe@redhat.com>
- <20190326090227.3059-5-bhe@redhat.com>
- <20190326114358.GM10344@bombadil.infradead.org>
+        Tue, 26 Mar 2019 08:43:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33184 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbfCZMnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:43:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gL3df5L1HoTWFH8unFKryxhSs/juRPBxhxE3ZuJLMGg=; b=LATDvmGnuyPrgONBtmPBf77AC
+        KAiQiUDmtULDnYX27Ef1yBNmlwBlt+pHRtChYWDMGbWanqgcoGh/xVZNDCDstxxer3u2iP6mqTBtm
+        RNcKy7CPSfbiXTaQOUqTOiqZmiuRJJAXyMVekY4PUjabohT6Vzfcz9IzH0nxzbJN3iHiD08Fw20Sn
+        xIbHT0RH4qyt348aOHjFbhMIpXHLa2BlXxYibvoM5V1X5w8w3S3mL6gtCxNqv5/QamV7yBQxOmdCS
+        VeicIeNCfHDvzSgGyYMEGvpdqe2fJPqdKW/PsK/3bSJ4nomuK3GDfmZQ2YXVlrysJj6ebLZyMDjz5
+        zaCyTcHXw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h8lQ0-0001ki-Us; Tue, 26 Mar 2019 12:43:04 +0000
+Date:   Tue, 26 Mar 2019 05:43:04 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [External] Re: Print map for total physical and virtual memory
+Message-ID: <20190326124304.GN10344@bombadil.infradead.org>
+References: <SG2PR02MB3098F980E1EB299853AC46E6E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190326113657.GL10344@bombadil.infradead.org>
+ <SG2PR02MB3098B0C0CD27969FB7C9ECD7E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326114358.GM10344@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 26 Mar 2019 12:42:49 +0000 (UTC)
+In-Reply-To: <SG2PR02MB3098B0C0CD27969FB7C9ECD7E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/26/19 at 04:43am, Matthew Wilcox wrote:
-> On Tue, Mar 26, 2019 at 05:02:27PM +0800, Baoquan He wrote:
-> > The input parameter 'phys_index' of memory_block_action() is actually
-> > the section number, but not the phys_index of memory_block. Fix it.
+On Tue, Mar 26, 2019 at 12:35:25PM +0000, Pankaj Suryawanshi wrote:
+> From: Matthew Wilcox <willy@infradead.org>
+> Sent: 26 March 2019 17:06
+> To: Pankaj Suryawanshi
+> Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+> Subject: [External] Re: Print map for total physical and virtual memory
 > 
-> >  static int
-> > -memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
-> > +memory_block_action(unsigned long sec, unsigned long action, int online_type)
-> 
-> 'sec' is a bad abbreviation for 'section'.  We don't use it anyhere else
-> in the vm.
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
 
-Hmm, here 'sec' is in a particular context, we may not confuse it with
-other abbreviation. Since Michal also complained about it, seems an
-update is needed. I will change it to start_section_nr as Michal
-suggested. Thanks.
+... you should probably use gmail or something.  Whatever broken email
+system your employer provides makes it really hard for you to participate
+in any meaningful way.
 
-> 
-> Looking through include/, I see it used as an abbreviation for second,
-> security, ELF section, and section of a book.  Nowhere as a memory
-> block section.  Please use an extra four letters for this parameter.
+> Can you please elaborate about tools/vm/page-types.c ?
 
+cd tools/vm/
+make
+sudo ./page-types
 
-
+If that doesn't do exactly what you need, you can use the source code to
+make a program which does.
