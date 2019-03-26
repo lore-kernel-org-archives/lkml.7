@@ -2,206 +2,98 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5811C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEF0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DFB20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C33A20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:15:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="XdjsaQvn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732151AbfCZQPd (ORCPT
+        id S1731573AbfCZQPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:15:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZQPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:15:31 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 87A205946F;
-        Tue, 26 Mar 2019 16:15:30 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C1E65C231;
-        Tue, 26 Mar 2019 16:15:28 +0000 (UTC)
-Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
-To:     Joao Moreira <jmoreira@suse.de>, Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
-        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
-        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com>
- <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz>
- <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
-Date:   Tue, 26 Mar 2019 12:15:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 26 Mar 2019 12:15:36 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40083 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732119AbfCZQPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:15:34 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h22so11282802edw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=stMZSrcLpSkOMBILhdqDOLfW9MtN6O+g6RIWKTXvR5w=;
+        b=XdjsaQvnHpT6UT5zjksyACB4rbG4UMsycywQawujdUIyuZ1lf22Fa5fC8mQasBupA8
+         9G2ueaxKnEUa77xC0hO4jePLzFSmb5fAk6L3jVBLBQhSu3/7QscEqkk6lsCasFE9QmhF
+         Um0y5O15aZB5hzFrGbK+a9An6d15bCgaYYsMEMWUxUtfs5RoJ1OvSjIsodOr43/3vFHU
+         LursHwHhzlbkz0+TPqVh1MLsm9SxDvgmebMoeMoqXtzWA+psKrg1Lq+vdrrO2TassssA
+         tD14SIzGJ3laVgyqjQ9g0XV57YL5IdZHsar7xPwCu7FtSWN8YfqbOREaJjnB2N1TeNSD
+         tcKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=stMZSrcLpSkOMBILhdqDOLfW9MtN6O+g6RIWKTXvR5w=;
+        b=M0D7J9F53DervN/5b8Ixw2mr5zdqYST5QqrzuXxWWSdbfoSSZsot8pknABwlN9q9mm
+         l71u9obpKuLrPYdqoj+RwtkKevp5b2uXv+GgTzDJhWZ2SISo6Z2Vj69R9ZnH4pudJJzB
+         31xvDldk6tSABlQjlOwaKHExn9Rmc0a6L8qObpOu9Bo+AafL5YVL4LP6rOKPi5gSBQFn
+         cJEexiGU6B30mp1uBVQPwgSD/HpzOmJZkpQ5W46cGfJuB5EEh8apZrhooc+p5lKrJug3
+         C3t4TaJpnNLHmn+5NN2PBKCTn4oyphUIy+9rOp+EDYsqLSotYI7mt4a3tCi8329Soo9l
+         8rLg==
+X-Gm-Message-State: APjAAAVW3EdK0sCBG+2Ti/FTOGyF0CMhWRNSY1jA8wRsPghJjuQG5eXJ
+        w1J7Wl9f3DwLQ6FZhdjAC2jWGA==
+X-Google-Smtp-Source: APXvYqxCdjkcjarUczael9LfXfLGwCrazjNIjDL/5u3jlEBAS0fhwJVJ06nE4K5H6dCjvv8g8NHnpg==
+X-Received: by 2002:a50:eac8:: with SMTP id u8mr2881336edp.125.1553616932738;
+        Tue, 26 Mar 2019 09:15:32 -0700 (PDT)
+Received: from brauner.io (x59cc895e.dyn.telefonica.de. [89.204.137.94])
+        by smtp.gmail.com with ESMTPSA id e4sm6748873edm.86.2019.03.26.09.15.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 26 Mar 2019 09:15:32 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:15:30 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        bl0pbl33p@gmail.com, "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        cyphar@cyphar.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Colascione <dancol@google.com>
+Subject: Re: [PATCH 2/4] pid: add pidctl()
+Message-ID: <20190326161528.lhtxdsbkxdodoogt@brauner.io>
+References: <20190325162052.28987-1-christian@brauner.io>
+ <20190325162052.28987-3-christian@brauner.io>
+ <CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com>
+ <20190326160729.GA76870@google.com>
 MIME-Version: 1.0
-In-Reply-To: <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 26 Mar 2019 16:15:31 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190326160729.GA76870@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 10:40 AM, Joao Moreira wrote:
-> 
-> 
-> On 3/20/19 4:08 PM, Miroslav Benes wrote:
->>>> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
->>>> index fd03d60f6c5a..1e28ad21314c 100644
->>>> --- a/scripts/Makefile.build
->>>> +++ b/scripts/Makefile.build
->>>> @@ -247,6 +247,11 @@ cmd_gen_ksymdeps = \
->>>>    	$(CONFIG_SHELL) $(srctree)/scripts/gen_ksymdeps.sh $@ >> $(dot-target).cmd
->>>>    endif
->>>>    
->>>> +ifdef CONFIG_LIVEPATCH
->>>> +cmd_livepatch = $(if $(LIVEPATCH_$(basetarget).o),			\
->>>> +	$(shell touch $(MODVERDIR)/$(basetarget).livepatch))
->>>> +endif
->>>> +
->>>>    define rule_cc_o_c
->>>>    	$(call cmd,checksrc)
->>>>    	$(call cmd_and_fixdep,cc_o_c)
->>>> @@ -283,6 +288,7 @@ $(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) $(objtool_dep) F
->>>>    	$(call if_changed_rule,cc_o_c)
->>>>    	@{ echo $(@:.o=.ko); echo $@; \
->>>>    	   $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
->>>> +	$(call cmd_livepatch)
->>>>    
->>>>    quiet_cmd_cc_lst_c = MKLST   $@
->>>>          cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
->>>
->>> Since cmd_livepatch is only called for single-used-m, does this mean
->>> that we can only klp-convert single object file livepatch modules?
->>>
->>> I stumbled upon this when trying to create a self-test module that
->>> incorporated two object files.  I tried adding a $(call cmd_livepatch)
->>> in the recipe for $(obj)/%.o, but that didn't help.  My kbuild foo
->>> wasn't good enough to figure this one out.
->>
->> I looked at my original code and it is a bit different there. I placed it
->> under rule_cc_o_c right after objtool command. If I remember correctly
->> this is the correct recipe for .c->.o. Unfortunately I forgot the details
->> and there is of course nothing about it in my notes.
->>
->> Does it help?
->>
->> Joao, is there a reason you moved it elsewhere?
-> 
-> Hi,
-> 
-> Unfortunately I can't remember why the chunk was moved to where it is in
-> this version of the patch, sorry. Yet, I did try to move this into the
-> rule cc_o_c and it seemed to work with not damage.
-> 
-> Joe, would you kindly verify and squash properly the patch below, which
-> places cmd_livepatch in rule_cc_o_c?
-> 
-> Thank you.
-> 
-> Subject: [PATCH] Move cmd_klp_convert to the right place
-> 
->   
-> 
-> Signed-off-by: Joao Moreira <jmoreira@suse.de>
-> 
-> ---
-> 
->    scripts/Makefile.build | 2 +-
-> 
->    1 file changed, 1 insertion(+), 1 deletion(-)
-> 
->   
-> 
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 1e28ad21314c..5f66106a47d6 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -260,6 +260,7 @@ define rule_cc_o_c
->           $(call cmd,objtool)
->           $(call cmd,modversions_c)
->           $(call cmd,record_mcount)
-> +       $(call cmd,livepatch)
->    endef
->   
->    define rule_as_o_S
-> @@ -288,7 +289,6 @@ $(single-used-m): $(obj)/%.o: $(src)/%.c
-> $(recordmcount_source) $(objtool_dep) F
->           $(call if_changed_rule,cc_o_c)
->           @{ echo $(@:.o=.ko); echo $@; \
->              $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
-> -       $(call cmd_livepatch)
->   
->    quiet_cmd_cc_lst_c = MKLST   $@
->          cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
+> Agreed, I also was going to say the same, about the flags.
 
-Hi Joao,
+Please review the updated version I just sent out.
 
-This change seems to work okay for (again) single object modules, but 
-I'm having issues with multi-object modules.
-
-Here are my sources:
-
-% head -n100 *
-==> Makefile <==
-KDIR := /lib/modules/$(shell uname -r)/build
-PWD := $(shell pwd)
-
-LIVEPATCH_test_mod_a.o := y
-LIVEPATCH_test_mod_b.o := y
-
-obj-m += test_mod.o
-
-test_mod-y := \
-         test_mod_a.o \
-         test_mod_b.o
-
-default:
-         $(MAKE) -C $(KDIR) M=$(PWD)
-clean:
-         @rm -rf .tmp_versions/
-         @rm -f .*.cmd *.o *.mod.* *.ko modules.order Module.symvers
-
-==> test_mod_a.c <==
-#include <linux/module.h>
-__used static void function(void) { }
-MODULE_LICENSE("GPL");
-
-==> test_mod_b.c <==
-__used static void function(void) { }
-
-
-
-But when I build, I don't see klp-convert invoked for any of the object 
-files:
-
-% make
-make -C /lib/modules/5.0.0+/build M=/home/cloud-user/klp-convert-modtest
-make[1]: Entering directory '/home/cloud-user/disk/linux'
-   CC [M]  /home/cloud-user/klp-convert-modtest/test_mod_a.o
-   CC [M]  /home/cloud-user/klp-convert-modtest/test_mod_b.o
-   LD [M]  /home/cloud-user/klp-convert-modtest/test_mod.o
-   Building modules, stage 2.
-   MODPOST 1 modules
-   CC      /home/cloud-user/klp-convert-modtest/test_mod.mod.o
-   LD [M]  /home/cloud-user/klp-convert-modtest/test_mod.ko
-make[1]: Leaving directory '/home/cloud-user/disk/linux'
-
-However, if I modify the Makefile to build test_mod_a.o into its own 
-module, I see "KLP 
-/home/cloud-user/klp-convert-modtest/test_mod_a.ko" in the build output.
-
--- Joe
+Christian
