@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163ECC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 996EBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E702070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7433B20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732333AbfCZQMI (ORCPT
+        id S1732348AbfCZQMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:12:08 -0400
+        Tue, 26 Mar 2019 12:12:16 -0400
 Received: from mga02.intel.com ([134.134.136.20]:55266 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732244AbfCZQLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732237AbfCZQLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 12:11:39 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 09:11:39 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 09:11:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,273,1549958400"; 
-   d="scan'208";a="217714814"
+   d="scan'208";a="217714811"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 09:11:39 -0700
+  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 09:11:38 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 19/23] perf/x86/intel: Support CPUID 10.ECX to disable fixed counters
-Date:   Tue, 26 Mar 2019 09:08:57 -0700
-Message-Id: <20190326160901.4887-20-kan.liang@linux.intel.com>
+Subject: [PATCH V4 18/23] perf/x86/intel: Disable sampling read slots and topdown
+Date:   Tue, 26 Mar 2019 09:08:56 -0700
+Message-Id: <20190326160901.4887-19-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326160901.4887-1-kan.liang@linux.intel.com>
 References: <20190326160901.4887-1-kan.liang@linux.intel.com>
@@ -45,145 +45,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Icelake supports a new CPUID 10.ECX cpu leaf to indicate some fixed
-counters are not supported.  This extends the previous count to a bitmap
-which allows to disable even lower counters.
+To get correct PERF_METRICS value, the fixed counter 3 must start from
+0. It would bring problems when sampling read slots and topdown events.
+For example,
+        perf record -e '{slots, topdown-retiring}:S'
+The slots would not overflow if it starts from 0.
 
-It's a nop on Icelake (all fixed counters are supported), but let's
-implement it here.  This adds the necessary checks. In theory it could
-be used today by a Hypervisor.
+Add specific validate_group() support to reject the case and error out
+for Icelake.
 
-For disabled counters disable any constraint events. I reuse the
-existing intel_ctrl variable to remember which counters are disabled.
-All code that reads all counters is fixed to check this extra bitmask.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V3.
 
- arch/x86/events/core.c       |  8 +++++++-
- arch/x86/events/intel/core.c | 22 +++++++++++++++-------
- arch/x86/events/perf_event.h |  6 ++++++
- 3 files changed, 28 insertions(+), 8 deletions(-)
+ arch/x86/events/core.c       |  2 ++
+ arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
+ arch/x86/events/perf_event.h |  2 ++
+ 3 files changed, 24 insertions(+)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b9bee53e53d8..12d7d591843e 100644
+index 7d4d56f76436..b9bee53e53d8 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -225,6 +225,8 @@ static bool check_hw_exists(void)
- 		if (ret)
- 			goto msr_fail;
- 		for (i = 0; i < x86_pmu.num_counters_fixed; i++) {
-+			if (fixed_counter_disabled(i))
-+				continue;
- 			if (val & (0x03 << i*4)) {
- 				bios_fail = 1;
- 				val_fail = val;
-@@ -1372,6 +1374,8 @@ void perf_event_print_debug(void)
- 			cpu, idx, prev_left);
- 	}
- 	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
-+		if (fixed_counter_disabled(idx))
-+			continue;
- 		rdmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, pmc_count);
+@@ -2122,6 +2122,8 @@ static int validate_group(struct perf_event *event)
  
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
-@@ -1887,7 +1891,9 @@ static int __init init_hw_perf_events(void)
- 	pr_info("... generic registers:      %d\n",     x86_pmu.num_counters);
- 	pr_info("... value mask:             %016Lx\n", x86_pmu.cntval_mask);
- 	pr_info("... max period:             %016Lx\n", x86_pmu.max_period);
--	pr_info("... fixed-purpose events:   %d\n",     x86_pmu.num_counters_fixed);
-+	pr_info("... fixed-purpose events:   %lu\n",
-+			hweight64((((1ULL << x86_pmu.num_counters_fixed) - 1)
-+					<< INTEL_PMC_IDX_FIXED) & x86_pmu.intel_ctrl));
- 	pr_info("... event mask:             %016Lx\n", x86_pmu.intel_ctrl);
+ 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
  
- 	/*
++	if (x86_pmu.validate_group)
++		ret = x86_pmu.validate_group(fake_cpuc, n);
+ out:
+ 	free_fake_cpuc(fake_cpuc);
+ 	return ret;
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ef6045544628..a4b7711ef0ee 100644
+index b08e361fc718..ef6045544628 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2311,8 +2311,11 @@ static void intel_pmu_reset(void)
- 		wrmsrl_safe(x86_pmu_config_addr(idx), 0ull);
- 		wrmsrl_safe(x86_pmu_event_addr(idx),  0ull);
- 	}
--	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++)
-+	for (idx = 0; idx < x86_pmu.num_counters_fixed; idx++) {
-+		if (fixed_counter_disabled(idx))
-+			continue;
- 		wrmsrl_safe(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, 0ull);
-+	}
+@@ -4331,6 +4331,25 @@ static int icl_set_period(struct perf_event *event)
+ 	return 1;
+ }
  
- 	if (ds)
- 		ds->bts_index = ds->bts_buffer_base;
-@@ -4551,7 +4554,7 @@ __init int intel_pmu_init(void)
- 	union cpuid10_eax eax;
- 	union cpuid10_ebx ebx;
- 	struct event_constraint *c;
--	unsigned int unused;
-+	unsigned int fixed_mask;
- 	struct extra_reg *er;
- 	int version, i;
- 	char *name;
-@@ -4572,9 +4575,11 @@ __init int intel_pmu_init(void)
- 	 * Check whether the Architectural PerfMon supports
- 	 * Branch Misses Retired hw_event or not.
- 	 */
--	cpuid(10, &eax.full, &ebx.full, &unused, &edx.full);
-+	cpuid(10, &eax.full, &ebx.full, &fixed_mask, &edx.full);
- 	if (eax.split.mask_length < ARCH_PERFMON_EVENTS_COUNT)
- 		return -ENODEV;
-+	if (!fixed_mask)
-+		fixed_mask = -1;
- 
- 	version = eax.split.version_id;
- 	if (version < 2)
-@@ -5104,7 +5109,8 @@ __init int intel_pmu_init(void)
- 	}
- 
- 	x86_pmu.intel_ctrl |=
--		((1LL << x86_pmu.num_counters_fixed)-1) << INTEL_PMC_IDX_FIXED;
-+		(((1LL << x86_pmu.num_counters_fixed)-1) & (u64)fixed_mask)
-+			<< INTEL_PMC_IDX_FIXED;
- 
- 	if (x86_pmu.event_constraints) {
- 		/*
-@@ -5121,9 +5127,11 @@ __init int intel_pmu_init(void)
- 				c->weight = hweight64(c->idxmsk64);
- 				continue;
- 			}
--			if (c->cmask == FIXED_EVENT_FLAGS
--			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES) {
--				c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+			if (c->cmask == FIXED_EVENT_FLAGS)  {
-+				if (c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES)
-+					c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
-+				/* Disabled fixed counters which are not in CPUID */
-+				c->idxmsk64 &= x86_pmu.intel_ctrl;
- 			}
- 			c->idxmsk64 &=
- 				~(~0ULL << (INTEL_PMC_IDX_FIXED + x86_pmu.num_counters_fixed));
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 077d44a96d31..fff8868f92a8 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -925,6 +925,12 @@ ssize_t events_sysfs_show(struct device *dev, struct device_attribute *attr,
- ssize_t events_ht_sysfs_show(struct device *dev, struct device_attribute *attr,
- 			  char *page);
- 
-+static inline bool fixed_counter_disabled(int i)
++static int icl_validate_group(struct cpu_hw_events *cpuc, int n)
 +{
-+	return x86_pmu.intel_ctrl &&
-+		((1ULL << (i + INTEL_PMC_IDX_FIXED)) & x86_pmu.intel_ctrl);
++	bool has_sampling_slots = false, has_metrics = false;
++	struct perf_event *e;
++	int i;
++
++	for (i = 0; i < n; i++) {
++		e = cpuc->event_list[i];
++		if (is_slots_event(e) && is_sampling_event(e))
++			has_sampling_slots = true;
++
++		if (is_perf_metrics_event(e))
++			has_metrics = true;
++	}
++	if (unlikely(has_sampling_slots && has_metrics))
++		return -EINVAL;
++	return 0;
 +}
 +
- #ifdef CONFIG_CPU_SUP_AMD
+ EVENT_ATTR_STR(mem-loads,	mem_ld_hsw,	"event=0xcd,umask=0x1,ldlat=3");
+ EVENT_ATTR_STR(mem-stores,	mem_st_hsw,	"event=0xd0,umask=0x82")
  
- int amd_pmu_init(void);
+@@ -5037,6 +5056,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.has_metric = x86_pmu.intel_cap.perf_metrics;
+ 		x86_pmu.metric_update_event = icl_metric_update_event;
+ 		x86_pmu.set_period = icl_set_period;
++		x86_pmu.validate_group = icl_validate_group;
+ 		pr_cont("Icelake events, ");
+ 		name = "icelake";
+ 		break;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 6500463bda85..077d44a96d31 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -631,6 +631,8 @@ struct x86_pmu {
+ 	u64		(*limit_period)(struct perf_event *event, u64 l);
+ 	int		(*set_period)(struct perf_event *event);
+ 
++	int		(*validate_group)(struct cpu_hw_events *cpuc, int n);
++
+ 	/* PMI handler bits */
+ 	unsigned int	late_ack		:1,
+ 			counter_freezing	:1;
 -- 
 2.17.1
 
