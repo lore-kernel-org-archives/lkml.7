@@ -2,181 +2,135 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B950EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F27C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7F20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33BA20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553608725;
+	bh=W8fy+juAD7MWXKzh3i6irLB9PyF6m1IeA+OMV8CqpHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ByFYplJo7a+BBzC2yt1hOKkvYKWIUYAOnGqxdLQRCICrH2Ll5dL4fFFn1gN2CzkVX
+	 dXAvCnChDfPAR7uvDEoN+yZyCygfH+gjrLarmY2iXStjSsm1s0wVxTPBenta47dXDg
+	 Ug3eSHCUAOHjOak/MaApWQrAebXp/3spGMZe7p5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbfCZN5S (ORCPT
+        id S1731571AbfCZN6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:57:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47822 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731739AbfCZN5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:57:17 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QDsAbl039997
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:57:16 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfmymhfbn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:57:15 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 26 Mar 2019 13:57:13 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 13:57:11 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QDvAUu53018786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 13:57:10 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22B614204F;
-        Tue, 26 Mar 2019 13:57:10 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B08142042;
-        Tue, 26 Mar 2019 13:57:09 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.52])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 26 Mar 2019 13:57:09 +0000 (GMT)
-Date:   Tue, 26 Mar 2019 15:57:07 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, osalvador@suse.de,
-        willy@infradead.org, william.kucharski@oracle.com
-Subject: Re: [PATCH v2 2/4] mm/sparse: Optimize sparse_add_one_section()
-References: <20190326090227.3059-1-bhe@redhat.com>
- <20190326090227.3059-3-bhe@redhat.com>
- <20190326092936.GK28406@dhcp22.suse.cz>
- <20190326100817.GV3659@MiWiFi-R3L-srv>
- <20190326101710.GN28406@dhcp22.suse.cz>
- <20190326134522.GB21943@MiWiFi-R3L-srv>
+        Tue, 26 Mar 2019 09:58:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37440 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfCZN6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:58:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1C7FFAC8E;
+        Tue, 26 Mar 2019 13:58:40 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 14:58:37 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        keith.busch@intel.com, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190326135837.GP28406@dhcp22.suse.cz>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326134522.GB21943@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19032613-0028-0000-0000-000003587834
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032613-0029-0000-0000-00002417302C
-Message-Id: <20190326135706.GB23024@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260098
+In-Reply-To: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 09:45:22PM +0800, Baoquan He wrote:
-> On 03/26/19 at 11:17am, Michal Hocko wrote:
-> > On Tue 26-03-19 18:08:17, Baoquan He wrote:
-> > > On 03/26/19 at 10:29am, Michal Hocko wrote:
-> > > > On Tue 26-03-19 17:02:25, Baoquan He wrote:
-> > > > > Reorder the allocation of usemap and memmap since usemap allocation
-> > > > > is much simpler and easier. Otherwise hard work is done to make
-> > > > > memmap ready, then have to rollback just because of usemap allocation
-> > > > > failure.
-> > > > 
-> > > > Is this really worth it? I can see that !VMEMMAP is doing memmap size
-> > > > allocation which would be 2MB aka costly allocation but we do not do
-> > > > __GFP_RETRY_MAYFAIL so the allocator backs off early.
-> > > 
-> > > In !VMEMMAP case, it truly does simple allocation directly. surely
-> > > usemap which size is 32 is smaller. So it doesn't matter that much who's
-> > > ahead or who's behind. However, this benefit a little in VMEMMAP case.
-> > 
-> > How does it help there? The failure should be even much less probable
-> > there because we simply fall back to a small 4kB pages and those
-> > essentially never fail.
+On Sat 23-03-19 12:44:25, Yang Shi wrote:
 > 
-> OK, I am fine to drop it. Or only put the section existence checking
-> earlier to avoid unnecessary usemap/memmap allocation?
+> With Dave Hansen's patches merged into Linus's tree
 > 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308fd01d9fb33a16f64d2fd95f8830a4
 > 
-> From 7594b86ebf5d6fcc8146eca8fc5625f1961a15b1 Mon Sep 17 00:00:00 2001
-> From: Baoquan He <bhe@redhat.com>
-> Date: Tue, 26 Mar 2019 18:48:39 +0800
-> Subject: [PATCH] mm/sparse: Check section's existence earlier in
->  sparse_add_one_section()
+> PMEM could be hot plugged as NUMA node now. But, how to use PMEM as NUMA node
+> effectively and efficiently is still a question. 
 > 
-> No need to allocate usemap and memmap if section has been present.
-> And can clean up the handling on failure.
+> There have been a couple of proposals posted on the mailing list [1] [2].
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  mm/sparse.c | 21 ++++++++-------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
+> The patchset is aimed to try a different approach from this proposal [1]
+> to use PMEM as NUMA nodes.
 > 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 363f9d31b511..f564b531e0f7 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -714,7 +714,13 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
->  	ret = sparse_index_init(section_nr, nid);
->  	if (ret < 0 && ret != -EEXIST)
->  		return ret;
-> -	ret = 0;
-> +
-> +	ms = __pfn_to_section(start_pfn);
-> +	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
-> +		ret = -EEXIST;
-> +		goto out;
+> The approach is designed to follow the below principles:
+> 
+> 1. Use PMEM as normal NUMA node, no special gfp flag, zone, zonelist, etc.
+> 
+> 2. DRAM first/by default. No surprise to existing applications and default
+> running. PMEM will not be allocated unless its node is specified explicitly
+> by NUMA policy. Some applications may be not very sensitive to memory latency,
+> so they could be placed on PMEM nodes then have hot pages promote to DRAM
+> gradually.
 
-		return -EEXIST; ?
+Why are you pushing yourself into the corner right at the beginning? If
+the PMEM is exported as a regular NUMA node then the only difference
+should be performance characteristics (module durability which shouldn't
+play any role in this particular case, right?). Applications which are
+already sensitive to memory access should better use proper binding already.
+Some NUMA topologies might have quite a large interconnect penalties
+already. So this doesn't sound like an argument to me, TBH.
 
-> +	}
-> +
->  	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
->  	if (!memmap)
->  		return -ENOMEM;
-> @@ -724,12 +730,6 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
->  		return -ENOMEM;
->  	}
->  
-> -	ms = __pfn_to_section(start_pfn);
-> -	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
-> -		ret = -EEXIST;
-> -		goto out;
-> -	}
-> -
->  	/*
->  	 * Poison uninitialized struct pages in order to catch invalid flags
->  	 * combinations.
-> @@ -739,12 +739,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
->  	section_mark_present(ms);
->  	sparse_init_one_section(ms, section_nr, memmap, usemap);
->  
-> -out:
-> -	if (ret < 0) {
-> -		kfree(usemap);
-> -		__kfree_section_memmap(memmap, altmap);
-> -	}
-> -	return ret;
-> +	return 0;
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTREMOVE
-> -- 
-> 2.17.2
-> 
+> 5. Control memory allocation and hot/cold pages promotion/demotion on per VMA
+> basis.
 
+What does that mean? Anon vs. file backed memory?
+
+[...]
+
+> 2. Introduce a new mempolicy, called MPOL_HYBRID to keep other mempolicy
+> semantics intact. We would like to have memory placement control on per process
+> or even per VMA granularity. So, mempolicy sounds more reasonable than madvise.
+> The new mempolicy is mainly used for launching processes on PMEM nodes then
+> migrate hot pages to DRAM nodes via NUMA balancing. MPOL_BIND could bind to
+> PMEM nodes too, but migrating to DRAM nodes would just break the semantic of
+> it. MPOL_PREFERRED can't constraint the allocation to PMEM nodes. So, it sounds
+> a new mempolicy is needed to fulfill the usecase.
+
+The above restriction pushes you to invent an API which is not really
+trivial to get right and it seems quite artificial to me already.
+
+> 3. The new mempolicy would promote pages to DRAM via NUMA balancing. IMHO, I
+> don't think kernel is a good place to implement sophisticated hot/cold page
+> distinguish algorithm due to the complexity and overhead. But, kernel should
+> have such capability. NUMA balancing sounds like a good start point.
+
+This is what the kernel does all the time. We call it memory reclaim.
+
+> 4. Promote twice faulted page. Use PG_promote to track if a page is faulted
+> twice. This is an optimization to NUMA balancing to reduce the migration
+> thrashing and overhead for migrating from PMEM.
+
+I am sorry, but page flags are an extremely scarce resource and a new
+flag is extremely hard to get. On the other hand we already do have
+use-twice detection for mapped page cache (see page_check_references). I
+believe we can generalize that to anon pages as well.
+
+> 5. When DRAM has memory pressure, demote page to PMEM via page reclaim path.
+> This is quite similar to other proposals. Then NUMA balancing will promote
+> page to DRAM as long as the page is referenced again. But, the
+> promotion/demotion still assumes two tier main memory. And, the demotion may
+> break mempolicy.
+
+Yes, this sounds like a good idea to me ;)
+
+> 6. Anonymous page only for the time being since NUMA balancing can't promote
+> unmapped page cache.
+
+As long as the nvdimm access is faster than the regular storage then
+using any node (including pmem one) should be OK.
 -- 
-Sincerely yours,
-Mike.
-
+Michal Hocko
+SUSE Labs
