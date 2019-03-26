@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF2AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40109C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB0F20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA3820879
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582282;
-	bh=d0LZQVmkwKoC+KOo44e+swDldATl5u07QK342dpbSlA=;
+	s=default; t=1553582288;
+	bh=khEEPCq83+Rne8oKJwNM6NCSVfc1r5zIbsqw95I9uko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/5Max1cAohgW+q81Bgilo7hPWpzIHYlDEaEOi1IZEFRX0SBH0zD4CF7yhjIHdD58
-	 wbHs1TWv0kUi1vQ98hiHmI+CGEwvI3cEin2i0/QBU8wIB1wSxdQx/fcy10PPwI7Dey
-	 lvVArvJ1gbc4dWCk6jOQr7zsru7Ef4RQy9cP6a64=
+	b=S761Dpx3IoNrzJTgeIVX3eg3Zwdy5gdQuvzHBASpY2L8zB3ccB3+Qb1pWxs4SvNgb
+	 zpGgEo7+bukSAPqwKpf1X7AoF9rsydZcVFKCUB1+v2OhZo8hC87xdLrQCs62Ave7PK
+	 7UPMZCtQw7icIPSc9twtGD8AH0Q9BCOinqZ/lhJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfCZGiA (ORCPT
+        id S1731982AbfCZGiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732440AbfCZGh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:58 -0400
+        id S1732472AbfCZGiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:04 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363CF2075E;
-        Tue, 26 Mar 2019 06:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C42B72075E;
+        Tue, 26 Mar 2019 06:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582276;
-        bh=d0LZQVmkwKoC+KOo44e+swDldATl5u07QK342dpbSlA=;
+        s=default; t=1553582283;
+        bh=khEEPCq83+Rne8oKJwNM6NCSVfc1r5zIbsqw95I9uko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01IdKLwte9vIzAsZir5ZmCgBVuXr01WEZZLX9SGVyG21nWBuhWdLZS8OmZBr3ENIn
-         +/BNvJodSjFUrfkWqe/yT/ffGgDMuHONpPYbkbtQ6jaKE5k5lc67msLA1kI/2Dbxbq
-         cJoT+88/uEYa86FM1N1zrywJLSwVm5rfaULjeVBU=
+        b=p4fRqIA57ki9BoYgWGfg+BAgiPW7Ujl6xDE45kX7tdodfjqnFPXOQACS41a28fCI8
+         pi2dfH2tJW4AEMziU1+HmVfxQXGxM72AgRNNtuu3ybZ6I4/5eftrUmZc8/6rzNu0tS
+         VLUC2A+VWDdMccNo/i2sc6LIyS9EZDEEuz32AERk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 44/45] ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-Date:   Tue, 26 Mar 2019 15:30:27 +0900
-Message-Id: <20190326042705.005848439@linuxfoundation.org>
+        stable@vger.kernel.org, hs.guimaraes@outlook.com,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 01/52] ALSA: hda - add Lenovo IdeaCentre B550 to the power_save_blacklist
+Date:   Tue, 26 Mar 2019 15:29:48 +0900
+Message-Id: <20190326042701.035115939@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
-References: <20190326042702.565683325@linuxfoundation.org>
+In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
+References: <20190326042700.963224437@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -60,97 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Jaroslav Kysela <perex@perex.cz>
 
-commit b5a236c175b0d984552a5f7c9d35141024c2b261 upstream.
+commit 721f1e6c1fd137e7e2053d8e103b666faaa2d50c upstream.
 
-Recently we found the audio jack detection stop working after suspend
-on many machines with Realtek codec. Sometimes the audio selection
-dialogue didn't show up after users plugged headhphone/headset into
-the headset jack, sometimes after uses plugged headphone/headset, then
-click the sound icon on the upper-right corner of gnome-desktop, it
-also showed the speaker rather than the headphone.
+Another machine which does not like the power saving (noise):
+  https://bugzilla.redhat.com/show_bug.cgi?id=1689623
 
-The root cause is that before suspend, the codec already call the
-runtime_suspend since this codec is not used by any apps, then in
-resume, it will not call runtime_resume for this codec. But for some
-realtek codec (so far, alc236, alc255 and alc891) with the specific
-BIOS, if it doesn't run runtime_resume after suspend, all codec
-functions including jack detection stop working anymore.
+Also, reorder the Lenovo C50 entry to keep the table sorted.
 
-This problem existed for a long time, but it was not exposed, that is
-because when problem happens, if users play sound or open
-sound-setting to check audio device, this will trigger calling to
-runtime_resume (via snd_hda_power_up), then the codec starts working
-again before users notice this problem.
-
-Since we don't know how many codec and BIOS combinations have this
-problem, to fix it, let the driver call runtime_resume for all codecs
-in pm_resume, maybe for some codecs, this is not needed, but it is
-harmless. After a codec is runtime resumed, if it is not used by any
-apps, it will be runtime suspended soon and furthermore we don't run
-suspend frequently, this change will not add much power consumption.
-
-Fixes: cc72da7d4d06 ("ALSA: hda - Use standard runtime PM for codec power-save control")
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Reported-by: hs.guimaraes@outlook.com
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_codec.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ sound/pci/hda/hda_intel.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -2944,6 +2944,20 @@ static int hda_codec_runtime_resume(stru
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2144,10 +2144,12 @@ static struct snd_pci_quirk power_save_b
+ 	SND_PCI_QUIRK(0x8086, 0x2057, "Intel NUC5i7RYB", 0),
+ 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1520902 */
+ 	SND_PCI_QUIRK(0x8086, 0x2068, "Intel NUC7i3BNB", 0),
+-	/* https://bugzilla.redhat.com/show_bug.cgi?id=1572975 */
+-	SND_PCI_QUIRK(0x17aa, 0x36a7, "Lenovo C50 All in one", 0),
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=198611 */
+ 	SND_PCI_QUIRK(0x17aa, 0x2227, "Lenovo X1 Carbon 3rd Gen", 0),
++	/* https://bugzilla.redhat.com/show_bug.cgi?id=1689623 */
++	SND_PCI_QUIRK(0x17aa, 0x367b, "Lenovo IdeaCentre B550", 0),
++	/* https://bugzilla.redhat.com/show_bug.cgi?id=1572975 */
++	SND_PCI_QUIRK(0x17aa, 0x36a7, "Lenovo C50 All in one", 0),
+ 	{}
+ };
  #endif /* CONFIG_PM */
- 
- #ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
- static int hda_codec_pm_suspend(struct device *dev)
- {
- 	dev->power.power_state = PMSG_SUSPEND;
-@@ -2953,7 +2967,7 @@ static int hda_codec_pm_suspend(struct d
- static int hda_codec_pm_resume(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESUME;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_freeze(struct device *dev)
-@@ -2965,13 +2979,13 @@ static int hda_codec_pm_freeze(struct de
- static int hda_codec_pm_thaw(struct device *dev)
- {
- 	dev->power.power_state = PMSG_THAW;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- 
- static int hda_codec_pm_restore(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESTORE;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- #endif /* CONFIG_PM_SLEEP */
- 
 
 
