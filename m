@@ -2,127 +2,88 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3D1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1757C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482FE20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4920857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sccCvHZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731738AbfCZN5K (ORCPT
+        id S1731760AbfCZN5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:57:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39480 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbfCZN5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:57:09 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QDs9H0045259
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:57:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfn46rv8k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:57:07 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 26 Mar 2019 13:57:05 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 13:57:03 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QDv2sa18546860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 13:57:02 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AD65A405C;
-        Tue, 26 Mar 2019 13:57:02 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05457A405B;
-        Tue, 26 Mar 2019 13:57:01 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.109.68])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 13:57:00 +0000 (GMT)
-Subject: Re: [PATCH v4a 1/2] selftests/kexec: make tests independent of IMA
- being enabled
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Petr Vorel <pvorel@suse.cz>, Matthew Garrett <mjg59@google.com>
-Date:   Tue, 26 Mar 2019 09:56:50 -0400
-In-Reply-To: <20190326074942.GA19708@dhcp-128-65.nay.redhat.com>
-References: <1553283351-6310-1-git-send-email-zohar@linux.ibm.com>
-         <20190325080935.GA12497@dhcp-128-65.nay.redhat.com>
-         <1553546236.5561.7.camel@linux.ibm.com>
-         <20190326074942.GA19708@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032613-4275-0000-0000-0000031F749D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032613-4276-0000-0000-0000382E0B3E
-Message-Id: <1553608610.3960.37.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260098
+        Tue, 26 Mar 2019 09:57:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48838 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbfCZN5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:57:13 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3903D1EC02D1;
+        Tue, 26 Mar 2019 14:57:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553608631;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=VBmvhlNt5T5tLICXaCt3yoPsTBW8T+5xJTvH2vUPLi4=;
+        b=sccCvHZTT+X6zA6GWy5vc0DSNYdViOh6q6QQODpPK25G2eSDBqHWpe/SX1TX0AJ95mPJe6
+        372kqEd/QlRUi/oeNImZP28Sc7BH2brFz/gYceVrPOgWWfDbS4EN+i8+sQpY8qFijBn/sM
+        ox+F806wiMjtziaxj1jcSLZHIv5I6zk=
+Date:   Tue, 26 Mar 2019 14:57:14 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
+Message-ID: <20190326135714.GG1867@zn.tnic>
+References: <bcb5bd29-a3b8-e42d-8da7-a8501f695c21@ce.jp.nec.com>
+ <20190325065921.GA11096@dhcp-128-65.nay.redhat.com>
+ <20190325082720.GA20771@jeru.linux.bs1.fc.nec.co.jp>
+ <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
+ <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
+ <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
+ <20190325120149.GI12016@zn.tnic>
+ <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
+ <20190325123229.GL12016@zn.tnic>
+ <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 15:49 +0800, Dave Young wrote:
-> On 03/25/19 at 04:37pm, Mimi Zohar wrote:
-> > On Mon, 2019-03-25 at 16:09 +0800, Dave Young wrote:
-> > > Hi Mimi
-> > > On 03/22/19 at 03:35pm, Mimi Zohar wrote:
-> > > > Verify IMA is enabled before failing tests or emitting irrelevant
-> > > > messages.  Also, don't skip the test if signatures are not required.
-> > > > 
-> > > > Suggested-by: Dave Young <dyoung@redhat.com>
-> > > > Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > > ---
-> > > > Dave, if this patch resolves the outstanding issues, I can fold these
-> > > > changes into the original patches. (Reminder, these patches will need to
-> > > > be updated to support the "lockdown" patch set.)
-> > > 
-> > > They looks good to me, thanks for the update
-> > 
-> > I've folded the kexec_file_load changes into the kexec_file_load test.
-> >  The remaining kexec_load change is left as a separate patch, since it
-> > is dependent on the ikconfig change.
-> > 
-> > > Feel free to add my reviewed-by, I did some tests although not cover all
-> > > ima cases.
-> > 
-> > Thanks!  Is this meant as a general "reviewed-by" for all of the
-> > patches or just this specific one?
-> 
-> Thank you for taking this as a separate kexec tests, I think it can
-> be used for these delta fixes
+On Mon, Mar 25, 2019 at 11:10:01PM +0000, Junichi Nomura wrote:
+> efi_get_rsdp_addr() and kexec_get_rsdp_addr() could be implemented
+> like this (sorry about the pseudo code):
 
-Ok, I just re-posted the patches, folding part of this patch into the
-kexec_file_load test.  I've added your Reviewed-by on the remaining
-patch.
+This doesn't look like what I suggested:
 
-> 
-> I read all the patches and reviewed the kexec stuff, but I do not
-> understand all the IMA logic yet although I did some simple ima
-> tests.
+> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
+> least the loop towards the end gets carved out into a separate function
+> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
+> size as arguments and finds the RSDP address in the kexec-ed kernel.
 
-I understand.  There are many different aspects to the integrity
-subsystem.  I'm happy to answer any questions you have.
+You need to carve out the loop at the end and make it into a separate
+__efi_get_rsdp_addr() function which gets the physical or the virtual
+address.
 
-Mimi
+-- 
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
