@@ -2,126 +2,154 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC9BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FDEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67BE20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6FE20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ko9TC5vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfCZFyt (ORCPT
+        id S1730377AbfCZF6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 01:54:49 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51455 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbfCZFyt (ORCPT
+        Tue, 26 Mar 2019 01:58:51 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41527 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfCZF6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 01:54:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TNg4QDt_1553579653;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TNg4QDt_1553579653)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 Mar 2019 13:54:43 +0800
-Subject: Re: [PATCH] fbdev: fix divide error in fb_var_to_videomode
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Fredrik Noring <noring@nocrew.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-References: <1552998003-237288-1-git-send-email-shile.zhang@linux.alibaba.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <0560ca36-a7a8-ed6f-d66f-059336e6b5e9@linux.alibaba.com>
-Date:   Tue, 26 Mar 2019 13:54:13 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.1
+        Tue, 26 Mar 2019 01:58:51 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y5so1112892plk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=CbYmRGUZEd1iQvum1IXYqF42ybOYTBKz3+p6mg+oYlo=;
+        b=Ko9TC5vvEKuLwoXWFWzSAreUCqwrexYQMDa9zIoj6ql1FmP/l//6Ugs9azCRPyRu6J
+         3rB852ZUpel8SIRAf1eA0VXvpeRr6gGfASPseK4uV3ZnuBZcy1lEUTLBEsSL7Db9ANKd
+         8o8kh2cMlQR9PXoKKK3OkAnDekzGyhdfTLjBPSQi4IrHKdu48rwSnrWUESCOgx7OmYLe
+         NuJ8h6kSYMSPTd/YeqYCrrD9iqEV3RYTRXzclPfWx8vYe19Z6xcDINB/jVaeOe8lzh2j
+         eXmjJGFYw0Du/D5AhoU+ln+15kZ6rEM59plczL2dYyrQq/tDxtpP5uY7calONo898Fl/
+         5htA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=CbYmRGUZEd1iQvum1IXYqF42ybOYTBKz3+p6mg+oYlo=;
+        b=MTJ4NIWFCJtiujPKuBPu3Iknd+kXHPivZN7dvxwh0c26Zu4aDnYij04cIzLYzTAg7z
+         YWIfBqMYVeIPqEaqHEuXevS9DyTSfeWAGF8DUaKF6onbaRvKbAbcDm5UqumKzWRbkwcL
+         vUVGIcV+KPfRdjMANz7QY8n31U0mQShH8elYx6B/gXtDz5Pb0lJQ4+Xy8JPK63gY6hva
+         4IBo7x5Nh8rZ7YD3ZUI8CefsiIMahYh6SOBvXqDR9qJx3fh3AxuknyOOJ9jYPCeffyYy
+         W3IfVUDbrtoa5ZMpn4kuzwHREAjo7wahQ8fckvvUiqCi7EBP7rXxDfvyXXWiWweyv+54
+         cBzw==
+X-Gm-Message-State: APjAAAU2W4y6KzNdDlbDhLLVdvSz7l0XZ2ptGwG2gCQQFgdWBz4n9G6Y
+        8MkZGRHrAJyWLdpeBIudTGk=
+X-Google-Smtp-Source: APXvYqwYpL9AXMOqLKcqIJyllvGM0xwvhgBITtdXdHbwwCZFAwPbb753YOq1ogdG3ANmWqO5UHFx5Q==
+X-Received: by 2002:a17:902:1008:: with SMTP id b8mr28480020pla.120.1553579930670;
+        Mon, 25 Mar 2019 22:58:50 -0700 (PDT)
+Received: from localhost ([193.114.107.176])
+        by smtp.gmail.com with ESMTPSA id 25sm22419793pfo.96.2019.03.25.22.58.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 22:58:49 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 15:58:43 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2]  arch/powerpc: Rework local_paca to avoid LTO warnings
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>
+References: <20190313034208.13134-1-alastair@au1.ibm.com>
+        <20190314023125.10076-1-alastair@au1.ibm.com>
+In-Reply-To: <20190314023125.10076-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1552998003-237288-1-git-send-email-shile.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1553579424.0r39b9otz6.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bartlomiej, Fredrik, Daniel,
+Alastair D'Silva's on March 14, 2019 12:31 pm:
+> From: Alastair D'Silva <alastair@d-silva.org>
+>=20
+> When building an LTO kernel, the existing code generates warnings:
+>     ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
+>         =E2=80=98local_paca=E2=80=99 used for multiple global register va=
+riables
+>      register struct paca_struct *local_paca asm("r13");
+>                                   ^
+>     ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
+>         =E2=80=98local_paca=E2=80=99
 
-Could you please help to have a look at this patch?
+Isn't this a bogus warning? It doesn't look like there's a way to=20
+define it any other way.
 
-Many thanks!
-
--Shile
-
-On 2019/3/19 20:20, shile.zhang@linux.alibaba.com wrote:
-> From: Shile Zhang <shile.zhang@linux.alibaba.com>
->
-> To fix following divide-by-zero error found by Syzkaller:
->
->    divide error: 0000 [#1] SMP PTI
->    CPU: 7 PID: 8447 Comm: test Kdump: loaded Not tainted 4.19.24-8.al7.x86_64 #1
->    Hardware name: Alibaba Cloud Alibaba Cloud ECS, BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
->    RIP: 0010:fb_var_to_videomode+0xae/0xc0
->    Code: 04 44 03 46 78 03 4e 7c 44 03 46 68 03 4e 70 89 ce d1 ee 69 c0 e8 03 00 00 f6 c2 01 0f 45 ce 83 e2 02 8d 34 09 0f 45 ce 31 d2 <41> f7 f0 31 d2 f7 f1 89 47 08 f3 c3 66 0f 1f 44 00 00 0f 1f 44 00
->    RSP: 0018:ffffb7e189347bf0 EFLAGS: 00010246
->    RAX: 00000000e1692410 RBX: ffffb7e189347d60 RCX: 0000000000000000
->    RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb7e189347c10
->    RBP: ffff99972a091c00 R08: 0000000000000000 R09: 0000000000000000
->    R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000100
->    R13: 0000000000010000 R14: 00007ffd66baf6d0 R15: 0000000000000000
->    FS:  00007f2054d11740(0000) GS:ffff99972fbc0000(0000) knlGS:0000000000000000
->    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->    CR2: 00007f205481fd20 CR3: 00000004288a0001 CR4: 00000000001606a0
->    Call Trace:
->     fb_set_var+0x257/0x390
->     ? lookup_fast+0xbb/0x2b0
->     ? fb_open+0xc0/0x140
->     ? chrdev_open+0xa6/0x1a0
->     do_fb_ioctl+0x445/0x5a0
->     do_vfs_ioctl+0x92/0x5f0
->     ? __alloc_fd+0x3d/0x160
->     ksys_ioctl+0x60/0x90
->     __x64_sys_ioctl+0x16/0x20
->     do_syscall_64+0x5b/0x190
->     entry_SYSCALL_64_after_hwframe+0x44/0xa9
->    RIP: 0033:0x7f20548258d7
->    Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
->
-> It can be triggered easily with following test code:
->
->    #include <linux/fb.h>
->    #include <fcntl.h>
->    #include <sys/ioctl.h>
->    int main(void)
->    {
->            struct fb_var_screeninfo var = {.activate = 0x100, .pixclock = 60};
->            int fd = open("/dev/fb0", O_RDWR);
->            if (fd < 0)
->                    return 1;
->
->            if (ioctl(fd, FBIOPUT_VSCREENINFO, &var))
->                    return 1;
->
->            return 0;
->    }
->
-> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>=20
+> This patch reworks local_paca into an inline getter & setter function,
+> which addresses the warning.
+>=20
+> Changelog:
+> V2
+>   - Address whitespace issues
+>   - keep new implementation close to where the old implementation was
+>=20
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > ---
->   drivers/video/fbdev/core/modedb.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/video/fbdev/core/modedb.c b/drivers/video/fbdev/core/modedb.c
-> index 283d9307..ac04987 100644
-> --- a/drivers/video/fbdev/core/modedb.c
-> +++ b/drivers/video/fbdev/core/modedb.c
-> @@ -935,6 +935,9 @@ void fb_var_to_videomode(struct fb_videomode *mode,
->   	if (var->vmode & FB_VMODE_DOUBLE)
->   		vtotal *= 2;
->   
-> +	if (!htotal || !vtotal)
-> +		return;
+>  arch/powerpc/include/asm/paca.h | 37 +++++++++++++++++++++++++--------
+>  arch/powerpc/kernel/paca.c      |  2 +-
+>  2 files changed, 29 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/p=
+aca.h
+> index e843bc5d1a0f..2fa0b43357c9 100644
+> --- a/arch/powerpc/include/asm/paca.h
+> +++ b/arch/powerpc/include/asm/paca.h
+> @@ -34,19 +34,38 @@
+>  #include <asm/cpuidle.h>
+>  #include <asm/atomic.h>
+> =20
+> -register struct paca_struct *local_paca asm("r13");
+> -
+>  #if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
+>  extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
+> -/*
+> - * Add standard checks that preemption cannot occur when using get_paca(=
+):
+> - * otherwise the paca_struct it points to may be the wrong one just afte=
+r.
+> - */
+> -#define get_paca()	((void) debug_smp_processor_id(), local_paca)
+> -#else
+> -#define get_paca()	local_paca
+>  #endif
+> =20
+> +static inline struct paca_struct *get_paca_no_preempt_check(void)
+> +{
+> +	register struct paca_struct *paca asm("r13");
 > +
->   	hfreq = pixclock/htotal;
->   	mode->refresh = hfreq/vtotal;
->   }
+> +	return paca;
+> +}
+
+Problem is it now changes the global register variable to a local=20
+register variable. The compiler would presumably be within its rights
+to "cache" that return value or use another register for it, which
+is not really what we want.
+
+Thanks,
+Nick
+
+=
