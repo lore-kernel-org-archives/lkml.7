@@ -2,129 +2,105 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658EBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA00C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A20A2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lA+V4GhQ"
+	by mail.kernel.org (Postfix) with ESMTP id 92DAB2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfCZLxK (ORCPT
+        id S1731501AbfCZLxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:53:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43272 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731451AbfCZLxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:53:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k17so6022755wrx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 04:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=qCwyZ7FbocWnc8CdV4hERB3qHdj5lW3pd0mmcHt1d/Y=;
-        b=lA+V4GhQqi69wzJUwIoniQ/0VSWSXbbmXCwu7ST3kbTLqJhSOpVbWpjWjEgaYXkdzx
-         V95TZLWtXNNCkcbSvCiLnFwxlLfBLAmP0gN2ItZtNKKxh5grMhoMI9Ksb/PmD60xd9C6
-         VsDFkgnYGYS2c9HRJGrXfXMN/jcD5+Rm0/W3IeYWiUhO33CVOlJY5YJde+I0bDzrn26z
-         vMBF43kFFjDyYzd8z4fnpXqANLp1nvUceiKGYhEsKDoM+vpB5EsLQjGs8BPwCXGoDRgC
-         FMFzOYF+/3BNeKAjx0HInQsBLRjpHac9xyO5/Gh6Ti7gHqoy73BBTJsU9LoaPiJMkRaw
-         neJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=qCwyZ7FbocWnc8CdV4hERB3qHdj5lW3pd0mmcHt1d/Y=;
-        b=EnMXKe0BKwyO7Fj0AN+BOsE5UX9bZmGvvJwCYv3/0AiBZTStWn1cUscKf0sVQXIJcO
-         pQMEnnYLTqMAdFYsqaIBjlQJF0/PuiB4uK7RDs2ju89LbjQ1BUF9FdiB+3hML2mt1ZnQ
-         +zHffuzjeNHQO0Zlj+3101D04GRtHWyY/QkmWKESpU2B10PRiJUqceVv+cfnXc2VSOS+
-         Otz/czXQzMcw1WWCt/pmiUKN+p3gRXM9rkffRE5FGijp2CkCAI/Mzpf8JPIP+OoqFQuf
-         3kI4Xvb35+Qet2dxo1rXqSZLy3hIeRm8pUfi65WJXSDCOCD5yeQFDSdRBMUO0DS4SdMS
-         Be2g==
-X-Gm-Message-State: APjAAAU5vLDDehOIExruP7kmk9X/oRZiDBofkyXdjujMQoCJj2y8fgLv
-        71bQbFeiO8dJusHfNzT0UJ8cjg==
-X-Google-Smtp-Source: APXvYqyeX/I68b4lNXD4S2vv5OCknWxQCRkhiZuUBlDLna75MBMeW8bjeTFJ/L2Nh+AMb+cd8fWQTw==
-X-Received: by 2002:a5d:4087:: with SMTP id o7mr7830063wrp.9.1553601187651;
-        Tue, 26 Mar 2019 04:53:07 -0700 (PDT)
-Received: from [192.168.0.102] ([88.147.50.223])
-        by smtp.gmail.com with ESMTPSA id x192sm20297864wmf.48.2019.03.26.04.53.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 04:53:06 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH BUGFIX IMPROVEMENT V3 0/9] lock, bfq: fix bugs, reduce
- exec time and boost performance
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190312085935.11340-1-paolo.valente@linaro.org>
-Date:   Tue, 26 Mar 2019 12:53:04 +0100
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, broonie@kernel.org,
-        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
-        fra.fra.800@gmail.com, alessio.masola@gmail.com,
-        holger@applied-asynchrony.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E7E093AD-07CC-4B76-9675-14F0A7C4D8E1@linaro.org>
-References: <20190312085935.11340-1-paolo.valente@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Tue, 26 Mar 2019 07:53:31 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:43520 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729625AbfCZLxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:53:30 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id C807620A98;
+        Tue, 26 Mar 2019 12:53:28 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id AE77D20A8F;
+        Tue, 26 Mar 2019 12:53:28 +0100 (CET)
+Subject: Re: [PATCH v1] phy: qcom-qmp: Add msm8998 PCIe QMP PHY support
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <a897277d-23b3-9746-81dc-28f8925a9992@free.fr>
+ <136857e7-0fe1-6fc6-729e-2cbf6ea72386@ti.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <e724b6ed-ef04-1b3b-7ae7-579ea770187d@free.fr>
+Date:   Tue, 26 Mar 2019 12:53:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <136857e7-0fe1-6fc6-729e-2cbf6ea72386@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Mar 26 12:53:28 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26/03/2019 08:45, Kishon Vijay Abraham I wrote:
 
+> On 22/03/19 9:42 PM, Marc Gonzalez wrote:
+> 
+>> Copy init sequence from downstream:
+>> https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-v2.dtsi?h=LE.UM.1.3.r3.25#n372
+> 
+> Can't we instead have reference to HW manual or datasheet?
 
-> Il giorno 12 mar 2019, alle ore 09:59, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> Hi,
-> this is the v3 of the series
-> https://lkml.org/lkml/2019/3/10/138
-> that fixes some bug affecting performance, reduces execution time a
-> little bit, and boosts throughput and responsiveness.
->=20
-> The difference w.r.t. v2 are new fixes to the patch "block, bfq: print
-> SHARED instead of pid for shared queues in logs", after patient checks
-> and suggestions by Holger and Oleksandr.
->=20
+I have heard of these legendary beasts, but I have never seen one.
 
-Hi Jens,
-have you had time to look into this?
+>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+>> ---
+>>  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   5 +
+>>  drivers/phy/qualcomm/phy-qcom-qmp.c           | 110 ++++++++++++++++++
+>>  drivers/phy/qualcomm/phy-qcom-qmp.h           |  12 ++
+>>  3 files changed, 127 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> index 5d181fc3cc18..6000ae34b12b 100644
+>> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>  	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+>>  	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+>>  	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
+>> +	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
+>>  	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>>  	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+>>  	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+>> @@ -48,6 +49,8 @@ Required properties:
+>>  			"aux", "cfg_ahb", "ref".
+>>  		For "qcom,msm8998-qmp-ufs-phy" must contain:
+>>  			"ref", "ref_aux".
+>> +		For "qcom,msm8998-qmp-pcie-phy" must contain:
+>> +			"aux", "cfg_ahb", "ref".
+>>  		For "qcom,sdm845-qmp-usb3-phy" must contain:
+>>  			"aux", "cfg_ahb", "ref", "com_aux".
+>>  		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+>> @@ -70,6 +73,8 @@ Required properties:
+>>  		For "qcom,msm8998-qmp-usb3-phy" must contain
+>>  			"phy", "common".
+>>  		For "qcom,msm8998-qmp-ufs-phy": no resets are listed.
+>> +		For "qcom,msm8998-qmp-pcie-phy" must contain:
+>> +			"phy", "common", "cfg".
+>>  		For "qcom,sdm845-qmp-usb3-phy" must contain:
+>>  			"phy", "common".
+>>  		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+> 
+> Please send the dt binding in a separate patch.
 
-Thanks,
-Paolo
-
-> Thanks,
-> Paolo
->=20
-> Francesco Pollicino (2):
->  block, bfq: print SHARED instead of pid for shared queues in logs
->  block, bfq: save & resume weight on a queue merge/split
->=20
-> Paolo Valente (7):
->  block, bfq: increase idling for weight-raised queues
->  block, bfq: do not idle for lowest-weight queues
->  block, bfq: tune service injection basing on request service times
->  block, bfq: do not merge queues on flash storage with queueing
->  block, bfq: do not tag totally seeky queues as soft rt
->  block, bfq: always protect newly-created queues from existing active
->    queues
->  doc, block, bfq: add information on bfq execution time
->=20
-> Documentation/block/bfq-iosched.txt |  29 +-
-> block/bfq-cgroup.c                  |   3 +-
-> block/bfq-iosched.c                 | 786 +++++++++++++++++++++++-----
-> block/bfq-iosched.h                 |  92 ++--
-> block/bfq-wf2q.c                    |   2 +-
-> 5 files changed, 729 insertions(+), 183 deletions(-)
->=20
-> --
-> 2.20.1
-
+Coming right up.
