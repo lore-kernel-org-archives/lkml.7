@@ -2,96 +2,266 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB46C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C2FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3173D2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O8NBdrkB"
+	by mail.kernel.org (Postfix) with ESMTP id 7741D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbfCZHdr (ORCPT
+        id S1731055AbfCZHfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:33:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45064 "EHLO mail.skyhub.de"
+        Tue, 26 Mar 2019 03:35:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13051 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbfCZHdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:33:47 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EEC1D1EC058B;
-        Tue, 26 Mar 2019 08:33:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553585626;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yWaw34r3ikZVogWKj8M/1U46mF3JXDYcVy0I2a+rWFc=;
-        b=O8NBdrkBC0HDxDl6+mgC1AEi0L4CR7rVaSZqPtbp6rr7zt5qi8OKzXpYqpIb3h3Vf7ccwW
-        btuCNFlbcm+5fxtpcvrMsLLsIEREeeS/8unrNPT1Va70q1KH3OCteWa2z9S/tKjgYfyU/g
-        UJZnBHk3AR6fNwrMIv7Y2aYfBMLmnCs=
-Date:   Tue, 26 Mar 2019 08:33:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for EDAC-I10NM
-Message-ID: <20190326073346.GA1867@zn.tnic>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190325212506.26282-1-joe@perches.com>
- <20190325235627.GA11938@agluck-desk>
+        id S1726307AbfCZHfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 03:35:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 00:35:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
+   d="scan'208";a="137314248"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 00:35:00 -0700
+Subject: Re: [PATCH v2 1/8] mmc: sdhci: Get rid of finish_tasklet
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, Kishon <kishon@ti.com>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20190215192033.24203-1-faiz_abbas@ti.com>
+ <20190215192033.24203-2-faiz_abbas@ti.com>
+ <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <65f24027-005a-4372-8819-45e6a360bfce@intel.com>
+Date:   Tue, 26 Mar 2019 09:33:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
+In-Reply-To: <CAPDyKFqN4s1CZa9z5C3YzCUO01V-=Xhtao5352Pmytd-Tusv9A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190325235627.GA11938@agluck-desk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 04:56:27PM -0700, Luck, Tony wrote:
-> We forgot to update the MAINTAINERS file when adding this
-> new driver.
+On 18/03/19 11:33 AM, Ulf Hansson wrote:
+> + Arnd, Grygorii
 > 
-> Fixes: d4dc89d069aa ("EDAC, i10nm: Add a driver for Intel 10nm server processors")
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
+> On Fri, 15 Feb 2019 at 20:17, Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>
+>> sdhci.c has two bottom halves implemented. A threaded_irq for handling
+>> card insert/remove operations and a tasklet for finishing mmc requests.
+>> With the addition of external dma support, dmaengine APIs need to
+>> terminate in non-atomic context before unmapping the dma buffers.
+>>
+>> To facilitate this, remove the finish_tasklet and move the call of
+>> sdhci_request_done() to the threaded_irq() callback. Also move the
+>> interrupt result variable to sdhci_host so it can be populated from
+>> anywhere inside the sdhci_irq handler.
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e5f3230d3f14..86c4a5d95cca 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5596,6 +5596,12 @@ L:	linux-edac@vger.kernel.org
->  S:	Maintained
->  F:	drivers/edac/ghes_edac.c
->  
-> +EDAC-I10NM
-> +M:	Tony Luck <tony.luck@intel.com>
-> +L:	linux-edac@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/edac/i10nm_base.c
-> +
->  EDAC-I3000
->  L:	linux-edac@vger.kernel.org
->  S:	Orphan
-> -- 
+> Adrian, I think it makes sense to apply this patch, even if there is
+> very minor negative impact throughput wise.
+> 
+> To me, it doesn't seems like MMC/SD/SDIO has good justification for
+> using tasklets, besides from the legacy point of view, of course.
+> Instead, I think we should try to move all mmc hosts into using
+> threaded IRQs.
+> 
+> So, what do you think? Can you overlook the throughput drop and
+> instead we can try to recover this on top with other optimizations?
 
-All 3 applied,
-thanks.
+I tend to favour good results as expressed here:
 
--- 
-Regards/Gruss,
-    Boris.
+	https://lkml.org/lkml/2007/6/22/360
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+So I want to do optimization first.
+
+But performance is not the only problem with the patch.  Give me a few
+days and I will see what I can come up with.
+
+> 
+> Kind regards
+> Uffe
+> 
+>> ---
+>>  drivers/mmc/host/sdhci.c | 43 +++++++++++++++-------------------------
+>>  drivers/mmc/host/sdhci.h |  2 +-
+>>  2 files changed, 17 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index eba9bcc92ad3..20ed09b896d7 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -1232,7 +1232,7 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
+>>
+>>         WARN_ON(i >= SDHCI_MAX_MRQS);
+>>
+>> -       tasklet_schedule(&host->finish_tasklet);
+>> +       host->result = IRQ_WAKE_THREAD;
+>>  }
+>>
+>>  static void sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
+>> @@ -2705,14 +2705,6 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>>         return false;
+>>  }
+>>
+>> -static void sdhci_tasklet_finish(unsigned long param)
+>> -{
+>> -       struct sdhci_host *host = (struct sdhci_host *)param;
+>> -
+>> -       while (!sdhci_request_done(host))
+>> -               ;
+>> -}
+>> -
+>>  static void sdhci_timeout_timer(struct timer_list *t)
+>>  {
+>>         struct sdhci_host *host;
+>> @@ -2995,11 +2987,12 @@ static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
+>>
+>>  static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>  {
+>> -       irqreturn_t result = IRQ_NONE;
+>>         struct sdhci_host *host = dev_id;
+>>         u32 intmask, mask, unexpected = 0;
+>>         int max_loops = 16;
+>>
+>> +       host->result = IRQ_NONE;
+>> +
+>>         spin_lock(&host->lock);
+>>
+>>         if (host->runtime_suspended && !sdhci_sdio_irq_enabled(host)) {
+>> @@ -3009,7 +3002,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>
+>>         intmask = sdhci_readl(host, SDHCI_INT_STATUS);
+>>         if (!intmask || intmask == 0xffffffff) {
+>> -               result = IRQ_NONE;
+>> +               host->result = IRQ_NONE;
+>>                 goto out;
+>>         }
+>>
+>> @@ -3054,7 +3047,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>
+>>                         host->thread_isr |= intmask & (SDHCI_INT_CARD_INSERT |
+>>                                                        SDHCI_INT_CARD_REMOVE);
+>> -                       result = IRQ_WAKE_THREAD;
+>> +                       host->result = IRQ_WAKE_THREAD;
+>>                 }
+>>
+>>                 if (intmask & SDHCI_INT_CMD_MASK)
+>> @@ -3074,7 +3067,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>                     (host->ier & SDHCI_INT_CARD_INT)) {
+>>                         sdhci_enable_sdio_irq_nolock(host, false);
+>>                         host->thread_isr |= SDHCI_INT_CARD_INT;
+>> -                       result = IRQ_WAKE_THREAD;
+>> +                       host->result = IRQ_WAKE_THREAD;
+>>                 }
+>>
+>>                 intmask &= ~(SDHCI_INT_CARD_INSERT | SDHCI_INT_CARD_REMOVE |
+>> @@ -3087,8 +3080,8 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>                         sdhci_writel(host, intmask, SDHCI_INT_STATUS);
+>>                 }
+>>  cont:
+>> -               if (result == IRQ_NONE)
+>> -                       result = IRQ_HANDLED;
+>> +               if (host->result == IRQ_NONE)
+>> +                       host->result = IRQ_HANDLED;
+>>
+>>                 intmask = sdhci_readl(host, SDHCI_INT_STATUS);
+>>         } while (intmask && --max_loops);
+>> @@ -3101,7 +3094,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
+>>                 sdhci_dumpregs(host);
+>>         }
+>>
+>> -       return result;
+>> +       return host->result;
+>>  }
+>>
+>>  static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
+>> @@ -3131,6 +3124,12 @@ static irqreturn_t sdhci_thread_irq(int irq, void *dev_id)
+>>                 spin_unlock_irqrestore(&host->lock, flags);
+>>         }
+>>
+>> +       if (!isr) {
+>> +               do {
+>> +                       isr = !sdhci_request_done(host);
+>> +               } while (isr);
+>> +       }
+>> +
+>>         return isr ? IRQ_HANDLED : IRQ_NONE;
+>>  }
+>>
+>> @@ -4212,12 +4211,6 @@ int __sdhci_add_host(struct sdhci_host *host)
+>>         struct mmc_host *mmc = host->mmc;
+>>         int ret;
+>>
+>> -       /*
+>> -        * Init tasklets.
+>> -        */
+>> -       tasklet_init(&host->finish_tasklet,
+>> -               sdhci_tasklet_finish, (unsigned long)host);
+>> -
+>>         timer_setup(&host->timer, sdhci_timeout_timer, 0);
+>>         timer_setup(&host->data_timer, sdhci_timeout_data_timer, 0);
+>>
+>> @@ -4230,7 +4223,7 @@ int __sdhci_add_host(struct sdhci_host *host)
+>>         if (ret) {
+>>                 pr_err("%s: Failed to request IRQ %d: %d\n",
+>>                        mmc_hostname(mmc), host->irq, ret);
+>> -               goto untasklet;
+>> +               return ret;
+>>         }
+>>
+>>         ret = sdhci_led_register(host);
+>> @@ -4263,8 +4256,6 @@ int __sdhci_add_host(struct sdhci_host *host)
+>>         sdhci_writel(host, 0, SDHCI_INT_ENABLE);
+>>         sdhci_writel(host, 0, SDHCI_SIGNAL_ENABLE);
+>>         free_irq(host->irq, host);
+>> -untasklet:
+>> -       tasklet_kill(&host->finish_tasklet);
+>>
+>>         return ret;
+>>  }
+>> @@ -4326,8 +4317,6 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+>>         del_timer_sync(&host->timer);
+>>         del_timer_sync(&host->data_timer);
+>>
+>> -       tasklet_kill(&host->finish_tasklet);
+>> -
+>>         if (!IS_ERR(mmc->supply.vqmmc))
+>>                 regulator_disable(mmc->supply.vqmmc);
+>>
+>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>> index 6cc9a3c2ac66..624d5aa01995 100644
+>> --- a/drivers/mmc/host/sdhci.h
+>> +++ b/drivers/mmc/host/sdhci.h
+>> @@ -554,7 +554,7 @@ struct sdhci_host {
+>>
+>>         unsigned int desc_sz;   /* ADMA descriptor size */
+>>
+>> -       struct tasklet_struct finish_tasklet;   /* Tasklet structures */
+>> +       irqreturn_t result;     /* Result of IRQ handler */
+>>
+>>         struct timer_list timer;        /* Timer for timeouts */
+>>         struct timer_list data_timer;   /* Timer for data timeouts */
+>> --
+>> 2.19.2
+>>
+> 
+
