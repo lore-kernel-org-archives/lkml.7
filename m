@@ -2,112 +2,138 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8300C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7250C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E8920830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553601743;
-	bh=lN9HXpztWmVzrb6B9KmwzfZqFzm1rWoHvbwmpdpMwKA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CZQ7SG34q57Ljc0O8zEfknvKZhrCp8iQPhDK5/ppB4zqmI8oXO2yO8ZbxqHV2ErdQ
-	 5R20dtH7FWAwoBspeOieUNxszlnLg3E32xBqmJsRQN+/5km4bG6iwtb98LGpU2k2N+
-	 Osv78wuPQ7nXEItUBFgpiuocvx8FwcuxRQOJDQNk=
+	by mail.kernel.org (Postfix) with ESMTP id 901C22075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="egBMB9rW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbfCZMCW (ORCPT
+        id S1731493AbfCZMDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfCZMCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:02:21 -0400
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC352075C;
-        Tue, 26 Mar 2019 12:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553601741;
-        bh=lN9HXpztWmVzrb6B9KmwzfZqFzm1rWoHvbwmpdpMwKA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GFVINhQhh+Wok76Jtm8an9BwMwydfOcHpzfqD7sq1heO+hWV0AJfQVGDG+awbST0+
-         XPJVbmibTRO6ctw4c+pisulPRYQFLgurRCJ+sL+//iHmq89rAgNlu9Wi651gyUIUjq
-         uGn7rLel2FZz/XGmGwMGEItl3Ld9+Fjrdgq1dzw0=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] x86/apic: Reduce print level of CPU limit announcement
-Date:   Tue, 26 Mar 2019 14:02:13 +0200
-Message-Id: <20190326120213.28633-1-leon@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 26 Mar 2019 08:03:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36317 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731435AbfCZMDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:03:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y13so14046697wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 05:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=ieT1G8e1H0sAJvPT0a91cFfjHNOjq4XXFJK6kjAcqew=;
+        b=egBMB9rWaRpUIiB2Uv1Pu937O2SKmI3th7MksI8D4Z1NrvpF7uJsSkUFZlURMCEnWz
+         N3/P4hR8Jfv3BuaMYcU0MI2PPWlmXKoOMxHi8KxRaUxVgTWX7jO8kfWTPouPKxlOhFRU
+         bzzHTjBx8uTRLwFoDL9qU/QBI2PuinqiA+/DSPAIHSddSY23FiM6mcpmZUr/zMVgnSmJ
+         kAGZVSuawW5Cr329VlRGIxkKur0ZggktkMuBnyKCBrblIJGohXdyCUgswnQOc30/JJh+
+         69XREfpgUmE+HnGMd/1FHbmR0k7ixsyYQ9jlRa1nlacwPapuSDZ9psjyPZ+81YqfH7XF
+         Nx3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=ieT1G8e1H0sAJvPT0a91cFfjHNOjq4XXFJK6kjAcqew=;
+        b=mQmYBHuZXMzrZBqorgazsoCxDRnttQ1xIvJdDD/hsiGk5vm22UmdF1zhDShYKeGbe4
+         cBstDZAnouOFrkSDAM+f0ozrutMUy+nyts0cZBz6JDyAx4m4gDQ0VBbCMEWKDmewRIge
+         CJuPBl6G0bsIvRplgLiMNsBZp0ZYc7Q5EWcQDvYjT0zWT9+gHmwe/t0om4oEPhu75SYL
+         /+mCBn7YaOobu915D03BGBm6DtetkJojjgrEOCItHoViAplPdvzrwmPL1nZiImD5kzyI
+         P1h0BIhDqvR2Tr9bq6pM/synyZ9vQeg7PXO0ctP1a4+CUOzOT5G+jB5iENPEIijrUrP7
+         7IrA==
+X-Gm-Message-State: APjAAAXQnZwgmjsBDb6iVmCOAL46gSdkPeCyHs17vSoQ35/3BcAPDVma
+        jzZcYDHtlUaf4yqJcqZj46Kl1dBxXSvahA==
+X-Google-Smtp-Source: APXvYqwN0aepGvz7jNcNZ6EHASrQGkNjbmToaq7/pPZoWYNVPwFeg94CcncnGbDOKwIb/kFNM/06Pw==
+X-Received: by 2002:adf:cd90:: with SMTP id q16mr18744967wrj.75.1553601792483;
+        Tue, 26 Mar 2019 05:03:12 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id h2sm35353537wro.11.2019.03.26.05.03.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 05:03:11 -0700 (PDT)
+Message-ID: <5c9a14ff.1c69fb81.82d17.a43b@mx.google.com>
+Date:   Tue, 26 Mar 2019 05:03:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.165-31-gb7e63ff5d9f9
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
+References: <20190326042607.558087893@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/30] 4.9.166-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+stable-rc/linux-4.9.y boot: 98 boots: 0 failed, 86 passed with 12 offline (=
+v4.9.165-31-gb7e63ff5d9f9)
 
-Kernel is booted with less possible CPUs (possible_cpus kernel boot
-option) than available CPUs will have prints like this:
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.165-31-gb7e63ff5d9f9/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.165-31-gb7e63ff5d9f9/
 
-[    1.131039] APIC: NR_CPUS/possible_cpus limit of 8 reached. Processor 55/0x1f ignored.
-[    1.132228] ACPI: Unable to map lapic to logical cpu number
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.165-31-gb7e63ff5d9f9
+Git Commit: b7e63ff5d9f9f1ae13c633d2b98e6b180398ff5f
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 50 unique boards, 22 SoC families, 15 builds out of 197
 
-Those warnings are printed for every not-enabled CPU and on the systems
-with large number of such CPUs, we see a lot of those prints for default
-print level.
+Offline Platforms:
 
-Simple conversion of those prints to be in debug level removes them
-while leaving the option to debug system.
+arm:
 
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+    bcm2835_defconfig:
+        gcc-7
+            bcm2835-rpi-b: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-7
+            alpine-db: 1 offline lab
+            at91-sama5d4_xplained: 1 offline lab
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            tegra124-jetson-tk1: 1 offline lab
+
+    tegra_defconfig:
+        gcc-7
+            tegra124-jetson-tk1: 1 offline lab
+
+    sunxi_defconfig:
+        gcc-7
+            sun5i-r8-chip: 1 offline lab
+
+    sama5_defconfig:
+        gcc-7
+            at91-sama5d4_xplained: 1 offline lab
+
+    socfpga_defconfig:
+        gcc-7
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+
+arm64:
+
+    defconfig:
+        gcc-7
+            apq8016-sbc: 1 offline lab
+            juno-r2: 1 offline lab
+
 ---
- arch/x86/kernel/acpi/boot.c | 2 +-
- arch/x86/kernel/apic/apic.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 8dcbf6890714..3ef8ab89c02d 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -770,7 +770,7 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
-
- 	cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
- 	if (cpu < 0) {
--		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
-+		pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
- 		return cpu;
- 	}
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index b7bcdd781651..8c2a487b5216 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
- 	if (num_processors >= nr_cpu_ids) {
- 		int thiscpu = max + disabled_cpus;
-
--		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
--			   "reached. Processor %d/0x%x ignored.\n",
--			   max, thiscpu, apicid);
-+		pr_debug(
-+			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-+			max, thiscpu, apicid);
-
- 		disabled_cpus++;
- 		return -EINVAL;
---
-2.20.1
-
+For more info write to <info@kernelci.org>
