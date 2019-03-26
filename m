@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682E4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABDBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB0120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D05F920879
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582381;
-	bh=wOGl9iMOub8+3BMxj+lbQiSIbBc0Sx+03MFrdqrOHfQ=;
+	s=default; t=1553582384;
+	bh=l69Nk4WVANOK1f5I+7ly/G7QnJMc5TiEO5alnkUNxD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MM30e9kGGMPoaY+EHt1a43ePAyvcFJY5QNyTzWuiQdzPP9iZG94VSiYWT49kECOC8
-	 fI1Zckb1QniUAxnYEqAua3la0PqY82yr+ukZeX+5z3hZnQB8cKSjOQxa4m0H6+bi9i
-	 TxCcGtzyGJklVcUCurgHIid94bDJ+a0kw29uRw4E=
+	b=D/jq6vX7SyY0l/bkdfgmJbO9AxOGqZljGw3P/zz/SZpdc2dsV6a5qA38bfWIG80T9
+	 HdyfKv9PDE6hElQkxfHP+iSjdcPiJZEfFtgSSo8C7KNJ6ZhjUcwdToe9HeqCNCRr1Q
+	 TmB1bdk2jdJY6bH4Ryk4XOaQM745eNLFU0/JhZLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731963AbfCZGjk (ORCPT
+        id S1732742AbfCZGjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:39:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731842AbfCZGjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:36 -0400
+        id S1732731AbfCZGjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:39:40 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC6A20863;
-        Tue, 26 Mar 2019 06:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB5E120879;
+        Tue, 26 Mar 2019 06:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582376;
-        bh=wOGl9iMOub8+3BMxj+lbQiSIbBc0Sx+03MFrdqrOHfQ=;
+        s=default; t=1553582379;
+        bh=l69Nk4WVANOK1f5I+7ly/G7QnJMc5TiEO5alnkUNxD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EZH3Y/ON7cZCdBZxRQlKBMXF6B2T3nuQf/lghaP90JjbhrxbmthzBcGajz6+AOCN9
-         Gp7Mhe0Nka806Py5UrIhFmmMFk5kQ++CesarnaoYB8VRB2K1qJb4jFBQRawn5PO4s7
-         G8DSEagxXa31QkFZeQvNXhSlXROsOeiQI/OnrYqQ=
+        b=AyTo/0UImWFzkdFoaqcePpTXLMQi32f2i69Rp75Bh1UfZI9+1XQ/PI3JF22uYlT5m
+         OxWUf68eUarxXUXlYShlQnxlxXVmMErsMt3D0xW/RRBVtl9uIJEVlw3FLWSmcOua04
+         S/CbgnRt5rzpM8LNNOe7K9C0ysipNAmsGhOtmtGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.0 36/52] media: v4l2-ctrls.c/uvc: zero v4l2_event
-Date:   Tue, 26 Mar 2019 15:30:23 +0900
-Message-Id: <20190326042702.914022455@linuxfoundation.org>
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.0 19/52] net/mlx5: Fix DCT creation bad flow
+Date:   Tue, 26 Mar 2019 15:30:06 +0900
+Message-Id: <20190326042701.880117127@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -66,49 +66,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-commit f45f3f753b0a3d739acda8e311b4f744d82dc52a upstream.
+commit f84b66b9cce78e8f9d38204fdaa75f07c75f4911 upstream.
 
-Control events can leak kernel memory since they do not fully zero the
-event. The same code is present in both v4l2-ctrls.c and uvc_ctrl.c, so
-fix both.
+In case the DCT creation command has succeeded a DRAIN must be issued
+before calling DESTROY.
 
-It appears that all other event code is properly zeroing the structure,
-it's these two places.
+In addition, the original code used the wrong parameter for the DESTROY
+command, 'in' instead of 'din', which caused another creation try instead
+of destroying.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: <stable@vger.kernel.org> # 4.15
+Fixes: 57cda166bbe0 ("net/mlx5: Add DCT command interface")
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_ctrl.c     |    2 +-
- drivers/media/v4l2-core/v4l2-ctrls.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/qp.c |   66 ++++++++++++++-------------
+ 1 file changed, 36 insertions(+), 30 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -1212,7 +1212,7 @@ static void uvc_ctrl_fill_event(struct u
+--- a/drivers/net/ethernet/mellanox/mlx5/core/qp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
+@@ -40,6 +40,9 @@
+ #include "mlx5_core.h"
+ #include "lib/eq.h"
  
- 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
- 
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = v4l2_ctrl.id;
- 	ev->u.ctrl.value = value;
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1387,7 +1387,7 @@ static u32 user_flags(const struct v4l2_
- 
- static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
++static int mlx5_core_drain_dct(struct mlx5_core_dev *dev,
++			       struct mlx5_core_dct *dct);
++
+ static struct mlx5_core_rsc_common *
+ mlx5_get_rsc(struct mlx5_qp_table *table, u32 rsn)
  {
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = ctrl->id;
- 	ev->u.ctrl.changes = changes;
+@@ -227,13 +230,42 @@ static void destroy_resource_common(stru
+ 	wait_for_completion(&qp->common.free);
+ }
+ 
++static int _mlx5_core_destroy_dct(struct mlx5_core_dev *dev,
++				  struct mlx5_core_dct *dct, bool need_cleanup)
++{
++	u32 out[MLX5_ST_SZ_DW(destroy_dct_out)] = {0};
++	u32 in[MLX5_ST_SZ_DW(destroy_dct_in)]   = {0};
++	struct mlx5_core_qp *qp = &dct->mqp;
++	int err;
++
++	err = mlx5_core_drain_dct(dev, dct);
++	if (err) {
++		if (dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR) {
++			goto destroy;
++		} else {
++			mlx5_core_warn(
++				dev, "failed drain DCT 0x%x with error 0x%x\n",
++				qp->qpn, err);
++			return err;
++		}
++	}
++	wait_for_completion(&dct->drained);
++destroy:
++	if (need_cleanup)
++		destroy_resource_common(dev, &dct->mqp);
++	MLX5_SET(destroy_dct_in, in, opcode, MLX5_CMD_OP_DESTROY_DCT);
++	MLX5_SET(destroy_dct_in, in, dctn, qp->qpn);
++	MLX5_SET(destroy_dct_in, in, uid, qp->uid);
++	err = mlx5_cmd_exec(dev, (void *)&in, sizeof(in),
++			    (void *)&out, sizeof(out));
++	return err;
++}
++
+ int mlx5_core_create_dct(struct mlx5_core_dev *dev,
+ 			 struct mlx5_core_dct *dct,
+ 			 u32 *in, int inlen)
+ {
+ 	u32 out[MLX5_ST_SZ_DW(create_dct_out)]   = {0};
+-	u32 din[MLX5_ST_SZ_DW(destroy_dct_in)]   = {0};
+-	u32 dout[MLX5_ST_SZ_DW(destroy_dct_out)] = {0};
+ 	struct mlx5_core_qp *qp = &dct->mqp;
+ 	int err;
+ 
+@@ -254,11 +286,7 @@ int mlx5_core_create_dct(struct mlx5_cor
+ 
+ 	return 0;
+ err_cmd:
+-	MLX5_SET(destroy_dct_in, din, opcode, MLX5_CMD_OP_DESTROY_DCT);
+-	MLX5_SET(destroy_dct_in, din, dctn, qp->qpn);
+-	MLX5_SET(destroy_dct_in, din, uid, qp->uid);
+-	mlx5_cmd_exec(dev, (void *)&in, sizeof(din),
+-		      (void *)&out, sizeof(dout));
++	_mlx5_core_destroy_dct(dev, dct, false);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(mlx5_core_create_dct);
+@@ -323,29 +351,7 @@ static int mlx5_core_drain_dct(struct ml
+ int mlx5_core_destroy_dct(struct mlx5_core_dev *dev,
+ 			  struct mlx5_core_dct *dct)
+ {
+-	u32 out[MLX5_ST_SZ_DW(destroy_dct_out)] = {0};
+-	u32 in[MLX5_ST_SZ_DW(destroy_dct_in)]   = {0};
+-	struct mlx5_core_qp *qp = &dct->mqp;
+-	int err;
+-
+-	err = mlx5_core_drain_dct(dev, dct);
+-	if (err) {
+-		if (dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR) {
+-			goto destroy;
+-		} else {
+-			mlx5_core_warn(dev, "failed drain DCT 0x%x with error 0x%x\n", qp->qpn, err);
+-			return err;
+-		}
+-	}
+-	wait_for_completion(&dct->drained);
+-destroy:
+-	destroy_resource_common(dev, &dct->mqp);
+-	MLX5_SET(destroy_dct_in, in, opcode, MLX5_CMD_OP_DESTROY_DCT);
+-	MLX5_SET(destroy_dct_in, in, dctn, qp->qpn);
+-	MLX5_SET(destroy_dct_in, in, uid, qp->uid);
+-	err = mlx5_cmd_exec(dev, (void *)&in, sizeof(in),
+-			    (void *)&out, sizeof(out));
+-	return err;
++	return _mlx5_core_destroy_dct(dev, dct, true);
+ }
+ EXPORT_SYMBOL_GPL(mlx5_core_destroy_dct);
+ 
 
 
