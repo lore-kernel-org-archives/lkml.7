@@ -2,141 +2,90 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD28AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C36F20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A8720857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="vH3GlHBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfCZKVv (ORCPT
+        id S1731339AbfCZKWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:21:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51638 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726111AbfCZKVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:21:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D6969AD3E;
-        Tue, 26 Mar 2019 10:21:49 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 249441E42D1; Tue, 26 Mar 2019 11:21:49 +0100 (CET)
-Date:   Tue, 26 Mar 2019 11:21:49 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] quota: remove trailing whitespaces
-Message-ID: <20190326102149.GR8308@quack2.suse.cz>
-References: <20190326075431.14198-1-s.hauer@pengutronix.de>
+        Tue, 26 Mar 2019 06:22:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51148 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCZKWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:22:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z11so12067943wmi.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lRVZi2r3G7VUSF3IA05APgb6NuW2Y3SH/ohQpo5admk=;
+        b=vH3GlHBq/V16PQuKuyAWiSwwPoAHZCGKlM7oper6rqeI+RUvvCqgXfKpK9TKG0mZ0r
+         ozTPwnhbpB4H3kwLS3PoFcykkwfsBHVng+9O6VYW1JA8r2+o6alZFOPH7TVYlbAdxM6U
+         JcBz44JWsBZRJyUfKdooNCLCXpRShHW6noRLihchcUUyJ+f4hOhSG2GnvJhEno48cbw5
+         Q8cZjm0JUUhRsN+wWcbhKLPS0ql5N9YQ84gLSSHcI0K15+2987e/54p0IRMxJg+ILQWg
+         wQBAnhBGOj3weYPIuD3dqH8Arg41LCowU7NVLTAMXLMT3NXjwfAggcrglpf4xc8TCEus
+         wRpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lRVZi2r3G7VUSF3IA05APgb6NuW2Y3SH/ohQpo5admk=;
+        b=F632v0XEgYobyJAAMC6LjJM7NYmqPZR0OGP+12XYRToXEnPP+yH91QGvfnjEpgOs8p
+         /fT++uQw50HOnCDp7POQv9att7q+ATwhzPO5WAqWRUnLMCoLVAOkmQxBPAxYKKmdUAub
+         0Qjcc9fFXkFRgxEs4E1ynyA0E4/sRwF3ROlw6wDqhcBZB1qaWFYAH6/6NIonGrfVzRuF
+         3ViOuWp55KOS+3/lflhDreS6bHDDc6+WcSmhAHqDkkjq9cyVv33ywcyO5H36kmo/dE0c
+         2ymIUFc4NkO3XrbBg5o0SkMMPyha2c9GO6HOGqhaE1+3/ELGubPmJA+/v8KXEtVY/g92
+         fuuA==
+X-Gm-Message-State: APjAAAVtu2pb0ILj/fc5YWHFgaAkLovo26YpB5jxzHTiAh8HN+qUO1y8
+        TnsZyJf3eZlJZX8F/JQcXoxmOfW1FdA=
+X-Google-Smtp-Source: APXvYqyRDKTzAgCU5Fi92Ysk+tdSh8NrDXVt3cutUlgT97COwcMPT7jb8Q7P/Z6TSdNfIzUjfr59cg==
+X-Received: by 2002:a1c:1d4:: with SMTP id 203mr9206191wmb.101.1553595734421;
+        Tue, 26 Mar 2019 03:22:14 -0700 (PDT)
+Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
+        by smtp.gmail.com with ESMTPSA id b3sm22047351wrx.57.2019.03.26.03.22.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 03:22:14 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:11:26 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 03/22] netlink: add strict version of
+ nla_parse_nested()
+Message-ID: <20190326101126.GC2230@nanopsycho>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <3a0ca34890256f86a4ca0c4f4582a0cff5af95ad.1553532199.git.mkubecek@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326075431.14198-1-s.hauer@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3a0ca34890256f86a4ca0c4f4582a0cff5af95ad.1553532199.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 08:54:31, Sascha Hauer wrote:
-> This removes all trailing whitespaces in fs/quota/.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Mon, Mar 25, 2019 at 06:08:03PM CET, mkubecek@suse.cz wrote:
+>Similar to nla_parse_strict() and nlmsg_parse_strict(), add also
+>nla_parse_nested_strict() as a version of nla_parse_nested() with strict
+>policy checking.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
 
-Thanks. Applied.
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 
-								Honza
-
-> ---
->  fs/quota/dquot.c    | 10 +++++-----
->  fs/quota/quota_v1.c |  2 +-
->  fs/quota/quota_v2.c |  2 +-
->  3 files changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index fc20e06c56ba..0036d27206a8 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -9,7 +9,7 @@
->   * on the Melbourne quota system as used on BSD derived systems. The internal
->   * implementation is based on one of the several variants of the LINUX
->   * inode-subsystem with added complexity of the diskquota system.
-> - * 
-> + *
->   * Author:	Marco van Wieringen <mvw@planets.elm.net>
->   *
->   * Fixes:   Dmitry Gorodchanin <pgmdsg@ibi.com>, 11 Feb 96
-> @@ -51,7 +51,7 @@
->   *		Added journalled quota support, fix lock inversion problems
->   *		Jan Kara, <jack@suse.cz>, 2003,2004
->   *
-> - * (C) Copyright 1994 - 1997 Marco van Wieringen 
-> + * (C) Copyright 1994 - 1997 Marco van Wieringen
->   */
->  
->  #include <linux/errno.h>
-> @@ -197,7 +197,7 @@ static struct quota_format_type *find_quota_format(int id)
->  		int qm;
->  
->  		spin_unlock(&dq_list_lock);
-> -		
-> +
->  		for (qm = 0; module_names[qm].qm_fmt_id &&
->  			     module_names[qm].qm_fmt_id != id; qm++)
->  			;
-> @@ -2397,7 +2397,7 @@ static int vfs_load_quota_inode(struct inode *inode, int type, int format_id,
->  out_fmt:
->  	put_quota_format(fmt);
->  
-> -	return error; 
-> +	return error;
->  }
->  
->  /* Reenable quotas on remount RW */
-> @@ -2775,7 +2775,7 @@ int dquot_get_state(struct super_block *sb, struct qc_state *state)
->  	struct qc_type_state *tstate;
->  	struct quota_info *dqopt = sb_dqopt(sb);
->  	int type;
-> -  
-> +
->  	memset(state, 0, sizeof(*state));
->  	for (type = 0; type < MAXQUOTAS; type++) {
->  		if (!sb_has_quota_active(sb, type))
-> diff --git a/fs/quota/quota_v1.c b/fs/quota/quota_v1.c
-> index 7ac5298aba70..9f2b2573b83c 100644
-> --- a/fs/quota/quota_v1.c
-> +++ b/fs/quota/quota_v1.c
-> @@ -127,7 +127,7 @@ static int v1_check_quota_file(struct super_block *sb, int type)
->  {
->  	struct inode *inode = sb_dqopt(sb)->files[type];
->  	ulong blocks;
-> -	size_t off; 
-> +	size_t off;
->  	struct v2_disk_dqheader dqhead;
->  	ssize_t size;
->  	loff_t isize;
-> diff --git a/fs/quota/quota_v2.c b/fs/quota/quota_v2.c
-> index a73e5b34db41..3c30034e733f 100644
-> --- a/fs/quota/quota_v2.c
-> +++ b/fs/quota/quota_v2.c
-> @@ -78,7 +78,7 @@ static int v2_check_quota_file(struct super_block *sb, int type)
->  	struct v2_disk_dqheader dqhead;
->  	static const uint quota_magics[] = V2_INITQMAGICS;
->  	static const uint quota_versions[] = V2_INITQVERSIONS;
-> - 
-> +
->  	if (v2_read_header(sb, type, &dqhead))
->  		return 0;
->  	if (le32_to_cpu(dqhead.dqh_magic) != quota_magics[type] ||
-> -- 
-> 2.20.1
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
