@@ -2,107 +2,99 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4F7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB2BC10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C772087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC02920823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553604912;
+	bh=zwrszH0q56mIPC28FXfodGT4P/TQFSU0NFXDHwmLx/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pjicFSvu3I9cEP/OWU7yeR7HhiPKqL2eoIPpYwr/M/Lt+jT2s/pzijnkW7TITPSRf
+	 26cZnB/m/E9F0s3Qaa6pkvA2CHKq7vrmBRga9SZCyqtvYe8yc8chL0R1OEVfuUDagA
+	 YaSw9qVs8x3dDi4WwhAOAyV5ixnyA1sHaPgbhMg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731452AbfCZMwo (ORCPT
+        id S1731412AbfCZMzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:52:44 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17689 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726258AbfCZMwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:52:44 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QCkIZi004729;
-        Tue, 26 Mar 2019 13:52:37 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rddh7hjbp-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 26 Mar 2019 13:52:37 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 539ED38;
-        Tue, 26 Mar 2019 12:52:36 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DB20585C;
-        Tue, 26 Mar 2019 12:52:36 +0000 (GMT)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 Mar
- 2019 13:52:35 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1347.000; Tue, 26 Mar 2019 13:52:35 +0100
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Yannick FERTRE <yannick.fertre@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] drm/stm: dw_mipi_dsi-stm: add sleep power management
-Thread-Topic: [PATCH] drm/stm: dw_mipi_dsi-stm: add sleep power management
-Thread-Index: AQHU374TioDRLrU+xUCL3ZXbfkQ7i6Yd1VGA
-Date:   Tue, 26 Mar 2019 12:52:35 +0000
-Message-ID: <8dc548ed-fc71-dd04-83b9-ee07faeb16ea@st.com>
-References: <1553156033-13792-1-git-send-email-yannick.fertre@st.com>
-In-Reply-To: <1553156033-13792-1-git-send-email-yannick.fertre@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <085ED1A7A37AE04A84E41EE996E08B69@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 26 Mar 2019 08:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbfCZMzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:55:11 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 221562070B;
+        Tue, 26 Mar 2019 12:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553604910;
+        bh=zwrszH0q56mIPC28FXfodGT4P/TQFSU0NFXDHwmLx/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZshjX7/kTWgu3JyqjG2xr7Y8OmvqDo35udLb4fRzMsCvP9EuJvZEJUuivNuC398ws
+         g+m2ztv0y0EWc1BOoKsrZGsB8SFSGUZ7r2Q+z1uLuBE/XiBgAYAEcxRXlS8wbNI2jJ
+         0Njhf5IUXJcOYfPJtUbGcbblriCvOhWbrOTsrbAY=
+Date:   Tue, 26 Mar 2019 07:55:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, zeev@amazon.com,
+        ronenk@amazon.com, barakw@amazon.com
+Subject: Re: [PATCH v2] PCI: al: Add Amazon Annapurna Labs PCIe host
+ controller driver
+Message-ID: <20190326125508.GG24180@google.com>
+References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+ <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_09:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVhciBZYW5uaWNrLA0KTWFueSB0aGFua3MgZm9yIHlvdXIgcGF0Y2guDQoNCkFja2VkLWJ5OiBQ
-aGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KDQpQaGlsaXBwZSA6LSkNCg0K
-DQpPbiAzLzIxLzE5IDk6MTMgQU0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToNCj4gSW1wbGVtZW50
-cyBzeXN0ZW0gc2xlZXAgcG93ZXIgbWFuYWdlbWVudCBvcHMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4gLS0tDQo+ICAgZHJp
-dmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYyB8IDI4ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jDQo+IGluZGV4IGE2NzJiNTkuLjFiZWY3
-M2UgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMN
-Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPiBAQCAtMzU2
-LDEyICszNTYsNDAgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9zdG1fcmVtb3ZlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCXJldHVybiAwOw0KPiAgIH0NCj4gICANCj4gK3N0
-YXRpYyBpbnQgX19tYXliZV91bnVzZWQgZHdfbWlwaV9kc2lfc3RtX3N1c3BlbmQoc3RydWN0IGRl
-dmljZSAqZGV2KQ0KPiArew0KPiArCXN0cnVjdCBkd19taXBpX2RzaV9zdG0gKmRzaSA9IGR3X21p
-cGlfZHNpX3N0bV9wbGF0X2RhdGEucHJpdl9kYXRhOw0KPiArDQo+ICsJRFJNX0RFQlVHX0RSSVZF
-UigiXG4iKTsNCj4gKw0KPiArCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbHJlZl9jbGsp
-Ow0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgX19tYXliZV91
-bnVzZWQgZHdfbWlwaV9kc2lfc3RtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICt7DQo+
-ICsJc3RydWN0IGR3X21pcGlfZHNpX3N0bSAqZHNpID0gZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0
-YS5wcml2X2RhdGE7DQo+ICsNCj4gKwlEUk1fREVCVUdfRFJJVkVSKCJcbiIpOw0KPiArDQo+ICsJ
-Y2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGxscmVmX2Nsayk7DQo+ICsNCj4gKwlyZXR1cm4gMDsN
-Cj4gK30NCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGR3X21pcGlfZHNp
-X3N0bV9wbV9vcHMgPSB7DQo+ICsJU0VUX1NZU1RFTV9TTEVFUF9QTV9PUFMoZHdfbWlwaV9kc2lf
-c3RtX3N1c3BlbmQsDQo+ICsJCQkJZHdfbWlwaV9kc2lfc3RtX3Jlc3VtZSkNCj4gK307DQo+ICsN
-Cj4gICBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBkd19taXBpX2RzaV9zdG1fZHJpdmVy
-ID0gew0KPiAgIAkucHJvYmUJCT0gZHdfbWlwaV9kc2lfc3RtX3Byb2JlLA0KPiAgIAkucmVtb3Zl
-CQk9IGR3X21pcGlfZHNpX3N0bV9yZW1vdmUsDQo+ICAgCS5kcml2ZXIJCT0gew0KPiAgIAkJLm9m
-X21hdGNoX3RhYmxlID0gZHdfbWlwaV9kc2lfc3RtX2R0X2lkcywNCj4gICAJCS5uYW1lCT0gInN0
-bTMyLWRpc3BsYXktZHNpIiwNCj4gKwkJLnBtID0gJmR3X21pcGlfZHNpX3N0bV9wbV9vcHMsDQo+
-ICAgCX0sDQo+ICAgfTsNCj4gICANCj4g
+Nits, probably Lorenzo will fix them up unless he sees more substantive
+things.
+
+On Tue, Mar 26, 2019 at 12:00:55PM +0200, Jonathan Chocron wrote:
+> Adding support for Amazon's Annapurna Labs PCIe driver.
+
+Ideally, use "imperative mood", i.e., write it as a command:
+
+  Add support for Amazon's Annapurna Labs PCIe driver.
+
+> The HW controller is based on DesignWare's IP.
+> 
+> The HW doesn't support accessing the Root Port's config space via
+> ECAM, so we obtain its base address via an AMZN0001 device.
+> 
+> Furthermore, the DesignWare PCIe controller doesn't filter out
+> config transactions sent to devices 1 and up on its bus, so they
+> are filtered by the driver.
+> All subordinate buses do support ECAM access.
+
+I didn't communicate my point very clearly.  The above four lines
+should either be (1) a single paragraph, wrapped to fill the entire
+width, or (2) two paragraphs, with a blank line before "All
+subordinate buses ..."
+
+The fact that "... by the driver" ends in the middle of the line
+suggests that it's the end of the paragraph, but the fact that there's
+no blank line following suggests that it's not.  So it creates an
+unnecessary hiccup for the reader.
+
+> Implementing specific PCI config access functions involves:
+>  - Adding an init function to obtain the Root Port's base address
+>    from an AMZN0001 device.
+>  - Adding a new entry in the mcfg quirk array
+
+s/mcfg/MCFG/ since "MCFG" is an ACPI table ID, not a word.
+
+Bjorn
