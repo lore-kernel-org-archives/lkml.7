@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8389EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA97FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5327B206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DAD206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfCZLWI (ORCPT
+        id S1731367AbfCZLWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:22:08 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57936 "EHLO
+        Tue, 26 Mar 2019 07:22:09 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53358 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZLWH (ORCPT
+        with ESMTP id S1726248AbfCZLWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:22:07 -0400
+        Tue, 26 Mar 2019 07:22:08 -0400
 Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 42f8ab6b4ead0209; Tue, 26 Mar 2019 12:22:05 +0100
+ id 0c7d4342ac95eade; Tue, 26 Mar 2019 12:22:05 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Gabriele Mazzotta <gabriele.mzt@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Quentin Perret <quentin.perret@arm.com>
-Subject: [PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
-Date:   Tue, 26 Mar 2019 12:18:00 +0100
-Message-ID: <2864116.v8IU97Resm@aspire.rjw.lan>
+Subject: [PATCH v3 2/4] cpufreq: Add cpufreq_cpu_acquire() and cpufreq_cpu_release()
+Date:   Tue, 26 Mar 2019 12:16:58 +0100
+Message-ID: <4367018.ucxPRbh1Da@aspire.rjw.lan>
 In-Reply-To: <11953735.uMqeHy63Iu@aspire.rjw.lan>
 References: <11953735.uMqeHy63Iu@aspire.rjw.lan>
 MIME-Version: 1.0
@@ -47,84 +47,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-There is not reason for the minimum iowait boost value in the
-schedutil cpufreq governor to depend on the available range of CPU
-frequencies.  In fact, that dependency is generally confusing,
-because it causes the iowait boost to behave somewhat differently
-on CPUs with the same maximum frequency and different minimum
-frequencies, for example.
+It sometimes is necessary to find a cpufreq policy for a given CPU
+and acquire its rwsem (for writing) immediately after that, so
+introduce cpufreq_cpu_acquire() as a helper for that and the
+complementary cpufreq_cpu_release().
 
-For this reason, replace the min field in struct sugov_cpu
-with a constant and choose its values to be 1/8 of
-SCHED_CAPACITY_SCALE (for consistency with the intel_pstate
-driver's internal governor).
+Make cpufreq_update_policy() use the new functions.
 
-[Note that policy->cpuinfo.max_freq will not be a constant any more
- after a subsequent change, so this change is depended on by it.]
-
-Link: https://lore.kernel.org/lkml/20190305083202.GU32494@hirez.programming.kicks-ass.net/T/#ee20bdc98b7d89f6110c0d00e5c3ee8c2ced93c3d
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- kernel/sched/cpufreq_schedutil.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Index: linux-pm/kernel/sched/cpufreq_schedutil.c
+v2 -> v3:
+  * Added Acked-by from Viresh.
+
+---
+ drivers/cpufreq/cpufreq.c |   56 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 47 insertions(+), 9 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/cpufreq.c
 ===================================================================
---- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
-+++ linux-pm/kernel/sched/cpufreq_schedutil.c
-@@ -13,6 +13,8 @@
- #include <linux/sched/cpufreq.h>
- #include <trace/events/power.h>
- 
-+#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
-+
- struct sugov_tunables {
- 	struct gov_attr_set	attr_set;
- 	unsigned int		rate_limit_us;
-@@ -51,7 +53,6 @@ struct sugov_cpu {
- 	u64			last_update;
- 
- 	unsigned long		bw_dl;
--	unsigned long		min;
- 	unsigned long		max;
- 
- 	/* The field below is for single-CPU policies only: */
-@@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct su
- 	if (delta_ns <= TICK_NSEC)
- 		return false;
- 
--	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
-+	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
- 	sg_cpu->iowait_boost_pending = set_iowait_boost;
- 
- 	return true;
-@@ -349,7 +350,7 @@ static void sugov_iowait_boost(struct su
- 	}
- 
- 	/* First wakeup after IO: start with minimum boost */
--	sg_cpu->iowait_boost = sg_cpu->min;
-+	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
+--- linux-pm.orig/drivers/cpufreq/cpufreq.c
++++ linux-pm/drivers/cpufreq/cpufreq.c
+@@ -250,6 +250,51 @@ void cpufreq_cpu_put(struct cpufreq_poli
  }
+ EXPORT_SYMBOL_GPL(cpufreq_cpu_put);
  
- /**
-@@ -389,7 +390,7 @@ static unsigned long sugov_iowait_apply(
- 		 * No boost pending; reduce the boost value.
- 		 */
- 		sg_cpu->iowait_boost >>= 1;
--		if (sg_cpu->iowait_boost < sg_cpu->min) {
-+		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
- 			sg_cpu->iowait_boost = 0;
- 			return util;
- 		}
-@@ -826,9 +827,6 @@ static int sugov_start(struct cpufreq_po
- 		memset(sg_cpu, 0, sizeof(*sg_cpu));
- 		sg_cpu->cpu			= cpu;
- 		sg_cpu->sg_policy		= sg_policy;
--		sg_cpu->min			=
--			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
--			policy->cpuinfo.max_freq;
- 	}
++/**
++ * cpufreq_cpu_release - Unlock a policy and decrement its usage counter.
++ * @policy: cpufreq policy returned by cpufreq_cpu_acquire().
++ */
++static void cpufreq_cpu_release(struct cpufreq_policy *policy)
++{
++	if (WARN_ON(!policy))
++		return;
++
++	lockdep_assert_held(&policy->rwsem);
++
++	up_write(&policy->rwsem);
++
++	cpufreq_cpu_put(policy);
++}
++
++/**
++ * cpufreq_cpu_acquire - Find policy for a CPU, mark it as busy and lock it.
++ * @cpu: CPU to find the policy for.
++ *
++ * Call cpufreq_cpu_get() to get a reference on the cpufreq policy for @cpu and
++ * if the policy returned by it is not NULL, acquire its rwsem for writing.
++ * Return the policy if it is active or release it and return NULL otherwise.
++ *
++ * The policy returned by this function has to be released with the help of
++ * cpufreq_cpu_release() in order to release its rwsem and balance its usage
++ * counter properly.
++ */
++static struct cpufreq_policy *cpufreq_cpu_acquire(unsigned int cpu)
++{
++	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++
++	if (!policy)
++		return NULL;
++
++	down_write(&policy->rwsem);
++
++	if (policy_is_inactive(policy)) {
++		cpufreq_cpu_release(policy);
++		return NULL;
++	}
++
++	return policy;
++}
++
+ /*********************************************************************
+  *            EXTERNALLY AFFECTING FREQUENCY CHANGES                 *
+  *********************************************************************/
+@@ -2337,17 +2382,12 @@ static int cpufreq_set_policy(struct cpu
+  */
+ void cpufreq_update_policy(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	struct cpufreq_policy *policy = cpufreq_cpu_acquire(cpu);
+ 	struct cpufreq_policy new_policy;
  
- 	for_each_cpu(cpu, policy->cpus) {
+ 	if (!policy)
+ 		return;
+ 
+-	down_write(&policy->rwsem);
+-
+-	if (policy_is_inactive(policy))
+-		goto unlock;
+-
+ 	/*
+ 	 * BIOS might change freq behind our back
+ 	 * -> ask driver for current freq and notify governors about a change
+@@ -2364,9 +2404,7 @@ void cpufreq_update_policy(unsigned int
+ 	cpufreq_set_policy(policy, &new_policy);
+ 
+ unlock:
+-	up_write(&policy->rwsem);
+-
+-	cpufreq_cpu_put(policy);
++	cpufreq_cpu_release(policy);
+ }
+ EXPORT_SYMBOL(cpufreq_update_policy);
+ 
 
