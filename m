@@ -4,73 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19E0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AD9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C3E206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E4B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WIyBizMn"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ic2pO6Jr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732139AbfCZTYc (ORCPT
+        id S1732634AbfCZTYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:24:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41907 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730449AbfCZTYb (ORCPT
+        Tue, 26 Mar 2019 15:24:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46896 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732244AbfCZTYg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:24:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y5so2084846plk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:24:31 -0700 (PDT)
+        Tue, 26 Mar 2019 15:24:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 9so8506609pfj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cBJLe6/JGplG+Cy8Q3/cMVi7Shc7ruJGMSA1cWOMVqY=;
-        b=WIyBizMngixWEhCS5V1bN1IbboWlbBa/zzrPjtzcGpBAqm9dDvsYykZKnRKho5FZvm
-         waFLFVy194hEvmK7je9hxoDmUOzvW8fiSsEkt+sz2wr9ghG5955KLCCx49DjcgSR9E3z
-         m0cbfO0jiIvx7ys5FH0c4R6IZ/KvKyvBD6wfc=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=VpO+kH5n/TCwOCtL6i6LDDDwCLUmaIA5kDbeBwsenW8=;
+        b=ic2pO6JrvwEPAs1CnVuT7xWHP8ABOKGkFUt9H1s0OLBDzjFRw1epxg+DmzlHEGONnX
+         IixtodF2vh92KGgKTGRYdCz8Qfg7aK04HlZJQmLZZu6bgaA7wzxGBDOf24vFPGpVK2hJ
+         cmIfAFVEayqe/33wv7JRMHW2vxfovfoZ/Y5Ck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cBJLe6/JGplG+Cy8Q3/cMVi7Shc7ruJGMSA1cWOMVqY=;
-        b=pAl7U5aVS7ax2TM96PXQry1c19QVhGh1orBjAa9TBlwgmfIk23/eY+UVBbP9rWQePc
-         tCmFvDsemkn8HfJqYddauLldACBUVDD/4Xklky0STBEgOI+jto6knaTUtETbA12s3hrO
-         IcQDLgzLAbJwUQcAmW8c4el3PATIifEVe28Op0Lwhdh6L7XquUNUYVj4n797oYB3j+vy
-         if0cowg+pfBj9yyRHIT0nGwr8t0avxxIuM+m6EJGxVyK6Y5+6ZPmDQa/U7rin7c9ZJwZ
-         psuS0laHd3suUi8maBZoPrEAX1efEOmvm03KomoYLej7K6KpB/wOc7pzoxhwjlJDW3xu
-         EKHA==
-X-Gm-Message-State: APjAAAVmTF/2QVS/rqa6lm9THPgrKTEHkA/UQC2T+Di+/lGTPvJKW/8i
-        7F4wclhg3hsQ/SYEmaolHJHocDmSnl8=
-X-Google-Smtp-Source: APXvYqypEKPXcoQJgDVy5MvfSX2VsoZ1x9Ur4x5YtgQwDWYTEU/kZATCqD9coRmyBcoDdt/Dx7aYRw==
-X-Received: by 2002:a17:902:20e5:: with SMTP id v34mr33077657plg.319.1553628270382;
-        Tue, 26 Mar 2019 12:24:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VpO+kH5n/TCwOCtL6i6LDDDwCLUmaIA5kDbeBwsenW8=;
+        b=cVGxZgzIJAYrmph6toZmRhBbO0FqDTSpLSHD3khfOuMy/1aRZtkElInatngWW8CVMa
+         6PMg5NKnobdSyzGp+NvS0rmCuVuNy4EvUl+5lj+MLd55nM9spVaFaTfDj+dH8JgLOykZ
+         wehFQBxajug0FgP2dSL9VLWyJxBT/zZFqkzFkozKmoWxSwZb3YoMb+7wGQmWCQczZT1P
+         eVk7QmV1DDgouaWiXEN57vjk3JGe70LO1GZJK01r0+J7/XyeMxDL7qjTSmN3lQVS9mAX
+         Yyhdwj6HAxRzPwSl+5FLa/cHdk5xn7IHZ/r6m+AP2xxk66lHTb93M8hrqMFPdfEZVMpQ
+         JkLw==
+X-Gm-Message-State: APjAAAW4maXTLcIlg52XCfipBLB0RL2XAaRyxE7QwOYBuE4AzF5mQUZJ
+        U1u6k/HSsX7BpiRJzZfpmtgbOmGNGIM=
+X-Google-Smtp-Source: APXvYqxRuFbNRDdKaMGu2pfXId9tLkyI2m9Vc5ldX1d4DDCuVuNBaT6qoRUfJTbviF9W9099+n61Lg==
+X-Received: by 2002:a62:e502:: with SMTP id n2mr31731079pff.242.1553628275495;
+        Tue, 26 Mar 2019 12:24:35 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l12sm36761889pgn.83.2019.03.26.12.24.27
+        by smtp.gmail.com with ESMTPSA id l12sm36761889pgn.83.2019.03.26.12.24.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:24:29 -0700 (PDT)
+        Tue, 26 Mar 2019 12:24:34 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>, kernel-team@android.com,
         rcu@vger.kernel.org, byungchul.park@lge.com,
         Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         linux-kselftest@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v2 1/4] lockdep: Add assertion to check if in an interrupt
-Date:   Tue, 26 Mar 2019 15:24:08 -0400
-Message-Id: <20190326192411.198070-1-joel@joelfernandes.org>
+Subject: [PATCH v2 3/4] rcutorture: Select from only online CPUs
+Date:   Tue, 26 Mar 2019 15:24:10 -0400
+Message-Id: <20190326192411.198070-3-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190326192411.198070-1-joel@joelfernandes.org>
+References: <20190326192411.198070-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,43 +80,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rcu_rrupt_from_idle, we want to check if it is called from within an
-interrupt, but want to do such checking only for debug builds. lockdep
-already tracks when we enter an interrupt. Let us expose it as an
-assertion macro so it can be used to assert this.
+The rcutorture jitter.sh script selects a random CPU but does not check
+if it is offline or online. This leads to taskset errors many times. On
+my machine, hyper threading is disabled so half the cores are offline
+causing taskset errors a lot of times. Let us fix this by checking from
+only the online CPUs on the system.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: kernel-team@android.com
 Cc: rcu@vger.kernel.org
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
 ---
- include/linux/lockdep.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/testing/selftests/rcutorture/bin/jitter.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index c5335df2372f..d24f564823d3 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -601,11 +601,18 @@ do {									\
- 			  "IRQs not disabled as expected\n");		\
- 	} while (0)
+diff --git a/tools/testing/selftests/rcutorture/bin/jitter.sh b/tools/testing/selftests/rcutorture/bin/jitter.sh
+index 3633828375e3..47bd9829dc55 100755
+--- a/tools/testing/selftests/rcutorture/bin/jitter.sh
++++ b/tools/testing/selftests/rcutorture/bin/jitter.sh
+@@ -47,10 +47,11 @@ do
+ 		exit 0;
+ 	fi
  
-+#define lockdep_assert_in_irq() do {					\
-+		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-+			  !current->hardirq_context,			\
-+			  "Not in hardirq as expected\n");		\
-+	} while (0)
+-	# Set affinity to randomly selected CPU
+-	cpus=`ls /sys/devices/system/cpu/*/online |
++	# Set affinity to randomly selected online CPU
++	cpus=`grep 1 /sys/devices/system/cpu/*/online |
+ 		sed -e 's,/[^/]*$,,' -e 's/^[^0-9]*//' |
+ 		grep -v '^0*$'`
 +
- #else
- # define might_lock(lock) do { } while (0)
- # define might_lock_read(lock) do { } while (0)
- # define lockdep_assert_irqs_enabled() do { } while (0)
- # define lockdep_assert_irqs_disabled() do { } while (0)
-+# define lockdep_assert_in_irq() do { } while (0)
- #endif
- 
- #ifdef CONFIG_LOCKDEP
+ 	cpumask=`awk -v cpus="$cpus" -v me=$me -v n=$n 'BEGIN {
+ 		srand(n + me + systime());
+ 		ncpus = split(cpus, ca);
 -- 
 2.21.0.392.gf8f6787159e-goog
 
