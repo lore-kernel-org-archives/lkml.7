@@ -2,71 +2,83 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44000C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1723E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CD920856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:28:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q6gbNKNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfCZJ0L (ORCPT
+        id S1729552AbfCZJ2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:26:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60448 "EHLO mx1.redhat.com"
+        Tue, 26 Mar 2019 05:28:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35718 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfCZJ0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:26:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726178AbfCZJ2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:28:24 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E49C52D7EB;
-        Tue, 26 Mar 2019 09:26:10 +0000 (UTC)
-Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F2BF82636E;
-        Tue, 26 Mar 2019 09:26:08 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 10:26:07 +0100
-From:   Miroslav Lichvar <mlichvar@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] timekeeping: Force upper bound for setting CLOCK_REALTIME
-Message-ID: <20190326092607.GE14186@localhost>
-References: <alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2F5C71EC082D;
+        Tue, 26 Mar 2019 10:28:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553592503;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fe37sMoDMB5hf9mQV5TgUhE9xUbWKgIpMBeBsT+xM7o=;
+        b=Q6gbNKNGgGcuXlTo5Cf11ndXmcnutWc0Xh20dwizj/rffHcfFou1BeDiBPCcV4c8Yc1fFO
+        ZBPGSPzlAAO/CKggOkGZLLoY4jH31Fwc/34IktyeVX9nq3Te8FK5uaA2rXJmJl4mwsLMwy
+        eojB4Y+1hwvE/RhVRIEnaq4oaXzvQag=
+Date:   Tue, 26 Mar 2019 10:28:25 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "rafal@milecki.pl" <rafal@milecki.pl>,
+        "clemej@gmail.com" <clemej@gmail.com>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA
+ errors
+Message-ID: <20190326092825.GF1867@zn.tnic>
+References: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903231125480.2157@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 26 Mar 2019 09:26:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 23, 2019 at 11:36:19AM +0100, Thomas Gleixner wrote:
-> It is reasonable to force an upper bound for the various methods of setting
-> CLOCK_REALTIME. Year 2262 is the absolute upper bound. Assume a maximum
-> uptime of 30 years which is plenty enough even for esoteric embedded
-> systems. That results in an upper bound of year 2232 for setting the time.
+On Mon, Mar 25, 2019 at 04:34:22PM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
+> 
+> Some systems may report spurious MCA errors. In general, spurious MCA
+> errors may be disabled by clearing a particular bit in MCA_CTL. However,
+> clearing a bit in MCA_CTL may not be recommended for some errors, so the
+> only option is to ignore them.
 
-The patch looks good to me.
+Ok, I cleaned those up and applied them here:
 
-I like this approach better than using a larger value closer to the
-overflow (e.g. one week) and stepping the clock back automatically
-when the clock reaches that time, but I suspect it might possibly
-break more tests (or any unusual applications messing with time) as a
-much larger interval is now EINVAL.
+https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-urgent-ras
 
-Thanks,
+Rafał, John, can you guys test them pls?
+
+Thx.
 
 -- 
-Miroslav Lichvar
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
