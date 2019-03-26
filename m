@@ -2,133 +2,165 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D66C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB36C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DB920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553606432;
-	bh=++ohudIKf1bylFwoG3UmwPuW2ukf9kVYeU/M5rF+bmo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RdomOp7YtF/K3xbIX6kpoTWG04lSEVDu/gGYCmRMSnZ+YyX5AqDQv6thlYzBdrlDF
-	 ECcgeomqA42f2hg5SLPbjnMKCZ2JSpRCpVbeQWL0F1yfDNa+kSn9izn+gXirPAEBjq
-	 YZxylzklciWPdkViHYr2QWllge2TRf/2L1rzcOqk=
+	by mail.kernel.org (Postfix) with ESMTP id 90BEF2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbfCZNUa (ORCPT
+        id S1731457AbfCZNYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfCZNUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:20:30 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA4920863
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 13:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553606429;
-        bh=++ohudIKf1bylFwoG3UmwPuW2ukf9kVYeU/M5rF+bmo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2q+DXd2ousbmZ36gmi4RAi0EvIocE3oZZVgIKtrA7JScb4+TqrSIJS2TrRz1+T4xW
-         K6kvjbAuQgn+iJtxI1eFFkKQQAlVsor6MFUd9TNzhcfHqpqwWmwbYc6R4BsvIUqKeQ
-         cqjGGs3lDh7FfDiJBf3uj6XAFL0z2u8EsJhoP9mw=
-Received: by mail-qk1-f173.google.com with SMTP id w20so7543047qka.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 06:20:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAWCgCDZ/ZbhHjvriL1ciqwNKooAZsCIpOmfmCThEIyRhuHjNYSh
-        MKLJMTBRUj1jGZjDAltltM77EOUUfeP61d2X3Q==
-X-Google-Smtp-Source: APXvYqwLhm3F7MHYJc20XaAxnbgSAVYQRSSuJhlpvh8A2yL36LQwsOYqDYoH6t0DrKho3KZTjoW0z8oLeQ0aXp+uh08=
-X-Received: by 2002:a37:d285:: with SMTP id f127mr24509566qkj.147.1553606428266;
- Tue, 26 Mar 2019 06:20:28 -0700 (PDT)
+        Tue, 26 Mar 2019 09:24:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58266 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbfCZNYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:24:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DEDB2AD0A;
+        Tue, 26 Mar 2019 13:24:30 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 83A0DE1404; Tue, 26 Mar 2019 14:24:27 +0100 (CET)
+Date:   Tue, 26 Mar 2019 14:24:27 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190326132427.GK26076@unicorn.suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+ <20190326120909.GF2230@nanopsycho>
 MIME-Version: 1.0
-References: <cover.1553523114.git.agx@sigxcpu.org> <3319783f60fedd7f0029dd60a51c76a75003fe05.1553523114.git.agx@sigxcpu.org>
-In-Reply-To: <3319783f60fedd7f0029dd60a51c76a75003fe05.1553523114.git.agx@sigxcpu.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 26 Mar 2019 08:20:16 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJrct6atOOto4hdDaRZKhnPda7ATV=7+OofWNUJFD=i8Q@mail.gmail.com>
-Message-ID: <CAL_JsqJrct6atOOto4hdDaRZKhnPda7ATV=7+OofWNUJFD=i8Q@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] dt-bindings: phy: Add documentation for mixel dphy
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326120909.GF2230@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 9:14 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> Add support for the MIXEL DPHY IP as found in the NXP's i.MX8MQ.
+On Tue, Mar 26, 2019 at 01:09:09PM +0100, Jiri Pirko wrote:
+> Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
+> >+All "set" and "action" type requests require admin privileges (CAP_NET_ADMIN
+> >+in the namespace). Most "get" type request are allowed for anyone but there
+> 
+> s/request/requests/
 
-Please use get_maintainers.pl and send patches to the correct lists.
+Will fix.
 
->
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-=
-phy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt=
- b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-> new file mode 100644
-> index 000000000000..d3646580412a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-> @@ -0,0 +1,29 @@
-> +Mixel DSI PHY for i.MX8
-> +
-> +The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along =
-the
-> +MIPI-DSI IP from Northwest Logic). It represents the physical layer for =
-the
-> +electrical signals for DSI.
-> +
-> +Required properties:
-> +- compatible: Must be:
-> +  - "mixel,imx8mq-mipi-dphy"
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +- clock-names: Must contain the following entries:
-> +  - "phy_ref": phandle and specifier referring to the DPHY ref clock
-> +- reg: the register range of the PHY controller
-> +- #phy-cells: number of cells in PHY, as defined in
-> +  Documentation/devicetree/bindings/phy/phy-bindings.txt
-> +  this must be <0>
-> +
-> +Optional properties:
-> +- power-domains: phandle to power domain
-> +
-> +Example:
-> +       mipi_dphy: mipi_dphy@30A0030 {
+> >+Device identification
+> >+---------------------
+> >+
+> >+When appropriate, network device is identified by a nested attribute named
+> >+ETHA_*_DEV. This attribute can contain
+> 
+> Isn't it ETHA_DEV_*? I must admit I'm a bit confused.
 
-dphy@30a0030
+ETHA_*_DEV is the nesting attribute (e.g. ETHA_SETTINGS_DEV), ETHA_DEV_*
+(ETHA_DEV_INDEX and ETHA_DEV_NAME) are in the nest.
 
-> +               compatible =3D "mixel,imx8mq-mipi-dphy";
-> +               clocks =3D <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-> +               clock-names =3D "phy_ref";
-> +               reg =3D <0x30A00300 0x100>;
-> +               power-domains =3D <&pd_mipi0>;
-> +               #phy-cells =3D <0>;
-> +        };
-> --
-> 2.20.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+> >+
+> >+    ETHA_DEV_INDEX	(u32)		device ifindex
+> >+    ETHA_DEV_NAME	(string)	device name
+> >+
+> >+In device related requests, one of these is sufficient; if both are used, they
+> >+must match (i.e. identify the same device). In device related replies both are
+> 
+> You say this now for the second time. First time this was said in second
+> para.
+
+I'll drop one of them.
+
+> >+List of message types
+> >+---------------------
+> >+
+> >+All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
+> 
+> Why "usually"? Why not "always"?
+
+Right, it's always. And if it changes one day, the sentence will have to
+be rewritten anyway.
+
+> >+Messages of type "get" are used by userspace to request information and
+> >+usually do not contain any attributes (that may be added later for dump
+> >+filtering). Kernel response is in the form of corresponding "set" message;
+> 
+> Okay. Do we want reply to "*_cmd_something_get" command to be
+> "*_cmd_something_set". That sounds odd. Why reply has to be "cmd"? Why
+> not something like "reply" or "response"?
+> This should work for both "doit/dumpit" and notifications.
+
+As stated right below, the aim is to use the same format for replies to
+GET requests as userspace uses for related SET requests. We could use
+different id (genlmsghdr::cmd) but that seemed like a waste for no actual
+gain.
+
+> >+the same message can be also used to set (some of) the parameters, except for
+> >+messages marked as "response only" in the table above. "Get" messages with
+> >+NLM_F_DUMP flags and no device identification dump the information for all
+> >+devices supporting the request.
+
+> >+
+> >+enum {
+> >+	ETHNL_CMD_NOOP,
+> >+
+> 
+> Usually headers have something like:
+> /* add new commands above here */
+> here.
+
+OK
+
+> >diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
+> >index 3ebfab2bca66..f30e0da88be5 100644
+> >--- a/net/ethtool/Makefile
+> >+++ b/net/ethtool/Makefile
+> >@@ -1,3 +1,7 @@
+> > # SPDX-License-Identifier: GPL-2.0
+> > 
+> >-obj-y		+= ioctl.o
+> >+obj-y				+= ioctl.o
+> >+
+> >+obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+> 
+> Why? I believe this should be always build-in same as ioctl.
+
+I would like to make the ioctl interface optional as well, eventually.
+As someone noted in one of the earlier discussions, there may be some
+special minimalistic setups where ethtool interface may be of no use.
+
+> >+struct genl_family ethtool_genl_family = {
+> >+	.hdrsize	= 0,
+> 
+> No need to set 0.
+
+OK
+
+> >+
+> >+extern struct genl_family ethtool_genl_family;
+> 
+> Why? You need this just within "netlink.c", don't you?
+
+In the submitted part, yes. But one of the later patches adds specific
+notify handler (different from ethnl_std_notify()) which is not in
+netlink.c and needs to use pointer to ethtool_genl_family for a call to
+genlmsg_put() and genlmsg_multicast().
+
+But I can make it static for now and change to extern when it's needed.
+
+Michal
+
