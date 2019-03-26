@@ -6,53 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69DEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C9AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB4220811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A9C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582542;
-	bh=wl5wIp2aD3am9trgEnq4QK59v0CURmSAhbUEL0IZw9k=;
+	s=default; t=1553582569;
+	bh=L8BfrMJM4ReGHRZphoDO05S2VYWukmNSjNEh7o9Jea4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZumrwjgUWJEUq3eQ0MLS77dXGh2nbOMEn4lHfumYIoBTUD27Yifpp8kUd8jqHQHk4
-	 sZ3C4Cm07BzJJLl6vYBEGgBrGvcEjO2RqpFemHcuj/AZ5ACb0v8RLsBzhvWpsmkHhM
-	 r5/A0sGM946ac0diaRj8SJ/21ssHGzjY5ZxLlkBQ=
+	b=EQHwdHd5hNyk8OK35xKNDMDYHqhZ65vxxVNKkydvbkn0BPrvD0QllvTUTeV7LLS97
+	 hW5HB5d1+LHeEUDfd3VAkrQD57RbfzR+nkq7xYrAar4aROChaNPKuzcgxvRAVJvhQO
+	 QFAzK8K8exGrOChIPGVfmS3+D1ISTePPXECSC20w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732658AbfCZGjR (ORCPT
+        id S1732559AbfCZGih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732647AbfCZGjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:11 -0400
+        id S1732139AbfCZGif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:35 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3740220879;
-        Tue, 26 Mar 2019 06:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 259FE208E4;
+        Tue, 26 Mar 2019 06:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582350;
-        bh=wl5wIp2aD3am9trgEnq4QK59v0CURmSAhbUEL0IZw9k=;
+        s=default; t=1553582314;
+        bh=L8BfrMJM4ReGHRZphoDO05S2VYWukmNSjNEh7o9Jea4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bv+jW4CofX5ncO0juKuqIofzoA0IVxzoJUqgp2//Qilc9dWLPwXO4Uxe3iRKZD7Al
-         SP5HChUjAS+mKTU8gfywH9xC6xJVvcKCVIPibhxDtZENgnaqFBIuZSXMixV2zlUB2+
-         /4QNZL+v3c1SXU8xD/qHXwFWRO2+5B6ssCXWAh+A=
+        b=Z+B+nwAAhUvL1MdRxUBb0wqBNLekfM/7BRJElimGr0YVgo0cFGChGGFYnyyDjd6Ko
+         wCsUlFZo6P0d/MBIsEsi9mbbNLrnnBE1P9iQofBPlHNe4Ntwi7sXMXViMeTxCWpws0
+         JbYXuhbOM6d7uzVqZX3zB1CpBjo6eUu3ZIq5TNJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Anup Patel <anup@brainfault.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>
-Subject: [PATCH 5.0 29/52] clocksource/drivers/riscv: Fix clocksource mask
-Date:   Tue, 26 Mar 2019 15:30:16 +0900
-Message-Id: <20190326042702.424504276@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.0 03/52] mmc: pxamci: fix enum type confusion
+Date:   Tue, 26 Mar 2019 15:29:50 +0900
+Message-Id: <20190326042701.151983659@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -71,55 +66,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Atish Patra <atish.patra@wdc.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 32d0be018f6f5ee2d5d19c4795304613560814cf upstream.
+commit e60a582bcde01158a64ff948fb799f21f5d31a11 upstream.
 
-For all riscv architectures (RV32, RV64 and RV128), the clocksource
-is a 64 bit incrementing counter.
+clang points out several instances of mismatched types in this drivers,
+all coming from a single declaration:
 
-Fix the clock source mask accordingly.
+drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
+      different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
+                direction = DMA_DEV_TO_MEM;
+                          ~ ^~~~~~~~~~~~~~
+drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
+      different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
+        tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
 
-Tested on both 64bit and 32 bit virt machine in QEMU.
+The behavior is correct, so this must be a simply typo from
+dma_data_direction and dma_transfer_direction being similarly named
+types with a similar purpose.
 
-Fixes: 62b019436814 ("clocksource: new RISC-V SBI timer driver")
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-riscv@lists.infradead.org
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Anup Patel <Anup.Patel@wdc.com>
-Cc: Damien Le Moal <Damien.LeMoal@wdc.com>
+Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190322215411.19362-1-atish.patra@wdc.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clocksource/timer-riscv.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/mmc/host/pxamci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clocksource/timer-riscv.c
-+++ b/drivers/clocksource/timer-riscv.c
-@@ -58,7 +58,7 @@ static u64 riscv_sched_clock(void)
- static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
- 	.name		= "riscv_clocksource",
- 	.rating		= 300,
--	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
-+	.mask		= CLOCKSOURCE_MASK(64),
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
- 	.read		= riscv_clocksource_rdtime,
- };
-@@ -103,8 +103,7 @@ static int __init riscv_timer_init_dt(st
- 	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
- 	clocksource_register_hz(cs, riscv_timebase);
- 
--	sched_clock_register(riscv_sched_clock,
--			BITS_PER_LONG, riscv_timebase);
-+	sched_clock_register(riscv_sched_clock, 64, riscv_timebase);
- 
- 	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
- 			 "clockevents/riscv/timer:starting",
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -162,7 +162,7 @@ static void pxamci_dma_irq(void *param);
+ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+-	enum dma_data_direction direction;
++	enum dma_transfer_direction direction;
+ 	struct dma_slave_config	config;
+ 	struct dma_chan *chan;
+ 	unsigned int nob = data->blocks;
 
 
