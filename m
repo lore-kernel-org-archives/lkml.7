@@ -2,143 +2,127 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2C9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A89C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554FC2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955C52075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYUTOnyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbfCZOO7 (ORCPT
+        id S1731755AbfCZOQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:14:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:61198 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfCZOO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:14:58 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 07:14:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="134913947"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Mar 2019 07:14:53 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id EB6A5205E7; Tue, 26 Mar 2019 16:14:51 +0200 (EET)
-Date:   Tue, 26 Mar 2019 16:14:51 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Mickael GUENE <mickael.guene@st.com>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Petr Cvek <petrcvekcz@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Kao <ben.kao@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Rui Miguel Silva <rui.silva@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>
-Subject: Re: [PATCH v3 2/2] media:st-mipid02: MIPID02 CSI-2 to PARALLEL
- bridge driver
-Message-ID: <20190326141451.klfwjdfapsspbwbm@paasikivi.fi.intel.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-3-git-send-email-mickael.guene@st.com>
- <20190326113308.mp5hqdw3ktbpcawu@paasikivi.fi.intel.com>
- <9c8fb935-5c67-d4aa-d0ba-2aae0edd2b55@st.com>
- <20190326135439.oju2k6idndjaulfj@paasikivi.fi.intel.com>
- <23f2f17c-7c3d-30c0-d191-1a5c7a4a2989@st.com>
+        Tue, 26 Mar 2019 10:16:05 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:33016 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCZOQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 10:16:05 -0400
+Received: by mail-it1-f194.google.com with SMTP id v8so2924400itf.0;
+        Tue, 26 Mar 2019 07:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qEOjZYpKMejJbkDAYqurrvWQBSNTI1zmr7mLx7VYA7s=;
+        b=AYUTOnyNaTkS5ye7/E64ftAWe2vIMEKHy1UPw3CU4ImWHPkKzINenbGs8Cn82bO35M
+         +mtHvNrgMxE6INjEI91E8IIVsLHH26VZNKc+Wk8gCsBs4hUNk3rkCpDJn8duKw22HSu+
+         fEKOVdjKmvCzTqqlCDq9OlJhLXUlydNnWBBwCPa6K37Nu+7w/b3wXzzNnSqJ5EMdXARZ
+         RwTPKFQtY3aQ7AJRh5VFNv0PNtZyXdvbAdiVmKKjPANqEYDdNzu1BKibtLla0b3HH46H
+         E2YfT9iQz4G1gkkLSqQSlL/z5k5gAZ/Up90DxsC8ZTDlxHpporVnY+xnVF5gFzkFWMsP
+         EU3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qEOjZYpKMejJbkDAYqurrvWQBSNTI1zmr7mLx7VYA7s=;
+        b=T3kSOYO2O4W3EmpS4LxdD3CFUUvyYUVlovsQz9vswrk7HGq4hnzTXvqeyLX1jv8Sy+
+         h6sjPyHuyYeBwcUg+A8EeANJTTtaIcVdWWUhROtn2/7NBeFodgm+MGk/htwBBY2pHG8H
+         AXKkCNHR8+DAhEslfWCGpRjcAPeQz7h85mEjED+r/WswuQfW+F1MzpA2xyQOrfDLgDCG
+         iHi4HfzOoJIFrgGdePYiu5Z3eTOlKql2NtYv7OpvtKgchHFOXQhkseKbwXTWOnYu/v4r
+         y9hAz9XyclrM4JIu3pOjBO/EVj9tNrVSUs00MKPq2sEqIOFB0Ybj9e/F+kWEVMsy+LNs
+         jqZg==
+X-Gm-Message-State: APjAAAXVf90HiI+p2pbbh/S/DfvGNL5Q7vDp9/BQu7rA6wvumfnc2hzs
+        ynGMsp1CgoJk6ltUPKy9bwPAmk39I0NtHeDsYnc=
+X-Google-Smtp-Source: APXvYqz8afjv4V4Fd8d3RJB/qI9pOzRABqX9RNuOO+b8tmwTLXqHpwKzP8RhdHdmy9tfTEFhgJIEeiehaBGxYEM2Ud8=
+X-Received: by 2002:a24:4e11:: with SMTP id r17mr7140880ita.168.1553609764179;
+ Tue, 26 Mar 2019 07:16:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23f2f17c-7c3d-30c0-d191-1a5c7a4a2989@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-4-brgl@bgdev.pl>
+In-Reply-To: <20190322133105.5945-4-brgl@bgdev.pl>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Tue, 26 Mar 2019 09:15:53 -0500
+Message-ID: <CAHCN7xJLp37dkpTR=ehBntQwD+s5G7M6srmKL-gYEmgDQLv6uw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: da850-evm: enable cpufreq
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 02:12:52PM +0000, Mickael GUENE wrote:
-> Sakari,
-> 
-> On 3/26/19 14:54, Sakari Ailus wrote:
-> > Hi Mickael,
-> > 
-> > On Tue, Mar 26, 2019 at 12:57:03PM +0000, Mickael GUENE wrote:
-> > ...
-> >>>> +static int mipid02_set_fmt(struct v4l2_subdev *sd,
-> >>>> +			   struct v4l2_subdev_pad_config *cfg,
-> >>>> +			   struct v4l2_subdev_format *format)
-> >>>> +{
-> >>>> +	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
-> >>>> +	struct mipid02_dev *bridge = to_mipid02_dev(sd);
-> >>>> +	struct i2c_client *client = bridge->i2c_client;
-> >>>> +	struct v4l2_mbus_framefmt *fmt;
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	dev_dbg(&client->dev, "%s for %d", __func__, format->pad);
-> >>>> +
-> >>>> +	if (format->pad >= MIPID02_PAD_NB)
-> >>>> +		return -EINVAL;
-> >>>> +	/* second CSI-2 pad not yet supported */
-> >>>> +	if (format->pad == 1)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	mutex_lock(&bridge->lock);
-> >>>> +
-> >>>> +	if (bridge->streaming) {
-> >>>> +		ret = -EBUSY;
-> >>>> +		goto error;
-> >>>> +	}
-> >>>> +
-> >>>> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY)
-> >>>> +		fmt = v4l2_subdev_get_try_format(sd, cfg, format->pad);
-> >>>> +	else
-> >>>> +		fmt = &bridge->fmt;
-> >>>> +
-> >>>> +	*fmt = *mbus_fmt;
-> >>>
-> >>> What are the limits of the hardware regarding the size of the image? Aren't
-> >>> there any?
-> >>>
-> >> There are no limits for image size.
-> >>> The format on the sink pad needs to be propagated to the source pad as
-> >>> well. I presume there's nothing to set on the sink pad for this device, is
-> >>> there?
-> >>  User only need to set format code so the driver can configure hardware.
-> >>  In the mipid02 we have always the same format for sink and source. So I
-> >>  only store one configuration during set_fmt when called from either pad0
-> >> (sink) or pad2 (source). Is it the correct way to implement it ? or
-> >> should I only accept set_fmt on pad0 ?
-> >>  For get_fmt I return stored configuration for pad0 and pad2.
-> > 
-> > Only 76 or so characters per line, please.
-> > 
-> > For pad 0 (sink) the format must be settable freely (as you don't have any
-> > hardware restrictions) and on the pad 2 (source) the driver converts the
-> > format set on the pad 0 according to the hardware functionality. This is
-> > what the link validation from the source pad onwards is based on.
-> > 
->  So for a set_fmt on pad 2 I return current configuration ? (as
-> in my case I have the same configuration for pad 0 and pad2)
->  And I only update format when set_fmt is called for pad 0 ?
+On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
+> tps6507 pmic with configurable output voltage, so all operating points
+> can be enabled.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/boot/dts/da850-evm.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index f04bc3e15332..a0a1b3dccf37 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -191,6 +191,18 @@
+>         };
+>  };
+>
+> +&cpu {
+> +       cpu-supply = <&vdcdc3_reg>;
+> +};
+> +
+> +&opp_375 {
+> +       status = "okay";
+> +};
+> +
+> +&opp_456 {
+> +       status = "okay";
+> +};
 
-Correct. Do note that the format is different in cases (uyvy8_1x16 vs. 2x8)
-as you're dealing with two different kinds of busses.
+I pulled part number for the processor used in the da850evm that Logic
+PD produces, and it shows a imit of 375MHz.  I cross-referenced the
+processor part number with the description from a distributor, and the
+part number also lists 375MHz, so I think we should leave 456
+disabled.
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+adam
+> +
+>  &sata {
+>         status = "okay";
+>  };
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
