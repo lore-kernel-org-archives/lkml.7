@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C0FC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C82C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245FC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552D22087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582432;
-	bh=Gt2xzzerCM+oT2loC2kEPSdnCTNxEMe4GNk/eXO2Y3s=;
+	s=default; t=1553582441;
+	bh=4dpy/ylC5x1lz+cqpLWZEf6MZHwKv65SgmVyl5JyypQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Df/TLrNiYHOq2LaP/K7SqhcwJoacTJmCugpCKD6AMCyntq0llsMnhWLnggAy0ygKh
-	 0gc8LmsqE5flIsv5BmX2QrMAVPgHLWx4PN6s/P1Ik79FOLbNK8FM3hWvuV4sY5dWlJ
-	 E1JMcJpbhl1w04h4gBsD1V0sGgPBCJ0RNv3Y6E8E=
+	b=wIXyaM6hC7y+h1cHkoRCWoxtYflHwSS/fA8sfVwgpOnIhwQCRdW6lqgvVHuyQuDzR
+	 OqgkqFGBmDAjV9mqCA56wWzGhJP+7KAhBcg1FV6hSRwK4az57SMsMSKbUiv0Pn+aF1
+	 xeV2a16fkCAizK9iS4h1x+0St4tsGDgSo5LTr86U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732879AbfCZGkb (ORCPT
+        id S1732557AbfCZGkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:40:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56960 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731660AbfCZGka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:40:30 -0400
+        id S1727624AbfCZGkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:39 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43ED42086C;
-        Tue, 26 Mar 2019 06:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B2E2086C;
+        Tue, 26 Mar 2019 06:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582429;
-        bh=Gt2xzzerCM+oT2loC2kEPSdnCTNxEMe4GNk/eXO2Y3s=;
+        s=default; t=1553582437;
+        bh=4dpy/ylC5x1lz+cqpLWZEf6MZHwKv65SgmVyl5JyypQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBwKArNKdy+L9tMVBWMaiOtxFgY2E7OwBkpdjc8xADwIwOsrhc1BJuBz4AbqCjVwd
-         E9qJKQV5CpmdYndF1AMpB+yXciNlAD+mzxOi/u+Vkr+TLHvyVMta/4+8t/KnA1vM6J
-         a26pzfb5j/agE5U6T6I5x9BCrIlnayfcd3nxPOGc=
+        b=hWd99WlSd3/yyIe7vEeUsQ/nhLXHwGcFWBlFvatbOC94aVTbJG59bBtlRHGNwCGD6
+         oCMHETirFmrZa2BOc7B/qdNB/Qk/+Y0HOdjHqQ4pzpXl7XtlA6Y2c1bIL3U30Imguu
+         /tHwizdpQyZafAVkc1XPA0O0Juyr2iQ3Lh1NDNbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 52/52] ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-Date:   Tue, 26 Mar 2019 15:30:39 +0900
-Message-Id: <20190326042703.755090890@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com,
+        Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.0 39/52] Bluetooth: hci_ldisc: Initialize hci_dev before open()
+Date:   Tue, 26 Mar 2019 15:30:26 +0900
+Message-Id: <20190326042703.053632903@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -65,93 +66,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-commit b5a236c175b0d984552a5f7c9d35141024c2b261 upstream.
+commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 upstream.
 
-Recently we found the audio jack detection stop working after suspend
-on many machines with Realtek codec. Sometimes the audio selection
-dialogue didn't show up after users plugged headhphone/headset into
-the headset jack, sometimes after uses plugged headphone/headset, then
-click the sound icon on the upper-right corner of gnome-desktop, it
-also showed the speaker rather than the headphone.
+The hci_dev struct hdev is referenced in work queues and timers started
+by open() in some protocols. This creates a race between the
+initialization function and the work or timer which can result hdev
+being dereferenced while it is still null.
 
-The root cause is that before suspend, the codec already call the
-runtime_suspend since this codec is not used by any apps, then in
-resume, it will not call runtime_resume for this codec. But for some
-realtek codec (so far, alc236, alc255 and alc891) with the specific
-BIOS, if it doesn't run runtime_resume after suspend, all codec
-functions including jack detection stop working anymore.
+The syzbot report contains a reliable reproducer which causes a null
+pointer dereference of hdev in hci_uart_write_work() by making the
+memory allocation for hdev fail.
 
-This problem existed for a long time, but it was not exposed, that is
-because when problem happens, if users play sound or open
-sound-setting to check audio device, this will trigger calling to
-runtime_resume (via snd_hda_power_up), then the codec starts working
-again before users notice this problem.
+To fix this, ensure hdev is valid from before calling a protocol's
+open() until after calling a protocol's close().
 
-Since we don't know how many codec and BIOS combinations have this
-problem, to fix it, let the driver call runtime_resume for all codecs
-in pm_resume, maybe for some codecs, this is not needed, but it is
-harmless. After a codec is runtime resumed, if it is not used by any
-apps, it will be runtime suspended soon and furthermore we don't run
-suspend frequently, this change will not add much power consumption.
-
-Fixes: cc72da7d4d06 ("ALSA: hda - Use standard runtime PM for codec power-save control")
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_codec.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_ldisc.c |   21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -2952,6 +2952,20 @@ static int hda_codec_runtime_resume(stru
- #endif /* CONFIG_PM */
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -207,11 +207,11 @@ void hci_uart_init_work(struct work_stru
+ 	err = hci_register_dev(hu->hdev);
+ 	if (err < 0) {
+ 		BT_ERR("Can't register HCI device");
++		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
++		hu->proto->close(hu);
+ 		hdev = hu->hdev;
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		hu->proto->close(hu);
+ 		return;
+ 	}
  
- #ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
+@@ -616,6 +616,7 @@ static void hci_uart_tty_receive(struct
+ static int hci_uart_register_dev(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev;
++	int err;
+ 
+ 	BT_DBG("");
+ 
+@@ -659,11 +660,22 @@ static int hci_uart_register_dev(struct
+ 	else
+ 		hdev->dev_type = HCI_PRIMARY;
+ 
++	/* Only call open() for the protocol after hdev is fully initialized as
++	 * open() (or a timer/workqueue it starts) may attempt to reference it.
 +	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
++	err = hu->proto->open(hu);
++	if (err) {
++		hu->hdev = NULL;
++		hci_free_dev(hdev);
++		return err;
++	}
 +
- static int hda_codec_pm_suspend(struct device *dev)
- {
- 	dev->power.power_state = PMSG_SUSPEND;
-@@ -2961,7 +2975,7 @@ static int hda_codec_pm_suspend(struct d
- static int hda_codec_pm_resume(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESUME;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
+ 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+ 		return 0;
  
- static int hda_codec_pm_freeze(struct device *dev)
-@@ -2973,13 +2987,13 @@ static int hda_codec_pm_freeze(struct de
- static int hda_codec_pm_thaw(struct device *dev)
- {
- 	dev->power.power_state = PMSG_THAW;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
+ 	if (hci_register_dev(hdev) < 0) {
+ 		BT_ERR("Can't register HCI device");
++		hu->proto->close(hu);
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+ 		return -ENODEV;
+@@ -683,17 +695,12 @@ static int hci_uart_set_proto(struct hci
+ 	if (!p)
+ 		return -EPROTONOSUPPORT;
  
- static int hda_codec_pm_restore(struct device *dev)
- {
- 	dev->power.power_state = PMSG_RESTORE;
--	return pm_runtime_force_resume(dev);
-+	return hda_codec_force_resume(dev);
- }
- #endif /* CONFIG_PM_SLEEP */
+-	err = p->open(hu);
+-	if (err)
+-		return err;
+-
+ 	hu->proto = p;
+ 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	err = hci_uart_register_dev(hu);
+ 	if (err) {
+ 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		p->close(hu);
+ 		return err;
+ 	}
  
 
 
