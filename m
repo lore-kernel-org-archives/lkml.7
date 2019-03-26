@@ -5,95 +5,88 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F0AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944A1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D972087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6011C20700
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbfCZUxQ (ORCPT
+        id S1732733AbfCZUzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:53:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60656 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfCZUxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:53:15 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EBF0830FE5B2;
-        Tue, 26 Mar 2019 20:53:14 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D88417DC5;
-        Tue, 26 Mar 2019 20:53:13 +0000 (UTC)
-Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
-To:     Joao Moreira <jmoreira@suse.de>, Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
-        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
-        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com>
- <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz>
- <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de>
- <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
- <699e78da-36ba-8217-c509-2e9b443bd380@suse.de>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com>
-Date:   Tue, 26 Mar 2019 16:53:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 26 Mar 2019 16:55:45 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49336 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfCZUzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 16:55:44 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8t6e-000669-8B; Tue, 26 Mar 2019 21:55:36 +0100
+Date:   Tue, 26 Mar 2019 21:55:35 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 12/14] x86/watchdog/hardlockup/hpet: Determine if
+ HPET timer caused NMI
+In-Reply-To: <1551283518-18922-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1903262149590.1789@nanos.tec.linutronix.de>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-13-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <699e78da-36ba-8217-c509-2e9b443bd380@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 26 Mar 2019 20:53:15 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 2:13 PM, Joao Moreira wrote:
-> 
-> 
-> On 3/26/19 1:15 PM, Joe Lawrence wrote:
- >>
->> Hi Joao,
->>
->> This change seems to work okay for (again) single object modules, but
->> I'm having issues with multi-object modules.
->>
-> 
-> Hi Joe, thanks for the sources, this made everything much easier in my
-> side :)
-> 
-> In the patch below I change a little bit the interface used to inform
-> kbuild that a module is a livepatch. Instead of defining the flag
-> LIVEPATCH_ per .o file, we define it per module (what actually makes
-> much more sense). We later use $(basetarget) in the Makefile for
-> checking the flags. By doing so, and invoking cmd_livepatch both from
-> the $(single-used-m) and $(multi-used-m) we ensure that the .livepatch
-> file is created for each module, what later in the pipeline flags the
-> invocation of klp-convert.
-> 
-> I tested the following patch with the sources you provided (with little
-> modifications, removing the .o from the LIVEPATCH_ definitions and using
-> the module name instead of the object names), achieving successful
-> compilation and conversion. I also tested against the sample
-> livepatches, thus I think it might be ok now.
+On Wed, 27 Feb 2019, Ricardo Neri wrote:
+> @@ -62,7 +67,18 @@ static inline void set_comparator(struct hpet_hld_data *hdata,
+>  static void kick_timer(struct hpet_hld_data *hdata, bool force)
+>  {
+>  	bool kick_needed = force || !(hdata->flags & HPET_DEV_PERI_CAP);
+> -	unsigned long new_compare, count;
+> +	unsigned long tsc_curr, tsc_delta, new_compare, count;
+> +
+> +	/* Start obtaining the current TSC and HPET counts. */
+> +	tsc_curr = rdtsc();
+> +
+> +	if (kick_needed)
+> +		count = get_count();
 
-Cool thanks for taking a look -- I can confirm that the toy code I sent 
-over builds with those modifications and so does the sample and selftest 
-I was working on.  I'll set about refactoring that klp-convert selftest 
-to combine .o files into a more compact module.
+Can you please keep the TSC code in one block and the HPET block in the
+next one? Having this inbetween is really bad to follow.
 
-> Do you think we can go this way to solve the problem in v3?
+It really does not matter whether you read the HPET counter before or after
+the calculation. This is a crystal ball estimation anyway so a few cyles
+more or less are completely irrelevant.
 
-Yeah, I'll add it to the list of patches to squash for v3.
+> +	tsc_delta = (unsigned long)watchdog_thresh * (unsigned long)tsc_khz
+> +		    * 1000L;
+> +	hdata->tsc_next = tsc_curr + tsc_delta;
+> +	hdata->tsc_next_error = tsc_delta >> 6;
 
 Thanks,
 
--- Joe
+	tglx
