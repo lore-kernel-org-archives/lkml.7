@@ -2,97 +2,196 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C8CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6D8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430FE20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="jeaL76ao"
+	by mail.kernel.org (Postfix) with ESMTP id 1CAAC20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731489AbfCZP7P (ORCPT
+        id S1731782AbfCZQAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:59:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52523 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCZP7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:59:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a184so13210834wma.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KvLvYQ8To9vnE8+/chaGT7oUCER7SYfH+KoD75hlshE=;
-        b=jeaL76aojADDCFOSBXXt0XmST0oQR1XTZNIyNuFeG/4lsPEmF20iM2oSC9/C1yYwUQ
-         ShJC7lUWkVwfaL6BN+A7Nt8zfM+eybDCCfRFpCC7qHX1pbgLhPpQNHjbNDh35NCkLP3Y
-         URnXqNPjPP7pUqE3oh1o1Bpx9wzD5saGdjBvyFp7kxZyFTkiEuEeDCYmWxL/lfsRtwLJ
-         whkRIycdMXSprftUznuWfMS19x6dA+JPV+btQAWbz0uvL/F7+QbHpkxM0bRVbHGAUuey
-         L9QDdd0BPhzI1tEAtEiIedzAmZYMcYK1uoktiUI+mt+7cnPo+1eshAy/xbi29byM2P5F
-         r5wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KvLvYQ8To9vnE8+/chaGT7oUCER7SYfH+KoD75hlshE=;
-        b=pzRJWpnqr7KrsxjBztBsHmRKrxVUPbC19FI7n/m5MvCEV36OGy5OGSkcW+wlbk0C+B
-         uzpoXWa6sG0DgoMwruVEVephCYBMBberx7jEVX+K3VZ8xO+0fVHFoSmC9HQjswA5G056
-         +z4CWuIMrssYdLZf8FBzre9R7hAwwm1DE04Hq4uwqjLuSVJSRXpEZpiZnQsqJbbTldmO
-         gwGKQDrm3HSLQh4S1uUIsUTiqMrurERTYRIxfqJgiQXvPn6j7a5EH6R7ZdEJWckwT9E1
-         OR1g2jU4xIakEPz2DJwEyO1KgeliojMaqIDB6LweeElwDH2J02YFa6wUETfsjDY3Hmrl
-         R6eQ==
-X-Gm-Message-State: APjAAAUcPlTnME3nLvfb2o5gje1JjqwMKkXRv3JKxEH+HK/UTnSN8K4O
-        p4LV8t8V/q/SODkBde6UihdBKg==
-X-Google-Smtp-Source: APXvYqx0VLE2SqTpxDnTTedfDiOi3xMbbu8jujt0Nf7moivF12Z7LAL/tS5ByQ7Mn5HVjGWy4cPINA==
-X-Received: by 2002:a1c:ca06:: with SMTP id a6mr13965175wmg.14.1553615952187;
-        Tue, 26 Mar 2019 08:59:12 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id x5sm21572993wrt.72.2019.03.26.08.59.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 08:59:11 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:59:11 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 07/22] ethtool: netlink bitset handling
-Message-ID: <20190326155911.GA4958@nanopsycho.orion>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <9123f942b484ef4bbb684bb1f4aa2b70d673a259.1553532199.git.mkubecek@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9123f942b484ef4bbb684bb1f4aa2b70d673a259.1553532199.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 26 Mar 2019 12:00:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35814 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726127AbfCZQAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:00:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4452DAE7F;
+        Tue, 26 Mar 2019 16:00:08 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 17:00:07 +0100
+Message-ID: <s5ha7hh62yg.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Timo Wischer <twischer@de.adit-jv.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] ALSA: pcm: Add snd_pcm_ops for snd_pcm_link()
+In-Reply-To: <68cfbf7a-5f1e-50d2-2b97-4d3c5d360b36@de.adit-jv.com>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+        <1553586574-18608-1-git-send-email-twischer@de.adit-jv.com>
+        <1553586574-18608-5-git-send-email-twischer@de.adit-jv.com>
+        <s5ho95ym3s7.wl-tiwai@suse.de>
+        <3ad5c313-ba2c-b541-8930-3f2515dfca72@de.adit-jv.com>
+        <s5hr2at67ew.wl-tiwai@suse.de>
+        <68cfbf7a-5f1e-50d2-2b97-4d3c5d360b36@de.adit-jv.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Mar 25, 2019 at 06:08:15PM CET, mkubecek@suse.cz wrote:
->Declare attribute type constants and add helper functions to generate and
->parse arbitrary length bit sets.
+On Tue, 26 Mar 2019 16:16:54 +0100,
+Timo Wischer wrote:
+> 
+> On 3/26/19 15:23, Takashi Iwai wrote:
+> > On Tue, 26 Mar 2019 12:25:37 +0100,
+> > Timo Wischer wrote:
+> >> On 3/26/19 09:35, Takashi Iwai wrote:
+> >>
+> >>      On Tue, 26 Mar 2019 08:49:33 +0100,
+> >>      <twischer@de.adit-jv.com> wrote:
+> >>               From: Timo Wischer <twischer@de.adit-jv.com>
+> >>                   snd_pcm_link() can be called by the user as long
+> >> as the device is not
+> >>          yet started. Therefore currently a driver which wants to iterate over
+> >>          the linked substreams has to do this at the start trigger. But the start
+> >>          trigger should not block for a long time. Therefore there is no callback
+> >>          which can be used to iterate over the linked substreams without delaying
+> >>          the start trigger.
+> >>          This patch introduces a new callback function which will be called after
+> >>          the linked substream list was updated by snd_pcm_link(). This callback
+> >>          function is allowed to block for a longer time without interfering the
+> >>          synchronized start up of linked substreams.
+> >>                   Signed-off-by: Timo Wischer
+> >> <twischer@de.adit-jv.com>
+> >>               Well, the idea appears interesting, but I'm afraid
+> >> that the
+> >>      implementation is still racy.  The place you're calling the new
+> >>      callback isn't protected, hence the stream can be triggered while
+> >>      calling it.  That is, even during operating your loopback link_changed
+> >>      callback, another thread is able to start the stream.
+> >>      Hi Takashi,
+> >>
+> >> As far as I got you mean the following scenario:
+> >>
+> >>    * snd_pcm_link() is called for a HW sound card
+> >>        + loopback_snd_timer_link_changed()
+> > The start may happen at this point.
+> 
+> In this case the last link status will be used and aloop will print a
+> warning "Another sound timer was requested but at least one device is
+> already running...".
+> 
+> Without this patch set a similar issue already exists. When calling
+> snd_pcm_start() before snd_pcm_link() was done the additional device
+> linked by the snd_pcm_link() will not be started.
+> Therefore the application has already to take care about the order of
+> the calls.
 
-Hmm, this looks like a lot of work. Two things:
-1) This is generic. Not really related to ethtool in any way. Could this
-   be done in netlink common code?
-2) Did you think about leveraging NLA_BITFIELD32? What I mean is this:
-NEST_START
-   NLA_BITFIELD32 index 0 (bit 0-31)
-   NLA_BITFIELD32 index 1 (bit 32-63)
-   NLA_BITFIELD32 index 2 (bit 64-95)
-   NLA_BITFIELD32 index 3 (bit 96-127)
-   ....
-NEST_END
-It is basically an array of NLA_BITFIELD32.
+Yes, but it doesn't matter for now, just because other drivers do care
+the PCM links only for trigger callback.  Now you're trying to add
+something new but in an incomplete manner.
 
+> 
+> >
+> >>        + loopback_snd_timer_open()
+> >>        + spin_lock_irqsave(&dpcm->cable->lock, flags);
+> >>    * snd_pcm_start() called for aloop sound card
+> >>        + loopback_trigger()
+> >>        + spin_lock(&cable->lock) -> has to wait till loopback_snd_timer_open()
+> >>          calls spin_unlock_irqrestore()
+> >>
+> >> So far snd_pcm_start() has to wait for loopback_snd_timer_open().
+> >>
+> >>    * loopback_snd_timer_open() will continue with
+> >>        + dpcm->cable->snd_timer.instance = NULL;
+> >>        + spin_unlock_irqrestore()
+> >>    * loopback_trigger() can enter the lock
+> >>        + loopback_snd_timer_start() will fail with -EINVAL due to
+> >>          (loopback_trigger == NULL)
+> >>
+> >> At least this will not result into memory corruption due to race or any other
+> >> wired behavior.
+> > I don't expect the memory corruption, but my point is that dealing
+> > with linked streams is still tricky.  It was considered for the
+> > lightweight coupled start/stop operation, and something intensively
+> > depending on the linked status was out of the original design...
+> >
+> >> But my expectation is that snd_pcm_link(hw, aloop) or snd_pcm_link(aloop, hw)
+> >> is only called by the application calling snd_pcm_start(aloop)
+> >> because the same aloop device cannot be opened by multiple applications at the
+> >> same time.
+> >>
+> >> Do you see an use case where one application would call snd_pcm_start() in
+> >> parallel with snd_pcm_link() (somehow configuring the device)?
+> > It's not about the actual application usages but rather against the
+> > malicious attacks.  Especially aloop is a virtual device that is
+> > available allover the places, it may be deployed / attacked easily.
+> The attack we are identifying here can only be done by the application
+> opening the aloop device.
+> An application allowed to open the aloop device is anyway able to
+> manipulate the audio streaming.
+
+Right, and if it such a racy access may lead to a driver misbehavior,
+it's a big concern.  The proposed callback usage is racy, so some
+other implementation might be broken easily in future.
+
+> Or do you see an attack which would influence any other device/stream
+> not opened by this application?
+>
+> >> May be we should add an additional synchronization mechanism in pcm_native.c
+> >> to avoid call of snd_pcm_link() in parallel with snd_pcm_start().
+> > If it really matters...  Honestly speaking, I'm not fully convinced
+> > whether we want to deal with this using the PCM link mechanism.
+> >
+> > What's the motivation for using the linked streams at the first place?
+> > That's one of the biggest missing piece in the whole picture.
+> In general when the user uses snd_pcm_link() it expects that the
+> linked devices are somehow synchronized.
+> Any applications already using snd_pcm_link() do not need to be
+> adapted to use the new feature of aloop (for example JACK or ALSA
+> multi plugin)
+> 
+> But when linking a HW sound card and aloop without this patch set,
+> both devices will be started in sync but
+> the snd_pcm_period_eleapsed() calls of the different devices will
+> drift. To avoid this the aloop plugin can automatically use the right
+> timer.
+> If this feature is not implemented the user has to use snd_pcm_link()
+> to trigger snd_pcm_start() in sync but also has to configure the aloop
+> plugin to use the right sound timer.
+> May be the linked cards can change during runtime of the
+> system. Without this feature the aloop kernel driver has to be loaded
+> with different kernel parameters
+> to select the right timer.
+> 
+> ALSA controls cannot be used easily. Selecting the sound timer by the
+> card number could be error prone because the card ID could change
+> between system starts.
+> Therefore an ALSA control supporting the card name should be
+> used. This could be for example done via an ALSA enum control. But in
+> this case the names of all sound cards of the system has to be
+> available
+> on aloop probe() call. But at this point in time the sound cards
+> probed after aloop are not available. Therefore only the sound timers
+> of the sound cards probed before aloop are selectable.
+
+Hm.  For me this patch series looks very hackish.  As mentioned, the
+PCM link usage is rather just a synchronous trigger start/stop for
+multiple streams belonging to the same hardware; in that sense, it'd
+be possible to adapt some mechanism for aloop, but at most it should
+be much less intrusive change, e.g. just doing the multiple
+loopback_timer_start() in a single loop.
+
+
+thanks,
+
+Takashi
