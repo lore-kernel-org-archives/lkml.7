@@ -3,90 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4895C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745D8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7009E20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410D52084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPDSn7rR"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="Bi3K81Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbfCZKlp (ORCPT
+        id S1727617AbfCZKwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:41:45 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39030 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfCZKln (ORCPT
+        Tue, 26 Mar 2019 06:52:19 -0400
+Received: from mailout.micron.com ([137.201.242.129]:55668 "EHLO
+        mailout.micron.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZKwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:41:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id n187so6686639oih.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z7JulrIjGjw4aS5f5PUAk6l5Nt96av6iTfePl/MKlsU=;
-        b=dPDSn7rR5bATKC5tkGqixUZxOUNPP06SCKGWE77wuNg/SGaLIVXZ6+zQXBhZnRff8t
-         iGCSBLGRfDA1b3xDDa3ZxgjslTYHo3kVV05J4K4Im0ryowr3J/tY98J4YISON4V7//sW
-         fTXLCNlXYHjvSgazzQ4RNpw1i4s71AqBEzkx0oueQI0+KJVp132wp2s9w3CK0Azb5ja6
-         2Q8flIZYXFHjRIj2OcX8HMEI9bcOQCUoGX44qWiLbsgVH3SeyMTAWUZVId/yAKmnQob9
-         WPUUgt69D276+bf4slYaPt7xyE1kOGA0IotzawvVj37bmhsPHtXGnvBUvK7H7JlwsBpA
-         ycvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z7JulrIjGjw4aS5f5PUAk6l5Nt96av6iTfePl/MKlsU=;
-        b=Tbt6ABTJnNGV1mT+AEhaef0slAaMz/2tbRPUr1pswKa+7zS2kbPWeh5TzYS56sLdc+
-         r364Q1cAlqL1ffkSazHwIEGaIbuTrBsmuIw9sHeBzzjjklAKeQ0NK9l/r+jfII7WB0ey
-         rsu5IpteTamhoA8i5PMHk3EVyFADv1Q+2DV0rfDCc8nilpbEhOpxsj5aNBY4g8N2RLRc
-         Pfv8f+kfL4C4tbJruPRTM6QFLZ3+S9OZV9qi3txu9z+lbn4fC798hatw0KPe6yguvSkd
-         v+CHbgd75yWIe2xGgIOgz0KHJQ8/6xvqcr4Su9ly0QFeXsc+hBk/h4puTUK3NKj5OJrp
-         z/Ww==
-X-Gm-Message-State: APjAAAX25tR0EuX916twvjCzE9piClguc+a4vE86PYuuxkbfv559tEy6
-        9PrijALL6xWb74ZVK00qD84tnEgvfMLilsBrGFRCYw==
-X-Google-Smtp-Source: APXvYqwXZThf7CW4RQdE5DJW5Wv8wfDFbcooayt+EIwLjLRMoMWRU45639YIPrlVD5mDT0qhBRMyD38Vk7x8QQpxsqs=
-X-Received: by 2002:aca:4a4a:: with SMTP id x71mr14972201oia.27.1553596903010;
- Tue, 26 Mar 2019 03:41:43 -0700 (PDT)
+        Tue, 26 Mar 2019 06:52:18 -0400
+Received: from mail.micron.com (bowex17f.micron.com [137.201.21.111])
+        by mailout.micron.com (8.14.4/8.14.6) with ESMTP id x2QApl2J032408;
+        Tue, 26 Mar 2019 04:51:47 -0600
+Received: from bowex36e.micron.com (137.201.85.221) by BOWEX17F.micron.com
+ (137.201.21.111) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 04:51:46 -0600
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (137.201.84.23)
+ by bowex36e.micron.com (137.201.85.221) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 26 Mar 2019 04:51:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZBKtfCahZfMK4e3jnlv9SRMsW+VKBTYTk6nYuxqKTo0=;
+ b=Bi3K81GjtVfpHef1zoBni2Wx9IQLHWB0b6ZulWa7kMl8iXMNoxQdzGMTGtd1skfI6N9jNepgFgRztaSfvkUlculp3e5vathmsImSSZldvrxImfw6zzZ2Yt6x2mzGzMnl/kVl2HeZIFAEG3cLBA6xngajxwRVPCZNk/mZQ2b2FiQ=
+Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
+ MN2PR08MB5838.namprd08.prod.outlook.com (20.179.87.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Tue, 26 Mar 2019 10:51:44 +0000
+Received: from MN2PR08MB5951.namprd08.prod.outlook.com
+ ([fe80::c561:284f:9768:a4af]) by MN2PR08MB5951.namprd08.prod.outlook.com
+ ([fe80::c561:284f:9768:a4af%7]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 10:51:44 +0000
+From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        "Marek Vasut" <marek.vasut@gmail.com>
+Subject: [PATCH 0/4] Introduce generic ONFI support
+Thread-Topic: [PATCH 0/4] Introduce generic ONFI support
+Thread-Index: AdTjvjij23wsaI7kSFiEJjPFIWIGDA==
+Date:   Tue, 26 Mar 2019 10:51:44 +0000
+Message-ID: <MN2PR08MB59510D880AD3E92A7D4C12CDB85F0@MN2PR08MB5951.namprd08.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sshivamurthy@micron.com; 
+x-originating-ip: [165.225.81.69]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b1fccd8a-185c-4b0d-03c9-08d6b1d90994
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MN2PR08MB5838;
+x-ms-traffictypediagnostic: MN2PR08MB5838:|MN2PR08MB5838:
+x-microsoft-antispam-prvs: <MN2PR08MB583853867331E96DAE997B85B85F0@MN2PR08MB5838.namprd08.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(366004)(376002)(396003)(199004)(189003)(106356001)(71200400001)(14444005)(478600001)(7696005)(71190400001)(256004)(105586002)(476003)(53936002)(25786009)(6436002)(97736004)(2501003)(9686003)(8936002)(186003)(33656002)(110136005)(81166006)(4326008)(8676002)(26005)(81156014)(102836004)(2201001)(305945005)(6506007)(2906002)(3846002)(6116002)(55016002)(5660300002)(99286004)(14454004)(486006)(86362001)(7736002)(66066001)(54906003)(74316002)(316002)(52536014)(55236004)(68736007)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5838;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: E7MINXQK2v0HF3qhd45/tSbRDoL04Jol6Hp7xBXI/xdbFC6HziKoYD1hdWecuQ4/8e6B6AbTFaQI1vxbuw09DOtggBSaY5lSIVVtFgtQ6c0LHsvKdLPwbLvpuakZXg/LLjag7K2NUDvxwLK9W+YuKQ/vDqeZF9u40uO1kqfexPUE8zRM+9qx/YSbbem61y2MTS7ZK06MfkkcBnFDcC7eV5igOuxrfHbgnLTHFSkLev1/EWDF04idrvNkbqolYJXASJgTFHpG+/CE4j6EoHDe3DAOL6w4jmm+CxBfebl9wiUpi5gcTiftzGUioljKx1wAojKhGQb6r9uyrvZ5C/iVahU3Lw5kiua9kmFzZquQ1CasTuSdEdYKEiIVqXCcMBFVq+EqwzSR3xSrIluaBjYKlzXui0HVBitr6obdP1VlK+s=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1551689518.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1551689518.git.baolin.wang@linaro.org>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 26 Mar 2019 18:41:31 +0800
-Message-ID: <CAMz4kuJitF7Q76T0Hoj1-UTAjQnepEs9aQHhy=r_Acdq+RiwGw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Add new features for the Spreadtrum serial controller
-To:     Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, lanqing.liu@unisoc.com,
-        linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1fccd8a-185c-4b0d-03c9-08d6b1d90994
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 10:51:44.4707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5838
+X-OriginatorOrg: micron.com
+X-TM-AS-Product-Ver: SMEX-12.0.0.1782-8.200.1013-24512.005
+X-TM-AS-Result: No--3.483400-0.000000-31
+X-TM-AS-MatchedID: 150215-105640-704156-702358-113289-708060-704425-702126-7
+        00038-705450-701604-700648-700016-703529-847575-148004-148007-148020-148050
+        -42000-42003-63
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-MT-CheckInternalSenderRule: True
+X-Scanned-By: MIMEDefang 2.78 on 137.201.82.98
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Current support to ONFI parameter page is only for raw NAND, this patch
+series turn ONFI support into generic. So that, other NAND devices like SPI
+NAND can use this.
 
-On Mon, 4 Mar 2019 at 16:59, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> This patch set fixes the baud rate calculation formula issue, as well as
-> adding power management support and DMA mode support for the Spreadtrum
-> serial controller.
->
-> Changes from v1:
->  - The patch 1 of V1 was applied, so remove the baud rate fix from this patch set.
->  - Add reviewed tag from Rob for patch 1.
->  - Fix the incorrect names' order in patch 3.
+Support to detect parameter page is enabled in SPI NAND core.
 
-Could you apply this patch set if no objection from you? Thanks.
+Turned Micron SPI NAND driver to use parameter page.
 
--- 
-Baolin Wang
-Best Regards
+From SPI NAND side, this patch series is tested with Micron flashes
+MT29F2G01ABXGD, MT29F4G01ABXFD, MT29F8G01ADXFD, MT29F1G01ABXFD.
+
+I created this patch series based on mtd/next + Miquel Raynal's new series =
+of
+patches, as I needed some of the changes done by him.
+
+Shivamurthy Shastri (4):
+  mtd: rawnand: Turn the ONFI support to generic
+  mtd: nand: Move ONFI code into nand/ directory
+  mtd: spinand: Enabled support to detect parameter page
+  mtd: spinand: micron: Support for new Micron SPI NAND flashes
+
+ drivers/mtd/nand/Makefile        |   2 +-
+ drivers/mtd/nand/onfi.c          | 169 +++++++++++++++++
+ drivers/mtd/nand/raw/Makefile    |   1 -
+ drivers/mtd/nand/raw/internals.h |   6 +-
+ drivers/mtd/nand/raw/nand_base.c | 236 +++++++++++++++++++++--
+ drivers/mtd/nand/raw/nand_onfi.c | 312 -------------------------------
+ drivers/mtd/nand/spi/core.c      | 113 ++++++++++-
+ drivers/mtd/nand/spi/micron.c    | 109 ++++++++---
+ include/linux/mtd/nand.h         |  30 +++
+ include/linux/mtd/rawnand.h      |   5 +
+ include/linux/mtd/spinand.h      |   5 +
+ 11 files changed, 620 insertions(+), 368 deletions(-)
+ create mode 100644 drivers/mtd/nand/onfi.c
+ delete mode 100644 drivers/mtd/nand/raw/nand_onfi.c
+
+--=20
+2.17.1
+
