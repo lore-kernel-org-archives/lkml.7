@@ -2,91 +2,89 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FBDC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A269C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 646AE20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0BF208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="n5Ofe8zL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5yUuDrO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfCZWwI (ORCPT
+        id S1732333AbfCZWx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 18:52:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42601 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfCZWwH (ORCPT
+        Tue, 26 Mar 2019 18:53:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39598 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfCZWx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 18:52:07 -0400
-Received: by mail-qt1-f193.google.com with SMTP id p20so16678187qtc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 15:52:06 -0700 (PDT)
+        Tue, 26 Mar 2019 18:53:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k3so5248913pga.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 15:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=k2K7y5i3c/bIxXtCts/FFPzx4K3yumcOwK4/9lIY7Rk=;
-        b=n5Ofe8zLAm9EvPjLhVdPsZ3yG+NXRr4zT84bTkHrv5sbGyhMdamxp8kmuZCee4HzOn
-         vJkAbTon7PDVvYe3EFK7GVlOoVTOnjLB1CViUgGTK5uuYPXOw4ZLWKTOTm0NPo7Zx3Sf
-         iyFHDIRg7FTnJ32MLxyOMtoh7uSbxAG16X3FZ3kd/muS5nMET3h4yolATvnTiHym2shp
-         y8j4LbsQp7pv7TmRMcGCPehHXc2+FTM7JwFAubRsShJIAyU1frlyf/6DG3+h1adfDJ+y
-         sr61X8iIfSJWKhqqF4WxmKwMvQD6uJSXvByvuPeB7NLgjwqjc3xGfKuBUVZMsO7kWFFT
-         ywLQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IvI0L3Y11eT0LetkIXPjNVoXo7x8LZy31wCroQGbBwY=;
+        b=F5yUuDrO9R6lsgmTPlObxDyOZMdHZ2uJIrmZUWHnHWMd5EPToTe88VH4ePxdtzWOWK
+         bLQL+Urp5ayvClio7uBhOPwneeu5fpvN7pxH8pttue6+NEYNBRT6GukF0KIQX5zBJIqw
+         YYPmxv46RryGiTsqhDtjowAUOrQFiuIiHQ3zGOPaPB1RMCLxRtnoHVgoRSRSzX0woU29
+         N9rQRBj9Svn0k3RnQvZICPKkaUf1VGcOBszWNZYQuaDrz9TmYoekzEmMnO2nJwyOsfX7
+         iUTM3RG6+i1wHY0SN8WPj6AU6pRRjAnqXyZLJhnW2uFhwTVjVntk+MhfIj2KOEzBYvFq
+         fzFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k2K7y5i3c/bIxXtCts/FFPzx4K3yumcOwK4/9lIY7Rk=;
-        b=PAZDmuzwneCHSW4ExZicuwjMvLXUfxAk7RlHVi4iZHyZc6dFIYDJ1SUICp4+zdY9l/
-         ZaiHhjFQh1Seppn2JY9IBprFarwqQykOuOSo4n26mAK5sqMOZclBhMGnrViyvmDfbEp9
-         GqbgVpx8HXIuGfT4wn7pYqugJjp6lK47ESqejbC5orSMTxKCmyaBhFzhBiCXZIBHhWd3
-         DREfZ/71QZg7m4uNGdkp/YkoQ6tqkMZv852UNAsh9ge+iOQuZTtzSmazzzLEarXUgWzj
-         iT78jDBD7BTqM4HZgrXuShbI16pL9HjeguQpevcByUdyta4/qJdIzYa2H1fiGNv58s57
-         8cIA==
-X-Gm-Message-State: APjAAAVVG3hrS48Q4+0IAwrYvmEsWTxYdZAydtMP8jIxypGBmeJKHhGm
-        c1tVisIW/i3Wmuh7eYengv/YTFiTYsY=
-X-Google-Smtp-Source: APXvYqyACKSYRBpxrbdIiKwu+la2okmi8IV5CX3I+DKq1kFHmH4WfTErGqK9QvxozjxIFy+SFYyQww==
-X-Received: by 2002:ac8:17ee:: with SMTP id r43mr27012056qtk.169.1553640726411;
-        Tue, 26 Mar 2019 15:52:06 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p64sm12128427qkc.62.2019.03.26.15.52.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 15:52:05 -0700 (PDT)
-Subject: Re: [PATCH v3] kmemleaak: survive in a low-memory situation
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, cl@linux.com,
-        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20190326154338.20594-1-cai@lca.pw>
- <20190326160617.GG33308@arrakis.emea.arm.com>
-From:   Qian Cai <cai@lca.pw>
-Message-ID: <2193546d-e525-b8d0-a643-53fea7391c86@lca.pw>
-Date:   Tue, 26 Mar 2019 18:52:04 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.3.3
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IvI0L3Y11eT0LetkIXPjNVoXo7x8LZy31wCroQGbBwY=;
+        b=ulRyY5Cl/W22WHcu2XbqVK5FGwIq4UFWna+RaxpbTbIveTv6rjvLdOGXB/22/L3WAs
+         RsiDuS8ykXEzdIsNyzWhE3fnuRjIkUTKzalCC/5UZ20x31t1QV9MtiawDMRis1NvZZ8z
+         ROn0yAsyiH+Z8y9Yo5ddIEMfO9MFtB7KpMpargRi9DaOnRJpneHu4V33KhlZmkXEet80
+         jYRlKEZk5vtszVWfvtZP2UEXhevbdJY2YGRCCOX5u1KQxsZgxtYRWqtR+twLSa0eefoP
+         k3dVWw6/J8nPP2/yhDfTvdoxIEMs4eylTPdYe+uxAAMz8zj57jVNbOmP+InL1HqjjnXC
+         o4EQ==
+X-Gm-Message-State: APjAAAUzomPtVyHcfWSt0qFHEQxDtewqQOfqSOs/BY6F9cutbGQulK/a
+        lUL7JlkZo5PmqUT7YqXzo0k=
+X-Google-Smtp-Source: APXvYqxLaZY4Vdrd4gJh3m1BMmbbu/YLnn3PtHtgSGpgNvz+0LnCKe1gaKKYfeCUvvHTFQ4wjTJKKQ==
+X-Received: by 2002:a63:c54a:: with SMTP id g10mr9442469pgd.71.1553640807238;
+        Tue, 26 Mar 2019 15:53:27 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id z77sm38303944pfi.155.2019.03.26.15.53.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 15:53:26 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 15:53:22 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     hch@lst.de, robin.murphy@arm.com
+Cc:     vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
+        will.deacon@arm.com, joro@8bytes.org, m.szyprowski@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, tony@atomide.com
+Subject: Re: [PATCH RFC/RFT 2/5] dma-remap: Run alloc_pages() on failure
+Message-ID: <20190326225321.GA6796@Asurada-Nvidia>
+References: <20190326224959.9656-1-nicoleotsuka@gmail.com>
+ <20190326224959.9656-3-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190326160617.GG33308@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326224959.9656-3-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 12:06 PM, Catalin Marinas wrote:
-> I wonder whether we'd be better off to replace the metadata allocator
-> with gen_pool. This way we'd also get rid of early logging/replaying of
-> the memory allocations since we can populate the gen_pool early with a
-> static buffer.
+On Tue, Mar 26, 2019 at 03:49:56PM -0700, Nicolin Chen wrote:
+> @@ -116,7 +116,7 @@ int __init dma_atomic_pool_init(gfp_t gfp, pgprot_t prot)
+>  	if (dev_get_cma_area(NULL))
+>  		page = dma_alloc_from_contiguous(NULL, nr_pages,
+>  						 pool_size_order, false);
+> -	else
+> +	if (!page)
+>  		page = alloc_pages(gfp, pool_size_order);
 
-I suppose this is not going to work well, as DMA_API_DEBUG use a similar
-approach [1] but I still saw it is struggling in a low-memory situation and
-disable itself occasionally.
-
-[1] https://lkml.org/lkml/2018/12/10/383
-
+Just realized a missing change in this patch, will send v2.
+Please ignore this version.
