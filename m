@@ -2,171 +2,119 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1504FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB89C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B8520823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E13120823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:12:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="QQmlbfBs"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="H26/VzTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbfCZNLj (ORCPT
+        id S1731464AbfCZNMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:11:39 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39217 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZNLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:11:38 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p20so10219576eds.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 06:11:37 -0700 (PDT)
+        Tue, 26 Mar 2019 09:12:19 -0400
+Received: from mail-eopbgr770052.outbound.protection.outlook.com ([40.107.77.52]:64386
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726177AbfCZNMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:12:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KyICKHawodi0q5vRc842R7ZLBQGvYXISdjlGH9osZLw=;
-        b=QQmlbfBscHRulIMYmBScbnb4HHYkLGzyAzq6HkA6BkvfzqGXOdOEQ9lBmZ/Rx8ki4V
-         12uEKsYsILfGgoDVXUwKkYToADl6L1hKMCAiZcPaKagJYlA140AYaP/1mn+mn0epOuW/
-         wI2HofnUffPc4ml1rbXGV0udTFZNZDKNPJH78=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KyICKHawodi0q5vRc842R7ZLBQGvYXISdjlGH9osZLw=;
-        b=RG2B67P2fXfrVbYkw6J3piqLEGlKUL7KRd2TRLqTS+6DlF++1J4vNkS6rha4oMIVq+
-         IadG58ATyMgbzCiiUX6U/Skz1FEXb8ZXS+OUZd3fdR/S9thdvh1YrpEZCgCTNEq2D/sA
-         excnHpmlrABOw9z8lat9w9fsiUwur63UNjGQyrIycEka/vg1gDr2YFHANoZZtGT47e+8
-         0CcV19LeUu3NBox25+szFIXOP0jiYq5P/eHQTPdF9a3nzVHTyJ2oknh7hmLgDJTDmcLG
-         uLSyv3Qu/FCp2O0Qnlsyj/xEyEzb2eRTVbfc7T8SwEdI/Y8t7Arq5+juiP11fBR/Or05
-         BLkw==
-X-Gm-Message-State: APjAAAXaUSP70GHKdJmeLiBdPR2JKtWj4JDSWZWmUSeSxBncC2gq08Mo
-        3V5mK2EmFdFF2jk+Zmti66MiRw==
-X-Google-Smtp-Source: APXvYqzyWzcBh8HAhCQD5mKeOhzu6mAiSee/yF+impIUD7ynfTbvdvQFWXKv+v8NF5ME9//yj/cttA==
-X-Received: by 2002:aa7:c250:: with SMTP id y16mr16828735edo.238.1553605896843;
-        Tue, 26 Mar 2019 06:11:36 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id c7sm971311edt.70.2019.03.26.06.11.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 06:11:36 -0700 (PDT)
-Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-7-sakari.ailus@linux.intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <8c6accab-9e0c-c2d4-ce93-ea3ede60f34e@rasmusvillemoes.dk>
-Date:   Tue, 26 Mar 2019 14:11:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ d=analog.onmicrosoft.com; s=selector1-analog-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XaOlykCUB/H1G987miN8d7W13ECzjXeoMbEOrGLixa8=;
+ b=H26/VzTMyaN0UPVunA00qIZ252fkADXgFc4UfWUUbsPtdVwnuFY53HTitRrP1Sb8KqEL1tKlEyyuvVpkgZeBoYqWknonOpDVDbNI9HGGG63ReXwzB8rh0k4Z/jL+o4JmgTmKwKaxzjGEgwNUpnEAxj1WAcxpDosCZeaLDKMegAw=
+Received: from BN8PR03CA0023.namprd03.prod.outlook.com (2603:10b6:408:94::36)
+ by BN3PR03MB2258.namprd03.prod.outlook.com (2a01:111:e400:7bbf::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1730.18; Tue, 26 Mar
+ 2019 13:12:16 +0000
+Received: from BL2NAM02FT008.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::207) by BN8PR03CA0023.outlook.office365.com
+ (2603:10b6:408:94::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1750.15 via Frontend
+ Transport; Tue, 26 Mar 2019 13:12:16 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.55)
+ smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT008.mail.protection.outlook.com (10.152.76.162) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
+ via Frontend Transport; Tue, 26 Mar 2019 13:12:16 +0000
+Received: from NWD2HUBCAS8.ad.analog.com (nwd2hubcas8.ad.analog.com [10.64.69.108])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x2QDCE6p006358
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 26 Mar 2019 06:12:14 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by NWD2HUBCAS8.ad.analog.com
+ (10.64.69.108) with Microsoft SMTP Server id 14.3.408.0; Tue, 26 Mar 2019
+ 09:12:14 -0400
+Received: from localhost.localdomain ([10.44.3.40])     by zeus.spd.analog.com
+ (8.15.1/8.15.1) with ESMTP id x2QDCCCW020993;  Tue, 26 Mar 2019 09:12:13 -0400
+From:   <michael.hennerich@analog.com>
+To:     <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <robin.getz@analog.com>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: [PATCH] mfd: Kconfig: Fix typo in PMIC_ADP5520 help text
+Date:   Tue, 26 Mar 2019 14:16:58 +0100
+Message-ID: <1553606218-28391-1-git-send-email-michael.hennerich@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190326124106.27694-7-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(39860400002)(396003)(2980300002)(189003)(199004)(8936002)(16586007)(2906002)(47776003)(14444005)(51416003)(106466001)(2351001)(106002)(126002)(426003)(86152003)(2616005)(476003)(336012)(48376002)(2876002)(54906003)(36756003)(77096007)(316002)(50466002)(26005)(8676002)(4744005)(72206003)(6916009)(478600001)(86362001)(5660300002)(246002)(186003)(486006)(305945005)(4326008)(49486002)(107886003)(7636002)(356004)(50226002)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR03MB2258;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9c6e58da-fa45-4547-8efe-08d6b1ecab71
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4709054)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060);SRVR:BN3PR03MB2258;
+X-MS-TrafficTypeDiagnostic: BN3PR03MB2258:
+X-Microsoft-Antispam-PRVS: <BN3PR03MB225865F907BC2753795981A98E5F0@BN3PR03MB2258.namprd03.prod.outlook.com>
+X-Forefront-PRVS: 09888BC01D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: MNqmQHFINnAtssUd4oTSPValwwhKUa6vaBYRpCzAfVRD1LLDUU8EMziwoOmJJiVnK/GLfjYjToU7cYpu04yWePaNqH7g0FgThWB59VrHp8kURA2FZ8PllgZ0YgsAX3UV99p3GfaDR8kIvCGjoIYa2nu6uhVrN6s4w5IZ5MoRpXMFY32XXlm5UYCcdyc4vE/HbEqlKeuQ5tJ2D3fwOxDacLbiRUt/BuPpHzvXR6ciQHSvm+ENmNRRaySpbUrFWCCpuwkGv9fC59JbwH2pXzwdy/8621gbsvUuEtU5Jn0fx49lJ/4DJ7QLnMpEIROSJEjfm31v7MMAn4SCWe0xSs+YzpelVRo8gQZSb8lUvX1mEBhcrMIrssJm2EDidyradnNZyTPyCYXBv7iH7DHj4Gn3BRvWyL4o2252cT6r5B+qdYw=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2019 13:12:16.0693
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c6e58da-fa45-4547-8efe-08d6b1ecab71
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR03MB2258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 13.41, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-> 
->  
-> +static noinline_for_stack
-> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> +		    struct printf_spec spec, const char *fmt)
-> +{
-> +	const char * const modifiers = "fP";
-> +	struct printf_spec str_spec = spec;
-> +	char *buf_start = buf;
-> +	bool pass;
-> +
-> +	str_spec.field_width = -1;
-> +
-> +	if ((unsigned long)fwnode < PAGE_SIZE)
-> +		return string(buf, end, "(null)", spec);
-> +
-> +	/* simple case without anything any more format specifiers */
-> +	fmt++;
-> +	if (fmt[0] == '\0' || strcspn(fmt, modifiers) > 0)
-> +		fmt = "f";
-> +
-> +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
-> +		if (pass) {
-> +			if (buf < end)
-> +				*buf = ':';
-> +			buf++;
-> +		}
-> +
-> +		switch (*fmt) {
-> +		case 'f':	/* full_name */
-> +			buf = fwnode_gen_full_name(fwnode, buf, end);
-> +			break;
-> +		case 'P':	/* name */
-> +			buf = string(buf, end, fwnode_get_name(fwnode),
-> +				     str_spec);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
+From: Michael Hennerich <michael.hennerich@analog.com>
 
-This seems awfully complicated. Why would anyone ever pass more than one
-of 'f' and 'P'? Why not just
+No functional changes. This fixes a simple typo in the help text.
 
-switch(*fmt) {
-case 'P':
-   ...
-case 'f':
-default:
-   ...
-}
+Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+---
+ drivers/mfd/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-which avoids the loop and the strcspn. Or, drop the default: case and
-don't have logic at all for falling back to 'f' if neither is present.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 0ce2d8d..5660d48 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -82,7 +82,7 @@ config PMIC_ADP5520
+ 	bool "Analog Devices ADP5520/01 MFD PMIC Core Support"
+ 	depends on I2C=y
+ 	help
+-	  Say yes here to add support for Analog Devices AD5520 and ADP5501,
++	  Say yes here to add support for Analog Devices ADP5520 and ADP5501,
+ 	  Multifunction Power Management IC. This includes
+ 	  the I2C driver and the core APIs _only_, you have to select
+ 	  individual components like LCD backlight, LEDs, GPIOs and Kepad
+-- 
+2.7.4
 
-> +	return widen_string(buf, buf - buf_start, end, spec);
-> +}
-> +
->  /*
->   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
->   * by an extra set of alphanumeric characters that are extended format
-> @@ -1936,6 +1978,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
->   *                  F device node flags
->   *                  c major compatible string
->   *                  C full compatible string
-> + * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
-> + *		Without an option prints the full name of the node
-> + *		f full name
-> + *		P node name, including a possible unit address
->   * - 'x' For printing the address. Equivalent to "%lx".
->   *
->   * ** When making changes please also update:
-> @@ -2060,6 +2106,16 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->  			return device_node_string(buf, end, ptr, spec, fmt + 1);
->  		}
->  		break;
-> +	case 'f':
-> +		switch (fmt[1]) {
-> +		case 'w':
-> +			return fwnode_string(buf, end, ptr, spec, fmt + 1);
-
-Why not pass fmt+2; we know that fmt+1 points at a 'w'. Just to avoid
-doing the fmt++ inside fwnode_string().
-
-Rasmus
