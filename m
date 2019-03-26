@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C0FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A84C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE6820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D9020863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582236;
-	bh=8VNO9OKovcrLuQT8lZ5GcTbzpS/B6LkpQqNh1ftFtNA=;
+	s=default; t=1553582240;
+	bh=vqUKB/qBfQ34iruK18jYm1DkW+RcVP3891PCWS46gpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6/JxFfYuPeCg4KxeK6/HfKWRJcgrf7ZhUmYg64Ckd1f+0y0Ye8v96is1Vil2KaUV
-	 zEye3l7tywtPrP62CPu1xugee3pekFWpr/0ZW2Y0ZH6prwyMIk5PnPmoA2QJwNUGnZ
-	 8D0dA5zlRfw9oWSodKiNLik8AcGUADGIkaFgLkHM=
+	b=Bh4d1yTIyj3kvBFW57wMjyiqgMwk3ytrDHuhIt8Jy5FueCao3xqYElsnuXloXQh/M
+	 0jkZGt8A0GdxZTK4Nl2EMOaiXQbcc0EiiwqGTu8dgq8956i68oKXIFhxA2QnE8svLD
+	 Oj3q3atv1xnagVEhWCbcbnnuzfXLuZx5Y5QXQNVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732345AbfCZGhO (ORCPT
+        id S1732355AbfCZGhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731052AbfCZGhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:13 -0400
+        id S1731632AbfCZGhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:17 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE5EF2075E;
-        Tue, 26 Mar 2019 06:37:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D356F2075E;
+        Tue, 26 Mar 2019 06:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582232;
-        bh=8VNO9OKovcrLuQT8lZ5GcTbzpS/B6LkpQqNh1ftFtNA=;
+        s=default; t=1553582236;
+        bh=vqUKB/qBfQ34iruK18jYm1DkW+RcVP3891PCWS46gpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JTpbWKj6dt2cmyuRXNun1j4dLRPkrCIjxsn0yyWX5GoZsM2HmUnxUJE5Q9qoabuhB
-         1kqE3VfQekMC8r8GQ2C3DSrOpH+o24HV05ES08w+LLv8gmlait3y7+sABa3lOu9dap
-         C0dpwWu5CbksbvEyArBN3Y+iHXHPQZiRR5E4p2Pg=
+        b=HiXsOUBRXrbOi+OhL/bHtFNvmC+kobNfCj2z8LMudc93wQnXYyPNRysfnGHKgIMb4
+         8RHJLz2pcBLMKtOADI/CHEcKWH0zLTqyYUch0rhzSFnCYEcg/d2W7xTTjhIg6ZLgjp
+         n/vhh0DcwoDHDrqNnYaC/Jd30oCNlMtckzQHOcpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 4.19 21/45] irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
-Date:   Tue, 26 Mar 2019 15:30:04 +0900
-Message-Id: <20190326042703.807916087@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Paulo Alcantara <palcantara@suse.de>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 22/45] SMB3: Fix SMB3.1.1 guest mounts to Samba
+Date:   Tue, 26 Mar 2019 15:30:05 +0900
+Message-Id: <20190326042703.852771279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -65,36 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Steve French <stfrench@microsoft.com>
 
-commit 89dc891792c2e046b030f87600109c22209da32e upstream.
+commit 8c11a607d1d9cd6e7f01fd6b03923597fb0ef95a upstream.
 
-The lpi_range_list is supposed to be sorted in ascending order of
-->base_id (at least if the range merging is to work), but the current
-comparison function returns a positive value if rb->base_id >
-ra->base_id, which means that list_sort() will put A after B in that
-case - and vice versa, of course.
+Workaround problem with Samba responses to SMB3.1.1
+null user (guest) mounts.  The server doesn't set the
+expected flag in the session setup response so we have
+to do a similar check to what is done in smb3_validate_negotiate
+where we also check if the user is a null user (but not sec=krb5
+since username might not be passed in on mount for Kerberos case).
 
-Fixes: 880cb3cddd16 (irqchip/gic-v3-its: Refactor LPI allocator)
-Cc: stable@vger.kernel.org (v4.19+)
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Note that the commit below tightened the conditions and forced signing
+for the SMB2-TreeConnect commands as per MS-SMB2.
+However, this should only apply to normal user sessions and not for
+cases where there is no user (even if server forgets to set the flag
+in the response) since we don't have anything useful to sign with.
+This is especially important now that the more secure SMB3.1.1 protocol
+is in the default dialect list.
+
+An earlier patch ("cifs: allow guest mounts to work for smb3.11") fixed
+the guest mounts to Windows.
+
+    Fixes: 6188f28bf608 ("Tree connect for SMB3.1.1 must be signed for non-encrypted shares")
+
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Reviewed-by: Paulo Alcantara <palcantara@suse.de>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-gic-v3-its.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1477,7 +1477,7 @@ static int lpi_range_cmp(void *priv, str
- 	ra = container_of(a, struct lpi_range, entry);
- 	rb = container_of(b, struct lpi_range, entry);
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -1503,10 +1503,13 @@ SMB2_tcon(const unsigned int xid, struct
+ 	/*
+ 	 * 3.11 tcon req must be signed if not encrypted. See MS-SMB2 3.2.4.1.1
+ 	 * unless it is guest or anonymous user. See MS-SMB2 3.2.5.3.1
++	 * (Samba servers don't always set the flag so also check if null user)
+ 	 */
+ 	if ((ses->server->dialect == SMB311_PROT_ID) &&
+ 	    !smb3_encryption_required(tcon) &&
+-	    !(ses->session_flags & (SMB2_SESSION_FLAG_IS_GUEST|SMB2_SESSION_FLAG_IS_NULL)))
++	    !(ses->session_flags &
++		    (SMB2_SESSION_FLAG_IS_GUEST|SMB2_SESSION_FLAG_IS_NULL)) &&
++	    ((ses->user_name != NULL) || (ses->sectype == Kerberos)))
+ 		req->sync_hdr.Flags |= SMB2_FLAGS_SIGNED;
  
--	return rb->base_id - ra->base_id;
-+	return ra->base_id - rb->base_id;
- }
- 
- static void merge_lpi_ranges(void)
+ 	memset(&rqst, 0, sizeof(struct smb_rqst));
 
 
