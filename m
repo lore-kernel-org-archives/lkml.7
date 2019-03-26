@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A84C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D869AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D9020863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E1720863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582240;
-	bh=vqUKB/qBfQ34iruK18jYm1DkW+RcVP3891PCWS46gpY=;
+	s=default; t=1553582243;
+	bh=ioC9M5Az5x6N3sc/gLRcRFX8RH4C2zyWVPYpiacsxKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bh4d1yTIyj3kvBFW57wMjyiqgMwk3ytrDHuhIt8Jy5FueCao3xqYElsnuXloXQh/M
-	 0jkZGt8A0GdxZTK4Nl2EMOaiXQbcc0EiiwqGTu8dgq8956i68oKXIFhxA2QnE8svLD
-	 Oj3q3atv1xnagVEhWCbcbnnuzfXLuZx5Y5QXQNVY=
+	b=Jjw8xFOCci3hzucOUv232g2GvSoBeFaG0xqEZBG2s1cSEImuFu1vdYEzKLAsodnME
+	 t56SbaR9oo82zM8GDyWiAs0LhfycPuft050z2+aBz6wQljqgaVZyy/BqzWDTbT8+yt
+	 N+L0hDKEXQkgMJwYbD7dMwYiX9E61mU15Nwyi30g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbfCZGhT (ORCPT
+        id S1732366AbfCZGhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50518 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731632AbfCZGhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:17 -0400
+        id S1731445AbfCZGhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:20 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D356F2075E;
-        Tue, 26 Mar 2019 06:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 511462075E;
+        Tue, 26 Mar 2019 06:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582236;
-        bh=vqUKB/qBfQ34iruK18jYm1DkW+RcVP3891PCWS46gpY=;
+        s=default; t=1553582239;
+        bh=ioC9M5Az5x6N3sc/gLRcRFX8RH4C2zyWVPYpiacsxKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HiXsOUBRXrbOi+OhL/bHtFNvmC+kobNfCj2z8LMudc93wQnXYyPNRysfnGHKgIMb4
-         8RHJLz2pcBLMKtOADI/CHEcKWH0zLTqyYUch0rhzSFnCYEcg/d2W7xTTjhIg6ZLgjp
-         n/vhh0DcwoDHDrqNnYaC/Jd30oCNlMtckzQHOcpM=
+        b=MHtGohARb7uDpoluvAPgGB3RekD60WRwlGr0nB2rAIOTkRBCiGrLYY+mJ20QPcWYb
+         H6YdblERZDt5SRfTtMODSwueuE7j0kyHvdnA9dmEVjaLtYrS0PDyud/jK3bX2sBFWe
+         mU18cpuqLUVi68CHTq+9fzkUG9gMYUAX2xSEmAms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Paulo Alcantara <palcantara@suse.de>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 22/45] SMB3: Fix SMB3.1.1 guest mounts to Samba
-Date:   Tue, 26 Mar 2019 15:30:05 +0900
-Message-Id: <20190326042703.852771279@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 4.19 23/45] ALSA: x86: Fix runtime PM for hdmi-lpe-audio
+Date:   Tue, 26 Mar 2019 15:30:06 +0900
+Message-Id: <20190326042703.904595084@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -65,56 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Steve French <stfrench@microsoft.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 8c11a607d1d9cd6e7f01fd6b03923597fb0ef95a upstream.
+commit 8dfb839cfe737a17def8e5f88ee13c295230364a upstream.
 
-Workaround problem with Samba responses to SMB3.1.1
-null user (guest) mounts.  The server doesn't set the
-expected flag in the session setup response so we have
-to do a similar check to what is done in smb3_validate_negotiate
-where we also check if the user is a null user (but not sec=krb5
-since username might not be passed in on mount for Kerberos case).
+Commit 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as
+"no callbacks"") broke runtime PM with lpe audio. We can no longer
+runtime suspend the GPU since the sysfs  power/control for the
+lpe-audio device no longer exists and the device is considered
+always active. We can fix this by not marking the device as
+active.
 
-Note that the commit below tightened the conditions and forced signing
-for the SMB2-TreeConnect commands as per MS-SMB2.
-However, this should only apply to normal user sessions and not for
-cases where there is no user (even if server forgets to set the flag
-in the response) since we don't have anything useful to sign with.
-This is especially important now that the more secure SMB3.1.1 protocol
-is in the default dialect list.
-
-An earlier patch ("cifs: allow guest mounts to work for smb3.11") fixed
-the guest mounts to Windows.
-
-    Fixes: 6188f28bf608 ("Tree connect for SMB3.1.1 must be signed for non-encrypted shares")
-
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Paulo Alcantara <palcantara@suse.de>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Fixes: 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as "no callbacks"")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181024154825.18185-1-ville.syrjala@linux.intel.com
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/x86/intel_hdmi_audio.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -1503,10 +1503,13 @@ SMB2_tcon(const unsigned int xid, struct
- 	/*
- 	 * 3.11 tcon req must be signed if not encrypted. See MS-SMB2 3.2.4.1.1
- 	 * unless it is guest or anonymous user. See MS-SMB2 3.2.5.3.1
-+	 * (Samba servers don't always set the flag so also check if null user)
- 	 */
- 	if ((ses->server->dialect == SMB311_PROT_ID) &&
- 	    !smb3_encryption_required(tcon) &&
--	    !(ses->session_flags & (SMB2_SESSION_FLAG_IS_GUEST|SMB2_SESSION_FLAG_IS_NULL)))
-+	    !(ses->session_flags &
-+		    (SMB2_SESSION_FLAG_IS_GUEST|SMB2_SESSION_FLAG_IS_NULL)) &&
-+	    ((ses->user_name != NULL) || (ses->sectype == Kerberos)))
- 		req->sync_hdr.Flags |= SMB2_FLAGS_SIGNED;
+--- a/sound/x86/intel_hdmi_audio.c
++++ b/sound/x86/intel_hdmi_audio.c
+@@ -1900,7 +1900,6 @@ static int hdmi_lpe_audio_probe(struct p
  
- 	memset(&rqst, 0, sizeof(struct smb_rqst));
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_mark_last_busy(&pdev->dev);
+-	pm_runtime_set_active(&pdev->dev);
+ 
+ 	dev_dbg(&pdev->dev, "%s: handle pending notification\n", __func__);
+ 	for_each_port(card_ctx, port) {
 
 
