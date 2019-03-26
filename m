@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB320C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD37FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC5920866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59972084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XKxuTIw9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYJW/xs+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732629AbfCZS2L (ORCPT
+        id S1732646AbfCZS2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:28:11 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:41719 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732610AbfCZS2J (ORCPT
+        Tue, 26 Mar 2019 14:28:13 -0400
+Received: from mail-ot1-f73.google.com ([209.85.210.73]:51787 "EHLO
+        mail-ot1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732622AbfCZS2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:28:09 -0400
-Received: by mail-vk1-f202.google.com with SMTP id g9so5836366vke.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:28:08 -0700 (PDT)
+        Tue, 26 Mar 2019 14:28:11 -0400
+Received: by mail-ot1-f73.google.com with SMTP id y19so8831000otk.18
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ZxYq8cG2sFhGgbw0k3aUDfwIzpbQidarvZYq7w9bkW0=;
-        b=XKxuTIw96/3+PO2e8Ya9M0C6H/BRKjbA7yCgb6ScDY71OKQu5O1qKynqYWdRZD1PkT
-         6X/9B1zYux3mu1aFjig8XS7q3DMLwHqMmXUvoGtAgZTiVqAXOPlB39jvB0b2LcsukNoL
-         pPWqayoIdW9Nge+E83siRCq3NRELl3ui1CHNEgvGTxCphitA1+OlZJQrBFj2IxpBsuI7
-         OqL6q+lDn6kFhRlnMVUGjoMx6N8teAVHCUvVXD+VM8jpkzW3SOP0RUjD2LSxBoRDE4M5
-         OP99Uwtyx2pNjnZ+DqkkO4GZpT9A9MLxfN2L8AWVWnyv+Fsq/32fW8wpw4Kzu4Khwxel
-         8K+w==
+        bh=DR3rBb2V8Dk77n+84nIF0+Znm0UqE9/8zaxdQ5CO2lo=;
+        b=qYJW/xs+nLDcVGGTYVEVD05T/qerxpSxu5bGyCDyqRIN2PQcO/8rizPMkEG5e9Q/K0
+         SFoDzqGhV+38csuM69grnxhhFT4BiwC+wwvUHZrsP2a+ElcfMDnOkJdguaVu2IjpjD0s
+         4wPlkPUTr2mESbl6ovuAdSF4bYbUZGmG7/erzjPE1iAdak1g83oCJZUEO6DVBhoUeB9z
+         cw9AEgwlYCfHOS4TfzcHpZ+K9aDyCNS0FK2N4LaxlfjnZiVI0S8KvIXG+PGcu3zB6ILk
+         JFIPhAeLRMIB8hYAG10DKu4KsQCQcgb5ie1C+bK/xLY0vr2tSMWjeAQxgrNQBlYjpf4B
+         HH6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ZxYq8cG2sFhGgbw0k3aUDfwIzpbQidarvZYq7w9bkW0=;
-        b=QB3FE3Q1NkmRyNl8I01q4Ka3T1dAGgoad8JMFjR64hf3b2bObonLKMb/Mdu8Q9E7R+
-         OfJ0chCfJZetHuX7YD5BS0yw2Kk/V3hwXQeWanikOX2oHTZmZzk93Z5Iiz/gJ+FS+Q76
-         +VIy58kM77g1LIUKEj6sC1Jpvkq0gXxFLLGJmtnU/TYzoeNVfo4JKJa6n0scqJw2AfNL
-         uKTSo9pNZg23Xqn8npHBd0VdRaUEnQ7+U/un7tZiJzJqDBrMRH6BEbRuCPxgIHAJE/CX
-         ox6viZ7bg4Nw7JHfdGvBxwsV286EVYkH8pjqRM7WkIxSoauk4D6vELw/u2kk2ymF7Poz
-         LzWA==
-X-Gm-Message-State: APjAAAVepL+DkG7NoJK/S+Lh+l5bdaigOepEvI3DrprXtJyxFM3sH9nX
-        VDl5C4Zy5at8Kx7ayoVPbvhFQ+pgEkx6aEpLdiEffA==
-X-Google-Smtp-Source: APXvYqxlissl0NjOJ+77xdIz+6/F0YGZJeXa8wrNGBsNkoGBnW975xjqFKfU2vra4AZjmcWWJ9+pVUMa08cHnkbiVaF4kQ==
-X-Received: by 2002:a67:f3c3:: with SMTP id j3mr10831580vsn.206.1553624888095;
- Tue, 26 Mar 2019 11:28:08 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 11:27:21 -0700
+        bh=DR3rBb2V8Dk77n+84nIF0+Znm0UqE9/8zaxdQ5CO2lo=;
+        b=NWbfX1BQW5HDEEkgWJSkeGHyr9FyfUrMWvUssfPebIyjVq1arlESd20HNEUCsaFdtK
+         o8Ui2K2Ho/e5jYrs+YUvDJO7vUfZQoOTye/2ozuCxFg5z2UmAmqI1pZ8FI/l0vcEvYun
+         FlG7bA2ImVsW8KDWBDf8c4vIBvQrisRafzziH4LSS1KxIEfy1ymbIgTApDGekT81U3VA
+         U7IEzfpeoaoz8rHDX3OMFHPpUiKOQ/J/d6XstUMWCP5TmG86xotGdnsg6g1u4W0zbdX4
+         Azz/oTS83YL+HJ3PCrXytOxovDuhBGDvcT5OC5MaiZjkZtNS+kcC6/UDGWAu8udsWnxF
+         jXwQ==
+X-Gm-Message-State: APjAAAU0z5DBYwS5p8ZUGYKkMq5UakBMM4Twdi2V8gNn1e5IJ0FKJzZJ
+        oF4q4p4E77pOSWigEpFbA0Paf1sNGqfjv2zmRQacLQ==
+X-Google-Smtp-Source: APXvYqw4gd1ZERpUGHBC5v8fMRulSwVLUw0V07pXZdOQJYCMHhe2tsQoihJIKx5WNOGpIu0Wee6WW9kbDcKmvL2X64t7og==
+X-Received: by 2002:a9d:76cb:: with SMTP id p11mr8330720otl.248.1553624890542;
+ Tue, 26 Mar 2019 11:28:10 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:27:22 -0700
 In-Reply-To: <20190326182742.16950-1-matthewgarrett@google.com>
-Message-Id: <20190326182742.16950-6-matthewgarrett@google.com>
+Message-Id: <20190326182742.16950-7-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190326182742.16950-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH V31 05/25] Copy secure_boot flag in boot params across kexec reboot
+Subject: [PATCH V31 06/25] kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG
+ and KEXEC_SIG_FORCE
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, dhowells@redhat.com,
         linux-api@vger.kernel.org, luto@kernel.org,
-        Dave Young <dyoung@redhat.com>,
+        Jiri Bohac <jbohac@suse.cz>,
         Matthew Garrett <mjg59@google.com>, kexec@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,39 +73,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Jiri Bohac <jbohac@suse.cz>
 
-Kexec reboot in case secure boot being enabled does not keep the secure
-boot mode in new kernel, so later one can load unsigned kernel via legacy
-kexec_load.  In this state, the system is missing the protections provided
-by secure boot.
+This is a preparatory patch for kexec_file_load() lockdown.  A locked down
+kernel needs to prevent unsigned kernel images from being loaded with
+kexec_file_load().  Currently, the only way to force the signature
+verification is compiling with KEXEC_VERIFY_SIG.  This prevents loading
+usigned images even when the kernel is not locked down at runtime.
 
-Adding a patch to fix this by retain the secure_boot flag in original
-kernel.
+This patch splits KEXEC_VERIFY_SIG into KEXEC_SIG and KEXEC_SIG_FORCE.
+Analogous to the MODULE_SIG and MODULE_SIG_FORCE for modules, KEXEC_SIG
+turns on the signature verification but allows unsigned images to be
+loaded.  KEXEC_SIG_FORCE disallows images without a valid signature.
 
-secure_boot flag in boot_params is set in EFI stub, but kexec bypasses the
-stub.  Fixing this issue by copying secure_boot flag across kexec reboot.
+[Modified by David Howells such that:
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
+ (1) verify_pefile_signature() differentiates between no-signature and
+     sig-didn't-match in its returned errors.
+
+ (2) kexec fails with EKEYREJECTED and logs an appropriate message if
+     signature checking is enforced and an signature is not found, uses
+     unsupported crypto or has no matching key.
+
+ (3) kexec fails with EKEYREJECTED if there is a signature for which we
+     have a key, but signature doesn't match - even if in non-forcing mode.
+
+ (4) kexec fails with EBADMSG or some other error if there is a signature
+     which cannot be parsed - even if in non-forcing mode.
+
+ (5) kexec fails with ELIBBAD if the PE file cannot be parsed to extract
+     the signature - even if in non-forcing mode.
+
+]
+
+Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
+Reviewed-by: Jiri Bohac <jbohac@suse.cz>
 cc: kexec@lists.infradead.org
 ---
- arch/x86/kernel/kexec-bzimage64.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/Kconfig                       | 20 ++++++++---
+ crypto/asymmetric_keys/verify_pefile.c |  4 ++-
+ include/linux/kexec.h                  |  4 +--
+ kernel/kexec_file.c                    | 48 ++++++++++++++++++++++----
+ 4 files changed, 61 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 278cd07228dd..d49554b948fd 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -179,6 +179,7 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	if (efi_enabled(EFI_OLD_MEMMAP))
- 		return 0;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4b4a7f32b68e..735d04a4b18f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2016,20 +2016,30 @@ config KEXEC_FILE
+ config ARCH_HAS_KEXEC_PURGATORY
+ 	def_bool KEXEC_FILE
  
-+	params->secure_boot = boot_params.secure_boot;
- 	ei->efi_loader_signature = current_ei->efi_loader_signature;
- 	ei->efi_systab = current_ei->efi_systab;
- 	ei->efi_systab_hi = current_ei->efi_systab_hi;
+-config KEXEC_VERIFY_SIG
++config KEXEC_SIG
+ 	bool "Verify kernel signature during kexec_file_load() syscall"
+ 	depends on KEXEC_FILE
+ 	---help---
+-	  This option makes kernel signature verification mandatory for
+-	  the kexec_file_load() syscall.
+ 
+-	  In addition to that option, you need to enable signature
++	  This option makes the kexec_file_load() syscall check for a valid
++	  signature of the kernel image.  The image can still be loaded without
++	  a valid signature unless you also enable KEXEC_SIG_FORCE, though if
++	  there's a signature that we can check, then it must be valid.
++
++	  In addition to this option, you need to enable signature
+ 	  verification for the corresponding kernel image type being
+ 	  loaded in order for this to work.
+ 
++config KEXEC_SIG_FORCE
++	bool "Require a valid signature in kexec_file_load() syscall"
++	depends on KEXEC_SIG
++	---help---
++	  This option makes kernel signature verification mandatory for
++	  the kexec_file_load() syscall.
++
+ config KEXEC_BZIMAGE_VERIFY_SIG
+ 	bool "Enable bzImage signature verification support"
+-	depends on KEXEC_VERIFY_SIG
++	depends on KEXEC_SIG
+ 	depends on SIGNED_PE_FILE_VERIFICATION
+ 	select SYSTEM_TRUSTED_KEYRING
+ 	---help---
+diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
+index d178650fd524..4473cea1e877 100644
+--- a/crypto/asymmetric_keys/verify_pefile.c
++++ b/crypto/asymmetric_keys/verify_pefile.c
+@@ -100,7 +100,7 @@ static int pefile_parse_binary(const void *pebuf, unsigned int pelen,
+ 
+ 	if (!ddir->certs.virtual_address || !ddir->certs.size) {
+ 		pr_debug("Unsigned PE binary\n");
+-		return -EKEYREJECTED;
++		return -ENODATA;
+ 	}
+ 
+ 	chkaddr(ctx->header_size, ddir->certs.virtual_address,
+@@ -408,6 +408,8 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
+  *  (*) 0 if at least one signature chain intersects with the keys in the trust
+  *	keyring, or:
+  *
++ *  (*) -ENODATA if there is no signature present.
++ *
+  *  (*) -ENOPKG if a suitable crypto module couldn't be found for a check on a
+  *	chain.
+  *
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index b9b1bc5f9669..58b27c7bdc2b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -125,7 +125,7 @@ typedef void *(kexec_load_t)(struct kimage *image, char *kernel_buf,
+ 			     unsigned long cmdline_len);
+ typedef int (kexec_cleanup_t)(void *loader_data);
+ 
+-#ifdef CONFIG_KEXEC_VERIFY_SIG
++#ifdef CONFIG_KEXEC_SIG
+ typedef int (kexec_verify_sig_t)(const char *kernel_buf,
+ 				 unsigned long kernel_len);
+ #endif
+@@ -134,7 +134,7 @@ struct kexec_file_ops {
+ 	kexec_probe_t *probe;
+ 	kexec_load_t *load;
+ 	kexec_cleanup_t *cleanup;
+-#ifdef CONFIG_KEXEC_VERIFY_SIG
++#ifdef CONFIG_KEXEC_SIG
+ 	kexec_verify_sig_t *verify_sig;
+ #endif
+ };
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f1d0e00a3971..67f3a866eabe 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -90,7 +90,7 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
+-#ifdef CONFIG_KEXEC_VERIFY_SIG
++#ifdef CONFIG_KEXEC_SIG
+ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+ 					  unsigned long buf_len)
+ {
+@@ -188,7 +188,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			     const char __user *cmdline_ptr,
+ 			     unsigned long cmdline_len, unsigned flags)
+ {
+-	int ret = 0;
++	const char *reason;
++	int ret;
+ 	void *ldata;
+ 	loff_t size;
+ 
+@@ -207,15 +208,48 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	if (ret)
+ 		goto out;
+ 
+-#ifdef CONFIG_KEXEC_VERIFY_SIG
++#ifdef CONFIG_KEXEC_SIG
+ 	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+ 					   image->kernel_buf_len);
+-	if (ret) {
+-		pr_debug("kernel signature verification failed.\n");
++#else
++	ret = -ENODATA;
++#endif
++
++	switch (ret) {
++	case 0:
++		break;
++
++		/* Certain verification errors are non-fatal if we're not
++		 * checking errors, provided we aren't mandating that there
++		 * must be a valid signature.
++		 */
++	case -ENODATA:
++		reason = "kexec of unsigned image";
++		goto decide;
++	case -ENOPKG:
++		reason = "kexec of image with unsupported crypto";
++		goto decide;
++	case -ENOKEY:
++		reason = "kexec of image with unavailable key";
++	decide:
++		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
++			pr_notice("%s rejected\n", reason);
++			ret = -EKEYREJECTED;
++			goto out;
++		}
++
++		ret = 0;
++		break;
++
++		/* All other errors are fatal, including nomem, unparseable
++		 * signatures and signature check failures - even if signatures
++		 * aren't required.
++		 */
++	default:
++		pr_notice("kernel signature verification failed (%d).\n", ret);
+ 		goto out;
+ 	}
+-	pr_debug("kernel signature verification successful.\n");
+-#endif
++
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
 -- 
 2.21.0.392.gf8f6787159e-goog
 
