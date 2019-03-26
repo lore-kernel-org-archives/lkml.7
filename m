@@ -2,77 +2,74 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B05C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C302075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553600592;
-	bh=OaNI0ikA1J+EwZiVYXYESqhoujisliDMJcjHMJuqvwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=it9yWxJL4KDfbs6w+/DhYEKNYGhnKRSgg+PFlZYX2MMMUUfWDehRLNIVxQYBQa7HM
-	 97eJFi+eaLUWEaPenkoUNzFi7CwpxzW9OP8OBqmOqLRACET1UagbNYkYvEWbS9azUP
-	 4GRmrayDUlzH1awhWHtzwHxT8DAbi8V5mOPkqzU0=
+	by mail.kernel.org (Postfix) with ESMTP id 046182075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GOz8h2r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbfCZLnK (ORCPT
+        id S1730996AbfCZLoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:43:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZLnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:43:10 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30D9D2075D;
-        Tue, 26 Mar 2019 11:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553600589;
-        bh=OaNI0ikA1J+EwZiVYXYESqhoujisliDMJcjHMJuqvwM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TB7kaEVw8AM1ZZcEN63vpFBqBxUR4EWBXOtA2U81yAzApteOMfH69x9iIUvtm6bRf
-         6N76r+QRoBCTjy2NrxRu+EGNRFUKtZojT+2YATUpDIli7ne8TInGS1K5CH3G6PDBwH
-         uzSuiSUYJJ99rFYxICgD2j0DoIIBauXYmPEQOg2k=
-Received: by mail-lf1-f41.google.com with SMTP id 5so8402930lft.12;
-        Tue, 26 Mar 2019 04:43:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAWNtuByfhl0Ipi5tj6R0FOdnC/B/gDHeE0prTCgAhQCp/62/3hp
-        PIiS0+nSKUzSFHGbyM0djaypRaRCqNmYwo2lVVw=
-X-Google-Smtp-Source: APXvYqziMSAigdZzfcA+l2oncpJMa4hhcxL9Yyk7kMr30kKr/FEcQZwuhxAb52GBov/9YVBDfQ9Bcfly/DWHGLoidG8=
-X-Received: by 2002:ac2:4154:: with SMTP id c20mr14857209lfi.74.1553600587538;
- Tue, 26 Mar 2019 04:43:07 -0700 (PDT)
+        Tue, 26 Mar 2019 07:44:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48222 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfCZLoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:44:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aAAXvmmTpqe3PtKH32pMXKJgd7/JMwI32R5uwR173Us=; b=GOz8h2r7e1vwNGCBOWxSWQbu4
+        8fdYTyqMl51xZ3W8YhfGeKl/UVtqGgk2ASuGxrwHuwneOJA75P2lw+vim6JCPSc9U+jRFpDtD7Pdl
+        s5ppQKd/lFiKG9sPY2/I+HHUHQ0Mh0LxI7V9wHj77oq1GZCdhMQJomdGKLRMF38SWwQgQc1jTyl0l
+        5y3BAxKmxUuFy2XK9g74vhMi06RkmAV6iKBh/RnFi0pgZ6Tt43WVFcFMTO9qDvPD78H0KCHWPFTRh
+        CAn994OiEly0QewZtj2KYnPynOlF3yKN277iTJT4zt9wSnBvVK1JnyvAowlYyc3cyFgXSuEYeShZv
+        UwquBy94Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h8kUo-000758-VV; Tue, 26 Mar 2019 11:43:58 +0000
+Date:   Tue, 26 Mar 2019 04:43:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mhocko@suse.com, rppt@linux.ibm.com,
+        osalvador@suse.de, william.kucharski@oracle.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 4/4] drivers/base/memory.c: Rename the misleading
+ parameter
+Message-ID: <20190326114358.GM10344@bombadil.infradead.org>
+References: <20190326090227.3059-1-bhe@redhat.com>
+ <20190326090227.3059-5-bhe@redhat.com>
 MIME-Version: 1.0
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com> <20190325212751.27532-1-joe@perches.com>
-In-Reply-To: <20190325212751.27532-1-joe@perches.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 26 Mar 2019 12:42:56 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPcyOVLboJHZyEcUx_9HNh+iVq=7OFQN4=qnfL+O4Ld_4g@mail.gmail.com>
-Message-ID: <CAJKOXPcyOVLboJHZyEcUx_9HNh+iVq=7OFQN4=qnfL+O4Ld_4g@mail.gmail.com>
-Subject: Re: Bad file pattern in MAINTAINERS section 'SAMSUNG EXYNOS TRUE
- RANDOM NUMBER GENERATOR (TRNG) DRIVER'
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326090227.3059-5-bhe@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 at 22:29, Joe Perches <joe@perches.com> wrote:
->
-> A file pattern line in this section of the MAINTAINERS file in linux-next
-> does not have a match in the linux source files.
+On Tue, Mar 26, 2019 at 05:02:27PM +0800, Baoquan He wrote:
+> The input parameter 'phys_index' of memory_block_action() is actually
+> the section number, but not the phys_index of memory_block. Fix it.
 
-Thanks for reminder, the patch adding file is pending.
+>  static int
+> -memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
+> +memory_block_action(unsigned long sec, unsigned long action, int online_type)
 
-Best regards,
-Krzysztof
+'sec' is a bad abbreviation for 'section'.  We don't use it anyhere else
+in the vm.
+
+Looking through include/, I see it used as an abbreviation for second,
+security, ELF section, and section of a book.  Nowhere as a memory
+block section.  Please use an extra four letters for this parameter.
