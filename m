@@ -2,196 +2,384 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6222EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F153BC10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FED420828
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:51:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sXoGtaPO"
+	by mail.kernel.org (Postfix) with ESMTP id B549820828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfCZHvq (ORCPT
+        id S1731148AbfCZHxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:51:46 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37137 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730569AbfCZHvq (ORCPT
+        Tue, 26 Mar 2019 03:53:14 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49530 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730422AbfCZHxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:51:46 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v13so10216004ljk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B01lGyfJBsAdGUtQGWQpzVe+7/KX45Rc7+rWFjohi0o=;
-        b=sXoGtaPOpaD9D53XCcm8wcxwm1LFUwVg4IMAN/WVKJTQIo7hZQl+sni7ILF/4GAymN
-         q3xDP9Z6bdPumfRWIn2V0nNtgeKeaYKCHaBpQMxvMgWhPDGJ9M96czwD6jwRGe6EJLW/
-         UUtzAEoWBrXxKG2PVZCngkFkdxy64+T5xyVoWPeYcy/KQ+PuRlDRRaEKaP0SIo+cO3Yh
-         /+M8e/XRxZ49UbnLV+3fNDzx0ZgjjP4hSduPYRu1q9RnU9GmaWC8yYbEzideiPNt18wq
-         WojzOTSpa0a4r4uMxEK3L6k0zaZFvFMcR1SYAi7nadIty4Y3kK1fNGK7Fombn6B/70lu
-         K7KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B01lGyfJBsAdGUtQGWQpzVe+7/KX45Rc7+rWFjohi0o=;
-        b=YkH1Y8LGPTn9Wt3pGnxGtIgLpjQGKJWNma78xFumuUTRVP/AblrdRgK5B+b9618vaU
-         SttMLmfZvK+8OAMywSp9HpZPDY8zD/SF0vy3E4fobXyFcbvLgwHreASzuJMRoVDDAJ/2
-         w0oNupeU9psqSXYTyulM6mC1UzDL/umdV8UI8eIgaeSbQTMvgRQoQcJ9IPafZ2xIurrc
-         agm4cLIjnO9Ogn2oyqjHWzFdVAAkbP0G69QFiIbH3N20EzVDr+W656GSx0Bhu88SlHj3
-         V3ZpWZmu+lIVaO0302bajgANx66ONpLCNjJs84rQ0UFw5RrALFkPMaF4b/52wJ7rCg8D
-         2r4g==
-X-Gm-Message-State: APjAAAX/34lZN/0somP6mr1a3LfJ22MrFN+hR4LdC9STWOqeQJ4uBOuY
-        8ZQk62ZQZX6rNbkS4/BEDhmSHQ==
-X-Google-Smtp-Source: APXvYqzuG4lVrmC5DK2tFNK2dsX3zJVU4wg/Glb6yaxJZ8YcwCwtuYUbE+8Dza7NdgZrZWBXw7g8Sg==
-X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr13584393lja.49.1553586702905;
-        Tue, 26 Mar 2019 00:51:42 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.243])
-        by smtp.gmail.com with ESMTPSA id k19sm3727508lje.7.2019.03.26.00.51.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 00:51:42 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 3/5] mtd: Add support for Hyperbus memory devices
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tudor.ambarus@microchip.com,
-        nsekhar@ti.com, Mason Yang <masonccyang@mxic.com.tw>
-References: <20190321174548.9288-1-vigneshr@ti.com>
- <20190321174548.9288-4-vigneshr@ti.com>
- <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
-Message-ID: <02dfcf5d-f7f8-f33a-22b2-462ea92b0702@cogentembedded.com>
-Date:   Tue, 26 Mar 2019 10:51:23 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 03:53:13 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2A1DD3C00DD;
+        Tue, 26 Mar 2019 08:53:09 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qlnHBbYKqpuL; Tue, 26 Mar 2019 08:53:02 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 915D83C00C4;
+        Tue, 26 Mar 2019 08:53:02 +0100 (CET)
+Received: from vmlxhi-087.adit-jv.com (10.72.93.172) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
+ 2019 08:53:02 +0100
+From:   <twischer@de.adit-jv.com>
+To:     <patch@alsa-project.org>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: [PATCH 10/10] ALSA: aloop: Use timer of linked card if chosen
+Date:   Tue, 26 Mar 2019 08:52:55 +0100
+Message-ID: <1553586775-18902-1-git-send-email-twischer@de.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
 MIME-Version: 1.0
-In-Reply-To: <98e1e3ad-75d3-670f-bcf7-27389cc60a98@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.72.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.03.2019 23:13, Sergei Shtylyov wrote:
+From: Timo Wischer <twischer@de.adit-jv.com>
 
->> Cypress' Hyperbus is Low Signal Count, High Performance Double Data Rate
-> 
->     It's HyperBus, according to the spec...
-> 
->> Bus interface between a host system master and one or more slave
->> interfaces. Hyperbus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called Hyperflash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in Hyperbus
->> specification[1].
-> 
->     HyperBus.
->> Hyperflash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->> Hyperbus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, Hyperbus memory controllers seem to abstract implementation details
-> 
->     HyperBus.
-> 
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering Hyperflash devices with MTD framework. MTD
-> 
->     HyperFlash.
-> 
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. Hyperbus
-> 
->     HyperBus.
-> 
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single Hyperflash device. Hyperflash core parses MMIO access
-> 
->     HyperFlash.
-> 
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> Hyperbus specification can be found at[1]
->> Hyperflash datasheet can be found at[2]
-> 
->    HyperBus & HyperFlash.
->   
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>      Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> [...]
->> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
->> new file mode 100644
->> index 000000000000..4c2876c367fc
->> --- /dev/null
->> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
->> @@ -0,0 +1,183 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +//
->> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->> +// Author: Vignesh Raghavendra <vigneshr@ti.com>
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mtd/hyperbus.h>
->> +#include <linux/mtd/map.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/cfi.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/types.h>
->> +
->> +#define HYPERBUS_CALIB_COUNT 25
-> 
->     As I said, this seems platform specific...
-> 
-> [...]
->> +/* Default calibration routine for use by Hyperbus controller.
-> 
->     No, there should be easy opt-out from the calibration method.
-> Currently, the driver will have to define its own calibrate method, even
-> if does't need any calibration...
+If there is a hardware sound card linked to the loopback device
+the sound timer of the hardware sound card will be used for this
+loopback device. Such a link will be created when snd_pcm_link() was
+called.
+Linked dummy and loopback devices will be ignored.
 
-    Nevermind -- the method ptr can be NULL, of course, so there's easy opt-out...
+This feature can be enabled when loading the module with the following
+command:
+$ modprobe snd_aloop enable=1 timer_source=-1
 
-[...]
+Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+---
+ sound/drivers/aloop.c | 187 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 172 insertions(+), 15 deletions(-)
 
-MBR, Sergei
+diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
+index a411aeb..e2f1d64 100644
+--- a/sound/drivers/aloop.c
++++ b/sound/drivers/aloop.c
+@@ -51,7 +51,8 @@ MODULE_LICENSE("GPL");
+ MODULE_SUPPORTED_DEVICE("{{ALSA,Loopback soundcard}}");
+ 
+ #define MAX_PCM_SUBSTREAMS	8
+-#define TIMER_SRC_JIFFIES	-1
++#define TIMER_SRC_JIFFIES	-2
++#define TIMER_SRC_AUTODETECT	-1
+ 
+ static int index[SNDRV_CARDS] = SNDRV_DEFAULT_IDX;	/* Index 0-MAX */
+ static char *id[SNDRV_CARDS] = SNDRV_DEFAULT_STR;	/* ID for this card */
+@@ -76,7 +77,7 @@ MODULE_PARM_DESC(pcm_notify, "Break capture when PCM format/rate/channels change
+  * sound timer is not supported.
+  */
+ module_param_array(timer_source, charp, NULL, 0444);
+-MODULE_PARM_DESC(timer_source, "Sound card number of timer to be used (>=0). -2 jiffies timer [default].");
++MODULE_PARM_DESC(timer_source, "Sound card number of timer to be used (>=0). -2 jiffies timer [default]. -1 auto detect sound timer.");
+ 
+ #define NO_PITCH 100000
+ 
+@@ -252,6 +253,14 @@ static int loopback_snd_timer_start(struct loopback_pcm *dpcm)
+ {
+ 	int err;
+ 
++	/* only in auto detect mode the sound timer will not be opened when the
++	 * device was opened. It will be opened on the first snd_pcm_link() call
++	 */
++	if (!dpcm->cable->snd_timer.instance) {
++		pcm_err(dpcm->substream->pcm, "Sound timer not auto detected. At least one application of the same loopback cable has to call snd_pcm_link() to detect the sound timer.");
++		return -EINVAL;
++	}
++
+ 	/* Loopback device has to use same period as timer card. Therefore
+ 	 * wake up for each snd_pcm_period_elapsed() call of timer card.
+ 	 */
+@@ -286,6 +295,10 @@ static int loopback_snd_timer_stop(struct loopback_pcm *dpcm)
+ {
+ 	int err;
+ 
++	/* no need to stop the timer if it was not yet opened */
++	if (!dpcm->cable->snd_timer.instance)
++		return 0;
++
+ 	/* only stop if both devices (playback and capture) are not running */
+ 	if (dpcm->cable->running)
+ 		return 0;
+@@ -307,10 +320,15 @@ static inline int loopback_jiffies_timer_stop_sync(struct loopback_pcm *dpcm)
+ }
+ 
+ /* call in loopback->cable_lock */
+-static int loopback_snd_timer_close_cable(struct loopback_pcm *dpcm)
++static int loopback_snd_timer_close(struct loopback_pcm *dpcm,
++				    struct snd_timer_instance * const timer)
+ {
+ 	int err;
+ 
++	/* no need to close the timer if it was not yet opened */
++	if (!timer)
++		return 0;
++
+ 	/* wait till drain tasklet has finished if requested */
+ 	tasklet_kill(&dpcm->cable->snd_timer.event_tasklet);
+ 
+@@ -319,7 +337,7 @@ static int loopback_snd_timer_close_cable(struct loopback_pcm *dpcm)
+ 	 * loopback->cable_lock is locked. Therefore no need to lock
+ 	 * cable->lock;
+ 	 */
+-	err = snd_timer_close(dpcm->cable->snd_timer.instance);
++	err = snd_timer_close(timer);
+ 	if (err < 0) {
+ 		pcm_err(dpcm->substream->pcm, "snd_timer_close(card %d) = %d",
+ 			dpcm->cable->snd_timer.id.card, err);
+@@ -329,6 +347,12 @@ static int loopback_snd_timer_close_cable(struct loopback_pcm *dpcm)
+ 	return err;
+ }
+ 
++/* call in loopback->cable_lock */
++static int loopback_snd_timer_close_cable(struct loopback_pcm *dpcm)
++{
++	return loopback_snd_timer_close(dpcm, dpcm->cable->snd_timer.instance);
++}
++
+ static int loopback_check_format(struct loopback_cable *cable, int stream)
+ {
+ 	struct snd_pcm_runtime *runtime, *cruntime;
+@@ -1065,11 +1089,11 @@ static int loopback_snd_card_by_name(const char * const name)
+ 	return -EINVAL;
+ }
+ 
+-/* call in loopback->cable_lock */
+-static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
++/* call in cable->lock */
++static int loopback_snd_timer_source_update(struct loopback_pcm *dpcm)
+ {
+-	int err = 0;
+-	unsigned long flags;
++	int changed = 0;
++	struct snd_pcm_substream *s;
+ 	struct snd_timer_id tid = {
+ 		.dev_class = SNDRV_TIMER_CLASS_PCM,
+ 		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+@@ -1078,18 +1102,109 @@ static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+ 		.device = 0,
+ 		.subdevice = 0,
+ 	};
+-	struct snd_timer_instance *timer = NULL;
+ 
+-	spin_lock_irqsave(&dpcm->cable->lock, flags);
++	/* Enforce kernel module parameter if not auto detect */
++	if (tid.card != TIMER_SRC_AUTODETECT) {
++		dpcm->cable->snd_timer.owner = dpcm->substream->stream;
++		dpcm->cable->snd_timer.id = tid;
++		return 0;
++	}
++
++	/* find the first HW device which is linked to this loop device */
++	snd_pcm_group_for_each_entry(s, dpcm->substream) {
++		/* ignore all linked devices also using jiffies timer */
++		if (strcmp(s->pcm->card->driver, "Loopback") == 0)
++			continue;
++		if (strcmp(s->pcm->card->driver, "Dummy") == 0)
++			continue;
++
++		tid.card = s->pcm->card->number;
++		tid.device = s->pcm->device;
++		tid.subdevice = s->number;
++		break;
++	}
++
++	/* check if a sound timer could already be detected */
++	if (tid.card < 0)
++		return -ENODEV;
++
++	/* check if timer source has changed */
++	changed = (dpcm->cable->snd_timer.id.card != tid.card ||
++		   dpcm->cable->snd_timer.id.device != tid.device ||
++		   dpcm->cable->snd_timer.id.subdevice != tid.subdevice);
++	/* Do not change anything if we are the second device
++	 * which calls snd_pcm_link()
++	 */
++	if (changed) {
++		if (dpcm->cable->snd_timer.owner > 0 &&
++		    dpcm->cable->snd_timer.owner != dpcm->substream->stream) {
++			pcm_warn(dpcm->substream->pcm, "Both devices of the same loopback cable are requesting different sound timers. May be the wrong one is used. (used hw:%d,%d,%d reqested hw:%d,%d,%d)",
++				 dpcm->cable->snd_timer.id.card,
++				 dpcm->cable->snd_timer.id.device,
++				 dpcm->cable->snd_timer.id.subdevice, tid.card,
++				 tid.device, tid.subdevice);
++			return 0;
++		} else if (dpcm->cable->running) {
++			pcm_warn(dpcm->substream->pcm, "Another sound timer was requested but at least one device is already running. May be the wrong one is used. (used hw:%d,%d,%d reqested hw:%d,%d,%d)",
++				 dpcm->cable->snd_timer.id.card,
++				 dpcm->cable->snd_timer.id.device,
++				 dpcm->cable->snd_timer.id.subdevice, tid.card,
++				 tid.device, tid.subdevice);
++			return 0;
++		}
++	}
++
++	/* always return a valid  timer id with defined classes. Also in case
++	 * when it looks like card has not changed because hw:0,0,0 should be
++	 * used
++	 */
+ 	dpcm->cable->snd_timer.owner = dpcm->substream->stream;
+ 	dpcm->cable->snd_timer.id = tid;
+ 
+-	/* check if timer was already opened. It is only opened once
+-	 * per playback and capture subdevice (aka cable).
++	return changed;
++}
++
++/* call in loopback->cable_lock */
++static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
++{
++	int err = 0;
++	unsigned long flags;
++	struct snd_timer_instance *timer = NULL;
++
++	spin_lock_irqsave(&dpcm->cable->lock, flags);
++	err = loopback_snd_timer_source_update(dpcm);
++	if (err < 0) {
++		/* Could not yet detect the right sound timer because no valid
++		 * snd_pcm_link() exists. This should not be handled as an error
++		 * because the right timer will be opened with the call to
++		 * snd_pcm_link().
++		 */
++		if (err == -ENODEV)
++			err = 0;
++		goto unlock;
++	}
++	/* do not reopen the timer if it is already opened and nothing has
++	 * changed
+ 	 */
+-	if (dpcm->cable->snd_timer.instance)
++	if (dpcm->cable->snd_timer.instance && err < 1)
+ 		goto unlock;
+ 
++	/* Avoids that any function accesses an invalid timer instance when
++	 * reopening the sound timer. Reopening the sound timer is only
++	 * supported in TIMER_SRC_AUTODETECT mode. snd_pcm_start() will fail on
++	 * the second device when the first device currently reopens the_timer:
++	 * [proc1] Calls snd_pcm_link() -> loopback_timer_open() ->
++	 *	   Unlock cable->lock for snd_timer_close/open() call
++	 * [proc2] Calls snd_pcm_start() when timer reopening is in progress
++	 * But this is fine because snd_pcm_start() would also fail if
++	 * snd_pcm_link() was not called from any device of the same cable in
++	 * TIMER_SRC_AUTODETECT mode. Therefore the user has to guarantee in
++	 * TIMER_SRC_AUTODETECT mode that snd_pcm_link() is called before anyone
++	 * calls snd_pcm_start() of the same cable.
++	 */
++	timer = dpcm->cable->snd_timer.instance;
++	dpcm->cable->snd_timer.instance = NULL;
++
+ 	/* snd_timer_close() and snd_timer_open() should not be called with
+ 	 * locked spinlock because both functions can block on a mutex. The
+ 	 * mutex loopback->cable_lock is kept locked. Therefore snd_timer_open()
+@@ -1103,6 +1218,10 @@ static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+ 	 *	   instance
+ 	 */
+ 	spin_unlock_irqrestore(&dpcm->cable->lock, flags);
++	/* close timer if there is already something open */
++	err = loopback_snd_timer_close(dpcm, timer);
++	if (err < 0)
++		return err;
+ 	err = snd_timer_open(&timer, dpcm->loopback->card->id,
+ 			     &dpcm->cable->snd_timer.id,
+ 			     current->pid);
+@@ -1137,6 +1256,19 @@ static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+ 	return err;
+ }
+ 
++static int loopback_snd_timer_link_changed(struct snd_pcm_substream *substream)
++{
++	int err;
++	struct loopback_pcm *dpcm = substream->runtime->private_data;
++
++	mutex_lock(&dpcm->loopback->cable_lock);
++	/* Try to reopen the timer here if the link_list has changed. */
++	err = loopback_snd_timer_open(dpcm);
++	mutex_unlock(&dpcm->loopback->cable_lock);
++
++	return err;
++}
++
+ /* stop_sync() is not required for sound timer because it does not need to be
+  * restarted in loopback_prepare() on Xrun recovery
+  */
+@@ -1148,6 +1280,13 @@ static struct loopback_ops loopback_snd_timer_ops = {
+ 	.dpcm_info = loopback_snd_timer_dpcm_info,
+ };
+ 
++static struct loopback_ops loopback_snd_timer_auto_ops = {
++	.start = loopback_snd_timer_start,
++	.stop = loopback_snd_timer_stop,
++	.close_cable = loopback_snd_timer_close_cable,
++	.dpcm_info = loopback_snd_timer_dpcm_info,
++};
++
+ static int loopback_open(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+@@ -1178,6 +1317,8 @@ static int loopback_open(struct snd_pcm_substream *substream)
+ 		cable->hw = loopback_pcm_hardware;
+ 		if (loopback->timer_source <= TIMER_SRC_JIFFIES)
+ 			cable->ops = &loopback_jiffies_timer_ops;
++		else if (loopback->timer_source == TIMER_SRC_AUTODETECT)
++			cable->ops = &loopback_snd_timer_auto_ops;
+ 		else
+ 			cable->ops = &loopback_snd_timer_ops;
+ 		loopback->cables[substream->number][dev] = cable;
+@@ -1276,18 +1417,34 @@ static const struct snd_pcm_ops loopback_pcm_ops = {
+ 	.page =		snd_pcm_lib_get_vmalloc_page,
+ };
+ 
++static const struct snd_pcm_ops loopback_pcm_auto_ops = {
++	.open =		loopback_open,
++	.close =	loopback_close,
++	.ioctl =	snd_pcm_lib_ioctl,
++	.hw_params =	loopback_hw_params,
++	.hw_free =	loopback_hw_free,
++	.prepare =	loopback_prepare,
++	.trigger =	loopback_trigger,
++	.pointer =	loopback_pointer,
++	.page =		snd_pcm_lib_get_vmalloc_page,
++	.link_changed =	loopback_snd_timer_link_changed,
++};
++
+ static int loopback_pcm_new(struct loopback *loopback,
+ 			    int device, int substreams)
+ {
+ 	struct snd_pcm *pcm;
+ 	int err;
++	const struct snd_pcm_ops * const ops =
++			(loopback->timer_source == TIMER_SRC_AUTODETECT) ?
++				&loopback_pcm_auto_ops : &loopback_pcm_ops;
+ 
+ 	err = snd_pcm_new(loopback->card, "Loopback PCM", device,
+ 			  substreams, substreams, &pcm);
+ 	if (err < 0)
+ 		return err;
+-	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK, &loopback_pcm_ops);
+-	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &loopback_pcm_ops);
++	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK, ops);
++	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, ops);
+ 
+ 	pcm->private_data = loopback;
+ 	pcm->info_flags = 0;
+-- 
+2.7.4
+
