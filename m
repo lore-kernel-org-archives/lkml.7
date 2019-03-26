@@ -2,120 +2,297 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE71C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC67CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382DB2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49EE2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="erHndOcm"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XCFK+oMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfCZAt1 (ORCPT
+        id S1731074AbfCZAtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 20:49:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41794 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbfCZAtY (ORCPT
+        Mon, 25 Mar 2019 20:49:49 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55062 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727394AbfCZAtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 20:49:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 10so7368626lfr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:49:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OFP2jZU8cYxTAE12oUDWp0lSFiuDMdFVz8HpXQukEdA=;
-        b=erHndOcm/9WDEIMAly50XEVIigCRogpN9KLIR+Nzbm/kXgpqJM/Wcr8p5b6IdZQgB9
-         oOHmjXBakMM8yUOeobBFKjBiTGkrDe9KgT6KuEihJN34ObiUnM4+F27uubFIp92Xj9tL
-         IUP43vt9WHQ/gYFvjcYFwcFiU5DHNwc9Axv4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OFP2jZU8cYxTAE12oUDWp0lSFiuDMdFVz8HpXQukEdA=;
-        b=DZp2Yf4Me0NYoNryKlhbJR0+EWMBGQTz63PdruSQ9YwFQCuX/JmL1B8YdF8OdBsUDc
-         M4+ed/R4BfQ/EKSqUnU/TmxPEZ/Gxy3K6eQ7cpfoMRxTvmjkxnREk4SK/VI1kZbzUKxa
-         uH81lKGBv6QaET9bBSCmmMSXvgWXY34U+0OgN3nGe14vtxQ8gnrKJBa3gHvxmpXIN9oP
-         ccBVnQ076mNR1magyRA+T+DQjG/sPnmf6yii1CpFQJwV5xFLqvh5joNOfovwiFItADxa
-         3Qh/yixUeRrPCUE9R48icwkLwY3Vycj1mCeCe+xeZroSqE07yu6E9ScOBBdeoP+NMYfO
-         2nTw==
-X-Gm-Message-State: APjAAAUEbEEQy4kIwYDOmk9TiW9FRMhNHeMGQzsvMZ1KFVPqL+mw7/ap
-        aNITQJKvplKB2RyLZA2cpss35QziFUs=
-X-Google-Smtp-Source: APXvYqwTij+/5/kNj83sEC4qQHRRlzDf8yqwhlfz5/kwSJKCVH+q7psRCMNl3DufB1IFNUPfaDCfYQ==
-X-Received: by 2002:a19:9101:: with SMTP id t1mr774853lfd.165.1553561361189;
-        Mon, 25 Mar 2019 17:49:21 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id m19sm3674613lfb.78.2019.03.25.17.49.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 17:49:20 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id r25so7359147lfn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:49:19 -0700 (PDT)
-X-Received: by 2002:a19:4b14:: with SMTP id y20mr13438544lfa.36.1553561359526;
- Mon, 25 Mar 2019 17:49:19 -0700 (PDT)
+        Mon, 25 Mar 2019 20:49:49 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q0gkKU004029
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:49:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=2Sx0xajWNz0nUJLb1U7ytp1MVNS4hEoEOreogsLzpps=;
+ b=XCFK+oMUPAkL7aQNOithjn0i4DXEoJSvPNePpQXlwq4JtRT+HIWZMdLxdWtyyCUC6NMA
+ elfHI3MPNY30fRzBywSnHB/gq35eZpzcDmWPVBRBdKs7KfxkBfFysbhXCO5RysZuLYbj
+ spQglRY0vW0SCU52Q7Cq5YzsJgthRiawBmE= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rf79egjy0-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:49:48 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Mon, 25 Mar 2019 17:49:18 -0700
+Received: by dev082.prn2.facebook.com (Postfix, from userid 572249)
+        id D136537036A2; Mon, 25 Mar 2019 17:49:13 -0700 (PDT)
+Smtp-Origin-Hostprefix: dev
+From:   Andrey Ignatov <rdna@fb.com>
+Smtp-Origin-Hostname: dev082.prn2.facebook.com
+To:     <netdev@vger.kernel.org>
+CC:     Andrey Ignatov <rdna@fb.com>, <ast@kernel.org>,
+        <daniel@iogearbox.net>, <guro@fb.com>, <kernel-team@fb.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 bpf-next 21/21] selftests/bpf: C based test for sysctl and strtoX
+Date:   Mon, 25 Mar 2019 17:43:47 -0700
+Message-ID: <7c3a8a7b091a729dbce25bb7bb8ec7b9295677ef.1553560621.git.rdna@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1553560620.git.rdna@fb.com>
+References: <cover.1553560620.git.rdna@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <20190306214730.6545-1-valleau@chromium.org> <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
- <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
- <caee30e2-ddc4-0076-907e-558dbcfe7c52@kernel.org> <CA+ASDXOzTkXk_JtBDa4zkMhy3NyWv7Wn1i6YYtwRdeF8j_c2nA@mail.gmail.com>
- <23918a77-2694-fdae-4300-0882c7c940cf@kernel.org> <CA+ASDXOEkG36W-6rONqDntzChtq65=cQh6JVyjWhftBykXVTbw@mail.gmail.com>
- <20190326001353.GA4315@kroah.com>
-In-Reply-To: <20190326001353.GA4315@kroah.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 25 Mar 2019 17:49:07 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMR_HPSnAWRGYV_fDq6kSR7WdgTq3pgW9VaTwA7fA7=qA@mail.gmail.com>
-Message-ID: <CA+ASDXMR_HPSnAWRGYV_fDq6kSR7WdgTq3pgW9VaTwA7fA7=qA@mail.gmail.com>
-Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel versions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     shuah <shuah@kernel.org>, David Valleau <valleau@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_01:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Add C based test for a few bpf_sysctl_* helpers and bpf_strtoul.
 
-On Mon, Mar 25, 2019 at 5:35 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> 3.18 was released at the end of 2014, and as the tool that came with
-> that kernel still works just fine, you are just pushing the boundry here
-> really hard :)
+Make sure that sysctl can be identified by name and that multiple
+integers can be parsed from sysctl value with bpf_strtoul.
 
-For some reason, we're focusing on 3.18, when the last breakage we're
-currently aware of was as recent as 4.13. So we (Chrom{ium,e} OS) also
-dealing with 4.4, which is still getting active LTS releases (thanks!)
-and is in heavy use.
+net/ipv4/tcp_mem is chosen as a testing sysctl, it contains 3 unsigned
+longs, they all are parsed and compared (val[0] < val[1] < val[2]).
 
-> Why do you want to update your userspace tool and not update your
-> kernel?  What is forcing your userspace tool to be updated?
+One verifier limitation is being worked around in the test: variable
+stack access. Since such an access is unsupported, offset, returned by
+bpf_strtoul while parsing current ulong, can't be used directly when
+specifying 'buf' pointer to the next bpf_strtoul. That's why instead of
+'base + offset' where offset non-const tnum, the test uses brute force
+search to find static number, that matches with 'offset', and use
+'base + static' to access the stack.
 
-I tried to downplay that part: we're primarily interested in finding
-some way to utilize the *same* tool on all kernels in question. It
-doesn't have to be the latest. But it's currently impossible, mostly
-due to commit 1c9de5bf4286 ("usbip: vhci-hcd: Add USB3 SuperSpeed
-support").
+Example of output:
+  # ./test_sysctl
+  ...
+  Test case: C prog: deny all writes .. [PASS]
+  Test case: C prog: deny access by name .. [PASS]
+  Test case: C prog: read tcp_mem .. [PASS]
+  Summary: 39 PASSED, 0 FAILED
 
-We also certainly have flexibility to hack things on our own and don't
-need upstream to care about everything we care about (e.g.,
-sufficiently old kernels), but I did want to have this conversation at
-least, so that people are aware of the breakages they are making, and
-so we can understand what to expect.
+Signed-off-by: Andrey Ignatov <rdna@fb.com>
+---
+ .../selftests/bpf/progs/test_sysctl_prog.c    | 89 +++++++++++++++++++
+ tools/testing/selftests/bpf/test_sysctl.c     | 57 +++++++++++-
+ 2 files changed, 145 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/test_sysctl_prog.c
 
-> Not to say that this shouldn't be fixed if at all possible, but realize
-> that this is not the "normal" case of "we do not break userspace" here,
-> given the tool involved, and the apis being used.
+diff --git a/tools/testing/selftests/bpf/progs/test_sysctl_prog.c b/tools/testing/selftests/bpf/progs/test_sysctl_prog.c
+new file mode 100644
+index 000000000000..29c02b6a0979
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_sysctl_prog.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2019 Facebook
++
++#include <stdint.h>
++#include <string.h>
++
++#include <linux/stddef.h>
++#include <linux/bpf.h>
++
++#include "bpf_helpers.h"
++
++/* Min/max supported lengths of a string with unsigned long in base 10. */
++#define MIN_ULONG_STR_LEN 2
++#define MAX_ULONG_STR_LEN 15
++
++static __always_inline int is_tcp_mem(struct bpf_sysctl *ctx)
++{
++	char tcp_mem_name[] = "net/ipv4/tcp_mem";
++	unsigned char i;
++	char name[64];
++	int ret;
++
++	memset(name, 0, sizeof(name));
++	ret = bpf_sysctl_get_name(ctx, name, sizeof(name), 0);
++	if (ret < 0 || ret != sizeof(tcp_mem_name) - 1)
++		return 0;
++
++#pragma clang loop unroll(full)
++	for (i = 0; i < sizeof(tcp_mem_name); ++i)
++		if (name[i] != tcp_mem_name[i])
++			return 0;
++
++	return 1;
++}
++
++SEC("cgroup/sysctl")
++int sysctl_tcp_mem(struct bpf_sysctl *ctx)
++{
++	unsigned long mem_min = 0, mem_pressure = 0, mem_max = 0;
++	unsigned char i, off;
++	char value[64];
++	int ret;
++
++	if (ctx->write)
++		return 0;
++
++	if (!is_tcp_mem(ctx))
++		return 0;
++
++	ret = bpf_sysctl_get_current_value(ctx, value, sizeof(value));
++	if (ret < 0 || ret >= sizeof(value))
++		return 0;
++
++	ret = bpf_strtoul(value, sizeof(value), 0, &mem_min);
++	if (ret <= 0 || ret > MAX_ULONG_STR_LEN)
++		return 0;
++	off = ret;
++	ret = -1;
++
++	/* Make verifier happy, prevent "invalid variable stack read R1
++	 * var_off=(0x0; 0xf)" by using static offset for value.
++	 */
++#pragma clang loop unroll(full)
++	for (i = MIN_ULONG_STR_LEN; i <= MAX_ULONG_STR_LEN; ++i)
++		if (off == i) {
++			ret = bpf_strtoul(value + i, sizeof(value) - i, 0,
++					  &mem_pressure);
++			break;
++		}
++	if (ret <= 0 || ret > MAX_ULONG_STR_LEN)
++		return 0;
++	off += ret;
++	ret = -1;
++
++	/* Same here. */
++#pragma clang loop unroll(full)
++	for (i = MIN_ULONG_STR_LEN * 2; i <= MAX_ULONG_STR_LEN * 2 + 2; ++i)
++		if (off == i) {
++			ret = bpf_strtoul(value + i, sizeof(value) - i, 0,
++					  &mem_max);
++			break;
++		}
++	if (ret <= 0 || ret > MAX_ULONG_STR_LEN)
++		return 0;
++
++	return mem_min < mem_pressure && mem_pressure < mem_max;
++}
++
++char _license[] SEC("license") = "GPL";
+diff --git a/tools/testing/selftests/bpf/test_sysctl.c b/tools/testing/selftests/bpf/test_sysctl.c
+index 885675480af9..a3bebd7c68dd 100644
+--- a/tools/testing/selftests/bpf/test_sysctl.c
++++ b/tools/testing/selftests/bpf/test_sysctl.c
+@@ -11,6 +11,7 @@
+ #include <linux/filter.h>
+ 
+ #include <bpf/bpf.h>
++#include <bpf/libbpf.h>
+ 
+ #include "bpf_rlimit.h"
+ #include "bpf_util.h"
+@@ -26,6 +27,7 @@ struct sysctl_test {
+ 	const char *descr;
+ 	size_t fixup_value_insn;
+ 	struct bpf_insn	insns[MAX_INSNS];
++	const char *prog_file;
+ 	enum bpf_attach_type attach_type;
+ 	const char *sysctl;
+ 	int open_flags;
+@@ -1302,6 +1304,31 @@ static struct sysctl_test tests[] = {
+ 		.open_flags = O_RDONLY,
+ 		.result = SUCCESS,
+ 	},
++	{
++		"C prog: deny all writes",
++		.prog_file = "./test_sysctl_prog.o",
++		.attach_type = BPF_CGROUP_SYSCTL,
++		.sysctl = "net/ipv4/tcp_mem",
++		.open_flags = O_WRONLY,
++		.newval = "123 456 789",
++		.result = OP_EPERM,
++	},
++	{
++		"C prog: deny access by name",
++		.prog_file = "./test_sysctl_prog.o",
++		.attach_type = BPF_CGROUP_SYSCTL,
++		.sysctl = "net/ipv4/route/mtu_expires",
++		.open_flags = O_RDONLY,
++		.result = OP_EPERM,
++	},
++	{
++		"C prog: read tcp_mem",
++		.prog_file = "./test_sysctl_prog.o",
++		.attach_type = BPF_CGROUP_SYSCTL,
++		.sysctl = "net/ipv4/tcp_mem",
++		.open_flags = O_RDONLY,
++		.result = SUCCESS,
++	},
+ };
+ 
+ static size_t probe_prog_length(const struct bpf_insn *fp)
+@@ -1335,7 +1362,8 @@ static int fixup_sysctl_value(const char *buf, size_t buf_len,
+ 	return 0;
+ }
+ 
+-static int load_sysctl_prog(struct sysctl_test *test, const char *sysctl_path)
++static int load_sysctl_prog_insns(struct sysctl_test *test,
++				  const char *sysctl_path)
+ {
+ 	struct bpf_insn *prog = test->insns;
+ 	struct bpf_load_program_attr attr;
+@@ -1377,6 +1405,33 @@ static int load_sysctl_prog(struct sysctl_test *test, const char *sysctl_path)
+ 	return ret;
+ }
+ 
++static int load_sysctl_prog_file(struct sysctl_test *test)
++{
++	struct bpf_prog_load_attr attr;
++	struct bpf_object *obj;
++	int prog_fd;
++
++	memset(&attr, 0, sizeof(struct bpf_prog_load_attr));
++	attr.file = test->prog_file;
++	attr.prog_type = BPF_PROG_TYPE_CGROUP_SYSCTL;
++
++	if (bpf_prog_load_xattr(&attr, &obj, &prog_fd)) {
++		if (test->result != LOAD_REJECT)
++			log_err(">>> Loading program (%s) error.\n",
++				test->prog_file);
++		return -1;
++	}
++
++	return prog_fd;
++}
++
++static int load_sysctl_prog(struct sysctl_test *test, const char *sysctl_path)
++{
++		return test->prog_file
++			? load_sysctl_prog_file(test)
++			: load_sysctl_prog_insns(test, sysctl_path);
++}
++
+ static int access_sysctl(const char *sysctl_path,
+ 			 const struct sysctl_test *test)
+ {
+-- 
+2.17.1
 
-I think I sort of understand what you're going for here, but can you
-elaborate so I don't have to assume?
-
-Thanks,
-Brian
