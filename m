@@ -6,46 +6,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2CCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1255BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC192075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54AC20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582215;
-	bh=2UdpZgTxZKGqLuctCI/xZZCvrNcBLRcsCD+vdro3r+s=;
+	s=default; t=1553582219;
+	bh=3HQH3vHKe550ailZIBDXphfZRyHP836jLqH0tjjNHTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8SzPQSOpNWRdZOT6gGcccLsHIY0mdbxK8zBTFGDf2fYSd2BzsYAsDWYbkciW77SY
-	 X+7TKydim5ZmzpxViXH/I1SVoxWUJ+FyAXPzzZK61pJWY91jT9JrG4BHtB7i3vvW1Q
-	 r4AlVZFjiGoFOw9WPLKA6Ls1k51g5Rz0gVScT5Ww=
+	b=Pea3uZCLWWhlCPEaCqjNtTC4NqE1EYBCYPSNBfXI3BDJYsg9HksjurkWhzCJgeb4H
+	 xmLtiKXPwT5n5NCrxvg2ZarbhaE034CZI+yrQzZgo+/G1MhwSCkWnb51qxSn0Skz3a
+	 Z3Kce+M9AXv+ttGdUFGAUE9VzAhQVU2bwtK3VoAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbfCZGgy (ORCPT
+        id S1732304AbfCZGg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731257AbfCZGgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:52 -0400
+        id S1731257AbfCZGgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:55 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFE792075E;
-        Tue, 26 Mar 2019 06:36:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4B42070B;
+        Tue, 26 Mar 2019 06:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582211;
-        bh=2UdpZgTxZKGqLuctCI/xZZCvrNcBLRcsCD+vdro3r+s=;
+        s=default; t=1553582215;
+        bh=3HQH3vHKe550ailZIBDXphfZRyHP836jLqH0tjjNHTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPgsvE68POdM0U0kPf/r6zEaB/4teK82fiKmsRYHRyx7YS9PunbX5OB7SYXhfwKcB
-         EWGJ5g7MN+c0a97Yo9lJfpO/NUqDFagEBkCxER6H4FHuCow2ZvycVTUtEsjsWf961C
-         OsPui1cg68mAMUMd68CG+IAyo2C57/rfJMBN2tpw=
+        b=pXH0IiNK84ZHp3EGaBM2wmuR9OdD3vMt1l8OG1gvoYUS/wFnvLT6sWM9cdhtuuDp3
+         oJCdxndZtThFY/WYSR8LKYCAw5XA96mdndY5GGinlC+3ERtLhdQ+yNjTZ5QTLD6W75
+         LynnqkrWRK7IUyKPCZp8qK9y82IXojkTHXs0GTzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 16/45] scsi: ibmvscsi: Fix empty event pool access during host removal
-Date:   Tue, 26 Mar 2019 15:29:59 +0900
-Message-Id: <20190326042703.550184647@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6ea337c427f5083ebdf2@syzkaller.appspotmail.com,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>
+Subject: [PATCH 4.19 34/45] drm: Reorder set_property_atomic to avoid returning with an active ww_ctx
+Date:   Tue, 26 Mar 2019 15:30:17 +0900
+Message-Id: <20190326042704.463433831@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,93 +68,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 7f5203c13ba8a7b7f9f6ecfe5a4d5567188d7835 upstream.
+commit 227ad6d957898a88b1746e30234ece64d305f066 upstream.
 
-The event pool used for queueing commands is destroyed fairly early in the
-ibmvscsi_remove() code path. Since, this happens prior to the call so
-scsi_remove_host() it is possible for further calls to queuecommand to be
-processed which manifest as a panic due to a NULL pointer dereference as
-seen here:
+Delay the drm_modeset_acquire_init() until after we check for an
+allocation failure so that we can return immediately upon error without
+having to unwind.
 
-PANIC: "Unable to handle kernel paging request for data at address
-0x00000000"
+WARNING: lock held when returning to user space!
+4.20.0+ #174 Not tainted
+------------------------------------------------
+syz-executor556/8153 is leaving the kernel with locks still held!
+1 lock held by syz-executor556/8153:
+  #0: 000000005100c85c (crtc_ww_class_acquire){+.+.}, at:
+set_property_atomic+0xb3/0x330 drivers/gpu/drm/drm_mode_object.c:462
 
-Context process backtrace:
-
-DSISR: 0000000042000000 ????Syscall Result: 0000000000000000
-4 [c000000002cb3820] memcpy_power7 at c000000000064204
-[Link Register] [c000000002cb3820] ibmvscsi_send_srp_event at d000000003ed14a4
-5 [c000000002cb3920] ibmvscsi_send_srp_event at d000000003ed14a4 [ibmvscsi] ?(unreliable)
-6 [c000000002cb39c0] ibmvscsi_queuecommand at d000000003ed2388 [ibmvscsi]
-7 [c000000002cb3a70] scsi_dispatch_cmd at d00000000395c2d8 [scsi_mod]
-8 [c000000002cb3af0] scsi_request_fn at d00000000395ef88 [scsi_mod]
-9 [c000000002cb3be0] __blk_run_queue at c000000000429860
-10 [c000000002cb3c10] blk_delay_work at c00000000042a0ec
-11 [c000000002cb3c40] process_one_work at c0000000000dac30
-12 [c000000002cb3cd0] worker_thread at c0000000000db110
-13 [c000000002cb3d80] kthread at c0000000000e3378
-14 [c000000002cb3e30] ret_from_kernel_thread at c00000000000982c
-
-The kernel buffer log is overfilled with this log:
-
-[11261.952732] ibmvscsi: found no event struct in pool!
-
-This patch reorders the operations during host teardown. Start by calling
-the SRP transport and Scsi_Host remove functions to flush any outstanding
-work and set the host offline. LLDD teardown follows including destruction
-of the event pool, freeing the Command Response Queue (CRQ), and unmapping
-any persistent buffers. The event pool destruction is protected by the
-scsi_host lock, and the pool is purged prior of any requests for which we
-never received a response. Finally, move the removal of the scsi host from
-our global list to the end so that the host is easily locatable for
-debugging purposes during teardown.
-
-Cc: <stable@vger.kernel.org> # v2.6.12+
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+6ea337c427f5083ebdf2@syzkaller.appspotmail.com
+Fixes: 144a7999d633 ("drm: Handle properties in the core for atomic drivers")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: <stable@vger.kernel.org> # v4.14+
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181230122842.21917-1-chris@chris-wilson.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/drm_mode_object.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2296,17 +2296,27 @@ static int ibmvscsi_probe(struct vio_dev
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	spin_lock(&ibmvscsi_driver_lock);
--	list_del(&hostdata->host_list);
--	spin_unlock(&ibmvscsi_driver_lock);
--	unmap_persist_bufs(hostdata);
-+	unsigned long flags;
-+
-+	srp_remove_host(hostdata->host);
-+	scsi_remove_host(hostdata->host);
-+
-+	purge_requests(hostdata, DID_ERROR);
-+
-+	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
-+	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-+
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
+--- a/drivers/gpu/drm/drm_mode_object.c
++++ b/drivers/gpu/drm/drm_mode_object.c
+@@ -458,12 +458,13 @@ static int set_property_atomic(struct dr
+ 	struct drm_modeset_acquire_ctx ctx;
+ 	int ret;
  
- 	kthread_stop(hostdata->work_thread);
--	srp_remove_host(hostdata->host);
--	scsi_remove_host(hostdata->host);
-+	unmap_persist_bufs(hostdata);
+-	drm_modeset_acquire_init(&ctx, 0);
+-
+ 	state = drm_atomic_state_alloc(dev);
+ 	if (!state)
+ 		return -ENOMEM;
 +
-+	spin_lock(&ibmvscsi_driver_lock);
-+	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
++	drm_modeset_acquire_init(&ctx, 0);
+ 	state->acquire_ctx = &ctx;
 +
- 	scsi_host_put(hostdata->host);
- 
- 	return 0;
+ retry:
+ 	if (prop == state->dev->mode_config.dpms_property) {
+ 		if (obj->type != DRM_MODE_OBJECT_CONNECTOR) {
 
 
