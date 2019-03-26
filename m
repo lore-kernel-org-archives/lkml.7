@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFE4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B92C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA8020863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D63E20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582323;
-	bh=1OaqqUXJDrI7dfSfYr7b/X6MysTBFQofNoFwE/0B3Ao=;
+	s=default; t=1553582325;
+	bh=l7m2CQJS8IT/mSsE1RlZAj3e0LgKTrkWvCMpW8bb6jQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O78jzvAgT5lVN6LMTbOW4RQstlbmmMbpjEPrjIGQfimpYCe51by3v4sJvMbirMF+C
-	 pOuXGac+JDVOPjRAsAjDW3ruyWjnVj1pFwo1jdvYmXZvhNQoK5O9lYufRsj7mctpNn
-	 1Bvx0AJGwOFbt/iubxGiiCWoaQ1JL8ASi8iBkGbk=
+	b=KElfeKDKcCku6OA2cnHC50IggoreAvSY9J17tIYZXV+U3ligPPhTDcRd5+97hV9Dm
+	 3a9X08B8GS0TVP0r36vpfjdT9RLzpdE8q5pbmSIy8aco/3NmboNlOHE6iomlXfNY5R
+	 zFd6HlMS0Fgu3l0Tr3/CIe+UlgSqku+mVAkAk5WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732584AbfCZGil (ORCPT
+        id S1732594AbfCZGio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53376 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732245AbfCZGii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:38 -0400
+        id S1732579AbfCZGim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:42 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FBB42070B;
-        Tue, 26 Mar 2019 06:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AB212070B;
+        Tue, 26 Mar 2019 06:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582317;
-        bh=1OaqqUXJDrI7dfSfYr7b/X6MysTBFQofNoFwE/0B3Ao=;
+        s=default; t=1553582321;
+        bh=l7m2CQJS8IT/mSsE1RlZAj3e0LgKTrkWvCMpW8bb6jQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aImW/nvqdFV5xUrXye90R+e/VI279iWl49R9n7bad4mMt+OqxuTwy9NKog8wJaX+K
-         PdvEUe7/QzrKW+qUtDzPiwWVkyhVbYm5yUTXz3jzIcIG7XZfMFgl/sFneBXTyeXnwc
-         6Fq7oX3R7woFXlw/RxCV8BLgSUQ0Ik4UK+/elNLY=
+        b=K437OKGUkDQqQii1QexK5ckhZ3zM8KJM8Q/971CpSpQPDTKw0RljM2SDClFssIeY0
+         xBm7A5BbUlOIr0i+Vu4d0PaaoR0Qt1m1FZdreZprpsPv68WDFA3ASL55MX/2WRcPyJ
+         42bJ0kN35RCCrnjoAc0UM2Y9cxUuavKkNzU38a1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
+        stable@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 04/52] mmc: alcor: fix DMA reads
-Date:   Tue, 26 Mar 2019 15:29:51 +0900
-Message-Id: <20190326042701.190923076@linuxfoundation.org>
+Subject: [PATCH 5.0 05/52] mmc: mxcmmc: "Revert mmc: mxcmmc: handle highmem pages"
+Date:   Tue, 26 Mar 2019 15:29:52 +0900
+Message-Id: <20190326042701.242272577@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -65,69 +64,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Drake <drake@endlessm.com>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-commit 5ea47691bd99e1100707ec63364aff72324e2af4 upstream.
+commit 2b77158ffa92b820a0c5da9a3c6ead7aa069c71c upstream.
 
-Setting max_blk_count to 1 here was causing the mmc block layer
-to always use the MMC_READ_SINGLE_BLOCK command here, which the
-driver does not DMA-accelerate.
+This reverts commit b189e7589f6d3411e85c6b7ae6eef158f08f388f.
 
-Drop the max_blk_ settings here. The mmc host defaults suffice,
-along with the max_segs and max_seg_size settings, which I have
-now documented in more detail.
+Unable to handle kernel paging request at virtual address c8358000
+pgd = efa405c3
+[c8358000] *pgd=00000000
+Internal error: Oops: 805 [#1] PREEMPT ARM
+CPU: 0 PID: 711 Comm: kworker/0:2 Not tainted 4.20.0+ #30
+Hardware name: Freescale i.MX27 (Device Tree Support)
+Workqueue: events mxcmci_datawork
+PC is at mxcmci_datawork+0xbc/0x2ac
+LR is at mxcmci_datawork+0xac/0x2ac
+pc : [<c04e33c8>]    lr : [<c04e33b8>]    psr: 60000013
+sp : c6c93f08  ip : 24004180  fp : 00000008
+r10: c8358000  r9 : c78b3e24  r8 : c6c92000
+r7 : 00000000  r6 : c7bb8680  r5 : c7bb86d4  r4 : c78b3de0
+r3 : 00002502  r2 : c090b2e0  r1 : 00000880  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 0005317f  Table: a68a8000  DAC: 00000055
+Process kworker/0:2 (pid: 711, stack limit = 0x389543bc)
+Stack: (0xc6c93f08 to 0xc6c94000)
+3f00:                   c7bb86d4 00000000 00000000 c6cbfde0 c7bb86d4 c7ee4200
+3f20: 00000000 c0907ea8 00000000 c7bb86d8 c0907ea8 c012077c c6cbfde0 c7bb86d4
+3f40: c6cbfde0 c6c92000 c6cbfdf4 c09280ba c0907ea8 c090b2e0 c0907ebc c0120c18
+3f60: c6cbfde0 00000000 00000000 c6cbb580 c7ba7c40 c7837edc c6cbb598 00000000
+3f80: c6cbfde0 c01208f8 00000000 c01254fc c7ba7c40 c0125400 00000000 00000000
+3fa0: 00000000 00000000 00000000 c01010d0 00000000 00000000 00000000 00000000
+3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+3fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+[<c04e33c8>] (mxcmci_datawork) from [<c012077c>] (process_one_work+0x1f0/0x338)
+[<c012077c>] (process_one_work) from [<c0120c18>] (worker_thread+0x320/0x474)
+[<c0120c18>] (worker_thread) from [<c01254fc>] (kthread+0xfc/0x118)
+[<c01254fc>] (kthread) from [<c01010d0>] (ret_from_fork+0x14/0x24)
+Exception stack(0xc6c93fb0 to 0xc6c93ff8)
+3fa0:                                     00000000 00000000 00000000 00000000
+3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+Code: e3500000 1a000059 e5153050 e5933038 (e48a3004)
+---[ end trace 54ca629b75f0e737 ]---
+note: kworker/0:2[711] exited with preempt_count 1
 
-Now each MMC command reads 4 512-byte blocks, using DMA instead of
-PIO. On my SD card, this increases read performance (measured with dd)
-from 167kb/sec to 4.6mb/sec.
-
-Link: http://lkml.kernel.org/r/CAD8Lp47L5T3jnAjBiPs1cQ+yFA3L6LJtgFvMETnBrY63-Zdi2g@mail.gmail.com
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Reviewed-by: Oleksij Rempel <linux@rempel-privat.de>
-Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Fixes: b189e7589f6d ("mmc: mxcmmc: handle highmem pages")
 Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/alcor.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ drivers/mmc/host/mxcmmc.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -1044,14 +1044,27 @@ static void alcor_init_mmc(struct alcor_
- 	mmc->caps2 = MMC_CAP2_NO_SDIO;
- 	mmc->ops = &alcor_sdc_ops;
+--- a/drivers/mmc/host/mxcmmc.c
++++ b/drivers/mmc/host/mxcmmc.c
+@@ -292,11 +292,8 @@ static void mxcmci_swap_buffers(struct m
+ 	struct scatterlist *sg;
+ 	int i;
  
--	/* Hardware cannot do scatter lists */
-+	/* The hardware does DMA data transfer of 4096 bytes to/from a single
-+	 * buffer address. Scatterlists are not supported, but upon DMA
-+	 * completion (signalled via IRQ), the original vendor driver does
-+	 * then immediately set up another DMA transfer of the next 4096
-+	 * bytes.
-+	 *
-+	 * This means that we need to handle the I/O in 4096 byte chunks.
-+	 * Lacking a way to limit the sglist entries to 4096 bytes, we instead
-+	 * impose that only one segment is provided, with maximum size 4096,
-+	 * which also happens to be the minimum size. This means that the
-+	 * single-entry sglist handled by this driver can be handed directly
-+	 * to the hardware, nice and simple.
-+	 *
-+	 * Unfortunately though, that means we only do 4096 bytes I/O per
-+	 * MMC command. A future improvement would be to make the driver
-+	 * accept sg lists and entries of any size, and simply iterate
-+	 * through them 4096 bytes at a time.
-+	 */
- 	mmc->max_segs = AU6601_MAX_DMA_SEGMENTS;
- 	mmc->max_seg_size = AU6601_MAX_DMA_BLOCK_SIZE;
--
--	mmc->max_blk_size = mmc->max_seg_size;
--	mmc->max_blk_count = mmc->max_segs;
--
--	mmc->max_req_size = mmc->max_seg_size * mmc->max_segs;
-+	mmc->max_req_size = mmc->max_seg_size;
+-	for_each_sg(data->sg, sg, data->sg_len, i) {
+-		void *buf = kmap_atomic(sg_page(sg) + sg->offset);
+-		buffer_swap32(buf, sg->length);
+-		kunmap_atomic(buf);
+-	}
++	for_each_sg(data->sg, sg, data->sg_len, i)
++		buffer_swap32(sg_virt(sg), sg->length);
  }
+ #else
+ static inline void mxcmci_swap_buffers(struct mmc_data *data) {}
+@@ -613,7 +610,6 @@ static int mxcmci_transfer_data(struct m
+ {
+ 	struct mmc_data *data = host->req->data;
+ 	struct scatterlist *sg;
+-	void *buf;
+ 	int stat, i;
  
- static int alcor_pci_sdmmc_drv_probe(struct platform_device *pdev)
+ 	host->data = data;
+@@ -621,18 +617,14 @@ static int mxcmci_transfer_data(struct m
+ 
+ 	if (data->flags & MMC_DATA_READ) {
+ 		for_each_sg(data->sg, sg, data->sg_len, i) {
+-			buf = kmap_atomic(sg_page(sg) + sg->offset);
+-			stat = mxcmci_pull(host, buf, sg->length);
+-			kunmap(buf);
++			stat = mxcmci_pull(host, sg_virt(sg), sg->length);
+ 			if (stat)
+ 				return stat;
+ 			host->datasize += sg->length;
+ 		}
+ 	} else {
+ 		for_each_sg(data->sg, sg, data->sg_len, i) {
+-			buf = kmap_atomic(sg_page(sg) + sg->offset);
+-			stat = mxcmci_push(host, buf, sg->length);
+-			kunmap(buf);
++			stat = mxcmci_push(host, sg_virt(sg), sg->length);
+ 			if (stat)
+ 				return stat;
+ 			host->datasize += sg->length;
 
 
