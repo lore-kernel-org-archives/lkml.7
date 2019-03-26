@@ -2,136 +2,108 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FCCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CB0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC002070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0D82070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ThlmGBMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731976AbfCZPUD (ORCPT
+        id S1732013AbfCZPUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:20:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbfCZPUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:20:02 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 53E0E781758513CD8426;
-        Tue, 26 Mar 2019 23:19:57 +0800 (CST)
-Received: from S00345302A-PC.china.huawei.com (10.202.227.237) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 26 Mar 2019 23:19:50 +0800
-From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-To:     <lorenzo.pieralisi@arm.com>, <robin.murphy@arm.com>
-CC:     <andrew.murray@arm.com>, <jean-philippe.brucker@arm.com>,
-        <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <guohanjun@huawei.com>, <john.garry@huawei.com>,
-        <pabba@codeaurora.org>, <vkilari@codeaurora.org>,
-        <rruigrok@codeaurora.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
-        <neil.m.leeder@gmail.com>
-Subject: [PATCH v7 0/4] arm64 SMMUv3 PMU driver with IORT support
-Date:   Tue, 26 Mar 2019 15:17:49 +0000
-Message-ID: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
-X-Mailer: git-send-email 2.12.0.windows.1
+        Tue, 26 Mar 2019 11:20:06 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16592 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731978AbfCZPUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:20:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9a43270001>; Tue, 26 Mar 2019 08:20:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 26 Mar 2019 08:20:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 26 Mar 2019 08:20:04 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 15:19:59 +0000
+Subject: Re: [PATCH 4.19 00/45] 4.19.32-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190326042702.565683325@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <879360b6-5584-493f-4386-6f67ceb2ad16@nvidia.com>
+Date:   Tue, 26 Mar 2019 15:19:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.202.227.237]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553613607; bh=QTBPdlnCXSoy0l+dGbTiqPwTkiUrr6iJxptc7mX9o1M=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ThlmGBMaVZD/5h/6qkegQUhox1pth6Z+6c7hmmXhtux3Lfx5sQjsHTlxnHWtRGHoc
+         p/Nkj5MRl4sfgoUkB4d7J2HzmouwT3FBqEM7ppA0eQyyZr2MArBIs0TXqSRF35ZyHi
+         C/VRQtNQfQfJZfFFSGYoaMX04VugMptNbZkl1sfuDvLxic70W6wySw6yOYQcH2gCIL
+         R9USebt/PVb3xx31F0EhoLf+HYXz5zqZ03yeFidPcK/KsEcU4PEhh5jnApMSYgCZD5
+         3DISLNil6FR0uxp5WXKM8wyCFkzUG+qDkJXALQsWJUuNfLnev6k3U2mZ3jGuor7d/N
+         FvHXKWer7DDHQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a driver for the SMMUv3 PMU into the perf framework.
-It includes an IORT update to support PM Counter Groups.
 
-This is based on the initial work done by Neil Leeder[1]
+On 26/03/2019 06:29, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.32 release.
+> There are 45 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu Mar 28 04:26:41 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.32-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-SMMUv3 PMCG devices are named as smmuv3_pmcg_<phys_addr_page>
-where <phys_addr_page> is the physical page address of the SMMU PMCG.
-For example, the PMCG at 0xff88840000 is named smmuv3_pmcg_ff88840
+All tests are passing for Tegra ...
 
-Usage example:
-For common arch supported events:
-perf stat -e smmuv3_pmcg_ff88840/transaction,filter_enable=1,
- filter_span=1,filter_stream_id=0x42/ -a netperf
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    28 tests:	28 pass, 0 fail
 
-For IMP DEF events:
-perf stat -e smmuv3_pmcg_ff88840/event=id/ -a netperf
+Linux version:	4.19.32-rc1-g91ed293
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-This is sanity tested on a HiSilicon platform that requires
-a quirk to run  it properly. As per HiSilicon erratum  #162001800,
-PMCG event counter registers (SMMU_PMCG_EVCNTRn) on HiSilicon Hip08
-platforms are read only and this prevents the software from setting
-the initial period on event start. Unfortunately we were a bit late
-in the cycle to detect this issue and now require software workaround
-for this. Patch #4 is added to this series to provide a workaround
-for this issue.
-
-Further testing on supported platforms are very much welcome.
-
-v6 --> v7
--Addressed comments from Robin and Lorenzo.
--Added R-by from Robin/Hanjun and A-by from Lorenzo.
-
-v5 ---> v6
--Addressed comments from Robin and Andrew.
--Changed the way global filter settings are applied as a probable
- fix to the v5 bug where in-use settings gets overwritten.
--Use of PMCG model number to identify the platform.
--Added R-by from Robin to patches #1 and #3.
-
-v4 ---> v5
--IORT code is modified to pass the option/quirk flags to the driver
- through platform_data (patch #4), based on Robin's comments.
--Removed COMPILE_TEST (patch #2).
-
-v3 --> v4
-
--Addressed comments from Jean and Robin.
--Merged dma config callbacks as per Lorenzo's comments(patch #1).
--Added handling of Global(Counter0) filter settings mode(patch #2).
--Added patch #4 to address HiSilicon erratum  #162001800
--
-v2 --> v3
-
--Addressed comments from Robin.
--Removed iort helper function to retrieve the PMCG reference smmu.
--PMCG devices are now named using the base address
-
-v1 --> v2
-
-- Addressed comments from Robin.
-- Added an helper to retrieve the associated smmu dev and named PMUs
-  to make the association visible to user.
-- Added MSI support  for overflow irq
-
-[1]https://www.spinics.net/lists/arm-kernel/msg598591.html
-
-
-Neil Leeder (2):
-  ACPI/IORT: Add support for PMCG
-  perf/smmuv3: Add arm64 smmuv3 pmu driver
-
-Shameer Kolothum (2):
-  perf/smmuv3: Add MSI irq support
-  perf/smmuv3: Enable HiSilicon Erratum 162001800 quirk
-
- drivers/acpi/arm64/iort.c     | 131 +++++--
- drivers/perf/Kconfig          |   9 +
- drivers/perf/Makefile         |   1 +
- drivers/perf/arm_smmuv3_pmu.c | 868 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/acpi_iort.h     |   8 +
- 5 files changed, 993 insertions(+), 24 deletions(-)
- create mode 100644 drivers/perf/arm_smmuv3_pmu.c
+Cheers
+Jon
 
 -- 
-2.7.4
-
-
+nvpublic
