@@ -2,179 +2,119 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F505C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB59C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458C620830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D5620830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfCZJu4 (ORCPT
+        id S1730918AbfCZJvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:50:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45170 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfCZJu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:50:56 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C10CF308620D;
-        Tue, 26 Mar 2019 09:50:55 +0000 (UTC)
-Received: from dhcp-4-67.tlv.redhat.com (dhcp-4-67.tlv.redhat.com [10.35.4.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B16FA1712F;
-        Tue, 26 Mar 2019 09:50:48 +0000 (UTC)
-Message-ID: <ad88c611e6ce0df3d7e0137d7eaa0eff4c862a89.camel@redhat.com>
-Subject: Re: [PATCH 0/9] RFC: NVME VFIO mediated device [BENCHMARKS]
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, Fam Zheng <fam@euphon.net>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        John Ferlan <jferlan@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>
-Date:   Tue, 26 Mar 2019 11:50:47 +0200
-In-Reply-To: <20190326093858.GI21018@stefanha-x1.localdomain>
-References: <20190319144116.400-1-mlevitsk@redhat.com>
-         <d41484848b1832192c6978c7054bec5c326afa6d.camel@redhat.com>
-         <dbec1f2bee53ab786bb4f6204f9a930eac279970.camel@redhat.com>
-         <20190326093858.GI21018@stefanha-x1.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
+        Tue, 26 Mar 2019 05:51:09 -0400
+Received: from mail.netline.ch ([148.251.143.178]:39476 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfCZJvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:51:09 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id E90AE2A605A;
+        Tue, 26 Mar 2019 10:51:05 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id UP0oX60E-7Qf; Tue, 26 Mar 2019 10:51:05 +0100 (CET)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 419B82A6053;
+        Tue, 26 Mar 2019 10:51:05 +0100 (CET)
+Received: from [::1]
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1h8ijY-0003Dy-M7; Tue, 26 Mar 2019 10:51:04 +0100
+Subject: Re: [PATCH v2] gpu: radeon: fix a potential NULL-pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>, pakki001@umn.edu,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <0fc81efe-186b-3207-e0d0-b0bb95626069@daenzer.net>
+ <20190325210552.12797-1-kjlu@umn.edu>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <deadaf61-e92f-829c-8a96-7017519c5617@daenzer.net>
+Date:   Tue, 26 Mar 2019 10:51:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190325210552.12797-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 26 Mar 2019 09:50:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 09:38 +0000, Stefan Hajnoczi wrote:
-> On Mon, Mar 25, 2019 at 08:52:32PM +0200, Maxim Levitsky wrote:
-> > Hi
-> > 
-> > This is first round of benchmarks.
-> > 
-> > The system is Intel(R) Xeon(R) Gold 6128 CPU @ 3.40GHz
-> > 
-> > The system has 2 numa nodes, but only cpus and memory from node 0 were used to
-> > avoid noise from numa.
-> > 
-> > The SSD is Intel® Optane™ SSD 900P Series, 280 GB version
-> > 
-> > 
-> > https://ark.intel.com/content/www/us/en/ark/products/123628/intel-optane-ssd-900p-series-280gb-1-2-height-pcie-x4-20nm-3d-xpoint.html
-> > 
-> > 
-> > ** Latency benchmark with no interrupts at all **
-> > 
-> > spdk was complited with fio plugin in the host and in the guest.
-> > spdk was first run in the host
-> > then vm was started with one of spdk,pci passthrough, mdev and inside the
-> > vm spdk was run with fio plugin.
-> > 
-> > spdk was taken from my branch on gitlab, and fio was complied from source for
-> > 3.4 branch as needed by the spdk fio plugin.
-> > 
-> > The following spdk command line was used:
-> > 
-> > $WORK/fio/fio \
-> > 	--name=job --runtime=40 --ramp_time=0 --time_based \
-> > 	 --filename="trtype=PCIe traddr=$DEVICE_FOR_FIO ns=1" --ioengine=spdk  \
-> > 	--direct=1 --rw=randread --bs=4K --cpus_allowed=0 \
-> > 	--iodepth=1 --thread
-> > 
-> > The average values for slat (submission latency), clat (completion latency) and
-> > its sum (slat+clat) were noted.
-> > 
-> > The results:
-> > 
-> > spdk fio host: 
-> > 	573 Mib/s - slat 112.00ns, clat 6.400us, lat 6.52ms
-> > 	573 Mib/s - slat 111.50ns, clat 6.406us, lat 6.52ms
-> > 
-> > 
-> > pci passthough host/
-> > spdk fio guest
-> > 	571 Mib/s - slat 124.56ns, clat 6.422us  lat 6.55ms
-> > 	571 Mib/s - slat 122.86ns, clat 6.410us  lat 6.53ms
-> > 	570 Mib/s - slat 124.95ns, clat 6.425us  lat 6.55ms
-> > 
-> > spdk host/
-> > spdk fio guest:
-> > 	535 Mib/s - slat 125.00ns, clat 6.895us  lat 7.02ms
-> > 	534 Mib/s - slat 125.36ns, clat 6.896us  lat 7.02ms
-> > 	534 Mib/s - slat 125.82ns, clat 6.892us  lat 7.02ms
-> > 
-> > mdev host/
-> > spdk fio guest:
-> > 	534 Mib/s - slat 128.04ns, clat 6.902us  lat 7.03ms
-> > 	535 Mib/s - slat 126.97ns, clat 6.900us  lat 7.03ms
-> > 	535 Mib/s - slat 127.00ns, clat 6.898us  lat 7.03ms
-> > 
-> > 
-> > As you see, native latency is 6.52ms, pci passthrough barely adds any latency,
-> > while both mdev/spdk added about (7.03/2 - 6.52) - 0.51ms/0.50ms of latency.
+On 2019-03-25 10:05 p.m., Kangjie Lu wrote:
+> In case alloc_workqueue fails, the fix frees memory and
+> returns -ENOMEM to avoid potential NULL pointer dereference.
 > 
-> Milliseconds is surprising.  The SSD's spec says 10us read/write
-> latency.  Did you mean microseconds?
-Yea, this is typo - all of this is microseconds.
-
-
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+> v2: use radeon_crtc_destroy to properly clean up resources as
+> suggested by Michel Dänzer <michel@daenzer.net>
 > 
-> > 
-> > In addtion to that I added few 'rdtsc' into my mdev driver to strategically
-> > capture the cycle count it takes it to do 3 things:
-> > 
-> > 1. translate a just received command (till it is copied to the hardware
-> > submission queue)
-> > 
-> > 2. receive a completion (divided by the number of completion received in one
-> > round of polling)
-> > 
-> > 3. deliver an interupt to the guest (call to eventfd_signal)
-> > 
-> > This is not the whole latency as there is also a latency between the point the
-> > submission entry is written and till it is visible on the polling cpu, plus
-> > latency till polling cpu gets to the code which reads the submission entry,
-> > and of course latency of interrupt delivery, but the above measurements mostly
-> > capture the latency I can control.
-> > 
-> > The results are:
-> > 
-> > commands translated : avg cycles: 459.844     avg time(usec): 0.135        
-> > commands completed  : avg cycles: 354.61      avg time(usec): 0.104        
-> > interrupts sent     : avg cycles: 590.227     avg time(usec): 0.174
-> > 
-> > avg time total: 0.413 usec
-> > 
-> > All measurmenets done in the host kernel. the time calculated using tsc_khz
-> > kernel variable.
-> > 
-> > The biggest take from this is that both spdk and my driver are very fast and
-> > overhead is just a  thousand of cpu cycles give it or take.
+>  [...]
 > 
-> Nice!
-> 
-> Stefan
+> @@ -671,13 +671,18 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
+>  
+>  	radeon_crtc = kzalloc(sizeof(struct radeon_crtc) + (RADEONFB_CONN_LIMIT * sizeof(struct drm_connector *)), GFP_KERNEL);
+>  	if (radeon_crtc == NULL)
+> -		return;
+> +		return -ENOMEM;
+>  
+>  	drm_crtc_init(dev, &radeon_crtc->base, &radeon_crtc_funcs);
+>  
+>  	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
+>  	radeon_crtc->crtc_id = index;
+>  	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
+> +	if (!radeon_crtc->flip_queue) {
+> +		DRM_ERROR("failed to allocate the flip queue\n");
+> +		radeon_crtc_destroy(&radeon_crtc->base);
+> +		return -ENOMEM;
+> +	}
+
+radeon_crtc_destroy currently unconditionally calls:
+
+	destroy_workqueue(radeon_crtc->flip_queue);
+
+AFAICT destroy_workqueue will blow up if NULL is passed to it, so
+radeon_crtc_destroy needs to check for that.
 
 
-Best regards,
-	Maxim Levitsky
-
-
+-- 
+Earthling Michel Dänzer               |              https://www.amd.com
+Libre software enthusiast             |             Mesa and X developer
