@@ -2,457 +2,141 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B26DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6DBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108A92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="LHIMq8Zo"
+	by mail.kernel.org (Postfix) with ESMTP id 956762075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfCZMUA (ORCPT
+        id S1731267AbfCZMWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:20:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33336 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730697AbfCZMUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:20:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q1so14104860wrp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 05:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6+SUBC0TRvddUeAi0z83m54s+83aEcE88Bn255vHU+w=;
-        b=LHIMq8ZogYlJMOhv6OFnjrgzPK1JNPxH2hjq+52dD+tpTOq7UYdexrGslLxQJrT/KJ
-         7jmGhPLRlXViNeRrvMP9avurqBykIaAdHOUfJsoO1UFWZH4XO+WVHfeSUwyqRxThUxes
-         1xQu0GACNDJIM4bNbJ9hXXfhSc7oHvKWWk9/iyTgWBhTiqQTrOPcEYD7WvPigSazHOIX
-         tmvOMaQ6d7hn3Iuliw5JUXfqjG0BW5juIQdDG9nXWf8d/haOXJ5uGhyzKt5KPE8xAaoQ
-         +Y86Yyz46iAVXq5CDrqaQfp4sV0chLEIgSG0MEExTUCRtRzlF9/ZlEkMnNToj451ER9+
-         TBow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6+SUBC0TRvddUeAi0z83m54s+83aEcE88Bn255vHU+w=;
-        b=rQNC8ZF5R2mxmzXVma1DaWNhq4iI3jiqI5oUCQw7PAgUjsG/HCsPufDWKMz/EbKFS9
-         4KVT3MlggQHPdAhGC0CJs1K83EkDBcf2lMF9iMK7EjzksmVjHyDbOJdCx0hAQysHzTtB
-         /velE69ARNq87UX79Orcslv+NO2f5P9uG5oDbkJxeJ2y8GtfweeaTZ6KVg4Bmr9r+JZs
-         azepk1giu0TmLCPXVlrfgQN7Gfwypu9lOVrebfeF5zaP8Gl6OF0JQFvMKDKmL9JqyiOX
-         AvYbfNa6RF330CuU2c+b3Zbile9gSQ+nU+SywaGDZP+gaUMtBk7faOkg1v+dUtMv0mo5
-         q7tQ==
-X-Gm-Message-State: APjAAAXZhZvbKjVv9YLal8J4o3LqbxUhXxrf5I2kSKwuh63eow6r7Jkv
-        4PYIzZgKgTzAqtXApwgQAUiujQ==
-X-Google-Smtp-Source: APXvYqzZAd5WwDz3YcGjrfO8jbs4TWbhCzDBAJgU5LnoMc3F6LJ/wcNVvW17DEwAImGhU32IY1ZuxQ==
-X-Received: by 2002:adf:ea81:: with SMTP id s1mr18628352wrm.277.1553602797789;
-        Tue, 26 Mar 2019 05:19:57 -0700 (PDT)
-Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
-        by smtp.gmail.com with ESMTPSA id m6sm24059649wrr.53.2019.03.26.05.19.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 05:19:57 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 13:09:09 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190326120909.GF2230@nanopsycho>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+        Tue, 26 Mar 2019 08:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726111AbfCZMWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:22:01 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DC502075C;
+        Tue, 26 Mar 2019 12:21:59 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 08:21:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, paulmck@linux.ibm.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, shaoyafang@didiglobal.com
+Subject: Re: [PATCH v2 2/3] sched/fair: do not expose some tracepoints to
+ user if CONFIG_SCHEDSTATS is not set
+Message-ID: <20190326082157.1d0c01cb@gandalf.local.home>
+In-Reply-To: <1553602391-11926-3-git-send-email-laoar.shao@gmail.com>
+References: <1553602391-11926-1-git-send-email-laoar.shao@gmail.com>
+        <1553602391-11926-3-git-send-email-laoar.shao@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
->Basic genetlink and init infrastructure for the netlink interface, register
->genetlink family "ethtool". Introduce CONFIG_ETHTOOL_NETLINK Kconfig
->option. Add interface description into Documentation/networking.
->
->Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->---
-> Documentation/networking/ethtool-netlink.txt | 168 +++++++++++++++++++
-> include/linux/ethtool_netlink.h              |   9 +
-> include/uapi/linux/ethtool_netlink.h         |  25 +++
-> net/Kconfig                                  |   8 +
-> net/ethtool/Makefile                         |   6 +-
-> net/ethtool/netlink.c                        |  34 ++++
-> net/ethtool/netlink.h                        |  12 ++
-> 7 files changed, 261 insertions(+), 1 deletion(-)
-> create mode 100644 Documentation/networking/ethtool-netlink.txt
-> create mode 100644 include/linux/ethtool_netlink.h
-> create mode 100644 include/uapi/linux/ethtool_netlink.h
-> create mode 100644 net/ethtool/netlink.c
-> create mode 100644 net/ethtool/netlink.h
->
->diff --git a/Documentation/networking/ethtool-netlink.txt b/Documentation/networking/ethtool-netlink.txt
->new file mode 100644
->index 000000000000..377d64c9b7fa
->--- /dev/null
->+++ b/Documentation/networking/ethtool-netlink.txt
->@@ -0,0 +1,168 @@
->+                        Netlink interface for ethtool
->+                        =============================
->+
->+
->+Basic information
->+-----------------
->+
->+Netlink interface for ethtool uses generic netlink family "ethtool" (userspace
->+application should use macros ETHTOOL_GENL_NAME and ETHTOOL_GENL_VERSION
->+defined in <linux/ethtool_netlink.h> uapi header). This family does not use
->+a specific header, all information in requests and replies is passed using
->+netlink attributes.
->+
->+In requests, device can be identified by ifindex or by name; if both are used,
->+they must match. In replies, kernel fills both. The meaning of flags,
->+info_mask and index fields depends on request type.
->+
->+The ethtool netlink interface uses extended ACK for error and warning
->+reporting, userspace application developers are encouraged to make these
->+messages available to user in a suitable way.
->+
->+Requests can be divided into three categories: "get" (retrieving information),
->+"set" (setting parameters) and "action" (invoking an action).
->+
->+All "set" and "action" type requests require admin privileges (CAP_NET_ADMIN
->+in the namespace). Most "get" type request are allowed for anyone but there
+Peter, Ingo,
 
-s/request/requests/
+Are you OK with this patch? If you ack it, I'll pull it in through my
+tree.
+
+-- Steve
 
 
->+are exceptions (where the response contains sensitive information). In some
->+cases, the request as such is allowed for anyone but unprivileged users have
->+attributes with sensitive information (e.g. wake-on-lan password) omitted.
->+
->+
->+Conventions
->+-----------
->+
->+Attributes which represent a boolean value usually use u8 type so that we can
->+distinguish three states: "on", "off" and "not present" (meaning the
->+information is not available in "get" requests or value is not to be changed
->+in "set" requests). For these attributes, the "true" value should be passed as
->+number 1 but any non-zero value should be understood as "true" by recipient.
->+
->+Some request types allow passing an attribute named ETHA_*_INFOMASK with
->+a bitmask telling kernel that we are only interested in some parts of the
->+information. If info mask is omitted, all available information is returned.
->+Meaning of info mask bits depends on request type and is listed below.
->+
->+
->+Device identification
->+---------------------
->+
->+When appropriate, network device is identified by a nested attribute named
->+ETHA_*_DEV. This attribute can contain
+On Tue, 26 Mar 2019 20:13:10 +0800
+Yafang Shao <laoar.shao@gmail.com> wrote:
 
-Isn't it ETHA_DEV_*? I must admit I'm a bit confused.
-
-
->+
->+    ETHA_DEV_INDEX	(u32)		device ifindex
->+    ETHA_DEV_NAME	(string)	device name
->+
->+In device related requests, one of these is sufficient; if both are used, they
->+must match (i.e. identify the same device). In device related replies both are
-
-You say this now for the second time. First time this was said in second
-para.
-
-
->+provided by kernel. In dump requests, device is not specified and kernel
->+replies with one message per network device (only those for which the request
->+is supported).
->+
->+
->+List of message types
->+---------------------
->+
->+All constants use ETHNL_CMD_ prefix, usually followed by "GET", "SET" or "ACT"
-
-Why "usually"? Why not "always"?
-
-
->+to indicate the type.
->+
->+Messages of type "get" are used by userspace to request information and
->+usually do not contain any attributes (that may be added later for dump
->+filtering). Kernel response is in the form of corresponding "set" message;
-
-Okay. Do we want reply to "*_cmd_something_get" command to be
-"*_cmd_something_set". That sounds odd. Why reply has to be "cmd"? Why
-not something like "reply" or "response"?
-This should work for both "doit/dumpit" and notifications.
-
-
->+the same message can be also used to set (some of) the parameters, except for
->+messages marked as "response only" in the table above. "Get" messages with
->+NLM_F_DUMP flags and no device identification dump the information for all
->+devices supporting the request.
->+
->+Later sections describe the format and semantics of these request messages.
->+
->+
->+Request translation
->+-------------------
->+
->+The following table maps iosctl commands to netlink commands providing their
->+functionality. Entries with "n/a" in right column are commands which do not
->+have their netlink replacement yet.
->+
->+ioctl command			netlink command
->+---------------------------------------------------------------------
->+ETHTOOL_GSET			n/a
->+ETHTOOL_SSET			n/a
->+ETHTOOL_GDRVINFO		n/a
->+ETHTOOL_GREGS			n/a
->+ETHTOOL_GWOL			n/a
->+ETHTOOL_SWOL			n/a
->+ETHTOOL_GMSGLVL			n/a
->+ETHTOOL_SMSGLVL			n/a
->+ETHTOOL_NWAY_RST		n/a
->+ETHTOOL_GLINK			n/a
->+ETHTOOL_GEEPROM			n/a
->+ETHTOOL_SEEPROM			n/a
->+ETHTOOL_GCOALESCE		n/a
->+ETHTOOL_SCOALESCE		n/a
->+ETHTOOL_GRINGPARAM		n/a
->+ETHTOOL_SRINGPARAM		n/a
->+ETHTOOL_GPAUSEPARAM		n/a
->+ETHTOOL_SPAUSEPARAM		n/a
->+ETHTOOL_GRXCSUM			n/a
->+ETHTOOL_SRXCSUM			n/a
->+ETHTOOL_GTXCSUM			n/a
->+ETHTOOL_STXCSUM			n/a
->+ETHTOOL_GSG			n/a
->+ETHTOOL_SSG			n/a
->+ETHTOOL_TEST			n/a
->+ETHTOOL_GSTRINGS		n/a
->+ETHTOOL_PHYS_ID			n/a
->+ETHTOOL_GSTATS			n/a
->+ETHTOOL_GTSO			n/a
->+ETHTOOL_STSO			n/a
->+ETHTOOL_GPERMADDR		rtnetlink RTM_GETLINK
->+ETHTOOL_GUFO			n/a
->+ETHTOOL_SUFO			n/a
->+ETHTOOL_GGSO			n/a
->+ETHTOOL_SGSO			n/a
->+ETHTOOL_GFLAGS			n/a
->+ETHTOOL_SFLAGS			n/a
->+ETHTOOL_GPFLAGS			n/a
->+ETHTOOL_SPFLAGS			n/a
->+ETHTOOL_GRXFH			n/a
->+ETHTOOL_SRXFH			n/a
->+ETHTOOL_GGRO			n/a
->+ETHTOOL_SGRO			n/a
->+ETHTOOL_GRXRINGS		n/a
->+ETHTOOL_GRXCLSRLCNT		n/a
->+ETHTOOL_GRXCLSRULE		n/a
->+ETHTOOL_GRXCLSRLALL		n/a
->+ETHTOOL_SRXCLSRLDEL		n/a
->+ETHTOOL_SRXCLSRLINS		n/a
->+ETHTOOL_FLASHDEV		n/a
->+ETHTOOL_RESET			n/a
->+ETHTOOL_SRXNTUPLE		n/a
->+ETHTOOL_GRXNTUPLE		n/a
->+ETHTOOL_GSSET_INFO		n/a
->+ETHTOOL_GRXFHINDIR		n/a
->+ETHTOOL_SRXFHINDIR		n/a
->+ETHTOOL_GFEATURES		n/a
->+ETHTOOL_SFEATURES		n/a
->+ETHTOOL_GCHANNELS		n/a
->+ETHTOOL_SCHANNELS		n/a
->+ETHTOOL_SET_DUMP		n/a
->+ETHTOOL_GET_DUMP_FLAG		n/a
->+ETHTOOL_GET_DUMP_DATA		n/a
->+ETHTOOL_GET_TS_INFO		n/a
->+ETHTOOL_GMODULEINFO		n/a
->+ETHTOOL_GMODULEEEPROM		n/a
->+ETHTOOL_GEEE			n/a
->+ETHTOOL_SEEE			n/a
->+ETHTOOL_GRSSH			n/a
->+ETHTOOL_SRSSH			n/a
->+ETHTOOL_GTUNABLE		n/a
->+ETHTOOL_STUNABLE		n/a
->+ETHTOOL_GPHYSTATS		n/a
->+ETHTOOL_PERQUEUE		n/a
->+ETHTOOL_GLINKSETTINGS		n/a
->+ETHTOOL_SLINKSETTINGS		n/a
->+ETHTOOL_PHY_GTUNABLE		n/a
->+ETHTOOL_PHY_STUNABLE		n/a
->+ETHTOOL_GFECPARAM		n/a
->+ETHTOOL_SFECPARAM		n/a
->diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
->new file mode 100644
->index 000000000000..0412adb4f42f
->--- /dev/null
->+++ b/include/linux/ethtool_netlink.h
->@@ -0,0 +1,9 @@
->+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->+
->+#ifndef _LINUX_ETHTOOL_NETLINK_H_
->+#define _LINUX_ETHTOOL_NETLINK_H_
->+
->+#include <uapi/linux/ethtool_netlink.h>
->+#include <linux/ethtool.h>
->+
->+#endif /* _LINUX_ETHTOOL_NETLINK_H_ */
->diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
->new file mode 100644
->index 000000000000..6aa267451542
->--- /dev/null
->+++ b/include/uapi/linux/ethtool_netlink.h
->@@ -0,0 +1,25 @@
->+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->+/*
->+ * include/uapi/linux/ethtool_netlink.h - netlink interface for ethtool
->+ *
->+ * See Documentation/networking/ethtool-netlink.txt in kernel source tree for
->+ * doucumentation of the interface.
->+ */
->+
->+#ifndef _UAPI_LINUX_ETHTOOL_NETLINK_H_
->+#define _UAPI_LINUX_ETHTOOL_NETLINK_H_
->+
->+#include <linux/ethtool.h>
->+
->+enum {
->+	ETHNL_CMD_NOOP,
->+
-
-Usually headers have something like:
-/* add new commands above here */
-here.
-
-
->+	__ETHNL_CMD_CNT,
->+	ETHNL_CMD_MAX = (__ETHNL_CMD_CNT - 1)
->+};
->+
->+/* generic netlink info */
->+#define ETHTOOL_GENL_NAME "ethtool"
->+#define ETHTOOL_GENL_VERSION 1
->+
->+#endif /* _UAPI_LINUX_ETHTOOL_NETLINK_H_ */
->diff --git a/net/Kconfig b/net/Kconfig
->index 3e8fdd688329..75c600b45775 100644
->--- a/net/Kconfig
->+++ b/net/Kconfig
->@@ -448,6 +448,14 @@ config FAILOVER
-> 	  migration of VMs with direct attached VFs by failing over to the
-> 	  paravirtual datapath when the VF is unplugged.
+> The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
+> be not exposed to user if CONFIG_SCHEDSTATS is not set.
 > 
->+config ETHTOOL_NETLINK
->+	bool "Netlink interface for ethtool"
->+	default y
->+	help
->+	  An alternative userspace interface for ethtool based on generic
->+	  netlink. It provides better extensibility and some new features,
->+	  e.g. notification messages.
->+
-> endif   # if NET
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> ---
+>  include/trace/events/sched.h | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
 > 
-> # Used by archs to tell that they support BPF JIT compiler plus which flavour.
->diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
->index 3ebfab2bca66..f30e0da88be5 100644
->--- a/net/ethtool/Makefile
->+++ b/net/ethtool/Makefile
->@@ -1,3 +1,7 @@
-> # SPDX-License-Identifier: GPL-2.0
-> 
->-obj-y		+= ioctl.o
->+obj-y				+= ioctl.o
->+
->+obj-$(CONFIG_ETHTOOL_NETLINK)	+= ethtool_nl.o
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 9a4bdfa..c8c7c7e 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -241,7 +241,6 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+>  DEFINE_EVENT(sched_process_template, sched_process_free,
+>  	     TP_PROTO(struct task_struct *p),
+>  	     TP_ARGS(p));
+> -	     
+>  
+>  /*
+>   * Tracepoint for a task exiting:
+> @@ -336,11 +335,20 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+>  		  __entry->pid, __entry->old_pid)
+>  );
+>  
+> +
+> +#ifdef CONFIG_SCHEDSTATS
+> +#define DEFINE_EVENT_SCHEDSTAT DEFINE_EVENT
+> +#define DECLARE_EVENT_CLASS_SCHEDSTAT DECLARE_EVENT_CLASS
+> +#else
+> +#define DEFINE_EVENT_SCHEDSTAT DEFINE_EVENT_NOP
+> +#define DECLARE_EVENT_CLASS_SCHEDSTAT DECLARE_EVENT_CLASS_NOP
+> +#endif
+> +
+>  /*
+>   * XXX the below sched_stat tracepoints only apply to SCHED_OTHER/BATCH/IDLE
+>   *     adding sched_stat support to SCHED_FIFO/RR would be welcome.
+>   */
+> -DECLARE_EVENT_CLASS(sched_stat_template,
+> +DECLARE_EVENT_CLASS_SCHEDSTAT(sched_stat_template,
+>  
+>  	TP_PROTO(struct task_struct *tsk, u64 delay),
+>  
+> @@ -363,12 +371,11 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+>  			(unsigned long long)__entry->delay)
+>  );
+>  
+> -
+>  /*
+>   * Tracepoint for accounting wait time (time the task is runnable
+>   * but not actually running due to scheduler contention).
+>   */
+> -DEFINE_EVENT(sched_stat_template, sched_stat_wait,
+> +DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_wait,
+>  	     TP_PROTO(struct task_struct *tsk, u64 delay),
+>  	     TP_ARGS(tsk, delay));
+>  
+> @@ -376,7 +383,7 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+>   * Tracepoint for accounting sleep time (time the task is not runnable,
+>   * including iowait, see below).
+>   */
+> -DEFINE_EVENT(sched_stat_template, sched_stat_sleep,
+> +DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_sleep,
+>  	     TP_PROTO(struct task_struct *tsk, u64 delay),
+>  	     TP_ARGS(tsk, delay));
+>  
+> @@ -384,14 +391,14 @@ static inline long __trace_sched_switch_state(bool preempt, struct task_struct *
+>   * Tracepoint for accounting iowait time (time the task is not runnable
+>   * due to waiting on IO to complete).
+>   */
+> -DEFINE_EVENT(sched_stat_template, sched_stat_iowait,
+> +DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_iowait,
+>  	     TP_PROTO(struct task_struct *tsk, u64 delay),
+>  	     TP_ARGS(tsk, delay));
+>  
+>  /*
+>   * Tracepoint for accounting blocked time (time the task is in uninterruptible).
+>   */
+> -DEFINE_EVENT(sched_stat_template, sched_stat_blocked,
+> +DEFINE_EVENT_SCHEDSTAT(sched_stat_template, sched_stat_blocked,
+>  	     TP_PROTO(struct task_struct *tsk, u64 delay),
+>  	     TP_ARGS(tsk, delay));
+>  
 
-Why? I believe this should be always build-in same as ioctl.
-
-
->+
->+ethtool_nl-y	:= netlink.o
->diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
->new file mode 100644
->index 000000000000..85dd6dac71a2
->--- /dev/null
->+++ b/net/ethtool/netlink.c
->@@ -0,0 +1,34 @@
->+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
->+
->+#include <linux/ethtool_netlink.h>
->+#include "netlink.h"
->+
->+/* genetlink setup */
->+
->+static const struct genl_ops ethtool_genl_ops[] = {
->+};
->+
->+struct genl_family ethtool_genl_family = {
->+	.hdrsize	= 0,
-
-No need to set 0.
-
-
->+	.name		= ETHTOOL_GENL_NAME,
->+	.version	= ETHTOOL_GENL_VERSION,
->+	.netnsok	= true,
->+	.parallel_ops	= true,
->+	.ops		= ethtool_genl_ops,
->+	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
->+};
->+
->+/* module setup */
->+
->+static int __init ethnl_init(void)
->+{
->+	int ret;
->+
->+	ret = genl_register_family(&ethtool_genl_family);
->+	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
->+		return ret;
->+
->+	return 0;
->+}
->+
->+subsys_initcall(ethnl_init);
->diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
->new file mode 100644
->index 000000000000..63063b582ca2
->--- /dev/null
->+++ b/net/ethtool/netlink.h
->@@ -0,0 +1,12 @@
->+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->+
->+#ifndef _NET_ETHTOOL_NETLINK_H
->+#define _NET_ETHTOOL_NETLINK_H
->+
->+#include <linux/ethtool_netlink.h>
->+#include <linux/netdevice.h>
->+#include <net/genetlink.h>
->+
->+extern struct genl_family ethtool_genl_family;
-
-Why? You need this just within "netlink.c", don't you?
-
-
->+
->+#endif /* _NET_ETHTOOL_NETLINK_H */
->-- 
->2.21.0
->
