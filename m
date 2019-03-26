@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AF1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F60C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820C820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F2C20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582136;
-	bh=6KsUm45Tq7wO3TT0SzVUoSTfmg40B6UWeSPS3xHSR9k=;
+	s=default; t=1553582141;
+	bh=pqjvzSiJEsfK7ZffskbdO1uKI6xdKYWOWo4gD1qa7Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJ3tH/fXbADm9SeTLYNziAqX7gvUoCejWdukdVgrMshQTP+VASLMhrVaZ4TIMj5P0
-	 o9jG7nESo+quU+emd5Rs8qb4jA7LwgT2j6fUY1KN4niRi7N+waCpyQqHrnZ2wlmr10
-	 z/JBpsS5VqaCO/+E9Rq/07D4IEk3iy4dNuLi59AE=
+	b=SII5TH5u0UDbpfFm17QyvM89xWN3ERv0uFdxU5YKaQnVp/W9Muc/S0bGPJjGIis++
+	 mBiWgxuoZ60aP1P2+zCEKic3DGN1H6MDxHPESB6APSA3V8xCOtbmTy74MPgAzyqENd
+	 JTsPkP0nUYfZC9n54PWAfh3zFHtK1D0LFx9cUgEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbfCZGff (ORCPT
+        id S1732083AbfCZGfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbfCZGfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:33 -0400
+        id S1725535AbfCZGfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:37 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6FD42087C;
-        Tue, 26 Mar 2019 06:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 650F420823;
+        Tue, 26 Mar 2019 06:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582133;
-        bh=6KsUm45Tq7wO3TT0SzVUoSTfmg40B6UWeSPS3xHSR9k=;
+        s=default; t=1553582137;
+        bh=pqjvzSiJEsfK7ZffskbdO1uKI6xdKYWOWo4gD1qa7Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AoC3HfVx51EW3PsnZNhddWH08Cu/mla2RPFdGvKD7WTRwMdOeHUC9nBDHsLlw098W
-         OwlEXpPea18TzjbDtF/SP+U4vMqDGjfPUMQkT9vqZixt26wJrV0aHWBRx5maGgSIPp
-         cbdsGpYjlcFbTGzFNoQns1ovL48iLS7qhaBppKho=
+        b=sAOT0UTkbmKRCntzdQ1tJ69HJ/32hsCIyF3U1vV2LPoMWSrsypK9K1bnSKHwlvaO9
+         HXDfqE88j/Q/XRQNZU6PruDaamCIQDu9hsxgvolTiEnGv7l0XI5W8GWzCMT853E0KN
+         uFHbZpkYGcnlda44SGdiODtPS0rmIbA8ux4mSIM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yasha Cherikovsky <yasha.che3@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
-Subject: [PATCH 4.19 12/45] MIPS: Ensure ELF appended dtb is relocated
-Date:   Tue, 26 Mar 2019 15:29:55 +0900
-Message-Id: <20190326042703.322006959@linuxfoundation.org>
+        stable@vger.kernel.org, Archer Yan <ayan@wavecomp.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 4.19 13/45] MIPS: Fix kernel crash for R6 in jump label branch function
+Date:   Tue, 26 Mar 2019 15:29:56 +0900
+Message-Id: <20190326042703.370663184@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -66,61 +64,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yasha Cherikovsky <yasha.che3@gmail.com>
+From: Archer Yan <ayan@wavecomp.com>
 
-commit 3f0a53bc6482fb09770982a8447981260ea258dc upstream.
+commit 47c25036b60f27b86ab44b66a8861bcf81cde39b upstream.
 
-This fixes booting with the combination of CONFIG_RELOCATABLE=y
-and CONFIG_MIPS_ELF_APPENDED_DTB=y.
+Insert Branch instruction instead of NOP to make sure assembler don't
+patch code in forbidden slot. In jump label function, it might
+be possible to patch Control Transfer Instructions(CTIs) into
+forbidden slot, which will generate Reserved Instruction exception
+in MIPS release 6.
 
-Sections that appear after the relocation table are not relocated
-on system boot (except .bss, which has special handling).
-
-With CONFIG_MIPS_ELF_APPENDED_DTB, the dtb is part of the
-vmlinux ELF, so it must be relocated together with everything else.
-
-Fixes: 069fd766271d ("MIPS: Reserve space for relocation table")
-Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+Signed-off-by: Archer Yan <ayan@wavecomp.com>
+Reviewed-by: Paul Burton <paul.burton@mips.com>
+[paul.burton@mips.com:
+  - Add MIPS prefix to subject.
+  - Mark for stable from v4.0, which introduced r6 support, onwards.]
 Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.7+
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.0+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/vmlinux.lds.S |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ arch/mips/include/asm/jump_label.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -140,6 +140,13 @@ SECTIONS
- 	PERCPU_SECTION(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
+--- a/arch/mips/include/asm/jump_label.h
++++ b/arch/mips/include/asm/jump_label.h
+@@ -21,15 +21,15 @@
  #endif
  
-+#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
-+	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
-+		*(.appended_dtb)
-+		KEEP(*(.appended_dtb))
-+	}
-+#endif
-+
- #ifdef CONFIG_RELOCATABLE
- 	. = ALIGN(4);
- 
-@@ -164,11 +171,6 @@ SECTIONS
- 	__appended_dtb = .;
- 	/* leave space for appended DTB */
- 	. += 0x100000;
--#elif defined(CONFIG_MIPS_ELF_APPENDED_DTB)
--	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
--		*(.appended_dtb)
--		KEEP(*(.appended_dtb))
--	}
+ #ifdef CONFIG_CPU_MICROMIPS
+-#define NOP_INSN "nop32"
++#define B_INSN "b32"
+ #else
+-#define NOP_INSN "nop"
++#define B_INSN "b"
  #endif
- 	/*
- 	 * Align to 64K in attempt to eliminate holes before the
+ 
+ static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
+ {
+-	asm_volatile_goto("1:\t" NOP_INSN "\n\t"
+-		"nop\n\t"
++	asm_volatile_goto("1:\t" B_INSN " 2f\n\t"
++		"2:\tnop\n\t"
+ 		".pushsection __jump_table,  \"aw\"\n\t"
+ 		WORD_INSN " 1b, %l[l_yes], %0\n\t"
+ 		".popsection\n\t"
 
 
