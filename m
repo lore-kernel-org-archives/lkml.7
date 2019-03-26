@@ -2,89 +2,129 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26FFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A390C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B312075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE2C2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MBnXWi3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbfCZNta (ORCPT
+        id S1731685AbfCZNth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:49:30 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:18541 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZNta (ORCPT
+        Tue, 26 Mar 2019 09:49:37 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36678 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731471AbfCZNtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:49:30 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2QDnGT8061775;
-        Tue, 26 Mar 2019 22:49:17 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
- Tue, 26 Mar 2019 22:49:16 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2QDnGHD061770
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Tue, 26 Mar 2019 22:49:16 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add rk3399 UART DMAs
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190321162244.10080-1-katsuhiro@katsuster.net>
- <8309531.dRdlsDmmhi@phil> <f2d0a95f-33c0-cdeb-80e3-0cd04bd0871d@arm.com>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <e7bcf8b9-123e-eb30-f47d-7f8855f30ccb@katsuster.net>
-Date:   Tue, 26 Mar 2019 22:49:16 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 09:49:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id f6so10822302iop.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 06:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BbMzgIzQCfWFlXsfTKjvE5YFCQD6PlQb3XZXDhFLods=;
+        b=MBnXWi3EFgJUfYY0NfW9JI9zwf0RmGdMiCf2iziNzx/8pvXU0xsWMfahqhZl1sqJLb
+         aqQfrvZQggQjSBByeFyav0V+nj/g95aAWmRgMpMlNYpRRB7x5tjWrX5KMBJvFct6OqsZ
+         k1qI+8SwX/QWvA1piaEp8gbNCf/Om5sOMFik3AH/3iR5J4rfdbqerZeMlhA4fwWxNWz2
+         MZa5YsYJIK2lO/vDFxv2aosG3yCWZy36e5gseMwdKMX+OVJYYYOUZl5J5H6GNgD6yybv
+         RwN8DU0TggMxQbaLh1tde+/VthGKrhCJmieSNxjnPFdPXC0DgczNn6YtbLOlre4jCWQC
+         4Rcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BbMzgIzQCfWFlXsfTKjvE5YFCQD6PlQb3XZXDhFLods=;
+        b=koi2rQb0QPknP5yecowv0eg1T7PBm+KL8jNeCOK7JzfBZaRVkdxLMK8XoI7LdBNduk
+         rgtWi360ZBMldXEK89L8sUN47nSrixJkUjQmaqar29ea/XUJ+30pmgy8ZdRd+jlRQ6XN
+         yv6EaIzlgS5Ecrpk7+KAjsTjhA3Vz7SoSzwbEuxV1uRjuciYk2inzYFxHt85AeXWN+nX
+         i7ZYa0tZjgUimeAMrwuKCl95MxmI4XZ4Am2JLzHcADGnhS9aimiq/uZa6hRHR1n6kUod
+         YtnEKF9aTTy28DdexByxWr2i5SEx1jMz8ZZAlaE4IE12eHryfT8Cufng9E9nQKB5FPt0
+         Iy9w==
+X-Gm-Message-State: APjAAAV/7bm9ly0d3e25dmxzDQRDiPBFSeTVAyAdiKKs2fZe4mFUeVQI
+        68akvP6XQYFd/JIO/GmlU0Lg6GBV9PIe0/LcxmtvfeEx
+X-Google-Smtp-Source: APXvYqyK8kulVJ2QGkqImXDk7FfdEcLLymLdmUxG/qvsquaryZoWLeZkfoWg3YLpmX4nTs7gHZFKuu8qWgRI4EtXxgo=
+X-Received: by 2002:a5d:91d3:: with SMTP id k19mr21355533ior.258.1553608175458;
+ Tue, 26 Mar 2019 06:49:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f2d0a95f-33c0-cdeb-80e3-0cd04bd0871d@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190318174228.18194-1-brgl@bgdev.pl> <20190318174228.18194-7-brgl@bgdev.pl>
+ <20190322091223.GI27015@amd>
+In-Reply-To: <20190322091223.GI27015@amd>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 26 Mar 2019 14:49:24 +0100
+Message-ID: <CAMRc=Me1BbZKPQyAt4RR1eRk9pX3oHFudpm1CnHx3-AuD-G5ug@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 06/11] mfd: max77650: new core mfd driver
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Robin,
+pt., 22 mar 2019 o 10:12 Pavel Machek <pavel@ucw.cz> napisa=C5=82(a):
+>
+> On Mon 2019-03-18 18:42:23, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Add the core mfd driver for max77650 PMIC. We define five sub-devices
+> > for which the drivers will be added in subsequent patches.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/mfd/Kconfig          |  14 +++
+> >  drivers/mfd/Makefile         |   1 +
+> >  drivers/mfd/max77650.c       | 234 +++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/max77650.h |  59 +++++++++
+> >  4 files changed, 308 insertions(+)
+> >  create mode 100644 drivers/mfd/max77650.c
+> >  create mode 100644 include/linux/mfd/max77650.h
+> >
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 0ce2d8dfc5f1..ade04e124aa0 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -733,6 +733,20 @@ config MFD_MAX77620
+> >         provides common support for accessing the device; additional dr=
+ivers
+> >         must be enabled in order to use the functionality of the device=
+.
+> >
+> > +config MFD_MAX77650
+> > +     tristate "Maxim MAX77650/77651 PMIC Support"
+> > +     depends on I2C
+> > +     depends on OF || COMPILE_TEST
+>
+> This says it will compile ok in !OF case. Will it?
+>
 
-Sorry for inconvenience. Since I don't adhere enabling DMA for UARTs,
-please revert my patch if you need.
+It will compile because the stubs for OF functions will be provided -
+it just won't work, because they won't be implemented.
 
-BTW, there are DMA properties in RK3328 device-tree like as this patch.
-RK3328 UART DMA could not work correctly too...??
+Bart
 
-Best Regards,
-Katsuhiro Suzuki
-
-
-On 2019/03/26 20:48, Robin Murphy wrote:
-> On 25/03/2019 12:34, Heiko Stuebner wrote:
->> Am Donnerstag, 21. März 2019, 17:22:44 CET schrieb Katsuhiro Suzuki:
->>> Add UART dma channels as specified by the rk3399 TRM.
->>>
->>> Refer:
->>> RK3399 TRM V1.4: Chapter 12 DMA Controller
->>>
->>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
->>
->> applied for 5.2
-> 
-> As a heads-up, I did manage to try my board with this patch applied over 
-> the weekend, and it makes probing the bluetooth adapter fail with 
-> communication errors, so I'm not sure the 8250 and pl330 drivers are 
-> really cooperating well enough :(
-> 
-> Robin.
-> 
-
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
+log.html
