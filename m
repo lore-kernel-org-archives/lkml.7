@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693BCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90477C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B60A20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F36120857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581972;
-	bh=IIjmejFk7PHog+QH64EjrFFrAXw8i0Kuk7FAYEhdWrQ=;
+	s=default; t=1553581975;
+	bh=sBwvjyicwVeAiQTiK1lqJkRVfjphBUdDaAxmtOcHxRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qGIxqnUrwJqzDk4xx+inqOxNwqxbn2nj/XrrmXcxhiNX6KLEKNw+xlhqjODn4hf0r
-	 DQUSmmaMKnGXMbwcGowJfrvEl0vBve17BoxJrdPpP6NWpb0tFJnDZOb9Cry4mF2kCc
-	 S1nZXd3We55omcLF4jNzIxjT8YAOTTf4K0u2z0Kc=
+	b=IZAQy+mVdiaGwFaSte4Yvys6LmKw+jz5ycjJ+FHZWiWrBIGFDckWkGE1V5t2AieY1
+	 3VU808Da/Z/0d3B+gLG1U5+M0256K5XSUVHF/QKYjKvCwzIUnpcGOo7tvDkN/P7LN2
+	 aSaujlQE6ufYZ6SbDlWFhJV+Cim4D24KPvRysbHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbfCZGcv (ORCPT
+        id S1731534AbfCZGcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:32:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731497AbfCZGct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:32:49 -0400
+        id S1731497AbfCZGcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:32:52 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B2D20856;
-        Tue, 26 Mar 2019 06:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD8B20857;
+        Tue, 26 Mar 2019 06:32:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581968;
-        bh=IIjmejFk7PHog+QH64EjrFFrAXw8i0Kuk7FAYEhdWrQ=;
+        s=default; t=1553581972;
+        bh=sBwvjyicwVeAiQTiK1lqJkRVfjphBUdDaAxmtOcHxRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AIJHCvYWavjTYp8OCh7ZC1QL1nkUa479E8NJjIMozmlWyIDmq4fw7WGoloAqO4f2p
-         leAnWJigul9ALv5jJW8+LDZ3UGVF7rYl+Hc/l12MzqFehh4cTsuhqPuZUKOmbHaH9G
-         VnsJm3dt0uoreWBO+v4tVHfjvIVXUA66XLN31JDI=
+        b=iSmM6I7TczVVcOc1ZcNgn5vikE5wuR+6woEvwQb2sDCfGeiqg6gWbEZCcBmaOR3w/
+         agHegtwEOFoz3DraUiv5LPY0gfuMlroL8wuN84zdeo2KVzjo67emTFCNB4nna62lA3
+         EJzWL3BCwHH1VlRmP/4epZFoussKCan1xzpYE6Qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 21/30] Hang/soft lockup in d_invalidate with simultaneous calls
-Date:   Tue, 26 Mar 2019 15:30:00 +0900
-Message-Id: <20190326042608.283817743@linuxfoundation.org>
+        stable@vger.kernel.org, Frank Sorenson <fsorenso@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 12/30] ext4: fix data corruption caused by unaligned direct AIO
+Date:   Tue, 26 Mar 2019 15:29:51 +0900
+Message-Id: <20190326042607.991805470@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -65,59 +65,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Al Viro <viro@ZenIV.linux.org.uk>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit 81be24d263dbeddaba35827036d6f6787a59c2c3 upstream.
+commit 372a03e01853f860560eade508794dd274e9b390 upstream.
 
-It's not hard to trigger a bunch of d_invalidate() on the same
-dentry in parallel.  They end up fighting each other - any
-dentry picked for removal by one will be skipped by the rest
-and we'll go for the next iteration through the entire
-subtree, even if everything is being skipped.  Morevoer, we
-immediately go back to scanning the subtree.  The only thing
-we really need is to dissolve all mounts in the subtree and
-as soon as we've nothing left to do, we can just unhash the
-dentry and bugger off.
+Ext4 needs to serialize unaligned direct AIO because the zeroing of
+partial blocks of two competing unaligned AIOs can result in data
+corruption.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+However it decides not to serialize if the potentially unaligned aio is
+past i_size with the rationale that no pending writes are possible past
+i_size. Unfortunately if the i_size is not block aligned and the second
+unaligned write lands past i_size, but still into the same block, it has
+the potential of corrupting the previous unaligned write to the same
+block.
+
+This is (very simplified) reproducer from Frank
+
+    // 41472 = (10 * 4096) + 512
+    // 37376 = 41472 - 4096
+
+    ftruncate(fd, 41472);
+    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
+    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
+
+    io_submit(io_ctx, 1, &iocbs[1]);
+    io_submit(io_ctx, 1, &iocbs[2]);
+
+    io_getevents(io_ctx, 2, 2, events, NULL);
+
+Without this patch the 512B range from 40960 up to the start of the
+second unaligned write (41472) is going to be zeroed overwriting the data
+written by the first write. This is a data corruption.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+
+With this patch the data corruption is avoided because we will recognize
+the unaligned_aio and wait for the unwritten extent conversion.
+
+00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+*
+00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
+*
+0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
+*
+0000b200
+
+Reported-by: Frank Sorenson <fsorenso@redhat.com>
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/dcache.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ fs/ext4/file.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -1522,7 +1522,7 @@ static void check_and_drop(void *_data)
- {
- 	struct detach_data *data = _data;
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
+ 	struct super_block *sb = inode->i_sb;
+ 	int blockmask = sb->s_blocksize - 1;
  
--	if (!data->mountpoint && !data->select.found)
-+	if (!data->mountpoint && list_empty(&data->select.dispose))
- 		__d_drop(data->select.start);
- }
+-	if (pos >= i_size_read(inode))
++	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
+ 		return 0;
  
-@@ -1564,17 +1564,15 @@ void d_invalidate(struct dentry *dentry)
- 
- 		d_walk(dentry, &data, detach_and_collect, check_and_drop);
- 
--		if (data.select.found)
-+		if (!list_empty(&data.select.dispose))
- 			shrink_dentry_list(&data.select.dispose);
-+		else if (!data.mountpoint)
-+			return;
- 
- 		if (data.mountpoint) {
- 			detach_mounts(data.mountpoint);
- 			dput(data.mountpoint);
- 		}
--
--		if (!data.mountpoint && !data.select.found)
--			break;
--
- 		cond_resched();
- 	}
- }
+ 	if ((pos | iov_iter_alignment(from)) & blockmask)
 
 
