@@ -2,146 +2,259 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77755C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD19C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1318C20830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE8620857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aNcnYOSI"
+	dkim=pass (2048-bit key) header.d=skydio.com header.i=@skydio.com header.b="HiEFseJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfCZJEs (ORCPT
+        id S1730827AbfCZJFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:04:48 -0400
-Received: from mout.web.de ([217.72.192.78]:42351 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfCZJEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:04:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1553591064;
-        bh=tlXKT9wyoerRdwURIY577rIqRO7lJl2JJanPlwGaVV8=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=aNcnYOSIobfp/wkzxhhBSCrDWEh/bvcdV6UCpdS5ZWcuMILOugQIb9YZz/2hJOpMv
-         VQxb0+GTGasPQKQuR51IwITJFVW8GH/JhlQi6WiQ3IrJH5ORzzrmFmpI0ysgYsnZeY
-         H4BxSGHTXQBRD0qO2E5ZFNvkynoDDca4lLNldl/s=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.159.29]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M2dTd-1grjUD2BJF-00sMtc; Tue, 26
- Mar 2019 10:04:24 +0100
-Subject: Re: [v5] coccinelle: semantic code search for missing put_device()
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Wen Yang <yellowriver2010@hotmail.com>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1550217319-40418-1-git-send-email-wen.yang99@zte.com.cn>
- <CAK7LNASzd=bL1H34w-E_UD9x6w2=ObyS+EPDZ_jrvfV+ncw-yA@mail.gmail.com>
- <1691b160-5558-d4c3-afed-5773e115c5aa@web.de>
- <CAK7LNASVRbroW9_j1Kda3azHb6PzD3WyVAsKe0HfD1ri0RFPOQ@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e2798cd9-1366-63a4-8638-037dc8a36618@web.de>
-Date:   Tue, 26 Mar 2019 10:04:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 26 Mar 2019 05:05:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37651 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728991AbfCZJFS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:05:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id q6so1326844pll.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 02:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=skydio.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kyc1zizkwKohgx4A7VcnL5Bai7KVRGtlYwLkDvfw2+w=;
+        b=HiEFseJdu6tZwOcQMo7As9lRqt4BF0bGV269rpNS5vduOyJa1GsJHBRS64W2wZ6Wmm
+         Co2Da3QmJJncoQWmM2VKRRXWAjlHyPPc+gA5Jm+AN2I8B4Fwf7iC/9GKI7QRitP+4YXa
+         4nI1FiL4/eDgz4RG3D+QBhDZYLxv6b+cClHJq0HJmpZIDLy4/hMDou+wtmXlY0o8fQrI
+         egT8/rDkHeQLBMWszO4HTnOxME8VIo1QoqJBdgiwjKbHXu2nRx1ORmTRKSHjCjcGL+U9
+         BF3VBanU19CUYx56afU7lMq3KUZq3fhSHVnrlGvKRd6ju1TkZvY+A6Jjc8xLtUTIRNIo
+         ONSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kyc1zizkwKohgx4A7VcnL5Bai7KVRGtlYwLkDvfw2+w=;
+        b=hjsweA9L8mIA5PhQXDZ+YoD8QfDZDPuAE1p+4As9nn6b9+TS+2lRyKZrKqPfVDw5lm
+         eedeCl5vHNC8heZnnjB4xP3QNSe6D5rxGBbmy2xwkYmMOTodeUIBdAUtwBbWjfKZZ6em
+         hloVf4NaLztxfwHblY3NzHIL/hssTQ7AXChmj8EcPG+1gQxWXcBk0nUxdMKb+IpAnywv
+         kjOg3bDnJvJGLsz6r1hVTi0r8OaAVEPH5HTP47xr2IjhvHTKvreLjT8oBub3VPV1u57I
+         bFjTECP4aRf1qVxrdjDwJIizR0+MYjozp15/FXqZpBu3ZCxUfllN/GSK5oMWmli3rPRk
+         wIQA==
+X-Gm-Message-State: APjAAAWJaAqo/rCuaTn08/+3r37NQXXGl19lbnCNfD7GS+xkzT36nJbt
+        Kr7fPknfRDMbXe9OWXrVjOrf6A==
+X-Google-Smtp-Source: APXvYqxXfE9j3i0vkOIOZMi4IxmbIt0HTxaNLBxy/Eg7yqBYY8rV6cZjVBFELKuK1yRkticbIbh4+w==
+X-Received: by 2002:a17:902:bb0c:: with SMTP id l12mr30412854pls.108.1553591117930;
+        Tue, 26 Mar 2019 02:05:17 -0700 (PDT)
+Received: from stevemo-laptop.localdomain ([2601:646:c601:9a31:6c4c:9a9b:7596:e32f])
+        by smtp.gmail.com with ESMTPSA id v188sm9935467pgb.7.2019.03.26.02.05.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 26 Mar 2019 02:05:16 -0700 (PDT)
+From:   stevemo@skydio.com
+To:     gaireg@gaireg.de
+Cc:     Steve Moskovchenko <stevemo@skydio.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Martin Kelly <mkelly@xevo.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        Rob Herring <robh@kernel.org>,
+        Douglas Fischer <fischerdouglasc@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: imu: mpu6050: Fix FIFO layout for ICM20602
+Date:   Tue, 26 Mar 2019 02:01:45 -0700
+Message-Id: <20190326090238.23651-1-stevemo@skydio.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASVRbroW9_j1Kda3azHb6PzD3WyVAsKe0HfD1ri0RFPOQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:Ii5OePDt4OIQ5K1D7sk+NzO7xW0smCwHLPmQ3m+VT3Qahc8GolY
- vKeWTSdG9O4oI1rjCB9qE7/1R0H1u/oFpI2OTjqjQda63MkcNlQDR7FesEk1nK/NTVzWbrF
- K7Bd0mRBQ6hPP4Qq+rfHO2vYacqa55o9ccHe5c+Mw2iD8mqQyN7v/hE0o+a7rmYxBiaMENW
- jgBCgzovU44LCbHwAY2ZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Nj/XUvwB+K4=:y5F7iyagUdFm9SWBI7P6q9
- rBMbtxoG2II+XiUQ6qDZuh3k076UYMLT1MBAXLslzlTUI8zMAIMD/Ich7iKXlXjx/JcVWVmNq
- jNBee/tJ6uI3syvyaZRwFkmxG9R+UfdpiQ4Xrmc5uhKPDeRPaGnVcVgho2li2KbBo2uRB1lgT
- Dbgk39YmgSz+pTxAeLr8megWVZCE4a4U2P2RIRN6KWdlCOH4NdZ2h+Q0HbAk5d1VhXZpRWxDO
- lsjlGI+y5l+6IAhs8qOnX8Dtn2im4pyRBLyoe/6penKOIJVa3PiCMA6udMSrspDw8lR4AgkQa
- /HQB5NiYi7Ja2mdgPhwMcMb4g7QjicPfbw65886lQd2uLbF9H2T9yVpxgkdpQ7c9/U3MAmfYM
- MQVgbu/CUx6tHNMUKsVGwoVX/LXgrqqSK39OhDofFMQLEQ96CS9O5uWTxsIKjxzw0YUZPRLPJ
- fnHkhHzNlD3xNxwTrLvOlYkJcm20TbI/zDazzvRLHjDA6HFoSyPuhHHyF2+Teoeg6kJeJdj4r
- eANJJSsQVSiteek3ZdaQ5eqMdHwctb6BxELJnUUFe5TDAAgIbK4jbAiksPrlmq+ACR6iZO8aY
- obSiP8fgsdbI284ooGKyydxUX8fKBnQvP7OEdJJoDE+dU280nZwqFCir/DjM1CcsTbBW5mZXE
- 9eque+zSeBqZ7zShPg44TaU+FdKd1q58vgddTEn1AgTzzC8eIgmmzdr/Air5TU/1/zQEIWhDD
- 3B/4H+/EdDckhG3ADynN/TsYOTUa7zfZygMRTQhKjWAdz11pT6K/rb9jlQkMQU21XjRMJFNuA
- 8XQaU/mOUMTz8OLWFbx0ekRtJpOGo8wxPJgupW0yvR7WiMI1zONlQ/0j08CGNhms2b+YMeyL0
- jWa9SfQX30TcQ2FFaKiPg8QzJ2CsTPTm+EmUCNu2eIc4+4nZKc5Nt0M0H6sQmRYTSfGhU8PH+
- f9wgxsJFnpw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> When I searched "Wen Yang", v6 did not show up for some reasons.
-> https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=22638&state=*&q=&archive=&delegate=
+From: Steve Moskovchenko <stevemo@skydio.com>
 
-I find such a situation also interesting somehow.
-I assume that there was another temporary technical difficulty involved
-with the Linux mailing list (and related information systems).
+The MPU6050 driver has recently gained support for the
+ICM20602 IMU, which is very similar to MPU6xxx. However,
+the ICM20602's Gyro data specifically includes temperature
+readings, which were not present on MPU6xxx parts. As a
+result, the driver will under-read the ICM20602's FIFO
+register, causing the same (partial) sample to be returned
+for all reads, until the FIFO overflows.
 
+Fix this by adding a table of scan elements speciically for
+the ICM20602, which takes the extra temperature data into
+consideration.
 
-> So, I just thought v5 was the latest one
-> and I was completely missing the context.
+While we're at it, fix the temperature offset and scaling
+on ICM20602, since it uses different scale/offset constants
+than the rest of the MPU6xxx devices.
 
-Did any messages for the sixth (and seventh) script version reach you?
+Signed-off-by: Steve Moskovchenko <stevemo@skydio.com>
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 46 ++++++++++++++++++++--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  | 20 +++++++++-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c |  8 +++-
+ 3 files changed, 67 insertions(+), 7 deletions(-)
 
-https://lore.kernel.org/cocci/201902191014156680299@zte.com.cn/
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 650de0fefb7b..fedd3f2b0135 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -471,7 +471,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		case IIO_TEMP:
+ 			*val = 0;
+-			*val2 = INV_MPU6050_TEMP_SCALE;
++			if (st->chip_type == INV_ICM20602)
++				*val2 = INV_ICM20602_TEMP_SCALE;
++			else
++				*val2 = INV_MPU6050_TEMP_SCALE;
+ 
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		default:
+@@ -480,7 +483,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_OFFSET:
+ 		switch (chan->type) {
+ 		case IIO_TEMP:
+-			*val = INV_MPU6050_TEMP_OFFSET;
++			if (st->chip_type == INV_ICM20602)
++				*val = INV_ICM20602_TEMP_OFFSET;
++			else
++				*val = INV_MPU6050_TEMP_OFFSET;
+ 
+ 			return IIO_VAL_INT;
+ 		default:
+@@ -845,6 +851,32 @@ static const struct iio_chan_spec inv_mpu_channels[] = {
+ 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_MPU6050_SCAN_ACCL_Z),
+ };
+ 
++static const struct iio_chan_spec inv_icm20602_channels[] = {
++	IIO_CHAN_SOFT_TIMESTAMP(INV_ICM20602_SCAN_TIMESTAMP),
++	{
++		.type = IIO_TEMP,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++				| BIT(IIO_CHAN_INFO_OFFSET)
++				| BIT(IIO_CHAN_INFO_SCALE),
++		.scan_index = INV_ICM20602_SCAN_GYRO_TEMP,
++		.scan_type = {
++				.sign = 's',
++				.realbits = 16,
++				.storagebits = 16,
++				.shift = 0,
++				.endianness = IIO_BE,
++			     },
++	},
++
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_X, INV_ICM20602_SCAN_GYRO_X),
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Y, INV_ICM20602_SCAN_GYRO_Y),
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Z, INV_ICM20602_SCAN_GYRO_Z),
++
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Y, INV_ICM20602_SCAN_ACCL_Y),
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_X, INV_ICM20602_SCAN_ACCL_X),
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_ICM20602_SCAN_ACCL_Z),
++};
++
+ /*
+  * The user can choose any frequency between INV_MPU6050_MIN_FIFO_RATE and
+  * INV_MPU6050_MAX_FIFO_RATE, but only these frequencies are matched by the
+@@ -1100,8 +1132,14 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 		indio_dev->name = name;
+ 	else
+ 		indio_dev->name = dev_name(dev);
+-	indio_dev->channels = inv_mpu_channels;
+-	indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
++
++	if (chip_type == INV_ICM20602) {
++		indio_dev->channels = inv_icm20602_channels;
++		indio_dev->num_channels = ARRAY_SIZE(inv_icm20602_channels);
++	} else {
++		indio_dev->channels = inv_mpu_channels;
++		indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
++	}
+ 
+ 	indio_dev->info = &mpu_info;
+ 	indio_dev->modes = INDIO_BUFFER_TRIGGERED;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+index 325afd9f5f61..eb04391feaa8 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+@@ -208,6 +208,9 @@ struct inv_mpu6050_state {
+ #define INV_MPU6050_BYTES_PER_3AXIS_SENSOR   6
+ #define INV_MPU6050_FIFO_COUNT_BYTE          2
+ 
++/* ICM20602 gyro data includes temperature */
++#define INV_ICM20602_BYTES_PER_GYRO_SENSOR   8
++
+ /* mpu6500 registers */
+ #define INV_MPU6500_REG_ACCEL_CONFIG_2      0x1D
+ #define INV_MPU6500_REG_ACCEL_OFFSET        0x77
+@@ -229,6 +232,9 @@ struct inv_mpu6050_state {
+ #define INV_MPU6050_GYRO_CONFIG_FSR_SHIFT    3
+ #define INV_MPU6050_ACCL_CONFIG_FSR_SHIFT    3
+ 
++#define INV_ICM20602_TEMP_OFFSET	     8170
++#define INV_ICM20602_TEMP_SCALE		     3060
++
+ /* 6 + 6 round up and plus 8 */
+ #define INV_MPU6050_OUTPUT_DATA_SIZE         24
+ 
+@@ -270,7 +276,7 @@ struct inv_mpu6050_state {
+ #define INV_ICM20608_WHOAMI_VALUE		0xAF
+ #define INV_ICM20602_WHOAMI_VALUE		0x12
+ 
+-/* scan element definition */
++/* scan element definition for generic MPU6xxx devices */
+ enum inv_mpu6050_scan {
+ 	INV_MPU6050_SCAN_ACCL_X,
+ 	INV_MPU6050_SCAN_ACCL_Y,
+@@ -281,6 +287,18 @@ enum inv_mpu6050_scan {
+ 	INV_MPU6050_SCAN_TIMESTAMP,
+ };
+ 
++/* scan element definition for ICM20602, which includes gyro temp */
++enum inv_icm20602_scan {
++	INV_ICM20602_SCAN_ACCL_X,
++	INV_ICM20602_SCAN_ACCL_Y,
++	INV_ICM20602_SCAN_ACCL_Z,
++	INV_ICM20602_SCAN_GYRO_TEMP,
++	INV_ICM20602_SCAN_GYRO_X,
++	INV_ICM20602_SCAN_GYRO_Y,
++	INV_ICM20602_SCAN_GYRO_Z,
++	INV_ICM20602_SCAN_TIMESTAMP,
++};
++
+ enum inv_mpu6050_filter_e {
+ 	INV_MPU6050_FILTER_256HZ_NOLPF2 = 0,
+ 	INV_MPU6050_FILTER_188HZ,
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+index 548e042f7b5b..20828d6a13f9 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+@@ -204,8 +204,12 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+ 	if (st->chip_config.accl_fifo_enable)
+ 		bytes_per_datum += INV_MPU6050_BYTES_PER_3AXIS_SENSOR;
+ 
+-	if (st->chip_config.gyro_fifo_enable)
+-		bytes_per_datum += INV_MPU6050_BYTES_PER_3AXIS_SENSOR;
++	if (st->chip_config.gyro_fifo_enable) {
++		if (st->chip_type == INV_ICM20602)
++			bytes_per_datum += INV_ICM20602_BYTES_PER_GYRO_SENSOR;
++		else
++			bytes_per_datum += INV_MPU6050_BYTES_PER_3AXIS_SENSOR;
++	}
+ 
+ 	/*
+ 	 * read fifo_count register to know how many bytes are inside the FIFO
+-- 
+2.20.1
 
-https://lore.kernel.org/lkml/1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn/
-
-Regards,
-Markus
