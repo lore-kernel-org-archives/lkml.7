@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728B2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6F6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453A52070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8F520856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582068;
-	bh=FZDaCV1v2NXo0ANQib28qIv7UU0spYx4H9kGwLKxnzQ=;
+	s=default; t=1553582071;
+	bh=yuuepFgbB5zJsl3IQkZKjQXyVQc8Z6lgF0wkEAQLPZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kAByp3bYe9ofs8B5PLLA1wShrkeZvdELP/rjuUeEuaJI8wsSLn9C/q6cXSMeSkMva
-	 2K6C6U5FPiyLS8P5/nWNTZfPRs6PIF2v6rugjjyyIP3Nz3F2vlFQZgRvpOyOi87XQ7
-	 TCRcYHVLVSGDaseR9iB8n/REJTZu5NXZPNWhLA0E=
+	b=xkB1QXGPtdRHEi98hNGL+UNULu9Ot9CDB0ZWPkuD5FOSE7c/3TPkuc5fmRHOLnMne
+	 ZTtUBQNWWPXxtfn+cNC97Lym6iiZB4uvEzVPD5OujNWYBjnIF8A41acnKotGUoY786
+	 2gCdzquAD+MyptTUCnEcdOuz3GoO2Vuz/vuD2dNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbfCZGe1 (ORCPT
+        id S1731879AbfCZGe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44788 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731453AbfCZGeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:20 -0400
+        id S1731869AbfCZGe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:27 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7664206C0;
-        Tue, 26 Mar 2019 06:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F001D2075D;
+        Tue, 26 Mar 2019 06:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582059;
-        bh=FZDaCV1v2NXo0ANQib28qIv7UU0spYx4H9kGwLKxnzQ=;
+        s=default; t=1553582066;
+        bh=yuuepFgbB5zJsl3IQkZKjQXyVQc8Z6lgF0wkEAQLPZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nq+F4Hm/pcgJc2xyYptQqEg+2DdTgqaO1py5pBwzz5Q3gtmrFF1t8J6vMruRcTe43
-         qKFGEi97wX6cwP16nvgKyq7irk/EYHGB/nJMDG3Yt4d0eujYfiO6iexMnbwDSVIj1D
-         arfWwwWicTchO6xvcX90EBVYNU3ZMb3S3N9FZNL8=
+        b=NOKobFyYzJKmbC/L3M4Se1qEJRk2VUz/L7SD6fK+E4prN2GbWWis8JSyPpk8fodXY
+         ld+e1lzeXmaJBFQ84gVxMvvXY1O6KHlfDMBcjHO3Za4NnqSHcdQ19KMt7Qy5zaoZdt
+         z5en4+EePODQQ2V8WuI7JGVUxYMJFo2MjyW6Ch6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kehuanlin <kehuanlin@pinecone.net>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.14 33/41] scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-Date:   Tue, 26 Mar 2019 15:30:10 +0900
-Message-Id: <20190326042651.700241293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joao Pinto <jpinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 35/41] PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be writable
+Date:   Tue, 26 Mar 2019 15:30:12 +0900
+Message-Id: <20190326042651.810721809@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -66,55 +67,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: kehuanlin <chgokhl@gmail.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-commit 83dc7e3dea76b77b6bcc289eb86c5b5c145e8dff upstream.
+commit 1cab826b30c6275d479a6ab1dea1067e15dbec62 upstream.
 
-Since the command type of UTRD in UFS 2.1 specification is the same with
-UFS 2.0. And it assumes the future UFS specification will follow the
-same definition.
+Certain registers that pcie-designware-ep tries to write to are read-only
+registers. However, these registers can become read/write if we first
+enable the DBI_RO_WR_EN bit. Set/unset the DBI_RO_WR_EN bit before/after
+writing these registers.
 
-Signed-off-by: kehuanlin <kehuanlin@pinecone.net>
-Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Tested-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Joao Pinto <jpinto@synopsys.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/pci/dwc/pcie-designware-ep.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -2195,10 +2195,11 @@ static int ufshcd_comp_devman_upiu(struc
- 	u32 upiu_flags;
- 	int ret = 0;
+--- a/drivers/pci/dwc/pcie-designware-ep.c
++++ b/drivers/pci/dwc/pcie-designware-ep.c
+@@ -35,8 +35,10 @@ static void dw_pcie_ep_reset_bar(struct
+ 	u32 reg;
  
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
+ 	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
++	dw_pcie_dbi_ro_wr_en(pci);
+ 	dw_pcie_writel_dbi2(pci, reg, 0x0);
+ 	dw_pcie_writel_dbi(pci, reg, 0x0);
++	dw_pcie_dbi_ro_wr_dis(pci);
+ }
  
- 	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE);
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
-@@ -2222,10 +2223,11 @@ static int ufshcd_comp_scsi_upiu(struct
- 	u32 upiu_flags;
- 	int ret = 0;
+ static int dw_pcie_ep_write_header(struct pci_epc *epc,
+@@ -45,6 +47,7 @@ static int dw_pcie_ep_write_header(struc
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
  
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_SCSI;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
++	dw_pcie_dbi_ro_wr_en(pci);
+ 	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, hdr->vendorid);
+ 	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, hdr->deviceid);
+ 	dw_pcie_writeb_dbi(pci, PCI_REVISION_ID, hdr->revid);
+@@ -58,6 +61,7 @@ static int dw_pcie_ep_write_header(struc
+ 	dw_pcie_writew_dbi(pci, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+ 	dw_pcie_writeb_dbi(pci, PCI_INTERRUPT_PIN,
+ 			   hdr->interrupt_pin);
++	dw_pcie_dbi_ro_wr_dis(pci);
  
- 	if (likely(lrbp->cmd)) {
- 		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
+ 	return 0;
+ }
+@@ -142,8 +146,10 @@ static int dw_pcie_ep_set_bar(struct pci
+ 	if (ret)
+ 		return ret;
+ 
++	dw_pcie_dbi_ro_wr_en(pci);
+ 	dw_pcie_writel_dbi2(pci, reg, size - 1);
+ 	dw_pcie_writel_dbi(pci, reg, flags);
++	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	return 0;
+ }
+@@ -217,7 +223,9 @@ static int dw_pcie_ep_set_msi(struct pci
+ 	val = dw_pcie_readw_dbi(pci, MSI_MESSAGE_CONTROL);
+ 	val &= ~MSI_CAP_MMC_MASK;
+ 	val |= (encode_int << MSI_CAP_MMC_SHIFT) & MSI_CAP_MMC_MASK;
++	dw_pcie_dbi_ro_wr_en(pci);
+ 	dw_pcie_writew_dbi(pci, MSI_MESSAGE_CONTROL, val);
++	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+ 	return 0;
+ }
 
 
