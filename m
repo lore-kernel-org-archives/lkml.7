@@ -3,53 +3,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB793C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2096FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9962B20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D823F20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbfCZXlx (ORCPT
+        id S1733141AbfCZXl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:41:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59046 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733019AbfCZXlo (ORCPT
+        Tue, 26 Mar 2019 19:41:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732965AbfCZXlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 19:41:44 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNXdgb160358
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:42 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rft9vr8k3-1
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNXess135577
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:43 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rft2r11a7-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:42 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:43 -0400
 Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
         Tue, 26 Mar 2019 23:41:42 -0000
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:41:37 -0000
+        Tue, 26 Mar 2019 23:41:35 -0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNfaSu19791946
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNfYHS10485848
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:41:36 GMT
+        Tue, 26 Mar 2019 23:41:34 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1071AB2066;
-        Tue, 26 Mar 2019 23:41:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 87E9CB206B;
+        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2C8EB2075;
-        Tue, 26 Mar 2019 23:41:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 55671B2066;
+        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 23:41:35 +0000 (GMT)
+        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C452616C619C; Tue, 26 Mar 2019 16:41:35 -0700 (PDT)
+        id 78A7F16C6081; Tue, 26 Mar 2019 16:41:35 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         mingo@kernel.org
@@ -57,21 +57,29 @@ Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
         will.deacon@arm.com, peterz@infradead.org, boqun.feng@gmail.com,
         npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
         luc.maranget@inria.fr, akiyks@gmail.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 17/21] tools/memory-model: Make runlitmus.sh generate .litmus.out for --hw
-Date:   Tue, 26 Mar 2019 16:41:29 -0700
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: [PATCH tip/core/rcu 04/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O BARRIER EFFECTS" section
+Date:   Tue, 26 Mar 2019 16:41:16 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326234114.GA23843@linux.ibm.com>
 References: <20190326234114.GA23843@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19032623-2213-0000-0000-0000036A6908
+x-cbid: 19032623-0060-0000-0000-00000322757A
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180142; UDB=6.00617578; IPR=6.00960858;
+ PH=3.00000004; SC=3.00000282; SDB=6.01180142; UDB=6.00617577; IPR=6.00960858;
  MB=3.00026170; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:41:40
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-2214-0000-0000-00005DCD95C9
-Message-Id: <20190326234133.24962-17-paulmck@linux.ibm.com>
+x-cbparentid: 19032623-0061-0000-0000-000048BCDA66
+Message-Id: <20190326234133.24962-4-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -84,93 +92,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the absence of "Result:" comments, the runlitmus.sh script relies on
-litmus.out files from prior LKMM runs.  This can be a bit user-hostile,
-so this commit makes runlitmus.sh generate any needed .litmus.out files
-that don't already exist.
+From: Will Deacon <will.deacon@arm.com>
 
+The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
+x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
+This is largely because I/O ordering is a horrible can of worms, but also
+because the document has stagnated as our understanding has evolved.
+
+Attempt to address some of that, by rewriting the section based on
+recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
+find a way to formalise this stuff, but for now let's at least try to
+make the English easier to understand.
+
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Daniel Lustig <dlustig@nvidia.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- tools/memory-model/scripts/runlitmus.sh | 54 ++++++++++++++-----------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+ Documentation/memory-barriers.txt | 115 ++++++++++++++++++------------
+ 1 file changed, 70 insertions(+), 45 deletions(-)
 
-diff --git a/tools/memory-model/scripts/runlitmus.sh b/tools/memory-model/scripts/runlitmus.sh
-index 0ae46ab08cbd..186944a7a528 100755
---- a/tools/memory-model/scripts/runlitmus.sh
-+++ b/tools/memory-model/scripts/runlitmus.sh
-@@ -28,42 +28,48 @@ if test -f "$litmus" -a -r "$litmus"
- then
- 	:
- else
--	echo ' --- ' error: \"$litmus\" is not a readable file
-+	echo ' !!! ' error: \"$litmus\" is not a readable file
- 	exit 255
- fi
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 1c22b21ae922..158947ae78c2 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -2599,72 +2599,97 @@ likely, then interrupt-disabling locks should be used to guarantee ordering.
+ KERNEL I/O BARRIER EFFECTS
+ ==========================
  
--if test -z "$LKMM_HW_MAP_FILE"
-+if test -z "$LKMM_HW_MAP_FILE" -o ! -e $LKMM_DESTDIR/$litmus.out
- then
- 	# LKMM run
- 	herdoptions=${LKMM_HERD_OPTIONS--conf linux-kernel.cfg}
- 	echo Herd options: $herdoptions > $LKMM_DESTDIR/$litmus.out
- 	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 $herdoptions $litmus >> $LKMM_DESTDIR/$litmus.out 2>&1
--else
--	# Hardware run
-+	ret=$?
-+	if test -z "$LKMM_HW_MAP_FILE"
-+	then
-+		exit $ret
-+	fi
-+	echo " --- " Automatically generated LKMM output for '"'--hw $LKMM_HW_MAP_FILE'"' run
-+fi
+-When accessing I/O memory, drivers should use the appropriate accessor
+-functions:
++Interfacing with peripherals via I/O accesses is deeply architecture and device
++specific. Therefore, drivers which are inherently non-portable may rely on
++specific behaviours of their target systems in order to achieve synchronization
++in the most lightweight manner possible. For drivers intending to be portable
++between multiple architectures and bus implementations, the kernel offers a
++series of accessor functions that provide various degrees of ordering
++guarantees:
  
--	T=/tmp/checklitmushw.sh.$$
--	trap 'rm -rf $T' 0 2
--	mkdir $T
-+# Hardware run
+- (*) inX(), outX():
++ (*) readX(), writeX():
  
--	# Generate filenames
--	catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
--	mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
--	themefile="$T/${LKMM_HW_MAP_FILE}.theme"
--	herdoptions="-model $LKMM_HW_CAT_FILE"
--	hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
--	hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
-+T=/tmp/checklitmushw.sh.$$
-+trap 'rm -rf $T' 0 2
-+mkdir $T
+-     These are intended to talk to I/O space rather than memory space, but
+-     that's primarily a CPU-specific concept.  The i386 and x86_64 processors
+-     do indeed have special I/O space access cycles and instructions, but many
+-     CPUs don't have such a concept.
++     The readX() and writeX() MMIO accessors take a pointer to the peripheral
++     being accessed as an __iomem * parameter. For pointers mapped with the
++     default I/O attributes (e.g. those returned by ioremap()), then the
++     ordering guarantees are as follows:
  
--	# Don't run on litmus tests with complex synchronization
--	if ! scripts/simpletest.sh $litmus
--	then
--		echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
--		exit 254
--	fi
-+# Generate filenames
-+catfile="`echo $LKMM_HW_MAP_FILE | tr '[A-Z]' '[a-z]'`.cat"
-+mapfile="Linux2${LKMM_HW_MAP_FILE}.map"
-+themefile="$T/${LKMM_HW_MAP_FILE}.theme"
-+herdoptions="-model $LKMM_HW_CAT_FILE"
-+hwlitmus=`echo $litmus | sed -e 's/\.litmus$/.'${LKMM_HW_MAP_FILE}'.litmus/'`
-+hwlitmusfile=`echo $hwlitmus | sed -e 's,^.*/,,'`
+-     The PCI bus, amongst others, defines an I/O space concept which - on such
+-     CPUs as i386 and x86_64 - readily maps to the CPU's concept of I/O
+-     space.  However, it may also be mapped as a virtual I/O space in the CPU's
+-     memory map, particularly on those CPUs that don't support alternate I/O
+-     spaces.
++     1. All readX() and writeX() accesses to the same peripheral are ordered
++        with respect to each other. For example, this ensures that MMIO register
++	writes by the CPU to a particular device will arrive in program order.
  
--	# Generate the assembly code and run herd on it.
--	gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
--	jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
--	/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
-+# Don't run on litmus tests with complex synchronization
-+if ! scripts/simpletest.sh $litmus
-+then
-+	echo ' --- ' error: \"$litmus\" contains locking, RCU, or SRCU
-+	exit 254
- fi
+-     Accesses to this space may be fully synchronous (as on i386), but
+-     intermediary bridges (such as the PCI host bridge) may not fully honour
+-     that.
++     2. A writeX() by the CPU to the peripheral will first wait for the
++        completion of all prior CPU writes to memory. For example, this ensures
++        that writes by the CPU to an outbound DMA buffer allocated by
++        dma_alloc_coherent() will be visible to a DMA engine when the CPU writes
++        to its MMIO control register to trigger the transfer.
  
-+# Generate the assembly code and run herd on it.
-+gen_theme7 -n 10 -map $mapfile -call Linux.call > $themefile
-+jingle7 -theme $themefile $litmus > $T/$hwlitmusfile 2> $T/$hwlitmusfile.jingle7.out
-+/usr/bin/time $LKMM_TIMEOUT_CMD herd7 -model $catfile $T/$hwlitmusfile > $LKMM_DESTDIR/$hwlitmus.out 2>&1
+-     They are guaranteed to be fully ordered with respect to each other.
++     3. A readX() by the CPU from the peripheral will complete before any
++	subsequent CPU reads from memory can begin. For example, this ensures
++	that reads by the CPU from an incoming DMA buffer allocated by
++	dma_alloc_coherent() will not see stale data after reading from the DMA
++	engine's MMIO status register to establish that the DMA transfer has
++	completed.
+ 
+-     They are not guaranteed to be fully ordered with respect to other types of
+-     memory and I/O operation.
++     4. A readX() by the CPU from the peripheral will complete before any
++	subsequent delay() loop can begin execution. For example, this ensures
++	that two MMIO register writes by the CPU to a peripheral will arrive at
++	least 1us apart if the first write is immediately read back with readX()
++	and udelay(1) is called prior to the second writeX().
+ 
+- (*) readX(), writeX():
++     __iomem pointers obtained with non-default attributes (e.g. those returned
++     by ioremap_wc()) are unlikely to provide many of these guarantees.
+ 
+-     Whether these are guaranteed to be fully ordered and uncombined with
+-     respect to each other on the issuing CPU depends on the characteristics
+-     defined for the memory window through which they're accessing.  On later
+-     i386 architecture machines, for example, this is controlled by way of the
+-     MTRR registers.
++ (*) readX_relaxed(), writeX_relaxed():
+ 
+-     Ordinarily, these will be guaranteed to be fully ordered and uncombined,
+-     provided they're not accessing a prefetchable device.
++     These are similar to readX() and writeX(), but provide weaker memory
++     ordering guarantees. Specifically, they do not guarantee ordering with
++     respect to normal memory accesses or delay() loops (i.e bullets 2-4 above)
++     but they are still guaranteed to be ordered with respect to other accesses
++     to the same peripheral when operating on __iomem pointers mapped with the
++     default I/O attributes.
+ 
+-     However, intermediary hardware (such as a PCI bridge) may indulge in
+-     deferral if it so wishes; to flush a store, a load from the same location
+-     is preferred[*], but a load from the same device or from configuration
+-     space should suffice for PCI.
++ (*) readsX(), writesX():
+ 
+-     [*] NOTE! attempting to load from the same location as was written to may
+-	 cause a malfunction - consider the 16550 Rx/Tx serial registers for
+-	 example.
++     The readsX() and writesX() MMIO accessors are designed for accessing
++     register-based, memory-mapped FIFOs residing on peripherals that are not
++     capable of performing DMA. Consequently, they provide only the ordering
++     guarantees of readX_relaxed() and writeX_relaxed(), as documented above.
+ 
+-     Used with prefetchable I/O memory, an mmiowb() barrier may be required to
+-     force stores to be ordered.
++ (*) inX(), outX():
+ 
+-     Please refer to the PCI specification for more information on interactions
+-     between PCI transactions.
++     The inX() and outX() accessors are intended to access legacy port-mapped
++     I/O peripherals, which may require special instructions on some
++     architectures (notably x86). The port number of the peripheral being
++     accessed is passed as an argument.
+ 
+- (*) readX_relaxed(), writeX_relaxed()
++     Since many CPU architectures ultimately access these peripherals via an
++     internal virtual memory mapping, the portable ordering guarantees provided
++     by inX() and outX() are the same as those provided by readX() and writeX()
++     respectively when accessing a mapping with the default I/O attributes.
+ 
+-     These are similar to readX() and writeX(), but provide weaker memory
+-     ordering guarantees.  Specifically, they do not guarantee ordering with
+-     respect to normal memory accesses (e.g. DMA buffers) nor do they guarantee
+-     ordering with respect to LOCK or UNLOCK operations.  If the latter is
+-     required, an mmiowb() barrier can be used.  Note that relaxed accesses to
+-     the same peripheral are guaranteed to be ordered with respect to each
+-     other.
++     Device drivers may expect outX() to emit a non-posted write transaction
++     that waits for a completion response from the I/O peripheral before
++     returning. This is not guaranteed by all architectures and is therefore
++     not part of the portable ordering semantics.
 +
- exit $?
++ (*) insX(), outsX():
++
++     As above, the insX() and outX() accessors provide the same ordering
++     guarantees as readsX() and writesX() respectively when accessing a mapping
++     with the default I/O attributes.
+ 
+  (*) ioreadX(), iowriteX()
+ 
+      These will perform appropriately for the type of access they're actually
+      doing, be it inX()/outX() or readX()/writeX().
+ 
++All of these accessors assume that the underlying peripheral is little-endian,
++and will therefore perform byte-swapping operations on big-endian architectures.
++
++Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
++operations is a dangerous sport which may require the use of mmiowb(). See the
++subsection "Acquires vs I/O accesses" for more information.
+ 
+ ========================================
+ ASSUMED MINIMUM EXECUTION ORDERING MODEL
 -- 
 2.17.1
 
