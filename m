@@ -2,126 +2,139 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B07C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AFCC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6567C2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0CC2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732081AbfCZP63 (ORCPT
+        id S1732114AbfCZP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:58:29 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3346 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbfCZP63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:58:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 08:58:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,273,1549958400"; 
-   d="scan'208";a="137426280"
-Received: from tstruk-mobl1.jf.intel.com ([10.7.196.61])
-  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 08:58:28 -0700
-Subject: Re: [PATCH RESEND v3] tpm: fix an invalid condition in
- tpm_common_poll
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <155326553839.17270.7997105682830234546.stgit@tstruk-mobl1.jf.intel.com>
- <20190322155917.GA6987@linux.intel.com>
- <20190325140954.GA13699@linux.intel.com>
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tadeusz.struk@intel.com; prefer-encrypt=mutual; keydata=
- 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
- FheFfUJaD4iEjuL98uUjS/AI
-Message-ID: <dce01e51-7a1a-a5c7-0092-388889f334fd@intel.com>
-Date:   Tue, 26 Mar 2019 08:58:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 26 Mar 2019 11:58:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39016 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726127AbfCZP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:58:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 464001596;
+        Tue, 26 Mar 2019 08:58:46 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E6143F614;
+        Tue, 26 Mar 2019 08:58:43 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 15:58:37 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        vaerov@amazon.com, benh@kernel.crashing.org, alisaidi@amazon.com,
+        zeev@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v2] PCI: al: Add Amazon Annapurna Labs PCIe host
+ controller driver
+Message-ID: <20190326155837.GA8820@e107981-ln.cambridge.arm.com>
+References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+ <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
+ <20190326121727.GA4171@e107981-ln.cambridge.arm.com>
+ <07838dad0e0cdb14c42080ef19c11829f72c8814.camel@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190325140954.GA13699@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07838dad0e0cdb14c42080ef19c11829f72c8814.camel@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jarkko,
-On 3/25/19 7:09 AM, Jarkko Sakkinen wrote:
-> It is still missing the comment I asked to add. Otherwise, it is good.
+On Tue, Mar 26, 2019 at 01:24:41PM +0000, David Woodhouse wrote:
+> On Tue, 2019-03-26 at 12:17 +0000, Lorenzo Pieralisi wrote:
+> > [+Zhou, Gustavo]
+> > 
+> > On Tue, Mar 26, 2019 at 12:00:55PM +0200, Jonathan Chocron wrote:
+> > > Adding support for Amazon's Annapurna Labs PCIe driver.
+> > > The HW controller is based on DesignWare's IP.
+> > > 
+> > > The HW doesn't support accessing the Root Port's config space via
+> > > ECAM, so we obtain its base address via an AMZN0001 device.
+> > > 
+> > > Furthermore, the DesignWare PCIe controller doesn't filter out
+> > > config transactions sent to devices 1 and up on its bus, so they
+> > > are filtered by the driver.
+> > > All subordinate buses do support ECAM access.
+> > > 
+> > > Implementing specific PCI config access functions involves:
+> > >  - Adding an init function to obtain the Root Port's base address
+> > >    from an AMZN0001 device.
+> > >  - Adding a new entry in the mcfg quirk array
+> > > 
+> > > Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
+> > > Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> > 
+> > Review tags should be given on public mailing lists for public
+> > review and I have not seen them (they were already there in v1) so
+> > you should drop them.
+> 
+> We did that internally. You really don't want me telling engineers to
+> post to the list *first* without running things by me to get the basics
+> right. Not to start with, at least.
+
+Hi David,
+
+I am obviously in favour of internal review and I do not question it was
+carried out internally, I just kindly ask developers to drop review tags
+given internally when going to public mailing lists - I understand it is
+churn for you but I prefer them to be given explicitly.
+
+Thanks !
+Lorenzo
+
+> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> 
+> > > Changes from v1:
+> > >   - Fix commit message comments (incl. using AMZN0001
+> > >     instead of PNP0C02)
+> > >   - Use the usual multi-line comment style
+> > > 
+> > >  MAINTAINERS                          |  6 +++
+> > >  drivers/acpi/pci_mcfg.c              | 12 +++++
+> > >  drivers/pci/controller/dwc/Makefile  |  1 +
+> > >  drivers/pci/controller/dwc/pcie-al.c | 93 ++++++++++++++++++++++++++++++++++++
+> > >  include/linux/pci-ecam.h             |  1 +
+> > >  5 files changed, 113 insertions(+)
+> > >  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
+> > > 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 32d444476a90..7a17017f9f82 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+> > >  S:	Supported
+> > >  F:	drivers/pci/controller/
+> > >  
+> > > +PCIE DRIVER FOR ANNAPURNA LABS
+> > > +M:	Jonathan Chocron <jonnyc@amazon.com>
+> > > +L:	linux-pci@vger.kernel.org
+> > > +S:	Maintained
+> > > +F:	drivers/pci/controller/dwc/pcie-al.c
+> > 
+> > I do not think we need a maintainer file for that see below, and
+> > actually this quirk should be handled by DWC maintainers since it is a
+> > DWC quirk, not a platform one.
+> 
+> Many of the others already have this, it seems.
+> 
+> It's also fine to drop it, and include it when we add the rest of the
+> Alpine SOC support and a MAINTAINERS entry for that.
 > 
 
-Sorry, I didn't see your email with the suggestion earlier.
-To be honest I'm not sure if this comment adds much value, or if it is
-even correct. The poll doesn't "succeed" or "fail". It just returns
-a mask indicating if there is any data to read or if the user can write.
 
-Isn't the commit message + 'git blame' enough to remember why it was
-done this way?
-
-Thanks,
--- 
-Tadeusz
