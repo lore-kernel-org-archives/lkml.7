@@ -2,103 +2,133 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAD7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9E3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE4B20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41872070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbfCZRhK (ORCPT
+        id S1732114AbfCZRhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:37:10 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:36585 "EHLO gecko.sbs.de"
+        Tue, 26 Mar 2019 13:37:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:41384 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCZRhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:37:08 -0400
-X-Greylist: delayed 928 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Mar 2019 13:37:08 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id x2QHLN8r032214
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 18:21:23 +0100
-Received: from [167.87.1.199] ([167.87.1.199])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x2QHLLwu030986;
-        Tue, 26 Mar 2019 18:21:22 +0100
-Subject: Re: [PATCH 3/4] scripts/gdb: Add rb tree iterating utilities
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kieran Bingham <kbingham@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nikolay Borisov <n.borisov.lkml@gmail.com>,
-        Jackie Liu <liuyun01@kylinos.cn>
-References: <20190325184522.260535-1-swboyd@chromium.org>
- <20190325184522.260535-4-swboyd@chromium.org>
- <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org>
- <155361993610.20095.762425616683725063@swboyd.mtv.corp.google.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <ff5bffea-2689-0ace-9c77-2aaa6605342c@siemens.com>
-Date:   Tue, 26 Mar 2019 18:21:21 +0100
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        id S1726258AbfCZRhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:37:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0474374;
+        Tue, 26 Mar 2019 10:37:35 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2CB43F614;
+        Tue, 26 Mar 2019 10:37:32 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:37:30 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20190326173730.GC10666@e107981-ln.cambridge.arm.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <155361993610.20095.762425616683725063@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.03.19 18:05, Stephen Boyd wrote:
-> Quoting Kieran Bingham (2019-03-26 01:52:10)
->> Hi Stephen,
->>
->> On 25/03/2019 18:45, Stephen Boyd wrote:
->>> Implement gdb functions for rb_first(), rb_last(), rb_next(), and
->>> rb_prev(). These can be useful to iterate through the kernel's red-black
->>> trees.
->>
->> I definitely approve of getting data-structure helpers into scripts/gdb,
->> as it will greatly assist debug options but my last attempt to do this
->> was with the radix-tree which I had to give up on as the internals were
->> changing rapidly and caused continuous breakage to the helpers.
+On Mon, Mar 11, 2019 at 09:29:54AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> Thanks for the background on radix-tree. I haven't looked at that yet,
-> but I suppose I'll want to have that too at some point.
+> This patch set is aim to refactor the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
+> PCIe Gen4 controller.
 > 
->>
->> Do you foresee any similar issue here? Or is the corresponding RB code
->> in the kernel fairly 'stable'?
->>
->>
->> Please could we make sure whomever maintains the RBTree code is aware of
->> the python implementation?
->>
->> That said, MAINTAINERS doesn't actually seem to list any ownership over
->> the rb-tree code, and get_maintainers.pl [0] seems to be pointing at
->> Andrew as the probable route in for that code so perhaps that's already
->> in place :D
+> Hou Zhiqiang (28):
+>   PCI: mobiveil: uniform the register accessors
+>   PCI: mobiveil: format the code without function change
+>   PCI: mobiveil: correct the returned error number
+>   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
+>   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
+>   PCI: mobiveil: replace the resource list iteration function
+>   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
+>   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
+>   PCI: mobiveil: correct inbound/outbound window setup routines
+>   PCI: mobiveil: fix the INTx process error
+>   PCI: mobiveil: only fix up the Class Code field
+>   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+>   PCI: mobiveil: move irq chained handler setup out of DT parse
+>   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
+>   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
+>   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
+>   PCI: mobiveil: fix the checking of valid device
+>   PCI: mobiveil: add link up condition check
+>   PCI: mobiveil: continue to initialize the host upon no PCIe link
+>   PCI: mobiveil: disabled IB and OB windows set by bootloader
+>   PCI: mobiveil: add Byte and Half-Word width register accessors
+>   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
+>   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
+>   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
+>   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
+>   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+>   arm64: dts: freescale: lx2160a: add pcie DT nodes
+>   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
 > 
-> I don't think that the rb tree implementation is going to change. It
-> feels similar to the list API. I suppose this problem of keeping things
-> in sync is a more general problem than just data-structures changing.
-> The only solution I can offer is to have more testing and usage of these
-> scripts. Unless gdb can "simulate" or run arbitrary code for us then I
-> think we're stuck reimplementing kernel internal code in gdb scripts so
-> that we can get debug info out.
-> 
+>  .../bindings/pci/layerscape-pci-gen4.txt      |  52 ++
+>  .../devicetree/bindings/pci/mobiveil-pcie.txt |   2 +
+>  MAINTAINERS                                   |  10 +-
+>  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++
+>  arch/arm64/configs/defconfig                  |   1 +
+>  drivers/pci/controller/Kconfig                |  11 +-
+>  drivers/pci/controller/Makefile               |   2 +-
+>  drivers/pci/controller/mobiveil/Kconfig       |  34 +
+>  drivers/pci/controller/mobiveil/Makefile      |   5 +
+>  .../controller/mobiveil/pci-layerscape-gen4.c | 306 +++++++
+>  .../controller/mobiveil/pcie-mobiveil-host.c  | 640 +++++++++++++
+>  .../controller/mobiveil/pcie-mobiveil-plat.c  |  54 ++
+>  .../pci/controller/mobiveil/pcie-mobiveil.c   | 246 +++++
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   | 229 +++++
+>  drivers/pci/controller/pcie-mobiveil.c        | 861 ------------------
+>  15 files changed, 1743 insertions(+), 873 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci-gen4.txt
+>  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
+>  create mode 100644 drivers/pci/controller/mobiveil/Makefile
+>  create mode 100644 drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
+>  delete mode 100644 drivers/pci/controller/pcie-mobiveil.c
 
-Could we possibly leave some link in form of comment in the related headers or 
-implementations? Won't magically solve the problem but at least increase changes 
-that author actually read them when they start changing the C implementations.
+This patch series is a mixture of fixes, refactoring and development
+and to be frank it is a bit hard to review. Keeping in mind all
+the review comments already received and that I expect you to integrate,
+do you mind splitting it in logical series each one serving a specific
+purpose (eg fixes, Layerscape support, etc.) ?
 
-Jan
+Let's start with posting and merging the fixes first.
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Thank you very much.
+
+Lorenzo
