@@ -2,209 +2,269 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57DAC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9749BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8737320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553616412;
-	bh=n+YQMdyNixtA3ulybEQw/Fkej+e5djvPVPNuICR2uMQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZamVYWg/X9NV09HJHL80r1jZcBeqr5xIJauHvXzr4hlclnU3XnY9saqRTRCD+HqEa
-	 aLtRp8R7i2D0TF68ZRdjcLm5OOEWnpaALIsweN9/wECWPFsVdw0Vd30hHew20ATK1V
-	 gYa23/ncv0x2AM8OK6zD/Itvw0mVt6ByfDe0+uMw=
+	by mail.kernel.org (Postfix) with ESMTP id 578632070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:07:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="xVmHjKTG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732023AbfCZQGv (ORCPT
+        id S1732066AbfCZQHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbfCZQGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:06:51 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C29E2070D;
-        Tue, 26 Mar 2019 16:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553616409;
-        bh=n+YQMdyNixtA3ulybEQw/Fkej+e5djvPVPNuICR2uMQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Pi5bLvU2FZBHeGJvRQqjKqG+eIkpmTPgEtizBYefEnYDWSeqv7ZW2dW1vDipEou77
-         gnyDfAI8XgWawFuCMJFVynbx0fZ3D52BrCcyM/H09bcPucFhQUfcS3/wjVurOPq5Ns
-         5lNBr2KCTmEbdQFtstuoHZCoG1oEQFt3/bgF1A/s=
-Received: by mail-qt1-f176.google.com with SMTP id k14so15248575qtb.0;
-        Tue, 26 Mar 2019 09:06:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAX9izjE93Al6u5buIKFwXrzikBYzKBVbLYQOY75vDDtPOjkYuHL
-        2iDl4Z3xvEr6IBga1MzJZj4zyAQe9oJQLYoXyg==
-X-Google-Smtp-Source: APXvYqw83pPW8sTtnMW2/pivRygJIjkI7wQqunXKiwHrug9V4B++sp0PWbD9ZXw2VfcCpKx9ph3knTwET/1WllkreNQ=
-X-Received: by 2002:ac8:267c:: with SMTP id v57mr26094887qtv.76.1553616408717;
- Tue, 26 Mar 2019 09:06:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190316142138.65860d88@archlinux> <55b4aaba-a94f-2a9d-c96d-e591877fe075@mind.be>
-In-Reply-To: <55b4aaba-a94f-2a9d-c96d-e591877fe075@mind.be>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 26 Mar 2019 11:06:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKmtr7Gojx9kfPay=HUJ-Xpg0W1dB-K4bfWDnhsA3KAyA@mail.gmail.com>
-Message-ID: <CAL_JsqKmtr7Gojx9kfPay=HUJ-Xpg0W1dB-K4bfWDnhsA3KAyA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] dt-bindings: counter: ftm-quaddec
-To:     Arnout Vandecappelle <arnout@mind.be>
-Cc:     Patrick Havelange <patrick.havelange@essensium.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tue, 26 Mar 2019 12:07:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45744 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfCZQHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:07:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bf11so1850529plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QJ1htOgLKMIjpEqiqEqAcf/VdDwidl5sIsLdfwmDN0A=;
+        b=xVmHjKTGlw+QUZFp19EcARGAeF8sCBEWC1M+hH27FRGy9plVZdgB1HFO1Wd1F14HFK
+         yi1/GjjKBYGchV5smReb870JAIJWXrSbcbaELDbN8TEcLbIVkxFO4dw7RChD4JMzoicH
+         2esPVCN8ksUNi+FSO/i1f8olFTwSEUCFfVPks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QJ1htOgLKMIjpEqiqEqAcf/VdDwidl5sIsLdfwmDN0A=;
+        b=ksav2FdyfbzhZ139f97zBXy6wphJIKgqo01UsJbqSr8AE+bxQ0m3OsptMF/xFNouzj
+         NQYe66yBR9of/C7POz1UGVKqjmqzqbQqqbhLvsCCuQNtOVPMci5J3ZuYZJlxCB/GwAUd
+         eQpc2OU7M5YKWHN1T1JSYxi4F/R2upsCVrCTRzhGyQREoIf1arMX6GnQ1rKxQoGIM/sS
+         E/fL+IWToPgP2sqVNmtaVRTsnfJ+rSttidEm691ZLUoUoeeHNboqFxFLxCZKKtUvRHS3
+         4iQlO0CPnIlmO+YGjyVki6LGsf7EzjAXRTiZI3+DoaaW4A/NR1G2VjJlhvsSXAxhBFma
+         EMLA==
+X-Gm-Message-State: APjAAAVoaeVlhfqJcXb5AM1IJrN5F5iC2Dclr0N38e/XzVoO7a+eOfhu
+        VKwYjAaDPDvV8pnNPkIuiBkGgg==
+X-Google-Smtp-Source: APXvYqwKgWHYay0G489CW+ILPiDiR3AIzfQ8PFapEaKakajr7sAYKQiQB+pdhIRJd4H5RTP9KWNN2w==
+X-Received: by 2002:a17:902:e85:: with SMTP id 5mr32119928plx.13.1553616451877;
+        Tue, 26 Mar 2019 09:07:31 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e1sm24679452pfn.73.2019.03.26.09.07.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 09:07:30 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 12:07:29 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Andy Lutomirski <luto@kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Esben Haabendal <esben@haabendal.dk>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        bl0pbl33p@gmail.com, "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        cyphar@cyphar.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Colascione <dancol@google.com>
+Subject: Re: [PATCH 2/4] pid: add pidctl()
+Message-ID: <20190326160729.GA76870@google.com>
+References: <20190325162052.28987-1-christian@brauner.io>
+ <20190325162052.28987-3-christian@brauner.io>
+ <CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:43 AM Arnout Vandecappelle <arnout@mind.be> wrote:
->
->  [Full disclosure: I'm a colleague of Patrick.]
->
-> On 2019-03-16 14:21:38, Jonathan Cameron wrote:
->
-> > On Tue, 12 Mar 2019 14:09:52 -0500
-> > Rob Herring <robh@kernel.org> wrote:
-> >
-> > > On Wed, Mar 06, 2019 at 12:12:05PM +0100, Patrick Havelange wrote:
-> > > > FlexTimer quadrature decoder driver.
-> > > >
-> > > > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> > > > Reviewed-by: Esben Haabendal <esben@haabendal.dk>
-> > > > ---
-> > > > Changes v2
-> > > > - None
-> > > > ---
-> > > > .../bindings/counter/ftm-quaddec.txt           | 18 ++++++++++++++++++
-> > > > 1 file changed, 18 insertions(+)
-> > > > create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/counter/ftm-quaddec.txt \
-> > > > b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt new file mode 100644
-> > > > index 000000000000..4d18cd722074
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> > > > @@ -0,0 +1,18 @@
-> > > > +FlexTimer Quadrature decoder counter
-> > > > +
-> > > > +This driver exposes a simple counter for the quadrature decoder mode.
-> > >
-> > > Seems like this is more a mode of a h/w block than describing a h/w
-> > > block. Bindings should do the latter.
->
->
->   As Jonathan writes below, it really is a "hardware mode", since it is tied
-> very closely to how the device is wired up.
+On Mon, Mar 25, 2019 at 07:18:42PM +0100, Jann Horn wrote:
+> On Mon, Mar 25, 2019 at 5:21 PM Christian Brauner <christian@brauner.io> wrote:
+> > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > I quote Konstantins original patchset first that has already been acked and
+> > picked up by Eric before and whose functionality is preserved in this
+> > syscall:
+> [...]
+> > +
+> > +static struct pid_namespace *get_pid_ns_by_fd(int fd)
+> > +{
+> > +       struct pid_namespace *pidns = ERR_PTR(-EINVAL);
+> > +
+> > +       if (fd >= 0) {
+> > +#ifdef CONFIG_PID_NS
+> > +               struct ns_common *ns;
+> > +               struct file *file = proc_ns_fget(fd);
+> > +               if (IS_ERR(file))
+> > +                       return ERR_CAST(file);
+> > +
+> > +               ns = get_proc_ns(file_inode(file));
+> > +               if (ns->ops->type == CLONE_NEWPID)
+> > +                       pidns = get_pid_ns(
+> > +                               container_of(ns, struct pid_namespace, ns));
+> 
+> This increments the refcount of the pidns...
+> 
+> > +
+> > +               fput(file);
+> > +#endif
+> > +       } else {
+> > +               pidns = task_active_pid_ns(current);
+> 
+> ... but this doesn't. That's pretty subtle; could you please put a
+> comment on top of this function that points this out? Or even better,
+> change the function to always take a reference, so that the caller
+> doesn't have to worry about figuring this out.
+> 
+> > +       }
+> > +
+> > +       return pidns;
+> > +}
+> [...]
+> > +SYSCALL_DEFINE5(pidctl, unsigned int, cmd, pid_t, pid, int, source, int, target,
+> > +               unsigned int, flags)
+> > +{
+> > +       struct pid_namespace *source_ns = NULL, *target_ns = NULL;
+> > +       struct pid *struct_pid;
+> > +       pid_t result;
+> > +
+> > +       switch (cmd) {
+> > +       case PIDCMD_QUERY_PIDNS:
+> > +               if (pid != 0)
+> > +                       return -EINVAL;
+> > +               pid = 1;
+> > +               /* fall through */
+> > +       case PIDCMD_QUERY_PID:
+> > +               if (flags != 0)
+> > +                       return -EINVAL;
+> > +               break;
+> > +       case PIDCMD_GET_PIDFD:
+> > +               if (flags & ~PIDCTL_CLOEXEC)
+> > +                       return -EINVAL;
+> > +               break;
+> > +       default:
+> > +               return -EOPNOTSUPP;
+> > +       }
+> > +
+> > +       source_ns = get_pid_ns_by_fd(source);
+> > +       result = PTR_ERR(source_ns);
+> 
+> I very much dislike using PTR_ERR() on pointers before checking
+> whether they contain an error value or not. I understand that the
+> result of this won't actually be used, but it still seems weird to
+> have what is essentially a cast of a potentially valid pointer to a
+> potentially smaller integer here.
+> 
+> Could you maybe move the PTR_ERR() into the error branch? Like so:
+> 
+> if (IS_ERR(source_ns)) {
+>   result = PTR_ERR(source_ns);
+>   goto err_source;
+> }
 
-Okay, as it is describing what is attached, I agree.
+FWIW, thought of mentioning that once the get_pid_ns_by_fd can be modified to
+always take a reference on the ns, a further simplifcation here could be:
 
-The thing to consider is whether you will need to describe more than
-just the mode. We often start adding properties of an attached device
-in the controller node only to realize later that we should have a
-node for the device itself. Even for something as simple as an LED
-we've ended up there.
+if (IS_ERR(source_ns)) {
+	result = PTR_ERR(source_ns);
+	source_ns = NULL;
+	goto error;
+}
 
->  Basically, the same block can be used for pretty diverse functions: a PWM where
-> the pins are output, a counter where the pins are input, or a timer where the
-> interrupt or timer value is used purely internally.
->
->  This smells a bit like an MFD, but IMO it really isn't, because only one of the
-> functions can be enabled. So indeed, it's more like a mode.
+if (IS_ERR(target_ns)) {
+	result = PTR_ERR(target_ns);
+	target_ns = NULL;
+	goto error;
+}
 
-Agreed.
+And the error patch can be simplified as well which also avoids the "if (target)"
+issues Jan mentioned in the error path:
 
-> > The snag is that we need to dig ourselves out of the hole set by:
-> > fsl,vf610-ftm-pwm etc.
-> >
-> > Documentation/devicetree/bindings/pwm/pwm-fsl-ftm.txt
-> > Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
-> > (I'm assuming these are the same IP block).
-> >
-> > Can probably be sorted out though.  One core driver binds against the
-> > ftm and deals with instantiating the others depending on the configuration
-> > (note that this mode for instance does make sense in DT as it's
-> > really reflecting the fact there is a quadrature encoder
-> > connected to the ftm).
-> >
-> > Fiddly though :)
->
->
->  The way I see it, there are 3 ways this could be modelled (other than the
-> current way: several nodes with the same address).
->
->
-> 1. The SoC's .dtsi defines a single node, and the compatible string (which would
-> be defined by the board .dts) both enables the node and sets the compatible
-> string. The .dtsi would also define the static properties of all the different
-> functions: some "static" properties, e.g. reg, but also some function
-> specific-properties, e.g.#pwm-cells (only for PWM), interrupts (only for timer).
-> The driver (selected through compatible) anyway only uses the properties that it
-> needs, so it doesn't hurt to have those other-function properties there.
->
->
-> 2. Like 1, but instead of defining the compatible string in the .dts, use a
-> single compatible string for all the different drivers which is set in the
-> .dtsi, and add a mode property (to be set in the .dts) to select the driver. The
-> selection can be done either by having a top-level driver that calls out to the
-> subsystem-specific one based on the mode, or by having each driver bail out of
-> its probe function if the mode is not as expected.
->
->
-> 3. Have a common node that essentially does nothing except occupy the memory
-> resource, and sub-nodes for each function. This can again be combined with a
-> common driver that does the common resource allocation, or each function driver
-> can just look at its parent node to find the resources. A disadvantage of this
-> one is that it is possible to enable several functions in the DT, while only one
-> can actually work.
->
->
->  Option 3 is what is used for e.g. stm32-lptimer. It also uses an mfd driver to
-> model the common part. But possibly it actually allows the different functions
-> to operate simultaneously.
+error:
+	if (source_ns)
+		put_pid_ns(source_ns);
+	if (target_ns)
+		put_pid_ns(target_ns);
+	return result;
 
-I'm not all that thrilled with how that one ended up.
+ 
+> > +       if (IS_ERR(source_ns))
+> > +               goto err_source;
+> > +
+> > +       target_ns = get_pid_ns_by_fd(target);
+> > +       result = PTR_ERR(target_ns);
+> > +       if (IS_ERR(target_ns))
+> > +               goto err_target;
+> > +
+> > +       if (cmd == PIDCMD_QUERY_PIDNS) {
+> > +               result = pidns_related(source_ns, target_ns);
+> > +       } else {
+> > +               rcu_read_lock();
+> > +               struct_pid = find_pid_ns(pid, source_ns);
+> 
+> find_pid_ns() doesn't take a reference on its return value, the return
+> value is only pinned into memory by the RCU read-side critical
+> section...
+> 
+> > +               result = struct_pid ? pid_nr_ns(struct_pid, target_ns) : -ESRCH;
+> > +               rcu_read_unlock();
+> 
+> ... which ends here, making struct_pid a dangling pointer...
+> 
+> > +
+> > +               if (cmd == PIDCMD_GET_PIDFD) {
+> > +                       int cloexec = (flags & PIDCTL_CLOEXEC) ? O_CLOEXEC : 0;
+> > +                       if (result > 0)
+> > +                               result = pidfd_create_fd(struct_pid, cloexec);
+> 
+> ... and then here you continue to use struct_pid. That seems bogus.
 
->  Option 3 has the additional disadvantage that it requires changes in existing
-> DTs for ftm-pwm and ftm-timer, because some properties are moved one level down.
-> Since we need to retain backward compatibility, we'd need to look for those
-> properties both in the node itself and in the parent node. In particular, the
-> common driver part would be fairly complicated to implement in a backward
-> compatible way because it's not enough to do a simple devm_of_platform_populate().
->
->
->  Personally I don't like the common driver part too much. This common driver
-> does almost nothing (iomap and clock) and it creates dependencies between
-> different drivers. Combined with the backward compatibility problem, I don't see
-> much point to it.
->
->
->  I personally like option 2 the most. It's easy to be backward compatible (if
-> mode is not set, revert to the current behaviour, i.e. assume that the
-> compatible string has encoded the mode and that you're the only driver). It
-> doesn't introduce subnodes that have no hardware equivalent. The only messy
-> thing about it is that properties belonging to the different modes are mixed
-> together in a single node. And also, I don't think this kind of model is
-> currently used anywhere else in the kernel.
+Absolutely.
 
-Option 2 seems best to me.
+> > +                       else if (result == 0)
+> > +                               result = -ENOENT;
+> 
+> You don't need to have flags for this for new syscalls, you can just
+> make everything O_CLOEXEC; if someone wants to preserve an fd across
+> execve(), they can just clear that bit with fcntl(). (I thiiink it was
+> Andy Lutomirski who said that before regarding another syscall? But my
+> memory of that is pretty foggy, might've been someone else.)
 
-Rob
+Agreed, I also was going to say the same, about the flags.
+
+thanks,
+
+ - Joel
+
+
+> 
+> > +               }
+> > +       }
+> > +
+> > +       if (target)
+> > +               put_pid_ns(target_ns);
+> > +err_target:
+> > +       if (source)
+> > +               put_pid_ns(source_ns);
+> 
+> I think you probably intended to check for "if (target >= 0)" and "if
+> (source >= 0)" instead of these conditions, matching the condition in
+> get_pid_ns_by_fd()? The current code looks as if it will leave the
+> refcount one too high when used with target==0 or source==0, and leave
+> the refcount one too low when used with target==-1 or source==-1.
+> Anyway, as stated above, I think it would be simpler to
+> unconditionally take a reference instead.
+> 
+> > +err_source:
+> > +       return result;
+> > +}
