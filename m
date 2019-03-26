@@ -2,109 +2,255 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2996C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC329C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A083620863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553592798;
-	bh=b1z2AM41SPVknXwOSjCVU1GiDkrZnKZG35kyPZtrgjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=POlw/0gB2REdwlmAe2+hVY3MR+qEJk1LvOmoWGfS6byIooAW1eUiZI7wpR2Sy/0C9
-	 9MgPxtwf4s/OnNwNti+uE2AN/RdPn9cPpLSutGmbbfSGKJOPFhCW03lGr59/ylptx3
-	 n0mxmac6jUdRxOFNrzLl+oJkCWQ3Oj0XzCsSDppo=
+	by mail.kernel.org (Postfix) with ESMTP id A1DAE20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="No71KLEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfCZJdR (ORCPT
+        id S1731249AbfCZJdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:33:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726261AbfCZJdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:33:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B393FAD65;
-        Tue, 26 Mar 2019 09:33:15 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 10:33:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, rppt@linux.ibm.com, osalvador@suse.de,
-        willy@infradead.org, william.kucharski@oracle.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 4/4] drivers/base/memory.c: Rename the misleading
- parameter
-Message-ID: <20190326093315.GL28406@dhcp22.suse.cz>
-References: <20190326090227.3059-1-bhe@redhat.com>
- <20190326090227.3059-5-bhe@redhat.com>
+        Tue, 26 Mar 2019 05:33:21 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17510 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCZJdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:33:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c99f1db0000>; Tue, 26 Mar 2019 02:33:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 Mar 2019 02:33:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 Mar 2019 02:33:17 -0700
+Received: from [10.24.70.251] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 09:33:10 +0000
+Subject: Re: [PATCH v7 8/9] vfio/type1: Add domain at(de)taching group helpers
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     <ashok.raj@intel.com>, <sanjay.k.kumar@intel.com>,
+        <jacob.jun.pan@intel.com>, <kevin.tian@intel.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        <yi.l.liu@intel.com>, <yi.y.sun@intel.com>, <peterx@redhat.com>,
+        <tiwei.bie@intel.com>, <xin.zeng@intel.com>,
+        <iommu@lists.linux-foundation.org>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Neo Jia <cjia@nvidia.com>
+References: <20190222021927.13132-1-baolu.lu@linux.intel.com>
+ <20190222021927.13132-9-baolu.lu@linux.intel.com>
+X-Nvconfidentiality: public
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+Message-ID: <4ed10087-1e96-2aea-91a5-93ded001cb0b@nvidia.com>
+Date:   Tue, 26 Mar 2019 15:03:06 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326090227.3059-5-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190222021927.13132-9-baolu.lu@linux.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553592796; bh=368TaH0Fb1bLjmVRrNFt63DwQGMzKT1SSsjZM/MSzB8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=No71KLEGNdZKsNVTq7S4CoBXpKsJFvrU5HI+RuiDpoDbvDty7MgdwQko4CT6nb1Ee
+         Gs5fEzc1P6gJZWOZDn6IE4LtUJTUaYNLvhhWxWRbhVBEac0QHJ6dCTA8s77XyjbeYo
+         LQLQ4xuLetAAi84At+dhJf64Vd00w9gueJG0M5Xt7weZNy6Qc+0rkpCZ5sbFRwoEo0
+         BsW1H/5jZNqxEz8Gs7sTR4u45OTj5uZyh0I1VvMBcW5u8dR3+FesQQkPs1yMT4GwlB
+         CAMlQZ/vb1fVuNO0l87fQgk/FgqCiVvzTFnxaDGuZZG3uiYOUFrOcJGa6KU2r/F3/i
+         28/evKoa91H0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 17:02:27, Baoquan He wrote:
-> The input parameter 'phys_index' of memory_block_action() is actually
-> the section number, but not the phys_index of memory_block. Fix it.
 
-phys_index is a relict from the past and it indeed denotes the section
-number which is exported as phys_index via sysfs. start_section_nr would
-be a better name IMHO but nothing to really bike shed about.
 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+On 2/22/2019 7:49 AM, Lu Baolu wrote:
+> This adds helpers to attach or detach a domain to a
+> group. This will replace iommu_attach_group() which
+> only works for non-mdev devices.
+> 
+> If a domain is attaching to a group which includes the
+> mediated devices, it should attach to the iommu device
+> (a pci device which represents the mdev in iommu scope)
+> instead. The added helper supports attaching domain to
+> groups for both pci and mdev devices.
+> 
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+
+Thanks,
+Kirti
+
 
 > ---
->  drivers/base/memory.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/vfio/vfio_iommu_type1.c | 84 ++++++++++++++++++++++++++++++---
+>  1 file changed, 77 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index cb8347500ce2..184f4f8d1b62 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -231,13 +231,13 @@ static bool pages_correctly_probed(unsigned long start_pfn)
->   * OK to have direct references to sparsemem variables in here.
->   */
->  static int
-> -memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
-> +memory_block_action(unsigned long sec, unsigned long action, int online_type)
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 73652e21efec..ccc4165474aa 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -91,6 +91,7 @@ struct vfio_dma {
+>  struct vfio_group {
+>  	struct iommu_group	*iommu_group;
+>  	struct list_head	next;
+> +	bool			mdev_group;	/* An mdev group */
+>  };
+>  
+>  /*
+> @@ -1298,6 +1299,75 @@ static bool vfio_iommu_has_sw_msi(struct iommu_group *group, phys_addr_t *base)
+>  	return ret;
+>  }
+>  
+> +static struct device *vfio_mdev_get_iommu_device(struct device *dev)
+> +{
+> +	struct device *(*fn)(struct device *dev);
+> +	struct device *iommu_device;
+> +
+> +	fn = symbol_get(mdev_get_iommu_device);
+> +	if (fn) {
+> +		iommu_device = fn(dev);
+> +		symbol_put(mdev_get_iommu_device);
+> +
+> +		return iommu_device;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int vfio_mdev_attach_domain(struct device *dev, void *data)
+> +{
+> +	struct iommu_domain *domain = data;
+> +	struct device *iommu_device;
+> +
+> +	iommu_device = vfio_mdev_get_iommu_device(dev);
+> +	if (iommu_device) {
+> +		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+> +			return iommu_aux_attach_device(domain, iommu_device);
+> +		else
+> +			return iommu_attach_device(domain, iommu_device);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int vfio_mdev_detach_domain(struct device *dev, void *data)
+> +{
+> +	struct iommu_domain *domain = data;
+> +	struct device *iommu_device;
+> +
+> +	iommu_device = vfio_mdev_get_iommu_device(dev);
+> +	if (iommu_device) {
+> +		if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+> +			iommu_aux_detach_device(domain, iommu_device);
+> +		else
+> +			iommu_detach_device(domain, iommu_device);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int vfio_iommu_attach_group(struct vfio_domain *domain,
+> +				   struct vfio_group *group)
+> +{
+> +	if (group->mdev_group)
+> +		return iommu_group_for_each_dev(group->iommu_group,
+> +						domain->domain,
+> +						vfio_mdev_attach_domain);
+> +	else
+> +		return iommu_attach_group(domain->domain, group->iommu_group);
+> +}
+> +
+> +static void vfio_iommu_detach_group(struct vfio_domain *domain,
+> +				    struct vfio_group *group)
+> +{
+> +	if (group->mdev_group)
+> +		iommu_group_for_each_dev(group->iommu_group, domain->domain,
+> +					 vfio_mdev_detach_domain);
+> +	else
+> +		iommu_detach_group(domain->domain, group->iommu_group);
+> +}
+> +
+>  static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  					 struct iommu_group *iommu_group)
 >  {
->  	unsigned long start_pfn;
->  	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
->  	int ret;
->  
-> -	start_pfn = section_nr_to_pfn(phys_index);
-> +	start_pfn = section_nr_to_pfn(sec);
->  
->  	switch (action) {
->  	case MEM_ONLINE:
-> @@ -251,7 +251,7 @@ memory_block_action(unsigned long phys_index, unsigned long action, int online_t
->  		break;
->  	default:
->  		WARN(1, KERN_WARNING "%s(%ld, %ld) unknown action: "
-> -		     "%ld\n", __func__, phys_index, action, action);
-> +		     "%ld\n", __func__, sec, action, action);
->  		ret = -EINVAL;
+> @@ -1373,7 +1443,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  			goto out_domain;
 >  	}
 >  
-> -- 
-> 2.17.2
+> -	ret = iommu_attach_group(domain->domain, iommu_group);
+> +	ret = vfio_iommu_attach_group(domain, group);
+>  	if (ret)
+>  		goto out_domain;
+>  
+> @@ -1405,8 +1475,8 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	list_for_each_entry(d, &iommu->domain_list, next) {
+>  		if (d->domain->ops == domain->domain->ops &&
+>  		    d->prot == domain->prot) {
+> -			iommu_detach_group(domain->domain, iommu_group);
+> -			if (!iommu_attach_group(d->domain, iommu_group)) {
+> +			vfio_iommu_detach_group(domain, group);
+> +			if (!vfio_iommu_attach_group(d, group)) {
+>  				list_add(&group->next, &d->group_list);
+>  				iommu_domain_free(domain->domain);
+>  				kfree(domain);
+> @@ -1414,7 +1484,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  				return 0;
+>  			}
+>  
+> -			ret = iommu_attach_group(domain->domain, iommu_group);
+> +			ret = vfio_iommu_attach_group(domain, group);
+>  			if (ret)
+>  				goto out_domain;
+>  		}
+> @@ -1440,7 +1510,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+>  	return 0;
+>  
+>  out_detach:
+> -	iommu_detach_group(domain->domain, iommu_group);
+> +	vfio_iommu_detach_group(domain, group);
+>  out_domain:
+>  	iommu_domain_free(domain->domain);
+>  out_free:
+> @@ -1531,7 +1601,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+>  		if (!group)
+>  			continue;
+>  
+> -		iommu_detach_group(domain->domain, iommu_group);
+> +		vfio_iommu_detach_group(domain, group);
+>  		list_del(&group->next);
+>  		kfree(group);
+>  		/*
+> @@ -1596,7 +1666,7 @@ static void vfio_release_domain(struct vfio_domain *domain, bool external)
+>  	list_for_each_entry_safe(group, group_tmp,
+>  				 &domain->group_list, next) {
+>  		if (!external)
+> -			iommu_detach_group(domain->domain, group->iommu_group);
+> +			vfio_iommu_detach_group(domain, group);
+>  		list_del(&group->next);
+>  		kfree(group);
+>  	}
 > 
-
--- 
-Michal Hocko
-SUSE Labs
