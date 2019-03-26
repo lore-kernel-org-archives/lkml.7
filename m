@@ -2,214 +2,108 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7316C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF86C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B63CA2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525D120823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g8+pMeZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfCZPU1 (ORCPT
+        id S1732121AbfCZPUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:20:27 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41550 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731905AbfCZPUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:20:25 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE50E64A8430CE43DEDA;
-        Tue, 26 Mar 2019 23:20:22 +0800 (CST)
-Received: from S00345302A-PC.china.huawei.com (10.202.227.237) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 26 Mar 2019 23:20:12 +0800
-From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-To:     <lorenzo.pieralisi@arm.com>, <robin.murphy@arm.com>
-CC:     <andrew.murray@arm.com>, <jean-philippe.brucker@arm.com>,
-        <will.deacon@arm.com>, <mark.rutland@arm.com>,
-        <guohanjun@huawei.com>, <john.garry@huawei.com>,
-        <pabba@codeaurora.org>, <vkilari@codeaurora.org>,
-        <rruigrok@codeaurora.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
-        <neil.m.leeder@gmail.com>
-Subject: [PATCH v7 4/4] perf/smmuv3: Enable HiSilicon Erratum 162001800 quirk
-Date:   Tue, 26 Mar 2019 15:17:53 +0000
-Message-ID: <20190326151753.19384-5-shameerali.kolothum.thodi@huawei.com>
-X-Mailer: git-send-email 2.12.0.windows.1
-In-Reply-To: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
-References: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
+        Tue, 26 Mar 2019 11:20:30 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18783 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731905AbfCZPU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:20:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9a433a0000>; Tue, 26 Mar 2019 08:20:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 Mar 2019 08:20:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 Mar 2019 08:20:28 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 15:20:25 +0000
+Subject: Re: [PATCH 5.0 00/52] 5.0.5-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190326042700.963224437@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c72ed127-da73-27d5-dd84-259897a3181c@nvidia.com>
+Date:   Tue, 26 Mar 2019 15:20:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.202.227.237]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553613626; bh=psSyLm93KWY6uheQ1HOKV9dwyZK0A1xCxQ4u4BnFdB4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=g8+pMeZiKwILuiJFX+fhQuRmqTGzFhFANofJ0/351kCJio2o49P/TX+h70QPmSVPI
+         sNJ4lX0WijnosjNd55+86t2dOS9/OLewTMXfJp4FRWSfD/I+ZjB75wRucNx5gbUd7i
+         aSAfxqNRnpg3dW0Pr0OOX6VUIyX/Ng8lS7UL0bo6Op0DfDkibrQl/7olR7hApnQYbv
+         e+zT0ferKg4mytteLVygUMLBseFMzBQlnrpO+q677rNaSI46qRYI9vBFzsrMam6liD
+         rqrq+1K933F6ZfkuXZC2vBtRZkea7g6SfO1pX/NvZ6M81pwT+oOMmq1EUqXBOjdhQB
+         W/3nkwGTeq24w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HiSilicon erratum 162001800 describes the limitation of
-SMMUv3 PMCG implementation on HiSilicon Hip08 platforms.
 
-On these platforms, the PMCG event counter registers
-(SMMU_PMCG_EVCNTRn) are read only and as a result it
-is not possible to set the initial counter period value
-on event monitor start.
+On 26/03/2019 06:29, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.0.5 release.
+> There are 52 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu Mar 28 04:26:38 UTC 2019.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.5-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-To work around this, the current value of the counter
-is read and used for delta calculations. OEM information
-from ACPI header is used to identify the affected hardware
-platforms.
+All tests are passing for Tegra ...
 
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Reviewed-by: Hanjun Guo <hanjun.guo@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/acpi/arm64/iort.c     | 16 ++++++++++++++-
- drivers/perf/arm_smmuv3_pmu.c | 48 ++++++++++++++++++++++++++++++++++++-------
- include/linux/acpi_iort.h     |  1 +
- 3 files changed, 57 insertions(+), 8 deletions(-)
+Test results for stable-v5.0:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    28 tests:	28 pass, 0 fail
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index e2c9b26..4dc68de 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -1366,9 +1366,23 @@ static void __init arm_smmu_v3_pmcg_init_resources(struct resource *res,
- 				       ACPI_EDGE_SENSITIVE, &res[2]);
- }
- 
-+static struct acpi_platform_list pmcg_plat_info[] __initdata = {
-+	/* HiSilicon Hip08 Platform */
-+	{"HISI  ", "HIP08   ", 0, ACPI_SIG_IORT, greater_than_or_equal, 0,
-+	 IORT_SMMU_V3_PMCG_HISI_HIP08},
-+	{ }
-+};
-+
- static int __init arm_smmu_v3_pmcg_add_platdata(struct platform_device *pdev)
- {
--	u32 model = IORT_SMMU_V3_PMCG_GENERIC;
-+	u32 model;
-+	int idx;
-+
-+	idx = acpi_match_platform_list(pmcg_plat_info);
-+	if (idx >= 0)
-+		model = pmcg_plat_info[idx].data;
-+	else
-+		model = IORT_SMMU_V3_PMCG_GENERIC;
- 
- 	return platform_device_add_data(pdev, &model, sizeof(model));
- }
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 7803e9e..6b3c0ed 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -35,6 +35,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/acpi_iort.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/cpuhotplug.h>
-@@ -93,6 +94,8 @@
- 
- #define SMMU_PMCG_PA_SHIFT              12
- 
-+#define SMMU_PMCG_EVCNTR_RDONLY         BIT(0)
-+
- static int cpuhp_state_num;
- 
- struct smmu_pmu {
-@@ -108,6 +111,7 @@ struct smmu_pmu {
- 	void __iomem *reg_base;
- 	void __iomem *reloc_base;
- 	u64 counter_mask;
-+	u32 options;
- 	bool global_filter;
- 	u32 global_filter_span;
- 	u32 global_filter_sid;
-@@ -222,15 +226,27 @@ static void smmu_pmu_set_period(struct smmu_pmu *smmu_pmu,
- 	u32 idx = hwc->idx;
- 	u64 new;
- 
--	/*
--	 * We limit the max period to half the max counter value of the counter
--	 * size, so that even in the case of extreme interrupt latency the
--	 * counter will (hopefully) not wrap past its initial value.
--	 */
--	new = smmu_pmu->counter_mask >> 1;
-+	if (smmu_pmu->options & SMMU_PMCG_EVCNTR_RDONLY) {
-+		/*
-+		 * On platforms that require this quirk, if the counter starts
-+		 * at < half_counter value and wraps, the current logic of
-+		 * handling the overflow may not work. It is expected that,
-+		 * those platforms will have full 64 counter bits implemented
-+		 * so that such a possibility is remote(eg: HiSilicon HIP08).
-+		 */
-+		new = smmu_pmu_counter_get_value(smmu_pmu, idx);
-+	} else {
-+		/*
-+		 * We limit the max period to half the max counter value
-+		 * of the counter size, so that even in the case of extreme
-+		 * interrupt latency the counter will (hopefully) not wrap
-+		 * past its initial value.
-+		 */
-+		new = smmu_pmu->counter_mask >> 1;
-+		smmu_pmu_counter_set_value(smmu_pmu, idx, new);
-+	}
- 
- 	local64_set(&hwc->prev_count, new);
--	smmu_pmu_counter_set_value(smmu_pmu, idx, new);
- }
- 
- static void smmu_pmu_set_event_filter(struct perf_event *event,
-@@ -669,6 +685,22 @@ static void smmu_pmu_reset(struct smmu_pmu *smmu_pmu)
- 		       smmu_pmu->reloc_base + SMMU_PMCG_OVSCLR0);
- }
- 
-+static void smmu_pmu_get_acpi_options(struct smmu_pmu *smmu_pmu)
-+{
-+	u32 model;
-+
-+	model = *(u32 *)dev_get_platdata(smmu_pmu->dev);
-+
-+	switch (model) {
-+	case IORT_SMMU_V3_PMCG_HISI_HIP08:
-+		/* HiSilicon Erratum 162001800 */
-+		smmu_pmu->options |= SMMU_PMCG_EVCNTR_RDONLY;
-+		break;
-+	}
-+
-+	dev_notice(smmu_pmu->dev, "option mask 0x%x\n", smmu_pmu->options);
-+}
-+
- static int smmu_pmu_probe(struct platform_device *pdev)
- {
- 	struct smmu_pmu *smmu_pmu;
-@@ -748,6 +780,8 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	smmu_pmu_get_acpi_options(smmu_pmu);
-+
- 	/* Pick one CPU to be the preferred one to use */
- 	smmu_pmu->on_cpu = raw_smp_processor_id();
- 	WARN_ON(irq_set_affinity(smmu_pmu->irq, cpumask_of(smmu_pmu->on_cpu)));
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 052ef7b..723e4df 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -32,6 +32,7 @@
-  * do with hardware or with IORT specification.
-  */
- #define IORT_SMMU_V3_PMCG_GENERIC        0x00000000 /* Generic SMMUv3 PMCG */
-+#define IORT_SMMU_V3_PMCG_HISI_HIP08     0x00000001 /* HiSilicon HIP08 PMCG */
- 
- int iort_register_domain_token(int trans_id, phys_addr_t base,
- 			       struct fwnode_handle *fw_node);
+Linux version:	5.0.5-rc1-gebcb1bb
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.7.4
-
-
+nvpublic
