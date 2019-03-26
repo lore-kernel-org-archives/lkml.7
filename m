@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E8FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B22FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B294B204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065DE204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="X4KumO0F"
+	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="ceziVE5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfCZLS6 (ORCPT
+        id S1731351AbfCZLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:18:58 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42924 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfCZLS5 (ORCPT
+        Tue, 26 Mar 2019 07:19:02 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43803 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCZLS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:18:57 -0400
-Received: by mail-ed1-f65.google.com with SMTP id x61so4719178edc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 04:18:56 -0700 (PDT)
+        Tue, 26 Mar 2019 07:18:58 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d26so10364157ede.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 04:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=essensium-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UPeXZ4AAarS9G3G4HeyW+y4EGQai6OsoJ0Zh24Hq7BU=;
-        b=X4KumO0FhuZnqz+UjV7ZkLxXo2ABbK+SzEKUQEv9TwvjKA4fxLZ0JXGd2O3WB4YXC4
-         u4qkRnuIvBhWvmKR8Hq3hr8S0/aQ0E+Juh0AR5pDD0rxYRqku2Q4ZwO9T6pdkkOKk5H4
-         X803SKfUjOvwofv+JLsJMhqEvzB4hdL5TjZDMM49CyUw6/+Y4gQ+qJl8yB8RHPfL57+o
-         4hhFEueGAniJK53ywzw6Xsh+9geNUwbpCNRm8spOzbd8ARFNIz/Sp2ET0Exwr6cqZ0H6
-         J5EnEzP7LCLxFAptMUO9uIecDDiQM457ywkNQ/KdKkX9o+y+5tZ+4URC+M9ZEeQ+Nuwf
-         pkgg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OTeF7P8CMXOQSyh4b05fzYdChTzLr7I8xwnDJpAXFEw=;
+        b=ceziVE5Lqjn+EzSYxVUfdbAXgDuQyl09MLo2d6dcJUGOlWQf+M7qjLCDQGRvrZ8ecj
+         fRCeBQtuGSIa7BRfAqAfh8neVpceL9RfVdZC+wy1KfTAKKA22IMCtMcngMFGRR2Oa9E9
+         4tfojn71wm8FIGpomfVKgPPYv67h7gtHpZ2OsPasv2DIg+TgBWjuWk//ndYanmKw4OOI
+         cm77rc22jzuskrga2j/DEXF6FVw6RlRwm5e+hjALlwt0hxudtG3JGm/Nd7SRLG08ZRPv
+         +YbAv6YfUeH3CCz7ZL6N7KCbi4VB7n636duiB6ror0sG1TIm+qeis+AwYyhfgicHQEuX
+         YNvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UPeXZ4AAarS9G3G4HeyW+y4EGQai6OsoJ0Zh24Hq7BU=;
-        b=B2pkZDxTOgvYrsj6ESpQcF667PLcix3PO0iedNYtxh2pL3SLxF2quyG9gCqKOmKviZ
-         91DJ4rXVsMM/+b0nR+p+8CBYA+hFjLudC9caaGY1rzoTRyKSOeUjXyRykJ0VI8A/meRH
-         /f6m7I0d9S3LHo81y1+GGZ+syYbVf9+CezLd0ETgkNZgbiRA7AZlaNSHQcCEf8G5C6iE
-         TdE3CWXBj9oc7JZ1EIy2qm8Y54NUVU83EkbcazYngkQ5ysH+fhxIZFUkUHgy9W6ctn3I
-         baiLAC0DCeKz8siEr0mkmikCN8ymK5cBCDAqNuwg3uRBBURwJh7i/A/Jm31+dDjJvckd
-         lAdQ==
-X-Gm-Message-State: APjAAAW5KNEbf0cT8P34GHLfKVWnkE28IgWOZTAoe4JCwzVuVwk41OfG
-        x3LT+kKUf9m2R+S9tFIRp2neVA==
-X-Google-Smtp-Source: APXvYqwUy/wnpdzjGcFAw9dxWJVgKcN0+6t2Sb7AXHDZ0vAu3k7zmpiCUuSpBvOPgqrSG1lE4ypDPg==
-X-Received: by 2002:a50:e844:: with SMTP id k4mr5026287edn.249.1553599135872;
-        Tue, 26 Mar 2019 04:18:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OTeF7P8CMXOQSyh4b05fzYdChTzLr7I8xwnDJpAXFEw=;
+        b=gwIawZXP/ETBvHLf/BH8IDyajxqeyhWZPrEeDieHJZ58YjYtllFd4cHlWUeEoyWbb0
+         TKcnTMLXIzFmDzBZB3tuKMiR3uY61NC1YH5wZBXTaBkwlwQb04JM3HJpDfFiFqI3FoXW
+         biQRCYGtwb/dJxMdjJaVREo6OtV3FhkAj3Sd98x9CbrWwq6TrAY0fMPAYD2Rj3CFkHRY
+         MKFEUQjC3mIWJAFCpSpo42lFiopMPC2KBS/ob3PR294XatHRDs76WlNc7/mRJ6Qc8OGb
+         BrpcATzExTiVWIIhWnqqBMf0YREBciGXT8sISkfKhErys5hu+QozamOIXhe3WGdmWPRO
+         dLFg==
+X-Gm-Message-State: APjAAAWnXadm3GNqFdxWYxL4RWrR9+zaVXshtkFYLNuqdY+Qj1PTEcWP
+        UFhhUNM52FKQiyWv8/hKGpssw9lCgv0=
+X-Google-Smtp-Source: APXvYqyPI9yf/G8o+B/i8lkXsHpu2xIXaBze0QkRfdU2PriQBPfrJr1MvqSHq1fuZxhBPV3/Oa70ug==
+X-Received: by 2002:a50:aa4e:: with SMTP id p14mr14193692edc.59.1553599137227;
+        Tue, 26 Mar 2019 04:18:57 -0700 (PDT)
 Received: from ph-ThinkPad-E560.local.ess-mail.com (ip-188-118-3-185.reverse.destiny.be. [188.118.3.185])
-        by smtp.gmail.com with ESMTPSA id i3sm3842464ejj.46.2019.03.26.04.18.54
+        by smtp.gmail.com with ESMTPSA id i3sm3842464ejj.46.2019.03.26.04.18.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 04:18:54 -0700 (PDT)
+        Tue, 26 Mar 2019 04:18:56 -0700 (PDT)
 From:   Patrick Havelange <patrick.havelange@essensium.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -68,10 +68,12 @@ To:     Jonathan Cameron <jic23@kernel.org>,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
 Cc:     Patrick Havelange <patrick.havelange@essensium.com>
-Subject: [PATCH v7 1/3] dt-bindings: iio/temperature: Add thermocouple types (and doc)
-Date:   Tue, 26 Mar 2019 12:18:40 +0100
-Message-Id: <20190326111842.12399-1-patrick.havelange@essensium.com>
+Subject: [PATCH v7 2/3] iio:temperature:max31856:Add device tree bind info
+Date:   Tue, 26 Mar 2019 12:18:41 +0100
+Message-Id: <20190326111842.12399-2-patrick.havelange@essensium.com>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190326111842.12399-1-patrick.havelange@essensium.com>
+References: <20190326111842.12399-1-patrick.havelange@essensium.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,61 +81,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces common thermocouple types used by various
-temperature sensors. Also a brief documentation explaining this
-"thermocouple-type" property.
+From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
 
+This patch added device tree binding info for MAX31856 driver.
+
+Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
 Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes v7
- - Merge header and doc in same patch
- - Doc:add it's a single cell entry
- - Doc:removed non complete example
+Changes
+v1 -> v2
+[Matt
+ - Removed comment block and added possibilities of
+   thermocouple type in device tree binding doc.
 
-Changes v6
- - Add this file
+v2 -> v3
+ - Rebased
+
+v3 -> v4
+ - Removed one-shot property related information.
+ - Used standard name 'temp-sensor'
+
+v4 -> v5
+[Patrick
+ - Rename thermocouple type to maxim,thermocouple-type for DT entry
+
+v5 -> v6
+[Patrick
+ - use generic thermocouple-type for DT entry
+
+v6 -> v7
+[Patrick
+ - None
 ---
- .../iio/temperature/temperature-bindings.txt     |  7 +++++++
- .../dt-bindings/iio/temperature/thermocouple.h   | 16 ++++++++++++++++
- 2 files changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/temperature-bindings.txt
- create mode 100644 include/dt-bindings/iio/temperature/thermocouple.h
+ .../bindings/iio/temperature/max31856.txt     | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/temperature-bindings.txt b/Documentation/devicetree/bindings/iio/temperature/temperature-bindings.txt
+diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
 new file mode 100644
-index 000000000000..8f339cab74ae
+index 000000000000..06ab43bb4de8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/temperature-bindings.txt
-@@ -0,0 +1,7 @@
-+If the temperature sensor device can be configured to use some specific
-+thermocouple type, you can use the defined types provided in the file
-+"include/dt-bindings/iio/temperature/thermocouple.h".
++++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
+@@ -0,0 +1,24 @@
++Maxim MAX31856 thermocouple support
 +
-+Property:
-+thermocouple-type:	A single cell representing the type of the thermocouple
-+			used by the device.
-diff --git a/include/dt-bindings/iio/temperature/thermocouple.h b/include/dt-bindings/iio/temperature/thermocouple.h
-new file mode 100644
-index 000000000000..ce037f5238ac
---- /dev/null
-+++ b/include/dt-bindings/iio/temperature/thermocouple.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
 +
-+#ifndef _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H
-+#define _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H
++Optional property:
++	- thermocouple-type: Type of thermocouple (THERMOCOUPLE_TYPE_K if
++		omitted). Supported types are B, E, J, K, N, R, S, T.
 +
++Required properties:
++	- compatible: must be "maxim,max31856"
++	- reg: SPI chip select number for the device
++	- spi-max-frequency: As per datasheet max. supported freq is 5000000
++	- spi-cpha: must be defined for max31856 to enable SPI mode 1
 +
-+#define THERMOCOUPLE_TYPE_B	0x00
-+#define THERMOCOUPLE_TYPE_E	0x01
-+#define THERMOCOUPLE_TYPE_J	0x02
-+#define THERMOCOUPLE_TYPE_K	0x03
-+#define THERMOCOUPLE_TYPE_N	0x04
-+#define THERMOCOUPLE_TYPE_R	0x05
-+#define THERMOCOUPLE_TYPE_S	0x06
-+#define THERMOCOUPLE_TYPE_T	0x07
++	Refer to spi/spi-bus.txt for generic SPI slave bindings.
 +
-+#endif /* _DT_BINDINGS_TEMPERATURE_THERMOCOUPLE_H */
++ Example:
++	temp-sensor@0 {
++		compatible = "maxim,max31856";
++		reg = <0>;
++		spi-max-frequency = <5000000>;
++		spi-cpha;
++		thermocouple-type = <THERMOCOUPLE_TYPE_K>;
++	};
 -- 
 2.19.1
 
