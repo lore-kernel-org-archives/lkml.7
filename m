@@ -2,128 +2,127 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6297FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D5C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3605920823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DHQUUckm"
+	by mail.kernel.org (Postfix) with ESMTP id B20EF21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbfCZTjv (ORCPT
+        id S1732226AbfCZTnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:39:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44249 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732252AbfCZTjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:39:48 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h16so7760665ljg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ryBCGv2xEBNEXU2aXzO4ICzRrxjpGeSrWsqtu4p1C28=;
-        b=DHQUUckmM6C45xWtksRRcF6DidaWNCeE2xk9tNguwq0DY/ceSsHGIRUrnQMjgs9sI/
-         iuhzH88YVBADhmvapBfhwZHw400mz6KoZHDFXYjum0W+g4+UBji1W8Upy4M1LjD2TljH
-         J8RH3Ziv+Z+oHdi43mHvT+HFL/AiZWMbX6S30=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ryBCGv2xEBNEXU2aXzO4ICzRrxjpGeSrWsqtu4p1C28=;
-        b=ZDJ4ib59WW0twjzl3GL4fX0D6vBq6SJIFYGG4WdSbtwazYYwkNLLidpdOtI7HXaKv4
-         0QH+CdApMURk+kPcDAx5S12qnFhO8bZmijuFkv8DSAmBCaju2xbFVmT6+9a4NFAIGh7S
-         OpSg2DWCU2APCCjQX/ExHrvgAHtrOALj57ULN+Lnh14vC4fYj7gV5BtoPnEM9zBY4ZKn
-         KSa6mVbx/94Zy4tcQH0+aiY78pwUswhBT0MhfelIT+A2fRGYNXX3BoNQNsnOt/wqTG1i
-         KWfF75xrjKQWLyhOgAJCw0mkt1HcoScXIbkBrsNMqRCF7ySEoKbgvy8q2seokk/aPm30
-         lLYw==
-X-Gm-Message-State: APjAAAW5k3gEwafC41B1tVISlEetGCEyhu0V2VA+gDDUJEORRB6RkxMo
-        5Vuoukl4OG4wAACZzy24tTsjGXLmIsk=
-X-Google-Smtp-Source: APXvYqx9NbyVpMUvQgGpgE9CBbvjCim6F6I4vqjnppB/1yfwJmNUK46IzOFTRgLTtE0t9IqfPlzYXg==
-X-Received: by 2002:a2e:309:: with SMTP id 9mr5795588ljd.114.1553629186274;
-        Tue, 26 Mar 2019 12:39:46 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id x2sm3112495lfg.59.2019.03.26.12.39.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:39:45 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id f23so12263627ljc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:39:45 -0700 (PDT)
-X-Received: by 2002:a2e:834d:: with SMTP id l13mr5831798ljh.97.1553629184927;
- Tue, 26 Mar 2019 12:39:44 -0700 (PDT)
+        Tue, 26 Mar 2019 15:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730449AbfCZTnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:43:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2FD020823;
+        Tue, 26 Mar 2019 19:43:20 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 15:43:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/8] tools/perf,tools/lib/traceevent: Make traceevent
+ APIs more consistent
+Message-ID: <20190326154318.70716fbb@gandalf.local.home>
+In-Reply-To: <20190326154328.28718-2-tstoyanov@vmware.com>
+References: <20190326154328.28718-1-tstoyanov@vmware.com>
+        <20190326154328.28718-2-tstoyanov@vmware.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190326170518.157317-1-evgreen@chromium.org> <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
-In-Reply-To: <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 26 Mar 2019 12:39:08 -0700
-X-Gmail-Original-Message-ID: <CAE=gft710gv2+k86pwVhucJFxAcN-AUZhGnT9Hm2gLutV+PCpg@mail.gmail.com>
-Message-ID: <CAE=gft710gv2+k86pwVhucJFxAcN-AUZhGnT9Hm2gLutV+PCpg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: msm8998: Add UFS phy reset
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:14 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
->
-> On 26/03/2019 18:05, Evan Green wrote:
->
-> > With the new refactoring at [1], the UFS phy now controls its own
-> > destiny in toggling the phy reset bit within the UFS host controller.
-> > Add the DT pieces needed to 1) expose the reset controller from the
-> > HC, and 2) use it from the PHY. This series is based atop linux-next
-> > plus Marc's series at [2].
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> >
-> > [1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
-> > [2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
-> >
-> > ---
-> > I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
-> > patch if it needs any fixups.
-> >
-> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > index 3d0aeb3211de..d59a2c5fe83a 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > @@ -990,6 +990,7 @@
-> >                       interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-> >                       phys = <&ufsphy_lanes>;
-> >                       phy-names = "ufsphy";
-> > +                     #reset-cells = <1>;
-> >                       lanes-per-direction = <2>;
-> >                       power-domains = <&gcc UFS_GDSC>;
-> >
-> > @@ -1039,6 +1040,7 @@
-> >                               <&gcc GCC_UFS_CLKREF_CLK>,
-> >                               <&gcc GCC_UFS_PHY_AUX_CLK>;
-> >
-> > +                     resets = <&ufshc 0>;
-> >                       ufsphy_lanes: lanes@1da7400 {
-> >                               reg = <0x01da7400 0x128>,
-> >                                     <0x01da7600 0x1fc>,
-> >
->
-> If it's OK with you, I plan to test this patch tomorrow, and simply squash it
-> into my UFS DT submission.
+On Tue, 26 Mar 2019 17:43:21 +0200
+Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
 
-Sounds good, go ahead.
+> Rename some traceevent APIs for consistency:
+> 
+> tep_pid_is_registered() to tep_is_pid_registered()
+> tep_file_bigendian() to tep_is_file_bigendian()
+>   to make the names and return values consistent with other tep_is_... APIs
+> 
+> tep_data_lat_fmt() to tep_data_latency_format()
+>   to make the name more descriptive
+> 
+> tep_host_bigendian() to tep_is_bigendian()
+> tep_set_host_bigendian() to tep_set_local_bigendian()
+> tep_is_host_bigendian() to tep_is_local_bigendian()
+>   "host" can be confused with VMs, and "local" is about the local
+>   machine. All tep_is_..._bigendian(struct tep_handle *tep) APIs return
+>   the saved data in the tep handle, while tep_is_bigendian() returns
+>   the running machine's endianness.
+> 
+> All tep_is_... functions are modified to return bool value, instead of int.
+
+Much nicer ;-)
+
+> 
+> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+> ---
+>  tools/lib/traceevent/event-parse-api.c | 44 +++++++++++++-------------
+>  tools/lib/traceevent/event-parse.c     | 26 +++++++--------
+>  tools/lib/traceevent/event-parse.h     | 16 +++++-----
+>  tools/lib/traceevent/plugin_kvm.c      |  4 +--
+>  tools/perf/util/trace-event-read.c     |  2 +-
+>  tools/perf/util/trace-event.c          |  4 +--
+>  6 files changed, 48 insertions(+), 48 deletions(-)
+> 
+> diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
+> index 2ac8b44854ce..46670bb87051 100644
+> --- a/tools/lib/traceevent/event-parse-api.c
+> +++ b/tools/lib/traceevent/event-parse-api.c
+> @@ -88,7 +88,7 @@ void tep_clear_flag(struct tep_handle *tep, enum tep_flag flag)
+>  bool tep_test_flag(struct tep_handle *tep, enum tep_flag flag)
+>  {
+>  	if (tep)
+> -		return (tep->flags & flag);
+> +		return !!(tep->flags & flag);
+
+This isn't needed. The fact hat this returns "bool", the compiler will
+handle thins the same regardless.
+
+>  	return false;
+>  }
+>  
+
+
+> @@ -306,14 +306,14 @@ void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
+>   * tep_is_latency_format - get if the latency output format is configured
+>   * @pevent: a handle to the tep_handle
+>   *
+> - * This gets if the latency output format is configured
+> - * If @pevent is NULL, 0 is returned.
+> + * This returns true if the latency output format is configured
+> + * If @pevent is NULL, false is returned.
+>   */
+> -int tep_is_latency_format(struct tep_handle *pevent)
+> +bool tep_is_latency_format(struct tep_handle *pevent)
+>  {
+>  	if (pevent)
+> -		return pevent->latency_format;
+> -	return 0;
+> +		return !!(pevent->latency_format);
+
+Same here.
+
+> +	return false;
+>  }
+>  
+>  /**
+
+The rest looks good.
+
+-- Steve
+
+
