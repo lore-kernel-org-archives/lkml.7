@@ -2,127 +2,189 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECE0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD44C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7ED2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NdOJIOe1"
+	by mail.kernel.org (Postfix) with ESMTP id 727272075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732052AbfCZPXD (ORCPT
+        id S1731943AbfCZPZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:23:03 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37197 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731652AbfCZPXC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:23:02 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v14so13394803wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WddYwkXAY/Tsi87NmwWzGmL0EwMpqgKBoopyDwPbmEg=;
-        b=NdOJIOe1oguHGIOps371L/qncSYJQtNTU1TH/4OfGukXF8W85e1DVPJUSohRLPyTxR
-         2gets3BsZGe8b++3oZxC//Q9F9g6lDh1o6kSO5J266OBVZKGxW+dorBf6FI/g7PKGVNx
-         nYD/VB2+NtAIAYjPdEAJ5ItHKQ2MuUx7s+DxarHgGhoZSBZLOS7apK6H+W7m2Gwo++qU
-         3zA0SIMOSzsP/i06shLjMwLNsartGcfOdznBR3VD/EyyHJuJfh/Az4CJTk2xEJRAPnxn
-         ENCVgnr4hfznb98DvT1r2wK7+6gBQV/lICZZ4G4kU1X9Z46f8jF1DuFw8ak0rzWgJBh9
-         fdow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WddYwkXAY/Tsi87NmwWzGmL0EwMpqgKBoopyDwPbmEg=;
-        b=tjqEFSQ+vFsfEMNYP6nzOB8i1dOWFDkKyUHT+Br3Ki16uiSiTB4/Hdawk7KfuRM81T
-         SPM1uegMnClLd2K+DR9m1VwHLnB5t9zQsHKloH7Tyyqep/ThbQWLDRgyzisA09n1gkOu
-         pCGlifDZkbyWeBh6m+IjyqxICATIZokOZiB+Mgr8iOqQHo8yeL/wv7Rksw5wDpl5ud6N
-         d4m45TRP865ZMmfccdpS2sZi/1MZ5ttgqoeHCe9moxNJpMmSxzf8p0Ud5KkFoxDZz+yM
-         cGqH2XbW8nvWjrkMazsfJkjpvHPc8fcrCV53lTeeAiuqwQxFjdNx28gnUQxXtorXqnHw
-         gG2Q==
-X-Gm-Message-State: APjAAAWU9kNZO0AvOmsvojicOJPhAA1BnEblYotUI0dLDQFDpOu/7ocG
-        thZnZfCLb0bv8Rr5lTJEGv6fX4TVeM0=
-X-Google-Smtp-Source: APXvYqw5DcqNDRiiYtNoR/Kog2RwhylMWMNfIGF/DiT2y4+ObhqtZBGKfZCAp0KFlQY+lNpPfoiWKA==
-X-Received: by 2002:a1c:4e04:: with SMTP id g4mr9119604wmh.127.1553613780500;
-        Tue, 26 Mar 2019 08:23:00 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id z129sm19667902wmc.33.2019.03.26.08.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 08:22:59 -0700 (PDT)
-Subject: Re: [PATCH 2/3] genirq/timings: Add array suffix computation code
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     rjw@rjwysocki.net, ulf.hansson@linaro.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190308212047.28767-1-daniel.lezcano@linaro.org>
- <20190308212047.28767-3-daniel.lezcano@linaro.org>
- <alpine.DEB.2.21.1903241825210.1798@nanos.tec.linutronix.de>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-X-Enigmail-Draft-Status: N11100
-Message-ID: <5ad6f7d7-3081-8eef-1adf-3ce705a1ba94@linaro.org>
-Date:   Tue, 26 Mar 2019 16:22:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1903241825210.1798@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 26 Mar 2019 11:25:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58066 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731594AbfCZPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:25:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A5326ACBA;
+        Tue, 26 Mar 2019 15:24:59 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 16:24:59 +0100
+Message-ID: <s5himw564l0.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     "Lee, Chun-Yi" <jlee@suse.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: Downgrade "EFI_MEMMAP is not enabled" message
+In-Reply-To: <s5hpnrad38j.wl-tiwai@suse.de>
+References: <20190301134033.2100-1-tiwai@suse.de>
+        <CAKv+Gu_d7fZuFmu6e5v4WFta11qVRkaKZWdt4X33JRLe3BwHZw@mail.gmail.com>
+        <s5ha7ieels3.wl-tiwai@suse.de>
+        <CAKv+Gu91QeeFHXfp4ShM2z1hbypwnoRKzZQQ3Sktk1sASXvR6Q@mail.gmail.com>
+        <s5h5zt2el6d.wl-tiwai@suse.de>
+        <CAKv+Gu-gp+Hvd-ZcZC-ZRQOHpinj_mXx-L6fTUkKWSXd0UwC+g@mail.gmail.com>
+        <s5hpnrad38j.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Thomas,
-
-thanks for reviewing this patch.
-
-[ ... ]
-
->> +
->> +/*
->> + * Exponential moving average computation
->> + */
->> +static int irq_timings_ema_new(s64 value, s64 ema_old)
+On Fri, 01 Mar 2019 16:27:24 +0100,
+Takashi Iwai wrote:
 > 
-> There is a mixed bag of s64/u64 all over this code. Please stay
-> consistent. We had enough sign confusion bugs in the past.
+> On Fri, 01 Mar 2019 15:57:03 +0100,
+> Ard Biesheuvel wrote:
+> > 
+> > On Fri, 1 Mar 2019 at 15:14, Takashi Iwai <tiwai@suse.de> wrote:
+> > >
+> > > On Fri, 01 Mar 2019 15:02:23 +0100,
+> > > Ard Biesheuvel wrote:
+> > > >
+> > > > On Fri, 1 Mar 2019 at 15:01, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > >
+> > > > > On Fri, 01 Mar 2019 14:53:39 +0100,
+> > > > > Ard Biesheuvel wrote:
+> > > > > >
+> > > > > > On Fri, 1 Mar 2019 at 14:40, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > > >
+> > > > > > > Since 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes
+> > > > > > > when mapping the FB"), efifb_probe() checks its memory range via
+> > > > > > > efi_mem_desc_lookup(), and this leads to a spurious error message
+> > > > > > > "EFI_MEMMAP is not enabled" at every boot on KVM.  This is quite
+> > > > > > > annoying since the error message appears even if you set "quiet" boot
+> > > > > > > option.
+> > > > > > >
+> > > > > > > Actually there are only a few places that call efi_mem_desc_lookup()
+> > > > > > > function, and the other callers do give the explicit error messages
+> > > > > > > when the function returns an error in anyway.  That is, the error
+> > > > > > > message in the function is more or less moot.
+> > > > > > >
+> > > > > > > So let's downgrade the error message for stop annoying users.
+> > > > > > >
+> > > > > > > Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+> > > > > > > Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1127339
+> > > > > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > > > > ---
+> > > > > > >  drivers/firmware/efi/efi.c | 2 +-
+> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > > > > > index 55b77c576c42..50ac33097458 100644
+> > > > > > > --- a/drivers/firmware/efi/efi.c
+> > > > > > > +++ b/drivers/firmware/efi/efi.c
+> > > > > > > @@ -409,7 +409,7 @@ int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+> > > > > > >         efi_memory_desc_t *md;
+> > > > > > >
+> > > > > > >         if (!efi_enabled(EFI_MEMMAP)) {
+> > > > > > > -               pr_err_once("EFI_MEMMAP is not enabled.\n");
+> > > > > > > +               pr_debug("EFI_MEMMAP is not enabled.\n");
+> > > > > > >                 return -EINVAL;
+> > > > > > >         }
+> > > > > > >
+> > > > > >
+> > > > > > efifb_probe() only calls efi_mem_desc_lookup() if
+> > > > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI, which only gets
+> > > > > > assigned on a EFI boot.
+> > > > > >
+> > > > > > So even though I don't object to the patch as is, I would like to
+> > > > > > understand where this error message is coming from, given that it
+> > > > > > means that you are running on a UEFI system without the EFI memory
+> > > > > > map.
+> > > > > >
+> > > > > > Is this system booting via GRUB in EFI mode?
+> > > > >
+> > > > > No, it's booted in legacy boot mode.  But the primary fb is efifb, and
+> > > > > that's why the message appears.
+> > > > >
+> > > >
+> > > > So how are we ending up with
+> > > >
+> > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI
+> > > >
+> > > > ??
+> > >
+> > > Ah, sorry, my description was too ambiguous.
+> > >
+> > > Actually our GRUB2 default setup boots the Linux kernel with linuxefi.
+> > > What I meant was that I invoked qemu-kvm without any -bios option, so
+> > > it's no EFI BIOS.
+> > >
+> > 
+> > Some from the link here
+> > 
+> > https://openqa.opensuse.org/tests/864184/file/journal_check-full_journal.log
+> > 
+> > I got
+> > 
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: probing for efifb
+> > Feb 27 13:13:41 linux-e2c3 kernel: efi: EFI_MEMMAP is not enabled.
+> > Feb 27 13:13:41 linux-e2c3 kernel: fbcon: Taking over console
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: No BGRT, not showing boot graphics
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: framebuffer at 0xfc000000,
+> > using 1408k, total 1408k
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: mode is 800x600x24,
+> > linelength=2400, pages=1
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: scrolling: redraw
+> > Feb 27 13:13:41 linux-e2c3 kernel: efifb: Truecolor: size=0:8:8:8,
+> > shift=0:16:8:0
+> > Feb 27 13:13:41 linux-e2c3 kernel: Console: switching to colour frame
+> > buffer device 100x37
+> > Feb 27 13:13:41 linux-e2c3 kernel: fb0: EFI VGA frame buffer device
+> > 
+> > So if we are doing legacy, there is something else that is taking,
+> > GRUB perhaps, that is taking the framebuffer parameters and putting
+> > them in screen_info and marking them as VIDEO_TYPE_EFI.
+> > 
+> > If this is a reasonable thing to do, it implies that the efifb driver
+> > may run on otherwise non-EFI systems, and if this is the case, I'd
+> > rather fix it like this:
+> > 
+> > diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> > index ba906876cc45..9e529cc2b4ff 100644
+> > --- a/drivers/video/fbdev/efifb.c
+> > +++ b/drivers/video/fbdev/efifb.c
+> > @@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
+> >         info->apertures->ranges[0].base = efifb_fix.smem_start;
+> >         info->apertures->ranges[0].size = size_remap;
+> > 
+> > -       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> > +       if (efi_enabled(EFI_BOOT) &&
+> > +           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> >                 if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+> >                     (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+> >                         pr_err("efifb: video memory @ 0x%lx spans
+> > multiple EFI memory regions\n",
+> > 
+> > Could you please confirm whether this works around the issue as well?
+> 
+> Yeah, that makes sense, and I confirmed that your patch worked.
+> Both EFI_BOOT and EFI_MEMMAP are 0 on the default boot.
+> 
+> Reported-and-tested-by: Takashi Iwai <tiwai@suse.de>
 
-Right.
+Ard, what is the status of this fix?
 
-I have a question, ema_old and value will be always u64 type and the
-function irq_timings_ema_new() will return an u64 ...
 
-> 	value = (value - ema_old) * EMA_ALPHA_VAL;
-> 	return ema_old + value >> EMA_ALPHA_SHIFT;
+thanks,
 
-... how can I deal with the operations above when value < ema_old ?
-
-Shall I use an intermediate s64 ?
-
-eg:
-
-	s64 aux = (value - ema_old) * EMA_ALPHA_VAL;
-	return ema_old + aux >> EMA_ALPHA_SHIFT;
-?
-
-[ ... ]
-
- > Other than that this looks good to me. Nice work!
-
-Thanks, I appreciate.
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Takashi
