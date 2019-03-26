@@ -2,167 +2,83 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36CCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D7DC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF592075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="JLNccMwf"
+	by mail.kernel.org (Postfix) with ESMTP id 53C052075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553561092;
+	bh=8SUfUE5nuZ1q7O+shWBJjUmIu7S7n/I9P2djfmaQFt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=le+UOuqsZnUQkfJKalKUItgk9CUSQfL8hdGvI/cQH7hBK+tusH8ugBCWyo450QuYK
+	 sTOlfAgFCQIJm1RzHfc2d7FCdrHDP525C1yDiEKlaebRvwKtIJsyUkqlR7xV70s/Ii
+	 u77YNCVAYkvYDH2FK7wD7fu25b7sY7wU4lvGiUWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbfCZAoY (ORCPT
+        id S1730624AbfCZAov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 20:44:24 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53868 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730515AbfCZAoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 20:44:22 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q0aDAe023561
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:44:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=1xljpDs4Esn3bwjsb7POMN+Fwk3bdiYCEBlhGBz12lY=;
- b=JLNccMwfrDVrqRpPL4ydKJwYeLV66uk0QfcpHWs4g+eE0/kUSukH1ZMOoE8K3hrYuq6S
- kHyYLDx0MmlQbKItDFYD8e2axRV8inZMPuNfcwtYJcbG8eXs82FAZi0eukote/HVLJxd
- 0R9gCSzs13gfpDk1FuW8kjeGLTl+1eUk5zA= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rf47k9de3-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:44:21 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Mon, 25 Mar 2019 17:44:20 -0700
-Received: by dev082.prn2.facebook.com (Postfix, from userid 572249)
-        id 686553703672; Mon, 25 Mar 2019 17:44:18 -0700 (PDT)
-Smtp-Origin-Hostprefix: dev
-From:   Andrey Ignatov <rdna@fb.com>
-Smtp-Origin-Hostname: dev082.prn2.facebook.com
-To:     <netdev@vger.kernel.org>
-CC:     Andrey Ignatov <rdna@fb.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <guro@fb.com>, <kernel-team@fb.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 bpf-next 00/21] bpf: Sysctl hook
-Date:   Mon, 25 Mar 2019 17:43:26 -0700
-Message-ID: <cover.1553560620.git.rdna@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 25 Mar 2019 20:44:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726553AbfCZAov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 20:44:51 -0400
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3AF62080F;
+        Tue, 26 Mar 2019 00:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553561090;
+        bh=8SUfUE5nuZ1q7O+shWBJjUmIu7S7n/I9P2djfmaQFt0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UgwcYj/MtOYsZSRSAQZJZmAOXrcAJWxN8DvslHezaJxGGppnUH9hg0WRn3OC3rd+5
+         CIOEoiA2anJiXnkvhlqLHbwgOEBeE0v9dkEPNPK1g+exjlciJPASiI196sSYfbfeMa
+         j1gLzdLm1hOYZFHXDyJli5H+H3Cii/Zz4DKCVJOY=
+Date:   Tue, 26 Mar 2019 09:43:51 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 25/27] debugfs: Restrict debugfs when the kernel is
+ locked down
+Message-ID: <20190326004351.GA26712@kroah.com>
+References: <20190325220954.29054-1-matthewgarrett@google.com>
+ <20190325220954.29054-26-matthewgarrett@google.com>
+ <20190326003137.GB5112@kroah.com>
+ <CACdnJus6a_7VUR27K7dJE037b3TPwDNMh1AyAOptHepB18vjxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_01:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACdnJus6a_7VUR27K7dJE037b3TPwDNMh1AyAOptHepB18vjxw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v1->v2:
-- add fs/proc/proc_sysctl.c mainteners to Cc:.
+On Mon, Mar 25, 2019 at 05:38:09PM -0700, Matthew Garrett wrote:
+> On Mon, Mar 25, 2019 at 5:35 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Mon, Mar 25, 2019 at 03:09:52PM -0700, Matthew Garrett wrote:
+> > > Normal device interaction should be done through configfs, sysfs or a
+> > > miscdev, not debugfs.
+> >
+> > Then why not just not allow debugfs at all if it is such a "big
+> > problem"?
+> 
+> Previous attempts to do so have resulted in strong pushback from
+> various maintainers. If you're happy just having any complaints
+> reassigned to you then I'm more than happy to turn it off entirely.
 
-The patch set introduces new BPF hook for sysctl.
-
-It adds new program type BPF_PROG_TYPE_CGROUP_SYSCTL and attach type
-BPF_CGROUP_SYSCTL.
-
-BPF_CGROUP_SYSCTL hook is placed before calling to sysctl's proc_handler so
-that accesses (read/write) to sysctl can be controlled for specific cgroup
-and either allowed or denied, or traced.
-
-The hook has access to sysctl name, current sysctl value and (on write
-only) to new sysctl value via corresponding helpers. New sysctl value can
-be overridden by program. Both name and values (current/new) are
-represented as strings same way they're visible in /proc/sys/. It is up to
-program to parse these strings.
-
-To help with parsing the most common kind of sysctl value, vector of
-integers, two new helpers are provided: bpf_strtol and bpf_strtoul with
-semantic similar to user space strtol(3) and strtoul(3).
-
-The hook also provides bpf_sysctl context with two fields:
-* @write indicates whether sysctl is being read (= 0) or written (= 1);
-* @file_pos is sysctl file position to read from or write to, can be
-  overridden.
-
-The hook allows to make better isolation for containerized applications
-that are run as root so that one container can't change a sysctl and affect
-all other containers on a host, make changes to allowed sysctl in a safer
-way and simplify sysctl tracing for cgroups.
-
-Patch 1 is preliminary refactoring.
-Patch 2 adds new program and attach types.
-Patches 3-5 implement helpers to access sysctl name and value.
-Patch 6 adds file_pos field to bpf_sysctl context.
-Patch 7 updates UAPI in tools.
-Patches 8-9 add support for the new hook to libbpf and corresponding test.
-Patches 10-14 add selftests for the new hook.
-Patch 15 adds support for new arg types to verifier: pointer to integer.
-Patch 16 adds bpf_strto{l,ul} helpers to parse integers from sysctl value.
-Patch 17 updates UAPI in tools.
-Patch 18 updates bpf_helpers.h.
-Patch 19 adds selftests for pointer to integer in verifier.
-Patches 20-21 add selftests for bpf_strto{l,ul}, including integration
-              C based test for sysctl value parsing.
-
-
-Andrey Ignatov (21):
-  bpf: Add base proto function for cgroup-bpf programs
-  bpf: Sysctl hook
-  bpf: Introduce bpf_sysctl_get_name helper
-  bpf: Introduce bpf_sysctl_get_current_value helper
-  bpf: Introduce bpf_sysctl_{get,set}_new_value helpers
-  bpf: Add file_pos field to bpf_sysctl ctx
-  bpf: Sync bpf.h to tools/
-  libbpf: Support sysctl hook
-  selftests/bpf: Test sysctl section name
-  selftests/bpf: Test BPF_CGROUP_SYSCTL
-  selftests/bpf: Test bpf_sysctl_get_name helper
-  selftests/bpf: Test sysctl_get_current_value helper
-  selftests/bpf: Test bpf_sysctl_{get,set}_new_value helpers
-  selftests/bpf: Test file_pos field in bpf_sysctl ctx
-  bpf: Introduce ARG_PTR_TO_{INT,LONG} arg types
-  bpf: Introduce bpf_strtol and bpf_strtoul helpers
-  bpf: Sync bpf.h to tools/
-  selftests/bpf: Add sysctl and strtoX helpers to bpf_helpers.h
-  selftests/bpf: Test ARG_PTR_TO_LONG arg type
-  selftests/bpf: Test bpf_strtol and bpf_strtoul helpers
-  selftests/bpf: C based test for sysctl and strtoX
-
- fs/proc/proc_sysctl.c                         |   25 +-
- include/linux/bpf-cgroup.h                    |   21 +
- include/linux/bpf.h                           |    4 +
- include/linux/bpf_types.h                     |    1 +
- include/linux/filter.h                        |   16 +
- include/uapi/linux/bpf.h                      |  139 +-
- kernel/bpf/cgroup.c                           |  364 +++-
- kernel/bpf/helpers.c                          |  131 ++
- kernel/bpf/syscall.c                          |    7 +
- kernel/bpf/verifier.c                         |   30 +
- tools/include/uapi/linux/bpf.h                |  139 +-
- tools/lib/bpf/libbpf.c                        |    3 +
- tools/lib/bpf/libbpf_probes.c                 |    1 +
- tools/testing/selftests/bpf/Makefile          |    3 +-
- tools/testing/selftests/bpf/bpf_helpers.h     |   19 +
- .../selftests/bpf/progs/test_sysctl_prog.c    |   89 +
- .../selftests/bpf/test_section_names.c        |    5 +
- tools/testing/selftests/bpf/test_sysctl.c     | 1567 +++++++++++++++++
- .../testing/selftests/bpf/verifier/int_ptr.c  |  160 ++
- 19 files changed, 2716 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/test_sysctl_prog.c
- create mode 100644 tools/testing/selftests/bpf/test_sysctl.c
- create mode 100644 tools/testing/selftests/bpf/verifier/int_ptr.c
-
--- 
-2.17.1
-
+Sure, send them my way :)
