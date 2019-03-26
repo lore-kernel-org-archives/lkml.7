@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E405C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903ADC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D252087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663D420811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733070AbfCZXbc (ORCPT
+        id S1733052AbfCZXbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:31:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33524 "EHLO
+        Tue, 26 Mar 2019 19:31:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52502 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732981AbfCZXb1 (ORCPT
+        by vger.kernel.org with ESMTP id S1732546AbfCZXb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 19:31:27 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNT539122486
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNT3bd043033
         for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:31:26 -0400
 Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfuyg3rwm-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfunycck6-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:31:26 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:31:25 -0400
 Received: from localhost
         by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
@@ -34,22 +34,22 @@ Received: from localhost
 Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
         by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:31:19 -0000
+        Tue, 26 Mar 2019 23:31:20 -0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNVIdJ21954776
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNVJkD21954778
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:31:18 GMT
+        Tue, 26 Mar 2019 23:31:19 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78CE3B206A;
+        by IMSVA (Postfix) with ESMTP id DC2BDB2066;
         Tue, 26 Mar 2019 23:31:18 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59F1DB2066;
+        by IMSVA (Postfix) with ESMTP id BB15EB206E;
         Tue, 26 Mar 2019 23:31:18 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Tue, 26 Mar 2019 23:31:18 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7C9CD16C60F9; Tue, 26 Mar 2019 16:31:19 -0700 (PDT)
+        id 9744316C6125; Tue, 26 Mar 2019 16:31:19 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -59,65 +59,61 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 4/9] rcutorture: Remove ->ext_irq_conflict field
-Date:   Tue, 26 Mar 2019 16:31:13 -0700
+Subject: [PATCH tip/core/rcu 9/9] torture: Suppress false-positive CONFIG_INITRAMFS_SOURCE complaint
+Date:   Tue, 26 Mar 2019 16:31:18 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326233054.GA21523@linux.ibm.com>
 References: <20190326233054.GA21523@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19032623-0072-0000-0000-00000410BBFA
+x-cbid: 19032623-0072-0000-0000-00000410BBFB
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
  PH=3.00000004; SC=3.00000282; SDB=6.01180139; UDB=6.00617576; IPR=6.00960854;
- MB=3.00026170; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:31:23
+ MB=3.00026170; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:31:24
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-0073-0000-0000-00004B9D5F37
-Message-Id: <20190326233118.23057-4-paulmck@linux.ibm.com>
+x-cbparentid: 19032623-0073-0000-0000-00004B9D5F38
+Message-Id: <20190326233118.23057-9-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=15 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=976 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1903260158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back when there was a separate RCU-bh flavor, the ->ext_irq_conflict
-field was used to prevent executing local_bh_enable() while interrupts
-were disabled.  However, there is no longer an RCU-bh flavor, so this
-commit removes the no-longer-needed ->ext_irq_conflict field.
+The scripting must supply the CONFIG_INITRAMFS_SOURCE Kconfig option
+so that kbuild can find the desired initrd, but the configcheck.sh
+script gets confused by this option because it takes a string instead
+of the expected y/n/m.  This causes checkconfig.sh to complain about
+CONFIG_INITRAMFS_SOURCE in the torture-test output (though not in the
+summary).  As more people use rcutorture, the resulting confusion is
+an increasing concern.
 
+This commit therefore suppresses this false-positive warning by filtering
+CONFIG_INITRAMFS_SOURCE from within the checkconfig.sh script.
+
+Reported-by: Joel Fernandes <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/rcu/rcutorture.c | 5 -----
- 1 file changed, 5 deletions(-)
+ tools/testing/selftests/rcutorture/bin/configcheck.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 2453229ba15a..21ab3c7eb221 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -299,7 +299,6 @@ struct rcu_torture_ops {
- 	int irq_capable;
- 	int can_boost;
- 	int extendables;
--	int ext_irq_conflict;
- 	const char *name;
- };
+diff --git a/tools/testing/selftests/rcutorture/bin/configcheck.sh b/tools/testing/selftests/rcutorture/bin/configcheck.sh
+index 5b25524d0366..31584cee84d7 100755
+--- a/tools/testing/selftests/rcutorture/bin/configcheck.sh
++++ b/tools/testing/selftests/rcutorture/bin/configcheck.sh
+@@ -14,6 +14,7 @@ mkdir $T
+ cat $1 > $T/.config
  
-@@ -1170,10 +1169,6 @@ rcutorture_extend_mask(int oldmask, struct torture_random_state *trsp)
- 	    ((!(mask & RCUTORTURE_RDR_BH) && (oldmask & RCUTORTURE_RDR_BH)) ||
- 	     (!(mask & RCUTORTURE_RDR_RBH) && (oldmask & RCUTORTURE_RDR_RBH))))
- 		mask |= RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
--	if ((mask & RCUTORTURE_RDR_IRQ) &&
--	    !(mask & cur_ops->ext_irq_conflict) &&
--	    (oldmask & cur_ops->ext_irq_conflict))
--		mask |= cur_ops->ext_irq_conflict; /* Or if readers object. */
- 	return mask ?: RCUTORTURE_RDR_RCU;
- }
- 
+ cat $2 | sed -e 's/\(.*\)=n/# \1 is not set/' -e 's/^#CHECK#//' |
++grep -v '^CONFIG_INITRAMFS_SOURCE' |
+ awk	'
+ {
+ 		print "if grep -q \"" $0 "\" < '"$T/.config"'";
 -- 
 2.17.1
 
