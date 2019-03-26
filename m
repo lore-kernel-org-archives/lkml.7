@@ -2,79 +2,136 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51690C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AF6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDA320700
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9793620700
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:49:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553636984;
+	bh=v+HKbO1ok06lJiUV79eBSbe4T2bXO4tAdvDPTy/p/Nk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nbSpj3ZGKfL2t3kwpUU0EXX7B9p/T/yV2S1rwh5S54L8kOU6N2Ejt0p5F5VYFKDNE
+	 dt487q4E+UNk/OS5RdtwYdKBxvG5MF7lrxRvlVh9tXpeFB+pvEjscFthBgoRntu4we
+	 lRm8vnLRgVFuZFDAVpW3hQFFT6WaUj10j1h4384g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbfCZVq0 (ORCPT
+        id S1732436AbfCZVtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbfCZVq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:46:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48DD820700;
-        Tue, 26 Mar 2019 21:46:25 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 17:46:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/3] [GIT PULL] tracing: Minor fixes for 5.1-rc2
-Message-ID: <20190326174623.16d7725f@gandalf.local.home>
-In-Reply-To: <CAHk-=wg5_Hu4W5tz05vmC3eBH3_h7_uJKEMwLM+MvsJ=znWtbw@mail.gmail.com>
-References: <20190326124143.521905652@goodmis.org>
-        <CAHk-=wiw+vH-LwFRv910FhojCHUDjwUJ4pNWVJkAiP=deyyG3Q@mail.gmail.com>
-        <20190326144825.7b359641@gandalf.local.home>
-        <CAHk-=wg5_Hu4W5tz05vmC3eBH3_h7_uJKEMwLM+MvsJ=znWtbw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 26 Mar 2019 17:49:43 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33247 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbfCZVtn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:49:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j10so6511765otq.0;
+        Tue, 26 Mar 2019 14:49:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ckZMXmgmcgR8XrCw5AW2X6vn32D44/9t62wX0hdzI64=;
+        b=T8z8/hHhc10aEYB3t6+SoIfRsXIx/AEhiOTJRg4Nkyxm91xyzpNmOrH1OGrXRc205/
+         KXHjkEQLOra9emSgIGTWx8WCDlu6YJPFFbUY755tsSZSYeiu1WvVfF9CJqkiEkHI/3co
+         Ht0jF9o2Z6+LOZhSlP6gC+2ztQbz0AL3ZZNYX8a6DP8Br5HKdcoIVfsoF7m+NaFjvL50
+         b4vvjuHT/xF1iNrxCFOVlOHsiyQYjCMVLn+9yFcEiEDSq5wI66qP1Qpv//r9jE9JfhCC
+         d8PTaifC0BOD+L6NrJG3ImqErwtAF29qPyKftnMYHnntv78KsEHnB5d36crxGsIpwLPK
+         hiWA==
+X-Gm-Message-State: APjAAAWdpW98yRJTd6GVEtijnQ29GSgwFkp5n7A3LNjgEr5jutlIiYZd
+        nkIpwH4Xv0A0iSoIUYTjExS/i1OP8CJ5bLtlxgg=
+X-Google-Smtp-Source: APXvYqwMVrFpkWC0q/izSo0WvL3ml8k5ylijCi2p16CLLSDNhQwt63FEPflO30zUs8BFN3kgQozMfCeRzcxbX/+0uWc=
+X-Received: by 2002:a9d:6498:: with SMTP id g24mr24900948otl.343.1553636982407;
+ Tue, 26 Mar 2019 14:49:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190304030022.22492-1-hu1.chen@intel.com>
+In-Reply-To: <20190304030022.22492-1-hu1.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 Mar 2019 22:49:32 +0100
+Message-ID: <CAJZ5v0g3+S0vkW0XTzMKA8rYCtgy7yJ+UDc5xG4rRcdTbcJ=Lg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI / PM: Propagate KEY_POWER wakeup events to user space
+To:     "Chen, Hu" <hu1.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 14:29:27 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Mon, Mar 4, 2019 at 4:18 AM Chen, Hu <hu1.chen@intel.com> wrote:
+>
+> When the system is woken from S3 by the ACPI fixed power button, send
+> KEY_POWER to user space.
+>
+> I run Android on x86 PC (it's a NUC). Everytime I press the power button
+> to wake the system, it suspends right away. After some debug, I find
+> that Android wants to see KEY_POWER at resume. Otherwise, its
+> opportunistic suspend will kick in shortly.
 
-> On Tue, Mar 26, 2019 at 11:48 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > Should I work on changing this?  
-> 
-> I don't personally much care, but the pr-tracker-bot clearly does.
-> 
-> If you don't care about the automated "it's been pulled" message, that
-> doesn't matter, of course.
+Alas that extra button event will cause other (non-Android) systems to
+want to power off immediately after resume AFAICS.
 
-I'm subscribed to your git tree and filter out all updates for my
-signed off by. An then I get those emails. So I get the "Pulled"
-message regardless.
+Something else needs to be done for the Android case.
 
-> 
-> That said, I'd almost prefer to get just the regular pull request
-> without the patches. If the complete patch is small, it's often nice
-> to see that _in_ the pull request (at the bottom), but I don't
-> generally need or want the individual patches themselves as separate
-> emails (unless there's some particular reason you want me to comment
-> on something, or apply them directly as patches).
-
-It's not really for you, but more for transparency in general. I have a
-rule that I don't push anything to you that I haven't personally sent
-to LKML as a separate patch.
-
-It's not a big deal. I could make this a two step process, and send
-these as my "for-next" patches so that people (including the authors of
-the patch) know that I'm sending them upstream.
-
--- Steve
+> Signed-off-by: Chen, Hu <hu1.chen@intel.com>
+> ---
+>  drivers/acpi/button.c | 4 +++-
+>  drivers/acpi/sleep.c  | 8 ++++++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+> index a19ff3977ac4..117718057938 100644
+> --- a/drivers/acpi/button.c
+> +++ b/drivers/acpi/button.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>  #include <acpi/button.h>
+> +#include <linux/suspend.h>
+>
+>  #define PREFIX "ACPI: "
+>
+> @@ -417,7 +418,8 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+>                         int keycode;
+>
+>                         acpi_pm_wakeup_event(&device->dev);
+> -                       if (button->suspended)
+> +                       if (button->suspended &&
+> +                           mem_sleep_current == PM_SUSPEND_TO_IDLE)
+>                                 break;
+>
+>                         keycode = test_bit(KEY_SLEEP, input->keybit) ?
+> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> index 403c4ff15349..c5dcee9f5872 100644
+> --- a/drivers/acpi/sleep.c
+> +++ b/drivers/acpi/sleep.c
+> @@ -462,6 +462,13 @@ static int find_powerf_dev(struct device *dev, void *data)
+>         return !strcmp(hid, ACPI_BUTTON_HID_POWERF);
+>  }
+>
+> +static void pwr_btn_notify(struct device *dev)
+> +{
+> +       struct acpi_device *device = to_acpi_device(dev);
+> +
+> +       device->driver->ops.notify(device, ACPI_FIXED_HARDWARE_EVENT);
+> +}
+> +
+>  /**
+>   *     acpi_pm_finish - Instruct the platform to leave a sleep state.
+>   *
+> @@ -505,6 +512,7 @@ static void acpi_pm_finish(void)
+>                                       find_powerf_dev);
+>         if (pwr_btn_dev) {
+>                 pm_wakeup_event(pwr_btn_dev, 0);
+> +               pwr_btn_notify(pwr_btn_dev);
+>                 put_device(pwr_btn_dev);
+>         }
+>  }
+> --
+> 2.20.1
+>
