@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6798FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55BEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 348C220857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796FE20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581931;
-	bh=RvsOEjC+WipSxHU4bk4SPKmLyib+iPAjw5AyK0LvBQo=;
+	s=default; t=1553581934;
+	bh=A942+mqL8OzBGjvq5Sm/9s5QYiiZbxx4r/iJZepqlBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0sGD3P8SRWJRYduKwtrHJEsCk60rRxYYRnIWPvLOszVcI75ihL0ClbAsuetDBja+
-	 hFeiu8YuI+35W8y4PyokE3ejOatlzDcP4bEbtWEKK3BZIE+fCl5101tYAug0cU3EyA
-	 SMd+AmD5nj7TTs+VUHIJ02GDjRO/UvfCfTw9tq2c=
+	b=wtWDXm90mt1gTvOwx1ZvXgyPKrVAaGe7BfzE/hnhwedORxOGWVZsBZIp6ZcDPY67m
+	 tq5yvOCvbwqJigoujZSElPGfOHdQm3kINL3UzvgEXaBrn4OubHxy71Zk69ES/mOUfq
+	 mB9fDdC8mYcdH2TcCMeXDeEfqEKXfVyBC5J4Sy1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbfCZGcK (ORCPT
+        id S1731379AbfCZGcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:32:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41520 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731029AbfCZGcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:32:06 -0400
+        id S1731336AbfCZGcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:32:10 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE78F20856;
-        Tue, 26 Mar 2019 06:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9352E20823;
+        Tue, 26 Mar 2019 06:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581925;
-        bh=RvsOEjC+WipSxHU4bk4SPKmLyib+iPAjw5AyK0LvBQo=;
+        s=default; t=1553581929;
+        bh=A942+mqL8OzBGjvq5Sm/9s5QYiiZbxx4r/iJZepqlBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W2y7Uc+Pwo9cxv0F5d+5ctUqNx7dNnMahPJC28oO4+riaL98djeKKn0HvOB/1cPI0
-         FgmEnA7xI4fSLpfZSbtPJGdxdgf/Soh+HqzzcjaAlNzjLir0QbU7Nnoxty43NSODpM
-         RRg3/KiXJ2JEHquZh5ftDM2YtVSsoSA8u0KCUjF4=
+        b=p054MZsDBB6d5fslKqL8Pr1NhtTpm2AnuNCgIvmfU53V3JA+7bMJ01U07Xij/GFTO
+         MK+sBeWYFmLCJXHIl79Z9HrI24KwDe4MPazw0d5AL8+NaionmJ3HPNtQOIVmbXAffF
+         41WJkFiapJSmu+P7hwJQLmNBfi4SMI3M/7+O+hdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kehuanlin <kehuanlin@pinecone.net>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.9 26/30] scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-Date:   Tue, 26 Mar 2019 15:30:05 +0900
-Message-Id: <20190326042608.444848909@linuxfoundation.org>
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.9 27/30] rtc: Fix overflow when converting time64_t to rtc_time
+Date:   Tue, 26 Mar 2019 15:30:06 +0900
+Message-Id: <20190326042608.476146676@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -66,55 +66,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: kehuanlin <chgokhl@gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-commit 83dc7e3dea76b77b6bcc289eb86c5b5c145e8dff upstream.
+commit 36d46cdb43efea74043e29e2a62b13e9aca31452 upstream.
 
-Since the command type of UTRD in UFS 2.1 specification is the same with
-UFS 2.0. And it assumes the future UFS specification will follow the
-same definition.
+If we convert one large time values to rtc_time, in the original formula
+'days * 86400' can be overflowed in 'unsigned int' type to make the formula
+get one incorrect remain seconds value. Thus we can use div_s64_rem()
+function to avoid this situation.
 
-Signed-off-by: kehuanlin <kehuanlin@pinecone.net>
-Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ufs/ufshcd.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-lib.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1348,10 +1348,11 @@ static int ufshcd_comp_devman_upiu(struc
- 	u32 upiu_flags;
- 	int ret = 0;
+--- a/drivers/rtc/rtc-lib.c
++++ b/drivers/rtc/rtc-lib.c
+@@ -52,13 +52,11 @@ EXPORT_SYMBOL(rtc_year_days);
+  */
+ void rtc_time64_to_tm(time64_t time, struct rtc_time *tm)
+ {
+-	unsigned int month, year;
+-	unsigned long secs;
++	unsigned int month, year, secs;
+ 	int days;
  
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
+ 	/* time must be positive */
+-	days = div_s64(time, 86400);
+-	secs = time - (unsigned int) days * 86400;
++	days = div_s64_rem(time, 86400, &secs);
  
- 	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE);
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
-@@ -1375,10 +1376,11 @@ static int ufshcd_comp_scsi_upiu(struct
- 	u32 upiu_flags;
- 	int ret = 0;
- 
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_SCSI;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
- 
- 	if (likely(lrbp->cmd)) {
- 		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
+ 	/* day of the week, 1970-01-01 was a Thursday */
+ 	tm->tm_wday = (days + 4) % 7;
 
 
