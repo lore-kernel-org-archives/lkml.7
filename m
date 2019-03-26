@@ -2,104 +2,85 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACEA20848
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cd8ozTLj"
+	by mail.kernel.org (Postfix) with ESMTP id D38CD20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:30:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbfCZB3h (ORCPT
+        id S1730750AbfCZBaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 21:29:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43653 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730570AbfCZB3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 21:29:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f18so9590622lja.10
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 18:29:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9rZR7CLmDE7W1CsA2uUjGFYAIsf+SIg0KHMb3XzKijg=;
-        b=Cd8ozTLjKxoYOfBuJughFD/REkkG2NsrrmQACRxNkw6Jpp7SdpVw754qx8h2CF6ezA
-         1aauQE3kBpXrUfxKDmf0JCdrPy3lwvtorzZIYMPLOy7l2NKAu8UZJaL5aZujea2xL4LE
-         z+0nd7LuuDnoc+tq3cPzH7fQt4pedy99JDmWU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9rZR7CLmDE7W1CsA2uUjGFYAIsf+SIg0KHMb3XzKijg=;
-        b=P0oVjLLLfOhpUElvQUAHKz8mANJkWRGhe+g54kn/E9i+X+KQ4wwD+/Do2AZqdEIt8u
-         J1J5cSyvNBf39mzjSF9haAb+bzd8tTFC1IDkmCTYfmwVCBZRGIrganyc2JjonPuANN+l
-         hpTHEAAiH66k0s0oYhrq6VdVmZBijHJ/LnKpAYCVF/lQ45Y9jQZPnqQPMCQ7EGSL923G
-         YPqDDNWlkJpc8WGGf97mwMYryqIkhU7pNafOgEuFioLlmnN/eXJsQi+HkBiBrBok0Sae
-         U8PMhGJscjpDddqPGZqnDFqO4cZBlk1moFDVUWKcjnh65hdpFMCsP7Wpt67V0eG4/7jQ
-         d5wg==
-X-Gm-Message-State: APjAAAUkWEeIKvRP4zBAg0SexIstEHV7ObGhOWc4y+IQ8vjEbmxr9PeB
-        CEBRaxX6b8eeB8g0fDEkUEIdddJtpSQ=
-X-Google-Smtp-Source: APXvYqxa5rreCawVk9+ErDwDz6Sbmeq1Msig60vowMa0harO1cG6FLhHMyLmSvMusHq/ztBZlHipsg==
-X-Received: by 2002:a2e:4e12:: with SMTP id c18mr10036864ljb.3.1553563774005;
-        Mon, 25 Mar 2019 18:29:34 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id q5sm3689405lfm.16.2019.03.25.18.29.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 25 Mar 2019 18:29:33 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id k23so278705lji.13
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 18:29:32 -0700 (PDT)
-X-Received: by 2002:a2e:3e18:: with SMTP id l24mr5557183lja.68.1553563772042;
- Mon, 25 Mar 2019 18:29:32 -0700 (PDT)
+        Mon, 25 Mar 2019 21:30:00 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47516 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727506AbfCZBaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 21:30:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Mar 2019 18:29:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,270,1549958400"; 
+   d="scan'208";a="130144816"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga006.jf.intel.com with ESMTP; 25 Mar 2019 18:29:58 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
+ iommu_get_resv_regions
+To:     James Sewart <jamessewart@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+ <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
+ <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
+ <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
+ <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
+Date:   Tue, 26 Mar 2019 09:24:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190306214730.6545-1-valleau@chromium.org> <44e151af-b6c4-d0af-3ef1-a5632d079915@kernel.org>
- <CA+ASDXMcnEfZzTjDGsDbZxX2Xknv6dt3H-3kN79WdKFzif2zsA@mail.gmail.com>
- <caee30e2-ddc4-0076-907e-558dbcfe7c52@kernel.org> <CA+ASDXOzTkXk_JtBDa4zkMhy3NyWv7Wn1i6YYtwRdeF8j_c2nA@mail.gmail.com>
- <23918a77-2694-fdae-4300-0882c7c940cf@kernel.org> <CA+ASDXOEkG36W-6rONqDntzChtq65=cQh6JVyjWhftBykXVTbw@mail.gmail.com>
- <759fcefa-974b-7430-e7cf-64eabd219d61@kernel.org>
-In-Reply-To: <759fcefa-974b-7430-e7cf-64eabd219d61@kernel.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 25 Mar 2019 18:29:20 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMt97g-r3PniB4Z9+DeETdybtZ2sUneRgmetRKVZC-FBw@mail.gmail.com>
-Message-ID: <CA+ASDXMt97g-r3PniB4Z9+DeETdybtZ2sUneRgmetRKVZC-FBw@mail.gmail.com>
-Subject: Re: [PATCH] tools: usb: usbip: adding support for older kernel versions
-To:     shuah <shuah@kernel.org>
-Cc:     David Valleau <valleau@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+Hi James,
 
-On Mon, Mar 25, 2019 at 5:04 PM shuah <shuah@kernel.org> wrote:
-> Agreed. Let's move forward with the assumption that this won't happen
-> in the future.
+On 3/25/19 8:57 PM, James Sewart wrote:
+>>> Theres an issue that if we choose to alloc a new resv_region with type
+>>> IOMMU_RESV_DIRECT, we will need to refactor intel_iommu_put_resv_regions
+>>> to free this entry type which means refactoring the rmrr regions in
+>>> get_resv_regions. Should this work be in this patchset?
+>> Do you mean the rmrr regions are not allocated in get_resv_regions, but
+>> are freed in put_resv_regions? I think we should fix this in this patch
+>> set since this might impact the device passthrough if we don't do it.
+> They’re not allocated and not freed currently, only type IOMMU_RESV_MSI is
+> freed in put_resv_regions. If we allocate a new resv_region with type
+> IOMMU_RESV_DIRECT for the isa region, then it won’t be freed. If we modify
+> put_resv_regions to free type IOMMU_RESV_DIRECT, then we will try to free
+> the static RMRR regions.
+> 
+> Either the ISA region is static and not freed as with my implementation,
+> or the RMRR regions are converted to be allocated on each call to
+> get_resv_regions and freed in put_resv_regions.
+> 
 
-Great! Are you going to propose a Documentation/ABI/ patch to help
-with that? e.g., Documentation/ABI/testing/sysfs-platform-vhci-hcd?
-I'm frankly not that familiar with usbip (I'm just trying to help
-David out) and might not be the best person for describing the details
-exposed here.
+By the way, there's another way in my mind. Let's add a new region type
+for LPC devices, e.x. IOMMU_RESV_LPC, and then handle it in the same way
+as those MSI regions. Just FYI.
 
-And are you planning to try something else to maintain compatibility
-pre-[1]? I'm not saying you have to, but you mentioned it and I'd like
-to know if we're doing any duplicate work.
-
-Regards,
-Brian
-
-[1] 1c9de5bf4286 usbip: vhci-hcd: Add USB3 SuperSpeed support
+Best regards,
+Lu Baolu
