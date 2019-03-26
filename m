@@ -2,44 +2,163 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C97C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DB42070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE6D20828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z6v0XXqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731205AbfCZHkD (ORCPT
+        id S1731059AbfCZHod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:40:03 -0400
-Received: from verein.lst.de ([213.95.11.211]:34742 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbfCZHkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:40:03 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 06B8C68D0D; Tue, 26 Mar 2019 08:39:55 +0100 (CET)
-Date:   Tue, 26 Mar 2019 08:39:54 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     luferry <luferry@163.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] make blk_mq_map_queues more friendly for cpu topology
-Message-ID: <20190326073954.GD21617@lst.de>
-References: <20190325152640.48120-1-luferry@163.com>
+        Tue, 26 Mar 2019 03:44:33 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41864 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfCZHod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 03:44:33 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 188so2253162pfd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=guX9JjzludzjpfbhyDia6d8Kx5PRCAeJ16z/HP1EEq8=;
+        b=Z6v0XXqM7DONOBaYbfDIEbQF39dWcHODW3NiueK5leRqOl31GAH3JjWOtt5LUV58Wn
+         SEksRJkRoXrHkTuur7PzDZekWyCXNpjPgMtaInVdGo+1XuXVBtSMezQfxsEUasvUC8yW
+         pb0w+3/lBkkJvXQqJ0Mfb7e47wM46xol6Qo6I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=guX9JjzludzjpfbhyDia6d8Kx5PRCAeJ16z/HP1EEq8=;
+        b=bzy8yUfeSwH4MWmqw/uy6xqTF7GXK/iZFHQUrqOclcMlqpU6+lmpPAN/tuy2TxakLO
+         Z1IdPlD95T3qMoX0flZlLbCCIff1YfT19gHQlWEqSwhJZaiSpp8S+2nvtkFgIZdm6gp8
+         Cia4+Bbc1FhKxqfaNh0wP2Ft+aDA6DSbUPxig2knahtXW6O/0FnP4Ik5iDk9VQTb6ToQ
+         wlSSejjoWZ0261be586/4GCsQfcJhAV6RMgObxJJ08Zt/p4FZCRS+ak56CMrfX6wN78z
+         vfr5msBzDQYOt1MPm3r1OjEu2/tvJ2rmtWc1rUwA8iEPwuP4EtN3i0SjCl6HbI5KVO47
+         bKpg==
+X-Gm-Message-State: APjAAAUv58EVXF5MAmPyF+UTUrC3RBIrS2Y3hn0Xph+2Zd8ZRiH72/HT
+        DyiSqYWoqCY1J8k73rZhAGQ0xQ==
+X-Google-Smtp-Source: APXvYqyaJId/+xlnGKhyV500nOy9o4V1J2JSBRH2FN7nRJEBNWH3MDDTL/+Rtka8ilCknE+BJPh64w==
+X-Received: by 2002:a62:e502:: with SMTP id n2mr28662586pff.242.1553586272232;
+        Tue, 26 Mar 2019 00:44:32 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
+        by smtp.gmail.com with ESMTPSA id n9sm19716753pff.43.2019.03.26.00.44.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 00:44:31 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH] media: mtk-vcodec: fix access to incorrect planes member
+Date:   Tue, 26 Mar 2019 16:44:23 +0900
+Message-Id: <20190326074423.123864-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325152640.48120-1-luferry@163.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why isn't this using the automatic PCI-level affinity assignment to
-start with?
+Commit 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem
+buffer helpers") fixed the return types for mem2mem buffer helper
+functions by changing a few local variables from vb2_buffer to
+vb2_v4l2_buffer. However, it left a few accesses to vb2_buffer::planes
+as-is, accidentally turning them into accesses to
+vb2_v4l2_buffer::planes and resulting in values being read from/written
+to the wrong place.
+
+Fix this by inserting vb2_buf into these accesses so they mimic their
+original behavior.
+
+Fixes: 0650a91499e0 ("media: mtk-vcodec: Correct return type for mem2mem buffer helpers")
+
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+---
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |  4 ++--
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+index a85c7cc8328e..e20b340855e7 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+@@ -388,7 +388,7 @@ static void mtk_vdec_worker(struct work_struct *work)
+ 	}
+ 	buf.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
+ 	buf.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
+-	buf.size = (size_t)src_buf->planes[0].bytesused;
++	buf.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
+ 	if (!buf.va) {
+ 		v4l2_m2m_job_finish(dev->m2m_dev_dec, ctx->m2m_ctx);
+ 		mtk_v4l2_err("[%d] id=%d src_addr is NULL!!",
+@@ -1155,7 +1155,7 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+ 
+ 	src_mem.va = vb2_plane_vaddr(&src_buf->vb2_buf, 0);
+ 	src_mem.dma_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
+-	src_mem.size = (size_t)src_buf->planes[0].bytesused;
++	src_mem.size = (size_t)src_buf->vb2_buf.planes[0].bytesused;
+ 	mtk_v4l2_debug(2,
+ 			"[%d] buf id=%d va=%p dma=%pad size=%zx",
+ 			ctx->id, src_buf->vb2_buf.index,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index c6b48b5925fb..50351adafc47 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -894,7 +894,7 @@ static void vb2ops_venc_stop_streaming(struct vb2_queue *q)
+ 
+ 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+ 		while ((dst_buf = v4l2_m2m_dst_buf_remove(ctx->m2m_ctx))) {
+-			dst_buf->planes[0].bytesused = 0;
++			dst_buf->vb2_buf.planes[0].bytesused = 0;
+ 			v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
+ 		}
+ 	} else {
+@@ -947,7 +947,7 @@ static int mtk_venc_encode_header(void *priv)
+ 
+ 	bs_buf.va = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+ 	bs_buf.dma_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+-	bs_buf.size = (size_t)dst_buf->planes[0].length;
++	bs_buf.size = (size_t)dst_buf->vb2_buf.planes[0].length;
+ 
+ 	mtk_v4l2_debug(1,
+ 			"[%d] buf id=%d va=0x%p dma_addr=0x%llx size=%zu",
+@@ -976,7 +976,7 @@ static int mtk_venc_encode_header(void *priv)
+ 	}
+ 
+ 	ctx->state = MTK_STATE_HEADER;
+-	dst_buf->planes[0].bytesused = enc_result.bs_size;
++	dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
+ 	v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
+ 
+ 	return 0;
+@@ -1107,12 +1107,12 @@ static void mtk_venc_worker(struct work_struct *work)
+ 
+ 	if (ret) {
+ 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_ERROR);
+-		dst_buf->planes[0].bytesused = 0;
++		dst_buf->vb2_buf.planes[0].bytesused = 0;
+ 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_ERROR);
+ 		mtk_v4l2_err("venc_if_encode failed=%d", ret);
+ 	} else {
+ 		v4l2_m2m_buf_done(src_buf, VB2_BUF_STATE_DONE);
+-		dst_buf->planes[0].bytesused = enc_result.bs_size;
++		dst_buf->vb2_buf.planes[0].bytesused = enc_result.bs_size;
+ 		v4l2_m2m_buf_done(dst_buf, VB2_BUF_STATE_DONE);
+ 		mtk_v4l2_debug(2, "venc_if_encode bs size=%d",
+ 				 enc_result.bs_size);
+-- 
+2.21.0.392.gf8f6787159e-goog
+
