@@ -2,315 +2,124 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B505C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E326EC10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20332084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553597903;
-	bh=0Ru5SGm1b0p1CmVT2aAa+gkPP/WfOw/7dUEkQ9QCy94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BMym9G0onaqp2oTiY8QZZkR0h19XhkNrDJsK/QrUgLXZDt7jtgrI9KR99PMHtWTFA
-	 OPVUTzYnXlGJB5I5EHnrD3chIhNF6gKzr+Ut/hRiI2fErsiJWMHwbWHrrB7aSMpRVK
-	 3a1HthCN8JlL44KN37h6gOCTeVZqzWuU0HEJMSXA=
+	by mail.kernel.org (Postfix) with ESMTP id B2ED32084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:00:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="nviiNkcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfCZK6V (ORCPT
+        id S1726645AbfCZLAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfCZK6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:58:21 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138F02086C;
-        Tue, 26 Mar 2019 10:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553597899;
-        bh=0Ru5SGm1b0p1CmVT2aAa+gkPP/WfOw/7dUEkQ9QCy94=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gscVViqeraGDLlKtIhV0TXqsI2z6fUIlVtZOLcsNzR/DNMb/+ZuKeH6DEXsGtZbgE
-         2u96nSGHs2QBRuy4A5YEDizRcom+s/BQ3ekqxdjoFQKglAtk/99Sa08YcenKiw+Klm
-         M03c7EXiCDngaF9/IHcdCDTokoNQfz4Jl5N+GTNc=
-Received: by mail-lj1-f171.google.com with SMTP id h16so6202319ljg.11;
-        Tue, 26 Mar 2019 03:58:18 -0700 (PDT)
-X-Gm-Message-State: APjAAAXKpu9kbIJM2g2m0pDOWPnmdPnMFG9VcQC5caQoOn5EyYPxIscR
-        vklW18aQA+V2PpanQGDqlqGTJUglg0B5M9Gt07E=
-X-Google-Smtp-Source: APXvYqzZV9dBT1gfrKP69H0eWQRUdjQwPkkk+B1MkNNj9n52noEwbj+rst0MhbWoThmlJwUMLF0dMIMhmggN34F+Xi4=
-X-Received: by 2002:a2e:9496:: with SMTP id c22mr1780553ljh.131.1553597897175;
- Tue, 26 Mar 2019 03:58:17 -0700 (PDT)
+        Tue, 26 Mar 2019 07:00:09 -0400
+Received: from mail-eopbgr690057.outbound.protection.outlook.com ([40.107.69.57]:28060
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfCZLAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:00:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ky0e4sonZr7HmYYqoY6/1ukkyUoR2/qreWOxohL1FE=;
+ b=nviiNkcSodTtVFldEig3YHUPbK+M27k7Gqq7qHb7WmQ+w0+C4P43Ceg/AIxNUbN8EgvXGJSZgBqgmkRsAHKw+O0LEwJGzCdiLRtkx64Li9HpyFA0DDKEQCwVjEW47Dr5N3oC/6+XwirGa8Wn38RGIx8uDTRaRZaKYHIC5Zdx0Yc=
+Received: from BN6PR03CA0087.namprd03.prod.outlook.com (2603:10b6:405:6f::25)
+ by CY4PR03MB3127.namprd03.prod.outlook.com (2603:10b6:910:53::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1730.18; Tue, 26 Mar
+ 2019 11:00:05 +0000
+Received: from SN1NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::205) by BN6PR03CA0087.outlook.office365.com
+ (2603:10b6:405:6f::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1730.18 via Frontend
+ Transport; Tue, 26 Mar 2019 11:00:04 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.57)
+ smtp.mailfrom=analog.com; davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT007.mail.protection.outlook.com (10.152.72.88) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1730.9
+ via Frontend Transport; Tue, 26 Mar 2019 11:00:04 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x2QB03Lu032243
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 26 Mar 2019 04:00:03 -0700
+Received: from linux.ad.analog.com (10.32.224.122) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 26 Mar 2019 07:00:02 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <davem@davemloft.net>,
+        <mchehab+samsung@kernel.org>, <gregkh@linuxfoundation.org>,
+        <robh@kernel.org>, <joe@perches.com>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v2] MAINTAINERS: Fix the link to ad7606 dt-bindings
+Date:   Tue, 26 Mar 2019 12:59:52 +0200
+Message-ID: <1553597992-31693-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190324083256.1047-1-linux.amoon@gmail.com> <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
- <CANAwSgTS5nkxOwoS1hJLgN_Mw9X2FopgeCr=7itGm-caJzVXUw@mail.gmail.com>
-In-Reply-To: <CANAwSgTS5nkxOwoS1hJLgN_Mw9X2FopgeCr=7itGm-caJzVXUw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 26 Mar 2019 11:58:05 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPdCMPpC=q4WfPm9k8ZqgfRE+gpj0QmZU3h5yi0dqBBiCA@mail.gmail.com>
-Message-ID: <CAJKOXPdCMPpC=q4WfPm9k8ZqgfRE+gpj0QmZU3h5yi0dqBBiCA@mail.gmail.com>
-Subject: Re: [PATCH v1] ARM: dts: exynos: Add proper regulator states for
- suspend-to-mem for odroid-u3
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(346002)(376002)(2980300002)(199004)(189003)(246002)(51416003)(7696005)(305945005)(14444005)(5660300002)(26005)(4326008)(8676002)(7636002)(36756003)(486006)(186003)(106466001)(47776003)(966005)(6306002)(107886003)(50226002)(77096007)(476003)(8936002)(126002)(2616005)(426003)(336012)(44832011)(6666004)(356004)(478600001)(4744005)(72206003)(2906002)(16586007)(2351001)(106002)(54906003)(50466002)(6916009)(48376002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3127;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d9409487-2e87-4cf0-7480-08d6b1da3387
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4709054)(2017052603328)(7153060);SRVR:CY4PR03MB3127;
+X-MS-TrafficTypeDiagnostic: CY4PR03MB3127:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <CY4PR03MB3127F6773CD8E3C78BDA7D589D5F0@CY4PR03MB3127.namprd03.prod.outlook.com>
+X-Forefront-PRVS: 09888BC01D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: /fF0gCe8XfjfT9OgTeNx6muGXuhEhJy2rCi4HnGnCY2z3GeLrFFTVI5nrcBpEaHhPCuZz5V4NL/33R1BIcT+u45RCyhePtKjQIq/ZM6sFjtEdDGDPXoeoudzKHW/1F6J26cAY+v8Sb5PjqyFxx+hy2voFnI6oPWyhXhf+2WMULx3P6jtYWCSaUYIQZK+1ZAb5u57RxeI1ZmtyDf8DUAE0t1T0MMtN+oNZsU/hD5GPfOpIegkLu7aS5Dln5q0DFrKlA4Tj7O87ijFqRBMtBRwopY+EQfhnvpwQk7DizWWdktY/D6Yj55KisApdlbIZ37ulMor4pCoxeYNyA7vQ8jeQ8JTsShY7qgC/TnYvCffYb9RJtTwQZ8TvntF2VEGerGt5+BJwhNHJJIv7DhoV4ZEq/nfbIP47edvq2SzRy0meSA=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2019 11:00:04.1062
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9409487-2e87-4cf0-7480-08d6b1da3387
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 at 11:35, Anand Moon <linux.amoon@gmail.com> wrote:
+The devicetree bindings documentation for ad7606 should also include
+the vendor prefix: ad7606.txt -> adi,ad7606.txt
 
-(...)
+Fixes: 6e33a125df66 ("dt-bindings: iio: adc: Add docs for AD7606 ADC")
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- Added Fixes tag
 
-> > This is third or fourth submission but you marked it as v1. This makes
-> > it very difficult to discuss and reference previous versions.
-> >
-> > The commit message did not change since beginning (first version). I
-> > asked twice that you need to explain exactly why you put the the
-> > regulator to off or on state in suspend. Why?
-> > Because:
-> > 1. This change looks without justification - once you put on, then you
-> > put off, now again on,
-> > 2. Anyone reading the code later must know the rationale why this was done,
-> > 3. I am not quite sure whether this is good setting so I would be
-> > happy to be convinced.
-> >
->
-> Like I mention in the patch summary that this.
->
-> Current changes are based on
-> [0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
->
->   Regulators which can be turned off during system suspend:
-> -LDOn : 2, 6-8, 10-12, 14-16,
-> -BUCKn : 1-4.
->   Use standard regulator bindings for it ('regulator-off-in-suspend').
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I do not see how this is related to my questions.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ff2c2f2..4f81cdc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -860,7 +860,7 @@ L:	linux-iio@vger.kernel.org
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/adc/ad7606.c
+-F:	Documentation/devicetree/bindings/iio/adc/ad7606.txt
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.txt
+ 
+ ANALOG DEVICES INC AD7768-1 DRIVER
+ M:	Stefan Popa <stefan.popa@analog.com>
+-- 
+2.7.4
 
-> > How to provide such explanation? The best in commit message. Sometimes
-> > in the comment in the code, depends.
->
-> Ok I have been testing with following regulator debug prints to catch error.
-> [0] max77686-regulator.patch
->
-> below is the console logs during suspend and resume.
-> -------------------------------------------------------------------------------
-> Last login: Sat Mar 23 18:22:46 on ttySAC1
-> [root@archl-u3e ~]# echo no > /sys/module/printk/parameters/console_suspend
-> [root@archl-u3e ~]# rtcwake -d /dev/rtc0 -m mem -s 10
-> rtcwake: wakeup from "mem" using /dev/rtc0 at Sat Mar 23 19:56:17 2019
-> [   38.595854] PM: suspend entry (deep)
-> [   38.596603] PM: Syncing filesystems ... done.
-> [   38.629351] Freezing user space processes ... (elapsed 0.002 seconds) done.
-> [   38.633192] OOM killer disabled.
-> [   38.636035] Freezing remaining freezable tasks ... (elapsed 0.001
-> seconds) done.
-> [   38.675059] smsc95xx 1-2:1.0 eth0: entering SUSPEND2 mode
-> [   38.753120] dwc2 12480000.hsotg: suspending usb gadget g_ether
-> [   38.754007] dwc2 12480000.hsotg: new device is full-speed
-> [   38.758960] dwc2 12480000.hsotg: dwc2_hsotg_ep_disable: called for ep0
-> [   38.765507] dwc2 12480000.hsotg: dwc2_hsotg_ep_disable: called for ep0
-> [   38.774050] wake enabled for irq 119
-> [   38.775761] BUCK9: No configuration
-> [   38.779191] BUCK8_P3V3: No configuration
-> [   38.782852] BUCK7_2.0V: No configuration
-> [   38.786851] BUCK6_1.35V: No configuration
-> [   38.790752] VDDQ_CKEM1_2_1.2V: No configuration
-> [   38.796220] BUCK4: regulator suspend disable supported
-> [   38.800769] BUCK3: regulator suspend disable supported
-> [   38.806002] BUCK1: regulator suspend disable supported
-> [   38.810644] LDO26: No configuration
-> [   38.814169] VDDQ_LCD_1.8V: No configuration
-> [   38.818267] LDO24: No configuration
-> [   38.821732] LDO23: No configuration
-> [   38.825262] LDO22_VDDQ_MMC4_2.8V: No configuration
-> [   38.829992] TFLASH_2.8V: No configuration
-> [   38.834040] LDO20_1.8V: No configuration
-> [   38.837883] LDO19: No configuration
-> [   38.841349] LDO18: No configuration
-> [   38.844878] LDO17: No configuration
-> [   38.848667] LDO16: regulator suspend disable supported
-> [   38.853889] LDO15: regulator suspend disable supported
-> [   38.858931] LDO14: regulator suspend disable supported
-> [   38.863771] VDDQ_C2C_W_1.8V: No configuration
-> [   38.868378] LDO12: regulator suspend disable supported
-> [   38.873508] LDO11: regulator suspend disable supported
-> [   38.878545] LDO10: regulator suspend disable supported
-> [   38.883384] LDO9: No configuration
-> [   38.887190] LDO8: regulator suspend disable supported
-> [   38.892168] LDO7: regulator suspend disable supported
-> [   38.897279] LDO6: regulator suspend disable supported
-> [   38.901872] VDDQ_MMC1_3_1.8V: No configuration
-> [   38.906363] VDDQ_MMC2_2.8V: No configuration
-> [   38.910541] VDDQ_EXT_1.8V: No configuration
-> [   38.915134] LDO2: regulator suspend disable supported
-> [   38.919753] VDD_ALIVE_1.0V: No configuration
-> [   38.935229] usb3503 0-0008: switched to STANDBY mode
-> [   38.935981] wake enabled for irq 123
-> [   38.955192] samsung-pinctrl 11000000.pinctrl: Setting external
-> wakeup interrupt mask: 0xfbfff7ff
-> [   38.975448] Disabling non-boot CPUs ...
-> [   39.029279] s3c2410-wdt 10060000.watchdog: watchdog disabled
-> [   39.029576] wake disabled for irq 123
-> [   39.044319] usb3503 0-0008: switched to HUB mode
-> [   39.144089] wake disabled for irq 119
-> [   39.144812] dwc2 12480000.hsotg: resuming usb gadget g_ether
-> [   39.422626] usb 1-2: reset high-speed USB device number 2 using exynos-ehci
-> [   39.774632] usb 1-3: reset high-speed USB device number 3 using exynos-ehci
-> [   40.106478] OOM killer enabled.
-> [   40.106609] Restarting tasks ... done.
-> [   40.111100] PM: suspend exit
-> [   40.124058] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
-> req 400000Hz, actual 396825HZ div = 63)
-> [root@archl-u3e ~]# [   40.364705] mmc_host mmc1: Bus speed (slot 0) =
-> 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
-> [   41.220200] smsc95xx 1-2:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xC5E1
-> -------------------------------------------------------------------------------
-> > How such explanation could look like? For example like this:
-> > f8f3b7fc21b1 ("ARM: dts: exynos: Fix regulators configuration on Peach
-> > Pi/Pit Chromebooks")
-> > Marek clearly explained why he put the regulators "always-on", even
-> > tough we do not know everything about this. More over, he mentions
-> > that this fixes specific issue.
-> >
->
-> Thanks but I am not the expert here in general with regulator on/off.
-> I will add comment if needed explain in more detail.
-
-This kernel log does not prove whether these DTS properties make sense
-or whether are proper at all. They  prove that kernel uses some
-configuration but I did not ask for this.
-
->
-> [snip]
->
-> > Summarizing, please answer:
-> > 1. Why this is made off-in-suspend?
-> > 2. Why this can be made off-in-suspend?
-> >
->
-> On MAX77686A PMIC. (some quote from the datasheet).
->
-> Power ON/OFF by PWRREQ in PMIC=ON sequence is only effective when ON/OFF
-> on all regulators above are assigned by PWRREQ=H/L.
->
-> All programming must be done before the AP enters the sleep mode by
-> pulling PWRREQ low since
-> the AP does not have programming capability in (deep) sleep mode.
->
-> *Regulator are not really turned off but set into IDLE  / Standby
-> state too be restored to Normal state*
->
-> Power summary in image : [1] https://imgur.com/gallery/l74kliX
->
-> Power Summary for MAX77686A of the regulator support PWRREQ
-> Power   Default ON  |  ON/OFF
-> --------------------------------------
-> BUCK1  |  ON        | PWRREQ or I2C
-> BUCK2  |  ON        | PWRREQ or I2C
-> BUCK3  |  ON        | PWRREQ or I2C
-> BUCK4  |  ON        | PWREWQ or I2C
-> BUCK5  |  ON        | I2C
-> BUCK6  |  ON        | I2C
-> BUCK7  |  ON        | I2C
-> BUCK8  |  OFF       | I2C or ENB8 The external enable/disable pin, ENB8
-> BUCK9  |  OFF       | I2C or ENB9 The external enable/disable pin, ENB9
-> LDO1   |  ON        | I2C
-> LDO2   |  ON        | PWRREQ or I2C
-> LDO3   |  ON        | I2C
-> LDO4   |  ON        | I2C
-> LDO5   |  ON        | I2C
-> LDO6   |  ON        | PWRREQ or I2C
-> LDO7   |  ON        | PWRREQ or I2C
-> LDO8   |  ON        | PWRREQ or I2C
-> LDO9   |  OFF       | I2C
-> LDO10  |  ON        | PWRREQ or I2C
-> LDO11  |  ON        | PWRREQ or I2C
-> LDO12  |  ON        | PWRREQ or I2C
-> LDO13  |  ON        | I2C
-> LDO14  |  ON        | PWRREQ or I2C
-> LDO15  |  ON        | PWRREQ or I2C
-> LDO16  |  ON        | PWRREQ or I2C
-> LDO17  |  OFF       | I2C
-> LDO18  |  OFF       | I2C
-> LDO19  |  OFF       | I2C
-> LDO20  |  OFF       | I2C OR ENL20 ENL20, external enable/disable pin
-> LDO21  |  OFF       | I2C OR ENL21 ENL21, external enable/disable pin
-> LDO22  |  OFF       | I2C OR ENL22 ENL22, external enable/disable pin
-> LDO23  |  OFF       | I2C
-> LDO24  |  OFF       | I2C
-> LDO25  |  OFF       | I2C
-> LDO26  |  OFF       | I2C
-
-You quoted the datasheet which describes PMIC behavior. This does not
-answer to my two questions at all.
-
->
-> > >                         ldo20_reg: LDO20 {
-> > > @@ -421,6 +451,9 @@
-> > >                                 regulator-max-microvolt = <1100000>;
-> > >                                 regulator-always-on;
-> > >                                 regulator-boot-on;
-> > > +                               regulator-state-mem {
-> > > +                                       regulator-off-in-suspend;
-> > > +                               };
-> > >                         };
-> >
-> > I questioned this change two times. You did not answer to my
-> > question... If you turn memory bus regulator off, how the memory will
-> > work in Suspend-to-Memory mode? I might be missing here something but
-> > it just looks suspicious. Maybe the regulator does not supply the
-> > memory itself (so refresh works even when it is down), just the
-> > interface? I don't know, it just looks suspicious. I need to see
-> > proper explanation.
-> >
-> > I am sorry but I will not check other hunks in this patch. Please
-> > provide the answers for all my questions here first.
-> >
->
-> As per above table of MAX77686 PWRREQ capabilities regulator nodes
-> can be turned off during suspend reset of them remain on during suspend.
-
-Just because something can be turned off does not mean that it should.
-Apparently you made this assumption everywhere here and for my
-questions "why?" you reply "datasheet of PMIC says it can be done".
-This is wrong assumption and wrong justification for the patch.
-
-I cannot accept this. Please answer my questions and provide proper
-rationale for this patch.
-
->
-> > Best regards,
-> > Krzysztof
-> >
->
-> We could monitor the regulator states via sys filesystem and also
-> using below tool
-> https://git.linaro.org/power/powerdebug.git
->
-> I have tried to summaries the feature required for this patch.
-> some of which I have overlooked earlier before sending the patch.
->
-> I am really poor in english for transform / interpreter the technical details
-> required at for your queries. But I will try to improve my self in the future.
-
-Again this is observing of kernel behavior after applying patch. It
-has nothing to do whether change should be implemented and how it
-affects real hardware. This is not even a measurement...
-
-Best regards,
-Krzysztof
