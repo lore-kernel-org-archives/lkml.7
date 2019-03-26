@@ -2,152 +2,152 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CBEC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66161C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4DD20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553620128;
-	bh=fnmB69yMKqMc+7KaVc4Qf/jiOL8ofWqwpwaUEsDlxdM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xL0Eh7nSNF50B3Udr56oZZp7utO7jc6l8oS91h8V2XN8QCN8Y6dxnfqeUm15nyMN7
-	 ZpuiisR2i5+XK+aC0jMh5eflnJN2VfmU7XfLKrFCif8cVeOnW72g70P3Prd+GdGPYN
-	 t6x20ZQRN3fyZzgpy6e4Y1zn80foBMnym0cCUTfY=
+	by mail.kernel.org (Postfix) with ESMTP id 2A1D520693
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfCZRIr (ORCPT
+        id S1731962AbfCZRIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 13:08:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:40990 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726278AbfCZRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:08:46 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68BC20879
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 17:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553620125;
-        bh=fnmB69yMKqMc+7KaVc4Qf/jiOL8ofWqwpwaUEsDlxdM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1z793o6kBznOuMvG1VODLsDenbvcNxaMmPpkkwB1Tj3T7YlGV8T30Hq0TK1+Bvfyr
-         IKOqiMuj8qqmdyNrt2wRX2WCG3QNJinTIk3G+Ewij3Kh6xDYJzLsX0y+pVjIgXeoN2
-         /g+eZNCZh7jLZ1sr46YHSBpDeVejnxZ87Q428V3c=
-Received: by mail-wr1-f51.google.com with SMTP id q1so15310894wrp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:08:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAVy/MijKns7y0wXf+GE3YE6xGAIRMolORmTO8zKfXyc5ZL1B3U+
-        5SWl2J0VtT4FKkYjVAeZTvQltld+z/QSMOwxBuhngQ==
-X-Google-Smtp-Source: APXvYqyxXYGuwahuAtAyhTFxlqdZV6pUNGRT1aSSvoJKCza3lzXzyFlU/v7AmAkAeoiKaf97tFc0BQVkGuUWDFnLyC0=
-X-Received: by 2002:adf:f011:: with SMTP id j17mr18108124wro.330.1553620123457;
- Tue, 26 Mar 2019 10:08:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-25-jarkko.sakkinen@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C484@ORSMSX116.amr.corp.intel.com>
- <20190320191318.GF30469@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85C5AB@ORSMSX116.amr.corp.intel.com>
- <20190322215903.GE12666@linux.intel.com> <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
- <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
- <20190325180349.GF31069@linux.intel.com> <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 26 Mar 2019 10:08:31 -0700
-X-Gmail-Original-Message-ID: <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com>
-Message-ID: <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com>
-Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add __vdso_sgx_enter_enclave()
- to wrap SGX enclave transitions
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        id S1726278AbfCZRIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:08:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CE29374;
+        Tue, 26 Mar 2019 10:08:51 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 881EF3F614;
+        Tue, 26 Mar 2019 10:08:48 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:08:42 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Message-ID: <20190326170842.GA10666@e107981-ln.cambridge.arm.com>
+References: <PU1P153MB0169E9AA13EB51DF5CFC1CE4BF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB0169E9AA13EB51DF5CFC1CE4BF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 9:53 PM Xing, Cedric <cedric.xing@intel.com> wrote:
->
-> > On Mon, Mar 25, 2019 at 11:03 AM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
+On Thu, Mar 21, 2019 at 12:12:03AM +0000, Dexuan Cui wrote:
+> > From: Michael Kelley <mikelley@microsoft.com>
+> > Sent: Wednesday, March 20, 2019 2:38 PM
+> > 
+> > From: Dexuan Cui <decui@microsoft.com>
 > > >
-> > > On Sun, Mar 24, 2019 at 01:59:48AM -0700, Xing, Cedric wrote:
-> > > > As said in my previous email, this vDSO API isn't even compliant to
-> > > > x86_64 ABI and is absolutely NOT for average developers. Instead,
-> > > > host/enclave communications are expected to be handled by SDKs and
-> > > > those developers will be very aware of the limitations of their
-> > > > targeted environments, and will need the freedom to deploy optimal
-> > solutions.
-> >
-> > > I fully realize that the above approach saddles Cedric and the SDK
-> > > team with the extra task of justifying the need for two vDSO
-> > > interfaces, and likely reduces the probability of their proposal bein=
-g
-> > > accepted.  But, we don't *force* the SDK to be rewritten, and we gain
-> > > a vDSO interface that many people want and is acceptable to the
-> > > maintainers (unless I've horribly misread Andy's position).
-> >
-> > I don't think you've horribly misread it.  I would like to keep the
-> > stuff in the vDSO as minimal as possible.  If we need to add a fancier
-> > interface down the line, then that's fine.
->
-> Andy, I don't know "many people" is how many in Sean's email. I couldn't =
-tell you how long it took us to settle on the current SGX ISA because you w=
-ould just LAUGH! Why? Because it took insanely ridiculously long. Why that =
-long? Because the h/w and u-code teams would like to trim down the ISA as m=
-uch as possible. The fact is, whatever new is released, Intel will have to =
-maintain it on all future processors FOREVER! That means significant/on-goi=
-ng cost to Intel. So any addition to ISA has to undergo extensive reviews t=
-hat involve all kinds of experts from both within Intel and externally, and=
- would usually take years, before you can see what you are seeing today. As=
- I said in my earlier emails, RBP is NOT needed for interrupt/exception han=
-dlers, then how did RBP end up being restored at AEX? You can guess how man=
-y people were standing behind it! Sean has no clue! I can assure you!
->
-> Guess we've talked enough on the technical front. So let's talk about it =
-on the business front. Let me take a step back. Let's say you are right, al=
-l enclaves would eventually be coded in the way you want. We (Intel SDK tea=
-m) were convinced to follow your approach. But there were existing enclaves=
- and a migration path would be needed. Would you like to support us? It'd b=
-e only 9 LOC on your side but how much would incur on our side? If you beli=
-eve you are doing right thing, then acceptance is the next thing you should=
- think of. You should offer an easy path for those who did "wrong" to get o=
-n your "right" boat. Don't you think so?
->
+> > > After a device is just created in new_pcichild_device(), hpdev->refs is set
+> > > to 2 (i.e. the initial value of 1 plus the get_pcichild()).
+> > >
+> > > When we hot remove the device from the host, in Linux VM we first call
+> > > hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
+> > > then schedules a work of hv_eject_device_work(), so hpdev->refs becomes 3
+> > > (let's ignore the paired get/put_pcichild() in other places). But in
+> > > hv_eject_device_work(), currently we only call put_pcichild() twice,
+> > > meaning the 'hpdev' struct can't be freed in put_pcichild(). This patch
+> > > adds one put_pcichild() to fix the memory leak.
+> > >
+> > > BTW, the device can also be removed when we run "rmmod pci-hyperv". On
+> > this
+> > > path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
+> > > hpdev->refs is 2, and we do correctly call put_pcichild() twice in
+> > > pci_devices_present_work().
+> > 
+> > Exiting new_pcichild_device() with hpdev->refs set to 2 seems OK to me.
+> > There is the reference in the hbus->children list, and there is the reference that
+> > is returned to the caller.  
+> So IMO the "normal" reference count should be 2. :-) IMO only when a hv_pci_dev
+> device is about to be destroyed, its reference count can drop to less than 2, 
+> i.e. first temporarily drop to 1 (meaning the hv_pci_dev device is removed from
+> hbus->children), and then drop to zero (meaning kfree(hpdev) is called).
+> 
+> > But what is strange is that pci_devices_present_work()
+> > overwrites the reference returned in local variable hpdev without doing a
+> > put_pcichild().
+> I suppose you mean:
+> 
+>         /* First, mark all existing children as reported missing. */
+>         spin_lock_irqsave(&hbus->device_list_lock, flags);
+>         list_for_each_entry(hpdev, &hbus->children, list_entry) {
+>                 hpdev->reported_missing = true;
+>         }
+>         spin_unlock_irqrestore(&hbus->device_list_lock, flags)
+> 
+> This is not strange to me, because, in pci_devices_present_work(), at first we
+> don't know which devices are about to disappear, so we pre-mark all devices to
+> be potentially missing like that; if a device is still on the bus, we'll mark its
+> hpdev->reported_missing to false later; only after we know exactly which
+> devices are missing, we should call put_pcichild() against them. All these
+> seem natural to me.
+> 
+> > It seems like the "normal" reference count should be 1 when the
+> > child device is not being manipulated, not 2.
+> What does "not being manipulated" mean?
+> 
+> > The fix would be to add a call to
+> > put_pcichild() when the return value from new_pcichild_device() is
+> > overwritten.
+> In pci_devices_present_work(), we NEVER "overwrite" the "hpdev" returned
+> from new_pcichild_device(): the "reported_missing" field of the new hpdev
+> is implicitly initialized to false in new_pcichild_device().
+> 
+> > Then remove the call to put_pcichild() in pci_device_present_work() when
+> > missing
+> > children are moved to the local list. The children have been moved from one
+> > list
+> > to another, so there's no need to decrement the reference count.  Then when
+> > everything in the local list is deleted, the reference is correctly decremented,
+> > presumably freeing the memory.
+> > 
+> > With this approach, the code in hv_eject_device_work() is correct.  There's
+> > one call to put_pcichild() to reflect removing the child device from the hbus->
+> > children list, and one call to put_pcichild() to pair with the get_pcichild() in
+> > hv_pci_eject_device().
+> Please refer to my replies above. IMO we should fix
+> hv_eject_device_work() rather than pci_devices_present_work().
 
-I suppose the real question is: are there a significant number of
-users who will want to run enclaves created using an old SDK on Linux?
- And will there actually be support for doing this in the software
-stack?
+Have we reached a conclusion on this ? I would like to merge this series
+given that it is fixing bugs and it has hung in the balance for quite
+a while but it looks like Michael is not too happy about these patches
+and I need a maintainer ACK to merge them.
 
-If the answer to both questions is yes, then it seems like it could be
-reasonable to support it in the vDSO.  But I still think it should
-probably be a different vDSO entry point so that the normal case
-doesn't become more complicated.
+Thanks,
+Lorenzo
+
+> Thanks
+> -- Dexuan
+>  
+> > Your patch works, but to me it leaves the ref count in an unnatural state
+> > most of the time.
+> > 
+> > Michael
+> 
