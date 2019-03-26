@@ -2,103 +2,124 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB2FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2593EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C04720811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E327220828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n81JNVKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfCZDzn (ORCPT
+        id S1730918AbfCZD5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 23:55:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:58852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbfCZDzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 23:55:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CEC180D;
-        Mon, 25 Mar 2019 20:55:42 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6F353F59C;
-        Mon, 25 Mar 2019 20:55:38 -0700 (PDT)
-Subject: Re: [PATCH v7 5/10] KVM: arm/arm64: preserve host MDCR_EL2 value
-To:     Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-6-git-send-email-amit.kachhap@arm.com>
- <19c2bdb3-6917-286e-3f2a-35fd71f69f51@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <bce98120-b844-f4a2-cd44-a0e8418dfd13@arm.com>
-Date:   Tue, 26 Mar 2019 09:25:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <19c2bdb3-6917-286e-3f2a-35fd71f69f51@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 25 Mar 2019 23:57:41 -0400
+Received: from mail-eopbgr790049.outbound.protection.outlook.com ([40.107.79.49]:12192
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729681AbfCZD5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 23:57:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TaCTqfpSEk/xxnYB++SuPHewlgCJRLEUHeexU+RyZAA=;
+ b=n81JNVKwHjCgaKfq5DlvZMSvIZMMaDNZEClTp0KY1SWNUBOzICVYVZ8gtOJQiRkr+/VmjAn3UatlqBHeet9GtAh/WIWOZb1LHINoPqrja5yIBaHzIoiCUGE/o5fvTd548rwdeHHVkKD9FxI88AfPFQ8LZF72o46sr3oFT20GpN4=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3209.namprd12.prod.outlook.com (20.179.105.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Tue, 26 Mar 2019 03:57:37 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::3589:a066:e1d:b1f0]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::3589:a066:e1d:b1f0%5]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 03:57:37 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH v2] svm/avic: Fix invalidate logical APIC id entry
+Thread-Topic: [PATCH v2] svm/avic: Fix invalidate logical APIC id entry
+Thread-Index: AQHU44gM6vK3inub30eEmN0VlYxwVQ==
+Date:   Tue, 26 Mar 2019 03:57:37 +0000
+Message-ID: <20190326035711.77916-1-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [171.96.73.107]
+x-clientproxiedby: SG2PR01CA0154.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::34) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a548e3b3-fa27-43df-b39f-08d6b19f2f26
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB3209;
+x-ms-traffictypediagnostic: DM6PR12MB3209:
+x-microsoft-antispam-prvs: <DM6PR12MB3209BC1A5BF4580526C9D67EF35F0@DM6PR12MB3209.namprd12.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(366004)(396003)(346002)(136003)(199004)(189003)(7736002)(6512007)(1076003)(106356001)(99286004)(3846002)(54906003)(110136005)(68736007)(71190400001)(4326008)(2616005)(71200400001)(86362001)(2501003)(66066001)(476003)(316002)(50226002)(81156014)(6116002)(81166006)(102836004)(256004)(8676002)(14444005)(5660300002)(305945005)(105586002)(26005)(25786009)(6486002)(6436002)(478600001)(8936002)(52116002)(6506007)(386003)(36756003)(53936002)(72206003)(486006)(2906002)(97736004)(186003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3209;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: el0ApbgR9Hmir8YBAVZrTQgP0NBJ7Pk2cwBgoouacbHwFHpod/PQhWKiaRLXvlK/6SrkzBD7a70oBvamTdHnz2/p0g7UvAiUfW8k2gPoVtWq9AprIImL0uyt3PfzvCneeTEbKg7JdjZO4se9OrIq1eBhH5H9vDEXZBp2JyczyPBXSygzk8CRca7G5bmIB98SQn8RaRauN1CNNCDF9H4mI8pmf0lCX6JXJs7LmChayRBcdoT6I4mv5f02ZhuMD43HTD5uqb29RrFDP427lrYe/io1CcFb6TUHCpUN3F8NdPP+d+udWhLm8nOUdsc8r2VCaEEP2/NgANNL/vgbZPyqJBpxZtxV1xSeDN12oG+jKR4o5lLuhXPlo/R/jgT9BsxILALsmztkpKebXxMs9TqmJsUOxrUEq8tiJhvdX9g/KIg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a548e3b3-fa27-43df-b39f-08d6b19f2f26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 03:57:37.3049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3209
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Only clear the valid bit when invalidate logical APIC id entry.
+The current logic clear the valid bit, but also set the rest of
+the bits (including reserved bits) to 1.
 
-On 3/26/19 1:34 AM, Kristina Martsenko wrote:
-> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
->> Save host MDCR_EL2 value during kvm HYP initialisation and restore
->> after every switch from host to guest. There should not be any
->> change in functionality due to this.
->>
->> The value of mdcr_el2 is now stored in struct kvm_cpu_context as
->> both host and guest can now use this field in a common way.
->>
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Acked-by: Mark Rutland <mark.rutland@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
-> 
-> [...]
-> 
->>   /**
->> - * kvm_arm_init_debug - grab what we need for debug
->> - *
->> - * Currently the sole task of this function is to retrieve the initial
->> - * value of mdcr_el2 so we can preserve MDCR_EL2.HPMN which has
->> - * presumably been set-up by some knowledgeable bootcode.
->> - *
->> - * It is called once per-cpu during CPU hyp initialisation.
->> - */
->> -
->> -void kvm_arm_init_debug(void)
->> -{
->> -	__this_cpu_write(mdcr_el2, kvm_call_hyp_ret(__kvm_get_mdcr_el2));
->> -}
-> 
-> The __kvm_get_mdcr_el2 function is no longer used anywhere, so can also
-> be removed.
-Nice catch. Will do.
+Fixes: 98d90582be2e ('svm: Fix AVIC DFR and LDR handling')
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/kvm/svm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Amit D
-> 
-> Thanks,
-> Kristina
-> 
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 7a4ce1a22ca0..8a123bd0f591 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -270,6 +270,7 @@ struct amd_svm_iommu_ir {
+ };
+=20
+ #define AVIC_LOGICAL_ID_ENTRY_GUEST_PHYSICAL_ID_MASK	(0xFF)
++#define AVIC_LOGICAL_ID_ENTRY_VALID_BIT			31
+ #define AVIC_LOGICAL_ID_ENTRY_VALID_MASK		(1 << 31)
+=20
+ #define AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK	(0xFFULL)
+@@ -4640,7 +4641,7 @@ static void avic_invalidate_logical_id_entry(struct k=
+vm_vcpu *vcpu)
+ 	u32 *entry =3D avic_get_logical_id_entry(vcpu, svm->ldr_reg, flat);
+=20
+ 	if (entry)
+-		WRITE_ONCE(*entry, (u32) ~AVIC_LOGICAL_ID_ENTRY_VALID_MASK);
++		clear_bit(AVIC_LOGICAL_ID_ENTRY_VALID_BIT, (unsigned long *)entry);
+ }
+=20
+ static int avic_handle_ldr_update(struct kvm_vcpu *vcpu)
+--=20
+2.17.1
+
