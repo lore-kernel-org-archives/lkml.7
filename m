@@ -2,138 +2,120 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7250C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3340C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901C22075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="egBMB9rW"
+	by mail.kernel.org (Postfix) with ESMTP id C43212075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbfCZMDR (ORCPT
+        id S1731538AbfCZMD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:03:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36317 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731435AbfCZMDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:03:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y13so14046697wrd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 05:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=ieT1G8e1H0sAJvPT0a91cFfjHNOjq4XXFJK6kjAcqew=;
-        b=egBMB9rWaRpUIiB2Uv1Pu937O2SKmI3th7MksI8D4Z1NrvpF7uJsSkUFZlURMCEnWz
-         N3/P4hR8Jfv3BuaMYcU0MI2PPWlmXKoOMxHi8KxRaUxVgTWX7jO8kfWTPouPKxlOhFRU
-         bzzHTjBx8uTRLwFoDL9qU/QBI2PuinqiA+/DSPAIHSddSY23FiM6mcpmZUr/zMVgnSmJ
-         kAGZVSuawW5Cr329VlRGIxkKur0ZggktkMuBnyKCBrblIJGohXdyCUgswnQOc30/JJh+
-         69XREfpgUmE+HnGMd/1FHbmR0k7ixsyYQ9jlRa1nlacwPapuSDZ9psjyPZ+81YqfH7XF
-         Nx3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=ieT1G8e1H0sAJvPT0a91cFfjHNOjq4XXFJK6kjAcqew=;
-        b=mQmYBHuZXMzrZBqorgazsoCxDRnttQ1xIvJdDD/hsiGk5vm22UmdF1zhDShYKeGbe4
-         cBstDZAnouOFrkSDAM+f0ozrutMUy+nyts0cZBz6JDyAx4m4gDQ0VBbCMEWKDmewRIge
-         CJuPBl6G0bsIvRplgLiMNsBZp0ZYc7Q5EWcQDvYjT0zWT9+gHmwe/t0om4oEPhu75SYL
-         /+mCBn7YaOobu915D03BGBm6DtetkJojjgrEOCItHoViAplPdvzrwmPL1nZiImD5kzyI
-         P1h0BIhDqvR2Tr9bq6pM/synyZ9vQeg7PXO0ctP1a4+CUOzOT5G+jB5iENPEIijrUrP7
-         7IrA==
-X-Gm-Message-State: APjAAAXQnZwgmjsBDb6iVmCOAL46gSdkPeCyHs17vSoQ35/3BcAPDVma
-        jzZcYDHtlUaf4yqJcqZj46Kl1dBxXSvahA==
-X-Google-Smtp-Source: APXvYqwN0aepGvz7jNcNZ6EHASrQGkNjbmToaq7/pPZoWYNVPwFeg94CcncnGbDOKwIb/kFNM/06Pw==
-X-Received: by 2002:adf:cd90:: with SMTP id q16mr18744967wrj.75.1553601792483;
-        Tue, 26 Mar 2019 05:03:12 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id h2sm35353537wro.11.2019.03.26.05.03.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 05:03:11 -0700 (PDT)
-Message-ID: <5c9a14ff.1c69fb81.82d17.a43b@mx.google.com>
-Date:   Tue, 26 Mar 2019 05:03:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 Mar 2019 08:03:29 -0400
+Received: from foss.arm.com ([217.140.101.70]:35308 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731501AbfCZMD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:03:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE2DD1596;
+        Tue, 26 Mar 2019 05:03:25 -0700 (PDT)
+Received: from [10.162.41.160] (p8cg001049571a15.blr.arm.com [10.162.41.160])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C06B3F59C;
+        Tue, 26 Mar 2019 05:03:22 -0700 (PDT)
+Subject: Re: [RFC] mm/hotplug: Make get_nid_for_pfn() work with
+ HAVE_ARCH_PFN_VALID
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        logang@deltatee.com, osalvador@suse.de, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, richard.weiyang@gmail.com,
+        rientjes@google.com, zi.yan@cs.rutgers.edu
+References: <1553155700-3414-1-git-send-email-anshuman.khandual@arm.com>
+ <20190321083639.GJ8696@dhcp22.suse.cz>
+ <621cc94c-210d-6fd4-a2e1-b7cfce733cf3@arm.com>
+ <20190322120219.GI32418@dhcp22.suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <65a4b160-a654-8bd3-8022-491094cf6b8f@arm.com>
+Date:   Tue, 26 Mar 2019 17:33:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.9.165-31-gb7e63ff5d9f9
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.9.y
-In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
-References: <20190326042607.558087893@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 00/30] 4.9.166-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+In-Reply-To: <20190322120219.GI32418@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 98 boots: 0 failed, 86 passed with 12 offline (=
-v4.9.165-31-gb7e63ff5d9f9)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.165-31-gb7e63ff5d9f9/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.165-31-gb7e63ff5d9f9/
 
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.165-31-gb7e63ff5d9f9
-Git Commit: b7e63ff5d9f9f1ae13c633d2b98e6b180398ff5f
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 50 unique boards, 22 SoC families, 15 builds out of 197
+On 03/22/2019 05:32 PM, Michal Hocko wrote:
+> On Fri 22-03-19 11:49:30, Anshuman Khandual wrote:
+>>
+>> On 03/21/2019 02:06 PM, Michal Hocko wrote:
+>>> On Thu 21-03-19 13:38:20, Anshuman Khandual wrote:
+>>>> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+>>>> entries between memory block and node. It first checks pfn validity with
+>>>> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+>>>> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+>>>>
+>>>> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+>>>> which scans all mapped memblock regions with memblock_is_map_memory(). This
+>>>> creates a problem in memory hot remove path which has already removed given
+>>>> memory range from memory block with memblock_[remove|free] before arriving
+>>>> at unregister_mem_sect_under_nodes().
+>>> Could you be more specific on what is the actual problem please? It
+>>> would be also helpful to mention when is the memblock[remove|free]
+>>> called actually.
+>> The problem is in unregister_mem_sect_under_nodes() as it skips calling into both
+>> instances of sysfs_remove_link() which removes node-memory block sysfs symlinks.
+>> The node enumeration of the memory block still remains in sysfs even if the memory
+>> block itself has been removed.
+>>
+>> This happens because get_nid_for_pfn() returns -1 for a given pfn even if it has
+>> a valid associated struct page to fetch the node ID from.
+>>
+>> On arm64 (with CONFIG_HOLES_IN_ZONE)
+>>
+>> get_nid_for_pfn() -> pfn_valid_within() -> pfn_valid -> memblock_is_map_memory()
+>>
+>> At this point memblock for the range has been removed.
+>>
+>> __remove_memory()
+>> 	memblock_free()
+>> 	memblock_remove()	--------> memblock has already been removed
+>> 	arch_remove_memory()
+>> 		__remove_pages()
+>> 			__remove_section()
+>> 				unregister_memory_section()
+>>  					remove_memory_section()
+>> 						unregister_mem_sect_under_nodes()
+>>
+>> There is a dependency on memblock (after it has been removed) through pfn_valid().
+> Can we reorganize or rework the code that the memblock is removed later?
+> I guess this is what Oscar was suggesting.
 
-Offline Platforms:
+I could get it working with the following re-order of memblock_[free|remove] and
+arch_remove_memory(). I did not observe any other adverse side affect because of
+this change. Does it look okay ?
 
-arm:
-
-    bcm2835_defconfig:
-        gcc-7
-            bcm2835-rpi-b: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-7
-            alpine-db: 1 offline lab
-            at91-sama5d4_xplained: 1 offline lab
-            socfpga_cyclone5_de0_sockit: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            tegra124-jetson-tk1: 1 offline lab
-
-    tegra_defconfig:
-        gcc-7
-            tegra124-jetson-tk1: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-7
-            sun5i-r8-chip: 1 offline lab
-
-    sama5_defconfig:
-        gcc-7
-            at91-sama5d4_xplained: 1 offline lab
-
-    socfpga_defconfig:
-        gcc-7
-            socfpga_cyclone5_de0_sockit: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-7
-            apq8016-sbc: 1 offline lab
-            juno-r2: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1863,11 +1863,11 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+ 
+        /* remove memmap entry */
+        firmware_map_remove(start, start + size, "System RAM");
++       arch_remove_memory(nid, start, size, NULL);
++
+        memblock_free(start, size);
+        memblock_remove(start, size);
+ 
+-       arch_remove_memory(nid, start, size, NULL);
+-
+        try_offline_node(nid);
+ 
+        mem_hotplug_done();
