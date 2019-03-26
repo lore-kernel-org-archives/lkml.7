@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F05C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249EBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1762086C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AED2086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582177;
-	bh=WC8xcnsz9CXCNykI5eaLsGiOGkAfw7RGJivnY0kIBeM=;
+	s=default; t=1553582180;
+	bh=OwFBnBZIbqH6wTrqlyKAmbOfZs6eJM6n/SbpiKDUKf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X3Ef06r2J4KEzz9QnNCpKuvbx4kVx2/GWjt7UlTQpyuhuJrZCPqCpnxJ2fc9di8PJ
-	 pGdii3UZgremUO4X2CmvQmwv3FrLjOj6I7n0e7rL3xdVKq4p6WnzhA+xHoExR7FWYD
-	 ZhpflOdI3tXg/Pi0mju3Uo1oA2QwGOW77/4GmLfY=
+	b=tDcbSUDc/RM5zQlTqyA2UVoHSxZ1hNy1CQ1wgXVpHIyRJpBU5EuIpDIKPDUSDqhO7
+	 5G2ma3F4mvE/iq97xRM+kXnPlR/jxq329TBINsZwq9MXJ+gjlyo6dyWCC7I6WwCfv4
+	 JsA+2WnmaWe3MwZbURlJZEaA+DNor76leUcOFFUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfCZGgP (ORCPT
+        id S1732193AbfCZGgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731580AbfCZGgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:13 -0400
+        id S1731786AbfCZGgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:16 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1183620863;
-        Tue, 26 Mar 2019 06:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 816ED20863;
+        Tue, 26 Mar 2019 06:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582172;
-        bh=WC8xcnsz9CXCNykI5eaLsGiOGkAfw7RGJivnY0kIBeM=;
+        s=default; t=1553582176;
+        bh=OwFBnBZIbqH6wTrqlyKAmbOfZs6eJM6n/SbpiKDUKf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HsYR6RpzH80sRJ0hiA4F+bo/z0Sp8L4JENfhIigOpOsPxt4QDmuMMLe9qes2Kcdzl
-         nMnbQbIGZ70KRLlZ2MZBfGopmz9DPbDlgaBJSz03zisX7B5RpDhDlK1XH1id00ZZ9v
-         DEPLMnoaCxF7Ob8v2xl0vMuo22aTc/f1/oV+Vpwo=
+        b=VzXGRu4DrehKPCc0y455sldEcHF+2si9GbaCVc1zpAPXvMczYCNz8LJfqz0pzL9o9
+         tvCLWchqoR7uhMSMEC3tjQJBxXEmMebIx5Ab+l3mCsF0hHkit3Nns9cZgqcf5Sm+De
+         kD5Xnb8iB6ZpYi2bmALSJapSJN3PsJbvP5r8Q1/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 15/45] scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
-Date:   Tue, 26 Mar 2019 15:29:58 +0900
-Message-Id: <20190326042703.490706211@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 24/45] ALSA: hda/ca0132 - make pci_iounmap() call conditional
+Date:   Tue, 26 Mar 2019 15:30:07 +0900
+Message-Id: <20190326042703.954186355@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,57 +65,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 7205981e045e752ccf96cf6ddd703a98c59d4339 upstream.
+commit 1e73359a24fad529b0794515b46cbfff99e5fbe6 upstream.
 
-For each ibmvscsi host created during a probe or destroyed during a remove
-we either add or remove that host to/from the global ibmvscsi_head
-list. This runs the risk of concurrent modification.
+When building without CONFIG_PCI, we can (depending on the architecture)
+get a link failure:
 
-This patch adds a simple spinlock around the list modification calls to
-prevent concurrent updates as is done similarly in the ibmvfc driver and
-ipr driver.
+ERROR: "pci_iounmap" [sound/pci/hda/snd-hda-codec-ca0132.ko] undefined!
 
-Fixes: 32d6e4b6e4ea ("scsi: ibmvscsi: add vscsi hosts to global list_head")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Adding a compile-time check for PCI gets it to work correctly on
+32-bit ARM.
+
+Fixes: d99501b8575d ("ALSA: hda/ca0132 - Call pci_iounmap() instead of iounmap()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ sound/pci/hda/patch_ca0132.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -96,6 +96,7 @@ static int client_reserve = 1;
- static char partition_name[96] = "UNKNOWN";
- static unsigned int partition_number = -1;
- static LIST_HEAD(ibmvscsi_head);
-+static DEFINE_SPINLOCK(ibmvscsi_driver_lock);
+--- a/sound/pci/hda/patch_ca0132.c
++++ b/sound/pci/hda/patch_ca0132.c
+@@ -7394,7 +7394,7 @@ static void ca0132_free(struct hda_codec
+ 	ca0132_exit_chip(codec);
  
- static struct scsi_transport_template *ibmvscsi_transport_template;
- 
-@@ -2271,7 +2272,9 @@ static int ibmvscsi_probe(struct vio_dev
- 	}
- 
- 	dev_set_drvdata(&vdev->dev, hostdata);
-+	spin_lock(&ibmvscsi_driver_lock);
- 	list_add_tail(&hostdata->host_list, &ibmvscsi_head);
-+	spin_unlock(&ibmvscsi_driver_lock);
- 	return 0;
- 
-       add_srp_port_failed:
-@@ -2293,7 +2296,9 @@ static int ibmvscsi_probe(struct vio_dev
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
-+	spin_lock(&ibmvscsi_driver_lock);
- 	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
- 	unmap_persist_bufs(hostdata);
- 	release_event_pool(&hostdata->pool, hostdata);
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 	snd_hda_power_down(codec);
+-	if (spec->mem_base)
++	if (IS_ENABLED(CONFIG_PCI) && spec->mem_base)
+ 		pci_iounmap(codec->bus->pci, spec->mem_base);
+ 	kfree(spec->spec_init_verbs);
+ 	kfree(codec->spec);
 
 
