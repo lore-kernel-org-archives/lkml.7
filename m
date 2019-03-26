@@ -2,103 +2,93 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0B1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349B5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDD92084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079AC2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPaErm2M"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DR2k7H5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbfCZRlz (ORCPT
+        id S1732185AbfCZRmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:41:55 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45557 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCZRlz (ORCPT
+        Tue, 26 Mar 2019 13:42:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34943 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732117AbfCZRmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:41:55 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e5so12252225otk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:41:55 -0700 (PDT)
+        Tue, 26 Mar 2019 13:42:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j132so10643787oib.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=13g8DOyZDfMxmWogI9dENc8mQIBbIGzhWqp70P2HsrU=;
-        b=KPaErm2MV8OaGrMvyRRYAtuGBQja+veykRvl75T77WgEbywAgnsLzgUSYX8YBncc/L
-         nvFvLPwurHACBJPiYZGCpvqxXLcNscN5HrXxrH0IIi6EbeI/wkU7En5pNLH11dzJqbTA
-         eqit7SAFazqQVNPC2B5Hes2fYnIiaqrcgjtXAJ86IjNPNdztcxZwzC4T45cR2VkdyKlT
-         o2EDaKftDBxtd6QOAcpsR1LBdOM2Lb4/jxMZM8yxgut8Gko8S9eZlnm8Smtb6rGarpuu
-         oo9V3MKAaUxGACT/25uXS6rUYUDsesT2loKDO+pnns3NokykBZJGQJuedA2NYNBY7EsO
-         Gd8g==
+         :cc:content-transfer-encoding;
+        bh=ksQ3V6OnXM5qhpcnJ5nmSh0VB/ZyAct7AyWcwfR7+88=;
+        b=DR2k7H5Vq1w9+9V7G7zDURmGkuNjtR7LEckQ48Dwo1HsnrjGhYGzwnAGDHW/LHcnp6
+         VSKKYqiwGoFiCogqmKbsEMM/8zG5dlc3imk2FQ5L7Ddmyfoew5rYe2gLtnkaT50j/n6G
+         voAcjAoru6X4nhWWCpOzahRcJzSgogC8RYocOAgyXIisDxw5MTfwwHoTdASe2q7sGAMZ
+         9/aCJ7W2+XboEPZCx7eQZJfoHaIB8YSpDWPiDTY4wTrVhGUJFxyNj4tWHhNR2/vdRxTz
+         Qcm/XJzjz4inI4euOKYn45Jt0FyQKslMbHfC1U7BxoiEksatGdNQ1xUnVik2rgn+n214
+         K99A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=13g8DOyZDfMxmWogI9dENc8mQIBbIGzhWqp70P2HsrU=;
-        b=fGKLIuj44ajYSvStiLHgHMHrwcvQizz1J/9+3QtvXQbUmCC81gKJn3IvYc0SChHtTA
-         4OmNlLBnvgLNJRNxBCgzVz1MpDLl3Nj6afbQMbkv3SAzFrURd4/ZO0ZenLgreuQZlpX8
-         593DjIx1hyrpESJMbfwxMFfMszrhfoNYdVtJ5uh3Kg+QWKPemWpeT2LPZRKSxuVS50nu
-         ya17Lv8AR5/VXE0r1fgTZwNWb6wfEO6b0LPT4Mu4ofZxAqIdBv0RQqKPFGJO3i8uv0DK
-         hsraFnjAbPLAp0DelgfUoodnSS3aRGWJvkcoD4lEt/pTVr4jBegyA/Bpm3G03yrx2FeK
-         rLoA==
-X-Gm-Message-State: APjAAAXwBfdVRnDiydTxZMiUyv66JxSVK6rZaUxxfMyg/FLAG4PfJ72y
-        MiS9vRPCr2mVHB127AfuQD4SukIF5oupdJwNpnZe3Q==
-X-Google-Smtp-Source: APXvYqxxAlv2H+DzRqn070vzVwlaxgPJ4k/57vrfDwq3XWpnWqopr0qXXQ8rJ0mG3fcA8w5+OwCGgliBaBo7voRTqh8=
-X-Received: by 2002:a9d:51ca:: with SMTP id d10mr22065819oth.83.1553622114149;
- Tue, 26 Mar 2019 10:41:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ksQ3V6OnXM5qhpcnJ5nmSh0VB/ZyAct7AyWcwfR7+88=;
+        b=oj3eSAhIZhNewy3ZYfL5XijWT3Z7TQsFb8KDoy6Qn7k4tajOk3vfJHUuWA7IIFUB2y
+         0JA8D2T/p9UcjEaCeiV6ZzzN0554cl2ZV0cJTTQJdOkU0tduoCPEMSTebuprKvfr1GYe
+         IA0pJJ/IE+CKjwvPq8fyvItDg4HHfxoA3vbkmmEv0n+Q1iNjVM9yBaQg1jS/LBc7v0N+
+         9kiQyQAgv6PqK8YfQObqH0rUCEEdCVecaXuwGSRekN1Vzk3OtW/S0lCGzP/wVRxyAE/0
+         jKlzji0hS+sSz0UtfZSuYaMvbv+loVzZHkZvhEP+Si38lj8Uk2IeyGQhfRU9GgtXIlTY
+         7bBA==
+X-Gm-Message-State: APjAAAXFfWsFturICKNnfRorASKkQ5YAsbKB6mmyZ2GsCz6dIkGpqPaU
+        wVhNCds17ld6M6iVj/AgKSFnAtYGnv1Ur0h2hfq1jw==
+X-Google-Smtp-Source: APXvYqzYCNT+YqoFGiflYiCNrDoyHg2615QHGlLtxM2wciSTejUVHPDaBbqQe8eUs4FNSurxl6KxrW0Sh6/c3gDU73Q=
+X-Received: by 2002:aca:4c88:: with SMTP id z130mr16780530oia.170.1553622128811;
+ Tue, 26 Mar 2019 10:42:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190325212446.25795-1-joe@perches.com> <CAP6Zq1g62wiDTd9zn5dhwsfK6Rr52+ishU_=cO+G0Rm3Cs7kbQ@mail.gmail.com>
-In-Reply-To: <CAP6Zq1g62wiDTd9zn5dhwsfK6Rr52+ishU_=cO+G0Rm3Cs7kbQ@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 26 Mar 2019 10:41:42 -0700
-Message-ID: <CAFd5g47LVZ6xtfcAx4GDO-bg1QsovMauiBqUHOk6JPT4fNPTqg@mail.gmail.com>
-Subject: Re: Bad file pattern in MAINTAINERS section 'ARM/NUVOTON NPCM ARCHITECTURE'
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Fair <benjaminfair@google.com>
+References: <cover.1553610690.git.sramani@mellanox.com>
+In-Reply-To: <cover.1553610690.git.sramani@mellanox.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 26 Mar 2019 18:41:58 +0100
+Message-ID: <CAMpxmJX6y9aKD8=P+v+5db4_WsOna+5fvw5tGc6RvOE6PFWUnQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/1] gpio: add driver for Mellanox BlueField GPIO
+To:     Shravan Kumar Ramani <sramani@mellanox.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 5:11 AM Tomer Maimon <tmaimon77@gmail.com> wrote:
+wt., 26 mar 2019 o 15:43 Shravan Kumar Ramani <sramani@mellanox.com> napisa=
+=C5=82(a):
 >
-> Hi Joe,
+> Changes since v5:
+> Use devm_platform_ioremap_resource().
 >
-> Thanks for sending the notice.
+> Shravan Kumar Ramani (1):
+>   gpio: add driver for Mellanox BlueField GPIO controller
 >
-> We will send a fix this week.
+>  drivers/gpio/Kconfig      |   7 +++
+>  drivers/gpio/Makefile     |   1 +
+>  drivers/gpio/gpio-mlxbf.c | 153 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 161 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-mlxbf.c
 >
-> Tomer
+> --
+> 2.1.2
 >
-> On Mon, 25 Mar 2019 at 23:24, Joe Perches <joe@perches.com> wrote:
->>
->> A file pattern line in this section of the MAINTAINERS file in linux-next
->> does not have a match in the linux source files.
 
-Hi Tomer,
+Applied, thanks!
 
-Just thought I mentioned that I posted a fix here[1] sometime ago. The
-patch should still apply cleanly.
-
-On a side note, it would probably good to send a follow up patch that
-removes me as a reviewer, and adds Benjamin Fair (CC'ed) as a
-reviewer.
-
-Cheers
-
-[1] https://www.spinics.net/lists/kernel/msg2925741.html
+Bart
