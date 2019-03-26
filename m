@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C530AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FC5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1C42075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2632075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582145;
-	bh=dAfwJoYAX+KopjHonuTt91w5tVc/SiHeui/2rHqUyzw=;
+	s=default; t=1553582149;
+	bh=0ZWpSgbyG/SLM1tloAc/EWkO3FEyzQMnKabwcVQ0214=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUIhya82Br/4GptWO9bI/Z+DhTcwbjJmbw1K6l71/kFXOPUIJOV7gHynmPwAS+Y1M
-	 tnPs7fH1IcvkOHalKt92Jt2LFTUJt4BEQFcrJJ4hhYVTJG6FHmqrGlGQivZ8zLLYJm
-	 Zru8FzvszqfqaSBiRoydvVE28sAbwmBQJVtoXZgM=
+	b=FuDOCrcdKIKsH4y3QCnVhfbP9Pl7cM+VxK6f0shZ5lsU6hfq0UeimHV7RDR3qzFO0
+	 Ly5O9KZ8oTHxz9VZLfMmJg247jmSBg/djdIM2POku4jv15WtnvwgA5ZxwPUJDJKktz
+	 TBLWphnN0hf1vGHe3fR/jmL5SvP3bmzYGN67ag4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732093AbfCZGfo (ORCPT
+        id S1732103AbfCZGfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfCZGfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:42 -0400
+        id S1732092AbfCZGfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:44 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 040BD2075E;
-        Tue, 26 Mar 2019 06:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74F092070B;
+        Tue, 26 Mar 2019 06:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582140;
-        bh=dAfwJoYAX+KopjHonuTt91w5tVc/SiHeui/2rHqUyzw=;
+        s=default; t=1553582144;
+        bh=0ZWpSgbyG/SLM1tloAc/EWkO3FEyzQMnKabwcVQ0214=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEqoD03JJVapHOjKp0U9yW8ffqvlZubVdrhWRWWGLaCY/xATN/AkkXGFi1F58+KvQ
-         NcCIJGGGwYOsbQsdzTV20h4hCgAKNByq6mRMOcNJmy+xiktKDeXzNahcPLRI2yhUYl
-         0PX4h2mNmMFh8N5ebdS5RH6kDjWg0aTV9lgrPcFg=
+        b=ncekXd2d1TozH1S0Kj685loaFtylDZdl+yDn5kvP/4X7YqU1wgDhuyek10zcPll3q
+         i4t1eInoqY3cbjKoZezkaVv1BJOXMpBDYLydbCznfahWawWR94H/P0K5vFoGB6ABEv
+         ePJBlf2/8d+7Vl6Sj3UKwT982b6ELOiuV9kqdNmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 02/45] ALSA: firewire-motu: use version field of unit directory to identify model
-Date:   Tue, 26 Mar 2019 15:29:45 +0900
-Message-Id: <20190326042702.822957994@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 03/45] mmc: pxamci: fix enum type confusion
+Date:   Tue, 26 Mar 2019 15:29:46 +0900
+Message-Id: <20190326042702.870641145@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,94 +66,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 2d012c65a9ca26a0ef87ea0a42f1653dd37155f5 upstream.
+commit e60a582bcde01158a64ff948fb799f21f5d31a11 upstream.
 
-Current ALSA firewire-motu driver uses the value of 'model' field
-of unit directory in configuration ROM for modalias for MOTU
-FireWire models. However, as long as I checked, Pre8 and
-828mk3(Hybrid) have the same value for the field (=0x100800).
+clang points out several instances of mismatched types in this drivers,
+all coming from a single declaration:
 
-unit            | version   | model
---------------- | --------- | ----------
-828mkII         | 0x000003  | 0x101800
-Traveler        | 0x000009  | 0x107800
-Pre8            | 0x00000f  | 0x100800 <-
-828mk3(FW)      | 0x000015  | 0x106800
-AudioExpress    | 0x000033  | 0x104800
-828mk3(Hybrid)  | 0x000035  | 0x100800 <-
+drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
+      different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
+                direction = DMA_DEV_TO_MEM;
+                          ~ ^~~~~~~~~~~~~~
+drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
+      different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
+        tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
 
-When updating firmware for MOTU 8pre FireWire from v1.0.0 to v1.0.3,
-I got change of the value from 0x100800 to 0x103800. On the other
-hand, the value of 'version' field is fixed to 0x00000f. As a quick
-glance, the higher 12 bits of the value of 'version' field represent
-firmware version, while the lower 12 bits is unknown.
+The behavior is correct, so this must be a simply typo from
+dma_data_direction and dma_transfer_direction being similarly named
+types with a similar purpose.
 
-By induction, the value of 'version' field represents actual model.
-
-This commit changes modalias to match the value of 'version' field,
-instead of 'model' field. For degug, long name of added sound card
-includes hexadecimal value of 'model' field.
-
-Fixes: 6c5e1ac0e144 ("ALSA: firewire-motu: add support for Motu Traveler")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/motu.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/mmc/host/pxamci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/firewire/motu/motu.c
-+++ b/sound/firewire/motu/motu.c
-@@ -36,7 +36,7 @@ static void name_card(struct snd_motu *m
- 	fw_csr_iterator_init(&it, motu->unit->directory);
- 	while (fw_csr_iterator_next(&it, &key, &val)) {
- 		switch (key) {
--		case CSR_VERSION:
-+		case CSR_MODEL:
- 			version = val;
- 			break;
- 		}
-@@ -46,7 +46,7 @@ static void name_card(struct snd_motu *m
- 	strcpy(motu->card->shortname, motu->spec->name);
- 	strcpy(motu->card->mixername, motu->spec->name);
- 	snprintf(motu->card->longname, sizeof(motu->card->longname),
--		 "MOTU %s (version:%d), GUID %08x%08x at %s, S%d",
-+		 "MOTU %s (version:%06x), GUID %08x%08x at %s, S%d",
- 		 motu->spec->name, version,
- 		 fw_dev->config_rom[3], fw_dev->config_rom[4],
- 		 dev_name(&motu->unit->device), 100 << fw_dev->max_speed);
-@@ -258,20 +258,20 @@ static const struct snd_motu_spec motu_a
- #define SND_MOTU_DEV_ENTRY(model, data)			\
- {							\
- 	.match_flags	= IEEE1394_MATCH_VENDOR_ID |	\
--			  IEEE1394_MATCH_MODEL_ID |	\
--			  IEEE1394_MATCH_SPECIFIER_ID,	\
-+			  IEEE1394_MATCH_SPECIFIER_ID |	\
-+			  IEEE1394_MATCH_VERSION,	\
- 	.vendor_id	= OUI_MOTU,			\
--	.model_id	= model,			\
- 	.specifier_id	= OUI_MOTU,			\
-+	.version	= model,			\
- 	.driver_data	= (kernel_ulong_t)data,		\
- }
- 
- static const struct ieee1394_device_id motu_id_table[] = {
--	SND_MOTU_DEV_ENTRY(0x101800, &motu_828mk2),
--	SND_MOTU_DEV_ENTRY(0x107800, &snd_motu_spec_traveler),
--	SND_MOTU_DEV_ENTRY(0x106800, &motu_828mk3),	/* FireWire only. */
--	SND_MOTU_DEV_ENTRY(0x100800, &motu_828mk3),	/* Hybrid. */
--	SND_MOTU_DEV_ENTRY(0x104800, &motu_audio_express),
-+	SND_MOTU_DEV_ENTRY(0x000003, &motu_828mk2),
-+	SND_MOTU_DEV_ENTRY(0x000009, &snd_motu_spec_traveler),
-+	SND_MOTU_DEV_ENTRY(0x000015, &motu_828mk3),	/* FireWire only. */
-+	SND_MOTU_DEV_ENTRY(0x000035, &motu_828mk3),	/* Hybrid. */
-+	SND_MOTU_DEV_ENTRY(0x000033, &motu_audio_express),
- 	{ }
- };
- MODULE_DEVICE_TABLE(ieee1394, motu_id_table);
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -164,7 +164,7 @@ static void pxamci_dma_irq(void *param);
+ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+-	enum dma_data_direction direction;
++	enum dma_transfer_direction direction;
+ 	struct dma_slave_config	config;
+ 	struct dma_chan *chan;
+ 	unsigned int nob = data->blocks;
 
 
