@@ -3,76 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C80EC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BE0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEB820643
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6792F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfCZVTG (ORCPT
+        id S1732328AbfCZVTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:19:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58864 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfCZVTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:19:05 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 67F66E6A6F;
-        Tue, 26 Mar 2019 21:19:05 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D9DC1001E84;
-        Tue, 26 Mar 2019 21:19:03 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 15:19:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V31 10/25] PCI: Lock down BAR access when the kernel is
- locked down
-Message-ID: <20190326151903.257724d5@x1.home>
-In-Reply-To: <CALCETrW43Syz-deM-fGUCbWfA8tcsoCJJ5XqjFhpg+d0sNYDRA@mail.gmail.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
-        <20190326182742.16950-11-matthewgarrett@google.com>
-        <CALCETrW43Syz-deM-fGUCbWfA8tcsoCJJ5XqjFhpg+d0sNYDRA@mail.gmail.com>
-Organization: Red Hat
+        Tue, 26 Mar 2019 17:19:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49442 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfCZVT3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:19:29 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8tSr-0006XE-Fg; Tue, 26 Mar 2019 22:18:33 +0100
+Date:   Tue, 26 Mar 2019 22:18:32 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Babu Moger <babu.moger@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 08/14] watchdog/hardlockup: Decouple the hardlockup
+ detector from perf
+In-Reply-To: <1551283518-18922-9-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1903262213470.1789@nanos.tec.linutronix.de>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-9-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 26 Mar 2019 21:19:05 +0000 (UTC)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 13:55:39 -0700
-Andy Lutomirski <luto@kernel.org> wrote:
+On Wed, 27 Feb 2019, Ricardo Neri wrote:
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Detect hard lockups on a system
+> + *
+> + * Copyright (C) Intel Corporation 2019
+> + *
+> + * Note: All of this code comes from the original perf-specific hardlockup
+> + * detector.
 
-> On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
-> <matthewgarrett@google.com> wrote:
-> >
-> > From: Matthew Garrett <mjg59@srcf.ucam.org>
-> >
-> > Any hardware that can potentially generate DMA has to be locked down in
-> > order to avoid it being possible for an attacker to modify kernel code,
-> > allowing them to circumvent disabled module loading or module signing.
-> > Default to paranoid - in future we can potentially relax this for
-> > sufficiently IOMMU-isolated devices.  
-> 
-> Does this break vfio?
+And because you copied it from there without modification this becomes
+automatically Copyrighted by Intel?
 
-No, vfio provides its own interface to pci config space.  Thanks,
+May I recommend that you talk to your legal departement about this.
 
-Alex
+Aside of that there is really no value in creating yet another file. The
+code in question can simply wrapped into a large #ifdef PERF in the old
+file.
+
+Thanks,
+
+	tglx
+
+
