@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF9FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6605C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BD12070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638462086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582474;
-	bh=DvrZ+cuFMyPWMLjOVt5f/7qKuNdPg/URmGxbkQVsgL4=;
+	s=default; t=1553582479;
+	bh=IvVIh/oRc4HrYVT3U8mOp6qSb4Twg7k2OEllCBsU8O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZfGwatUoyu/Lf24Q1Xu3uTUX05wtxt6/BgraAzgtmGboyRx/aWKjHN0xtJh8a8iF
-	 H+COvsvEzIWrj62wuNrLmNiboHLz+jN4oCtcmDGgS+oMjBS/k8RI9rA890CJ1SQQlg
-	 iY5VCxTCtUXa+YABU5Jsh26pQID5D890F32mpmYg=
+	b=D/Cb1gJuSf13U/zM8weeDvFtf+nRdd4Q1CqoagxaiQVc/4PtYJQO59wpxZYe9pVbZ
+	 qMay3LvHJzJ0arAHt7Avenfk0jhKazkjLUntL0xn3LFXcUVyVDUz+PPSZOXgpQIfdS
+	 jx1zoPQ8KBwcw6pBcIxv8Q06tE1m0skYgWm+8VZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732908AbfCZGlM (ORCPT
+        id S1732891AbfCZGk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:41:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732431AbfCZGlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:41:04 -0400
+        id S1731467AbfCZGkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:52 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CA172087C;
-        Tue, 26 Mar 2019 06:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1311C2070B;
+        Tue, 26 Mar 2019 06:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582464;
-        bh=DvrZ+cuFMyPWMLjOVt5f/7qKuNdPg/URmGxbkQVsgL4=;
+        s=default; t=1553582450;
+        bh=IvVIh/oRc4HrYVT3U8mOp6qSb4Twg7k2OEllCBsU8O8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxZMlr8WWPgIt1ZNNZvXDfAQXoQKbd9q6z9N5VMaOumPtSyu8EozwZ4xtBygbKohg
-         QcpcpitszBy0Z7Ek4W9PaIffsza1xY5NL95CdE/7YDUS6YoiTnE2fr/NS+Lo562n8H
-         mqh4Ya50IJTfEDYIN2CTu0C+tce1ciALj2Am7yhs=
+        b=yV4K76xpPziOa56KljznjLpaoEPeMwqejGELEwq2xMnkT2UySghjNDA2mqAMNyT/R
+         WBwuCMWl01OptQ5XjDuShWcWqLj1A75CnPVQDeW5r5V3ZR0VnbWafJlOV5o/wgUf9T
+         bBQtdUyHkWBX9R6RxwJHPvo5pgetKCojFkp4Mhzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+017a32f149406df32703@syzkaller.appspotmail.com,
-        Myungho Jung <mhjungk@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.0 37/52] Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
-Date:   Tue, 26 Mar 2019 15:30:24 +0900
-Message-Id: <20190326042702.959977113@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.0 43/52] f2fs: fix to avoid deadlock of atomic file operations
+Date:   Tue, 26 Mar 2019 15:30:30 +0900
+Message-Id: <20190326042703.269132852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -66,51 +65,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Myungho Jung <mhjungk@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit 1dc2d785156cbdc80806c32e8d2c7c735d0b4721 upstream.
+commit 48432984d718c95cf13e26d487c2d1b697c3c01f upstream.
 
-h4_recv_buf() callers store the return value to socket buffer and
-recursively pass the buffer to h4_recv_buf() without protection. So,
-ERR_PTR returned from h4_recv_buf() can be dereferenced, if called again
-before setting the socket buffer to NULL from previous error. Check if
-skb is ERR_PTR in h4_recv_buf().
+Thread A				Thread B
+- __fput
+ - f2fs_release_file
+  - drop_inmem_pages
+   - mutex_lock(&fi->inmem_lock)
+   - __revoke_inmem_pages
+    - lock_page(page)
+					- open
+					- f2fs_setattr
+					- truncate_setsize
+					 - truncate_inode_pages_range
+					  - lock_page(page)
+					  - truncate_cleanup_page
+					   - f2fs_invalidate_page
+					    - drop_inmem_page
+					    - mutex_lock(&fi->inmem_lock);
 
-Reported-by: syzbot+017a32f149406df32703@syzkaller.appspotmail.com
-Signed-off-by: Myungho Jung <mhjungk@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+We may encounter above ABBA deadlock as reported by Kyungtae Kim:
+
+I'm reporting a bug in linux-4.17.19: "INFO: task hung in
+drop_inmem_page" (no reproducer)
+
+I think this might be somehow related to the following:
+https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
+
+=========================================
+INFO: task syz-executor7:10822 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D27024 10822   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
+ __mutex_lock_common kernel/locking/mutex.c:833 [inline]
+ __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
+ mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
+ drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
+ f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
+ do_invalidatepage mm/truncate.c:165 [inline]
+ truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
+ truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
+ truncate_inode_pages mm/truncate.c:478 [inline]
+ truncate_pagecache+0x6d/0x90 mm/truncate.c:801
+ truncate_setsize+0x81/0xa0 mm/truncate.c:826
+ f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
+ notify_change+0xa62/0xe80 fs/attr.c:313
+ do_truncate+0x12e/0x1e0 fs/open.c:63
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
+INFO: task syz-executor7:10858 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D28880 10858   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
+ rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
+ call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
+ __down_write arch/x86/include/asm/rwsem.h:142 [inline]
+ down_write+0x58/0xa0 kernel/locking/rwsem.c:72
+ inode_lock include/linux/fs.h:713 [inline]
+ do_truncate+0x120/0x1e0 fs/open.c:61
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
+INFO: task syz-executor5:10829 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor5   D28760 10829   6308 0x80000002
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ io_schedule+0x21/0x80 kernel/sched/core.c:5179
+ wait_on_page_bit_common mm/filemap.c:1100 [inline]
+ __lock_page+0x2b5/0x390 mm/filemap.c:1273
+ lock_page include/linux/pagemap.h:483 [inline]
+ __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
+ drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
+ f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
+ __fput+0x2c7/0x780 fs/file_table.c:209
+ ____fput+0x1a/0x20 fs/file_table.c:243
+ task_work_run+0x151/0x1d0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0x8ba/0x30a0 kernel/exit.c:865
+ do_group_exit+0x13b/0x3a0 kernel/exit.c:968
+ get_signal+0x6bb/0x1650 kernel/signal.c:2482
+ do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
+ do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
+RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
+
+This patch tries to use trylock_page to mitigate such deadlock condition
+for fix.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/h4_recv.h |    4 ++++
- drivers/bluetooth/hci_h4.c  |    4 ++++
- 2 files changed, 8 insertions(+)
+ fs/f2fs/segment.c |   43 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
---- a/drivers/bluetooth/h4_recv.h
-+++ b/drivers/bluetooth/h4_recv.h
-@@ -60,6 +60,10 @@ static inline struct sk_buff *h4_recv_bu
- 					  const struct h4_recv_pkt *pkts,
- 					  int pkts_count)
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -215,7 +215,8 @@ void f2fs_register_inmem_page(struct ino
+ }
+ 
+ static int __revoke_inmem_pages(struct inode *inode,
+-				struct list_head *head, bool drop, bool recover)
++				struct list_head *head, bool drop, bool recover,
++				bool trylock)
  {
-+	/* Check for error from previous call */
-+	if (IS_ERR(skb))
-+		skb = NULL;
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct inmem_pages *cur, *tmp;
+@@ -227,7 +228,16 @@ static int __revoke_inmem_pages(struct i
+ 		if (drop)
+ 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
+ 
+-		lock_page(page);
++		if (trylock) {
++			/*
++			 * to avoid deadlock in between page lock and
++			 * inmem_lock.
++			 */
++			if (!trylock_page(page))
++				continue;
++		} else {
++			lock_page(page);
++		}
+ 
+ 		f2fs_wait_on_page_writeback(page, DATA, true, true);
+ 
+@@ -318,13 +328,19 @@ void f2fs_drop_inmem_pages(struct inode
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+-	mutex_lock(&fi->inmem_lock);
+-	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
+-	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+-	if (!list_empty(&fi->inmem_ilist))
+-		list_del_init(&fi->inmem_ilist);
+-	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+-	mutex_unlock(&fi->inmem_lock);
++	while (!list_empty(&fi->inmem_pages)) {
++		mutex_lock(&fi->inmem_lock);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, true);
 +
- 	while (count) {
- 		int i, len;
++		if (list_empty(&fi->inmem_pages)) {
++			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
++			if (!list_empty(&fi->inmem_ilist))
++				list_del_init(&fi->inmem_ilist);
++			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
++		}
++		mutex_unlock(&fi->inmem_lock);
++	}
  
---- a/drivers/bluetooth/hci_h4.c
-+++ b/drivers/bluetooth/hci_h4.c
-@@ -174,6 +174,10 @@ struct sk_buff *h4_recv_buf(struct hci_d
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	u8 alignment = hu->alignment ? hu->alignment : 1;
+ 	clear_inode_flag(inode, FI_ATOMIC_FILE);
+ 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+@@ -429,12 +445,15 @@ retry:
+ 		 * recovery or rewrite & commit last transaction. For other
+ 		 * error number, revoking was done by filesystem itself.
+ 		 */
+-		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
++		err = __revoke_inmem_pages(inode, &revoke_list,
++						false, true, false);
  
-+	/* Check for error from previous call */
-+	if (IS_ERR(skb))
-+		skb = NULL;
-+
- 	while (count) {
- 		int i, len;
+ 		/* drop all uncommitted pages */
+-		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, false);
+ 	} else {
+-		__revoke_inmem_pages(inode, &revoke_list, false, false);
++		__revoke_inmem_pages(inode, &revoke_list,
++						false, false, false);
+ 	}
  
+ 	return err;
 
 
