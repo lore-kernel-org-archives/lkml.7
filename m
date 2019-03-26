@@ -2,84 +2,69 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA6CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A4C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6CD20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06792208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553639104;
+	bh=aUULyc+DiuHrD+5Kdvg4BctRjE9mcqkfZX20gIdKojE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=BSB7dQPlxaaxNCCQdSTU6n0BWcQ2LC89ojt3hEHqqZVjn0NN4NBGmlldYsLYOvtUs
+	 qjfN+os2do9ch0LD9Ie4YwSfm7iNxPvlhvaCr3vzoogxUEhe4SDgzh78HjEmh++16+
+	 5dAtLQTx4YQsz9IF42uuwa3xU3DMaP6w7YNHqd34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbfCZWYm (ORCPT
+        id S1732042AbfCZWZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 18:24:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:9203 "EHLO mga05.intel.com"
+        Tue, 26 Mar 2019 18:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbfCZWYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 18:24:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 15:24:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
-   d="scan'208";a="217815521"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 15:24:41 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 981BF301BD4; Tue, 26 Mar 2019 15:24:41 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 15:24:41 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     kan.liang@linux.intel.com
-Cc:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH V4 04/23] perf/x86/intel: Support adaptive PEBSv4
-Message-ID: <20190326222441.GP18020@tassilo.jf.intel.com>
-References: <20190326160901.4887-1-kan.liang@linux.intel.com>
- <20190326160901.4887-5-kan.liang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326160901.4887-5-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1726782AbfCZWZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 18:25:02 -0400
+Subject: Re: [GIT PULL] Please pull NFS client fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553639102;
+        bh=aUULyc+DiuHrD+5Kdvg4BctRjE9mcqkfZX20gIdKojE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=FOy2P7QC9vyly/7Q1XLKtGa/P6IgIa0Z+ThyWs6O1WwHVcrTFHiUWd+yqu4bPOdd9
+         3U/WLAzEgJfOWU7gwxwLFxeCHsNF/0cUU1kAKqJcxBz8EoVF60gi2lYZLqMPvHrRsx
+         tUjBhWfTM53PZcGyxZ9fR998AuLwLjwbMy1t7Zys=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
+References: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
+X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
+ tags/nfs-for-5.1-3
+X-PR-Tracked-Commit-Id: 01f2f5b82a2b523ae76af53f2ff43c48dde10a00
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 14c741de93861749dfb60b4964028541f5c506ca
+Message-Id: <155363910207.25306.7118243450185118149.pr-tracker-bot@kernel.org>
+Date:   Tue, 26 Mar 2019 22:25:02 +0000
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	for (at = base; at < top; at += cpuc->pebs_record_size) {
-> +		u64 pebs_status;
-> +
-> +		pebs_status = get_pebs_status(at) & cpuc->pebs_enabled;
-> +		pebs_status &= mask;
-> +
-> +		for_each_set_bit(bit, (unsigned long *)&pebs_status, size)
-> +			counts[bit]++;
-> +	}
+The pull request you sent on Tue, 26 Mar 2019 20:12:07 +0000:
 
-On Icelake pebs_status is always reliable, so I don't think we need
-the two pass walking.
+> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.1-3
 
--Andi
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/14c741de93861749dfb60b4964028541f5c506ca
 
-> +
-> +	for (bit = 0; bit < size; bit++) {
-> +		if (counts[bit] == 0)
-> +			continue;
-> +
-> +		event = cpuc->events[bit];
-> +		if (WARN_ON_ONCE(!event))
-> +			continue;
-> +
-> +		if (WARN_ON_ONCE(!event->attr.precise_ip))
-> +			continue;
-> +
-> +		__intel_pmu_pebs_event(event, iregs, base,
-> +				       top, bit, counts[bit],
-> +				       setup_pebs_adaptive_sample_data);
-> +	}
-> +}
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
