@@ -2,85 +2,115 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5708C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FF0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C001A20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2D12070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbfCZNAD (ORCPT
+        id S1731489AbfCZNBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:00:03 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:46150 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730722AbfCZM77 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:59:59 -0400
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 334A372CCAC;
-        Tue, 26 Mar 2019 15:59:57 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 3F88F4A4AE9;
-        Tue, 26 Mar 2019 15:59:56 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 10/10] integrity: support EC-RDSA signatures for asymmetric_verify
-Date:   Tue, 26 Mar 2019 15:58:42 +0300
-Message-Id: <20190326125842.24110-11-vt@altlinux.org>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190326125842.24110-1-vt@altlinux.org>
-References: <20190326125842.24110-1-vt@altlinux.org>
+        Tue, 26 Mar 2019 09:01:14 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35996 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726177AbfCZNBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:01:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D6A11596;
+        Tue, 26 Mar 2019 06:01:13 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B4693F59C;
+        Tue, 26 Mar 2019 06:01:11 -0700 (PDT)
+Subject: Re: [PATCH v2] pci: pcie-xilinx: fix a missing-check bug for
+ __get_free_pages
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, kjlu@umn.edu,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190323210423.8881-1-pakki001@umn.edu>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <d3d64f70-0db7-6571-c38e-5fdc35c3577f@arm.com>
+Date:   Tue, 26 Mar 2019 13:01:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190323210423.8881-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow to use EC-RDSA signatures for IMA by determining signature type by
-the hash algorithm name. This works good for EC-RDSA since Streebog and
-EC-RDSA should always be used together.
+On 23/03/2019 21:04, Aditya Pakki wrote:
+> In case __get_free_pages fail, the fix returns error upstream
+> to avoid NULL pointer dereference.
 
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: linux-integrity@vger.kernel.org
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
----
- security/integrity/digsig_asymmetric.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Where does msi_pages ever get dereferenced?
 
-diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
-index d775e03fbbcc..99080871eb9f 100644
---- a/security/integrity/digsig_asymmetric.c
-+++ b/security/integrity/digsig_asymmetric.c
-@@ -104,9 +104,16 @@ int asymmetric_verify(struct key *keyring, const char *sig,
- 
- 	memset(&pks, 0, sizeof(pks));
- 
--	pks.pkey_algo = "rsa";
- 	pks.hash_algo = hash_algo_name[hdr->hash_algo];
--	pks.encoding = "pkcs1";
-+	if (hdr->hash_algo == HASH_ALGO_STREEBOG_256 ||
-+	    hdr->hash_algo == HASH_ALGO_STREEBOG_512) {
-+		/* EC-RDSA and Streebog should go together. */
-+		pks.pkey_algo = "ecrdsa";
-+		pks.encoding = "raw";
-+	} else {
-+		pks.pkey_algo = "rsa";
-+		pks.encoding = "pkcs1";
-+	}
- 	pks.digest = (u8 *)data;
- 	pks.digest_size = datalen;
- 	pks.s = hdr->sig;
--- 
-2.11.0
+The logic here might actually still have a chance of working out OK with 
+NULL depending on how the memory maps line up, but even if it doesn't, 
+the problem is certainly not one of dereferencing.
 
+Robin.
+
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> 
+> ---
+> v1: Return error upstream as suggested by Steven
+> ---
+>   drivers/pci/controller/pcie-xilinx.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+> index 9bd1a35cd5d8..91d8945bfb0c 100644
+> --- a/drivers/pci/controller/pcie-xilinx.c
+> +++ b/drivers/pci/controller/pcie-xilinx.c
+> @@ -335,15 +335,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+>   /**
+>    * xilinx_pcie_enable_msi - Enable MSI support
+>    * @port: PCIe port information
+> + * Return: 0 on success, negative error on failure
+>    */
+> -static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+> +static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+>   {
+>   	phys_addr_t msg_addr;
+>   
+>   	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
+> +	if (!port->msi_pages)
+> +		return -ENOMEM;
+>   	msg_addr = virt_to_phys((void *)port->msi_pages);
+>   	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>   	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
+> +	return 0;
+>   }
+>   
+>   /* INTx Functions */
+> @@ -498,6 +502,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>   	struct device *dev = port->dev;
+>   	struct device_node *node = dev->of_node;
+>   	struct device_node *pcie_intc_node;
+> +	int ret;
+>   
+>   	/* Setup INTx */
+>   	pcie_intc_node = of_get_next_child(node, NULL);
+> @@ -526,7 +531,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>   			return -ENODEV;
+>   		}
+>   
+> -		xilinx_pcie_enable_msi(port);
+> +		ret = xilinx_pcie_enable_msi(port);
+> +		if (ret)
+> +			return ret;
+>   	}
+>   
+>   	return 0;
+> 
