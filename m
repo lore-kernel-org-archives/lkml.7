@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E79BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC782087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBBE2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733073AbfCZXOH (ORCPT
+        id S1733047AbfCZXOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:14:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51814 "EHLO
+        Tue, 26 Mar 2019 19:14:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41394 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732839AbfCZXNX (ORCPT
+        by vger.kernel.org with ESMTP id S1732847AbfCZXNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 19:13:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QN9Rra143122
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QN9Kk3017190
         for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:13:22 -0400
-Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfunybv2a-1
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfuyj3dg9-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:13:22 -0400
 Received: from localhost
-        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
         Tue, 26 Mar 2019 23:13:21 -0000
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:13:16 -0000
+        Tue, 26 Mar 2019 23:13:15 -0000
 Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNDFiY23789584
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNDEMD9502818
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:13:15 GMT
+        Tue, 26 Mar 2019 23:13:14 GMT
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5FD0B2078;
+        by IMSVA (Postfix) with ESMTP id 65B68B2070;
         Tue, 26 Mar 2019 23:13:14 +0000 (GMT)
 Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4378B207B;
+        by IMSVA (Postfix) with ESMTP id 47018B2066;
         Tue, 26 Mar 2019 23:13:14 +0000 (GMT)
 Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
         by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
         Tue, 26 Mar 2019 23:13:14 +0000 (GMT)
 Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A7AB116C619C; Tue, 26 Mar 2019 16:13:15 -0700 (PDT)
+        id 6020216C60F8; Tue, 26 Mar 2019 16:13:15 -0700 (PDT)
 From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
@@ -58,75 +58,59 @@ Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Zhouyi Zhou <zhouzhouyi@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
         "Paul E . McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH tip/core/rcu 15/18] rcu: Fix force_qs_rnp() header comment
-Date:   Tue, 26 Mar 2019 16:13:11 -0700
+Subject: [PATCH tip/core/rcu 03/18] rcu: rcu_qs -- Use raise_softirq_irqoff to not save irqs twice
+Date:   Tue, 26 Mar 2019 16:12:59 -0700
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326231253.GA18343@linux.ibm.com>
 References: <20190326231253.GA18343@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19032623-0040-0000-0000-000004D7AEA1
+x-cbid: 19032623-0068-0000-0000-000003AB74A1
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180133; UDB=6.00606765; IPR=6.00960848;
- MB=3.00026169; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:13:19
+ PH=3.00000004; SC=3.00000282; SDB=6.01180132; UDB=6.00617573; IPR=6.00960848;
+ MB=3.00026169; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:13:20
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-0041-0000-0000-000008E2CFED
-Message-Id: <20190326231314.19518-15-paulmck@linux.ibm.com>
+x-cbparentid: 19032623-0069-0000-0000-000047F21E36
+Message-Id: <20190326231314.19518-3-paulmck@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=582 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1903260156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhouyi Zhou <zhouzhouyi@gmail.com>
+From: Cyrill Gorcunov <gorcunov@gmail.com>
 
-Previously, threads blocked on offlining CPUS were migrated to the
-root rcu_node structure, thus requiring RCU priority boosting on this
-structure.  However, since commit d19fb8d1f3f6 ("rcu: Don't migrate
-blocked tasks even if all corresponding CPUs offline"), RCU does not
-migrate blocked tasks.  Consequently, RCU no longer does RCU priority
-boosting on the root rcu_node structure as of commit 1be0085b515e ("rcu:
-Don't initiate RCU priority boosting on root rcu_node").
+The rcu_qs is disabling IRQs by self so no need to do the same in raise_softirq
+but instead we can save some cycles using raise_softirq_irqoff directly.
 
-This commit therefore brings comments for the force_qs_rnp() function's
-header comment in line with this new no-root-boosting reality.
-
-Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
-[ paulmck: Also remove obsolete comment on suppressing new grace periods. ]
+CC: Paul E. McKenney <paulmck@linux.ibm.com>
+Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 ---
- kernel/rcu/tree.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/rcu/tiny.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index e117732bcd5d..abc8512ceb5f 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2548,11 +2548,11 @@ void rcu_sched_clock_irq(int user)
+diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+index 911bd9076d43..477b4eb44af5 100644
+--- a/kernel/rcu/tiny.c
++++ b/kernel/rcu/tiny.c
+@@ -52,7 +52,7 @@ void rcu_qs(void)
+ 	local_irq_save(flags);
+ 	if (rcu_ctrlblk.donetail != rcu_ctrlblk.curtail) {
+ 		rcu_ctrlblk.donetail = rcu_ctrlblk.curtail;
+-		raise_softirq(RCU_SOFTIRQ);
++		raise_softirq_irqoff(RCU_SOFTIRQ);
+ 	}
+ 	local_irq_restore(flags);
  }
- 
- /*
-- * Scan the leaf rcu_node structures, processing dyntick state for any that
-- * have not yet encountered a quiescent state, using the function specified.
-- * Also initiate boosting for any threads blocked on the root rcu_node.
-- *
-- * The caller must have suppressed start of new grace periods.
-+ * Scan the leaf rcu_node structures.  For each structure on which all
-+ * CPUs have reported a quiescent state and on which there are tasks
-+ * blocking the current grace period, initiate RCU priority boosting.
-+ * Otherwise, invoke the specified function to check dyntick state for
-+ * each CPU that has not yet reported a quiescent state.
-  */
- static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- {
 -- 
 2.17.1
 
