@@ -2,104 +2,143 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4609C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562DDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBBA20830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2049120863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553588567;
+	bh=4VuJdYoW27ty/umu9Sr/06n6fgW/6tGcO4jT4QYwpT8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=S+A3C8Mps6u1we/1fTvF/Vx4Wca7oUC+TMTUXR2xL1323G9/CXE+G21yYUyhq/zpW
+	 ucx5j91zXCp2tEKZfSEotI8lCpUWePcRPzZXuqXinm0wkEcgVFciXgTmcL3Tsf/us7
+	 jMnWmJwsfsumgy/F3oEVTyOG3RW2k2YaOh2usUCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbfCZIU6 (ORCPT
+        id S1730944AbfCZIWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:20:58 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46156 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCZIU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:20:58 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z17so13478205qts.13;
-        Tue, 26 Mar 2019 01:20:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=01AgOD1FiCLKydD75Ls4KyfhgM8ZPlrxuRYuNZhSbKQ=;
-        b=EE1eCYXL/+0kQkWh/mZW4sUnKJmdEUyAchKybHCSUZ0J5dVwXgj2bXV54j79Uw/POH
-         hMFBBDwEsChI997LGvYh2oDkSC04EDWuJ4bYibXJAU7G4/zPXQerPaelBqjmRH/+HVt6
-         DlGP42p1mSfrFdjii1/Nr34o8bnASz3aU9cRaxQzjM7FSUwPRwPgoaF8SJ5ESuyZ/Blo
-         CTDaiKz3zpWoBGfGCafUZBfFNZ349J/HT57oXeSMsGnkcuVDUGZSL5sIbG7dcNGkiLso
-         EzbWDNAho3FW6slYCZXSoYaI7Jvca+LEOh1oQpXx+6P8L2f6F9MU8iFFunxzk9hQ5eqO
-         0L3w==
-X-Gm-Message-State: APjAAAXkkuOWmgTfVGqzttZlPkmZzdXAebQV3K/rVdVzTJPeShsvK9l5
-        bNOmKQ39TC9h049M1oU1LaJvM/th21ajeakNqME=
-X-Google-Smtp-Source: APXvYqxDn3JoS0wBdQHJaiDBxxOTEI6L/B7mKWWAO6MWPzivdQEVF+jYX6kcpCo5jMoKleOvkOitJcGLpFHXwQJUpsc=
-X-Received: by 2002:a0c:b501:: with SMTP id d1mr24804782qve.115.1553588457049;
- Tue, 26 Mar 2019 01:20:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190322154425.3852517-1-arnd@arndb.de> <20190322154425.3852517-5-arnd@arndb.de>
- <20190326011319.GC29420@kroah.com>
-In-Reply-To: <20190326011319.GC29420@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 Mar 2019 09:20:40 +0100
-Message-ID: <CAK8P3a1u_2gz=UieoNT7yOqSKFvFOXA34CAs7w+qouoQTjqDgQ@mail.gmail.com>
-Subject: Re: [BACKPORT 4.4.y 04/25] USB: iowarrior: fix oops with malicious
- USB descriptors
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "# 3.4.x" <stable@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Ralf Spenneberg <ralf@spenneberg.net>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <chunyan.zhang@spreadtrum.com>,
-        Baolin Wang <baolin.wang@spreadtrum.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 26 Mar 2019 04:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfCZIWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:22:45 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E39FA20830;
+        Tue, 26 Mar 2019 08:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553588564;
+        bh=4VuJdYoW27ty/umu9Sr/06n6fgW/6tGcO4jT4QYwpT8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QkPZL5Tutbbb8JkHRv97jAdTMS2wHBVSz9cgdVAkxq30z8XWbG8FM6Nsrz31gdo3s
+         2h9FsVTnocbPJ/PfJX49JwW/mVw1n903+QimVFKlxbCuO5KbSX7Vxt8HdrboD2ihIK
+         nuJ2rIeqzLbMhFtRYg8osjKeBmFz7yGVLzFbQmcw=
+Date:   Tue, 26 Mar 2019 17:22:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
+        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v4 01/11] tracing: Add tracing error log
+Message-Id: <20190326172239.563f933cceb1f71c45f7e474@kernel.org>
+In-Reply-To: <5038ab97eaa3cf23c16264299221c5f1c5cf8147.1553268040.git.tom.zanussi@linux.intel.com>
+References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
+        <5038ab97eaa3cf23c16264299221c5f1c5cf8147.1553268040.git.tom.zanussi@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 2:23 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 22, 2019 at 04:43:55PM +0100, Arnd Bergmann wrote:
-> > From: Josh Boyer <jwboyer@fedoraproject.org>
-> >
-> > The iowarrior driver expects at least one valid endpoint.  If given
-> > malicious descriptors that specify 0 for the number of endpoints,
-> > it will crash in the probe function.  Ensure there is at least
-> > one endpoint on the interface before using it.
-> >
-> > The full report of this issue can be found here:
-> > http://seclists.org/bugtraq/2016/Mar/87
-> >
-> > Reported-by: Ralf Spenneberg <ralf@spenneberg.net>
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > (cherry picked from commit 4ec0ef3a82125efc36173062a50624550a900ae0)
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  drivers/usb/misc/iowarrior.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
->
-> This commit has been in the tree for a long time.  It was in the 4.4.7
-> release, back in April 2016.  And then it was reverted in commit
-> b7321e81fc36 ("USB: iowarrior: fix NULL-deref at probe") as it broke
-> systems.  So why add it back, the correct functionality should be there
-> today, right?
+Hi Tom,
 
-Sorry I missed that history. The script I used to identify patches noticed
-that this patch was not applied, but I did not have a check for already-
-reverted patches.
+On Fri, 22 Mar 2019 10:34:27 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Chunyan, Baolin: it seems the spreadtrum 4.4 kernel got this wrong
-as well, by backporting the patch again on top of 4.4.172. Can you check
-the latest internal version for this?
+> +static int tracing_err_log_open(struct inode *inode, struct file *file)
+> +{
+> +	if (file->f_mode & FMODE_WRITE) {
+> +		if (file->f_flags & O_TRUNC)
+> +			return 0;
+> +		else
+> +			return -EINVAL;
+> +	}
+> +
+> +	return seq_open(file, &tracing_err_log_seq_ops);
+> +}
+> +
+> +static ssize_t tracing_err_log_write(struct file *file,
+> +				     const char __user *buffer,
+> +				     size_t count, loff_t *ppos)
+> +{
+> +	if (count == 1)
+> +		clear_tracing_err_log();
+> +	else
+> +		return -EINVAL;
+> +
+> +	*ppos += count;
+> +
+> +	return count;
+> +}
 
-       Arnd
+Hmm, could you make this as same as "tracing/trace"?
+- It clears buffer at open with WRITE & TRUNC flag
+- It just ignore how much user wrote (works as /dev/null)
+
+See tracing_open() and tracing_write_stub() in
+kernel/trace/trace.c.
+
+Thank you,
+
+
+> +
+> +static const struct file_operations tracing_err_log_fops = {
+> +	.open           = tracing_err_log_open,
+> +	.write		= tracing_err_log_write,
+> +	.read           = seq_read,
+> +	.llseek         = seq_lseek,
+> +};
+> +
+>  static int tracing_buffers_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct trace_array *tr = inode->i_private;
+> @@ -8258,6 +8478,9 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+>  			  tr, &snapshot_fops);
+>  #endif
+>  
+> +	trace_create_file("error_log", 0644, d_tracer,
+> +			  tr, &tracing_err_log_fops);
+> +
+>  	for_each_tracing_cpu(cpu)
+>  		tracing_init_tracefs_percpu(tr, cpu);
+>  
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index d80cee49e0eb..b711edbef7e7 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -1884,6 +1884,10 @@ extern ssize_t trace_parse_run_command(struct file *file,
+>  		const char __user *buffer, size_t count, loff_t *ppos,
+>  		int (*createfn)(int, char**));
+>  
+> +extern unsigned int err_pos(char *cmd, const char *str);
+> +extern void tracing_log_err(const char *loc, const char *cmd,
+> +			    const char **errs, u8 type, u8 pos);
+> +
+>  /*
+>   * Normal trace_printk() and friends allocates special buffers
+>   * to do the manipulation, as well as saves the print formats
+> -- 
+> 2.14.1
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
