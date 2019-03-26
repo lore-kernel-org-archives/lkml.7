@@ -2,69 +2,88 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A4C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B41FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06792208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553639104;
-	bh=aUULyc+DiuHrD+5Kdvg4BctRjE9mcqkfZX20gIdKojE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=BSB7dQPlxaaxNCCQdSTU6n0BWcQ2LC89ojt3hEHqqZVjn0NN4NBGmlldYsLYOvtUs
-	 qjfN+os2do9ch0LD9Ie4YwSfm7iNxPvlhvaCr3vzoogxUEhe4SDgzh78HjEmh++16+
-	 5dAtLQTx4YQsz9IF42uuwa3xU3DMaP6w7YNHqd34=
+	by mail.kernel.org (Postfix) with ESMTP id 0A3B421741
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 22:25:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732042AbfCZWZD (ORCPT
+        id S1732137AbfCZWZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 18:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbfCZWZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 18:25:02 -0400
-Subject: Re: [GIT PULL] Please pull NFS client fixes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553639102;
-        bh=aUULyc+DiuHrD+5Kdvg4BctRjE9mcqkfZX20gIdKojE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=FOy2P7QC9vyly/7Q1XLKtGa/P6IgIa0Z+ThyWs6O1WwHVcrTFHiUWd+yqu4bPOdd9
-         3U/WLAzEgJfOWU7gwxwLFxeCHsNF/0cUU1kAKqJcxBz8EoVF60gi2lYZLqMPvHrRsx
-         tUjBhWfTM53PZcGyxZ9fR998AuLwLjwbMy1t7Zys=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
-References: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <938c564de7930769feacf1403fae0c9511f10993.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
- tags/nfs-for-5.1-3
-X-PR-Tracked-Commit-Id: 01f2f5b82a2b523ae76af53f2ff43c48dde10a00
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 14c741de93861749dfb60b4964028541f5c506ca
-Message-Id: <155363910207.25306.7118243450185118149.pr-tracker-bot@kernel.org>
-Date:   Tue, 26 Mar 2019 22:25:02 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        Tue, 26 Mar 2019 18:25:51 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49597 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfCZWZv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 18:25:51 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8uVt-0007UD-Ki; Tue, 26 Mar 2019 23:25:45 +0100
+Date:   Tue, 26 Mar 2019 23:25:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andi Kleen <ak@linux.intel.com>
+cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
+ .text
+In-Reply-To: <20190326213803.GN18020@tassilo.jf.intel.com>
+Message-ID: <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de>
+References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-3-andi@firstfloor.org> <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de> <20190326213803.GN18020@tassilo.jf.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 26 Mar 2019 20:12:07 +0000:
+Andi.
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.1-3
+On Tue, 26 Mar 2019, Andi Kleen wrote:
+> On Tue, Mar 26, 2019 at 06:03:59PM +0100, Thomas Gleixner wrote:
+> > On Thu, 21 Mar 2019, Andi Kleen wrote:
+> > 
+> > > With gcc 8 toplevel assembler statements that do not mark themselves
+> > > as .text may end up in other sections.
+> > 
+> > Which is clearly a change in behaviour. Is that intended or just yet
+> > another feature of GCC?
+> 
+> I'm not sure it's a new behavior, but I've seen it first
+> with gcc 8.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/14c741de93861749dfb60b4964028541f5c506ca
+Ok.
+ 
+> > Your subject says: 'x86, lto:'
+> > 
+> > So is this a LTO related problem or is the section randomization
+> > independent of LTO?
+> 
+> The basic behavior is independent of LTO, but I've only seen
+> failures with LTO. But I believe in theory it could lead
+> to failures even without LTO.
 
-Thank you!
+Well, we better should know the real reason for this wreckage. I mean, the
+default section for text is suprisingly .text. I don't see a reason why
+this would be any different for an assembly function implemented in a C
+file.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+So the question is whether GCC does something silly in general which gets
+'repaired' silentely by the linker or whether it's just an LTO issue.
+
+If it's the former, then we must backport those fixes.
+
+Could you please verify with the GCC people as you seem to have a
+reproducer of some sort.
+
+Thanks,
+
+	tglx
