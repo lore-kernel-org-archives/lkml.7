@@ -2,127 +2,141 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A89C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BF8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955C52075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04272075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYUTOnyN"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XVVr9M6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbfCZOQF (ORCPT
+        id S1731658AbfCZOR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:16:05 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:33016 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfCZOQF (ORCPT
+        Tue, 26 Mar 2019 10:17:27 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:34542 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCZOR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:16:05 -0400
-Received: by mail-it1-f194.google.com with SMTP id v8so2924400itf.0;
-        Tue, 26 Mar 2019 07:16:04 -0700 (PDT)
+        Tue, 26 Mar 2019 10:17:27 -0400
+Received: by mail-it1-f193.google.com with SMTP id l4so2911703ite.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 07:17:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qEOjZYpKMejJbkDAYqurrvWQBSNTI1zmr7mLx7VYA7s=;
-        b=AYUTOnyNaTkS5ye7/E64ftAWe2vIMEKHy1UPw3CU4ImWHPkKzINenbGs8Cn82bO35M
-         +mtHvNrgMxE6INjEI91E8IIVsLHH26VZNKc+Wk8gCsBs4hUNk3rkCpDJn8duKw22HSu+
-         fEKOVdjKmvCzTqqlCDq9OlJhLXUlydNnWBBwCPa6K37Nu+7w/b3wXzzNnSqJ5EMdXARZ
-         RwTPKFQtY3aQ7AJRh5VFNv0PNtZyXdvbAdiVmKKjPANqEYDdNzu1BKibtLla0b3HH46H
-         E2YfT9iQz4G1gkkLSqQSlL/z5k5gAZ/Up90DxsC8ZTDlxHpporVnY+xnVF5gFzkFWMsP
-         EU3A==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9aPTWbji5R5ZFrlaEGImvL5Rga/Q6axt0J4jjzESFQY=;
+        b=XVVr9M6GRXnnRp709mtgCpeG4Dh0V3FcL6dc+bI6uCLvGQTyhVXHPpqsGadiETLOna
+         S2Ie0PIcujwWIVfuKGSWhwG1PTmmYELqKpFGJv+rvZ36bm6UYkFk3/jiDk6F3Ms6nh0d
+         KaZH45CQQatgEk9MuAjHFte0NGurvP39cNEfFnb/AmExGEoqNiC2ohqXkQ498rN1vU4a
+         qkWZTqwKP2J6rsemYC7heQZjzuLq3QH5Lgkhnl9f6Mlmtd8T+bYDn+J3aoV4TYYs6Ib6
+         8Lv7HjNyMNTj2r53Bi7tqBALdYrJlYet+RGxI6F9o9Cf/3Deuev0O/9i2ATSGRGfS1Xc
+         Rcog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qEOjZYpKMejJbkDAYqurrvWQBSNTI1zmr7mLx7VYA7s=;
-        b=T3kSOYO2O4W3EmpS4LxdD3CFUUvyYUVlovsQz9vswrk7HGq4hnzTXvqeyLX1jv8Sy+
-         h6sjPyHuyYeBwcUg+A8EeANJTTtaIcVdWWUhROtn2/7NBeFodgm+MGk/htwBBY2pHG8H
-         AXKkCNHR8+DAhEslfWCGpRjcAPeQz7h85mEjED+r/WswuQfW+F1MzpA2xyQOrfDLgDCG
-         iHi4HfzOoJIFrgGdePYiu5Z3eTOlKql2NtYv7OpvtKgchHFOXQhkseKbwXTWOnYu/v4r
-         y9hAz9XyclrM4JIu3pOjBO/EVj9tNrVSUs00MKPq2sEqIOFB0Ybj9e/F+kWEVMsy+LNs
-         jqZg==
-X-Gm-Message-State: APjAAAXVf90HiI+p2pbbh/S/DfvGNL5Q7vDp9/BQu7rA6wvumfnc2hzs
-        ynGMsp1CgoJk6ltUPKy9bwPAmk39I0NtHeDsYnc=
-X-Google-Smtp-Source: APXvYqz8afjv4V4Fd8d3RJB/qI9pOzRABqX9RNuOO+b8tmwTLXqHpwKzP8RhdHdmy9tfTEFhgJIEeiehaBGxYEM2Ud8=
-X-Received: by 2002:a24:4e11:: with SMTP id r17mr7140880ita.168.1553609764179;
- Tue, 26 Mar 2019 07:16:04 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9aPTWbji5R5ZFrlaEGImvL5Rga/Q6axt0J4jjzESFQY=;
+        b=YyZmGY8jnbFdSgYd9CJ7f9dzoUdB3JjEW6RPnn/6bui/78H+TgjNObzqPxtqn91W37
+         QhBcDeLg2Q8GJQyacKbx0EzNOQ4mygo7nMZd19vgmPfQVffeC9GUNqK6WDwjrz9cC5gi
+         oReadLOMjc4yrbCy7KiB+jvtge0Af+Hn2XG+pWdWke/SRfhEwiwi0H0FQxwB7JVsYdW6
+         ahtwIdm00no5VVlC84IGrSAq4X+mLI9454YJmQKXo3nThzVGcZnJqiGGFaaraTIN2tUw
+         0XHmxR3pao5vGuWKc07zR/ATywuvaXGbs5ymJWikdqK3TPne3DFLrb/7XZwX0lo1R/4K
+         DZEA==
+X-Gm-Message-State: APjAAAWD0U5wfubrVosDPg2JOHjETYhqkWyQgKNdDfeEW1WQJSDSRpU2
+        NHYlp+LuQzbwiJ5UnPJnxL6tfQ==
+X-Google-Smtp-Source: APXvYqz6p+qO4/ZGQanAGH5KyF2mdWz1O8RRUTnNOdfnwR6UETbr0Beb1eE6Du0Nk9NHAQ19zlbkeQ==
+X-Received: by 2002:a02:9831:: with SMTP id t46mr20707845jaj.140.1553609846220;
+        Tue, 26 Mar 2019 07:17:26 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id f132sm8188593ioa.76.2019.03.26.07.17.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 07:17:24 -0700 (PDT)
+Subject: Re: [PATCH V2 8/8] blk-mq: remove blk_mq_tagset_busy_iter
+To:     Hannes Reinecke <hare@suse.de>,
+        "jianchao.wang" <jianchao.w.wang@oracle.com>
+Cc:     linux-block@vger.kernel.org, jsmart2021@gmail.com,
+        sagi@grimberg.me, josef@toxicpanda.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, jthumshirn@suse.de, hch@lst.de,
+        bvanassche@acm.org
+References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1553492318-1810-9-git-send-email-jianchao.w.wang@oracle.com>
+ <47fe0e2a-f427-0e3e-e15b-a9e2bffb502f@suse.de>
+ <f9d22543-65d1-e473-e3ab-deefa2d6e884@oracle.com>
+ <15fa9443-776b-bb75-0e20-538609d34eba@suse.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5b5442f9-eb31-c7fa-822b-9e7b1a1d188c@kernel.dk>
+Date:   Tue, 26 Mar 2019 08:17:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-4-brgl@bgdev.pl>
-In-Reply-To: <20190322133105.5945-4-brgl@bgdev.pl>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Tue, 26 Mar 2019 09:15:53 -0500
-Message-ID: <CAHCN7xJLp37dkpTR=ehBntQwD+s5G7M6srmKL-gYEmgDQLv6uw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: da850-evm: enable cpufreq
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <15fa9443-776b-bb75-0e20-538609d34eba@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> tps6507 pmic with configurable output voltage, so all operating points
-> can be enabled.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index f04bc3e15332..a0a1b3dccf37 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -191,6 +191,18 @@
->         };
->  };
->
-> +&cpu {
-> +       cpu-supply = <&vdcdc3_reg>;
-> +};
-> +
-> +&opp_375 {
-> +       status = "okay";
-> +};
-> +
-> +&opp_456 {
-> +       status = "okay";
-> +};
+On 3/25/19 2:25 AM, Hannes Reinecke wrote:
+> On 3/25/19 8:37 AM, jianchao.wang wrote:
+>> Hi Hannes
+>>
+>> On 3/25/19 3:18 PM, Hannes Reinecke wrote:
+>>> On 3/25/19 6:38 AM, Jianchao Wang wrote:
+>>>> As nobody uses blk_mq_tagset_busy_iter, remove it.
+>>>>
+>>>> Signed-off-by: Jianchao Wang <jianchao.w.wang@oracle.com>
+>>>> ---
+>>>>    block/blk-mq-tag.c     | 95 --------------------------------------------------
+>>>>    include/linux/blk-mq.h |  2 --
+>>>>    2 files changed, 97 deletions(-)
+>>>>
+>>> Please, don't.
+>>>
+>>> I'm currently implementing reserved commands for SCSI and reworking
+>>> the SCSI error handling where I rely on this interface quite
+>>> heavily.
+>>
+>>
+>> blk_mq_tagset_busy_iter could access some stale requests which maybe
+>> freed due to io scheduler switching, request_queue cleanup (shared
+>> tagset) when there is someone submits io and gets driver tag. When io
+>> scheduler attached, even quiesce request_queue won't work.
+>>
+>> If this patchset is accepted, blk_mq_tagset_busy_iter could be
+>> replaced with blk_mq_queue_inflight_tag_iter which needs to be
+>> invoked by every request_queue that shares the tagset.
+>>
+> The point is, at that time I do _not_ have a request queue to work
+> with.
+> 
+> Most SCSI drivers have a host-wide shared tagset, which is used by all
+> request queues on that host.  Iterating over the shared tagset is far
+> more efficient than to traverse over all devices and the attached
+> request queues.
+> 
+> If I had to traverse all request queues I would need to add additional
+> locking to ensure this traversal is race-free, making it a really
+> cumbersome interface to use.
+> 
+> Plus the tagset iter is understood to be used only in cases where I/O
+> is stopped from the upper layers (ie no new I/O will be submitted).
+> So here we only need to protect against I/O being completed, which is
+> not what this patchset is about.
+> 
+> So my objection still stands: Please, don't.
 
-I pulled part number for the processor used in the da850evm that Logic
-PD produces, and it shows a imit of 375MHz.  I cross-referenced the
-processor part number with the description from a distributor, and the
-part number also lists 375MHz, so I think we should leave 456
-disabled.
+We can't just keep an interface that's hard to use correctly just
+because you have something pending for that. Jianchao has good
+suggestions for you on how to proceed.
 
-adam
-> +
->  &sata {
->         status = "okay";
->  };
-> --
-> 2.20.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Jens Axboe
+
