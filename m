@@ -2,120 +2,87 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4A2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521A6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C118F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC24206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=mykolab.com header.i=@mykolab.com header.b="KKuKBEov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732369AbfCZVWg (ORCPT
+        id S1732709AbfCZVWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:22:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:22806 "EHLO mx1.redhat.com"
+        Tue, 26 Mar 2019 17:22:45 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:33382 "EHLO mx.kolabnow.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCZVWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:22:35 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE3AF30718C1;
-        Tue, 26 Mar 2019 21:22:35 +0000 (UTC)
-Received: from ovpn-118-18.phx2.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A6E9960160;
-        Tue, 26 Mar 2019 21:22:34 +0000 (UTC)
-Message-ID: <580c6c604d3915c105f076fc7f22ab5da98598fc.camel@redhat.com>
-Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
-From:   Scott Wood <swood@redhat.com>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Date:   Tue, 26 Mar 2019 16:22:34 -0500
-In-Reply-To: <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
-         <1553483264-5379-4-git-send-email-hao.wu@intel.com>
-         <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
-         <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
-         <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1731617AbfCZVWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:22:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id A8C8941297;
+        Tue, 26 Mar 2019 22:22:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mykolab.com; h=
+        content-transfer-encoding:mime-version:message-id:date:date
+        :subject:subject:from:from:received:received:received; s=
+        dkim20160331; t=1553635363; x=1555449764; bh=gSqUx19cRTa3ayxvz3T
+        WeMmZhf0qOI4s+zH+WFepwJs=; b=KKuKBEov5f/NZXnzrqinpzjsHzl816cZnsZ
+        uzjvCjGSnu0uoSaAFDsCVnVaFAIbwLoDuNizmrEfukr7+hEzkU+03GL5nOKib62T
+        1mFKEP8GXeWI0aG2J7KQvD1aScaQV/5kZs4rFCqsW2d8fOB6i3/qMR/z27QAmrsN
+        NWwL6KPdkotSvs4zUKx3TC1oGm6c2nB4f3SjnRztbrlD2HAkYhC/B/MWq17LVlWP
+        Rft6SVPWWsdr0+mTa9K4wbAYYasPU/FbpWcyxfRLSeavZkJ2wC3bEM+bToJ3rZKi
+        EVPZFDleriJPGhLG0/OS3hrlXKB6i7aeqTid1NSdeCAbCrg80AonKqX6QX9PwEuH
+        hOVBYv0y6VnV6dhF+pd+5CwZEWkDdgYtbbT8z5sUPzEoPelwFJMPedDSYobIerE0
+        mrrpgTZ3CI/oOfIZBX9Avo9D3UgOnOzsf6RkCFcq4kXmELne6dEJhRwLZnrxHH9e
+        wewgEvxB4dlifq0b0vwQuQmo15D6N4hK4zgtU+owGPD4OqkLyk5H4Su64CPH6qjb
+        T/qiawW1iIVs81gN5CMC7ufecsGG/8nMs/XLRMzJfWLhYfs1ZXYWJazBykH4UNpb
+        kZXXsloholIGm5anxjjhXfqSRODaoSCQ8DJkGrMVQScZ+vAvyU5aF6e9u2enHt6w
+        7NAzkIDo=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id igd8Aw2GjbU7; Tue, 26 Mar 2019 22:22:43 +0100 (CET)
+Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
+        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id 0D4C74125E;
+        Tue, 26 Mar 2019 22:22:43 +0100 (CET)
+Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
+        by int-mx003.mykolab.com (Postfix) with ESMTPS id D85D92702;
+        Tue, 26 Mar 2019 22:22:42 +0100 (CET)
+From:   Michael Stefaniuc <mstefani@mykolab.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH] scripts: coccinelle: Fix description of badty.cocci
+Date:   Tue, 26 Mar 2019 22:22:00 +0100
+Message-Id: <20190326212200.21168-1-mstefani@mykolab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 26 Mar 2019 21:22:35 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 14:33 -0500, Alan Tull wrote:
-> On Mon, Mar 25, 2019 at 5:58 PM Scott Wood <swood@redhat.com> wrote:
-> 
-> Hi Scott,
-> 
-> > On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
-> > > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
-> > > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
-> > > > +
-> > > > +#include <asm/fpu/api.h>
-> > > > +
-> > > > +static inline void copy512(void *src, void __iomem *dst)
-> > > > +{
-> > > > +   kernel_fpu_begin();
-> > > > +
-> > > > +   asm volatile("vmovdqu64 (%0), %%zmm0;"
-> > > > +                "vmovntdq %%zmm0, (%1);"
-> > > > +                :
-> > > > +                : "r"(src), "r"(dst));
-> > > > +
-> > > > +   kernel_fpu_end();
-> > > > +}
-> > > 
-> > > Shouldn't there be some sort of check that AVX512 is actually
-> > > supported
-> > > on the running system?
-> > > 
-> > > Also, src should be const, and the asm statement should have a memory
-> > > clobber.
-> > > 
-> > > > +#else
-> > > > +static inline void copy512(void *src, void __iomem *dst)
-> > > > +{
-> > > > +   WARN_ON_ONCE(1);
-> > > > +}
-> > > > +#endif
-> > > 
-> > > Likewise, this will be called if a revision 2 device is used on non-
-> > > x86
-> > > (or on x86 with an old binutils).  The driver should fall back to 32-
-> > > bit
-> > > in such cases.
-> > 
-> > Sorry, I missed the comment about revision 2 only being on integrated
-> > devices -- but will that always be the case?  Seems worthwhile to check
-> > for
-> > AVX512 support anyway.  And there's still the possibility of being built
-> > with an old binutils such that CONFIG_AS_AVX512 is not set, or running
-> > on a
-> > kernel where avx512 was disabled via a boot option.
-> 
-> The code checks for CONFIG_AS_AVX512 above.
+Summary was copy and pasted from array_size.cocci.
 
-That just indicates that binutils supports it.  Plus, the code does not
-check for CONFIG_AS_AVX512 when deciding whether to set pr_datawidth to 64
-(and thus call copy512), so you'll get a WARN_ON rather than falling back to
-32-bit.
+Signed-off-by: Michael Stefaniuc <mstefani@mykolab.com>
+---
+ scripts/coccinelle/misc/badty.cocci | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> What boot option are you referring to?
-
-clearcpuid=304
-
--Scott
-
+diff --git a/scripts/coccinelle/misc/badty.cocci b/scripts/coccinelle/misc/badty.cocci
+index 481cf301ccfc..08470362199c 100644
+--- a/scripts/coccinelle/misc/badty.cocci
++++ b/scripts/coccinelle/misc/badty.cocci
+@@ -1,4 +1,4 @@
+-/// Use ARRAY_SIZE instead of dividing sizeof array with sizeof an element
++/// Correct the size argument to alloc functions
+ ///
+ //# This makes an effort to find cases where the argument to sizeof is wrong
+ //# in memory allocation functions by checking the type of the allocated memory
+-- 
+2.20.1
 
