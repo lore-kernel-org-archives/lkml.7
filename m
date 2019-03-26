@@ -2,116 +2,315 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018B9C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B505C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B1120856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20332084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553597825;
-	bh=/L3t67LqpUi7diaC5PJQh+kjEi5mkouoy+99kkJKkx0=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=YXJ82ADN+INKF2LiUFHYRs4Kn9Mai3Hyu/S2TdC8IsuXyTY8yngDQQN0KeC055QN4
-	 fZxdg0nPp7RmrSALuJ7uYsN+9vnLKaNqAitRNMImmtalAJc/GhZHlfsVRkyvJNeQrP
-	 nKRqyX5tT3a0LL+IVX0HhDzkOjpHPJTzshbALyzg=
+	s=default; t=1553597903;
+	bh=0Ru5SGm1b0p1CmVT2aAa+gkPP/WfOw/7dUEkQ9QCy94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BMym9G0onaqp2oTiY8QZZkR0h19XhkNrDJsK/QrUgLXZDt7jtgrI9KR99PMHtWTFA
+	 OPVUTzYnXlGJB5I5EHnrD3chIhNF6gKzr+Ut/hRiI2fErsiJWMHwbWHrrB7aSMpRVK
+	 3a1HthCN8JlL44KN37h6gOCTeVZqzWuU0HEJMSXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfCZK5E (ORCPT
+        id S1731172AbfCZK6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 06:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfCZK5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:57:04 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726258AbfCZK6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:58:21 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB0492084B;
-        Tue, 26 Mar 2019 10:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 138F02086C;
+        Tue, 26 Mar 2019 10:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553597823;
-        bh=/L3t67LqpUi7diaC5PJQh+kjEi5mkouoy+99kkJKkx0=;
-        h=Subject:From:To:Cc:Date:From;
-        b=fSOxcT9eNhO7qwXFtTcQH4RTdnMjKOBlrQPBaigUdvM2UQG1KXeXQiCj68Rm6EsmS
-         mT38OJxdv/cq1jKxfxCaW1TddfU19oBP3wdSv5TQ36L1OYyFY3h/ZWLCBNY8E6LBmL
-         q45+2JIAO8K72uwdt1+i1AohhavvMY6OHoMgsNtA=
-Message-ID: <73ec5fc30bc902ba836eb9dabc8bf92023aa427c.camel@kernel.org>
-Subject: [GIT PULL] file locking bugfix for v5.1
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     NeilBrown <neilb@suse.com>, "asn@redhat.com" <asn@redhat.com>,
-        "bfields@vger.kernel.org" <bfields@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 26 Mar 2019 06:56:55 -0400
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-CVQdXV0PzGpvEqhWIUCr"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        s=default; t=1553597899;
+        bh=0Ru5SGm1b0p1CmVT2aAa+gkPP/WfOw/7dUEkQ9QCy94=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gscVViqeraGDLlKtIhV0TXqsI2z6fUIlVtZOLcsNzR/DNMb/+ZuKeH6DEXsGtZbgE
+         2u96nSGHs2QBRuy4A5YEDizRcom+s/BQ3ekqxdjoFQKglAtk/99Sa08YcenKiw+Klm
+         M03c7EXiCDngaF9/IHcdCDTokoNQfz4Jl5N+GTNc=
+Received: by mail-lj1-f171.google.com with SMTP id h16so6202319ljg.11;
+        Tue, 26 Mar 2019 03:58:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAXKpu9kbIJM2g2m0pDOWPnmdPnMFG9VcQC5caQoOn5EyYPxIscR
+        vklW18aQA+V2PpanQGDqlqGTJUglg0B5M9Gt07E=
+X-Google-Smtp-Source: APXvYqzZV9dBT1gfrKP69H0eWQRUdjQwPkkk+B1MkNNj9n52noEwbj+rst0MhbWoThmlJwUMLF0dMIMhmggN34F+Xi4=
+X-Received: by 2002:a2e:9496:: with SMTP id c22mr1780553ljh.131.1553597897175;
+ Tue, 26 Mar 2019 03:58:17 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190324083256.1047-1-linux.amoon@gmail.com> <CAJKOXPfLyLRwJKWcMCtDg10em2pfWZJzXr8FkFTf1vtavRdoTw@mail.gmail.com>
+ <CANAwSgTS5nkxOwoS1hJLgN_Mw9X2FopgeCr=7itGm-caJzVXUw@mail.gmail.com>
+In-Reply-To: <CANAwSgTS5nkxOwoS1hJLgN_Mw9X2FopgeCr=7itGm-caJzVXUw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 26 Mar 2019 11:58:05 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPdCMPpC=q4WfPm9k8ZqgfRE+gpj0QmZU3h5yi0dqBBiCA@mail.gmail.com>
+Message-ID: <CAJKOXPdCMPpC=q4WfPm9k8ZqgfRE+gpj0QmZU3h5yi0dqBBiCA@mail.gmail.com>
+Subject: Re: [PATCH v1] ARM: dts: exynos: Add proper regulator states for
+ suspend-to-mem for odroid-u3
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 26 Mar 2019 at 11:35, Anand Moon <linux.amoon@gmail.com> wrote:
 
---=-CVQdXV0PzGpvEqhWIUCr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+(...)
 
-The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00=
-:
+> > This is third or fourth submission but you marked it as v1. This makes
+> > it very difficult to discuss and reference previous versions.
+> >
+> > The commit message did not change since beginning (first version). I
+> > asked twice that you need to explain exactly why you put the the
+> > regulator to off or on state in suspend. Why?
+> > Because:
+> > 1. This change looks without justification - once you put on, then you
+> > put off, now again on,
+> > 2. Anyone reading the code later must know the rationale why this was done,
+> > 3. I am not quite sure whether this is good setting so I would be
+> > happy to be convinced.
+> >
+>
+> Like I mention in the patch summary that this.
+>
+> Current changes are based on
+> [0] https://www.kernel.org/doc/Documentation/devicetree/bindings/regulator/max77686.txt
+>
+>   Regulators which can be turned off during system suspend:
+> -LDOn : 2, 6-8, 10-12, 14-16,
+> -BUCKn : 1-4.
+>   Use standard regulator bindings for it ('regulator-off-in-suspend').
 
-  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
+I do not see how this is related to my questions.
 
-are available in the Git repository at:
+> > How to provide such explanation? The best in commit message. Sometimes
+> > in the comment in the code, depends.
+>
+> Ok I have been testing with following regulator debug prints to catch error.
+> [0] max77686-regulator.patch
+>
+> below is the console logs during suspend and resume.
+> -------------------------------------------------------------------------------
+> Last login: Sat Mar 23 18:22:46 on ttySAC1
+> [root@archl-u3e ~]# echo no > /sys/module/printk/parameters/console_suspend
+> [root@archl-u3e ~]# rtcwake -d /dev/rtc0 -m mem -s 10
+> rtcwake: wakeup from "mem" using /dev/rtc0 at Sat Mar 23 19:56:17 2019
+> [   38.595854] PM: suspend entry (deep)
+> [   38.596603] PM: Syncing filesystems ... done.
+> [   38.629351] Freezing user space processes ... (elapsed 0.002 seconds) done.
+> [   38.633192] OOM killer disabled.
+> [   38.636035] Freezing remaining freezable tasks ... (elapsed 0.001
+> seconds) done.
+> [   38.675059] smsc95xx 1-2:1.0 eth0: entering SUSPEND2 mode
+> [   38.753120] dwc2 12480000.hsotg: suspending usb gadget g_ether
+> [   38.754007] dwc2 12480000.hsotg: new device is full-speed
+> [   38.758960] dwc2 12480000.hsotg: dwc2_hsotg_ep_disable: called for ep0
+> [   38.765507] dwc2 12480000.hsotg: dwc2_hsotg_ep_disable: called for ep0
+> [   38.774050] wake enabled for irq 119
+> [   38.775761] BUCK9: No configuration
+> [   38.779191] BUCK8_P3V3: No configuration
+> [   38.782852] BUCK7_2.0V: No configuration
+> [   38.786851] BUCK6_1.35V: No configuration
+> [   38.790752] VDDQ_CKEM1_2_1.2V: No configuration
+> [   38.796220] BUCK4: regulator suspend disable supported
+> [   38.800769] BUCK3: regulator suspend disable supported
+> [   38.806002] BUCK1: regulator suspend disable supported
+> [   38.810644] LDO26: No configuration
+> [   38.814169] VDDQ_LCD_1.8V: No configuration
+> [   38.818267] LDO24: No configuration
+> [   38.821732] LDO23: No configuration
+> [   38.825262] LDO22_VDDQ_MMC4_2.8V: No configuration
+> [   38.829992] TFLASH_2.8V: No configuration
+> [   38.834040] LDO20_1.8V: No configuration
+> [   38.837883] LDO19: No configuration
+> [   38.841349] LDO18: No configuration
+> [   38.844878] LDO17: No configuration
+> [   38.848667] LDO16: regulator suspend disable supported
+> [   38.853889] LDO15: regulator suspend disable supported
+> [   38.858931] LDO14: regulator suspend disable supported
+> [   38.863771] VDDQ_C2C_W_1.8V: No configuration
+> [   38.868378] LDO12: regulator suspend disable supported
+> [   38.873508] LDO11: regulator suspend disable supported
+> [   38.878545] LDO10: regulator suspend disable supported
+> [   38.883384] LDO9: No configuration
+> [   38.887190] LDO8: regulator suspend disable supported
+> [   38.892168] LDO7: regulator suspend disable supported
+> [   38.897279] LDO6: regulator suspend disable supported
+> [   38.901872] VDDQ_MMC1_3_1.8V: No configuration
+> [   38.906363] VDDQ_MMC2_2.8V: No configuration
+> [   38.910541] VDDQ_EXT_1.8V: No configuration
+> [   38.915134] LDO2: regulator suspend disable supported
+> [   38.919753] VDD_ALIVE_1.0V: No configuration
+> [   38.935229] usb3503 0-0008: switched to STANDBY mode
+> [   38.935981] wake enabled for irq 123
+> [   38.955192] samsung-pinctrl 11000000.pinctrl: Setting external
+> wakeup interrupt mask: 0xfbfff7ff
+> [   38.975448] Disabling non-boot CPUs ...
+> [   39.029279] s3c2410-wdt 10060000.watchdog: watchdog disabled
+> [   39.029576] wake disabled for irq 123
+> [   39.044319] usb3503 0-0008: switched to HUB mode
+> [   39.144089] wake disabled for irq 119
+> [   39.144812] dwc2 12480000.hsotg: resuming usb gadget g_ether
+> [   39.422626] usb 1-2: reset high-speed USB device number 2 using exynos-ehci
+> [   39.774632] usb 1-3: reset high-speed USB device number 3 using exynos-ehci
+> [   40.106478] OOM killer enabled.
+> [   40.106609] Restarting tasks ... done.
+> [   40.111100] PM: suspend exit
+> [   40.124058] mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot
+> req 400000Hz, actual 396825HZ div = 63)
+> [root@archl-u3e ~]# [   40.364705] mmc_host mmc1: Bus speed (slot 0) =
+> 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+> [   41.220200] smsc95xx 1-2:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xC5E1
+> -------------------------------------------------------------------------------
+> > How such explanation could look like? For example like this:
+> > f8f3b7fc21b1 ("ARM: dts: exynos: Fix regulators configuration on Peach
+> > Pi/Pit Chromebooks")
+> > Marek clearly explained why he put the regulators "always-on", even
+> > tough we do not know everything about this. More over, he mentions
+> > that this fixes specific issue.
+> >
+>
+> Thanks but I am not the expert here in general with regulator on/off.
+> I will add comment if needed explain in more detail.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/lock=
-s-v5.1
+This kernel log does not prove whether these DTS properties make sense
+or whether are proper at all. They  prove that kernel uses some
+configuration but I did not ask for this.
 
-for you to fetch changes up to 945ab8f6de94430c23a82f3cf2e3f6d6f2945ff7:
+>
+> [snip]
+>
+> > Summarizing, please answer:
+> > 1. Why this is made off-in-suspend?
+> > 2. Why this can be made off-in-suspend?
+> >
+>
+> On MAX77686A PMIC. (some quote from the datasheet).
+>
+> Power ON/OFF by PWRREQ in PMIC=ON sequence is only effective when ON/OFF
+> on all regulators above are assigned by PWRREQ=H/L.
+>
+> All programming must be done before the AP enters the sleep mode by
+> pulling PWRREQ low since
+> the AP does not have programming capability in (deep) sleep mode.
+>
+> *Regulator are not really turned off but set into IDLE  / Standby
+> state too be restored to Normal state*
+>
+> Power summary in image : [1] https://imgur.com/gallery/l74kliX
+>
+> Power Summary for MAX77686A of the regulator support PWRREQ
+> Power   Default ON  |  ON/OFF
+> --------------------------------------
+> BUCK1  |  ON        | PWRREQ or I2C
+> BUCK2  |  ON        | PWRREQ or I2C
+> BUCK3  |  ON        | PWRREQ or I2C
+> BUCK4  |  ON        | PWREWQ or I2C
+> BUCK5  |  ON        | I2C
+> BUCK6  |  ON        | I2C
+> BUCK7  |  ON        | I2C
+> BUCK8  |  OFF       | I2C or ENB8 The external enable/disable pin, ENB8
+> BUCK9  |  OFF       | I2C or ENB9 The external enable/disable pin, ENB9
+> LDO1   |  ON        | I2C
+> LDO2   |  ON        | PWRREQ or I2C
+> LDO3   |  ON        | I2C
+> LDO4   |  ON        | I2C
+> LDO5   |  ON        | I2C
+> LDO6   |  ON        | PWRREQ or I2C
+> LDO7   |  ON        | PWRREQ or I2C
+> LDO8   |  ON        | PWRREQ or I2C
+> LDO9   |  OFF       | I2C
+> LDO10  |  ON        | PWRREQ or I2C
+> LDO11  |  ON        | PWRREQ or I2C
+> LDO12  |  ON        | PWRREQ or I2C
+> LDO13  |  ON        | I2C
+> LDO14  |  ON        | PWRREQ or I2C
+> LDO15  |  ON        | PWRREQ or I2C
+> LDO16  |  ON        | PWRREQ or I2C
+> LDO17  |  OFF       | I2C
+> LDO18  |  OFF       | I2C
+> LDO19  |  OFF       | I2C
+> LDO20  |  OFF       | I2C OR ENL20 ENL20, external enable/disable pin
+> LDO21  |  OFF       | I2C OR ENL21 ENL21, external enable/disable pin
+> LDO22  |  OFF       | I2C OR ENL22 ENL22, external enable/disable pin
+> LDO23  |  OFF       | I2C
+> LDO24  |  OFF       | I2C
+> LDO25  |  OFF       | I2C
+> LDO26  |  OFF       | I2C
 
-  locks: wake any locks blocked on request before deadlock check (2019-03-2=
-5 08:36:24 -0400)
+You quoted the datasheet which describes PMIC behavior. This does not
+answer to my two questions at all.
 
-----------------------------------------------------------------
-Hi Linus,
+>
+> > >                         ldo20_reg: LDO20 {
+> > > @@ -421,6 +451,9 @@
+> > >                                 regulator-max-microvolt = <1100000>;
+> > >                                 regulator-always-on;
+> > >                                 regulator-boot-on;
+> > > +                               regulator-state-mem {
+> > > +                                       regulator-off-in-suspend;
+> > > +                               };
+> > >                         };
+> >
+> > I questioned this change two times. You did not answer to my
+> > question... If you turn memory bus regulator off, how the memory will
+> > work in Suspend-to-Memory mode? I might be missing here something but
+> > it just looks suspicious. Maybe the regulator does not supply the
+> > memory itself (so refresh works even when it is down), just the
+> > interface? I don't know, it just looks suspicious. I need to see
+> > proper explanation.
+> >
+> > I am sorry but I will not check other hunks in this patch. Please
+> > provide the answers for all my questions here first.
+> >
+>
+> As per above table of MAX77686 PWRREQ capabilities regulator nodes
+> can be turned off during suspend reset of them remain on during suspend.
 
-Just a single fix for a bug that crept into POSIX lock deadlock
-detection in v5.0.
-----------------------------------------------------------------
-Jeff Layton (1):
-      locks: wake any locks blocked on request before deadlock check
+Just because something can be turned off does not mean that it should.
+Apparently you made this assumption everywhere here and for my
+questions "why?" you reply "datasheet of PMIC says it can be done".
+This is wrong assumption and wrong justification for the patch.
 
- fs/locks.c | 5 +++++
- 1 file changed, 5 insertions(+)
---=20
-Jeff Layton <jlayton@kernel.org>
+I cannot accept this. Please answer my questions and provide proper
+rationale for this patch.
 
---=-CVQdXV0PzGpvEqhWIUCr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+>
+> > Best regards,
+> > Krzysztof
+> >
+>
+> We could monitor the regulator states via sys filesystem and also
+> using below tool
+> https://git.linaro.org/power/powerdebug.git
+>
+> I have tried to summaries the feature required for this patch.
+> some of which I have overlooked earlier before sending the patch.
+>
+> I am really poor in english for transform / interpreter the technical details
+> required at for your queries. But I will try to improve my self in the future.
 
------BEGIN PGP SIGNATURE-----
+Again this is observing of kernel behavior after applying patch. It
+has nothing to do whether change should be implemented and how it
+affects real hardware. This is not even a measurement...
 
-iQJHBAABCAAxFiEES8DXskRxsqGE6vXTAA5oQRlWghUFAlyaBXcTHGpsYXl0b25A
-a2VybmVsLm9yZwAKCRAADmhBGVaCFV0yD/9XkhKQiCl5KW46ozZ3X9YsZq0jEPCm
-bTlRs1QD+qhzL/j4Z2tB+BYxHXZiTcUZJgZ99OeipQenSalqhNdWJ+LudU53Gi1D
-U8sr/uwjkfwAJP6boob17eonvZmN6pNhNkScA49KgnJ+NA/QSjIAIJUJ5BccGVuc
-kvlQYUZTT54kAZfOAEXhcfPwTt/GoFHNT+8EVT/UhG8zHQANIxjkyZgp5vUc9bm2
-93cXqs7GdbzHQ/Mjha4vf9MOuoQ5t4Ee1GZGDz+SC2ZPzKfgURzikLQB75GxiMrQ
-ncLQPTFSL0kKi3BIemo6bRFFnHyrfGUBl0SHdfGXdjqLUmqKsoauQ59TRJBNOxrk
-UfIHmalSaQ0G+vFclP/HlGPMNaxEXKJsy1gce0R/GzSD2Bb2HNlhocW/wlu/8fIA
-8TZKqK0uFY0wGN2CcPpFQkIaLHNoQi0lGbu1xYOt/n62Av0MPKlc7uQEn43dhNDg
-0NBatgUV3kofzk8xaf4eRD5rh9O+l/EB0eTHPZOptr1hzmP6jQyZb8uYVzTvQxMX
-Ww6w5c+Sg4QPkSwiBCiFpOjwk4JZLu/vTv3G+shG1CE1/U2voRaDhowUVF62wulr
-WegsWnePXq54PnB3mXtNbbx1P2zXJGjhAVxd6bved+WmCRo3R9VLmeFjFo2w5xjZ
-i2YGVa6JeSQ5gA==
-=Lpgl
------END PGP SIGNATURE-----
-
---=-CVQdXV0PzGpvEqhWIUCr--
-
+Best regards,
+Krzysztof
