@@ -2,99 +2,95 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A923C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293F820811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC78E20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JtRpJHVY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ffz2YTlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfCZFS4 (ORCPT
+        id S1726669AbfCZFVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 01:18:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41179 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfCZFS4 (ORCPT
+        Tue, 26 Mar 2019 01:21:19 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]:37254 "EHLO
+        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfCZFVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 01:18:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so5021581wrq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:18:54 -0700 (PDT)
+        Tue, 26 Mar 2019 01:21:19 -0400
+Received: by mail-qt1-f181.google.com with SMTP id z16so13196696qtn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-         :references;
-        bh=skNEpzEm/S7yvN9Jpa1/tTPD3XXWtt116hN850XD2/E=;
-        b=JtRpJHVYPe35+MEw/iMkYbDI69d24+bO1MIxjSWpbha6KQ+85RWB+RLlBNYHK4pMB4
-         /hh4hcDeEkQkQ2p8roKonPxQKwAn1BVYAFDGg7h9rc2dbjgyh7Mqy7inu1sbHzH1orJS
-         p0evUYB3COoHn4z4Mkm7kiVnIxcpusJf82ER/8N3uvzCXTAl1ZbdgrX5qpvtq3KhAqw9
-         2erAFzJSZCUNGsyJELy8JusuKIdtOCHFzSTGfs/koRXs4cryTRF2dyXz1X5+MloR2Q42
-         CZ2zLCgxd3lzdcTw8oYddEAjsOeW6M/dZx/7J7WZ6vzb2+XZ4CSrk+E53sVZo5rj4x1i
-         st3Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MG9Vuccji97pBaK+2+LScrYML+yUtZuNzJj7SYuYcOM=;
+        b=Ffz2YTlRoY/koxP05ABhTVLsed/t4LLoEbUtbbZcJFjQjR3DIgp2/ISiDJOmpBNmb2
+         68+2fK2/JjQrz+yhE6OYVid+9/uGPzjaxiEUerGOuaEfcgTpM8WCuykOfDe9ThJx+E6T
+         /Zti5N+nfqC0hZ0jAbHvOp58+ezgNy5aWeX9RfoCoH5/TO+WsqwqzAY/1j2OldTI6P0w
+         ZfROOUILlYxQ3N8QfUdnyiknHD2BESUE4X4gCJ4eYM+OGAMcWtcFs3JasaTxie/3OfJy
+         AufZbw+MYn2RWKSj0CByjJYZ2eTV39H6ThRJ2wDnUnlhTe0e60cXPyTAl1tEKkVqnLbi
+         DDWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=skNEpzEm/S7yvN9Jpa1/tTPD3XXWtt116hN850XD2/E=;
-        b=Or4aakyF1uUtPPPnpAyTyXCobEQyEhpiDCJumMT6GKC9pICc/qfStWD5oRnAzxN9Kd
-         GTLvfnxwnLt9Q2Wy/EDA2O0ht9HJ9reMH5Z+RGJg6JNVhmIqqT69tjsiMFgp6/WfqX8x
-         lOVkmIR8fWnUOisW1b2rWWmR7zqPrIUh8SrIcDl6NRZUVuPvN1NceRnUe8y/EFo4zic+
-         b3Ob6rPb1uYeX5zm9P6IpyTI+xyBT72ug39skG6xN8CZpkFSpN5enjmBUfdkZyCgWi46
-         SrfS2qtURAw6GMdAxfsdUe0XjB/XvYgcoyh5yYN5VZWxhPIjDBtGJFVgS2zFdjaAdHBJ
-         QUow==
-X-Gm-Message-State: APjAAAVHq79HsPjxfAWQho2Ur9ayDwf6d5GLXpCbfej7gjJO+O8R1379
-        cxLe1uqaPwgoKNiNNd7Qyetj/0dasTM=
-X-Google-Smtp-Source: APXvYqxtSw5pvvqyjtDJqicXzY8Lx/ovD/uIiROc9zMKbLTZGv34Wzqu6439ZRpGl6gk/pmMBR/WpA==
-X-Received: by 2002:adf:f68d:: with SMTP id v13mr19797183wrp.6.1553577533570;
-        Mon, 25 Mar 2019 22:18:53 -0700 (PDT)
-Received: from localhost ([49.248.191.105])
-        by smtp.gmail.com with ESMTPSA id v2sm16782365wme.29.2019.03.25.22.18.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 22:18:52 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, joe@perches.com,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH v1 1/1] MAINTAINERS: fix typo in file name
-Date:   Tue, 26 Mar 2019 10:48:45 +0530
-Message-Id: <8ea01476a26ce5eb059b667181262f91873b87c5.1553577179.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MG9Vuccji97pBaK+2+LScrYML+yUtZuNzJj7SYuYcOM=;
+        b=CS2NvlnOil1fISp9UEfbb+ryiwHKtr3B34RvxFn+79NRiIdzPGUQMgR9YG7GJVo1n6
+         e4MmKxO8Ir9331bBs9Emgfa3K8HuXvMXN1SJP2BYq6EOQ4f2jjsN5Ko7GcokE3COVDCj
+         2mrJL0+53jxFzrkM1Xao26jpr7YFeRn+AtQVJpbhCF90YdFir3HUnbdewH95X+ryrtMj
+         DARte71M6QaI1Si6WslsNGKF+DYXUUsiUYWT8ICNo8jt6byDtn/GhGNTAkqMZ9BrbSTM
+         ZGVgKKmkM/hbrOrkxKT88qyUWooSw3rbb0vHz9XSuzJ9cCTTSeP/lU5HwJkUXOCLhs88
+         zF6Q==
+X-Gm-Message-State: APjAAAVb5kmlElAph9m18X2waW+JUEd+aunuEewBMO84D87G7Ly5UIjq
+        5UVlwnn6zhEys/72Jv2YSiJ/3QAb8a1fTcA1rAHfWw==
+X-Google-Smtp-Source: APXvYqyVYpNtfr8A+h3UJy8Z+X6SJZJZS1x3274RwnQq7MNyAUm5z7u3J8wLCiHDQGM/rnAeEL+N3vMJJMxnhx+OETc=
+X-Received: by 2002:ac8:464b:: with SMTP id f11mr24632616qto.276.1553577677909;
+ Mon, 25 Mar 2019 22:21:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com> <20190325212450.25865-1-joe@perches.com>
 In-Reply-To: <20190325212450.25865-1-joe@perches.com>
-References: <20190325212450.25865-1-joe@perches.com>
-In-Reply-To: <cover.1553577179.git.amit.kucheria@linaro.org>
-References: <cover.1553577179.git.amit.kucheria@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 26 Mar 2019 10:51:06 +0530
+Message-ID: <CAP245DWGYZW_vnO=vAGrGJ1dUbq_Y-znpgfO=oR6m1qRoRu+Ww@mail.gmail.com>
+Subject: Re: Bad file pattern in MAINTAINERS section 'ARM/QUALCOMM SUPPORT'
+To:     Joe Perches <joe@perches.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace underscore with dash.
+On Tue, Mar 26, 2019 at 2:54 AM Joe Perches <joe@perches.com> wrote:
+>
+> A file pattern line in this section of the MAINTAINERS file in linux-next
+> does not have a match in the linux source files.
+>
+> This could occur because a matching filename was never added, was deleted
+> or renamed in some other commit.
+>
+> The commits that added and if found renamed or removed the file pattern
+> are shown below.
+>
+> Please fix this defect appropriately.
 
-Fixes: e31f941cf977 ("MAINTAINERS: update list of qcom drivers")
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+<snip>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e5a5d263f29..d2c5852a3c8d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2007,7 +2007,7 @@ F:	drivers/i2c/busses/i2c-qup.c
- F:	drivers/i2c/busses/i2c-qcom-geni.c
- F:	drivers/mfd/ssbi.c
- F:	drivers/mmc/host/mmci_qcom*
--F:	drivers/mmc/host/sdhci_msm.c
-+F:	drivers/mmc/host/sdhci-msm.c
- F:	drivers/pci/controller/dwc/pcie-qcom.c
- F:	drivers/phy/qualcomm/
- F:	drivers/power/*/msm*
--- 
-2.17.1
+>         2008    F:      drivers/mfd/ssbi.c
+>         2009    F:      drivers/mmc/host/mmci_qcom*
+> -->     2010    F:      drivers/mmc/host/sdhci_msm.c
 
+> No commit with file pattern 'drivers/mmc/host/sdhci_msm.c' was found
+
+I've sent a patch to fix the typo in the filename. Thanks for reporting.
+
+Regards,
+Amit
