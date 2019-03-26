@@ -2,83 +2,135 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC52C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CD920856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q6gbNKNG"
+	by mail.kernel.org (Postfix) with ESMTP id B977320856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553592580;
+	bh=j6zoOEW+A+lYDgy9qXFRRwfP9iM4mQcbQuGy0vzHiYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0UAcl0AwXWXfztDxnPmKs59mKQa4KDvQA17td5ISef+VtmSGJ9hVLGjwzCunb+88B
+	 M6DLnszzC9AD2XLDXO64WHOUy3PYYGKT9S8uEOY0t/hwrGDDlUHNgZxEhEaG35wc4L
+	 U+cSMYgNCQyr7VVMuR0CKcV0YZgE5jxfDmZEv0zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfCZJ2Z (ORCPT
+        id S1730906AbfCZJ3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:28:25 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35718 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfCZJ2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:28:24 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2F5C71EC082D;
-        Tue, 26 Mar 2019 10:28:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553592503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fe37sMoDMB5hf9mQV5TgUhE9xUbWKgIpMBeBsT+xM7o=;
-        b=Q6gbNKNGgGcuXlTo5Cf11ndXmcnutWc0Xh20dwizj/rffHcfFou1BeDiBPCcV4c8Yc1fFO
-        ZBPGSPzlAAO/CKggOkGZLLoY4jH31Fwc/34IktyeVX9nq3Te8FK5uaA2rXJmJl4mwsLMwy
-        eojB4Y+1hwvE/RhVRIEnaq4oaXzvQag=
-Date:   Tue, 26 Mar 2019 10:28:25 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "rafal@milecki.pl" <rafal@milecki.pl>,
-        "clemej@gmail.com" <clemej@gmail.com>
-Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v4 1/2] x86/MCE: Add function to allow filtering of MCA
- errors
-Message-ID: <20190326092825.GF1867@zn.tnic>
-References: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
+        Tue, 26 Mar 2019 05:29:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41634 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729334AbfCZJ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:29:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 63BC9AC8C;
+        Tue, 26 Mar 2019 09:29:37 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 10:29:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, rppt@linux.ibm.com, osalvador@suse.de,
+        willy@infradead.org, william.kucharski@oracle.com
+Subject: Re: [PATCH v2 2/4] mm/sparse: Optimize sparse_add_one_section()
+Message-ID: <20190326092936.GK28406@dhcp22.suse.cz>
+References: <20190326090227.3059-1-bhe@redhat.com>
+ <20190326090227.3059-3-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190325163410.171021-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20190326090227.3059-3-bhe@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 04:34:22PM +0000, Ghannam, Yazen wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
+On Tue 26-03-19 17:02:25, Baoquan He wrote:
+> Reorder the allocation of usemap and memmap since usemap allocation
+> is much simpler and easier. Otherwise hard work is done to make
+> memmap ready, then have to rollback just because of usemap allocation
+> failure.
+
+Is this really worth it? I can see that !VMEMMAP is doing memmap size
+allocation which would be 2MB aka costly allocation but we do not do
+__GFP_RETRY_MAYFAIL so the allocator backs off early.
+
+> And also check if section is present earlier. Then don't bother to
+> allocate usemap and memmap if yes.
+
+Moving the check up makes some sense.
+
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+
+The patch is not incorrect but I am wondering whether it is really worth
+it for the current code base. Is it fixing anything real or it is a mere
+code shuffling to please an eye?
+
+> ---
+> v1->v2:
+>   Do section existence checking earlier to further optimize code.
 > 
-> Some systems may report spurious MCA errors. In general, spurious MCA
-> errors may be disabled by clearing a particular bit in MCA_CTL. However,
-> clearing a bit in MCA_CTL may not be recommended for some errors, so the
-> only option is to ignore them.
-
-Ok, I cleaned those up and applied them here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-urgent-ras
-
-Rafał, John, can you guys test them pls?
-
-Thx.
+>  mm/sparse.c | 29 +++++++++++------------------
+>  1 file changed, 11 insertions(+), 18 deletions(-)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index b2111f996aa6..f4f34d69131e 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -714,20 +714,18 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+>  	ret = sparse_index_init(section_nr, nid);
+>  	if (ret < 0 && ret != -EEXIST)
+>  		return ret;
+> -	ret = 0;
+> -	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+> -	if (!memmap)
+> -		return -ENOMEM;
+> -	usemap = __kmalloc_section_usemap();
+> -	if (!usemap) {
+> -		__kfree_section_memmap(memmap, altmap);
+> -		return -ENOMEM;
+> -	}
+>  
+>  	ms = __pfn_to_section(start_pfn);
+> -	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
+> -		ret = -EEXIST;
+> -		goto out;
+> +	if (ms->section_mem_map & SECTION_MARKED_PRESENT)
+> +		return -EEXIST;
+> +
+> +	usemap = __kmalloc_section_usemap();
+> +	if (!usemap)
+> +		return -ENOMEM;
+> +	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
+> +	if (!memmap) {
+> +		kfree(usemap);
+> +		return  -ENOMEM;
+>  	}
+>  
+>  	/*
+> @@ -739,12 +737,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
+>  	section_mark_present(ms);
+>  	sparse_init_one_section(ms, section_nr, memmap, usemap);
+>  
+> -out:
+> -	if (ret < 0) {
+> -		kfree(usemap);
+> -		__kfree_section_memmap(memmap, altmap);
+> -	}
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> -- 
+> 2.17.2
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Michal Hocko
+SUSE Labs
