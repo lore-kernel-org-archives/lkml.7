@@ -2,102 +2,90 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A40C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBB2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24742075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6583F2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbfCZOyy (ORCPT
+        id S1731859AbfCZOzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:54:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13451 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZOyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:54:54 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 07:54:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="310547256"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga005.jf.intel.com with ESMTP; 26 Mar 2019 07:54:52 -0700
-Date:   Tue, 26 Mar 2019 07:54:52 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Huang, Kai" <kai.huang@intel.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Svahn, Kai" <kai.svahn@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v19,RESEND 16/27] x86/sgx: Add the Linux SGX Enclave
- Driver
-Message-ID: <20190326145452.GD3757@linux.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-17-jarkko.sakkinen@linux.intel.com>
- <1553601688.17255.12.camel@intel.com>
- <alpine.DEB.2.21.1903261340030.1789@nanos.tec.linutronix.de>
+        Tue, 26 Mar 2019 10:55:07 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:50807 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZOzH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 10:55:07 -0400
+X-Originating-IP: 90.88.32.136
+Received: from localhost (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 5D78EC001A;
+        Tue, 26 Mar 2019 14:55:02 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, linux@armlinux.org.uk, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
+Subject: [PATCH net-next v3 1/2] net: phy: marvell10g: implement suspend/resume callbacks
+Date:   Tue, 26 Mar 2019 15:53:01 +0100
+Message-Id: <20190326145302.9563-2-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190326145302.9563-1-antoine.tenart@bootlin.com>
+References: <20190326145302.9563-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903261340030.1789@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 01:40:57PM +0100, Thomas Gleixner wrote:
-> On Tue, 26 Mar 2019, Huang, Kai wrote:
-> > On Wed, 2019-03-20 at 18:21 +0200, Jarkko Sakkinen wrote:
-> > >  13 files changed, 1657 insertions(+), 2 deletions(-)
-> > >  create mode 100644 arch/x86/include/uapi/asm/sgx.h
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/driver/Makefile
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/driver/driver.h
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/driver/ioctl.c
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/driver/main.c
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/encl.c
-> > >  create mode 100644 arch/x86/kernel/cpu/sgx/encl.h
-> > 
-> > Shouldn't the driver be located somewhere under drivers/, but not under arch/x86?
-> > 
-> > I don't think x86 maintainers should have the burden to review every code
-> > change made to SGX driver?
-> 
-> I rather prefer to have it in x86. Why? Because driver code has a tendency
-> to get under the radar.
+This patch adds the suspend/resume callbacks for Marvell 10G PHYs. The
+three PCS (base-t, base-r and 1000base-x) are set in low power (the PCS
+are powered down) when the PHY isn't used.
 
-And having everything under arch/x86 will likely reduce the maintenance
-burden for everyone:
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/phy/marvell10g.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-   - Doesn't require taking changes through multiple trees or coordinating
-     acks from multiple maintainers.
+diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
+index 100b401b1f4a..b56cd35182d5 100644
+--- a/drivers/net/phy/marvell10g.c
++++ b/drivers/net/phy/marvell10g.c
+@@ -226,11 +226,25 @@ static int mv3310_probe(struct phy_device *phydev)
+ 
+ static int mv3310_suspend(struct phy_device *phydev)
+ {
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_T + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_R + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_1000BASEX + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
++
+ 	return 0;
+ }
+ 
+ static int mv3310_resume(struct phy_device *phydev)
+ {
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_T + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, 0);
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_R + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, 0);
++	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_1000BASEX + MDIO_CTRL1,
++		       MDIO_CTRL1_LPOWER, 0);
++
+ 	return mv3310_hwmon_config(phydev, true);
+ }
+ 
+-- 
+2.20.1
 
-   - Significantly reduces the number of functions, macros, structs and
-     variables that needs to be exposed in asm/sgx.h (actually eliminates
-     it entirely at this point) which allows for sane code organization as
-     opposed to dumping everything in one big header.
-
-   - Mostly avoids bikeshedding over whether something is architectural
-     or belongs in the so called driver.
