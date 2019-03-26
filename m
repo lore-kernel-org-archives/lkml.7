@@ -2,78 +2,84 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAFDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B633C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6838A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DD12087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553644580;
+	bh=2rdmD6MnZE+u+bUnH6U7enpAMI60HCBl6jmqAVXYBjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YNu4T4JEU/ekRLXzV82mLV0v7cyzPq+5jrBy9iifxpCMNy341ElvJtinBKZdth6uJ
+	 JKDrcM4WSkQuXaaIXyzIkMihZuYz+0tCzpaPl29IzYR172cyTbAMPkujy2h4QDqYmU
+	 Org6UghgBpC9CmlJC/DugehQXDqNsrg3ljT2u+Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbfCZX4F (ORCPT
+        id S1732742AbfCZX4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:56:05 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:41008 "EHLO mxhk.zte.com.cn"
+        Tue, 26 Mar 2019 19:56:18 -0400
+Received: from mga06.intel.com ([134.134.136.31]:29770 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731666AbfCZX4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:56:04 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id B40239CDBA527FE662B0;
-        Wed, 27 Mar 2019 07:56:02 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2QNtxhs093440;
-        Wed, 27 Mar 2019 07:55:59 +0800 (GMT-8)
-        (envelope-from huang.zijiang@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032707561816-6463566 ;
-          Wed, 27 Mar 2019 07:56:18 +0800 
-From:   Huang Zijiang <huang.zijiang@zte.com.cn>
-To:     jejb@linux.ibm.com
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Huang Zijiang <huang.zijiang@zte.com.cn>
-Subject: [PATCH] scsi: sun_esp: : Fix object reference leaks in esp_sbus_probe
-Date:   Wed, 27 Mar 2019 07:55:57 +0800
-Message-Id: <1553644557-35817-1-git-send-email-huang.zijiang@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-27 07:56:18,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-27 07:55:51,
-        Serialize complete at 2019-03-27 07:55:51
-X-MAIL: mse01.zte.com.cn x2QNtxhs093440
+        id S1731666AbfCZX4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 19:56:18 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 16:56:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
+   d="scan'208";a="137533192"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 16:56:16 -0700
+Date:   Tue, 26 Mar 2019 17:57:27 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     "jianchao.wang" <jianchao.w.wang@oracle.com>
+Cc:     Ming Lei <tom.leiming@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
+Message-ID: <20190326235726.GC4328@localhost.localdomain>
+References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1553492318-1810-8-git-send-email-jianchao.w.wang@oracle.com>
+ <20190325134917.GA4328@localhost.localdomain>
+ <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
+ <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
+ <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference whatever of_find_device_by_node
-reutrns.
+On Mon, Mar 25, 2019 at 08:05:53PM -0700, jianchao.wang wrote:
+> What if there used to be a io scheduler and leave some stale requests of sched tags ?
+> Or the nr_hw_queues was decreased and leave the hctx->fq->flush_rq ?
 
-Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
----
- drivers/scsi/sun_esp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Requests internally queued in scheduler or block layer are not eligible
+for the nvme driver's iterator callback. We only use it to reclaim
+dispatched requests that the target can't return, which only applies to
+requests that must have a valid rq->tag value from hctx->tags.
+ 
+> The stable request could be some tings freed and used
+> by others and the state field happen to be overwritten to non-zero...
 
-diff --git a/drivers/scsi/sun_esp.c b/drivers/scsi/sun_esp.c
-index a11efbc..a74605a 100644
---- a/drivers/scsi/sun_esp.c
-+++ b/drivers/scsi/sun_esp.c
-@@ -543,9 +543,8 @@ static int esp_sbus_probe(struct platform_device *op)
- 		return -ENODEV;
- 
- 	ret = esp_sbus_probe_one(op, dma_of, hme);
--	if (ret)
--		put_device(&dma_of->dev);
- 
-+	put_device(&dma_of->dev);
- 	return ret;
- }
- 
--- 
-1.8.3.1
-
+I am not sure I follow what this means. At least for nvme, every queue
+sharing the same tagset is quiesced and frozen, there should be no
+request state in flux at the time we iterate.
