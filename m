@@ -2,126 +2,138 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E512C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D6DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603D520823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5E820823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="hxDQVLio"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1pKwYUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732497AbfCZTxA (ORCPT
+        id S1732543AbfCZTx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:53:00 -0400
-Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:65280 "EHLO
-        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730605AbfCZTw7 (ORCPT
+        Tue, 26 Mar 2019 15:53:26 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42666 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbfCZTx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:52:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
-  t=1553629954; x=1585165954;
-  h=from:cc:to:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Fq5SxuMOtRUTbnyMNSL2EHU4TvTVFvwas2ChAyC4nrg=;
-  b=hxDQVLio17hY4ma/d6UOJVhdPteB7pllBVKl0aSYEpHgC+lBMlsqSomS
-   tsRSk5AiJJyCfOiolGeexVbJZU/ZOIHMR6GPIFMugW8rcDfQt965Qc/RA
-   SgaTvCpN187L1CCsfaTHKhb17p7Y3e11Vv5GYCSW2K1OICCF1Ixtn4x+Y
-   w=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2E5AAC6PJpchyeV50NkGgEBAQEBAgE?=
- =?us-ascii?q?BAQEHAgEBAQGBZQKCZoEUJwqMf4xTmE+BEANUDQEBhGwChSMiOBIBAQMBAQk?=
- =?us-ascii?q?BAwIBAQIQAQEBCgsJCCkvQgEOAYFoIoJvAQEBBBIoPwwEAgEIEQMBAQEfEE8?=
- =?us-ascii?q?IAgQTCBqDAIF2oRg9Am+BAYkHAQEBgh6KM4EvAYsxghaBEYMSPoQRARIBCGS?=
- =?us-ascii?q?FFAOMRJhVBwKTMyGUAi2eIgIEAgQFAhWBZFcwcXCDPIIkjidAATGKNYNJgR+?=
- =?us-ascii?q?BHwEB?=
-X-IPAS-Result: =?us-ascii?q?A2E5AAC6PJpchyeV50NkGgEBAQEBAgEBAQEHAgEBAQGBZ?=
- =?us-ascii?q?QKCZoEUJwqMf4xTmE+BEANUDQEBhGwChSMiOBIBAQMBAQkBAwIBAQIQAQEBC?=
- =?us-ascii?q?gsJCCkvQgEOAYFoIoJvAQEBBBIoPwwEAgEIEQMBAQEfEE8IAgQTCBqDAIF2o?=
- =?us-ascii?q?Rg9Am+BAYkHAQEBgh6KM4EvAYsxghaBEYMSPoQRARIBCGSFFAOMRJhVBwKTM?=
- =?us-ascii?q?yGUAi2eIgIEAgQFAhWBZFcwcXCDPIIkjidAATGKNYNJgR+BHwEB?=
-Received: from mx0a-00154901.pphosted.com ([67.231.149.39])
-  by esa1.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Mar 2019 14:52:33 -0500
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QGs3IE149357;
-        Tue, 26 Mar 2019 15:52:58 -0400
-Received: from esa3.dell-outbound2.iphmx.com (esa3.dell-outbound2.iphmx.com [68.232.154.63])
-        by mx0a-00154901.pphosted.com with ESMTP id 2rfnght6p1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Mar 2019 15:52:57 -0400
-From:   <Mario.Limonciello@dell.com>
-Cc:     <linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hayeswang@realtek.com>,
-        <sjg@google.com>, <campello@google.com>, <Ryan.Hong@Dell.com>,
-        <Crag.Wang@dell.com>
-Received: from ausxippc106.us.dell.com ([143.166.85.156])
-  by esa3.dell-outbound2.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA256; 27 Mar 2019 01:52:37 +0600
-X-LoopCount0: from 10.166.135.95
-X-IronPort-AV: E=Sophos;i="5.60,274,1549951200"; 
-   d="scan'208";a="374164227"
-To:     <davem@davemloft.net>
-Subject: RE: [PATCH] r8152: Refresh MAC address during USBDEVFS_RESET
-Thread-Topic: [PATCH] r8152: Refresh MAC address during USBDEVFS_RESET
-Thread-Index: AQHU4xTHuLEGWwasfk+zBAknUygSNqYel1KA//+9ILA=
-Date:   Tue, 26 Mar 2019 19:52:50 +0000
-Message-ID: <f1d2f070fd124fe3bc83a7d6535a61ef@ausx13mpc120.AMER.DELL.COM>
-References: <1553523143-23072-1-git-send-email-mario.limonciello@dell.com>
- <20190326.115051.1713861149387592628.davem@davemloft.net>
-In-Reply-To: <20190326.115051.1713861149387592628.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 26 Mar 2019 15:53:26 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v22so12255927lje.9;
+        Tue, 26 Mar 2019 12:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QlaTdYWvG+WCAOE3wzX5MphhWaKUUxDm2PjB3wKgpcg=;
+        b=d1pKwYUuF31ZcHlqnBQtGrve+uHG81tALZ/PJf4FO+QvshRxOGy8SXiuws/AXQ6Kgs
+         KDwRcPOdnGQROG4hEWfwbJPEz1+NeIDY/ENoB7/J6YyH5jlvkPEMPLjYgVVSjg4LST8h
+         IXyPaHPbs3o8iIEYzUCXFfv0V3e7vEsBU2OT9WoPKsuunPZSBdeFVw0l96mz/kdNDSLw
+         itraKFpOxHZXL5pNOgilzo51na2RbFjSkFuOLZU1PXU8EFsslDXvIWpR59Tb7rldoJaf
+         SMWKmhL+FEL+9rSpHRtrVnW27MpMa4ePUjyORu9WO5nsjr/ctTsjcDcZ6KscUh14/UIh
+         YxoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QlaTdYWvG+WCAOE3wzX5MphhWaKUUxDm2PjB3wKgpcg=;
+        b=YSd5QLsuhTpyu8D3jtRCtIq3W3ntiZXXdbm+wc4e6bx5DhkHcCCBPQHI2Avgy/OGyU
+         6uNz3rxYBEJBxScZx0nMXl7Lr3HXSsELnx4CijRik6Gyf0wIm8MlX/4/O3/8kj9vBRcX
+         megGM35pWNaTEa+qQcpCtlwnQezseVax+xf58VV1MCU4vwRLWRvumLcUksueiN9Cij8Q
+         BP/WSLXbHN4ieXClPDRby8NPo6vIQA2G0veWDUOnOMvAIvWXP4Jwqgqmmnm176GMYujX
+         XosAsFrACb134yN49rPvUnp1jSndSyjIeTEAgebf0S4DluI/hSXFbkZC87l52Zezicsd
+         MiZA==
+X-Gm-Message-State: APjAAAUWmKyNJeS3Wm3n/r3MYJqb+X4QHD17teWntIHMrRTChuRc0wxz
+        3/IYndIYHOlzfniCZEXLUMSKeJh6
+X-Google-Smtp-Source: APXvYqy7uwJvYlc98x4i7IgkyqCkkEzaulCqtjnWiyS/U1ocoCtaARndrw/LMmW8HPFTx8fsXKtVHw==
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr18395015ljg.136.1553630003609;
+        Tue, 26 Mar 2019 12:53:23 -0700 (PDT)
+Received: from [192.168.1.19] (ckd248.neoplus.adsl.tpnet.pl. [83.31.79.248])
+        by smtp.gmail.com with ESMTPSA id c64sm710697lfg.70.2019.03.26.12.53.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 12:53:22 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] leds: netdev trigger: use memcpy in
+ device_name_store
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-2-linux@rasmusvillemoes.dk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <987c3e60-edb3-44f0-be28-434c70bb8659@gmail.com>
+Date:   Tue, 26 Mar 2019 20:53:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260088
+In-Reply-To: <20190314140619.3309-2-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Tuesday, March 26, 2019 1:51 PM
-> To: Limonciello, Mario
-> Cc: linux-usb@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; hayeswang@realtek.com; sjg@google.com;
-> campello@google.com; Hong, Ryan; Wang, Crag
-> Subject: Re: [PATCH] r8152: Refresh MAC address during USBDEVFS_RESET
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> From: Mario Limonciello <mario.limonciello@dell.com>
-> Date: Mon, 25 Mar 2019 09:12:23 -0500
->=20
-> > On some platforms it is possible to dynamically change the policy
-> > of what MAC address is selected from the ASL at runtime.
-> >
-> > These tools will reset the USB device and expect the change to be
-> > made immediately.
-> >
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
->=20
-> You are going to have to emit CHANGEADDR notifications and such if
-> necessary when you do this.
+Hi Rasmus,
 
-Thanks for the feedback, I'll add that call.  Do you feel a need that the M=
-AC
-address needs to be tracked and compared to what was previously in ACPI
-table to know it "really" changed or just emit CHANGEADDR because it "might=
-"
-have changed?
+Thank you for the patch.
+
+On 3/14/19 3:06 PM, Rasmus Villemoes wrote:
+> If userspace doesn't end the input with a newline (which can easily
+> happen if the write happens from a C program that does write(fd,
+> iface, strlen(iface))), we may end up including garbage from a
+> previous, longer value in the device_name. For example
+> 
+> # cat device_name
+> 
+> # printf 'eth12' > device_name
+> # cat device_name
+> eth12
+> # printf 'eth3' > device_name
+> # cat device_name
+> eth32
+> 
+> I highly doubt anybody is relying on this behaviour, so switch to
+> simply copying the bytes (we've already checked that size is <
+> IFNAMSIZ) and unconditionally zero-terminate it; of course, we also
+> still have to strip a trailing newline.
+> 
+> This is also preparation for future patches.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>   drivers/leds/trigger/ledtrig-netdev.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+> index 3dd3ed46d473..8d476b92f58c 100644
+> --- a/drivers/leds/trigger/ledtrig-netdev.c
+> +++ b/drivers/leds/trigger/ledtrig-netdev.c
+> @@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
+>   		trigger_data->net_dev = NULL;
+>   	}
+>   
+> -	strncpy(trigger_data->device_name, buf, size);
+> +	memcpy(trigger_data->device_name, buf, size);
+> +	trigger_data->device_name[size] = 0;
+>   	if (size > 0 && trigger_data->device_name[size - 1] == '\n')
+>   		trigger_data->device_name[size - 1] = 0;
+>   
+> 
+
+Added tag:
+
+Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+
+and applied to the fixes-for-5.1-rc3 branch.
+
+-- 
+Best regards,
+Jacek Anaszewski
