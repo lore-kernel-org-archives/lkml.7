@@ -2,139 +2,314 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597A6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB8BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B2A2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864EF2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:57:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="C/zyYxT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbfCZTyj (ORCPT
+        id S1732313AbfCZT5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:54:39 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43294 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCZTyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:54:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 432B180D;
-        Tue, 26 Mar 2019 12:54:38 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D4E03F575;
-        Tue, 26 Mar 2019 12:54:35 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 19:54:30 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
- pci_devices_present_work(), if necessary
-Message-ID: <20190326195429.GA15410@e107981-ln.cambridge.arm.com>
-References: <20190304213357.16652-1-decui@microsoft.com>
- <20190304213357.16652-4-decui@microsoft.com>
+        Tue, 26 Mar 2019 15:57:42 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41501 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731847AbfCZT5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:57:41 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a25so11916457edc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b6nNsIxTU1wammuIs4O2mIyMC4L3naD9IKwWwWv8oec=;
+        b=C/zyYxT5MG2sjcAKcFybCi+L+qCb0j0M/QQekrtMLImkryKoweB+ze2BNO4VvolpNE
+         NkNb0YrLuU71aoEpyZ08cHOE6BVNKCprDgxLWmdjPs+FlN1VJlBesDfKyomH/xbOt1Jf
+         rk7khrgAtGusrQ1rhnfc1XocJY86BZmQs0du+iPBMzCIlcHAIqro76VVBGG/EMWgBktX
+         aD7PJkIobC1AOqhye5CJAZIJrX9xSuKf1uKvr+UOSlCSFWdfJghmP95L5sNF7G/jkblE
+         ZW6wEfKpyMSHDmSIZ64ZbrBFv5TwhyQ/5O+J0qxCDAFnqqzoyUGsyj/YSo9i5Fki940L
+         hozg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b6nNsIxTU1wammuIs4O2mIyMC4L3naD9IKwWwWv8oec=;
+        b=nl8rceSU9PZ5lI2cmqbG+7q6GeB/5NPV1TkRNcAhvvtdjVP+zBnzg5R647HnD53WK0
+         vJEaTQAwLXZIZJW+nUP5C+logl0W2SEjkM4OZZAqVHpLPjQZ7CUf8ZRVAkBdxm/nybw+
+         7GLURScNSdWInqeXt3sPPSTItmweiF97eAdDrBKx80wnmrIy1UIvqBQDlTr7VHqEX+YZ
+         eNv+6ZnSu/7VwpOS+pvF3dLZ0+Ndsx9CuB0+Ji1h11X2IyG7SnaEUwg6oyKh1NVNtESn
+         qG95SApxnAre5omlq49/8zDEfeGzlbrnrbEy+iMpYEoOgk4bvr6h6YxCxijgc40wYJGe
+         MzXQ==
+X-Gm-Message-State: APjAAAWcU+YjldIt03VCJ4seXz3Pj6n7yQ9280fmVRS0eA5ab4bj/aFJ
+        pgRybKG4iKZIgoerFS6oUy4rEA==
+X-Google-Smtp-Source: APXvYqwFpeCZpPmrmKhe6SWg38V8wfljPvbRr/Bt6mrAhH+AMV4q/uY/ahb1ZuhlgS69qJOyy6/JeA==
+X-Received: by 2002:aa7:c803:: with SMTP id a3mr12065835edt.39.1553630259355;
+        Tue, 26 Mar 2019 12:57:39 -0700 (PDT)
+Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id h50sm6493933edh.47.2019.03.26.12.57.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 26 Mar 2019 12:57:39 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 20:57:37 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, dancol@google.com
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+Message-ID: <20190326195737.mtnsvnplmm45ecol@brauner.io>
+References: <20190326155513.26964-1-christian@brauner.io>
+ <20190326155513.26964-3-christian@brauner.io>
+ <20190326170601.GA101741@google.com>
+ <20190326172231.daa5a53lxf6nz6jn@brauner.io>
+ <20190326181012.GA138478@google.com>
+ <20190326191942.jyqpk3ehpbvhgvyz@brauner.io>
+ <20190326195151.GD114492@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190304213357.16652-4-decui@microsoft.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190326195151.GD114492@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 09:34:49PM +0000, Dexuan Cui wrote:
-> When we hot-remove a device, usually the host sends us a PCI_EJECT message,
-> and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0. But when
-> we do the quick hot-add/hot-remove test, the host may not send us the
-> PCI_EJECT message, if the guest has not fully finished the initialization
-> by sending the PCI_RESOURCES_ASSIGNED* message to the host, so it's
-> potentially unsafe to only depend on the pci_destroy_slot() in
-> hv_eject_device_work(), though create_root_hv_pci_bus() ->
-> hv_pci_assign_slots() is not called in this case. Note: in this case, the
-> host still sends the guest a PCI_BUS_RELATIONS message with
-> bus_rel->device_count == 0.
+On Tue, Mar 26, 2019 at 03:51:51PM -0400, Joel Fernandes wrote:
+> On Tue, Mar 26, 2019 at 08:19:43PM +0100, Christian Brauner wrote:
+> > On Tue, Mar 26, 2019 at 02:10:12PM -0400, Joel Fernandes wrote:
+> > > On Tue, Mar 26, 2019 at 06:22:33PM +0100, Christian Brauner wrote:
+> > > > On Tue, Mar 26, 2019 at 01:06:01PM -0400, Joel Fernandes wrote:
+> > > > > On Tue, Mar 26, 2019 at 04:55:11PM +0100, Christian Brauner wrote:
+> > > > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > > > > > I quote Konstantins original patchset first that has already been acked and
+> > > > > > picked up by Eric before and whose functionality is preserved in this
+> > > > > > syscall:
+> > > > > > 
+> > > > > > "Each process have different pids, one for each pid namespace it belongs.
+> > > > > >  When interaction happens within single pid-ns translation isn't required.
+> > > > > >  More complicated scenarios needs special handling.
+> > > > > > 
+> > > > > >  For example:
+> > > > > >  - reading pid-files or logs written inside container with pid namespace
+> > > > > >  - writing logs with internal pids outside container for pushing them into
+> > > > > >  - attaching with ptrace to tasks from different pid namespace
+> > > > > > 
+> > > > > >  Generally speaking, any cross pid-ns API with pids needs translation.
+> > > > > > 
+> > > > > >  Currently there are several interfaces that could be used here:
+> > > > > > 
+> > > > > >  Pid namespaces are identified by device and inode of /proc/[pid]/ns/pid.
+> > > > > > 
+> > > > > >  Pids for nested pid namespaces are shown in file /proc/[pid]/status.
+> > > > > >  In some cases pid translation could be easily done using this information.
+> > > > > >  Backward translation requires scanning all tasks and becomes really
+> > > > > >  complicated for deeper namespace nesting.
+> > > > > > 
+> > > > > >  Unix socket automatically translates pid attached to SCM_CREDENTIALS.
+> > > > > >  This requires CAP_SYS_ADMIN for sending arbitrary pids and entering
+> > > > > >  into pid namespace, this expose process and could be insecure."
+> > > > > > 
+> > > > > > The original patchset allowed two distinct operations implicitly:
+> > > > > > - discovering whether pid namespaces (pidns) have a parent-child
+> > > > > >   relationship
+> > > > > > - translating a pid from a source pidns into a target pidns
+> > > > > > 
+> > > > > > Both tasks are accomplished in the original patchset by passing a pid
+> > > > > > along. If the pid argument is passed as 1 the relationship between two pid
+> > > > > > namespaces can be discovered.
+> > > > > > The syscall will gain a lot clearer syntax and will be easier to use for
+> > > > > > userspace if the task it is asked to perform is passed through a
+> > > > > > command argument. Additionally, it allows us to remove an intrinsic race
+> > > > > > caused by using the pid argument as a way to discover the relationship
+> > > > > > between pid namespaces.
+> > > > > > This patch introduces three commands:
+> > > > > > 
+> > > > > > /* PIDCMD_QUERY_PID */
+> > > > > > PIDCMD_QUERY_PID allows to translate a pid between pid namespaces.
+> > > > > > Given a source pid namespace fd return the pid of the process in the target
+> > > > > > namespace:
+> > > > > 
+> > > > > Could we call this PIDCMD_TRANSLATE_PID please? QUERY is confusing/ambigious
+> > > > > IMO (see below).
+> > > > 
+> > > > Yes, doesn't matter to me too much what we call it.
+> > > 
+> > > Ok.
+> > > 
+> > > > > > 1. pidctl(PIDCMD_QUERY_PID, pid, source_fd, -1, 0)
+> > > > > >   - retrieve pidns identified by source_fd
+> > > > > >   - retrieve struct pid identifed by pid in pidns identified by source_fd
+> > > > > >   - retrieve callers pidns
+> > > > > >   - return pid in callers pidns
+> > > > > > 
+> > > > > > 2. pidctl(PIDCMD_QUERY_PID, pid, -1, target_fd, 0)
+> > > > > >   - retrieve callers pidns
+> > > > > >   - retrieve struct pid identifed by pid in callers pidns
+> > > > > >   - retrieve pidns identified by target_fd
+> > > > > >   - return pid in pidns identified by target_fd
+> > > > > > 
+> > > > > > 3. pidctl(PIDCMD_QUERY_PID, 1, source_fd, -1, 0)
+> > > > > >   - retrieve pidns identified by source_fd
+> > > > > >   - retrieve struct pid identifed by init task in pidns identified by source_fd
+> > > > > >   - retrieve callers pidns
+> > > > > >   - return pid of init task of pidns identified by source_fd in callers pidns
+> > > > > > 
+> > > > > > 4. pidctl(PIDCMD_QUERY_PID, pid, source_fd, target_fd, 0)
+> > > > > >   - retrieve pidns identified by source_fd
+> > > > > >   - retrieve struct pid identifed by pid in pidns identified by source_fd
+> > > > > >   - retrieve pidns identified by target_fd
+> > > > > >   - check whether struct pid can be found in pidns identified by target_fd
+> > > > > >   - return pid in pidns identified by target_fd
+> > > > > > 
+> > > > > > /* PIDCMD_QUERY_PIDNS */
+> > > > > > PIDCMD_QUERY_PIDNS allows to determine the relationship between pid
+> > > > > > namespaces.
+> > > > > > In the original version of the pachset passing pid as 1 would allow to
+> > > > > > deterimine the relationship between the pid namespaces. This is inherhently
+> > > > > > racy. If pid 1 inside a pid namespace has died it would report false
+> > > > > > negatives. For example, if pid 1 inside of the target pid namespace already
+> > > > > > died, it would report that the target pid namespace cannot be reached from
+> > > > > > the source pid namespace because it couldn't find the pid inside of the
+> > > > > > target pid namespace and thus falsely report to the user that the two pid
+> > > > > > namespaces are not related. This problem is simple to avoid. In the new
+> > > > > > version we simply walk the list of ancestors and check whether the
+> > > > > > namespace are related to each other. By doing it this way we can reliably
+> > > > > > report what the relationship between two pid namespace file descriptors
+> > > > > > looks like.
+> > > > > > 
+> > > > > > 1. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd1, 0) == 0
+> > > > > >    - pidns_of(ns_fd1) and pidns_of(ns_fd2) are unrelated to each other
+> > > > > > 
+> > > > > > 2. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 1
+> > > > > >    - pidns_of(ns_fd1) == pidns_of(ns_fd2)
+> > > > > > 
+> > > > > > 3. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 2
+> > > > > >    - pidns_of(ns_fd1) is ancestor of pidns_of(ns_fd2)
+> > > > > > 
+> > > > > > 4. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 3
+> > > > > >    - pidns_of(ns_fd2) is ancestor of pidns_of(ns_fd1)
+> > > > > 
+> > > > > Why not call this PIDCMD_COMPARE_PIDNS, since a comparison is what you're doing.
+> > > > 
+> > > > Same.
+> > > 
+> > > Ok, glad we agree on it.
+> > > 
+> > > > > 
+> > > > > Again QUERY is ambigious here. Above you called QUERY to translate something,
+> > > > > now you're calling QUERY to mean compare something. I suggest to be explicit
+> > > > > about the operation PIDCMD_<OPERATION>_<OPERAND-TYPE>.
+> > > > > 
+> > > > > Arguably, 2 syscalls for this is cleaner:
+> > > > > pid_compare_namespaces(ns_fd1, ns_fd2);
+> > > > > pid_translate(pid, ns_fd1, nds_fd2);
+> > > > 
+> > > > I don't think we want to send out pid_compare_namespaces() as a separate
+> > > > syscall. If that's the consensus I'd rather just drop this functionality
+> > > > completely.
+> > > 
+> > > I mean, if pid-namespace fd comparison functionality is not needed in
+> > > userspace, why add it all. I suggest to drop it if not needed and can be
+> > > considered for addition later when needed.
+> > > 
+> > > Then you're just left with GET_PID and TRANSLATE_PID which we know we do need.
+> > > 
+> > > > > > These two commands - PIDCMD_QUERY_PID and PIDCMD_QUERY_PIDNS - cover and
+> > > > > > improve the functionality expressed implicitly in translate_pid() before.
+> > > > > > 
+> > > > > > /* PIDCMD_GET_PIDFD */
+> > > > > 
+> > > > > And this can be a third syscall:
+> > > > > pidfd_translate(pid, ns_fd1, ns_fd2).
+> > > > 
+> > > > Sigh, yes. But I honestly want other people other than us to come out
+> > > > and say "yes, please send a PR to Linus with three separate syscalls for
+> > > > very closely related functionality". There's a difference between "this
+> > > > is how we would ideally like to do it" and "this is what is common
+> > > > practice and will likely get accepted". But I'm really not opposed to it
+> > > > per se.
+> > > 
+> > > Ok.
+> > > 
+> > > > > I am actually supportive of Daniel's view that by combining too many
+> > > > > arguments into a single syscall, becomes confusing and sometimes some
+> > > > > arguments have to be forced to 0 in the single shoe-horned syscall. Like you
+> > > > 
+> > > > There's a difference between an ioctl() and say seccomp() which this is
+> > > > close to:
+> > > > int seccomp(unsigned int operation, unsigned int flags, void *args);
+> > > > The point is that the functionality is closely related not just randomly
+> > > > unrelated stuff. But as I said I'm more than willing to compromise.
+> > > 
+> > > Sounds great, yeah whatever makes sense.
+> > 
+> > One option is to do the following which removes the cmd argument all
+> > together in favor of a flag GET_PIDFD:
+> > 
+> > +SYSCALL_DEFINE4(pidfd_translate, pid_t, pid, int, source, int, target,
+> > +               unsigned int, flags)
+> > +{
 > 
-> And, in the quick hot-add/hot-remove test, we can have such a race: before
-> pci_devices_present_work() -> new_pcichild_device() adds the new device
-> into hbus->children, we may have already received the PCI_EJECT message,
-> and hence the taklet handler hv_pci_onchannelcallback() may fail to find
-> the "hpdev" by get_pcichild_wslot(hbus, dev_message->wslot.slot), so
-> hv_pci_eject_device() is NOT called; later create_root_hv_pci_bus() ->
-> hv_pci_assign_slots() creates the slot, and the PCI_BUS_RELATIONS message
-> with bus_rel->device_count == 0 removes the device from hbus->children, and
-> we end up being unable to remove the slot in hv_pci_remove() ->
-> hv_pci_remove_slots().
+> Yes that's also fine. But would it not be better to just add the flags as an
+
+Also fine. It's just a sketch. I'm working on another suggestion that
+might be better.
+
+> extra parameter to translate_pid syscall, telling it what to translate to
+> (pidfd or pid)?
 > 
-> The patch removes the slot in pci_devices_present_work() when the device
-> is removed. This can address the above race. Note 1:
-> pci_devices_present_work() and hv_eject_device_work() run in the
-> singled-threaded hbus->wq, so there is not a double-remove issue for the
-> slot. Note 2: we can't offload hv_pci_eject_device() from
-> hv_pci_onchannelcallback() to the workqueue, because we need
-> hv_pci_onchannelcallback() synchronously call hv_pci_eject_device() to
-> poll the channel's ringbuffer to work around the
-> "hangs in hv_compose_msi_msg()" issue: see
-> commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
-
-This commit log is unreadable, sorry. Indentation, punctuation and
-formatting are just a mess, try to read it, you will notice by
-yourself.
-
-I basically reformatted it completely and pushed the series to
-pci/controller-fixes but that's the last time I do it since I am not an
-editor, next time I won't merge it.
-
-More importantly, these patches are marked for stable, given the series
-of fixes that triggered this series please ensure it was tested
-thoroughly because it is honestly complicate to understand and I do not
-want to backport further fixes to stable kernels on top of this.
-
-Please have a look and report back.
-
-Thanks,
-Lorenzo
-
-> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/pci/controller/pci-hyperv.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> thanks,
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index b489412e3502..82acd6155adf 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1776,6 +1776,10 @@ static void pci_devices_present_work(struct work_struct *work)
->  		hpdev = list_first_entry(&removed, struct hv_pci_dev,
->  					 list_entry);
->  		list_del(&hpdev->list_entry);
-> +
-> +		if (hpdev->pci_slot)
-> +			pci_destroy_slot(hpdev->pci_slot);
-> +
->  		put_pcichild(hpdev);
->  	}
->  
-> -- 
-> 2.19.1
+>  - Joel
 > 
+> 
+> 
+> > +       struct pid_namespace *source_ns, *target_ns;
+> > +       struct pid *struct_pid;
+> > +       pid_t result;
+> > +
+> > +       if (flags & ~GET_PIDFD)
+> > +               return -EINVAL;
+> > +
+> > +       source_ns = get_pid_ns_by_fd(source);
+> > +       if (IS_ERR(source_ns))
+> > +               return PTR_ERR(source_ns);
+> > +
+> > +       target_ns = get_pid_ns_by_fd(target);
+> > +       if (IS_ERR(target_ns)) {
+> > +               put_pid_ns(source_ns);
+> > +               return PTR_ERR(target_ns);
+> > +       }
+> > +
+> > +       rcu_read_lock();
+> > +       struct_pid = get_pid(find_pid_ns(pid, source_ns));
+> > +       rcu_read_unlock();
+> > +
+> > +       if (struct_pid)
+> > +               result = pid_nr_ns(struct_pid, target_ns);
+> > +       else
+> > +               result = -ESRCH;
+> > +
+> > +       if ((flags & GET_PIDFD) && (result > 0))
+> > +               result = pidfd_create_fd(struct_pid, O_CLOEXEC);
+> > +
+> > +       if (!result)
+> > +               result = -ENOENT;
+> > +
+> > +       put_pid(struct_pid);
+> > +       put_pid_ns(target_ns);
+> > +       put_pid_ns(source_ns);
+> > +
+> > +       return result;
+> > +}
