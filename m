@@ -2,78 +2,74 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B59C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C879AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563D120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9817120830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553590906;
-	bh=2caQ5ME99w7Qf1zXwB8fLFNzMC4UDO3qQ5HeDsmCJXs=;
+	s=default; t=1553590911;
+	bh=1zB3ghv/pgE/iSf4MBKq33UDqJRi6hW5YzkfBqaKUpo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t9mq3G7i5Fz+SS7ZIxjhaqocrvhs8C7xMBSCmhNcDBJATEoXIF4IoNUWSWO2i/o4I
-	 J5lqUd20SRrfahTL0y0uQDCn5g2/6Xz/qWO5z4v6DMESDh/s2+a8u1lGUGRZCDqn/R
-	 ylf6P+3cvswOCT3x6kU0OqI2ib8x/r/BOcK31aLw=
+	b=kPSPXNY+hefza+AgLi6mpcm26zL6ek4GXpDIAJmk+uxDeEzaLfdGey6OLNwYNlUC5
+	 jKOdARAYnZsIVvqXz1XfaBYW9MfBWcneG7zEk78zB1yWGRUskocU8BbNQrIENrSgpc
+	 Z4iHnuxvB9t5AJJJg0Dk+3iPCN3vufJpZvxp43AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfCZJBp (ORCPT
+        id S1730594AbfCZJBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:01:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35982 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbfCZJBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:01:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 75AA9AD65;
-        Tue, 26 Mar 2019 09:01:43 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 10:01:42 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+        Tue, 26 Mar 2019 05:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfCZJBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:01:50 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ACD320857;
+        Tue, 26 Mar 2019 09:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553590909;
+        bh=1zB3ghv/pgE/iSf4MBKq33UDqJRi6hW5YzkfBqaKUpo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wMyPSLZdriVNQEg4/kvUJbuPHsjkwhPxKvzH8PWTXhiPw6rCkv1yfHiBoX2xVaow9
+         1EBaa8MBEhaq5dh/hNWSY7Fml7bWI3etzSAWH56HE81jPEVxq6gkZnhjuhuLPPS6ll
+         D6WJSAUeBpE24oIoBxViNMEWky3bkSWwcVmNKvtQ=
+Date:   Tue, 26 Mar 2019 17:01:13 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>
-Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
-Message-ID: <20190326090142.GH28406@dhcp22.suse.cz>
-References: <SG2PR02MB3098E6F2C4BAEB56AE071EDCE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <0b86dbca-cbc9-3b43-e3b9-8876bcc24f22@suse.cz>
- <SG2PR02MB309841EA4764E675D4649139E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <56862fc0-3e4b-8d1e-ae15-0df32bf5e4c0@virtuozzo.com>
- <SG2PR02MB3098EEAF291BFD72F4163936E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <4c05dda3-9fdf-e357-75ed-6ee3f25c9e52@virtuozzo.com>
- <SG2PR02MB309869FC3A436C71B50FA57BE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <09b6ee71-0007-7f1d-ac80-7e05421e4ec6@virtuozzo.com>
- <SG2PR02MB309864258DBE630AD3AD2E10E8410@SG2PR02MB3098.apcprd02.prod.outlook.com>
- <SG2PR02MB309824F3FCD9B0D1DF689390E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx7ulp: add ocotp support
+Message-ID: <20190326090112.GK12513@dragon>
+References: <1553236008-28407-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SG2PR02MB309824F3FCD9B0D1DF689390E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553236008-28407-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[You were asked to use a reasonable quoting several times. This is
-really annoying because it turns the email thread into a complete mess]
+On Fri, Mar 22, 2019 at 06:31:56AM +0000, Anson Huang wrote:
+> Add i.MX7ULP OCOTP support, its clock source is from
+> M4 BUS clock which is NOT available in Linux clock tree,
+> but M4 BUS clock is always ON when A7 (Linux) is alive,
+> so just use dummy clock here.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-On Tue 26-03-19 07:53:14, Pankaj Suryawanshi wrote:
-> Is there anyone who is familiar with this?  Please Comment.
-
-Not really. You are observing an unexpected behavior of the page reclaim
-which hasn't changed for quite some time. So I find more probable that
-your non-vanilla kernel is doing something unexpected. It would help if
-you could track down how does the unevictable page get down to the
-reclaim path. I assume this is a CMA page or something like that but
-those shouldn't get to the reclaim path AFIR.
--- 
-Michal Hocko
-SUSE Labs
+Applied, thanks.
