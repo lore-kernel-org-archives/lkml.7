@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C20EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185DD20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285BB2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582248;
-	bh=gFQWJ8MiRxLeuyhFa58VBC9DZ8Mx65qGonWrWzzjtZs=;
+	s=default; t=1553582251;
+	bh=ZFVCL8C9M+wrQWHGWH9e6Ax1gogy+Ise3jPLOluY13Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkMmbqXSSMBng2T2EjK12S0NvhUkROxUSM6YgVaWC+D572AzYXfB4WovE+B22oS/R
-	 DsImOML8wtT7apZmv++HLOs2fChwhesc1SNh/lt2Jh1WndkWCxCu5xy2iV2rFWltri
-	 T8VPH+HYXZMIHSiJb7Vhxknv7Sao4O+czOjcdXaY=
+	b=gnzuZaYZ9pJP8YSmSus03+zq1PRlh9sdVpMTa6dknl+qMQsvQF+uFbAyj42pkmERQ
+	 C7jN0wumztddMU+U552nkB8veGQ9QIcTL63stC2bMVTZHbKl1yhlZTklcYjRvFNtl7
+	 9VBxcBjHH/Ijb2TQ9X2Z0C4rYTrAavUr/s/7ULuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732376AbfCZGh0 (ORCPT
+        id S1732385AbfCZGha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50754 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731399AbfCZGhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:24 -0400
+        id S1732372AbfCZGh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:27 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AF82075E;
-        Tue, 26 Mar 2019 06:37:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEF372070B;
+        Tue, 26 Mar 2019 06:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582243;
-        bh=gFQWJ8MiRxLeuyhFa58VBC9DZ8Mx65qGonWrWzzjtZs=;
+        s=default; t=1553582246;
+        bh=ZFVCL8C9M+wrQWHGWH9e6Ax1gogy+Ise3jPLOluY13Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBLyoltlhHg/r+gmbsJTiljcAyfTHeECzyXpKyWmRT5G8vOiST1Iav+81jfol+zD+
-         AJ6GTZmaErRQ+eW5WHIgk5ar0pDsTnF4S/0OAjpg7Gh4SsIvQKHpN8YiLpD4xNTIgf
-         QEke+OUQt1EXQ7zF3vgf/wk7b3XTymcQ5m/THUDI=
+        b=AF4tjQl4rlqKRQD+FShWNVw7ien/7M3Y3g/vBtet0I78bxBc0BNf9L0W1qZvZPL7r
+         YKL+EUMbDb7WMkznmmUMtfjsdisITkUTrfNOPxedGKbmvkSxS7Uo/nL9QQ4rHmdnBK
+         14vcndH1/BjjHtCQIlikIb18N0BltiWLepLpOO04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Drnec <jaydee@email.cz>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 14/45] powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
-Date:   Tue, 26 Mar 2019 15:29:57 +0900
-Message-Id: <20190326042703.417534104@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 4.19 36/45] f2fs: fix to avoid deadlock of atomic file operations
+Date:   Tue, 26 Mar 2019 15:30:19 +0900
+Message-Id: <20190326042704.566582951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,129 +64,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit b5b4453e7912f056da1ca7572574cada32ecb60c upstream.
+commit 48432984d718c95cf13e26d487c2d1b697c3c01f upstream.
 
-Jakub Drnec reported:
-  Setting the realtime clock can sometimes make the monotonic clock go
-  back by over a hundred years. Decreasing the realtime clock across
-  the y2k38 threshold is one reliable way to reproduce. Allegedly this
-  can also happen just by running ntpd, I have not managed to
-  reproduce that other than booting with rtc at >2038 and then running
-  ntp. When this happens, anything with timers (e.g. openjdk) breaks
-  rather badly.
+Thread A				Thread B
+- __fput
+ - f2fs_release_file
+  - drop_inmem_pages
+   - mutex_lock(&fi->inmem_lock)
+   - __revoke_inmem_pages
+    - lock_page(page)
+					- open
+					- f2fs_setattr
+					- truncate_setsize
+					 - truncate_inode_pages_range
+					  - lock_page(page)
+					  - truncate_cleanup_page
+					   - f2fs_invalidate_page
+					    - drop_inmem_page
+					    - mutex_lock(&fi->inmem_lock);
 
-And included a test case (slightly edited for brevity):
-  #define _POSIX_C_SOURCE 199309L
-  #include <stdio.h>
-  #include <time.h>
-  #include <stdlib.h>
-  #include <unistd.h>
+We may encounter above ABBA deadlock as reported by Kyungtae Kim:
 
-  long get_time(void) {
-    struct timespec tp;
-    clock_gettime(CLOCK_MONOTONIC, &tp);
-    return tp.tv_sec + tp.tv_nsec / 1000000000;
-  }
+I'm reporting a bug in linux-4.17.19: "INFO: task hung in
+drop_inmem_page" (no reproducer)
 
-  int main(void) {
-    long last = get_time();
-    while(1) {
-      long now = get_time();
-      if (now < last) {
-        printf("clock went backwards by %ld seconds!\n", last - now);
-      }
-      last = now;
-      sleep(1);
-    }
-    return 0;
-  }
+I think this might be somehow related to the following:
+https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
 
-Which when run concurrently with:
- # date -s 2040-1-1
- # date -s 2037-1-1
+=========================================
+INFO: task syz-executor7:10822 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D27024 10822   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
+ __mutex_lock_common kernel/locking/mutex.c:833 [inline]
+ __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
+ mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
+ drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
+ f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
+ do_invalidatepage mm/truncate.c:165 [inline]
+ truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
+ truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
+ truncate_inode_pages mm/truncate.c:478 [inline]
+ truncate_pagecache+0x6d/0x90 mm/truncate.c:801
+ truncate_setsize+0x81/0xa0 mm/truncate.c:826
+ f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
+ notify_change+0xa62/0xe80 fs/attr.c:313
+ do_truncate+0x12e/0x1e0 fs/open.c:63
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
+INFO: task syz-executor7:10858 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D28880 10858   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
+ rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
+ call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
+ __down_write arch/x86/include/asm/rwsem.h:142 [inline]
+ down_write+0x58/0xa0 kernel/locking/rwsem.c:72
+ inode_lock include/linux/fs.h:713 [inline]
+ do_truncate+0x120/0x1e0 fs/open.c:61
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
+INFO: task syz-executor5:10829 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor5   D28760 10829   6308 0x80000002
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ io_schedule+0x21/0x80 kernel/sched/core.c:5179
+ wait_on_page_bit_common mm/filemap.c:1100 [inline]
+ __lock_page+0x2b5/0x390 mm/filemap.c:1273
+ lock_page include/linux/pagemap.h:483 [inline]
+ __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
+ drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
+ f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
+ __fput+0x2c7/0x780 fs/file_table.c:209
+ ____fput+0x1a/0x20 fs/file_table.c:243
+ task_work_run+0x151/0x1d0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0x8ba/0x30a0 kernel/exit.c:865
+ do_group_exit+0x13b/0x3a0 kernel/exit.c:968
+ get_signal+0x6bb/0x1650 kernel/signal.c:2482
+ do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
+ do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
+RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
 
-Will detect the clock going backward.
+This patch tries to use trylock_page to mitigate such deadlock condition
+for fix.
 
-The root cause is that wtom_clock_sec in struct vdso_data is only a
-32-bit signed value, even though we set its value to be equal to
-tk->wall_to_monotonic.tv_sec which is 64-bits.
-
-Because the monotonic clock starts at zero when the system boots the
-wall_to_montonic.tv_sec offset is negative for current and future
-dates. Currently on a freshly booted system the offset will be in the
-vicinity of negative 1.5 billion seconds.
-
-However if the wall clock is set past the Y2038 boundary, the offset
-from wall to monotonic becomes less than negative 2^31, and no longer
-fits in 32-bits. When that value is assigned to wtom_clock_sec it is
-truncated and becomes positive, causing the VDSO assembly code to
-calculate CLOCK_MONOTONIC incorrectly.
-
-That causes CLOCK_MONOTONIC to jump ahead by ~4 billion seconds which
-it is not meant to do. Worse, if the time is then set back before the
-Y2038 boundary CLOCK_MONOTONIC will jump backward.
-
-We can fix it simply by storing the full 64-bit offset in the
-vdso_data, and using that in the VDSO assembly code. We also shuffle
-some of the fields in vdso_data to avoid creating a hole.
-
-The original commit that added the CLOCK_MONOTONIC support to the VDSO
-did actually use a 64-bit value for wtom_clock_sec, see commit
-a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to
-32 bits kernel") (Nov 2005). However just 3 days later it was
-converted to 32-bits in commit 0c37ec2aa88b ("[PATCH] powerpc: vdso
-fixes (take #2)"), and the bug has existed since then AFAICS.
-
-Fixes: 0c37ec2aa88b ("[PATCH] powerpc: vdso fixes (take #2)")
-Cc: stable@vger.kernel.org # v2.6.15+
-Link: http://lkml.kernel.org/r/HaC.ZfES.62bwlnvAvMP.1STMMj@seznam.cz
-Reported-by: Jakub Drnec <jaydee@email.cz>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/vdso_datapage.h  |    8 ++++----
- arch/powerpc/kernel/vdso64/gettimeofday.S |    4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ fs/f2fs/segment.c |   43 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -82,10 +82,10 @@ struct vdso_data {
- 	__u32 icache_block_size;		/* L1 i-cache block size     */
- 	__u32 dcache_log_block_size;		/* L1 d-cache log block size */
- 	__u32 icache_log_block_size;		/* L1 i-cache log block size */
--	__s32 wtom_clock_sec;			/* Wall to monotonic clock */
--	__s32 wtom_clock_nsec;
--	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
--	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 stamp_sec_fraction;		/* fractional seconds of stamp_xtime */
-+	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
-+	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
-+	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -92,7 +92,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	 * At this point, r4,r5 contain our sec/nsec values.
- 	 */
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -216,7 +216,8 @@ void f2fs_register_inmem_page(struct ino
+ }
  
--	lwa	r6,WTOM_CLOCK_SEC(r3)
-+	ld	r6,WTOM_CLOCK_SEC(r3)
- 	lwa	r9,WTOM_CLOCK_NSEC(r3)
+ static int __revoke_inmem_pages(struct inode *inode,
+-				struct list_head *head, bool drop, bool recover)
++				struct list_head *head, bool drop, bool recover,
++				bool trylock)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct inmem_pages *cur, *tmp;
+@@ -228,7 +229,16 @@ static int __revoke_inmem_pages(struct i
+ 		if (drop)
+ 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
  
- 	/* We now have our result in r6,r9. We create a fake dependency
-@@ -125,7 +125,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	bne     cr6,75f
+-		lock_page(page);
++		if (trylock) {
++			/*
++			 * to avoid deadlock in between page lock and
++			 * inmem_lock.
++			 */
++			if (!trylock_page(page))
++				continue;
++		} else {
++			lock_page(page);
++		}
  
- 	/* CLOCK_MONOTONIC_COARSE */
--	lwa     r6,WTOM_CLOCK_SEC(r3)
-+	ld	r6,WTOM_CLOCK_SEC(r3)
- 	lwa     r9,WTOM_CLOCK_NSEC(r3)
+ 		f2fs_wait_on_page_writeback(page, DATA, true);
  
- 	/* check if counter has updated */
+@@ -317,13 +327,19 @@ void f2fs_drop_inmem_pages(struct inode
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+-	mutex_lock(&fi->inmem_lock);
+-	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
+-	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+-	if (!list_empty(&fi->inmem_ilist))
+-		list_del_init(&fi->inmem_ilist);
+-	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+-	mutex_unlock(&fi->inmem_lock);
++	while (!list_empty(&fi->inmem_pages)) {
++		mutex_lock(&fi->inmem_lock);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, true);
++
++		if (list_empty(&fi->inmem_pages)) {
++			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
++			if (!list_empty(&fi->inmem_ilist))
++				list_del_init(&fi->inmem_ilist);
++			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
++		}
++		mutex_unlock(&fi->inmem_lock);
++	}
+ 
+ 	clear_inode_flag(inode, FI_ATOMIC_FILE);
+ 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+@@ -427,12 +443,15 @@ retry:
+ 		 * recovery or rewrite & commit last transaction. For other
+ 		 * error number, revoking was done by filesystem itself.
+ 		 */
+-		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
++		err = __revoke_inmem_pages(inode, &revoke_list,
++						false, true, false);
+ 
+ 		/* drop all uncommitted pages */
+-		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, false);
+ 	} else {
+-		__revoke_inmem_pages(inode, &revoke_list, false, false);
++		__revoke_inmem_pages(inode, &revoke_list,
++						false, false, false);
+ 	}
+ 
+ 	return err;
 
 
