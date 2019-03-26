@@ -2,155 +2,84 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E100C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50661C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C002070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582797;
-	bh=3NfzcUYRE7PQW1bNsav4qR5AFpAqpVi3gSPqt3zz1PU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyYxJqzgux6yHmwoJUNQvnKqrUe2cIvkbo/8ZsjfBLZVgs2XoC2B9+HbNFubWYS7X
-	 LA+d5Vx2F0ctwjmqjrfa6QAIGXhLPPS81ZhomTPMgC9K9BktYjDWbD/EZRyY9Sl6WL
-	 fMHuB+4Yw0/z8j6s9WyrDRPDi5frXkHACwB4osJA=
+	by mail.kernel.org (Postfix) with ESMTP id B933A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jY03Xhum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbfCZGdD (ORCPT
+        id S1731577AbfCZGqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730935AbfCZGdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:01 -0400
-Received: from localhost (unknown [104.132.152.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D6920856;
-        Tue, 26 Mar 2019 06:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581980;
-        bh=3NfzcUYRE7PQW1bNsav4qR5AFpAqpVi3gSPqt3zz1PU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQI20oP4sE0wKILgWHC28M9nETrSVl9cy9kZ6zPbGwTWavPD3RWBqgN+ukTiytY3O
-         S8dhcmJapioSPXHaW20NzL2t+RBTZ+qWLFBQttvswV1cZL91TxX9udTXNtIPyPeFcn
-         PoVxd2c2yFpThTDd7Gewh3DysqA+/ZrCkkGzWVyU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 10/41] scsi: ibmvscsi: Fix empty event pool access during host removal
-Date:   Tue, 26 Mar 2019 15:29:47 +0900
-Message-Id: <20190326042650.454629037@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
-References: <20190326042649.889479098@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 26 Mar 2019 02:46:50 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:34210 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730649AbfCZGcn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:32:43 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x2Q6WIMv022574;
+        Tue, 26 Mar 2019 15:32:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x2Q6WIMv022574
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1553581938;
+        bh=H2NatzQB9WaXUPrKwAF3g9dVX3FEcZkArZ+BAwTDODg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jY03Xhum4/kqgmyHcyGk9bZ1XtOPc10eVoPZW4JDjph20GWq6VzxVPYzSJctIFdRQ
+         UIXHfdB4hmPJCxtHI+ifIkuSuUVLJ3mmU1ab7Kqz1WxxXxgykH9ADG6Iflgb85JPrm
+         NBts5k4UTiOkI3PpuWE5BeWyqwAZc1fpNos3ulTNLJ4aidZUMwwA6EsYbfvPny+Wut
+         nAPtOy1eG9gTJNaCmXBliIhYk/i/58ALM7pvXEgX2onRP6DgCdDGBoqHt6Fp27qStf
+         rabO7u3IN3P6jRtCrwicbAYCQhB0Fts6jkT14TgdTllxs0h0z9B8qNF8dD4KS+2TcW
+         oZFxjmMi8H4EQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: fix warning "overriding recipe for target 'Makefile'"
+Date:   Tue, 26 Mar 2019 15:32:16 +0900
+Message-Id: <1553581936-6476-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+If you do "make Makefile" with GNU Make 3.x, the following warning
+is displayed:
 
-------------------
+  $ make Makefile
+  Makefile:165: warning: overriding recipe for target 'Makefile'
+  Makefile:51: warning: ignoring old recipe for target 'Makefile'
+  make[1]: Nothing to be done for 'Makefile'.
+  make: Nothing to be done for 'Makefile'.
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-
-commit 7f5203c13ba8a7b7f9f6ecfe5a4d5567188d7835 upstream.
-
-The event pool used for queueing commands is destroyed fairly early in the
-ibmvscsi_remove() code path. Since, this happens prior to the call so
-scsi_remove_host() it is possible for further calls to queuecommand to be
-processed which manifest as a panic due to a NULL pointer dereference as
-seen here:
-
-PANIC: "Unable to handle kernel paging request for data at address
-0x00000000"
-
-Context process backtrace:
-
-DSISR: 0000000042000000 ????Syscall Result: 0000000000000000
-4 [c000000002cb3820] memcpy_power7 at c000000000064204
-[Link Register] [c000000002cb3820] ibmvscsi_send_srp_event at d000000003ed14a4
-5 [c000000002cb3920] ibmvscsi_send_srp_event at d000000003ed14a4 [ibmvscsi] ?(unreliable)
-6 [c000000002cb39c0] ibmvscsi_queuecommand at d000000003ed2388 [ibmvscsi]
-7 [c000000002cb3a70] scsi_dispatch_cmd at d00000000395c2d8 [scsi_mod]
-8 [c000000002cb3af0] scsi_request_fn at d00000000395ef88 [scsi_mod]
-9 [c000000002cb3be0] __blk_run_queue at c000000000429860
-10 [c000000002cb3c10] blk_delay_work at c00000000042a0ec
-11 [c000000002cb3c40] process_one_work at c0000000000dac30
-12 [c000000002cb3cd0] worker_thread at c0000000000db110
-13 [c000000002cb3d80] kthread at c0000000000e3378
-14 [c000000002cb3e30] ret_from_kernel_thread at c00000000000982c
-
-The kernel buffer log is overfilled with this log:
-
-[11261.952732] ibmvscsi: found no event struct in pool!
-
-This patch reorders the operations during host teardown. Start by calling
-the SRP transport and Scsi_Host remove functions to flush any outstanding
-work and set the host offline. LLDD teardown follows including destruction
-of the event pool, freeing the Command Response Queue (CRQ), and unmapping
-any persistent buffers. The event pool destruction is protected by the
-scsi_host lock, and the pool is purged prior of any requests for which we
-never received a response. Finally, move the removal of the scsi host from
-our global list to the end so that the host is easily locatable for
-debugging purposes during teardown.
-
-Cc: <stable@vger.kernel.org> # v2.6.12+
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2299,17 +2299,27 @@ static int ibmvscsi_probe(struct vio_dev
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	spin_lock(&ibmvscsi_driver_lock);
--	list_del(&hostdata->host_list);
--	spin_unlock(&ibmvscsi_driver_lock);
--	unmap_persist_bufs(hostdata);
-+	unsigned long flags;
-+
-+	srp_remove_host(hostdata->host);
-+	scsi_remove_host(hostdata->host);
-+
-+	purge_requests(hostdata, DID_ERROR);
-+
-+	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
-+	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
-+
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
- 
- 	kthread_stop(hostdata->work_thread);
--	srp_remove_host(hostdata->host);
--	scsi_remove_host(hostdata->host);
-+	unmap_persist_bufs(hostdata);
-+
-+	spin_lock(&ibmvscsi_driver_lock);
-+	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
-+
- 	scsi_host_put(hostdata->host);
- 
- 	return 0;
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Makefile b/Makefile
+index 70fc778..1b361bd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -161,7 +161,7 @@ ifeq ($(need-sub-make),1)
+ 
+ PHONY += $(MAKECMDGOALS) sub-make
+ 
+-$(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
++$(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all: sub-make
+ 	@:
+ 
+ # Invoke a second make in the output directory, passing relevant variables
+-- 
+2.7.4
 
