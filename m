@@ -2,111 +2,118 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1437C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3342C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0432070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582859;
-	bh=/TUrN4y3ylhaLve7jrAYIkqMu/k6ee2UyMWHnkM23xQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jPCJ+9+UHJ5Kro7xx7TkG+SMvJSwuWPEiuTlep666HtSM0YcbbJBhrOmEmnIuK6nS
-	 OG7Cme3SogoZpzVnzFhj1wLDru5UzUTdDqMq36Ev3TT+enBShEu0bNTHfo+nNtnF6v
-	 sLF5KbIm9XtsBAuOe0/OoxOg4MPyywDcfVfXLD9A=
+	by mail.kernel.org (Postfix) with ESMTP id 858002070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfCZGbr (ORCPT
+        id S1730842AbfCZGut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:31:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731108AbfCZGbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:31:42 -0400
-Received: from localhost (unknown [104.132.152.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAC720866;
-        Tue, 26 Mar 2019 06:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581901;
-        bh=/TUrN4y3ylhaLve7jrAYIkqMu/k6ee2UyMWHnkM23xQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FrvuVVVXTfSjS0uLYhArFjwxjwaVwlmAtkosgzbP7DmATSoLk7HmhRMcQqOyxaYDC
-         mdJxQlv91zjltKoYJXtzhJk5OCUgoD6tFRvz6G/x/Vf/SQmW1n6IJ4gFjyXg4UT3EH
-         mXqIGa1xbPmrz2H4Hd/r24DeD42F5Y+ksioj7UWQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 26 Mar 2019 02:50:49 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44287 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZGut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:50:49 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g12so1183978pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 23:50:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FZhwv3yi5zyZbOFCZb2GEhrF1eNPuv7xg9JUzeBkJ/I=;
+        b=RD6pFDX9mw91sCEDV8fcyWef9EA1jI2Ui5J+mVOM7S8DM9w1Kub0tcYhXzp0t0+7Rp
+         /5oxxGu71L7GNpeQSbZ3gtxIM4or/BYtODqmsyOTOiahpZf20p4fIZx1OoAtPVGSOqek
+         94j/+BQLDF0DycJ3MYZBzVuPETcOBqCqCjUsMOMDxI1ujftGlk9gg8wz3zvnyXleex4n
+         b9BQdpiQyCmVBWLN3b9MEoef+/z+NC+/rAUgXLdFNnqh8Edyj4hsyEa1MBPDeG2X/iCR
+         /DbdPoZjJzMjfYbJEBFykKa5H4Uuc+hTDsr+lxvIRYHEL+/FK9sULA/xVv6cTcShHDFN
+         9OCg==
+X-Gm-Message-State: APjAAAWTEXrrJjWyYTGqc+mKR5ZN8pRMEFVUMSCDlC1X67JKSx+zGiru
+        gjv60VTSSIXTlPu9Ep2fmSB7qJ0crWo=
+X-Google-Smtp-Source: APXvYqy39bmf1qbyFI6moNdEPCXkx4W2gXiUlmd3KBrqDCU2xEuOLaQloNXGw74Vf1g20sAehiiMvw==
+X-Received: by 2002:a17:902:142:: with SMTP id 60mr29516055plb.191.1553583048524;
+        Mon, 25 Mar 2019 23:50:48 -0700 (PDT)
+Received: from localhost ([182.69.197.66])
+        by smtp.gmail.com with ESMTPSA id e13sm30256596pgb.37.2019.03.25.23.50.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Mar 2019 23:50:47 -0700 (PDT)
+From:   Bhupesh Sharma <bhsharma@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Jie <chenjie6@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>, dvhart@infradead.org,
-        peterz@infradead.org, zengweilin@huawei.com
-Subject: [PATCH 4.9 09/30] futex: Ensure that futex address is aligned in handle_futex_death()
-Date:   Tue, 26 Mar 2019 15:29:48 +0900
-Message-Id: <20190326042607.894047733@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
-References: <20190326042607.558087893@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Cc:     bhupesh.linux@gmail.com, bhsharma@redhat.com,
+        James Morse <james.morse@arm.com>, Boris Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dave Anderson <anderson@redhat.com>,
+        Dave Young <dyoung@redhat.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
+Subject: [PATCH] include/kcore: Remove left-over instances of 'kclist_add_remap()'
+Date:   Tue, 26 Mar 2019 12:20:28 +0530
+Message-Id: <1553583028-17804-1-git-send-email-bhsharma@redhat.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+Commit bf904d2762ee ("x86/pti/64: Remove the SYSCALL64 entry trampoline")
+removed the sole usage of 'kclist_add_remap()' from
+'arch/x86/mm/cpu_entry_area.c', but it did not remove the left-over
+definition from the include file.
 
-------------------
+Fix the same.
 
-From: Chen Jie <chenjie6@huawei.com>
-
-commit 5a07168d8d89b00fe1760120714378175b3ef992 upstream.
-
-The futex code requires that the user space addresses of futexes are 32bit
-aligned. sys_futex() checks this in futex_get_keys() but the robust list
-code has no alignment check in place.
-
-As a consequence the kernel crashes on architectures with strict alignment
-requirements in handle_futex_death() when trying to cmpxchg() on an
-unaligned futex address which was retrieved from the robust list.
-
-[ tglx: Rewrote changelog, proper sizeof() based alignement check and add
-  	comment ]
-
-Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
-Signed-off-by: Chen Jie <chenjie6@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <dvhart@infradead.org>
-Cc: <peterz@infradead.org>
-Cc: <zengweilin@huawei.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1552621478-119787-1-git-send-email-chenjie6@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: James Morse <james.morse@arm.com>
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- kernel/futex.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/kcore.h | 11 -----------
+ 1 file changed, 11 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3110,6 +3110,10 @@ int handle_futex_death(u32 __user *uaddr
- {
- 	u32 uval, uninitialized_var(nval), mval;
+diff --git a/include/linux/kcore.h b/include/linux/kcore.h
+index c843f4a9c512..da676cdbd727 100644
+--- a/include/linux/kcore.h
++++ b/include/linux/kcore.h
+@@ -38,12 +38,6 @@ struct vmcoredd_node {
  
-+	/* Futex address must be 32bit aligned */
-+	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
-+		return -1;
-+
- retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
-
+ #ifdef CONFIG_PROC_KCORE
+ void __init kclist_add(struct kcore_list *, void *, size_t, int type);
+-static inline
+-void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
+-{
+-	m->vaddr = (unsigned long)vaddr;
+-	kclist_add(m, addr, sz, KCORE_REMAP);
+-}
+ 
+ extern int __init register_mem_pfn_is_ram(int (*fn)(unsigned long pfn));
+ #else
+@@ -51,11 +45,6 @@ static inline
+ void kclist_add(struct kcore_list *new, void *addr, size_t size, int type)
+ {
+ }
+-
+-static inline
+-void kclist_add_remap(struct kcore_list *m, void *addr, void *vaddr, size_t sz)
+-{
+-}
+ #endif
+ 
+ #endif /* _LINUX_KCORE_H */
+-- 
+2.7.4
 
