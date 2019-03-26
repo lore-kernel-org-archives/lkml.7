@@ -2,186 +2,88 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD18C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3C1C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35A220856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553587453;
-	bh=r0Rhe84AsjUCGIJ/d1xqfxWm709fXRVv6h7vqAn0ius=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PIxcy7Q3E39uo4eIEu8NnrsbmTQqewR4oACZGgSvsotOrDQbapUCN8R52z9ogj7jO
-	 cCkLgiSU55NXtKUBld5I6Oackkl2xE9ODNcZHvzi3T/wyhqzVy3SoeuYbQ4uPiKGfC
-	 OTCo763lDS58c1tg1csrMv2kXBKW0g5nSK+n5Uus=
+	by mail.kernel.org (Postfix) with ESMTP id F01F620856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:06:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EKNQhc84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfCZIEM (ORCPT
+        id S1730919AbfCZIGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:04:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53248 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726275AbfCZIEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:04:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 64AACACF3;
-        Tue, 26 Mar 2019 08:04:09 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 09:04:08 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
-Message-ID: <20190326080408.GC28406@dhcp22.suse.cz>
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190322180532.GM32418@dhcp22.suse.cz>
- <CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com>
- <20190325101945.GD9924@dhcp22.suse.cz>
- <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
+        Tue, 26 Mar 2019 04:06:51 -0400
+Received: from m13-37.163.com ([220.181.13.37]:4176 "EHLO m13-37.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727624AbfCZIGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:06:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=e0SYl
+        +G2gMP2T47fr0R5SU8lscsVUcNOWxUkH+DbRw4=; b=EKNQhc84CAjzx6FAv0vuB
+        vDJ3PlkCdVJ5QlU0Y5TeXOgoboOwkHUa2kzPq0oXY9p+ChlB5I0zJJWbnE9kfVq3
+        L8FTj8iSUX+JmKEWDWISaKl8nszwhc6b0mUak7sNKz6umOHAt014vYSmjedPFw4l
+        Q0DCjrGKly3RdGiW0WOOdg=
+Received: from luferry$163.com ( [42.120.75.143] ) by ajax-webmail-wmsvr37
+ (Coremail) ; Tue, 26 Mar 2019 15:55:10 +0800 (CST)
+X-Originating-IP: [42.120.75.143]
+Date:   Tue, 26 Mar 2019 15:55:10 +0800 (CST)
+From:   luferry <luferry@163.com>
+To:     "Christoph Hellwig" <hch@lst.de>
+Cc:     "Jens Axboe" <axboe@kernel.dk>,
+        "Dongli Zhang" <dongli.zhang@oracle.com>,
+        "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] make blk_mq_map_queues more friendly for cpu
+ topology
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
+In-Reply-To: <20190326073954.GD21617@lst.de>
+References: <20190325152640.48120-1-luferry@163.com>
+ <20190326073954.GD21617@lst.de>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: JcGowADX5gTf2plcf9kfAA--.38729W
+X-CM-SenderInfo: poxiv2lu16il2tof0z/xtbBLwWDWlUMIcBO4gACsl
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 25-03-19 13:03:47, Dan Williams wrote:
-> On Mon, Mar 25, 2019 at 3:20 AM Michal Hocko <mhocko@kernel.org> wrote:
-[...]
-> > > User-defined memory namespaces have this problem, but 2MB is the
-> > > default alignment and is sufficient for most uses.
-> >
-> > What does prevent users to go and use a larger alignment?
-> 
-> Given that we are living with 64MB granularity on mainstream platforms
-> for the foreseeable future, the reason users can't rely on a larger
-> alignment to address the issue is that the physical alignment may
-> change from one boot to the next.
-
-I would love to learn more about this inter boot volatility. Could you
-expand on that some more? I though that the HW configuration presented
-to the OS would be more or less stable unless the underlying HW changes.
-
-> No, you can't just wish hardware / platform firmware won't do this,
-> because there are not enough platform resources to give every hardware
-> device a guaranteed alignment.
-
-Guarantee is one part and I can see how nobody wants to give you
-something as strong but how often does that happen in the real life?
-
-> The effect is that even if the driver deploys a software alignment
-> mitigation when it first sees the persistent memory range, that
-> alignment can be violated on a subsequent boot leading to data being
-> unavailable. There is no facility to communicate to the administrator
-> what went wrong in this scenario as several events can trigger a
-> physical map layout change. Add / remove of hardware and hardware
-> failure are the most likely causes.
-
-This is indeed bad and unexpected! That is exactly something to have in
-the chagelog!
-
-> An additional pain point for users is that EFI pre-boot environment
-> has little chance to create a namespace that Linux might be able to
-> use. The section size is an arbitrary Linux constraint and we should
-> not encode something Linux specific that might change in the future
-> into OS agnostic software.
-
-This looks like a fair point but please keep in mind that there hotplug
-restrictions are on other platforms as well (4MB on Windows IIRC) so
-there will be some knowledge required all the time. Besides that there
-are likely to be some restrictions depending on the implementation.
-
-[...]
-> > > Right, as stated in the cover letter, this does not remove all those
-> > > assumptions, it only removes the ones that impact
-> > > devm_memremap_pages(). Specifying that sub-section is only supported
-> > > in the 'want_memblock=false' case to arch_add_memory().
-> >
-> > And this is exactly the problem. Having different assumptions depending
-> > on whether there is a memblock interface or not is utterly wrong and a
-> > maintainability mess.
-> 
-> In this case I disagree with you. The hotplug code already has the
-> want_memblock=false semantic in the implementation.
-
-want_memblock was a hack to allow memory hotplug to not have user
-visible sysfs interface. It was added to reduce the code duplication
-IIRC. Besides that this hasn't changed the underlying assumptions about
-hotplugable units or other invariants that were in place.
-
-> The sub-section
-> hotplug infrastructure is a strict superset of what is there already.
-> Now, if it created parallel infrastructure that would indeed be a
-> maintainability burden, but in this case there are no behavior changes
-> for typical memory hotplug as it just hotplugs full sections at a time
-> like always. The 'section' concept is not going away.
-
-You are really neglecting many details here. E.g. memory section can be
-shared between two different types of memory. We've had some bugs in the
-hotplug code when one section can be shared between two different NUMA
-nodes (e.g. 4aa9fc2a435a ("Revert "mm, memory_hotplug: initialize struct
-pages for the full memory section""). We do not allow to hotremove such
-sections because it would open another can of worms. I am not saying
-your implementation is incorrect - still haven't time to look deeply -
-but stating that this is a strict superset of want_memblock is simply
-wrong.
- 
-[...]
-> > Why do we have to go a mile to tweak the kernel, especially something as
-> > fragile as memory hotplug, just to support sub mem section ranges. This
-> > is somthing that is not clearly explained in the cover letter. Sure you
-> > are talking about hacks at the higher level to deal with this but I do
-> > not see any fundamental reason to actually support that at all.
-> 
-> Like it or not, 'struct page' mappings for arbitrary hardware-physical
-> memory ranges is a facility that has grown from the pmem case, to hmm,
-> and peer-to-peer DMA. Unless you want to do the work to eliminate the
-> 'struct page' requirement across the kernel I think it is unreasonable
-> to effectively archive the arch_add_memory() implementation and
-> prevent it from reacting to growing demands.
-
-I am definitely not blocking memory hotplug to be reused more! All I am
-saying is that there is much more ground work to be done before you can
-add features like that. There are some general assumptions in the code,
-like it or not, and you should start by removing those to build on top.
-Pmem/nvidimm development is full of "we have to do it now and find a way
-to graft it into the existing infrastructure" pattern that I really
-hate. Clean up will come later, I have heard. Have a look at all
-zone_device hacks that remained. Why is this any different?
-
-And just to make myself clear. There are places where section cannot go
-away because that is the unit in which the memory model maintains struct
-pages. But the hotplug code is fill of construct where we iterate mem
-sections as one unit and operate on it as whole. Those have to go away
-before you can consider subsection hotadd/remove.
-
-> > I can feel your frustration. I am not entirely happy about the section
-> > size limitation myself but you have to realize that this is simplicy vs.
-> > feature set compromise.
-> 
-> You have to realize that arch_add_memory() is no longer just a
-> front-end for typical memory hotplug. The requirements have changed.
-> Simplicity should be maintained for as long as it can get the job
-> done, and the simplicity is currently failing.
-
-I do agree. But you also have to realize that this require a lot of
-work. As long as users of the api are not willing to do that work then
-I am afraid but the facility will remain dumb. But putting hacks to make
-a specific usecase (almost)work is not the right way.
--- 
-Michal Hocko
-SUSE Labs
+CgoKQXQgMjAxOS0wMy0yNiAxNTozOTo1NCwgIkNocmlzdG9waCBIZWxsd2lnIiA8aGNoQGxzdC5k
+ZT4gd3JvdGU6Cj5XaHkgaXNuJ3QgdGhpcyB1c2luZyB0aGUgYXV0b21hdGljIFBDSS1sZXZlbCBh
+ZmZpbml0eSBhc3NpZ25tZW50IHRvCj5zdGFydCB3aXRoPwoKV2hlbiBlbmFibGUgdmlydGlvLWJs
+ayB3aXRoIG11bHRpIHF1ZXVlcyBidXQgd2l0aCBvbmx5IDIgbXNpeC12ZWN0b3IuCnZwX2Rldi0+
+cGVyX3ZxX3ZlY3RvcnMgd2lsbCBiZSBmYWxzZSwgdnBfZ2V0X3ZxX2FmZmludGl0eSB3aWxsIHJl
+dHVybiBOVUxMIGRpcmVjdGx5CnNvIGJsa19tcV92aXJ0aW9fbWFwX3F1ZXVlcyB3aWxsIGZhbGxi
+YWNrIHRvIGJsa19tcV9tYXBfcXVldWVzLgoKCjQ0OCBjb25zdCBzdHJ1Y3QgY3B1bWFzayAqdnBf
+Z2V0X3ZxX2FmZmluaXR5KHN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2ZGV2LCBpbnQgaW5kZXgpCjQ0
+OSB7CjQ1MCAgICAgc3RydWN0IHZpcnRpb19wY2lfZGV2aWNlICp2cF9kZXYgPSB0b192cF9kZXZp
+Y2UodmRldik7CjQ1MQo0NTIgICAgIGlmICghdnBfZGV2LT5wZXJfdnFfdmVjdG9ycyB8fAo0NTMg
+ICAgICAgICB2cF9kZXYtPnZxc1tpbmRleF0tPm1zaXhfdmVjdG9yID09IFZJUlRJT19NU0lfTk9f
+VkVDVE9SKQo0NTQgICAgICAgICByZXR1cm4gTlVMTDsKNDU1CjQ1NiAgICAgcmV0dXJuIHBjaV9p
+cnFfZ2V0X2FmZmluaXR5KHZwX2Rldi0+cGNpX2RldiwKNDU3ICAgICAgICAgICAgICAgICAgICAg
+dnBfZGV2LT52cXNbaW5kZXhdLT5tc2l4X3ZlY3Rvcik7CjQ1OCB9CgogMzIgaW50IGJsa19tcV92
+aXJ0aW9fbWFwX3F1ZXVlcyhzdHJ1Y3QgYmxrX21xX3F1ZXVlX21hcCAqcW1hcCwKIDMzICAgICAg
+ICAgc3RydWN0IHZpcnRpb19kZXZpY2UgKnZkZXYsIGludCBmaXJzdF92ZWMpCiAzNCB7CiAzNSAg
+ICAgY29uc3Qgc3RydWN0IGNwdW1hc2sgKm1hc2s7CiAzNiAgICAgdW5zaWduZWQgaW50IHF1ZXVl
+LCBjcHU7CiAzNwogMzggICAgIGlmICghdmRldi0+Y29uZmlnLT5nZXRfdnFfYWZmaW5pdHkpCiAz
+OSAgICAgICAgIGdvdG8gZmFsbGJhY2s7CiA0MAogNDEgICAgIGZvciAocXVldWUgPSAwOyBxdWV1
+ZSA8IHFtYXAtPm5yX3F1ZXVlczsgcXVldWUrKykgewogNDIgICAgICAgICBtYXNrID0gdmRldi0+
+Y29uZmlnLT5nZXRfdnFfYWZmaW5pdHkodmRldiwgZmlyc3RfdmVjICsgcXVldWUpOyAvL3ZwX2dl
+dF92cV9hZmZpbml0eSByZXR1cm4gTlVMTAogNDMgICAgICAgICBpZiAoIW1hc2spCiA0NCAgICAg
+ICAgICAgICBnb3RvIGZhbGxiYWNrOwogNDUKIDQ2ICAgICAgICAgZm9yX2VhY2hfY3B1KGNwdSwg
+bWFzaykKIDQ3ICAgICAgICAgICAgIHFtYXAtPm1xX21hcFtjcHVdID0gcW1hcC0+cXVldWVfb2Zm
+c2V0ICsgcXVldWU7CiA0OCAgICAgfQogNDkKIDUwICAgICByZXR1cm4gMDsKIDUxIGZhbGxiYWNr
+OgogNTIgICAgIHJldHVybiBibGtfbXFfbWFwX3F1ZXVlcyhxbWFwKTsKIDUzIH0KCmhlcmUgaXMg
+cHJldmlvdXMgZGlzY3Vzc2lvbgpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
+ODY1NDYxLyAK
