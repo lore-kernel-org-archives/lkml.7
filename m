@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8947C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF987C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBD120879
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD1E20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582349;
-	bh=LyI094+zkmHeEY3UHBwOkO7Ui4LxtSUMsFrTUROdVqs=;
+	s=default; t=1553582353;
+	bh=ZACpqakP4sH/Ag6TNxr/ompRfcAFjXJ2oVMoOB9XYp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERK1/8e0fhbASOiLWFrwvvWmDXAxiIjhNbZjWeleNvlYNVHxqCFngXM2f+/NSVmn4
-	 KwDmz8d5FFuqr7aGWWTdeMYAqsNb6BmSAygJpc5ZwAhrArF7PRH+BgVyqVXMm9/LDp
-	 HirMEXCNn2a54IjwZRVaC3CcNFI032IQ1Y4Fa8MA=
+	b=YXQrxOV39jX+DKJ4a9KEoMul3zdZuxherp0PV3A7/68UqFyIbw8c9qi5+ZwI1eZCj
+	 jlV2CD3wX7y1AyyS2PlfZROI/McrGtS/O/ev+UXerMGF3V40O/6e+rNemOLzUmWG44
+	 hWtyAxSbbDr4x7q/8bStfHyBxdl4/0RV3Dde5pTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbfCZGjI (ORCPT
+        id S1732651AbfCZGjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732620AbfCZGjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:05 -0400
+        id S1732643AbfCZGjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:39:08 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B431A2087C;
-        Tue, 26 Mar 2019 06:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2603F20870;
+        Tue, 26 Mar 2019 06:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582344;
-        bh=LyI094+zkmHeEY3UHBwOkO7Ui4LxtSUMsFrTUROdVqs=;
+        s=default; t=1553582347;
+        bh=ZACpqakP4sH/Ag6TNxr/ompRfcAFjXJ2oVMoOB9XYp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtVV2bHIgoMG3cSb2uwY3H7/YIswzY93CXL4BQN/EcKeU535MCR7z9yl14KgNR6iq
-         7kC9w9n7orDgYaMJKRVnKe2f2iHXGj15GbVpS7+Hbr4Hs9pBB1chkzMuaNgt7W0xKx
-         E1v/GvDD9p94bX6gYuRbWKvRf0KRz3gB8ZxxDtRY=
+        b=1fMdPmdVkembP4/hopcyAnWEp0A/ib5UgjUl4hAo9USP9KMfR3dLODf3kSzbjzvq2
+         xc1qrhrP64r6vxpZojJF9p3k/9WTmrk5H4m3oNcgSJiNDehgEbyH+ue5lrx5zhe3/c
+         08za8gWzrZmJjW7EezaIvr9UdyYk7+OQZkD6scwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vassili Karpov <moosotc@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.0 27/52] objtool: Move objtool_file struct off the stack
-Date:   Tue, 26 Mar 2019 15:30:14 +0900
-Message-Id: <20190326042702.309899847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH 5.0 28/52] irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
+Date:   Tue, 26 Mar 2019 15:30:15 +0900
+Message-Id: <20190326042702.367847680@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -66,42 +65,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-commit 0c671812f152b628bd87c0af49da032cc2a2c319 upstream.
+commit 89dc891792c2e046b030f87600109c22209da32e upstream.
 
-Objtool uses over 512k of stack, thanks to the hash table embedded in
-the objtool_file struct.  This causes an unnecessarily large stack
-allocation and breaks users with low stack limits.
+The lpi_range_list is supposed to be sorted in ascending order of
+->base_id (at least if the range merging is to work), but the current
+comparison function returns a positive value if rb->base_id >
+ra->base_id, which means that list_sort() will put A after B in that
+case - and vice versa, of course.
 
-Move the struct off the stack.
-
-Fixes: 042ba73fe7eb ("objtool: Add several performance improvements")
-Reported-by: Vassili Karpov <moosotc@gmail.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/df92dcbc4b84b02ffa252f46876df125fb56e2d7.1552954176.git.jpoimboe@redhat.com
+Fixes: 880cb3cddd16 (irqchip/gic-v3-its: Refactor LPI allocator)
+Cc: stable@vger.kernel.org (v4.19+)
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2184,9 +2184,10 @@ static void cleanup(struct objtool_file
- 	elf_close(file->elf);
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1482,7 +1482,7 @@ static int lpi_range_cmp(void *priv, str
+ 	ra = container_of(a, struct lpi_range, entry);
+ 	rb = container_of(b, struct lpi_range, entry);
+ 
+-	return rb->base_id - ra->base_id;
++	return ra->base_id - rb->base_id;
  }
  
-+static struct objtool_file file;
-+
- int check(const char *_objname, bool orc)
- {
--	struct objtool_file file;
- 	int ret, warnings = 0;
- 
- 	objname = _objname;
+ static void merge_lpi_ranges(void)
 
 
