@@ -2,106 +2,124 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22720C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C90AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC5C2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028C72087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732871AbfCZXUU convert rfc822-to-8bit (ORCPT
+        id S1732817AbfCZXWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:20:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:5842 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbfCZXUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:20:20 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 16:20:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
-   d="scan'208";a="158669207"
-Received: from kmsmsx152.gar.corp.intel.com ([172.21.73.87])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2019 16:20:16 -0700
-Received: from pgsmsx112.gar.corp.intel.com ([169.254.3.114]) by
- KMSMSX152.gar.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0415.000;
- Wed, 27 Mar 2019 07:20:01 +0800
-From:   "Huang, Kai" <kai.huang@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Svahn, Kai" <kai.svahn@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: RE: [PATCH v19,RESEND 08/27] x86/cpu/intel: Detect SGX support and
- update caps appropriately
-Thread-Topic: [PATCH v19,RESEND 08/27] x86/cpu/intel: Detect SGX support and
- update caps appropriately
-Thread-Index: AQHU3zky6JmIjy9D9kKUr6BC7GDLPqYdVzoAgAAkQICAAPek0P//hiCAgACc10A=
-Date:   Tue, 26 Mar 2019 23:19:59 +0000
-Message-ID: <105F7BF4D0229846AF094488D65A0989356F3436@PGSMSX112.gar.corp.intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
- <20190320162119.4469-9-jarkko.sakkinen@linux.intel.com>
- <1553602654.17255.15.camel@intel.com>
- <20190326142719.GC3757@linux.intel.com>
- <105F7BF4D0229846AF094488D65A0989356F307D@PGSMSX112.gar.corp.intel.com>
- <20190326215727.GG3757@linux.intel.com>
-In-Reply-To: <20190326215727.GG3757@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNGM1YjM3NzEtZTI1MS00NzJlLWFjMmYtY2MxZDkwYzAxNzU2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRVdVczFaTU9MZE9mZENWY2EwXC9HMTVhYlVJWEMzWExSTURcLzU4emFJT2h5dVc5NlBPOG82c3FRK2htMEtITmJiIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 26 Mar 2019 19:22:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51918 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726922AbfCZXWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 19:22:16 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNIbGU126123
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:22:14 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rft9vqqb7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:22:14 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 26 Mar 2019 23:22:14 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Mar 2019 23:22:08 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNM7hb20840670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 23:22:07 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DF0DB2067;
+        Tue, 26 Mar 2019 23:22:07 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F94EB205F;
+        Tue, 26 Mar 2019 23:22:07 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Mar 2019 23:22:07 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 99B7216C60F3; Tue, 26 Mar 2019 16:22:08 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 16:22:08 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/11] RCU CPU stall-warning changes for v5.2
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032623-0072-0000-0000-00000410BB4C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000282; SDB=6.01180136; UDB=6.00617574; IPR=6.00960851;
+ MB=3.00026169; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:22:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032623-0073-0000-0000-00004B9D5B75
+Message-Id: <20190326232208.GA20384@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tue, Mar 26, 2019 at 02:25:52PM -0700, Huang, Kai wrote:
-> > >
-> > > That being said, this in no way impacts KVM's ability to virtualize SGX, e.g.
-> > > KVM can directly do CPUID and {RD,WR}MSR to probe the capabilities
-> > > of the platform as needed.
-> >
-> > I am not following. KVM can do whatever it wants, but it cannot change
-> > the fact that KVM guest cannot run intel enclave if platform's MSRs
-> > are configured to 3rd party and locked.
-> >
-> > Or am I misunderstanding?
-> 
-> What does that have to do with this patch?  The only thing this patch does is
-> clear a *software* bit that says "SGX LC is enabled" so that the kernel can
-> make the reasonable assumption that the MSRs are writable when
-> X86_FEATURE_SGX_LC=1.
+Hello!
 
-Sorted out offline discussion with you. Will let you handle :)
+This series is primarily code movement for RCU CPU stall warnings.
+If I am having a hard time finding the various scattered pieces of
+this code, it is in need of consolidation!
 
-Thanks,
--Kai
+1-3.	Move RCU CPU stall-warning code into kernel/rcu/tree_stall.h.
+
+4.	Inline RCU task stall-warning helper functions.
+
+5.	Move rcu_print_task_exp_stall() to tree_exp.h.
+
+6.	Inline RCU stall-warning info helper functions.
+
+7.	Move FAST_NO_HZ stall-warning code to tree_stall.h.
+
+8.	Organize functions in tree_stall.h.
+
+9.	Move irq-disabled stall-warning checking to tree_stall.h.
+
+10.	Move forward-progress checkers into tree_stall.h
+
+11.	Fix nohz status in stall warning, courtesy of Neeraj Upadhyay.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ rcu.h         |    1 
+ tree.c        |  479 -----------------------------
+ tree.h        |   18 -
+ tree_exp.h    |   32 +
+ tree_plugin.h |  213 ------------
+ tree_stall.h  |  951 ++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ update.c      |   59 ---
+ 7 files changed, 875 insertions(+), 878 deletions(-)
+
