@@ -2,168 +2,211 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDC2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907DCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFEA2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jbtSZaEf"
+	by mail.kernel.org (Postfix) with ESMTP id 542242084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfCZIhT (ORCPT
+        id S1731218AbfCZIiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:37:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40257 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCZIhT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:37:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z24so8608738wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 01:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=mWH5TE9ngb/T4SFljDRth3c31ZtSkwBldxnRgk3wmtk=;
-        b=jbtSZaEfdEFa/HjT4oKknl08ZaL8XyuvijT0P3HwKBvbNRMvOiYTbE7I/jMCdYeGSd
-         zJ2HSVE4J3Pr0zsh05yXt+vx1HQwAvyw9LefX5HaooZa+HCQXzFJ7snWN6knKxWEcmzl
-         Gr692g5/UpfiDsdlOlEppVvr5JWwUvkgTTkq1oLOb9sz48to6evj60jSVphaK2x6eDeU
-         dngzk1yavdhuwfVbIPzaN3nV+vQJaq81GAra9siG8rbLjJzV819rQxpRtIqvpr6U+3GS
-         AqRGE8JLpFFjkzd034YgUwszNS2G9nWvZwXaYRsS/tJp7fYNxyPnDeAfEyrZ/D9dsecG
-         MIFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=mWH5TE9ngb/T4SFljDRth3c31ZtSkwBldxnRgk3wmtk=;
-        b=VoIXJkIsZgaKITA0vvyi++zHsdJv7dMGh5TkiS+uPD8agxwgn0XVXx8NVH2KuJnSU7
-         tl56bAc2QVXVrjR90UpsBRpmkxyBHcKr2uYgrleSYC+TZJ8tg3p1svu2DCpt+qvAs/Xw
-         Mb6d0DDtgv9EalGei3Rx7X02+3jqCdRESzx5eiVbbrSNCXWpKqafBi3YR15nVCvMSNA2
-         CxYWiQ+QilkP3bcYtKOaoC5W5vkt0wN/R6bRVSGEalxz9z9oHu6tvgzkAVEZZF6YnNgk
-         P2bb/gJoS2G4lJ/TXLZTBl8ZDi7NpCI4gFv9wvL0x3BZbwx867fswRtrUTkitlkLM0GY
-         +WYg==
-X-Gm-Message-State: APjAAAVV1A4zRZZ1g5sX0u8mR+gxNWTYBRorL9rgB1Rt+bg8daloXXj2
-        G8BW81bb6zHlufn/4/xz0sWPjg==
-X-Google-Smtp-Source: APXvYqzZdwTqgaSZfVI3hGKnx5vPu3dG9j8Ca65UUlBfpMDU8YwB5wYJhHVl+n5c8C9EXj4euPY3DA==
-X-Received: by 2002:a1c:6587:: with SMTP id z129mr13661182wmb.84.1553589435679;
-        Tue, 26 Mar 2019 01:37:15 -0700 (PDT)
-Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id b134sm37945007wmd.26.2019.03.26.01.37.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 26 Mar 2019 01:37:14 -0700 (PDT)
-Message-ID: <88a731b0f1c2ce18d2cf7aff6e2ffc24a395a067.camel@baylibre.com>
-Subject: Re: [PATCH 0/1] pwm: meson: fix scheduling while atomic issue
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     thierry.reding@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 26 Mar 2019 09:37:12 +0100
-In-Reply-To: <CAFBinCCPW8wAoiN4hjj9tAYSqQqChpSB6+urAiXU95VYaZZKGg@mail.gmail.com>
-References: <20190324220217.15813-1-martin.blumenstingl@googlemail.com>
-         <47e944da1c3b0a11cf46fc5ad5678ba961b9f9d3.camel@baylibre.com>
-         <CAFBinCCPW8wAoiN4hjj9tAYSqQqChpSB6+urAiXU95VYaZZKGg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 26 Mar 2019 04:38:19 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32914 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbfCZIiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:38:18 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 843B17979576A754B93D;
+        Tue, 26 Mar 2019 08:38:16 +0000 (GMT)
+Received: from lhreml706-chm.china.huawei.com (10.201.108.55) by
+ LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 26 Mar 2019 08:38:16 +0000
+Received: from lhreml702-chm.china.huawei.com (10.201.108.51) by
+ lhreml706-chm.china.huawei.com (10.201.108.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Tue, 26 Mar 2019 08:38:16 +0000
+Received: from lhreml702-chm.china.huawei.com ([10.201.68.197]) by
+ lhreml702-chm.china.huawei.com ([10.201.68.197]) with mapi id 15.01.1713.004;
+ Tue, 26 Mar 2019 08:38:15 +0000
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     syzbot <syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: RE: inconsistent lock state in ax25_std_heartbeat_expiry
+Thread-Topic: inconsistent lock state in ax25_std_heartbeat_expiry
+Thread-Index: AQHU4zxQi6YptRtXJkyVp0+Ue4BUaaYdl0UA
+Date:   Tue, 26 Mar 2019 08:38:15 +0000
+Message-ID: <ff7a386eb6164b5882471d4d7150c8cc@huawei.com>
+References: <0000000000001b07250584efbee3@google.com>
+In-Reply-To: <0000000000001b07250584efbee3@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.226.60]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 19:04 +0100, Martin Blumenstingl wrote:
-> > Thanks for fixing this Martin.
-> you're welcome!
-> 
-> > As for the future enhancement, I'd like to know what you have in mind.
-> > As I have told you previously, I think the clock bindings of this driver are
-> > not great.
-> > 
-> > The global name of the input clocks are hard coded in this driver and it
-> > sucks. CCF is evolving to rely less on these global names.
-> I fully agree with you on the clock setup, but I'm not sure if we have
-> to break the dt-bindings for it.
-> 
-> the datasheet notes: "Each PWM is driven by a programmable divider
-> driven by a 4:1 clock selector".
-> In my own words this means that each PWM controller has up to 8 clock inputs:
-> - up to 4 inputs for the first channel (PWM_A)
-> - up to 4 inputs for the second channel (PWM_B)
-
-Not from the pwm device POV. there is one device (PWM_AB) with 4 (max) input
-clocks. Those are consumed by two internal muxes. There would be 8 if the
-input was different between path A and B.
-
-> 
-> the current pwm-meson driver assumes that both the inputs for both
-> channels are identical.
-> the "clock trees" section of the public S912 datasheet (page 65)
-> clearly documents the clock inputs per PWM channel, not per PWM
-> controller.
-> 
-> Thus I believe we should name our clock-names (the inputs to the PWM
-> controller) "pwm-a-clkin0", "pwm-a-clkin1", "pwm-b-clkin0", ...
-> That way we don't have a conflict with the existing bindings (which
-> already reserve "clkin0" and "clkin1").
-
-I think this is overkill an inaccurate. The experience of all the soc we have
-seen so far (meson8, gxbb, gxl, gxm, axg and g12) confirms the sources the are
-the same input clock for both path.
-
-The documentation just shows the clock src of each pwm. That just how the the
-table is presented. That does not change the fact the pwms are organized in
-modules (pairs) and the that the clock source are the same for each pwm of the
-module. IOW, there is only 4 lines of clocks getting to the IP, not 8. Feel
-free to ask amlogic if you want to make sure.
-
-The name clash is not really my point. The purpose of the clock binding would
-be different (from stating a setting to describing hw connection)
-
-> 
-> > In addition, the 'clock' binding should be used to refer to the clock
-> > 'consumed' by the device, not to define a setting (as done now). 'assigned-
-> > clock' binding can be used for that.
-> using the assigned-clock* properties requires self-referencing the PWM
-> controller (which I'm not used to), for example:
->   &pwm_ab {
->       #clock-cells = <1>;
->       assigned-clocks = <&pwm_ab 0>, <&pwm_ab 1>; /* references itself */
->       assigned-clock-parents = <&xtal>, <&clkc CLKID_FCLK_DIV5>;
->   };
-> 
-> if we want to auto-detect the parent clock (like you suggested below)
-> we need to consider if we can detect whether a .dts-author assigned a
-> specific parent.
-
-I (personally) don't want to keep supporting the manual assignment of the
-parent. If the driver can guarantee than it will pick the most appropriate
-parent, there is no reason to have that.
-
-> I know that it's easy to detect this when the clock is passed in the
-> "clocks" property, but I'm not sure if it's easy to parse it from the
-> assigned-clocks/assigned-clock-parents properties.
-
-Assigned parent is the poor man solution and not necessarily easier to
-implement (the pwm device would have to export its own clocks) ... I have just
-mentioned it to make  the point that current method is not ideal
-
-> 
-> [...]
-> > Last, instead of specifying the parent to be used, I think we should come up
-> > with some code to let the driver pick the most appropriate parent for the period/duty requested.
-> that will make it easier for .dts authors.
-> I would like to postpone this until we have solved the other topics though.
-
-I much prefer this last solution. Since the algorithm and the bindings would
-change, I think it would be easier (in DT) to just make v2 driver with a new
-compatible, progressively transition dts to it and finally remove the old
-driver.
-
-
-
+Tm90IHJlcHJvZHVjaWJsZSBvbiBvdXIgc2V0dXAgZWl0aGVyLiBUaGFua3MgZm9yIHJlcG9ydGlu
+ZyB0aG91Z2guDQpXZSB3aWxsIGtlZXAgYW4gZXllIQ0KDQpTYWxpbC4NCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFp
+bHRvOm5ldGRldi0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2Ygc3l6Ym90
+DQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMjUsIDIwMTkgNjo1NSBQTQ0KPiBUbzogZGF2ZW1AZGF2
+ZW1sb2Z0Lm5ldDsgbGludXgtaGFtc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
+dmdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyByYWxmQGxpbnV4LW1pcHMu
+b3JnOw0KPiBzeXprYWxsZXItYnVnc0Bnb29nbGVncm91cHMuY29tDQo+IFN1YmplY3Q6IGluY29u
+c2lzdGVudCBsb2NrIHN0YXRlIGluIGF4MjVfc3RkX2hlYXJ0YmVhdF9leHBpcnkNCj4gDQo+IEhl
+bGxvLA0KPiANCj4gc3l6Ym90IGZvdW5kIHRoZSBmb2xsb3dpbmcgY3Jhc2ggb246DQo+IA0KPiBI
+RUFEIGNvbW1pdDogICAgNWY1NDNhNTQgbmV0OiBobnMzOiBmaXggZm9yIG5vdCBjYWxjdWxhdGlu
+ZyB0eCBiZCBudW0NCj4gY29yci4uDQo+IGdpdCB0cmVlOiAgICAgICBuZXQNCj4gY29uc29sZSBv
+dXRwdXQ6DQo+IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEwYzg2
+NTJiMjAwMDAwDQo+IGtlcm5lbCBjb25maWc6DQo+IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3Qu
+Y29tL3gvLmNvbmZpZz94PWYwNTkwMmJjYTIxZDg5MzUNCj4gZGFzaGJvYXJkIGxpbms6DQo+IGh0
+dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL2J1Zz9leHRpZD1lMzUwYjgxZTk1YTZhMjE0ZGE4
+YQ0KPiBjb21waWxlcjogICAgICAgZ2NjIChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50
+YWwpDQo+IA0KPiBVbmZvcnR1bmF0ZWx5LCBJIGRvbid0IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9y
+IHRoaXMgY3Jhc2ggeWV0Lg0KPiANCj4gSU1QT1JUQU5UOiBpZiB5b3UgZml4IHRoZSBidWcsIHBs
+ZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlDQo+IGNvbW1pdDoNCj4gUmVwb3J0ZWQt
+Ynk6IHN5emJvdCtlMzUwYjgxZTk1YTZhMjE0ZGE4YUBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29t
+DQo+IA0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0aCBv
+d24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYToxYiwg
+dmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdp
+dGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6NjY6NTY6MjE6NzQ6MTQ6
+ZGYsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2ZV8w
+IHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6
+YWE6MGMsIHZsYW46MCkNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gV0FS
+TklORzogaW5jb25zaXN0ZW50IGxvY2sgc3RhdGUNCj4gNS4wLjArICMxMzQgTm90IHRhaW50ZWQN
+Cj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gaW5jb25zaXN0ZW50IHtTT0ZU
+SVJRLU9OLVd9IC0+IHtJTi1TT0ZUSVJRLVd9IHVzYWdlLg0KPiBrc29mdGlycWQvMS8xNiBbSEMw
+WzBdOlNDMVsxXTpIRTE6U0UwXSB0YWtlczoNCj4gMDAwMDAwMDA4MjgyYTdkNCAoc2xvY2stQUZf
+QVgyNSl7Ky4/Ln0sIGF0OiBzcGluX2xvY2sNCj4gaW5jbHVkZS9saW51eC9zcGlubG9jay5oOjMy
+OSBbaW5saW5lXQ0KPiAwMDAwMDAwMDgyODJhN2Q0IChzbG9jay1BRl9BWDI1KXsrLj8ufSwgYXQ6
+DQo+IGF4MjVfc3RkX2hlYXJ0YmVhdF9leHBpcnkrMHg1ZC8weDNlMCBuZXQvYXgyNS9heDI1X3N0
+ZF90aW1lci5jOjM3DQo+IHtTT0ZUSVJRLU9OLVd9IHN0YXRlIHdhcyByZWdpc3RlcmVkIGF0Og0K
+PiAgICBsb2NrX2FjcXVpcmUrMHgxNmYvMHgzZjAga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjQy
+MTENCj4gICAgX19yYXdfc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3BpbmxvY2tfYXBpX3NtcC5o
+OjE0MiBbaW5saW5lXQ0KPiAgICBfcmF3X3NwaW5fbG9jaysweDJmLzB4NDAga2VybmVsL2xvY2tp
+bmcvc3BpbmxvY2suYzoxNDQNCj4gICAgc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3BpbmxvY2su
+aDozMjkgW2lubGluZV0NCj4gICAgYXgyNV9ydF9hdXRvYmluZCsweDNjYS8weDcyMCBuZXQvYXgy
+NS9heDI1X3JvdXRlLmM6NDMyDQo+ICAgIGF4MjVfY29ubmVjdC5jb2xkKzB4MzAvMHhhNCBuZXQv
+YXgyNS9hZl9heDI1LmM6MTIyNA0KPiAgICBfX3N5c19jb25uZWN0KzB4MjY2LzB4MzMwIG5ldC9z
+b2NrZXQuYzoxODA4DQo+ICAgIF9fZG9fc3lzX2Nvbm5lY3QgbmV0L3NvY2tldC5jOjE4MTkgW2lu
+bGluZV0NCj4gICAgX19zZV9zeXNfY29ubmVjdCBuZXQvc29ja2V0LmM6MTgxNiBbaW5saW5lXQ0K
+PiAgICBfX3g2NF9zeXNfY29ubmVjdCsweDczLzB4YjAgbmV0L3NvY2tldC5jOjE4MTYNCj4gICAg
+ZG9fc3lzY2FsbF82NCsweDEwMy8weDYxMCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoyOTANCj4g
+ICAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KPiBpcnEgZXZlbnQg
+c3RhbXA6IDI5Njg2ODExMA0KPiBoYXJkaXJxcyBsYXN0ICBlbmFibGVkIGF0ICgyOTY4NjgxMTAp
+OiBbPGZmZmZmZmZmODcwZjFhZDg+XQ0KPiBfX3Jhd19zcGluX3VubG9ja19pcnEgaW5jbHVkZS9s
+aW51eC9zcGlubG9ja19hcGlfc21wLmg6MTY4IFtpbmxpbmVdDQo+IGhhcmRpcnFzIGxhc3QgIGVu
+YWJsZWQgYXQgKDI5Njg2ODExMCk6IFs8ZmZmZmZmZmY4NzBmMWFkOD5dDQo+IF9yYXdfc3Bpbl91
+bmxvY2tfaXJxKzB4MjgvMHg5MCBrZXJuZWwvbG9ja2luZy9zcGlubG9jay5jOjE5Mg0KPiBoYXJk
+aXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4NjgxMDkpOiBbPGZmZmZmZmZmODcwZjFjNGE+XQ0K
+PiBfX3Jhd19zcGluX2xvY2tfaXJxIGluY2x1ZGUvbGludXgvc3BpbmxvY2tfYXBpX3NtcC5oOjEy
+NiBbaW5saW5lXQ0KPiBoYXJkaXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4NjgxMDkpOiBbPGZm
+ZmZmZmZmODcwZjFjNGE+XQ0KPiBfcmF3X3NwaW5fbG9ja19pcnErMHgzYS8weDgwIGtlcm5lbC9s
+b2NraW5nL3NwaW5sb2NrLmM6MTYwDQo+IHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDI5Njg2
+ODEwMik6IFs8ZmZmZmZmZmY4NzQwMDY2Mj5dDQo+IF9fZG9fc29mdGlycSsweDY2Mi8weDk1YSBr
+ZXJuZWwvc29mdGlycS5jOjMyMA0KPiBzb2Z0aXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4Njgx
+MDcpOiBbPGZmZmZmZmZmODE0NGM4YWU+XQ0KPiBydW5fa3NvZnRpcnFkDQo+IGtlcm5lbC9zb2Z0
+aXJxLmM6NjU1IFtpbmxpbmVdDQo+IHNvZnRpcnFzIGxhc3QgZGlzYWJsZWQgYXQgKDI5Njg2ODEw
+Nyk6IFs8ZmZmZmZmZmY4MTQ0YzhhZT5dDQo+IHJ1bl9rc29mdGlycWQrMHg4ZS8weDExMCBrZXJu
+ZWwvc29mdGlycS5jOjY0Nw0KPiANCj4gb3RoZXIgaW5mbyB0aGF0IG1pZ2h0IGhlbHAgdXMgZGVi
+dWcgdGhpczoNCj4gICBQb3NzaWJsZSB1bnNhZmUgbG9ja2luZyBzY2VuYXJpbzoNCj4gDQo+ICAg
+ICAgICAgQ1BVMA0KPiAgICAgICAgIC0tLS0NCj4gICAgbG9jayhzbG9jay1BRl9BWDI1KTsNCj4g
+ICAgPEludGVycnVwdD4NCj4gICAgICBsb2NrKHNsb2NrLUFGX0FYMjUpOw0KPiANCj4gICAqKiog
+REVBRExPQ0sgKioqDQo+IA0KPiAxIGxvY2sgaGVsZCBieSBrc29mdGlycWQvMS8xNjoNCj4gICAj
+MDogMDAwMDAwMDA2NTQ5MjFjMyAoKCZheDI1LT50aW1lcikpeysuLS59LCBhdDogbG9ja2RlcF9j
+b3B5X21hcA0KPiBpbmNsdWRlL2xpbnV4L2xvY2tkZXAuaDoxNzAgW2lubGluZV0NCj4gICAjMDog
+MDAwMDAwMDA2NTQ5MjFjMyAoKCZheDI1LT50aW1lcikpeysuLS59LCBhdDoNCj4gY2FsbF90aW1l
+cl9mbisweGRhLzB4NzIwDQo+IGtlcm5lbC90aW1lL3RpbWVyLmM6MTMxNQ0KPiANCj4gc3RhY2sg
+YmFja3RyYWNlOg0KPiBDUFU6IDEgUElEOiAxNiBDb21tOiBrc29mdGlycWQvMSBOb3QgdGFpbnRl
+ZCA1LjAuMCsgIzEzNA0KPiBIYXJkd2FyZSBuYW1lOiBHb29nbGUgR29vZ2xlIENvbXB1dGUgRW5n
+aW5lL0dvb2dsZSBDb21wdXRlIEVuZ2luZSwgQklPUw0KPiBHb29nbGUgMDEvMDEvMjAxMQ0KPiBD
+YWxsIFRyYWNlOg0KPiAgIF9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVd
+DQo+ICAgZHVtcF9zdGFjaysweDE3Mi8weDFmMCBsaWIvZHVtcF9zdGFjay5jOjExMw0KPiAgIHBy
+aW50X3VzYWdlX2J1Zy5jb2xkKzB4MzMwLzB4NDJhIGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzoy
+ODM5DQo+ICAgdmFsaWRfc3RhdGUga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjI4NTIgW2lubGlu
+ZV0NCj4gICBtYXJrX2xvY2tfaXJxIGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzozMDQ2IFtpbmxp
+bmVdDQo+ICAgbWFya19sb2NrKzB4ZDU4LzB4MTM4MCBrZXJuZWwvbG9ja2luZy9sb2NrZGVwLmM6
+MzQyMQ0KPiAgIG1hcmtfaXJxZmxhZ3Mga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjMyOTkgW2lu
+bGluZV0NCj4gICBfX2xvY2tfYWNxdWlyZSsweDE2NTQvMHgzZmIwIGtlcm5lbC9sb2NraW5nL2xv
+Y2tkZXAuYzozNjUzDQo+ICAgbG9ja19hY3F1aXJlKzB4MTZmLzB4M2YwIGtlcm5lbC9sb2NraW5n
+L2xvY2tkZXAuYzo0MjExDQo+ICAgX19yYXdfc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3Bpbmxv
+Y2tfYXBpX3NtcC5oOjE0MiBbaW5saW5lXQ0KPiAgIF9yYXdfc3Bpbl9sb2NrKzB4MmYvMHg0MCBr
+ZXJuZWwvbG9ja2luZy9zcGlubG9jay5jOjE0NA0KPiAgIHNwaW5fbG9jayBpbmNsdWRlL2xpbnV4
+L3NwaW5sb2NrLmg6MzI5IFtpbmxpbmVdDQo+ICAgYXgyNV9zdGRfaGVhcnRiZWF0X2V4cGlyeSsw
+eDVkLzB4M2UwIG5ldC9heDI1L2F4MjVfc3RkX3RpbWVyLmM6MzcNCj4gICBheDI1X2hlYXJ0YmVh
+dF9leHBpcnkrMHhmMy8weDEyMCBuZXQvYXgyNS9heDI1X3RpbWVyLmM6MTQxDQo+ICAgY2FsbF90
+aW1lcl9mbisweDE5MC8weDcyMCBrZXJuZWwvdGltZS90aW1lci5jOjEzMjUNCj4gICBleHBpcmVf
+dGltZXJzIGtlcm5lbC90aW1lL3RpbWVyLmM6MTM2MiBbaW5saW5lXQ0KPiAgIF9fcnVuX3RpbWVy
+cyBrZXJuZWwvdGltZS90aW1lci5jOjE2ODEgW2lubGluZV0NCj4gICBfX3J1bl90aW1lcnMga2Vy
+bmVsL3RpbWUvdGltZXIuYzoxNjQ5IFtpbmxpbmVdDQo+ICAgcnVuX3RpbWVyX3NvZnRpcnErMHg2
+NTIvMHgxNzAwIGtlcm5lbC90aW1lL3RpbWVyLmM6MTY5NA0KPiAgIF9fZG9fc29mdGlycSsweDI2
+Ni8weDk1YSBrZXJuZWwvc29mdGlycS5jOjI5Mw0KPiAgIHJ1bl9rc29mdGlycWQga2VybmVsL3Nv
+ZnRpcnEuYzo2NTUgW2lubGluZV0NCj4gICBydW5fa3NvZnRpcnFkKzB4OGUvMHgxMTAga2VybmVs
+L3NvZnRpcnEuYzo2NDcNCj4gICBzbXBib290X3RocmVhZF9mbisweDZhYi8weGExMCBrZXJuZWwv
+c21wYm9vdC5jOjE2NA0KPiAgIGt0aHJlYWQrMHgzNTcvMHg0MzAga2VybmVsL2t0aHJlYWQuYzoy
+NTMNCj4gICByZXRfZnJvbV9mb3JrKzB4M2EvMHg1MCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5T
+OjM1Mg0KPiBuZXRfcmF0ZWxpbWl0OiAyMTYxMyBjYWxsYmFja3Mgc3VwcHJlc3NlZA0KPiBicmlk
+Z2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3Mg
+YXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6NjY6NTY6MjE6NzQ6MTQ6ZGYsIHZsYW46MCkNCj4g
+YnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJl
+c3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkN
+Cj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBh
+ZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNzIChhZGRyOmFhOmFhOmFhOmFhOmFhOjBjLCB2bGFu
+OjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBhY2tldCBvbiB2ZXRoMF90b19icmlkZ2Ugd2l0aCBv
+d24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjo2Njo1NjoyMTo3NDoxNDpkZiwg
+dmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0
+aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYTox
+YiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAg
+d2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTph
+YToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZl
+XzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTph
+YTphYToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3Ns
+YXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTph
+YTphYTphYToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdl
+X3NsYXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTph
+YTphYTphYTphYTowYywgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0
+aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6
+YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gbmV0X3JhdGVsaW1pdDogMTY0MDcgY2FsbGJh
+Y2tzIHN1cHByZXNzZWQNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2
+ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6
+YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9z
+bGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6
+YWE6YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRn
+ZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6
+YWE6YWE6YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJy
+aWRnZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6
+YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9u
+IHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBhZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNzIChh
+ZGRyOmFhOmFhOmFhOmFhOmFhOjBjLCB2bGFuOjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBhY2tl
+dCBvbiBicmlkZ2Vfc2xhdmVfMCB3aXRoIG93biBhZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNz
+IChhZGRyOmFhOmFhOmFhOmFhOmFhOjFiLCB2bGFuOjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBh
+Y2tldCBvbiB2ZXRoMF90b19icmlkZ2Ugd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRk
+cmVzcyAoYWRkcjo2Njo1NjoyMTo3NDoxNDpkZiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZl
+ZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4g
+YWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYTowYywgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNl
+aXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNl
+DQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gYnJpZGdlMDog
+cmVjZWl2ZWQgcGFja2V0IG9uIHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBhZGRyZXNzIGFzIHNv
+dXJjZQ0KPiBhZGRyZXNzIChhZGRyOjY2OjU2OjIxOjc0OjE0OmRmLCB2bGFuOjApDQo+IA0KPiAN
+Cj4gLS0tDQo+IFRoaXMgYnVnIGlzIGdlbmVyYXRlZCBieSBhIGJvdC4gSXQgbWF5IGNvbnRhaW4g
+ZXJyb3JzLg0KPiBTZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9u
+IGFib3V0IHN5emJvdC4NCj4gc3l6Ym90IGVuZ2luZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXpr
+YWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCj4gDQo+IHN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2Yg
+dGhpcyBidWcgcmVwb3J0LiBTZWU6DQo+IGh0dHBzOi8vZ29vLmdsL3Rwc21FSiNzdGF0dXMgZm9y
+IGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
