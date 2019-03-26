@@ -6,49 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79390C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A5AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDA920879
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601EF20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582291;
-	bh=pQF1jQemvu3hvnvEKwThylZZ1gVTgF+GkTqjqsdHzl0=;
+	s=default; t=1553582296;
+	bh=5e8+6GoShf4X7zAQc83nvtQcCfJqsmWxkyfwWNVDOVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0k8xm5XhTOCr/R4kXNm5QRh8EEoaUGMR9Z0pjQByP7ovI4j4pJ5B2XQXkLVrirL4p
-	 GGPvPOTALKGV6LDbLf+mpCHII/W3SwdNlE177wJSjRLjo58CkC5mOE9jJKQ2qT6Vdt
-	 I1rxsHubicSaeRV2S2R7cirbzF0ZtbHgMlZ8CKFM=
+	b=zWPSk2Or4Y4mjGoV1rvIfO5zaJnDVGZxMgS4HVkZfeFQQrBpirTh8TlWN3Q9RLrtO
+	 sBzxarEPs1TFMrhpY9rFXoADEU44kzV7toyWKDBzmtJoyRE+coXpm2k2MfgyQZsrXn
+	 JckWS/ohTyU4QuTFo9lCQlLKclLyIAnI/a/XLauU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732493AbfCZGiJ (ORCPT
+        id S1730559AbfCZGiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52352 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731590AbfCZGiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:07 -0400
+        id S1731055AbfCZGiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:11 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 510FE20863;
-        Tue, 26 Mar 2019 06:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCFC020863;
+        Tue, 26 Mar 2019 06:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582287;
-        bh=pQF1jQemvu3hvnvEKwThylZZ1gVTgF+GkTqjqsdHzl0=;
+        s=default; t=1553582290;
+        bh=5e8+6GoShf4X7zAQc83nvtQcCfJqsmWxkyfwWNVDOVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOIkdb+V8ywBXMDFjP0+iukqh8CSHXROshSyLhyc8+afhnAWROrIW68JWwp0AK0xt
-         WPduf92lijeFZxUiZVGaUdh9FrP0kfCqpLuXTlqCNceTLNd6K7KjVf9U/AA3hf1Hi4
-         vcuWe7yE7fYqNDYl+0ZBBZD+qKglwZUHsEWsBres=
+        b=RQ3SJCIBFodmvZ6Pude5gCrF9rx2af7WKQMldXgXcMvOz4od0Fm2SC9LavjABxzUf
+         05JlVO2Jfc6f0HRU258WxfIMnY3qE4GkHbfVVsW8Il/jx0CyLcQq+pWGJxk8XbsN5x
+         iQNxwGxm6lOO9ra9B9uCEXvWmxkz0G+20l6TFgOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jan Viktorin <jan.viktorin@gmail.com>
-Subject: [PATCH 5.0 10/52] iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-Date:   Tue, 26 Mar 2019 15:29:57 +0900
-Message-Id: <20190326042701.455906647@linuxfoundation.org>
+        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.0 11/52] iommu/iova: Fix tracking of recently failed iova address
+Date:   Tue, 26 Mar 2019 15:29:58 +0900
+Message-Id: <20190326042701.509197091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -57,7 +55,7 @@ X-stable: review
 X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,100 +65,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Robert Richter <rrichter@marvell.com>
 
-commit 4e50ce03976fbc8ae995a000c4b10c737467beaa upstream.
+commit 80ef4464d5e27408685e609d389663aad46644b9 upstream.
 
-Take into account that sg->offset can be bigger than PAGE_SIZE when
-setting segment sg->dma_address. Otherwise sg->dma_address will point
-at diffrent page, what makes DMA not possible with erros like this:
+If a 32 bit allocation request is too big to possibly succeed, it
+early exits with a failure and then should never update max32_alloc_
+size. This patch fixes current code, now the size is only updated if
+the slow path failed while walking the tree. Without the fix the
+allocation may enter the slow path again even if there was a failure
+before of a request with the same or a smaller size.
 
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa70c0 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7040 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7080 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7100 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7000 flags=3D0x0020]
-
-Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
-what what can cause crashes like this:
-
-Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
-Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
-Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
-Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff0000=
-0301 0000000000000000
-Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffff=
-ffff 0000000000000000
-Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
-Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid =
-amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core k=
-vm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 cr=
-ct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel=
- gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_ge=
-neric drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aes=
-ni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cry=
-ptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart =
-libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore s=
-p5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cp=
-ufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E)=
- mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) d=
-m_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E)=
- libata(E) xhci_pci(E) xhci_hcd(E)
-Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
-Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W =
-  E     4.20.12-arch1-1-custom #1
-Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled =
-By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
-Feb 28 19:27:45 kernel: Call Trace:
-Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
-Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
-Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
-Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
-Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
-Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
-Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
-Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
-Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
-Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
-Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
-Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
-Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
-Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
-Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
-Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Fixes: 80187fd39dcb ('iommu/amd: Optimize map_sg and unmap_sg')
+Cc: <stable@vger.kernel.org> # 4.20+
+Fixes: bee60e94a1e2 ("iommu/iova: Optimise attempts to allocate iova from 32bit address range")
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/iommu/iova.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2605,7 +2605,12 @@ static int map_sg(struct device *dev, st
-=20
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address +=3D address + s->offset;
-+		/*
-+		 * Add in the remaining piece of the scatter-gather offset that
-+		 * was masked out when we were determining the physical address
-+		 * via (sg_phys(s) & PAGE_MASK) earlier.
-+		 */
-+		s->dma_address +=3D address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   =3D s->length;
- 	}
-=20
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -207,8 +207,10 @@ static int __alloc_and_insert_iova_range
+ 		curr_iova = rb_entry(curr, struct iova, node);
+ 	} while (curr && new_pfn <= curr_iova->pfn_hi);
+ 
+-	if (limit_pfn < size || new_pfn < iovad->start_pfn)
++	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
++		iovad->max32_alloc_size = size;
+ 		goto iova32_full;
++	}
+ 
+ 	/* pfn_lo will point to size aligned address if size_aligned is set */
+ 	new->pfn_lo = new_pfn;
+@@ -222,7 +224,6 @@ static int __alloc_and_insert_iova_range
+ 	return 0;
+ 
+ iova32_full:
+-	iovad->max32_alloc_size = size;
+ 	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+ 	return -ENOMEM;
+ }
 
 
