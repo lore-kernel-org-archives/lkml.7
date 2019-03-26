@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B2CC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071A820857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4285A20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Y4Ic/WhE"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="eudjB1x9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbfCZKXh (ORCPT
+        id S1731409AbfCZKXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:23:37 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33034 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZKXg (ORCPT
+        Tue, 26 Mar 2019 06:23:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38823 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfCZKXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:23:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z6so2033317wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:23:35 -0700 (PDT)
+        Tue, 26 Mar 2019 06:23:37 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so6228376wro.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:to:from:cc;
-        bh=jJLlhnDqvDbSGuKszT2yDktYDvv/jgO0pJ6vOc3ZBRk=;
-        b=Y4Ic/WhE3GdJ/qeNUbSh0IEi2VDAYwwHCmLS1TljN42EE7aPk/6VcXV4v6Owuf+IB3
-         2fGzMFgmTV3GkD7sNrmLAh0B2q9RQHN3979hnh6K3M6vcjy7ntPNHLBXj47V3poP2wJk
-         im35OK8l6fqDDcMVkWEXPKl/McXNKeD4XfVMFsPj2dCmucrPadeddynOs5XlhBImNn7n
-         7Z4NX8wPbrLb7GVMQ5cuwR34f9AKkdflSoeyO2xirOtmF0ZmVccVAiZF3nW3d1fnTG7v
-         clNpAJvjvAACHf+Zmc6rOUoHjVLDZzSI2vBWfNl75Z/jrniZ5RW2+KOPZxr0MLRUMous
-         4abw==
+        bh=B/XU/aVRTl/nhhXr7u3qGKAsBDGIywkps16bjkANzsA=;
+        b=eudjB1x9f3Ctq8nzfMXAqqNoWyaWlmLFxGZn8gFUuFG3tKiSXaCSLQ+sv+pJqkbzhn
+         g4ue2oOnQ+5bm4N9pNu1y7APB0IrGGv38U64hajplEebbLcLy8aKrznMALqnyPlZKOlR
+         QmcqHO7DEWONZqNHmXpmoWr3kzxgamDCBLGvc7CmNCjJTlhLOZju981qniYKh7Pf3l5b
+         l87XzGOVFKFhh7DYoI+4c/n4OjfUuUkhJv6wOjXS3tQZH4ntXaPV6w0nxXcM9WUwRvs6
+         lw+VGjRjUOFfuwZtVQTNa8Tt7CWY91jXJK8DZcdWejvZfmaOH2lhtI9Z6mTrmdiRJ28U
+         VYng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=jJLlhnDqvDbSGuKszT2yDktYDvv/jgO0pJ6vOc3ZBRk=;
-        b=DqhRxzP3YuG7Yv+j9HiELG79YGxHXwoTI6SBa+NU3BXsE4KPsmho13IvicPieMj3g1
-         WGzk7nJ5/F7/2tBL54l5iO5W5AUdr6Vr665GMzUq5H9D4QzTiZVx8C4LYi1mxHk3LJ6V
-         nQchrcX/mTp25lP/iL+CTHcUuMVzRPJg7fbXrwiEsG9wzd7kraqBRGFffE950zyc4tml
-         nSGoHz9fTXclCykDieizGYqUdoef4oKcIXVfzWFBFEfD0hxyoQbR7bOUCmD+7kRB1BHP
-         ULy+RYbekOS9JqI3pG6D8xr71lf4P8sLkGcncmhRKgcALFXl83rxhY75AAHlf373Czak
-         j2Eg==
-X-Gm-Message-State: APjAAAXGNLu9gmeiioUYIWZ70RyJrm8gz1ydyGKN5RxIooDdyW8DtXoN
-        CFjTrJbrFJKwrAoUrd1JlG2CrwNHpp9VIA==
-X-Google-Smtp-Source: APXvYqytPoYI0zQqMI2FhJ15g2DveDZqk9Mv9nOUkIA0qF5zxEIFDdOJVS5/fG+eZW53PbMOAao9JQ==
-X-Received: by 2002:a7b:c923:: with SMTP id h3mr8233827wml.34.1553595815108;
+        bh=B/XU/aVRTl/nhhXr7u3qGKAsBDGIywkps16bjkANzsA=;
+        b=dGuhgwID6Ah/pvJj4RZ6mS5OZRSo9cyYAU1Q1075z1Aya+VNc2qzAjHjJWkJqmb4P/
+         SYeFaxxTVIHIhx7rf+npw94rjQayHwYIAm0aB2dOS+K+KkStkrDZtjfiZBLljzCAKikm
+         Tm3qYHK8BtN9QWbNaLJW9/y5hCWt7ke6jj+wtT8apDQe+2bZkv74Kye2BlcIs7cFdjZU
+         eoYvRYgp/6NGj9sGbD14+E8NpySz9r8q7XE7pjudD83avPmu9Og8DKQSXnI2LMIkzUxB
+         8OjwEiJMuR5LlpuK9gb25yZiqDXvhfv4C1wDvLKJWPzsV4Azei8XAkXqKCL4NFAU5Kon
+         v5Qw==
+X-Gm-Message-State: APjAAAWDhkgyMF0N6RaHHOxl8cqmLcE6iVhTJZweqJ9ZR2KBSABE4NAV
+        YFwHQ/Yd6sH/hlS+anFpbX7ZsQ==
+X-Google-Smtp-Source: APXvYqz0OFldp5sm1aNNplQcBmnFt9qpNdmCKVRANvXbNSnE9DPjjCB+YHE/fw75ygzQyeRx4Np90Q==
+X-Received: by 2002:adf:afd7:: with SMTP id y23mr18391481wrd.254.1553595815605;
         Tue, 26 Mar 2019 03:23:35 -0700 (PDT)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s12sm18682693wmj.42.2019.03.26.03.23.34
+        by smtp.gmail.com with ESMTPSA id v14sm24105214wrr.20.2019.03.26.03.23.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Tue, 26 Mar 2019 03:23:34 -0700 (PDT)
-Message-ID: <5c99fda6.1c69fb81.ecdb5.c834@mx.google.com>
+Message-ID: <5c99fda6.1c69fb81.c4a8a.62e1@mx.google.com>
 Date:   Tue, 26 Mar 2019 03:23:34 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.14.108-42-g4bb6d9c67e49
+X-Kernelci-Kernel: v4.19.31-45-ge47f4c0ee31a
 X-Kernelci-Report-Type: boot
 X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
-References: <20190326042649.889479098@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/41] 4.14.109-stable review
+X-Kernelci-Branch: linux-4.19.y
+In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
+References: <20190326042702.565683325@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/45] 4.19.32-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 From:   "kernelci.org bot" <bot@kernelci.org>
@@ -80,29 +80,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 110 boots: 1 failed, 97 passed with 12 offline=
- (v4.14.108-42-g4bb6d9c67e49)
+stable-rc/linux-4.19.y boot: 94 boots: 0 failed, 82 passed with 12 offline =
+(v4.19.31-45-ge47f4c0ee31a)
 
 Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.108-42-g4bb6d9c67e49/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.108-42-g4bb6d9c67e49/
+-4.19.y/kernel/v4.19.31-45-ge47f4c0ee31a/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.31-45-ge47f4c0ee31a/
 
 Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.108-42-g4bb6d9c67e49
-Git Commit: 4bb6d9c67e49d5301e6341b32ab5d72354e821d6
+Branch: linux-4.19.y
+Git Describe: v4.19.31-45-ge47f4c0ee31a
+Git Commit: e47f4c0ee31a24ecdab103f2d57cbdd5ed345804
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
 e-rc.git
-Tested: 61 unique boards, 24 SoC families, 14 builds out of 201
-
-Boot Failure Detected:
-
-arm64:
-
-    defconfig:
-        gcc-7:
-            rk3399-firefly: 1 failed lab
+Tested: 58 unique boards, 24 SoC families, 14 builds out of 206
 
 Offline Platforms:
 
