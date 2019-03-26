@@ -2,139 +2,121 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0851EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1317C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93D32075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD73C2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h0eAQJ1t"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lij5X2WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfCZKLb (ORCPT
+        id S1731226AbfCZKLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:11:31 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:34044 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfCZKLb (ORCPT
+        Tue, 26 Mar 2019 06:11:48 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50374 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfCZKLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:11:31 -0400
-Received: by mail-it1-f193.google.com with SMTP id l4so2384478ite.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xmEwjK6q+d5zUPkyRUG8lAHrpxBSqSUrJuNg8YUWIbE=;
-        b=h0eAQJ1tFQhCQNnnYfmtD8kGQcbiowqKDly7ZksN8OHLI6GJM642Z244VEvqhl3/EI
-         gXIIwibjqVKd8KnQVzW93hucScKgaU85F0ILdqR42S7B+gPxxRTVKm+w3lfHz7V9bZrp
-         RQFs7q0on+qh9KU/626kv0qdhUg0Xa5nyG8qqoDzMlQ8soa/liu9uhvol50H+QaanU5T
-         idaXC4uoDCHmhtvJpq+zxREXFGEdNnsvHDvgJ6RbxN+8MZSdAzpiaOlcYyPBhHBlU3m7
-         ipOicjboUcl0LVCIjSzQ2v/N+3a84uGgI9H774p+35aCMnXeVwkDdEINSy3GuVsxqe8b
-         2Wbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xmEwjK6q+d5zUPkyRUG8lAHrpxBSqSUrJuNg8YUWIbE=;
-        b=OQZxMqt9StOtnQItRH6IYkELn5Ej35gbfKmDd28EWbdzEgz35bcDxUH1fLxe7lmV+h
-         lM7mopKuV4lSct7H7s9BdTId4IYyaRfkj2O9L86M/HLjN5Y8WjuYIWAmclHVbseEfOLG
-         5P3ioIl6a2jfOKjgAyTmK8+FfnBpUYmVZU0rBmCPFr9rK8yGQNLx2vO6P0IbDBsjLZZr
-         Akybn3Iq4gWj6yHIuotkzBVgPFbzRMfncu3Mm9EOQlKHzwLDlm1KSBfsUxGT+Bv3pRah
-         0JXmFdg6Sa2s6bCULO4coc61bdteuNyZLlCk62u4beXUEQ5DEXJfFLhBf+c+6YDuolrz
-         fRTw==
-X-Gm-Message-State: APjAAAUqwaWbCjyK2fBRBlSX4eMvuEkDB9f9/vzdF2WXiW202lnB1oP+
-        +DbGAsr7irAXC7tftPyBX+NNNXULwCv2abR+2mBsjQ==
-X-Google-Smtp-Source: APXvYqxFBTS8Y0kphZc8fPBB0fBkg79BIHxtFotfYAPpUUHiss3qoq2mIepG9CydUJo+ByTqvdkIwW4o/1tbeFOaTnY=
-X-Received: by 2002:a24:9a86:: with SMTP id l128mr2831273ite.12.1553595089448;
- Tue, 26 Mar 2019 03:11:29 -0700 (PDT)
+        Tue, 26 Mar 2019 06:11:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2QA90Uw038277;
+        Tue, 26 Mar 2019 10:11:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=AB0YaICaasoYS0X63qlpptAXq48WFU6qakXfDgTD7bM=;
+ b=Lij5X2WXmkW5XGP+e5GIbKmuFSEOszD8p+YLc+15+A2XpGVK6nLOickJ4fACex1ANrtf
+ GlAdIqkLwqSIp4+t+9gyuNEXtnLILKMXwkMSKL628DAHYF6CuYyy5evnJdxPs4OasLkr
+ 8v/0AUIFV77EFMJf4JcpIlMExLvHuH6+TgS4lX+yBBcfvPq0V2kJ87TtKluN5WjQlAIg
+ htGO1oa5AO7IOu+jEl+v00YnXoiqlFsA70J9XSoMketbl5Cr2jd64D88CkRQUhvt5m0z
+ IcSPzNZVfb6HK+Be94s/aVJYqxj7eNqxhXhTUoJKup6rwGwi3Jv4nb5WGMq2MniKpSgH 1Q== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2re6g11cee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 10:11:29 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2QABMqF010715
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 10:11:23 GMT
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2QABF8T029198;
+        Tue, 26 Mar 2019 10:11:17 GMT
+Received: from kadam (/197.157.0.51)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Mar 2019 03:11:15 -0700
+Date:   Tue, 26 Mar 2019 13:11:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cocci@systeme.lip6.fr
+Subject: Re: [PATCH] coccinelle: put_device: reduce false positives
+Message-ID: <20190326101103.GH32613@kadam>
+References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
+ <179bbdd1-3fcb-bba5-52b3-7f96973c7650@web.de>
+ <alpine.DEB.2.21.1903232104030.5660@hadrien>
+ <20190326084512.GC32590@kadam>
+ <alpine.DEB.2.20.1903261037320.5021@hadrien>
 MIME-Version: 1.0
-References: <000000000000958aa50584c851b7@google.com> <alpine.DEB.2.21.1903240058290.1798@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1903240058290.1798@nanos.tec.linutronix.de>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 26 Mar 2019 11:11:18 +0100
-Message-ID: <CACT4Y+a3R+MBu207hU=tHa2JZKd6HPUDfLZFET-eMi-GRJdPfA@mail.gmail.com>
-Subject: Re: BUG: soft lockup in kvm_vm_release
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzbot <syzbot+6349a512c2938b2ad058@syzkaller.appspotmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.20.1903261037320.5021@hadrien>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 1:04 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sat, 23 Mar 2019, syzbot wrote:
->
-> > syzbot has bisected this bug to:
+On Tue, Mar 26, 2019 at 10:38:43AM +0100, Julia Lawall wrote:
+> 
+> 
+> On Tue, 26 Mar 2019, Dan Carpenter wrote:
+> 
+> > On Sat, Mar 23, 2019 at 09:06:54PM +0100, Julia Lawall wrote:
+> > >
+> > >
+> > > On Sat, 23 Mar 2019, Markus Elfring wrote:
+> > >
+> > > > > Don't complain about a return when this function returns "&pdev->dev".
+> > > >
+> > > > Would this information qualify to add the tag “Fixes” to the commit message?
+> > >
+> > > Fixes tags relate to stable kernels, so that one can see which stable
+> > > kernels a particular patch should be propagated to.  There is no need to
+> > > propagate patches on semantic patches to stable kernels.  People who run
+> > > stable kernels are interested in their behavior, not the bug finding
+> > > rules that they contain.
 > >
-> > commit 80eb865768703c0f85a0603762742ae1dedf21f0
-> > Author: Andrea Parri <andrea.parri@amarulasolutions.com>
-> > Date:   Tue Nov 27 11:01:10 2018 +0000
-> >
-> >    sched/fair: Clean up comment in nohz_idle_balance()
->
-> I.m pretty sure that this bisect is bogus. The commit changes a comment not
-> code.
->
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1362209b200000
-> > start commit:   57902dc0 Merge tag 'riscv-for-linus-5.0-rc7' of git://git...
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=10e2209b200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1762209b200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=ee434566c893c7b1
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=6349a512c2938b2ad058
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14287e78c00000
-> >
-> > Reported-by: syzbot+6349a512c2938b2ad058@syzkaller.appspotmail.com
-> > Fixes: 80eb86576870 ("sched/fair: Clean up comment in nohz_idle_balance()")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> If I understand that correctly, then the bisect does not try to revert the
-> commit which it identified on top of the tree where it started to bisect.
->
-> I think that'd be a reasonably simple to do extra data point, at least when
-> the commit reverts cleanly on head.
+> > The Fixes tag is not just about stable...  For example, we use them for
+> > statistics to see how quickly bugs get fixed etc.
+> 
+> OK.  But still do we need fixes tags for bug finding rules?  Perhaps if
+> the previous version was really broken, and it would be really undesirable
+> to use it.
 
-Hi Thomas,
+It's not worth resending a patch for that, but I probably would use the
+fixes tag.  It depends on your definition of "bug" really...  I tell
+people not to use Fixes for spelling mistakes and unused variables.  But
+I do use the Fixes tag for things like "an off by one in a sanity check
+which doesn't affect run time because the index is always correct".
 
-Interesting. You mean revert on the start commit and check if kernel
-still crashes?
-
-I've got several suggestions on how some results can be tentatively
-marked as "suspicious". But the question is: if we mark a result as
-"suspicious", what then? How should reporting be different or what?
-If syzbot does not report bisection results, people start complaining
-"why there are no bisection results?"; "why didn't syzbot just bisect
-it to find the right people to CC?"; or even that this does not count
-as a bug report without bisection.
-So we are kind of between 2 fires here.
-And this test will have false positives too. I can see at least 3
-common reasons for this:
- - reproducer triggering 2+ bugs at the same time
- - unrelated kernel bug that triggers of simple programs, or fires
-episodically on random programs
- - if we found the right commit and it itself fixes a bug in the
-subsystem, then we will now hit that bug instead
-So in a sense we will just add more flakiness on top of flakiness,
-potentially making the whole thing even more nonsensical. E.g. we can
-find the right commit, but then say that it's wrong.
-
-But I am adding this to
-https://github.com/google/syzkaller/issues/1051 where I am collecting
-all feedback/ideas re bisection.
+regards,
+dan carpenter
