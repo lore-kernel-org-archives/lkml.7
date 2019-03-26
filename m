@@ -2,152 +2,92 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6C2C10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E48AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80B5208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="U7dj3Cr5"
+	by mail.kernel.org (Postfix) with ESMTP id C6EF02075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbfC0BAQ (ORCPT
+        id S1732157AbfC0BFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 21:00:16 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33283 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732225AbfC0BAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 21:00:15 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k14so17013806qtb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 18:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pZxffqpv2AkoRy7l1MYn8mOEK0pZUkSkYNUnR2f18Ts=;
-        b=U7dj3Cr53elo9aF+87clxge+HccjN2L7G7EmN+YbZQJEzwn1rZLsOecFkFfmh32iIS
-         3OolISTsTDjaeGqpIGfYIeTQhUzj2zax/UQ5TfLl8LfYCASUnTnUjxH9AOcHm9t76B5j
-         vfp1SzSqKeAL5zv4eQkDoS1PMTo+KArXgtJFxzQ0OYbQVDaKt364XEJRT44ACDiUMSbS
-         1kYHA4gEp6RyrERzBVsyG3cBsm4LYQefYZsQldtyjDg0ose1Nm9IlAXLRhGWL1UF8kOk
-         ICcHl8yyGZE+wdygbNGyNee3OEJaE+4g8djjqMl5LXKK4uMp6cA/dNqmwbEgjYvoTsIa
-         DyAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pZxffqpv2AkoRy7l1MYn8mOEK0pZUkSkYNUnR2f18Ts=;
-        b=qJoBGf/xpF8k2n0aS/cFKv0Of/Mqo1OajI1++TcmLRMoGvtdwnGqgMqpgRq3UO4dIf
-         41cA6krtEXI3ORzHrJE3KkGSjgOgeJ9zWBtbHv0MxG9DZgdu0uUufB9z0spG30KLhe9E
-         TT2nUqno7gKZwcSmGI86EtXkcJ1sPUMRf1tZzCZv6v+jVJiJWwu2wBVrnSnVpCDfX/Wh
-         /7OAjhRUZk1Xtz4DlQ5QaT57ajjRGeL80uFjFAnNCXJmiTG1owazGaY3SJw0Fy8NS5TH
-         qpGAGIRbBrEzedh3yicIkg2vz6UBc+xuJVbpimddytZvOn7BO4QNn8rc0rbJX7yrq/Kk
-         v+lg==
-X-Gm-Message-State: APjAAAX2ZszymfyR1RGn4rxJtFOO7/fsMspQOT8hGnJW720WuUNva7nM
-        x76FXP4qrSiSgUZ2oSZBR/p4/Q==
-X-Google-Smtp-Source: APXvYqwl4TaXQkcnOk0vHKSITH5fSKz32SoS1GojFCbNObWe52QerscJNR7oDPb0LKa+63PVnFPuJA==
-X-Received: by 2002:ac8:29e8:: with SMTP id 37mr29212714qtt.153.1553648414651;
-        Tue, 26 Mar 2019 18:00:14 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id b3sm10821266qti.33.2019.03.26.18.00.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 18:00:14 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     catalin.marinas@arm.com, cl@linux.com, mhocko@kernel.org,
-        willy@infradead.org, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v4] kmemleak: survive in a low-memory situation
-Date:   Tue, 26 Mar 2019 20:59:48 -0400
-Message-Id: <20190327005948.24263-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Tue, 26 Mar 2019 21:05:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57594 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731579AbfC0BFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 21:05:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1FA3ABA1;
+        Wed, 27 Mar 2019 01:05:17 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Date:   Wed, 27 Mar 2019 09:35:18 +1100
+Cc:     Thomas Graf <tgraf@suug.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash bucket.
+In-Reply-To: <20190326050320.gwk3tgtqwl5csivt@gondor.apana.org.au>
+References: <155349021177.1111.15681654355431465791.stgit@noble.brown> <155349033961.1111.18247269615646768227.stgit@noble.brown> <20190326050320.gwk3tgtqwl5csivt@gondor.apana.org.au>
+Message-ID: <874l7p463d.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kmemleak could quickly fail to allocate an object structure and then
-disable itself below in a low-memory situation. For example, running a
-mmap() workload triggering swapping and OOM. This is especially
-problematic for running things like LTP testsuite where one OOM test
-case would disable the whole kmemleak and render the rest of test cases
-without kmemleak watching for leaking.
+--=-=-=
+Content-Type: text/plain
 
-Kmemleak allocation could fail even though the tracked memory is
-succeeded. Hence, it could still try to start a direct reclaim if it is
-not executed in an atomic context (spinlock, irq-handler etc), or a
-high-priority allocation in an atomic context as a last-ditch effort.
-Since kmemleak is a debug feature, it is unlikely to be used in
-production that memory resources is scarce where direct reclaim or
-high-priority atomic allocations should not be granted lightly.
+On Tue, Mar 26 2019, Herbert Xu wrote:
 
-Unless there is a brave soul to reimplement the kmemleak to embed it's
-metadata into the tracked memory itself in a foreseeable future, this
-provides a good balance between enabling kmemleak in a low-memory
-situation and not introducing too much hackiness into the existing
-code for now. Another approach is to fail back the original allocation
-once kmemleak_alloc() failed, but there are too many call sites to
-deal with which makes it error-prone.
+> On Mon, Mar 25, 2019 at 04:05:39PM +1100, NeilBrown wrote:
+>>
+>> + * Sometimes we unlock a bucket by writing a new pointer there.  In that
+>> + * case we don't need to unlock, but we do need to reset state such as
+>> + * local_bh. For that we have rht_unlocked().  This doesn't include
+>> + * the memory barrier that bit_spin_unlock() provides, but rcu_assign_pointer()
+>> + * will have provided that.
+>
+> Hmm, are you sure that's enough? IIRC rcu_assign_pointer only
+> provides a write barrier compared to the more complete (but one-way)
+> barrier that a spin-lock provides.
+>
 
-kmemleak: Cannot allocate a kmemleak_object structure
-kmemleak: Kernel memory leak detector disabled
-kmemleak: Automatic memory scanning thread ended
-RIP: 0010:__alloc_pages_nodemask+0x242a/0x2ab0
-Call Trace:
- allocate_slab+0x4d9/0x930
- new_slab+0x46/0x70
- ___slab_alloc+0x5d3/0x9c0
- __slab_alloc+0x12/0x20
- kmem_cache_alloc+0x30a/0x360
- create_object+0x96/0x9a0
- kmemleak_alloc+0x71/0xa0
- kmem_cache_alloc+0x254/0x360
- mempool_alloc_slab+0x3f/0x60
- mempool_alloc+0x120/0x329
- bio_alloc_bioset+0x1a8/0x510
- get_swap_bio+0x107/0x470
- __swap_writepage+0xab4/0x1650
- swap_writepage+0x86/0xe0
+The bit_spin_unlock(), which I am avoiding as unnecessary, would have
+provided release semantics.
+i.e. any write by this CPU that happened before the releasing write
+will be visible to other CPUs before (or when) they see the result of
+the releasing write.
+This is (as I understand it) exactly that rcu_assign_pointer() promises
+- even before acquire semantics were added as Paul just reported.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+So yes, I am sure (surer now that I've walked through it carefully).
 
-v4: Update the commit log.
-    Fix a typo in comments per Christ.
-    Consolidate the allocation.
-v3: Update the commit log.
-    Simplify the code inspired by graph_trace_open() from ftrace.
-v2: Remove the needless checking for NULL objects in slab_post_alloc_hook()
-    per Catalin.
+Thanks,
+NeilBrown
 
- mm/kmemleak.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index a2d894d3de07..7f4545ab1f84 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -580,7 +580,16 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
- 	struct rb_node **link, *rb_parent;
- 	unsigned long untagged_ptr;
- 
--	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
-+	/*
-+	 * The tracked memory was allocated successful, if the kmemleak object
-+	 * failed to allocate for some reasons, it ends up with the whole
-+	 * kmemleak disabled, so try it harder.
-+	 */
-+	gfp = (in_atomic() || irqs_disabled()) ?
-+	       gfp_kmemleak_mask(gfp) | GFP_ATOMIC :
-+	       gfp_kmemleak_mask(gfp) | __GFP_DIRECT_RECLAIM;
-+
-+	object = kmem_cache_alloc(object_cache, gfp);
- 	if (!object) {
- 		pr_warn("Cannot allocate a kmemleak_object structure\n");
- 		kmemleak_disable();
--- 
-2.17.2 (Apple Git-113)
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyaqSYACgkQOeye3VZi
+gblG1BAAugBQSAHkt7j0YxxaNGdLzZFDd1c7CFpL3USh8KEqNJlSZidq0g+746mk
+YlEW67d9PUu0ey4A1dalzjD3vD/ti4MCy1GqWS5LF+JV1GoYOpFesq6aHi28yBsf
+JeFHBBk8EBiKZ3LspXL9sjd/KodwbujTEtQKw0Ax1FJWizCMiF8g80G+Ly3RjUn3
+8QF3WHCgdjNfPcHXmMkLnRVXEnKRUSgutvPTj9rPSdhUme3ZLcQFee3ff+HbKD9r
+BSun9EA8nEW+9wfFscXu+F0we5l+cmATr8sK9y4OEyiu+HCdj3JgG3lOiAaDeW3+
+ZOuoX8C3AUsDpBMQB3Xx0nppDnl7cI3WW7JmLnIAAIyk8fKrJBYaXNQX0xlxGipu
+c2HDn738xwBMGd1ECfQECXDEANUjGdmSXR/sZISx3rPjIgyyYRllgvV3LvcdhZk4
+f9cB8LEkmW3Vo1+M4J1CT8Iwb6LFVJrqxbc8HlzIEyBMUEqIJiKwR+plTUeeXPUd
+NfF83LluCow4a12uFWyn86jqydlxeHKe1qqPFPZGexHDWvnHJNsmGxGWU75I0Knq
+w6xikBUm9tcQauQVRXmF85Fv6AnbLapyAiYSEuG+oKvr5xvwd+1/hQaGRcZ5Oj1k
+j3FgQ+tECDpaMcFh6FAHO1XLq4TD3EbOmX1eT201gIJdjzeQeS4=
+=u/o4
+-----END PGP SIGNATURE-----
+--=-=-=--
