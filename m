@@ -2,114 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CA4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8950EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8C320823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:39:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z9uDEr+7"
+	by mail.kernel.org (Postfix) with ESMTP id 5EFDD20896
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732694AbfCZUjD (ORCPT
+        id S1732617AbfCZUku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:39:03 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36406 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCZUjD (ORCPT
+        Tue, 26 Mar 2019 16:40:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44770 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731617AbfCZUku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:39:03 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r124so8805037pgr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 13:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=8gazi28c20822jWbnu97Ff27qgZuzyclqPEStdgiz60=;
-        b=Z9uDEr+7LnsTBf7wW31awvFoJm+qIEpxbW9Syhv+0Xus7ZNdNrA3JRcb/j8s7kGlWV
-         4OA8lQCvLxguBKHrYAB31jwTYwz02BTpWv6iItQV8R9n0mqfXHwXj2NXgTpD+dlQVXz4
-         W4s5t8I1WHCZM8w8aEGI9sfptdoStTd8Vg29E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=8gazi28c20822jWbnu97Ff27qgZuzyclqPEStdgiz60=;
-        b=ZoYHk+epnf7Ap5TKFxbCOberH+AtfZfZEt+mHpVxTGW1S9er3uefZoAJY7dj3tmuPR
-         938F3JWuNMW7Ffii34BlByOOfKC05D0wmjN4gqIdEqL+T0t2YL/wVFauhLpUgXeD3NuB
-         yUses7+DHaY2ppVGkKzmeUO5Dez3B4ZinH/r0cxvzoKVX4nU3RF9C9BpSFra/l6wFlR2
-         6LPr6bU8obhnh56gs09OjpDqPb0/pKH0W666GVfVc4dHFQEfBaL4X2lDfviD6OwINvhs
-         lMpVB6PigNLBNK8/ZB6M79BWsy1m5I6ogOL08fpd28dUJWx+ZBUtVGED4h+1a7m4xMCf
-         9eyA==
-X-Gm-Message-State: APjAAAWHiuHCdTXsWDr5QxQA8QyZnK/m1/feZ95ygyK3vnAqeK+rJ28Y
-        jvpwGg4HS+s6yWtb6wVPjeg+3HIUpf9xkA==
-X-Google-Smtp-Source: APXvYqwK24qEf/f28VXKN+4bbwKyNUS3Gy8Hpo0FlaXqTovXoG5clNg3JG2A14DSAjO72u+n3GYMzg==
-X-Received: by 2002:a63:1322:: with SMTP id i34mr30284474pgl.208.1553632741756;
-        Tue, 26 Mar 2019 13:39:01 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i72sm35120674pfj.147.2019.03.26.13.39.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 13:39:01 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ff5bffea-2689-0ace-9c77-2aaa6605342c@siemens.com>
-References: <20190325184522.260535-1-swboyd@chromium.org> <20190325184522.260535-4-swboyd@chromium.org> <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org> <155361993610.20095.762425616683725063@swboyd.mtv.corp.google.com> <ff5bffea-2689-0ace-9c77-2aaa6605342c@siemens.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 3/4] scripts/gdb: Add rb tree iterating utilities
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nikolay Borisov <n.borisov.lkml@gmail.com>,
-        Jackie Liu <liuyun01@kylinos.cn>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>
-Message-ID: <155363274033.20095.10762543028999566245@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Tue, 26 Mar 2019 13:39:00 -0700
+        Tue, 26 Mar 2019 16:40:50 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QKdU2o016942
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:40:50 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfre9yjnx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:40:49 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 26 Mar 2019 20:40:47 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Mar 2019 20:40:43 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QKeg8P62718058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 20:40:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CAAA4C044;
+        Tue, 26 Mar 2019 20:40:42 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3ED204C050;
+        Tue, 26 Mar 2019 20:40:41 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.94.28])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Mar 2019 20:40:41 +0000 (GMT)
+Subject: Re: [PATCH ghak109 V2] audit: link integrity evm_write_xattrs
+ record to syscall event
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Richard Guy Briggs <rgb@redhat.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, eparis@parisplace.org, serge@hallyn.com,
+        mjg59@google.com
+Date:   Tue, 26 Mar 2019 16:40:30 -0400
+In-Reply-To: <087489b21e50bcda65c6af3e038394d5bfe09e00.1553626080.git.rgb@redhat.com>
+References: <087489b21e50bcda65c6af3e038394d5bfe09e00.1553626080.git.rgb@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032620-0012-0000-0000-000003076F32
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032620-0013-0000-0000-0000213E9955
+Message-Id: <1553632830.4233.3.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jan Kiszka (2019-03-26 10:21:21)
-> On 26.03.19 18:05, Stephen Boyd wrote:
-> > Quoting Kieran Bingham (2019-03-26 01:52:10)
-> >>
-> >> Do you foresee any similar issue here? Or is the corresponding RB code
-> >> in the kernel fairly 'stable'?
-> >>
-> >>
-> >> Please could we make sure whomever maintains the RBTree code is aware =
-of
-> >> the python implementation?
-> >>
-> >> That said, MAINTAINERS doesn't actually seem to list any ownership over
-> >> the rb-tree code, and get_maintainers.pl [0] seems to be pointing at
-> >> Andrew as the probable route in for that code so perhaps that's already
-> >> in place :D
-> >=20
-> > I don't think that the rb tree implementation is going to change. It
-> > feels similar to the list API. I suppose this problem of keeping things
-> > in sync is a more general problem than just data-structures changing.
-> > The only solution I can offer is to have more testing and usage of these
-> > scripts. Unless gdb can "simulate" or run arbitrary code for us then I
-> > think we're stuck reimplementing kernel internal code in gdb scripts so
-> > that we can get debug info out.
-> >=20
->=20
-> Could we possibly leave some link in form of comment in the related heade=
-rs or=20
-> implementations? Won't magically solve the problem but at least increase =
-changes=20
-> that author actually read them when they start changing the C implementat=
-ions.
->=20
+Hi Richard, Paul,
 
-Sure. Can you propose some sort of patch against the 'list'
-implementation for this? I'd like to just use whatever policy is decided
-here.
+On Tue, 2019-03-26 at 14:49 -0400, Richard Guy Briggs wrote:
+> In commit fa516b66a1bf ("EVM: Allow runtime modification of the set of
+> verified xattrs"), the call to audit_log_start() is missing a context to
+> link it to an audit event. Since this event is in user context, add
+> the process' syscall context to the record.
+> 
+> In addition, the orphaned keyword "locked" appears in the record.
+> Normalize this by changing it to logging the locking string "." as any
+> other user input in the "xattr=" field.
+> 
+> Please see the github issue
+> https://github.com/linux-audit/audit-kernel/issues/109
+> 
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+
+Paul, were you planning on upstreaming this patch?
+
+Mimi
+
