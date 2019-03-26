@@ -2,149 +2,187 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC64BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AB0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F952087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854EE2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731963AbfCZXNA (ORCPT
+        id S1732694AbfCZXNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:13:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731583AbfCZXM7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:12:59 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNA1j5075169
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:12:58 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rft2r04f9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:12:58 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 26 Mar 2019 23:12:57 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:12:53 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNCqfr22806596
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:12:52 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22152B2065;
-        Tue, 26 Mar 2019 23:12:52 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0237CB205F;
-        Tue, 26 Mar 2019 23:12:51 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 23:12:51 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 17A6F16C60F3; Tue, 26 Mar 2019 16:12:53 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:12:53 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
-Subject: [PATCH tip/core/rcu 0/18] Miscellaneous fixes for v5.2
-Reply-To: paulmck@linux.ibm.com
+        Tue, 26 Mar 2019 19:13:11 -0400
+Received: from muru.com ([72.249.23.125]:42954 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731583AbfCZXNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 19:13:11 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0310B8030;
+        Tue, 26 Mar 2019 23:13:22 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 16:13:06 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 09/14] bus: ti-sysc: Move rstctrl reset to happen later
+Message-ID: <20190326231306.GC49658@atomide.com>
+References: <20190325215849.13182-1-tony@atomide.com>
+ <20190325215849.13182-10-tony@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032623-0068-0000-0000-000003AB7494
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180132; UDB=6.00617572; IPR=6.00960848;
- MB=3.00026169; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:12:56
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-0069-0000-0000-000047F21E07
-Message-Id: <20190326231253.GA18343@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=997 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260156
+In-Reply-To: <20190325215849.13182-10-tony@atomide.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+* Tony Lindgren <tony@atomide.com> [190325 22:00]:
+> We should not do the reset until the clocks are enabled. Let's only init
+> restctrl in sysc_init_resets() and do the reset later on in sysc_reset().
+...
 
-This series contains miscellaneous fixes.
+>  static int sysc_reset(struct sysc *ddata)
+>  {
+>  	int offset = ddata->offsets[SYSC_SYSCONFIG];
+> -	int val;
+> +	int error, val;
+>  
+>  	if (ddata->legacy_mode || offset < 0 ||
+>  	    ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
+> -		return 0;
+> +		return sysc_rstctrl_reset_deassert(ddata, false);
+> +
+> +	error = sysc_rstctrl_reset_deassert(ddata, true);
+> +	if (error)
+> +		return error;
 
-1.	Unconditionally expedite during suspend/hibernate (unless the
-	real-time guys have disabled expediting altogether, that is).
+This change is wrong, we need to deassert rstctrl reset before
+we enable clocks, not after. Updated version below.
 
-2.	Avoid unnecessary softirq when system is idle, courtesy of
-	Joel Fernandes.
+Regards,
 
-3.	rcu_qs -- Use raise_softirq_irqoff to not save irqs twice,
-	courtesy of Cyrill Gorcunov.
+Tony
 
-4.	Make exit_rcu() handle non-preempted RCU readers.
+8< --------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Thu, 21 Mar 2019 11:00:21 -0700
+Subject: [PATCH] bus: ti-sysc: Move rstctrl reset to happen later
 
-5.	Set rcutree.kthread_prio sysfs access to read-only, courtesy
-	of Liu Song.
+We can do the rsstctrl a bit later, but need to deassert rstctrl reset
+before the clocks are enabled if asserted. Let's only init restctrl
+in sysc_init_resets() and do the reset later on just before we enable
+the device clocks.
 
-6.	MAINTAINERS: RCU now has its own email list.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 61 +++++++++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 22 deletions(-)
 
-7.	MAINTAINERS: Add -rcu branch name ("dev").
-
-8.	rcu: Move common code out of if-else block, courtesy of Akira
-	Yokosawa.
-
-9.	Allow rcu_nocbs= to specify all CPUs.
-
-10.	Report error for bad rcu_nocbs= parameter values.
-
-11.	Fix self-wakeups for grace-period kthread, courtesy of Neeraj
-	Upadhyay.
-
-12.	Default jiffies_to_sched_qs to jiffies_till_sched_qs, courtesy
-	of Neeraj Upadhyay.
-
-13.	Do a single rhp->func read in rcu_head_after_call_rcu(),
-	courtesy of Neeraj Upadhyay.
-
-14.	Update jiffies_to_sched_qs and adjust_jiffies_till_sched_qs()
-	comments.
-
-15.	Fix force_qs_rnp() header comment, courtesy of Zhouyi Zhou.
-
-16.	Eliminate redundant NULL-pointer check.
-
-17.	Fix typo in tree_exp.h comment.
-
-18.	Correct READ_ONCE()/WRITE_ONCE() for ->rcu_read_unlock_special.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
- Documentation/admin-guide/kernel-parameters.txt |    4 +-
- MAINTAINERS                                     |   16 ++++----
- include/linux/rcupdate.h                        |    6 ++-
- kernel/rcu/tiny.c                               |    2 -
- kernel/rcu/tree.c                               |   31 +++++++--------
- kernel/rcu/tree_exp.h                           |    4 +-
- kernel/rcu/tree_plugin.h                        |   48 +++++++++++++++---------
- 7 files changed, 63 insertions(+), 48 deletions(-)
-
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -339,38 +339,18 @@ static void sysc_disable_opt_clocks(struct sysc *ddata)
+ }
+ 
+ /**
+- * sysc_init_resets - reset module on init
++ * sysc_init_resets - init rstctrl reset line if configured
+  * @ddata: device driver data
+  *
+- * A module can have both OCP softreset control and external rstctrl.
+- * If more complicated rstctrl resets are needed, please handle these
+- * directly from the child device driver and map only the module reset
+- * for the parent interconnect target module device.
+- *
+- * Automatic reset of the module on init can be skipped with the
+- * "ti,no-reset-on-init" device tree property.
++ * See sysc_rstctrl_reset_deassert().
+  */
+ static int sysc_init_resets(struct sysc *ddata)
+ {
+-	int error;
+-
+ 	ddata->rsts =
+ 		devm_reset_control_array_get_optional_exclusive(ddata->dev);
+ 	if (IS_ERR(ddata->rsts))
+ 		return PTR_ERR(ddata->rsts);
+ 
+-	if (ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
+-		goto deassert;
+-
+-	error = reset_control_assert(ddata->rsts);
+-	if (error)
+-		return error;
+-
+-deassert:
+-	error = reset_control_deassert(ddata->rsts);
+-	if (error)
+-		return error;
+-
+ 	return 0;
+ }
+ 
+@@ -1031,6 +1011,35 @@ static int sysc_legacy_init(struct sysc *ddata)
+ 	return error;
+ }
+ 
++/**
++ * sysc_rstctrl_reset_deassert - deassert rstctrl reset
++ * @ddata: device driver data
++ * @reset: reset before deassert
++ *
++ * A module can have both OCP softreset control and external rstctrl.
++ * If more complicated rstctrl resets are needed, please handle these
++ * directly from the child device driver and map only the module reset
++ * for the parent interconnect target module device.
++ *
++ * Automatic reset of the module on init can be skipped with the
++ * "ti,no-reset-on-init" device tree property.
++ */
++static int sysc_rstctrl_reset_deassert(struct sysc *ddata, bool reset)
++{
++	int error;
++
++	if (!ddata->rsts)
++		return 0;
++
++	if (reset) {
++		error = reset_control_assert(ddata->rsts);
++		if (error)
++			return error;
++	}
++
++	return reset_control_deassert(ddata->rsts);
++}
++
+ static int sysc_reset(struct sysc *ddata)
+ {
+ 	int offset = ddata->offsets[SYSC_SYSCONFIG];
+@@ -1071,6 +1080,14 @@ static int sysc_init_module(struct sysc *ddata)
+ {
+ 	int error = 0;
+ 	bool manage_clocks = true;
++	bool reset = true;
++
++	if (ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)
++		reset = false;
++
++	error = sysc_rstctrl_reset_deassert(ddata, reset);
++	if (error)
++		return error;
+ 
+ 	if (ddata->cfg.quirks &
+ 	    (SYSC_QUIRK_NO_IDLE | SYSC_QUIRK_NO_IDLE_ON_INIT))
+-- 
+2.21.0
