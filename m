@@ -2,86 +2,254 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0960C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B068720823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553624331;
-	bh=Nfnzd4sdx9vZQ/RcUhXBnxvrFrkAtirD6220aVnMIUU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ofx+ZD2A5/uYrEuZe8MRt1jPvOrlV7yiteNBEw5oyIF3XMktqlwuQ5R9yHDWEV+wT
-	 asP5QvF2AW1Or24VLInPc+hbpp4SZWpoawJcpl8oDEYeRRttRaGMRxa+4hI4viTL9L
-	 AkgyyjvAk+3zWPueo+eNb4NXt2hobgpGd7DGzgRo=
+	by mail.kernel.org (Postfix) with ESMTP id A2B4120823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="b1AQG4by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbfCZSSu (ORCPT
+        id S1732511AbfCZSTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:18:50 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45058 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731904AbfCZSSu (ORCPT
+        Tue, 26 Mar 2019 14:19:35 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42997 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732252AbfCZSTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:18:50 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m16so11624417edd.12;
-        Tue, 26 Mar 2019 11:18:49 -0700 (PDT)
+        Tue, 26 Mar 2019 14:19:35 -0400
+Received: by mail-ed1-f66.google.com with SMTP id x61so5992312edc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uajPdoR+igi1/TeXPLGSYnlHo3ZbKeFf/xhYNan88Dw=;
+        b=b1AQG4by9+wttx8wmawYtfUfBlsaVHJlh/RGpvXNpOcHurYvMfD15gR9Fz8S5irpGW
+         XXuQfzJokeeQuiXL5+aycDiYuCxyNPZkFDU1KVMKq57OMl7YDZddc7fysIYzHOiVRgWq
+         fgh5wAhkktlYZgL8+TRh4CzcqAWoeK/LiU69NbsWdH2He6OogsbwsulhLQhqwGePTagZ
+         ksbIDIG1SvrmNukKPg1/UwdCMpfUdpI97M/G6CwoscYNYNxELj5N1IQC+YkcmNIO9wk/
+         QHjrDM9IbX08x5mhNEEyxhJOZC5qZsvTM2fOYnzyevzvYl0NJdyJi8IWclLD7rueX8Br
+         znHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bsow1X4q7i7i6LGYg9TTZCc77skn5gkjBjb0nG6qTh0=;
-        b=S06fW6+Vc68JhbO2O8sGjQBcpsij7sqKANemcaZDdLfnQVZUc7AlJWBfbK1t9VJb9u
-         m2LckdhphjxSJ9p876wRnhR0k6YLY/coGtOVkRploKS3YSuhcp+trl0WDrLBM7aiV6V4
-         QVzjaQxOQZ07/+Z/Y2SbeIib9LYJu6paYfv8NIgDRUiNH6Cy7pQgVIzrNK1D+kH56wkL
-         PJEWapuQKbPaKXRIrXnY4pXePDGYfN0YPqda/p1iDSxjXaCd3yw4Du8lWThVFR3VMeVl
-         KeZCWlxF0WZQjPKsC1aTJ2qS7vGhe1yDrMFpr3J18a4aylo7kGX2N2SnorLbxsbps60x
-         zjFQ==
-X-Gm-Message-State: APjAAAXd/mBiHpzKgnmb7osOqIX0K4b9UWc5CUet3BkG3bBnJywLD6gl
-        CLLDXLKdzjf34bo3KXTULdIKco2EAdloqOwn8NY=
-X-Google-Smtp-Source: APXvYqzVw5QthfJaMGAusoK83QXzFzkNhkkZDC34WiWPY+JZSlhTmxVNiQqRd1pruZ9OiKZanE519ABh2LV+AWr4QoU=
-X-Received: by 2002:a50:89fa:: with SMTP id h55mr21083002edh.296.1553624328651;
- Tue, 26 Mar 2019 11:18:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uajPdoR+igi1/TeXPLGSYnlHo3ZbKeFf/xhYNan88Dw=;
+        b=JVddO4REZi7G0hwx1mwEr83t1BH9GFC8rDKKe4/wIiUHTGQAQESwgMDdHG7m2A9sJu
+         tJsr+5jqPt/aH92PA9Oc3AmSSlCMWcH5jQQqcS61n9LdGsIR0yTyNkwFeQx2fQ+d+cRB
+         x+c9tQAvNU7iEerRTo35h+b1dLAcG0Z9IIyfJ1dCVMB6zI2n8TwF0cHIJS5dZZMTmiZw
+         +t3xWPOCEfqVvneB+W+/maqrONgcamDOkUWKktEIYvnL/MRfl07nwQbnwTc15nu7nbbt
+         iDg3MJpIv4UDM6LUZlTMVql4rxm/TqOOSk6YXXcVRDEAsOyH5+Xa35hhWthQoVO3MOVI
+         V0MQ==
+X-Gm-Message-State: APjAAAX59tylC1G4cVCjV7nsf3JXvB2mdvJMGK9imz8uHC5c4c27DcI2
+        qIKrtwWtGwOZXzLj5MTKYlzZRA==
+X-Google-Smtp-Source: APXvYqz1s0H7tZxNVbCKHuQJYZbtGsYiIC5nhQayHv6kdT+KgNba7eX9JDNOvnjVkrLN+dft2S5L7g==
+X-Received: by 2002:a50:ed8e:: with SMTP id h14mr21108368edr.276.1553624373031;
+        Tue, 26 Mar 2019 11:19:33 -0700 (PDT)
+Received: from brauner.io ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id h10sm4260068ejl.51.2019.03.26.11.19.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 26 Mar 2019 11:19:32 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 19:19:30 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, dancol@google.com
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+Message-ID: <20190326181929.eypk2hzprdltcrqd@brauner.io>
+References: <20190326155513.26964-1-christian@brauner.io>
+ <20190326155513.26964-3-christian@brauner.io>
+ <20190326170601.GA101741@google.com>
+ <20190326172231.daa5a53lxf6nz6jn@brauner.io>
+ <20190326181012.GA138478@google.com>
 MIME-Version: 1.0
-References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
- <43f15c3d7b5e0fd7e3f257d4c0736200f6198971.1551160674.git.len.brown@intel.com> <20190307144552.GC19434@e105550-lin.cambridge.arm.com>
-In-Reply-To: <20190307144552.GC19434@e105550-lin.cambridge.arm.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Tue, 26 Mar 2019 14:18:37 -0400
-Message-ID: <CAJvTdKmmYSvwqbo35+ON8qauRTxAt5+nOkriFwcRVHkTmPtPcQ@mail.gmail.com>
-Subject: Re: [PATCH 05/14] cpu topology: Export die_id
-To:     Morten Rasmussen <morten.rasmussen@arm.com>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
-        Len Brown <len.brown@intel.com>, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190326181012.GA138478@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 7, 2019 at 9:45 AM Morten Rasmussen
-<morten.rasmussen@arm.com> wrote:
+On Tue, Mar 26, 2019 at 02:10:12PM -0400, Joel Fernandes wrote:
+> On Tue, Mar 26, 2019 at 06:22:33PM +0100, Christian Brauner wrote:
+> > On Tue, Mar 26, 2019 at 01:06:01PM -0400, Joel Fernandes wrote:
+> > > On Tue, Mar 26, 2019 at 04:55:11PM +0100, Christian Brauner wrote:
+> > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > > > I quote Konstantins original patchset first that has already been acked and
+> > > > picked up by Eric before and whose functionality is preserved in this
+> > > > syscall:
+> > > > 
+> > > > "Each process have different pids, one for each pid namespace it belongs.
+> > > >  When interaction happens within single pid-ns translation isn't required.
+> > > >  More complicated scenarios needs special handling.
+> > > > 
+> > > >  For example:
+> > > >  - reading pid-files or logs written inside container with pid namespace
+> > > >  - writing logs with internal pids outside container for pushing them into
+> > > >  - attaching with ptrace to tasks from different pid namespace
+> > > > 
+> > > >  Generally speaking, any cross pid-ns API with pids needs translation.
+> > > > 
+> > > >  Currently there are several interfaces that could be used here:
+> > > > 
+> > > >  Pid namespaces are identified by device and inode of /proc/[pid]/ns/pid.
+> > > > 
+> > > >  Pids for nested pid namespaces are shown in file /proc/[pid]/status.
+> > > >  In some cases pid translation could be easily done using this information.
+> > > >  Backward translation requires scanning all tasks and becomes really
+> > > >  complicated for deeper namespace nesting.
+> > > > 
+> > > >  Unix socket automatically translates pid attached to SCM_CREDENTIALS.
+> > > >  This requires CAP_SYS_ADMIN for sending arbitrary pids and entering
+> > > >  into pid namespace, this expose process and could be insecure."
+> > > > 
+> > > > The original patchset allowed two distinct operations implicitly:
+> > > > - discovering whether pid namespaces (pidns) have a parent-child
+> > > >   relationship
+> > > > - translating a pid from a source pidns into a target pidns
+> > > > 
+> > > > Both tasks are accomplished in the original patchset by passing a pid
+> > > > along. If the pid argument is passed as 1 the relationship between two pid
+> > > > namespaces can be discovered.
+> > > > The syscall will gain a lot clearer syntax and will be easier to use for
+> > > > userspace if the task it is asked to perform is passed through a
+> > > > command argument. Additionally, it allows us to remove an intrinsic race
+> > > > caused by using the pid argument as a way to discover the relationship
+> > > > between pid namespaces.
+> > > > This patch introduces three commands:
+> > > > 
+> > > > /* PIDCMD_QUERY_PID */
+> > > > PIDCMD_QUERY_PID allows to translate a pid between pid namespaces.
+> > > > Given a source pid namespace fd return the pid of the process in the target
+> > > > namespace:
+> > > 
+> > > Could we call this PIDCMD_TRANSLATE_PID please? QUERY is confusing/ambigious
+> > > IMO (see below).
+> > 
+> > Yes, doesn't matter to me too much what we call it.
+> 
+> Ok.
+> 
+> > > > 1. pidctl(PIDCMD_QUERY_PID, pid, source_fd, -1, 0)
+> > > >   - retrieve pidns identified by source_fd
+> > > >   - retrieve struct pid identifed by pid in pidns identified by source_fd
+> > > >   - retrieve callers pidns
+> > > >   - return pid in callers pidns
+> > > > 
+> > > > 2. pidctl(PIDCMD_QUERY_PID, pid, -1, target_fd, 0)
+> > > >   - retrieve callers pidns
+> > > >   - retrieve struct pid identifed by pid in callers pidns
+> > > >   - retrieve pidns identified by target_fd
+> > > >   - return pid in pidns identified by target_fd
+> > > > 
+> > > > 3. pidctl(PIDCMD_QUERY_PID, 1, source_fd, -1, 0)
+> > > >   - retrieve pidns identified by source_fd
+> > > >   - retrieve struct pid identifed by init task in pidns identified by source_fd
+> > > >   - retrieve callers pidns
+> > > >   - return pid of init task of pidns identified by source_fd in callers pidns
+> > > > 
+> > > > 4. pidctl(PIDCMD_QUERY_PID, pid, source_fd, target_fd, 0)
+> > > >   - retrieve pidns identified by source_fd
+> > > >   - retrieve struct pid identifed by pid in pidns identified by source_fd
+> > > >   - retrieve pidns identified by target_fd
+> > > >   - check whether struct pid can be found in pidns identified by target_fd
+> > > >   - return pid in pidns identified by target_fd
+> > > > 
+> > > > /* PIDCMD_QUERY_PIDNS */
+> > > > PIDCMD_QUERY_PIDNS allows to determine the relationship between pid
+> > > > namespaces.
+> > > > In the original version of the pachset passing pid as 1 would allow to
+> > > > deterimine the relationship between the pid namespaces. This is inherhently
+> > > > racy. If pid 1 inside a pid namespace has died it would report false
+> > > > negatives. For example, if pid 1 inside of the target pid namespace already
+> > > > died, it would report that the target pid namespace cannot be reached from
+> > > > the source pid namespace because it couldn't find the pid inside of the
+> > > > target pid namespace and thus falsely report to the user that the two pid
+> > > > namespaces are not related. This problem is simple to avoid. In the new
+> > > > version we simply walk the list of ancestors and check whether the
+> > > > namespace are related to each other. By doing it this way we can reliably
+> > > > report what the relationship between two pid namespace file descriptors
+> > > > looks like.
+> > > > 
+> > > > 1. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd1, 0) == 0
+> > > >    - pidns_of(ns_fd1) and pidns_of(ns_fd2) are unrelated to each other
+> > > > 
+> > > > 2. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 1
+> > > >    - pidns_of(ns_fd1) == pidns_of(ns_fd2)
+> > > > 
+> > > > 3. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 2
+> > > >    - pidns_of(ns_fd1) is ancestor of pidns_of(ns_fd2)
+> > > > 
+> > > > 4. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 3
+> > > >    - pidns_of(ns_fd2) is ancestor of pidns_of(ns_fd1)
+> > > 
+> > > Why not call this PIDCMD_COMPARE_PIDNS, since a comparison is what you're doing.
+> > 
+> > Same.
+> 
+> Ok, glad we agree on it.
+> 
+> > > 
+> > > Again QUERY is ambigious here. Above you called QUERY to translate something,
+> > > now you're calling QUERY to mean compare something. I suggest to be explicit
+> > > about the operation PIDCMD_<OPERATION>_<OPERAND-TYPE>.
+> > > 
+> > > Arguably, 2 syscalls for this is cleaner:
+> > > pid_compare_namespaces(ns_fd1, ns_fd2);
+> > > pid_translate(pid, ns_fd1, nds_fd2);
+> > 
+> > I don't think we want to send out pid_compare_namespaces() as a separate
+> > syscall. If that's the consensus I'd rather just drop this functionality
+> > completely.
+> 
+> I mean, if pid-namespace fd comparison functionality is not needed in
+> userspace, why add it all. I suggest to drop it if not needed and can be
+> considered for addition later when needed.
+> 
+> Then you're just left with GET_PID and TRANSLATE_PID which we know we do need.
+> 
+> > > > These two commands - PIDCMD_QUERY_PID and PIDCMD_QUERY_PIDNS - cover and
+> > > > improve the functionality expressed implicitly in translate_pid() before.
+> > > > 
+> > > > /* PIDCMD_GET_PIDFD */
+> > > 
+> > > And this can be a third syscall:
+> > > pidfd_translate(pid, ns_fd1, ns_fd2).
+> > 
+> > Sigh, yes. But I honestly want other people other than us to come out
+> > and say "yes, please send a PR to Linus with three separate syscalls for
+> > very closely related functionality". There's a difference between "this
+> > is how we would ideally like to do it" and "this is what is common
+> > practice and will likely get accepted". But I'm really not opposed to it
+> > per se.
+> 
+> Ok.
+> 
+> > > I am actually supportive of Daniel's view that by combining too many
+> > > arguments into a single syscall, becomes confusing and sometimes some
+> > > arguments have to be forced to 0 in the single shoe-horned syscall. Like you
+> > 
+> > There's a difference between an ioctl() and say seccomp() which this is
+> > close to:
+> > int seccomp(unsigned int operation, unsigned int flags, void *args);
+> > The point is that the functionality is closely related not just randomly
+> > unrelated stuff. But as I said I'm more than willing to compromise.
+> 
+> Sounds great, yeah whatever makes sense.
 
-> Can we add the details about die_id further down in cputopology.txt as
-> well?
-
-Done.
-
-> > diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-> > --- a/arch/x86/include/asm/topology.h
-> > +++ b/arch/x86/include/asm/topology.h
-...
-> > +#define topology_die_id(cpu)                 (cpu_data(cpu).cpu_die_id)
-> >  #define topology_core_id(cpu)                        (cpu_data(cpu).cpu_core_id)
-
-> The above is x86 specific and seems to fit better with the next patch in
-> the series.
-
-No problem, I split that x86 line into a separate x86-specific patch.
-
-thanks Morten,
-
-Len Brown, Intel Open Source Technology Center
+In case I haven't said this enough: I really appreciate the discussion
+and in general the help on this. That probably sometimes gets lost in
+mails sometimes. :)
