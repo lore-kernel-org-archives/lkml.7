@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDDBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2CCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1CA2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC192075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582213;
-	bh=UcyVKUup6zLBaDatE9NsBWSlI8KbNbHcWneqUhIMxZg=;
+	s=default; t=1553582215;
+	bh=2UdpZgTxZKGqLuctCI/xZZCvrNcBLRcsCD+vdro3r+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=baNr6ei1TYHjots5opB/m8azyzwSS3Vj4dfgFL2KWA+4XMWwm3n79cTVX4ShnMU5x
-	 odAj1IcwKjUZHZ6cBXYeGzYq/FWECXYWkGh//j5xqasaVrVSiDhHTzr58tBqu8/sE6
-	 pcB1yp2VClJrg+Sny6dBqD5aOEpA29fMcQA7ZTUk=
+	b=n8SzPQSOpNWRdZOT6gGcccLsHIY0mdbxK8zBTFGDf2fYSd2BzsYAsDWYbkciW77SY
+	 X+7TKydim5ZmzpxViXH/I1SVoxWUJ+FyAXPzzZK61pJWY91jT9JrG4BHtB7i3vvW1Q
+	 r4AlVZFjiGoFOw9WPLKA6Ls1k51g5Rz0gVScT5Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfCZGgw (ORCPT
+        id S1732264AbfCZGgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732264AbfCZGgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:48 -0400
+        id S1731257AbfCZGgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:52 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395092070B;
-        Tue, 26 Mar 2019 06:36:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFE792075E;
+        Tue, 26 Mar 2019 06:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582207;
-        bh=UcyVKUup6zLBaDatE9NsBWSlI8KbNbHcWneqUhIMxZg=;
+        s=default; t=1553582211;
+        bh=2UdpZgTxZKGqLuctCI/xZZCvrNcBLRcsCD+vdro3r+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7AvcghnxRJ+CUMUNC+XBkzgIA92E2641jGheiWyIP88MkhSegV9Lvbw2cY5E4n7I
-         ZMKIW/V+szM/8fgVN9am8K5/uaSYDGdp0UnxTR+lzlqj5m3+1BtgL1z1J3vqpQlv8U
-         hTy5InZb6kkUPebCCGCpz4J85U4CI2S+yePDE+D0=
+        b=HPgsvE68POdM0U0kPf/r6zEaB/4teK82fiKmsRYHRyx7YS9PunbX5OB7SYXhfwKcB
+         EWGJ5g7MN+c0a97Yo9lJfpO/NUqDFagEBkCxER6H4FHuCow2ZvycVTUtEsjsWf961C
+         OsPui1cg68mAMUMd68CG+IAyo2C57/rfJMBN2tpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jeremy Cline <jcline@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.19 33/45] Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
-Date:   Tue, 26 Mar 2019 15:30:16 +0900
-Message-Id: <20190326042704.404278904@linuxfoundation.org>
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 16/45] scsi: ibmvscsi: Fix empty event pool access during host removal
+Date:   Tue, 26 Mar 2019 15:29:59 +0900
+Message-Id: <20190326042703.550184647@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -68,57 +64,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
+commit 7f5203c13ba8a7b7f9f6ecfe5a4d5567188d7835 upstream.
 
-task A:                                task B:
-hci_uart_set_proto                     flush_to_ldisc
- - p->open(hu) -> h5_open  //alloc h5  - receive_buf
- - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
- - hci_uart_register_dev                 - tty_ldisc_receive_buf
-                                          - hci_uart_tty_receive
-				           - test_bit HCI_UART_PROTO_READY
-				            - h5_recv
- - clear_bit HCI_UART_PROTO_READY             while() {
- - p->open(hu) -> h5_close //free h5
-				              - h5_rx_3wire_hdr
-				               - h5_reset()  //use-after-free
-                                              }
+The event pool used for queueing commands is destroyed fairly early in the
+ibmvscsi_remove() code path. Since, this happens prior to the call so
+scsi_remove_host() it is possible for further calls to queuecommand to be
+processed which manifest as a panic due to a NULL pointer dereference as
+seen here:
 
-It could use ioctl to set hci uart proto, but there is
-a use-after-free issue when hci_uart_register_dev() fail in
-hci_uart_set_proto(), see stack above, fix this by setting
-HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
-return success.
+PANIC: "Unable to handle kernel paging request for data at address
+0x00000000"
 
-Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reviewed-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Context process backtrace:
+
+DSISR: 0000000042000000 ????Syscall Result: 0000000000000000
+4 [c000000002cb3820] memcpy_power7 at c000000000064204
+[Link Register] [c000000002cb3820] ibmvscsi_send_srp_event at d000000003ed14a4
+5 [c000000002cb3920] ibmvscsi_send_srp_event at d000000003ed14a4 [ibmvscsi] ?(unreliable)
+6 [c000000002cb39c0] ibmvscsi_queuecommand at d000000003ed2388 [ibmvscsi]
+7 [c000000002cb3a70] scsi_dispatch_cmd at d00000000395c2d8 [scsi_mod]
+8 [c000000002cb3af0] scsi_request_fn at d00000000395ef88 [scsi_mod]
+9 [c000000002cb3be0] __blk_run_queue at c000000000429860
+10 [c000000002cb3c10] blk_delay_work at c00000000042a0ec
+11 [c000000002cb3c40] process_one_work at c0000000000dac30
+12 [c000000002cb3cd0] worker_thread at c0000000000db110
+13 [c000000002cb3d80] kthread at c0000000000e3378
+14 [c000000002cb3e30] ret_from_kernel_thread at c00000000000982c
+
+The kernel buffer log is overfilled with this log:
+
+[11261.952732] ibmvscsi: found no event struct in pool!
+
+This patch reorders the operations during host teardown. Start by calling
+the SRP transport and Scsi_Host remove functions to flush any outstanding
+work and set the host offline. LLDD teardown follows including destruction
+of the event pool, freeing the Command Response Queue (CRQ), and unmapping
+any persistent buffers. The event pool destruction is protected by the
+scsi_host lock, and the pool is purged prior of any requests for which we
+never received a response. Finally, move the removal of the scsi host from
+our global list to the end so that the host is easily locatable for
+debugging purposes during teardown.
+
+Cc: <stable@vger.kernel.org> # v2.6.12+
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_ldisc.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/ibmvscsi/ibmvscsi.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -696,14 +696,13 @@ static int hci_uart_set_proto(struct hci
- 		return -EPROTONOSUPPORT;
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2296,17 +2296,27 @@ static int ibmvscsi_probe(struct vio_dev
+ static int ibmvscsi_remove(struct vio_dev *vdev)
+ {
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	spin_lock(&ibmvscsi_driver_lock);
+-	list_del(&hostdata->host_list);
+-	spin_unlock(&ibmvscsi_driver_lock);
+-	unmap_persist_bufs(hostdata);
++	unsigned long flags;
++
++	srp_remove_host(hostdata->host);
++	scsi_remove_host(hostdata->host);
++
++	purge_requests(hostdata, DID_ERROR);
++
++	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
++	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
++
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
  
- 	hu->proto = p;
--	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	kthread_stop(hostdata->work_thread);
+-	srp_remove_host(hostdata->host);
+-	scsi_remove_host(hostdata->host);
++	unmap_persist_bufs(hostdata);
++
++	spin_lock(&ibmvscsi_driver_lock);
++	list_del(&hostdata->host_list);
++	spin_unlock(&ibmvscsi_driver_lock);
++
+ 	scsi_host_put(hostdata->host);
  
- 	err = hci_uart_register_dev(hu);
- 	if (err) {
--		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
- 		return err;
- 	}
- 
-+	set_bit(HCI_UART_PROTO_READY, &hu->flags);
  	return 0;
- }
- 
 
 
