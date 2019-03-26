@@ -2,229 +2,169 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E49C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A23C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6215020811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B318020811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732042AbfCZPeT (ORCPT
+        id S1732048AbfCZPf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:34:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731881AbfCZPeS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:34:18 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QFY0PE077566
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:34:17 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfp4t2e53-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:34:15 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 26 Mar 2019 15:34:11 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 15:34:09 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QFY8br47710310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 15:34:08 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3460A4C05A;
-        Tue, 26 Mar 2019 15:34:08 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EA774C04A;
-        Tue, 26 Mar 2019 15:34:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.109.36])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 15:34:06 +0000 (GMT)
-Subject: Re: [PATCH 27/27] kexec: Allow kexec_file() with appropriate IMA
- policy when locked down
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com,
-        Matthew Garrett <mjg59@google.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org
-Date:   Tue, 26 Mar 2019 11:33:55 -0400
-In-Reply-To: <20190325220954.29054-28-matthewgarrett@google.com>
-References: <20190325220954.29054-1-matthewgarrett@google.com>
-         <20190325220954.29054-28-matthewgarrett@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 26 Mar 2019 11:35:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53238 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfCZPf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:35:27 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63261307B48D;
+        Tue, 26 Mar 2019 15:35:26 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FAC2100ACFB;
+        Tue, 26 Mar 2019 15:35:21 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 09:35:20 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+Message-ID: <20190326093520.24c211ab@x1.home>
+In-Reply-To: <A2975661238FB949B60364EF0F2C257439E4DB32@SHSMSX104.ccr.corp.intel.com>
+References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
+        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
+        <20190319121416.27495651@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
+        <20190320132202.6279a190@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E4BBF2@SHSMSX104.ccr.corp.intel.com>
+        <20190325121720.53935577@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E4DB32@SHSMSX104.ccr.corp.intel.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032615-0012-0000-0000-000003075A46
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032615-0013-0000-0000-0000213E8387
-Message-Id: <1553614435.4115.19.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260108
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 26 Mar 2019 15:35:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 15:09 -0700, Matthew Garrett wrote:
-> Systems in lockdown mode should block the kexec of untrusted kernels.
-> For x86 and ARM we can ensure that a kernel is trustworthy by validating
-> a PE signature, but this isn't possible on other architectures. On those
-> platforms we can use IMA digital signatures instead. Add a function to
-> determine whether IMA has or will verify signatures for a given event type,
-> and if so permit kexec_file() even if the kernel is otherwise locked down.
-> This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
-> in order to prevent an attacker from loading additional keys at runtime.
+On Tue, 26 Mar 2019 12:37:37 +0000
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
+
+> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > Sent: Tuesday, March 26, 2019 2:17 AM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+> > 
+> > On Sat, 23 Mar 2019 11:06:44 +0000
+> > "Liu, Yi L" <yi.l.liu@intel.com> wrote:  
+> > > Hi Alex,  
 > 
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> Cc: linux-integrity@vger.kernel.org
-
-Acked-by: Mimi Zohar <zohar@linux.ibm.com>
-
-> ---
->  include/linux/ima.h                 |  9 ++++++
->  kernel/kexec_file.c                 |  7 +++-
->  security/integrity/ima/ima.h        |  2 ++
->  security/integrity/ima/ima_main.c   |  2 +-
->  security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
->  5 files changed, 68 insertions(+), 2 deletions(-)
+> [...]
 > 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index b5e16b8c50b7..05921227d700 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -127,4 +127,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
->  	return 0;
->  }
->  #endif /* CONFIG_IMA_APPRAISE */
-> +
-> +#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
-> +extern bool ima_appraise_signature(enum kernel_read_file_id func);
-> +#else
-> +static inline bool ima_appraise_kexec_signature(enum kernel_read_file_id func)
-> +{
-> +	return false;
-> +}
-> +#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
->  #endif /* _LINUX_IMA_H */
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 0cfe4f6f7f85..8ffa4b75c620 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -240,7 +240,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  
->  		ret = 0;
->  
-> -		if (kernel_is_locked_down(reason)) {
-> +		/* If IMA is guaranteed to appraise a signature on the kexec
-> +		 * image, permit it even if the kernel is otherwise locked
-> +		 * down.
-> +		 */
-> +		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
-> +		    kernel_is_locked_down(reason)) {
->  			ret = -EPERM;
->  			goto out;
->  		}
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index cc12f3449a72..fe03cc6f1ca4 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -115,6 +115,8 @@ struct ima_kexec_hdr {
->  	u64 count;
->  };
->  
-> +extern const int read_idmap[];
-> +
->  #ifdef CONFIG_HAVE_IMA_KEXEC
->  void ima_load_kexec_buffer(void);
->  #else
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 4ffac4f5c647..106f06dee9d1 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -442,7 +442,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
->  	return 0;
->  }
->  
-> -static const int read_idmap[READING_MAX_ID] = {
-> +const int read_idmap[READING_MAX_ID] = {
->  	[READING_FIRMWARE] = FIRMWARE_CHECK,
->  	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
->  	[READING_MODULE] = MODULE_CHECK,
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 122797023bdb..f8f1cdb74a4f 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -1341,3 +1341,53 @@ int ima_policy_show(struct seq_file *m, void *v)
->  	return 0;
->  }
->  #endif	/* CONFIG_IMA_READ_POLICY */
-> +
-> +#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
-> +/*
-> + * ima_appraise_signature: whether IMA will appraise a given function using
-> + * an IMA digital signature. This is restricted to cases where the kernel
-> + * has a set of built-in trusted keys in order to avoid an attacker simply
-> + * loading additional keys.
-> + */
-> +bool ima_appraise_signature(enum kernel_read_file_id id)
-> +{
-> +	struct ima_rule_entry *entry;
-> +	bool found = false;
-> +	enum ima_hooks func;
-> +
-> +	if (id >= READING_MAX_ID)
-> +		return false;
-> +
-> +	func = read_idmap[id] ?: FILE_CHECK;
-> +
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(entry, ima_rules, list) {
-> +		if (entry->action != APPRAISE)
-> +			continue;
-> +
-> +		/*
-> +		 * A generic entry will match, but otherwise require that it
-> +		 * match the func we're looking for
-> +		 */
-> +		if (entry->func && entry->func != func)
-> +			continue;
-> +
-> +		/*
-> +		 * We require this to be a digital signature, not a raw IMA
-> +		 * hash.
-> +		 */
-> +		if (entry->flags & IMA_DIGSIG_REQUIRED)
-> +			found = true;
-> +
-> +		/*
-> +		 * We've found a rule that matches, so break now even if it
-> +		 * didn't require a digital signature - a later rule that does
-> +		 * won't override it, so would be a false positive.
-> +		 */
-> +		break;
-> +	}
-> +
-> +	rcu_read_unlock();
-> +	return found;
-> +}
-> +#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+> > >
+> > > I tried to get a common file which includes the definitions of the module
+> > > options and the common interfaces and get it linked separately with each
+> > > module. It works well when linked separately by config the
+> > > CONFIG_VFIO_PCI=m and CONFIG_VFIO_PCI_MDEV=m in kernel
+> > > configuration file. CONFIG_VFIO_PCI_MDEV is a new Kconfig macro
+> > > for the mdev wrapped version driver. However, if building the vfio-pci
+> > > and the mdev wrapped version into kernel image (config the
+> > > CONFIG_VFIO_PCI=y and CONFIG_VFIO_PCI_MDEV=y), then the symbols
+> > > defined in the common file will be shared thus doesn't allow dissimilar
+> > > user settings.
+> > >
+> > > Per my understanding, I think we expect to allow simultaneous usage of
+> > > the two drivers. So I think the way above doesn't meet our expectation.  
+> > 
+> > I agree.  They should be related in implementation only, from a user
+> > perspective they should be entirely separate.
+> >   
+> > > I considered a possible proposal as below. May listen to your opinion
+> > > on it before heading to cook. Also, better idea is welcomed. :-)
+> > >
+> > > - get a common file includes interfaces which are common and have
+> > >   input parameters to differentiate the calling from vfio-pci and the
+> > >   wrapped version. e.g. vfio_pci_rw(). may call it as vfio_pci_common.c.
+> > >
+> > > - get another common file includes the definitions of the module options,
+> > >   and the functions which referred the options. Define all of them as static.
+> > >   may call it as common.c
+> > >
+> > > - get vfio_pci.c which includes the module_init/exit interfaces and driver
+> > >   registration operations of vfio-pci.ko. This file should include the common.c
+> > >   above to have same module options with the mdev wrapped version.
+> > >
+> > > - get vfio_pci_mdev.c which includes the module_init/exit interfaces and
+> > >   driver registration operations of vfio-pci-mdev.ko. It should also include
+> > >   the common.c above to have same module options with vfio-pci.ko.
+> > >
+> > > - Makefile:
+> > > vfio-pci-y := vfio_pci.o vfio_pci_common.o vfio_pci_intrs.o vfio_pci_rdwr.o  
+> > vfio_pci_config.o  
+> > > vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> > > vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> > >
+> > > vfio-pci-mdev-y := vfio_pci_mdev.o vfio_pci_common.o vfio_pci_intrs.o  
+> > vfio_pci_rdwr.o vfio_pci_config.o  
+> > > vfio-pci-mdev-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> > > vfio-pci-mdev-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> > >
+> > > obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> > > obj-$(CONFIG_VFIO_PCI_MDEV) += vfio-pci-mdev.o  
+> > 
+> > Each module needs it's own module_init/exit and will register its own
+> > struct pci_driver, which gives us separate control of the probe and  
+> 
+> Agreed.
+> 
+> > remove callbacks.  I think we want the drivers to have the same module
+> > parameters initially, but we don't necessarily want to require it for
+> > any future options, so we can duplicate the parameter declarations.
+> > Then to support the shared code, I think we can easily push nointxmask,
+> > disable_vga, and disable_idle_d3 into bools on the struct
+> > vfio_pci_device, which would be allocated and set by each module's
+> > probe function before calling the shared probe function.  
+> 
+> sounds good to me. 
+> 
+> > vfio_fill_ids() could take a pointer to the array to keep them separate
+> > between modules.   
+> 
+> Agreed.
+> 
+> > I think that just leaves the config permission bits,
+> > vfio_pci_{un}init_perm_bits(). Could we use a simple atomic reference
+> > counter on those to potentially share them so they get initialized by
+> > the first caller and freed by the last user, at least in the case of
+> > both drivers being compiled statically into the kernel?  Thanks,  
+> 
+> Sure, I can add it. The two modules will still share the cap_perms and
+> ecap_perms config bits when built statically in kernel. However, I think
+> such share is reasonable. I'll check if any other similar bits in other files.
+> 
+> > Alex  
+> 
+> Thanks for the suggestions, Alex. Let me prepare another RFC.
 
+Thank Yi, I appreciate your work on this.  Also, I wonder if we might
+want to reconsider placing this driver in samples, the Makefile might
+be a little bit ugly with paths back to drivers/vfio/pci, but I don't
+think we run into the same barriers as you did with previous
+approaches.  Placing it in samples would at least alleviate any
+confusion that this isn't a vfio-pci replacement, but more of an mdev
+wrapper proof of concept.  Thanks,
+
+Alex
