@@ -2,211 +2,130 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98275C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9398920866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D9420823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:33:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="T0fK8fB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732446AbfCZRdU (ORCPT
+        id S1732456AbfCZRda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:33:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41910 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732431AbfCZRdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:33:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 83DFE8666B;
-        Tue, 26 Mar 2019 17:33:12 +0000 (UTC)
-Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F2465C28D;
-        Tue, 26 Mar 2019 17:33:10 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 13:33:08 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount findstring
-Message-ID: <20190326173308.GA26546@redhat.com>
-References: <20190325160438.8982-1-joe.lawrence@redhat.com>
- <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
+        Tue, 26 Mar 2019 13:33:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34402 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732087AbfCZRc2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:32:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so15417956wrq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=T1F7KCZQllI8gey25Uaoq9o2WFLfikAjSL+Gi1a9B5o=;
+        b=T0fK8fB2fBY6RWA67zKWISoj1RTZ2iwfykSypKUPezvSZ8yY5gg8gl4/L7JTXBrZ5H
+         w1tH1dRjR6QgRaky/7E3z08GdAVqnEc99Qbbkbli2ta8f5KUMWoPpCSg9Baj4RSkoRKw
+         JfUtjoXiN9rg3tCFOJIv5SL85NJK8CA58I7SsrvxLSye6IQE3XA8lg7tzycantI8dFVl
+         NDjk2D0EgXG7LI7+7+36eQ/kIJumsZU68XhjloVFdZ3v2JPXoyD2h10i2nk5altjiFv8
+         nknoii9PDXEtdjLI3HaJzUS/NY36ZkhrISRNahZSoDk82kPW3mG4yVQXGY3ic7071HVg
+         Bd8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=T1F7KCZQllI8gey25Uaoq9o2WFLfikAjSL+Gi1a9B5o=;
+        b=qEGaAhHIp358lw4639+lUlERizuABO4vufXeA1a/c8T56FNV4AG1AMHe5rGsbLA4a2
+         WaxBW+V3eiaHbBYu8e1t3k1Evzzkvu74CiU8QTP+oSJ8owdavRvGDLAJwheHcdxIzmKv
+         prIY0LoWJ5UR9bl1keS2fBBdTuQzIHCm5HHx7XSlzJo2/KYbCtqJXGRMa42d17ZRtmZI
+         pUpWICqoVjhFUohpZdV1EqZR+NnNpi9vwBvsyUjE1lqU4Ub7LoUw6VYJHTo9ea5ULG2w
+         mpmcEy3q8f1DeIQSPRalP23JE0+9XecI0MFcmePs0fpP5vhldvm2ahFme9V5bpSswWnN
+         5AKw==
+X-Gm-Message-State: APjAAAXMm4c6ipFZDGpoMes/cpymCdbVtqwZLHkmARCrQ6uyWuHOaDe7
+        NFKKzSvaqxS8ftIKER+flIP5cA==
+X-Google-Smtp-Source: APXvYqzMS3UlFWKlsV8LAucBD7uTDvG+qskaGhPxUTsLoG1gNuF1jBvaMMqiP6SXR0AeGUgCAd639Q==
+X-Received: by 2002:adf:b651:: with SMTP id i17mr19190021wre.108.1553621546597;
+        Tue, 26 Mar 2019 10:32:26 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id 4sm2534541wmg.12.2019.03.26.10.32.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 10:32:25 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 04/11] dt-bindings: input: add DT bindings for max77650
+Date:   Tue, 26 Mar 2019 18:32:01 +0100
+Message-Id: <20190326173208.30614-5-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190326173208.30614-1-brgl@bgdev.pl>
+References: <20190326173208.30614-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 26 Mar 2019 17:33:15 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 02:29:47PM +0900, Masahiro Yamada wrote:
-> On Tue, Mar 26, 2019 at 1:05 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> >
-> > CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
-> > findstring.
-> >
-> > For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
-> > GCC 4.9 and newer") introduced a change such that on my ppc64le box,
-> > CC_FLAGS_FTRACE="-pg -mprofile-kernel ".  (Note the trailing space.)
-> > When cmd_record_mcount is now invoked, findstring fails as the ftrace
-> > flags were found at very end of _c_flags, without the trailing space.
-> >
-> >   _c_flags=" ... -pg -mprofile-kernel"
-> >   CC_FLAGS_FTRACE="-pg -mprofile-kernel "
-> >                                        ^
-> >     findstring is looking for this extra space
-> >
-> > Remove the redundant whitespaces from CC_FLAGS_FTRACE in
-> > cmd_record_mcount to avoid this problem.
-> >
-> > Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer").
-> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > ---
-> >
-> > Standard disclaimer: I'm not a kbuild expert, but this works around the
-> > problem I reported where ftrace and livepatch self-tests were failing as
-> > specified object files were not run through the recordmcount.pl script:
-> >
-> > ppc64le: ftrace self-tests and $(CC_FLAGS_FTRACE) broken?
-> > https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-March/187298.html
-> >
-> >  scripts/Makefile.build | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> > index 2554a15ecf2b..74d402b5aa3c 100644
-> > --- a/scripts/Makefile.build
-> > +++ b/scripts/Makefile.build
-> > @@ -199,10 +199,10 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
-> >         "$(if $(part-of-module),1,0)" "$(@)";
-> >  recordmcount_source := $(srctree)/scripts/recordmcount.pl
-> >  endif # BUILD_C_RECORDMCOUNT
-> > -cmd_record_mcount =                                            \
-> > -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =   \
-> > -            "$(CC_FLAGS_FTRACE)" ]; then                       \
-> > -               $(sub_cmd_record_mcount)                        \
-> > +cmd_record_mcount =                                                    \
-> > +       if [ "$(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags))" =  \
-> > +            "$(strip $(CC_FLAGS_FTRACE))" ]; then                      \
-> > +               $(sub_cmd_record_mcount)                                \
-> >         fi
-> >  endif # CC_USING_RECORD_MCOUNT
-> >  endif # CONFIG_FTRACE_MCOUNT_RECORD
-> > --
-> > 2.20.1
-> >
-> 
-> 
-> 
-> I do not see a point in using the shell command here
-> in the first place.
-> 
-> Instead of adding crappy workarounds,
-> I guess the following simple code should work:
-> 
-> 
-> index 2554a15..5f13021 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -199,11 +199,8 @@ sub_cmd_record_mcount = perl
-> $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
->         "$(if $(part-of-module),1,0)" "$(@)";
->  recordmcount_source := $(srctree)/scripts/recordmcount.pl
->  endif # BUILD_C_RECORDMCOUNT
-> -cmd_record_mcount =                                            \
-> -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =   \
-> -            "$(CC_FLAGS_FTRACE)" ]; then                       \
-> -               $(sub_cmd_record_mcount)                        \
-> -       fi
-> +cmd_record_mcount = $(if $(findstring $(CC_FLAGS_FTRACE),$(_c_flags)),\
-> +                 $(sub_cmd_record_mcount))
->  endif # CC_USING_RECORD_MCOUNT
->  endif # CONFIG_FTRACE_MCOUNT_RECORD
-> 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Hi Masahiro,
+Add the DT binding document for the onkey module of max77650.
 
-Agreed on the shell command ugliness, however I still think we need to
-strip the search pattern here.  With your suggestion:
-
-% rm -f kernel/trace/trace_selftest_dynamic.o 
-% make kernel/trace/trace_selftest_dynamic.o
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  CC      kernel/trace/trace_selftest_dynamic.o
-
-% eu-readelf --sections kernel/trace/trace_selftest_dynamic.o | grep mcount
-(nothing)
-
-Adding it back as, as below, restores those sections and the self tests
-work again.
-
-Regards,
-
--- Joe
-
--->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-
-From 6a85e8ecf4179b3e80601a327ec43d8d49f0e3cd Mon Sep 17 00:00:00 2001
-From: Joe Lawrence <joe.lawrence@redhat.com>
-Date: Tue, 26 Mar 2019 10:50:28 -0400
-Subject: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount findstring
-
-CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
-findstring.
-
-For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
-GCC 4.9 and newer") introduced a change such that on my ppc64le box,
-CC_FLAGS_FTRACE="-pg -mprofile-kernel ".  (Note the trailing space.)
-When cmd_record_mcount is now invoked, findstring fails as the ftrace
-flags were found at very end of _c_flags, without the trailing space.
-
-  _c_flags=" ... -pg -mprofile-kernel"
-  CC_FLAGS_FTRACE="-pg -mprofile-kernel "
-                                       ^
-    findstring is looking for this extra space
-
-Remove the redundant whitespaces from CC_FLAGS_FTRACE in
-cmd_record_mcount to avoid this problem.
-
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com> (refactoring)
-Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and newer").
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- scripts/Makefile.build | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ .../bindings/input/max77650-onkey.txt         | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
 
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 2554a15ecf2b..76ca30cc4791 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -199,11 +199,8 @@ sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
- 	"$(if $(part-of-module),1,0)" "$(@)";
- recordmcount_source := $(srctree)/scripts/recordmcount.pl
- endif # BUILD_C_RECORDMCOUNT
--cmd_record_mcount =						\
--	if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =	\
--	     "$(CC_FLAGS_FTRACE)" ]; then			\
--		$(sub_cmd_record_mcount)			\
--	fi
-+cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
-+	$(sub_cmd_record_mcount))
- endif # CC_USING_RECORD_MCOUNT
- endif # CONFIG_FTRACE_MCOUNT_RECORD
- 
+diff --git a/Documentation/devicetree/bindings/input/max77650-onkey.txt b/Documentation/devicetree/bindings/input/max77650-onkey.txt
+new file mode 100644
+index 000000000000..477dc74f452a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/max77650-onkey.txt
+@@ -0,0 +1,26 @@
++Onkey driver for MAX77650 PMIC from Maxim Integrated.
++
++This module is part of the MAX77650 MFD device. For more details
++see Documentation/devicetree/bindings/mfd/max77650.txt.
++
++The onkey controller is represented as a sub-node of the PMIC node on
++the device tree.
++
++Required properties:
++--------------------
++- compatible:		Must be "maxim,max77650-onkey".
++
++Optional properties:
++- linux,code:		The key-code to be reported when the key is pressed.
++			Defaults to KEY_POWER.
++- maxim,onkey-slide:	The system's button is a slide switch, not the default
++			push button.
++
++Example:
++--------
++
++	onkey {
++		compatible = "maxim,max77650-onkey";
++		linux,code = <KEY_END>;
++		maxim,onkey-slide;
++	};
 -- 
 2.20.1
 
