@@ -3,72 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4EEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E36C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3732070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57E12070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731560AbfCZQEK (ORCPT
+        id S1731696AbfCZQEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:04:10 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48691 "EHLO
+        Tue, 26 Mar 2019 12:04:32 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48697 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCZQEK (ORCPT
+        with ESMTP id S1726266AbfCZQEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:04:10 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h8oYY-0000YU-5M; Tue, 26 Mar 2019 17:04:06 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave P Martin <Dave.Martin@arm.com>
-Subject: Re: [ANNOUNCE] v5.0.3-rt1
-References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
-        <791056c4-3575-0bd8-031e-44d0e3b21e54@arm.com>
-        <87tvfrs76z.fsf@linutronix.de>
-        <3cb3c190-e804-982a-1c5b-8545a97379b9@arm.com>
-        <87imw7qm2p.fsf@linutronix.de>
-        <28ab7caf-1ada-1c39-c2f9-cd69b2376ef8@arm.com>
-Date:   Tue, 26 Mar 2019 17:04:04 +0100
-In-Reply-To: <28ab7caf-1ada-1c39-c2f9-cd69b2376ef8@arm.com> (Julien Grall's
-        message of "Tue, 26 Mar 2019 10:26:31 +0000")
-Message-ID: <878sx17hcb.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 26 Mar 2019 12:04:32 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8oYv-0000Zw-0u; Tue, 26 Mar 2019 17:04:29 +0100
+Date:   Tue, 26 Mar 2019 17:04:28 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+cc:     rjw@rjwysocki.net, ulf.hansson@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] genirq/timings: Add array suffix computation code
+In-Reply-To: <5ad6f7d7-3081-8eef-1adf-3ce705a1ba94@linaro.org>
+Message-ID: <alpine.DEB.2.21.1903261702320.1789@nanos.tec.linutronix.de>
+References: <20190308212047.28767-1-daniel.lezcano@linaro.org> <20190308212047.28767-3-daniel.lezcano@linaro.org> <alpine.DEB.2.21.1903241825210.1798@nanos.tec.linutronix.de> <5ad6f7d7-3081-8eef-1adf-3ce705a1ba94@linaro.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julien,
+Daniel,
 
-On 2019-03-26, Julien Grall <julien.grall@arm.com> wrote:
->>> [...]
->>> [    1.169151] 002: Serial: AMBA PL011 UART driver
->>> [    1.254891] 002: 7ff80000.uart: ttyAMA0 at MMIO 0x7ff80000 (irq = 32, base_baud = 0) is a PL011 rev3
->>> [    1.255007] 002: printk: console [ttyAMA0] enabled
->>
->> The ttyAMA drivers do not have support for atomic printing, so it is
->> not the new atomic feature that is causing the mangling. For your
->> setup, all printk console printing is being handled within a specific
->> context, the printk kernel thread.
->
-> This series is somehow making worst when using ttyAMA0. I haven't see
-> any mangling with 4.19-rt.
+On Tue, 26 Mar 2019, Daniel Lezcano wrote:
+> >> +/*
+> >> + * Exponential moving average computation
+> >> + */
+> >> +static int irq_timings_ema_new(s64 value, s64 ema_old)
+> > 
+> > There is a mixed bag of s64/u64 all over this code. Please stay
+> > consistent. We had enough sign confusion bugs in the past.
+> 
+> Right.
+> 
+> I have a question, ema_old and value will be always u64 type and the
+> function irq_timings_ema_new() will return an u64 ...
+> 
+> > 	value = (value - ema_old) * EMA_ALPHA_VAL;
+> > 	return ema_old + value >> EMA_ALPHA_SHIFT;
+> 
+> ... how can I deal with the operations above when value < ema_old ?
+> 
+> Shall I use an intermediate s64 ?
+> 
+> eg:
+> 
+> 	s64 aux = (value - ema_old) * EMA_ALPHA_VAL;
+> 	return ema_old + aux >> EMA_ALPHA_SHIFT;
+> ?
 
-I will setup some tests using systemd on 4.19 and 5.0 to see if I can
-see what is going on. It seems there may be some synchronization missing
-between the printk kernel thread and /dev/console.
+That should work if ema_old is not ever having the topmost bit set :)
 
-John Ogness
+Thanks,
+
+	tglx
