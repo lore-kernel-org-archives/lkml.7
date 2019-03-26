@@ -2,211 +2,222 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907DCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542242084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBC920863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553589593;
+	bh=gcLfiGPZ3NuWPr9xHxZdXcaaK4Sc9G0b7vGJXYUk19U=;
+	h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:
+	 From;
+	b=PGbLeRG0KiRqIt390IsQ75Gg0Y2ZnAmW/xDKFb1XpNJc/WMgrkt2pM/llfMwiOxTc
+	 KFKhcla3Kch9edO32jHHqIsLQWkUX+08FhAf5zAy1THayEMFjB2oFFC359P0fwiWaB
+	 Dp5kYLS0uxmG/sJrj6yH+CfCYlEjaUItkVOf644w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbfCZIiT (ORCPT
+        id S1731182AbfCZIjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:38:19 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32914 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726042AbfCZIiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:38:18 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 843B17979576A754B93D;
-        Tue, 26 Mar 2019 08:38:16 +0000 (GMT)
-Received: from lhreml706-chm.china.huawei.com (10.201.108.55) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 26 Mar 2019 08:38:16 +0000
-Received: from lhreml702-chm.china.huawei.com (10.201.108.51) by
- lhreml706-chm.china.huawei.com (10.201.108.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Tue, 26 Mar 2019 08:38:16 +0000
-Received: from lhreml702-chm.china.huawei.com ([10.201.68.197]) by
- lhreml702-chm.china.huawei.com ([10.201.68.197]) with mapi id 15.01.1713.004;
- Tue, 26 Mar 2019 08:38:15 +0000
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     syzbot <syzbot+e350b81e95a6a214da8a@syzkaller.appspotmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: RE: inconsistent lock state in ax25_std_heartbeat_expiry
-Thread-Topic: inconsistent lock state in ax25_std_heartbeat_expiry
-Thread-Index: AQHU4zxQi6YptRtXJkyVp0+Ue4BUaaYdl0UA
-Date:   Tue, 26 Mar 2019 08:38:15 +0000
-Message-ID: <ff7a386eb6164b5882471d4d7150c8cc@huawei.com>
-References: <0000000000001b07250584efbee3@google.com>
-In-Reply-To: <0000000000001b07250584efbee3@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.202.226.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 26 Mar 2019 04:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbfCZIjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:39:51 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62832084B;
+        Tue, 26 Mar 2019 08:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553589590;
+        bh=gcLfiGPZ3NuWPr9xHxZdXcaaK4Sc9G0b7vGJXYUk19U=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LA04y1ocoOE9QyoDzlppQJuRqOaF/RQCcI95tpukIojGTtF/pID8ar8zfCY6IEViJ
+         1sbyKBXZgiwziWhnMeg/5qKjaIJZ2B6nq6x275Y+uFNZsflljJJxQDG+69VrWVgXyy
+         RUFN2KNPoxvLLyEP/flDepDMTYiYx8QYQ1vDOCME=
+Reply-To: kbingham@kernel.org
+Subject: Re: [PATCH 0/4] gdb script for kconfig and timer list
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nikolay Borisov <n.borisov.lkml@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jackie Liu <liuyun01@kylinos.cn>
+References: <20190325184522.260535-1-swboyd@chromium.org>
+From:   Kieran Bingham <kbingham@kernel.org>
+Openpgp: preference=signencrypt
+Message-ID: <0cb6bd11-b98e-2d76-f464-b06afab74e97@kernel.org>
+Date:   Tue, 26 Mar 2019 08:39:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190325184522.260535-1-swboyd@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tm90IHJlcHJvZHVjaWJsZSBvbiBvdXIgc2V0dXAgZWl0aGVyLiBUaGFua3MgZm9yIHJlcG9ydGlu
-ZyB0aG91Z2guDQpXZSB3aWxsIGtlZXAgYW4gZXllIQ0KDQpTYWxpbC4NCj4gLS0tLS1PcmlnaW5h
-bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbmV0ZGV2LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFp
-bHRvOm5ldGRldi0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2Ygc3l6Ym90
-DQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMjUsIDIwMTkgNjo1NSBQTQ0KPiBUbzogZGF2ZW1AZGF2
-ZW1sb2Z0Lm5ldDsgbGludXgtaGFtc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyByYWxmQGxpbnV4LW1pcHMu
-b3JnOw0KPiBzeXprYWxsZXItYnVnc0Bnb29nbGVncm91cHMuY29tDQo+IFN1YmplY3Q6IGluY29u
-c2lzdGVudCBsb2NrIHN0YXRlIGluIGF4MjVfc3RkX2hlYXJ0YmVhdF9leHBpcnkNCj4gDQo+IEhl
-bGxvLA0KPiANCj4gc3l6Ym90IGZvdW5kIHRoZSBmb2xsb3dpbmcgY3Jhc2ggb246DQo+IA0KPiBI
-RUFEIGNvbW1pdDogICAgNWY1NDNhNTQgbmV0OiBobnMzOiBmaXggZm9yIG5vdCBjYWxjdWxhdGlu
-ZyB0eCBiZCBudW0NCj4gY29yci4uDQo+IGdpdCB0cmVlOiAgICAgICBuZXQNCj4gY29uc29sZSBv
-dXRwdXQ6DQo+IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEwYzg2
-NTJiMjAwMDAwDQo+IGtlcm5lbCBjb25maWc6DQo+IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3Qu
-Y29tL3gvLmNvbmZpZz94PWYwNTkwMmJjYTIxZDg5MzUNCj4gZGFzaGJvYXJkIGxpbms6DQo+IGh0
-dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL2J1Zz9leHRpZD1lMzUwYjgxZTk1YTZhMjE0ZGE4
-YQ0KPiBjb21waWxlcjogICAgICAgZ2NjIChHQ0MpIDkuMC4wIDIwMTgxMjMxIChleHBlcmltZW50
-YWwpDQo+IA0KPiBVbmZvcnR1bmF0ZWx5LCBJIGRvbid0IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9y
-IHRoaXMgY3Jhc2ggeWV0Lg0KPiANCj4gSU1QT1JUQU5UOiBpZiB5b3UgZml4IHRoZSBidWcsIHBs
-ZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlDQo+IGNvbW1pdDoNCj4gUmVwb3J0ZWQt
-Ynk6IHN5emJvdCtlMzUwYjgxZTk1YTZhMjE0ZGE4YUBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29t
-DQo+IA0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0aCBv
-d24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYToxYiwg
-dmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdp
-dGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6NjY6NTY6MjE6NzQ6MTQ6
-ZGYsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2ZV8w
-IHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6
-YWE6MGMsIHZsYW46MCkNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gV0FS
-TklORzogaW5jb25zaXN0ZW50IGxvY2sgc3RhdGUNCj4gNS4wLjArICMxMzQgTm90IHRhaW50ZWQN
-Cj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gaW5jb25zaXN0ZW50IHtTT0ZU
-SVJRLU9OLVd9IC0+IHtJTi1TT0ZUSVJRLVd9IHVzYWdlLg0KPiBrc29mdGlycWQvMS8xNiBbSEMw
-WzBdOlNDMVsxXTpIRTE6U0UwXSB0YWtlczoNCj4gMDAwMDAwMDA4MjgyYTdkNCAoc2xvY2stQUZf
-QVgyNSl7Ky4/Ln0sIGF0OiBzcGluX2xvY2sNCj4gaW5jbHVkZS9saW51eC9zcGlubG9jay5oOjMy
-OSBbaW5saW5lXQ0KPiAwMDAwMDAwMDgyODJhN2Q0IChzbG9jay1BRl9BWDI1KXsrLj8ufSwgYXQ6
-DQo+IGF4MjVfc3RkX2hlYXJ0YmVhdF9leHBpcnkrMHg1ZC8weDNlMCBuZXQvYXgyNS9heDI1X3N0
-ZF90aW1lci5jOjM3DQo+IHtTT0ZUSVJRLU9OLVd9IHN0YXRlIHdhcyByZWdpc3RlcmVkIGF0Og0K
-PiAgICBsb2NrX2FjcXVpcmUrMHgxNmYvMHgzZjAga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjQy
-MTENCj4gICAgX19yYXdfc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3BpbmxvY2tfYXBpX3NtcC5o
-OjE0MiBbaW5saW5lXQ0KPiAgICBfcmF3X3NwaW5fbG9jaysweDJmLzB4NDAga2VybmVsL2xvY2tp
-bmcvc3BpbmxvY2suYzoxNDQNCj4gICAgc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3BpbmxvY2su
-aDozMjkgW2lubGluZV0NCj4gICAgYXgyNV9ydF9hdXRvYmluZCsweDNjYS8weDcyMCBuZXQvYXgy
-NS9heDI1X3JvdXRlLmM6NDMyDQo+ICAgIGF4MjVfY29ubmVjdC5jb2xkKzB4MzAvMHhhNCBuZXQv
-YXgyNS9hZl9heDI1LmM6MTIyNA0KPiAgICBfX3N5c19jb25uZWN0KzB4MjY2LzB4MzMwIG5ldC9z
-b2NrZXQuYzoxODA4DQo+ICAgIF9fZG9fc3lzX2Nvbm5lY3QgbmV0L3NvY2tldC5jOjE4MTkgW2lu
-bGluZV0NCj4gICAgX19zZV9zeXNfY29ubmVjdCBuZXQvc29ja2V0LmM6MTgxNiBbaW5saW5lXQ0K
-PiAgICBfX3g2NF9zeXNfY29ubmVjdCsweDczLzB4YjAgbmV0L3NvY2tldC5jOjE4MTYNCj4gICAg
-ZG9fc3lzY2FsbF82NCsweDEwMy8weDYxMCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzoyOTANCj4g
-ICAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NDkvMHhiZQ0KPiBpcnEgZXZlbnQg
-c3RhbXA6IDI5Njg2ODExMA0KPiBoYXJkaXJxcyBsYXN0ICBlbmFibGVkIGF0ICgyOTY4NjgxMTAp
-OiBbPGZmZmZmZmZmODcwZjFhZDg+XQ0KPiBfX3Jhd19zcGluX3VubG9ja19pcnEgaW5jbHVkZS9s
-aW51eC9zcGlubG9ja19hcGlfc21wLmg6MTY4IFtpbmxpbmVdDQo+IGhhcmRpcnFzIGxhc3QgIGVu
-YWJsZWQgYXQgKDI5Njg2ODExMCk6IFs8ZmZmZmZmZmY4NzBmMWFkOD5dDQo+IF9yYXdfc3Bpbl91
-bmxvY2tfaXJxKzB4MjgvMHg5MCBrZXJuZWwvbG9ja2luZy9zcGlubG9jay5jOjE5Mg0KPiBoYXJk
-aXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4NjgxMDkpOiBbPGZmZmZmZmZmODcwZjFjNGE+XQ0K
-PiBfX3Jhd19zcGluX2xvY2tfaXJxIGluY2x1ZGUvbGludXgvc3BpbmxvY2tfYXBpX3NtcC5oOjEy
-NiBbaW5saW5lXQ0KPiBoYXJkaXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4NjgxMDkpOiBbPGZm
-ZmZmZmZmODcwZjFjNGE+XQ0KPiBfcmF3X3NwaW5fbG9ja19pcnErMHgzYS8weDgwIGtlcm5lbC9s
-b2NraW5nL3NwaW5sb2NrLmM6MTYwDQo+IHNvZnRpcnFzIGxhc3QgIGVuYWJsZWQgYXQgKDI5Njg2
-ODEwMik6IFs8ZmZmZmZmZmY4NzQwMDY2Mj5dDQo+IF9fZG9fc29mdGlycSsweDY2Mi8weDk1YSBr
-ZXJuZWwvc29mdGlycS5jOjMyMA0KPiBzb2Z0aXJxcyBsYXN0IGRpc2FibGVkIGF0ICgyOTY4Njgx
-MDcpOiBbPGZmZmZmZmZmODE0NGM4YWU+XQ0KPiBydW5fa3NvZnRpcnFkDQo+IGtlcm5lbC9zb2Z0
-aXJxLmM6NjU1IFtpbmxpbmVdDQo+IHNvZnRpcnFzIGxhc3QgZGlzYWJsZWQgYXQgKDI5Njg2ODEw
-Nyk6IFs8ZmZmZmZmZmY4MTQ0YzhhZT5dDQo+IHJ1bl9rc29mdGlycWQrMHg4ZS8weDExMCBrZXJu
-ZWwvc29mdGlycS5jOjY0Nw0KPiANCj4gb3RoZXIgaW5mbyB0aGF0IG1pZ2h0IGhlbHAgdXMgZGVi
-dWcgdGhpczoNCj4gICBQb3NzaWJsZSB1bnNhZmUgbG9ja2luZyBzY2VuYXJpbzoNCj4gDQo+ICAg
-ICAgICAgQ1BVMA0KPiAgICAgICAgIC0tLS0NCj4gICAgbG9jayhzbG9jay1BRl9BWDI1KTsNCj4g
-ICAgPEludGVycnVwdD4NCj4gICAgICBsb2NrKHNsb2NrLUFGX0FYMjUpOw0KPiANCj4gICAqKiog
-REVBRExPQ0sgKioqDQo+IA0KPiAxIGxvY2sgaGVsZCBieSBrc29mdGlycWQvMS8xNjoNCj4gICAj
-MDogMDAwMDAwMDA2NTQ5MjFjMyAoKCZheDI1LT50aW1lcikpeysuLS59LCBhdDogbG9ja2RlcF9j
-b3B5X21hcA0KPiBpbmNsdWRlL2xpbnV4L2xvY2tkZXAuaDoxNzAgW2lubGluZV0NCj4gICAjMDog
-MDAwMDAwMDA2NTQ5MjFjMyAoKCZheDI1LT50aW1lcikpeysuLS59LCBhdDoNCj4gY2FsbF90aW1l
-cl9mbisweGRhLzB4NzIwDQo+IGtlcm5lbC90aW1lL3RpbWVyLmM6MTMxNQ0KPiANCj4gc3RhY2sg
-YmFja3RyYWNlOg0KPiBDUFU6IDEgUElEOiAxNiBDb21tOiBrc29mdGlycWQvMSBOb3QgdGFpbnRl
-ZCA1LjAuMCsgIzEzNA0KPiBIYXJkd2FyZSBuYW1lOiBHb29nbGUgR29vZ2xlIENvbXB1dGUgRW5n
-aW5lL0dvb2dsZSBDb21wdXRlIEVuZ2luZSwgQklPUw0KPiBHb29nbGUgMDEvMDEvMjAxMQ0KPiBD
-YWxsIFRyYWNlOg0KPiAgIF9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVd
-DQo+ICAgZHVtcF9zdGFjaysweDE3Mi8weDFmMCBsaWIvZHVtcF9zdGFjay5jOjExMw0KPiAgIHBy
-aW50X3VzYWdlX2J1Zy5jb2xkKzB4MzMwLzB4NDJhIGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzoy
-ODM5DQo+ICAgdmFsaWRfc3RhdGUga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjI4NTIgW2lubGlu
-ZV0NCj4gICBtYXJrX2xvY2tfaXJxIGtlcm5lbC9sb2NraW5nL2xvY2tkZXAuYzozMDQ2IFtpbmxp
-bmVdDQo+ICAgbWFya19sb2NrKzB4ZDU4LzB4MTM4MCBrZXJuZWwvbG9ja2luZy9sb2NrZGVwLmM6
-MzQyMQ0KPiAgIG1hcmtfaXJxZmxhZ3Mga2VybmVsL2xvY2tpbmcvbG9ja2RlcC5jOjMyOTkgW2lu
-bGluZV0NCj4gICBfX2xvY2tfYWNxdWlyZSsweDE2NTQvMHgzZmIwIGtlcm5lbC9sb2NraW5nL2xv
-Y2tkZXAuYzozNjUzDQo+ICAgbG9ja19hY3F1aXJlKzB4MTZmLzB4M2YwIGtlcm5lbC9sb2NraW5n
-L2xvY2tkZXAuYzo0MjExDQo+ICAgX19yYXdfc3Bpbl9sb2NrIGluY2x1ZGUvbGludXgvc3Bpbmxv
-Y2tfYXBpX3NtcC5oOjE0MiBbaW5saW5lXQ0KPiAgIF9yYXdfc3Bpbl9sb2NrKzB4MmYvMHg0MCBr
-ZXJuZWwvbG9ja2luZy9zcGlubG9jay5jOjE0NA0KPiAgIHNwaW5fbG9jayBpbmNsdWRlL2xpbnV4
-L3NwaW5sb2NrLmg6MzI5IFtpbmxpbmVdDQo+ICAgYXgyNV9zdGRfaGVhcnRiZWF0X2V4cGlyeSsw
-eDVkLzB4M2UwIG5ldC9heDI1L2F4MjVfc3RkX3RpbWVyLmM6MzcNCj4gICBheDI1X2hlYXJ0YmVh
-dF9leHBpcnkrMHhmMy8weDEyMCBuZXQvYXgyNS9heDI1X3RpbWVyLmM6MTQxDQo+ICAgY2FsbF90
-aW1lcl9mbisweDE5MC8weDcyMCBrZXJuZWwvdGltZS90aW1lci5jOjEzMjUNCj4gICBleHBpcmVf
-dGltZXJzIGtlcm5lbC90aW1lL3RpbWVyLmM6MTM2MiBbaW5saW5lXQ0KPiAgIF9fcnVuX3RpbWVy
-cyBrZXJuZWwvdGltZS90aW1lci5jOjE2ODEgW2lubGluZV0NCj4gICBfX3J1bl90aW1lcnMga2Vy
-bmVsL3RpbWUvdGltZXIuYzoxNjQ5IFtpbmxpbmVdDQo+ICAgcnVuX3RpbWVyX3NvZnRpcnErMHg2
-NTIvMHgxNzAwIGtlcm5lbC90aW1lL3RpbWVyLmM6MTY5NA0KPiAgIF9fZG9fc29mdGlycSsweDI2
-Ni8weDk1YSBrZXJuZWwvc29mdGlycS5jOjI5Mw0KPiAgIHJ1bl9rc29mdGlycWQga2VybmVsL3Nv
-ZnRpcnEuYzo2NTUgW2lubGluZV0NCj4gICBydW5fa3NvZnRpcnFkKzB4OGUvMHgxMTAga2VybmVs
-L3NvZnRpcnEuYzo2NDcNCj4gICBzbXBib290X3RocmVhZF9mbisweDZhYi8weGExMCBrZXJuZWwv
-c21wYm9vdC5jOjE2NA0KPiAgIGt0aHJlYWQrMHgzNTcvMHg0MzAga2VybmVsL2t0aHJlYWQuYzoy
-NTMNCj4gICByZXRfZnJvbV9mb3JrKzB4M2EvMHg1MCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5T
-OjM1Mg0KPiBuZXRfcmF0ZWxpbWl0OiAyMTYxMyBjYWxsYmFja3Mgc3VwcHJlc3NlZA0KPiBicmlk
-Z2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3Mg
-YXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6NjY6NTY6MjE6NzQ6MTQ6ZGYsIHZsYW46MCkNCj4g
-YnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJl
-c3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkN
-Cj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBh
-ZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNzIChhZGRyOmFhOmFhOmFhOmFhOmFhOjBjLCB2bGFu
-OjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBhY2tldCBvbiB2ZXRoMF90b19icmlkZ2Ugd2l0aCBv
-d24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjo2Njo1NjoyMTo3NDoxNDpkZiwg
-dmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0
-aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYTox
-YiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAg
-d2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTphYTph
-YToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZl
-XzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTphYTph
-YTphYToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdlX3Ns
-YXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTphYTph
-YTphYTphYToxYiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gYnJpZGdl
-X3NsYXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRkcmVzcyAoYWRkcjphYTph
-YTphYTphYTphYTowYywgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZlZCBwYWNrZXQgb24gdmV0
-aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6
-YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gbmV0X3JhdGVsaW1pdDogMTY0MDcgY2FsbGJh
-Y2tzIHN1cHByZXNzZWQNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9zbGF2
-ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6
-YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRnZV9z
-bGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6
-YWE6YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJyaWRn
-ZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6YWE6
-YWE6YWE6YWE6YWE6MWIsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9uIGJy
-aWRnZV9zbGF2ZV8wIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNlDQo+IGFkZHJlc3MgKGFkZHI6
-YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gYnJpZGdlMDogcmVjZWl2ZWQgcGFja2V0IG9u
-IHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBhZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNzIChh
-ZGRyOmFhOmFhOmFhOmFhOmFhOjBjLCB2bGFuOjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBhY2tl
-dCBvbiBicmlkZ2Vfc2xhdmVfMCB3aXRoIG93biBhZGRyZXNzIGFzIHNvdXJjZQ0KPiBhZGRyZXNz
-IChhZGRyOmFhOmFhOmFhOmFhOmFhOjFiLCB2bGFuOjApDQo+IGJyaWRnZTA6IHJlY2VpdmVkIHBh
-Y2tldCBvbiB2ZXRoMF90b19icmlkZ2Ugd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4gYWRk
-cmVzcyAoYWRkcjo2Njo1NjoyMTo3NDoxNDpkZiwgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNlaXZl
-ZCBwYWNrZXQgb24gYnJpZGdlX3NsYXZlXzAgd2l0aCBvd24gYWRkcmVzcyBhcyBzb3VyY2UNCj4g
-YWRkcmVzcyAoYWRkcjphYTphYTphYTphYTphYTowYywgdmxhbjowKQ0KPiBicmlkZ2UwOiByZWNl
-aXZlZCBwYWNrZXQgb24gdmV0aDBfdG9fYnJpZGdlIHdpdGggb3duIGFkZHJlc3MgYXMgc291cmNl
-DQo+IGFkZHJlc3MgKGFkZHI6YWE6YWE6YWE6YWE6YWE6MGMsIHZsYW46MCkNCj4gYnJpZGdlMDog
-cmVjZWl2ZWQgcGFja2V0IG9uIHZldGgwX3RvX2JyaWRnZSB3aXRoIG93biBhZGRyZXNzIGFzIHNv
-dXJjZQ0KPiBhZGRyZXNzIChhZGRyOjY2OjU2OjIxOjc0OjE0OmRmLCB2bGFuOjApDQo+IA0KPiAN
-Cj4gLS0tDQo+IFRoaXMgYnVnIGlzIGdlbmVyYXRlZCBieSBhIGJvdC4gSXQgbWF5IGNvbnRhaW4g
-ZXJyb3JzLg0KPiBTZWUgaHR0cHM6Ly9nb28uZ2wvdHBzbUVKIGZvciBtb3JlIGluZm9ybWF0aW9u
-IGFib3V0IHN5emJvdC4NCj4gc3l6Ym90IGVuZ2luZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXpr
-YWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCj4gDQo+IHN5emJvdCB3aWxsIGtlZXAgdHJhY2sgb2Yg
-dGhpcyBidWcgcmVwb3J0LiBTZWU6DQo+IGh0dHBzOi8vZ29vLmdsL3Rwc21FSiNzdGF0dXMgZm9y
-IGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
+Hi Stephen,
+
+Thank you for these patches,
+
+Could you check them through with PEP8 please?
+
+While we are not entirely "pep8 clean", Your series adds the following
+warnings:
+
+linux/config.py:10:1: E302 expected 2 blank lines, found 1
+linux/config.py:17:41: E128 continuation line under-indented for visual
+indent
+linux/config.py:30:9: E722 do not use bare 'except'
+linux/config.py:35:41: E128 continuation line under-indented for visual
+indent
+linux/config.py:40:9: E722 do not use bare 'except'
+linux/config.py:48:1: E305 expected 2 blank lines after class or
+function definition, found 1
+
+linux/rbtree.py:18:17: E128 continuation line under-indented for visual
+indent
+linux/rbtree.py:29:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:34:17: E128 continuation line under-indented for visual
+indent
+linux/rbtree.py:45:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:49:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:52:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:57:17: E128 continuation line under-indented for visual
+indent
+linux/rbtree.py:75:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:80:17: E128 continuation line under-indented for visual
+indent
+linux/rbtree.py:115:1: E305 expected 2 blank lines after class or
+function definition, found 1
+linux/rbtree.py:117:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:133:1: E305 expected 2 blank lines after class or
+function definition, found 1
+linux/rbtree.py:135:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:151:1: E305 expected 2 blank lines after class or
+function definition, found 1
+linux/rbtree.py:153:1: E302 expected 2 blank lines, found 1
+linux/rbtree.py:169:1: E305 expected 2 blank lines after class or
+function definition, found 1
+
+linux/timerlist.py:26:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:27:80: E501 line too long (95 > 79 characters)
+linux/timerlist.py:28:80: E501 line too long (85 > 79 characters)
+linux/timerlist.py:37:80: E501 line too long (81 > 79 characters)
+linux/timerlist.py:38:13: E128 continuation line under-indented for
+visual indent
+linux/timerlist.py:41:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:50:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:63:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:81:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:82:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:83:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:84:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:85:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:103:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:104:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:105:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:106:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:107:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:108:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:109:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:110:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:111:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:112:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:113:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:114:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:115:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:116:12: E122 continuation line missing indentation or
+outdented
+linux/timerlist.py:122:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:150:15: E124 closing bracket does not match visual
+indentation
+linux/timerlist.py:160:1: E302 expected 2 blank lines, found 1
+linux/timerlist.py:183:65: E261 at least two spaces before inline comment
+linux/timerlist.py:183:80: E501 line too long (88 > 79 characters)
+linux/timerlist.py:186:77: E261 at least two spaces before inline comment
+linux/timerlist.py:186:80: E501 line too long (100 > 79 characters)
+linux/timerlist.py:190:80: E501 line too long (125 > 79 characters)
+linux/timerlist.py:194:1: E305 expected 2 blank lines after class or
+function definition, found 1
+
+--
+Regards
+
+Kieran
+
+
+
+On 25/03/2019 18:45, Stephen Boyd wrote:
+> This is a handful of changes to the kernel's gdb scripts to do some more
+> debugging with kgdb. The first patch allows the vmlinux to be reloaded
+> from where it was specified on the command line so that this set of
+> scripts can be used from anywhere. The second patch adds a script to
+> dump the config.gz to a file on the host debugging machine. The third
+> patch adds some rb tree utilities and the last patch uses those rb tree
+> walking utilities to dump out the contents of /proc/timer_list from a
+> system under debug.
+> 
+> I'm guessing that Andrew will pick these patches up. I don't know who
+> maintains these gdb scripts but it looks like Andrew has been doing the
+> lifting recently.
+> 
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
+> Cc: Kieran Bingham <kbingham@kernel.org>
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Jackie Liu <liuyun01@kylinos.cn> 
+> 
+> Stephen Boyd (4):
+>   scripts/gdb: Find vmlinux where it was before
+>   scripts/gdb: Add kernel config dumping command
+>   scripts/gdb: Add rb tree iterating utilities
+>   scripts/gdb: Add a timer list command
+> 
+>  scripts/gdb/linux/config.py       |  48 ++++++++
+>  scripts/gdb/linux/constants.py.in |   8 ++
+>  scripts/gdb/linux/rbtree.py       | 169 ++++++++++++++++++++++++++
+>  scripts/gdb/linux/symbols.py      |   6 +-
+>  scripts/gdb/linux/timerlist.py    | 194 ++++++++++++++++++++++++++++++
+>  scripts/gdb/vmlinux-gdb.py        |   3 +
+>  6 files changed, 427 insertions(+), 1 deletion(-)
+>  create mode 100644 scripts/gdb/linux/config.py
+>  create mode 100644 scripts/gdb/linux/rbtree.py
+>  create mode 100644 scripts/gdb/linux/timerlist.py
+> 
+> 
+> base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
+> 
+
+
+-- 
+--
+Kieran
