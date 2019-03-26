@@ -2,173 +2,183 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D78C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E549EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4942075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XOX2axUh"
+	by mail.kernel.org (Postfix) with ESMTP id B142B2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbfCZQj5 (ORCPT
+        id S1731863AbfCZQkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:39:57 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44251 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbfCZQj5 (ORCPT
+        Tue, 26 Mar 2019 12:40:01 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48827 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730449AbfCZQj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:39:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h16so7259807ljg.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eo09IaXnRShpsVlTFRkf2fadMKrCgS2sKiQsRnWf48I=;
-        b=XOX2axUhHos2mOxc1jbgmGi2LOZg5ZnnC5Nz7ZnYJEDAvlLuPRaDE4jOwVci+aoz77
-         FXSRDuFb4z+tYQSTUW79Hhu6SzQRgTaC/JEWt3c0IeGva5zPOpQV7JoOex4q8YkYVFss
-         UKPcAG9veBxtsWu3dHS6z+CiVSntUVi2n/Ri6QSCyHV/L+tBGrbbIHYZRwkJ9fdT8K+x
-         wSDGVwqZsoG+FzG3hX0hqQCdB5fS2fhVVtedepjnU0rjyaylAfRRCDZSk62KSTp6RG9t
-         /bAX+rj4m/kSYnNZyfh1Hja6GeB4bFLJyMpLJZ5sq6oJE27JxkaaAw+2QDhrGLcSQnQV
-         CPWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eo09IaXnRShpsVlTFRkf2fadMKrCgS2sKiQsRnWf48I=;
-        b=sKR5iya2w3VAmD8GhfrB4JDX6ban4Feu6rTrOPKgME6bsw1Ym3S+xWKmSsBggVeajv
-         fheAUR2MYPP7Lv9kTiai1YkIRHnNWQdh8Y4D3fyM1WxfCxcOfhphcGApYNDJ4lt9K7hV
-         iweiU7TI9Y/re1YuQAKWXAXORpprwIULTMKKH0NI536k1QD+RzfYLf7eKCtSdHEx8c/y
-         BJ+FJfbUU5vmjeJ3AgL8HMxpOSW2U5ezRQFkXIahg/rPFCIGQQ4SFKuViyMPGqBFPO0+
-         n7+fg9S4AXwS/nN1+TPc2Pu0kDRGPxX+DHY8EiC3HqVcOe8kHBzDgu4VxJjkiM0P+s6I
-         nvXQ==
-X-Gm-Message-State: APjAAAVQ3jnN76GfG4SnPqAQsy3MisE/iJ0dd3vH4ih7O64bEjzH1O24
-        4sTgcN7CvrkCZE+hG5OQ5hMEJvlzcE/aT9qu+YdWaA==
-X-Google-Smtp-Source: APXvYqwbCvCQYhWKUAB4s44G2h9p/tJ0Y0ZJetn660ckDzGHtCZVeKETbV0F6z5LJsAa+lfBPAfq/DhGgGDtmW0sL94=
-X-Received: by 2002:a2e:9597:: with SMTP id w23mr12058323ljh.111.1553618395012;
- Tue, 26 Mar 2019 09:39:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190326042649.889479098@linuxfoundation.org>
-In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 26 Mar 2019 22:09:43 +0530
-Message-ID: <CA+G9fYthncHa1vt3L2JSL0kt+SWeb1vGmtZwokqbrbqtQh-abA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/41] 4.14.109-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 26 Mar 2019 12:39:58 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8p7D-0001bL-1Z; Tue, 26 Mar 2019 17:39:55 +0100
+Message-Id: <20190326163811.503390616@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Tue, 26 Mar 2019 17:36:05 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Konrad Wilk <konrad.wilk@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>, Rik van Riel <riel@surriel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Micheal Kelley <michael.h.kelley@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org
+Subject: [patch 1/2] cpu/hotplug: Prevent crash when CPU bringup fails on
+ CONFIG_HOTPLUG_CPU=n
+References: <20190326163604.348882514@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 at 12:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.109 release.
-> There are 41 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu Mar 28 04:26:32 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.109-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Tianyu reported a crash in a CPU hotplug teardown callback when booting a
+kernel which has CONFIG_HOTPLUG_CPU disabled with the 'nosmt' boot
+parameter.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+It turns out that the SMP=y CONFIG_HOTPLUG_CPU=n case has been broken
+forever in case that a bringup callback fails. Unfortunately this issue was
+not recognized when the CPU hotplug code was reworked, so the shortcoming
+just stayed in place.
 
-Summary
-------------------------------------------------------------------------
+When a bringup callback fails, the CPU hotplug code rolls back the
+operation and takes the CPU offline.
 
-kernel: 4.14.109-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 4bb6d9c67e49d5301e6341b32ab5d72354e821d6
-git describe: v4.14.108-42-g4bb6d9c67e49
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.108-42-g4bb6d9c67e49
+The 'nosmt' command line argument uses a bringup failure to abort the
+bringup of SMT sibling CPUs. This partial bringup is required due to the
+MCE misdesign on Intel CPUs.
 
-No regressions (compared to build v4.14.108)
+With CONFIG_HOTPLUG_CPU=y the rollback works perfectly fine, but
+CONFIG_HOTPLUG_CPU=n lacks essential mechanisms to exercise the low level
+teardown of a CPU including the synchronizations in various facilities like
+RCU, NOHZ and others.
+
+As a consequence the teardown callbacks which must be executed on the
+outgoing CPU within stop machine with interrupts disabled are executed on
+the control CPU in interrupt enabled and preemptible context causing the
+kernel to crash and burn. The pre state machine code has a different
+failure mode which is more subtle and resulting in a less obvious use after
+free crash because the control side frees resources which are still in use
+by the undead CPU.
+
+But this is not a x86 only problem. Any architecture which supports the
+SMP=y HOTPLUG_CPU=n combination suffers from the same issue. It's just less
+likely to be triggered because in 99.99999% of the cases all bringup
+callbacks succeed.
+
+The easy solution of making HOTPLUG_CPU mandatory for SMP is not working on
+all architectures as the following architectures have either no hotplug
+support at all or not all subarchitectures support it:
+
+ alpha, arc, hexagon, openrisc, riscv, sparc (32bit), mips (partial).
+
+Crashing the kernel in such a situation is not an acceptable state
+either.
+
+Implement a minimal rollback variant by limiting the teardown to the point
+where all regular teardown callbacks have been invoked and leave the CPU in
+the 'dead' idle state. This has the following consequences:
+
+ - the CPU is brought down to the point where the stop_machine takedown
+   would happen.
+
+ - the CPU stays there forever and is idle
+
+ - The CPU is cleared in the CPU active mask, but not in the CPU online
+   mask which is a legit state.
+
+ - Interrupts are not forced away from the CPU
+
+ - All facilities which only look at online mask would still see it, but
+   that is the case during normal hotplug/unplug operations as well. It's
+   just a (way) longer time frame.
+
+This will expose issues, which haven't been exposed before or only seldom,
+because now the normally transient state of being non active but online is
+a permanent state. In testing this exposed already an issue vs. work queues
+where the vmstat code schedules work on the almost dead CPU which ends up
+in an unbound workqueue and triggers 'preemtible context' warnings. This is
+not a problem of this change, it merily exposes an already existing issue.
+Still this is better than crashing fully without a chance to debug it.
+
+This is mainly thought as workaround for those architectures which do not
+support HOTPLUG_CPU. All others should enforce HOTPLUG_CPU for SMP.
+
+Fixes: 2e1a3483ce74 ("cpu/hotplug: Split out the state walk into functions")
+Reported-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Cc: Konrad Wilk <konrad.wilk@oracle.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Micheal Kelley <michael.h.kelley@microsoft.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: stable@vger.kernel.org
+---
+ kernel/cpu.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -564,6 +564,20 @@ static void undo_cpu_up(unsigned int cpu
+ 		cpuhp_invoke_callback(cpu, st->state, false, NULL, NULL);
+ }
+ 
++static inline bool can_rollback_cpu(struct cpuhp_cpu_state *st)
++{
++	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
++		return true;
++	/*
++	 * When CPU hotplug is disabled, then taking the CPU down is not
++	 * possible because takedown_cpu() and the architecture and
++	 * subsystem specific mechanisms are not available. So the CPU
++	 * which would be completely unplugged again needs to stay around
++	 * in the current state.
++	 */
++	return st->state <= CPUHP_BRINGUP_CPU;
++}
++
+ static int cpuhp_up_callbacks(unsigned int cpu, struct cpuhp_cpu_state *st,
+ 			      enum cpuhp_state target)
+ {
+@@ -574,8 +588,10 @@ static int cpuhp_up_callbacks(unsigned i
+ 		st->state++;
+ 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
+ 		if (ret) {
+-			st->target = prev_state;
+-			undo_cpu_up(cpu, st);
++			if (can_rollback_cpu(st)) {
++				st->target = prev_state;
++				undo_cpu_up(cpu, st);
++			}
+ 			break;
+ 		}
+ 	}
 
 
-No fixes (compared to build v4.14.108)
-
-Ran 22897 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
