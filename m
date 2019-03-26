@@ -2,64 +2,86 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC08DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF89C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0AA20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8572F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732245AbfCZTux (ORCPT
+        id S1732505AbfCZTuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 26 Mar 2019 15:50:54 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49750 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732176AbfCZTux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 15:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbfCZTuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:50:52 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B41EA20823;
-        Tue, 26 Mar 2019 19:50:51 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 15:50:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] tools/lib/traceevent: Remove tep filter trivial
- APIs
-Message-ID: <20190326155050.68ca14ad@gandalf.local.home>
-In-Reply-To: <20190326154328.28718-4-tstoyanov@vmware.com>
-References: <20190326154328.28718-1-tstoyanov@vmware.com>
-        <20190326154328.28718-4-tstoyanov@vmware.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EBF3014C66CFA;
+        Tue, 26 Mar 2019 12:50:51 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 12:50:51 -0700 (PDT)
+Message-Id: <20190326.125051.1865224055641059773.davem@davemloft.net>
+To:     mojha@codeaurora.org
+Cc:     kjlu@umn.edu, alexandre.torgue@st.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, pakki001@umn.edu,
+        peppe.cavallaro@st.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] net: stmmac: fix a potential NULL pointer dereference
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <0f518f7a-ff1f-b8d9-8468-a1f7648ada46@codeaurora.org>
+References: <20190323033942.21796-1-kjlu@umn.edu>
+        <0f518f7a-ff1f-b8d9-8468-a1f7648ada46@codeaurora.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 26 Mar 2019 12:50:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 17:43:23 +0200
-Tzvetomir Stoyanov <tstoyanov@vmware.com> wrote:
+From: Mukesh Ojha <mojha@codeaurora.org>
+Date: Tue, 26 Mar 2019 15:27:03 +0530
 
-> This patch removes trivial filter tep APIs:
->  enum tep_filter_trivial_type
->  tep_filter_event_has_trivial()
->  tep_update_trivial()
->  tep_filter_clear_trivial()
 > 
-> Trivial filters is an optimization, used only in the first
-> version of KernelShark. The API is deprecated, the next KernelShark
-> release does not use it.
+> On 3/23/2019 9:09 AM, Kangjie Lu wrote:
+>> In case of_device_get_match_data fails, the fix return -EINVAL
+>> to avoid the NULL pointer dereference.
+>>
+>> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+>> ---
+>>   drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+>> b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+>> index 3256e5cbad27..344ead5949b1 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+>> @@ -485,6 +485,8 @@ static int dwc_eth_dwmac_remove(struct
+>> platform_device *pdev)
+>>   	int err;
+>>     	data = of_device_get_match_data(&pdev->dev);
+>> +	if (!data)
+>> +		return -EINVAL;
 > 
-> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
->
+> Although, it is false alarm for this driver as of_match_table is not
+> NULL, but it would be good to add the check.
 
-This patch looks fine to me. I'm taking it now. You shouldn't need to
-send it again in newer series.
+I disagree.
 
--- Steve
+This is adding a check just for the sake of adding the check and
+shutting up a static analysis tool.
+
+Now, if the tool looked at the table entries being fed into this
+function, and found such a posibility then we would fix the bug
+and still not add the check.
