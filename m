@@ -2,114 +2,129 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F9DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34C2C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D540C2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtlyFWbL"
+	by mail.kernel.org (Postfix) with ESMTP id B805C2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 11:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfCZLhY (ORCPT
+        id S1731403AbfCZLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 07:37:24 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54164 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZLhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 07:37:24 -0400
-Received: by mail-it1-f195.google.com with SMTP id y204so4686510itf.3;
-        Tue, 26 Mar 2019 04:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5nYa4+fsAkS74VZ5Qo0Tv1Q6m3DqdUqGN/BlWyh7nRU=;
-        b=PtlyFWbLH3NBoTRHkSphldFDn2wLd1/r34ELBH42ynSowQ/asQw8pdyPAhqrq/LYsO
-         L/I2A7Zjjc34MiUBGSczOMrJrI8AUTnaxOPAfmW5L0q0UePoiYOcQ4/ds2HHcm5bdbVM
-         TorpoxQyxLA0COidcQ+127YgLiSVQ2F17wGinnAq3PunU///gLVW1O023dTe13raL7YZ
-         TOZn8Fl4aqpGqM8Wi/00Ya2H1f/K+tYh0+pOA4DA5iTa9s7crNFWZlhUxMZNmk8iEbQ7
-         crr3/pLotmCtDu5sPVncuYO+dC7k+4lkAg+PYgImEQ25/hrSytu5u96Nz1Z+GBpgtIt8
-         kuyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5nYa4+fsAkS74VZ5Qo0Tv1Q6m3DqdUqGN/BlWyh7nRU=;
-        b=eapWfyqmvJNQOSO1GzZ2H6tEDUIqB48G7++Jv42Ox/CAT696grhfLbbcqsqNLiwwMw
-         KePBGrjio79qF8c9iuu5Lgvh1imnDFbmBUmlm9xswMG4/XZ2DJUq+vYd1/VIqC8wpwuK
-         9n7Jbm5CTTRWnsIulRI/XLRFsu0emPwbcs/iMuAuVvHCpZEsCN9zZBg523q33FFRUDhJ
-         V5xkHWXeN/hCTjNIB3gvLt1q9anHvDICAKZ37U1a3rT8cocQ+M+IbOOriehGH0J52xUU
-         YKSXvrlnJH9/O0W+ZTNnWBbxE7uxoJGL2Q1vDFFGDdTUTWDUrYUs5tCyQ/db9RK7rlJm
-         tXKg==
-X-Gm-Message-State: APjAAAU/m9y/FXF0iYM6F2voug42YGqCtxmf0c7hlKoG04NMwLRsgblh
-        EIhRXB5bY4IfxRV5DfoEJkdXooz+QhMiatSyTKkfjWk1
-X-Google-Smtp-Source: APXvYqwiOjGDlD23o50/F+pST+/SbKPXoFZu4qbf/29d6lUPNsGV/aWPJl58CEboNda974CnIsotSw4x3SMk9A/6MaA=
-X-Received: by 2002:a24:56c2:: with SMTP id o185mr14653142itb.57.1553600243291;
- Tue, 26 Mar 2019 04:37:23 -0700 (PDT)
+        Tue, 26 Mar 2019 07:37:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11902 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730722AbfCZLh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 07:37:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 04:37:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
+   d="scan'208";a="137361552"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.182])
+  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 04:37:25 -0700
+Date:   Tue, 26 Mar 2019 13:37:25 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Mimi Zohar <zohar@us.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Denis Kenzior <denkenz@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        James Morris <james.morris@microsoft.com>
+Subject: Re: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
+Message-ID: <20190326113725.GA10898@linux.intel.com>
+References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
+ <20190325212705.26837-1-joe@perches.com>
 MIME-Version: 1.0
-References: <0000000000006946d2057bbd0eef@google.com> <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk> <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
- <CAHk-=whJ4M5FegOLvnjUtJ0+pHv4L8UNFt+9jJDhox3Ada8kwA@mail.gmail.com>
- <20190325211405.GP2217@ZenIV.linux.org.uk> <CAHk-=wj+-e=X9cvvNwc5+QuvBOyYT7OtZTBzy-Wg8zGrUwxSbw@mail.gmail.com>
- <20190325233731.GS2217@ZenIV.linux.org.uk> <20190326013858.GU2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190326013858.GU2217@ZenIV.linux.org.uk>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 26 Mar 2019 12:38:40 +0100
-Message-ID: <CAOi1vP_n5OxtEDHs-+YLGf+AMDt9_WrnGPf8T6eBzfwGjSkjAQ@mail.gmail.com>
-Subject: Re: ceph: fix use-after-free on symlink traversal
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325212705.26837-1-joe@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 2:39 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> free the symlink body after the same RCU delay we have for freeing the
-> struct inode itself, so that traversal during RCU pathwalk wouldn't step
-> into freed memory.
->
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> ---
-> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-> index e3346628efe2..2d61ddda9bf5 100644
-> --- a/fs/ceph/inode.c
-> +++ b/fs/ceph/inode.c
-> @@ -524,6 +524,7 @@ static void ceph_i_callback(struct rcu_head *head)
->         struct inode *inode = container_of(head, struct inode, i_rcu);
->         struct ceph_inode_info *ci = ceph_inode(inode);
->
-> +       kfree(ci->i_symlink);
->         kmem_cache_free(ceph_inode_cachep, ci);
->  }
->
-> @@ -566,7 +567,6 @@ void ceph_destroy_inode(struct inode *inode)
->                 }
->         }
->
-> -       kfree(ci->i_symlink);
->         while ((n = rb_first(&ci->i_fragtree)) != NULL) {
->                 frag = rb_entry(n, struct ceph_inode_frag, node);
->                 rb_erase(n, &ci->i_fragtree);
+Mimi,
 
-Al, I see you directed this patch at Linus instead of ceph-devel.
-I can pick it up for -rc3 as I have an important libceph fix pending
-anyway.  Let me know if you want me to handle it.
+Can you fix this and I can ack and send PR through my tree?
 
-Thanks,
+/Jarkko
 
-                Ilya
+On Mon, Mar 25, 2019 at 02:27:05PM -0700, Joe Perches wrote:
+> A file pattern line in this section of the MAINTAINERS file in linux-next
+> does not have a match in the linux source files.
+> 
+> This could occur because a matching filename was never added, was deleted
+> or renamed in some other commit.
+> 
+> The commits that added and if found renamed or removed the file pattern
+> are shown below.
+> 
+> Please fix this defect appropriately.
+> 
+> 1: ---------------------------------------------------------------------------
+> 
+> linux-next MAINTAINERS section:
+> 
+> 	8587	KEYS-TRUSTED
+> 	8588	M:	James Bottomley <jejb@linux.ibm.com>
+> 	8589	M:      Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 	8590	M:	Mimi Zohar <zohar@linux.ibm.com>
+> 	8591	L:	linux-integrity@vger.kernel.org
+> 	8592	L:	keyrings@vger.kernel.org
+> 	8593	S:	Supported
+> 	8594	F:	Documentation/security/keys/trusted-encrypted.rst
+> 	8595	F:	include/keys/trusted-type.h
+> 	8596	F:	security/keys/trusted.c
+> -->	8597	F:	security/keys/trusted.h
+> 
+> 2: ---------------------------------------------------------------------------
+> 
+> The most recent commit that added or modified file pattern 'security/keys/trusted.h':
+> 
+> commit 7f3c68bee977ab872827e44de017216736fe21d7
+> Author: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> Date:   Tue Jan 18 09:07:13 2011 -0500
+> 
+>     keys: add trusted and encrypted maintainers
+>     
+>     Add myself and David Safford as maintainers for trusted/encrypted keys.
+>     
+>     Signed-off-by: Mimi Zohar <zohar@us.ibm.com>
+>     Acked-by: David Howells <dhowells@redhat.com>
+>     Signed-off-by: James Morris <jmorris@namei.org>
+> 
+>  MAINTAINERS | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> 3: ---------------------------------------------------------------------------
+> 
+> The last commit with a real presence of file pattern 'security/keys/trusted.h':
+> 
+> commit 22447981fc050b5f1bdd0e7cbee89b4152a2b2d8
+> Author: Denis Kenzior <denkenz@gmail.com>
+> Date:   Tue Oct 9 17:48:49 2018 +0100
+> 
+>     KEYS: Move trusted.h to include/keys [ver #2]
+>     
+>     Signed-off-by: Denis Kenzior <denkenz@gmail.com>
+>     Signed-off-by: David Howells <dhowells@redhat.com>
+>     Tested-by: Marcel Holtmann <marcel@holtmann.org>
+>     Reviewed-by: Marcel Holtmann <marcel@holtmann.org>
+>     Signed-off-by: James Morris <james.morris@microsoft.com>
+> 
+>  {security => include}/keys/trusted.h | 0
+>  security/keys/trusted.c              | 2 +-
+>  2 files changed, 1 insertion(+), 1 deletion(-)
