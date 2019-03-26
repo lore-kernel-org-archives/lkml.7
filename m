@@ -2,90 +2,103 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259DCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A621BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0139420856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7024720823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:43:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="v3mqQ7mr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfCZFl7 (ORCPT
+        id S1731023AbfCZFnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 01:41:59 -0400
-Received: from mx.socionext.com ([202.248.49.38]:10758 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfCZFl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 01:41:58 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 26 Mar 2019 14:41:56 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id CF31D6117D;
-        Tue, 26 Mar 2019 14:41:56 +0900 (JST)
-Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Tue, 26 Mar 2019 14:41:56 +0900
-Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
- SOC-EX03V.e01.socionext.com (10.213.24.23) with Microsoft SMTP Server (TLS)
- id 15.0.995.29; Tue, 26 Mar 2019 14:41:55 +0900
-Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
- SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
- Tue, 26 Mar 2019 14:41:55 +0900
-From:   <orito.takao@socionext.com>
-To:     <ulf.hansson@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <masami.hiramatsu@linaro.org>,
-        <jaswinder.singh@linaro.org>, <sugaya.taichi@socionext.com>,
-        <kasai.kazuhiro@socionext.com>, <kanematsu.shinji@socionext.com>,
-        <orito.takao@socionext.com>
-Subject: Re: [Milbeaut PATCH v0.4 0/2] mmc: sdhci_f_sdh30: Add support for
- Milbeaut
-Thread-Topic: [Milbeaut PATCH v0.4 0/2] mmc: sdhci_f_sdh30: Add support for
- Milbeaut
-Thread-Index: AQHU45A5pbCXUFjQzUagCLDakbwvPqYczzwA
-Date:   Tue, 26 Mar 2019 05:41:55 +0000
-Message-ID: <20190326144149.6AAC.F0D17A80@socionext.com>
-References: <1553576281-5813-1-git-send-email-orito.takao@socionext.com>
-In-Reply-To: <1553576281-5813-1-git-send-email-orito.takao@socionext.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Becky! ver. 2.74.02 [ja] (Evaluation)
-x-originating-ip: [10.213.24.1]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <A2BA792336201C4B8D85972951CB0429@socionext.com>
-Content-Transfer-Encoding: base64
+        Tue, 26 Mar 2019 01:43:01 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38808 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730377AbfCZFnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 01:43:00 -0400
+Received: by mail-vs1-f66.google.com with SMTP id s2so5605109vsi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xgItU0iuQXmDd8+M01D0UyRQB/txnZWDcxqvXjJC+lA=;
+        b=v3mqQ7mrzm5H2aqKTM1Ml93tGUzSg58rJLGu++dhDa/G7LfwLXRvFPKP4y6KorwF1F
+         lebTvFFZmQYhF1KNhWArWyTyFpTYYjP1PuYkwUsA5GJDKc0sBoLZnbFbhe0AKj06A5J9
+         YsLVp0LJDMVYQlpkifFM1KF0pNU9KeVwGmLzVopMUY5sLp5uXQDlDP6X2pPyWQzTaJyO
+         SjDPWkIbSuPaj8mVwaQpFpxTtbFQ9Nc634GnoqXvBuhj+FMcuhbRyjxyTWy+Eoe4S+M5
+         Jw3LbveBqkKOmDaNJLR2GNpyd/0PJbNCMnXvvoDx8Bi+stQCNlR0JQOlcpUVPpROv58g
+         1Wqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xgItU0iuQXmDd8+M01D0UyRQB/txnZWDcxqvXjJC+lA=;
+        b=ZII+jlnMDfjtdqt0zDNwNx1iDDYOlsNaraYqfGgpATW9eulAZTEjUN0UuFmzwZEszP
+         iIp5DttowQitVXeekRNvi2sEWygPne8QtP5q5F0rNrzXy7+iA7KktiwbtjFlWBXaNaw/
+         HRSKBPK2fpSXqXUe7wTz/HI/HoxTQcL+JLNSn695/1NdyBtJtwstF/fCpW6TATvlCZ0G
+         pvb/7ivpFSZgDlf3iMSfKcIDYQlJpNDwQ3VFBBAE9kpJFRQhMWi0gpd6ASwHQf+o+myV
+         uGfKbsAMN+BcMBxbdUcCuIvzIiMMqYYQgGcCYMoe6mYUNSIHWthfjPw7FbZ9VeXIgnIj
+         k1Dw==
+X-Gm-Message-State: APjAAAXbjSoqlFW9z2kRCk2eMTPXbzt3IF0d0an+Y/Oihq+2LXOAXBax
+        okefAD1VSDvPWCkgVquZAL73+UFSHKVcZjaXugJaEA==
+X-Google-Smtp-Source: APXvYqwOtqIV8FyVT+1C3rEYAZB2M1RbPT4GIPnq4pz88NvXFZAWGsghbHQpNMlFV5SgNLiRjhLFofVZPbL/PAosK7M=
+X-Received: by 2002:a67:f505:: with SMTP id u5mr10367422vsn.159.1553578979644;
+ Mon, 25 Mar 2019 22:42:59 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190326052139.11784-1-vkoul@kernel.org>
+In-Reply-To: <20190326052139.11784-1-vkoul@kernel.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 26 Mar 2019 11:12:48 +0530
+Message-ID: <CAHLCerOv+HkWskZwoAN+rTFb7kXoNC+DbNd3zRWf0dEdhd3D2w@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINER: Fix Qualcomm ETHQOS ethernet DT file
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpIaSBBbGwNCg0KSSdtIHNvcnJ5LCBJIGhhZCBtaXN0YWtlbiB0aGUgU3ViamVjdCBmb3JtYXQg
-b2YgbXkgcGF0Y2ggc2VyaWVzLg0KSSB3aWxsIHNlbmQgbmV3IHBhdGNoZXMgd2l0aCByaWdodCBm
-b3JtYXQuDQpQbGVhc2UgaWdub3JlIHRoaXMgc2VyaWVzLg0KDQpPcml0bw0KDQo+IFRoZSBmb2xs
-b3dpbmcgcGF0Y2hlcyBhZGQgZHJpdmVyIHN1cHBvcnQgZm9yIFNEIEhvc3QgY29udHJvbGxlciBv
-bg0KPiBTb2Npb25leHQncyBNaWxiZWF1dCBNMTBWIHBsYXRmb3Jtcy4NCj4gDQo+IFNEIEhvc3Qg
-Y29udHJvbGxlciBvbiBNaWxiZWF1dCBpcyBjb25zaXN0IG9mIHR3byBjb250cm9sbGVyIHBhcnRz
-Lg0KPiBPbmUgaXMgY29yZSBjb250cm9sbGVyIEZfU0RIMzAsIHRoaXMgaXMgc2ltaWxhciB0byBz
-ZGhjaS1mdWppdHN1DQo+IGNvbnRyb2xsZXIuDQo+IEFub3RoZXIgaXMgYnJpZGdlIGNvbnRyb2xs
-ZXIuIFRoaXMgYnJpZGdlIGNvbnRyb2xsZXIgaXMgbm90IGNvbXBhdGlibGUNCj4gd2l0aCBzZGhj
-aS1mdWppdHN1IGNvbnRyb2xsZXIuIFRoaXMgaXMgc3BlY2lhbCBmb3IgTWlsYmVhdXQgc2VyaWVz
-Lg0KPiANCj4gSXQgaGFzIHRoZSBzZXZlcmFsIHBhcnRzLA0KPiAgLSByZXNldCBjb250cm9sDQo+
-ICAtIGNsb2NrIGVuYWJsZSAvIHNlbGVjdCBmb3IgU0RSNTAvMjUvMTINCj4gIC0gaG9sZCBjb250
-cm9sIG9mIERBVEEvQ01EIGxpbmUNCj4gIC0gc2VsZWN0IGNoYXJhY3RlcmlzdGljcyBmb3IgV1Av
-Q0QvTEVEIGxpbmUNCj4gIC0gUmUtdHVuaW5nIGNvbnRyb2wgZm9yIG1vZGUzDQo+ICAtIENhcGFi
-aWxpdHkgc2V0dGluZw0KPiAgICBUaW1lb3V0IENsb2NrIC8gQmFzZSBDbG9jayAvIFRpbWVyIENv
-dW50IGZvciBSZS1UdW5pbmcgLw0KPiAgICBEZWJvdW5jZSBwZXJpb2QNCj4gVGhlc2UgcmVxdWly
-ZXMgc3BlY2lhbCBwcm9jZWR1cmVzIGF0IHJlc2V0IG9yIGNsb2NrIGVuYWJsZS9jaGFuZ2Ugb3IN
-Cj4gIGZ1cnRoZXIgdHVuaW5nIG9mIGNsb2NrLg0KPiANCj4gVGFrYW8gT3JpdG8gKDIpOg0KPiAg
-IGR0LWJpbmRpbmdzOiBtbWM6IHNkaGNpLWZ1aml0c3UudHh0OiBhZGQgbWlpbGJlYXV0IGRyaXZl
-cg0KPiAgIG1tYzogc2RoY2lfZl9zZGgzMDogQWRkIHN1cHBvcnQgZm9yIE1pbGJlYXV0IE0xMFYg
-aG9zdCBjb250cm9sbGVyDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL3NkaGNp
-LWZ1aml0c3UudHh0ICAgICAgfCAgMjIgKy0NCj4gIGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2lfZl9z
-ZGgzMC5jICAgICAgICAgICAgICAgICAgIHwgMzI0ICsrKysrKysrKysrKysrKysrKystLQ0KPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAzMTUgaW5zZXJ0aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pDQo+IA0K
-PiAtLSANCj4gMS45LjENCj4gDQoNCi0tIA0KVGFrYW8gT3JpdG8gPG9yaXRvLnRha2FvQHNvY2lv
-bmV4dC5jb20+DQo=
+On Tue, Mar 26, 2019 at 10:52 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Commit 83c177aea4c3: ("MAINTAINER: Add entry for Qualcomm ETHQOS
+> ethernet driver") added incorrect filename for DT binding, fix the same.
+>
+> Fixes: 83c177aea4c3 ("MAINTAINER: Add entry for Qualcomm ETHQOS ethernet driver")
+> Reported-By: Joe Perches <joe@perches.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e17ebf70b548..74c654d89a43 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12849,7 +12849,7 @@ M:      Niklas Cassel <niklas.cassel@linaro.org>
+>  L:     netdev@vger.kernel.org
+>  S:     Maintained
+>  F:     drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> -F:     Documentation/devicetree/bindings/net/qcom,dwmac.txt
+> +F:     Documentation/devicetree/bindings/net/qcom,ethqos.txt
+>
+>  QUALCOMM GENERIC INTERFACE I2C DRIVER
+>  M:     Alok Chauhan <alokc@codeaurora.org>
+> --
+> 2.20.1
+>
