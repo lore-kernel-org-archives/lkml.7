@@ -2,111 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86771C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AE820823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:23:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j0E5sn0Q";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JEJMT1KA"
+	by mail.kernel.org (Postfix) with ESMTP id D214F2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfCZHXx (ORCPT
+        id S1730722AbfCZH3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:23:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34574 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCZHXw (ORCPT
+        Tue, 26 Mar 2019 03:29:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52649 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfCZH3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:23:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 307E860ACE; Tue, 26 Mar 2019 07:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553585032;
-        bh=b7KQ0YiaBzeJFbXUEL2PXvBMIJErVldxSWcZfURah3A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=j0E5sn0QX844UdxSh7U1vrw07BGzrSdQeE+d96qC/mnTKGqSsKfOO/mQQ/JIUVDKJ
-         Tal2xVqdqq32rQSLQRihvAsmnlc0LfAoXPZAubuZHI5RoqGELYvsDUyBRxbrRYWvWq
-         iC47NS9wBTI0MJTgNGhhR/+PyAMmhASVCTO4tVB8=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2E7F5607C3;
-        Tue, 26 Mar 2019 07:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553585031;
-        bh=b7KQ0YiaBzeJFbXUEL2PXvBMIJErVldxSWcZfURah3A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JEJMT1KAwxsGJ29A06b4mdW6cw6L6GdF0fpQVgKgoCZS3Nu29r46GqQ0L8ia2PYhV
-         NRLERYYA3hiyQN2NChJPW+4OPu0eCdca88tmkNdGGUZYNo3+7z4y07wj1hxNjOiGto
-         n1hfA/oHOmgJFmC8qlOLQYgzU+9jWAgWW5D5Qg2o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2E7F5607C3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] firmware: arm_scmi: Fix leak in scmi_mailbox_check
-To:     Steven Price <steven.price@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20190325173722.49414-1-steven.price@arm.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <dcf27d87-e72f-3892-f982-941c91f95102@codeaurora.org>
-Date:   Tue, 26 Mar 2019 12:53:44 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 03:29:15 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2Q7ShIX2287211
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 26 Mar 2019 00:28:43 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2Q7Sbcj2287204;
+        Tue, 26 Mar 2019 00:28:37 -0700
+Date:   Tue, 26 Mar 2019 00:28:37 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tony Luck <tipbot@zytor.com>
+Message-ID: <tip-1762058319f1cf34b11fc6b82678828ecc88c8ee@git.kernel.org>
+Cc:     nicolas.ferre@microchip.com, tony.luck@intel.com,
+        tglx@linutronix.de, davem@davemloft.net, joe@perches.com,
+        hpa@linux.intel.com, gregkh@linuxfoundation.org, mingo@kernel.org,
+        mchehab+samsung@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bp@suse.de, hpa@zytor.com
+Reply-To: hpa@linux.intel.com, joe@perches.com, tglx@linutronix.de,
+          davem@davemloft.net, nicolas.ferre@microchip.com,
+          tony.luck@intel.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          bp@suse.de, gregkh@linuxfoundation.org,
+          mchehab+samsung@kernel.org, mingo@kernel.org,
+          linux-edac@vger.kernel.org
+In-Reply-To: <20190325233416.GB8869@agluck-desk>
+References: <20190325233416.GB8869@agluck-desk>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:ras/core] MAINTAINERS: Fix file pattern for X86 MCE
+ INFRASTRUCTURE
+Git-Commit-ID: 1762058319f1cf34b11fc6b82678828ecc88c8ee
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190325173722.49414-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  1762058319f1cf34b11fc6b82678828ecc88c8ee
+Gitweb:     https://git.kernel.org/tip/1762058319f1cf34b11fc6b82678828ecc88c8ee
+Author:     Tony Luck <tony.luck@intel.com>
+AuthorDate: Mon, 25 Mar 2019 16:34:17 -0700
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Tue, 26 Mar 2019 08:23:53 +0100
 
-On 3/25/2019 11:07 PM, Steven Price wrote:
-> of_parse_phandle_with_args() requires the caller to call of_node_put() on
-> the returned args->np pointer. Otherwise the reference count will remain
-> incremented.
->
-> However, in this case, since we don't actually use the returned pointer,
-> we can simply pass in NULL.
->
-> Fixes: aa4f886f3893f ("firmware: arm_scmi: add basic driver infrastructure for SCMI")
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   drivers/firmware/arm_scmi/driver.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 8f952f2f1a29..dd967d675c08 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -654,9 +654,7 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
->   
->   static int scmi_mailbox_check(struct device_node *np)
->   {
-> -	struct of_phandle_args arg;
-> -
-> -	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
-> +	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, NULL);
+MAINTAINERS: Fix file pattern for X86 MCE INFRASTRUCTURE
 
-Although, it is not used but it is better to put arg->np instead of 
-passing NULL.
-Here, you are making the driver not to fill arguement which is 
-customised solution, that may change in future.
+Code restructuring renamed arch/x86/kernel/cpu/mcheck/ to
+be arch/x86/kernel/cpu/mce/
 
+Update the MAINTAINERS file pattern to account for this change.
 
-Thanks.
-Mukesh
+Fixes: 21afaf181362 ("x86/mce: Streamline MCE subsystem's naming")
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: "H. Peter Anvin" <hpa@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190325233416.GB8869@agluck-desk
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
->   }
->   
->   static int scmi_mbox_free_channel(int id, void *p, void *data)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf70b548..58acbc246adc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16910,7 +16910,7 @@ M:	Tony Luck <tony.luck@intel.com>
+ M:	Borislav Petkov <bp@alien8.de>
+ L:	linux-edac@vger.kernel.org
+ S:	Maintained
+-F:	arch/x86/kernel/cpu/mcheck/*
++F:	arch/x86/kernel/cpu/mce/*
+ 
+ X86 MICROCODE UPDATE SUPPORT
+ M:	Borislav Petkov <bp@alien8.de>
