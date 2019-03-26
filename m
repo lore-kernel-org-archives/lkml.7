@@ -2,133 +2,289 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0991C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDF7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5362075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/OyMbMP"
+	by mail.kernel.org (Postfix) with ESMTP id 0C06820896
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732766AbfCZUrf (ORCPT
+        id S1732739AbfCZUt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:47:35 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:32918 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732729AbfCZUre (ORCPT
+        Tue, 26 Mar 2019 16:49:29 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49315 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731736AbfCZUt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:47:34 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z6so3268210wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 13:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1Yoprl42VcVIg+Or9Xh6MCziR7xSFWDxzJkJwkvYVkM=;
-        b=l/OyMbMP6FYtklBeTYh528cFF/MOk837ueO1ug77OIPM3GBz+Av8cEaVYgUXS0HSOu
-         Y8hALqPC2q/zcNCsoUdGKxNkLcjr0LwuBJmprNt1wGnzk8KrAexiMxEBxeQ60j17lvgq
-         OKoj+cc0pG+YVGpLUZRXNkhDAhxkDut/ahD4UTLuG1Vy4xLNtq5KtBCBdQRRenXicjiG
-         FHfQQjAI2KTqqU/6Y496B8xdp8c2k9KMYp859Vc+sMh9j88Pawkc8uT40uHN8YcqQtTw
-         nN8LLoYfRTxw8wEHEMJSdbtrLxgMDFI0RaxF/SedB13kJcJQ5103nJXT2VC2I4RB0DsO
-         /Mug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=1Yoprl42VcVIg+Or9Xh6MCziR7xSFWDxzJkJwkvYVkM=;
-        b=oLaL7RGUuohV5SOdS9dyV467fi2sW/rOjIM2HIdZzyP0G60dLwN+BTWOKdzr8unG77
-         ct0OW1BFIdXO1RBNN7Rk7PP9gWYTI4UxXEvtxBzQFyWzG6Tr4TjPVHkwZmdHmj4xesap
-         loQZP/89o7tofY3mhFt/BApsBiVh3urM02KUYkn2Hjzva4xnTUi3afX+P1SLrT5HKynH
-         Fzhx/gX5XnYDXxDLJuiUtLvUWu00/LFc7yznRkNeBU/NTZ2Q2evKC8E5cnJyjwHNub35
-         j42cOLZpqD7Fbbet46wmhRaDfdNL7eh9glgO6hLBN+tUJIgHqjPjAT6wtW1DhhU1s68L
-         gq4w==
-X-Gm-Message-State: APjAAAVwBwcMtfDFJgpeE9GcvfhN+fREdTUy6ayY/dM9DEJgR/I/71hV
-        GZuXSOtTObESdyzQQspd0n0=
-X-Google-Smtp-Source: APXvYqxztKxz/750qXzabQMQ4wEcM+Qcs+la49Os7Vqkfu5HIMAOPr6mJmA9WF1F4Wu2fiB2y6JRww==
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr7928405wmg.132.1553633253075;
-        Tue, 26 Mar 2019 13:47:33 -0700 (PDT)
-Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
-        by smtp.gmail.com with ESMTPSA id b11sm107391wru.61.2019.03.26.13.47.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 13:47:32 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 711FC1142374; Tue, 26 Mar 2019 21:47:21 +0100 (CET)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] powerpc: Make some functions static
-Date:   Tue, 26 Mar 2019 21:47:18 +0100
-Message-Id: <20190326204720.18882-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190312203140.31785-1-malat@debian.org>
-References: <20190312203140.31785-1-malat@debian.org>
+        Tue, 26 Mar 2019 16:49:29 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8t0U-00061t-Ei; Tue, 26 Mar 2019 21:49:14 +0100
+Date:   Tue, 26 Mar 2019 21:49:13 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 11/14] x86/watchdog/hardlockup: Add an HPET-based
+ hardlockup detector
+In-Reply-To: <1551283518-18922-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1903262029310.1789@nanos.tec.linutronix.de>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit cb9e4d10c448 ("[POWERPC] Add support for 750CL Holly board")
-new functions were added. Since most of these functions can be made static,
-make it so.
+On Wed, 27 Feb 2019, Ricardo Neri wrote:
+> +/**
+> + * get_count() - Get the current count of the HPET timer
+> + *
+> + * Returns:
+> + *
+> + * Value of the main counter of the HPET timer
 
-Both holly_power_off and holly_halt functions were not changed since they
-are unused, making them static would have triggered the following warning
-(treated as error):
+The extra newline is not required IIRC.
 
-  arch/powerpc/platforms/embedded6xx/holly.c:244:13: error: 'holly_halt' defined but not used [-Werror=unused-function]
+    Returns: Value ......
 
-Silence the following warnings triggered using W=1:
+shoud be sufficient and spares a lot of lines all over the place.
 
-  arch/powerpc/platforms/embedded6xx/holly.c:47:5: error: no previous prototype for 'holly_exclude_device' [-Werror=missing-prototypes]
-  arch/powerpc/platforms/embedded6xx/holly.c:190:6: error: no previous prototype for 'holly_show_cpuinfo' [-Werror=missing-prototypes]
-  arch/powerpc/platforms/embedded6xx/holly.c:196:17: error: no previous prototype for 'holly_restart' [-Werror=missing-prototypes]
+> + */
+> +static inline unsigned long get_count(void)
+> +{
+> +	return hpet_readq(HPET_COUNTER);
+> +}
+> +
+> +/**
+> + * set_comparator() - Update the comparator in an HPET timer instance
+> + * @hdata:	A data structure with the timer instance to update
+> + * @cmp:	The value to write in the in the comparator registere
+> + *
+> + * Returns:
+> + *
+> + * None
 
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
-v2: Split the patch in two operations
+Returns: None is not required and provides no additional value.
 
- arch/powerpc/platforms/embedded6xx/holly.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+I appreciate that you try to document your functions extensively, but please
+apply common sense whether it really provides value. Documenting the
+obvious is not necessarily an improvement.
 
-diff --git a/arch/powerpc/platforms/embedded6xx/holly.c b/arch/powerpc/platforms/embedded6xx/holly.c
-index 0409714e8070..9d2eefef7b7b 100644
---- a/arch/powerpc/platforms/embedded6xx/holly.c
-+++ b/arch/powerpc/platforms/embedded6xx/holly.c
-@@ -44,7 +44,8 @@
- 
- #define HOLLY_PCI_CFG_PHYS 0x7c000000
- 
--int holly_exclude_device(struct pci_controller *hose, u_char bus, u_char devfn)
-+static int holly_exclude_device(struct pci_controller *hose, u_char bus,
-+				u_char devfn)
- {
- 	if (bus == 0 && PCI_SLOT(devfn) == 0)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
-@@ -187,13 +188,13 @@ static void __init holly_init_IRQ(void)
- 	tsi108_write_reg(TSI108_MPIC_OFFSET + 0x30c, 0);
- }
- 
--void holly_show_cpuinfo(struct seq_file *m)
-+static void holly_show_cpuinfo(struct seq_file *m)
- {
- 	seq_printf(m, "vendor\t\t: IBM\n");
- 	seq_printf(m, "machine\t\t: PPC750 GX/CL\n");
- }
- 
--void __noreturn holly_restart(char *cmd)
-+static void __noreturn holly_restart(char *cmd)
- {
- 	__be32 __iomem *ocn_bar1 = NULL;
- 	unsigned long bar;
--- 
-2.20.1
+> + */
+> +static inline void set_comparator(struct hpet_hld_data *hdata,
+> +				  unsigned long cmp)
+> +{
+> +	hpet_writeq(cmp, HPET_Tn_CMP(hdata->num));
+> +}
 
+Also do we really need wrappers plus N lines documentation for
+hpet_readq/writeq()?
+
+I fail to see the benefit. It's just increasing the line count for no
+reason and requires the reader to lookup functions which are just cosmetic
+wrappers.
+
+> +/**
+> + * hardlockup_detector_nmi_handler() - NMI Interrupt handler
+> + * @val:	Attribute associated with the NMI. Not used.
+> + * @regs:	Register values as seen when the NMI was asserted
+> + *
+> + * When in NMI context, check if it was caused by the expiration of the
+
+When in NMI context? This function _IS_ called in NMI context, right?
+
+> + * HPET timer. If yes, create a CPU mask to issue an IPI to the rest
+> + * of monitored CPUs. Upon receiving their own NMI, the other CPUs will
+> + * check such mask to determine if they need to also look for lockups.
+> + *
+> + * Returns:
+> + *
+> + * NMI_DONE if the HPET timer did not cause the interrupt. NMI_HANDLED
+> + * otherwise.
+> + */
+> +static int hardlockup_detector_nmi_handler(unsigned int val,
+> +					   struct pt_regs *regs)
+> +{
+> +	struct hpet_hld_data *hdata = hld_data;
+> +	unsigned int cpu = smp_processor_id();
+> +
+> +	if (is_hpet_wdt_interrupt(hdata)) {
+> +		/* Get ready to check other CPUs for hardlockups. */
+> +		cpumask_copy(&hdata->cpu_monitored_mask,
+> +			     watchdog_get_allowed_cpumask());
+> +		cpumask_clear_cpu(smp_processor_id(),
+> +				  &hdata->cpu_monitored_mask);
+
+Why are you copying the mask in NMI context and not updating it when the
+watchdog enable/disable functions are called?
+
+Also the mask can contain offline CPUs, which is bad because the send IPI
+function expects offline CPUs to be cleared.
+
+Clearing the CPU in the mask is not required because the function you
+invoke:
+
+> +		apic->send_IPI_mask_allbutself(&hdata->cpu_monitored_mask,
+> +					       NMI_VECTOR);
+
+has it's name for a reason.
+
+> +
+> +		kick_timer(hdata, !(hdata->flags & HPET_DEV_PERI_CAP));
+> +
+> +		inspect_for_hardlockups(regs);
+> +
+> +		return NMI_HANDLED;
+> +	}
+> +
+> +	if (cpumask_test_and_clear_cpu(cpu, &hdata->cpu_monitored_mask)) {
+> +		inspect_for_hardlockups(regs);
+> +		return NMI_HANDLED;
+> +	}
+
+So if the function above returns false, then why would you try to check
+that CPU mask and invoke the inspection? You already cleared that bit
+above. This part is pointless and can be removed.
+
+> +void hardlockup_detector_hpet_enable(void)
+> +{
+> +	struct cpumask *allowed = watchdog_get_allowed_cpumask();
+> +	unsigned int cpu = smp_processor_id();
+
+This is called from a function which has already a cpu argument. Why aren't
+you handing that in?
+
+> +
+> +	if (!hld_data)
+> +		return;
+
+Why can hld_data be NULL here?
+
+> +
+> +	hld_data->handling_cpu = cpumask_first(allowed);
+> +
+> +	if (cpu == hld_data->handling_cpu) {
+> +		update_handling_cpu(hld_data);
+> +		/* Force timer kick when detector is just enabled */
+> +		kick_timer(hld_data, true);
+> +		enable_timer(hld_data);
+> +	}
+
+That logic is wrong. The per cpu enable function is called via:
+
+  softlockup_start_all()
+    for_each_cpu(cpu, &watchdog_allowed_mask)
+       smp_call_on_cpu(cpu, softlockup_start_fn, NULL, false);
+
+       ---> softlockup_start_fn()
+               watchdog_enable()
+
+OR
+
+  lockup_detector_online_cpu()
+    watchdog_enable()
+
+The latter is a CPU hotplug operation. The former is invoked when the
+watchdog is (re)configured in the core code. Both are mutually exclusive
+and guarantee to never invoke the function concurrently on multiple CPUs.
+
+So way you should handle this is:
+
+	cpumask_set_cpu(cpu, hld_data->cpu_monitored_mask);
+
+	if (!hld_data->enabled_cpus++) {
+		hld_data->handling_cpu = cpu;
+		kick_timer();
+		enable_timer();
+	}
+
+The cpu mask starts off empty and each CPU sets itself when the function is
+invoked on it.
+
+data->enabled_cpus keeps track of the enabled cpus so you avoid
+reconfiguration just because a different cpu comes online. And it's
+required for disable as well.
+
+> +void hardlockup_detector_hpet_disable(void)
+> +{
+> +	struct cpumask *allowed = watchdog_get_allowed_cpumask();
+> +
+> +	if (!hld_data)
+> +		return;
+> +
+> +	/* Only disable the timer if there are no more CPUs to monitor. */
+> +	if (!cpumask_weight(allowed))
+> +		disable_timer(hld_data);
+
+Again this should be:
+
+	cpumask_clear_cpu(cpu, hld_data->cpu_monitored_mask);
+	hld_data->enabled_cpus--;
+
+	if (hld_data->handling_cpu != cpu)
+		return;
+
+	disable_timer();
+	if (hld_data->enabled_cpus)
+		return;
+
+	hld_data->handling_cpu = cpumask_first(hld_data->cpu_monitored_mask);
+	enable_timer();
+
+> +}
+> +
+> +/**
+> + * hardlockup_detector_hpet_stop() - Stop the NMI watchdog on all CPUs
+> + *
+> + * Returns:
+> + *
+> + * None
+> + */
+> +void hardlockup_detector_hpet_stop(void)
+> +{
+> +	disable_timer(hld_data);
+> +}
+
+This function is nowhere used.
+
+> +int __init hardlockup_detector_hpet_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (!is_hpet_enabled())
+> +		return -ENODEV;
+> +
+> +	if (check_tsc_unstable())
+
+What happens if the TSC becomes unstable _AFTER_ you initialized and
+started the HPET watchdog?
+
+Thanks,
+
+	tglx
