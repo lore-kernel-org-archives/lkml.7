@@ -2,101 +2,154 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A872C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFEDC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A4F20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5858920866
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbfCZMlK (ORCPT
+        id S1731542AbfCZMlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:41:10 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:42342 "EHLO
+        Tue, 26 Mar 2019 08:41:11 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:42348 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726175AbfCZMlJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726266AbfCZMlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:41:09 -0400
+        Tue, 26 Mar 2019 08:41:10 -0400
 Received: from lanttu.localdomain (unknown [IPv6:2a01:4f9:c010:4572::e1:1001])
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTP id BC69D634C7B;
-        Tue, 26 Mar 2019 14:41:03 +0200 (EET)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTP id 1C1A6634C7D;
+        Tue, 26 Mar 2019 14:41:04 +0200 (EET)
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 0/6] Device property improvements, add %pfw format specifier
-Date:   Tue, 26 Mar 2019 14:41:00 +0200
-Message-Id: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 1/6] device property: Add functions for accessing node's parents
+Date:   Tue, 26 Mar 2019 14:41:01 +0200
+Message-Id: <20190326124106.27694-2-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Add two convenience functions for accessing node's parents:
 
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
+fwnode_count_parents() returns the number of parent nodes a given node
+has. fwnode_get_nth_parent() returns node's parent at a given distance
+from the node itself.
 
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
+Also reorder fwnode_get_parent() in property.c according to the same order
+as in property.h.
 
-This set depends on a cleanup fully releasing the now-deprecated %pf for
-other use:
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/base/property.c  | 59 ++++++++++++++++++++++++++++++++++++++++++------
+ include/linux/property.h |  3 +++
+ 2 files changed, 55 insertions(+), 7 deletions(-)
 
-<URL:https://lore.kernel.org/lkml/20190325211906.GA24180@google.com/T/#t>
-
-I was a bit hesitant on how much of this should be covered by the fwnode
-ops and how much would be just better to reside in lib/vsprintf.c, but
-opted for putting it to the fwnode interface. This keeps it clean in
-vsprintf.c and still rather lean on the fwnode ops side while making it
-possible to add other firmware types (although that is unlikely I guess).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (6):
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-
- Documentation/core-api/printk-formats.rst |  34 +++++++---
- drivers/acpi/property.c                   |  46 ++++++++++++++
- drivers/base/property.c                   |  82 +++++++++++++++++++++---
- drivers/of/property.c                     |  16 +++++
- include/linux/fwnode.h                    |   4 ++
- include/linux/property.h                  |   5 ++
- lib/vsprintf.c                            | 101 +++++++++++++++++++++---------
- scripts/checkpatch.pl                     |   4 +-
- 8 files changed, 245 insertions(+), 47 deletions(-)
-
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 8b91ab380d14..61eb6ceacc3f 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -533,6 +533,19 @@ int device_add_properties(struct device *dev,
+ EXPORT_SYMBOL_GPL(device_add_properties);
+ 
+ /**
++ * fwnode_get_parent - Return parent firwmare node
++ * @fwnode: Firmware whose parent is retrieved
++ *
++ * Return parent firmware node of the given node if possible or %NULL if no
++ * parent was available.
++ */
++struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
++{
++	return fwnode_call_ptr_op(fwnode, get_parent);
++}
++EXPORT_SYMBOL_GPL(fwnode_get_parent);
++
++/**
+  * fwnode_get_next_parent - Iterate to the node's parent
+  * @fwnode: Firmware whose parent is retrieved
+  *
+@@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+ EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+ 
+ /**
+- * fwnode_get_parent - Return parent firwmare node
+- * @fwnode: Firmware whose parent is retrieved
++ * fwnode_count_parents - Return the number of parents a node has
++ * @fwnode: The node the parents of which are to be counted
+  *
+- * Return parent firmware node of the given node if possible or %NULL if no
+- * parent was available.
++ * Returns the number of parents a node has.
+  */
+-struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
++unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
+ {
+-	return fwnode_call_ptr_op(fwnode, get_parent);
++	unsigned int count;
++
++	fwnode_handle_get(fwnode);
++
++	for (count = 0; fwnode; count++)
++		fwnode = fwnode_get_next_parent(fwnode);
++
++	return count - 1;
+ }
+-EXPORT_SYMBOL_GPL(fwnode_get_parent);
++EXPORT_SYMBOL_GPL(fwnode_count_parents);
++
++/**
++ * fwnode_get_nth_parent - Return an nth parent of a node
++ * @fwnode: The node the parent of which is requested
++ * @depth: Distance of the parent from the node
++ *
++ * Returns the nth parent of a node. If @depth is 0, the functionality is
++ * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
++ * and so on.
++ *
++ * The caller is responsible for calling fwnode_handle_put() for the returned
++ * node.
++ */
++struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
++					    unsigned int depth)
++{
++	unsigned int i;
++
++	fwnode_handle_get(fwnode);
++
++	for (i = 0; i < depth && fwnode; i++)
++		fwnode = fwnode_get_next_parent(fwnode);
++
++	return fwnode;
++}
++EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
+ 
+ /**
+  * fwnode_get_next_child_node - Return the next child node handle for a node
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 65d3420dd5d1..1164ac974ee8 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -81,6 +81,9 @@ int fwnode_property_get_reference_args(const struct fwnode_handle *fwnode,
+ struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *fwnode_get_next_parent(
+ 	struct fwnode_handle *fwnode);
++unsigned int fwnode_count_parents(struct fwnode_handle *fwn);
++struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
++					    unsigned int depth);
+ struct fwnode_handle *fwnode_get_next_child_node(
+ 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
+ struct fwnode_handle *fwnode_get_next_available_child_node(
 -- 
 2.11.0
 
