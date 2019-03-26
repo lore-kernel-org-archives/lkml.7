@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BD4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91E0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BAF2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A842075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXEW98J6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEl0Z5Ra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfCZXBm (ORCPT
+        id S1732929AbfCZXBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:01:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46259 "EHLO
+        Tue, 26 Mar 2019 19:01:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36908 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732436AbfCZXBk (ORCPT
+        with ESMTP id S1732889AbfCZXBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:01:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 9so8739906pfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:01:39 -0700 (PDT)
+        Tue, 26 Mar 2019 19:01:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so8760512pfr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uADFbodtyi76mzTIX2Xhd3f7QgEY+mxRgH7JdFV0yy0=;
-        b=YXEW98J6zg2ngpdsbfxr6LvjKJrW33mB3hLFn3NjZUDubpqWmop2dMdcSWSvyphals
-         7TiS+I8S0EO+f/8xgAKAa8RjMCdMxQMzFhh61XaYuVBMgclCGd0KIg+qAs6zK7YSCqtg
-         uRPGdvIAycukBJ7HDxvb5wMH0fGXj5XEVIcBC+RewLu9Jnf6dCW1uhxu4WPJBADSR5Yc
-         KGoiXFYQSdq11wARhbBhf22DLSqyjOSwrlOckPYB557DntfUEWvq2x4TybL6EYePmDyl
-         PUacipS6FZTxJLVOprM6mCFCSxE2kXPH7GxaJBbz7p8lmHGMPjYoCfGy1JNVPGQm78WK
-         oKBQ==
+        bh=Pbdwi/63Agi4s6Tt6RAM0FtL+bzJWgpn5Dncpfelpvo=;
+        b=VEl0Z5RabQr/GpMe+VeLFsQb1j8S9dkjTJrD73RCdjoxt/+64vqdmHwA3oCGAU3Rao
+         muG6Fg1gGNy4yTM2ISm6Gf3H5J7n1jKEiVHPSGMKodZ0bbiuQWDa8gw1fkXV8HsU5ery
+         mpeAb6v/5rSdYG4hg+7ZETItqEadoofzRSDWxISNsQUrrUVE7NPHPampAmcd89uvOBnV
+         ILhZtuXSENh2o4CATQZwLUHukCRjgN4ODRK3DJXp21AKe0LehF7+/VJaueNzwuYtNAkD
+         OQ53fK3oOGDrCaQw0Syk2v6ZUm+nJiznA+UTVRMM49uxpitTBcIJ45aavdT9RDkG7MNG
+         OkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uADFbodtyi76mzTIX2Xhd3f7QgEY+mxRgH7JdFV0yy0=;
-        b=ueOBWRehi5+TX+EWIlbtPqdDIoOtxplo2TmlDeexAmzcHa1boN82h3sjfsAni9CeyA
-         bIXEDHCDaysuLkcX1c+pobelsghaEkJxDkvn1wfLToOgJNNHmN7IslRkAclSsLJPyEEH
-         6MWKV39BXt0PrtZSBK6vvpNyGOkmhETb3OXMII7XcbER32UGOOfp9BmakoyOubn8ndcC
-         NR7cj71xKXhi6o0NG2ViMDkgn53gBDOFL+6zjkEcQDodVz1d+9ttvy77xdGTCMoGIpYS
-         K+dekIyALFoRMmMsxqdAuWxy/G68/QnPqu66Gei2VdJMDCfvjcxapf4odNIR1i+rDBuC
-         wQaw==
-X-Gm-Message-State: APjAAAV1umhb/Qs5HzRje01YWBBUKIo1HdZxL43MvDdKr4VLjiZ1qohR
-        keBL1GsYOqxXjb1DrTsZzZ8=
-X-Google-Smtp-Source: APXvYqzklxAL3HA3sAuQe2qJFq1XDkOl77Jl/JduYVAUyv9Beg8otfrvCX8qukeM8dQKVBZmt8Bt8A==
-X-Received: by 2002:a62:1b03:: with SMTP id b3mr28362977pfb.150.1553641299192;
-        Tue, 26 Mar 2019 16:01:39 -0700 (PDT)
+        bh=Pbdwi/63Agi4s6Tt6RAM0FtL+bzJWgpn5Dncpfelpvo=;
+        b=KKAgACKIyEU4dZhxmew3JfQwUpyoMaHyEnuzwI5rsNFwZHX8GYP+ofXE288Vcl0H50
+         KQ17J0csYhGQZZZ2xE1Pd9La44ay5rU4kluVGBikt109y3ar7O+ke7nQeGRC1xLRz2Sa
+         DHYChzpqosZMlSPVgZ0RNxbGd2IDv3AD9JDggya8RejqoJFpdNBSQF4l4jqUUT5DAqnA
+         yZ0gBCV+NAE2DP593FX3JGC4B+LEQwymILy0DSDCxSfrJOOEASO0OW0UnjkkHNnknCCA
+         ASz4b1iRIaurrIsaS3WYwMbPGXwr2LdtmSS3pz5MVwgimogHTtMwkxJIPyJXze0zFOS4
+         2BNw==
+X-Gm-Message-State: APjAAAWkPsV6CKcGCV4m7HNDT4PJzpQq5ddDgy/TPIhnodt8jx4RHJKY
+        3+MBIfQ7nwFAE8HwaHGXMHg=
+X-Google-Smtp-Source: APXvYqzI4KLCbPz8UxICZ051Zm3uWTFPxOlGhyODzocBuOSnWTYCxGRTIeA0rPSHp3VHcl/fsSnMcw==
+X-Received: by 2002:a62:388d:: with SMTP id f135mr17894178pfa.103.1553641301996;
+        Tue, 26 Mar 2019 16:01:41 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id n24sm43832587pfi.123.2019.03.26.16.01.37
+        by smtp.gmail.com with ESMTPSA id n24sm43832587pfi.123.2019.03.26.16.01.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 16:01:38 -0700 (PDT)
+        Tue, 26 Mar 2019 16:01:41 -0700 (PDT)
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
 To:     hch@lst.de, robin.murphy@arm.com
 Cc:     vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
         will.deacon@arm.com, joro@8bytes.org, m.szyprowski@samsung.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         iommu@lists.linux-foundation.org, tony@atomide.com
-Subject: [PATCH v2 RFC/RFT 1/5] ARM: dma-mapping: Add fallback normal page allocations
-Date:   Tue, 26 Mar 2019 16:01:27 -0700
-Message-Id: <20190326230131.16275-2-nicoleotsuka@gmail.com>
+Subject: [PATCH v2 RFC/RFT 3/5] iommu: amd_iommu: Add fallback normal page allocations
+Date:   Tue, 26 Mar 2019 16:01:29 -0700
+Message-Id: <20190326230131.16275-4-nicoleotsuka@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190326230131.16275-1-nicoleotsuka@gmail.com>
 References: <20190326230131.16275-1-nicoleotsuka@gmail.com>
@@ -76,63 +76,31 @@ The CMA allocation will skip allocations of single pages to save CMA
 resource. This requires its callers to rebound those page allocations
 from normal area. So this patch adds fallback routines.
 
+Note: amd_iommu driver uses dma_alloc_from_contiguous() as a fallback
+      allocation and uses alloc_pages() as its first round allocation.
+      This's in reverse order than other callers. So the alloc_pages()
+      added by this change becomes a second fallback, though it likely
+      won't succeed since the alloc_pages() has failed once.
+
 Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- arch/arm/mm/dma-mapping.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/iommu/amd_iommu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 8a90f298af96..febaf637a25b 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -589,6 +589,8 @@ static void *__alloc_from_contiguous(struct device *dev, size_t size,
- 	void *ptr = NULL;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 21cb088d6687..2aa4818f5249 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2701,6 +2701,9 @@ static void *alloc_coherent(struct device *dev, size_t size,
  
- 	page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
-+	if (!page)
-+		page = alloc_pages(gfp, order);
- 	if (!page)
- 		return NULL;
- 
-@@ -600,7 +602,8 @@ static void *__alloc_from_contiguous(struct device *dev, size_t size,
- 	if (PageHighMem(page)) {
- 		ptr = __dma_alloc_remap(page, size, GFP_KERNEL, prot, caller);
- 		if (!ptr) {
--			dma_release_from_contiguous(dev, page, count);
-+			if (!dma_release_from_contiguous(dev, page, count))
-+				__free_pages(page, get_order(size));
- 			return NULL;
- 		}
- 	} else {
-@@ -622,7 +625,8 @@ static void __free_from_contiguous(struct device *dev, struct page *page,
- 		else
- 			__dma_remap(page, size, PAGE_KERNEL);
- 	}
--	dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
-+	if (!dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT))
-+		__free_pages(page, get_order(size));
- }
- 
- static inline pgprot_t __get_dma_pgprot(unsigned long attrs, pgprot_t prot)
-@@ -1295,6 +1299,8 @@ static struct page **__iommu_alloc_buffer(struct device *dev, size_t size,
- 
- 		page = dma_alloc_from_contiguous(dev, count, order,
- 						 gfp & __GFP_NOWARN);
+ 		page = dma_alloc_from_contiguous(dev, size >> PAGE_SHIFT,
+ 					get_order(size), flag & __GFP_NOWARN);
 +		if (!page)
-+			page = alloc_pages(gfp, order);
++			page = alloc_pages(flag | __GFP_NOWARN,
++					   get_order(size));
  		if (!page)
- 			goto error;
- 
-@@ -1369,7 +1375,8 @@ static int __iommu_free_buffer(struct device *dev, struct page **pages,
- 	int i;
- 
- 	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
--		dma_release_from_contiguous(dev, pages[0], count);
-+		if (!dma_release_from_contiguous(dev, pages[0], count))
-+			__free_pages(page[0], get_order(size));
- 	} else {
- 		for (i = 0; i < count; i++)
- 			if (pages[i])
+ 			return NULL;
+ 	}
 -- 
 2.17.1
 
