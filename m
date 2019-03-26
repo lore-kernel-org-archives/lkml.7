@@ -2,114 +2,114 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB39C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7562070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D19A20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVSO81oH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g2pmnjJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfCZRF1 (ORCPT
+        id S1731902AbfCZRFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:05:27 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36272 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729693AbfCZRF1 (ORCPT
+        Tue, 26 Mar 2019 13:05:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40326 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbfCZRFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:05:27 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r124so8548126pgr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:05:26 -0700 (PDT)
+        Tue, 26 Mar 2019 13:05:38 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c207so8359617pfc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LsLe1HrF/ojJF1oDyTC8JucVDbgZ9e7bF+XA2994fJU=;
-        b=HVSO81oHItsZPvcbJ67VR6yV45MRAsWA+J1tUiXOtE3h691f6HhWfZHExLmfLhwfYr
-         ZjxhhXvXEGfn5We+2Ujif+pJU0WU35MFNxM371BD/6NXVKRdaQMDCCyEeBgB6Q+ccbL0
-         hqC4FnpcWX/ifac5uzbjfqc4vTjXytQRr/RvY=
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=ktOQ/tyLu68SW7AEyELHJA2CTC+i4Py410izLIuc0B8=;
+        b=g2pmnjJkyR9pNDE2XNSd92oQqcIjvFz3Yq0BJpN28uBvF2bRVjt6tQabZiJgH0n4Cu
+         LeF62VihkNX8sGurgmV/IkqLfijlwqnEWj4pljYg2rt+Y+INHmHfcCcWrmixNf3D4k8c
+         2Z5hgX+BTNolCeg7o1ru5Wa/2ykbYhjNihdco=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LsLe1HrF/ojJF1oDyTC8JucVDbgZ9e7bF+XA2994fJU=;
-        b=ZdXlp5jXSGVck7KvmMcweArynDp60OoL2zxPrJ8vjCQ0iwRu11mr6EBiZIT8Gq5Mcn
-         jdUsK90KhGulAsxQ7EWfKHNDROEyuDyCRuemvBnjwuWKSl/W+jKuPOHWMVpAbx6sMTgw
-         lUo4pknA8i0ahJiNsQxxJ5CJcQ6cSqn/a74KScrCqYRq0LpCADjmh+F51MXKGj1cZ2tR
-         cAyp7tIYhwF4Vwdl9rbuVI7LryycCMLLE2yV81Il+R9zYZkTTG/a2zI5TvzBAQ36OeJb
-         HFsS2YNL2NDEXEZ09Pf98MB+Yv8T1zI+NpwSix5tel8r1k/spZZeSgNNizL7vltxdjHR
-         zJCw==
-X-Gm-Message-State: APjAAAWy6xYpON7mC1bmnJvOeR/cd44GysCLLwERXRbVlpq5fS/Sz8aL
-        BndXIQjG/WjoT7rI2Wy34Koijg==
-X-Google-Smtp-Source: APXvYqwJ+aiJxRaHVGgXu51qkRdwnCCXFqPebaF1OBVulvgkjcwWYcEvaUacnP2JuOdtAOsBUmTRoA==
-X-Received: by 2002:a63:4346:: with SMTP id q67mr29516890pga.92.1553619926353;
-        Tue, 26 Mar 2019 10:05:26 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id u11sm22768433pfh.23.2019.03.26.10.05.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 26 Mar 2019 10:05:25 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Andy Gross <andy.gross@linaro.org>
-Cc:     Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] arm64: dts: msm8998: Add UFS phy reset
-Date:   Tue, 26 Mar 2019 10:05:18 -0700
-Message-Id: <20190326170518.157317-1-evgreen@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=ktOQ/tyLu68SW7AEyELHJA2CTC+i4Py410izLIuc0B8=;
+        b=C8UAqug04qm7YhldLXRbZzJHbxApYBitSWYU5FvsThc+vhYc09xf4/1QbrPTd0c+oe
+         IMoUE9f6BHYgp8T9Vgyv+S1N8KvgHDMso2faE3lM3InUlTqxXXgVufJAeUVuFeMufv7d
+         Bq+2cGVYnLbU1r+2zZJCnIEROZUu1sYWoHJJcFVlfUjEamrXb9B5KjIj3/KKr1gyvOmv
+         PuoU0Fn4Ufh3tiu1AY4IbOwXE/gPqMkRfD9NeyZfL1O2I5jpPKh6aKx4RXkxeMIOWAI9
+         dBC2yRfY2aQ6M4tQHnEBe//gwFjMHg0g1F/2/poRgPERjxX8WVVFZFEDHq1NmVbgjbOs
+         LHtg==
+X-Gm-Message-State: APjAAAXqlahiklw85rQ7bWRIOLbRpcCjm4SfRrkRBOvg/JuGI2t+kNLe
+        P11X8iqyT/ftTrXQngtR3ci+oUHhxAF2Jw==
+X-Google-Smtp-Source: APXvYqyqIKp5OOHOOX7Z1QTe/y60ci77rkMYm/K2sbCXGKLD+0xF2K1ykPupxrK6AWoPvIAaZWZryw==
+X-Received: by 2002:a65:538b:: with SMTP id x11mr29294441pgq.35.1553619937602;
+        Tue, 26 Mar 2019 10:05:37 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 125sm29309655pfw.139.2019.03.26.10.05.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 10:05:36 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org>
+References: <20190325184522.260535-1-swboyd@chromium.org> <20190325184522.260535-4-swboyd@chromium.org> <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 3/4] scripts/gdb: Add rb tree iterating utilities
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nikolay Borisov <n.borisov.lkml@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jackie Liu <liuyun01@kylinos.cn>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Kieran Bingham <kbingham@kernel.org>
+Message-ID: <155361993610.20095.762425616683725063@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 26 Mar 2019 10:05:36 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the new refactoring at [1], the UFS phy now controls its own
-destiny in toggling the phy reset bit within the UFS host controller.
-Add the DT pieces needed to 1) expose the reset controller from the
-HC, and 2) use it from the PHY. This series is based atop linux-next
-plus Marc's series at [2].
+Quoting Kieran Bingham (2019-03-26 01:52:10)
+> Hi Stephen,
+>=20
+> On 25/03/2019 18:45, Stephen Boyd wrote:
+> > Implement gdb functions for rb_first(), rb_last(), rb_next(), and
+> > rb_prev(). These can be useful to iterate through the kernel's red-black
+> > trees.
+>=20
+> I definitely approve of getting data-structure helpers into scripts/gdb,
+> as it will greatly assist debug options but my last attempt to do this
+> was with the radix-tree which I had to give up on as the internals were
+> changing rapidly and caused continuous breakage to the helpers.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
+Thanks for the background on radix-tree. I haven't looked at that yet,
+but I suppose I'll want to have that too at some point.
 
-[1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
-[2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
+>=20
+> Do you foresee any similar issue here? Or is the corresponding RB code
+> in the kernel fairly 'stable'?
+>=20
+>=20
+> Please could we make sure whomever maintains the RBTree code is aware of
+> the python implementation?
+>=20
+> That said, MAINTAINERS doesn't actually seem to list any ownership over
+> the rb-tree code, and get_maintainers.pl [0] seems to be pointing at
+> Andrew as the probable route in for that code so perhaps that's already
+> in place :D
 
----
-I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
-patch if it needs any fixups.
-
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 3d0aeb3211de..d59a2c5fe83a 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -990,6 +990,7 @@
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&ufsphy_lanes>;
- 			phy-names = "ufsphy";
-+			#reset-cells = <1>;
- 			lanes-per-direction = <2>;
- 			power-domains = <&gcc UFS_GDSC>;
- 
-@@ -1039,6 +1040,7 @@
- 				<&gcc GCC_UFS_CLKREF_CLK>,
- 				<&gcc GCC_UFS_PHY_AUX_CLK>;
- 
-+			resets = <&ufshc 0>;
- 			ufsphy_lanes: lanes@1da7400 {
- 				reg = <0x01da7400 0x128>,
- 				      <0x01da7600 0x1fc>,
--- 
-2.20.1
+I don't think that the rb tree implementation is going to change. It
+feels similar to the list API. I suppose this problem of keeping things
+in sync is a more general problem than just data-structures changing.
+The only solution I can offer is to have more testing and usage of these
+scripts. Unless gdb can "simulate" or run arbitrary code for us then I
+think we're stuck reimplementing kernel internal code in gdb scripts so
+that we can get debug info out.
 
