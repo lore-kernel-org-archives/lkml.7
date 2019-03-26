@@ -2,143 +2,135 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562DDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65153C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2049120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3174A20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553588567;
-	bh=4VuJdYoW27ty/umu9Sr/06n6fgW/6tGcO4jT4QYwpT8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=S+A3C8Mps6u1we/1fTvF/Vx4Wca7oUC+TMTUXR2xL1323G9/CXE+G21yYUyhq/zpW
-	 ucx5j91zXCp2tEKZfSEotI8lCpUWePcRPzZXuqXinm0wkEcgVFciXgTmcL3Tsf/us7
-	 jMnWmJwsfsumgy/F3oEVTyOG3RW2k2YaOh2usUCE=
+	s=default; t=1553588573;
+	bh=gwtDLMqGQYA0no8ugNIMSIAnIHbgXvBIxNKUdY2t1PA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=M+ID8Xlej5lTYSv+uJXXFyKxgnpsctzFYb/Vfzpsv6/Wyi5oGUMw4RtdRnnG6ec5k
+	 /5Q+cVqD1TCQQfKL3CC3gZOxww9gch9JHZw8DiqrMlB+L2b5ro65N4SQQaOTyDae2M
+	 6FfUfWzwjN/PS1ExkpBu2kWTaRttO7mG7F6QewRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbfCZIWp (ORCPT
+        id S1731129AbfCZIWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 04:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfCZIWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:22:45 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726175AbfCZIWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:22:51 -0400
+Received: from localhost.localdomain (unknown [115.199.178.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E39FA20830;
-        Tue, 26 Mar 2019 08:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F69820857;
+        Tue, 26 Mar 2019 08:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553588564;
-        bh=4VuJdYoW27ty/umu9Sr/06n6fgW/6tGcO4jT4QYwpT8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QkPZL5Tutbbb8JkHRv97jAdTMS2wHBVSz9cgdVAkxq30z8XWbG8FM6Nsrz31gdo3s
-         2h9FsVTnocbPJ/PfJX49JwW/mVw1n903+QimVFKlxbCuO5KbSX7Vxt8HdrboD2ihIK
-         nuJ2rIeqzLbMhFtRYg8osjKeBmFz7yGVLzFbQmcw=
-Date:   Tue, 26 Mar 2019 17:22:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, tglx@linutronix.de, mhiramat@kernel.org,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] tracing: Add tracing error log
-Message-Id: <20190326172239.563f933cceb1f71c45f7e474@kernel.org>
-In-Reply-To: <5038ab97eaa3cf23c16264299221c5f1c5cf8147.1553268040.git.tom.zanussi@linux.intel.com>
-References: <cover.1553268040.git.tom.zanussi@linux.intel.com>
-        <5038ab97eaa3cf23c16264299221c5f1c5cf8147.1553268040.git.tom.zanussi@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1553588571;
+        bh=gwtDLMqGQYA0no8ugNIMSIAnIHbgXvBIxNKUdY2t1PA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qkStPLbGBQZ5w8wKEDmx+ZaLILe0s7zvROp/ERmC5nbOv/jvt+xhEZUeOs6sSBZqT
+         uxOjr92nuVOhM/ItRd3L2bR9pCvOPJhi5Q4OxwIahsxzOnEpUIC6z7xZa7CQQ3LOgM
+         bCaR/zl331r0E2DD5kCx9sAPwAibyJSyytbXOuwQ=
+From:   guoren@kernel.org
+To:     arnd@arndb.de, ldv@altlinux.org
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        ren_guo@c-sky.com, strace-devel@lists.strace.io
+Subject: [PATCH] csky: Add non-uapi asm/ptrace.h namespace
+Date:   Tue, 26 Mar 2019 16:22:31 +0800
+Message-Id: <1553588551-30020-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+From: Guo Ren <ren_guo@c-sky.com>
 
-On Fri, 22 Mar 2019 10:34:27 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
+Move #ifdef __KERNEL__ code in the uapi namespace to non-uapi
+include/asm/ptrace.h namespace and remove #ifdef __KERNEL__ in
+include/asm/ptrace.h. Seperate ptrace.h in uapi and non-uapi is more
+common and clear.
 
-> +static int tracing_err_log_open(struct inode *inode, struct file *file)
-> +{
-> +	if (file->f_mode & FMODE_WRITE) {
-> +		if (file->f_flags & O_TRUNC)
-> +			return 0;
-> +		else
-> +			return -EINVAL;
-> +	}
-> +
-> +	return seq_open(file, &tracing_err_log_seq_ops);
-> +}
-> +
-> +static ssize_t tracing_err_log_write(struct file *file,
-> +				     const char __user *buffer,
-> +				     size_t count, loff_t *ppos)
-> +{
-> +	if (count == 1)
-> +		clear_tracing_err_log();
-> +	else
-> +		return -EINVAL;
-> +
-> +	*ppos += count;
-> +
-> +	return count;
-> +}
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Dmitry V. Levin <ldv@altlinux.org>
+---
+ arch/csky/include/asm/ptrace.h      | 29 +++++++++++++++++++++++++++++
+ arch/csky/include/uapi/asm/ptrace.h | 20 --------------------
+ 2 files changed, 29 insertions(+), 20 deletions(-)
+ create mode 100644 arch/csky/include/asm/ptrace.h
 
-Hmm, could you make this as same as "tracing/trace"?
-- It clears buffer at open with WRITE & TRUNC flag
-- It just ignore how much user wrote (works as /dev/null)
-
-See tracing_open() and tracing_write_stub() in
-kernel/trace/trace.c.
-
-Thank you,
-
-
-> +
-> +static const struct file_operations tracing_err_log_fops = {
-> +	.open           = tracing_err_log_open,
-> +	.write		= tracing_err_log_write,
-> +	.read           = seq_read,
-> +	.llseek         = seq_lseek,
-> +};
-> +
->  static int tracing_buffers_open(struct inode *inode, struct file *filp)
->  {
->  	struct trace_array *tr = inode->i_private;
-> @@ -8258,6 +8478,9 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
->  			  tr, &snapshot_fops);
->  #endif
->  
-> +	trace_create_file("error_log", 0644, d_tracer,
-> +			  tr, &tracing_err_log_fops);
-> +
->  	for_each_tracing_cpu(cpu)
->  		tracing_init_tracefs_percpu(tr, cpu);
->  
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index d80cee49e0eb..b711edbef7e7 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -1884,6 +1884,10 @@ extern ssize_t trace_parse_run_command(struct file *file,
->  		const char __user *buffer, size_t count, loff_t *ppos,
->  		int (*createfn)(int, char**));
->  
-> +extern unsigned int err_pos(char *cmd, const char *str);
-> +extern void tracing_log_err(const char *loc, const char *cmd,
-> +			    const char **errs, u8 type, u8 pos);
-> +
->  /*
->   * Normal trace_printk() and friends allocates special buffers
->   * to do the manipulation, as well as saves the print formats
-> -- 
-> 2.14.1
-> 
-
-
+diff --git a/arch/csky/include/asm/ptrace.h b/arch/csky/include/asm/ptrace.h
+new file mode 100644
+index 0000000..1e00578
+--- /dev/null
++++ b/arch/csky/include/asm/ptrace.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
++
++#ifndef __ASM_CSKY_PTRACE_H
++#define __ASM_CSKY_PTRACE_H
++
++#include <uapi/asm/ptrace.h>
++
++#ifndef __ASSEMBLY__
++
++#define PS_S	0x80000000 /* Supervisor Mode */
++
++#define arch_has_single_step() (1)
++#define current_pt_regs() \
++({ (struct pt_regs *)((char *)current_thread_info() + THREAD_SIZE) - 1; })
++
++#define user_stack_pointer(regs) ((regs)->usp)
++
++#define user_mode(regs) (!((regs)->sr & PS_S))
++#define instruction_pointer(regs) ((regs)->pc)
++#define profile_pc(regs) instruction_pointer(regs)
++
++static inline unsigned long regs_return_value(struct pt_regs *regs)
++{
++	return regs->a0;
++}
++
++#endif /* __ASSEMBLY__ */
++#endif /* __ASM_CSKY_PTRACE_H */
+diff --git a/arch/csky/include/uapi/asm/ptrace.h b/arch/csky/include/uapi/asm/ptrace.h
+index 9bf5b1a..4e248d5 100644
+--- a/arch/csky/include/uapi/asm/ptrace.h
++++ b/arch/csky/include/uapi/asm/ptrace.h
+@@ -48,25 +48,5 @@ struct user_fp {
+ 	unsigned long	reserved;
+ };
+ 
+-#ifdef __KERNEL__
+-
+-#define PS_S	0x80000000 /* Supervisor Mode */
+-
+-#define arch_has_single_step() (1)
+-#define current_pt_regs() \
+-({ (struct pt_regs *)((char *)current_thread_info() + THREAD_SIZE) - 1; })
+-
+-#define user_stack_pointer(regs) ((regs)->usp)
+-
+-#define user_mode(regs) (!((regs)->sr & PS_S))
+-#define instruction_pointer(regs) ((regs)->pc)
+-#define profile_pc(regs) instruction_pointer(regs)
+-
+-static inline unsigned long regs_return_value(struct pt_regs *regs)
+-{
+-	return regs->a0;
+-}
+-
+-#endif /* __KERNEL__ */
+ #endif /* __ASSEMBLY__ */
+ #endif /* _CSKY_PTRACE_H */
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
