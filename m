@@ -2,85 +2,293 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915F7C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F59C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BF820830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E086A20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 09:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfCZJvo (ORCPT
+        id S1731041AbfCZJwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 05:51:44 -0400
-Received: from stretch.kos.to ([51.15.203.87]:56032 "EHLO pilvi.kos.to"
+        Tue, 26 Mar 2019 05:52:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49036 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfCZJvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 05:51:44 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Mar 2019 05:51:43 EDT
-Received: from 08efd375aeba (unknown [172.17.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726042AbfCZJwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 05:52:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by pilvi.kos.to (Postfix) with ESMTPSA id B0AE62411D2;
-        Tue, 26 Mar 2019 09:46:03 +0000 (UTC)
-Received: (nullmailer pid 32707 invoked by uid 1000);
-        Tue, 26 Mar 2019 09:46:03 -0000
-Date:   Tue, 26 Mar 2019 09:46:03 +0000
-From:   Riku Voipio <riku.voipio@iki.fi>
-To:     Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "linux-fscrypt@vger.kernel.org" <linux-fscrypt@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/17] Add zinc using existing algorithm implementations
-Message-ID: <20190326094603.nyfi2dsnt6a6u57f@08efd375aeba>
-References: <20190322062740.nrwfx2rvmt7lzotj@gondor.apana.org.au>
- <CAKv+Gu_mgyzqUCeb+wke--8Gn8YbjOb8jyrSgFr3-tcNP8ccEQ@mail.gmail.com>
- <CAHk-=wg2LJ5qQ0B2y+_6Ue62SBP4h9MLxLvn89bfcP7Cp2ac6A@mail.gmail.com>
- <AM5PR0901MB1155FD05113D6DC79A6274CED25E0@AM5PR0901MB1155.eurprd09.prod.outlook.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id D287430832D1;
+        Tue, 26 Mar 2019 09:52:34 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-53.pek2.redhat.com [10.72.12.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBF105E7DC;
+        Tue, 26 Mar 2019 09:52:22 +0000 (UTC)
+Subject: Re: [PATCH 1/2 v8] resource: add the new I/O resource descriptor
+ 'IORES_DESC_RESERVED'
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "bhe@redhat.com" <bhe@redhat.com>, Toshi Kani <toshi.kani@hp.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20181129080956.20776-1-lijiang@redhat.com>
+ <20181129080956.20776-2-lijiang@redhat.com>
+ <20181130033703.GA23624@dhcp-128-65.nay.redhat.com>
+ <b8936194-01ef-8b8f-254e-039fc951855d@amd.com>
+ <95661569-d9c9-af13-11c4-c0d752710a1f@redhat.com>
+ <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <2b721ccb-278a-5934-c7a1-e1f62ab5efa5@redhat.com>
+Date:   Tue, 26 Mar 2019 17:52:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR0901MB1155FD05113D6DC79A6274CED25E0@AM5PR0901MB1155.eurprd09.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <b1556461-fe83-2ba0-00a3-e8ecf3e286fe@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 26 Mar 2019 09:52:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:10:08AM +0000, Pascal Van Leeuwen wrote:
-> As someone who has been working on crypto acceleration hardware for the better
-> part of the past 20 years, I feel compelled to respond to this, in defence of
-> the crypto API (which we're really happy with ...).
+在 2019年03月26日 03:34, Lendacky, Thomas 写道:
+> On 3/16/19 2:31 AM, lijiang wrote:
+>>
+>>
+>> 在 2018年12月05日 05:33, Lendacky, Thomas 写道:
+>>> On 11/29/2018 09:37 PM, Dave Young wrote:
+>>>> + more people
+>>>>
+>>>> On 11/29/18 at 04:09pm, Lianbo Jiang wrote:
+>>>>> When doing kexec_file_load, the first kernel needs to pass the e820
+>>>>> reserved ranges to the second kernel. But kernel can not exactly
+>>>>> match the e820 reserved ranges when walking through the iomem resources
+>>>>> with the descriptor 'IORES_DESC_NONE', because several e820 types(
+>>>>> e.g. E820_TYPE_RESERVED_KERN/E820_TYPE_RAM/E820_TYPE_UNUSABLE/E820
+>>>>> _TYPE_RESERVED) are converted to the descriptor 'IORES_DESC_NONE'. It
+>>>>> may pass these four types to the kdump kernel, that is not desired result.
+>>>>>
+>>>>> So, this patch adds a new I/O resource descriptor 'IORES_DESC_RESERVED'
+>>>>> for the iomem resources search interfaces. It is helpful to exactly
+>>>>> match the reserved resource ranges when walking through iomem resources.
+>>>>>
+>>>>> In addition, since the new descriptor 'IORES_DESC_RESERVED' is introduced,
+>>>>> these code originally related to the descriptor 'IORES_DESC_NONE' need to
+>>>>> be updated. Otherwise, it will be easily confused and also cause some
+>>>>> errors. Because the 'E820_TYPE_RESERVED' type is converted to the new
+>>>>> descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE', it has been
+>>>>> changed.
+>>>>>
+>>>>> Suggested-by: Dave Young <dyoung@redhat.com>
+>>>>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>>>>> ---
+>>>>>  arch/ia64/kernel/efi.c |  4 ++++
+>>>>>  arch/x86/kernel/e820.c |  2 +-
+>>>>>  arch/x86/mm/ioremap.c  | 13 ++++++++++++-
+>>>>>  include/linux/ioport.h |  1 +
+>>>>>  kernel/resource.c      |  6 +++---
+>>>>>  5 files changed, 21 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/ia64/kernel/efi.c b/arch/ia64/kernel/efi.c
+>>>>> index 8f106638913c..1841e9b4db30 100644
+>>>>> --- a/arch/ia64/kernel/efi.c
+>>>>> +++ b/arch/ia64/kernel/efi.c
+>>>>> @@ -1231,6 +1231,10 @@ efi_initialize_iomem_resources(struct resource *code_resource,
+>>>>>  				break;
+>>>>>  
+>>>>>  			case EFI_RESERVED_TYPE:
+>>>>> +				name = "reserved";
+>>>>
+>>>> Ingo updated X86 code to use "Reserved",  I think it would be good to do
+>>>> same for this case as well
+>>>>
+>>>>> +				desc = IORES_DESC_RESERVED;
+>>>>> +				break;
+>>>>> +
+>>>>>  			case EFI_RUNTIME_SERVICES_CODE:
+>>>>>  			case EFI_RUNTIME_SERVICES_DATA:
+>>>>>  			case EFI_ACPI_RECLAIM_MEMORY:
+>>>>
+>>>> Originally, above 3 are all "reserved", so probably they all should be
+>>>> IORES_DESC_RESERVED.
+>>>>
+>>>> Can any IA64 people to review this?
+>>>>
+>>>>> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>>>>> index 50895c2f937d..57fafdafb860 100644
+>>>>> --- a/arch/x86/kernel/e820.c
+>>>>> +++ b/arch/x86/kernel/e820.c
+>>>>> @@ -1048,10 +1048,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+>>>>>  	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+>>>>>  	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+>>>>>  	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+>>>>> +	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
+>>>>>  	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+>>>>>  	case E820_TYPE_RAM:		/* Fall-through: */
+>>>>>  	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+>>>>> -	case E820_TYPE_RESERVED:	/* Fall-through: */
+>>>>>  	default:			return IORES_DESC_NONE;
+>>>>>  	}
+>>>>>  }
+>>>>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+>>>>> index 5378d10f1d31..fea2ef99415d 100644
+>>>>> --- a/arch/x86/mm/ioremap.c
+>>>>> +++ b/arch/x86/mm/ioremap.c
+>>>>> @@ -83,7 +83,18 @@ static bool __ioremap_check_ram(struct resource *res)
+>>>>>  
+>>>>>  static int __ioremap_check_desc_other(struct resource *res)
+>>>>>  {
+>>>>> -	return (res->desc != IORES_DESC_NONE);
+>>>>> +	/*
+>>>>> +	 * But now, the 'E820_TYPE_RESERVED' type is converted to the new
+>>>>> +	 * descriptor 'IORES_DESC_RESERVED' instead of 'IORES_DESC_NONE',
+>>>>> +	 * it has been changed. And the value of 'mem_flags.desc_other'
+>>>>> +	 * is equal to 'true' if we don't strengthen the condition in this
+>>>>> +	 * function, that is wrong. Because originally it is equal to
+>>>>> +	 * 'false' for the same reserved type.
+>>>>> +	 *
+>>>>> +	 * So, that would be nice to keep it the same as before.
+>>>>> +	 */
+>>>>> +	return ((res->desc != IORES_DESC_NONE) &&
+>>>>> +		(res->desc != IORES_DESC_RESERVED));
+>>>>>  }
+>>>>
+>>>> Added Tom since he added the check function.  Is it possible to only
+>>>> check explict valid desc types instead of exclude IORES_DESC_NONE?
+>>>
+>>> Sorry for the delay...
+>>>
+>>> The original intent of the check was to map most memory as encrypted under
+>>> SEV if it was marked with a specific descriptor, since it was likely to
+>>> not be MMIO. I tried converting most things that mapped memory to memremap
+>>> vs ioremap, but ACPI was one area that I left alone and this check catches
+>>> the mapping of the ACPI tables. I suppose it's possible to change this to
+>>> check just for IORES_DESC_ACPI_* values, but I would have to do some
+>>> testing.
+>>
+>> Recently, i tested it according to your advice, here it is really checking for the
+>> 'IORES_DESC_ACPI_*' values.  If you agree to this change, i would add the following
+>> patch into this patch set and post them again.
+>>
+>> [root@localhost linux]# git diff arch/x86/mm/ioremap.c
+>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+>> index 0029604af8a4..0e3ba620612d 100644
+>> --- a/arch/x86/mm/ioremap.c
+>> +++ b/arch/x86/mm/ioremap.c
+>> @@ -83,7 +83,8 @@ static bool __ioremap_check_ram(struct resource *res)
+>>  
+>>  static int __ioremap_check_desc_other(struct resource *res)
+>>  {
+>> -       return (res->desc != IORES_DESC_NONE);
+>> +       return ((res->desc == IORES_DESC_ACPI_TABLES) ||
+>> +               (res->desc == IORES_DESC_ACPI_NV_STORAGE));
+> 
+> I'm not a big fan of this. I think you should leave it as the previous
+> check you had for IORES_DESC_NONE and IORES_DESC_RESERVED. There's no
+> telling what type of resources may be mapped in the future where this
+> will break.
+> 
+> Adding a nice comment here about how IORES_DESC_NONE originally was to
+> identify MMIO and reserved areas. Now IORES_DESC_RESERVED has been created
+> for the reserved areas so the check needs to be expanded so that these
+> areas aren't mapped encrypted when using ioremap.
 
-Thanks for joining in.
+Thanks for your comment.
 
-> We have done plenty of measurements, on both power and performance, to prove
-> you wrong there. Typically our HW needs *at least* a full order of a magnitude
-> less power to do the actual work. The CPU load for handing the interrupts etc.
-> tends to be around 20%. So assuming the CPU goes to sleep for the other 80%
-> of the time,  the combined solution would need about 1/3rd of the power of a
-> CPU only solution. It's one of our biggest selling points.
+It's OK for me. I'm not sure whether Boris has any suggestion.
 
-I actually have the kind of (relatively) low-power system with your crypto
-accelerator IP. But it doesn't matter how great performance or energy saving
-I would get from using crypto offloading. I will continue to use CPU only
-solution for the foreseeable future.
+Thanks.
+Lianbo
 
-Because of one tiny problem:
-
-The firmware files for eip197(?) crypto accelerator are secrets we are not
-allowed download anywhere from.
-
-> Pascal van Leeuwen,
-> Silicon IP Architect @ Inside Secure
-
-Riku
+> 
+> Thanks,
+> Tom
+> 
+>>  }
+>>
+>>
+>> Thanks.
+>> Lianbo
+>>
+>>>
+>>> Thanks,
+>>> Tom
+>>>
+>>>>
+>>>>>  
+>>>>>  static int __ioremap_res_check(struct resource *res, void *arg)
+>>>>> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>>>>> index da0ebaec25f0..6ed59de48bd5 100644
+>>>>> --- a/include/linux/ioport.h
+>>>>> +++ b/include/linux/ioport.h
+>>>>> @@ -133,6 +133,7 @@ enum {
+>>>>>  	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
+>>>>>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+>>>>>  	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
+>>>>> +	IORES_DESC_RESERVED			= 8,
+>>>>>  };
+>>>>>  
+>>>>>  /* helpers to define resources */
+>>>>> diff --git a/kernel/resource.c b/kernel/resource.c
+>>>>> index b0fbf685c77a..f34a632c4169 100644
+>>>>> --- a/kernel/resource.c
+>>>>> +++ b/kernel/resource.c
+>>>>> @@ -994,7 +994,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
+>>>>>  	res->start = start;
+>>>>>  	res->end = end;
+>>>>>  	res->flags = type | IORESOURCE_BUSY;
+>>>>> -	res->desc = IORES_DESC_NONE;
+>>>>> +	res->desc = IORES_DESC_RESERVED;
+>>>>>  
+>>>>>  	while (1) {
+>>>>>  
+>>>>> @@ -1029,7 +1029,7 @@ __reserve_region_with_split(struct resource *root, resource_size_t start,
+>>>>>  				next_res->start = conflict->end + 1;
+>>>>>  				next_res->end = end;
+>>>>>  				next_res->flags = type | IORESOURCE_BUSY;
+>>>>> -				next_res->desc = IORES_DESC_NONE;
+>>>>> +				next_res->desc = IORES_DESC_RESERVED;
+>>>>>  			}
+>>>>>  		} else {
+>>>>>  			res->start = conflict->end + 1;
+>>>>> @@ -1477,7 +1477,7 @@ static int __init reserve_setup(char *str)
+>>>>>  			res->start = io_start;
+>>>>>  			res->end = io_start + io_num - 1;
+>>>>>  			res->flags |= IORESOURCE_BUSY;
+>>>>> -			res->desc = IORES_DESC_NONE;
+>>>>> +			res->desc = IORES_DESC_RESERVED;
+>>>>>  			res->child = NULL;
+>>>>>  			if (request_resource(parent, res) == 0)
+>>>>>  				reserved = x+1;
+>>>>> -- 
+>>>>> 2.17.1
+>>>>>
+>>>>
+>>>>
+>>>> There are a lot of places call region_intersects which use DESC_NONE,
+>>>> I'm not sure if needed changes accordingly.  Cced Dan and Toshi.
+>>>>
+>>>>
+>>>> Thanks
+>>>> Dave
+>>>>
