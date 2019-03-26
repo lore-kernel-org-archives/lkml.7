@@ -2,86 +2,123 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF41DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75FAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECB120823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B403220811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YyVPVkry"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="STiKyYYw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MUZA8UkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfCZCZi (ORCPT
+        id S1731055AbfCZC1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:25:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54688 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730273AbfCZCZh (ORCPT
+        Mon, 25 Mar 2019 22:27:05 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:33735 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727328AbfCZC1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:25:37 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q2P5SX077370;
-        Tue, 26 Mar 2019 02:25:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=YlN08lgWqUjAGIaUpT9fV5glukI3seX0g5Ww3GQPoic=;
- b=YyVPVkryj2pD/q8vyuw3DdS847Vjky17X8RuUS0gQi9LnN6zlMnnnY4IPgSwZ+1SWQza
- i9NMvFqQAIEjWOENlSNcpaSYYC0f8irdr04ZHNq7A0/+wj8Nrcc3DNZeFNDTXV/b/pAl
- 1l+W40futhu8fRiOiATS+7ztV5DKppBcdvecRdT6hyR4rU+mbiLqOhvRDVCCMUeFdXZF
- llcaU+KTOZQ3Z3lVh4NeK3YhzhHi0Qei2oxUKZKof43ZUs1lNk8adj/tO0A205y11vax
- TaZmGTLEVRDm64KnrPaNAISbV0kmjx0/nesv3ADC8fdOn8iaaoGUHhIILM6J0TbBXoXU sA== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2re6dj7ngt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 02:25:32 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2PVT7001141
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 02:25:31 GMT
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2PT10028429;
-        Tue, 26 Mar 2019 02:25:30 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Mar 2019 19:25:29 -0700
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Mon, 25 Mar 2019 22:27:04 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 28FC322E76;
+        Mon, 25 Mar 2019 22:27:03 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 25 Mar 2019 22:27:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=GLaTIU9WH7pq5hbeGJ4+7kivvIo
+        zCQ7QosT6yxfBZT8=; b=STiKyYYwHPzMYz/8a9vzrbKb8R1iLmTXBTbFe1Dlzx6
+        4xKr/seG+roBRhPnl7szLaI33MAt9tDI889CCDHBZ8gs2lPAPdvNCBUiwpDgR23C
+        tL1I62/+Wr1ayCSKLTE6OwIL2WwfMK0LB/jQJoan9HoWfKEBWCxvSdicMo9N+BPk
+        Hx3IPgVKZpb0aif5YpXauGibEFFQllbaxyowl32l+h1rSDUoHvZFaFTPviZXnakp
+        dCh3tV/5Vnf6slkVlq8sirToWqaeewU6SWqpVWwFL9J814/n7HvF1MJm9iFORAau
+        OyPtoBdBjz9LiCYQ/uFlZO66D9/6q5Zxwx3zeiD+BPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=GLaTIU
+        9WH7pq5hbeGJ4+7kivvIozCQ7QosT6yxfBZT8=; b=MUZA8UkW53XZG+TUg7uUXM
+        BW+KIeClQ6da4LqKyDmXcD5WQfpeKucJlTqeixeFmmArmAsXGwZFKQi01q7b4DVQ
+        lBS+oL0eeBMyiFz2LWrTWgG4JN8O2B4SaIe6VpLCOml7yksiA5d6lpMcNf+G2ACw
+        x6dlRxduBen/v9GyfzqUqytPvBVOOtPOCtxoXaTpYt6xKHXp0PZHIwr6Glp2ds2P
+        /TX+F3mbONDXk4eFqeeNdbkGlB0dEaj5Z3FW5T00zzC5ypjQwAlwpW/MKNAI8uVk
+        6Dmy7G0HsSV67APmoVWNpMwumRJ5vWAWLURc0DoPMPCtbxs0ypG4JJlmyhCOKrng
+        ==
+X-ME-Sender: <xms:8o2ZXND8QyHu9HRvrxZSXtAwqZO2gkUadbttJh2uei6VDrio4Sdhcg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrjeelgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepudejvddruddtgedrvdegke
+    drgeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:8o2ZXH8FZZLHdMCQhSwTv9DB9iptCwBCyV_4kCYogctbqRz8iwgpSQ>
+    <xmx:8o2ZXP275VVqhbUWMZ92bz4VqNWNUiAe7a21VZoOIg-3I0N9lGb49A>
+    <xmx:8o2ZXOR0R2pqW7vemW7bWru1n-nxEse0apO7QJWK21WI7APEPWSH3A>
+    <xmx:942ZXJ0UUFpuZoOuqng_fK8-uYZG1eCIQTFgYnamfofTsZZX8aOLeg>
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6766DE442F;
+        Mon, 25 Mar 2019 22:26:57 -0400 (EDT)
+Date:   Tue, 26 Mar 2019 11:26:52 +0900
+From:   Greg KH <greg@kroah.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     stable@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@free-electrons.com>,
+        Vinayak Holikatti <vinholikatti@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla4xxx: fix a potential NULL pointer dereference
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190314063100.12805-1-kjlu@umn.edu>
-Date:   Mon, 25 Mar 2019 22:25:26 -0400
-In-Reply-To: <20190314063100.12805-1-kjlu@umn.edu> (Kangjie Lu's message of
-        "Thu, 14 Mar 2019 01:30:59 -0500")
-Message-ID: <yq1d0mez815.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [BACKPORT 4.14.y 0/8] candidates from spreadtrum 4.14 product
+ kernel
+Message-ID: <20190326022652.GB19395@kroah.com>
+References: <20190322161727.1153278-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=583 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903260016
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322161727.1153278-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 22, 2019 at 05:17:15PM +0100, Arnd Bergmann wrote:
+> I took a scripted approach to look at some product kernels for patches
+> backported into vendor kernels. This is a set of (mostly) bugfixes I found
+> in Spreadtrum's linux-4.14 kernel that are missing in v4.14.107:
+> 
+> 83dc7e3dea76 scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
+> 099a95f3591a PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+> 1cab826b30c6 PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be writable
+> b330104fa76d PCI: endpoint: Use EPC's device in dma_alloc_coherent()/dma_free_coherent()
+> 36d46cdb43ef rtc: Fix overflow when converting time64_t to rtc_time
+> 1b5d43cfb697 sched/cpufreq/schedutil: Fix error path mutex unlock
+> 5fb5caee92ba pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
+> f25a646fbe20 power: supply: charger-manager: Fix incorrect return value
+> 
+> Only a small number of patches here, the vendor tree is fairly close to
+> mainline. All commits apply cleanly through git-cherry-pick.
 
-Kangjie,
+Thanks for these, now queued up to 4.14.y and a few other branches that
+needed them.
 
-> In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid
-> NULL pointer dereference.
-
-Applied to 5.1/scsi-fixes, thanks.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+greg k-h
