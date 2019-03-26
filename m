@@ -2,205 +2,101 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA47C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A951020857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7728320823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="l86VO2N8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3tr4I3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbfCZGWx (ORCPT
+        id S1726367AbfCZG2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:22:53 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:58943 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730422AbfCZGWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:22:52 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44T1Jn3r3fz9v25f;
-        Tue, 26 Mar 2019 07:22:49 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=l86VO2N8; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id qWY4bGBmanWW; Tue, 26 Mar 2019 07:22:49 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44T1Jn2crJz9v08b;
-        Tue, 26 Mar 2019 07:22:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553581369; bh=w9ZTq+9gYrT7Z+ul8f2ugxptugC8KBMJKVc640Gv0vU=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=l86VO2N82/ufoOs+unzzDSDLD+Qvv3O2AOGdtY9EFXUQA4sWEPcR58HdGJPnMy8oC
-         8J3TzAKKrboPnTZLEHmpE//gghVqDRcFVrl3xsstv27OGo7ESHgNqlSCUwVRRTF/xf
-         eso5woF+OX3Ll0czr7JyCBOMo3QG/XRj0ZZDcaSU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30B2F8B77C;
-        Tue, 26 Mar 2019 07:22:50 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id SUe2GIoZZt36; Tue, 26 Mar 2019 07:22:50 +0100 (CET)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E80448B74C;
-        Tue, 26 Mar 2019 07:22:49 +0100 (CET)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id C022E69D61; Tue, 26 Mar 2019 06:22:49 +0000 (UTC)
-Message-Id: <cb99fd3c53dbc3cafcc1a09e1c07397a458b15c3.1553581290.git.christophe.leroy@c-s.fr>
-In-Reply-To: <670fb3e35793383652b961458c47ce865736a65f.1553581290.git.christophe.leroy@c-s.fr>
-References: <670fb3e35793383652b961458c47ce865736a65f.1553581290.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 3/3] powerpc/mm: print hash info in a helper
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 26 Mar 2019 06:22:49 +0000 (UTC)
+        Tue, 26 Mar 2019 02:28:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37942 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfCZG2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:28:32 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g37so1149496plb.5;
+        Mon, 25 Mar 2019 23:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9klk9DlyPNX6ZYfIChAqq8jdp3QwCHVRJFf8Xe5M+PU=;
+        b=o3tr4I3fu98XpgbdXY3MbFjsf36sDedDYTqOYZriNzQ21G6mXd4ZsNeyNOBEDqrYuD
+         L2XkewXa0bWHkS2rBOmWrA098acUvKbeYN29Gd3rPqbdttzu0kDBf1QfJUwmH9V9gAUL
+         U3SCwf3RlE2hTzNQlpcWeqNV12qHyAFs4sjD0rGXmy3tQDGvfs5psYOsUzuBrxMxUmh+
+         IgHddDrs6fTCcmamAz0So8b6J7T5sGn6jEskRhPPAkhXsKK3HPu7/Wnh97LnARTpZ0q6
+         qpy+1NxYxIxsmVOqpcSjIEjki4xkyr5H4nYb3RWEJ3VzDaK2mxc2ttfR6Rsblb+ZM+1A
+         qRig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9klk9DlyPNX6ZYfIChAqq8jdp3QwCHVRJFf8Xe5M+PU=;
+        b=ovxOKbDSVSbZHtdvaWIDw4mwL6CXYmB5YT4Qa/6/TuHhlZ90QzefDFoAkSCPok++Kf
+         /U0aCX/be5qk3A8BfynjJrlWpXltA6ckfrIQpGnWPhklqFPo4sahCFeOHLDWmHpYcRwh
+         Y//OBndCpE3+4FV4WCY3hmXqvO6+/fIjI8LdZIomCTFREX8VIZQUGc1kFAJSJKKAS1Ob
+         7f8PXSCqxl1ARkpObTzkd/SBElAAvxLcar2lz5ljt49f7B+E8Nesro7YbFOlJBjV6DwI
+         cdhubOeJrFXxu3TULfvejfvX2Y9gqdOHVdJPKiNbSzeksu3oo4PjZLWUX3Zv9Gc9XNLn
+         GJEQ==
+X-Gm-Message-State: APjAAAW8xKLcFh/IIqSf1o6ghasUt5sqz/C0AXqjeyfiSJyST4KrOIRm
+        B3pFPbgGtf+Mxb7cy3XhrtQ=
+X-Google-Smtp-Source: APXvYqxOA/AuPgKigjA5FxvfAC2vKsjFbZCbDGg4XxjJXykV2VKg0jlhMvDbvvqLnqvIKAZJjKRObg==
+X-Received: by 2002:a17:902:8d8b:: with SMTP id v11mr29974203plo.241.1553581712068;
+        Mon, 25 Mar 2019 23:28:32 -0700 (PDT)
+Received: from tianyukernel.corp.microsoft.com ([167.220.255.93])
+        by smtp.googlemail.com with ESMTPSA id e123sm26171542pfe.35.2019.03.25.23.28.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 25 Mar 2019 23:28:30 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     davem@davemloft.net, mchehab+samsung@kernel.org,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        tglx@linutronix.de, mingo@kernel.org, konrad.wilk@oracle.com,
+        jpoimboe@redhat.com, peterz@infradead.org, mojha@codeaurora.org,
+        jkosina@suse.cz, riel@surriel.com, peterz@infraded.org,
+        Tianyu.Lan@microsoft.com, luto@kernel.org,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        sashal@kernel.org, joe@perches.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Fix Hyperv vIOMMU driver file name
+Date:   Tue, 26 Mar 2019 14:28:21 +0800
+Message-Id: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce #ifdef mess by defining a helper to print
-hash info at startup.
+From: Lan Tianyu <Tianyu.Lan@microsoft.com>
 
-In the meantime, remove the display of hash table address
-to reduce leak of non necessary information.
+The Hyperv vIOMMU file name should be "hyperv-iommu.c" rather
+than "hyperv_iommu.c". This patch is to fix it.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
 ---
-v2: added header to avoid sparse warning
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/powerpc/kernel/setup-common.c | 19 +------------------
- arch/powerpc/mm/hash_utils_64.c    | 10 ++++++++++
- arch/powerpc/mm/mmu_decl.h         |  5 ++++-
- arch/powerpc/mm/ppc_mmu_32.c       |  9 ++++++++-
- 4 files changed, 23 insertions(+), 20 deletions(-)
-
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 2e5dfb6e0823..f24a74f7912d 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -799,12 +799,6 @@ void arch_setup_pdev_archdata(struct platform_device *pdev)
- static __init void print_system_info(void)
- {
- 	pr_info("-----------------------------------------------------\n");
--#ifdef CONFIG_PPC_BOOK3S_64
--	pr_info("ppc64_pft_size    = 0x%llx\n", ppc64_pft_size);
--#endif
--#ifdef CONFIG_PPC_BOOK3S_32
--	pr_info("Hash_size         = 0x%lx\n", Hash_size);
--#endif
- 	pr_info("phys_mem_size     = 0x%llx\n",
- 		(unsigned long long)memblock_phys_mem_size());
- 
-@@ -826,18 +820,7 @@ static __init void print_system_info(void)
- 	pr_info("firmware_features = 0x%016lx\n", powerpc_firmware_features);
- #endif
- 
--#ifdef CONFIG_PPC_BOOK3S_64
--	if (htab_address)
--		pr_info("htab_address      = 0x%p\n", htab_address);
--	if (htab_hash_mask)
--		pr_info("htab_hash_mask    = 0x%lx\n", htab_hash_mask);
--#endif
--#ifdef CONFIG_PPC_BOOK3S_32
--	if (Hash)
--		pr_info("Hash              = 0x%p\n", Hash);
--	if (Hash_mask)
--		pr_info("Hash_mask         = 0x%lx\n", Hash_mask);
--#endif
-+	print_system_hash_info();
- 
- 	if (PHYSICAL_START > 0)
- 		pr_info("physical_start    = 0x%llx\n",
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index 0a4f939a8161..cef2d05fdb9b 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -65,6 +65,8 @@
- #include <asm/pte-walk.h>
- #include <asm/asm-prototypes.h>
- 
-+#include "mmu_decl.h"
-+
- #ifdef DEBUG
- #define DBG(fmt...) udbg_printf(fmt)
- #else
-@@ -1909,3 +1911,11 @@ static int __init hash64_debugfs(void)
- }
- machine_device_initcall(pseries, hash64_debugfs);
- #endif /* CONFIG_DEBUG_FS */
-+
-+void __init print_system_hash_info(void)
-+{
-+	pr_info("ppc64_pft_size    = 0x%llx\n", ppc64_pft_size);
-+
-+	if (htab_hash_mask)
-+		pr_info("htab_hash_mask    = 0x%lx\n", htab_hash_mask);
-+}
-diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-index f7f1374ba3ee..dc617ade83ab 100644
---- a/arch/powerpc/mm/mmu_decl.h
-+++ b/arch/powerpc/mm/mmu_decl.h
-@@ -83,6 +83,8 @@ static inline void _tlbivax_bcast(unsigned long address, unsigned int pid,
- }
- #endif
- 
-+static inline void print_system_hash_info(void) {}
-+
- #else /* CONFIG_PPC_MMU_NOHASH */
- 
- extern void hash_preload(struct mm_struct *mm, unsigned long ea,
-@@ -92,6 +94,8 @@ extern void hash_preload(struct mm_struct *mm, unsigned long ea,
- extern void _tlbie(unsigned long address);
- extern void _tlbia(void);
- 
-+void print_system_hash_info(void);
-+
- #endif /* CONFIG_PPC_MMU_NOHASH */
- 
- #ifdef CONFIG_PPC32
-@@ -105,7 +109,6 @@ extern unsigned int rtas_data, rtas_size;
- 
- struct hash_pte;
- extern struct hash_pte *Hash;
--extern unsigned long Hash_size, Hash_mask;
- 
- #endif /* CONFIG_PPC32 */
- 
-diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
-index 088f14d57cce..864096489b6d 100644
---- a/arch/powerpc/mm/ppc_mmu_32.c
-+++ b/arch/powerpc/mm/ppc_mmu_32.c
-@@ -37,7 +37,7 @@
- #include "mmu_decl.h"
- 
- struct hash_pte *Hash;
--unsigned long Hash_size, Hash_mask;
-+static unsigned long Hash_size, Hash_mask;
- unsigned long _SDR1;
- 
- struct ppc_bat BATS[8][2];	/* 8 pairs of IBAT, DBAT */
-@@ -392,3 +392,10 @@ void setup_initial_memory_limit(phys_addr_t first_memblock_base,
- 	else /* Anything else has 256M mapped */
- 		memblock_set_current_limit(min_t(u64, first_memblock_size, 0x10000000));
- }
-+
-+void __init print_system_hash_info(void)
-+{
-+	pr_info("Hash_size         = 0x%lx\n", Hash_size);
-+	if (Hash_mask)
-+		pr_info("Hash_mask         = 0x%lx\n", Hash_mask);
-+}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf7..403247d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7175,7 +7175,7 @@ F:	drivers/net/hyperv/
+ F:	drivers/scsi/storvsc_drv.c
+ F:	drivers/uio/uio_hv_generic.c
+ F:	drivers/video/fbdev/hyperv_fb.c
+-F:	drivers/iommu/hyperv_iommu.c
++F:	drivers/iommu/hyperv-iommu.c
+ F:	net/vmw_vsock/hyperv_transport.c
+ F:	include/linux/hyperv.h
+ F:	include/uapi/linux/hyperv.h
 -- 
-2.13.3
+2.7.4
 
