@@ -4,70 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193B3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ED9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26952084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cuvbwz8H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R2jr48bz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfCZS24 (ORCPT
+        id S1732915AbfCZS3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:28:56 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:42284 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732881AbfCZS2x (ORCPT
+        Tue, 26 Mar 2019 14:29:00 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:43024 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732891AbfCZS24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:28:53 -0400
-Received: by mail-pf1-f201.google.com with SMTP id f67so12469631pfh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:28:53 -0700 (PDT)
+        Tue, 26 Mar 2019 14:28:56 -0400
+Received: by mail-qk1-f202.google.com with SMTP id m8so12378314qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:28:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=H3HRoHYDWMArQkaxv1MNV9sbVAN4QTLQDsX3m+S9eoU=;
-        b=Cuvbwz8H/UPT74uyS/N/4qnzLflOCWavMy5nGUSyYS7YEzjkinR90BjdsCrgcJkE3I
-         nx4KbkC9dnoe9GkBObKBMRpDYEdqno8HqIh6XA2YCeqV6CvG7JzzRNQF6q8pd5BERf2L
-         RFxm3yO2wG89tTrr53Mp5FuBliWeQ+U4jl6R2mVmbyq/irL9EVf0dyxEQAXY+gsnOrUa
-         sjp/qtKV1gEMDqiY5H2Ik89SIJ7l/HNOQiiyV055Dk+vHQVGGJnndcLvaKRB3EJIEJ7P
-         b5O2WEtybYZzvX3/wEfbV1lJ62nVHR0Vg+h1YgKtbRZ41TCuXQBY+ohnhrP2W4Cl8SFS
-         GMMw==
+        bh=ahwCRT59PUZ2OMjvkc7Um/co/AqhkFAUQugbjFE3pQg=;
+        b=R2jr48bzMerg1oMgmmmSMR8HlYXKL/FiNAnxSWmcCueCQBGJw2kMfBP1Nz952fYkw0
+         zBz5k5I+oWx5YpGuyN8UqSbN973STVZEUATKECDMUb5svS2fWjQvt7fJEWLHBIMpvKQR
+         C/P22YtQMfpusPgycXDw6S5EOrM2LaVN/i1Atun13qW8SO8k1BgLeiM3rFsUS6J6EN4j
+         A/RsDbmdC/nSF42Vgk+LeCcwJDHXkWuek2Ou5bla/HgqZtwODBp8cVGYwB1D49tefdjL
+         mYL23awC4c+Nv8UwxlbIZPdnFQlQjWNjHk/xls8WLrxuEqzUlYy5VSWjSF4rcy2Ulwku
+         nLwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=H3HRoHYDWMArQkaxv1MNV9sbVAN4QTLQDsX3m+S9eoU=;
-        b=jnKhZnZrGrt6pBB2jz3jAh5ZYhoFxR0fuaveYJ/JQiYZyVMMWOsJ7cqmL5hz4Qjffw
-         Q4vpmo2BALPqDDrf6tHQnb+MYOqII1eMGAaAn9dUvCGGbZDKduEwSVKFzzcP3CyTSbUM
-         uk2Mc0Qu10W3dI74kHze4SjTj5kPO18avjOHuVRu0Be3GaufBiczdH+Fw564Nv0vr7RU
-         uSgEQsbAhMUVS7wuPUHerSKipN3EzFktLLjC6MdPqu1OHwwqCSnZultxPAjRVq4DH7UR
-         4nyGNgqzOdUrB3yzfUe9cjAfa0lwKnqfdKniI95rn/vtbxwualP3A8zspjvFmo+9hMXu
-         u/eg==
-X-Gm-Message-State: APjAAAUmPl3SujxayNoTm1MXWk2EnBgr9J8WSqm8Wp4/2ZWq1YIVDLfH
-        Ryo1YszD+1O3edMAo4V4PDatoJLrosSOFV87yX36bg==
-X-Google-Smtp-Source: APXvYqwphmFpi3T6TN1vNeRaZ63APL0Md38wVERg+esYXiBHNy7zUZ/YoDtb9yiRRaTqqwrQlnsrIfBnrwPddl2w0CiOFw==
-X-Received: by 2002:a63:f146:: with SMTP id o6mr29796370pgk.360.1553624932579;
- Tue, 26 Mar 2019 11:28:52 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 11:27:39 -0700
+        bh=ahwCRT59PUZ2OMjvkc7Um/co/AqhkFAUQugbjFE3pQg=;
+        b=MQ+5c2I8Oy4oK6CvFPpZv0oky5p6vwU3hdnc9JnwKnGKoXYGjWyO6S/QzkwK/Jo91V
+         ZGl8iClxxtOeRlJML1ka0QoWCpFXl2YOyyB7A7T7gP3t8YpMCgnY8CvimLA5VMmuLVy9
+         ReJ80XAyUkt5yE2IMdmaD298mwidDkpHAJcbqVqgMevJLX2t3A4nyBg4bSPNvumXMZUl
+         +tfjKi2wbf+OY0tMH6oIzhVOFdorXVKnifrR15TcBXmJk+0oEMyMKzTF0bs7QneRspPM
+         JFhSQy4SAfXvZJIyabDEwxX2Wk+TOuh00C043PdlN4hIyWN6eiCVXGhfnSCojEU5ZOhT
+         MqlQ==
+X-Gm-Message-State: APjAAAVLYRU1rA6iRTPvvH0SAaa2dSCWzpqQJ+V3/2mAA8bWxf3LIjNo
+        zl8hPck2P+2/9Kk6EsFtyRJmY4fDkAq9mJzsyy4D3g==
+X-Google-Smtp-Source: APXvYqy+PZO657NT2rtW8JWUD/4TRR5zbeRGjli9Y62NtWOMN/t8xuRoQeqW8HHqnCrtjXRhw6Wm22riuwZjNviQj7ZjFg==
+X-Received: by 2002:a0c:ad4a:: with SMTP id v10mr26132549qvc.232.1553624935093;
+ Tue, 26 Mar 2019 11:28:55 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:27:40 -0700
 In-Reply-To: <20190326182742.16950-1-matthewgarrett@google.com>
-Message-Id: <20190326182742.16950-24-matthewgarrett@google.com>
+Message-Id: <20190326182742.16950-25-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190326182742.16950-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH V31 23/25] Lock down perf when in confidentiality mode
+Subject: [PATCH V31 24/25] lockdown: Print current->comm in restriction messages
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, dhowells@redhat.com,
         linux-api@vger.kernel.org, luto@kernel.org,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+        Matthew Garrett <mjg59@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,35 +73,160 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Disallow the use of certain perf facilities that might allow userspace to
-access kernel data.
+Print the content of current->comm in messages generated by lockdown to
+indicate a restriction that was hit.  This makes it a bit easier to find
+out what caused the message.
+
+The message now patterned something like:
+
+	Lockdown: <comm>: <what> is restricted; see man kernel_lockdown.7
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 ---
- kernel/events/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/ima.h                 |  9 ++++++
+ kernel/kexec_file.c                 |  7 +++-
+ security/integrity/ima/ima.h        |  2 ++
+ security/integrity/ima/ima_main.c   |  2 +-
+ security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
+ security/lock_down.c                |  4 +--
+ 6 files changed, 70 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3cd13a30f732..6ad3d83c091c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10461,6 +10461,12 @@ SYSCALL_DEFINE5(perf_event_open,
- 			return -EINVAL;
- 	}
- 
-+	if ((attr.sample_type & PERF_SAMPLE_REGS_INTR) &&
-+	    kernel_is_locked_down("PERF_SAMPLE_REGS_INTR",
-+				  LOCKDOWN_CONFIDENTIALITY))
-+		/* REGS_INTR can leak data, lockdown must prevent this */
-+		return -EPERM;
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index b5e16b8c50b7..05921227d700 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -127,4 +127,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+ 	return 0;
+ }
+ #endif /* CONFIG_IMA_APPRAISE */
 +
- 	/* Only privileged users can get physical addresses */
- 	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR) &&
- 	    perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++extern bool ima_appraise_signature(enum kernel_read_file_id func);
++#else
++static inline bool ima_appraise_kexec_signature(enum kernel_read_file_id func)
++{
++	return false;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+ #endif /* _LINUX_IMA_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index a1cc37c8b43b..7599039623a7 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -240,7 +240,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 
+ 		ret = 0;
+ 
+-		if (kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)) {
++		/* If IMA is guaranteed to appraise a signature on the kexec
++		 * image, permit it even if the kernel is otherwise locked
++		 * down.
++		 */
++		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
++		    kernel_is_locked_down(reason, LOCKDOWN_INTEGRITY)) {
+ 			ret = -EPERM;
+ 			goto out;
+ 		}
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index cc12f3449a72..fe03cc6f1ca4 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -115,6 +115,8 @@ struct ima_kexec_hdr {
+ 	u64 count;
+ };
+ 
++extern const int read_idmap[];
++
+ #ifdef CONFIG_HAVE_IMA_KEXEC
+ void ima_load_kexec_buffer(void);
+ #else
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 4ffac4f5c647..106f06dee9d1 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -442,7 +442,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ 	return 0;
+ }
+ 
+-static const int read_idmap[READING_MAX_ID] = {
++const int read_idmap[READING_MAX_ID] = {
+ 	[READING_FIRMWARE] = FIRMWARE_CHECK,
+ 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+ 	[READING_MODULE] = MODULE_CHECK,
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 122797023bdb..f8f1cdb74a4f 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1341,3 +1341,53 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 	return 0;
+ }
+ #endif	/* CONFIG_IMA_READ_POLICY */
++
++#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
++/*
++ * ima_appraise_signature: whether IMA will appraise a given function using
++ * an IMA digital signature. This is restricted to cases where the kernel
++ * has a set of built-in trusted keys in order to avoid an attacker simply
++ * loading additional keys.
++ */
++bool ima_appraise_signature(enum kernel_read_file_id id)
++{
++	struct ima_rule_entry *entry;
++	bool found = false;
++	enum ima_hooks func;
++
++	if (id >= READING_MAX_ID)
++		return false;
++
++	func = read_idmap[id] ?: FILE_CHECK;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, ima_rules, list) {
++		if (entry->action != APPRAISE)
++			continue;
++
++		/*
++		 * A generic entry will match, but otherwise require that it
++		 * match the func we're looking for
++		 */
++		if (entry->func && entry->func != func)
++			continue;
++
++		/*
++		 * We require this to be a digital signature, not a raw IMA
++		 * hash.
++		 */
++		if (entry->flags & IMA_DIGSIG_REQUIRED)
++			found = true;
++
++		/*
++		 * We've found a rule that matches, so break now even if it
++		 * didn't require a digital signature - a later rule that does
++		 * won't override it, so would be a false positive.
++		 */
++		break;
++	}
++
++	rcu_read_unlock();
++	return found;
++}
++#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+diff --git a/security/lock_down.c b/security/lock_down.c
+index 0f9ef4c30aa8..6bcffd0bb200 100644
+--- a/security/lock_down.c
++++ b/security/lock_down.c
+@@ -70,8 +70,8 @@ bool __kernel_is_locked_down(const char *what, enum lockdown_level level,
+ 			     bool first)
+ {
+ 	if ((kernel_locked_down >= level) && what && first)
+-		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
+-			  what);
++		pr_notice("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
++			  current->comm, what);
+ 	return (kernel_locked_down >= level);
+ }
+ EXPORT_SYMBOL(__kernel_is_locked_down);
 -- 
 2.21.0.392.gf8f6787159e-goog
 
