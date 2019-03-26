@@ -2,88 +2,93 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2247BC10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AF4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAA82084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A6E20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 01:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553563385;
-	bh=XTza0M4aOIclUOllkCeDM3SweeaLQkRbgv14ot7P5Qw=;
+	s=default; t=1553563392;
+	bh=M+7MENbk1nNPgov0KHp8UWU2y624IzxWo/AlDpDqK28=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Tyl6Wue8otvKFP8ApI1j2Hj73FrUN4PMCPgYNerFMnlLeIIi6lDuHvnm8SVRXQpuu
-	 LyTGFNZpx2tXGCwbYNh3bbZ2ESg+rjEccsawEOn6LPw7fB4Ghu5La+FVTBL/86OhrM
-	 V1jotgueJSU9OJTikuBFJNLpxTFdpRuLyqqw2YYo=
+	b=c9X0WdOCTUYxc1QWhynZaA4QRz+faYsMf/iDIvn2vivJHTAq/pSmAlqrTQ2HcqHoF
+	 PNGtbMG3RmUcsx4zZkbfylaedgnk1NG0fBRiClQxQtBlq4+xCQNkPPgwiCa1YJEAVL
+	 YLkXjEH0Ggy4Au3MWUyGFWhav4ZkTCkXE9zpitug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfCZBXD (ORCPT
+        id S1730633AbfCZBXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 21:23:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
+        Mon, 25 Mar 2019 21:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfCZBXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 21:23:03 -0400
+        id S1727412AbfCZBXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 21:23:10 -0400
 Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AE7C20693;
-        Tue, 26 Mar 2019 01:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71F27206DF;
+        Tue, 26 Mar 2019 01:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553563382;
-        bh=XTza0M4aOIclUOllkCeDM3SweeaLQkRbgv14ot7P5Qw=;
+        s=default; t=1553563389;
+        bh=M+7MENbk1nNPgov0KHp8UWU2y624IzxWo/AlDpDqK28=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VFeKunSJkntdkjJHjlVf//jIy26/P3SsKv3YjWqn70wScB31zEPrmMYuIgAYevBqg
-         1KgyKvX0j+vGNlMQUjL2MXWgM5h2A5Me9sZAclf3VwPNEymYsz+lwSSgHxtDJhkBl8
-         gay4RgDYDP+QOdHVbNkN3lynnYsSRoh1IlaDDu78=
-Date:   Tue, 26 Mar 2019 10:09:11 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
+        b=vJ3gUwIhTPMAPiD+BGfROqtuvcpmcJryICFmlfj72ubg7NlTLD+WlM1HgGz+8fsSu
+         MzLYFgDl1Zg+DrJdmCgVXgJ/KMIiUO497ArDg7MK81kp/7JN8buEK3Fhnha9xCsCkV
+         qv74qpHuZ4czfZ/LSvoTOUOU3ROJj5Y+a/mt4uKg=
+Date:   Tue, 26 Mar 2019 10:13:19 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravindra Lokhande <rlokhande@nvidia.com>,
-        Vinod Koul <vinod.koul@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [BACKPORT 4.4.y 02/25] ALSA: compress: add support for 32bit
- calls in a 64bit kernel
-Message-ID: <20190326010911.GB29420@kroah.com>
+Cc:     stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Ralf Spenneberg <ralf@spenneberg.net>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BACKPORT 4.4.y 04/25] USB: iowarrior: fix oops with malicious
+ USB descriptors
+Message-ID: <20190326011319.GC29420@kroah.com>
 References: <20190322154425.3852517-1-arnd@arndb.de>
- <20190322154425.3852517-3-arnd@arndb.de>
+ <20190322154425.3852517-5-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190322154425.3852517-3-arnd@arndb.de>
+In-Reply-To: <20190322154425.3852517-5-arnd@arndb.de>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 04:43:53PM +0100, Arnd Bergmann wrote:
-> From: Ravindra Lokhande <rlokhande@nvidia.com>
+On Fri, Mar 22, 2019 at 04:43:55PM +0100, Arnd Bergmann wrote:
+> From: Josh Boyer <jwboyer@fedoraproject.org>
 > 
-> Compress offload does not support ioctl calls from a 32bit userspace
-> in a 64 bit kernel. This patch adds support for ioctls from a 32bit
-> userspace in a 64bit kernel
+> The iowarrior driver expects at least one valid endpoint.  If given
+> malicious descriptors that specify 0 for the number of endpoints,
+> it will crash in the probe function.  Ensure there is at least
+> one endpoint on the interface before using it.
 > 
-> Signed-off-by: Ravindra Lokhande <rlokhande@nvidia.com>
-> Acked-by: Vinod Koul <vinod.koul@intel.com>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> (cherry picked from commit c10368897e104c008c610915a218f0fe5fa4ec96)
+> The full report of this issue can be found here:
+> http://seclists.org/bugtraq/2016/Mar/87
+> 
+> Reported-by: Ralf Spenneberg <ralf@spenneberg.net>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> (cherry picked from commit 4ec0ef3a82125efc36173062a50624550a900ae0)
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  sound/core/compress_offload.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  drivers/usb/misc/iowarrior.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-How is this not a "new feature"?  What bug does this fix?  Has this ever
-worked in the past?
+This commit has been in the tree for a long time.  It was in the 4.4.7
+release, back in April 2016.  And then it was reverted in commit
+b7321e81fc36 ("USB: iowarrior: fix NULL-deref at probe") as it broke
+systems.  So why add it back, the correct functionality should be there
+today, right?
 
 thanks,
 
