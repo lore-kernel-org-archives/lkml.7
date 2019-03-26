@@ -2,107 +2,144 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FB8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D214F2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6934E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:30:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DmrsHUeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfCZH3P (ORCPT
+        id S1730872AbfCZHaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:29:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52649 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfCZH3P (ORCPT
+        Tue, 26 Mar 2019 03:30:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36658 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfCZHaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:29:15 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2Q7ShIX2287211
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 26 Mar 2019 00:28:43 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2Q7Sbcj2287204;
-        Tue, 26 Mar 2019 00:28:37 -0700
-Date:   Tue, 26 Mar 2019 00:28:37 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Tony Luck <tipbot@zytor.com>
-Message-ID: <tip-1762058319f1cf34b11fc6b82678828ecc88c8ee@git.kernel.org>
-Cc:     nicolas.ferre@microchip.com, tony.luck@intel.com,
-        tglx@linutronix.de, davem@davemloft.net, joe@perches.com,
-        hpa@linux.intel.com, gregkh@linuxfoundation.org, mingo@kernel.org,
-        mchehab+samsung@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bp@suse.de, hpa@zytor.com
-Reply-To: hpa@linux.intel.com, joe@perches.com, tglx@linutronix.de,
-          davem@davemloft.net, nicolas.ferre@microchip.com,
-          tony.luck@intel.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          bp@suse.de, gregkh@linuxfoundation.org,
-          mchehab+samsung@kernel.org, mingo@kernel.org,
-          linux-edac@vger.kernel.org
-In-Reply-To: <20190325233416.GB8869@agluck-desk>
-References: <20190325233416.GB8869@agluck-desk>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:ras/core] MAINTAINERS: Fix file pattern for X86 MCE
- INFRASTRUCTURE
-Git-Commit-ID: 1762058319f1cf34b11fc6b82678828ecc88c8ee
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 26 Mar 2019 03:30:24 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2Q7U93F129039;
+        Tue, 26 Mar 2019 02:30:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553585409;
+        bh=jwL7Cz9BeFMyoI6ixuedj2xZ3alTOxzKakeqri8mXn4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=DmrsHUeU7ydumkZ/bnSq4nmS0kKgC6t9btJcLR61n14xQ9Ta3n5zxB6UwMsLM7JbW
+         YyZxtuvZyOUptAO82mWTanmgHA3NuKeZQDvKCbIUDC47ue3Xo2H+auUtJL5+I8iU4+
+         /ROPFFDsW+2o+EYzpF7abUf7tIG6LhvNAI1AfIfA=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2Q7U9xo020902
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 Mar 2019 02:30:09 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 26
+ Mar 2019 02:30:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 26 Mar 2019 02:30:08 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2Q7U3is055197;
+        Tue, 26 Mar 2019 02:30:05 -0500
+Subject: Re: [PATCH v6 0/3] Stingray USB PHY driver support
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Tejun Heo <tj@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1552986944-3398-1-git-send-email-srinath.mannam@broadcom.com>
+ <7490f894-3c0b-c7cd-5ff0-4eea6ea2c199@broadcom.com>
+ <1f910861-7d3b-63ad-da79-9515eae2b230@gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <90db2ec9-c960-8cf5-c5d3-1e8e85d6ad60@ti.com>
+Date:   Tue, 26 Mar 2019 12:59:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <1f910861-7d3b-63ad-da79-9515eae2b230@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1762058319f1cf34b11fc6b82678828ecc88c8ee
-Gitweb:     https://git.kernel.org/tip/1762058319f1cf34b11fc6b82678828ecc88c8ee
-Author:     Tony Luck <tony.luck@intel.com>
-AuthorDate: Mon, 25 Mar 2019 16:34:17 -0700
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Tue, 26 Mar 2019 08:23:53 +0100
 
-MAINTAINERS: Fix file pattern for X86 MCE INFRASTRUCTURE
 
-Code restructuring renamed arch/x86/kernel/cpu/mcheck/ to
-be arch/x86/kernel/cpu/mce/
+On 22/03/19 10:12 PM, Florian Fainelli wrote:
+> On 3/19/19 11:38 AM, Scott Branden wrote:
+>> Thanks Srinath and Rob - patch series looks good now.
+>>
+>> patch series,
+>>
+>> Acked-by: Scott Branden <scott.branden@broadcom.com>
+>>
+> 
+> Kishon, can you let me know when you apply patches 1 and 2 so I can
+> queue up patch 3 for inclusion the 5.2 ARM SoC pull request? Thanks!
 
-Update the MAINTAINERS file pattern to account for this change.
+merged the dt-binding and sr-usb driver, thanks.
 
-Fixes: 21afaf181362 ("x86/mce: Streamline MCE subsystem's naming")
-Reported-by: Joe Perches <joe@perches.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: "H. Peter Anvin" <hpa@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190325233416.GB8869@agluck-desk
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf70b548..58acbc246adc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16910,7 +16910,7 @@ M:	Tony Luck <tony.luck@intel.com>
- M:	Borislav Petkov <bp@alien8.de>
- L:	linux-edac@vger.kernel.org
- S:	Maintained
--F:	arch/x86/kernel/cpu/mcheck/*
-+F:	arch/x86/kernel/cpu/mce/*
- 
- X86 MICROCODE UPDATE SUPPORT
- M:	Borislav Petkov <bp@alien8.de>
+-Kishon
+> 
+>>
+>> On 2019-03-19 2:15 a.m., Srinath Mannam wrote:
+>>> These patches add Stingray USB PHY driver and its corresponding
+>>> DT nodes with documentation.
+>>>
+>>> This patch set is based on Linux-5.0-rc2.
+>>>
+>>> Changes from v5:
+>>>    - Removed redundant address and size cells in DT nodes.
+>>>
+>>> Changes from v4:
+>>>    - Addressed Rob Herring review comments
+>>>       - Removed child nodes and added #phy-cells 1
+>>>       - Added xlate function to get phy using phandle argument.
+>>>
+>>> Changes from v3:
+>>>    - Addressed Rob Herring review comments
+>>>       - Changed compatible strings.
+>>>       - updated driver based on new compatible strings.
+>>>
+>>> Changes from v2:
+>>>    - Addressed Kishon review comments
+>>>    - Updated patchset to Linux-5.0-rc2
+>>>
+>>> Changes from v1:
+>>>    - Addressed Kishon review comments
+>>>    - phy init call return value handle
+>>>    Srinath Mannam (3):
+>>>    dt-bindings: phy: Add Stingray USB PHY binding document
+>>>    phy: sr-usb: Add Stingray USB PHY driver
+>>>    arm64: dts: Add USB DT nodes for Stingray SoC
+>>>
+>>>   .../bindings/phy/brcm,stingray-usb-phy.txt         |  32 ++
+>>>   .../boot/dts/broadcom/stingray/stingray-usb.dtsi   |  72 ++++
+>>>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   1 +
+>>>   drivers/phy/broadcom/Kconfig                       |  11 +
+>>>   drivers/phy/broadcom/Makefile                      |   1 +
+>>>   drivers/phy/broadcom/phy-bcm-sr-usb.c              | 393
+>>> +++++++++++++++++++++
+>>>   6 files changed, 510 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+>>>   create mode 100644
+>>> arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi
+>>>   create mode 100644 drivers/phy/broadcom/phy-bcm-sr-usb.c
+>>>
+> 
+> 
