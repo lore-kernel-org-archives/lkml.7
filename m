@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66601C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D1B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329412075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553611389;
-	bh=YusBWNd1m2h9+bvVZMpufMXf7IIcuLypMIal2VyLILA=;
+	s=default; t=1553611394;
+	bh=MK63LAaMOEmafKNTp66YrZskr8PGaH5lwoDurIg9zKg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VvSMMQntLNykcwKj+1tem5fzBM6ueWv5rUlQCFzuB9vQcwUvvKmpZ1VW2R5yEPLkT
-	 x0UmyT7kQMhfclOFCLkdHcMWRM1FAzhQVCdzthRBcRTQP4AvUwY/GL5UafQaW4f3Bd
-	 D7//6N2gx+vffpteFplbOhgE2F5MAGwZs7w5OB6g=
+	b=fhopssoCy3lJ3iN4jXCSWF3xajLrCTkWFpe9G+putFamWr/fhCNtluoO3Ce5iM9Dy
+	 lchViX8/wvh+9nhFAl/b+McHV0AM0UMTyCIYisTknhM4S8OvM2rI8ruD3YV8QbgZKL
+	 le4ycl76AmsPgKZICwupKfB0ySsJIi7V9uP4JZ0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbfCZOnH (ORCPT
+        id S1731781AbfCZOnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:43:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35828 "EHLO
+        Tue, 26 Mar 2019 10:43:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36002 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731859AbfCZOnF (ORCPT
+        with ESMTP id S1730587AbfCZOnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:43:05 -0400
+        Tue, 26 Mar 2019 10:43:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NrSmLC3B5CqhSksoqOXZFsAD66Zcqz+zRpzq4f7YvbE=; b=NlOpRQtvTllw
-        sF3x/Q/vPqCxLcJWX+6OC/cXR56OrqaWoZ2Jr5s+nDCG4gcHxE8de6ud1oWqAQSMyCTMxkCcEznju
-        VN2Byak+9/gSfj8d9Y50bw0r+zIiOtV1SU+taUpNntbSzGpD6vr7DOXJjKlWeORHYUzDESZJwlCef
-        oB63k=;
+        List-Archive; bh=Ld7r/9j3uBVnLYfY9l0AmmGU8L0G1ZbodlEOxhMxJWA=; b=LweyP4vkFGwa
+        UwRu5CiT1TcdQJDfC5JnmMOoY62flvVylRvxZJk2lTKYR5L1/GrHzWGLVfFIByt/Z/nIuf5BzT/TL
+        3Y4ne6lBK/vkmWEQcJdZi72TnETe5LIZYmUz3La0RV5WX6ilX0XsCUVx8kjAPX4R0oDIiBX/3PdfR
+        HddcA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h8nI6-0007jC-0r; Tue, 26 Mar 2019 14:43:02 +0000
+        id 1h8nI7-0007jG-KE; Tue, 26 Mar 2019 14:43:03 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 2C7B81121B57; Tue, 26 Mar 2019 14:43:01 +0000 (GMT)
+        id C92E51121B57; Tue, 26 Mar 2019 14:43:02 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: tps65217: Fix off-by-one for latest seletor of tps65217_uv1_ranges" to the regulator tree
+Subject: Applied "regulator: sc2731: Constify regulators" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190326144301.2C7B81121B57@debutante.sirena.org.uk>
-Date:   Tue, 26 Mar 2019 14:43:01 +0000 (GMT)
+Message-Id: <20190326144302.C92E51121B57@debutante.sirena.org.uk>
+Date:   Tue, 26 Mar 2019 14:43:02 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps65217: Fix off-by-one for latest seletor of tps65217_uv1_ranges
+   regulator: sc2731: Constify regulators
 
 has been applied to the regulator tree at
 
@@ -84,33 +84,33 @@ to this mail.
 Thanks,
 Mark
 
-From 0b5e200cc7ee339694693a6d89816b66ccbd663a Mon Sep 17 00:00:00 2001
+From 883ce2421ed7fc1aaf94ff58d099e9a843345dfa Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Sun, 24 Mar 2019 14:00:04 +0800
-Subject: [PATCH] regulator: tps65217: Fix off-by-one for latest seletor of
- tps65217_uv1_ranges
+Date: Tue, 26 Mar 2019 07:57:39 +0800
+Subject: [PATCH] regulator: sc2731: Constify regulators
 
-According to the datasheet the latest seletor 11 1111b = 3.3 V.
+The regulators array should never need to be modified, make it const so
+compiler can put it to .rodata.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps65217-regulator.c | 2 +-
+ drivers/regulator/sc2731-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/tps65217-regulator.c b/drivers/regulator/tps65217-regulator.c
-index d84fab616abf..546fb5cf2023 100644
---- a/drivers/regulator/tps65217-regulator.c
-+++ b/drivers/regulator/tps65217-regulator.c
-@@ -61,7 +61,7 @@ static const struct regulator_linear_range tps65217_uv1_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(1550000, 25, 30, 50000),
- 	REGULATOR_LINEAR_RANGE(1850000, 31, 52, 50000),
- 	REGULATOR_LINEAR_RANGE(3000000, 53, 55, 100000),
--	REGULATOR_LINEAR_RANGE(3300000, 56, 62, 0),
-+	REGULATOR_LINEAR_RANGE(3300000, 56, 63, 0),
- };
+diff --git a/drivers/regulator/sc2731-regulator.c b/drivers/regulator/sc2731-regulator.c
+index eb2bdf060b7b..0f21f95c8981 100644
+--- a/drivers/regulator/sc2731-regulator.c
++++ b/drivers/regulator/sc2731-regulator.c
+@@ -146,7 +146,7 @@ static const struct regulator_ops sc2731_regu_linear_ops = {
+ 	.vsel_mask		= vmask,			\
+ }
  
- static const struct regulator_linear_range tps65217_uv2_ranges[] = {
+-static struct regulator_desc regulators[] = {
++static const struct regulator_desc regulators[] = {
+ 	SC2731_REGU_LINEAR(BUCK_CPU0, SC2731_POWER_PD_SW,
+ 			   SC2731_DCDC_CPU0_PD_MASK, SC2731_DCDC_CPU0_VOL,
+ 			   SC2731_DCDC_CPU0_VOL_MASK, 3125, 400000, 1996875),
 -- 
 2.20.1
 
