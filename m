@@ -2,102 +2,90 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D564EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D7DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9467D206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0DB2080F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v36revJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfCZCGX (ORCPT
+        id S1730849AbfCZCKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:06:23 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:25282 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbfCZCGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:06:22 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 0883A20E516B7CDD5874;
-        Tue, 26 Mar 2019 10:06:20 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x2Q26EuC083217;
-        Tue, 26 Mar 2019 10:06:14 +0800 (GMT-8)
-        (envelope-from peng.hao2@zte.com.cn)
-Received: from localhost.localdomain.localdomain ([10.74.120.59])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019032610062610-6321346 ;
-          Tue, 26 Mar 2019 10:06:26 +0800 
-From:   Peng Hao <peng.hao2@zte.com.cn>
-To:     vitb@kernel.crashing.org, benh@kernel.crashing.org,
-        paulus@samba.org, mpe@ellerman.id.au, christophe.leroy@c-s.fr
-Cc:     Wen Yang <wen.yang99@zte.com.cn>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] powerpc/8xx: fix possible object reference leak
-Date:   Tue, 26 Mar 2019 18:29:51 +0800
-Message-Id: <1553596191-78889-1-git-send-email-peng.hao2@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-26 10:06:26,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-26 10:06:10,
-        Serialize complete at 2019-03-26 10:06:10
-X-MAIL: mse01.zte.com.cn x2Q26EuC083217
+        Mon, 25 Mar 2019 22:10:50 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41354 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730556AbfCZCKt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 22:10:49 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q29Kvh059788;
+        Tue, 26 Mar 2019 02:10:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=fiPSubIoBmwHiUK/ziWc5GKMlGMINVr9Dm2mxOoVJJ8=;
+ b=v36revJpRsT6TfwwmfxNTrJs6r2Fl5EqTmpj1nXQ98AyOkrAIMYtxfSv75WS5Uc7iTK3
+ zK9jHJ1YH77hbmN6OICtA4tebLU6VOiYIritbxw7zo3dFw63K/+YwgzZhFAOGGYJZIIf
+ Lnio8XbazjStIE257QU8eMKda8jDOGcVJm0GTxY7PObMZvb1ivy4sbwJqxvfX9gchjxO
+ kmcPsQ/K1wZGbSMw9tR2fMWZfLq8RZiyd73URKZD4iEI1ZeD5gOdOuFH6zR9yhsCkhZT
+ 55NDPAetrMZimAOsXy/Wx2rTQS+qVqsyQjRnoRQt1ITIK1vzLq3LTl0E4s3ocfRa5qfU WQ== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by aserp2130.oracle.com with ESMTP id 2re6g0qjsg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:10:41 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2AZWL025025
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:10:35 GMT
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2Q2AZ6u024459;
+        Tue, 26 Mar 2019 02:10:35 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 19:10:35 -0700
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        matthias.bgg@gmail.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2] drivers: ufs: Add missing MODULE_* information
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190321132444.28659-1-anders.roxell@linaro.org>
+Date:   Mon, 25 Mar 2019 22:10:32 -0400
+In-Reply-To: <20190321132444.28659-1-anders.roxell@linaro.org> (Anders
+        Roxell's message of "Thu, 21 Mar 2019 14:24:44 +0100")
+Message-ID: <yq17ecm1j3b.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=985 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
 
-The call to of_find_compatible_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-irq_domain_add_linear also calls of_node_get to increase refcount,
-so irq_domain will not be affected when it is released.
+Anders,
 
-Detected by coccinelle with the following warnings:
-./arch/powerpc/platforms/8xx/pic.c:158:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 136, but without a corresponding object release within this function.
+> When building the ufs-mediatek module the following warning shows up:
+>
+> WARNING: modpost: missing MODULE_LICENSE() in
+>   drivers/scsi/ufs/ufs-mediatek.o
+>
+> Rework to add MODULE_LICENSE,MODULE_AUTHOR and MODULE_DESCRIPTION.
 
-Fixes: a8db8cf0d894 ("irq_domain: Replace irq_alloc_host() with
-revmap-specific initializers")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Peng Hao <peng.hao2@zte.com.cn>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Vitaly Bordug <vitb@kernel.crashing.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
----
-v3->v2: set ret to zero explicitly.
-v2->v1: add a Fixes tag.  
+Applied to 5.2/scsi-queue, thanks.
 
- arch/powerpc/platforms/8xx/pic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
-index 8d5a25d..9993998 100644
---- a/arch/powerpc/platforms/8xx/pic.c
-+++ b/arch/powerpc/platforms/8xx/pic.c
-@@ -153,9 +153,9 @@ int mpc8xx_pic_init(void)
- 	if (mpc8xx_pic_host == NULL) {
- 		printk(KERN_ERR "MPC8xx PIC: failed to allocate irq host!\n");
- 		ret = -ENOMEM;
--		goto out;
- 	}
--	return 0;
-+
-+	ret = 0;
- 
- out:
- 	of_node_put(np);
 -- 
-2.9.5
-
+Martin K. Petersen	Oracle Linux Engineering
