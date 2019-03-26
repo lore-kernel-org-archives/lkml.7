@@ -2,36 +2,36 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65305C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B57C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392BD20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1497220857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbfCZO2T (ORCPT
+        id S1731822AbfCZO2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:28:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62979 "EHLO
+        Tue, 26 Mar 2019 10:28:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32818 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726111AbfCZO2S (ORCPT
+        with ESMTP id S1731729AbfCZO2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:28:18 -0400
-X-UUID: 83f15606239e4179a4e38f24af20ba58-20190326
-X-UUID: 83f15606239e4179a4e38f24af20ba58-20190326
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Tue, 26 Mar 2019 10:28:19 -0400
+X-UUID: 044b2ce15da344f993e381d3b1099a43-20190326
+X-UUID: 044b2ce15da344f993e381d3b1099a43-20190326
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <ryder.lee@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 589441082; Tue, 26 Mar 2019 22:28:13 +0800
+        with ESMTP id 1732120422; Tue, 26 Mar 2019 22:28:15 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 26 Mar 2019 22:28:11 +0800
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 26 Mar 2019 22:28:13 +0800
 Received: from mtkslt306.mediatek.inc (10.21.14.136) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 26 Mar 2019 22:28:11 +0800
+ Transport; Tue, 26 Mar 2019 22:28:13 +0800
 From:   Ryder Lee <ryder.lee@mediatek.com>
 To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
         Felix Fietkau <nbd@nbd.name>
@@ -45,78 +45,84 @@ CC:     Roy Luo <royluo@google.com>, Sean Wang <sean.wang@mediatek.com>,
         <linux-wireless@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 0/4] Add support for MediaTek MT7615 wireless chipsets
-Date:   Tue, 26 Mar 2019 22:28:06 +0800
-Message-ID: <cover.1553607739.git.ryder.lee@mediatek.com>
+Subject: [PATCH 3/4] mt76: use macro for sn and seq_ctrl conversion
+Date:   Tue, 26 Mar 2019 22:28:09 +0800
+Message-ID: <7b4aa870b4f1da720ce8b93ee1d9e4a6e254737d.1553607739.git.ryder.lee@mediatek.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1553607739.git.ryder.lee@mediatek.com>
+References: <cover.1553607739.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="y"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 6D0FD367ACF931BF4BDA1C549375BFE175648A3CB72CC84A68981683718296D82000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for MediaTek MT7615E 4x4 802.11ac PCIe-based chipsets.
+Use macro to convert sn and seq_ctrl for better readability.
 
-In the legacy tx arch, we move and store the whole skb content to the
-on-device memory when we send packets via high speed interface. (i.e. PCIe)
+Signed-off-by: Roy Luo <royluo@google.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/net/wireless/mediatek/mt76/agg-rx.c       | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c   | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c  | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x02_util.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-However, MT7615 and the following generation use a new tx arch called
-“cut-through”, which only passes the physical address to the hardware,
-and the packet engine will fetch the packets before transmission.
-
-It saves on-chip memory for high throughput devices, and the token mechanism
-is used to manage the release of skb under this arch.
-
-Detailed hardware information for this chip could be found on 
-https://wikidevi.com/wiki/MediaTek_MT7615
-
-Ryder Lee (4):
-  mt76: add mac80211 driver for MT7615 PCIe-based chipsets
-  mt76: add unlikely() for dma_mapping_error() check
-  mt76: use macro for sn and seq_ctrl conversion
-  MAINTAINERS : update entry for mt76 wireless driver
-
- MAINTAINERS                                        |    2 +
- drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
- drivers/net/wireless/mediatek/mt76/Makefile        |    1 +
- drivers/net/wireless/mediatek/mt76/agg-rx.c        |    2 +-
- drivers/net/wireless/mediatek/mt76/dma.c           |    8 +-
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c    |    2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/main.c   |    2 +-
- drivers/net/wireless/mediatek/mt76/mt7615/Kconfig  |    7 +
- drivers/net/wireless/mediatek/mt76/mt7615/Makefile |    5 +
- drivers/net/wireless/mediatek/mt76/mt7615/dma.c    |  204 +++
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |   97 ++
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h |   18 +
- drivers/net/wireless/mediatek/mt76/mt7615/init.c   |  220 +++
- drivers/net/wireless/mediatek/mt76/mt7615/mac.c    |  760 +++++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mac.h    |  300 ++++
- drivers/net/wireless/mediatek/mt76/mt7615/main.c   |  498 ++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 1656 ++++++++++++++++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.h    |  520 ++++++
- drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  195 +++
- drivers/net/wireless/mediatek/mt76/mt7615/pci.c    |  149 ++
- drivers/net/wireless/mediatek/mt76/mt7615/regs.h   |  196 +++
- drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    2 +-
- 22 files changed, 4837 insertions(+), 8 deletions(-)
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Kconfig
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/Makefile
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/dma.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/init.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mac.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/main.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mcu.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/pci.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7615/regs.h
-
+diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+index 73c8b28..27e3ff0 100644
+--- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
++++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+@@ -135,7 +135,7 @@
+ 		return;
+ 
+ 	status->tid = le16_to_cpu(bar->control) >> 12;
+-	seqno = le16_to_cpu(bar->start_seq_num) >> 4;
++	seqno = IEEE80211_SEQ_TO_SN(le16_to_cpu(bar->start_seq_num));
+ 	tid = rcu_dereference(wcid->aggr[status->tid]);
+ 	if (!tid)
+ 		return;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index e498169..2f2961e 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -627,7 +627,7 @@ void mt7603_mac_tx_ba_reset(struct mt7603_dev *dev, int wcid, int tid, int ssn,
+ 	status->aggr = unicast &&
+ 		       !ieee80211_is_qos_nullfunc(hdr->frame_control);
+ 	status->tid = *ieee80211_get_qos_ctl(hdr) & IEEE80211_QOS_CTL_TID_MASK;
+-	status->seqno = hdr->seq_ctrl >> 4;
++	status->seqno = IEEE80211_SEQ_TO_SN(hdr->seq_ctrl);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/main.c b/drivers/net/wireless/mediatek/mt76/mt7603/main.c
+index 5d38392..0c78044 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/main.c
+@@ -594,7 +594,7 @@
+ 		mt7603_mac_tx_ba_reset(dev, msta->wcid.idx, tid, *ssn, -1);
+ 		break;
+ 	case IEEE80211_AMPDU_TX_START:
+-		mtxq->agg_ssn = *ssn << 4;
++		mtxq->agg_ssn = IEEE80211_SN_TO_SEQ(*ssn);
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
+ 		break;
+ 	case IEEE80211_AMPDU_TX_STOP_CONT:
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_util.c b/drivers/net/wireless/mediatek/mt76/mt76x02_util.c
+index b137ce8..f0e1e12 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_util.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_util.c
+@@ -378,7 +378,7 @@ int mt76x02_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
+ 		ieee80211_send_bar(vif, sta->addr, tid, mtxq->agg_ssn);
+ 		break;
+ 	case IEEE80211_AMPDU_TX_START:
+-		mtxq->agg_ssn = *ssn << 4;
++		mtxq->agg_ssn = IEEE80211_SN_TO_SEQ(*ssn);
+ 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
+ 		break;
+ 	case IEEE80211_AMPDU_TX_STOP_CONT:
 -- 
 1.9.1
 
