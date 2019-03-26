@@ -2,85 +2,135 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5AFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BC1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6212070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553613132;
-	bh=9K2v4+21nGzr54bKaKVVw3DJ5qmgz5aJJ+PlNxUo4tY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MbY/1VIgqporye9ZbDNWzFxDWD1aG5Wd8bV/9SGb1+JQZvYeCBrlPkZfJSvwm0rZh
-	 hkzI8aeP4cB1nFl4yFTh+kjm7yHxlnp6DWz98aU0tm1DifZQhjaa26WQVg+XtAZgMM
-	 /wzgaij2ivnPFbYNkGLnypBejhyBjLm3HxcAHGeg=
+	by mail.kernel.org (Postfix) with ESMTP id 4FE5B20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfCZPML (ORCPT
+        id S1731968AbfCZPMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:12:11 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38809 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfCZPMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:12:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w137so10181958oiw.5;
-        Tue, 26 Mar 2019 08:12:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dJb7ydaU8hTdfO/iMVhL/H+QruagqPyslzxtLe17XYY=;
-        b=lB1wcWXNAT0png4DXFvtwy0XkHNFdmwgX4PsvMgsXD918szRojp1NFKresrKorW4j9
-         X/2YjEsbn0t5rD5RgVmzfLaEv4Pr+3W6IaOce/y/Eeh/zdb2qcj3wov1JvEYpwf4XQJo
-         KZOwawdhj/0+UD/18iUBDzBdbN04JrLy0NKnXUeYbMC53CefOAcMyxAhK3xEOezps839
-         NvgVl/kOKkClNMpKOS8hRfpuFeiooAdomgGAYVBLWv+q1jSFOgTJJzcPXk8Ek8zw8ypm
-         eowp0w/1UlLCYTlGNSUzT1b+irfve89LPML21AlnBjzIMNsALktQkKvpNfX2IzpEJK8n
-         LPrw==
-X-Gm-Message-State: APjAAAUtNcJbM9/MZSzoBLQIgV6mdhTw9h29hBWXqDUbWSYwLrW3aWl3
-        D52eDONatwsQDsxG6JOtWEVfBKA=
-X-Google-Smtp-Source: APXvYqwof3dapU2q+5bmoe+IXYJj/sPkPw5Q5N3NPNJA2gyQFPBHs4Mqt06cuMvJXnaA9PbRsBl9UA==
-X-Received: by 2002:aca:4507:: with SMTP id s7mr5586456oia.127.1553613129940;
-        Tue, 26 Mar 2019 08:12:09 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w141sm4818364oie.1.2019.03.26.08.12.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 08:12:09 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 10:12:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Cc:     robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com,
-        broonie@kernel.org, bbrezillon@kernel.org,
-        horms+renesas@verge.net.au, geert+renesas@glider.be,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, nagasuresh12@gmail.com,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: spi: Add device tree binding
- documentation for Zynq QSPI controller
-Message-ID: <20190326151208.GA12727@bogus>
-References: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+        Tue, 26 Mar 2019 11:12:15 -0400
+Received: from mout01.posteo.de ([185.67.36.141]:51844 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731919AbfCZPMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:12:13 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 60847160066
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:12:09 +0100 (CET)
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 44TF3W3CJYz6tmK;
+        Tue, 26 Mar 2019 16:12:07 +0100 (CET)
+Subject: Re: [PATCH v2 2/2] tty/serial: atmel: RS485 HD w/DMA: enable RX after
+ TX is stopped
+To:     Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     Gil Weber <webergil@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190319132035.18481-1-razvan.stefanescu@microchip.com>
+ <20190319132035.18481-3-razvan.stefanescu@microchip.com>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <58640e9d-5570-3649-31cd-3ffcd0d6c3af@sorico.fr>
+Date:   Tue, 26 Mar 2019 16:12:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551337313-9499-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190319132035.18481-3-razvan.stefanescu@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 12:31:53 +0530, Naga Sureshkumar Relli wrote:
-> This patch adds the dts binding document for Zynq SOC QSPI
-> controller.
+Le 19/03/2019 à 14:20, Razvan Stefanescu a écrit :
+> In half-duplex operation, RX should be started after TX completes.
 > 
-> Signed-off-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+> If DMA is used, there is a case when the DMA transfer completes but the
+> TX FIFO is not emptied, so the RX cannot be restarted just yet.
+> 
+> Use a boolean variable to store this state and rearm TX interrupt mask
+> to be signaled again that the transfer finished. In interrupt transmit
+> handler this variable is used to start RX. A warning message is generated
+> if RX is activated before TX fifo is cleared.
+> 
+> Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
+> RX after TX is done")
+> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+
+NB: backport on kernel older than 4.20 will fail because of the iso7816
+variables fidi_min/fidi_max.
 > ---
->  .../devicetree/bindings/spi/spi-zynq-qspi.txt      | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-zynq-qspi.txt
+> Changelog:
+> v2:
+>   - start RX and display warning in case of error
+>   - add fix info
+> 
+>  drivers/tty/serial/atmel_serial.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index b4b89a16a41b..5b2f859c327c 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -166,6 +166,8 @@ struct atmel_uart_port {
+>  	unsigned int		pending_status;
+>  	spinlock_t		lock_suspended;
+>  
+> +	bool			hd_start_rx;	/* can start RX during half-duplex operation */
+> +
+>  	/* ISO7816 */
+>  	unsigned int		fidi_min;
+>  	unsigned int		fidi_max;
+> @@ -933,8 +935,13 @@ static void atmel_complete_tx_dma(void *arg)
+>  	if (!uart_circ_empty(xmit))
+>  		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+>  	else if (atmel_uart_is_half_duplex(port)) {
+> -		/* DMA done, stop TX, start RX for RS485 */
+> -		atmel_start_rx(port);
+> +		/*
+> +		 * DMA done, re-enable TXEMPTY and signal that we can stop
+> +		 * TX and start RX for RS485
+> +		 */
+> +		atmel_port->hd_start_rx = true;
+> +		atmel_uart_writel(port, ATMEL_US_IER,
+> +				  atmel_port->tx_done_mask);
+>  	}
+>  
+>  	spin_unlock_irqrestore(&port->lock, flags);
+> @@ -1378,9 +1385,20 @@ atmel_handle_transmit(struct uart_port *port, unsigned int pending)
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+>  
+>  	if (pending & atmel_port->tx_done_mask) {
+> -		/* Either PDC or interrupt transmission */
+>  		atmel_uart_writel(port, ATMEL_US_IDR,
+>  				  atmel_port->tx_done_mask);
+> +
+> +		/* Start RX if flag was set and FIFO is empty */
+> +		if (atmel_port->hd_start_rx) {
+> +			if (!(atmel_uart_readl(port, ATMEL_US_CSR)
+> +					& ATMEL_US_TXEMPTY))
+> +				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
+> +
+> +			atmel_port->hd_start_rx = false;
+> +			atmel_start_rx(port);
+> +			return;
+> +		}
+> +
+>  		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+>  	}
+>  }
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
