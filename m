@@ -2,85 +2,102 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD980C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E811C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C5920823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553609032;
-	bh=jgFBdyNhB56pXkn3kHqGwV4wD7A3nF+zJJ2CiXn1+Ww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rpkoDV8uRBo2QZ1XFBo3t5TR6ChdAykYPwpmF9Lac/sFzi6OWZ+dNNWkSea7RWpXm
-	 FI8POqH5a6PmTUwu7ur4yv+HLrzhAyzrXpyFrg0fcxq/0q3riHEq1Q8D4yl7Pj2aW8
-	 HP9a7k7Z+LZFLaaIETGTSeITTyoIHqIZWOh4TNJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 01F5220823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731630AbfCZODv (ORCPT
+        id S1731701AbfCZOGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:03:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38924 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbfCZODu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:03:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 61482AF74;
-        Tue, 26 Mar 2019 14:03:49 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 15:03:48 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, rppt@linux.ibm.com, osalvador@suse.de,
-        willy@infradead.org, william.kucharski@oracle.com
-Subject: Re: [PATCH v2 2/4] mm/sparse: Optimize sparse_add_one_section()
-Message-ID: <20190326140348.GQ28406@dhcp22.suse.cz>
-References: <20190326090227.3059-1-bhe@redhat.com>
- <20190326090227.3059-3-bhe@redhat.com>
- <20190326092936.GK28406@dhcp22.suse.cz>
- <20190326100817.GV3659@MiWiFi-R3L-srv>
- <20190326101710.GN28406@dhcp22.suse.cz>
- <20190326134522.GB21943@MiWiFi-R3L-srv>
+        Tue, 26 Mar 2019 10:06:00 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35011 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfCZOF7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 10:05:59 -0400
+Received: from localhost (alyon-652-1-47-144.w109-213.abo.wanadoo.fr [109.213.38.144])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 13F9F200013;
+        Tue, 26 Mar 2019 14:05:52 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 15:05:52 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>
+Subject: Re: [PATCH v11 6/8] rtc: bd70528: Initial support for ROHM bd70528
+ RTC
+Message-ID: <20190326140552.GS30105@piout.net>
+References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+ <901900e12e2a06865b3649ec94af511fcc6443a3.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190325170451.GQ30105@piout.net>
+ <1db28c6d6223f2c052c0853121fd7b7aa6f7b227.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326134522.GB21943@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1db28c6d6223f2c052c0853121fd7b7aa6f7b227.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 21:45:22, Baoquan He wrote:
-> On 03/26/19 at 11:17am, Michal Hocko wrote:
-> > On Tue 26-03-19 18:08:17, Baoquan He wrote:
-> > > On 03/26/19 at 10:29am, Michal Hocko wrote:
-> > > > On Tue 26-03-19 17:02:25, Baoquan He wrote:
-> > > > > Reorder the allocation of usemap and memmap since usemap allocation
-> > > > > is much simpler and easier. Otherwise hard work is done to make
-> > > > > memmap ready, then have to rollback just because of usemap allocation
-> > > > > failure.
-> > > > 
-> > > > Is this really worth it? I can see that !VMEMMAP is doing memmap size
-> > > > allocation which would be 2MB aka costly allocation but we do not do
-> > > > __GFP_RETRY_MAYFAIL so the allocator backs off early.
+On 26/03/2019 13:51:40+0000, Vaittinen, Matti wrote:
+> On Mon, 2019-03-25 at 18:04 +0100, Alexandre Belloni wrote:
+> > On 25/03/2019 14:06:42+0200, Matti Vaittinen wrote:
+> > > Support RTC block in ROHM bd70528 power management IC. Support
+> > > getting and setting the time and date as well as arming an alarm
+> > > which can also be used to wake the PMIC from standby state.
 > > > 
-> > > In !VMEMMAP case, it truly does simple allocation directly. surely
-> > > usemap which size is 32 is smaller. So it doesn't matter that much who's
-> > > ahead or who's behind. However, this benefit a little in VMEMMAP case.
+> > > HW supports wake interrupt only for the next 24 hours (sec, minute
+> > > and hour information only) so we limit also the alarm interrupt to
+> > > this 24 hours for the sake of consistency.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 > > 
-> > How does it help there? The failure should be even much less probable
-> > there because we simply fall back to a small 4kB pages and those
-> > essentially never fail.
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > 
+> > > +	r->time.hour |= BD70528_MASK_RTC_HOUR_24H;
+> > > +	r->day |= bin2bcd(t->tm_mday);
+> > > +	r->week |= bin2bcd(t->tm_wday);
+> > > +	r->month |= bin2bcd(t->tm_mon + 1);
+> > > +	r->year = bin2bcd(t->tm_year-100);
+> > 
+> > If you ever have to resend, please add spaces around that -
 > 
-> OK, I am fine to drop it. Or only put the section existence checking
-> earlier to avoid unnecessary usemap/memmap allocation?
+> Good catch, thanks! I wonder why I didn't get checkpatch warning... I
+> should've had one. (I usually do run checkpatch).
+> 
 
-DO you have any data on how often that happens? Should basically never
-happening, right?
+checkpatch --strict would tell you.
+
+
 -- 
-Michal Hocko
-SUSE Labs
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
