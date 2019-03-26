@@ -6,55 +6,56 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03488C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA253C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77A1208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA45F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582271;
-	bh=sNOJjlS/DqNEriSNYuTl3GLoDQjFxFrFof1tY2iJEcY=;
+	s=default; t=1553582274;
+	bh=BEE45E/MwtPDp4GvIysgm3dZGR8dcxnz/Iz3TyIquJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwYd/qY64qbCVqm/YTw5sJ5EE8/AzKBBqChehZBJhXATiijEd+dElhKrDQBGdAkCV
-	 +bPjNNehLeL077Gl9FtREs+ORBRYdl3LAO3vr7nLiRvjeqnCUi206aqwjBzw2TegI0
-	 eP5IudFRQUoQMYI9CB3NC7Z0VqS2ozq9fgDJMTXw=
+	b=V++EsfrxlIwP388GgwUeKCpmR1TkKS0XpwfIGG995n4M+zAiHP6ZGdgzP87YxkcyP
+	 PhJx0krdzESGMPG+YWOmqCJYaYegpMIZEBaYPRm3PcUprum0cTVCXnu6hDIiPMDV/5
+	 7/02xMzSPCU6HLp+zS4LT0RS6eyOR4HblQPhjX9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732439AbfCZGhu (ORCPT
+        id S1732451AbfCZGhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731936AbfCZGhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:47 -0400
+        id S1732440AbfCZGhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:51 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25CE820879;
-        Tue, 26 Mar 2019 06:37:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87B412086C;
+        Tue, 26 Mar 2019 06:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582266;
-        bh=sNOJjlS/DqNEriSNYuTl3GLoDQjFxFrFof1tY2iJEcY=;
+        s=default; t=1553582270;
+        bh=BEE45E/MwtPDp4GvIysgm3dZGR8dcxnz/Iz3TyIquJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=km34DXQkLzpPSCv9PHLgJjTqtfE4Tk91q8Zt3ZkuKCA3jD5SBCWyy4yhyNR4BPrK3
-         x7jOjHGyqGeWMnfOdmjqvyTEfySpCc0bNOYC2gzWWN6oFMp63c6ZqXXvHTxm7eGYtH
-         biYdbPMfIb8xVtRG8Gx7iITf8vooJfPwwEi/ftLU=
+        b=v+RP4B/lz+vUrcLAH3uMvJc5PoK5jD/x0HQuB8XaOlXjiTb7WIyHWr3M7clTdMYPE
+         7mvafdzYiLxQbQk5sXW5y2x2ZuJPHfI8CKMVnjnUjlpJLbNOOWJ23txCbrhyPVt0ty
+         XFjfwPNUqbi5lsKdjVloASh2q439cvartzETTruY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Yisheng Xie <xieyisheng1@huawei.com>,
+        zhong jiang <zhongjiang@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 41/45] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Tue, 26 Mar 2019 15:30:24 +0900
-Message-Id: <20190326042704.860905184@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 42/45] mm, mempolicy: fix uninit memory access
+Date:   Tue, 26 Mar 2019 15:30:25 +0900
+Message-Id: <20190326042704.910479246@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -73,48 +74,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Waiman Long <longman@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit 71492580571467fb7177aade19c18ce7486267f5 upstream.
+commit 2e25644e8da4ed3a27e7b8315aaae74660be72dc upstream.
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+Syzbot with KMSAN reports (excerpt):
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
+==================================================================
+BUG: KMSAN: uninit-value in mpol_rebind_policy mm/mempolicy.c:353 [inline]
+BUG: KMSAN: uninit-value in mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
+CPU: 1 PID: 17420 Comm: syz-executor4 Not tainted 4.20.0-rc7+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
+  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:295
+  mpol_rebind_policy mm/mempolicy.c:353 [inline]
+  mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
+  update_tasks_nodemask+0x608/0xca0 kernel/cgroup/cpuset.c:1120
+  update_nodemasks_hier kernel/cgroup/cpuset.c:1185 [inline]
+  update_nodemask kernel/cgroup/cpuset.c:1253 [inline]
+  cpuset_write_resmask+0x2a98/0x34b0 kernel/cgroup/cpuset.c:1728
 
-Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+...
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
+  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
+  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
+  kmem_cache_alloc+0x572/0xb90 mm/slub.c:2777
+  mpol_new mm/mempolicy.c:276 [inline]
+  do_mbind mm/mempolicy.c:1180 [inline]
+  kernel_mbind+0x8a7/0x31a0 mm/mempolicy.c:1347
+  __do_sys_mbind mm/mempolicy.c:1354 [inline]
+
+As it's difficult to report where exactly the uninit value resides in
+the mempolicy object, we have to guess a bit.  mm/mempolicy.c:353
+contains this part of mpol_rebind_policy():
+
+        if (!mpol_store_user_nodemask(pol) &&
+            nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
+
+"mpol_store_user_nodemask(pol)" is testing pol->flags, which I couldn't
+ever see being uninitialized after leaving mpol_new().  So I'll guess
+it's actually about accessing pol->w.cpuset_mems_allowed on line 354,
+but still part of statement starting on line 353.
+
+For w.cpuset_mems_allowed to be not initialized, and the nodes_equal()
+reachable for a mempolicy where mpol_set_nodemask() is called in
+do_mbind(), it seems the only possibility is a MPOL_PREFERRED policy
+with empty set of nodes, i.e.  MPOL_LOCAL equivalent, with MPOL_F_LOCAL
+flag.  Let's exclude such policies from the nodes_equal() check.  Note
+the uninit access should be benign anyway, as rebinding this kind of
+policy is always a no-op.  Therefore no actual need for stable
+inclusion.
+
+Link: http://lkml.kernel.org/r/a71997c3-e8ae-a787-d5ce-3db05768b27c@suse.cz
+Link: http://lkml.kernel.org/r/73da3e9c-cc84-509e-17d9-0c434bb9967d@suse.cz
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Yisheng Xie <xieyisheng1@huawei.com>
+Cc: zhong jiang <zhongjiang@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/locking/lockdep.c |    3 +++
- 1 file changed, 3 insertions(+)
+ mm/mempolicy.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3567,6 +3567,9 @@ __lock_set_class(struct lockdep_map *loc
- 	unsigned int depth;
- 	int i;
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -350,7 +350,7 @@ static void mpol_rebind_policy(struct me
+ {
+ 	if (!pol)
+ 		return;
+-	if (!mpol_store_user_nodemask(pol) &&
++	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
+ 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
+ 		return;
  
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
 
 
