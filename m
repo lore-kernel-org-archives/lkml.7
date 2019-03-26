@@ -2,130 +2,444 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A620C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2B9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E3520828
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F672084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 07:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yMfP04Gb"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="lUxfL1rz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbfCZHxX (ORCPT
+        id S1731351AbfCZHxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 03:53:23 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35374 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731173AbfCZHxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 03:53:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so11737415wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 00:53:19 -0700 (PDT)
+        Tue, 26 Mar 2019 03:53:30 -0400
+Received: from mail-eopbgr1300085.outbound.protection.outlook.com ([40.107.130.85]:33232
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730422AbfCZHxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 03:53:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=+P/pDctBzgqNCJzJAj22Bp6Ulq3f13aqe+jh+b1hejk=;
-        b=yMfP04GbVCy1OCXi8Zh/Js4WKcX3FrUxZsa3NAiI7gwT7049iS6cPNwX+FGCuvPp7g
-         rxJCzPMmuJZXf7IRPUfdm3acMrIcEFZ5OUjOUcwVi8Wh/XsSevMXoLWew3UA/pPeXWYg
-         0ENNnYZJ+crDmYQunPgI2U6KbiB9o7r0KJGBKPUgp5m4VYO3GbrdlBIjgebVbWtx5BeW
-         /2j0KqaiktKTH1sW4oET6+rA1OynfpaPPGnhZX5YPKZ/38lLlcS+Ssm9HEsGc2s/L0Of
-         pyXsEPI+loD+cDcmq/8mNWBmFWDaDH1bJtJHNmQD864pzbeC+9ODIqTEWTlJQ3p1zJuv
-         DS6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=+P/pDctBzgqNCJzJAj22Bp6Ulq3f13aqe+jh+b1hejk=;
-        b=Qm5ea3694XMfHIr7BLoASspnN0XfFW+/t5HxL+xq7zLCbSMCjfNHQvjGO3xorDF9pP
-         gDMT361RgkjAUUnpx1kZZszETuyEBIQne1Vild21f3YTZtK4AXOoTtDWEkXIcDlLxpn6
-         4oDo8LW2lKNymL0L8+xIeD68EEx80Zi0cubZiUdgmkSImDLK3PrMMbOC7cx2EU1uIPun
-         xugvpsq2TE31nbHDJk8V3wZ7K6OIhTDqcfuAh1zWaPXSmLOvl7Ncdh0yYGwim73GvxAM
-         gqwxwouRVupajoebGVgT7plvg0Jfak4phD4kUcvHekFP3ywyLvd5jZSig5nhv6Eb/Tik
-         penA==
-X-Gm-Message-State: APjAAAWI9+ia99f8kOQDlBTheeLDZjuT7aTC6MVlqPt3QcF8a3t1gRGG
-        2ojXyJjNZaIWe4PhkZ3F/hUeHw==
-X-Google-Smtp-Source: APXvYqyUOqJoh6ug291ipn/WEnZewgLcDELTWekaeWiEDLB0t9vPsF9eDBRiqM7vm7QU70dAASQyBQ==
-X-Received: by 2002:a1c:67c2:: with SMTP id b185mr14139004wmc.68.1553586798375;
-        Tue, 26 Mar 2019 00:53:18 -0700 (PDT)
-Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id j11sm22170116wrw.85.2019.03.26.00.53.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 26 Mar 2019 00:53:17 -0700 (PDT)
-Message-ID: <8b6f0bc6210834af2aff2de7dc95692dd87db539.camel@baylibre.com>
-Subject: Re: [PATCH 1/4] clk: meson: mpll: add init callback and regs
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 26 Mar 2019 08:53:15 +0100
-In-Reply-To: <155353381842.20095.17915880223118004926@swboyd.mtv.corp.google.com>
-References: <20190325111200.15940-1-jbrunet@baylibre.com>
-         <20190325111200.15940-2-jbrunet@baylibre.com>
-         <155353381842.20095.17915880223118004926@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wmzzx44yEmLDYGrcR9BzjtQ3TPcnO8YxeBVeTtmP22g=;
+ b=lUxfL1rz4GGZ2I2JGs6OAiAL2bT6v9a2Xm0S0WQcQH74Nb2yJqNPlTklzpGrDS5XoSnPN1s/Lgtet7CDpoK10EBZxNRew5bvP+zcF6ON8idfmSGUb77QNdf3P/E2NTcZfsRgt5UDKqKM+/zxuEFm8n0ehqO5yRIJYZO0svkl+rs=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB2527.apcprd02.prod.outlook.com (10.170.141.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Tue, 26 Mar 2019 07:53:15 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1730.019; Tue, 26 Mar 2019
+ 07:53:15 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minchan@kernel.org" <minchan@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>
+Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Topic: [External] Re: vmscan: Reclaim unevictable pages
+Thread-Index: AQHU3WaYCAMWaFadm0e/0+hd2XPYGaYRGYZ/gAAG5oCAAAD82oAAAx4AgAABDq2AAAzwgIAC47DNgAmAbsA=
+Date:   Tue, 26 Mar 2019 07:53:14 +0000
+Message-ID: <SG2PR02MB309824F3FCD9B0D1DF689390E85F0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB3098A05E09B0D3F3CB1C3B9BE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <20190314084120.GF7473@dhcp22.suse.cz>
+ <SG2PR02MB309894F6D7DF9148846088F3E84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <226a92b9-94c5-b859-c54b-3aacad3089cc@virtuozzo.com>
+ <SG2PR02MB3098299456FB6AE2FD822C4CE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB30988333AD658F8124070ABEE84B0@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098AB587F4BFCD6B9D042FDE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098E6F2C4BAEB56AE071EDCE8440@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <0b86dbca-cbc9-3b43-e3b9-8876bcc24f22@suse.cz>
+ <SG2PR02MB309841EA4764E675D4649139E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <56862fc0-3e4b-8d1e-ae15-0df32bf5e4c0@virtuozzo.com>
+ <SG2PR02MB3098EEAF291BFD72F4163936E8470@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <4c05dda3-9fdf-e357-75ed-6ee3f25c9e52@virtuozzo.com>
+ <SG2PR02MB309869FC3A436C71B50FA57BE8470@SG2PR02MB3098.apcprd02.prod.outlook.com>,<09b6ee71-0007-7f1d-ac80-7e05421e4ec6@virtuozzo.com>,<SG2PR02MB309864258DBE630AD3AD2E10E8410@SG2PR02MB3098.apcprd02.prod.outlook.com>
+In-Reply-To: <SG2PR02MB309864258DBE630AD3AD2E10E8410@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8f585fcf-8cb6-431b-93a1-08d6b1c01a2f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2527;
+x-ms-traffictypediagnostic: SG2PR02MB2527:|SG2PR02MB2527:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <SG2PR02MB252734D1556CFEFFC079C9DBE85F0@SG2PR02MB2527.apcprd02.prod.outlook.com>
+x-forefront-prvs: 09888BC01D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39850400004)(366004)(136003)(346002)(199004)(189003)(54534003)(305945005)(8936002)(68736007)(7736002)(7696005)(6506007)(14444005)(5024004)(106356001)(5660300002)(55236004)(4326008)(478600001)(30864003)(105586002)(52536014)(25786009)(256004)(53546011)(3846002)(74316002)(76176011)(6116002)(966005)(6306002)(26005)(66066001)(2501003)(316002)(44832011)(2906002)(186003)(54906003)(110136005)(33656002)(8676002)(476003)(6246003)(11346002)(93886005)(81166006)(81156014)(9686003)(486006)(97736004)(446003)(55016002)(14454004)(78486014)(99286004)(53936002)(229853002)(86362001)(6436002)(71190400001)(71200400001)(102836004)(66574012)(586874002);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2527;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Yz200Fk+nvgdo9z3I/u5/gudwNKaswe4c/Xx1YFTmy1ne4N9IhyoCfOwiWijlzBas0lXm7FMqUXJ3CBMuFFLptiWtMt80SsQ8c3R/VCoYAq5r1TP7/dGniGLAyS76vtQ7jd+7BOFbMiLRlGTTtK4hZz+Kh5odGEl05+KP4R3EBF8uotkt/qLoD4jzR22DGUIl1sORgg9rtXL1qCTBvKrdnkzElJapjHRxUGjr/4POvL9eW37Y1QUNDpiiMIlTbojc1zKNT6AqbrTrHIeOQwpRZzg3Zez6pAf6NYpwP5s+EYo2+Wsj1/9lf1pkP0xaQdstdkuh1PStIajuKjVTXWGIkceRrRT+IOvp0KUPQhJq/tiE1Q2bveIl5pXJLcoSP7CIxfXZ7tjFegZWW8F/ItZKK2P8LFe/2dQqbPfuZYrDiY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f585fcf-8cb6-431b-93a1-08d6b1c01a2f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2019 07:53:14.9776
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2527
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-25 at 10:10 -0700, Stephen Boyd wrote:
-> Quoting Jerome Brunet (2019-03-25 04:11:57)
-> > @@ -138,6 +129,27 @@ static int mpll_set_rate(struct clk_hw *hw,
-> >         return 0;
-> >  }
-> >  
-> > +static void mpll_init(struct clk_hw *hw)
-> > +{
-> > +       struct clk_regmap *clk = to_clk_regmap(hw);
-> > +       struct meson_clk_mpll_data *mpll = meson_clk_mpll_data(clk);
-> > +
-> > +       if (mpll->init_count)
-> > +               regmap_multi_reg_write(clk->map, mpll->init_regs,
-> > +                                      mpll->init_count);
-> > +
-> > +       /* Enable the fractional part */
-> > +       meson_parm_write(clk->map, &mpll->sdm_en, 1);
-> > +
-> > +       /* Set additional fractional part enable if required */
-> > +       if (MESON_PARM_APPLICABLE(&mpll->ssen))
-> > +               meson_parm_write(clk->map, &mpll->ssen, 1);
-> > +
-> > +       /* Set the magic misc bit if required */
-> > +       if (MESON_PARM_APPLICABLE(&mpll->misc))
-> > +               meson_parm_write(clk->map, &mpll->misc, 1);
-> > +}
-> > +
-> >  const struct clk_ops meson_clk_mpll_ro_ops = {
-> >         .recalc_rate    = mpll_recalc_rate,
-> >         .round_rate     = mpll_round_rate,
-> > @@ -148,6 +160,7 @@ const struct clk_ops meson_clk_mpll_ops = {
-> >         .recalc_rate    = mpll_recalc_rate,
-> >         .round_rate     = mpll_round_rate,
-> >         .set_rate       = mpll_set_rate,
-> > +       .init           = mpll_init,
-> 
-> We actively discourage using init callbacks. Can you do this some other
-> way?
 
-Yes I'm aware of that but init it the right place to do this.
-To be clear, this is not initializing the clock to some particular rate, the
-rate is preserved.
-
-It just applies the necessary settings that needs to be done only once to make
-sure the clock is in working order and that the rate calculated is actually
-accurate. 
-
-> 
-> >  };
-> >  EXPORT_SYMBOL_GPL(meson_clk_mpll_ops);
-> >  
+________________________________________
+From: Pankaj Suryawanshi
+Sent: 20 March 2019 12:18
+To: Kirill Tkhai; Vlastimil Babka; Michal Hocko; aneesh.kumar@linux.ibm.com
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org; k=
+handual@linux.vnet.ibm.com
+Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
 
 
+________________________________________
+From: Kirill Tkhai <ktkhai@virtuozzo.com>
+Sent: 18 March 2019 16:08
+To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linux.i=
+bm.com
+Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org; k=
+handual@linux.vnet.ibm.com
+Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+
+On 18.03.2019 12:59, Pankaj Suryawanshi wrote:
+>
+> From: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Sent: 18 March 2019 15:17:56
+> To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linux=
+.ibm.com
+> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org;=
+ khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
+> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+
+Also, please, avoid irritating quoting like below ^^^. They just distract a=
+ttention.
+
+> On 18.03.2019 12:43, Pankaj Suryawanshi wrote:
+>> Hi Kirill Tkhai,
+>>
+>
+> Please, do not top posting:  https://kernelnewbies.org/mailinglistguideli=
+nes
+>
+> Okay.
+>
+> mailinglistguidelines - Linux Kernel Newbies
+> kernelnewbies.org
+> Set of FAQs for kernelnewbies mailing list. If you are new to this list p=
+lease read this page before you go on your quest for squeezing all the know=
+ledge from fellow members.
+
+And this spew ^^^.
+
+>> Please see mm/vmscan.c in which it first added to list and than throw th=
+e error :
+>> ------------------------------------------------------------------------=
+--------------------------
+>> keep:
+>>                  list_add(&page->lru, &ret_pages);
+>>                  VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), =
+page);
+>> ------------------------------------------------------------------------=
+---------------------------
+>>
+>> Before throwing error, pages are added to list, this is under iteration =
+of shrink_page_list().
+>
+> I say about about the list, which is passed to shrink_page_list() as firs=
+t argument.
+> Did you mean candidate list which is passed to shrink_page_list().
+>
+> shrink_inactive_list()
+> {
+>         isolate_lru_pages(&page_list); // <-- you can't obtain unevictabl=
+e pages here.
+>         shrink_page_list(&page_list);
+> }
+>
+> below is the overview of flow of calls for your information.
+>
+> cma_alloc() ->
+> alloc_contig_range() ->
+> start_isolate_page_range() ->
+> __alloc_contig_migrate_range() ->
+> isolate_migratepages_range() ->
+> reclaim_clean_pages_from_list() ->
+> shrink_page_list()
+
+Hm, isolate_migratepages_range() can take unevictable pages,
+but then with your patch we just skip them in shrink_page_list().
+Without your patch we bump into bug on.
+
+I don't see any other issue/effect if i apply this patch.
+
+These both look incorrect for me. Let's wait someone who familiar
+with this logic.
+
+Is there anyone who is familiar with this?  Please Comment.
+
+>> From: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> Sent: 18 March 2019 15:03:15
+>> To: Pankaj Suryawanshi; Vlastimil Babka; Michal Hocko; aneesh.kumar@linu=
+x.ibm.com
+>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.org=
+; khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
+>> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+>>
+>>
+>> Hi, Pankaj,
+>>
+>> On 18.03.2019 12:09, Pankaj Suryawanshi wrote:
+>>>
+>>> Hello
+>>>
+>>> shrink_page_list() returns , number of pages reclaimed, when pages is u=
+nevictable it returns VM_BUG_ON_PAGE(PageLRU(page) || PageUnevicatble(page)=
+,page);
+>>
+>> the general idea is shrink_page_list() can't iterate PageUnevictable() p=
+ages.
+>> PageUnevictable() pages are never being added to lists, which shrink_pag=
+e_list()
+>> uses for iteration. Also, a page can't be marked as PageUnevictable(), w=
+hen
+>> it's attached to a shrinkable list.
+>>
+>> So, the problem should be somewhere outside shrink_page_list().
+>>
+>> I won't suggest you something about CMA, since I haven't dived in that c=
+ode.
+>>
+>>> We can add the unevictable pages in reclaim list in shrink_page_list(),=
+ return total number of reclaim pages including unevictable pages, let the =
+caller handle unevictable pages.
+>>>
+>>> I think the problem is shrink_page_list is awkard. If page is unevictab=
+le it goto activate_locked->keep_locked->keep lables, keep lable list_add t=
+he unevictable pages and throw the VM_BUG instead of passing it to caller w=
+hile it relies on caller for non-reclaimed-non-unevictable    page's putbac=
+k.
+>>> I think we can make it consistent so that shrink_page_list could return=
+ non-reclaimed pages via page_list and caller can handle it. As an advance,=
+ it could try to migrate mlocked pages without retrial.
+>>>
+>>>
+>>> Below is the issue of CMA_ALLOC of large size buffer : (Kernel version =
+- 4.14.65 (On Android pie [ARM])).
+>>>
+>>> [=A0=A0 24.718792] page dumped because: VM_BUG_ON_PAGE(PageLRU(page) ||=
+ PageUnevictable(page))
+>>> [=A0=A0 24.726949] page->mem_cgroup:bd008c00
+>>> [=A0=A0 24.730693] ------------[ cut here ]------------
+>>> [=A0=A0 24.735304] kernel BUG at mm/vmscan.c:1350!
+>>> [=A0=A0 24.739478] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
+>>>
+>>>
+>>> Below is the patch which solved this issue :
+>>>
+>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>> index be56e2e..12ac353 100644
+>>> --- a/mm/vmscan.c
+>>> +++ b/mm/vmscan.c
+>>> @@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_h=
+ead *page_list,
+>>>                 sc->nr_scanned++;
+>>>
+>>>                 if (unlikely(!page_evictable(page)))
+>>> -                       goto activate_locked;
+>>> +                      goto cull_mlocked;
+>>>
+>>>                 if (!sc->may_unmap && page_mapped(page))
+>>>                         goto keep_locked;
+>>> @@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct lis=
+t_head *page_list,
+>>>                 } else
+>>>                         list_add(&page->lru, &free_pages);
+>>>                 continue;
+>>> -
+>>> +cull_mlocked:
+>>> +                if (PageSwapCache(page))
+>>> +                        try_to_free_swap(page);
+>>> +                unlock_page(page);
+>>> +                list_add(&page->lru, &ret_pages);
+>>> +                continue;
+>>>  activate_locked:
+>>>                 /* Not a candidate for swapping, so reclaim swap space.=
+ */
+>>>                 if (PageSwapCache(page) && (mem_cgroup_swap_full(page) =
+||
+>>>
+>>>
+>>>
+>>>
+>>> It fixes the below issue.
+>>>
+>>> 1. Large size buffer allocation using cma_alloc successful with unevict=
+able pages.
+>>>
+>>> cma_alloc of current kernel will fail due to unevictable page
+>>>
+>>> Please let me know if anything i am missing.
+>>>
+>>> Regards,
+>>> Pankaj
+>>>
+>>> From: Vlastimil Babka <vbabka@suse.cz>
+>>> Sent: 18 March 2019 14:12:50
+>>> To: Pankaj Suryawanshi; Kirill Tkhai; Michal Hocko; aneesh.kumar@linux.=
+ibm.com
+>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.or=
+g; khandual@linux.vnet.ibm.com; hillf.zj@alibaba-inc.com
+>>> Subject: Re: [External] Re: vmscan: Reclaim unevictable pages
+>>>
+>>>
+>>> On 3/15/19 11:11 AM, Pankaj Suryawanshi wrote:
+>>>>
+>>>> [ cc Aneesh kumar, Anshuman, Hillf, Vlastimil]
+>>>
+>>> Can you send a proper patch with changelog explaining the change? I
+>>> don't know the context of this thread.
+>>>
+>>>> From: Pankaj Suryawanshi
+>>>> Sent: 15 March 2019 11:35:05
+>>>> To: Kirill Tkhai; Michal Hocko
+>>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org; linux-mm@kvack.o=
+rg
+>>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+>>>>
+>>>>
+>>>>
+>>>> [ cc linux-mm ]
+>>>>
+>>>>
+>>>> From: Pankaj Suryawanshi
+>>>> Sent: 14 March 2019 19:14:40
+>>>> To: Kirill Tkhai; Michal Hocko
+>>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
+>>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+>>>>
+>>>>
+>>>>
+>>>> Hello ,
+>>>>
+>>>> Please ignore the curly braces, they are just for debugging.
+>>>>
+>>>> Below is the updated patch.
+>>>>
+>>>>
+>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>> index be56e2e..12ac353 100644
+>>>> --- a/mm/vmscan.c
+>>>> +++ b/mm/vmscan.c
+>>>> @@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct list_=
+head *page_list,
+>>>>                  sc->nr_scanned++;
+>>>>
+>>>>                  if (unlikely(!page_evictable(page)))
+>>>> -                       goto activate_locked;
+>>>> +                      goto cull_mlocked;
+>>>>
+>>>>                  if (!sc->may_unmap && page_mapped(page))
+>>>>                          goto keep_locked;
+>>>> @@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct li=
+st_head *page_list,
+>>>>                  } else
+>>>>                          list_add(&page->lru, &free_pages);
+>>>>                  continue;
+>>>> -
+>>>> +cull_mlocked:
+>>>> +                if (PageSwapCache(page))
+>>>> +                        try_to_free_swap(page);
+>>>> +                unlock_page(page);
+>>>> +                list_add(&page->lru, &ret_pages);
+>>>> +                continue;
+>>>>   activate_locked:
+>>>>                  /* Not a candidate for swapping, so reclaim swap spac=
+e. */
+>>>>                  if (PageSwapCache(page) && (mem_cgroup_swap_full(page=
+) ||
+>>>>
+>>>>
+>>>>
+>>>> Regards,
+>>>> Pankaj
+>>>>
+>>>>
+>>>> From: Kirill Tkhai <ktkhai@virtuozzo.com>
+>>>> Sent: 14 March 2019 14:55:34
+>>>> To: Pankaj Suryawanshi; Michal Hocko
+>>>> Cc: linux-kernel@vger.kernel.org; minchan@kernel.org
+>>>> Subject: Re: Re: [External] Re: vmscan: Reclaim unevictable pages
+>>>>
+>>>>
+>>>> On 14.03.2019 11:52, Pankaj Suryawanshi wrote:
+>>>>>
+>>>>> I am using kernel version 4.14.65 (on Android pie [ARM]).
+>>>>>
+>>>>> No additional patches applied on top of vanilla.(Core MM).
+>>>>>
+>>>>> If  I change in the vmscan.c as below patch, it will work.
+>>>>
+>>>> Sorry, but 4.14.65 does not have braces around trylock_page(),
+>>>> like in your patch below.
+>>>>
+>>>> See        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
+x.git/tree/mm/vmscan.c?h=3Dv4.14.65
+>>>>
+>>>> [...]
+>>>>
+>>>>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>>>>>> index be56e2e..2e51edc 100644
+>>>>>> --- a/mm/vmscan.c
+>>>>>> +++ b/mm/vmscan.c
+>>>>>> @@ -990,15 +990,17 @@ static unsigned long shrink_page_list(struct l=
+ist_head *page_list,
+>>>>>>                   page =3D lru_to_page(page_list);
+>>>>>>                   list_del(&page->lru);
+>>>>>>
+>>>>>>                  if (!trylock_page(page)) {
+>>>>>>                           goto keep;
+>>>>>>                  }
+>>>>
+>>>> **********************************************************************=
+***************************************************************************=
+************ eInfochips Business Disclaimer: This e-mail message and all at=
+tachments transmitted with it are   intended  solely for the use of the add=
+ressee and may contain legally privileged and confidential information. If =
+the reader of this message is not the intended recipient, or an employee or=
+ agent responsible for delivering this message to the intended recipient,  =
+ you  are hereby notified that any dissemination, distribution, copying, or=
+ other use of this message or its attachments is strictly prohibited. If yo=
+u have received this message in error, please notify the sender immediately=
+ by replying to this message and   please  delete it from your computer. An=
+y views expressed in this message are those of the individual sender unless=
+ otherwise stated. Company has taken enough precautions to prevent the spre=
+ad of viruses. However the company accepts no liability for any damage   ca=
+used  by any virus transmitted by this email. *****************************=
+***************************************************************************=
+*****************************************************
+>>>>
+>>>
+>>>
+>>>
+>>
+>>
+>
+>
