@@ -2,129 +2,160 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979B3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E36DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6425C20830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4720720830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVrUFhly"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qaiiRwOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfCZK16 (ORCPT
+        id S1731351AbfCZK2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:27:58 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:55096 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfCZK15 (ORCPT
+        Tue, 26 Mar 2019 06:28:34 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52026 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCZK2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:27:57 -0400
-Received: by mail-it1-f195.google.com with SMTP id w18so18658036itj.4;
-        Tue, 26 Mar 2019 03:27:57 -0700 (PDT)
+        Tue, 26 Mar 2019 06:28:31 -0400
+Received: by mail-it1-f196.google.com with SMTP id e24so18693345itl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tlAk1qNw3eNBVB2PmRA+DTGTHvUydulAWbcIGX59EZ4=;
-        b=aVrUFhlyI99XTFkw2vLuUB98sj5T4+hOrAFCMv4C3a0ZZK+6XCjzgA1IHP7Z/4DwHZ
-         Xdap1DfOPvhfeVJWrwG+nGB0p4LNYdjW3PumIUjibIsdYc/YcCJW63oJOl3w7Le8EdEE
-         CYWWvpDsXEZaioB4wAKAhKkOCs+wQ6KunvteIzQcgCiLb8eYGo/oM+ocNYZJhD/mbpma
-         H8oXa61dppX1ARN4QO/o82lbugUrLuG8ZEw4ElEFYzMvvZYPY+TOcSrVklk+6vWxMulO
-         1QdZmTNGXsaL0gX+QSQylrZiApBMcmIHCrFUR9N/05pnu9vHgZ1tNpCEFhhQ8TPt8SwR
-         vREA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5Pa2hHx1krLUUKLo4HVfoSo1n6QmzxGuIvnvOfPoj1A=;
+        b=qaiiRwOwTa19JjyeE3h36Yl3zW8YxQZc+OaRxetF5FWJppv1Whxpj2q3fYu2+wx+Sw
+         4NMwFrPEzJkZ9qSXxSny0tgI1EvzEFTFoT4yr/0FjQ5/t6Ox5kN+OFH2acPJlorzSB4b
+         Zj/X1c0YPAXDVmKvFbqziFSWphvhUTo2gLRlP1tXJW76zeeiirZxQT5s3xuTBnC4rVg5
+         7cQ2KfrhZNWkbyxl2YwgH3sv4GEVfFlUWGxJNHq70YYQFapuEB7kR3nTmEM5SfUHYgL6
+         MTpX7iI+S7TqSNImFeHiD16k3vyercp8Avb0wx/oZ4DVAAP6vk8L9qoupH67ir0ewwhp
+         0Idg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tlAk1qNw3eNBVB2PmRA+DTGTHvUydulAWbcIGX59EZ4=;
-        b=ceOtnS9Ffm5KwlrmkwaFfIeGc9sX+/11Xvqyivwbxw+Tp8KNvPk6wREUwMIzQ/tqOf
-         wjwtw02VEZomsKGeHlRvIkGWQgvglkST8XnbLpFCr2U7FHbFGV5OWXIYu0VdXn/x+JC1
-         PJAkwEBIeTzg7gbphWVRKDgOSfXtB1mZV0cMCzbAuLCKgE8S1BVOlvhi9OXoQiUyNO8S
-         HIT91ad4ftm0tW/8dl81+LzJXv9oOhmlL0xGU5agi5ZygXiF5I1/dpUGXL5sv7e1R3d1
-         WSemDYQmQaIvMoZ4hh1P4pht6BIgjN/a+pNODGwBVnDWBIywwoPMOUlW+k6LmPCuncFz
-         V04Q==
-X-Gm-Message-State: APjAAAWeKiU+Qh+XLmM0EZkWrA5FaWseoPwbPkMPEFpP311/7PE7c6/W
-        EXyyuyh8HP5Nwg2njoHIYMs=
-X-Google-Smtp-Source: APXvYqz/z5o6AGGjvZqJtOqCmcJg/Fmx/lsbE8dWLic1WRDu+bKdXUFc0Ol+LWRIvpjc+mnYEBRmtQ==
-X-Received: by 2002:a02:ad03:: with SMTP id s3mr15848938jan.3.1553596076455;
-        Tue, 26 Mar 2019 03:27:56 -0700 (PDT)
-Received: from icarus ([2001:268:c0a3:6e7a:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id b74sm346086itd.12.2019.03.26.03.27.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 03:27:55 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 19:28:43 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v12 01/11] bitops: Introduce the for_each_set_clump8 macro
-Message-ID: <20190326102843.GA10264@icarus>
-References: <cover.1553494625.git.vilhelm.gray@gmail.com>
- <9afc30a574ce3e6a86b51dd522146a1d2156dedd.1553494625.git.vilhelm.gray@gmail.com>
- <20190325093854.jzkkwaksxi7zvtrg@wunner.de>
- <20190326031422.GB3356@icarus>
- <20190326094345.v7l7xjvfs2scbvbv@wunner.de>
- <20190326100743.GA10005@icarus>
- <20190326101933.GW9224@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5Pa2hHx1krLUUKLo4HVfoSo1n6QmzxGuIvnvOfPoj1A=;
+        b=Yp6DpU8SShXEiMcN3YR2kyLKQ9map5cte3U9A7hWMTGpnQvvqGldWTXZCOwao0n6JB
+         EGnU5T/ecjb3nW7TSz5ctTV+dcg2eYmXVB8sxGxh+LT+9Buyqr5KZpvRqKpkj6hyB6T8
+         IXeSUB+gOslxWrBuzcxTydvxTc+kZzu0sY4oqG19jT0psUZVg3T6V1NNyO8Op11iwE7w
+         YDLIs1P/UKko7k7cnfmPn8XoddU6oFhedt4WmXLGZWzYXfWPG3Fhs0XWa53oI4cZUkgk
+         +eknt00c1AC7bCMxLQJx8el6ruDDUet6naB8ZD1yR17tDTakoa1k4uUxqdO0O2YOAuKo
+         7n/A==
+X-Gm-Message-State: APjAAAVwFLzue3AT5h4Fjn6qKo5Tw2YRHjcFgOHXhJ9Lk+LUQZSVtnCR
+        k7Z3wGht6hz57xNJOsW0MlroKUgfUP/VeNxJGmIZvQ==
+X-Google-Smtp-Source: APXvYqxSmng3heofTCli47CaH/ZWlY+Z+Gi548aO6izCOxG5kiWeDpJjVWYO66BU1Pmf+yFgPnyuixVND1l5T1dr/Sc=
+X-Received: by 2002:a24:3281:: with SMTP id j123mr13899319ita.166.1553596109701;
+ Tue, 26 Mar 2019 03:28:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190326101933.GW9224@smile.fi.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <0000000000004f8499057be95e1d@google.com> <0000000000008ee87005847fc985@google.com>
+ <20190325100223-mutt-send-email-mst@kernel.org> <df4f2cf6-8469-f894-8f45-7c48a6a1801f@redhat.com>
+In-Reply-To: <df4f2cf6-8469-f894-8f45-7c48a6a1801f@redhat.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 26 Mar 2019 11:28:18 +0100
+Message-ID: <CACT4Y+Z1s-Lx1UXHKj88kQoOcbiD8gwyuRU3F_+cceP3pzbbrw@mail.gmail.com>
+Subject: Re: INFO: task hung in vhost_net_stop_vq
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        syzbot <syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com>,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        virtualization@lists.linux-foundation.org, weiyj.lk@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 12:19:33PM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 26, 2019 at 07:08:18PM +0900, William Breathitt Gray wrote:
-> > On Tue, Mar 26, 2019 at 10:43:45AM +0100, Lukas Wunner wrote:
-> > > On Tue, Mar 26, 2019 at 12:14:22PM +0900, William Breathitt Gray wrote:
-> 
-> > > Why is it so complicated, does it allow passing in a start value
-> > > that's not a multiple of 8?  Do you really need that?  I imagine
-> > > a simplification is possible if that assumption can be made (and
-> > > is spelled out in the kerneldoc).
-> > 
-> > That's a good point. Originally, I had envisioned the possibility of
-> > calling bitmap_get_value8/bitmap_set_value8 at odd start offsets; this
-> > would open up the possibility of a clump landing as a split between 2
-> > words, thus requiring this complicated case handling code. However, I'm
-> > not sure how often users would need this case; none of the drivers right
-> > now require clumps at odd offsets.
-> > 
-> > Andy, would you have any objection to restricting the start offset
-> > values for bitmap_get_value8/bitmap_set_value8 to multiples of 8? That
-> > would prevent the split word case, and thus allow the implementation for
-> > those functions to be a lot simpler.
-> 
-> No, I have no objection.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+On Tue, Mar 26, 2019 at 11:17 AM Jason Wang <jasowang@redhat.com> wrote:
+>
+>
+> On 2019/3/25 =E4=B8=8B=E5=8D=8810:02, Michael S. Tsirkin wrote:
+> > Looks like more iotlb locking mess?
+>
+>
+> Looking at the calltrace:
+>
+> [  221.743675] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> [  221.744297] [ INFO: possible recursive locking detected ]
+> [  221.744944] 4.7.0+ #1 Not tainted
+> [  221.745326] ---------------------------------------------
+> [  221.746128] syz-executor1/6823 is trying to acquire lock:
+> [  221.746737]  (&vq->mutex){+.+...}, at: [<ffffffff84484b70>] vhost_proc=
+ess_iotlb_msg+0xe0/0x9e0
+> [  221.747789]
+> [  221.747789] but task is already holding lock:
+> [  221.748470]  (&vq->mutex){+.+...}, at: [<ffffffff84484b70>] vhost_proc=
+ess_iotlb_msg+0xe0/0x9e0
+> [  221.749535]
+> [  221.749535] other info that might help us debug this:
+> [  221.750280]  Possible unsafe locking scenario:
+> [  221.750280]
+> [  221.750946]        CPU0
+> [  221.751232]        ----
+> [  221.751523]   lock(&vq->mutex);
+> [  221.751922]   lock(&vq->mutex);
+> [  221.752339]
+> [  221.752339]  *** DEADLOCK ***
+> [  221.752339]
+>
+> I could not think of a path that can hit this. And I could not reproduce =
+with the reproducer in the link in net-next.
 
-In this case, bitmap_get_value8 could be simplified to something like
-this:
 
-        index = BIT_WORD(start);
-        offset = start % BITS_PER_LONG;
-        return (bitmap[index] >> offset) & 0xFF;
+Looking at the bisection log, syzbot is able to reproduce this
+super-reliably on multiple kernel revisions. Are you sure you are
+using the right config/revision? What else can be in play? syzbot uses
+VMs. The image is available.
 
-Or if you prefer a single line:
 
-        (bitmap[BIT_WORD(start)] >> (start % BITS_PER_LONG)) & 0xFF;
-
-Would it be better to define bitmap_get_value8 as a macro then?
-
-William Breathitt Gray
+> Thanks
+>
+>
+> >
+> > On Tue, Mar 19, 2019 at 10:21:00PM -0700, syzbot wrote:
+> >> syzbot has bisected this bug to:
+> >>
+> >> commit 6b1e6cc7855b09a0a9bfa1d9f30172ba366f161c
+> >> Author: Jason Wang <jasowang@redhat.com>
+> >> Date:   Thu Jun 23 06:04:32 2016 +0000
+> >>
+> >>      vhost: new device IOTLB API
+> >>
+> >> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D1486ad2=
+7200000
+> >> start commit:   6b1e6cc7 vhost: new device IOTLB API
+> >> git tree:       upstream
+> >> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D1686ad2=
+7200000
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1286ad2720=
+0000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc94f9f0c03=
+63db4b
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd21e6e297322=
+a900c128
+> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D141db34d=
+400000
+> >> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D108ef29340=
+0000
+> >>
+> >> Reported-by: syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com
+> >> Fixes: 6b1e6cc7 ("vhost: new device IOTLB API")
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/syzkaller-bugs/df4f2cf6-8469-f894-8f45-7c48a6a1801f%40redhat.com.
+> For more options, visit https://groups.google.com/d/optout.
