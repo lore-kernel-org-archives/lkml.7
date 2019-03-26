@@ -3,90 +3,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26496C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC89C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EED2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:19:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OQ0tJ4hP"
+	by mail.kernel.org (Postfix) with ESMTP id 6E7452075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553631660;
+	bh=WlX3mKU7ybiZhB/KyE7ButxaXqtd5qA2M5Dl9dJjWTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X22SZvl0KSTcsGyGA9slI/UYcgme3htnZhZjtADlrSm8MZHXcFBHq+ZYAxCOp2c5b
+	 iyRlxmIj749LbOnGZlpdWGTn7jW0VHx+a1W9hBDRL6GbUrp9SvYcrSm2iB8d+9FoIX
+	 gso9Iqly1tHUxypVZAqM3Gh3gh7g1ssIL7gtE/W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfCZUTY (ORCPT
+        id S1732559AbfCZUU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:19:24 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37198 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731701AbfCZUTX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:19:23 -0400
-Received: by mail-io1-f68.google.com with SMTP id x7so12052798ioh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 13:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hB29KTCJlsbqFhKCwkDQh+R5X5tiePaO6kD9ZEWJZbo=;
-        b=OQ0tJ4hPqATnNwystXYKaNCD6UwL4/fn6mB5FjSIT7nVHn9ZHVjLZh0CMgN/brQrXT
-         aYz6NoTlh8J65LM3tlc86k0Txf9ueKoV3gRloJbdspXVXYX3WkMeKgqh3qDeQu2+0HoG
-         B6no9aLMDIzH7YGkM2iTOkVbPUV9sOoBR5zkQNw++/AlKs12qosWNOOIF0O9XMm8epIg
-         LsVRWZqQ9vHJ52cyp1QlthYMFfGoqNfiA/0A/qNH1ZSPh8qCrf93jJwP2XUSJptAo2kC
-         xZiVKKYya8uktZ9LPP9n7+jki09yQRga4RnKJtsnmH0rxosZa9KcuAloNQaKsLiEVL9x
-         lQ5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hB29KTCJlsbqFhKCwkDQh+R5X5tiePaO6kD9ZEWJZbo=;
-        b=ThA37iHCe86KFGFJRZggVFD442xMTcMP61TG39vZcOR9gRmcZzh7s5oQsw8gKj6D0q
-         F9Q/alVti11RJ6O2fm5PHpRHlGYvgFq8It+7w2ioc1tTXg+xtDRSFMXrKj9gcQMbL0tg
-         rPTousJejvdvZ9akvFJwxK/vGxZkT9AtaHnm1Pw1+LyxfCZYKApyFchfsIZ/e92qgTo0
-         Qmkj2AyiJm3S/laQdGOE79ZoRyt6gV6YSET8mzNkAeY4kw7xxcTHb77XrEUkRDth+uh/
-         NZ0Pg6eSrjCR0mpesi7JVOOYCeE/7RvGav60xXavZKPCEuXHqfuubLoiz6vNuTuNoq7W
-         ij1Q==
-X-Gm-Message-State: APjAAAUWC8mDnWg4ow5kXuQVme/3+CdZEUIkgyVz5h8VjIGL8nlaVrij
-        dDgGViRFYp4rE79vntpiG0zVlF90ywk+AaNu03kzTw==
-X-Google-Smtp-Source: APXvYqwpSgfoWd0foYi7OK3mePaE1gVvnrZtRJ0wlPPomG3EqUY9wyTQY9JGiNPSzHPcdRLYbBCG6+jifqs5L2vaQLI=
-X-Received: by 2002:a6b:e509:: with SMTP id y9mr22448630ioc.169.1553631562467;
- Tue, 26 Mar 2019 13:19:22 -0700 (PDT)
+        Tue, 26 Mar 2019 16:20:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731736AbfCZUU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 16:20:59 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5473820657;
+        Tue, 26 Mar 2019 20:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553631657;
+        bh=WlX3mKU7ybiZhB/KyE7ButxaXqtd5qA2M5Dl9dJjWTQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lCpYKWtMfFgGUD3pGqWHfPg5Urxvob4sjxEJnjqf/ReMO4qSgGqsTwea34UhdNTdM
+         Ybd46hyXcUeIUeC/pupENwrrx5bFZQOdDI6cmbUXvw6W44eeGc4n2KHUH6pbi+ztCh
+         Crmf+Kk96tntguibsrvalzBYHjq6SwDnIWnBax4k=
+Date:   Tue, 26 Mar 2019 15:20:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux@yadro.com, Keith Busch <keith.busch@intel.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v4 08/21] nvme-pci: Handle movable BARs
+Message-ID: <20190326202055.GP24180@google.com>
+References: <20190311133122.11417-1-s.miroshnichenko@yadro.com>
+ <20190311133122.11417-9-s.miroshnichenko@yadro.com>
 MIME-Version: 1.0
-References: <20190325220954.29054-1-matthewgarrett@google.com>
- <20190325220954.29054-24-matthewgarrett@google.com> <20190325164221.5d8687bd@shemminger-XPS-13-9360>
- <CALCETrU=EqqRwyQGBT0=_N9-E_pBM53=z+WJrd9OzV7g6xJa0A@mail.gmail.com> <alpine.LRH.2.21.1903270523240.5235@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1903270523240.5235@namei.org>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 26 Mar 2019 13:19:10 -0700
-Message-ID: <CACdnJuskoACijaifrNQhqRtr07uPN7LT8m=FNgcxgJRiwDLVkw@mail.gmail.com>
-Subject: Re: [PATCH 23/27] bpf: Restrict kernel image access functions when
- the kernel is locked down
-To:     James Morris <jmorris@namei.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Chun-Yi Lee <jlee@suse.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311133122.11417-9-s.miroshnichenko@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:57 AM James Morris <jmorris@namei.org> wrote:
-> - Assign an ID to each lockdown point
-> - Implement a policy mechanism where each ID is mapped to 0 or 1
-> - Allow this policy to be specified statically or dynamically
+[+cc Keith, Jens, Christoph, Sagi, linux-nvme, LKML]
 
-One of the problems with this approach is what the default behaviour
-should be when a new feature is added. If an admin fails to notice
-that there's now a new policy element, they run the risk of kernel
-integrity being compromised via the new feature even if the rest of
-the kernel is locked down.
+On Mon, Mar 11, 2019 at 04:31:09PM +0300, Sergey Miroshnichenko wrote:
+> Hotplugged devices can affect the existing ones by moving their BARs.
+> PCI subsystem will inform the NVME driver about this by invoking
+> reset_prepare()+reset_done(), then iounmap()+ioremap() must be called.
+
+Do you mean the PCI core will invoke ->rescan_prepare() and
+->rescan_done() (as opposed to *reset*)?
+
+> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+> ---
+>  drivers/nvme/host/pci.c | 29 +++++++++++++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 92bad1c810ac..ccea3033a67a 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -106,6 +106,7 @@ struct nvme_dev {
+>  	unsigned int num_vecs;
+>  	int q_depth;
+>  	u32 db_stride;
+> +	resource_size_t current_phys_bar;
+>  	void __iomem *bar;
+>  	unsigned long bar_mapped_size;
+>  	struct work_struct remove_work;
+> @@ -1672,13 +1673,16 @@ static int nvme_remap_bar(struct nvme_dev *dev, unsigned long size)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(dev->dev);
+>  
+> -	if (size <= dev->bar_mapped_size)
+> +	if (dev->bar &&
+> +	    dev->current_phys_bar == pci_resource_start(pdev, 0) &&
+> +	    size <= dev->bar_mapped_size)
+>  		return 0;
+>  	if (size > pci_resource_len(pdev, 0))
+>  		return -ENOMEM;
+>  	if (dev->bar)
+>  		iounmap(dev->bar);
+> -	dev->bar = ioremap(pci_resource_start(pdev, 0), size);
+> +	dev->current_phys_bar = pci_resource_start(pdev, 0);
+> +	dev->bar = ioremap(dev->current_phys_bar, size);
+
+dev->current_phys_bar is different from pci_resource_start() in the
+case where the PCI core has moved the nvme BAR, but nvme has not yet
+remapped it.
+
+I'm not sure it's worth keeping track of current_phys_bar, as opposed
+to always unmapping and remapping.  Is this a performance path?  I
+think there are advantages to always exercising the same code path,
+regardless of whether the BAR happened to be moved, e.g., if there's a
+bug in the "BAR moved" path, it may be a heisenbug because whether we
+exercise that path depends on the current configuration.
+
+If you do need to cache current_phys_bar, maybe this, so it's a little
+easier to see that you're not changing the ioremap() itself:
+
+  dev->bar = ioremap(pci_resource_start(pdev, 0), size);
+  dev->current_phys_bar = pci_resource_start(pdev, 0);
+
+>  	if (!dev->bar) {
+>  		dev->bar_mapped_size = 0;
+>  		return -ENOMEM;
+> @@ -2504,6 +2508,8 @@ static void nvme_reset_work(struct work_struct *work)
+>  	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING))
+>  		goto out;
+>  
+> +	nvme_remap_bar(dev, db_bar_size(dev, 0));
+
+How is this change connected to rescan?  This looks reset-related.
+
+>  	/*
+>  	 * If we're called to reset a live controller first shut it down before
+>  	 * moving on.
+> @@ -2910,6 +2916,23 @@ static void nvme_error_resume(struct pci_dev *pdev)
+>  	flush_work(&dev->ctrl.reset_work);
+>  }
+>  
+> +void nvme_rescan_prepare(struct pci_dev *pdev)
+> +{
+> +	struct nvme_dev *dev = pci_get_drvdata(pdev);
+> +
+> +	nvme_dev_disable(dev, false);
+> +	nvme_dev_unmap(dev);
+> +	dev->bar = NULL;
+> +}
+> +
+> +void nvme_rescan_done(struct pci_dev *pdev)
+> +{
+> +	struct nvme_dev *dev = pci_get_drvdata(pdev);
+> +
+> +	nvme_dev_map(dev);
+> +	nvme_reset_ctrl_sync(&dev->ctrl);
+> +}
+> +
+>  static const struct pci_error_handlers nvme_err_handler = {
+>  	.error_detected	= nvme_error_detected,
+>  	.slot_reset	= nvme_slot_reset,
+> @@ -2974,6 +2997,8 @@ static struct pci_driver nvme_driver = {
+>  	},
+>  	.sriov_configure = pci_sriov_configure_simple,
+>  	.err_handler	= &nvme_err_handler,
+> +	.rescan_prepare	= nvme_rescan_prepare,
+> +	.rescan_done	= nvme_rescan_done,
+>  };
+>  
+>  static int __init nvme_init(void)
+> -- 
+> 2.20.1
+> 
