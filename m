@@ -2,140 +2,163 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BAEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96C1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0556520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C1D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:36:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CccCLRso"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="XnoONczA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbfCZQe6 (ORCPT
+        id S1731681AbfCZQgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:34:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40143 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbfCZQe5 (ORCPT
+        Tue, 26 Mar 2019 12:36:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54247 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729800AbfCZQgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:34:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h22so11341692edw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:34:56 -0700 (PDT)
+        Tue, 26 Mar 2019 12:36:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q16so13353531wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:36:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uhKIZ8TUnlMSSQGGMRtLqbaYuRj+7mZCO6B+dsUkCqY=;
-        b=CccCLRsoGNz69rhZaHHllAZ2djVdT9wcbzWzSlPXcm/dpS60RE8ukVlDX/ig+9hPBj
-         N3yEQu+bgrNvHV3hH/mgZnQA9A5W8UBOBxw1fOpPwDNZDA0o2qvq2fn5iL/ojaRucek4
-         i8Gx4tIP96CyG0Dw9CJ6wfCNoo4cpVkZAd14+eifQGWLb35S+/i6vwp8GmzyX1Nt/tDz
-         ecQNBHf7makUomgg+6q6ARNJoIi6lF0Mh5SOd2tnmpdu0oGQbbwIIw9uEVbUPS9WyKi2
-         hdhmauxG6xcNw6j7WlVPYKbp4egppkwfVrGpqYhDyLRY3hcdqqD2D7RBxhO1RtSf3TmK
-         UsBw==
+        bh=GLaniIsP9Pgj38i/cF6fQVJt/oSPNpbEsEWUOxjxDnY=;
+        b=XnoONczAWvY0wIgCCptP6qnspanv/tQCI1Tl4k7lrM89EwlwCXQH77TeZoX8x8zr1r
+         TOqs7VerEmPfukxOU92hqzIESXbsHPFEhlcZ+FWhw1lWA5zc6TLEtjEChSFQw0mOZxRW
+         OwueOM/axyFYpzoR1bJXqd0j/eIOldVj2NWVcezjYm25taDDvONCZ+IX23NHzHhIXyZm
+         aoBoggR482YHrYPlZp9S4H71JuP+gqaALptdvGbSLKLlewKAaFPOV5JnMObAWf+WGHut
+         wmtSo3cN0jYcFNBE9078dj7LkbeySiZKtq6FSi/SLUPCQn1t7h/nvJSz4LbwGFXtoR1T
+         +mpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uhKIZ8TUnlMSSQGGMRtLqbaYuRj+7mZCO6B+dsUkCqY=;
-        b=pYMIb1n75WEnrzKrcvCN6g4uz34chaAH03EYaLMLoKvdd9mJnxyhviYok0QW7PyZe8
-         SW5k7sLO1QQz82bWQMoqcXa/MeTX76tSGShy0v46wS2Zs/DF8AxE+GgnhAIq0iplizfE
-         4ZfCaXuFSyd0L4WTvn3rUi3ViSwVVs4i3O2LfV9fmhgEdNSVrUO3lHuHSVXvdr6RxVLl
-         lIHW2mj6EYMgon/OXwMdCQCMolb/kwN64E77p9zcL5cfyWVsePvNFM2Q1i9RvLwBg6Xc
-         KafVd9wx0aFaZGDohtVicbhh+lcv2QQW38iS8PWBBUk9GDwxIxTNUJf48kzoJCAKmx4C
-         paYw==
-X-Gm-Message-State: APjAAAXVQ1Lhvw2F+pD+0AKHFx8Pz6V7SALLDlC3dq+znBpVDZG6Lfjm
-        YvE1kaHurT2Uq8U8BxwwuFJvHQ==
-X-Google-Smtp-Source: APXvYqyocoGdZNqeXotbuOvrE/6ASfsKPWrzMcN/tj1GT4/LvNcZVlWbP1SyHtyw/NdxbjVAUExttA==
-X-Received: by 2002:aa7:c697:: with SMTP id n23mr20631407edq.231.1553618095657;
-        Tue, 26 Mar 2019 09:34:55 -0700 (PDT)
-Received: from brauner.io (x59cc895e.dyn.telefonica.de. [89.204.137.94])
-        by smtp.gmail.com with ESMTPSA id z2sm4170721ejn.37.2019.03.26.09.34.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 26 Mar 2019 09:34:55 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 17:34:52 +0100
-From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        Jonathan Kowalski <bl0pbl33p@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v1 2/4] pid: add pidctl()
-Message-ID: <20190326163452.uku4bgkessxzxvai@brauner.io>
-References: <20190326155513.26964-1-christian@brauner.io>
- <20190326155513.26964-3-christian@brauner.io>
- <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
- <20190326162337.o256x7hiodu2qfyg@brauner.io>
- <20190326163142.4eh5qpgiqvygf26w@brauner.io>
+        bh=GLaniIsP9Pgj38i/cF6fQVJt/oSPNpbEsEWUOxjxDnY=;
+        b=dnQrKLYFpCv451zTfn3vcYQCDR9ge+7bLD7+Qdyl1X/t4XyocgMiNe4I79gOul96el
+         lkHm8MTpFSs5NnHD6tiVSAPZrJ17AtTSR02BwPByoHXE8dNb3R4U8u20TjxmKz5NC1ae
+         drbGU2A7WEox56QPCPfMEUysWvGDhZHseOC9ykOri3Fl6HyRiVRm6/++s7nqmZeamWgb
+         DA8tars+2I+pbDziY0G2H7IC0N7Fhe22WpWGpmBTSvoFYLZVl6PPEnJbYaNkeu3Qkf4Y
+         1gga7cFvfcQrRTlL2Ed9nLvDtZZo0BWSh39Mcv+qwjwQf3JMpPYeWIGnOWeMPjwr4PbD
+         2Jzw==
+X-Gm-Message-State: APjAAAXLylX4KCM85ER2mzQr05Mz/+aIyUdj5fFFcXqzVkEgTSeXYEWe
+        9M4s5TCtWNYg4RhnMuC9d4srPg==
+X-Google-Smtp-Source: APXvYqwJFcVMR0Q1Htaff5UXoS5w4Cl9jrdHlPXmdfBN118VmF9hnMem2LtWRW25NKaKHnUM7Z8KrA==
+X-Received: by 2002:a7b:c34e:: with SMTP id l14mr10286385wmj.68.1553618201592;
+        Tue, 26 Mar 2019 09:36:41 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id a17sm34884489wmg.40.2019.03.26.09.36.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 09:36:41 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 17:36:40 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190326163640.GD4958@nanopsycho.orion>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326163142.4eh5qpgiqvygf26w@brauner.io>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:31:42PM +0100, Christian Brauner wrote:
-> On Tue, Mar 26, 2019 at 05:23:37PM +0100, Christian Brauner wrote:
-> > On Tue, Mar 26, 2019 at 09:17:07AM -0700, Daniel Colascione wrote:
-> > > Thanks for the patch.
-> > > 
-> > > On Tue, Mar 26, 2019 at 8:55 AM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
-> > > > I quote Konstantins original patchset first that has already been acked and
-> > > > picked up by Eric before and whose functionality is preserved in this
-> > > > syscall:
-> > > 
-> > > We still haven't had a much-needed conversation about splitting this
-> > > system call into smaller logical operations. It's important that we
-> > > address this point before this patch is merged and becomes permanent
-> > > kernel ABI.
-> > 
-> > I don't particularly mind splitting this into an additional syscall like
-> > e.g.  pidfd_open() but then we have - and yes, I know you'll say
-> > syscalls are cheap - translate_pid(), and pidfd_open(). What I like
-> > about this rn is that it connects both apis in a single syscall
-> > and allows pidfd retrieval across pid namespaces. So I guess we'll see
-> > what other people think.
-> 
-> There's something to be said for
-> 
-> pidfd_open(pid_t pid, int pidfd, unsigned int flags);
-> 
-> /* get pidfd */
-> int pidfd = pidfd_open(1234, -1, 0);
-> 
-> /* convert to procfd */
-> int procfd = pidfd_open(-1, 4, 0);
-> 
-> /* convert to pidfd */
-> int pidfd = pidfd_open(4, -1, 0);
+Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
+>Basic genetlink and init infrastructure for the netlink interface, register
+>genetlink family "ethtool". Introduce CONFIG_ETHTOOL_NETLINK Kconfig
+>option. Add interface description into Documentation/networking.
+>
+>Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+>---
 
-probably rather:
+[...]
 
-int pidfd = pidfd_open(-1, 4, PIDFD_TO_PROCFD);
-int procfd = pidfd_open(-1, 4, PROCFD_TO_PIDFD);
-int pidfd = pidfd_open(1234, -1, 0);
+
+>diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+>new file mode 100644
+>index 000000000000..85dd6dac71a2
+>--- /dev/null
+>+++ b/net/ethtool/netlink.c
+>@@ -0,0 +1,34 @@
+>+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>+
+>+#include <linux/ethtool_netlink.h>
+>+#include "netlink.h"
+>+
+>+/* genetlink setup */
+>+
+>+static const struct genl_ops ethtool_genl_ops[] = {
+
+Please be consistent with prefixes. Either use "ethtool_" or "ethnl_"
+for all functions and variables in this code.
+
+
+>+};
+>+
+>+struct genl_family ethtool_genl_family = {
+>+	.hdrsize	= 0,
+>+	.name		= ETHTOOL_GENL_NAME,
+>+	.version	= ETHTOOL_GENL_VERSION,
+>+	.netnsok	= true,
+>+	.parallel_ops	= true,
+>+	.ops		= ethtool_genl_ops,
+>+	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
+>+};
+>+
+>+/* module setup */
+>+
+>+static int __init ethnl_init(void)
+>+{
+>+	int ret;
+>+
+>+	ret = genl_register_family(&ethtool_genl_family);
+>+	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
+
+Why do you need this warning? Please avoid it.
+
+
+>+		return ret;
+>+
+>+	return 0;
+>+}
+>+
+>+subsys_initcall(ethnl_init);
+>diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+>new file mode 100644
+>index 000000000000..63063b582ca2
+>--- /dev/null
+>+++ b/net/ethtool/netlink.h
+>@@ -0,0 +1,12 @@
+>+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>+
+>+#ifndef _NET_ETHTOOL_NETLINK_H
+>+#define _NET_ETHTOOL_NETLINK_H
+>+
+>+#include <linux/ethtool_netlink.h>
+>+#include <linux/netdevice.h>
+>+#include <net/genetlink.h>
+>+
+>+extern struct genl_family ethtool_genl_family;
+>+
+>+#endif /* _NET_ETHTOOL_NETLINK_H */
+>-- 
+>2.21.0
+>
