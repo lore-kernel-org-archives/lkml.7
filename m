@@ -2,60 +2,60 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAC7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE1CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A415D206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F8D206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oDcniD9L"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="avBvz9GQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732335AbfCZRcj (ORCPT
+        id S1732382AbfCZRct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:32:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44480 "EHLO
+        Tue, 26 Mar 2019 13:32:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35581 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732262AbfCZRcg (ORCPT
+        with ESMTP id S1732293AbfCZRci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:32:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y7so11256123wrn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:32:34 -0700 (PDT)
+        Tue, 26 Mar 2019 13:32:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w1so15422296wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=krSRy2BR7/lBUSfBkF8HPbKkzTxQSpgqYzJEmOcZcLg=;
-        b=oDcniD9LgpibGiHPF99L5Ebt2RwDyaVABHRJRtAwpdU3TzeqhGwNoklDDM9l6grK+F
-         a00yFMqnknQ/8nNi4hnlqcnW4Wkuuv8Snx9LnIhmcOqn8Jx9Sgd2keXMxgSdYjRa/DwX
-         44tWd8HPo1HuTW2Zpm8qQdTUPQ4cUbjy/4wIU6HgWShhXzxKpKyN5PSl0UQB9m0em1jM
-         wzp71YUlFDvba22eJMli/mQITtShpKcXUzU3eGyaiz9Y/85bW7f/Y3GerW7cpdg1OaK6
-         DCHZZNSfygW21ammTZhHXIntZ0lMDxdTywDZYqgzYeLV7S1VSRlP1OIEZz6l2IHtzqaI
-         Ym4w==
+        bh=Y2vBgqG62dEqhYLrbn7654YScA/5gj4YzakQT4vpJ6E=;
+        b=avBvz9GQGlWx5m3xjjCIcq4bAD9tFJ+aUBE1HJq0IKKwpoy1d4WLMOJkd7Ql6YuZ+2
+         RPlawgcLtzYV8M1+kzFKGCDps1lay07asPLAk+5T25D6+Ox8Z1kOHa/yspYK7dElsY++
+         YPxfdG+q15fju9/vXBhYllHQG2W+7VWCGe21HSiMWmsdXuqXTQtiYX0GNgEbAJ+Yk5O0
+         jZNU4g82STbtX0LVMRqnBoHKk6yxP38ya8bsdsUHSkGfGBc/ov/eeg1wiv+dUvIGc6Rz
+         uwEJR4UBnAliH7YLjxNRDpx8gtQQVx7NL6dYmjw0o6DfqTKj1vIvdNdSN60IsKe+poad
+         HVyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=krSRy2BR7/lBUSfBkF8HPbKkzTxQSpgqYzJEmOcZcLg=;
-        b=Nmk/qDUsdWP3OhSzetaR01JmAnSHuIi1R0ttDroifOsZLFd4LNm2b1ijjrR4tSXavi
-         l+3nHb9NiQlw8sKaFQHYeaEpPlzk3fkyHKjvjZhRpP5qBSeMOp9FB2pq8A8m3wG9b4R7
-         m+ix+kR0FYsOgAcnyBDjQB5/PrnURvyDR2gBLSsvZXsu4Kr8mMRp3JovXDP8iiDOOYeh
-         wY0I4N0r9lL+hjDK2DBMW6Vmkkb+r2mX76dxtfNHw3uXqeunPj6sboJTC87zyQplAHiq
-         S3CSkOo+PAw5/lIzNPSV0LqElm0TiNuPf8KDaFI5gK6WYuma+kvZ//Ya5lVLHCv0k0sX
-         XibA==
-X-Gm-Message-State: APjAAAU/bxzWdbcU31i4V2VW8S7liiM4e8/YKthBjXXtDM1JvMrPYciy
-        stvtmiJQ0ShIFQzXktFE9jhjlQ==
-X-Google-Smtp-Source: APXvYqzEyNI4CSjem7Q6zv3ItWBIxmMnwY809QWRTnNXRrb7z3R+Ylw3sj67q5A0mVA78DYQa7uXVw==
-X-Received: by 2002:a5d:638d:: with SMTP id p13mr19905744wru.202.1553621554056;
-        Tue, 26 Mar 2019 10:32:34 -0700 (PDT)
+        bh=Y2vBgqG62dEqhYLrbn7654YScA/5gj4YzakQT4vpJ6E=;
+        b=IhLNhVKaMnoZKFjvENn853BZhkO2lgcEQ4/a9MvF1f+IJYs50VmIMWo/iRFGwuCxMt
+         ACBAjlBkzFmK+pKSckyi047/1zKX6lGGkWV3pUiQ+xZ6sSkeNhAENnCzd23+6SDNQrW1
+         zmPfX86BvaX+1mk1D0E3pV25SClq1nzr2gncX5baReeul9T9mG37tNFo8eWR6TIPPbo8
+         5PFopngv9W4tV2pd91S153yom7AhzGi/j8RJD09Y/hAIYgH9+30hm/C+TIzde6ntjQZG
+         mOV1sPr6EZwWiBHVsMqXj+3pRU0VMUo/BECwHV65dL4YDunDgWRgWviU643Vgk+QJA3M
+         BQxQ==
+X-Gm-Message-State: APjAAAVwfxP32XvBf6+B0HJ8jhOORWb9yPvU/yfwLSRCMaohHspwXqwu
+        sg51LRNnnj++J35awXOCGyZjTA==
+X-Google-Smtp-Source: APXvYqwk46JpweNo//OkbvVrVIet6hbRlrW3TRR48Xy+UCGwOFvkBBv8GhB1uPghSiZXsI1RqyAJfg==
+X-Received: by 2002:adf:dbce:: with SMTP id e14mr15364086wrj.249.1553621556951;
+        Tue, 26 Mar 2019 10:32:36 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id 4sm2534541wmg.12.2019.03.26.10.32.32
+        by smtp.gmail.com with ESMTPSA id 4sm2534541wmg.12.2019.03.26.10.32.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 10:32:33 -0700 (PDT)
+        Tue, 26 Mar 2019 10:32:36 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -70,9 +70,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-input@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v7 09/11] leds: max77650: add LEDs support
-Date:   Tue, 26 Mar 2019 18:32:06 +0100
-Message-Id: <20190326173208.30614-10-brgl@bgdev.pl>
+Subject: [PATCH v7 11/11] MAINTAINERS: add an entry for max77650 mfd driver
+Date:   Tue, 26 Mar 2019 18:32:08 +0100
+Message-Id: <20190326173208.30614-12-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190326173208.30614-1-brgl@bgdev.pl>
 References: <20190326173208.30614-1-brgl@bgdev.pl>
@@ -85,200 +85,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This adds basic support for LEDs for the max77650 PMIC. The device has
-three current sinks for driving LEDs.
+I plan on extending this set of drivers so add myself as maintainer.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 ---
- drivers/leds/Kconfig         |   6 ++
- drivers/leds/Makefile        |   1 +
- drivers/leds/leds-max77650.c | 147 +++++++++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/leds/leds-max77650.c
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a72f97fca57b..d8c70cc6a714 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -608,6 +608,12 @@ config LEDS_TLC591XX
- 	  This option enables support for Texas Instruments TLC59108
- 	  and TLC59116 LED controllers.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e5a5d263f29..b32fe859c341 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9407,6 +9407,20 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/sound/max9860.txt
+ F:	sound/soc/codecs/max9860.*
  
-+config LEDS_MAX77650
-+	tristate "LED support for Maxim MAX77650 PMIC"
-+	depends on LEDS_CLASS && MFD_MAX77650
-+	help
-+	  LEDs driver for MAX77650 family of PMICs from Maxim Integrated.
++MAXIM MAX77650 PMIC MFD DRIVER
++M:	Bartosz Golaszewski <bgolaszewski@baylibre.com>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/*/*max77650.txt
++F:	Documentation/devicetree/bindings/*/max77650*.txt
++F:	include/linux/mfd/max77650.h
++F:	drivers/mfd/max77650.c
++F:	drivers/regulator/max77650-regulator.c
++F:	drivers/power/supply/max77650-charger.c
++F:	drivers/input/misc/max77650-onkey.c
++F:	drivers/leds/leds-max77650.c
++F:	drivers/gpio/gpio-max77650.c
 +
- config LEDS_MAX77693
- 	tristate "LED support for MAX77693 Flash"
- 	depends on LEDS_CLASS_FLASH
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 4c1b0054f379..f48b2404dbb7 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -61,6 +61,7 @@ obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
- obj-$(CONFIG_LEDS_NS2)			+= leds-ns2.o
- obj-$(CONFIG_LEDS_NETXBIG)		+= leds-netxbig.o
- obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
-+obj-$(CONFIG_LEDS_MAX77650)		+= leds-max77650.o
- obj-$(CONFIG_LEDS_MAX77693)		+= leds-max77693.o
- obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
- obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
-diff --git a/drivers/leds/leds-max77650.c b/drivers/leds/leds-max77650.c
-new file mode 100644
-index 000000000000..6b74ce9cac12
---- /dev/null
-+++ b/drivers/leds/leds-max77650.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2018 BayLibre SAS
-+// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+//
-+// LED driver for MAXIM 77650/77651 charger/power-supply.
-+
-+#include <linux/i2c.h>
-+#include <linux/leds.h>
-+#include <linux/mfd/max77650.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define MAX77650_LED_NUM_LEDS		3
-+
-+#define MAX77650_LED_A_BASE		0x40
-+#define MAX77650_LED_B_BASE		0x43
-+
-+#define MAX77650_LED_BR_MASK		GENMASK(4, 0)
-+#define MAX77650_LED_EN_MASK		GENMASK(7, 6)
-+
-+#define MAX77650_LED_MAX_BRIGHTNESS	MAX77650_LED_BR_MASK
-+
-+/* Enable EN_LED_MSTR. */
-+#define MAX77650_LED_TOP_DEFAULT	BIT(0)
-+
-+#define MAX77650_LED_ENABLE		GENMASK(7, 6)
-+#define MAX77650_LED_DISABLE		0x00
-+
-+#define MAX77650_LED_A_DEFAULT		MAX77650_LED_DISABLE
-+/* 100% on duty */
-+#define MAX77650_LED_B_DEFAULT		GENMASK(3, 0)
-+
-+struct max77650_led {
-+	struct led_classdev cdev;
-+	struct regmap *map;
-+	unsigned int regA;
-+	unsigned int regB;
-+};
-+
-+static struct max77650_led *max77650_to_led(struct led_classdev *cdev)
-+{
-+	return container_of(cdev, struct max77650_led, cdev);
-+}
-+
-+static int max77650_led_brightness_set(struct led_classdev *cdev,
-+				       enum led_brightness brightness)
-+{
-+	struct max77650_led *led = max77650_to_led(cdev);
-+	int val, mask;
-+
-+	mask = MAX77650_LED_BR_MASK | MAX77650_LED_EN_MASK;
-+
-+	if (brightness == LED_OFF)
-+		val = MAX77650_LED_DISABLE;
-+	else
-+		val = MAX77650_LED_ENABLE | brightness;
-+
-+	return regmap_update_bits(led->map, led->regA, mask, val);
-+}
-+
-+static int max77650_led_probe(struct platform_device *pdev)
-+{
-+	struct device_node *of_node, *child;
-+	struct max77650_led *leds, *led;
-+	struct device *parent;
-+	struct device *dev;
-+	struct regmap *map;
-+	const char *label;
-+	int rv, num_leds;
-+	u32 reg;
-+
-+	dev = &pdev->dev;
-+	parent = dev->parent;
-+	of_node = dev->of_node;
-+
-+	if (!of_node)
-+		return -ENODEV;
-+
-+	leds = devm_kcalloc(dev, sizeof(*leds),
-+			    MAX77650_LED_NUM_LEDS, GFP_KERNEL);
-+	if (!leds)
-+		return -ENOMEM;
-+
-+	map = dev_get_regmap(dev->parent, NULL);
-+	if (!map)
-+		return -ENODEV;
-+
-+	num_leds = of_get_child_count(of_node);
-+	if (!num_leds || num_leds > MAX77650_LED_NUM_LEDS)
-+		return -ENODEV;
-+
-+	for_each_child_of_node(of_node, child) {
-+		rv = of_property_read_u32(child, "reg", &reg);
-+		if (rv || reg >= MAX77650_LED_NUM_LEDS)
-+			return -EINVAL;
-+
-+		led = &leds[reg];
-+		led->map = map;
-+		led->regA = MAX77650_LED_A_BASE + reg;
-+		led->regB = MAX77650_LED_B_BASE + reg;
-+		led->cdev.brightness_set_blocking = max77650_led_brightness_set;
-+		led->cdev.max_brightness = MAX77650_LED_MAX_BRIGHTNESS;
-+
-+		label = of_get_property(child, "label", NULL);
-+		if (!label) {
-+			led->cdev.name = "max77650::";
-+		} else {
-+			led->cdev.name = devm_kasprintf(dev, GFP_KERNEL,
-+							"max77650:%s", label);
-+			if (!led->cdev.name)
-+				return -ENOMEM;
-+		}
-+
-+		of_property_read_string(child, "linux,default-trigger",
-+					&led->cdev.default_trigger);
-+
-+		rv = devm_of_led_classdev_register(dev, child, &led->cdev);
-+		if (rv)
-+			return rv;
-+
-+		rv = regmap_write(map, led->regA, MAX77650_LED_A_DEFAULT);
-+		if (rv)
-+			return rv;
-+
-+		rv = regmap_write(map, led->regB, MAX77650_LED_B_DEFAULT);
-+		if (rv)
-+			return rv;
-+	}
-+
-+	return regmap_write(map,
-+			    MAX77650_REG_CNFG_LED_TOP,
-+			    MAX77650_LED_TOP_DEFAULT);
-+}
-+
-+static struct platform_driver max77650_led_driver = {
-+	.driver = {
-+		.name = "max77650-led",
-+	},
-+	.probe = max77650_led_probe,
-+};
-+module_platform_driver(max77650_led_driver);
-+
-+MODULE_DESCRIPTION("MAXIM 77650/77651 LED driver");
-+MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
-+MODULE_LICENSE("GPL v2");
+ MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+ M:	Javier Martinez Canillas <javier@dowhile0.org>
+ L:	linux-kernel@vger.kernel.org
 -- 
 2.20.1
 
