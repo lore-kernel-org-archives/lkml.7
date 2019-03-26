@@ -2,114 +2,191 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6A2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D19A20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223682082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g2pmnjJk"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="A7xIWUJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbfCZRFi (ORCPT
+        id S1731950AbfCZRGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:05:38 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40326 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729693AbfCZRFi (ORCPT
+        Tue, 26 Mar 2019 13:06:04 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33649 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731548AbfCZRGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:05:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c207so8359617pfc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:05:38 -0700 (PDT)
+        Tue, 26 Mar 2019 13:06:03 -0400
+Received: by mail-ed1-f68.google.com with SMTP id q3so11460221edg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=ktOQ/tyLu68SW7AEyELHJA2CTC+i4Py410izLIuc0B8=;
-        b=g2pmnjJkyR9pNDE2XNSd92oQqcIjvFz3Yq0BJpN28uBvF2bRVjt6tQabZiJgH0n4Cu
-         LeF62VihkNX8sGurgmV/IkqLfijlwqnEWj4pljYg2rt+Y+INHmHfcCcWrmixNf3D4k8c
-         2Z5hgX+BTNolCeg7o1ru5Wa/2ykbYhjNihdco=
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NYHIjggyJoD/vENjjLBQMxNjFW6kf2tIbNZRZn7uTMI=;
+        b=A7xIWUJNfkLhdFHBA4KFdMCf+QH1kRJr4tmdo9kY4zjWCmQ5faim2AAAXvfk9G2E94
+         BHvQQ1XwdbOqLXdfCP88u5c1/Omr6/2oOgRqVOTxDgopGQO6yCQ4Bq9GDly3P/U3XgYl
+         ZZFs2332Lt6hAXhP6pSX5H0u4F5Ce1FIdWXscPfnBV39UN35eXLtGXOG/ZCDXz8KacTA
+         mI22p8EUJjWLdAX8dLHVeo07NgYbBDYyMzMxozih1JuKwNyB9rWTMohbAgetJIbSk1IG
+         wQoWXU+cOE/D7c2XjdjX20McKlYqgCFFjKrTTslk5wPLYbrxqFXYmseni0DO60R2kBAz
+         nI4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=ktOQ/tyLu68SW7AEyELHJA2CTC+i4Py410izLIuc0B8=;
-        b=C8UAqug04qm7YhldLXRbZzJHbxApYBitSWYU5FvsThc+vhYc09xf4/1QbrPTd0c+oe
-         IMoUE9f6BHYgp8T9Vgyv+S1N8KvgHDMso2faE3lM3InUlTqxXXgVufJAeUVuFeMufv7d
-         Bq+2cGVYnLbU1r+2zZJCnIEROZUu1sYWoHJJcFVlfUjEamrXb9B5KjIj3/KKr1gyvOmv
-         PuoU0Fn4Ufh3tiu1AY4IbOwXE/gPqMkRfD9NeyZfL1O2I5jpPKh6aKx4RXkxeMIOWAI9
-         dBC2yRfY2aQ6M4tQHnEBe//gwFjMHg0g1F/2/poRgPERjxX8WVVFZFEDHq1NmVbgjbOs
-         LHtg==
-X-Gm-Message-State: APjAAAXqlahiklw85rQ7bWRIOLbRpcCjm4SfRrkRBOvg/JuGI2t+kNLe
-        P11X8iqyT/ftTrXQngtR3ci+oUHhxAF2Jw==
-X-Google-Smtp-Source: APXvYqyqIKp5OOHOOX7Z1QTe/y60ci77rkMYm/K2sbCXGKLD+0xF2K1ykPupxrK6AWoPvIAaZWZryw==
-X-Received: by 2002:a65:538b:: with SMTP id x11mr29294441pgq.35.1553619937602;
-        Tue, 26 Mar 2019 10:05:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 125sm29309655pfw.139.2019.03.26.10.05.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 10:05:36 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NYHIjggyJoD/vENjjLBQMxNjFW6kf2tIbNZRZn7uTMI=;
+        b=EBzvY8RXjROciHWgZZZa3LPKolX8POO3+V8OPn0bb4An+yXuWO3QU85Fp22nndEgf0
+         Fjt3xn2JV/9O32uqSnTO2z6jgYFF32xpmesH4Lv1LHRMkfNSoG/HlCKUG4KlUQvLfuOz
+         REJ3/CKxPU9LnLG9CFoN41c4wUI7coh9fbg52ozYfWCDTda7ZQD9PPK5TI7pZm6jH/Cy
+         rxTJy4+Jhpv85O6mW1i8GQHIf7c4FzyvGOAgoUaPKuNS8p5/ToFlbopylxyD5qWFKQDt
+         T4dYCNyq7P9VkasV1QuBeioTL/A1Vb3wWdYnC2T+NkYo8rcukuAqThVeWbmOoBZ8Kiq8
+         IuEQ==
+X-Gm-Message-State: APjAAAUCOl6xHPbluy9aYuCk44oD7exAWyY7Y0fRy1Vr3P4iHm1tDFKU
+        XQxehwr3OpCRKNnm4+iyvkZZLlaR3TMgOA==
+X-Google-Smtp-Source: APXvYqzKBb7pHdjLWmNGsfmS2gw0s9Xtg77YnuflZkx9kBHpP/PvHeur5WUjICkeON80cVuYfvpwHQ==
+X-Received: by 2002:aa7:d945:: with SMTP id l5mr20903050eds.263.1553619961247;
+        Tue, 26 Mar 2019 10:06:01 -0700 (PDT)
+Received: from brauner.io (x59cc895e.dyn.telefonica.de. [89.204.137.94])
+        by smtp.gmail.com with ESMTPSA id g41sm1303504edb.23.2019.03.26.10.05.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 26 Mar 2019 10:06:00 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 18:05:58 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jann Horn <jannh@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+Message-ID: <20190326170557.y5fbn7lfegfllhwt@brauner.io>
+References: <20190326155513.26964-1-christian@brauner.io>
+ <20190326155513.26964-3-christian@brauner.io>
+ <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
+ <20190326162337.o256x7hiodu2qfyg@brauner.io>
+ <20190326163142.4eh5qpgiqvygf26w@brauner.io>
+ <20190326163452.uku4bgkessxzxvai@brauner.io>
+ <CAKOZuetcp=UPRWDkLUxLTmu-vqdN6qSmN9=0uP8MUuwyLoYfEA@mail.gmail.com>
+ <20190326164354.qecuzkqz6ic2433i@brauner.io>
+ <CAKOZueuXtWwC+U9-q3QG41p-fwjMxmujTUegmVkorLzFcY2-SA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org>
-References: <20190325184522.260535-1-swboyd@chromium.org> <20190325184522.260535-4-swboyd@chromium.org> <227f1a1f-d8dd-72f4-4eb9-43bba714d52a@kernel.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 3/4] scripts/gdb: Add rb tree iterating utilities
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nikolay Borisov <n.borisov.lkml@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jackie Liu <liuyun01@kylinos.cn>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Kieran Bingham <kbingham@kernel.org>
-Message-ID: <155361993610.20095.762425616683725063@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Tue, 26 Mar 2019 10:05:36 -0700
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKOZueuXtWwC+U9-q3QG41p-fwjMxmujTUegmVkorLzFcY2-SA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kieran Bingham (2019-03-26 01:52:10)
-> Hi Stephen,
->=20
-> On 25/03/2019 18:45, Stephen Boyd wrote:
-> > Implement gdb functions for rb_first(), rb_last(), rb_next(), and
-> > rb_prev(). These can be useful to iterate through the kernel's red-black
-> > trees.
->=20
-> I definitely approve of getting data-structure helpers into scripts/gdb,
-> as it will greatly assist debug options but my last attempt to do this
-> was with the radix-tree which I had to give up on as the internals were
-> changing rapidly and caused continuous breakage to the helpers.
+On Tue, Mar 26, 2019 at 09:50:28AM -0700, Daniel Colascione wrote:
+> On Tue, Mar 26, 2019 at 9:44 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > On Tue, Mar 26, 2019 at 09:38:31AM -0700, Daniel Colascione wrote:
+> > > On Tue, Mar 26, 2019 at 9:34 AM Christian Brauner <christian@brauner.io> wrote:
+> > > >
+> > > > On Tue, Mar 26, 2019 at 05:31:42PM +0100, Christian Brauner wrote:
+> > > > > On Tue, Mar 26, 2019 at 05:23:37PM +0100, Christian Brauner wrote:
+> > > > > > On Tue, Mar 26, 2019 at 09:17:07AM -0700, Daniel Colascione wrote:
+> > > > > > > Thanks for the patch.
+> > > > > > >
+> > > > > > > On Tue, Mar 26, 2019 at 8:55 AM Christian Brauner <christian@brauner.io> wrote:
+> > > > > > > >
+> > > > > > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > > > > > > > I quote Konstantins original patchset first that has already been acked and
+> > > > > > > > picked up by Eric before and whose functionality is preserved in this
+> > > > > > > > syscall:
+> > > > > > >
+> > > > > > > We still haven't had a much-needed conversation about splitting this
+> > > > > > > system call into smaller logical operations. It's important that we
+> > > > > > > address this point before this patch is merged and becomes permanent
+> > > > > > > kernel ABI.
+> > > > > >
+> > > > > > I don't particularly mind splitting this into an additional syscall like
+> > > > > > e.g.  pidfd_open() but then we have - and yes, I know you'll say
+> > > > > > syscalls are cheap - translate_pid(), and pidfd_open(). What I like
+> > > > > > about this rn is that it connects both apis in a single syscall
+> > > > > > and allows pidfd retrieval across pid namespaces. So I guess we'll see
+> > > > > > what other people think.
+> > > > >
+> > > > > There's something to be said for
+> > > > >
+> > > > > pidfd_open(pid_t pid, int pidfd, unsigned int flags);
+> > > > >
+> > > > > /* get pidfd */
+> > > > > int pidfd = pidfd_open(1234, -1, 0);
+> > > > >
+> > > > > /* convert to procfd */
+> > > > > int procfd = pidfd_open(-1, 4, 0);
+> > > > >
+> > > > > /* convert to pidfd */
+> > > > > int pidfd = pidfd_open(4, -1, 0);
+> > > >
+> > > > probably rather:
+> > > >
+> > > > int pidfd = pidfd_open(-1, 4, PIDFD_TO_PROCFD);
+> > > > int procfd = pidfd_open(-1, 4, PROCFD_TO_PIDFD);
+> > > > int pidfd = pidfd_open(1234, -1, 0);
+> > >
+> > > These three operations look like three related but distinct functions
+> > > to me, and in the second case, the "pidfd_open" name is a bit of a
+> > > misnomer. IMHO, the presence of an "operation name" field in any API
+> > > is usually a good indication that we're looking at a family of related
+> > > APIs, not a single coherent operation.
+> >
+> > So I'm happy to accommodate the need for a clean api even though I
+> > disagree that what we have in pidctl() is unclean.
+> > But I will not start sending a pile of syscalls. There is nothing
+> > necessarily wrong to group related APIs together.
+> 
+> In the email I sent just now, I identified several specific technical
+> disadvantages arising from unnecessary grouping of system calls. We
+> have historical evidence in the form of socketcall that this grouping
+> tends to be regrettable. I don't recall your identifying any
+> offsetting technical advantages. Did I miss something?
+> 
+> > By these standards the
+> > new mount API would need to be like 30 different syscalls, same for
+> > keyring management.
+> 
+> Can you please point out the problem that would arise from splitting
+> the mount and keyring APIs this way? One could have made the same
+> argument about grouping socket operations, and this socket-operation
+> grouping ended up being a mistake.
 
-Thanks for the background on radix-tree. I haven't looked at that yet,
-but I suppose I'll want to have that too at some point.
+The main reasons why I am not responding to such mails is that I don't
+want long tangents about very generic issues. If you can find support
+from people that prefer to split this into three separate syscalls:
 
->=20
-> Do you foresee any similar issue here? Or is the corresponding RB code
-> in the kernel fairly 'stable'?
->=20
->=20
-> Please could we make sure whomever maintains the RBTree code is aware of
-> the python implementation?
->=20
-> That said, MAINTAINERS doesn't actually seem to list any ownership over
-> the rb-tree code, and get_maintainers.pl [0] seems to be pointing at
-> Andrew as the probable route in for that code so perhaps that's already
-> in place :D
+pidfd_open()
+pidfd_procfd()
+procfd_pidfd()
 
-I don't think that the rb tree implementation is going to change. It
-feels similar to the list API. I suppose this problem of keeping things
-in sync is a more general problem than just data-structures changing.
-The only solution I can offer is to have more testing and usage of these
-scripts. Unless gdb can "simulate" or run arbitrary code for us then I
-think we're stuck reimplementing kernel internal code in gdb scripts so
-that we can get debug info out.
+I'm happy to do it this way. But it seems we can find a compromise, e.g.
+by having
 
+pidfd_open(pid_t pid, int fd, int fd, unsigned int flags)
+
+and avoid that whole email waterfall.
