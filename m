@@ -3,56 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C271C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E14C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BAD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087022075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553628042;
-	bh=bNnFYh38SuqDllljiUAm8cHWf4KPM2Rm7i/Xh3MQULw=;
+	s=default; t=1553628100;
+	bh=3G5OLDJGt2VUj4PBtRdTYEfb1U+H5AzAVGZwalvrssE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t+jXVaElvLAFHeRgaZwfhKhI0DTzUsWOu1CTHY7TvOm7iAd5dsFbW4/ZMGCmmwj10
-	 PF5aiRCvDH/V0dPHAD0L1t5c3rIKNx4ZkarmPhdEoAEP8IhK0YbjLIJsd15Z2udg7e
-	 pCSWnNil9f2fBcMLXX7mHDyzm/59cLoJqswe/Bj0=
+	b=tEJvRQnkFFYBujt/5o6c+gJxdm2b204d3kIimItb4JEddHUJTxXtY818SVrRy+Kus
+	 th/mC6V7exYnk/IFCc7wdJ0sJv2CY4ZGbEuaonmAc+AaMJC/xZ/e2mNv38GcRM8YkL
+	 4ou0e2fFN1Kfqbbs4Oura95AGgrusgFQ9JpbCihA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbfCZTUk (ORCPT
+        id S1732311AbfCZTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 15:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfCZTUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:20:40 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        id S1731467AbfCZTVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:21:38 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B8192075C
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B5222146F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553628039;
-        bh=bNnFYh38SuqDllljiUAm8cHWf4KPM2Rm7i/Xh3MQULw=;
+        s=default; t=1553628097;
+        bh=3G5OLDJGt2VUj4PBtRdTYEfb1U+H5AzAVGZwalvrssE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SPh9sndLf5L+z8w24xCt620iuwf7m61WMxWzzLyEsuMJFCUexCPDW08eNL2OshchO
-         Q+9/8cn/bXjzjfd7CFfsJ8hIF78HADW5ZwWhOeXlRhOyJk/92xWFNC6g947yRhCtjG
-         DDuIFt020Kl1zuH/odz2npaBpqy29UP4MXphypEs=
-Received: by mail-wr1-f42.google.com with SMTP id w10so15757866wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:20:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAWhKSzfGmmatsiK5dBqVd8+6/4o/X21l/FSNXdGz08CpCvdPXxL
-        RoTlfrzoxqj/NG94ahCOtU7+Jd8w+Nge0MnFht/BYA==
-X-Google-Smtp-Source: APXvYqyU5qYOlluf0hTkfca40/GsYO8E1IVNImF4uhchjdYwXlFgPoyvT4WESRnbAIKI7+Sd1/JQaoujOiEosFG2ioo=
-X-Received: by 2002:a5d:4710:: with SMTP id y16mr19830662wrq.176.1553628038018;
- Tue, 26 Mar 2019 12:20:38 -0700 (PDT)
+        b=ujWgSVmPTiCJxHUFiLdNFRIQ3LNz/y2sT6zjgX6M5tpeyZMPlFA7/kAhrZsRmfsEw
+         BfqVVBiytLlSlOES3pK4D6WEj0zlUUELO7S2EfISBp5BLpATL8aSExwGrgqPQUNbvh
+         ei7uRzKraSVTBZ4hUpujhNNzMk5rDWg3hnDrs07Y=
+Received: by mail-wr1-f44.google.com with SMTP id w1so15788952wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:21:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAX/HPnEpo6v8RJb1XeTV0stDKjMPuzg5NVFqLL4AuHN3R4XJtho
+        3G4WmKbrcw5nqyAKAZ7UTH2ffJBhtqGyzTZkgtzyGw==
+X-Google-Smtp-Source: APXvYqxcunQWBDndSLRqy9+hfd85lsPv4VZV9ONiALbX5mgkPo4ruMBSbrDRvugQ9Go9DnUG8bauRTNb2ulhmq8wsgk=
+X-Received: by 2002:a5d:53d0:: with SMTP id a16mr185634wrw.309.1553628096107;
+ Tue, 26 Mar 2019 12:21:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190326182742.16950-1-matthewgarrett@google.com> <20190326182742.16950-26-matthewgarrett@google.com>
-In-Reply-To: <20190326182742.16950-26-matthewgarrett@google.com>
+References: <20190326182742.16950-1-matthewgarrett@google.com> <20190326182742.16950-23-matthewgarrett@google.com>
+In-Reply-To: <20190326182742.16950-23-matthewgarrett@google.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 26 Mar 2019 12:20:24 -0700
-X-Gmail-Original-Message-ID: <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
-Message-ID: <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
-Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked down
+Date:   Tue, 26 Mar 2019 12:21:24 -0700
+X-Gmail-Original-Message-ID: <CALCETrUtYir8bCCMMH2kEAEmWBB_h4tL_9fq0zgNwRNXmZfG6A@mail.gmail.com>
+Message-ID: <CALCETrUtYir8bCCMMH2kEAEmWBB_h4tL_9fq0zgNwRNXmZfG6A@mail.gmail.com>
+Subject: Re: [PATCH V31 22/25] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
 To:     Matthew Garrett <matthewgarrett@google.com>
 Cc:     James Morris <jmorris@namei.org>,
         LSM List <linux-security-module@vger.kernel.org>,
@@ -60,8 +61,11 @@ Cc:     James Morris <jmorris@namei.org>,
         David Howells <dhowells@redhat.com>,
         Linux API <linux-api@vger.kernel.org>,
         Andrew Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Matthew Garrett <mjg59@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,13 +75,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
 <matthewgarrett@google.com> wrote:
 >
-> From: Matthew Garrett <mjg59@google.com>
+> From: David Howells <dhowells@redhat.com>
 >
-> debugfs has not been meaningfully audited in terms of ensuring that
-> userland cannot trample over the kernel. At Greg's request, disable
-> access to it entirely when the kernel is locked down. This is done at
-> open() time rather than init time as the kernel lockdown status may be
-> made stricter at runtime.
+> There are some bpf functions can be used to read kernel memory:
+> bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
+> private keys in kernel memory (e.g. the hibernation image signing key) to
+> be read by an eBPF program and kernel memory to be altered without
+> restriction. Disable them if the kernel has been locked down in
+> confidentiality mode.
+>
 
-Ugh.  Some of those files are very useful.  Could this perhaps still
-allow O_RDONLY if we're in INTEGRITY mode?
+:)
+
+This is yet another reason to get the new improved bpf_probe_user_read
+stuff landed!
