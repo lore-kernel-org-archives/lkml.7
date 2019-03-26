@@ -2,96 +2,98 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BEBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263DA2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D44B20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wyehcn+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbfCZCRv (ORCPT
+        id S1731037AbfCZCSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730691AbfCZCRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:17:51 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4811220823;
-        Tue, 26 Mar 2019 02:17:49 +0000 (UTC)
-Date:   Mon, 25 Mar 2019 22:17:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, paulmck@linux.vnet.ibm.com,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org,
-        shaoyafang@didiglobal.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] tracing: introduce TRACE_EVENT_NONE and use it
-Message-ID: <20190325221745.1009cbdf@oasis.local.home>
-In-Reply-To: <1553564407-1162-1-git-send-email-laoar.shao@gmail.com>
-References: <1553564407-1162-1-git-send-email-laoar.shao@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 25 Mar 2019 22:18:08 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:47874 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730691AbfCZCSI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 Mar 2019 22:18:08 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q2E08Y062966;
+        Tue, 26 Mar 2019 02:17:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=xsHwC9oNYJjf/Hw5vkJQiO4kWrvRi0CA7gv9FiiMK00=;
+ b=Wyehcn+4qaPLQUKwJgGZvIh10yVRBJhSUT7fipddv6k96UIR6jxucta0A8gE1ZhNXzV5
+ uWtCoQT1SPJdlQsMZtAD5JRCKMiIPXauUe5efYNqQcYNYsygvEW3iZSbfqU6w1sNxuRw
+ nveJ8CLTU5QnYBqlKC7t5kyJU9nEwk8wSrxcx0v69GyUrEOHD82KP8t7z7WsmqLsHthB
+ 4TRSVqZew5JFajkipLHbT/982Cs0TXog0EbCsDwuHHQViSVKN3FXUSYoso2RbRxwaH5v
+ wg0alHC7BeqpNzO2Xw/bRxhs0laoGZpSUFX/o3WZRlcJOKvcLu0w1krsBCeXjI9SBFLl Fw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by aserp2130.oracle.com with ESMTP id 2re6g0qkah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:17:57 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2HuPm017792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:17:57 GMT
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2HtlM003514;
+        Tue, 26 Mar 2019 02:17:55 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 19:17:54 -0700
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: lpfc: avoid uninitialized variable warning
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190322142557.929966-1-arnd@arndb.de>
+Date:   Mon, 25 Mar 2019 22:17:52 -0400
+In-Reply-To: <20190322142557.929966-1-arnd@arndb.de> (Arnd Bergmann's message
+        of "Fri, 22 Mar 2019 15:25:49 +0100")
+Message-ID: <yq1tvfqz8dr.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=688 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 09:40:04 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
 
-> In this patchset, I introduce a new macro TRACE_EVENT_NONE(), which will
-> define a tracepoint as a do-nothing inline function.
-> 	#define TRACE_EVENT_NONE(name, proto)			\
-> 		static inline void trace_##name(proto)		\
-> 		{ }						\
-> 		static inline bool trace_##name##_enabled(void)	\
-> 		{						\
-> 			return false;				\
-> 		}
-> 
+Arnd,
 
-BTW, I prefer a name of TRACE_EVENT_DISABLED()
+> clang -Wuninitialized incorrectly sees a variable being used without
+> initialization:
+>
+> drivers/scsi/lpfc/lpfc_nvme.c:2102:37: error: variable 'localport' is uninitialized when used here
+>       [-Werror,-Wuninitialized]
+>                 lport = (struct lpfc_nvme_lport *)localport->private;
+>                                                   ^~~~~~~~~
+> drivers/scsi/lpfc/lpfc_nvme.c:2059:38: note: initialize the variable 'localport' to silence this warning
+>         struct nvme_fc_local_port *localport;
+>                                             ^
+>                                              = NULL
+> 1 error generated.
 
-Which shows that it is disabled, or TRACE_EVENT_UNDEF(), or
-TRACE_EVENT_NOP(). Something that states it is turned off. When I first
-saw NONE() I thought it was another attempt to introduce zero parameter
-trace events.
+Applied to 5.2/scsi-queue, thanks!
 
-
-> Let's take some example for why this macro is needed.
-> 
-> - sched
-> The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
-> be not exposed to user if CONFIG_SCHEDSTATS is not set.
-> We can place #ifdef in the kernel/sched/fair.c to fix it, but we
-> don't want to sprinkle #ifdef.
-
-But you still sprinkle #ifdef in the header, but the part I don't like
-is the need to duplicate the prototypes and the like.
-
-
-> So with TRACE_EVENT_NONE(), we can fix it in
-> include/trace/events/sched.h.
-> 
-> - rcu
-> When CONFIG_RCU_TRACE is not set, some rcu tracepoints are define as
-> do-nothing macro without validating arguments, that is not proper.
-> We should validate the arguments.
-> 
-> Yafang Shao (3):
->   tracing: introduce TRACE_EVENT_NONE()
->   sched/fair: do not expose some tracepoints to user if
->     CONFIG_SCHEDSTATS is not set
->   rcu: validate arguments for rcu tracepoints
-> 
-
-See my reply in the next patch.
-
--- Steve
+-- 
+Martin K. Petersen	Oracle Linux Engineering
