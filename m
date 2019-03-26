@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC9DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31708C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31472075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B8F2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582201;
-	bh=h7gJhUMgd56dqYERg24paTnOqXfOKdmt3Rsnfsfetjc=;
+	s=default; t=1553582206;
+	bh=De+R0y8rKl4XjvIhDlCCz9wpJ3gqTC2/H1gEUvoZ018=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PxrNXe0iSUsdycpzIwMbQAQ6Wb191uyCseeGzGbR8VWq8eirTZl4ywch1ujvo/dqK
-	 1lfQkQiVqCUpJ9VmdP6+KX783anZAIgnQYu+L3Bds/LMnqNYWHeSr+HsgqRD4fyrV7
-	 kKxjVKy8yrjPoXzlf3TRMhU3Hz5vo3mzdqFOQDRA=
+	b=Q2kcS+O1ddCw6DXiquq+tO862cnw1EGN8ZJXNcolqd1yE+d3bArqCLmTCMER1MnXw
+	 wbgVv84+NZqEVxemFvGvzewXd7c/TMOSTio2OUNORAe93wR/y1Tek7opQcFtVhCHmF
+	 KIPa/N1mRdJ5E71dYH8MvYB3dw4P4wJsaRVv1lyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732251AbfCZGgk (ORCPT
+        id S1732261AbfCZGgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49262 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbfCZGgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:37 -0400
+        id S1731428AbfCZGgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:41 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BADF2070B;
-        Tue, 26 Mar 2019 06:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066262070B;
+        Tue, 26 Mar 2019 06:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582197;
-        bh=h7gJhUMgd56dqYERg24paTnOqXfOKdmt3Rsnfsfetjc=;
+        s=default; t=1553582200;
+        bh=De+R0y8rKl4XjvIhDlCCz9wpJ3gqTC2/H1gEUvoZ018=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oS8UGmkRDB25QUInAOCXnw2MkbK+XVgYmfeOqfJHNL4RLx0uxn069bQ7M/hAIQ1Ih
-         OHMT0mO4ttKowo3cm/zoPJVUWHe42g/+mAoZwG4pxOK1qmTznHwExQRR5temgBpjRx
-         hs0zA1cMl5hafLHfFelWIkz8rRl01Oh75FXFWmWg=
+        b=a9pHa9bV1N+wiyZQ8DLbaZZIpsbCL7omPKSsRusNguf4w71QnRWo+sF0iVoHoZ7U4
+         f1ti0K4B+rbaWXfzNnqBh+Q/uu9tBdG4hP2PGGg85Or3LPpOl0tRZIL6jLBjRKBQhK
+         uaHWLWgE/65SNpYR3SE1qr2p/vD6GsTLTEgmDChw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+017a32f149406df32703@syzkaller.appspotmail.com,
+        syzbot+fdc00003f4efff43bc5b@syzkaller.appspotmail.com,
         Myungho Jung <mhjungk@gmail.com>,
         Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.19 30/45] Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
-Date:   Tue, 26 Mar 2019 15:30:13 +0900
-Message-Id: <20190326042704.256000231@linuxfoundation.org>
+Subject: [PATCH 4.19 31/45] Bluetooth: Fix decrementing reference count twice in releasing socket
+Date:   Tue, 26 Mar 2019 15:30:14 +0900
+Message-Id: <20190326042704.305533235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -68,49 +68,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Myungho Jung <mhjungk@gmail.com>
 
-commit 1dc2d785156cbdc80806c32e8d2c7c735d0b4721 upstream.
+commit e20a2e9c42c9e4002d9e338d74e7819e88d77162 upstream.
 
-h4_recv_buf() callers store the return value to socket buffer and
-recursively pass the buffer to h4_recv_buf() without protection. So,
-ERR_PTR returned from h4_recv_buf() can be dereferenced, if called again
-before setting the socket buffer to NULL from previous error. Check if
-skb is ERR_PTR in h4_recv_buf().
+When releasing socket, it is possible to enter hci_sock_release() and
+hci_sock_dev_event(HCI_DEV_UNREG) at the same time in different thread.
+The reference count of hdev should be decremented only once from one of
+them but if storing hdev to local variable in hci_sock_release() before
+detached from socket and setting to NULL in hci_sock_dev_event(),
+hci_dev_put(hdev) is unexpectedly called twice. This is resolved by
+referencing hdev from socket after bt_sock_unlink() in
+hci_sock_release().
 
-Reported-by: syzbot+017a32f149406df32703@syzkaller.appspotmail.com
+Reported-by: syzbot+fdc00003f4efff43bc5b@syzkaller.appspotmail.com
 Signed-off-by: Myungho Jung <mhjungk@gmail.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/h4_recv.h |    4 ++++
- drivers/bluetooth/hci_h4.c  |    4 ++++
- 2 files changed, 8 insertions(+)
+ net/bluetooth/hci_sock.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/bluetooth/h4_recv.h
-+++ b/drivers/bluetooth/h4_recv.h
-@@ -60,6 +60,10 @@ static inline struct sk_buff *h4_recv_bu
- 					  const struct h4_recv_pkt *pkts,
- 					  int pkts_count)
- {
-+	/* Check for error from previous call */
-+	if (IS_ERR(skb))
-+		skb = NULL;
-+
- 	while (count) {
- 		int i, len;
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -831,8 +831,6 @@ static int hci_sock_release(struct socke
+ 	if (!sk)
+ 		return 0;
  
---- a/drivers/bluetooth/hci_h4.c
-+++ b/drivers/bluetooth/hci_h4.c
-@@ -174,6 +174,10 @@ struct sk_buff *h4_recv_buf(struct hci_d
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	u8 alignment = hu->alignment ? hu->alignment : 1;
+-	hdev = hci_pi(sk)->hdev;
+-
+ 	switch (hci_pi(sk)->channel) {
+ 	case HCI_CHANNEL_MONITOR:
+ 		atomic_dec(&monitor_promisc);
+@@ -854,6 +852,7 @@ static int hci_sock_release(struct socke
  
-+	/* Check for error from previous call */
-+	if (IS_ERR(skb))
-+		skb = NULL;
-+
- 	while (count) {
- 		int i, len;
+ 	bt_sock_unlink(&hci_sk_list, sk);
  
++	hdev = hci_pi(sk)->hdev;
+ 	if (hdev) {
+ 		if (hci_pi(sk)->channel == HCI_CHANNEL_USER) {
+ 			/* When releasing a user channel exclusive access,
 
 
