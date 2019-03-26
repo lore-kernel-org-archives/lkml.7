@@ -2,123 +2,313 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D4AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B461C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19E02075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247B820657
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:44:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gy8qsIjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733062AbfCZXnZ (ORCPT
+        id S1733022AbfCZXoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:43:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732639AbfCZXll (ORCPT
+        Tue, 26 Mar 2019 19:44:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37228 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731824AbfCZXoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:41:41 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QNXVUp117617
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:40 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rftkx7npe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:41:40 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 26 Mar 2019 23:41:39 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 23:41:35 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QNfYK05505168
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 23:41:34 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65768B206A;
-        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48604B2064;
-        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 23:41:34 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6BD7516C2A63; Tue, 26 Mar 2019 16:41:35 -0700 (PDT)
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, andrea.parri@amarulasolutions.com,
-        will.deacon@arm.com, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: [PATCH tip/core/rcu 02/21] tools/memory-model: Fix comment in MP+poonceonces.litmus
-Date:   Tue, 26 Mar 2019 16:41:14 -0700
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190326234114.GA23843@linux.ibm.com>
-References: <20190326234114.GA23843@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19032623-0064-0000-0000-000003C07013
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010820; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180142; UDB=6.00617578; IPR=6.00960857;
- MB=3.00026170; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 23:41:39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032623-0065-0000-0000-00003CD8BF60
-Message-Id: <20190326234133.24962-2-paulmck@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260159
+        Tue, 26 Mar 2019 19:44:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so8802362pfr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GxlmyXaXjzdj8x33dzr7hkXjfNPCIskY3a7a6mH5B+M=;
+        b=gy8qsIjNyECjoKfSaF6rGs+qWjp0X+gXq1YQvk7JYuWr6TcHpBFxDRxAvb7fsNP7oZ
+         4Jctd6qT+Bt+xNma3BzQo/6drEG6UImYrjw2Cs5zVnncY7dkaViBa8g+iaxPEvkAZSxD
+         HTx8TDeru+Cew18zL5zxBhmh5QPTMptT/lLzA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GxlmyXaXjzdj8x33dzr7hkXjfNPCIskY3a7a6mH5B+M=;
+        b=SsQUsAjMa0B0lAMT9c8doMCQzPQ9xIHrt1FOd3wUP16edczg1XbZpJFbsGk1ztr63R
+         IDRcfie14Z42RXj11/r9PKdEbXvqaqAlm3FioqxbPGZBQ8w/5U3As/x6iwWesY1YPzaj
+         ndYvTyw8dXFCaEuUU3atEZiM4NVGsiFwSlvhyN1tmPtVkNNpH+6S2FsYs3dhwXwimNEt
+         aBedNiLniAW9C92RnAWmel/WvLec5mqURRAnb5BFw9inr7Mr8BpdL8NBAja16g5eHkde
+         puM6Wea0RRfkZAoZDvn4SE5YL6qljATgCkVZ9znUmklOUF600FezFNjoTEZXrk3/af/u
+         qX5Q==
+X-Gm-Message-State: APjAAAXotzEWDIOi493Cy811+bHm5Wu0Obdf6jSZMXwXmsI4qn+VKMFO
+        sKQyXwS2wDvE/TjLufEblTj90g==
+X-Google-Smtp-Source: APXvYqwdSG3qcGyJTZa5ZYLtaee3WSJeL+yUwoHEE0HDFJCSF8u5DXgBKoR87V83kqQ63KTHSW0qgQ==
+X-Received: by 2002:a63:c10b:: with SMTP id w11mr31779378pgf.39.1553643844990;
+        Tue, 26 Mar 2019 16:44:04 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id d3sm26803122pfc.125.2019.03.26.16.44.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 16:44:04 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 16:44:03 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v5 1/2] Bluetooth: hci_qca: Added support for WCN3998
+Message-ID: <20190326234403.GZ112750@google.com>
+References: <1553600756-8264-1-git-send-email-c-hbandi@codeaurora.org>
+ <1553600756-8264-2-git-send-email-c-hbandi@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1553600756-8264-2-git-send-email-c-hbandi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+On Tue, Mar 26, 2019 at 05:15:55PM +0530, Harish Bandi wrote:
+> Added new compatible for WCN3998 and corresponding voltage
+> and current values to WCN3998 compatible.
+> Changed driver code to support WCN3998
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> Changes in V5:
+> - changed is_qca_soc_type_wcn399x_family to
+> - qca_is_wcn399x helper function 
+> - moved the qca_is_wcn399x function to btqca.c
+> ---
+>  drivers/bluetooth/btqca.c   | 13 +++++++++++--
+>  drivers/bluetooth/btqca.h   |  8 +++++++-
+>  drivers/bluetooth/hci_qca.c | 40 ++++++++++++++++++++++++++--------------
+>  3 files changed, 44 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index 6122685..383e99f 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download rampatch file */
+>  	config.type = TLV_TYPE_PATCH;
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(soc_type)) {
+>  		/* Firmware files to download are based on ROM version.
+>  		 * ROM version is derived from last two bytes of soc_ver.
+>  		 */
+> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download NVM configuration */
+>  	config.type = TLV_TYPE_NVM;
+> -	if (soc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(soc_type))
+>  		snprintf(config.fwname, sizeof(config.fwname),
+>  			 "qca/crnv%02x.bin", rom_ver);
+>  	else
+> @@ -410,6 +410,15 @@ int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+>  }
+>  EXPORT_SYMBOL_GPL(qca_set_bdaddr);
+>  
+> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+> +{
+> +	if ((soc_type == QCA_WCN3990) || (soc_type == QCA_WCN3998))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(qca_is_wcn399x);
+> +
+>  MODULE_AUTHOR("Ben Young Tae Kim <ytkim@qca.qualcomm.com>");
+>  MODULE_DESCRIPTION("Bluetooth support for Qualcomm Atheros family ver " VERSION);
+>  MODULE_VERSION(VERSION);
+> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+> index 6fdc25d..aca7b0d 100644
+> --- a/drivers/bluetooth/btqca.h
+> +++ b/drivers/bluetooth/btqca.h
+> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
+>  	QCA_INVALID = -1,
+>  	QCA_AR3002,
+>  	QCA_ROME,
+> -	QCA_WCN3990
+> +	QCA_WCN3990,
+> +	QCA_WCN3998,
+>  };
+>  
+>  #if IS_ENABLED(CONFIG_BT_QCA)
+> @@ -142,6 +143,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  		   enum qca_btsoc_type soc_type, u32 soc_ver);
+>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
+>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
+> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type);
+>  #else
+>  
+>  static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+> @@ -165,4 +167,8 @@ static inline int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
+> +{
+> +	return -EOPNOTSUPP;
 
-The comment should say "Sometimes" for the result.
+This function returns a bool, hence returning an error code is not
+meaningful here. Just return false.
 
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-Cc: Luc Maranget <luc.maranget@inria.fr>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Akira Yokosawa <akiyks@gmail.com>
-Cc: Daniel Lustig <dlustig@nvidia.com>
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
----
- tools/memory-model/litmus-tests/MP+poonceonces.litmus | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +}
+>  #endif
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 4ea995d..4af580a 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -521,7 +521,7 @@ static int qca_open(struct hci_uart *hu)
+>  	if (hu->serdev) {
+>  
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type != QCA_WCN3990) {
+> +		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>  		} else {
+>  			hu->init_speed = qcadev->init_speed;
+> @@ -627,7 +627,7 @@ static int qca_close(struct hci_uart *hu)
+>  
+>  	if (hu->serdev) {
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (qcadev->btsoc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(qcadev->btsoc_type))
+>  			qca_power_shutdown(hu);
+>  		else
+>  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+> @@ -1008,7 +1008,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+>  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+>  
+>  	/* Give the controller time to process the request */
+> -	if (qca_soc_type(hu) == QCA_WCN3990)
+> +	if (qca_is_wcn399x(qca_soc_type(hu)))
+>  		msleep(10);
+>  	else
+>  		msleep(300);
+> @@ -1084,7 +1084,7 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
+>  
+>  static int qca_check_speeds(struct hci_uart *hu)
+>  {
+> -	if (qca_soc_type(hu) == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(qca_soc_type(hu))) {
+>  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+>  		    !qca_get_speed(hu, QCA_OPER_SPEED))
+>  			return -EINVAL;
+> @@ -1116,7 +1116,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+>  		/* Disable flow control for wcn3990 to deassert RTS while
+>  		 * changing the baudrate of chip and host.
+>  		 */
+> -		if (soc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(soc_type))
+>  			hci_uart_set_flow_control(hu, true);
+>  
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+> @@ -1128,7 +1128,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+>  		host_set_baudrate(hu, speed);
+>  
+>  error:
+> -		if (soc_type == QCA_WCN3990)
+> +		if (qca_is_wcn399x(soc_type))
+>  			hci_uart_set_flow_control(hu, false);
+>  	}
+>  
+> @@ -1201,7 +1201,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	/* Patch downloading has to be done without IBS mode */
+>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+>  
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (qca_is_wcn399x(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+>  
+>  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+> @@ -1232,7 +1232,7 @@ static int qca_setup(struct hci_uart *hu)
+>  		qca_baudrate = qca_get_baudrate_value(speed);
+>  	}
+>  
+> -	if (soc_type != QCA_WCN3990) {
+> +	if (!qca_is_wcn399x(soc_type)) {
+>  		/* Get QCA version information */
+>  		ret = qca_read_soc_version(hdev, &soc_ver);
+>  		if (ret)
+> @@ -1257,7 +1257,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	}
+>  
+>  	/* Setup bdaddr */
+> -	if (soc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(soc_type))
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr;
+>  	else
+>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+> @@ -1280,7 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+>  	.dequeue	= qca_dequeue,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data = {
+> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>  	.soc_type = QCA_WCN3990,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio",   1800000, 1900000,  15000  },
+> @@ -1291,6 +1291,17 @@ static int qca_setup(struct hci_uart *hu)
+>  	.num_vregs = 4,
+>  };
+>  
+> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+> +	.soc_type = QCA_WCN3998,
+> +	.vregs = (struct qca_vreg []) {
+> +		{ "vddio",   1800000, 1900000,  10000  },
+> +		{ "vddxo",   1800000, 1900000,  80000  },
+> +		{ "vddrf",   1300000, 1352000,  300000 },
+> +		{ "vddch0",  3300000, 3300000,  450000 },
+> +	},
+> +	.num_vregs = 4,
+> +};
+> +
+>  static void qca_power_shutdown(struct hci_uart *hu)
+>  {
+>  	struct qca_data *qca = hu->priv;
+> @@ -1424,8 +1435,8 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  	qcadev->serdev_hu.serdev = serdev;
+>  	data = of_device_get_match_data(&serdev->dev);
+>  	serdev_device_set_drvdata(serdev, qcadev);
+> -	if (data && data->soc_type == QCA_WCN3990) {
+> -		qcadev->btsoc_type = QCA_WCN3990;
+> +	if (data && qca_is_wcn399x(data->soc_type)) {
+> +		qcadev->btsoc_type = data->soc_type;
+>  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+>  						sizeof(struct qca_power),
+>  						GFP_KERNEL);
+> @@ -1489,7 +1500,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  {
+>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>  
+> -	if (qcadev->btsoc_type == QCA_WCN3990)
+> +	if (qca_is_wcn399x(qcadev->btsoc_type))
+>  		qca_power_shutdown(&qcadev->serdev_hu);
+>  	else
+>  		clk_disable_unprepare(qcadev->susclk);
+> @@ -1499,7 +1510,8 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  
+>  static const struct of_device_id qca_bluetooth_of_match[] = {
+>  	{ .compatible = "qcom,qca6174-bt" },
+> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
+> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
 
-diff --git a/tools/memory-model/litmus-tests/MP+poonceonces.litmus b/tools/memory-model/litmus-tests/MP+poonceonces.litmus
-index b2b60b84fb9d..172f0145301c 100644
---- a/tools/memory-model/litmus-tests/MP+poonceonces.litmus
-+++ b/tools/memory-model/litmus-tests/MP+poonceonces.litmus
-@@ -1,7 +1,7 @@
- C MP+poonceonces
- 
- (*
-- * Result: Maybe
-+ * Result: Sometimes
-  *
-  * Can the counter-intuitive message-passing outcome be prevented with
-  * no ordering at all?
--- 
-2.17.1
+Besides the return value in the qca_is_wcn399x() stub:
 
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
