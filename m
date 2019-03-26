@@ -2,86 +2,93 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B744C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA5420879
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553603126;
-	bh=e90zrrnTPe6aXqGN6s7zPHYtw037Dv/1hyTW/o/uYAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Otc0qa5L34CJFmHhJ+V8CMT7SJ4BaWBXIfp4OEE/KG43/r6Mgt9IdCsZah1Cje1rV
-	 vA5qO7tnbJ7VHEEu4uFFmpqFYWwGmfvjlRvpS+k+L3ffHUMBDnnGSHxJzH2mA9FE/7
-	 OyU5bKsStLmur8wCSlt5LfVZ3L54FtbsGo9MKzMc=
+	by mail.kernel.org (Postfix) with ESMTP id 762222075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfCZMZZ (ORCPT
+        id S1731190AbfCZM2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:25:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726111AbfCZMZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:25:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C215BAF19;
-        Tue, 26 Mar 2019 12:25:23 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 13:25:22 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        logang@deltatee.com, osalvador@suse.de, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, richard.weiyang@gmail.com,
-        rientjes@google.com, zi.yan@cs.rutgers.edu
-Subject: Re: [RFC] mm/hotplug: Make get_nid_for_pfn() work with
- HAVE_ARCH_PFN_VALID
-Message-ID: <20190326122522.GO28406@dhcp22.suse.cz>
-References: <1553155700-3414-1-git-send-email-anshuman.khandual@arm.com>
- <20190321083639.GJ8696@dhcp22.suse.cz>
- <621cc94c-210d-6fd4-a2e1-b7cfce733cf3@arm.com>
- <20190322120219.GI32418@dhcp22.suse.cz>
- <65a4b160-a654-8bd3-8022-491094cf6b8f@arm.com>
+        Tue, 26 Mar 2019 08:28:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34111 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726140AbfCZM2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:28:35 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QCMJbC010377;
+        Tue, 26 Mar 2019 13:28:15 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rf4ybveea-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 26 Mar 2019 13:28:15 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2F1531;
+        Tue, 26 Mar 2019 12:28:14 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 58DC95773;
+        Tue, 26 Mar 2019 12:28:14 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 Mar
+ 2019 13:28:13 +0100
+Subject: Re: [PATCH v2 0/6] Add nvmem support on STM32
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        <srinivas.kandagatla@linaro.org>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lionel.debieve@st.com>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <694a9e17-c864-bc11-6fdc-8f9f67e30e7c@st.com>
+Date:   Tue, 26 Mar 2019 13:27:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65a4b160-a654-8bd3-8022-491094cf6b8f@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 17:33:19, Anshuman Khandual wrote:
-[...]
-> I could get it working with the following re-order of memblock_[free|remove] and
-> arch_remove_memory(). I did not observe any other adverse side affect because of
-> this change. Does it look okay ?
+Hi Fabrice
 
-Memblock should only work with physical memory ranges without touching
-struct pages so this should be safe. But you should double check of
-course.
+On 2/28/19 11:19 AM, Fabrice Gasnier wrote:
+> Non volatile memory area is available on STM32. It contains various
+> factory programmed information such as unique device ID, analog calibration...
+> This patchset adds:
+> - NVMEM support to access stm32 data cells
+> - helper to read 16 bits cells.
+> 
+> ---
+> Changes in v2:
+> - update "st,stm32f4-otp" compatible as discussed with Rob
+> - add stm32f429 dts
+> - add core helper to read 16 bits cells
+> 
+> Fabrice Gasnier (6):
 
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1863,11 +1863,11 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
->  
->         /* remove memmap entry */
->         firmware_map_remove(start, start + size, "System RAM");
-> +       arch_remove_memory(nid, start, size, NULL);
-> +
->         memblock_free(start, size);
->         memblock_remove(start, size);
->  
-> -       arch_remove_memory(nid, start, size, NULL);
-> -
->         try_offline_node(nid);
->  
->         mem_hotplug_done();
+...
 
--- 
-Michal Hocko
-SUSE Labs
+>    ARM: dts: stm32: Add romem and temperature calibration on stm32mp157c
+>    ARM: dts: stm32: Add romem and temperature calibration on stm32f429
+
+DT patches applied on stm32-next.
+
+Regards
+Alex
+
+
