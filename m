@@ -2,136 +2,89 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B74CC10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA1020856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6993C20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfCZILv (ORCPT
+        id S1730996AbfCZIMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:11:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34030 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726175AbfCZILv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:11:51 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 150CFEDFC18E5EBC1B34;
-        Tue, 26 Mar 2019 16:11:49 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 26 Mar 2019 16:11:38 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <julien.thierry@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>,
-        <huawei.libin@huawei.com>
-Subject: [PATCH] arm64: gic-v3: fix unexpected overwrite of spi/ppi/sgi prio
-Date:   Tue, 26 Mar 2019 16:16:58 +0800
-Message-ID: <20190326081658.37450-1-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 Mar 2019 04:12:02 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:47004 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730803AbfCZIMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:12:01 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s81so7011016qke.13;
+        Tue, 26 Mar 2019 01:12:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KnNw3x3uIVonMYaNm1hCRelod2otCjxy0BvB7UUxoXg=;
+        b=Se1M+F2UAILNvSZIyLKHYc9cA1powSeRu1cetMo9ZBhH42FnMnCXc5v03yBHPoZ48P
+         KkKROVErNg5Z9Ad2ixv50O4LfLmdbKKiieb0FSB3l+oqZ5OzcmiR2eSk5N4+uYOjfRSZ
+         BxsYmtPf2WcUcdUQdA/ifpzIAPgJoDRCdGyorw4dY3nN2sm5wZLq+SXedjxk8kd7MG9P
+         /lPQ/yl2bnGYREKIU4NrMOg04Vvt2EK4AhP012GRt6Ha9BmR4+jR+haQO4aLgbm0ig9D
+         5M8NKVsSqxCNk984d9XbsMoemr28tjf8BmnZlFCb92rwmHg6vIiE6CYo5lp7IQ4QmXjW
+         OxSw==
+X-Gm-Message-State: APjAAAUlqodffwA3suLWtM47H8jQ52wyrKfY1sZYzK2/5cz8BXhQOEoA
+        vJkSIo8Zlp5PwYymY1wOQGKp9Ss/4uVSAiNhqkM=
+X-Google-Smtp-Source: APXvYqxZ+c/jntGU+pgMl/SFyKRH+410Kr0HEFSVIQcOaLWxFnMtheUzi/p/upgCqt54KpSp1OmwYrOZbK7Gl4WXBNY=
+X-Received: by 2002:a37:aa58:: with SMTP id t85mr23438691qke.291.1553587920707;
+ Tue, 26 Mar 2019 01:12:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+References: <20190322154425.3852517-1-arnd@arndb.de> <20190322154425.3852517-2-arnd@arndb.de>
+ <20190326010831.GA29420@kroah.com>
+In-Reply-To: <20190326010831.GA29420@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 26 Mar 2019 09:11:44 +0100
+Message-ID: <CAK8P3a1zF7VMoLQfby4W=TzB0btN82gMn2FNvkc3te5Ey97=+A@mail.gmail.com>
+Subject: Re: [BACKPORT 4.4.y 01/25] mmc: pwrseq: constify mmc_pwrseq_ops structures
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "# 3.4.x" <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The priority config will be restored to the default value in the
-notifiers of gic suspend. While the arm64 nmi-like interrupt has been
-implemented by using priority since commit bc3c03ccb464 ("arm64: Enable
-the support of pseudo-NMIs"), we need to do the save and restore exactly.
+On Tue, Mar 26, 2019 at 2:22 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Fri, Mar 22, 2019 at 04:43:52PM +0100, Arnd Bergmann wrote:
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
----
- drivers/irqchip/irq-gic.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+> >  }
+> >
+> > -static struct mmc_pwrseq_ops mmc_pwrseq_simple_ops = {
+> > +static const struct mmc_pwrseq_ops mmc_pwrseq_simple_ops = {
+> >       .pre_power_on = mmc_pwrseq_simple_pre_power_on,
+> >       .post_power_on = mmc_pwrseq_simple_post_power_on,
+> >       .power_off = mmc_pwrseq_simple_power_off,
+>
+> Why is this needed for a stable patch?  It doesn't fix a bug, it just
+> looks like it is a "nice thing" to have, right?  I don't think any later
+> patch in this series relies it it, or am I missing something?
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index fd3110c171ba..5928c4338b28 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -79,10 +79,12 @@ struct gic_chip_data {
- 	u32 saved_spi_enable[DIV_ROUND_UP(1020, 32)];
- 	u32 saved_spi_active[DIV_ROUND_UP(1020, 32)];
- 	u32 saved_spi_conf[DIV_ROUND_UP(1020, 16)];
-+	u32 saved_spi_prio[DIV_ROUND_UP(1020, 4)];
- 	u32 saved_spi_target[DIV_ROUND_UP(1020, 4)];
- 	u32 __percpu *saved_ppi_enable;
- 	u32 __percpu *saved_ppi_active;
- 	u32 __percpu *saved_ppi_conf;
-+	u32 __percpu *saved_ppi_prio;
- #endif
- 	struct irq_domain *domain;
- 	unsigned int gic_irqs;
-@@ -599,6 +601,10 @@ void gic_dist_save(struct gic_chip_data *gic)
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++)
- 		gic->saved_spi_active[i] =
- 			readl_relaxed(dist_base + GIC_DIST_ACTIVE_SET + i * 4);
-+
-+	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
-+		gic->saved_spi_prio[i] =
-+			readl_relaxed(dist_base + GIC_DIST_PRI + i * 4);
- }
- 
- /*
-@@ -630,7 +636,7 @@ void gic_dist_restore(struct gic_chip_data *gic)
- 			dist_base + GIC_DIST_CONFIG + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
--		writel_relaxed(GICD_INT_DEF_PRI_X4,
-+		writel_relaxed(gic->saved_spi_prio[i],
- 			dist_base + GIC_DIST_PRI + i * 4);
- 
- 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
-@@ -682,6 +688,9 @@ void gic_cpu_save(struct gic_chip_data *gic)
- 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
- 		ptr[i] = readl_relaxed(dist_base + GIC_DIST_CONFIG + i * 4);
- 
-+	ptr = raw_cpu_ptr(gic->saved_ppi_prio);
-+	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
-+		ptr[i] = readl_relaxed(dist_base + GIC_DIST_PRI + i * 4);
- }
- 
- void gic_cpu_restore(struct gic_chip_data *gic)
-@@ -718,9 +727,9 @@ void gic_cpu_restore(struct gic_chip_data *gic)
- 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
- 		writel_relaxed(ptr[i], dist_base + GIC_DIST_CONFIG + i * 4);
- 
-+	ptr = raw_cpu_ptr(gic->saved_ppi_prio);
- 	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
--		writel_relaxed(GICD_INT_DEF_PRI_X4,
--					dist_base + GIC_DIST_PRI + i * 4);
-+		writel_relaxed(ptr[i], dist_base + GIC_DIST_PRI + i * 4);
- 
- 	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
- 	gic_cpu_if_up(gic);
-@@ -778,11 +787,18 @@ static int gic_pm_init(struct gic_chip_data *gic)
- 	if (WARN_ON(!gic->saved_ppi_conf))
- 		goto free_ppi_active;
- 
-+	gic->saved_ppi_prio = __alloc_percpu(DIV_ROUND_UP(32, 4) * 4,
-+		sizeof(u32));
-+	if (WARN_ON(!gic->saved_ppi_prio))
-+		goto free_ppi_prio;
-+
- 	if (gic == &gic_data[0])
- 		cpu_pm_register_notifier(&gic_notifier_block);
- 
- 	return 0;
- 
-+free_ppi_prio:
-+	free_percpu(gic->saved_ppi_conf);
- free_ppi_active:
- 	free_percpu(gic->saved_ppi_active);
- free_ppi_enable:
--- 
-2.17.1
+Right, the benefit here is rather small. In theory, any structure of
+function pointers is a place into which an exploit can be placed
+in case someone finds a way to modify a few bytes of kernel
+memory. Placing the structures in read-only memory make this
+a little harder (it doesn't prevent rowhammer attacks though).
 
+Dropping this patch is certainly fine with me, as we have a large
+supply of other structure definitions like this, and we wont' get close to
+plugging enough of them in stable kernels.
+
+       Arnd
