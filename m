@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C20EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285BB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40BE2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582251;
-	bh=ZFVCL8C9M+wrQWHGWH9e6Ax1gogy+Ise3jPLOluY13Y=;
+	s=default; t=1553582255;
+	bh=In6n76Grm55JBYWka4e2uS8Tmi32MIa6z3NTVB7jlzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gnzuZaYZ9pJP8YSmSus03+zq1PRlh9sdVpMTa6dknl+qMQsvQF+uFbAyj42pkmERQ
-	 C7jN0wumztddMU+U552nkB8veGQ9QIcTL63stC2bMVTZHbKl1yhlZTklcYjRvFNtl7
-	 9VBxcBjHH/Ijb2TQ9X2Z0C4rYTrAavUr/s/7ULuo=
+	b=pYzNnpvz4LA/X0b3jJRCAPwp+HtPGqyMvwgtU6nwAOLNzNJYvTSsxP1NU99dEmkuq
+	 Ts/LThL7I99kpPH1os6uyb7iRufSewz2J9tIc5XVILk+/XUxV90bTUb1+soPFvXMhb
+	 TQkKXWzmvYTIgeYXu5iVw/BmZIe7j1zpVxn1munc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732385AbfCZGha (ORCPT
+        id S1732396AbfCZGhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732372AbfCZGh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:27 -0400
+        id S1732381AbfCZGha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:30 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF372070B;
-        Tue, 26 Mar 2019 06:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FE8F2070B;
+        Tue, 26 Mar 2019 06:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582246;
-        bh=ZFVCL8C9M+wrQWHGWH9e6Ax1gogy+Ise3jPLOluY13Y=;
+        s=default; t=1553582249;
+        bh=In6n76Grm55JBYWka4e2uS8Tmi32MIa6z3NTVB7jlzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AF4tjQl4rlqKRQD+FShWNVw7ien/7M3Y3g/vBtet0I78bxBc0BNf9L0W1qZvZPL7r
-         YKL+EUMbDb7WMkznmmUMtfjsdisITkUTrfNOPxedGKbmvkSxS7Uo/nL9QQ4rHmdnBK
-         14vcndH1/BjjHtCQIlikIb18N0BltiWLepLpOO04=
+        b=qtUyf/Nk41YGuHujACqW877SMtaCFNpMStyWVfJhybfxYhxsuR6GA/FIBWhvyePRB
+         djNDpG+mnZ6S6mvd8JneMRKRNeH+fze0rlza78bsPhfFWkuaMMZET2s+77Z4o7aXH1
+         nPUeDDQGxkIVNx5jCi2PtHg9x7yQV8P3B7jzXwZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 4.19 36/45] f2fs: fix to avoid deadlock of atomic file operations
-Date:   Tue, 26 Mar 2019 15:30:19 +0900
-Message-Id: <20190326042704.566582951@linuxfoundation.org>
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.19 45/45] power: supply: charger-manager: Fix incorrect return value
+Date:   Tue, 26 Mar 2019 15:30:28 +0900
+Message-Id: <20190326042705.047364226@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,228 +65,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Baolin Wang <baolin.wang@linaro.org>
 
-commit 48432984d718c95cf13e26d487c2d1b697c3c01f upstream.
+commit f25a646fbe2051527ad9721853e892d13a99199e upstream.
 
-Thread A				Thread B
-- __fput
- - f2fs_release_file
-  - drop_inmem_pages
-   - mutex_lock(&fi->inmem_lock)
-   - __revoke_inmem_pages
-    - lock_page(page)
-					- open
-					- f2fs_setattr
-					- truncate_setsize
-					 - truncate_inode_pages_range
-					  - lock_page(page)
-					  - truncate_cleanup_page
-					   - f2fs_invalidate_page
-					    - drop_inmem_page
-					    - mutex_lock(&fi->inmem_lock);
+Fix incorrect return value.
 
-We may encounter above ABBA deadlock as reported by Kyungtae Kim:
-
-I'm reporting a bug in linux-4.17.19: "INFO: task hung in
-drop_inmem_page" (no reproducer)
-
-I think this might be somehow related to the following:
-https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
-
-=========================================
-INFO: task syz-executor7:10822 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D27024 10822   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
- __mutex_lock_common kernel/locking/mutex.c:833 [inline]
- __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
- mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
- drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
- f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
- do_invalidatepage mm/truncate.c:165 [inline]
- truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
- truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
- truncate_inode_pages mm/truncate.c:478 [inline]
- truncate_pagecache+0x6d/0x90 mm/truncate.c:801
- truncate_setsize+0x81/0xa0 mm/truncate.c:826
- f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
- notify_change+0xa62/0xe80 fs/attr.c:313
- do_truncate+0x12e/0x1e0 fs/open.c:63
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
-INFO: task syz-executor7:10858 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D28880 10858   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
- rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
- call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
- __down_write arch/x86/include/asm/rwsem.h:142 [inline]
- down_write+0x58/0xa0 kernel/locking/rwsem.c:72
- inode_lock include/linux/fs.h:713 [inline]
- do_truncate+0x120/0x1e0 fs/open.c:61
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
-INFO: task syz-executor5:10829 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor5   D28760 10829   6308 0x80000002
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- io_schedule+0x21/0x80 kernel/sched/core.c:5179
- wait_on_page_bit_common mm/filemap.c:1100 [inline]
- __lock_page+0x2b5/0x390 mm/filemap.c:1273
- lock_page include/linux/pagemap.h:483 [inline]
- __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
- drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
- f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
- __fput+0x2c7/0x780 fs/file_table.c:209
- ____fput+0x1a/0x20 fs/file_table.c:243
- task_work_run+0x151/0x1d0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x8ba/0x30a0 kernel/exit.c:865
- do_group_exit+0x13b/0x3a0 kernel/exit.c:968
- get_signal+0x6bb/0x1650 kernel/signal.c:2482
- do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
- do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
-RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
-
-This patch tries to use trylock_page to mitigate such deadlock condition
-for fix.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/segment.c |   43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+ drivers/power/supply/charger-manager.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -216,7 +216,8 @@ void f2fs_register_inmem_page(struct ino
- }
- 
- static int __revoke_inmem_pages(struct inode *inode,
--				struct list_head *head, bool drop, bool recover)
-+				struct list_head *head, bool drop, bool recover,
-+				bool trylock)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct inmem_pages *cur, *tmp;
-@@ -228,7 +229,16 @@ static int __revoke_inmem_pages(struct i
- 		if (drop)
- 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
- 
--		lock_page(page);
-+		if (trylock) {
-+			/*
-+			 * to avoid deadlock in between page lock and
-+			 * inmem_lock.
-+			 */
-+			if (!trylock_page(page))
-+				continue;
-+		} else {
-+			lock_page(page);
-+		}
- 
- 		f2fs_wait_on_page_writeback(page, DATA, true);
- 
-@@ -317,13 +327,19 @@ void f2fs_drop_inmem_pages(struct inode
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
--	mutex_lock(&fi->inmem_lock);
--	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
--	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
--	if (!list_empty(&fi->inmem_ilist))
--		list_del_init(&fi->inmem_ilist);
--	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
--	mutex_unlock(&fi->inmem_lock);
-+	while (!list_empty(&fi->inmem_pages)) {
-+		mutex_lock(&fi->inmem_lock);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, true);
-+
-+		if (list_empty(&fi->inmem_pages)) {
-+			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
-+			if (!list_empty(&fi->inmem_ilist))
-+				list_del_init(&fi->inmem_ilist);
-+			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
-+		}
-+		mutex_unlock(&fi->inmem_lock);
-+	}
- 
- 	clear_inode_flag(inode, FI_ATOMIC_FILE);
- 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
-@@ -427,12 +443,15 @@ retry:
- 		 * recovery or rewrite & commit last transaction. For other
- 		 * error number, revoking was done by filesystem itself.
- 		 */
--		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
-+		err = __revoke_inmem_pages(inode, &revoke_list,
-+						false, true, false);
- 
- 		/* drop all uncommitted pages */
--		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, false);
- 	} else {
--		__revoke_inmem_pages(inode, &revoke_list, false, false);
-+		__revoke_inmem_pages(inode, &revoke_list,
-+						false, false, false);
+--- a/drivers/power/supply/charger-manager.c
++++ b/drivers/power/supply/charger-manager.c
+@@ -1212,7 +1212,6 @@ static int charger_extcon_init(struct ch
+ 	if (ret < 0) {
+ 		pr_info("Cannot register extcon_dev for %s(cable: %s)\n",
+ 			cable->extcon_name, cable->name);
+-		ret = -EINVAL;
  	}
  
- 	return err;
+ 	return ret;
+@@ -1633,7 +1632,7 @@ static int charger_manager_probe(struct
+ 
+ 	if (IS_ERR(desc)) {
+ 		dev_err(&pdev->dev, "No platform data (desc) found\n");
+-		return -ENODEV;
++		return PTR_ERR(desc);
+ 	}
+ 
+ 	cm = devm_kzalloc(&pdev->dev, sizeof(*cm), GFP_KERNEL);
 
 
