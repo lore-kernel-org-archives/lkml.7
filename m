@@ -6,46 +6,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35982C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFE0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DCA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB78320863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582131;
-	bh=EZFsfa8O+PO3D72vQSo4x0TpCSqsaFH2y4IoHjXncC8=;
+	s=default; t=1553582133;
+	bh=eR+kVsms1ayQI1Y+EZQ9BFrILcNEKzCkuHFhN/fY624=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LXFp70L25b1ODNn+wNgOgKgBdBaOb+MGubO8bNvek0F5QQPhCKbJlhgKoFskE3g6i
-	 E3d7iAYZ1WW1vRWqKlA0PYBwMd431QY7GsDJvU9XF1wtSYyYBwA2ch+374Yv3W0gSn
-	 3Aa6i1MBAHccmRsKgoj+4xXWLfNdq9hFt7pm9bv0=
+	b=RXpXhNeOcT0kVckScbCsZzOfodCTIs52pDB9oo4pj52EMy81KfaqMj+j8WYeL3ioe
+	 +l+Ma2Q/skZYUAnZdoylIfL+FPEg2WhByToxNelsJ4MF2Ewjrn+es7K9bwjrzpm3zI
+	 XMs84QqfD2V1cTcy/Uro23ICs2rSWl86DnUWfQ+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732057AbfCZGf3 (ORCPT
+        id S1732066AbfCZGfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47054 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbfCZGf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:26 -0400
+        id S1732058AbfCZGfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:30 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D94A2086C;
-        Tue, 26 Mar 2019 06:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0118D20823;
+        Tue, 26 Mar 2019 06:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582126;
-        bh=EZFsfa8O+PO3D72vQSo4x0TpCSqsaFH2y4IoHjXncC8=;
+        s=default; t=1553582129;
+        bh=eR+kVsms1ayQI1Y+EZQ9BFrILcNEKzCkuHFhN/fY624=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaMh9u8xKrAWiOUWjhC5iDa10BPiKjASXY3IvPP2aYeDTzIOql1RKJs70wOBDO/qD
-         sOCvTcI+vBS0Opq04exlesD5T/Ky9mVthDgh5naY324jV2vhDQ4Ezk0GpKigUGJveu
-         Q24KRlRccJmhzZ/A0QgTRjoeNEJYAm1kGXfLQFOI=
+        b=IXQ6juI5ZuRFwNJ3nj7rbXvlm3XdL9sfLURJXDcz0W/ciWHWlxnEHtSmqk12SlZe8
+         PQdUwFJM76q7XeIidH3UapnJxbCF9/28ifp9KDoBNB1rvau+j+wwvo2Xjj0GMVBg7A
+         FafvUP8q6ncasBqjDMkigIuXRnLCU6qyiwdSJMnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, jean-luc malet <jeanluc.malet@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 10/45] udf: Fix crash on IO error during truncate
-Date:   Tue, 26 Mar 2019 15:29:53 +0900
-Message-Id: <20190326042703.207374369@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Subject: [PATCH 4.19 11/45] mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
+Date:   Tue, 26 Mar 2019 15:29:54 +0900
+Message-Id: <20190326042703.258663344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -64,38 +68,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Yifeng Li <tomli@tomli.me>
 
-commit d3ca4651d05c0ff7259d087d8c949bcf3e14fb46 upstream.
+commit 5f5f67da9781770df0403269bc57d7aae608fecd upstream.
 
-When truncate(2) hits IO error when reading indirect extent block the
-code just bugs with:
+Timekeeping IRQs from CS5536 MFGPT are routed to i8259, which then
+triggers the "cascade" IRQ on MIPS CPU. Without IRQF_NO_SUSPEND in
+cascade_irqaction, MFGPT interrupts will be masked in suspend mode,
+and the machine would be unable to resume once suspended.
 
-kernel BUG at linux-4.15.0/fs/udf/truncate.c:249!
-...
+Previously, MIPS IRQs were not disabled properly, so the original
+code appeared to work. Commit a3e6c1eff5 ("MIPS: IRQ: Fix disable_irq on
+CPU IRQs") uncovers the bug. To fix it, add IRQF_NO_SUSPEND to
+cascade_irqaction.
 
-Fix the problem by bailing out cleanly in case of IO error.
+This commit is functionally identical to 0add9c2f1cff ("MIPS:
+Loongson-3: Add IRQF_NO_SUSPEND to Cascade irqaction"), but it forgot
+to apply the same fix to Loongson2.
 
-CC: stable@vger.kernel.org
-Reported-by: jean-luc malet <jeanluc.malet@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org # v3.19+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/udf/truncate.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/mips/loongson64/lemote-2f/irq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/udf/truncate.c
-+++ b/fs/udf/truncate.c
-@@ -260,6 +260,9 @@ void udf_truncate_extents(struct inode *
- 			epos.block = eloc;
- 			epos.bh = udf_tread(sb,
- 					udf_get_lb_pblock(sb, &eloc, 0));
-+			/* Error reading indirect block? */
-+			if (!epos.bh)
-+				return;
- 			if (elen)
- 				indirect_ext_len =
- 					(elen + sb->s_blocksize - 1) >>
+--- a/arch/mips/loongson64/lemote-2f/irq.c
++++ b/arch/mips/loongson64/lemote-2f/irq.c
+@@ -103,7 +103,7 @@ static struct irqaction ip6_irqaction =
+ static struct irqaction cascade_irqaction = {
+ 	.handler = no_action,
+ 	.name = "cascade",
+-	.flags = IRQF_NO_THREAD,
++	.flags = IRQF_NO_THREAD | IRQF_NO_SUSPEND,
+ };
+ 
+ void __init mach_init_irq(void)
 
 
