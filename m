@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE29C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44761C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34F12087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008F320896
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582483;
-	bh=l2QbowQy6zA1owO0UPm7m7cIMUDnxON+kBq13NZmw1g=;
+	s=default; t=1553582492;
+	bh=dEYfebLHPaLEcBJMQmEdbr/y0VDHyw1mgg7GaAxw08Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRKWBiiWp+/UIlUgpDOMvEtGpwgzHvYnYBAjujOK0ZfLHwcBO19AseBgi5s39IBeB
-	 qz8kMoXSUwzDBPI4QnU7VG7bRJnPgJpiShhEAYU2bz+pjem4KUvHez+5q0eBa1oN7E
-	 5scfdG0mldHMLDWBzANRc1U4Iy169OtlpFGyGGLk=
+	b=PjkO3xtqwtfJ+deffiGmdGtfLdRlKhb4TgDJWo/WXAZ+6zpP9m6AVIq7tZg0cxiTr
+	 Fj/cOXd7cmMH3+dOvMsIpxtkVdRJ4qCUQLS1zeD3XvyOUTWdZQPoCo6HYvT9HG0x56
+	 rM7QjSQIrT9BKLBZtD/x0zsyIkEj1lKGKEbPNT1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732525AbfCZGlW (ORCPT
+        id S1732753AbfCZGla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:41:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732465AbfCZGk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:40:58 -0400
+        id S1732620AbfCZGko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:44 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9F722070B;
-        Tue, 26 Mar 2019 06:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2FF2086C;
+        Tue, 26 Mar 2019 06:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582457;
-        bh=l2QbowQy6zA1owO0UPm7m7cIMUDnxON+kBq13NZmw1g=;
+        s=default; t=1553582443;
+        bh=dEYfebLHPaLEcBJMQmEdbr/y0VDHyw1mgg7GaAxw08Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7eoTwah5YRde9o8eHH2cmNMoo2PtgXljOgEZQ7Ntl5CIqrk5QKNA3eMj2ufRgAif
-         NkXmPMj/YHduS2yJ2uxJjAj+sCfzlc1/drd4qgeR1YM5v6cSk87r+KTHkJg3pR/VT8
-         fB9LVpBx9z1OMLcQXr+2bOlfBzj1Zh5mux/sG8hA=
+        b=wkhIz4yXhLmQSsB+fdco19ffoIVlOwvvu5n+bPE9HImj4zP1BFeVc0IC3JgeHm/Gt
+         0VslX91pnQFmPvyRhGSZnfxW6Ut/bvW9E9kDNSEH92djbo/WcvZg6TxF5wM5mrgeJ/
+         vhCmg8j+zdEr+XXor3zcX+kl+jxewQX5HWPxKmeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.0 45/52] netfilter: ebtables: remove BUGPRINT messages
-Date:   Tue, 26 Mar 2019 15:30:32 +0900
-Message-Id: <20190326042703.370455074@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot <syzbot+12f1b031b6da017e34f8@syzkaller.appspotmail.com>
+Subject: [PATCH 5.0 41/52] drm/vkms: Fix flush_work() without INIT_WORK().
+Date:   Tue, 26 Mar 2019 15:30:28 +0900
+Message-Id: <20190326042703.158950790@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -65,361 +68,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Florian Westphal <fw@strlen.de>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit d824548dae220820bdf69b2d1561b7c4b072783f upstream.
+commit b30b61ff6b1dc37f276cf56a8328b80086a3ffca upstream.
 
-They are however frequently triggered by syzkaller, so remove them.
+syzbot is hitting a lockdep warning [1] because flush_work() is called
+without INIT_WORK() after kzalloc() at vkms_atomic_crtc_reset().
 
-ebtables userspace should never trigger any of these, so there is little
-value in making them pr_debug (or ratelimited).
+Commit 6c234fe37c57627a ("drm/vkms: Implement CRC debugfs API") added
+INIT_WORK() to only vkms_atomic_crtc_duplicate_state() side. Assuming
+that lifecycle of crc_work is appropriately managed, fix this problem
+by adding INIT_WORK() to vkms_atomic_crtc_reset() side.
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+[1] https://syzkaller.appspot.com/bug?id=a5954455fcfa51c29ca2ab55b203076337e1c770
+
+Reported-and-tested-by: syzbot <syzbot+12f1b031b6da017e34f8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1547829823-9877-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/netfilter/ebtables.c |  131 +++++++++++-----------------------------
- 1 file changed, 39 insertions(+), 92 deletions(-)
+ drivers/gpu/drm/vkms/vkms_crtc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -31,10 +31,6 @@
- /* needed for logical [in,out]-dev filtering */
- #include "../br_private.h"
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -98,6 +98,7 @@ static void vkms_atomic_crtc_reset(struc
+ 	vkms_state = kzalloc(sizeof(*vkms_state), GFP_KERNEL);
+ 	if (!vkms_state)
+ 		return;
++	INIT_WORK(&vkms_state->crc_work, vkms_crc_work_handle);
  
--#define BUGPRINT(format, args...) printk("kernel msg: ebtables bug: please "\
--					 "report to author: "format, ## args)
--/* #define BUGPRINT(format, args...) */
--
- /* Each cpu has its own set of counters, so there is no need for write_lock in
-  * the softirq
-  * For reading or updating the counters, the user context needs to
-@@ -466,8 +462,6 @@ static int ebt_verify_pointers(const str
- 				/* we make userspace set this right,
- 				 * so there is no misunderstanding
- 				 */
--				BUGPRINT("EBT_ENTRY_OR_ENTRIES shouldn't be set "
--					 "in distinguisher\n");
- 				return -EINVAL;
- 			}
- 			if (i != NF_BR_NUMHOOKS)
-@@ -485,18 +479,14 @@ static int ebt_verify_pointers(const str
- 			offset += e->next_offset;
- 		}
- 	}
--	if (offset != limit) {
--		BUGPRINT("entries_size too small\n");
-+	if (offset != limit)
- 		return -EINVAL;
--	}
- 
- 	/* check if all valid hooks have a chain */
- 	for (i = 0; i < NF_BR_NUMHOOKS; i++) {
- 		if (!newinfo->hook_entry[i] &&
--		   (valid_hooks & (1 << i))) {
--			BUGPRINT("Valid hook without chain\n");
-+		   (valid_hooks & (1 << i)))
- 			return -EINVAL;
--		}
- 	}
- 	return 0;
- }
-@@ -523,26 +513,20 @@ ebt_check_entry_size_and_hooks(const str
- 		/* this checks if the previous chain has as many entries
- 		 * as it said it has
- 		 */
--		if (*n != *cnt) {
--			BUGPRINT("nentries does not equal the nr of entries "
--				 "in the chain\n");
-+		if (*n != *cnt)
- 			return -EINVAL;
--		}
-+
- 		if (((struct ebt_entries *)e)->policy != EBT_DROP &&
- 		   ((struct ebt_entries *)e)->policy != EBT_ACCEPT) {
- 			/* only RETURN from udc */
- 			if (i != NF_BR_NUMHOOKS ||
--			   ((struct ebt_entries *)e)->policy != EBT_RETURN) {
--				BUGPRINT("bad policy\n");
-+			   ((struct ebt_entries *)e)->policy != EBT_RETURN)
- 				return -EINVAL;
--			}
- 		}
- 		if (i == NF_BR_NUMHOOKS) /* it's a user defined chain */
- 			(*udc_cnt)++;
--		if (((struct ebt_entries *)e)->counter_offset != *totalcnt) {
--			BUGPRINT("counter_offset != totalcnt");
-+		if (((struct ebt_entries *)e)->counter_offset != *totalcnt)
- 			return -EINVAL;
--		}
- 		*n = ((struct ebt_entries *)e)->nentries;
- 		*cnt = 0;
- 		return 0;
-@@ -550,15 +534,13 @@ ebt_check_entry_size_and_hooks(const str
- 	/* a plain old entry, heh */
- 	if (sizeof(struct ebt_entry) > e->watchers_offset ||
- 	   e->watchers_offset > e->target_offset ||
--	   e->target_offset >= e->next_offset) {
--		BUGPRINT("entry offsets not in right order\n");
-+	   e->target_offset >= e->next_offset)
- 		return -EINVAL;
--	}
-+
- 	/* this is not checked anywhere else */
--	if (e->next_offset - e->target_offset < sizeof(struct ebt_entry_target)) {
--		BUGPRINT("target size too small\n");
-+	if (e->next_offset - e->target_offset < sizeof(struct ebt_entry_target))
- 		return -EINVAL;
--	}
-+
- 	(*cnt)++;
- 	(*totalcnt)++;
- 	return 0;
-@@ -678,18 +660,15 @@ ebt_check_entry(struct ebt_entry *e, str
- 	if (e->bitmask == 0)
- 		return 0;
- 
--	if (e->bitmask & ~EBT_F_MASK) {
--		BUGPRINT("Unknown flag for bitmask\n");
-+	if (e->bitmask & ~EBT_F_MASK)
- 		return -EINVAL;
--	}
--	if (e->invflags & ~EBT_INV_MASK) {
--		BUGPRINT("Unknown flag for inv bitmask\n");
-+
-+	if (e->invflags & ~EBT_INV_MASK)
- 		return -EINVAL;
--	}
--	if ((e->bitmask & EBT_NOPROTO) && (e->bitmask & EBT_802_3)) {
--		BUGPRINT("NOPROTO & 802_3 not allowed\n");
-+
-+	if ((e->bitmask & EBT_NOPROTO) && (e->bitmask & EBT_802_3))
- 		return -EINVAL;
--	}
-+
- 	/* what hook do we belong to? */
- 	for (i = 0; i < NF_BR_NUMHOOKS; i++) {
- 		if (!newinfo->hook_entry[i])
-@@ -748,13 +727,11 @@ ebt_check_entry(struct ebt_entry *e, str
- 	t->u.target = target;
- 	if (t->u.target == &ebt_standard_target) {
- 		if (gap < sizeof(struct ebt_standard_target)) {
--			BUGPRINT("Standard target size too big\n");
- 			ret = -EFAULT;
- 			goto cleanup_watchers;
- 		}
- 		if (((struct ebt_standard_target *)t)->verdict <
- 		   -NUM_STANDARD_TARGETS) {
--			BUGPRINT("Invalid standard target\n");
- 			ret = -EFAULT;
- 			goto cleanup_watchers;
- 		}
-@@ -813,10 +790,9 @@ static int check_chainloops(const struct
- 		if (strcmp(t->u.name, EBT_STANDARD_TARGET))
- 			goto letscontinue;
- 		if (e->target_offset + sizeof(struct ebt_standard_target) >
--		   e->next_offset) {
--			BUGPRINT("Standard target size too big\n");
-+		   e->next_offset)
- 			return -1;
--		}
-+
- 		verdict = ((struct ebt_standard_target *)t)->verdict;
- 		if (verdict >= 0) { /* jump to another chain */
- 			struct ebt_entries *hlp2 =
-@@ -825,14 +801,12 @@ static int check_chainloops(const struct
- 				if (hlp2 == cl_s[i].cs.chaininfo)
- 					break;
- 			/* bad destination or loop */
--			if (i == udc_cnt) {
--				BUGPRINT("bad destination\n");
-+			if (i == udc_cnt)
- 				return -1;
--			}
--			if (cl_s[i].cs.n) {
--				BUGPRINT("loop\n");
-+
-+			if (cl_s[i].cs.n)
- 				return -1;
--			}
-+
- 			if (cl_s[i].hookmask & (1 << hooknr))
- 				goto letscontinue;
- 			/* this can't be 0, so the loop test is correct */
-@@ -865,24 +839,21 @@ static int translate_table(struct net *n
- 	i = 0;
- 	while (i < NF_BR_NUMHOOKS && !newinfo->hook_entry[i])
- 		i++;
--	if (i == NF_BR_NUMHOOKS) {
--		BUGPRINT("No valid hooks specified\n");
-+	if (i == NF_BR_NUMHOOKS)
- 		return -EINVAL;
--	}
--	if (newinfo->hook_entry[i] != (struct ebt_entries *)newinfo->entries) {
--		BUGPRINT("Chains don't start at beginning\n");
-+
-+	if (newinfo->hook_entry[i] != (struct ebt_entries *)newinfo->entries)
- 		return -EINVAL;
--	}
-+
- 	/* make sure chains are ordered after each other in same order
- 	 * as their corresponding hooks
- 	 */
- 	for (j = i + 1; j < NF_BR_NUMHOOKS; j++) {
- 		if (!newinfo->hook_entry[j])
- 			continue;
--		if (newinfo->hook_entry[j] <= newinfo->hook_entry[i]) {
--			BUGPRINT("Hook order must be followed\n");
-+		if (newinfo->hook_entry[j] <= newinfo->hook_entry[i])
- 			return -EINVAL;
--		}
-+
- 		i = j;
- 	}
- 
-@@ -900,15 +871,11 @@ static int translate_table(struct net *n
- 	if (ret != 0)
- 		return ret;
- 
--	if (i != j) {
--		BUGPRINT("nentries does not equal the nr of entries in the "
--			 "(last) chain\n");
-+	if (i != j)
- 		return -EINVAL;
--	}
--	if (k != newinfo->nentries) {
--		BUGPRINT("Total nentries is wrong\n");
-+
-+	if (k != newinfo->nentries)
- 		return -EINVAL;
--	}
- 
- 	/* get the location of the udc, put them in an array
- 	 * while we're at it, allocate the chainstack
-@@ -942,7 +909,6 @@ static int translate_table(struct net *n
- 		   ebt_get_udc_positions, newinfo, &i, cl_s);
- 		/* sanity check */
- 		if (i != udc_cnt) {
--			BUGPRINT("i != udc_cnt\n");
- 			vfree(cl_s);
- 			return -EFAULT;
- 		}
-@@ -1042,7 +1008,6 @@ static int do_replace_finish(struct net
- 		goto free_unlock;
- 
- 	if (repl->num_counters && repl->num_counters != t->private->nentries) {
--		BUGPRINT("Wrong nr. of counters requested\n");
- 		ret = -EINVAL;
- 		goto free_unlock;
- 	}
-@@ -1118,15 +1083,12 @@ static int do_replace(struct net *net, c
- 	if (copy_from_user(&tmp, user, sizeof(tmp)) != 0)
- 		return -EFAULT;
- 
--	if (len != sizeof(tmp) + tmp.entries_size) {
--		BUGPRINT("Wrong len argument\n");
-+	if (len != sizeof(tmp) + tmp.entries_size)
- 		return -EINVAL;
--	}
- 
--	if (tmp.entries_size == 0) {
--		BUGPRINT("Entries_size never zero\n");
-+	if (tmp.entries_size == 0)
- 		return -EINVAL;
--	}
-+
- 	/* overflow check */
- 	if (tmp.nentries >= ((INT_MAX - sizeof(struct ebt_table_info)) /
- 			NR_CPUS - SMP_CACHE_BYTES) / sizeof(struct ebt_counter))
-@@ -1153,7 +1115,6 @@ static int do_replace(struct net *net, c
- 	}
- 	if (copy_from_user(
- 	   newinfo->entries, tmp.entries, tmp.entries_size) != 0) {
--		BUGPRINT("Couldn't copy entries from userspace\n");
- 		ret = -EFAULT;
- 		goto free_entries;
- 	}
-@@ -1194,10 +1155,8 @@ int ebt_register_table(struct net *net,
- 
- 	if (input_table == NULL || (repl = input_table->table) == NULL ||
- 	    repl->entries == NULL || repl->entries_size == 0 ||
--	    repl->counters != NULL || input_table->private != NULL) {
--		BUGPRINT("Bad table data for ebt_register_table!!!\n");
-+	    repl->counters != NULL || input_table->private != NULL)
- 		return -EINVAL;
--	}
- 
- 	/* Don't add one table to multiple lists. */
- 	table = kmemdup(input_table, sizeof(struct ebt_table), GFP_KERNEL);
-@@ -1235,13 +1194,10 @@ int ebt_register_table(struct net *net,
- 				((char *)repl->hook_entry[i] - repl->entries);
- 	}
- 	ret = translate_table(net, repl->name, newinfo);
--	if (ret != 0) {
--		BUGPRINT("Translate_table failed\n");
-+	if (ret != 0)
- 		goto free_chainstack;
--	}
- 
- 	if (table->check && table->check(newinfo, table->valid_hooks)) {
--		BUGPRINT("The table doesn't like its own initial data, lol\n");
- 		ret = -EINVAL;
- 		goto free_chainstack;
- 	}
-@@ -1252,7 +1208,6 @@ int ebt_register_table(struct net *net,
- 	list_for_each_entry(t, &net->xt.tables[NFPROTO_BRIDGE], list) {
- 		if (strcmp(t->name, table->name) == 0) {
- 			ret = -EEXIST;
--			BUGPRINT("Table name already exists\n");
- 			goto free_unlock;
- 		}
- 	}
-@@ -1320,7 +1275,6 @@ static int do_update_counters(struct net
- 		goto free_tmp;
- 
- 	if (num_counters != t->private->nentries) {
--		BUGPRINT("Wrong nr of counters\n");
- 		ret = -EINVAL;
- 		goto unlock_mutex;
- 	}
-@@ -1447,10 +1401,8 @@ static int copy_counters_to_user(struct
- 	if (num_counters == 0)
- 		return 0;
- 
--	if (num_counters != nentries) {
--		BUGPRINT("Num_counters wrong\n");
-+	if (num_counters != nentries)
- 		return -EINVAL;
--	}
- 
- 	counterstmp = vmalloc(array_size(nentries, sizeof(*counterstmp)));
- 	if (!counterstmp)
-@@ -1496,15 +1448,11 @@ static int copy_everything_to_user(struc
- 	   (tmp.num_counters ? nentries * sizeof(struct ebt_counter) : 0))
- 		return -EINVAL;
- 
--	if (tmp.nentries != nentries) {
--		BUGPRINT("Nentries wrong\n");
-+	if (tmp.nentries != nentries)
- 		return -EINVAL;
--	}
- 
--	if (tmp.entries_size != entries_size) {
--		BUGPRINT("Wrong size\n");
-+	if (tmp.entries_size != entries_size)
- 		return -EINVAL;
--	}
- 
- 	ret = copy_counters_to_user(t, oldcounters, tmp.counters,
- 					tmp.num_counters, nentries);
-@@ -1576,7 +1524,6 @@ static int do_ebt_get_ctl(struct sock *s
- 		}
- 		mutex_unlock(&ebt_mutex);
- 		if (copy_to_user(user, &tmp, *len) != 0) {
--			BUGPRINT("c2u Didn't work\n");
- 			ret = -EFAULT;
- 			break;
- 		}
+ 	crtc->state = &vkms_state->base;
+ 	crtc->state->crtc = crtc;
 
 
