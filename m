@@ -2,88 +2,136 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3C1C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DFEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01F620856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EKNQhc84"
+	by mail.kernel.org (Postfix) with ESMTP id 3BA1020856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfCZIGv (ORCPT
+        id S1730752AbfCZILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:06:51 -0400
-Received: from m13-37.163.com ([220.181.13.37]:4176 "EHLO m13-37.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbfCZIGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:06:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=e0SYl
-        +G2gMP2T47fr0R5SU8lscsVUcNOWxUkH+DbRw4=; b=EKNQhc84CAjzx6FAv0vuB
-        vDJ3PlkCdVJ5QlU0Y5TeXOgoboOwkHUa2kzPq0oXY9p+ChlB5I0zJJWbnE9kfVq3
-        L8FTj8iSUX+JmKEWDWISaKl8nszwhc6b0mUak7sNKz6umOHAt014vYSmjedPFw4l
-        Q0DCjrGKly3RdGiW0WOOdg=
-Received: from luferry$163.com ( [42.120.75.143] ) by ajax-webmail-wmsvr37
- (Coremail) ; Tue, 26 Mar 2019 15:55:10 +0800 (CST)
-X-Originating-IP: [42.120.75.143]
-Date:   Tue, 26 Mar 2019 15:55:10 +0800 (CST)
-From:   luferry <luferry@163.com>
-To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     "Jens Axboe" <axboe@kernel.dk>,
-        "Dongli Zhang" <dongli.zhang@oracle.com>,
-        "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH] make blk_mq_map_queues more friendly for cpu
- topology
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
- 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
-In-Reply-To: <20190326073954.GD21617@lst.de>
-References: <20190325152640.48120-1-luferry@163.com>
- <20190326073954.GD21617@lst.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+        Tue, 26 Mar 2019 04:11:51 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34030 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfCZILv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 04:11:51 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 150CFEDFC18E5EBC1B34;
+        Tue, 26 Mar 2019 16:11:49 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 26 Mar 2019 16:11:38 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <julien.thierry@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>,
+        <huawei.libin@huawei.com>
+Subject: [PATCH] arm64: gic-v3: fix unexpected overwrite of spi/ppi/sgi prio
+Date:   Tue, 26 Mar 2019 16:16:58 +0800
+Message-ID: <20190326081658.37450-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Message-ID: <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: JcGowADX5gTf2plcf9kfAA--.38729W
-X-CM-SenderInfo: poxiv2lu16il2tof0z/xtbBLwWDWlUMIcBO4gACsl
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgoKQXQgMjAxOS0wMy0yNiAxNTozOTo1NCwgIkNocmlzdG9waCBIZWxsd2lnIiA8aGNoQGxzdC5k
-ZT4gd3JvdGU6Cj5XaHkgaXNuJ3QgdGhpcyB1c2luZyB0aGUgYXV0b21hdGljIFBDSS1sZXZlbCBh
-ZmZpbml0eSBhc3NpZ25tZW50IHRvCj5zdGFydCB3aXRoPwoKV2hlbiBlbmFibGUgdmlydGlvLWJs
-ayB3aXRoIG11bHRpIHF1ZXVlcyBidXQgd2l0aCBvbmx5IDIgbXNpeC12ZWN0b3IuCnZwX2Rldi0+
-cGVyX3ZxX3ZlY3RvcnMgd2lsbCBiZSBmYWxzZSwgdnBfZ2V0X3ZxX2FmZmludGl0eSB3aWxsIHJl
-dHVybiBOVUxMIGRpcmVjdGx5CnNvIGJsa19tcV92aXJ0aW9fbWFwX3F1ZXVlcyB3aWxsIGZhbGxi
-YWNrIHRvIGJsa19tcV9tYXBfcXVldWVzLgoKCjQ0OCBjb25zdCBzdHJ1Y3QgY3B1bWFzayAqdnBf
-Z2V0X3ZxX2FmZmluaXR5KHN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2ZGV2LCBpbnQgaW5kZXgpCjQ0
-OSB7CjQ1MCAgICAgc3RydWN0IHZpcnRpb19wY2lfZGV2aWNlICp2cF9kZXYgPSB0b192cF9kZXZp
-Y2UodmRldik7CjQ1MQo0NTIgICAgIGlmICghdnBfZGV2LT5wZXJfdnFfdmVjdG9ycyB8fAo0NTMg
-ICAgICAgICB2cF9kZXYtPnZxc1tpbmRleF0tPm1zaXhfdmVjdG9yID09IFZJUlRJT19NU0lfTk9f
-VkVDVE9SKQo0NTQgICAgICAgICByZXR1cm4gTlVMTDsKNDU1CjQ1NiAgICAgcmV0dXJuIHBjaV9p
-cnFfZ2V0X2FmZmluaXR5KHZwX2Rldi0+cGNpX2RldiwKNDU3ICAgICAgICAgICAgICAgICAgICAg
-dnBfZGV2LT52cXNbaW5kZXhdLT5tc2l4X3ZlY3Rvcik7CjQ1OCB9CgogMzIgaW50IGJsa19tcV92
-aXJ0aW9fbWFwX3F1ZXVlcyhzdHJ1Y3QgYmxrX21xX3F1ZXVlX21hcCAqcW1hcCwKIDMzICAgICAg
-ICAgc3RydWN0IHZpcnRpb19kZXZpY2UgKnZkZXYsIGludCBmaXJzdF92ZWMpCiAzNCB7CiAzNSAg
-ICAgY29uc3Qgc3RydWN0IGNwdW1hc2sgKm1hc2s7CiAzNiAgICAgdW5zaWduZWQgaW50IHF1ZXVl
-LCBjcHU7CiAzNwogMzggICAgIGlmICghdmRldi0+Y29uZmlnLT5nZXRfdnFfYWZmaW5pdHkpCiAz
-OSAgICAgICAgIGdvdG8gZmFsbGJhY2s7CiA0MAogNDEgICAgIGZvciAocXVldWUgPSAwOyBxdWV1
-ZSA8IHFtYXAtPm5yX3F1ZXVlczsgcXVldWUrKykgewogNDIgICAgICAgICBtYXNrID0gdmRldi0+
-Y29uZmlnLT5nZXRfdnFfYWZmaW5pdHkodmRldiwgZmlyc3RfdmVjICsgcXVldWUpOyAvL3ZwX2dl
-dF92cV9hZmZpbml0eSByZXR1cm4gTlVMTAogNDMgICAgICAgICBpZiAoIW1hc2spCiA0NCAgICAg
-ICAgICAgICBnb3RvIGZhbGxiYWNrOwogNDUKIDQ2ICAgICAgICAgZm9yX2VhY2hfY3B1KGNwdSwg
-bWFzaykKIDQ3ICAgICAgICAgICAgIHFtYXAtPm1xX21hcFtjcHVdID0gcW1hcC0+cXVldWVfb2Zm
-c2V0ICsgcXVldWU7CiA0OCAgICAgfQogNDkKIDUwICAgICByZXR1cm4gMDsKIDUxIGZhbGxiYWNr
-OgogNTIgICAgIHJldHVybiBibGtfbXFfbWFwX3F1ZXVlcyhxbWFwKTsKIDUzIH0KCmhlcmUgaXMg
-cHJldmlvdXMgZGlzY3Vzc2lvbgpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
-ODY1NDYxLyAK
+The priority config will be restored to the default value in the
+notifiers of gic suspend. While the arm64 nmi-like interrupt has been
+implemented by using priority since commit bc3c03ccb464 ("arm64: Enable
+the support of pseudo-NMIs"), we need to do the save and restore exactly.
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ drivers/irqchip/irq-gic.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index fd3110c171ba..5928c4338b28 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -79,10 +79,12 @@ struct gic_chip_data {
+ 	u32 saved_spi_enable[DIV_ROUND_UP(1020, 32)];
+ 	u32 saved_spi_active[DIV_ROUND_UP(1020, 32)];
+ 	u32 saved_spi_conf[DIV_ROUND_UP(1020, 16)];
++	u32 saved_spi_prio[DIV_ROUND_UP(1020, 4)];
+ 	u32 saved_spi_target[DIV_ROUND_UP(1020, 4)];
+ 	u32 __percpu *saved_ppi_enable;
+ 	u32 __percpu *saved_ppi_active;
+ 	u32 __percpu *saved_ppi_conf;
++	u32 __percpu *saved_ppi_prio;
+ #endif
+ 	struct irq_domain *domain;
+ 	unsigned int gic_irqs;
+@@ -599,6 +601,10 @@ void gic_dist_save(struct gic_chip_data *gic)
+ 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 32); i++)
+ 		gic->saved_spi_active[i] =
+ 			readl_relaxed(dist_base + GIC_DIST_ACTIVE_SET + i * 4);
++
++	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
++		gic->saved_spi_prio[i] =
++			readl_relaxed(dist_base + GIC_DIST_PRI + i * 4);
+ }
+ 
+ /*
+@@ -630,7 +636,7 @@ void gic_dist_restore(struct gic_chip_data *gic)
+ 			dist_base + GIC_DIST_CONFIG + i * 4);
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
+-		writel_relaxed(GICD_INT_DEF_PRI_X4,
++		writel_relaxed(gic->saved_spi_prio[i],
+ 			dist_base + GIC_DIST_PRI + i * 4);
+ 
+ 	for (i = 0; i < DIV_ROUND_UP(gic_irqs, 4); i++)
+@@ -682,6 +688,9 @@ void gic_cpu_save(struct gic_chip_data *gic)
+ 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
+ 		ptr[i] = readl_relaxed(dist_base + GIC_DIST_CONFIG + i * 4);
+ 
++	ptr = raw_cpu_ptr(gic->saved_ppi_prio);
++	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
++		ptr[i] = readl_relaxed(dist_base + GIC_DIST_PRI + i * 4);
+ }
+ 
+ void gic_cpu_restore(struct gic_chip_data *gic)
+@@ -718,9 +727,9 @@ void gic_cpu_restore(struct gic_chip_data *gic)
+ 	for (i = 0; i < DIV_ROUND_UP(32, 16); i++)
+ 		writel_relaxed(ptr[i], dist_base + GIC_DIST_CONFIG + i * 4);
+ 
++	ptr = raw_cpu_ptr(gic->saved_ppi_prio);
+ 	for (i = 0; i < DIV_ROUND_UP(32, 4); i++)
+-		writel_relaxed(GICD_INT_DEF_PRI_X4,
+-					dist_base + GIC_DIST_PRI + i * 4);
++		writel_relaxed(ptr[i], dist_base + GIC_DIST_PRI + i * 4);
+ 
+ 	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
+ 	gic_cpu_if_up(gic);
+@@ -778,11 +787,18 @@ static int gic_pm_init(struct gic_chip_data *gic)
+ 	if (WARN_ON(!gic->saved_ppi_conf))
+ 		goto free_ppi_active;
+ 
++	gic->saved_ppi_prio = __alloc_percpu(DIV_ROUND_UP(32, 4) * 4,
++		sizeof(u32));
++	if (WARN_ON(!gic->saved_ppi_prio))
++		goto free_ppi_prio;
++
+ 	if (gic == &gic_data[0])
+ 		cpu_pm_register_notifier(&gic_notifier_block);
+ 
+ 	return 0;
+ 
++free_ppi_prio:
++	free_percpu(gic->saved_ppi_conf);
+ free_ppi_active:
+ 	free_percpu(gic->saved_ppi_active);
+ free_ppi_enable:
+-- 
+2.17.1
+
