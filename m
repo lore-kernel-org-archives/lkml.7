@@ -2,108 +2,136 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D5CC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FCCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFC920823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:19:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IMA+l8ov"
+	by mail.kernel.org (Postfix) with ESMTP id 7DC002070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbfCZPTb (ORCPT
+        id S1731976AbfCZPUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:19:31 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18707 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfCZPTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:19:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9a43000001>; Tue, 26 Mar 2019 08:19:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 26 Mar 2019 08:19:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 26 Mar 2019 08:19:30 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
- 2019 15:19:26 +0000
-Subject: Re: [PATCH 4.14 00/41] 4.14.109-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190326042649.889479098@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <20f0b2de-b020-8dfa-ed59-cec6df5d27c9@nvidia.com>
-Date:   Tue, 26 Mar 2019 15:19:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 11:20:03 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5191 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfCZPUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:20:02 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 53E0E781758513CD8426;
+        Tue, 26 Mar 2019 23:19:57 +0800 (CST)
+Received: from S00345302A-PC.china.huawei.com (10.202.227.237) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 26 Mar 2019 23:19:50 +0800
+From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+To:     <lorenzo.pieralisi@arm.com>, <robin.murphy@arm.com>
+CC:     <andrew.murray@arm.com>, <jean-philippe.brucker@arm.com>,
+        <will.deacon@arm.com>, <mark.rutland@arm.com>,
+        <guohanjun@huawei.com>, <john.garry@huawei.com>,
+        <pabba@codeaurora.org>, <vkilari@codeaurora.org>,
+        <rruigrok@codeaurora.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        <neil.m.leeder@gmail.com>
+Subject: [PATCH v7 0/4] arm64 SMMUv3 PMU driver with IORT support
+Date:   Tue, 26 Mar 2019 15:17:49 +0000
+Message-ID: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553613568; bh=Vo1HaC1/hWdEA7LTVBjBtQZzbO8uRKPf90Qu6xu2CVA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IMA+l8ovquCinTZOlTdbpGpRuUONLS8xy3/E9JIl6mSgfVzI5lDVy7GuLYaIH1qP5
-         969P28LEDImpWZv/3Aj+BqeIdpgBl6C/NJ5J4a7fTDXbJIzW6cFluwGizfvhfw9vOe
-         qZ/vwStkIxOSp1aLqIfTWX9+MJK14V9nOQ2QzDsE9C60wYH7jy/eieYhPilPlTFEqF
-         T73xCbdvksi3WIYY336zXZCqsdbXqpbnJKYEe9PyT0YIWgRq8Kg0lRha1F7qB2j1Dn
-         p7Dj2rBMZrUSJs9XwY7aP0fkVVfltrX3GNnbg7aXJ0zIKFh9C9wB3sI7Gg5gqBZkZk
-         MCE4YWMBU5vpQ==
+Content-Type: text/plain
+X-Originating-IP: [10.202.227.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds a driver for the SMMUv3 PMU into the perf framework.
+It includes an IORT update to support PM Counter Groups.
 
-On 26/03/2019 06:29, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.109 release.
-> There are 41 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu Mar 28 04:26:32 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.109-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+This is based on the initial work done by Neil Leeder[1]
 
-All tests are passing for Tegra ...
+SMMUv3 PMCG devices are named as smmuv3_pmcg_<phys_addr_page>
+where <phys_addr_page> is the physical page address of the SMMU PMCG.
+For example, the PMCG at 0xff88840000 is named smmuv3_pmcg_ff88840
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    20 tests:	20 pass, 0 fail
+Usage example:
+For common arch supported events:
+perf stat -e smmuv3_pmcg_ff88840/transaction,filter_enable=1,
+ filter_span=1,filter_stream_id=0x42/ -a netperf
 
-Linux version:	4.14.109-rc1-g4bb6d9c
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+For IMP DEF events:
+perf stat -e smmuv3_pmcg_ff88840/event=id/ -a netperf
 
-Cheers
-Jon
+This is sanity tested on a HiSilicon platform that requires
+a quirk to run  it properly. As per HiSilicon erratum  #162001800,
+PMCG event counter registers (SMMU_PMCG_EVCNTRn) on HiSilicon Hip08
+platforms are read only and this prevents the software from setting
+the initial period on event start. Unfortunately we were a bit late
+in the cycle to detect this issue and now require software workaround
+for this. Patch #4 is added to this series to provide a workaround
+for this issue.
+
+Further testing on supported platforms are very much welcome.
+
+v6 --> v7
+-Addressed comments from Robin and Lorenzo.
+-Added R-by from Robin/Hanjun and A-by from Lorenzo.
+
+v5 ---> v6
+-Addressed comments from Robin and Andrew.
+-Changed the way global filter settings are applied as a probable
+ fix to the v5 bug where in-use settings gets overwritten.
+-Use of PMCG model number to identify the platform.
+-Added R-by from Robin to patches #1 and #3.
+
+v4 ---> v5
+-IORT code is modified to pass the option/quirk flags to the driver
+ through platform_data (patch #4), based on Robin's comments.
+-Removed COMPILE_TEST (patch #2).
+
+v3 --> v4
+
+-Addressed comments from Jean and Robin.
+-Merged dma config callbacks as per Lorenzo's comments(patch #1).
+-Added handling of Global(Counter0) filter settings mode(patch #2).
+-Added patch #4 to address HiSilicon erratum  #162001800
+-
+v2 --> v3
+
+-Addressed comments from Robin.
+-Removed iort helper function to retrieve the PMCG reference smmu.
+-PMCG devices are now named using the base address
+
+v1 --> v2
+
+- Addressed comments from Robin.
+- Added an helper to retrieve the associated smmu dev and named PMUs
+  to make the association visible to user.
+- Added MSI support  for overflow irq
+
+[1]https://www.spinics.net/lists/arm-kernel/msg598591.html
+
+
+Neil Leeder (2):
+  ACPI/IORT: Add support for PMCG
+  perf/smmuv3: Add arm64 smmuv3 pmu driver
+
+Shameer Kolothum (2):
+  perf/smmuv3: Add MSI irq support
+  perf/smmuv3: Enable HiSilicon Erratum 162001800 quirk
+
+ drivers/acpi/arm64/iort.c     | 131 +++++--
+ drivers/perf/Kconfig          |   9 +
+ drivers/perf/Makefile         |   1 +
+ drivers/perf/arm_smmuv3_pmu.c | 868 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi_iort.h     |   8 +
+ 5 files changed, 993 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/perf/arm_smmuv3_pmu.c
 
 -- 
-nvpublic
+2.7.4
+
+
