@@ -6,50 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9CFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F03C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2C020866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EDC820823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581895;
-	bh=xvtAptN2oK6G48JYhe0g9Vj7ebdyPZ9rHtgpwelLzH4=;
+	s=default; t=1553581900;
+	bh=aChZIsApiOt2Ph7XS+iUWkQz7muClINzzHmHedw+IiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5PKMRUfYq8P0fhbYBUojH+dvgXMi7vXa3Ts79OES+y7LQa8Na8GoJxzep1BOJypa
-	 5nUB2wPb8954uuRoXHF1nH3rrSubsPPrCupAtPC1woefoXVvnR2hu+11rtaVWHoxJE
-	 3fwL11luLkO8FNmeS1oqno0Y8nYNvCRJ+qEqvYqI=
+	b=FYqxaud/Vp2txjC+SAO3M8yaKnBY5v3w5Tb0xfO1uI22ZiO2UxPK4zBd1Q0y2Ou+I
+	 zd9MQlhgPYeTPuqh4AMLg4/5wq0yE8RmRUTJCay3BBawFJSI3oWfn5xJA+FhUdKShv
+	 CwpLsv6yyXW14hUhJPNoGq+KgBHll9RZwjFVNfPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfCZGbd (ORCPT
+        id S1731106AbfCZGbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40930 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfCZGbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:31:31 -0400
+        id S1725535AbfCZGbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:31:35 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32AAC20823;
-        Tue, 26 Mar 2019 06:31:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E879320857;
+        Tue, 26 Mar 2019 06:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581890;
-        bh=xvtAptN2oK6G48JYhe0g9Vj7ebdyPZ9rHtgpwelLzH4=;
+        s=default; t=1553581894;
+        bh=aChZIsApiOt2Ph7XS+iUWkQz7muClINzzHmHedw+IiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOZac9JbGHxb/0BKzB5CzsltWqNaEWstWPEwgUdHZVmw4yhCiHjF5QFaIlyE1CVJG
-         04sQViTbatQ3QitRw4soStuedaSfhhuY7KWKoMFXu40X3yFm+b+elLUD35wJsvchs4
-         COrOoRaPefgQMSpOab/ylWoZQZnj0CAVxeaG0tgg=
+        b=cnTT065OqOI6uQxAvVr8qnDjRXj0BMP6nqGiuaU79znxNeXWkwo0jGvSTannPHan9
+         z88XvzEXfUnzuLifmxOnuSN6Oq2a0/c6cx5Bcf0oKgo10GRXCuEkgwu+eHBIO/iaY5
+         jy9MlYi57iVREO8c4q4PFazfaAAoHcWm9uHFlaxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
+        stable@vger.kernel.org, Yasha Cherikovsky <yasha.che3@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
         Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-Subject: [PATCH 4.9 06/30] mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
-Date:   Tue, 26 Mar 2019 15:29:45 +0900
-Message-Id: <20190326042607.790320243@linuxfoundation.org>
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
+Subject: [PATCH 4.9 07/30] MIPS: Ensure ELF appended dtb is relocated
+Date:   Tue, 26 Mar 2019 15:29:46 +0900
+Message-Id: <20190326042607.823262615@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
 References: <20190326042607.558087893@linuxfoundation.org>
@@ -68,49 +66,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yifeng Li <tomli@tomli.me>
+From: Yasha Cherikovsky <yasha.che3@gmail.com>
 
-commit 5f5f67da9781770df0403269bc57d7aae608fecd upstream.
+commit 3f0a53bc6482fb09770982a8447981260ea258dc upstream.
 
-Timekeeping IRQs from CS5536 MFGPT are routed to i8259, which then
-triggers the "cascade" IRQ on MIPS CPU. Without IRQF_NO_SUSPEND in
-cascade_irqaction, MFGPT interrupts will be masked in suspend mode,
-and the machine would be unable to resume once suspended.
+This fixes booting with the combination of CONFIG_RELOCATABLE=y
+and CONFIG_MIPS_ELF_APPENDED_DTB=y.
 
-Previously, MIPS IRQs were not disabled properly, so the original
-code appeared to work. Commit a3e6c1eff5 ("MIPS: IRQ: Fix disable_irq on
-CPU IRQs") uncovers the bug. To fix it, add IRQF_NO_SUSPEND to
-cascade_irqaction.
+Sections that appear after the relocation table are not relocated
+on system boot (except .bss, which has special handling).
 
-This commit is functionally identical to 0add9c2f1cff ("MIPS:
-Loongson-3: Add IRQF_NO_SUSPEND to Cascade irqaction"), but it forgot
-to apply the same fix to Loongson2.
+With CONFIG_MIPS_ELF_APPENDED_DTB, the dtb is part of the
+vmlinux ELF, so it must be relocated together with everything else.
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
+Fixes: 069fd766271d ("MIPS: Reserve space for relocation table")
+Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
 Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Huacai Chen <chenhc@lemote.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
 Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
 Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # v3.19+
+Cc: stable@vger.kernel.org # v4.7+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/loongson64/lemote-2f/irq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/kernel/vmlinux.lds.S |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/arch/mips/loongson64/lemote-2f/irq.c
-+++ b/arch/mips/loongson64/lemote-2f/irq.c
-@@ -102,7 +102,7 @@ static struct irqaction ip6_irqaction =
- static struct irqaction cascade_irqaction = {
- 	.handler = no_action,
- 	.name = "cascade",
--	.flags = IRQF_NO_THREAD,
-+	.flags = IRQF_NO_THREAD | IRQF_NO_SUSPEND,
- };
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -138,6 +138,13 @@ SECTIONS
+ 	PERCPU_SECTION(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
+ #endif
  
- void __init mach_init_irq(void)
++#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
++	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
++		*(.appended_dtb)
++		KEEP(*(.appended_dtb))
++	}
++#endif
++
+ #ifdef CONFIG_RELOCATABLE
+ 	. = ALIGN(4);
+ 
+@@ -162,11 +169,6 @@ SECTIONS
+ 	__appended_dtb = .;
+ 	/* leave space for appended DTB */
+ 	. += 0x100000;
+-#elif defined(CONFIG_MIPS_ELF_APPENDED_DTB)
+-	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
+-		*(.appended_dtb)
+-		KEEP(*(.appended_dtb))
+-	}
+ #endif
+ 	/*
+ 	 * Align to 64K in attempt to eliminate holes before the
 
 
