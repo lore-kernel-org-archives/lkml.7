@@ -2,243 +2,80 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D36C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F636C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329A72084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553626843;
-	bh=wD0qcM2zjpCg+HzkOtXBH/1ZYsacIxOzvgiHalvukMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f7iThBPJDQJrUGkj1EEXzaNBzSQNaKmFZYDSbNHpF17MgZI3ALJKEGS4Xh9VVL92b
-	 McTQ6PI4ffH8khJ3W8I33JoycPqAflXq+xM2GY3R6wEeB5sZJBMmpRBSdaWgz6+rna
-	 3WkN5hEoKkQG2ahdbZGrrU0vFAdjIqZLgMj9BTdo=
+	by mail.kernel.org (Postfix) with ESMTP id 02C1C20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbfCZTAm (ORCPT
+        id S1732757AbfCZTEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbfCZTAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:00:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29A220823;
-        Tue, 26 Mar 2019 19:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553626840;
-        bh=wD0qcM2zjpCg+HzkOtXBH/1ZYsacIxOzvgiHalvukMQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P+33IALqnRL3vKHa4U7M0WPk2c4dSIzJp3mxvQOXUX3vqPoklBw/47DQjDwxXKmD0
-         DvAaRl44E3/NnpPc4e9erTlb50uuHrU5BMXwgdkEkC2kbi2VvI3DDwA5Tdg9y0ZIPx
-         0XkRPl8H/ApfeDXfUiLV7dM/tjZeVjyJ9c8pv/M8=
-Date:   Tue, 26 Mar 2019 14:00:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux@yadro.com, Srinath Mannam <srinath.mannam@broadcom.com>,
-        Marta Rybczynska <mrybczyn@kalray.eu>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v4 02/21] PCI: Fix race condition in
- pci_enable/disable_device()
-Message-ID: <20190326190038.GL24180@google.com>
-References: <20190311133122.11417-1-s.miroshnichenko@yadro.com>
- <20190311133122.11417-3-s.miroshnichenko@yadro.com>
+        Tue, 26 Mar 2019 15:04:20 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:47139 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731973AbfCZTET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:04:19 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 1B8FD40008;
+        Tue, 26 Mar 2019 19:04:14 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 20:04:14 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Mans Rullgard <mans@mansr.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Werner =?utf-8?B?QsO2bGxtYW5u?= <Werner.Boellmann@fh-dortmund.de>
+Subject: Re: [PATCH] ARM: dts: sun7i: fix typos in uart pin mux
+Message-ID: <20190326190414.3wpu37mhwgb4yqqd@flea>
+References: <20190326112902.30080-1-mans@mansr.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3zyf22ldyzrxmiqu"
 Content-Disposition: inline
-In-Reply-To: <20190311133122.11417-3-s.miroshnichenko@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190326112902.30080-1-mans@mansr.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Srinath, Marta, LKML]
 
-On Mon, Mar 11, 2019 at 04:31:03PM +0300, Sergey Miroshnichenko wrote:
->  CPU0                                      CPU1
-> 
->  pci_enable_device_mem()                   pci_enable_device_mem()
->    pci_enable_bridge()                       pci_enable_bridge()
->      pci_is_enabled()
->        return false;
->      atomic_inc_return(enable_cnt)
->      Start actual enabling the bridge
->      ...                                       pci_is_enabled()
->      ...                                         return true;
->      ...                                   Start memory requests <-- FAIL
->      ...
->      Set the PCI_COMMAND_MEMORY bit <-- Must wait for this
-> 
-> This patch protects the pci_enable/disable_device() and pci_enable_bridge()
-> with mutexes.
+--3zyf22ldyzrxmiqu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is a subtle issue that we've tried to fix before, but we've never
-had a satisfactory solution, so I hope you've figured out the right
-fix.
+On Tue, Mar 26, 2019 at 11:29:02AM +0000, Mans Rullgard wrote:
+> The recently added uart mux options had a few typos.  Fix them.
+>
+> Fixes: 43d0fe112585 ("ARM: dts: sun7i: add pinctrl for missing uart mux o=
+ptions")
+> Reported-by: Werner B=F6llmann <Werner.Boellmann@fh-dortmund.de>
+> Signed-off-by: Mans Rullgard <mans@mansr.com>
 
-I'll include some links to previous discussion.  This patch is very
-similar to [2], which we didn't actually apply.  We did apply the
-patch from [3] as 40f11adc7cd9 ("PCI: Avoid race while enabling
-upstream bridges"), but it caused the regressions reported in [4,5],
-so we reverted it with 0f50a49e3008 ("Revert "PCI: Avoid race while
-enabling upstream bridges"").
+Applied, thanks!
+Maxime
 
-I think the underlying design problem is that we have a driver for
-device B calling pci_enable_device(), and it is changing the state of
-device A (an upstream bridge).  The model generally is that a driver
-should only touch the device it is bound to.
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-It's tricky to get the locking right when several children of device A
-all need to operate on A.
+--3zyf22ldyzrxmiqu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That's all to say I'll have to think carefully about this particular
-patch, so I'll go on to the others and come back to this one.
+-----BEGIN PGP SIGNATURE-----
 
-Bjorn
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXJp3rgAKCRDj7w1vZxhR
+xY1dAQDkyaP+lKiPAnxWYflN+o+niW0yDTlsHqXqYND4USUcwAD/aoZ0xUVNC6hy
+oVyNyCuxs/15uQoMul6FtnvuZwJv3As=
+=pzTO
+-----END PGP SIGNATURE-----
 
-[1] https://lore.kernel.org/linux-pci/1494256190-28993-1-git-send-email-srinath.mannam@broadcom.com/T/#u
-    [RFC PATCH] pci: Concurrency issue in NVMe Init through PCIe switch
-
-[2] https://lore.kernel.org/linux-pci/1496135297-19680-1-git-send-email-srinath.mannam@broadcom.com/T/#u
-    [RFC PATCH v2] pci: Concurrency issue in NVMe Init through PCIe switch
-
-[3] https://lore.kernel.org/linux-pci/1501858648-22228-1-git-send-email-srinath.mannam@broadcom.com/T/#u
-    [RFC PATCH v3] pci: Concurrency issue during pci enable bridge
-
-[4] https://lore.kernel.org/linux-pci/150547971091.977464.16294045866179907260.stgit@buzz/T/#u
-    [PATCH bisected regression in 4.14] PCI: fix race while enabling upstream bridges concurrently
-
-[5] https://lore.kernel.org/linux-wireless/04c9b578-693c-1dc6-9f0f-904580231b21@kernel.dk/T/#u
-    iwlwifi firmware load broken in current -git
-
-[6] https://lore.kernel.org/linux-pci/744877924.5841545.1521630049567.JavaMail.zimbra@kalray.eu/T/#u
-    [RFC PATCH] nvme: avoid race-conditions when enabling devices
-
-> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-> ---
->  drivers/pci/pci.c   | 26 ++++++++++++++++++++++----
->  drivers/pci/probe.c |  1 +
->  include/linux/pci.h |  1 +
->  3 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index f006068be209..895201d4c9e6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1615,6 +1615,8 @@ static void pci_enable_bridge(struct pci_dev *dev)
->  	struct pci_dev *bridge;
->  	int retval;
->  
-> +	mutex_lock(&dev->enable_mutex);
-> +
->  	bridge = pci_upstream_bridge(dev);
->  	if (bridge)
->  		pci_enable_bridge(bridge);
-> @@ -1622,6 +1624,7 @@ static void pci_enable_bridge(struct pci_dev *dev)
->  	if (pci_is_enabled(dev)) {
->  		if (!dev->is_busmaster)
->  			pci_set_master(dev);
-> +		mutex_unlock(&dev->enable_mutex);
->  		return;
->  	}
->  
-> @@ -1630,11 +1633,14 @@ static void pci_enable_bridge(struct pci_dev *dev)
->  		pci_err(dev, "Error enabling bridge (%d), continuing\n",
->  			retval);
->  	pci_set_master(dev);
-> +	mutex_unlock(&dev->enable_mutex);
->  }
->  
->  static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
->  {
->  	struct pci_dev *bridge;
-> +	/* Enable-locking of bridges is performed within the pci_enable_bridge() */
-> +	bool need_lock = !dev->subordinate;
->  	int err;
->  	int i, bars = 0;
->  
-> @@ -1650,8 +1656,13 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
->  		dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
->  	}
->  
-> -	if (atomic_inc_return(&dev->enable_cnt) > 1)
-> +	if (need_lock)
-> +		mutex_lock(&dev->enable_mutex);
-> +	if (pci_is_enabled(dev)) {
-> +		if (need_lock)
-> +			mutex_unlock(&dev->enable_mutex);
->  		return 0;		/* already enabled */
-> +	}
->  
->  	bridge = pci_upstream_bridge(dev);
->  	if (bridge)
-> @@ -1666,8 +1677,10 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
->  			bars |= (1 << i);
->  
->  	err = do_pci_enable_device(dev, bars);
-> -	if (err < 0)
-> -		atomic_dec(&dev->enable_cnt);
-> +	if (err >= 0)
-> +		atomic_inc(&dev->enable_cnt);
-> +	if (need_lock)
-> +		mutex_unlock(&dev->enable_mutex);
->  	return err;
->  }
->  
-> @@ -1910,15 +1923,20 @@ void pci_disable_device(struct pci_dev *dev)
->  	if (dr)
->  		dr->enabled = 0;
->  
-> +	mutex_lock(&dev->enable_mutex);
->  	dev_WARN_ONCE(&dev->dev, atomic_read(&dev->enable_cnt) <= 0,
->  		      "disabling already-disabled device");
->  
-> -	if (atomic_dec_return(&dev->enable_cnt) != 0)
-> +	if (atomic_dec_return(&dev->enable_cnt) != 0) {
-> +		mutex_unlock(&dev->enable_mutex);
->  		return;
-> +	}
->  
->  	do_pci_disable_device(dev);
->  
->  	dev->is_busmaster = 0;
-> +
-> +	mutex_unlock(&dev->enable_mutex);
->  }
->  EXPORT_SYMBOL(pci_disable_device);
->  
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 2ec0df04e0dc..977a127ce791 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2267,6 +2267,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
->  	INIT_LIST_HEAD(&dev->bus_list);
->  	dev->dev.type = &pci_dev_type;
->  	dev->bus = pci_bus_get(bus);
-> +	mutex_init(&dev->enable_mutex);
->  
->  	return dev;
->  }
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 77448215ef5b..cb2760a31fe2 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -419,6 +419,7 @@ struct pci_dev {
->  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
->  	pci_dev_flags_t dev_flags;
->  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
-> +	struct mutex	enable_mutex;
->  
->  	u32		saved_config_space[16]; /* Config space saved at suspend time */
->  	struct hlist_head saved_cap_space;
-> -- 
-> 2.20.1
-> 
+--3zyf22ldyzrxmiqu--
