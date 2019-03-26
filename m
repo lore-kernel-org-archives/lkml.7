@@ -2,87 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521A6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF14C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC24206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:22:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=mykolab.com header.i=@mykolab.com header.b="KKuKBEov"
+	by mail.kernel.org (Postfix) with ESMTP id B596A206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732709AbfCZVWp (ORCPT
+        id S1732753AbfCZVXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:22:45 -0400
-Received: from mx.kolabnow.com ([95.128.36.42]:33382 "EHLO mx.kolabnow.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731617AbfCZVWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:22:45 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTP id A8C8941297;
-        Tue, 26 Mar 2019 22:22:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mykolab.com; h=
-        content-transfer-encoding:mime-version:message-id:date:date
-        :subject:subject:from:from:received:received:received; s=
-        dkim20160331; t=1553635363; x=1555449764; bh=gSqUx19cRTa3ayxvz3T
-        WeMmZhf0qOI4s+zH+WFepwJs=; b=KKuKBEov5f/NZXnzrqinpzjsHzl816cZnsZ
-        uzjvCjGSnu0uoSaAFDsCVnVaFAIbwLoDuNizmrEfukr7+hEzkU+03GL5nOKib62T
-        1mFKEP8GXeWI0aG2J7KQvD1aScaQV/5kZs4rFCqsW2d8fOB6i3/qMR/z27QAmrsN
-        NWwL6KPdkotSvs4zUKx3TC1oGm6c2nB4f3SjnRztbrlD2HAkYhC/B/MWq17LVlWP
-        Rft6SVPWWsdr0+mTa9K4wbAYYasPU/FbpWcyxfRLSeavZkJ2wC3bEM+bToJ3rZKi
-        EVPZFDleriJPGhLG0/OS3hrlXKB6i7aeqTid1NSdeCAbCrg80AonKqX6QX9PwEuH
-        hOVBYv0y6VnV6dhF+pd+5CwZEWkDdgYtbbT8z5sUPzEoPelwFJMPedDSYobIerE0
-        mrrpgTZ3CI/oOfIZBX9Avo9D3UgOnOzsf6RkCFcq4kXmELne6dEJhRwLZnrxHH9e
-        wewgEvxB4dlifq0b0vwQuQmo15D6N4hK4zgtU+owGPD4OqkLyk5H4Su64CPH6qjb
-        T/qiawW1iIVs81gN5CMC7ufecsGG/8nMs/XLRMzJfWLhYfs1ZXYWJazBykH4UNpb
-        kZXXsloholIGm5anxjjhXfqSRODaoSCQ8DJkGrMVQScZ+vAvyU5aF6e9u2enHt6w
-        7NAzkIDo=
-X-Virus-Scanned: amavisd-new at mykolab.com
-Received: from mx.kolabnow.com ([127.0.0.1])
-        by localhost (ext-mx-out003.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id igd8Aw2GjbU7; Tue, 26 Mar 2019 22:22:43 +0100 (CET)
-Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
-        by ext-mx-out003.mykolab.com (Postfix) with ESMTPS id 0D4C74125E;
-        Tue, 26 Mar 2019 22:22:43 +0100 (CET)
-Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
-        by int-mx003.mykolab.com (Postfix) with ESMTPS id D85D92702;
-        Tue, 26 Mar 2019 22:22:42 +0100 (CET)
-From:   Michael Stefaniuc <mstefani@mykolab.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH] scripts: coccinelle: Fix description of badty.cocci
-Date:   Tue, 26 Mar 2019 22:22:00 +0100
-Message-Id: <20190326212200.21168-1-mstefani@mykolab.com>
+        Tue, 26 Mar 2019 17:23:15 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49514 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731617AbfCZVXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 17:23:14 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h8tWr-0006dc-M9; Tue, 26 Mar 2019 22:22:41 +0100
+Date:   Tue, 26 Mar 2019 22:22:40 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Babu Moger <babu.moger@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Byungchul Park <byungchul.park@lge.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Christoffer Dall <cdall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 10/14] kernel/watchdog: Add a function to obtain
+ the watchdog_allowed_mask
+In-Reply-To: <1551283518-18922-11-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1903262221140.1789@nanos.tec.linutronix.de>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1551283518-18922-11-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Summary was copy and pasted from array_size.cocci.
+On Wed, 27 Feb 2019, Ricardo Neri wrote:
+>  
+> -struct cpumask watchdog_allowed_mask __read_mostly;
+> +static struct cpumask watchdog_allowed_mask __read_mostly;
 
-Signed-off-by: Michael Stefaniuc <mstefani@mykolab.com>
----
- scripts/coccinelle/misc/badty.cocci | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That hunk is correct.
 
-diff --git a/scripts/coccinelle/misc/badty.cocci b/scripts/coccinelle/misc/badty.cocci
-index 481cf301ccfc..08470362199c 100644
---- a/scripts/coccinelle/misc/badty.cocci
-+++ b/scripts/coccinelle/misc/badty.cocci
-@@ -1,4 +1,4 @@
--/// Use ARRAY_SIZE instead of dividing sizeof array with sizeof an element
-+/// Correct the size argument to alloc functions
- ///
- //# This makes an effort to find cases where the argument to sizeof is wrong
- //# in memory allocation functions by checking the type of the allocated memory
--- 
-2.20.1
+>  struct cpumask watchdog_cpumask __read_mostly;
+>  unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+> @@ -92,6 +92,11 @@ static int __init hardlockup_all_cpu_backtrace_setup(char *str)
+>  }
+>  __setup("hardlockup_all_cpu_backtrace=", hardlockup_all_cpu_backtrace_setup);
+>  # endif /* CONFIG_SMP */
+> +
+> +struct cpumask *watchdog_get_allowed_cpumask(void)
+> +{
+> +	return &watchdog_allowed_mask;
+> +}
+
+That part is pointless as I showed you in the other reply. You don't need
+that mask in your code at all.
+
+Thanks,
+
+	tglx
+
 
