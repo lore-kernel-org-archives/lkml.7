@@ -2,84 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B633C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528BCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DD12087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553644580;
-	bh=2rdmD6MnZE+u+bUnH6U7enpAMI60HCBl6jmqAVXYBjc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YNu4T4JEU/ekRLXzV82mLV0v7cyzPq+5jrBy9iifxpCMNy341ElvJtinBKZdth6uJ
-	 JKDrcM4WSkQuXaaIXyzIkMihZuYz+0tCzpaPl29IzYR172cyTbAMPkujy2h4QDqYmU
-	 Org6UghgBpC9CmlJC/DugehQXDqNsrg3ljT2u+Rw=
+	by mail.kernel.org (Postfix) with ESMTP id 17A152087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="N5HmmzPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732742AbfCZX4S (ORCPT
+        id S1731962AbfCZX6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:56:18 -0400
-Received: from mga06.intel.com ([134.134.136.31]:29770 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731666AbfCZX4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:56:18 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 16:56:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
-   d="scan'208";a="137533192"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga003.jf.intel.com with ESMTP; 26 Mar 2019 16:56:16 -0700
-Date:   Tue, 26 Mar 2019 17:57:27 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "jianchao.wang" <jianchao.w.wang@oracle.com>
-Cc:     Ming Lei <tom.leiming@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
-Message-ID: <20190326235726.GC4328@localhost.localdomain>
-References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
- <1553492318-1810-8-git-send-email-jianchao.w.wang@oracle.com>
- <20190325134917.GA4328@localhost.localdomain>
- <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
- <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
- <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
+        Tue, 26 Mar 2019 19:58:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39320 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbfCZX6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 19:58:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id m13so10002668lfb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ez1d3rtd8Gt8vuFoJP9w9DkDqXFe0a1YWxYHhu4clFw=;
+        b=N5HmmzPn0hULnXUW4lDNN21MJvD8WMEPM2wOsUThimg2sDXJjQ6roao5w6pT26ID4E
+         NYVYIrxycc3GhxGDe4F6Mk2bsMcP1wGCl/XErj2Zvr5saafq4+Ob6GypXcmW4v3z/i84
+         6c3KGX5JzcfbF9u7VByAdCssHoslA5c5tNhYEnp1WmHepKUXpOblyGpz80pcojQcYZ1B
+         VgCueCyJm9qk4RRwhzDt5mI+De5gB4XKhEKpQA9VHWEs2Tk7U1/6nqNJhH0hnRRGrZPu
+         KLrgk7gTb3aE+hsJRzZKfj1h8tu19jLlQ1bMPFDkasE+ebbvrJPZrx+osulQBsviLzJU
+         yLrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ez1d3rtd8Gt8vuFoJP9w9DkDqXFe0a1YWxYHhu4clFw=;
+        b=Fz9BPREhE2SCwdpUKowy4f3y/LHUbrzpimFHyGYDhWse/TMoXXQxHvNFd6hjtPXrK/
+         th2qaT35RFjv8BawWTnMygU3VfHEtMHZtNKIFBMcNV3GulPhk6uVh0gKOa6mhrr3tE7v
+         ozBSw+gOUmXAlTFa2IPjw12ZMQnRJ6zCEvfZfNpbubtnbxDUy2ycE5lWcdlemwu2TPqp
+         yCdDzibPgxacxVu6iHCjFEjKRLfHBvCswviGyM8+y09SlhQOkewkxjowIYb9ogqqUSVF
+         IjZ7COxHcuRzRc/bRyVWyYJaR99d14XBIZ3CP2Pgc/NajMKL8Nzz4xqAt77Uh0jTueKD
+         pkLg==
+X-Gm-Message-State: APjAAAWW747fIE24v2xNAolqZ87gOnZ7BdaOvZYuTLfLtSIBDKs5Wq7Y
+        jKq1VDa2DfmmYMMS76ByQ4fTDmSaL5JlXvVSA3p+
+X-Google-Smtp-Source: APXvYqyxOpHELsEvSXgPj9t1atfmpfIvCzC11isrk/ZTRlidtk+1B2J/M6Q5j9udDDNXvJ9X5VzIDgnUfzRMKh82nRM=
+X-Received: by 2002:a19:4f44:: with SMTP id a4mr16785603lfk.72.1553644696033;
+ Tue, 26 Mar 2019 16:58:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+References: <087489b21e50bcda65c6af3e038394d5bfe09e00.1553626080.git.rgb@redhat.com>
+ <1553632830.4233.3.camel@linux.ibm.com>
+In-Reply-To: <1553632830.4233.3.camel@linux.ibm.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 26 Mar 2019 19:58:04 -0400
+Message-ID: <CAHC9VhS1e0+1t=ZUsKoJcFvO+JdewL4uqwO4dqw=tOOZdJbLYA@mail.gmail.com>
+Subject: Re: [PATCH ghak109 V2] audit: link integrity evm_write_xattrs record
+ to syscall event
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, sgrubb@redhat.com,
+        omosnace@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, mjg59@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 08:05:53PM -0700, jianchao.wang wrote:
-> What if there used to be a io scheduler and leave some stale requests of sched tags ?
-> Or the nr_hw_queues was decreased and leave the hctx->fq->flush_rq ?
+On Tue, Mar 26, 2019 at 4:40 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> Hi Richard, Paul,
+>
+> On Tue, 2019-03-26 at 14:49 -0400, Richard Guy Briggs wrote:
+> > In commit fa516b66a1bf ("EVM: Allow runtime modification of the set of
+> > verified xattrs"), the call to audit_log_start() is missing a context to
+> > link it to an audit event. Since this event is in user context, add
+> > the process' syscall context to the record.
+> >
+> > In addition, the orphaned keyword "locked" appears in the record.
+> > Normalize this by changing it to logging the locking string "." as any
+> > other user input in the "xattr=" field.
+> >
+> > Please see the github issue
+> > https://github.com/linux-audit/audit-kernel/issues/109
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+>
+> Acked-by: Mimi Zohar <zohar@linux.ibm.com>
+>
+> Paul, were you planning on upstreaming this patch?
 
-Requests internally queued in scheduler or block layer are not eligible
-for the nvme driver's iterator callback. We only use it to reclaim
-dispatched requests that the target can't return, which only applies to
-requests that must have a valid rq->tag value from hctx->tags.
- 
-> The stable request could be some tings freed and used
-> by others and the state field happen to be overwritten to non-zero...
+Yep, unless you would rather do it?  If you pull it into the IMA tree,
+please add my ACK; otherwise let me know and I'll merge it into
+audit/next.
 
-I am not sure I follow what this means. At least for nvme, every queue
-sharing the same tagset is quiesced and frozen, there should be no
-request state in flux at the time we iterate.
+Acked-by: Paul Moore <paul@paul-moore.com>
+
+-- 
+paul moore
+www.paul-moore.com
