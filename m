@@ -2,122 +2,128 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35324C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF57FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F260020830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6A620830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CYvUaBzW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsYUoL/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfCZINF (ORCPT
+        id S1731326AbfCZINk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:13:05 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41530 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfCZINF (ORCPT
+        Tue, 26 Mar 2019 04:13:40 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:46781 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfCZINj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:13:05 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q7xGE9118688;
-        Tue, 26 Mar 2019 08:13:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=W7BnsQJKvVdGHz8muJQ6ayHXVrB4dnpkCPC4dIfX9hE=;
- b=CYvUaBzWceElA9TJiOVQ+JJfPlsvYNh4QrM16tpgHE7qDICfxQGHYC6ls+CO4R3l62+C
- fKzLtk4AO0HUBkbAJm41xcTI8nLCKUPpR13aVZwzP1pdHCipmRum5A1qZd8RpJVwoSuP
- 2EhTVG07w/xPmauJtf0dIuQp5WncoG/kFCxv01MziUyY0jScyyYCSfsDMdBTHbyAh3/U
- 2AcyAk0gMP/6Snh4fEyQiRcjtWHLC5xVyh1fRxrP1CNR29+zIavsJYnXspgoTuKNinHq
- PopgkTyZp002JHbSZeBuZaaqk/HFHmeiZlcOxMECFvCtFTjo/9SnG9Ebnhu99GfdLhiv Dw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2130.oracle.com with ESMTP id 2re6g0rqb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 08:13:01 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q8D0rm025865
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 08:13:00 GMT
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q8CxSn012935;
-        Tue, 26 Mar 2019 08:12:59 GMT
-Received: from kadam (/197.157.0.51)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 Mar 2019 01:12:59 -0700
-Date:   Tue, 26 Mar 2019 11:12:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     qiaozhou <qiaozhou@asrmicro.com>
+        Tue, 26 Mar 2019 04:13:39 -0400
+Received: by mail-wr1-f43.google.com with SMTP id o1so13117597wrs.13
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 01:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=UjgzbLz8IMIeYsYsKD1/mExdPucWK63oSxes3DTmJ6k=;
+        b=AsYUoL/YcJRZ8JgucUf0rmbTQ/kpOfYp2a1NSiDOtp/kO8yQ4uaN36R1tMUMBSvMpc
+         bYe9qnbvRT6mlLCIk/b4Npnk0zDIILjsvlOT/jGaYfoDxBFQj0HZpZcCY2Zvl2cuR9Ol
+         uMMt9ZuHWfsDgy5JsnuACjCX/AxU5vGCh6oqygCOc6oZ5fk9WxGPrkQP9lBRqLAOmVo9
+         Yh/G4dQOsoyNP3WyYtgp8toEpegPy0qS1kGRzlioyc5TTV3tJJqOchdS27v48uNkNBDs
+         /8Lyx2CuFY0fKSXRt6KpJ7jZoYLOKJZyeEFkvNBh7vCVXMkFKt2zHbiZpsI3rg1PhBhC
+         mQew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=UjgzbLz8IMIeYsYsKD1/mExdPucWK63oSxes3DTmJ6k=;
+        b=Yhq3HKmwB6E9baSD4qNmOF4MyNYQRDe4odF7F3akf9VNy1WvBE0BFDl6FGP7/QfaNb
+         BOl789b9fGW7nKDFnqjmwIKp54MnndvjAhiazicCvxGsMCvqPoN2a0KfCwh7M3iGH/7m
+         dRgy0fB4mpWtPAEgH2ZYfrStQQC6d2BW7FcqleKqdTimeKp7P9fjNXngP6CqJex5gyPE
+         YOr/umTy38BX8XYyj39GdXH3c3uF2gmUjMxjGrx8dLQLz7vbGD5zEy2OM10dErIP+8+K
+         Eb9tI6TZluEz3YXagoeqOqt2zk4fghzwixqKqWw4YPhTDOGPABlKdP6YEZDmpUQ5ipLQ
+         lDew==
+X-Gm-Message-State: APjAAAWsSkUXOcZIjd6Acy1jYVUVJQenpzblhqkKFQvSgIuSnWHkvFXb
+        rhdl+XEyU8oY/GcjHaQie2dGi61+
+X-Google-Smtp-Source: APXvYqx8rjRTjQ5/BS0Fuf3tMTv8F/bBGWeMeehgtVP/dE9wSlMw4mob7BMbTx5+CQjQ6VCi9PMT6g==
+X-Received: by 2002:adf:f10c:: with SMTP id r12mr18107278wro.216.1553588017749;
+        Tue, 26 Mar 2019 01:13:37 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id 3sm24895767wrk.68.2019.03.26.01.13.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 01:13:37 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 10:13:35 +0200
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: add support for ASR AquilaC SoC
-Message-ID: <20190326081251.GE32613@kadam>
-References: <1553389083-13237-1-git-send-email-qiaozhou@asrmicro.com>
+Subject: [git pull v2] habanalabs fixes for 5.1-rc3
+Message-ID: <20190326081335.GA4175@ogabbay-VM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553389083-13237-1-git-send-email-qiaozhou@asrmicro.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903260061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
-I'm not the right person to send this to...
+A couple of important fixes for habanalabs driver:
 
-$ ./scripts/get_maintainer.pl -f arch/arm64/Kconfig.platforms
-Catalin Marinas <catalin.marinas@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
-Will Deacon <will.deacon@arm.com> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE))
-linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE))
-linux-kernel@vger.kernel.org (open list)
+- Fix host crash upon resume after suspend
+- Fix MMU related bugs which result in user's jobs getting stuck
+- Fix race between user context cleanup and hard-reset which results in
+  host crash
+- Fix sparse warning
 
+Thanks,
+Oded
 
-On Sun, Mar 24, 2019 at 08:58:03AM +0800, qiaozhou wrote:
-> From: Qiao Zhou <qiaozhou@asrmicro.com>
-> 
-> Add ARCH_ASR
+The following changes since commit 8c2ffd9174779014c3fe1f96d9dc3641d9175f00:
 
-You'll need to expand this.
+  Linux 5.1-rc2 (2019-03-24 14:02:26 -0700)
 
-> 
-> Signed-off-by: qiaozhou <qiaozhou@asrmicro.com>
-                 ^^^^^^^^
-Use Qiao Zhou so it matches the From header.
+are available in the Git repository at:
 
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-03-26
 
-> ---
->  arch/arm64/Kconfig.platforms | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 70498a0..da8d43a 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -278,4 +278,10 @@ config ARCH_ZYNQMP
->  	help
->  	  This enables support for Xilinx ZynqMP Family
->  
-> +config ARCH_ASR
-> +	bool "ASR Microelectronics chip Family"
-> +	select PINCTRL
-> +	help
-> +	  This enables support for ASR Microelectronics chip Family, including:
-> +	  - ASR 8751C SoC
->  endmenu
+for you to fetch changes up to 7c22278edd0a931c565a8511dfc1bc57ffbb9166:
 
-Was this supposed to be part of the patch you sent earlier?  You will
-need to resend that one as a v2 patch.
+  habanalabs: cast to expected type (2019-03-03 10:23:29 +0200)
 
-regards,
-dan carpenter
+----------------------------------------------------------------
+The following bug fixes are included in this tag:
 
+- Fix host crash upon resume after suspend
+- Fix MMU related bugs which result in user's jobs getting stuck
+- Fix race between user context cleanup and hard-reset which results in
+  host crash
+- Fix sparse warning
+
+----------------------------------------------------------------
+Oded Gabbay (3):
+      habanalabs: perform accounting for active CS
+      habanalabs: prevent host crash during suspend/resume
+      habanalabs: cast to expected type
+
+Omer Shpigelman (4):
+      habanalabs: fix MMU number of pages calculation
+      habanalabs: fix bug when mapping very large memory area
+      habanalabs: complete user context cleanup before hard reset
+      habanalabs: fix mapping with page size bigger than 4KB
+
+ drivers/misc/habanalabs/command_submission.c |  6 +++
+ drivers/misc/habanalabs/debugfs.c            |  7 +--
+ drivers/misc/habanalabs/device.c             | 71 ++++++++++++++++++++++++++--
+ drivers/misc/habanalabs/goya/goya.c          | 65 +------------------------
+ drivers/misc/habanalabs/habanalabs.h         | 21 ++++----
+ drivers/misc/habanalabs/hw_queue.c           |  5 +-
+ drivers/misc/habanalabs/memory.c             | 38 ++++++++-------
+ drivers/misc/habanalabs/mmu.c                |  6 ++-
+ 8 files changed, 117 insertions(+), 102 deletions(-)
