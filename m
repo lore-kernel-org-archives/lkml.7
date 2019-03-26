@@ -2,90 +2,91 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C641C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800D0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1512075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cbqxX8QM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cbqxX8QM"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF0320856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbfCZMSF (ORCPT
+        id S1731434AbfCZMTW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:18:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58268 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfCZMSE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:18:04 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DE31460159; Tue, 26 Mar 2019 12:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553602683;
-        bh=Mb/6oPEIT5zA9Lgdp3iSOIRwt/HImMYg4LWOdIGiPy8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cbqxX8QM7F07zgZCVhg4h7GhkA3tud+eJwfnmfQhiJtMMTmO21rloevH1N22RDM+1
-         T31BvZjMGOYQWHMlq5Wo6XAjR6/RqvFd80ELtw0DWhQLlOeQ4DHTWgQyQnqxM1gn8i
-         x1ZO8l0Dm3ZQGdVELEAcDMCB9KnH7z6UKhKftAkk=
-Received: from mojha-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38972602BA;
-        Tue, 26 Mar 2019 12:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553602683;
-        bh=Mb/6oPEIT5zA9Lgdp3iSOIRwt/HImMYg4LWOdIGiPy8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=cbqxX8QM7F07zgZCVhg4h7GhkA3tud+eJwfnmfQhiJtMMTmO21rloevH1N22RDM+1
-         T31BvZjMGOYQWHMlq5Wo6XAjR6/RqvFd80ELtw0DWhQLlOeQ4DHTWgQyQnqxM1gn8i
-         x1ZO8l0Dm3ZQGdVELEAcDMCB9KnH7z6UKhKftAkk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38972602BA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-From:   Mukesh Ojha <mojha@codeaurora.org>
-To:     prabhakar.csengg@gmail.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH] media: vpss: fix the order of resource clean up
-Date:   Tue, 26 Mar 2019 17:47:54 +0530
-Message-Id: <1553602674-531-1-git-send-email-mojha@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 26 Mar 2019 08:19:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59142 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725776AbfCZMTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:19:21 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6F422EBD771C26ABBC51;
+        Tue, 26 Mar 2019 20:19:19 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Tue, 26 Mar 2019
+ 20:19:17 +0800
+Date:   Tue, 26 Mar 2019 12:19:02 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Brice Goglin <Brice.Goglin@inria.fr>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190326121902.00004f10@huawei.com>
+In-Reply-To: <CAPcyv4imk02wme0PsY0rUePax8SOq2-=+objYT-x4bxthLkKkQ@mail.gmail.com>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+        <cc6f44e2-48b5-067f-9685-99d8ae470b50@inria.fr>
+        <CAPcyv4it1w7SdDVBV24cRCVHtLb3s1pVB5+SDM02Uw4RbahKiA@mail.gmail.com>
+        <3df2bf0e-0b1d-d299-3b8e-51c306cdc559@inria.fr>
+        <CAPcyv4gNrFOQJhKUV7crZqNfg8LQFZRVO04Z+Fo50kzswVQ=TA@mail.gmail.com>
+        <ac409eac-d2fa-8e93-6a18-14516b05632f@inria.fr>
+        <CAPcyv4imk02wme0PsY0rUePax8SOq2-=+objYT-x4bxthLkKkQ@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up of resources should be in reverse order of vpss_init().
-Fix this inside vpss_exit().
+On Mon, 25 Mar 2019 16:37:07 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
----
- drivers/media/platform/davinci/vpss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Mon, Mar 25, 2019 at 4:09 PM Brice Goglin <Brice.Goglin@inria.fr> wrote:
+> >
+> >
+> > Le 25/03/2019 à 20:29, Dan Williams a écrit :  
+> > > Perhaps "path" might be a suitable replacement identifier rather than
+> > > type. I.e. memory that originates from an ACPI.NFIT root device is
+> > > likely "pmem".  
+> >
+> >
+> > Could work.
+> >
+> > What kind of "path" would we get for other types of memory? (DDR,
+> > non-ACPI-based based PMEM if any, NVMe PMR?)  
+> 
+> I think for memory that is described by the HMAT "Reservation hint",
+> and no other ACPI table, it would need to have "HMAT" in the path. For
+> anything not ACPI it gets easier because the path can be the parent
+> PCI device.
+> 
 
-diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
-index 19cf685..e380fd3 100644
---- a/drivers/media/platform/davinci/vpss.c
-+++ b/drivers/media/platform/davinci/vpss.c
-@@ -507,9 +507,9 @@ static int vpss_resume(struct device *dev)
- 
- static void vpss_exit(void)
- {
-+	platform_driver_unregister(&vpss_driver);
- 	iounmap(oper_cfg.vpss_regs_base2);
- 	release_mem_region(VPSS_CLK_CTRL, 4);
--	platform_driver_unregister(&vpss_driver);
- }
- 
- static int __init vpss_init(void)
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+There is no HMAT reservation hint in ACPI 6.3 - but there are other ways
+of doing much the same thing so this is just a nitpick.
+
+J
 
