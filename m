@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C82C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C78C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552D22087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A392086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582441;
-	bh=4dpy/ylC5x1lz+cqpLWZEf6MZHwKv65SgmVyl5JyypQ=;
+	s=default; t=1553582449;
+	bh=9dh/LpIQImkGOiSSPA334Ug45jDG30yR00DuGiqymKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wIXyaM6hC7y+h1cHkoRCWoxtYflHwSS/fA8sfVwgpOnIhwQCRdW6lqgvVHuyQuDzR
-	 OqgkqFGBmDAjV9mqCA56wWzGhJP+7KAhBcg1FV6hSRwK4az57SMsMSKbUiv0Pn+aF1
-	 xeV2a16fkCAizK9iS4h1x+0St4tsGDgSo5LTr86U=
+	b=op3V4giNz2PtsKE0YCApVDeZSY6lb/4nKAMHXnu60r8+6lLSkFb2iVMACQJ5Zl8d0
+	 nHPcp6RHKx3z/RFZDKl4vwPvCp3abIwEIWAmlmJf5aaInIcSvKZkZf3iOri1idj9gz
+	 u9KcYyAZSpntizUZ2DxvLx2xcluWKdco9YjTjSAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732557AbfCZGkk (ORCPT
+        id S1732414AbfCZGkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57146 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727624AbfCZGkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:40:39 -0400
+        id S1727624AbfCZGkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:41 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B2E2086C;
-        Tue, 26 Mar 2019 06:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D9B2070B;
+        Tue, 26 Mar 2019 06:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582437;
-        bh=4dpy/ylC5x1lz+cqpLWZEf6MZHwKv65SgmVyl5JyypQ=;
+        s=default; t=1553582440;
+        bh=9dh/LpIQImkGOiSSPA334Ug45jDG30yR00DuGiqymKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWd99WlSd3/yyIe7vEeUsQ/nhLXHwGcFWBlFvatbOC94aVTbJG59bBtlRHGNwCGD6
-         oCMHETirFmrZa2BOc7B/qdNB/Qk/+Y0HOdjHqQ4pzpXl7XtlA6Y2c1bIL3U30Imguu
-         /tHwizdpQyZafAVkc1XPA0O0Juyr2iQ3Lh1NDNbM=
+        b=Jw5+GriAl02oseEKCCeahGETSgUR3jhrQeBCFSWgMDj9pI4J/TTp6/yPIqn49fQYV
+         w6t3OlOPnSKnf2GAReCRd7KI5KqZ9GXB3I3WAeBPEnaVCU4xEaEalAaeSlCD2YWH99
+         5LdA16VEEO/rhZrILbl71rgdb6wXsrkChgLMFU1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
         Jeremy Cline <jcline@redhat.com>,
         Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.0 39/52] Bluetooth: hci_ldisc: Initialize hci_dev before open()
-Date:   Tue, 26 Mar 2019 15:30:26 +0900
-Message-Id: <20190326042703.053632903@linuxfoundation.org>
+Subject: [PATCH 5.0 40/52] Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Date:   Tue, 26 Mar 2019 15:30:27 +0900
+Message-Id: <20190326042703.109244206@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -66,95 +68,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 upstream.
+commit 56897b217a1d0a91c9920cb418d6b3fe922f590a upstream.
 
-The hci_dev struct hdev is referenced in work queues and timers started
-by open() in some protocols. This creates a race between the
-initialization function and the work or timer which can result hdev
-being dereferenced while it is still null.
+task A:                                task B:
+hci_uart_set_proto                     flush_to_ldisc
+ - p->open(hu) -> h5_open  //alloc h5  - receive_buf
+ - set_bit HCI_UART_PROTO_READY         - tty_port_default_receive_buf
+ - hci_uart_register_dev                 - tty_ldisc_receive_buf
+                                          - hci_uart_tty_receive
+				           - test_bit HCI_UART_PROTO_READY
+				            - h5_recv
+ - clear_bit HCI_UART_PROTO_READY             while() {
+ - p->open(hu) -> h5_close //free h5
+				              - h5_rx_3wire_hdr
+				               - h5_reset()  //use-after-free
+                                              }
 
-The syzbot report contains a reliable reproducer which causes a null
-pointer dereference of hdev in hci_uart_write_work() by making the
-memory allocation for hdev fail.
+It could use ioctl to set hci uart proto, but there is
+a use-after-free issue when hci_uart_register_dev() fail in
+hci_uart_set_proto(), see stack above, fix this by setting
+HCI_UART_PROTO_READY bit only when hci_uart_register_dev()
+return success.
 
-To fix this, ensure hdev is valid from before calling a protocol's
-open() until after calling a protocol's close().
-
-Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Reported-by: syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Jeremy Cline <jcline@redhat.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_ldisc.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/bluetooth/hci_ldisc.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 --- a/drivers/bluetooth/hci_ldisc.c
 +++ b/drivers/bluetooth/hci_ldisc.c
-@@ -207,11 +207,11 @@ void hci_uart_init_work(struct work_stru
- 	err = hci_register_dev(hu->hdev);
- 	if (err < 0) {
- 		BT_ERR("Can't register HCI device");
-+		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-+		hu->proto->close(hu);
- 		hdev = hu->hdev;
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
--		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		hu->proto->close(hu);
- 		return;
- 	}
- 
-@@ -616,6 +616,7 @@ static void hci_uart_tty_receive(struct
- static int hci_uart_register_dev(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev;
-+	int err;
- 
- 	BT_DBG("");
- 
-@@ -659,11 +660,22 @@ static int hci_uart_register_dev(struct
- 	else
- 		hdev->dev_type = HCI_PRIMARY;
- 
-+	/* Only call open() for the protocol after hdev is fully initialized as
-+	 * open() (or a timer/workqueue it starts) may attempt to reference it.
-+	 */
-+	err = hu->proto->open(hu);
-+	if (err) {
-+		hu->hdev = NULL;
-+		hci_free_dev(hdev);
-+		return err;
-+	}
-+
- 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
- 		return 0;
- 
- 	if (hci_register_dev(hdev) < 0) {
- 		BT_ERR("Can't register HCI device");
-+		hu->proto->close(hu);
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
- 		return -ENODEV;
-@@ -683,17 +695,12 @@ static int hci_uart_set_proto(struct hci
- 	if (!p)
+@@ -696,14 +696,13 @@ static int hci_uart_set_proto(struct hci
  		return -EPROTONOSUPPORT;
  
--	err = p->open(hu);
--	if (err)
--		return err;
--
  	hu->proto = p;
- 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+-	set_bit(HCI_UART_PROTO_READY, &hu->flags);
  
  	err = hci_uart_register_dev(hu);
  	if (err) {
- 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		p->close(hu);
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
  		return err;
  	}
+ 
++	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 	return 0;
+ }
  
 
 
