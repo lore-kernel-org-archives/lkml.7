@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5802CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38782C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1034420863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF73A20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ZbsEuzUT"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="cTMTa//P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731993AbfCZPzf (ORCPT
+        id S1732032AbfCZPzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:55:35 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35767 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfCZPzc (ORCPT
+        Tue, 26 Mar 2019 11:55:38 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39643 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731991AbfCZPzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:55:32 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s39so5722549edb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:55:30 -0700 (PDT)
+        Tue, 26 Mar 2019 11:55:36 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p20so10743863eds.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:55:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=emLo1I83GRtPXeQ8CqS4ve40OKQhSKBiigiDOyBU9XQ=;
-        b=ZbsEuzUTfKFrsge6doGnPu2ZGruIfbGyJrjIEB0RHsR6zK6dYF5l43Jp94LSOaHB9e
-         C0ncXgKmk5l6YrhUZma6+SbbtVOjrUv4qbZeuVLQxI2N8EfQt91uWuftCQNJU09+j09y
-         SnmEBD6QcRGvwhug2pPZ542dsN2fDtpaO+9xLDog1IZCKBkGXXgKCFKQ+7LNyMm1iKUU
-         FnJIz6rSCm3Xmoo0dNO1BKwekj2n/Cz6GuXBE9ZZces/VTWOEwb1Kcf2gE/PR8d1aLKI
-         V+dsF7Rg187gIXTGHb+F8KSmFYusooqXpeeID8KmFFTE+NonRNqyRwMDNLDYl4dy35mU
-         D5Dw==
+        bh=fovWDFpIBIcv9kU9lPWKXGfBIevZ1NKhpTpFZ7NKOLM=;
+        b=cTMTa//P3OeSJbW3N9pNHDv1F1jmSf1tgc7syhLXIJBuXlFr9/Ul8eJL8bVFoQDu7z
+         IAliLBkQJilj5fsFvulFl/yxF8hAkFAEakxnQhxzly8H49TO2dL1Il0ZEH6aXpoGHbFx
+         A2EM+GfchbjZuVXoEq31keA7XpRFkFWQWu0vVWJGyUfE0H/IsCPfyL5v8V3Ox1343/6z
+         wkY0ZWHU0+WTVZT+OMLjftvY9KCeRujlauJdISjrIJy4NK7+lS1jqKkZco9mqZOiLdwK
+         ouTXILKYAtmFQLYppFET+q/Coi2qYU4aUOquXJHd/9ALxwb8dcaVezgPfbJOdB4zS/zO
+         xY2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=emLo1I83GRtPXeQ8CqS4ve40OKQhSKBiigiDOyBU9XQ=;
-        b=gleBZfhdkOAoDpTTJq6fg93W0/VWS4hhUqmSoyhFY4TbKX2kAy3IxfIem1UNHKlbdS
-         MlKKGgD/9rvtQbcqWU0OgC8V8K6fdFMe5Ms0Zv27pN+G93QAqa27uMzpKZs8MgORtav/
-         T6oPWYRFO1gS0n6o3hxXiKvQIu/ihqBKAggpBFNYQAPGYpXI94tXzremo4UmU8NENffM
-         EI3J4dCUlU4c4Lb3O8psyxFf/1Fj7NNgOOmqSu53hdgeISL3Fu5bF/MtHpTIZOTC9Zbc
-         4uTjN62N9zzv1omNfil3uGeQGp3ID/ByITaBy61aKXxm/jLgYtNlwu+vlO5Nl9lXPid5
-         JozQ==
-X-Gm-Message-State: APjAAAVD7GG2foBshI0wk14Sv3eroIJV0lj1JNDrRgUHuHVH3brIz2IG
-        pj0T/trquybzmG6rNzK5YkcD8Q==
-X-Google-Smtp-Source: APXvYqz6jo/Vy3zaI6nYeX1x1L6yWJXGqPUrLJvdVA8KwTMEv1ScgK3pi6G/kaFpqK8xr6jdR0NS/w==
-X-Received: by 2002:a50:aa4d:: with SMTP id p13mr20934697edc.17.1553615729211;
-        Tue, 26 Mar 2019 08:55:29 -0700 (PDT)
+        bh=fovWDFpIBIcv9kU9lPWKXGfBIevZ1NKhpTpFZ7NKOLM=;
+        b=Do6ERtITXK1sfWKZofeA/tgQTEpCZnZSvQKIOIlhka7OPi/m/1XzJNPGteMDXJB6Ik
+         47KpewxMnKmVPatjuwmIuU16Yd6COuGgAVGUeOq9jh28IXrz1QsscVJllk+EsKA93xE7
+         p8m2NmzIQrWSVdCpEx/HbcKy8aK7SGKs+WhJVYJLYnUasAqaVVfjhBmWboaG4IaDqAFL
+         k6tnWFHk24XZHsfHMgBAoEiRkZW2oKaaeoAGoQy02ggc87BChK327hGlbVImJX8Vk7v3
+         8ZSfIU3k6dmxLQIqS+zNSPtzLaxZoVMayEr9joGBg/kWpC3IXAcI8wCr40VHXLJOt+hY
+         Ep6A==
+X-Gm-Message-State: APjAAAV4xQQR/fF8/Nk0nTtmiagqal2R1DUGrnrPTLevAs3AsVcOTN78
+        +YyBOJ+aJsxYSG1sWIJ2AqVojw==
+X-Google-Smtp-Source: APXvYqwgD2ICEGL1S94S1cvT/MsUGoQ3A3wWTko00oZCeTdNaqBRxISVZZtPcwswq1ZhmfejNM623Q==
+X-Received: by 2002:a17:906:d69:: with SMTP id s9mr17747299ejh.205.1553615734116;
+        Tue, 26 Mar 2019 08:55:34 -0700 (PDT)
 Received: from localhost.localdomain (x59cc895e.dyn.telefonica.de. [89.204.137.94])
-        by smtp.gmail.com with ESMTPSA id k32sm6651057ede.97.2019.03.26.08.55.26
+        by smtp.gmail.com with ESMTPSA id k32sm6651057ede.97.2019.03.26.08.55.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 08:55:28 -0700 (PDT)
+        Tue, 26 Mar 2019 08:55:33 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
         dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
@@ -66,9 +66,9 @@ Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
         nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
         viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
         Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1 2/4] pid: add pidctl()
-Date:   Tue, 26 Mar 2019 16:55:11 +0100
-Message-Id: <20190326155513.26964-3-christian@brauner.io>
+Subject: [PATCH v1 4/4] tests: add pidctl() tests
+Date:   Tue, 26 Mar 2019 16:55:13 +0100
+Message-Id: <20190326155513.26964-5-christian@brauner.io>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326155513.26964-1-christian@brauner.io>
 References: <20190326155513.26964-1-christian@brauner.io>
@@ -79,189 +79,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
-I quote Konstantins original patchset first that has already been acked and
-picked up by Eric before and whose functionality is preserved in this
-syscall:
-
-"Each process have different pids, one for each pid namespace it belongs.
- When interaction happens within single pid-ns translation isn't required.
- More complicated scenarios needs special handling.
-
- For example:
- - reading pid-files or logs written inside container with pid namespace
- - writing logs with internal pids outside container for pushing them into
- - attaching with ptrace to tasks from different pid namespace
-
- Generally speaking, any cross pid-ns API with pids needs translation.
-
- Currently there are several interfaces that could be used here:
-
- Pid namespaces are identified by device and inode of /proc/[pid]/ns/pid.
-
- Pids for nested pid namespaces are shown in file /proc/[pid]/status.
- In some cases pid translation could be easily done using this information.
- Backward translation requires scanning all tasks and becomes really
- complicated for deeper namespace nesting.
-
- Unix socket automatically translates pid attached to SCM_CREDENTIALS.
- This requires CAP_SYS_ADMIN for sending arbitrary pids and entering
- into pid namespace, this expose process and could be insecure."
-
-The original patchset allowed two distinct operations implicitly:
-- discovering whether pid namespaces (pidns) have a parent-child
-  relationship
-- translating a pid from a source pidns into a target pidns
-
-Both tasks are accomplished in the original patchset by passing a pid
-along. If the pid argument is passed as 1 the relationship between two pid
-namespaces can be discovered.
-The syscall will gain a lot clearer syntax and will be easier to use for
-userspace if the task it is asked to perform is passed through a
-command argument. Additionally, it allows us to remove an intrinsic race
-caused by using the pid argument as a way to discover the relationship
-between pid namespaces.
-This patch introduces three commands:
-
-/* PIDCMD_QUERY_PID */
-PIDCMD_QUERY_PID allows to translate a pid between pid namespaces.
-Given a source pid namespace fd return the pid of the process in the target
-namespace:
-1. pidctl(PIDCMD_QUERY_PID, pid, source_fd, -1, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by pid in pidns identified by source_fd
-  - retrieve callers pidns
-  - return pid in callers pidns
-
-2. pidctl(PIDCMD_QUERY_PID, pid, -1, target_fd, 0)
-  - retrieve callers pidns
-  - retrieve struct pid identifed by pid in callers pidns
-  - retrieve pidns identified by target_fd
-  - return pid in pidns identified by target_fd
-
-3. pidctl(PIDCMD_QUERY_PID, 1, source_fd, -1, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by init task in pidns identified by source_fd
-  - retrieve callers pidns
-  - return pid of init task of pidns identified by source_fd in callers pidns
-
-4. pidctl(PIDCMD_QUERY_PID, pid, source_fd, target_fd, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by pid in pidns identified by source_fd
-  - retrieve pidns identified by target_fd
-  - check whether struct pid can be found in pidns identified by target_fd
-  - return pid in pidns identified by target_fd
-
-/* PIDCMD_QUERY_PIDNS */
-PIDCMD_QUERY_PIDNS allows to determine the relationship between pid
-namespaces.
-In the original version of the pachset passing pid as 1 would allow to
-deterimine the relationship between the pid namespaces. This is inherhently
-racy. If pid 1 inside a pid namespace has died it would report false
-negatives. For example, if pid 1 inside of the target pid namespace already
-died, it would report that the target pid namespace cannot be reached from
-the source pid namespace because it couldn't find the pid inside of the
-target pid namespace and thus falsely report to the user that the two pid
-namespaces are not related. This problem is simple to avoid. In the new
-version we simply walk the list of ancestors and check whether the
-namespace are related to each other. By doing it this way we can reliably
-report what the relationship between two pid namespace file descriptors
-looks like.
-
-1. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd1, 0) == 0
-   - pidns_of(ns_fd1) and pidns_of(ns_fd2) are unrelated to each other
-
-2. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 1
-   - pidns_of(ns_fd1) == pidns_of(ns_fd2)
-
-3. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 2
-   - pidns_of(ns_fd1) is ancestor of pidns_of(ns_fd2)
-
-4. pidctl(PIDCMD_QUERY_PIDNS, 0, ns_fd1, ns_fd2, 0) == 3
-   - pidns_of(ns_fd2) is ancestor of pidns_of(ns_fd1)
-
-These two commands - PIDCMD_QUERY_PID and PIDCMD_QUERY_PIDNS - cover and
-improve the functionality expressed implicitly in translate_pid() before.
-
-/* PIDCMD_GET_PIDFD */
-This command allows to retrieve file descriptors for processes and removes
-the dependency of pidfds and thereby the pidfd_send_signal() syscall on
-procfs. First, multiple people have expressed a desire to do this even when
-pidfd_send_signal() was merged. It is even recorded in the commit message
-for pidfd_send_signal() itself
-(cf. commit 3eb39f47934f9d5a3027fe00d906a45fe3a15fad):
-Q-06: (Andrew Morton [1])
-      Is there a cleaner way of obtaining the fd? Another syscall perhaps.
-A-06: Userspace can already trivially retrieve file descriptors from procfs
-      so this is something that we will need to support anyway. Hence,
-      there's no immediate need to add another syscalls just to make
-      pidfd_send_signal() not dependent on the presence of procfs. However,
-      adding a syscalls to get such file descriptors is planned for a
-      future patchset (cf. [1]).
-Alexey made a similar request (cf. [2]).
-Additionally, Andy made an additional, idependent argument that we should
-go forward with non-proc-dirfd file descriptors for the sake of security
-and extensibility (cf. [3]).
-
-The pidfds are not associated with a specific pid namespaces but rather
-only with struct pid. What the pidctl() syscall enforces is that when a
-caller wants to retrieve a pidfd file descriptor for a pid in a given
-target pid namespace the caller 
-- must have been given access to two file descriptors referring
-  to target and source pid namespace
-- the source pid namespace must be an ancestor of the target pid
-  namespace
-- the pid must be translatable from the source pid namespace into the
-  target pid namespace
-
-1. pidctl(PIDCMD_GET_PIDFD, pid, source_fd, -1, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by pid in pidns identified by source_fd
-  - retrieve callers pidns
-  - return pidfd
-
-2. pidctl(PIDCMD_GET_PIDFD, pid, -1, target_fd, 0)
-  - retrieve callers pidns
-  - retrieve struct pid identifed by pid in callers pidns
-  - retrieve pidns identified by target_fd
-  - return pidfd
-
-3. pidctl(PIDCMD_GET_PIDFD, 1, source_fd, -1, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by init task in pidns identified by
-    source_fd
-  - retrieve callers pidns
-  - return pidfd
-
-4. pidctl(PIDCMD_GET_PIDFD, pid, source_fd, target_fd, 0)
-  - retrieve pidns identified by source_fd
-  - retrieve struct pid identifed by pid in pidns identified by source_fd
-  - retrieve pidns identified by target_fd
-  - check whether struct pid can be found in pidns identified by target_fd
-  - return pidfd
-
-These pidfds are allocated using anon_inode_getfd(), are O_CLOEXEC by
-default and can be used with the pidfd_send_signal() syscall. They are not
-dirfds and as such have the advantage that we can make them pollable or
-readable in the future if we see a need to do so (which I'm pretty sure we
-will eventually). Currently they do not support any advanced operations.
-
-/* References */
-[1]: https://lore.kernel.org/lkml/20181228233725.722tdfgijxcssg76@brauner.io/
-[2]: https://lore.kernel.org/lkml/20190320203910.GA2842@avx2/
-[3]: https://lore.kernel.org/lkml/CALCETrXO=V=+qEdLDVPf8eCgLZiB9bOTrUfe0V-U-tUZoeoRDA@mail.gmail.com/
-[4]: https://lore.kernel.org/lkml/20181109034919.GA21681@altlinux.org/
+This adds test cases for all three subcommands and verifies that they
+succeed and fail as expected.
+Additionally, the tests verify that pidctl() pidfds are correctly useable
+with pidfd_send_signal().
 
 Signed-off-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Jann Horn <jannh@google.com
+Cc: David Howells <dhowells@redhat.com>
 Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
 Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
@@ -275,350 +105,569 @@ Cc: Al Viro <viro@zeniv.linux.org.uk>
 ---
 /* changelog */
 v1:
-- Jann Horn <jannh@google.com> in [1]:
-  - always increment refcount for pidns in get_pid_ns_by_fd()
-  - use PTR_ERR() after IS_ERR() not before
-  - take reference on struct pid to avoid dangling pointer after rcu
-    read-side critical section
-  - simplify logic to put_pid_ns() when exiting functions
-  - make pidfds O_CLOEXEC by default
-  - remove useless no_llseek assignment in pidfd_fops
-- Christian Brauner <christian@brauner.io>
-  - return -ESRCH if process cannot be found in source pidns and -ENOENT if
-    it cannot be found in target pidns for both PIDCMD_QUERY_PID and
-    PIDCMD_QUERY_PIDNS to unify semantics
-
-[changelog-1]: https://lore.kernel.org/lkml/CAG48ez24xPM4f7ty=8k5p6_gVWd-bEUSxca5Ngy5svHgarhz+w@mail.gmail.com
+- Christian Brauner <christian@brauner.io>:
+  - adapt to changing pidfds to CLOEXEC by default
 ---
- arch/x86/entry/syscalls/syscall_32.tbl |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl |   1 +
- include/linux/pid.h                    |   2 +
- include/linux/pid_namespace.h          |   8 ++
- include/linux/syscalls.h               |   2 +
- include/uapi/linux/wait.h              |  14 +++
- kernel/pid.c                           | 161 +++++++++++++++++++++++++
- kernel/pid_namespace.c                 |  25 ++++
- 8 files changed, 214 insertions(+)
+ tools/testing/selftests/pidfd/Makefile      |   2 +-
+ tools/testing/selftests/pidfd/pidctl_test.c | 537 ++++++++++++++++++++
+ 2 files changed, 538 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidctl_test.c
 
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 1f9607ed087c..afc5a8997140 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -433,3 +433,4 @@
- 425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
- 426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
- 427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
-+428	i386	pidctl			sys_pidctl			__ia32_sys_pidctl
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 92ee0b4378d4..8ef25d9a003d 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -349,6 +349,7 @@
- 425	common	io_uring_setup		__x64_sys_io_uring_setup
- 426	common	io_uring_enter		__x64_sys_io_uring_enter
- 427	common	io_uring_register	__x64_sys_io_uring_register
-+428	common	pidctl			__x64_sys_pidctl
+diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
+index deaf8073bc06..29dfa29b3afa 100644
+--- a/tools/testing/selftests/pidfd/Makefile
++++ b/tools/testing/selftests/pidfd/Makefile
+@@ -1,6 +1,6 @@
+ CFLAGS += -g -I../../../../usr/include/
  
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index b6f4ba16065a..3c8ef5a199ca 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -66,6 +66,8 @@ struct pid
+-TEST_GEN_PROGS := pidfd_test
++TEST_GEN_PROGS := pidfd_test pidctl_test
  
- extern struct pid init_struct_pid;
+ include ../lib.mk
  
-+extern const struct file_operations pidfd_fops;
+diff --git a/tools/testing/selftests/pidfd/pidctl_test.c b/tools/testing/selftests/pidfd/pidctl_test.c
+new file mode 100644
+index 000000000000..a39d3cd81089
+--- /dev/null
++++ b/tools/testing/selftests/pidfd/pidctl_test.c
+@@ -0,0 +1,537 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
- static inline struct pid *get_pid(struct pid *pid)
- {
- 	if (pid)
-diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
-index 49538b172483..c5aae8151287 100644
---- a/include/linux/pid_namespace.h
-+++ b/include/linux/pid_namespace.h
-@@ -64,6 +64,8 @@ extern struct pid_namespace *copy_pid_ns(unsigned long flags,
- extern void zap_pid_ns_processes(struct pid_namespace *pid_ns);
- extern int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd);
- extern void put_pid_ns(struct pid_namespace *ns);
-+extern int pidnscmp(struct pid_namespace *ancestor,
-+		    struct pid_namespace *descendant);
- 
- #else /* !CONFIG_PID_NS */
- #include <linux/err.h>
-@@ -94,6 +96,12 @@ static inline int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
- {
- 	return 0;
- }
-+
-+static inline int pidnscmp(struct pid_namespace *ancestor,
-+			   struct pid_namespace *descendant)
-+{
-+	return 0;
-+}
- #endif /* CONFIG_PID_NS */
- 
- extern struct pid_namespace *task_active_pid_ns(struct task_struct *tsk);
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e446806a561f..a4c8c59f7c8f 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -929,6 +929,8 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
- 				struct old_timex32 __user *tx);
- asmlinkage long sys_syncfs(int fd);
- asmlinkage long sys_setns(int fd, int nstype);
-+asmlinkage long sys_pidctl(unsigned int cmd, pid_t pid, int source, int target,
-+			   unsigned int flags);
- asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
- 			     unsigned int vlen, unsigned flags);
- asmlinkage long sys_process_vm_readv(pid_t pid,
-diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
-index ac49a220cf2a..e9564ec06b07 100644
---- a/include/uapi/linux/wait.h
-+++ b/include/uapi/linux/wait.h
-@@ -18,5 +18,19 @@
- #define P_PID		1
- #define P_PGID		2
- 
-+/* Commands to pass to pidctl() */
-+enum pidcmd {
-+	PIDCMD_QUERY_PID   = 0, /* Get pid in target pid namespace */
-+	PIDCMD_QUERY_PIDNS = 1, /* Determine relationship between pid namespaces */
-+	PIDCMD_GET_PIDFD   = 2, /* Get pidfd for a process */
-+};
-+
-+/* Return values of PIDCMD_QUERY_PIDNS */
-+enum pidcmd_query_pidns {
-+	PIDNS_UNRELATED          = 0, /* The pid namespaces are unrelated */
-+	PIDNS_EQUAL              = 1, /* The pid namespaces are equal */
-+	PIDNS_SOURCE_IS_ANCESTOR = 2, /* Source pid namespace is ancestor of target pid namespace */
-+	PIDNS_TARGET_IS_ANCESTOR = 3, /* Target pid namespace is ancestor of source pid namespace */
-+};
- 
- #endif /* _UAPI_LINUX_WAIT_H */
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 20881598bdfa..3213a137a63e 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -26,6 +26,7 @@
-  *
-  */
- 
-+#include <linux/anon_inodes.h>
- #include <linux/mm.h>
- #include <linux/export.h>
- #include <linux/slab.h>
-@@ -40,6 +41,7 @@
- #include <linux/proc_fs.h>
- #include <linux/sched/task.h>
- #include <linux/idr.h>
++#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h>
++#include <linux/types.h>
 +#include <linux/wait.h>
- 
- struct pid init_struct_pid = {
- 	.count 		= ATOMIC_INIT(1),
-@@ -451,6 +453,165 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
- 	return idr_get_next(&ns->idr, &nr);
- }
- 
-+static int pidfd_release(struct inode *inode, struct file *file)
-+{
-+	struct pid *pid = file->private_data;
++#include <sched.h>
++#include <signal.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <syscall.h>
++#include <sys/mount.h>
++#include <sys/prctl.h>
++#include <sys/wait.h>
++#include <unistd.h>
 +
-+	if (pid) {
-+		file->private_data = NULL;
-+		put_pid(pid);
++#include "../kselftest.h"
++
++static int parent_pidns_fd = -1;
++static pid_t parent_pidns_pid = 0;
++
++static int child_pidns_fd = -1;
++static pid_t child_pidns_pid = 0;
++
++static int cousin_pidns_fd = -1;
++static pid_t cousin_pidns_pid = 0;
++
++static bool pidns_supported = false;
++
++static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
++					unsigned int flags)
++{
++	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
++}
++
++static inline int sys_pidctl(unsigned int cmd, pid_t pid, int source,
++			     int target, unsigned int flags)
++{
++	return syscall(__NR_pidctl, cmd, pid, source, target, flags);
++}
++
++struct cr_clone_arg {
++	char stack[128] __attribute__((aligned(16)));
++	char stack_ptr[0];
++};
++
++static int child_pidns_creator(void *args)
++{
++	(void)prctl(PR_SET_PDEATHSIG, SIGKILL);
++	while (1)
++		sleep(5);
++
++	exit(0);
++}
++
++static int prepare_pid_namespaces(void)
++{
++	char path[512];
++	struct cr_clone_arg ca;
++	pid_t pid;
++
++	parent_pidns_fd = open("/proc/self/ns/pid", O_RDONLY | O_CLOEXEC);
++	if (parent_pidns_fd < 0) {
++		ksft_print_msg("failed to open current pid namespace");
++		return -1;
 +	}
++	parent_pidns_pid = getpid();
++
++	pid = clone(child_pidns_creator, ca.stack_ptr, CLONE_NEWPID | SIGCHLD,
++		    NULL);
++	if (pid < 0) {
++		ksft_print_msg("failed to clone child-pidns process in new pid namespace");
++		return -1;
++	}
++
++	snprintf(path, sizeof(path), "/proc/%d/ns/pid", pid);
++
++	child_pidns_fd = open(path, O_RDONLY | O_CLOEXEC);
++	if (child_pidns_fd < 0) {
++		ksft_print_msg("failed to open pid namespace");
++		return -1;
++	}
++	child_pidns_pid = pid;
++
++	pid = clone(child_pidns_creator, ca.stack_ptr, CLONE_NEWPID | SIGCHLD,
++		    NULL);
++	if (pid < 0) {
++		ksft_print_msg("failed to clone cousin-pidns process in new pid namespace");
++		return -1;
++	}
++
++	snprintf(path, sizeof(path), "/proc/%d/ns/pid", pid);
++
++	cousin_pidns_fd = open(path, O_RDONLY | O_CLOEXEC);
++	if (cousin_pidns_fd < 0) {
++		ksft_print_msg("failed to open cousin pid namespace");
++		return -1;
++	}
++	cousin_pidns_pid = pid;
 +
 +	return 0;
 +}
 +
-+const struct file_operations pidfd_fops = {
-+	.release = pidfd_release,
-+};
-+
-+static int pidfd_create_fd(struct pid *pid, unsigned int o_flags)
++static int test_pidcmd_query_pid(void)
 +{
-+	int fd;
++	const char *test_name = "pidctl PIDCMD_QUERY_PID";
++	pid_t pid, self;
++	int parent_pidns_fd2;
 +
-+	fd = anon_inode_getfd("pidfd", &pidfd_fops, get_pid(pid), O_RDWR | o_flags);
-+	if (fd < 0)
-+		put_pid(pid);
++	self = getpid();
 +
-+	return fd;
-+}
-+
-+static struct pid_namespace *get_pid_ns_by_fd(int fd)
-+{
-+	struct pid_namespace *pidns = ERR_PTR(-EINVAL);
-+
-+	if (fd >= 0) {
-+#ifdef CONFIG_PID_NS
-+		struct ns_common *ns;
-+		struct file *file = proc_ns_fget(fd);
-+		if (IS_ERR(file))
-+			return ERR_CAST(file);
-+
-+		ns = get_proc_ns(file_inode(file));
-+		if (ns->ops->type == CLONE_NEWPID) {
-+			pidns = container_of(ns, struct pid_namespace, ns);
-+			get_pid_ns(pidns);
-+		}
-+
-+		fput(file);
-+#endif
-+	} else {
-+		pidns = task_active_pid_ns(current);
-+		get_pid_ns(pidns);
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, -1, -1, 1);
++	if (pid >= 0) {
++		ksft_print_msg("%s test %d: managed to pass invalid flag\n",
++			       test_name, ksft_test_num());
++		return -1;
 +	}
 +
-+	return pidns;
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, -1, -1, 0);
++	if (!pid || (pid != self)) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	if (!pidns_supported)
++		goto out;
++
++	parent_pidns_fd2 = open("/proc/self/ns/pid", O_RDONLY | O_CLOEXEC);
++	if (parent_pidns_fd2 < 0) {
++		ksft_print_msg("%s test %d: Failed to open current pid namespace\n",
++			       test_name, ksft_test_num());
++		return -1;
++	}
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, parent_pidns_fd,
++			 parent_pidns_fd2, 0);
++	if (!pid || (pid != self)) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		close(parent_pidns_fd2);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, -1, parent_pidns_fd2, 0);
++	if (!pid || (pid != self)) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		close(parent_pidns_fd2);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, parent_pidns_fd, -1, 0);
++	if (!pid || (pid != self)) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		close(parent_pidns_fd2);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	close(parent_pidns_fd2);
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, parent_pidns_fd,
++			 child_pidns_fd, 0);
++	if (pid >= 0 || ((pid < 0) && (errno != ENOENT))) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, self, child_pidns_fd,
++			 parent_pidns_fd, 0);
++	if (pid >= 0 || ((pid < 0) && (errno != ESRCH))) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), self, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, child_pidns_pid, parent_pidns_fd,
++			 child_pidns_fd, 0);
++	if (pid != 1) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), child_pidns_pid, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, 1, child_pidns_fd, parent_pidns_fd,
++			 0);
++	if (pid != child_pidns_pid) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), 1, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, 1, child_pidns_fd, cousin_pidns_fd, 0);
++	if (pid >= 0 || ((pid < 0) && (errno != ENOENT))) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), 1, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pid = sys_pidctl(PIDCMD_QUERY_PID, cousin_pidns_pid, child_pidns_fd,
++			 cousin_pidns_fd, 0);
++	if (pid >= 0 || ((pid < 0) && (errno != ESRCH))) {
++		ksft_print_msg("%s test %d: argument pid %d, translated pid %d\n",
++			       test_name, ksft_test_num(), cousin_pidns_pid, pid);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++out:
++	ksft_test_result_pass("%s test: passed\n", test_name);
++	return 0;
 +}
 +
-+static int pidns_related(struct pid_namespace *source,
-+			 struct pid_namespace *target)
++static int test_pidcmd_query_pidns(void)
 +{
++	const char *test_name = "pidctl PIDCMD_QUERY_PIDNS";
++	int parent_pidns_fd2;
 +	int query;
 +
-+	query = pidnscmp(source, target);
-+	switch (query) {
-+	case 0:
-+		return PIDNS_EQUAL;
-+	case 1:
-+		return PIDNS_SOURCE_IS_ANCESTOR;
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, -1, -1, 1);
++	if (query >= 0) {
++		ksft_print_msg("%s test %d: managed to pass invalid flag\n",
++			       test_name, ksft_test_num());
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 1234, -1, -1, 0);
++	if (query >= 0)
++		ksft_print_msg("%s test %d: managed to pass invalid pid argument\n",
++			test_name, ksft_test_num());
++	ksft_inc_pass_cnt();
++
++	if (!pidns_supported)
++		goto out;
++
++	parent_pidns_fd2 = open("/proc/self/ns/pid", O_RDONLY | O_CLOEXEC);
++	if (parent_pidns_fd2 < 0) {
++		ksft_print_msg("%s test %d: Failed to open second pid namespace file descriptor\n",
++			       test_name, ksft_test_num());
++		return -1;
 +	}
 +
-+	query = pidnscmp(target, source);
-+	if (query == 1)
-+		return PIDNS_TARGET_IS_ANCESTOR;
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, parent_pidns_fd,
++			   parent_pidns_fd2, 0);
++	close(parent_pidns_fd2);
++	if (query != PIDNS_EQUAL) {
++		ksft_print_msg("%s test %d: failed to detect that pid namespaces are identical %d\n",
++			       test_name, ksft_test_num(), query);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
 +
-+	return PIDNS_UNRELATED;
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, parent_pidns_fd,
++			   child_pidns_fd, 0);
++	if (query != PIDNS_SOURCE_IS_ANCESTOR) {
++		ksft_print_msg("%s test %d: failed to detect that source pid namespace is ancestor of target pid namespace %d\n",
++			       test_name, ksft_test_num(), query);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, child_pidns_fd,
++			   parent_pidns_fd, 0);
++	if (query != PIDNS_TARGET_IS_ANCESTOR) {
++		ksft_print_msg("%s test %d: failed to detect that target pid namespace is ancestor of source pid namespace %d\n",
++			       test_name, ksft_test_num(), query);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, child_pidns_fd,
++			   cousin_pidns_fd, 0);
++	if (query != PIDNS_UNRELATED) {
++		ksft_print_msg("%s test %d: failed to detect that pid namespace are not related %d\n",
++			       test_name, ksft_test_num(), query);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	query = sys_pidctl(PIDCMD_QUERY_PIDNS, 0, child_pidns_fd,
++			   cousin_pidns_fd, 0);
++	if (query != PIDNS_UNRELATED) {
++		ksft_print_msg("%s test %d: failed to detect that pid namespace are not related %d\n",
++			       test_name, ksft_test_num(), query);
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++out:
++	ksft_test_result_pass("%s test: passed\n", test_name);
++	return 0;
 +}
 +
-+/*
-+ * pidctl - perform operations on pids
-+ * @cmd:    command to execute
-+ * @pid:    pid for translation
-+ * @source: pid-ns file descriptor or -1 for active namespace
-+ * @target: pid-ns file descriptor or -1 for active namesapce
-+ * @flags:  flags to pass
-+ *
-+ * If cmd is PIDCMD_QUERY_PID translates pid between pid namespaces
-+ * identified by @source and @target. Returns pid if process has pid in
-+ * @target, -ESRCH if process does not have a pid in @source, -ENOENT if
-+ * process has no pid in @target.
-+ *
-+ * If cmd is PIDCMD_QUERY_PIDNS determines the relations between two pid
-+ * namespaces. Returns 2 if @source is an ancestor pid namespace
-+ * of @target, 1 if @source and @target refer to the same pid namespace,
-+ * 3 if @target is an ancestor pid namespace of @source, 0 if they have
-+ * no parent-child relationship in either direction.
-+ *
-+ * If cmd is PIDCMD_GET_PIDFD returns pidfd for process in @target pid
-+ * namespace. Returns pidfd if process has pid in @target, -ESRCH if
-+ * process does not have a pid in @source, -ENOENT if process does not
-+ * have a pid in @target pid namespace.
-+ *
-+ */
-+SYSCALL_DEFINE5(pidctl, unsigned int, cmd, pid_t, pid, int, source, int, target,
-+		unsigned int, flags)
++static int test_pidcmd_get_pidfd(void)
 +{
-+	struct pid_namespace *source_ns = NULL, *target_ns = NULL;
-+	struct pid *struct_pid;
-+	pid_t result;
++	const char *test_name = "pidctl PIDCMD_GET_PIDFD";
++	pid_t self;
++	int pidfd, parent_pidns_fd2;
 +
-+	if (flags)
-+		return -EINVAL;
++	self = getpid();
 +
-+	switch (cmd) {
-+	case PIDCMD_QUERY_PID:
-+		break;
-+	case PIDCMD_QUERY_PIDNS:
-+		if (pid)
-+			return -EINVAL;
-+		break;
-+	case PIDCMD_GET_PIDFD:
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, -1, -1, 0);
++	if (pidfd < 0) {
++		ksft_print_msg("%s test %d: failed to pass valid flag\n",
++			       test_name, ksft_test_num());
++		return -1;
++	}
++	close(pidfd);
++	ksft_inc_pass_cnt();
++
++	if (!pidns_supported)
++		goto out;
++
++	parent_pidns_fd2 = open("/proc/self/ns/pid", O_RDONLY | O_CLOEXEC);
++	if (parent_pidns_fd2 < 0) {
++		ksft_print_msg("%s test %d: Failed to open current pid namespace\n",
++			       test_name, ksft_test_num());
++		return -1;
 +	}
 +
-+	source_ns = get_pid_ns_by_fd(source);
-+	if (IS_ERR(source_ns))
-+		return PTR_ERR(source_ns);
-+
-+	target_ns = get_pid_ns_by_fd(target);
-+	if (IS_ERR(target_ns)) {
-+		put_pid_ns(source_ns);
-+		return PTR_ERR(target_ns);
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, parent_pidns_fd,
++			   parent_pidns_fd2, 0);
++	if (pidfd < 0) {
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++		close(parent_pidns_fd2);
++		return -1;
 +	}
++	close(pidfd);
++	ksft_inc_pass_cnt();
 +
-+	if (cmd == PIDCMD_QUERY_PIDNS) {
-+		result = pidns_related(source_ns, target_ns);
-+	} else {
-+		rcu_read_lock();
-+		struct_pid = get_pid(find_pid_ns(pid, source_ns));
-+		rcu_read_unlock();
-+
-+		if (struct_pid)
-+			result = pid_nr_ns(struct_pid, target_ns);
-+		else
-+			result = -ESRCH;
-+
-+		if (cmd == PIDCMD_GET_PIDFD && (result > 0))
-+			result = pidfd_create_fd(struct_pid, O_CLOEXEC);
-+
-+		if (!result)
-+			result = -ENOENT;
-+
-+		put_pid(struct_pid);
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, -1, parent_pidns_fd2, 0);
++	if (pidfd < 0) {
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++		close(parent_pidns_fd2);
++		return -1;
 +	}
++	close(pidfd);
++	ksft_inc_pass_cnt();
 +
-+	put_pid_ns(target_ns);
-+	put_pid_ns(source_ns);
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, parent_pidns_fd, -1, 0);
++	if (pidfd < 0) {
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++		close(parent_pidns_fd2);
++		return -1;
++	}
++	close(pidfd);
++	ksft_inc_pass_cnt();
 +
-+	return result;
++	close(parent_pidns_fd2);
++
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, parent_pidns_fd,
++			   child_pidns_fd, 0);
++	if (pidfd >= 0 || ((pidfd < 0) && (errno != ENOENT))) {
++		ksft_print_msg("%s test %d: succeeded to retrieve pidfd but should've failed %s\n",
++			       test_name, ksft_test_num(), strerror(errno));
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, self, child_pidns_fd,
++			   parent_pidns_fd, 0);
++	if (pidfd >= 0 || ((pidfd < 0) && (errno != ESRCH))) {
++		ksft_print_msg("%s test %d: succeeded to retrieve pidfd but should've failed %s\n",
++			       test_name, ksft_test_num(), strerror(errno));
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, 1, child_pidns_fd, parent_pidns_fd, 0);
++	if (pidfd < 0) {
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++		return -1;
++	}
++	close(pidfd);
++	ksft_inc_pass_cnt();
++
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, 1, child_pidns_fd, cousin_pidns_fd, 0);
++	if (pidfd >= 0 || ((pidfd < 0) && (errno != ENOENT))) {
++		ksft_print_msg("%s test %d: succeeded to retrieve pidfd but should've failed %s\n",
++			       test_name, ksft_test_num(), strerror(errno));
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++	pidfd = sys_pidctl(PIDCMD_GET_PIDFD, cousin_pidns_pid, child_pidns_fd,
++			   cousin_pidns_fd, 0);
++	if (pidfd >= 0 || ((pidfd < 0) && (errno != ESRCH))) {
++		ksft_print_msg("%s test %d: succeeded to retrieve pidfd but should've failed %s\n",
++			       test_name, ksft_test_num(), strerror(errno));
++		return -1;
++	}
++	ksft_inc_pass_cnt();
++
++out:
++	ksft_test_result_pass("%s test: passed\n", test_name);
++	return 0;
 +}
 +
- void __init pid_idr_init(void)
- {
- 	/* Verify no one has done anything silly: */
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index aa6e72fb7c08..1c863fb3d55a 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -429,6 +429,31 @@ static struct ns_common *pidns_get_parent(struct ns_common *ns)
- 	return &get_pid_ns(pid_ns)->ns;
- }
- 
-+/**
-+ * pidnscmp - Determine if @ancestor is ancestor of @descendant
-+ * @ancestor:   pidns suspected to be the ancestor of @descendant
-+ * @descendant: pidns suspected to be the descendant of @ancestor
-+ *
-+ * Returns -1 if @ancestor is not an ancestor of @descendant,
-+ * 0 if @ancestor is the same pidns as @descendant, 1 if @ancestor
-+ * is an ancestor of @descendant.
-+ */
-+int pidnscmp(struct pid_namespace *ancestor, struct pid_namespace *descendant)
++static void test_pidctl_pidfd_send_signal(void)
 +{
-+	if (ancestor == descendant)
-+		return 0;
++	const char *test_name = "pidctl with pidfd_send_signal";
++	int child_pidfd, cousin_pidfd, ret;
 +
-+	for (;;) {
-+		if (!descendant)
-+			return -1;
-+		if (descendant == ancestor)
-+			break;
-+		descendant = descendant->parent;
++	child_pidfd = sys_pidctl(PIDCMD_GET_PIDFD, child_pidns_pid, -1, -1, 0);
++	if (child_pidfd < 0)
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++	ksft_inc_pass_cnt();
++
++	ret = sys_pidfd_send_signal(child_pidfd, SIGKILL, NULL, 0);
++	if (ret < 0) {
++		kill(child_pidns_pid, SIGKILL);
++		ksft_print_msg("%s test %d: failed to send signal via pidfd\n",
++			       test_name, ksft_test_num());
 +	}
++	ksft_inc_pass_cnt();
 +
-+	return 1;
++	cousin_pidfd = sys_pidctl(PIDCMD_GET_PIDFD, cousin_pidns_pid, -1, -1, 0);
++	if (cousin_pidfd < 0)
++		ksft_print_msg("%s test %d: failed to retrieve pidfd\n",
++			       test_name, ksft_test_num());
++	ksft_inc_pass_cnt();
++
++	ret = sys_pidfd_send_signal(cousin_pidfd, SIGKILL, NULL, 0);
++	if (ret < 0) {
++		kill(cousin_pidfd, SIGKILL);
++		ksft_print_msg("%s test %d: failed to send signal via pidfd\n",
++			       test_name, ksft_test_num());
++	}
++	ksft_inc_pass_cnt();
++
++	ksft_test_result_pass("%s test: passed\n", test_name);
 +}
 +
- static struct user_namespace *pidns_owner(struct ns_common *ns)
- {
- 	return to_pid_ns(ns)->user_ns;
++int wait_for_pid(pid_t pid)
++{
++	int status, ret;
++
++again:
++	ret = waitpid(pid, &status, 0);
++	if (ret == -1) {
++		if (errno == EINTR)
++			goto again;
++
++		return -1;
++	}
++
++	if (ret != pid)
++		goto again;
++
++	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
++		return -1;
++
++	return 0;
++}
++
++int main(int argc, char **argv)
++{
++	int ret;
++	pid_t pid;
++
++	pid = fork();
++	if (pid < 0)
++		ksft_exit_fail_msg("Failed to create new process\n");
++
++	if (pid == 0) {
++		if (unshare(CLONE_NEWPID) < 0)
++			exit(EXIT_FAILURE);
++
++		exit(EXIT_SUCCESS);
++	}
++
++	if (!wait_for_pid(pid))
++		pidns_supported = true;
++
++	ksft_print_header();
++
++	if (pidns_supported)
++		prepare_pid_namespaces();
++	else
++		ksft_print_msg(
++			"kernel does not support pid namespaces: skipping pid namespace parts of testsuite");
++
++	ret = test_pidcmd_query_pid();
++	if (ret < 0) {
++		ksft_print_msg("PIDCMD_QUERY_PID tests failed");
++		goto on_error;
++	}
++
++	ret = test_pidcmd_query_pidns();
++	if (ret < 0) {
++		ksft_print_msg("PIDCMD_QUERY_PIDNS tests failed");
++		goto on_error;
++	}
++
++	ret = test_pidcmd_get_pidfd();
++	if (ret < 0) {
++		ksft_print_msg("PIDCMD_GET_PIDFD tests failed");
++		goto on_error;
++	}
++
++	ret = 0;
++
++on_error:
++	if (pidns_supported)
++		test_pidctl_pidfd_send_signal();
++
++	if (parent_pidns_fd >= 0)
++		close(parent_pidns_fd);
++
++	if (child_pidns_fd >= 0)
++		close(child_pidns_fd);
++
++	if (cousin_pidns_fd >= 0)
++		close(cousin_pidns_fd);
++
++	return !ret ? ksft_exit_pass() : ksft_exit_fail();
++}
 -- 
 2.21.0
 
