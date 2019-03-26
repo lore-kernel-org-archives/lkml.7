@@ -2,135 +2,89 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9989DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FE22070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733D92070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732345AbfCZRnD (ORCPT
+        id S1732027AbfCZRoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:43:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46202 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfCZRnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:43:03 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A801A87629;
-        Tue, 26 Mar 2019 17:43:02 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E869C600C8;
-        Tue, 26 Mar 2019 17:42:55 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 13:42:52 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, omosnace@redhat.com,
-        Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, mjg59@google.com
-Subject: Re: [PATCH ghak109 V1] audit: link integrity evm_write_xattrs record
- to syscall event
-Message-ID: <20190326174252.irqrldtcy5bwho6k@madcap2.tricolour.ca>
-References: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com>
- <CAHC9VhS61LTQMXiALRre+5_+wvwe6Wa9RN-WYNTjvz5LVsA5rw@mail.gmail.com>
- <20190321005008.wfz3bk7q262km5fz@madcap2.tricolour.ca>
- <2006016.NXIvICiRTL@x2>
- <1553614157.4115.17.camel@linux.ibm.com>
- <20190326161409.3wej7hcwnqalf4or@madcap2.tricolour.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190326161409.3wej7hcwnqalf4or@madcap2.tricolour.ca>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 26 Mar 2019 17:43:02 +0000 (UTC)
+        Tue, 26 Mar 2019 13:44:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42883 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCZRoS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:44:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cv12so1980124plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:44:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xfE1mWZMTe2MUt3HB3oB5dCMGPVrq+8RT1AI4bTQq1I=;
+        b=S3K4jdwTDJzeyzVgot0AoWXnLOJG3VrE+Rdlt18DixI87Cv6AswskOqAJ1PkuwT8cW
+         kffC1ieqKuDe8DGF4CTtcYHKzV48d48XRxl2wg3H2sHYWalYqnP+BcCX6WOnfserXGAH
+         sgCh2ZSP32r5w2OXBwYDr6IGC+gGlbc0v6/Ot726VSPHBafn7PXZID3cJGR24XeJq26w
+         2uUSFOLQOZv7T31sNlhUzwIqw2GUOl/OHpK6GkFopOixxVYru9g79jQ00wAa/jxQtQr3
+         +C+oy4cDLlVz2HHjCBhYeO093exAFSEv2w5oto8shw9jh5b1inQrap72GG86g43DLixb
+         qczg==
+X-Gm-Message-State: APjAAAXdb17a/PntE1Sf0WhqD+40lENn0KdeiYJIc+P7I/tP7d5l46A6
+        Jb5fZrqDNipQvzbQDHNsP3o=
+X-Google-Smtp-Source: APXvYqxVk7UONmgup1r7TdgfAQY3R6JUUg0cDW+m6TWZ04KcPSdhDkkDEv64P2m5u/W+tC0y0jZuXA==
+X-Received: by 2002:a17:902:9043:: with SMTP id w3mr32126550plz.101.1553622258052;
+        Tue, 26 Mar 2019 10:44:18 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id z189sm27904596pfb.146.2019.03.26.10.44.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 10:44:16 -0700 (PDT)
+Message-ID: <1553622255.118779.69.camel@acm.org>
+Subject: Re: "cat /proc/lockdep" after "rmmod <some module>" when
+ !debug_locks will crash the system
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     shenghui <shhuiw@foxmail.com>, peterz@infradead.org,
+        mingo@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org
+Date:   Tue, 26 Mar 2019 10:44:15 -0700
+In-Reply-To: <5c9973cc.1c69fb81.371e8.7b9fSMTPIN_ADDED_BROKEN@mx.google.com>
+References: <5c98a345.1c69fb81.21300.0be5SMTPIN_ADDED_BROKEN@mx.google.com>
+         <1553527621.118779.2.camel@acm.org>
+         <5c9973cc.1c69fb81.371e8.7b9fSMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-26 12:14, Richard Guy Briggs wrote:
-> On 2019-03-26 11:29, Mimi Zohar wrote:
-> > On Tue, 2019-03-26 at 11:22 -0400, Steve Grubb wrote:
-> > 
-> > > > > > --- a/security/integrity/evm/evm_secfs.c
-> > > > > > +++ b/security/integrity/evm/evm_secfs.c
-> > > > > > @@ -192,7 +192,8 @@ static ssize_t evm_write_xattrs(struct file *file,
-> > > > > > const char __user *buf,> > 
-> > > > > >         if (count > XATTR_NAME_MAX)
-> > > > > >         
-> > > > > >                 return -E2BIG;
-> > > > > > 
-> > > > > > -       ab = audit_log_start(NULL, GFP_KERNEL,
-> > > > > > AUDIT_INTEGRITY_EVM_XATTR);
-> > > > > > +       ab = audit_log_start(audit_context(), GFP_KERNEL,
-> > > > > > +                            AUDIT_INTEGRITY_EVM_XATTR);
-> > > > > 
-> > > > > This part is fine.
-> > > > > 
-> > > > > >         if (!ab)
-> > > > > >         
-> > > > > >                 return -ENOMEM;
-> > > > > > 
-> > > > > > @@ -222,7 +223,7 @@ static ssize_t evm_write_xattrs(struct file *file,
-> > > > > > const char __user *buf,> > 
-> > > > > >                 inode_lock(inode);
-> > > > > >                 err = simple_setattr(evm_xattrs, &newattrs);
-> > > > > >                 inode_unlock(inode);
-> > > > > > 
-> > > > > > -               audit_log_format(ab, "locked");
-> > > > > > +               audit_log_format(ab, "xattr=(locked)");
-> > > > > 
-> > > > > Two things come to mind:
-> > > > > 
-> > > > > * While we can clearly trust the string above, should we be logging
-> > > > > the xattr field value as an untrusted string so it is consistent with
-> > > > > how we record other xattr names?
-> > > > 
-> > > > That would be a question for Steve.
-> > > 
-> > > All fields with the same name must be represented the same way. If one 
-> > > instance is untrusted, every instance of the same keyword must be untrusted.
-> > 
-> > Normal case:
-> >        audit_log_format(ab, "xattr=");
-> >        audit_log_untrustedstring(ab, xattr->name);
-> > 
-> > Ok, so the above audit_log_format() call should be replaced with
-> >  audit_log_untrustedstring().
-> 
-> Ok, so I think we can agree on "audit_log_untrustedstring(ab,
-> "xattr=.");" and simpler yet just print the contents regardless and not
-> special case this print.  V2 coming...
+On Tue, 2019-03-26 at 08:35 +-0800, shenghui wrote:
++AD4 My test steps:
++AD4 --------------
++AD4 1) bootup the system, and check the calltrace in dmesg. Just warning and ignore it.
++AD4 2) cat /proc/lockdep   +ACM everything is well
++AD4 3) rmmod some module which provides lock+AF8-class in lockdep
++AD4    In my system, module bcache is used:  ('grep bcache /proc/lockdep' prints something)
++AD4         +ACo stop bcache set
++AD4         +ACo rmmod bcache
++AD4    I have tried other module, e.g: rmmod iwldvm
++AD4 4) cat /proc/lockdep   +ACM system crash
 
-Ok, what I typed above wasn't quite what I intended...  This is what I
-meant:
+Hi shenghui,
 
-	audit_log_format(ab, "xattr=");
-	audit_log_untrustedstring(ab, ".");
+Thank you for having shared your test steps. I ran a slightly different test
+myself:
 
-But, I'll just move the normal case above the "." locking detection and
-log all cases the same way.
+while true+ADs do cat /proc/lockdep +AD4-/dev/null+ADs done +ACY
+(cd blktests +ACYAJg while ./check -q+ADs do :+ADs done)
 
-> > Mimi
-> 
-> - RGB
+This test reads /proc/lockdep in a loop while running a test that stresses
+lockdep and also that loads and unloads kernel modules. Since this test
+passed on my setup I suggest that you have a close look at your setup. The
+vboxdrv kernel driver or an out-of-tree patch may be what is making your
+system unstable.
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Bart.
