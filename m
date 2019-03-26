@@ -2,78 +2,124 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7167C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD822070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E24C20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731589AbfCZQKc (ORCPT
+        id S1731701AbfCZQLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:10:32 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:37364 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbfCZQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:10:32 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 8CF8A20A8D;
-        Tue, 26 Mar 2019 17:10:30 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 71BE9208E6;
-        Tue, 26 Mar 2019 17:10:30 +0100 (CET)
-Subject: Re: [PATCH v2 1/2] phy: qcom-qmp: Add msm8998 PCIe QMP PHY support
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-References: <a897277d-23b3-9746-81dc-28f8925a9992@free.fr>
- <136857e7-0fe1-6fc6-729e-2cbf6ea72386@ti.com>
- <3e9f0a18-0e0f-3790-fbbe-650bf8536ad9@free.fr>
-Message-ID: <8358b1d4-a479-2c2f-13b3-411832a13278@free.fr>
-Date:   Tue, 26 Mar 2019 17:10:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 12:11:03 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35123 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfCZQLD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:11:03 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2QGA7QW2468380
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 26 Mar 2019 09:10:07 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2QGA58l2468375;
+        Tue, 26 Mar 2019 09:10:05 -0700
+Date:   Tue, 26 Mar 2019 09:10:05 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kangjie Lu <tipbot@zytor.com>
+Message-ID: <tip-766460852cfaeca4042e5f3aeb9616b3689147bc@git.kernel.org>
+Cc:     nstange@suse.de, kjlu@umn.edu, hpa@zytor.com, dvhart@infradead.org,
+        x86@kernel.org, andy@infradead.org, bp@suse.de,
+        colin.king@canonical.com, linux-kernel@vger.kernel.org,
+        gustavo@embeddedor.com, mingo@redhat.com, keescook@chromium.org,
+        mingo@kernel.org, tglx@linutronix.de, rvarsha016@gmail.com,
+        abanman@hpe.com, mike.travis@hpe.com
+Reply-To: colin.king@canonical.com, linux-kernel@vger.kernel.org,
+          gustavo@embeddedor.com, x86@kernel.org, andy@infradead.org,
+          bp@suse.de, dvhart@infradead.org, nstange@suse.de, kjlu@umn.edu,
+          hpa@zytor.com, rvarsha016@gmail.com, abanman@hpe.com,
+          mike.travis@hpe.com, mingo@kernel.org, tglx@linutronix.de,
+          mingo@redhat.com, keescook@chromium.org
+In-Reply-To: <20190325202924.4624-1-kjlu@umn.edu>
+References: <20190325202924.4624-1-kjlu@umn.edu>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cleanups] x86/platform/uv: Fix missing checks of kcalloc()
+ return values
+Git-Commit-ID: 766460852cfaeca4042e5f3aeb9616b3689147bc
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <3e9f0a18-0e0f-3790-fbbe-650bf8536ad9@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Mar 26 17:10:30 2019 +0100 (CET)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 14:24, Marc Gonzalez wrote:
+Commit-ID:  766460852cfaeca4042e5f3aeb9616b3689147bc
+Gitweb:     https://git.kernel.org/tip/766460852cfaeca4042e5f3aeb9616b3689147bc
+Author:     Kangjie Lu <kjlu@umn.edu>
+AuthorDate: Mon, 25 Mar 2019 15:29:22 -0500
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Tue, 26 Mar 2019 17:01:30 +0100
 
-> +static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
-> +	.type			= PHY_TYPE_PCIE,
-> +	.nlanes			= 1,
-> +
-> +	.serdes_tbl		= msm8998_pcie_serdes_tbl,
-> +	.serdes_tbl_num		= ARRAY_SIZE(msm8998_pcie_serdes_tbl),
-> +	.tx_tbl			= msm8998_pcie_tx_tbl,
-> +	.tx_tbl_num		= ARRAY_SIZE(msm8998_pcie_tx_tbl),
-> +	.rx_tbl			= msm8998_pcie_rx_tbl,
-> +	.rx_tbl_num		= ARRAY_SIZE(msm8998_pcie_rx_tbl),
-> +	.pcs_tbl		= msm8998_pcie_pcs_tbl,
-> +	.pcs_tbl_num		= ARRAY_SIZE(msm8998_pcie_pcs_tbl),
-> +	.clk_list		= msm8996_phy_clk_l,
-> +	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
-> +	.reset_list		= msm8996_pciephy_reset_l,
-> +	.num_resets		= ARRAY_SIZE(msm8996_pciephy_reset_l),
+x86/platform/uv: Fix missing checks of kcalloc() return values
 
-Looking more closely at the code downstream, it looks like the
-reset situation is slightly different. Let me spin a v3.
+Handle potential errors returned from kcalloc().
 
-Regards.
+ [ bp: rewrite commit message. ]
+
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andrew Banman <abanman@hpe.com>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Mike Travis <mike.travis@hpe.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: pakki001@umn.edu
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Varsha Rao <rvarsha016@gmail.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190325202924.4624-1-kjlu@umn.edu
+---
+ arch/x86/platform/uv/tlb_uv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index 2c53b0f19329..1297e185b8c8 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -2133,14 +2133,19 @@ static int __init summarize_uvhub_sockets(int nuvhubs,
+  */
+ static int __init init_per_cpu(int nuvhubs, int base_part_pnode)
+ {
+-	unsigned char *uvhub_mask;
+ 	struct uvhub_desc *uvhub_descs;
++	unsigned char *uvhub_mask = NULL;
+ 
+ 	if (is_uv3_hub() || is_uv2_hub() || is_uv1_hub())
+ 		timeout_us = calculate_destination_timeout();
+ 
+ 	uvhub_descs = kcalloc(nuvhubs, sizeof(struct uvhub_desc), GFP_KERNEL);
++	if (!uvhub_descs)
++		goto fail;
++
+ 	uvhub_mask = kzalloc((nuvhubs+7)/8, GFP_KERNEL);
++	if (!uvhub_mask)
++		goto fail;
+ 
+ 	if (get_cpu_topology(base_part_pnode, uvhub_descs, uvhub_mask))
+ 		goto fail;
