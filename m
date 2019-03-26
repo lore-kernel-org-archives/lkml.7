@@ -2,237 +2,125 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAD8C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422EFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85F92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TZDkjkbL"
+	by mail.kernel.org (Postfix) with ESMTP id 0094E2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 23:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732453AbfCZXzA (ORCPT
+        id S1732497AbfCZXz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 19:55:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39646 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbfCZXzA (ORCPT
+        Tue, 26 Mar 2019 19:55:58 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34625 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730333AbfCZXz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 19:55:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b65so2386411plb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1ooxuPDG9rXa4ZncRFTnvx1OJLcH3UA8H49XDDNhXX4=;
-        b=TZDkjkbLD1YKIZpszz0y3yubjnPylU7DDaZvVbk+1L+N/wIZhpd1vL5lho6VLwwVIN
-         Udj+YGrPnbhFp8ASf5rb7KWn/9bBNEmL/DONWKkBOmUJL9szwoz6W+laeANqTUvJe93i
-         e7sn9+nYnDLVrdHWFxRcDnIOjH8kzsRPDrMms=
+        Tue, 26 Mar 2019 19:55:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id n68so8849970qka.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 16:55:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1ooxuPDG9rXa4ZncRFTnvx1OJLcH3UA8H49XDDNhXX4=;
-        b=QN3mOsz5wVCT/SmX5Xw4tm8HLokv2rZWOwHDjyb5PKTfZ/olyksyz/pGPzEkw0ebX+
-         4f5fw02ySMsoKYBIJOzjEfgOYj1qKSH04oNG59Rctq3GxYTIidwuShAo80Uf9ZOPzM2z
-         v49oJl9vnc1lT+n1YWp8SFLU3GCNDKhzvjlDXafQQC0f5Eaehp6eA3RQwkrb4Gcdx4Uh
-         WVNas7UGpVqBEcWazJ8Bku+9i6zZ+BKHYCD+940kAbGN3cdvZ+T+RaCEO+0IMot9jCSd
-         fSsbZJVMJ4Oy2m+hD0ftBFkcqnUvCyT5yT5OSNMU1wTXBrR6wk9TFauskevGvtJO79C9
-         mZYg==
-X-Gm-Message-State: APjAAAVEUuxrCzO3LhWSdhb8cnB0V849VtvMuk6zz45M2ffu5gL+p1/S
-        0s7DMxWolSmsySHeAETIIhkLFQ==
-X-Google-Smtp-Source: APXvYqwvElh3jfAicCmOSZDneKv1xy2LVKFKxxLJZXaHsLAEPHA/G3+UshLjXzvNoxIT1hmnzxBNlw==
-X-Received: by 2002:a17:902:7103:: with SMTP id a3mr34058004pll.214.1553644499629;
-        Tue, 26 Mar 2019 16:54:59 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id i126sm26330670pfb.15.2019.03.26.16.54.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 16:54:58 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:54:58 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     c-hbandi@codeaurora.org
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip wcn3998
-Message-ID: <20190326235458.GA112750@google.com>
-References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
- <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
- <20190312165928.GD200579@google.com>
- <88a923e02073461abb5f3a7674150615@codeaurora.org>
- <20190314185637.GB112750@google.com>
- <8432d8b9743e2b4b6a7195329c808af3@codeaurora.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P04cs5uaHO4BE6OlINHXYscLGe9dWYGk7foFB9Ma6MQ=;
+        b=XkV5llHxUVB7qdVAachfR71KIxN3/JpZAwouRkzYy4T7p1/rlCbx1RBQZpdMzkxg3t
+         f0EYas/F70aio//HGbcn9ZQOi/wSU3xWEH0ua0geLw4ZAAGeVIsQia0/EBA4GgZHaEbG
+         qf9OaZdduAxCwwTJkd/66w0DPXLCvb5IYYtusIUHHItHAftGguppP9fGGlth8acR7YzB
+         oJfTQ3oNcbIglwzxOe2taqTRyMrRrg77u6hDEHxqUQ2sqvwUpFt4A+PV7/thBtIxnvvN
+         yzjWk6OKPL0rBHJh8pe829o2Guf93W2iXsv+3RT8QGT5bkYMhx7uUwnK5vuqAacjxW+4
+         sPQQ==
+X-Gm-Message-State: APjAAAWvut2B6ARRw1kdOuVvC5fwjnm2HUGQQN7CoxOpcv4UfXuEApgf
+        qqMn6WvYrW6cQXiMIq202vStiQ==
+X-Google-Smtp-Source: APXvYqxAcifL+uJ3VTiKJ9L4slkNmfdnhyV8yHCCr1J+RTp+kjs+IMKBTYULivlRmVc/oQVYPlpR9Q==
+X-Received: by 2002:a37:d85:: with SMTP id 127mr26347746qkn.139.1553644557505;
+        Tue, 26 Mar 2019 16:55:57 -0700 (PDT)
+Received: from ?IPv6:2601:602:9800:dae6::fa4a? ([2601:602:9800:dae6::fa4a])
+        by smtp.gmail.com with ESMTPSA id s43sm10686593qth.47.2019.03.26.16.55.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 16:55:56 -0700 (PDT)
+Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
+ debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org
+References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
+Date:   Tue, 26 Mar 2019 16:55:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8432d8b9743e2b4b6a7195329c808af3@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190122152151.16139-24-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:00:31PM +0530, c-hbandi@codeaurora.org wrote:
-> Hi Matthias,
-> 
->  On 2019-03-15 00:26, Matthias Kaehlcke wrote:
-> > Hi Harish,
-> > 
-> > On Wed, Mar 13, 2019 at 12:00:06PM +0530, c-hbandi@codeaurora.org wrote:
-> > > Hi Matthias,
-> > > 
-> > > 
-> > > On 2019-03-12 22:29, Matthias Kaehlcke wrote:
-> > > > +DT folks
-> > > >
-> > > > Please add them in future versions (script/scripts/get_maintainer.pl
-> > > > <patches> should have listed them)
-> > > 
-> > > [Harish] -- Will add them in new version of patches.
-> > > >
-> > > > On Tue, Mar 12, 2019 at 05:52:59PM +0530, Harish Bandi wrote:
-> > > > > This patch enables regulators for the Qualcomm Bluetooth wcn3998
-> > > > > controller.
-> > > >
-> > > > No, it doesn't.
-> > > >
-> > > > The next version should probably say something like "Add compatible
-> > > > string for the Qualcomm WCN3998 Bluetooth controller.
-> > > >
-> > > [Harish] -- From new patch onwards will add all patch
-> > > version changes and add proper description.
-> > > 
-> > > > Is there any particular reason why QCA drivers folks use 'wcn' instead
-> > > > of 'WCN'? The QCA documentations calls it WCN399x, so I'd suggest to
-> > > > consistently use the uppercase name in comments and documentation (and
-> > > > log messages?).
-> > > >
-> > > [Harish] -- I think in DT we need to have small case like wcn,
-> > 
-> > agreed
-> > 
-> > > i think that is the reason it started using in code, comments and dt
-> > > documentation.
-> > 
-> > AFAIK there are no hard rules for everything, my suggestion would be:
-> > 
-> > - use WCN399x
-> >   - for general comments/documentation
-> >   - commit messages
-> >   - in DT context wcn3998-n seems ok
-> > - use wcn399x
-> >   - for function and variable names
-> >   - for compatible strings
-> > 
-> > For logging: whatever, just be consistent.
-> 
->  [Harish] --For Commit messages and all will try to follow change it new
-> patch
-> 
-> > 
-> > > > > Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> > > > > ---
-> > > > > changes in v3:
-> > > > > - updated to latest code base.
-> > > >
-> > > > This comment is useless, please describe what changed wrt the previous
-> > > > version.
-> > > [Harish] --  added details in v2, and v3 uploaded just to rebase on
-> > > tip of
-> > > bluetooth-next
-> > > for better understanding of code in review. From new patch onwards
-> > > will add
-> > > all patch
-> > > version changes and add proper description.
-> > > >
-> > > > > ---
-> > > > >  .../devicetree/bindings/net/qualcomm-bluetooth.txt        | 15
-> > > > > +++++++++++++++
-> > > > >  1 file changed, 15 insertions(+)
-> > > > >
-> > > > > diff --git
-> > > > > a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > > > > b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > > > > index 824c0e2..1221535 100644
-> > > > > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > > > > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> > > > > @@ -53,3 +53,18 @@ serial@898000 {
-> > > > >  		max-speed = <3200000>;
-> > > > >  	};
-> > > > >  };
-> > > > > +
-> > > > > +&blsp1_uart3 {
-> > > > > +	pinctrl-names = "default";
-> > > > > +	pinctrl-0 = <&blsp1_uart3_default>;
-> > > > > +	status = "okay";
-> > > > > +
-> > > > > +	bluetooth: wcn3998-bt {
-> > > > > +		compatible = "qcom,wcn3998-bt";
-> > > > > +		vddio-supply = <&vreg_l6_1p8>;
-> > > > > +		vddxo-supply = <&vreg_l5_1p8>;
-> > > > > +		vddrf-supply = <&vreg_s5_1p35>;
-> > > > > +		vddch0-supply = <&vdd_ch0_3p3>;
-> > > > > +		max-speed = <3200000>;
-> > > > > +	};
-> > > > > +};
-> > > > > \ No newline at end of file
-> > > >
-> > > > I think the example isn't really needed since it's essentially the
-> > > > same as the one for 'qcom,wcn3990-bt'.
-> > > >
-> > > > But the important part is missing: add the new compatible string under
-> > > > ´Required properties´. You also want to update the documentation that
-> > > > mentiones 'qcom,wcn3990-bt' to 'qcom,wcn399x-bt' (assuming for now
-> > > > that other possible WCN399x chips would be similar).
-> > > >
-> > > [Harish] -- Will check the DT properties, documentation and update
-> > > accordingly in new patch.
-> > > 
-> > > > You mentioned in an earlier version of the series that there are
-> > > > multiple WCN3998 variants with different requirements for
-> > > > voltage/current. This seems to suggests that multiple compatible
-> > > > strings are needed to distinguish between them.
-> > > >
-> > > [Harish] -- for now we want to add WCN3998 support only, What i mean
-> > > to say
-> > > in my earlier
-> > > explanation that. WCN3990 is base variant and on top of that we have
-> > > variants like WCN3990,
-> > > WCN3998 and WCN3998-0,WCN3998-1 like that..
-> > > So I think wcn399x would make sense for this series.
-> > 
-> > If the variants have relevant differences between them (like different
-> > regulator requirements) I think you want unique names, rather than
-> > 'wcn399x' (I was referring to comments/documentation with this
-> > string).
-> > 
-> > If there are variants wouldn't your first 'wcn3998' already be a
-> > 'wcn3998-n'? If 'wcn3998' without suffix is used I think it needs to
-> > be valid for all 'wcn3998-n' variants (it might be less
-> > power-efficient though than using the variant specific compatible
-> > string), otherwise things get confusing (a 'wcn3998-2' isn't a
-> > 'wcn3998'?)
-> > 
-> 
-> 
->  [Harish] -- for now WCN3990 and WCN3998 only, also wcn3998-2 and wcn3998
-> are same.
-> So for now we are going to have only WCN3990 and WCN3998 for DT.
+On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> index 33b0af24a537..c52cdc538678 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
+>   #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
+>   	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
+>   #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
+> -		if (!debugfs_create_file(#name, mode, parent, vif,	\
+> -					 &iwl_dbgfs_##name##_ops))	\
+> -			goto err;					\
+> +		debugfs_create_file(#name, mode, parent, vif,		\
+> +				    &iwl_dbgfs_##name##_ops);		\
+>   	} while (0)
+>   
+>   MVM_DEBUGFS_READ_FILE_OPS(mac_params);
+> @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+>   
+>   	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
+>   
+> -	if (!mvmvif->dbgfs_dir) {
+> -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
+> -			dbgfs_dir);
+> -		return;
+> -	}
+> -
+>   	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
+>   	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
+>   	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
+> @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+>   
+>   	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
+>   						     mvm->debugfs_dir, buf);
+> -	if (!mvmvif->dbgfs_slink)
+> -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
+> -			dbgfs_dir);
+> -	return;
+> -err:
+> -	IWL_ERR(mvm, "Can't create debugfs entity\n");
+>   }
+>   
 
-Since you brought up the different power requirements initially:
+Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
+of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
+("debugfs: return error values, not NULL") because the error checking is
+no longer correct in this driver.
 
-are your reasonably sure that future wcn3998-3, wcn3998-4, ... can
-operate with the generic wcn3998 power settings?
+Based on https://patchwork.kernel.org/patch/10865839/, it looks like
+this is supposed to go in for 5.2 but this needs to go in now as
+the error checking is currently broken without it. Can this get queued
+for Linus so we can get it in 5.0 stable?
+
+Thanks,
+Laura
