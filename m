@@ -2,141 +2,135 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E594C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04E2C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074EC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883FB2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfCZMbi (ORCPT
+        id S1731522AbfCZMbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:31:38 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35502 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfCZMbi (ORCPT
+        Tue, 26 Mar 2019 08:31:49 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:47089 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfCZMbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:31:38 -0400
-Received: by mail-vs1-f65.google.com with SMTP id e1so7497138vsp.2;
-        Tue, 26 Mar 2019 05:31:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Og7vdbY8Zlxbz+OaNnaaLhysuvTuuNBMaupoXTYuY/A=;
-        b=nkLxY5iylbXqm46nUJReFrUzIWPpwqB+PCO4bTB4ZZ9GDxcoiI94kPe4NRN3dCR4+A
-         Dywyvce54WqMbxp+k/zcA9QDYe9e1GAHze5q3CdiBDqQife6qpBFuVfni4KGEAvwOzTd
-         +MHjI2bUurZ3H9QeKjSIVponLb04CUkkSirHL2E8p8tswxuAJGRTGerLtXfdYB03rWsp
-         XpuIVzXIODNwRGlZe1Ge+bVB8Ac729nhchIuRiN/NtPOKZ/l9bD2sejmWW3t8oExqXeG
-         ywrM9WHSr6/q6lByd3RRDUxtfB/d0gLvTR1lyVrgSh+TVczyu0YD8KEkGSTXkgOqu2B7
-         Ot7g==
-X-Gm-Message-State: APjAAAVcuGS1BVCJ/KE9XkH/HtXu8DQCGZirJ4W7xhnszOllMgyNgcNf
-        FVhYbT30GvcEYRRuIjRHCmiu3gsCHRmbdhLhZ/Q=
-X-Google-Smtp-Source: APXvYqwQWvs/2oJLyylBiJvkDb0StrAwTuDYnxz0QPtx4fYTYIAonMQsBKYzQv5EJPPyOO7VaaUbwOYcOoI5ndWJ8ac=
-X-Received: by 2002:a67:f843:: with SMTP id b3mr18270214vsp.152.1553603496656;
- Tue, 26 Mar 2019 05:31:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190207193653.18221-1-geert+renesas@glider.be> <9966a420-b081-a8ed-7f7b-20d97c9f7996@huawei.com>
-In-Reply-To: <9966a420-b081-a8ed-7f7b-20d97c9f7996@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
+        Tue, 26 Mar 2019 08:31:49 -0400
+Received: from localhost ([89.247.163.190]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MUGNZ-1hYz6N1XzX-00RGvz; Tue, 26 Mar 2019 13:31:24 +0100
 Date:   Tue, 26 Mar 2019 13:31:23 +0100
-Message-ID: <CAMuHMdUTkPoCoL7jRz2MRRSjLVSrzE4kPx2uMKCKMGfmVayT6A@mail.gmail.com>
-Subject: Re: [PATCH/RFC] driver core: Postpone DMA tear-down until after
- devres release
-To:     John Garry <john.garry@huawei.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] devantech-srf04.yaml: transform DT binding to YAML
+Message-ID: <20190326123121.ibe3olu3yxptauws@arbad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:+aNG149jcbuYqmoS1FcLb4ZqRan3eMznzWnK+1xbjVnQccBcCpy
+ 8hF005ooTX6Ef/p/vTc/fOvkeH9Q+5Cj9nMz3Bh3fLMu7h91y/5hyrIn8okUw2NH8a6lVl4
+ SJFE5FlwxIchHudxoLFNOAz2J69eO7jExxqz92IUvNW38y74/gzQhvQ/qivG/WUo4RQGzFn
+ DRiClsGtkLNfLMOyqyhzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EigqP6sLmBA=:OhNTIzeDTbtnEYfHMbs0jN
+ xydQ88sm0J1DiEzN1uyUgy7HhTqlcJuy/YRmPxFUiiCYkZ6izdFShquX44lDOMZTgCPhKk9Dl
+ tp6wUM5J8UaaHovbO+M0VJw9/UmxRijoUgD+mWKUai4q4k2qLaW4NMCpJDBOYnWJC5CeyXsq/
+ gMDE+cKOcjENznewVNkAe4uqd3Ux4Tr7pAvR5UftSAnrHeoBiZpyG8NBvwbP9fy0MgmTn5FtC
+ +eRmAiBF70uAK9Kn77emh+R7xGtk5lQa8E2U7ghYYa+Y4+EvI+sMqr93UPToQV1zW7d018hhk
+ 3Hw7SasPowA+F44gQU9DWHp2Ye/hKeNLpBZWRolL3EEGiuLGGeM2+HWY80S5NQdo4GABMD0i0
+ fqKj9iMQGy7kyWor+5PP5gU462ZriN98vZodEL1I7pbIB5OhHMOcaLDf6WlA18mXiK6fWqJ8X
+ M6gHb1rZcnMeVCihdDJmQc7bCqoaE1p0Du/69f1SAjRIslZ14r44KpueKFlOf0bKzBEZzcu/6
+ v274TyIDPwnHYVUOTldGWu4UGB9EVeZ/Qo5J9vwJ4Vv937KOB4Iy75tMdjg0rugFc1UZykUcN
+ ncOyjjMvznEBtUZ3ghA0fQ6yKmaekwL+Sde8YPlpJCfmu+xcBJtB5Unsh3Sxiuzjw50Wxz4ei
+ GBDBgFEYPD9skogGJ7P60gQbRIJgRvJdGwL4biMA61R/d1b8iO7hSTAbfIyiyd3KSGkT0S1Xg
+ P0cROKmmtv78PpbPX08nkRHhrONgEIPY20ehDA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+use devantech-srf04.txt and transform binding into yaml
 
-CC robh
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../bindings/iio/proximity/devantech-srf04.yaml    | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
 
-On Tue, Mar 26, 2019 at 12:42 PM John Garry <john.garry@huawei.com> wrote:
-> > Memory is incorrectly freed using the direct ops, as dma_map_ops = NULL.
-> > Oops...
-> >
-> > After reversing the order of the calls to arch_teardown_dma_ops() and
-> > devres_release_all(), dma_map_ops is still valid, and the DMA memory is
-> > now released using __iommu_free_attrs():
-> >
-> >     +sata_rcar ee300000.sata: dmam_release:32: size 2048 vaddr ffffff8012145000 dma_handle 0x0x00000000fffff000 attrs 0x0
-> >     +sata_rcar ee300000.sata: dma_free_attrs:289: size 2048, ops = iommu_dma_ops
-> >     +sata_rcar ee300000.sata: dma_free_attrs:311: calling __iommu_free_attrs()
-> > ---
-> >  drivers/base/dd.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > index 8ac10af17c0043a3..d62487d024559620 100644
-> > --- a/drivers/base/dd.c
-> > +++ b/drivers/base/dd.c
-> > @@ -968,9 +968,9 @@ static void __device_release_driver(struct device *dev, struct device *parent)
-> >                       drv->remove(dev);
-> >
-> >               device_links_driver_cleanup(dev);
-> > -             arch_teardown_dma_ops(dev);
-> >
-> >               devres_release_all(dev);
-> > +             arch_teardown_dma_ops(dev);
-> >               dev->driver = NULL;
->
-> Hi guys,
->
-> Could there still be the same problem in the error path of really_probe():
->
-> static int really_probe(struct device *dev, struct device_driver *drv)
-> {
->
->         [...]
->
->         goto done;
->
-> probe_failed:
->         arch_teardown_dma_ops(dev);
-> dma_failed:
->         if (dev->bus)
->                 blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->                                      BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
-> pinctrl_bind_failed:
->         device_links_no_driver(dev);
->         devres_release_all(dev);
->         driver_sysfs_remove(dev);
->         dev->driver = NULL;
->         dev_set_drvdata(dev, NULL);
->
-> We seem to be able to call arch_teardown_dma_ops() prior to
-> devres_release_all() if we reach probe_failed label.
-
-Yes, this looks like another instance of the same problem.
-And test_remove doesn't expose this, as it doesn't exercise the full cycle.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+new file mode 100644
+index 000000000000..cd065393b062
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/devantech-srf04.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Devantech SRF04 ultrasonic range finder
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  Bit-banging driver using two GPIOs:
++  - trigger-gpio is raised by the driver to start sending out an ultrasonic
++    burst
++  - echo-gpio is held high by the sensor after sending ultrasonic burst
++    until it is received once again
++
++  Specifications about the driver can be found at:
++  http://www.robot-electronics.co.uk/htm/srf04tech.htm
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: devantech,srf04
++
++  trig-gpios:
++    description:
++      Definition of the GPIO for the triggering (output) This GPIO is set
++      for about 10 us by the driver to tell the device it should initiate
++      the measurement cycle.
++    maxItems: 1
++
++  echo-gpios:
++    description:
++      Definition of the GPIO for the echo (input)
++      This GPIO is set by the device as soon as an ultrasonic burst is sent
++      out and reset when the first echo is received.
++      Thus this GPIO is set while the ultrasonic waves are doing one round
++      trip.
++      It needs to be an GPIO which is able to deliver an interrupt because
++      the time between two interrupts is measured in the driver.
++      See Documentation/devicetree/bindings/gpio/gpio.txt for information
++      on how to specify a consumer gpio.
++    maxItems: 1
++
++required:
++  - compatible
++  - trig-gpios
++  - echo-gpios
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    proximity {
++        compatible = "devantech,srf04";
++        trig-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++        echo-gpios = <&gpio2  6 GPIO_ACTIVE_HIGH>;
++    };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.11.0
