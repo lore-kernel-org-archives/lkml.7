@@ -2,178 +2,123 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B03AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CD0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352852075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8732075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMSJTXlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbfCZUOI (ORCPT
+        id S1732639AbfCZUQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:14:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47302 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbfCZUOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:14:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5D3FDAAC4;
-        Tue, 26 Mar 2019 20:14:05 +0000 (UTC)
-Subject: Re: [PATCH v2 3/8] livepatch: Add klp-convert tool
-To:     Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
-        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
-        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-4-jmoreira@suse.de> <20190318192011.GA23157@redhat.com>
- <alpine.LSU.2.21.1903202021570.29796@pobox.suse.cz>
-From:   Joao Moreira <jmoreira@suse.de>
-Message-ID: <04f6c9c4-88c6-41b3-fbf8-2409b3822e0b@suse.de>
-Date:   Tue, 26 Mar 2019 17:13:57 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 16:16:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51572 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732073AbfCZUQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 16:16:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 4so14027445wmf.1;
+        Tue, 26 Mar 2019 13:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5zMrbv4HXLs7N/jpV0cgVroc3dOnsgGLlkvfpNHIpc=;
+        b=JMSJTXlHyb3jBKAw6tqBAykxqAANUMzeENoPXFppgja9eQRXIWUl50QH2/lGQsCSxl
+         L8OjvAacsFJVed4xsg8fjjClmCWrLbaJ1d+ABpTFTegi3Mv7F066ni+D1VyKzF7qW5lk
+         j4oDfaC33yQf1pvhJb/eQxvJE/z/dyGSmKVykxFXtPSzm32dRcVjKxs5Pzk0EtvaSokF
+         VPZn1tspRyBKcXQW1Hcm9WY6FhVlBcuV9Cj7HrrTjhYYdqrnNQtW6cUvsMCIamZa9AmT
+         wBEHh5SwHc9HlygfBH14ymA/HrKmjDBt/WyyPWjGLteeXtccEJ0cnmfeyYhySYk3dkIU
+         kP5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=b5zMrbv4HXLs7N/jpV0cgVroc3dOnsgGLlkvfpNHIpc=;
+        b=FRiqhbdlMzMwQ2DlnPPPyCdeyRh6keHjf/4wPsH1NhwVZxRn96ZAOkMHwRAcLnquir
+         OYfT88IaPCA2feOMgfNi4uLimrLZJnr5+J6vRPnfaSmAN5CoCLnc9XRkXOnAOZ8iv9zJ
+         k00kcy5xRe7zkM64LfjY8ynNufgp8K9WlEzFbQCY/f2/rxZhCZ+DHvGsARrIp2KGC5K+
+         F2r29zuOkgRkwT1MG7LQkSvVjtXJLFLk08KlRivDELMB7TotDOO7L79cRcIWA2BJA33C
+         kHBNL9LZOH2OoEgCHXu7+38bN3feonyAMFsb4NFiUtygbLr/CKNoIDCqIb2ZB2UHdhBd
+         E+dw==
+X-Gm-Message-State: APjAAAWp6wJB9ZjisDuV19v1uBQS6IXAockeUBxFspmoul9u5vLKvYIb
+        /6tHEEZn9rwxfdjqgM+X2V4=
+X-Google-Smtp-Source: APXvYqwT87oGi03VC4IjmKvAkWT7YBc+4rP8vQ3TZ+ni18h7fejbjVJSPRVV3HuY0SSxgwbvDsIoXA==
+X-Received: by 2002:a7b:c7d0:: with SMTP id z16mr16902969wmk.136.1553631368470;
+        Tue, 26 Mar 2019 13:16:08 -0700 (PDT)
+Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
+        by smtp.gmail.com with ESMTPSA id i17sm6890023wrs.44.2019.03.26.13.16.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 13:16:07 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 37F9C1142374; Tue, 26 Mar 2019 21:16:06 +0100 (CET)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     trivial@kernel.org, Mathieu Malaterre <malat@debian.org>,
+        Sarah Sharp <sarah.a.sharp@intel.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB/xHCI: Remove returned value 'status' since never used
+Date:   Tue, 26 Mar 2019 21:15:57 +0100
+Message-Id: <20190326201557.20388-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.1903202021570.29796@pobox.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The returned value in status has never been used since
+commit 4296c70a5ec3 ("USB/xHCI: Enable USB 3.0 hub remote wakeup.")
+So remove 'status' completely.
 
+Remove warning (W=1):
 
-On 3/20/19 4:36 PM, Miroslav Benes wrote:
->>> [ ... snip ... ]
->>> +
->>> +/* Checks if sympos is valid, otherwise prints valid sympos list */
->>> +static bool valid_sympos(struct sympos *sp)
->>> +{
->>> +	struct symbol_entry *e;
->>> +	int counter = 0;
->>> +
->>> +	list_for_each_entry(e, &symbols, list) {
->>> +		if ((strcmp(e->symbol_name, sp->symbol_name) == 0) &&
->>> +		    (strcmp(e->object_name, sp->object_name) == 0)) {
->>> +			if (counter == sp->pos)
->>> +				return true;
->>> +			counter++;
->>> +		}
->>> +	}
->>> +
->>> +	WARN("Provided KLP_SYMPOS does not match a symbol: %s.%s,%d",
->>> +			sp->object_name, sp->symbol_name, sp->pos);
->>> +	print_valid_module_relocs(sp->symbol_name);
->>> +
->>> +	return false;
->>> +}
->>
->> I believe there is an off-by-one error condition either here, or in
->> livepatch kernel core sympos disambiguator code (in which case, external
->> tools like kpatch-build would also need to be adjusted).
->>
->> The scenarios that I've observed using klp-convert and kpatch-build:
->>
->>    sympos == 0, uniquely named symbol
->>    sympos == 1, non-unique symbol name, first instance
->>    sympos == 2, non-unique symbol name, second instance
->>    ...
-> 
-> Yes, that is exactly how we defined it back then.
->   
->> When I built a klp-convert selftest, I made sure that the target module
->> contained multiple symbols of the same name across two .o files.
->> However, when I tried to use a KLP_MODULE_RELOC annotation in the
->> livepatch to resolve to the second (ie, last) symbol, using a sympos=2,
->> klp-convert kept telling me that the only valid KLP_SYMPOS were 0 and 1.
->>
->> The following code adjusts klp-convert to match the sympos logic, as I
->> understand it in livepatch/core.c and kpatch-build;
->>
->>    [squash] livepatch/klp-convert: fix klp-convert off-by-one sympos
->>    https://github.com/torvalds/linux/commit/1ed8e5baa98f7920bbbaa562278b3ed44552e01f
->>
->> This change also adds a check that sympos == 0 is in fact a uniquely
->> named symbol.
-> 
+  drivers/usb/core/hub.c:3671:8: warning: variable 'status' set but not used [-Wunused-but-set-variable]
 
-Nice catch, thanks for it. All looks good to me.
+Cc: Sarah Sharp <sarah.a.sharp@intel.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ drivers/usb/core/hub.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-> Looks good to me. Maybe we can even make it simpler and use similar
-> approach as in klp_find_callback() and klp_find_object_symbol() from
-> kernel/livepatch/core.c. On the other hand, given that we want to print
-> useful output in all cases, the code might happen to be more complicated
-> and definitely ugly.
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 8d4631c81b9f..15a2934dc29d 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3668,7 +3668,6 @@ static int hub_suspend(struct usb_interface *intf, pm_message_t msg)
+ 	struct usb_hub		*hub = usb_get_intfdata(intf);
+ 	struct usb_device	*hdev = hub->hdev;
+ 	unsigned		port1;
+-	int			status;
+ 
+ 	/*
+ 	 * Warn if children aren't already suspended.
+@@ -3702,12 +3701,12 @@ static int hub_suspend(struct usb_interface *intf, pm_message_t msg)
+ 	if (hub_is_superspeed(hdev) && hdev->do_remote_wakeup) {
+ 		/* Enable hub to send remote wakeup for all ports. */
+ 		for (port1 = 1; port1 <= hdev->maxchild; port1++) {
+-			status = set_port_feature(hdev,
+-					port1 |
+-					USB_PORT_FEAT_REMOTE_WAKE_CONNECT |
+-					USB_PORT_FEAT_REMOTE_WAKE_DISCONNECT |
+-					USB_PORT_FEAT_REMOTE_WAKE_OVER_CURRENT,
+-					USB_PORT_FEAT_REMOTE_WAKE_MASK);
++			set_port_feature(hdev,
++					 port1 |
++					 USB_PORT_FEAT_REMOTE_WAKE_CONNECT |
++					 USB_PORT_FEAT_REMOTE_WAKE_DISCONNECT |
++					 USB_PORT_FEAT_REMOTE_WAKE_OVER_CURRENT,
++					 USB_PORT_FEAT_REMOTE_WAKE_MASK);
+ 		}
+ 	}
+ 
+-- 
+2.20.1
 
-I don't have an opinion here.
-
->   
->>> [ ... snip ... ]
->>> +
->>> +int main(int argc, const char **argv)
->>> +{
->>> +	const char *klp_in_module, *klp_out_module, *symbols_list;
->>> +	struct rela *rela, *tmprela;
->>> +	struct section *sec, *aux;
->>> +	struct sympos sp;
->>> +	struct elf *klp_elf;
->>> +
->>> +	if (argc != 4) {
->>> +		WARN("Usage: %s <Symbols.list> <input.ko> <out.ko>", argv[0]);
->>> +		return -1;
->>> +	}
->>> +
->>> +	symbols_list = argv[1];
->>> +	klp_in_module = argv[2];
->>> +	klp_out_module = argv[3];
->>> +
->>> +	klp_elf = elf_open(klp_in_module);
->>> +	if (!klp_elf) {
->>> +		WARN("Unable to read elf file %s\n", klp_in_module);
->>> +		return -1;
->>> +	}
->>> +
->>> +	if (!load_syms_lists(symbols_list))
->>> +		return -1;
->>> +
->>> +	if (!load_usr_symbols(klp_elf)) {
->>> +		WARN("Unable to load user-provided sympos");
->>> +		return -1;
->>> +	}
->>> +
->>> +	list_for_each_entry_safe(sec, aux, &klp_elf->sections, list) {
->>> +		if (!is_rela_section(sec))
->>> +			continue;
->>> +
->>> +		list_for_each_entry_safe(rela, tmprela, &sec->relas, list) {
->>> +			if (!must_convert(rela->sym))
->>> +				continue;
->>> +
->>> +			if (!find_missing_position(rela->sym, &sp)) {
->>> +				WARN("Unable to find missing symbol");
->>
->> A really minor suggestion, but I found it useful to tell the user
->> exactly which symbol was missing:
->>
->>    [squash] livepatch/klp-convert: add missing symbol name to warning
->>    https://github.com/torvalds/linux/commit/7a41a8f3d9b9e11f0c75914cb925af1486c1ecc6
-> 
-> I think that Joao has exactly the same hunk staged somewhere
-> already. You are right. The message is not much informative.
-> 
-
-Yes, someone had the same idea for the klp-convert which we use inside 
-SUSE. But it did not make it to this patch-set.
-
-Nice that Joe added it here :)
-
-> Miroslav
-> 
