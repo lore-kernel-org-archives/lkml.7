@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A549C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3432E2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E982075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582716;
-	bh=VstsvJcbcdU3lgJYevQpBSglKejVU/kbbiQqxF+3JEY=;
+	s=default; t=1553582735;
+	bh=dTe/+VBP+uK9EEcRhTpGkpbX1XfnOqLR8cqikRR8xXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzbW65yeMAoHmbNBQFQHdBH8oBWX94OVXRCTuFPV0FmddHYtJf4+GdUqd4c6l2Muo
-	 7bCM4s2xfk+yi4XvbsXojBFzDKTmopGidJfsSU8b4Gm9IVSjv1ZilYxybU5c8f4ePQ
-	 H3wubQv+hoenmWOjZPWOvxM3B21DQ9ITX/DnVnXo=
+	b=ItD+wfD16+TfuyCZgWbg0R/jJs+Qnq/f+WfxLmDsXR3Ju1PT6miQ+bTYHDKV5BRyb
+	 2ZI6dapUDHl3XK6AiEL/jz18dVILkOCMe/NapXhchC5eFYa8CJMLex52MaJOnGp/wt
+	 azYMt3S3ptI+GaTgnI1SAo2B/yR1hRrFkICprxJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731931AbfCZGeo (ORCPT
+        id S1731433AbfCZGe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731909AbfCZGel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:34:41 -0400
+        id S1731441AbfCZGeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:34:23 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8012070B;
-        Tue, 26 Mar 2019 06:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C8F2206C0;
+        Tue, 26 Mar 2019 06:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582080;
-        bh=VstsvJcbcdU3lgJYevQpBSglKejVU/kbbiQqxF+3JEY=;
+        s=default; t=1553582062;
+        bh=dTe/+VBP+uK9EEcRhTpGkpbX1XfnOqLR8cqikRR8xXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AeFOv3k6VfqM7IDt3qdm0q+Moeh7MXIVgbMpryam/9oC6i5/kUCnYct4Vga7tBprd
-         gPDM0MLzQWmgSEk6fZCUoicqef08g1RJ3LOv03ppoKPEoO3d1zM8zwd6+uMGG6SpUN
-         z8rb1yKGmrJVbQBY8b6uPn4EfhFBVorpLfOW7kS8=
+        b=hrOiTSOQloz4IaYoiKPSiNbCXoi2WVSDiVBELDEovXbtqff19sDYMci3o5acdvWD4
+         Ha+M1UJNjsSrv8vryLBZxaA5LKTiDr/aE8hVGxhRBigGblrWdPQM6FaY0DvdEb5NHB
+         qwZ51w3q22frTsk51IvGTHkiGrQLvWSYgu/O59EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com,
-        Jeremy Cline <jcline@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 21/41] Bluetooth: hci_ldisc: Initialize hci_dev before open()
-Date:   Tue, 26 Mar 2019 15:29:58 +0900
-Message-Id: <20190326042651.056332063@linuxfoundation.org>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joao Pinto <jpinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 34/41] PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+Date:   Tue, 26 Mar 2019 15:30:11 +0900
+Message-Id: <20190326042651.750249866@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -66,95 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 upstream.
+commit 099a95f3591ade29da52131895a3ba9f92a0e82c upstream.
 
-The hci_dev struct hdev is referenced in work queues and timers started
-by open() in some protocols. This creates a race between the
-initialization function and the work or timer which can result hdev
-being dereferenced while it is still null.
+Previously, dw_pcie_ep_set_msi() wrote all bits in the Message Control
+register, thus overwriting the PCI_MSI_FLAGS_64BIT bit.
+By clearing the PCI_MSI_FLAGS_64BIT bit, we break MSI
+on systems where the RC has set a 64 bit MSI address.
+Fix dw_pcie_ep_set_msi() so that it only sets MMC bits.
 
-The syzbot report contains a reliable reproducer which causes a null
-pointer dereference of hdev in hci_uart_write_work() by making the
-memory allocation for hdev fail.
-
-To fix this, ensure hdev is valid from before calling a protocol's
-open() until after calling a protocol's close().
-
-Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Tested-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Joao Pinto <jpinto@synopsys.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/hci_ldisc.c |   21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ drivers/pci/dwc/pcie-designware-ep.c |    4 +++-
+ drivers/pci/dwc/pcie-designware.h    |    1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -207,11 +207,11 @@ static void hci_uart_init_work(struct wo
- 	err = hci_register_dev(hu->hdev);
- 	if (err < 0) {
- 		BT_ERR("Can't register HCI device");
-+		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-+		hu->proto->close(hu);
- 		hdev = hu->hdev;
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
--		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		hu->proto->close(hu);
- 		return;
- 	}
+--- a/drivers/pci/dwc/pcie-designware-ep.c
++++ b/drivers/pci/dwc/pcie-designware-ep.c
+@@ -214,7 +214,9 @@ static int dw_pcie_ep_set_msi(struct pci
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
  
-@@ -612,6 +612,7 @@ static void hci_uart_tty_receive(struct
- static int hci_uart_register_dev(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev;
-+	int err;
+-	val = (encode_int << MSI_CAP_MMC_SHIFT);
++	val = dw_pcie_readw_dbi(pci, MSI_MESSAGE_CONTROL);
++	val &= ~MSI_CAP_MMC_MASK;
++	val |= (encode_int << MSI_CAP_MMC_SHIFT) & MSI_CAP_MMC_MASK;
+ 	dw_pcie_writew_dbi(pci, MSI_MESSAGE_CONTROL, val);
  
- 	BT_DBG("");
+ 	return 0;
+--- a/drivers/pci/dwc/pcie-designware.h
++++ b/drivers/pci/dwc/pcie-designware.h
+@@ -99,6 +99,7 @@
  
-@@ -655,11 +656,22 @@ static int hci_uart_register_dev(struct
- 	else
- 		hdev->dev_type = HCI_PRIMARY;
- 
-+	/* Only call open() for the protocol after hdev is fully initialized as
-+	 * open() (or a timer/workqueue it starts) may attempt to reference it.
-+	 */
-+	err = hu->proto->open(hu);
-+	if (err) {
-+		hu->hdev = NULL;
-+		hci_free_dev(hdev);
-+		return err;
-+	}
-+
- 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
- 		return 0;
- 
- 	if (hci_register_dev(hdev) < 0) {
- 		BT_ERR("Can't register HCI device");
-+		hu->proto->close(hu);
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
- 		return -ENODEV;
-@@ -679,17 +691,12 @@ static int hci_uart_set_proto(struct hci
- 	if (!p)
- 		return -EPROTONOSUPPORT;
- 
--	err = p->open(hu);
--	if (err)
--		return err;
--
- 	hu->proto = p;
- 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
- 
- 	err = hci_uart_register_dev(hu);
- 	if (err) {
- 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		p->close(hu);
- 		return err;
- 	}
- 
+ #define MSI_MESSAGE_CONTROL		0x52
+ #define MSI_CAP_MMC_SHIFT		1
++#define MSI_CAP_MMC_MASK		(7 << MSI_CAP_MMC_SHIFT)
+ #define MSI_CAP_MME_SHIFT		4
+ #define MSI_CAP_MSI_EN_MASK		0x1
+ #define MSI_CAP_MME_MASK		(7 << MSI_CAP_MME_SHIFT)
 
 
