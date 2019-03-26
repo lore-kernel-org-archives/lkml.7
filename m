@@ -2,134 +2,95 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D8FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDEEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9605D20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2C620823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbyMewBK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xYnu1uSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbfCZCZM (ORCPT
+        id S1731077AbfCZCZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:25:12 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:40870 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730804AbfCZCZM (ORCPT
+        Mon, 25 Mar 2019 22:25:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54564 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730273AbfCZCZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:25:12 -0400
-Received: by mail-it1-f194.google.com with SMTP id y63so5799225itb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 19:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+lpTzd61Ax5/mB2IyxlIUFZrkafBLmUOKIKk5Je97zg=;
-        b=MbyMewBKqK1adISImbT1DMBVVqmNi5VBmdrx2ndflkS59kPKKVOPpeR2qzZ2J3jwOt
-         A4rpLbqNZy/P0inIb6YdJV+y/9vpKukoJxLMYLmDne/lpEyTsUDDMt0V9O1nzP2wX3pV
-         VMiSW2NChnIYaSaIjEFSS8ftMvk3HQcaRS2iJv54eEX8YVOwjrPdHfFskYNgsAVTAa+3
-         eBmX3lKxX4mjMQk1tuEqWSLbYX/n97PN8DWbBPPxf02ZvtCgrtRPomFcN6qUiRnlFTQ4
-         LHXwLtkVja3U7OB2szdvJJndt3lM98bCW8ZZ9iYjxLvVBFP0WJT+ZHhcGg/f1otSC9zD
-         k/QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+lpTzd61Ax5/mB2IyxlIUFZrkafBLmUOKIKk5Je97zg=;
-        b=Kg8Hc+uM/GLeY8xMp7lIT5ktGpCTqQ2PDFEZ0wcx0iwdi9Rg3CGifkOGvJgq0ihx6x
-         2NlxFCtIftwTq/hVcPAmrocFdPGvY5naBpc+nQUbnnrIivLm1w+zlE73kIzTI/Wv4V79
-         jLuUW+bRPkI/rLprudkhcz1kKwKOv+HHtrls5YUpYCuKcD1foHi5lHw/Z0q1FGfFFLDx
-         3Vs2pfC7c8yLY4xBHf8rjBiNiHhq2CHF89IM3b33/HL83UjLUZ4Tp8SKUm3HSw3fFzzo
-         pw8wGlWZAfVoy0k9pLwKTiFg+lb0yodJO9PJzz37PgWFrBnd6/41Yg3UDU4nHOUokmWn
-         mCdw==
-X-Gm-Message-State: APjAAAUFgk5WymsvGCC2Zq1uSRjnUDjx6dDWXMrh0+4bbZCwRovEgKPv
-        Al4w16wX57p4lW+fpa4fPvAM/7bwY6cIcjaS99Y=
-X-Google-Smtp-Source: APXvYqx31xlaSTqmu85qyLljhHwUrbablpKSCxlv1XXinPqPMNoUf3FUU7D5Epx4gSaOqDLX0pzSjuhnuLrh74RZiGk=
-X-Received: by 2002:a05:660c:606:: with SMTP id i6mr1580260itk.154.1553567111385;
- Mon, 25 Mar 2019 19:25:11 -0700 (PDT)
+        Mon, 25 Mar 2019 22:25:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q2Ea0Q070654;
+        Tue, 26 Mar 2019 02:23:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=qtJc4bBB/NvNu/ixyGKJVHvgBt+AIiWPQfvS/jXStcw=;
+ b=xYnu1uSpv39AErf7rZYY7xTS1WqW+l8AV25FqQYDMxxWGD0gpLbtQZ0A7CSVonJdgRKC
+ CawPholmMzhnSMSMU8TDMc728XXc/ewRDVLQ2Trm6QKBMc6RTM/nHvhif4IEPcmChSZX
+ 4CYb/Z4rSyI10OXSGUCUp2UOMYXAVpChP40QtLLCFU93POUtZrJ/JGyDY8YiBcyuV75R
+ 6FaW3GcpDtayf+tUVCtiNkoaPU8xIPlt4Qi5W45C+XxnQmd7s9cQwCynM/Os5z/QxQ2K
+ qOTpxRrfgtr4rD1zu1KsZujjyx47CKy5cZBLInaTatIlgiIDx31kZdNanceqvKJFtj51 OQ== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2re6dj7ndk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:23:21 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2NKDx025409
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 02:23:20 GMT
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2Q2NJoG031885;
+        Tue, 26 Mar 2019 02:23:19 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 19:23:19 -0700
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Achim Leubner <achim_leubner@adaptec.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] scsi: gdth: Only call dma_free_coherent when buf is not NULL in ioc_general
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190307231839.3330-1-natechancellor@gmail.com>
+Date:   Mon, 25 Mar 2019 22:23:16 -0400
+In-Reply-To: <20190307231839.3330-1-natechancellor@gmail.com> (Nathan
+        Chancellor's message of "Thu, 7 Mar 2019 16:18:39 -0700")
+Message-ID: <yq1h8bqz84r.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1553564407-1162-1-git-send-email-laoar.shao@gmail.com> <20190325221745.1009cbdf@oasis.local.home>
-In-Reply-To: <20190325221745.1009cbdf@oasis.local.home>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 26 Mar 2019 10:24:35 +0800
-Message-ID: <CALOAHbAUaRVCL_z2Kq45r-iwRqo5OwGMoEHrDJPj1fJsXbH6iA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] tracing: introduce TRACE_EVENT_NONE and use it
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mingo@redhat.com, Peter Zijlstra <peterz@infradead.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        josh@joshtriplett.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        jiangshanlai@gmail.com, joel@joelfernandes.org,
-        shaoyafang@didiglobal.com, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=836 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:17 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Tue, 26 Mar 2019 09:40:04 +0800
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> > In this patchset, I introduce a new macro TRACE_EVENT_NONE(), which will
-> > define a tracepoint as a do-nothing inline function.
-> >       #define TRACE_EVENT_NONE(name, proto)                   \
-> >               static inline void trace_##name(proto)          \
-> >               { }                                             \
-> >               static inline bool trace_##name##_enabled(void) \
-> >               {                                               \
-> >                       return false;                           \
-> >               }
-> >
->
-> BTW, I prefer a name of TRACE_EVENT_DISABLED()
->
-> Which shows that it is disabled, or TRACE_EVENT_UNDEF(), or
-> TRACE_EVENT_NOP(). Something that states it is turned off. When I first
-> saw NONE() I thought it was another attempt to introduce zero parameter
-> trace events.
->
 
-I prefer TRACE_EVENT_NOP.
-I will change it.
+Nathan,
 
-Thanks
-Yafang
+> When building with -Wsometimes-uninitialized, Clang warns:
+>
+> drivers/scsi/gdth.c:3662:6: warning: variable 'paddr' is used
+> uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>
+> Don't attempt to call dma_free_coherent when buf is NULL (meaning that
+> we never called dma_alloc_coherent and initialized paddr), which avoids
+> this warning.
 
->
-> > Let's take some example for why this macro is needed.
-> >
-> > - sched
-> > The tracepoints trace_sched_stat_{iowait, blocked, wait, sleep} should
-> > be not exposed to user if CONFIG_SCHEDSTATS is not set.
-> > We can place #ifdef in the kernel/sched/fair.c to fix it, but we
-> > don't want to sprinkle #ifdef.
->
-> But you still sprinkle #ifdef in the header, but the part I don't like
-> is the need to duplicate the prototypes and the like.
->
->
-> > So with TRACE_EVENT_NONE(), we can fix it in
-> > include/trace/events/sched.h.
-> >
-> > - rcu
-> > When CONFIG_RCU_TRACE is not set, some rcu tracepoints are define as
-> > do-nothing macro without validating arguments, that is not proper.
-> > We should validate the arguments.
-> >
-> > Yafang Shao (3):
-> >   tracing: introduce TRACE_EVENT_NONE()
-> >   sched/fair: do not expose some tracepoints to user if
-> >     CONFIG_SCHEDSTATS is not set
-> >   rcu: validate arguments for rcu tracepoints
-> >
->
-> See my reply in the next patch.
->
-> -- Steve
+Applied to 5.2/scsi-queue, thanks.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
