@@ -2,88 +2,141 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79F9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66CB20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="GKN6TdnG"
+	by mail.kernel.org (Postfix) with ESMTP id 8C36F20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfCZKUl (ORCPT
+        id S1730422AbfCZKVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:20:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37826 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCZKUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:20:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so13636781wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 03:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oGDK3PbhKNJWW4lty9R1MVSikr2RPSdtx2bt/jj9n5c=;
-        b=GKN6TdnGEFVDK+EhCz92UnTLWLPDWnLzjzpWbd3Ytb07y1JBX43GSEnsRjHsTMUIL7
-         8DabvGAM2xqgqd/QI0pVg0lQcbRWPl2QHjJP90anVv0apkkOrHUwYtq7Zt+gM+2MwYZE
-         zj0F6jTQxbVwLkPQbzSG3W/X+ytb3u2ZS60KnTKP9MBagchF+61JYZRR0tlXESLejW1Y
-         4nX97a7m1PVyHmjaumUkzwyU3fZFyohMCHODsDM54w4rYYimEDKdlkkUAJkqEiB2nIzX
-         PqnFi0u07mDicHLTT+up5Cvarbe2zSEbt5vulyHVbTiAuE5NmX/MG+SaxX7095GMbU17
-         FgYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oGDK3PbhKNJWW4lty9R1MVSikr2RPSdtx2bt/jj9n5c=;
-        b=uNXLU9kFgRXm4FScm27a8gyrM+yzoki7TEypC5NV3fgXqF7G7wycmeZruYMNnQHA3H
-         Vkq9rjEDr1hQop2Z/OT0IyobD+Y8QiY7HP5djLAEfKj86TV7WuAQXPx2/uGmMqozq7Ad
-         zWfiPfMDBn6La1TGYtjW8yGDSJblPgL5d3XXAnLScieE1+sdy1r4Vx9ZVg7zgb2XY2uK
-         LMRGK3zFN8kBfRuMobDsibfD/mvoJ668MCmmxCi0KkCxHmMDpZjpc0FIeV1wlyGVFxC6
-         8R719O0DOK9u5FyKi1lmq8nH1yJbCMwSpfQcxQ8w5MoG8tG8ydddn1ByskwT/OFMqE93
-         H7pQ==
-X-Gm-Message-State: APjAAAUnb0u4/AU82xxO6kG/C0C/dDAXlQJp5gNF/Udy+WMoHY3G9NME
-        xtNtOLKlb0Q/FQbIZJURpjZGLQ==
-X-Google-Smtp-Source: APXvYqz8qLopzK822aHzhtvW7NFYnyoO2ZbWyWOkbIyLCnBWTfxIfCcF/tNuCbgpdmpS5vQAngKpFA==
-X-Received: by 2002:a5d:474d:: with SMTP id o13mr19135264wrs.278.1553595639234;
-        Tue, 26 Mar 2019 03:20:39 -0700 (PDT)
-Received: from localhost (mail.chocen-mesto.cz. [85.163.43.2])
-        by smtp.gmail.com with ESMTPSA id x84sm1256184wmg.13.2019.03.26.03.20.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 03:20:38 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 11:09:51 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 02/22] netlink: introduce nla_put_bitfield32()
-Message-ID: <20190326100951.GB2230@nanopsycho>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <94ec4068f6767acabf6bd795818f5b7ce2dae00b.1553532199.git.mkubecek@suse.cz>
+        Tue, 26 Mar 2019 06:21:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51638 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726111AbfCZKVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:21:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D6969AD3E;
+        Tue, 26 Mar 2019 10:21:49 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 249441E42D1; Tue, 26 Mar 2019 11:21:49 +0100 (CET)
+Date:   Tue, 26 Mar 2019 11:21:49 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] quota: remove trailing whitespaces
+Message-ID: <20190326102149.GR8308@quack2.suse.cz>
+References: <20190326075431.14198-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <94ec4068f6767acabf6bd795818f5b7ce2dae00b.1553532199.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190326075431.14198-1-s.hauer@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Mar 25, 2019 at 06:08:00PM CET, mkubecek@suse.cz wrote:
->Similar to other data types, this helper puts NLA_BITFIELD32 attribute into
->a netlink message. It takes separate value and selector arguments, if there
->is a struct nla_bitfield32 already, one can use nla_put().
->
->Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+On Tue 26-03-19 08:54:31, Sascha Hauer wrote:
+> This removes all trailing whitespaces in fs/quota/.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Thanks. Applied.
+
+								Honza
+
+> ---
+>  fs/quota/dquot.c    | 10 +++++-----
+>  fs/quota/quota_v1.c |  2 +-
+>  fs/quota/quota_v2.c |  2 +-
+>  3 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index fc20e06c56ba..0036d27206a8 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -9,7 +9,7 @@
+>   * on the Melbourne quota system as used on BSD derived systems. The internal
+>   * implementation is based on one of the several variants of the LINUX
+>   * inode-subsystem with added complexity of the diskquota system.
+> - * 
+> + *
+>   * Author:	Marco van Wieringen <mvw@planets.elm.net>
+>   *
+>   * Fixes:   Dmitry Gorodchanin <pgmdsg@ibi.com>, 11 Feb 96
+> @@ -51,7 +51,7 @@
+>   *		Added journalled quota support, fix lock inversion problems
+>   *		Jan Kara, <jack@suse.cz>, 2003,2004
+>   *
+> - * (C) Copyright 1994 - 1997 Marco van Wieringen 
+> + * (C) Copyright 1994 - 1997 Marco van Wieringen
+>   */
+>  
+>  #include <linux/errno.h>
+> @@ -197,7 +197,7 @@ static struct quota_format_type *find_quota_format(int id)
+>  		int qm;
+>  
+>  		spin_unlock(&dq_list_lock);
+> -		
+> +
+>  		for (qm = 0; module_names[qm].qm_fmt_id &&
+>  			     module_names[qm].qm_fmt_id != id; qm++)
+>  			;
+> @@ -2397,7 +2397,7 @@ static int vfs_load_quota_inode(struct inode *inode, int type, int format_id,
+>  out_fmt:
+>  	put_quota_format(fmt);
+>  
+> -	return error; 
+> +	return error;
+>  }
+>  
+>  /* Reenable quotas on remount RW */
+> @@ -2775,7 +2775,7 @@ int dquot_get_state(struct super_block *sb, struct qc_state *state)
+>  	struct qc_type_state *tstate;
+>  	struct quota_info *dqopt = sb_dqopt(sb);
+>  	int type;
+> -  
+> +
+>  	memset(state, 0, sizeof(*state));
+>  	for (type = 0; type < MAXQUOTAS; type++) {
+>  		if (!sb_has_quota_active(sb, type))
+> diff --git a/fs/quota/quota_v1.c b/fs/quota/quota_v1.c
+> index 7ac5298aba70..9f2b2573b83c 100644
+> --- a/fs/quota/quota_v1.c
+> +++ b/fs/quota/quota_v1.c
+> @@ -127,7 +127,7 @@ static int v1_check_quota_file(struct super_block *sb, int type)
+>  {
+>  	struct inode *inode = sb_dqopt(sb)->files[type];
+>  	ulong blocks;
+> -	size_t off; 
+> +	size_t off;
+>  	struct v2_disk_dqheader dqhead;
+>  	ssize_t size;
+>  	loff_t isize;
+> diff --git a/fs/quota/quota_v2.c b/fs/quota/quota_v2.c
+> index a73e5b34db41..3c30034e733f 100644
+> --- a/fs/quota/quota_v2.c
+> +++ b/fs/quota/quota_v2.c
+> @@ -78,7 +78,7 @@ static int v2_check_quota_file(struct super_block *sb, int type)
+>  	struct v2_disk_dqheader dqhead;
+>  	static const uint quota_magics[] = V2_INITQMAGICS;
+>  	static const uint quota_versions[] = V2_INITQVERSIONS;
+> - 
+> +
+>  	if (v2_read_header(sb, type, &dqhead))
+>  		return 0;
+>  	if (le32_to_cpu(dqhead.dqh_magic) != quota_magics[type] ||
+> -- 
+> 2.20.1
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
