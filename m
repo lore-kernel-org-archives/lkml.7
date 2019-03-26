@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08CDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2447AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698A920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D642070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582036;
-	bh=rO62X66w9GixiCjwfoDThcNQzJeuYOyDaZNvRBrVBjA=;
+	s=default; t=1553582042;
+	bh=88Zd9Vu4cuW9cvnJF6y0OEBFnoOGcmuQvo9LpmTL2aM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcN2IVdcE+zQMbLIMx/prnV+QREkNtknD0x8o2zqXeOAwpmJIBuRPVb4wXogDrLlH
-	 iAuxHJALu8zRPFk8UpNr99g7Ra9q1mghCrsmJ21lhXABrouU9bM8W6q5OlDm3OuBr9
-	 /ZK3M/L3YBp/FP5xT9QVETAjuZZZmbCE26ytL89Q=
+	b=yyFqr6GKZhOmwCPepnJyv5vc9bOcXVyCJ90zCMSWAQgsopJ1WqkkfBX3e6KUVgu7Z
+	 hHV33eb8J8yibb9aU6v5EmjqgelYq+x7nJfyzLOln4ZTap1HWTvQGqBCXmB8RvebYI
+	 x3jVV+jB72hhsQbEM/2Qfd6odUlWBRhFaNW7NySc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731761AbfCZGdz (ORCPT
+        id S1731790AbfCZGeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43908 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731324AbfCZGdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:52 -0400
+        id S1731775AbfCZGd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:58 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1E820857;
-        Tue, 26 Mar 2019 06:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9185020857;
+        Tue, 26 Mar 2019 06:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582031;
-        bh=rO62X66w9GixiCjwfoDThcNQzJeuYOyDaZNvRBrVBjA=;
+        s=default; t=1553582038;
+        bh=88Zd9Vu4cuW9cvnJF6y0OEBFnoOGcmuQvo9LpmTL2aM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IWosiVkOb0w7/paSleH1EbTkQx0yg2+CIqk6xnh1jjUYquUVcV4uIkHMP5IIUC6Pi
-         RREMQ0esK2zCjUi9tgoLNAFc47Q2FQnyZ/zODaSqFpmVzexqI0/XjznvZEcZfIu3Zt
-         lkpWSnD0fGR+3N290A81+fvWNMngKC7KBa2IqQxU=
+        b=BHLflrHRlpIHE3ODi4Ey2BSWI2ymiwvFoPsSFoIWxTHrV5aG8Wi5gyoJu+i20H0mt
+         Ut/J9vn82cM7/tiQtp2adfZsCd46thaF7lfu/AAo11eXtyRgApMf7yW3qwyiTZseSZ
+         fd4pns14WvE7TeLQGt8WugLyJpBZmLly7kpjEuyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 09/41] scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
-Date:   Tue, 26 Mar 2019 15:29:46 +0900
-Message-Id: <20190326042650.389330590@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+017a32f149406df32703@syzkaller.appspotmail.com,
+        Myungho Jung <mhjungk@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 19/41] Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
+Date:   Tue, 26 Mar 2019 15:29:56 +0900
+Message-Id: <20190326042650.963542802@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -64,57 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Myungho Jung <mhjungk@gmail.com>
 
-commit 7205981e045e752ccf96cf6ddd703a98c59d4339 upstream.
+commit 1dc2d785156cbdc80806c32e8d2c7c735d0b4721 upstream.
 
-For each ibmvscsi host created during a probe or destroyed during a remove
-we either add or remove that host to/from the global ibmvscsi_head
-list. This runs the risk of concurrent modification.
+h4_recv_buf() callers store the return value to socket buffer and
+recursively pass the buffer to h4_recv_buf() without protection. So,
+ERR_PTR returned from h4_recv_buf() can be dereferenced, if called again
+before setting the socket buffer to NULL from previous error. Check if
+skb is ERR_PTR in h4_recv_buf().
 
-This patch adds a simple spinlock around the list modification calls to
-prevent concurrent updates as is done similarly in the ibmvfc driver and
-ipr driver.
-
-Fixes: 32d6e4b6e4ea ("scsi: ibmvscsi: add vscsi hosts to global list_head")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+017a32f149406df32703@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/bluetooth/hci_h4.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -96,6 +96,7 @@ static int client_reserve = 1;
- static char partition_name[96] = "UNKNOWN";
- static unsigned int partition_number = -1;
- static LIST_HEAD(ibmvscsi_head);
-+static DEFINE_SPINLOCK(ibmvscsi_driver_lock);
+--- a/drivers/bluetooth/hci_h4.c
++++ b/drivers/bluetooth/hci_h4.c
+@@ -174,6 +174,10 @@ struct sk_buff *h4_recv_buf(struct hci_d
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	u8 alignment = hu->alignment ? hu->alignment : 1;
  
- static struct scsi_transport_template *ibmvscsi_transport_template;
++	/* Check for error from previous call */
++	if (IS_ERR(skb))
++		skb = NULL;
++
+ 	while (count) {
+ 		int i, len;
  
-@@ -2274,7 +2275,9 @@ static int ibmvscsi_probe(struct vio_dev
- 	}
- 
- 	dev_set_drvdata(&vdev->dev, hostdata);
-+	spin_lock(&ibmvscsi_driver_lock);
- 	list_add_tail(&hostdata->host_list, &ibmvscsi_head);
-+	spin_unlock(&ibmvscsi_driver_lock);
- 	return 0;
- 
-       add_srp_port_failed:
-@@ -2296,7 +2299,9 @@ static int ibmvscsi_probe(struct vio_dev
- static int ibmvscsi_remove(struct vio_dev *vdev)
- {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
-+	spin_lock(&ibmvscsi_driver_lock);
- 	list_del(&hostdata->host_list);
-+	spin_unlock(&ibmvscsi_driver_lock);
- 	unmap_persist_bufs(hostdata);
- 	release_event_pool(&hostdata->pool, hostdata);
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
 
 
