@@ -2,143 +2,121 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15092C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE30C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D697D2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="arYpewWv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P4PdWykC"
+	by mail.kernel.org (Postfix) with ESMTP id C52502075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbfCZKEl (ORCPT
+        id S1731102AbfCZKFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:04:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48358 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfCZKEk (ORCPT
+        Tue, 26 Mar 2019 06:05:00 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:65396 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbfCZKFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:04:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EDCCE60DB4; Tue, 26 Mar 2019 10:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553594679;
-        bh=t4OXr9rKENVI+XK7cOtbNWHKfAWco+U88scfuqy0QHM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=arYpewWv4JMSCVo/Mu/6gK/5gy3sQpd7+rTv68fl9MgsvZnOM6DE3gFIB3eyfWrlj
-         WnAG6UsCRMLjoxN55EokIscO+8sarNU/6kz41gIFXEU6I2GFPTtlrUBE/rGVi/5kDV
-         qVFQLd2HGnHLG1cZjs4ugKI1WXZT9qYL/XSX9FRE=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D687A60AA3;
-        Tue, 26 Mar 2019 10:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553594678;
-        bh=t4OXr9rKENVI+XK7cOtbNWHKfAWco+U88scfuqy0QHM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P4PdWykChllUpvB1J6WCKa6LeiUWthU536kxc0tlm4bpvhGvigTFE6AvtMgHAAB1B
-         Ut10lP1Iac1AHrYqiDxxTgOztvQJR7d2BpFpabZkCT4v+W4uGsbYBSJZfEzaXX0jjN
-         ic6vQoYVuo2+zGMOdAfYfxga2lW6Z54y6rXEGpko=
+        Tue, 26 Mar 2019 06:05:00 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q9ugbv026877;
+        Tue, 26 Mar 2019 11:03:49 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhbgpqb-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 26 Mar 2019 11:03:49 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 39C963F;
+        Tue, 26 Mar 2019 10:03:48 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DEF6F5166;
+        Tue, 26 Mar 2019 10:03:47 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 26 Mar
+ 2019 11:03:47 +0100
+Received: from localhost (10.129.172.100) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 26 Mar 2019 11:03:47
+ +0100
+From:   Mickael Guene <mickael.guene@st.com>
+To:     <linux-media@vger.kernel.org>
+CC:     <hugues.fruchet@st.com>, Mickael Guene <mickael.guene@st.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Todor Tomov" <todor.tomov@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Tianshu Qiu <tian.shu.qiu@intel.com>,
+        Ben Kao <ben.kao@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Cvek <petrcvekcz@gmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Rui Miguel Silva <rui.silva@linaro.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Ricardo Ribalda Delgado <ricardo@ribalda.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v3 0/2] Add support for MIPID02 CSI-2 to PARALLEL bridge I2C device
+Date:   Tue, 26 Mar 2019 11:03:38 +0100
+Message-ID: <1553594620-88280-1-git-send-email-mickael.guene@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 Mar 2019 15:34:37 +0530
-From:   c-hbandi@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip WCN3998
-In-Reply-To: <20190325162935.GW112750@google.com>
-References: <1553513800-27611-1-git-send-email-c-hbandi@codeaurora.org>
- <1553513800-27611-3-git-send-email-c-hbandi@codeaurora.org>
- <20190325162935.GW112750@google.com>
-Message-ID: <0eecb0eec722f9246d2816bb0a2384d5@codeaurora.org>
-X-Sender: c-hbandi@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain
+X-Originating-IP: [10.129.172.100]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Hi,
 
-On 2019-03-25 21:59, Matthias Kaehlcke wrote:
-> On Mon, Mar 25, 2019 at 05:06:40PM +0530, Harish Bandi wrote:
->> This patch enables regulators for the Qualcomm Bluetooth WCN3998
->> controller.
->> 
->> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
->> ---
->> Changes in V4:
->> - Removed new compatible WCN3998
->> - changed wcn3990 to wcn399* to represent wcn399* family
->> ---
->>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 7 
->> ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 824c0e2..de9cefa 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -11,20 +11,21 @@ Required properties:
->>   - compatible: should contain one of the following:
->>     * "qcom,qca6174-bt"
->>     * "qcom,wcn3990-bt"
->> +   * "qcom,wcn3998-bt"
->> 
->>  Optional properties for compatible string qcom,qca6174-bt:
->> 
->>   - enable-gpios: gpio specifier used to enable chip
->>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
->> 
->> -Required properties for compatible string qcom,wcn3990-bt:
->> +Required properties for compatible string qcom,wcn399*-bt:
-> 
-> I think in Linux drivers the use of 'x' is more common as a wildcard
-> for a single letter than an asterisk. It is also in line with the
-> function name in the driver, so I would suggest to keep thinkgs
-> consistent and call it wcn399x everywhere.
+This is the v3 of my MIPID02 series which introduces support of
+STMicroelectronics MIPID02 CSI-2 to PARALLEL I2C bridge. It allows using a CSI-2
+sensor with a PARALLEL interface. Current driver implementation doesn't support
+CSI-2 second input port usage. It doesn't support also YUV420, RGB565 and RGB444
+input formats.
 
-[Harish] - ok, will change it to wcn399x
-> 
->> 
->>   - vddio-supply: VDD_IO supply regulator handle.
->>   - vddxo-supply: VDD_XO supply regulator handle.
->>   - vddrf-supply: VDD_RF supply regulator handle.
->>   - vddch0-supply: VDD_CH0 supply regulator handle.
->> 
->> -Optional properties for compatible string qcom,wcn3990-bt:
->> +Optional properties for compatible string qcom,wcn399*-bt:
->> 
->>   - max-speed: see 
->> Documentation/devicetree/bindings/serial/slave-device.txt
->> 
->> @@ -44,7 +45,7 @@ serial@7570000 {
->> 
->>  serial@898000 {
->>  	bluetooth {
->> -		compatible = "qcom,wcn3990-bt";
->> +		compatible = "qcom,wcn399*-bt";
-> 
-> Typically wildcards aren't used in DT examples as Marcel already
-> mentioned on v3. IMO the wildcard degrades the value of the example,
-> rather than enhancing it. I think just listing the compatible string
-> is enough, no need for an wcn3998/x specific example since it's
-> essentialy the same as wcn3990.
-[Harish] - So will keep as wcn3990 only here.
-> 
-> Thanks
-> 
-> Matthias
+Thanks to Sakari for review.
+
+Changes in v3:
+- Fix potential wrong error code for mipid02_stream_disable and mipid02_stream_enable
+- Remove useless memset for ep in mipid02_parse_rx_ep and mipid02_parse_tx_ep
+- Add second CSI-2 input pad even if it's not yet supported
+- Add support of get_fmt, set_fmt and link_validate and only access subdev connected to mipid02
+
+Changes in v2:
+- Add precision about first CSI-2 port data rate
+- Document endpoints supported properties
+- Rename 'mipid02@14' into generic 'csi2rx@14' in example
+- Merge MAINTAINERS patch 3 into patch 1 and 2
+- Fix line too long in Kconfig
+- Add missing delay after reset release
+- Various style fixes
+- Fix mipid02_stream_enable returning no error when mipid02_find_sensor failed
+
+Mickael Guene (2):
+  dt-bindings: Document MIPID02 bindings
+  media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge driver
+
+ .../bindings/media/i2c/st,st-mipid02.txt           |   83 ++
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   14 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/st-mipid02.c                     | 1012 ++++++++++++++++++++
+ 5 files changed, 1118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+ create mode 100644 drivers/media/i2c/st-mipid02.c
+
+-- 
+2.7.4
+
