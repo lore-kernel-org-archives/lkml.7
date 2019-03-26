@@ -2,230 +2,171 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989D3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1504FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6231720823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B8520823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="QQmlbfBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfCZNH5 (ORCPT
+        id S1729440AbfCZNLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:07:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47190 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZNH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:07:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 764F2C0021CA;
-        Tue, 26 Mar 2019 13:07:51 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E2408386F;
-        Tue, 26 Mar 2019 13:07:48 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Jon Doron <arilou@gmail.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: nVMX: allow RSM to restore VMXE CR4 flag
-Date:   Tue, 26 Mar 2019 14:07:46 +0100
-Message-Id: <20190326130746.28748-1-vkuznets@redhat.com>
+        Tue, 26 Mar 2019 09:11:39 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39217 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCZNLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:11:38 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p20so10219576eds.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 06:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KyICKHawodi0q5vRc842R7ZLBQGvYXISdjlGH9osZLw=;
+        b=QQmlbfBscHRulIMYmBScbnb4HHYkLGzyAzq6HkA6BkvfzqGXOdOEQ9lBmZ/Rx8ki4V
+         12uEKsYsILfGgoDVXUwKkYToADl6L1hKMCAiZcPaKagJYlA140AYaP/1mn+mn0epOuW/
+         wI2HofnUffPc4ml1rbXGV0udTFZNZDKNPJH78=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KyICKHawodi0q5vRc842R7ZLBQGvYXISdjlGH9osZLw=;
+        b=RG2B67P2fXfrVbYkw6J3piqLEGlKUL7KRd2TRLqTS+6DlF++1J4vNkS6rha4oMIVq+
+         IadG58ATyMgbzCiiUX6U/Skz1FEXb8ZXS+OUZd3fdR/S9thdvh1YrpEZCgCTNEq2D/sA
+         excnHpmlrABOw9z8lat9w9fsiUwur63UNjGQyrIycEka/vg1gDr2YFHANoZZtGT47e+8
+         0CcV19LeUu3NBox25+szFIXOP0jiYq5P/eHQTPdF9a3nzVHTyJ2oknh7hmLgDJTDmcLG
+         uLSyv3Qu/FCp2O0Qnlsyj/xEyEzb2eRTVbfc7T8SwEdI/Y8t7Arq5+juiP11fBR/Or05
+         BLkw==
+X-Gm-Message-State: APjAAAXaUSP70GHKdJmeLiBdPR2JKtWj4JDSWZWmUSeSxBncC2gq08Mo
+        3V5mK2EmFdFF2jk+Zmti66MiRw==
+X-Google-Smtp-Source: APXvYqzyWzcBh8HAhCQD5mKeOhzu6mAiSee/yF+impIUD7ynfTbvdvQFWXKv+v8NF5ME9//yj/cttA==
+X-Received: by 2002:aa7:c250:: with SMTP id y16mr16828735edo.238.1553605896843;
+        Tue, 26 Mar 2019 06:11:36 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
+        by smtp.gmail.com with ESMTPSA id c7sm971311edt.70.2019.03.26.06.11.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 06:11:36 -0700 (PDT)
+Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-7-sakari.ailus@linux.intel.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <8c6accab-9e0c-c2d4-ce93-ea3ede60f34e@rasmusvillemoes.dk>
+Date:   Tue, 26 Mar 2019 14:11:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 26 Mar 2019 13:07:56 +0000 (UTC)
+In-Reply-To: <20190326124106.27694-7-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5bea5123cbf0 ("KVM: VMX: check nested state and CR4.VMXE against
-SMM") introduced a check to vmx_set_cr4() forbidding to set VMXE from SMM.
-The check is correct, however, there is a special case when RSM is called
-to leave SMM: rsm_enter_protected_mode() is called with HF_SMM_MASK still
-set and in case VMXE was set before entering SMM we're failing to return.
+On 26/03/2019 13.41, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
+> 
+>  
+> +static noinline_for_stack
+> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +	const char * const modifiers = "fP";
+> +	struct printf_spec str_spec = spec;
+> +	char *buf_start = buf;
+> +	bool pass;
+> +
+> +	str_spec.field_width = -1;
+> +
+> +	if ((unsigned long)fwnode < PAGE_SIZE)
+> +		return string(buf, end, "(null)", spec);
+> +
+> +	/* simple case without anything any more format specifiers */
+> +	fmt++;
+> +	if (fmt[0] == '\0' || strcspn(fmt, modifiers) > 0)
+> +		fmt = "f";
+> +
+> +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
+> +		if (pass) {
+> +			if (buf < end)
+> +				*buf = ':';
+> +			buf++;
+> +		}
+> +
+> +		switch (*fmt) {
+> +		case 'f':	/* full_name */
+> +			buf = fwnode_gen_full_name(fwnode, buf, end);
+> +			break;
+> +		case 'P':	/* name */
+> +			buf = string(buf, end, fwnode_get_name(fwnode),
+> +				     str_spec);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
 
-Resolve the issue by temporary dropping HF_SMM_MASK around set_cr4() calls
-when ops->set_cr() is called from RSM.
+This seems awfully complicated. Why would anyone ever pass more than one
+of 'f' and 'P'? Why not just
 
-Reported-by: Jon Doron <arilou@gmail.com>
-Suggested-by: Liran Alon <liran.alon@oracle.com>
-Fixes: 5bea5123cbf0 ("KVM: VMX: check nested state and CR4.VMXE against SMM")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-- Instread of putting the temporary HF_SMM_MASK drop to
-  rsm_enter_protected_mode() (as was suggested by Liran), move it to
-  emulator_set_cr() modifying its interface. emulate.c seems to be
-  vcpu-specifics-free at this moment, we may want to keep it this way.
-- It seems that Hyper-V+UEFI on KVM is still broken, I'm observing sporadic
-  hangs even with this patch. These hangs, however, seem to be unrelated to
-  rsm.
----
- arch/x86/include/asm/kvm_emulate.h |  3 ++-
- arch/x86/kvm/emulate.c             | 27 ++++++++++++++-------------
- arch/x86/kvm/x86.c                 | 12 +++++++++++-
- 3 files changed, 27 insertions(+), 15 deletions(-)
+switch(*fmt) {
+case 'P':
+   ...
+case 'f':
+default:
+   ...
+}
 
-diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-index 93c4bf598fb0..6c33caa82fa5 100644
---- a/arch/x86/include/asm/kvm_emulate.h
-+++ b/arch/x86/include/asm/kvm_emulate.h
-@@ -203,7 +203,8 @@ struct x86_emulate_ops {
- 	void (*set_gdt)(struct x86_emulate_ctxt *ctxt, struct desc_ptr *dt);
- 	void (*set_idt)(struct x86_emulate_ctxt *ctxt, struct desc_ptr *dt);
- 	ulong (*get_cr)(struct x86_emulate_ctxt *ctxt, int cr);
--	int (*set_cr)(struct x86_emulate_ctxt *ctxt, int cr, ulong val);
-+	int (*set_cr)(struct x86_emulate_ctxt *ctxt, int cr, ulong val,
-+		      bool from_rsm);
- 	int (*cpl)(struct x86_emulate_ctxt *ctxt);
- 	int (*get_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong *dest);
- 	int (*set_dr)(struct x86_emulate_ctxt *ctxt, int dr, ulong value);
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index c338984c850d..a6204105d4d7 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -2413,7 +2413,7 @@ static int rsm_enter_protected_mode(struct x86_emulate_ctxt *ctxt,
- 		cr3 &= ~0xfff;
- 	}
- 
--	bad = ctxt->ops->set_cr(ctxt, 3, cr3);
-+	bad = ctxt->ops->set_cr(ctxt, 3, cr3, true);
- 	if (bad)
- 		return X86EMUL_UNHANDLEABLE;
- 
-@@ -2422,20 +2422,20 @@ static int rsm_enter_protected_mode(struct x86_emulate_ctxt *ctxt,
- 	 * Then enable protected mode.	However, PCID cannot be enabled
- 	 * if EFER.LMA=0, so set it separately.
- 	 */
--	bad = ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE);
-+	bad = ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE, true);
- 	if (bad)
- 		return X86EMUL_UNHANDLEABLE;
- 
--	bad = ctxt->ops->set_cr(ctxt, 0, cr0);
-+	bad = ctxt->ops->set_cr(ctxt, 0, cr0, true);
- 	if (bad)
- 		return X86EMUL_UNHANDLEABLE;
- 
- 	if (cr4 & X86_CR4_PCIDE) {
--		bad = ctxt->ops->set_cr(ctxt, 4, cr4);
-+		bad = ctxt->ops->set_cr(ctxt, 4, cr4, true);
- 		if (bad)
- 			return X86EMUL_UNHANDLEABLE;
- 		if (pcid) {
--			bad = ctxt->ops->set_cr(ctxt, 3, cr3 | pcid);
-+			bad = ctxt->ops->set_cr(ctxt, 3, cr3 | pcid, true);
- 			if (bad)
- 				return X86EMUL_UNHANDLEABLE;
- 		}
-@@ -2581,7 +2581,7 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
- 
- 		/* Zero CR4.PCIDE before CR0.PG.  */
- 		if (cr4 & X86_CR4_PCIDE) {
--			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE);
-+			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE, true);
- 			cr4 &= ~X86_CR4_PCIDE;
- 		}
- 
-@@ -2595,11 +2595,12 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
- 	/* For the 64-bit case, this will clear EFER.LMA.  */
- 	cr0 = ctxt->ops->get_cr(ctxt, 0);
- 	if (cr0 & X86_CR0_PE)
--		ctxt->ops->set_cr(ctxt, 0, cr0 & ~(X86_CR0_PG | X86_CR0_PE));
-+		ctxt->ops->set_cr(ctxt, 0, cr0 & ~(X86_CR0_PG | X86_CR0_PE),
-+				  true);
- 
- 	/* Now clear CR4.PAE (which must be done before clearing EFER.LME).  */
- 	if (cr4 & X86_CR4_PAE)
--		ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE);
-+		ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE, true);
- 
- 	/* And finally go back to 32-bit mode.  */
- 	efer = 0;
-@@ -3131,7 +3132,7 @@ static int load_state_from_tss32(struct x86_emulate_ctxt *ctxt,
- 	int ret;
- 	u8 cpl;
- 
--	if (ctxt->ops->set_cr(ctxt, 3, tss->cr3))
-+	if (ctxt->ops->set_cr(ctxt, 3, tss->cr3, false))
- 		return emulate_gp(ctxt, 0);
- 	ctxt->_eip = tss->eip;
- 	ctxt->eflags = tss->eflags | 2;
-@@ -3331,7 +3332,7 @@ static int emulator_do_task_switch(struct x86_emulate_ctxt *ctxt,
- 		write_segment_descriptor(ctxt, tss_selector, &next_tss_desc);
- 	}
- 
--	ops->set_cr(ctxt, 0,  ops->get_cr(ctxt, 0) | X86_CR0_TS);
-+	ops->set_cr(ctxt, 0,  ops->get_cr(ctxt, 0) | X86_CR0_TS, false);
- 	ops->set_segment(ctxt, tss_selector, &next_tss_desc, 0, VCPU_SREG_TR);
- 
- 	if (has_error_code) {
-@@ -3633,7 +3634,7 @@ static int em_movbe(struct x86_emulate_ctxt *ctxt)
- 
- static int em_cr_write(struct x86_emulate_ctxt *ctxt)
- {
--	if (ctxt->ops->set_cr(ctxt, ctxt->modrm_reg, ctxt->src.val))
-+	if (ctxt->ops->set_cr(ctxt, ctxt->modrm_reg, ctxt->src.val, false))
- 		return emulate_gp(ctxt, 0);
- 
- 	/* Disable writeback. */
-@@ -3766,7 +3767,7 @@ static int em_clts(struct x86_emulate_ctxt *ctxt)
- 
- 	cr0 = ctxt->ops->get_cr(ctxt, 0);
- 	cr0 &= ~X86_CR0_TS;
--	ctxt->ops->set_cr(ctxt, 0, cr0);
-+	ctxt->ops->set_cr(ctxt, 0, cr0, false);
- 	return X86EMUL_CONTINUE;
- }
- 
-@@ -3866,7 +3867,7 @@ static int em_smsw(struct x86_emulate_ctxt *ctxt)
- static int em_lmsw(struct x86_emulate_ctxt *ctxt)
- {
- 	ctxt->ops->set_cr(ctxt, 0, (ctxt->ops->get_cr(ctxt, 0) & ~0x0eul)
--			  | (ctxt->src.val & 0x0f));
-+			  | (ctxt->src.val & 0x0f), false);
- 	ctxt->dst.type = OP_NONE;
- 	return X86EMUL_CONTINUE;
- }
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a419656521b6..f2745e3170b6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5739,7 +5739,8 @@ static unsigned long emulator_get_cr(struct x86_emulate_ctxt *ctxt, int cr)
- 	return value;
- }
- 
--static int emulator_set_cr(struct x86_emulate_ctxt *ctxt, int cr, ulong val)
-+static int emulator_set_cr(struct x86_emulate_ctxt *ctxt, int cr, ulong val,
-+			   bool from_rsm)
- {
- 	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
- 	int res = 0;
-@@ -5755,7 +5756,16 @@ static int emulator_set_cr(struct x86_emulate_ctxt *ctxt, int cr, ulong val)
- 		res = kvm_set_cr3(vcpu, val);
- 		break;
- 	case 4:
-+		/*
-+		 * set_cr4() may forbid to set certain flags (e.g. VMXE) from
-+		 * SMM but we're actually leaving it; temporary drop HF_SMM_MASK
-+		 * when setting CR4.
-+		 */
-+		if (from_rsm)
-+			vcpu->arch.hflags &= ~HF_SMM_MASK;
- 		res = kvm_set_cr4(vcpu, mk_cr_64(kvm_read_cr4(vcpu), val));
-+		if (from_rsm)
-+			vcpu->arch.hflags |= HF_SMM_MASK;
- 		break;
- 	case 8:
- 		res = kvm_set_cr8(vcpu, val);
--- 
-2.20.1
+which avoids the loop and the strcspn. Or, drop the default: case and
+don't have logic at all for falling back to 'f' if neither is present.
 
+> +	return widen_string(buf, buf - buf_start, end, spec);
+> +}
+> +
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -1936,6 +1978,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>   *                  F device node flags
+>   *                  c major compatible string
+>   *                  C full compatible string
+> + * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
+> + *		Without an option prints the full name of the node
+> + *		f full name
+> + *		P node name, including a possible unit address
+>   * - 'x' For printing the address. Equivalent to "%lx".
+>   *
+>   * ** When making changes please also update:
+> @@ -2060,6 +2106,16 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  			return device_node_string(buf, end, ptr, spec, fmt + 1);
+>  		}
+>  		break;
+> +	case 'f':
+> +		switch (fmt[1]) {
+> +		case 'w':
+> +			return fwnode_string(buf, end, ptr, spec, fmt + 1);
+
+Why not pass fmt+2; we know that fmt+1 points at a 'w'. Just to avoid
+doing the fmt++ inside fwnode_string().
+
+Rasmus
