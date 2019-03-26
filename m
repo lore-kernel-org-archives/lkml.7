@@ -2,186 +2,122 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5985DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F59C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3416820811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725392070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbfCZQL2 (ORCPT
+        id S1731735AbfCZQOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:11:28 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55251 "EHLO mga02.intel.com"
+        Tue, 26 Mar 2019 12:14:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55866 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfCZQLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:11:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 09:11:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,273,1549958400"; 
-   d="scan'208";a="217714720"
-Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2019 09:11:24 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 02/23] perf/x86/intel: Extract memory code PEBS parser for reuse
-Date:   Tue, 26 Mar 2019 09:08:40 -0700
-Message-Id: <20190326160901.4887-3-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190326160901.4887-1-kan.liang@linux.intel.com>
-References: <20190326160901.4887-1-kan.liang@linux.intel.com>
+        id S1726175AbfCZQOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:14:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA74881F2F;
+        Tue, 26 Mar 2019 16:14:19 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C84535D73F;
+        Tue, 26 Mar 2019 16:14:12 +0000 (UTC)
+Date:   Tue, 26 Mar 2019 12:14:09 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, Paul Moore <paul@paul-moore.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, omosnace@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, mjg59@google.com
+Subject: Re: [PATCH ghak109 V1] audit: link integrity evm_write_xattrs record
+ to syscall event
+Message-ID: <20190326161409.3wej7hcwnqalf4or@madcap2.tricolour.ca>
+References: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com>
+ <CAHC9VhS61LTQMXiALRre+5_+wvwe6Wa9RN-WYNTjvz5LVsA5rw@mail.gmail.com>
+ <20190321005008.wfz3bk7q262km5fz@madcap2.tricolour.ca>
+ <2006016.NXIvICiRTL@x2>
+ <1553614157.4115.17.camel@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1553614157.4115.17.camel@linux.ibm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 26 Mar 2019 16:14:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On 2019-03-26 11:29, Mimi Zohar wrote:
+> On Tue, 2019-03-26 at 11:22 -0400, Steve Grubb wrote:
+> 
+> > > > > --- a/security/integrity/evm/evm_secfs.c
+> > > > > +++ b/security/integrity/evm/evm_secfs.c
+> > > > > @@ -192,7 +192,8 @@ static ssize_t evm_write_xattrs(struct file *file,
+> > > > > const char __user *buf,> > 
+> > > > >         if (count > XATTR_NAME_MAX)
+> > > > >         
+> > > > >                 return -E2BIG;
+> > > > > 
+> > > > > -       ab = audit_log_start(NULL, GFP_KERNEL,
+> > > > > AUDIT_INTEGRITY_EVM_XATTR);
+> > > > > +       ab = audit_log_start(audit_context(), GFP_KERNEL,
+> > > > > +                            AUDIT_INTEGRITY_EVM_XATTR);
+> > > > 
+> > > > This part is fine.
+> > > > 
+> > > > >         if (!ab)
+> > > > >         
+> > > > >                 return -ENOMEM;
+> > > > > 
+> > > > > @@ -222,7 +223,7 @@ static ssize_t evm_write_xattrs(struct file *file,
+> > > > > const char __user *buf,> > 
+> > > > >                 inode_lock(inode);
+> > > > >                 err = simple_setattr(evm_xattrs, &newattrs);
+> > > > >                 inode_unlock(inode);
+> > > > > 
+> > > > > -               audit_log_format(ab, "locked");
+> > > > > +               audit_log_format(ab, "xattr=(locked)");
+> > > > 
+> > > > Two things come to mind:
+> > > > 
+> > > > * While we can clearly trust the string above, should we be logging
+> > > > the xattr field value as an untrusted string so it is consistent with
+> > > > how we record other xattr names?
+> > > 
+> > > That would be a question for Steve.
+> > 
+> > All fields with the same name must be represented the same way. If one 
+> > instance is untrusted, every instance of the same keyword must be untrusted.
+> 
+> Normal case:
+>        audit_log_format(ab, "xattr=");
+>        audit_log_untrustedstring(ab, xattr->name);
+> 
+> Ok, so the above audit_log_format() call should be replaced with
+>  audit_log_untrustedstring().
 
-Extract some code related to memory profiling from the PEBS record
-parser into separate functions. It can be reused by the upcoming
-adaptive PEBS parser. No functional changes.
-Rename intel_hsw_weight to intel_get_tsx_weight, and
-intel_hsw_transaction to intel_get_tsx_transaction. Because the input is
-not the hsw pebs format anymore.
+Ok, so I think we can agree on "audit_log_untrustedstring(ab,
+"xattr=.");" and simpler yet just print the contents regardless and not
+special case this print.  V2 coming...
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
+> Mimi
 
-No changes since V3.
+- RGB
 
- arch/x86/events/intel/ds.c | 63 ++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 10c99ce1fead..c02cd19fe640 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1125,34 +1125,50 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
- 	return 0;
- }
- 
--static inline u64 intel_hsw_weight(struct pebs_record_skl *pebs)
-+static inline u64 intel_get_tsx_weight(u64 tsx_tuning)
- {
--	if (pebs->tsx_tuning) {
--		union hsw_tsx_tuning tsx = { .value = pebs->tsx_tuning };
-+	if (tsx_tuning) {
-+		union hsw_tsx_tuning tsx = { .value = tsx_tuning };
- 		return tsx.cycles_last_block;
- 	}
- 	return 0;
- }
- 
--static inline u64 intel_hsw_transaction(struct pebs_record_skl *pebs)
-+static inline u64 intel_get_tsx_transaction(u64 tsx_tuning, u64 ax)
- {
--	u64 txn = (pebs->tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
-+	u64 txn = (tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
- 
- 	/* For RTM XABORTs also log the abort code from AX */
--	if ((txn & PERF_TXN_TRANSACTION) && (pebs->ax & 1))
--		txn |= ((pebs->ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
-+	if ((txn & PERF_TXN_TRANSACTION) && (ax & 1))
-+		txn |= ((ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
- 	return txn;
- }
- 
-+#define PERF_X86_EVENT_PEBS_HSW_PREC \
-+		(PERF_X86_EVENT_PEBS_ST_HSW | \
-+		 PERF_X86_EVENT_PEBS_LD_HSW | \
-+		 PERF_X86_EVENT_PEBS_NA_HSW)
-+
-+static u64 get_data_src(struct perf_event *event, u64 aux)
-+{
-+	u64 val = PERF_MEM_NA;
-+	int fl = event->hw.flags;
-+	bool fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+
-+	if (fl & PERF_X86_EVENT_PEBS_LDLAT)
-+		val = load_latency_data(aux);
-+	else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
-+		val = precise_datala_hsw(event, aux);
-+	else if (fst)
-+		val = precise_store_data(aux);
-+	return val;
-+}
-+
- static void setup_pebs_sample_data(struct perf_event *event,
- 				   struct pt_regs *iregs, void *__pebs,
- 				   struct perf_sample_data *data,
- 				   struct pt_regs *regs)
- {
--#define PERF_X86_EVENT_PEBS_HSW_PREC \
--		(PERF_X86_EVENT_PEBS_ST_HSW | \
--		 PERF_X86_EVENT_PEBS_LD_HSW | \
--		 PERF_X86_EVENT_PEBS_NA_HSW)
- 	/*
- 	 * We cast to the biggest pebs_record but are careful not to
- 	 * unconditionally access the 'extra' entries.
-@@ -1160,17 +1176,13 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct pebs_record_skl *pebs = __pebs;
- 	u64 sample_type;
--	int fll, fst, dsrc;
--	int fl = event->hw.flags;
-+	int fll;
- 
- 	if (pebs == NULL)
- 		return;
- 
- 	sample_type = event->attr.sample_type;
--	dsrc = sample_type & PERF_SAMPLE_DATA_SRC;
--
--	fll = fl & PERF_X86_EVENT_PEBS_LDLAT;
--	fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+	fll = event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT;
- 
- 	perf_sample_data_init(data, 0, event->hw.last_period);
- 
-@@ -1185,16 +1197,8 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	/*
- 	 * data.data_src encodes the data source
- 	 */
--	if (dsrc) {
--		u64 val = PERF_MEM_NA;
--		if (fll)
--			val = load_latency_data(pebs->dse);
--		else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
--			val = precise_datala_hsw(event, pebs->dse);
--		else if (fst)
--			val = precise_store_data(pebs->dse);
--		data->data_src.val = val;
--	}
-+	if (sample_type & PERF_SAMPLE_DATA_SRC)
-+		data->data_src.val = get_data_src(event, pebs->dse);
- 
- 	/*
- 	 * We must however always use iregs for the unwinder to stay sane; the
-@@ -1281,10 +1285,11 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	if (x86_pmu.intel_cap.pebs_format >= 2) {
- 		/* Only set the TSX weight when no memory weight. */
- 		if ((sample_type & PERF_SAMPLE_WEIGHT) && !fll)
--			data->weight = intel_hsw_weight(pebs);
-+			data->weight = intel_get_tsx_weight(pebs->tsx_tuning);
- 
- 		if (sample_type & PERF_SAMPLE_TRANSACTION)
--			data->txn = intel_hsw_transaction(pebs);
-+			data->txn = intel_get_tsx_transaction(pebs->tsx_tuning,
-+							      pebs->ax);
- 	}
- 
- 	/*
--- 
-2.17.1
-
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
