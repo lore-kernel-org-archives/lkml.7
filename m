@@ -2,1565 +2,1371 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25461C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586A0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43BD2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E575E2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 21:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kS23hUWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732414AbfCZVOA (ORCPT
+        id S1732232AbfCZVPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 17:14:00 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:44116 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731531AbfCZVOA (ORCPT
+        Tue, 26 Mar 2019 17:15:38 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36514 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730605AbfCZVPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 17:14:00 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from lsun@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 26 Mar 2019 23:13:50 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x2QLDnQT028327;
-        Tue, 26 Mar 2019 17:13:49 -0400
-Received: (from lsun@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x2QLDlwC016111;
-        Tue, 26 Mar 2019 17:13:47 -0400
-From:   Liming Sun <lsun@mellanox.com>
-To:     David Woods <dwoods@mellanox.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-Cc:     Liming Sun <lsun@mellanox.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v11] platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc
-Date:   Tue, 26 Mar 2019 17:13:39 -0400
-Message-Id: <1553634819-16072-1-git-send-email-lsun@mellanox.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+        Tue, 26 Mar 2019 17:15:37 -0400
+Received: by mail-ot1-f65.google.com with SMTP id o74so12908270ota.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 14:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vl56ZjzRzfnGh/mXSKteH7wuho22b57Fa6/McgezUhg=;
+        b=kS23hUWsbVcl97M0pLkyR1OSYr3omraFwlUgDBKlkE+U95YwBMxLrDhnEJnXFYHt/q
+         9A4NjsrjBzZx1uPyTHVMKOgxhHpEuNOXZPUc5EalY4PgUUG/WolxVF7Tw+ECvOQJD8UE
+         gq+x5I5jZ+0vfj73HSMfbXcMoQd9XU/sZdAsU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vl56ZjzRzfnGh/mXSKteH7wuho22b57Fa6/McgezUhg=;
+        b=ZzcikrqxBiKJ0KNA+0fbp/zjw/9xnQY5XqKkMHEV15BnjozfJADmYnp2KoSO4KY3+/
+         TpzK0Y4Aj0d77Sxk3ou+iIexnp1ZyOMO1hVEhqhLR+50FYnqKgEeD6Re4f2MKFF4ZjSS
+         lyiR2X4voxl6M6chjVOkvD0Mrn5MJHTmWW0sxcKVXOB3EH+uKplb++zAL31ramB6LNUw
+         iv6aTCbZUwNPKvL8Ko40q9ho4Dy3R7q10cr1qK0DFBpKkCOcqIARpyFPCNF1eSylVW3a
+         ZGApiENuEfqwjhHRXXwyffVmAeUe8sLsMMwR0/aOHPznzi/Ht0/eTPovh29cOLx/zT+n
+         3F6w==
+X-Gm-Message-State: APjAAAWAV0Wz0+Y2f6OFt5sS+i+Ssn24M9k7Ir+65fbDUegGTxpcO4go
+        SGak3e5V80216/ENqSlcC9DATNBTuz9s7A==
+X-Google-Smtp-Source: APXvYqxRKNNwtcvcGsyRfz15mso1xH0saEyjzR+E2WvEyVJrUpK8k+sPS7+cuvPiacGC6zJ7qkKrNQ==
+X-Received: by 2002:a05:6830:1103:: with SMTP id w3mr24891755otq.28.1553634936148;
+        Tue, 26 Mar 2019 14:15:36 -0700 (PDT)
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
+        by smtp.gmail.com with ESMTPSA id j18sm7966822otq.68.2019.03.26.14.15.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 14:15:35 -0700 (PDT)
+Received: by mail-ot1-f52.google.com with SMTP id d24so12857658otl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 14:15:35 -0700 (PDT)
+X-Received: by 2002:a9d:77c9:: with SMTP id w9mr20766768otl.197.1553634934849;
+ Tue, 26 Mar 2019 14:15:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1553339772-25012-1-git-send-email-rushikesh.s.kadam@intel.com> <31755c704928710da998353192157ddfd903080c.camel@linux.intel.com>
+In-Reply-To: <31755c704928710da998353192157ddfd903080c.camel@linux.intel.com>
+From:   Jett Rink <jettrink@chromium.org>
+Date:   Tue, 26 Mar 2019 15:15:23 -0600
+X-Gmail-Original-Message-ID: <CAK+PMK7u-4sVzVJV0hhToDHBwapLaP4FJz43HrxcjD4ZeQfa2g@mail.gmail.com>
+Message-ID: <CAK+PMK7u-4sVzVJV0hhToDHBwapLaP4FJz43HrxcjD4ZeQfa2g@mail.gmail.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ISH firmware loader client driver
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        benjamin.tissoires@redhat.com, jikos@kernel.org,
+        ncrews@chromium.org, Gwendal Grignou <gwendal@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds the TmFifo platform driver for Mellanox BlueField
-Soc. TmFifo is a shared FIFO which enables external host machine
-to exchange data with the SoC via USB or PCIe. The driver is based
-on virtio framework and has console and network access enabled.
+Tested-by: Jett Rink <jettrink@chromium.org>
 
-Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
-v11->v11: rebase & resend, no new changes
-v10->v11:
-    Fixes for comments from Andy:
-    - Use GENMASK_ULL() instead of GENMASK() in mlxbf-tmfifo-regs.h
-    - Removed the cpu_to_le64()/le64_to_cpu() conversion since
-      readq()/writeq() already takes care of it.
-    - Remove the "if (irq)" check in mlxbf_tmfifo_disable_irqs().
-    - Add "u32 count" temp variable in mlxbf_tmfifo_get_tx_avail().
-    - Clean up mlxbf_tmfifo_get_cfg_mac(), use ETH_ALEN instead of
-      value 6.
-    - Change the tx_buf to use Linux existing 'struct circ_buf'.
-    Comment not applied:
-    - "Change macro mlxbf_vdev_to_tmfifo() to one line"
-      Couldn't fit in one line with 80 chracters
-    - "Is it appropriate use of devm_* for 'tm_vdev = devm_kzalloc'"
-      This is SoC, the device won't be closed or detached.
-      The only case is when the driver is unloaded. So it appears
-      ok to use devm_kzalloc() since it's allocated during probe()
-      and released during module unload.
-    Comments from Vadim: OK
-v9->v10:
-    Fixes for comments from Andy:
-    - Use devm_ioremap_resource() instead of devm_ioremap().
-    - Use kernel-doc comments.
-    - Keep Makefile contents sorted.
-    - Use same fixed format for offsets.
-    - Use SZ_1K/SZ_32K instead of 1024/23*1024.
-    - Remove unnecessary comments.
-    - Use one style for max numbers.
-    - More comments for mlxbf_tmfifo_vdev and mlxbf_tmfifo_data_64bit.
-    - Use globally defined MTU instead of new definition.
-    - Remove forward declaration of mlxbf_tmfifo_remove().
-    - Remove PAGE_ALIGN() for dma_alloc_coherent)().
-    - Remove the cast of "struct vring *".
-    - Check return result of test_and_set_bit().
-    - Add a macro mlxbt_vdev_to_tmfifo().
-    - Several other minor coding style comments.
-    Comment not applied:
-    - "Shouldn't be rather helper in EFI lib in kernel"
-      Looks like efi.get_variable() is the way I found in the kernel
-      tree.
-    - "this one is not protected anyhow? Potential race condition"
-      In mlxbf_tmfifo_console_tx(), the spin-lock is used to protect the
-      'tx_buf' only, not the FIFO writes. So there is no race condition.
-    - "Is __packed needed in mlxbf_tmfifo_msg_hdr".
-      Yes, it is needed to make sure the structure is 8 bytes.
-    Fixes for comments from Vadim:
-    - Use tab in mlxbf-tmfifo-regs.h
-    - Use kernel-doc comments for struct mlxbf_tmfifo_msg_hdr and
-      mlxbf_tmfifo_irq_info as well.
-    - Use _MAX instead of _CNT in the macro definition to be consistent.
-    - Fix the MODULE_LICENSE.
-    - Use BIT_ULL() instead of BIT().
-    - Remove argument of 'avail' for mlxbf_tmfifo_rxtx_header() and
-      mlxbf_tmfifo_rxtx_word()
-    - Revise logic in mlxbf_tmfifo_rxtx_one_desc() to remove the
-      WARN_ON().
-    - Change "union mlxbf_tmfifo_u64 u" to "union mlxbf_tmfifo_u64 buf"
-      in mlxbf_tmfifo_rxtx_word().
-    - Change date type of vring_change from 'int' to 'bool'.
-    - Remove the blank lines after Signed-off.
-    - Don’t use declaration in the middle.
-    - Make the network header initialization in some more elegant way.
-    - Change label done to mlxbf_tmfifo_desc_done.
-    - Remove some unnecessary comments, and several other misc coding
-      style comments.
-    - Simplify code logic in mlxbf_tmfifo_virtio_notify()
-    New changes by Liming:
-    - Simplify the Rx/Tx function arguments to make it more readable.
-v8->v9:
-    Fixes for comments from Andy:
-    - Use modern devm_xxx() API instead.
-    Fixes for comments from Vadim:
-    - Split the Rx/Tx function into smaller funcitons.
-    - File name, copyright information.
-    - Function and variable name conversion.
-    - Local variable and indent coding styles.
-    - Remove unnecessary 'inline' declarations.
-    - Use devm_xxx() APIs.
-    - Move the efi_char16_t MAC address definition to global.
-    - Fix warnings reported by 'checkpatch --strict'.
-    - Fix warnings reported by 'make CF="-D__CHECK_ENDIAN__"'.
-    - Change select VIRTIO_xxx to depends on  VIRTIO_ in Kconfig.
-    - Merge mlxbf_tmfifo_vdev_tx_buf_push() and
-      mlxbf_tmfifo_vdev_tx_buf_pop().
-    - Add union to avoid casting between __le64 and u64.
-    - Several other misc coding style comments.
-    New changes by Liming:
-    - Removed the DT binding documentation since only ACPI is
-      supported for now by UEFI on the SoC.
-v8: Re-submit under drivers/platform/mellanox for the target-side
-    platform driver only.
-v7: Added host side drivers into the same patch set.
-v5~v6: Coding style fix.
-v1~v4: Initial version for directory drivers/soc/mellanox.
----
- drivers/platform/mellanox/Kconfig             |   12 +-
- drivers/platform/mellanox/Makefile            |    1 +
- drivers/platform/mellanox/mlxbf-tmfifo-regs.h |   63 ++
- drivers/platform/mellanox/mlxbf-tmfifo.c      | 1286 +++++++++++++++++++++++++
- 4 files changed, 1361 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo-regs.h
- create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo.c
 
-diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-index cd8a908..530fe7e 100644
---- a/drivers/platform/mellanox/Kconfig
-+++ b/drivers/platform/mellanox/Kconfig
-@@ -5,7 +5,7 @@
- 
- menuconfig MELLANOX_PLATFORM
- 	bool "Platform support for Mellanox hardware"
--	depends on X86 || ARM || COMPILE_TEST
-+	depends on X86 || ARM || ARM64 || COMPILE_TEST
- 	---help---
- 	  Say Y here to get to see options for platform support for
- 	  Mellanox systems. This option alone does not add any kernel code.
-@@ -34,4 +34,14 @@ config MLXREG_IO
- 	  to system resets operation, system reset causes monitoring and some
- 	  kinds of mux selection.
- 
-+config MLXBF_TMFIFO
-+	tristate "Mellanox BlueField SoC TmFifo platform driver"
-+	depends on ARM64
-+	depends on ACPI
-+	depends on VIRTIO_CONSOLE && VIRTIO_NET
-+	help
-+	  Say y here to enable TmFifo support. The TmFifo driver provides
-+          platform driver support for the TmFifo which supports console
-+          and networking based on the virtio framework.
-+
- endif # MELLANOX_PLATFORM
-diff --git a/drivers/platform/mellanox/Makefile b/drivers/platform/mellanox/Makefile
-index 57074d9c..a229bda1 100644
---- a/drivers/platform/mellanox/Makefile
-+++ b/drivers/platform/mellanox/Makefile
-@@ -3,5 +3,6 @@
- # Makefile for linux/drivers/platform/mellanox
- # Mellanox Platform-Specific Drivers
- #
-+obj-$(CONFIG_MLXBF_TMFIFO)	+= mlxbf-tmfifo.o
- obj-$(CONFIG_MLXREG_HOTPLUG)	+= mlxreg-hotplug.o
- obj-$(CONFIG_MLXREG_IO) += mlxreg-io.o
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo-regs.h b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
-new file mode 100644
-index 0000000..e4f0d2e
---- /dev/null
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo-regs.h
-@@ -0,0 +1,63 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019, Mellanox Technologies. All rights reserved.
-+ */
-+
-+#ifndef __MLXBF_TMFIFO_REGS_H__
-+#define __MLXBF_TMFIFO_REGS_H__
-+
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+
-+#define MLXBF_TMFIFO_TX_DATA				0x00
-+#define MLXBF_TMFIFO_TX_STS				0x08
-+#define MLXBF_TMFIFO_TX_STS__LENGTH			0x0001
-+#define MLXBF_TMFIFO_TX_STS__COUNT_SHIFT		0
-+#define MLXBF_TMFIFO_TX_STS__COUNT_WIDTH		9
-+#define MLXBF_TMFIFO_TX_STS__COUNT_RESET_VAL		0
-+#define MLXBF_TMFIFO_TX_STS__COUNT_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_STS__COUNT_MASK			GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_CTL				0x10
-+#define MLXBF_TMFIFO_TX_CTL__LENGTH			0x0001
-+#define MLXBF_TMFIFO_TX_CTL__LWM_SHIFT			0
-+#define MLXBF_TMFIFO_TX_CTL__LWM_WIDTH			8
-+#define MLXBF_TMFIFO_TX_CTL__LWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_TX_CTL__LWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__LWM_MASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__HWM_SHIFT			8
-+#define MLXBF_TMFIFO_TX_CTL__HWM_WIDTH			8
-+#define MLXBF_TMFIFO_TX_CTL__HWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_TX_CTL__HWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_TX_CTL__HWM_MASK			GENMASK_ULL(15, 8)
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_SHIFT		32
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_WIDTH		9
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_RESET_VAL	256
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_MASK		GENMASK_ULL(40, 32)
-+#define MLXBF_TMFIFO_RX_DATA				0x00
-+#define MLXBF_TMFIFO_RX_STS				0x08
-+#define MLXBF_TMFIFO_RX_STS__LENGTH			0x0001
-+#define MLXBF_TMFIFO_RX_STS__COUNT_SHIFT		0
-+#define MLXBF_TMFIFO_RX_STS__COUNT_WIDTH		9
-+#define MLXBF_TMFIFO_RX_STS__COUNT_RESET_VAL		0
-+#define MLXBF_TMFIFO_RX_STS__COUNT_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_STS__COUNT_MASK			GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_CTL				0x10
-+#define MLXBF_TMFIFO_RX_CTL__LENGTH			0x0001
-+#define MLXBF_TMFIFO_RX_CTL__LWM_SHIFT			0
-+#define MLXBF_TMFIFO_RX_CTL__LWM_WIDTH			8
-+#define MLXBF_TMFIFO_RX_CTL__LWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_RX_CTL__LWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__LWM_MASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__HWM_SHIFT			8
-+#define MLXBF_TMFIFO_RX_CTL__HWM_WIDTH			8
-+#define MLXBF_TMFIFO_RX_CTL__HWM_RESET_VAL		128
-+#define MLXBF_TMFIFO_RX_CTL__HWM_RMASK			GENMASK_ULL(7, 0)
-+#define MLXBF_TMFIFO_RX_CTL__HWM_MASK			GENMASK_ULL(15, 8)
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_SHIFT		32
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_WIDTH		9
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_RESET_VAL	256
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_RMASK		GENMASK_ULL(8, 0)
-+#define MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK		GENMASK_ULL(40, 32)
-+
-+#endif /* !defined(__MLXBF_TMFIFO_REGS_H__) */
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-new file mode 100644
-index 0000000..0a31ffa
---- /dev/null
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -0,0 +1,1286 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Mellanox BlueField SoC TmFifo driver
-+ *
-+ * Copyright (C) 2019 Mellanox Technologies
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/circ_buf.h>
-+#include <linux/efi.h>
-+#include <linux/irq.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_console.h>
-+#include <linux/virtio_ids.h>
-+#include <linux/virtio_net.h>
-+#include <linux/virtio_ring.h>
-+
-+#include "mlxbf-tmfifo-regs.h"
-+
-+/* Vring size. */
-+#define MLXBF_TMFIFO_VRING_SIZE			SZ_1K
-+
-+/* Console Tx buffer size. */
-+#define MLXBF_TMFIFO_CON_TX_BUF_SIZE		SZ_32K
-+
-+/* Console Tx buffer reserved space. */
-+#define MLXBF_TMFIFO_CON_TX_BUF_RSV_SIZE	8
-+
-+/* House-keeping timer interval. */
-+#define MLXBF_TMFIFO_TIMER_INTERVAL		(HZ / 10)
-+
-+/* Virtual devices sharing the TM FIFO. */
-+#define MLXBF_TMFIFO_VDEV_MAX		(VIRTIO_ID_CONSOLE + 1)
-+
-+/*
-+ * Reserve 1/16 of TmFifo space, so console messages are not starved by
-+ * the networking traffic.
-+ */
-+#define MLXBF_TMFIFO_RESERVE_RATIO		16
-+
-+/* Message with data needs at least two words (for header & data). */
-+#define MLXBF_TMFIFO_DATA_MIN_WORDS		2
-+
-+struct mlxbf_tmfifo;
-+
-+/**
-+ * mlxbf_tmfifo_vring - Structure of the TmFifo virtual ring
-+ * @va: virtual address of the ring
-+ * @dma: dma address of the ring
-+ * @vq: pointer to the virtio virtqueue
-+ * @desc: current descriptor of the pending packet
-+ * @desc_head: head descriptor of the pending packet
-+ * @cur_len: processed length of the current descriptor
-+ * @rem_len: remaining length of the pending packet
-+ * @pkt_len: total length of the pending packet
-+ * @next_avail: next avail descriptor id
-+ * @num: vring size (number of descriptors)
-+ * @align: vring alignment size
-+ * @index: vring index
-+ * @vdev_id: vring virtio id (VIRTIO_ID_xxx)
-+ * @fifo: pointer to the tmfifo structure
-+ */
-+struct mlxbf_tmfifo_vring {
-+	void *va;
-+	dma_addr_t dma;
-+	struct virtqueue *vq;
-+	struct vring_desc *desc;
-+	struct vring_desc *desc_head;
-+	int cur_len;
-+	int rem_len;
-+	u32 pkt_len;
-+	u16 next_avail;
-+	int num;
-+	int align;
-+	int index;
-+	int vdev_id;
-+	struct mlxbf_tmfifo *fifo;
-+};
-+
-+/* Interrupt types. */
-+enum {
-+	MLXBF_TM_RX_LWM_IRQ,
-+	MLXBF_TM_RX_HWM_IRQ,
-+	MLXBF_TM_TX_LWM_IRQ,
-+	MLXBF_TM_TX_HWM_IRQ,
-+	MLXBF_TM_MAX_IRQ
-+};
-+
-+/* Ring types (Rx & Tx). */
-+enum {
-+	MLXBF_TMFIFO_VRING_RX,
-+	MLXBF_TMFIFO_VRING_TX,
-+	MLXBF_TMFIFO_VRING_MAX
-+};
-+
-+/**
-+ * mlxbf_tmfifo_vdev - Structure of the TmFifo virtual device
-+ * @vdev: virtio device, in which the vdev.id.device field has the
-+ *        VIRTIO_ID_xxx id to distinguish the virtual device.
-+ * @status: status of the device
-+ * @features: supported features of the device
-+ * @vrings: array of tmfifo vrings of this device
-+ * @config.cons: virtual console config -
-+ *               select if vdev.id.device is VIRTIO_ID_CONSOLE
-+ * @config.net: virtual network config -
-+ *              select if vdev.id.device is VIRTIO_ID_NET
-+ * @tx_buf: tx buffer used to buffer data before writing into the FIFO
-+ */
-+struct mlxbf_tmfifo_vdev {
-+	struct virtio_device vdev;
-+	u8 status;
-+	u64 features;
-+	struct mlxbf_tmfifo_vring vrings[MLXBF_TMFIFO_VRING_MAX];
-+	union {
-+		struct virtio_console_config cons;
-+		struct virtio_net_config net;
-+	} config;
-+	struct circ_buf tx_buf;
-+};
-+
-+/**
-+ * mlxbf_tmfifo_irq_info - Structure of the interrupt information
-+ * @fifo: pointer to the tmfifo structure
-+ * @irq: interrupt number
-+ * @index: index into the interrupt array
-+ */
-+struct mlxbf_tmfifo_irq_info {
-+	struct mlxbf_tmfifo *fifo;
-+	int irq;
-+	int index;
-+};
-+
-+/**
-+ * mlxbf_tmfifo - Structure of the TmFifo
-+ * @vdev: array of the virtual devices running over the TmFifo
-+ * @pdev: platform device
-+ * @lock: lock to protect the TmFifo access
-+ * @rx_base: mapped register base address for the Rx fifo
-+ * @tx_base: mapped register base address for the Tx fifo
-+ * @rx_fifo_size: number of entries of the Rx fifo
-+ * @tx_fifo_size: number of entries of the Tx fifo
-+ * @pend_events: pending bits for deferred events
-+ * @irq_info: interrupt information
-+ * @work: work struct for deferred process
-+ * @timer: background timer
-+ * @vring: Tx/Rx ring
-+ * @spin_lock: spin lock
-+ * @is_ready: ready flag
-+ */
-+struct mlxbf_tmfifo {
-+	struct mlxbf_tmfifo_vdev *vdev[MLXBF_TMFIFO_VDEV_MAX];
-+	struct platform_device *pdev;
-+	struct mutex lock;		/* TmFifo lock */
-+	void __iomem *rx_base;
-+	void __iomem *tx_base;
-+	int rx_fifo_size;
-+	int tx_fifo_size;
-+	unsigned long pend_events;
-+	struct mlxbf_tmfifo_irq_info irq_info[MLXBF_TM_MAX_IRQ];
-+	struct work_struct work;
-+	struct timer_list timer;
-+	struct mlxbf_tmfifo_vring *vring[2];
-+	spinlock_t spin_lock;		/* spin lock */
-+	bool is_ready;
-+};
-+
-+/**
-+ * mlxbf_tmfifo_msg_hdr - Structure of the TmFifo message header
-+ * @type: message type
-+ * @len: payload length
-+ * @u: 64-bit union data
-+ */
-+union mlxbf_tmfifo_msg_hdr {
-+	struct {
-+		u8 type;
-+		__be16 len;
-+		u8 unused[5];
-+	} __packed;
-+	u64 data;
-+};
-+
-+/*
-+ * Default MAC.
-+ * This MAC address will be read from EFI persistent variable if configured.
-+ * It can also be reconfigured with standard Linux tools.
-+ */
-+static u8 mlxbf_tmfifo_net_default_mac[ETH_ALEN] = {
-+	0x00, 0x1A, 0xCA, 0xFF, 0xFF, 0x01};
-+
-+/* EFI variable name of the MAC address. */
-+static efi_char16_t mlxbf_tmfifo_efi_name[] = L"RshimMacAddr";
-+
-+/* Maximum L2 header length. */
-+#define MLXBF_TMFIFO_NET_L2_OVERHEAD	36
-+
-+/* Supported virtio-net features. */
-+#define MLXBF_TMFIFO_NET_FEATURES	(BIT_ULL(VIRTIO_NET_F_MTU) | \
-+					 BIT_ULL(VIRTIO_NET_F_STATUS) | \
-+					 BIT_ULL(VIRTIO_NET_F_MAC))
-+
-+#define mlxbf_vdev_to_tmfifo(dev)	\
-+	container_of(dev, struct mlxbf_tmfifo_vdev, vdev)
-+
-+/* Allocate vrings for the fifo. */
-+static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
-+				     struct mlxbf_tmfifo_vdev *tm_vdev)
-+{
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct device *dev;
-+	dma_addr_t dma;
-+	int i, size;
-+	void *va;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+		vring->fifo = fifo;
-+		vring->num = MLXBF_TMFIFO_VRING_SIZE;
-+		vring->align = SMP_CACHE_BYTES;
-+		vring->index = i;
-+		vring->vdev_id = tm_vdev->vdev.id.device;
-+		dev = &tm_vdev->vdev.dev;
-+
-+		size = vring_size(vring->num, vring->align);
-+		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
-+		if (!va) {
-+			dev_err(dev->parent, "dma_alloc_coherent failed\n");
-+			return -ENOMEM;
-+		}
-+
-+		vring->va = va;
-+		vring->dma = dma;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Free vrings of the fifo device. */
-+static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
-+				     struct mlxbf_tmfifo_vdev *tm_vdev)
-+{
-+	struct mlxbf_tmfifo_vring *vring;
-+	int i, size;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+		if (vring->va) {
-+			size = vring_size(vring->num, vring->align);
-+			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
-+					  vring->va, vring->dma);
-+			vring->va = NULL;
-+			if (vring->vq) {
-+				vring_del_virtqueue(vring->vq);
-+				vring->vq = NULL;
-+			}
-+		}
-+	}
-+}
-+
-+/* Disable interrupts of the fifo device. */
-+static void mlxbf_tmfifo_disable_irqs(struct mlxbf_tmfifo *fifo)
-+{
-+	int i, irq;
-+
-+	for (i = 0; i < MLXBF_TM_MAX_IRQ; i++) {
-+		irq = fifo->irq_info[i].irq;
-+		fifo->irq_info[i].irq = 0;
-+		disable_irq(irq);
-+	}
-+}
-+
-+/* Interrupt handler. */
-+static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
-+{
-+	struct mlxbf_tmfifo_irq_info *irq_info = arg;
-+
-+	if (irq_info->index < MLXBF_TM_MAX_IRQ &&
-+	    !test_and_set_bit(irq_info->index, &irq_info->fifo->pend_events))
-+		schedule_work(&irq_info->fifo->work);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Get the next packet descriptor from the vring. */
-+static struct vring_desc *
-+mlxbf_tmfifo_get_next_desc(struct mlxbf_tmfifo_vring *vring)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	unsigned int idx, head;
-+
-+	if (vring->next_avail == virtio16_to_cpu(vdev, vr->avail->idx))
-+		return NULL;
-+
-+	idx = vring->next_avail % vr->num;
-+	head = virtio16_to_cpu(vdev, vr->avail->ring[idx]);
-+	if (WARN_ON(head >= vr->num))
-+		return NULL;
-+
-+	vring->next_avail++;
-+
-+	return &vr->desc[head];
-+}
-+
-+/* Release virtio descriptor. */
-+static void mlxbf_tmfifo_release_desc(struct mlxbf_tmfifo_vring *vring,
-+				      struct vring_desc *desc, u32 len)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	u16 idx, vr_idx;
-+
-+	vr_idx = virtio16_to_cpu(vdev, vr->used->idx);
-+	idx = vr_idx % vr->num;
-+	vr->used->ring[idx].id = cpu_to_virtio32(vdev, desc - vr->desc);
-+	vr->used->ring[idx].len = cpu_to_virtio32(vdev, len);
-+
-+	/*
-+	 * Virtio could poll and check the 'idx' to decide whether the desc is
-+	 * done or not. Add a memory barrier here to make sure the update above
-+	 * completes before updating the idx.
-+	 */
-+	mb();
-+	vr->used->idx = cpu_to_virtio16(vdev, vr_idx + 1);
-+}
-+
-+/* Get the total length of the descriptor chain. */
-+static u32 mlxbf_tmfifo_get_pkt_len(struct mlxbf_tmfifo_vring *vring,
-+				    struct vring_desc *desc)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	u32 len = 0, idx;
-+
-+	while (desc) {
-+		len += virtio32_to_cpu(vdev, desc->len);
-+		if (!(virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT))
-+			break;
-+		idx = virtio16_to_cpu(vdev, desc->next);
-+		desc = &vr->desc[idx];
-+	}
-+
-+	return len;
-+}
-+
-+static void mlxbf_tmfifo_release_pending_pkt(struct mlxbf_tmfifo_vring *vring)
-+{
-+	struct vring_desc *desc_head;
-+	u32 len = 0;
-+
-+	if (vring->desc_head) {
-+		desc_head = vring->desc_head;
-+		len = vring->pkt_len;
-+	} else {
-+		desc_head = mlxbf_tmfifo_get_next_desc(vring);
-+		if (desc_head)
-+			len = mlxbf_tmfifo_get_pkt_len(vring, desc_head);
-+	}
-+
-+	if (desc_head)
-+		mlxbf_tmfifo_release_desc(vring, desc_head, len);
-+
-+	vring->pkt_len = 0;
-+	vring->desc = NULL;
-+	vring->desc_head = NULL;
-+}
-+
-+static void mlxbf_tmfifo_init_net_desc(struct mlxbf_tmfifo_vring *vring,
-+				       struct vring_desc *desc, bool is_rx)
-+{
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	struct virtio_net_hdr *net_hdr;
-+
-+	net_hdr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+	memset(net_hdr, 0, sizeof(*net_hdr));
-+}
-+
-+/* Get and initialize the next packet. */
-+static struct vring_desc *
-+mlxbf_tmfifo_get_next_pkt(struct mlxbf_tmfifo_vring *vring, bool is_rx)
-+{
-+	struct vring_desc *desc;
-+
-+	desc = mlxbf_tmfifo_get_next_desc(vring);
-+	if (desc && is_rx && vring->vdev_id == VIRTIO_ID_NET)
-+		mlxbf_tmfifo_init_net_desc(vring, desc, is_rx);
-+
-+	vring->desc_head = desc;
-+	vring->desc = desc;
-+
-+	return desc;
-+}
-+
-+/* House-keeping timer. */
-+static void mlxbf_tmfifo_timer(struct timer_list *arg)
-+{
-+	struct mlxbf_tmfifo *fifo = container_of(arg, struct mlxbf_tmfifo,
-+						 timer);
-+	int more;
-+
-+	more = !test_and_set_bit(MLXBF_TM_RX_HWM_IRQ, &fifo->pend_events) ||
-+		    !test_and_set_bit(MLXBF_TM_TX_LWM_IRQ, &fifo->pend_events);
-+
-+	if (more)
-+		schedule_work(&fifo->work);
-+
-+	mod_timer(&fifo->timer, jiffies + MLXBF_TMFIFO_TIMER_INTERVAL);
-+}
-+
-+/* Copy one console packet into the output buffer. */
-+static void mlxbf_tmfifo_console_output_one(struct mlxbf_tmfifo_vdev *cons,
-+					    struct mlxbf_tmfifo_vring *vring,
-+					    struct vring_desc *desc)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct virtio_device *vdev = &cons->vdev;
-+	u32 len, idx, seg;
-+	void *addr;
-+
-+	while (desc) {
-+		addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+		len = virtio32_to_cpu(vdev, desc->len);
-+
-+		seg = CIRC_SPACE_TO_END(cons->tx_buf.head, cons->tx_buf.tail,
-+					MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (len <= seg) {
-+			memcpy(cons->tx_buf.buf + cons->tx_buf.head, addr, len);
-+		} else {
-+			memcpy(cons->tx_buf.buf + cons->tx_buf.head, addr, seg);
-+			addr += seg;
-+			memcpy(cons->tx_buf.buf, addr, len - seg);
-+		}
-+		cons->tx_buf.head = (cons->tx_buf.head + len) %
-+			MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+
-+		if (!(virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT))
-+			break;
-+		idx = virtio16_to_cpu(vdev, desc->next);
-+		desc = &vr->desc[idx];
-+	}
-+}
-+
-+/* Copy console data into the output buffer. */
-+static void mlxbf_tmfifo_console_output(struct mlxbf_tmfifo_vdev *cons,
-+					struct mlxbf_tmfifo_vring *vring)
-+{
-+	struct vring_desc *desc;
-+	u32 len, avail;
-+
-+	desc = mlxbf_tmfifo_get_next_desc(vring);
-+	while (desc) {
-+		/* Release the packet if not enough space. */
-+		len = mlxbf_tmfifo_get_pkt_len(vring, desc);
-+		avail = CIRC_SPACE(cons->tx_buf.head, cons->tx_buf.tail,
-+				   MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (len + MLXBF_TMFIFO_CON_TX_BUF_RSV_SIZE > avail) {
-+			mlxbf_tmfifo_release_desc(vring, desc, len);
-+			break;
-+		}
-+
-+		mlxbf_tmfifo_console_output_one(cons, vring, desc);
-+		mlxbf_tmfifo_release_desc(vring, desc, len);
-+		desc = mlxbf_tmfifo_get_next_desc(vring);
-+	}
-+}
-+
-+/* Get the number of available words in Rx FIFO for receiving. */
-+static int mlxbf_tmfifo_get_rx_avail(struct mlxbf_tmfifo *fifo)
-+{
-+	u64 sts;
-+
-+	sts = readq(fifo->rx_base + MLXBF_TMFIFO_RX_STS);
-+	return FIELD_GET(MLXBF_TMFIFO_RX_STS__COUNT_MASK, sts);
-+}
-+
-+/* Get the number of available words in the TmFifo for sending. */
-+static int mlxbf_tmfifo_get_tx_avail(struct mlxbf_tmfifo *fifo, int vdev_id)
-+{
-+	int tx_reserve;
-+	u32 count;
-+	u64 sts;
-+
-+	/* Reserve some room in FIFO for console messages. */
-+	if (vdev_id == VIRTIO_ID_NET)
-+		tx_reserve = fifo->tx_fifo_size / MLXBF_TMFIFO_RESERVE_RATIO;
-+	else
-+		tx_reserve = 1;
-+
-+	sts = readq(fifo->tx_base + MLXBF_TMFIFO_TX_STS);
-+	count = FIELD_GET(MLXBF_TMFIFO_TX_STS__COUNT_MASK, sts);
-+	return fifo->tx_fifo_size - tx_reserve - count;
-+}
-+
-+/* Console Tx (move data from the output buffer into the TmFifo). */
-+static void mlxbf_tmfifo_console_tx(struct mlxbf_tmfifo *fifo, int avail)
-+{
-+	union mlxbf_tmfifo_msg_hdr hdr;
-+	struct mlxbf_tmfifo_vdev *cons;
-+	unsigned long flags;
-+	int size, seg;
-+	void *addr;
-+	u64 data;
-+
-+	/* Return if not enough space available. */
-+	if (avail < MLXBF_TMFIFO_DATA_MIN_WORDS)
-+		return;
-+
-+	cons = fifo->vdev[VIRTIO_ID_CONSOLE];
-+	if (!cons || !cons->tx_buf.buf)
-+		return;
-+
-+	/* Return if no data to send. */
-+	size = CIRC_CNT(cons->tx_buf.head, cons->tx_buf.tail,
-+			MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+	if (size == 0)
-+		return;
-+
-+	/* Adjust the size to available space. */
-+	if (size + sizeof(hdr) > avail * sizeof(u64))
-+		size = avail * sizeof(u64) - sizeof(hdr);
-+
-+	/* Write header. */
-+	hdr.data = 0;
-+	hdr.type = VIRTIO_ID_CONSOLE;
-+	hdr.len = htons(size);
-+	writeq(hdr.data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+
-+	/* Use spin-lock to protect the 'cons->tx_buf'. */
-+	spin_lock_irqsave(&fifo->spin_lock, flags);
-+
-+	while (size > 0) {
-+		addr = cons->tx_buf.buf + cons->tx_buf.tail;
-+
-+		seg = CIRC_CNT_TO_END(cons->tx_buf.head, cons->tx_buf.tail,
-+				      MLXBF_TMFIFO_CON_TX_BUF_SIZE);
-+		if (seg >= sizeof(u64)) {
-+			memcpy(&data, addr, sizeof(u64));
-+		} else {
-+			memcpy(&data, addr, seg);
-+			memcpy((u8 *)&data + seg, cons->tx_buf.buf,
-+			       sizeof(u64) - seg);
-+		}
-+		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+
-+		if (size >= sizeof(u64)) {
-+			cons->tx_buf.tail = (cons->tx_buf.tail + sizeof(u64)) %
-+				MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+			size -= sizeof(u64);
-+		} else {
-+			cons->tx_buf.tail = (cons->tx_buf.tail + size) %
-+				MLXBF_TMFIFO_CON_TX_BUF_SIZE;
-+			size = 0;
-+		}
-+	}
-+
-+	spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+}
-+
-+/* Rx/Tx one word in the descriptor buffer. */
-+static void mlxbf_tmfifo_rxtx_word(struct mlxbf_tmfifo_vring *vring,
-+				   struct vring_desc *desc,
-+				   bool is_rx, int len)
-+{
-+	struct virtio_device *vdev = vring->vq->vdev;
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	void *addr;
-+	u64 data;
-+
-+	/* Get the buffer address of this desc. */
-+	addr = phys_to_virt(virtio64_to_cpu(vdev, desc->addr));
-+
-+	/* Read a word from FIFO for Rx. */
-+	if (is_rx)
-+		data = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
-+
-+	if (vring->cur_len + sizeof(u64) <= len) {
-+		/* The whole word. */
-+		if (is_rx)
-+			memcpy(addr + vring->cur_len, &data, sizeof(u64));
-+		else
-+			memcpy(&data, addr + vring->cur_len, sizeof(u64));
-+		vring->cur_len += sizeof(u64);
-+	} else {
-+		/* Leftover bytes. */
-+		if (is_rx)
-+			memcpy(addr + vring->cur_len, &data,
-+			       len - vring->cur_len);
-+		else
-+			memcpy(&data, addr + vring->cur_len,
-+			       len - vring->cur_len);
-+		vring->cur_len = len;
-+	}
-+
-+	/* Write the word into FIFO for Tx. */
-+	if (!is_rx)
-+		writeq(data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+}
-+
-+/*
-+ * Rx/Tx packet header.
-+ *
-+ * In Rx case, the packet might be found to belong to a different vring since
-+ * the TmFifo is shared by different services. In such case, the 'vring_change'
-+ * flag is set.
-+ */
-+static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
-+				     struct vring_desc *desc,
-+				     bool is_rx, bool *vring_change)
-+{
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	struct virtio_net_config *config;
-+	union mlxbf_tmfifo_msg_hdr hdr;
-+	int vdev_id, hdr_len;
-+
-+	/* Read/Write packet header. */
-+	if (is_rx) {
-+		/* Drain one word from the FIFO. */
-+		hdr.data = readq(fifo->rx_base + MLXBF_TMFIFO_RX_DATA);
-+
-+		/* Skip the length 0 packets (keepalive). */
-+		if (hdr.len == 0)
-+			return;
-+
-+		/* Check packet type. */
-+		if (hdr.type == VIRTIO_ID_NET) {
-+			vdev_id = VIRTIO_ID_NET;
-+			hdr_len = sizeof(struct virtio_net_hdr);
-+			config = &fifo->vdev[vdev_id]->config.net;
-+			if (ntohs(hdr.len) > config->mtu +
-+			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
-+				return;
-+		} else {
-+			vdev_id = VIRTIO_ID_CONSOLE;
-+			hdr_len = 0;
-+		}
-+
-+		/*
-+		 * Check whether the new packet still belongs to this vring.
-+		 * If not, update the pkt_len of the new vring.
-+		 */
-+		if (vdev_id != vring->vdev_id) {
-+			struct mlxbf_tmfifo_vdev *tm_dev2 = fifo->vdev[vdev_id];
-+
-+			if (!tm_dev2)
-+				return;
-+			vring->desc = desc;
-+			vring = &tm_dev2->vrings[MLXBF_TMFIFO_VRING_RX];
-+			*vring_change = true;
-+		}
-+		vring->pkt_len = ntohs(hdr.len) + hdr_len;
-+	} else {
-+		/* Network virtio has an extra header. */
-+		hdr_len = (vring->vdev_id == VIRTIO_ID_NET) ?
-+			   sizeof(struct virtio_net_hdr) : 0;
-+		vring->pkt_len = mlxbf_tmfifo_get_pkt_len(vring, desc);
-+		hdr.data = 0;
-+		hdr.type = (vring->vdev_id == VIRTIO_ID_NET) ?
-+			    VIRTIO_ID_NET : VIRTIO_ID_CONSOLE;
-+		hdr.len = htons(vring->pkt_len - hdr_len);
-+		writeq(hdr.data, fifo->tx_base + MLXBF_TMFIFO_TX_DATA);
-+	}
-+
-+	vring->cur_len = hdr_len;
-+	vring->rem_len = vring->pkt_len;
-+	fifo->vring[is_rx] = vring;
-+}
-+
-+/*
-+ * Rx/Tx one descriptor.
-+ *
-+ * Return true to indicate more data available.
-+ */
-+static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
-+				       bool is_rx, int *avail)
-+{
-+	const struct vring *vr = virtqueue_get_vring(vring->vq);
-+	struct mlxbf_tmfifo *fifo = vring->fifo;
-+	struct virtio_device *vdev;
-+	bool vring_change = false;
-+	struct vring_desc *desc;
-+	unsigned long flags;
-+	u32 len, idx;
-+
-+	vdev = &fifo->vdev[vring->vdev_id]->vdev;
-+
-+	/* Get the descriptor of the next packet. */
-+	if (!vring->desc) {
-+		desc = mlxbf_tmfifo_get_next_pkt(vring, is_rx);
-+		if (!desc)
-+			return false;
-+	} else {
-+		desc = vring->desc;
-+	}
-+
-+	/* Beginning of a packet. Start to Rx/Tx packet header. */
-+	if (vring->pkt_len == 0) {
-+		mlxbf_tmfifo_rxtx_header(vring, desc, is_rx, &vring_change);
-+		(*avail)--;
-+
-+		/* Return if new packet is for another ring. */
-+		if (vring_change)
-+			return false;
-+		goto mlxbf_tmfifo_desc_done;
-+	}
-+
-+	/* Get the length of this desc. */
-+	len = virtio32_to_cpu(vdev, desc->len);
-+	if (len > vring->rem_len)
-+		len = vring->rem_len;
-+
-+	/* Rx/Tx one word (8 bytes) if not done. */
-+	if (vring->cur_len < len) {
-+		mlxbf_tmfifo_rxtx_word(vring, desc, is_rx, len);
-+		(*avail)--;
-+	}
-+
-+	/* Check again whether it's done. */
-+	if (vring->cur_len == len) {
-+		vring->cur_len = 0;
-+		vring->rem_len -= len;
-+
-+		/* Get the next desc on the chain. */
-+		if (vring->rem_len > 0 &&
-+		    (virtio16_to_cpu(vdev, desc->flags) & VRING_DESC_F_NEXT)) {
-+			idx = virtio16_to_cpu(vdev, desc->next);
-+			desc = &vr->desc[idx];
-+			goto mlxbf_tmfifo_desc_done;
-+		}
-+
-+		/* Done and release the pending packet. */
-+		mlxbf_tmfifo_release_pending_pkt(vring);
-+		desc = NULL;
-+		fifo->vring[is_rx] = NULL;
-+
-+		/* Notify upper layer that packet is done. */
-+		spin_lock_irqsave(&fifo->spin_lock, flags);
-+		vring_interrupt(0, vring->vq);
-+		spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+	}
-+
-+mlxbf_tmfifo_desc_done:
-+	/* Save the current desc. */
-+	vring->desc = desc;
-+
-+	return true;
-+}
-+
-+/* Rx & Tx processing of a queue. */
-+static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
-+{
-+	int avail = 0, devid = vring->vdev_id;
-+	struct mlxbf_tmfifo *fifo;
-+	bool more;
-+
-+	fifo = vring->fifo;
-+
-+	/* Return if vdev is not ready. */
-+	if (!fifo->vdev[devid])
-+		return;
-+
-+	/* Return if another vring is running. */
-+	if (fifo->vring[is_rx] && fifo->vring[is_rx] != vring)
-+		return;
-+
-+	/* Only handle console and network for now. */
-+	if (WARN_ON(devid != VIRTIO_ID_NET && devid != VIRTIO_ID_CONSOLE))
-+		return;
-+
-+	do {
-+		/* Get available FIFO space. */
-+		if (avail == 0) {
-+			if (is_rx)
-+				avail = mlxbf_tmfifo_get_rx_avail(fifo);
-+			else
-+				avail = mlxbf_tmfifo_get_tx_avail(fifo, devid);
-+			if (avail <= 0)
-+				break;
-+		}
-+
-+		/* Console output always comes from the Tx buffer. */
-+		if (!is_rx && devid == VIRTIO_ID_CONSOLE) {
-+			mlxbf_tmfifo_console_tx(fifo, avail);
-+			break;
-+		}
-+
-+		/* Handle one descriptor. */
-+		more = mlxbf_tmfifo_rxtx_one_desc(vring, is_rx, &avail);
-+	} while (more);
-+}
-+
-+/* Handle Rx or Tx queues. */
-+static void mlxbf_tmfifo_work_rxtx(struct mlxbf_tmfifo *fifo, int queue_id,
-+				   int irq_id, bool is_rx)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	struct mlxbf_tmfifo_vring *vring;
-+	int i;
-+
-+	if (!test_and_clear_bit(irq_id, &fifo->pend_events) ||
-+	    !fifo->irq_info[irq_id].irq)
-+		return;
-+
-+	for (i = 0; i < MLXBF_TMFIFO_VDEV_MAX; i++) {
-+		tm_vdev = fifo->vdev[i];
-+		if (tm_vdev) {
-+			vring = &tm_vdev->vrings[queue_id];
-+			if (vring->vq)
-+				mlxbf_tmfifo_rxtx(vring, is_rx);
-+		}
-+	}
-+}
-+
-+/* Work handler for Rx and Tx case. */
-+static void mlxbf_tmfifo_work_handler(struct work_struct *work)
-+{
-+	struct mlxbf_tmfifo *fifo;
-+
-+	fifo = container_of(work, struct mlxbf_tmfifo, work);
-+	if (!fifo->is_ready)
-+		return;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Tx (Send data to the TmFifo). */
-+	mlxbf_tmfifo_work_rxtx(fifo, MLXBF_TMFIFO_VRING_TX,
-+			       MLXBF_TM_TX_LWM_IRQ, false);
-+
-+	/* Rx (Receive data from the TmFifo). */
-+	mlxbf_tmfifo_work_rxtx(fifo, MLXBF_TMFIFO_VRING_RX,
-+			       MLXBF_TM_RX_HWM_IRQ, true);
-+
-+	mutex_unlock(&fifo->lock);
-+}
-+
-+/* The notify function is called when new buffers are posted. */
-+static bool mlxbf_tmfifo_virtio_notify(struct virtqueue *vq)
-+{
-+	struct mlxbf_tmfifo_vring *vring = vq->priv;
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	struct mlxbf_tmfifo *fifo;
-+	unsigned long flags;
-+
-+	fifo = vring->fifo;
-+
-+	/*
-+	 * Virtio maintains vrings in pairs, even number ring for Rx
-+	 * and odd number ring for Tx.
-+	 */
-+	if (!(vring->index & BIT(0))) {
-+		if (test_and_set_bit(MLXBF_TM_RX_HWM_IRQ, &fifo->pend_events))
-+			return true;
-+	} else {
-+		/*
-+		 * Console could make blocking call with interrupts disabled.
-+		 * In such case, the vring needs to be served right away. For
-+		 * other cases, just set the TX LWM bit to start Tx in the
-+		 * worker handler.
-+		 */
-+		if (vring->vdev_id == VIRTIO_ID_CONSOLE) {
-+			spin_lock_irqsave(&fifo->spin_lock, flags);
-+			tm_vdev = fifo->vdev[VIRTIO_ID_CONSOLE];
-+			mlxbf_tmfifo_console_output(tm_vdev, vring);
-+			spin_unlock_irqrestore(&fifo->spin_lock, flags);
-+		} else if (test_and_set_bit(MLXBF_TM_TX_LWM_IRQ,
-+					    &fifo->pend_events)) {
-+			return true;
-+		}
-+	}
-+
-+	schedule_work(&fifo->work);
-+
-+	return true;
-+}
-+
-+/* Get the array of feature bits for this device. */
-+static u64 mlxbf_tmfifo_virtio_get_features(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	return tm_vdev->features;
-+}
-+
-+/* Confirm device features to use. */
-+static int mlxbf_tmfifo_virtio_finalize_features(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->features = vdev->features;
-+
-+	return 0;
-+}
-+
-+/* Free virtqueues found by find_vqs(). */
-+static void mlxbf_tmfifo_virtio_del_vqs(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* Release the pending packet. */
-+		if (vring->desc)
-+			mlxbf_tmfifo_release_pending_pkt(vring);
-+		vq = vring->vq;
-+		if (vq) {
-+			vring->vq = NULL;
-+			vring_del_virtqueue(vq);
-+		}
-+	}
-+}
-+
-+/* Create and initialize the virtual queues. */
-+static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
-+					unsigned int nvqs,
-+					struct virtqueue *vqs[],
-+					vq_callback_t *callbacks[],
-+					const char * const names[],
-+					const bool *ctx,
-+					struct irq_affinity *desc)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+	struct mlxbf_tmfifo_vring *vring;
-+	struct virtqueue *vq;
-+	int i, ret, size;
-+
-+	if (nvqs > ARRAY_SIZE(tm_vdev->vrings))
-+		return -EINVAL;
-+
-+	for (i = 0; i < nvqs; ++i) {
-+		if (!names[i]) {
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+		vring = &tm_vdev->vrings[i];
-+
-+		/* zero vring */
-+		size = vring_size(vring->num, vring->align);
-+		memset(vring->va, 0, size);
-+		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
-+					 false, false, vring->va,
-+					 mlxbf_tmfifo_virtio_notify,
-+					 callbacks[i], names[i]);
-+		if (!vq) {
-+			dev_err(&vdev->dev, "vring_new_virtqueue failed\n");
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+
-+		vqs[i] = vq;
-+		vring->vq = vq;
-+		vq->priv = vring;
-+	}
-+
-+	return 0;
-+
-+error:
-+	mlxbf_tmfifo_virtio_del_vqs(vdev);
-+	return ret;
-+}
-+
-+/* Read the status byte. */
-+static u8 mlxbf_tmfifo_virtio_get_status(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	return tm_vdev->status;
-+}
-+
-+/* Write the status byte. */
-+static void mlxbf_tmfifo_virtio_set_status(struct virtio_device *vdev,
-+					   u8 status)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->status = status;
-+}
-+
-+/* Reset the device. Not much here for now. */
-+static void mlxbf_tmfifo_virtio_reset(struct virtio_device *vdev)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	tm_vdev->status = 0;
-+}
-+
-+/* Read the value of a configuration field. */
-+static void mlxbf_tmfifo_virtio_get(struct virtio_device *vdev,
-+				    unsigned int offset,
-+				    void *buf,
-+				    unsigned int len)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config))
-+		return;
-+
-+	memcpy(buf, (u8 *)&tm_vdev->config + offset, len);
-+}
-+
-+/* Write the value of a configuration field. */
-+static void mlxbf_tmfifo_virtio_set(struct virtio_device *vdev,
-+				    unsigned int offset,
-+				    const void *buf,
-+				    unsigned int len)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-+
-+	if (offset + len > sizeof(tm_vdev->config))
-+		return;
-+
-+	memcpy((u8 *)&tm_vdev->config + offset, buf, len);
-+}
-+
-+/*
-+ * Nothing to do for now. This function is needed to avoid warnings
-+ * when the device is released in device_release().
-+ */
-+static void tmfifo_virtio_dev_release(struct device *dev)
-+{
-+}
-+
-+/* Virtio config operations. */
-+static const struct virtio_config_ops mlxbf_tmfifo_virtio_config_ops = {
-+	.get_features = mlxbf_tmfifo_virtio_get_features,
-+	.finalize_features = mlxbf_tmfifo_virtio_finalize_features,
-+	.find_vqs = mlxbf_tmfifo_virtio_find_vqs,
-+	.del_vqs = mlxbf_tmfifo_virtio_del_vqs,
-+	.reset = mlxbf_tmfifo_virtio_reset,
-+	.set_status = mlxbf_tmfifo_virtio_set_status,
-+	.get_status = mlxbf_tmfifo_virtio_get_status,
-+	.get = mlxbf_tmfifo_virtio_get,
-+	.set = mlxbf_tmfifo_virtio_set,
-+};
-+
-+/* Create vdev type in a tmfifo. */
-+static int mlxbf_tmfifo_create_vdev(struct device *dev,
-+				    struct mlxbf_tmfifo *fifo,
-+				    int vdev_id, u64 features,
-+				    void *config, u32 size)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+	int ret;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev) {
-+		dev_err(dev, "vdev %d already exists\n", vdev_id);
-+		ret = -EEXIST;
-+		goto fail;
-+	}
-+
-+	tm_vdev = devm_kzalloc(dev, sizeof(*tm_vdev), GFP_KERNEL);
-+	if (!tm_vdev) {
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	tm_vdev->vdev.id.device = vdev_id;
-+	tm_vdev->vdev.config = &mlxbf_tmfifo_virtio_config_ops;
-+	tm_vdev->vdev.dev.parent = &fifo->pdev->dev;
-+	tm_vdev->vdev.dev.release = tmfifo_virtio_dev_release;
-+	tm_vdev->features = features;
-+	if (config)
-+		memcpy(&tm_vdev->config, config, size);
-+
-+	if (mlxbf_tmfifo_alloc_vrings(fifo, tm_vdev)) {
-+		dev_err(dev, "unable to allocate vring\n");
-+		ret = -ENOMEM;
-+		goto vdev_fail;
-+	}
-+
-+	/* Allocate an output buffer for the console device. */
-+	if (vdev_id == VIRTIO_ID_CONSOLE)
-+		tm_vdev->tx_buf.buf = devm_kmalloc(dev,
-+						   MLXBF_TMFIFO_CON_TX_BUF_SIZE,
-+						   GFP_KERNEL);
-+	fifo->vdev[vdev_id] = tm_vdev;
-+
-+	/* Register the virtio device. */
-+	ret = register_virtio_device(&tm_vdev->vdev);
-+	if (ret) {
-+		dev_err(&fifo->pdev->dev, "register_virtio_device failed\n");
-+		goto vdev_fail;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+	return 0;
-+
-+vdev_fail:
-+	mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-+	fifo->vdev[vdev_id] = NULL;
-+fail:
-+	mutex_unlock(&fifo->lock);
-+	return ret;
-+}
-+
-+/* Delete vdev type from a tmfifo. */
-+static int mlxbf_tmfifo_delete_vdev(struct mlxbf_tmfifo *fifo, int vdev_id)
-+{
-+	struct mlxbf_tmfifo_vdev *tm_vdev;
-+
-+	mutex_lock(&fifo->lock);
-+
-+	/* Unregister vdev. */
-+	tm_vdev = fifo->vdev[vdev_id];
-+	if (tm_vdev) {
-+		unregister_virtio_device(&tm_vdev->vdev);
-+		mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-+		fifo->vdev[vdev_id] = NULL;
-+	}
-+
-+	mutex_unlock(&fifo->lock);
-+
-+	return 0;
-+}
-+
-+/* Read the configured network MAC address from efi variable. */
-+static void mlxbf_tmfifo_get_cfg_mac(u8 *mac)
-+{
-+	efi_guid_t guid = EFI_GLOBAL_VARIABLE_GUID;
-+	unsigned long size = ETH_ALEN;
-+	efi_status_t status;
-+	u8 buf[ETH_ALEN];
-+
-+	status = efi.get_variable(mlxbf_tmfifo_efi_name, &guid, NULL, &size,
-+				  buf);
-+	if (status == EFI_SUCCESS && size == ETH_ALEN)
-+		ether_addr_copy(mac, buf);
-+	else
-+		memcpy(mac, mlxbf_tmfifo_net_default_mac, ETH_ALEN);
-+}
-+
-+/* Set TmFifo thresolds which is used to trigger interrupts. */
-+static void mlxbf_tmfifo_set_threshold(struct mlxbf_tmfifo *fifo)
-+{
-+	u64 ctl;
-+
-+	/* Get Tx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
-+	fifo->tx_fifo_size =
-+		FIELD_GET(MLXBF_TMFIFO_TX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__LWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_TX_CTL__LWM_MASK,
-+			   fifo->tx_fifo_size / 2);
-+	ctl = (ctl & ~MLXBF_TMFIFO_TX_CTL__HWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_TX_CTL__HWM_MASK,
-+			   fifo->tx_fifo_size - 1);
-+	writeq(ctl, fifo->tx_base + MLXBF_TMFIFO_TX_CTL);
-+
-+	/* Get Rx FIFO size and set the low/high watermark. */
-+	ctl = readq(fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
-+	fifo->rx_fifo_size =
-+		FIELD_GET(MLXBF_TMFIFO_RX_CTL__MAX_ENTRIES_MASK, ctl);
-+	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__LWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__LWM_MASK, 0);
-+	ctl = (ctl & ~MLXBF_TMFIFO_RX_CTL__HWM_MASK) |
-+		FIELD_PREP(MLXBF_TMFIFO_RX_CTL__HWM_MASK, 1);
-+	writeq(ctl, fifo->rx_base + MLXBF_TMFIFO_RX_CTL);
-+}
-+
-+static void mlxbf_tmfifo_cleanup(struct mlxbf_tmfifo *fifo)
-+{
-+	int i;
-+
-+	fifo->is_ready = false;
-+	del_timer_sync(&fifo->timer);
-+	mlxbf_tmfifo_disable_irqs(fifo);
-+	cancel_work_sync(&fifo->work);
-+	for (i = 0; i < MLXBF_TMFIFO_VDEV_MAX; i++)
-+		mlxbf_tmfifo_delete_vdev(fifo, i);
-+}
-+
-+/* Probe the TMFIFO. */
-+static int mlxbf_tmfifo_probe(struct platform_device *pdev)
-+{
-+	struct virtio_net_config net_config;
-+	struct mlxbf_tmfifo *fifo;
-+	struct resource *res;
-+	int i, ret;
-+
-+	fifo = devm_kzalloc(&pdev->dev, sizeof(*fifo), GFP_KERNEL);
-+	if (!fifo)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&fifo->spin_lock);
-+	INIT_WORK(&fifo->work, mlxbf_tmfifo_work_handler);
-+	mutex_init(&fifo->lock);
-+
-+	/* Get the resource of the Rx FIFO. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	fifo->rx_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(fifo->rx_base))
-+		return PTR_ERR(fifo->rx_base);
-+
-+	/* Get the resource of the Tx FIFO. */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	fifo->tx_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(fifo->tx_base))
-+		return PTR_ERR(fifo->tx_base);
-+
-+	fifo->pdev = pdev;
-+	platform_set_drvdata(pdev, fifo);
-+
-+	timer_setup(&fifo->timer, mlxbf_tmfifo_timer, 0);
-+
-+	for (i = 0; i < MLXBF_TM_MAX_IRQ; i++) {
-+		fifo->irq_info[i].index = i;
-+		fifo->irq_info[i].fifo = fifo;
-+		fifo->irq_info[i].irq = platform_get_irq(pdev, i);
-+		ret = devm_request_irq(&pdev->dev, fifo->irq_info[i].irq,
-+				       mlxbf_tmfifo_irq_handler, 0,
-+				       "tmfifo", &fifo->irq_info[i]);
-+		if (ret) {
-+			dev_err(&pdev->dev, "devm_request_irq failed\n");
-+			fifo->irq_info[i].irq = 0;
-+			return ret;
-+		}
-+	}
-+
-+	mlxbf_tmfifo_set_threshold(fifo);
-+
-+	/* Create the console vdev. */
-+	ret = mlxbf_tmfifo_create_vdev(&pdev->dev, fifo, VIRTIO_ID_CONSOLE, 0,
-+				       NULL, 0);
-+	if (ret)
-+		goto fail;
-+
-+	/* Create the network vdev. */
-+	memset(&net_config, 0, sizeof(net_config));
-+	net_config.mtu = ETH_DATA_LEN;
-+	net_config.status = VIRTIO_NET_S_LINK_UP;
-+	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
-+	ret = mlxbf_tmfifo_create_vdev(&pdev->dev, fifo, VIRTIO_ID_NET,
-+				       MLXBF_TMFIFO_NET_FEATURES, &net_config,
-+				       sizeof(net_config));
-+	if (ret)
-+		goto fail;
-+
-+	mod_timer(&fifo->timer, jiffies + MLXBF_TMFIFO_TIMER_INTERVAL);
-+
-+	fifo->is_ready = true;
-+	return 0;
-+
-+fail:
-+	mlxbf_tmfifo_cleanup(fifo);
-+	return ret;
-+}
-+
-+/* Device remove function. */
-+static int mlxbf_tmfifo_remove(struct platform_device *pdev)
-+{
-+	struct mlxbf_tmfifo *fifo = platform_get_drvdata(pdev);
-+
-+	mlxbf_tmfifo_cleanup(fifo);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id mlxbf_tmfifo_acpi_match[] = {
-+	{ "MLNXBF01", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, mlxbf_tmfifo_acpi_match);
-+
-+static struct platform_driver mlxbf_tmfifo_driver = {
-+	.probe = mlxbf_tmfifo_probe,
-+	.remove = mlxbf_tmfifo_remove,
-+	.driver = {
-+		.name = "bf-tmfifo",
-+		.acpi_match_table = mlxbf_tmfifo_acpi_match,
-+	},
-+};
-+
-+module_platform_driver(mlxbf_tmfifo_driver);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField SoC TmFifo Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Mellanox Technologies");
--- 
-1.8.3.1
-
+On Sun, Mar 24, 2019 at 9:36 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Sat, 2019-03-23 at 16:46 +0530, Rushikesh S Kadam wrote:
+> > This driver adds support for loading Intel Integrated
+> > Sensor Hub (ISH) firmware from host file system to ISH
+> > SRAM and start execution.
+> >
+> > At power-on, the ISH subsystem shall boot to an interim
+> > Shim loader-firmware, which shall expose an ISHTP loader
+> > device.
+> >
+> > The driver implements an ISHTP client that communicates
+> > with the Shim ISHTP loader device over the intel-ish-hid
+> > stack, to download the main ISH firmware.
+> >
+> > Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+> Anybody in CC list here can add Reviewed-By/Tested-by tag?
+>
+> One comment below for copyright year.
+>
+> Thanks,
+> Srinivas
+> > ---
+> > The patches are baselined to hid git tree, branch for-5.2/ish
+> >
+> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/log/?h=for-5.2/ish
+> >
+> >  drivers/hid/Makefile                        |    1 +
+> >  drivers/hid/intel-ish-hid/Kconfig           |   15 +
+> >  drivers/hid/intel-ish-hid/Makefile          |    3 +
+> >  drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 1103
+> > +++++++++++++++++++++++++++
+> >  4 files changed, 1122 insertions(+)
+> >  create mode 100644 drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> >
+> > diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+> > index 170163b..d8d393e 100644
+> > --- a/drivers/hid/Makefile
+> > +++ b/drivers/hid/Makefile
+> > @@ -134,3 +134,4 @@ obj-$(CONFIG_USB_KBD)             += usbhid/
+> >  obj-$(CONFIG_I2C_HID)                += i2c-hid/
+> >
+> >  obj-$(CONFIG_INTEL_ISH_HID)  += intel-ish-hid/
+> > +obj-$(INTEL_ISH_FIRMWARE_DOWNLOADER) += intel-ish-hid/
+> > diff --git a/drivers/hid/intel-ish-hid/Kconfig b/drivers/hid/intel-
+> > ish-hid/Kconfig
+> > index 519e4c8..786adbc 100644
+> > --- a/drivers/hid/intel-ish-hid/Kconfig
+> > +++ b/drivers/hid/intel-ish-hid/Kconfig
+> > @@ -14,4 +14,19 @@ config INTEL_ISH_HID
+> >         Broxton and Kaby Lake.
+> >
+> >         Say Y here if you want to support Intel ISH. If unsure, say
+> > N.
+> > +
+> > +config INTEL_ISH_FIRMWARE_DOWNLOADER
+> > +     tristate "Host Firmware Load feature for Intel ISH"
+> > +     depends on INTEL_ISH_HID
+> > +     depends on X86
+> > +     help
+> > +       The Integrated Sensor Hub (ISH) enables the kernel to offload
+> > +       sensor polling and algorithm processing to a dedicated low
+> > power
+> > +       processor in the chipset.
+> > +
+> > +       The Host Firmware Load feature adds support to load the ISH
+> > +       firmware from host file system at boot.
+> > +
+> > +       Say M here if you want to support Host Firmware Loading
+> > feature
+> > +       for Intel ISH. If unsure, say N.
+> >  endmenu
+> > diff --git a/drivers/hid/intel-ish-hid/Makefile b/drivers/hid/intel-
+> > ish-hid/Makefile
+> > index 825b70a..2de97e4 100644
+> > --- a/drivers/hid/intel-ish-hid/Makefile
+> > +++ b/drivers/hid/intel-ish-hid/Makefile
+> > @@ -20,4 +20,7 @@ obj-$(CONFIG_INTEL_ISH_HID) += intel-ishtp-hid.o
+> >  intel-ishtp-hid-objs := ishtp-hid.o
+> >  intel-ishtp-hid-objs += ishtp-hid-client.o
+> >
+> > +obj-$(CONFIG_INTEL_ISH_FIRMWARE_DOWNLOADER) += intel-ishtp-loader.o
+> > +intel-ishtp-loader-objs += ishtp-fw-loader.o
+> > +
+> >  ccflags-y += -Idrivers/hid/intel-ish-hid/ishtp
+> > diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> > b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> > new file mode 100644
+> > index 0000000..85d71d3
+> > --- /dev/null
+> > +++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> > @@ -0,0 +1,1103 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * ISH-TP client driver for ISH firmware loading
+> > + *
+> > + * Copyright (c) 2018, Intel Corporation.
+> Year 2019.
+>
+> > + */
+> > +
+> > +#include <linux/firmware.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/intel-ish-client-if.h>
+> > +#include <linux/property.h>
+> > +#include <asm/cacheflush.h>
+> > +
+> > +/* ISH TX/RX ring buffer pool size */
+> > +#define LOADER_CL_RX_RING_SIZE                       1
+> > +#define LOADER_CL_TX_RING_SIZE                       1
+> > +
+> > +/*
+> > + * ISH Shim firmware loader reserves 4 Kb buffer in SRAM. The buffer
+> > is
+> > + * used to temporarily hold the data transferred from host to Shim
+> > firmware
+> > + * loader. Reason for the odd size of 3968 bytes? Each IPC transfer
+> > is 128
+> > + * bytes (= 4 bytes header + 124 bytes payload). So the 4 Kb buffer
+> > can
+> > + * hold maximum of 32 IPC transfers, which means we can have a max
+> > payload
+> > + * of 3968 bytes (= 32 x 124 payload).
+> > + */
+> > +#define LOADER_SHIM_IPC_BUF_SIZE             3968
+> > +
+> > +/**
+> > + * enum ish_loader_commands -        ISH loader host commands.
+> > + * LOADER_CMD_XFER_QUERY     Query the Shim firmware loader for
+> > capabilities
+> > + * LOADER_CMD_XFER_FRAGMENT  Transfer one firmware image framgment
+> > at a
+> > + *                           time. The command may be executed
+> > multiple
+> > + *                           times until the entire firmware image
+> > is
+> > + *                           downloaded to SRAM.
+> > + * LOADER_CMD_START          Start executing the main firmware.
+> > + */
+> > +enum ish_loader_commands {
+> > +     LOADER_CMD_XFER_QUERY = 0,
+> > +     LOADER_CMD_XFER_FRAGMENT,
+> > +     LOADER_CMD_START,
+> > +};
+> > +
+> > +/* Command bit mask */
+> > +#define      CMD_MASK                                GENMASK(6, 0)
+> > +#define      IS_RESPONSE                             BIT(7)
+> > +
+> > +/*
+> > + * ISH firmware max delay for one transmit failure is 1 Hz,
+> > + * and firmware will retry 2 times, so 3 Hz is used for timeout.
+> > + */
+> > +#define ISHTP_SEND_TIMEOUT                   (3 * HZ)
+> > +
+> > +/*
+> > + * Loader transfer modes:
+> > + *
+> > + * LOADER_XFER_MODE_ISHTP mode uses the existing ISH-TP mechanims to
+> > + * transfer data. This may use IPC or DMA if supported in firmware.
+> > + * The buffer size is limited to 4 Kb by the IPC/ISH-TP protocol for
+> > + * both IPC & DMA (legacy).
+> > + *
+> > + * LOADER_XFER_MODE_DIRECT_DMA - firmware loading is a bit different
+> > + * from the sensor data streaming. Here we download a large (300+
+> > Kb)
+> > + * image directly to ISH SRAM memory. There is limited benefit of
+> > + * DMA'ing 300 Kb image in 4 Kb chucks limit. Hence, we introduce
+> > + * this "direct dma" mode, where we do not use ISH-TP for DMA, but
+> > + * instead manage the DMA directly in kernel driver and Shim
+> > firmware
+> > + * loader (allocate buf, break in chucks and transfer). This allows
+> > + * to overcome 4 Kb limit, and optimize the data flow path in
+> > firmware.
+> > + */
+> > +#define LOADER_XFER_MODE_DIRECT_DMA          BIT(0)
+> > +#define LOADER_XFER_MODE_ISHTP                       BIT(1)
+> > +
+> > +/* ISH Transport Loader client unique GUID */
+> > +static const guid_t loader_ishtp_guid =
+> > +     GUID_INIT(0xc804d06a, 0x55bd, 0x4ea7,
+> > +               0xad, 0xed, 0x1e, 0x31, 0x22, 0x8c, 0x76, 0xdc);
+> > +
+> > +#define FILENAME_SIZE                                256
+> > +
+> > +/*
+> > + * The firmware loading latency will be minimum if we can DMA the
+> > + * entire ISH firmware image in one go. This requires that we
+> > allocate
+> > + * a large DMA buffer in kernel, which could be problematic on some
+> > + * platforms. So here we limit the DMA buf size via a module_param.
+> > + * We default to 4 pages, but a customer can set it to higher limit
+> > if
+> > + * deemed appropriate for his platform.
+> > + */
+> > +static int dma_buf_size_limit = 4 * PAGE_SIZE;
+> > +
+> > +/**
+> > + * struct loader_msg_hdr - Header for ISH Loader commands.
+> > + * @command:         LOADER_CMD* commands. Bit 7 is the response.
+> > + * @status:          Command response status. Non 0, is error
+> > condition.
+> > + *
+> > + * This structure is used as header for every command/data
+> > sent/received
+> > + * between Host driver and ISH Shim firmware loader.
+> > + */
+> > +struct loader_msg_hdr {
+> > +     u8 command;
+> > +     u8 reserved[2];
+> > +     u8 status;
+> > +} __packed;
+> > +
+> > +struct loader_xfer_query {
+> > +     struct loader_msg_hdr hdr;
+> > +     u32 image_size;
+> > +} __packed;
+> > +
+> > +struct ish_fw_version {
+> > +     u16 major;
+> > +     u16 minor;
+> > +     u16 hotfix;
+> > +     u16 build;
+> > +} __packed;
+> > +
+> > +union loader_version {
+> > +     u32 value;
+> > +     struct {
+> > +             u8 major;
+> > +             u8 minor;
+> > +             u8 hotfix;
+> > +             u8 build;
+> > +     };
+> > +} __packed;
+> > +
+> > +struct loader_capability {
+> > +     u32 max_fw_image_size;
+> > +     u32 xfer_mode;
+> > +     u32 max_dma_buf_size; /* only for dma mode, multiples of
+> > cacheline */
+> > +} __packed;
+> > +
+> > +struct shim_fw_info {
+> > +     struct ish_fw_version ish_fw_version;
+> > +     u32 protocol_version;
+> > +     union loader_version ldr_version;
+> > +     struct loader_capability ldr_capability;
+> > +} __packed;
+> > +
+> > +struct loader_xfer_query_response {
+> > +     struct loader_msg_hdr hdr;
+> > +     struct shim_fw_info fw_info;
+> > +} __packed;
+> > +
+> > +struct loader_xfer_fragment {
+> > +     struct loader_msg_hdr hdr;
+> > +     u32 xfer_mode;
+> > +     u32 offset;
+> > +     u32 size;
+> > +     u32 is_last;
+> > +} __packed;
+> > +
+> > +struct loader_xfer_ipc_fragment {
+> > +     struct loader_xfer_fragment fragment;
+> > +     u8 data[] ____cacheline_aligned; /* variable length payload
+> > here */
+> > +} __packed;
+> > +
+> > +struct loader_xfer_dma_fragment {
+> > +     struct loader_xfer_fragment fragment;
+> > +     u64 ddr_phys_addr;
+> > +} __packed;
+> > +
+> > +struct loader_start {
+> > +     struct loader_msg_hdr hdr;
+> > +} __packed;
+> > +
+> > +/**
+> > + * struct ishtp_cl_data - Encapsulate per ISH-TP Client Data
+> > + * @flag_response    Set true on receiving a firmware  response to
+> > host
+> > + *                   loader command
+> > + * @cmd_resp_wait:   Wait queue for Host firmware loading, where the
+> > + *                   client sends message to ISH firmware and wait
+> > for
+> > + *                   response
+> > + * @work_ishtp_reset:        Work queue for reset handling
+> > + * @work_fw_load:    Work queue for host firmware loading
+> > + * @flag_retry               Flag for indicating host firmware
+> > loading should be
+> > + *                   retried
+> > + * @bad_recv_cnt:    Running count of packets received with error
+> > + *
+> > + * This structure is used to store data per client
+> > + */
+> > +struct ishtp_cl_data {
+> > +     struct ishtp_cl *loader_ishtp_cl;
+> > +     struct ishtp_cl_device *cl_device;
+> > +
+> > +     /* Completion flags */
+> > +     bool flag_response;
+> > +
+> > +     /* Copy buffer received in firmware "response" here */
+> > +     void *response_data;
+> > +     size_t response_size;
+> > +
+> > +     /* Wait queue for ISH firmware message event */
+> > +     wait_queue_head_t cmd_resp_wait;
+> > +
+> > +     struct work_struct work_ishtp_reset;
+> > +     struct work_struct work_fw_load;
+> > +
+> > +     /*
+> > +      * In certain failure scenrios, it makes sense to reset the
+> > +      * the ISH subsystem and retry Host firmware loading
+> > +      * (e.g. bad message packet, ENOMEM, etc.)
+> > +      * On the other hand, failures due to protocol mismatch, etc
+> > +      * are not recoverable. We do not retry.
+> > +      *
+> > +      * If set, the flag indictes that we should re-try the
+> > particular
+> > +      * failure.
+> > +      */
+> > +     bool flag_retry;
+> > +
+> > +     /* Statistics */
+> > +     unsigned int bad_recv_cnt;
+> > +};
+> > +
+> > +#define IPC_FRAGMENT_DATA_PREAMBLE                           \
+> > +     offsetof(struct loader_xfer_ipc_fragment, data)
+> > +
+> > +#define cl_data_to_dev(client_data) ishtp_device((client_data)-
+> > >cl_device)
+> > +
+> > +/**
+> > + * get_firmware_variant() - Gets the filename of firmware image to
+> > be
+> > + *                   loaded based on platform variant.
+> > + * @client_data              Client data instance.
+> > + * @filename         Returns firmware filename.
+> > + *
+> > + * Queries the firmware-name device property string.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int get_firmware_variant(struct ishtp_cl_data *client_data,
+> > +                             char *filename)
+> > +{
+> > +     int rv;
+> > +     const char *val;
+> > +     struct device *devc = ishtp_get_pci_device(client_data-
+> > >cl_device);
+> > +
+> > +     rv = device_property_read_string(devc, "firmware-name", &val);
+> > +     if (rv < 0) {
+> > +             dev_err(devc,
+> > +                     "Error: ISH firmware-name device property
+> > required\n");
+> > +             return rv;
+> > +     }
+> > +     return snprintf(filename, FILENAME_SIZE, "intel/%s", val);
+> > +}
+> > +
+> > +/**
+> > + * report_bad_packets() Report bad packets
+> > + * @loader_ishtp_cl: Client instance to get stats
+> > + * @recv_buf:                Raw received host interface message
+> > + *
+> > + * Dumps error in case bad packet is received
+> > + */
+> > +static void report_bad_packet(struct ishtp_cl *loader_ishtp_cl,
+> > +                           void *recv_buf)
+> > +{
+> > +     struct loader_msg_hdr *hdr = recv_buf;
+> > +     struct ishtp_cl_data *client_data =
+> > +             ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     client_data->bad_recv_cnt++;
+> > +     dev_err(cl_data_to_dev(client_data),
+> > +             "BAD packet: command=%02lx is_response=%u status=%02x
+> > total_bad=%u\n",
+> > +             hdr->command & CMD_MASK,
+> > +             hdr->command & IS_RESPONSE ? 1 : 0,
+> > +             hdr->status,
+> > +             client_data->bad_recv_cnt);
+> > +}
+> > +
+> > +/**
+> > + * loader_ish_hw_reset() - Reset ISH HW in bad state
+> > + * @loader_ishtp_cl  Client instance to reset
+> > + *
+> > + * This function resets ISH hardware, which shall reload
+> > + * the Shim firmware loader, initiate ISH-TP interface reset,
+> > + * re-attach kernel loader driver, and repeat Host
+> > + * firmware load.
+> > + */
+> > +static inline void loader_ish_hw_reset(struct ishtp_cl
+> > *loader_ishtp_cl)
+> > +{
+> > +     struct ishtp_cl_data *client_data =
+> > +             ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     dev_warn(cl_data_to_dev(client_data), "Reset the ISH
+> > subsystem\n");
+> > +     ish_hw_reset(ishtp_get_ishtp_device(loader_ishtp_cl));
+> > +}
+> > +
+> > +/**
+> > + * loader_cl_send()  Send message from host to firmware
+> > + * @client_data:     Client data instance
+> > + * @msg                      Message buffer to send
+> > + * @msg_size         Size of message
+> > + *
+> > + * Return: Received buffer size on success, negative error code on
+> > failure.
+> > + */
+> > +static int loader_cl_send(struct ishtp_cl_data *client_data,
+> > +                       u8 *msg, size_t msg_size)
+> > +{
+> > +     int rv;
+> > +     size_t data_len;
+> > +     struct loader_msg_hdr *in_hdr;
+> > +     struct loader_msg_hdr *out_hdr = (struct loader_msg_hdr *)msg;
+> > +     struct ishtp_cl *loader_ishtp_cl = client_data-
+> > >loader_ishtp_cl;
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data),
+> > +             "%s: command=%02lx is_response=%u status=%02x\n",
+> > +             __func__,
+> > +             out_hdr->command & CMD_MASK,
+> > +             out_hdr->command & IS_RESPONSE ? 1 : 0,
+> > +             out_hdr->status);
+> > +
+> > +     client_data->flag_response = false;
+> > +     rv = ishtp_cl_send(loader_ishtp_cl, msg, msg_size);
+> > +     if (rv < 0) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ishtp_cl_send error %d\n", rv);
+> > +             return rv;
+> > +     }
+> > +
+> > +     wait_event_interruptible_timeout(client_data->cmd_resp_wait,
+> > +                                      client_data->flag_response,
+> > +                                      ISHTP_SEND_TIMEOUT);
+> > +     if (!client_data->flag_response) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Timed out for response to command=%02lx",
+> > +                     out_hdr->command & CMD_MASK);
+> > +             return -ETIMEDOUT;
+> > +     }
+> > +
+> > +     /* All response messages will contain a header */
+> > +     data_len = client_data->response_size;
+> > +     in_hdr = (struct loader_msg_hdr *)client_data->response_data;
+> > +
+> > +     /* Sanity checks */
+> > +     if (!(in_hdr->command & IS_RESPONSE)) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Invalid response to command\n");
+> > +             return -EIO;
+> > +     }
+> > +
+> > +     if (in_hdr->status) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Loader returned status %d\n",
+> > +                     in_hdr->status);
+> > +             return -EIO;
+> > +     }
+> > +
+> > +     return data_len;
+> > +}
+> > +
+> > +/**
+> > + * process_recv() -  Receive and parse incoming packet
+> > + * @loader_ishtp_cl: Client instance to get stats
+> > + * @rb_in_proc:              ISH received message buffer
+> > + *
+> > + * Parse the incoming packet. If it is a response packet then it
+> > will
+> > + * update flag_response and wake up the caller waiting to for the
+> > response.
+> > + */
+> > +static void process_recv(struct ishtp_cl *loader_ishtp_cl,
+> > +                      struct ishtp_cl_rb *rb_in_proc)
+> > +{
+> > +     size_t data_len = rb_in_proc->buf_idx;
+> > +     struct loader_msg_hdr *hdr =
+> > +             (struct loader_msg_hdr *)rb_in_proc->buffer.data;
+> > +     struct ishtp_cl_data *client_data =
+> > +             ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     /*
+> > +      * All firmware messages have a header. Check buffer size
+> > +      * before accessing elements inside.
+> > +      */
+> > +     if (data_len < sizeof(struct loader_msg_hdr)) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "data size %zu is less than header %zu\n",
+> > +                     data_len, sizeof(struct loader_msg_hdr));
+> > +             report_bad_packet(client_data->loader_ishtp_cl, hdr);
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data),
+> > +             "%s: command=%02lx is_response=%u status=%02x\n",
+> > +             __func__,
+> > +             hdr->command & CMD_MASK,
+> > +             hdr->command & IS_RESPONSE ? 1 : 0,
+> > +             hdr->status);
+> > +
+> > +     switch (hdr->command & CMD_MASK) {
+> > +     case LOADER_CMD_XFER_QUERY:
+> > +     case LOADER_CMD_XFER_FRAGMENT:
+> > +     case LOADER_CMD_START:
+> > +             /* Sanity check */
+> > +             if (client_data->response_data || client_data-
+> > >flag_response) {
+> > +                     dev_err(cl_data_to_dev(client_data),
+> > +                             "Buffer overrun: previous firmware
+> > message not yet processed\n");
+> > +                     report_bad_packet(client_data->loader_ishtp_cl,
+> > hdr);
+> > +                     break;
+> > +             }
+> > +
+> > +             /*
+> > +              * Copy the buffer received in firmware response for
+> > the
+> > +              * calling thread.
+> > +              */
+> > +             client_data->response_data = kmalloc(data_len,
+> > GFP_KERNEL);
+> > +             if (!client_data->response_data)
+> > +                     break;
+> > +
+> > +             memcpy(client_data->response_data,
+> > +                    rb_in_proc->buffer.data, data_len);
+> > +             client_data->response_size = data_len;
+> > +
+> > +             /* Free the buffer */
+> > +             ishtp_cl_io_rb_recycle(rb_in_proc);
+> > +             rb_in_proc = NULL;
+> > +
+> > +             /* Wake the calling thread */
+> > +             client_data->flag_response = true;
+> > +             wake_up_interruptible(&client_data->cmd_resp_wait);
+> > +             break;
+> > +
+> > +     default:
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Invalid command=%02lx\n",
+> > +                     hdr->command & CMD_MASK);
+> > +             report_bad_packet(client_data->loader_ishtp_cl, hdr);
+> > +     }
+> > +
+> > +end_error:
+> > +     /* Free the buffer if we did not do above */
+> > +     if (rb_in_proc)
+> > +             ishtp_cl_io_rb_recycle(rb_in_proc);
+> > +}
+> > +
+> > +/**
+> > + * loader_cl_event_cb() - bus driver callback for incoming message
+> > + * @device:          Pointer to the the ishtp client device for
+> > which
+> > + *                   this message is targeted
+> > + *
+> > + * Remove the packet from the list and process the message by
+> > calling
+> > + * process_recv
+> > + */
+> > +static void loader_cl_event_cb(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl_rb *rb_in_proc;
+> > +     struct ishtp_cl_data *client_data;
+> > +     struct ishtp_cl *loader_ishtp_cl =
+> > ishtp_get_drvdata(cl_device);
+> > +
+> > +     client_data = ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     while ((rb_in_proc = ishtp_cl_rx_get_rb(loader_ishtp_cl)) !=
+> > NULL) {
+> > +             if (!rb_in_proc->buffer.data) {
+> > +                     dev_warn(cl_data_to_dev(client_data),
+> > +                              "rb_in_proc->buffer.data returned
+> > null");
+> > +                     continue;
+> > +             }
+> > +
+> > +             /* Process the data packet from firmware */
+> > +             process_recv(loader_ishtp_cl, rb_in_proc);
+> > +     }
+> > +}
+> > +
+> > +/**
+> > + * ish_query_loader_prop() -  Query ISH Shim firmware loader
+> > + * @client_data:     Client data instance
+> > + * @fw:                      Poiner to fw data struct in host memory
+> > + *
+> > + * This function queries the ISH Shim firmware loader for
+> > capabilities.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
+> > +                              const struct firmware *fw,
+> > +                              struct shim_fw_info *fw_info)
+> > +{
+> > +     int rv;
+> > +     size_t data_len;
+> > +     struct loader_msg_hdr *hdr;
+> > +     struct loader_xfer_query ldr_xfer_query;
+> > +     struct loader_xfer_query_response *ldr_xfer_query_resp;
+> > +
+> > +     memset(&ldr_xfer_query, 0, sizeof(ldr_xfer_query));
+> > +     ldr_xfer_query.hdr.command = LOADER_CMD_XFER_QUERY;
+> > +     ldr_xfer_query.image_size = fw->size;
+> > +     rv = loader_cl_send(client_data,
+> > +                         (u8 *)&ldr_xfer_query,
+> > +                         sizeof(ldr_xfer_query));
+> > +     if (rv < 0) {
+> > +             client_data->flag_retry = true;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     /* Check buffer size before accessing the elements */
+> > +     data_len = client_data->response_size;
+> > +     if (data_len != sizeof(struct loader_xfer_query_response)) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "data size %zu is not equal to size of
+> > loader_xfer_query_response %zu\n",
+> > +                     data_len, sizeof(struct
+> > loader_xfer_query_response));
+> > +             hdr = (struct loader_msg_hdr *)client_data-
+> > >response_data;
+> > +             report_bad_packet(client_data->loader_ishtp_cl, hdr);
+> > +             client_data->flag_retry = true;
+> > +             rv = -EMSGSIZE;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     /* Save fw_info for use outside this function */
+> > +     ldr_xfer_query_resp =
+> > +             (struct loader_xfer_query_response *)client_data-
+> > >response_data;
+> > +     *fw_info = ldr_xfer_query_resp->fw_info;
+> > +
+> > +     /* Loader firmware properties */
+> > +     dev_dbg(cl_data_to_dev(client_data),
+> > +             "ish_fw_version: major=%d minor=%d hotfix=%d build=%d
+> > protocol_version=0x%x loader_version=%d\n",
+> > +             fw_info->ish_fw_version.major,
+> > +             fw_info->ish_fw_version.minor,
+> > +             fw_info->ish_fw_version.hotfix,
+> > +             fw_info->ish_fw_version.build,
+> > +             fw_info->protocol_version,
+> > +             fw_info->ldr_version.value);
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data),
+> > +             "loader_capability: max_fw_image_size=0x%x xfer_mode=%d
+> > max_dma_buf_size=0x%x dma_buf_size_limit=0x%x\n",
+> > +             fw_info->ldr_capability.max_fw_image_size,
+> > +             fw_info->ldr_capability.xfer_mode,
+> > +             fw_info->ldr_capability.max_dma_buf_size,
+> > +             dma_buf_size_limit);
+> > +
+> > +     /* Sanity checks */
+> > +     if (fw_info->ldr_capability.max_fw_image_size < fw->size) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ISH firmware size %zu is greater than Shim
+> > firmware loader max supported %d\n",
+> > +                     fw->size,
+> > +                     fw_info->ldr_capability.max_fw_image_size);
+> > +             rv = -ENOSPC;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     /* For DMA the buffer size should be multiple of cacheline size
+> > */
+> > +     if ((fw_info->ldr_capability.xfer_mode &
+> > LOADER_XFER_MODE_DIRECT_DMA) &&
+> > +         (fw_info->ldr_capability.max_dma_buf_size %
+> > L1_CACHE_BYTES)) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Shim firmware loader buffer size %d should be
+> > multipe of cacheline\n",
+> > +                     fw_info->ldr_capability.max_dma_buf_size);
+> > +             rv = -EINVAL;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +end_error:
+> > +     /* Free ISH buffer if not done so in error case */
+> > +     kfree(client_data->response_data);
+> > +     client_data->response_data = NULL;
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * ish_fw_xfer_ishtp()       Loads ISH firmware using ishtp
+> > interface
+> > + * @client_data:     Client data instance
+> > + * @fw:                      Pointer to fw data struct in host
+> > memory
+> > + *
+> > + * This function uses ISH-TP to transfer ISH firmware from host to
+> > + * ISH SRAM. Lower layers may use IPC or DMA depending on firmware
+> > + * support.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int ish_fw_xfer_ishtp(struct ishtp_cl_data *client_data,
+> > +                          const struct firmware *fw)
+> > +{
+> > +     int rv;
+> > +     u32 fragment_offset, fragment_size, payload_max_size;
+> > +     struct loader_xfer_ipc_fragment *ldr_xfer_ipc_frag;
+> > +
+> > +     payload_max_size =
+> > +             LOADER_SHIM_IPC_BUF_SIZE - IPC_FRAGMENT_DATA_PREAMBLE;
+> > +
+> > +     ldr_xfer_ipc_frag = kzalloc(LOADER_SHIM_IPC_BUF_SIZE,
+> > GFP_KERNEL);
+> > +     if (!ldr_xfer_ipc_frag) {
+> > +             client_data->flag_retry = true;
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     ldr_xfer_ipc_frag->fragment.hdr.command =
+> > LOADER_CMD_XFER_FRAGMENT;
+> > +     ldr_xfer_ipc_frag->fragment.xfer_mode = LOADER_XFER_MODE_ISHTP;
+> > +
+> > +     /* Break the firmware image into fragments and send as ISH-TP
+> > payload */
+> > +     fragment_offset = 0;
+> > +     while (fragment_offset < fw->size) {
+> > +             if (fragment_offset + payload_max_size < fw->size) {
+> > +                     fragment_size = payload_max_size;
+> > +                     ldr_xfer_ipc_frag->fragment.is_last = 0;
+> > +             } else {
+> > +                     fragment_size = fw->size - fragment_offset;
+> > +                     ldr_xfer_ipc_frag->fragment.is_last = 1;
+> > +             }
+> > +
+> > +             ldr_xfer_ipc_frag->fragment.offset = fragment_offset;
+> > +             ldr_xfer_ipc_frag->fragment.size = fragment_size;
+> > +             memcpy(ldr_xfer_ipc_frag->data,
+> > +                    &fw->data[fragment_offset],
+> > +                    fragment_size);
+> > +
+> > +             dev_dbg(cl_data_to_dev(client_data),
+> > +                     "xfer_mode=ipc offset=0x%08x size=0x%08x
+> > is_last=%d\n",
+> > +                     ldr_xfer_ipc_frag->fragment.offset,
+> > +                     ldr_xfer_ipc_frag->fragment.size,
+> > +                     ldr_xfer_ipc_frag->fragment.is_last);
+> > +
+> > +             rv = loader_cl_send(client_data,
+> > +                                 (u8 *)ldr_xfer_ipc_frag,
+> > +                                 IPC_FRAGMENT_DATA_PREAMBLE +
+> > fragment_size);
+> > +             if (rv < 0) {
+> > +                     client_data->flag_retry = true;
+> > +                     goto end_err_resp_buf_release;
+> > +             }
+> > +
+> > +             /* Free ISH buffer once response is processed */
+> > +             kfree(client_data->response_data);
+> > +             client_data->response_data = NULL;
+> > +
+> > +             fragment_offset += fragment_size;
+> > +     }
+> > +
+> > +     kfree(ldr_xfer_ipc_frag);
+> > +     return 0;
+> > +
+> > +end_err_resp_buf_release:
+> > +     /* Free ISH buffer if not done already, in error case */
+> > +     kfree(client_data->response_data);
+> > +     client_data->response_data = NULL;
+> > +     kfree(ldr_xfer_ipc_frag);
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * ish_fw_xfer_direct_dma() - Loads ISH firmware using direct dma
+> > + * @client_data:     Client data instance
+> > + * @fw:                      Poiner to fw data struct in host memory
+> > + *
+> > + * Host firmware load is a unique case where we need to download
+> > + * a large firmware image (200+ Kb). This function implements
+> > + * direct DMA transfer in kernel and ISH firmware. This allows
+> > + * us to overcome the ISH-TP 4 Kb limit, and allows us to DMA
+> > + * directly to ISH UMA at location of choice.
+> > + * Function depends on corresponding support in ISH firmware.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int ish_fw_xfer_direct_dma(struct ishtp_cl_data *client_data,
+> > +                               const struct firmware *fw,
+> > +                               struct shim_fw_info fw_info)
+> > +{
+> > +     int rv;
+> > +     void *dma_buf;
+> > +     dma_addr_t dma_buf_phy;
+> > +     u32 fragment_offset, fragment_size, payload_max_size;
+> > +     struct loader_xfer_dma_fragment ldr_xfer_dma_frag;
+> > +     struct device *devc = ishtp_get_pci_device(client_data-
+> > >cl_device);
+> > +     u32 shim_fw_buf_size =
+> > +             fw_info.ldr_capability.max_dma_buf_size;
+> > +
+> > +     /*
+> > +      * payload_max_size should be set to minimum of
+> > +      *  (1) Size of firmware to be loaded,
+> > +      *  (2) Max DMA buf size supported by Shim firmware,
+> > +      *  (3) DMA buffer size limit set by boot_param
+> > dma_buf_size_limit.
+> > +      */
+> > +     payload_max_size = min3(fw->size,
+> > +                             (size_t)shim_fw_buf_size,
+> > +                             (size_t)dma_buf_size_limit);
+> > +
+> > +     /*
+> > +      * Buffer size should be multiple of cacheline size
+> > +      * if it's not, select the previous cacheline boundary.
+> > +      */
+> > +     payload_max_size &= ~(L1_CACHE_BYTES - 1);
+> > +
+> > +     dma_buf = kmalloc(payload_max_size, GFP_KERNEL | GFP_DMA32);
+> > +     if (!dma_buf) {
+> > +             client_data->flag_retry = true;
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     dma_buf_phy = dma_map_single(devc, dma_buf, payload_max_size,
+> > +                                  DMA_TO_DEVICE);
+> > +     if (dma_mapping_error(devc, dma_buf_phy)) {
+> > +             dev_err(cl_data_to_dev(client_data), "DMA map
+> > failed\n");
+> > +             client_data->flag_retry = true;
+> > +             rv = -ENOMEM;
+> > +             goto end_err_dma_buf_release;
+> > +     }
+> > +
+> > +     ldr_xfer_dma_frag.fragment.hdr.command =
+> > LOADER_CMD_XFER_FRAGMENT;
+> > +     ldr_xfer_dma_frag.fragment.xfer_mode =
+> > LOADER_XFER_MODE_DIRECT_DMA;
+> > +     ldr_xfer_dma_frag.ddr_phys_addr = (u64)dma_buf_phy;
+> > +
+> > +     /* Send the firmware image in chucks of payload_max_size */
+> > +     fragment_offset = 0;
+> > +     while (fragment_offset < fw->size) {
+> > +             if (fragment_offset + payload_max_size < fw->size) {
+> > +                     fragment_size = payload_max_size;
+> > +                     ldr_xfer_dma_frag.fragment.is_last = 0;
+> > +             } else {
+> > +                     fragment_size = fw->size - fragment_offset;
+> > +                     ldr_xfer_dma_frag.fragment.is_last = 1;
+> > +             }
+> > +
+> > +             ldr_xfer_dma_frag.fragment.offset = fragment_offset;
+> > +             ldr_xfer_dma_frag.fragment.size = fragment_size;
+> > +             memcpy(dma_buf, &fw->data[fragment_offset],
+> > fragment_size);
+> > +
+> > +             dma_sync_single_for_device(devc, dma_buf_phy,
+> > +                                        payload_max_size,
+> > +                                        DMA_TO_DEVICE);
+> > +
+> > +             /*
+> > +              * Flush cache here because the
+> > dma_sync_single_for_device()
+> > +              * does not do for x86.
+> > +              */
+> > +             clflush_cache_range(dma_buf, payload_max_size);
+> > +
+> > +             dev_dbg(cl_data_to_dev(client_data),
+> > +                     "xfer_mode=dma offset=0x%08x size=0x%x
+> > is_last=%d ddr_phys_addr=0x%016llx\n",
+> > +                     ldr_xfer_dma_frag.fragment.offset,
+> > +                     ldr_xfer_dma_frag.fragment.size,
+> > +                     ldr_xfer_dma_frag.fragment.is_last,
+> > +                     ldr_xfer_dma_frag.ddr_phys_addr);
+> > +
+> > +             rv = loader_cl_send(client_data,
+> > +                                 (u8 *)&ldr_xfer_dma_frag,
+> > +                                 sizeof(ldr_xfer_dma_frag));
+> > +             if (rv < 0) {
+> > +                     client_data->flag_retry = true;
+> > +                     goto end_err_resp_buf_release;
+> > +             }
+> > +
+> > +             /* Free ISH buffer once response is processed */
+> > +             kfree(client_data->response_data);
+> > +             client_data->response_data = NULL;
+> > +
+> > +             fragment_offset += fragment_size;
+> > +     }
+> > +
+> > +     dma_unmap_single(devc, dma_buf_phy, payload_max_size,
+> > DMA_TO_DEVICE);
+> > +     kfree(dma_buf);
+> > +     return 0;
+> > +
+> > +end_err_resp_buf_release:
+> > +     /* Free ISH buffer if not done already, in error case */
+> > +     kfree(client_data->response_data);
+> > +     client_data->response_data = NULL;
+> > +     dma_unmap_single(devc, dma_buf_phy, payload_max_size,
+> > DMA_TO_DEVICE);
+> > +end_err_dma_buf_release:
+> > +     kfree(dma_buf);
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * ish_fw_start()    Start executing ISH main firmware
+> > + * @client_data:     client data instance
+> > + *
+> > + * This function sends message to Shim firmware loader to start
+> > + * the execution of ISH main firmware.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int ish_fw_start(struct ishtp_cl_data *client_data)
+> > +{
+> > +     int rv;
+> > +     struct loader_start ldr_start;
+> > +
+> > +     memset(&ldr_start, 0, sizeof(ldr_start));
+> > +     ldr_start.hdr.command = LOADER_CMD_START;
+> > +     rv = loader_cl_send(client_data,
+> > +                         (u8 *)&ldr_start,
+> > +                         sizeof(ldr_start));
+> > +
+> > +     /* Free ISH buffer once response is processed */
+> > +     kfree(client_data->response_data);
+> > +     client_data->response_data = NULL;
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * load_fw_from_host()       Loads ISH firmware from host
+> > + * @client_data:     Client data instance
+> > + *
+> > + * This function loads the ISH firmware to ISH sram and starts
+> > execution
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int load_fw_from_host(struct ishtp_cl_data *client_data)
+> > +{
+> > +     int rv;
+> > +     u32 xfer_mode;
+> > +     char *filename;
+> > +     const struct firmware *fw;
+> > +     struct shim_fw_info fw_info;
+> > +
+> > +     client_data->flag_retry = false;
+> > +
+> > +     filename = kzalloc(FILENAME_SIZE, GFP_KERNEL);
+> > +     if (!filename) {
+> > +             rv = -ENOMEM;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     /* Get filename of the ISH firmware to be loaded */
+> > +     rv = get_firmware_variant(client_data, filename);
+> > +     if (rv < 0)
+> > +             goto end_err_filename_buf_release;
+> > +
+> > +     rv = request_firmware(&fw, filename,
+> > cl_data_to_dev(client_data));
+> > +     if (rv < 0)
+> > +             goto end_err_filename_buf_release;
+> > +
+> > +     /* Step 1: Query Shim firmware loader properties */
+> > +
+> > +     rv = ish_query_loader_prop(client_data, fw, &fw_info);
+> > +     if (rv < 0)
+> > +             goto end_err_fw_release;
+> > +
+> > +     /* Step 2: Send the main firmware image to be loaded, to ISH
+> > sram */
+> > +
+> > +     xfer_mode = fw_info.ldr_capability.xfer_mode;
+> > +     if (xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) {
+> > +             rv = ish_fw_xfer_direct_dma(client_data, fw, fw_info);
+> > +     } else if (xfer_mode & LOADER_XFER_MODE_ISHTP) {
+> > +             rv = ish_fw_xfer_ishtp(client_data, fw);
+> > +     } else {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "No transfer mode selected in firmware\n");
+> > +             rv = -EINVAL;
+> > +     }
+> > +     if (rv < 0)
+> > +             goto end_err_fw_release;
+> > +
+> > +     /* Step 3: Start ISH main firmware exeuction */
+> > +
+> > +     rv = ish_fw_start(client_data);
+> > +     if (rv < 0)
+> > +             goto end_err_fw_release;
+> > +
+> > +     release_firmware(fw);
+> > +     kfree(filename);
+> > +     dev_info(cl_data_to_dev(client_data), "ISH firmware %s
+> > loaded\n",
+> > +              filename);
+> > +     return 0;
+> > +
+> > +end_err_fw_release:
+> > +     release_firmware(fw);
+> > +end_err_filename_buf_release:
+> > +     kfree(filename);
+> > +end_error:
+> > +     if (client_data->flag_retry) {
+> > +             dev_warn(cl_data_to_dev(client_data),
+> > +                      "ISH host firmware load failed %d. Reset ISH &
+> > try again..\n",
+> > +                      rv);
+> > +             loader_ish_hw_reset(client_data->loader_ishtp_cl);
+> > +     } else {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ISH host firmware load failed %d\n", rv);
+> > +     }
+> > +     return rv;
+> > +}
+> > +
+> > +static void load_fw_from_host_handler(struct work_struct *work)
+> > +{
+> > +     struct ishtp_cl_data *client_data;
+> > +
+> > +     client_data = container_of(work, struct ishtp_cl_data,
+> > +                                work_fw_load);
+> > +     load_fw_from_host(client_data);
+> > +}
+> > +
+> > +/**
+> > + * loader_init() -   Init function for ISH-TP client
+> > + * @loader_ishtp_cl: ISH-TP client instance
+> > + * @reset:           true if called for init after reset
+> > + *
+> > + * Return: 0 for success, negative error code for failure
+> > + */
+> > +static int loader_init(struct ishtp_cl *loader_ishtp_cl, int reset)
+> > +{
+> > +     int rv;
+> > +     struct ishtp_fw_client *fw_client;
+> > +     struct ishtp_cl_data *client_data =
+> > +             ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data), "reset flag: %d\n",
+> > reset);
+> > +
+> > +     rv = ishtp_cl_link(loader_ishtp_cl);
+> > +     if (rv < 0) {
+> > +             dev_err(cl_data_to_dev(client_data), "ishtp_cl_link
+> > failed\n");
+> > +             return rv;
+> > +     }
+> > +
+> > +     /* Connect to firmware client */
+> > +     ishtp_set_tx_ring_size(loader_ishtp_cl,
+> > LOADER_CL_TX_RING_SIZE);
+> > +     ishtp_set_rx_ring_size(loader_ishtp_cl,
+> > LOADER_CL_RX_RING_SIZE);
+> > +
+> > +     fw_client =
+> > +             ishtp_fw_cl_get_client(ishtp_get_ishtp_device(loader_is
+> > htp_cl),
+> > +                                    &loader_ishtp_guid);
+> > +     if (!fw_client) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ISH client uuid not found\n");
+> > +             rv = -ENOENT;
+> > +             goto err_cl_unlink;
+> > +     }
+> > +
+> > +     ishtp_cl_set_fw_client_id(loader_ishtp_cl,
+> > +                               ishtp_get_fw_client_id(fw_client));
+> > +     ishtp_set_connection_state(loader_ishtp_cl,
+> > ISHTP_CL_CONNECTING);
+> > +
+> > +     rv = ishtp_cl_connect(loader_ishtp_cl);
+> > +     if (rv < 0) {
+> > +             dev_err(cl_data_to_dev(client_data), "Client connect
+> > fail\n");
+> > +             goto err_cl_unlink;
+> > +     }
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data), "Client connected\n");
+> > +
+> > +     ishtp_register_event_cb(client_data->cl_device,
+> > loader_cl_event_cb);
+> > +
+> > +     return 0;
+> > +
+> > +err_cl_unlink:
+> > +     ishtp_cl_unlink(loader_ishtp_cl);
+> > +     return rv;
+> > +}
+> > +
+> > +static void loader_deinit(struct ishtp_cl *loader_ishtp_cl)
+> > +{
+> > +     ishtp_set_connection_state(loader_ishtp_cl,
+> > ISHTP_CL_DISCONNECTING);
+> > +     ishtp_cl_disconnect(loader_ishtp_cl);
+> > +     ishtp_cl_unlink(loader_ishtp_cl);
+> > +     ishtp_cl_flush_queues(loader_ishtp_cl);
+> > +
+> > +     /* Disband and free all Tx and Rx client-level rings */
+> > +     ishtp_cl_free(loader_ishtp_cl);
+> > +}
+> > +
+> > +static void reset_handler(struct work_struct *work)
+> > +{
+> > +     int rv;
+> > +     struct ishtp_cl_data *client_data;
+> > +     struct ishtp_cl *loader_ishtp_cl;
+> > +     struct ishtp_cl_device *cl_device;
+> > +
+> > +     client_data = container_of(work, struct ishtp_cl_data,
+> > +                                work_ishtp_reset);
+> > +
+> > +     loader_ishtp_cl = client_data->loader_ishtp_cl;
+> > +     cl_device = client_data->cl_device;
+> > +
+> > +     /* Unlink, flush queues & start again */
+> > +     ishtp_cl_unlink(loader_ishtp_cl);
+> > +     ishtp_cl_flush_queues(loader_ishtp_cl);
+> > +     ishtp_cl_free(loader_ishtp_cl);
+> > +
+> > +     loader_ishtp_cl = ishtp_cl_allocate(cl_device);
+> > +     if (!loader_ishtp_cl)
+> > +             return;
+> > +
+> > +     ishtp_set_drvdata(cl_device, loader_ishtp_cl);
+> > +     ishtp_set_client_data(loader_ishtp_cl, client_data);
+> > +     client_data->loader_ishtp_cl = loader_ishtp_cl;
+> > +     client_data->cl_device = cl_device;
+> > +
+> > +     rv = loader_init(loader_ishtp_cl, 1);
+> > +     if (rv < 0) {
+> > +             dev_err(ishtp_device(cl_device), "Reset Failed\n");
+> > +             return;
+> > +     }
+> > +
+> > +     /* ISH firmware loading from host */
+> > +     load_fw_from_host(client_data);
+> > +}
+> > +
+> > +/**
+> > + * loader_ishtp_cl_probe() - ISH-TP client driver probe
+> > + * @cl_device:               ISH-TP client device instance
+> > + *
+> > + * This function gets called on device create on ISH-TP bus
+> > + *
+> > + * Return: 0 for success, negative error code for failure
+> > + */
+> > +static int loader_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl *loader_ishtp_cl;
+> > +     struct ishtp_cl_data *client_data;
+> > +     int rv;
+> > +
+> > +     client_data = devm_kzalloc(ishtp_device(cl_device),
+> > +                                sizeof(*client_data),
+> > +                                GFP_KERNEL);
+> > +     if (!client_data)
+> > +             return -ENOMEM;
+> > +
+> > +     loader_ishtp_cl = ishtp_cl_allocate(cl_device);
+> > +     if (!loader_ishtp_cl)
+> > +             return -ENOMEM;
+> > +
+> > +     ishtp_set_drvdata(cl_device, loader_ishtp_cl);
+> > +     ishtp_set_client_data(loader_ishtp_cl, client_data);
+> > +     client_data->loader_ishtp_cl = loader_ishtp_cl;
+> > +     client_data->cl_device = cl_device;
+> > +
+> > +     init_waitqueue_head(&client_data->cmd_resp_wait);
+> > +
+> > +     INIT_WORK(&client_data->work_ishtp_reset,
+> > +               reset_handler);
+> > +     INIT_WORK(&client_data->work_fw_load,
+> > +               load_fw_from_host_handler);
+> > +
+> > +     rv = loader_init(loader_ishtp_cl, 0);
+> > +     if (rv < 0) {
+> > +             ishtp_cl_free(loader_ishtp_cl);
+> > +             return rv;
+> > +     }
+> > +     ishtp_get_device(cl_device);
+> > +
+> > +     /* ISH firmware loading from host */
+> > +     schedule_work(&client_data->work_fw_load);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/**
+> > + * loader_ishtp_cl_remove() - ISH-TP client driver remove
+> > + * @cl_device:               ISH-TP client device instance
+> > + *
+> > + * This function gets called on device remove on ISH-TP bus
+> > + *
+> > + * Return: 0
+> > + */
+> > +static int loader_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl_data *client_data;
+> > +     struct ishtp_cl *loader_ishtp_cl =
+> > ishtp_get_drvdata(cl_device);
+> > +
+> > +     client_data = ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     /*
+> > +      * The sequence of the following two cancel_work_sync() is
+> > +      * important. The work_fw_load can in turn schedue
+> > +      * work_ishtp_reset, so first cancel work_fw_load then
+> > +      * cancel work_ishtp_reset.
+> > +      */
+> > +     cancel_work_sync(&client_data->work_fw_load);
+> > +     cancel_work_sync(&client_data->work_ishtp_reset);
+> > +     loader_deinit(loader_ishtp_cl);
+> > +     ishtp_put_device(cl_device);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/**
+> > + * loader_ishtp_cl_reset() - ISH-TP client driver reset
+> > + * @cl_device:               ISH-TP client device instance
+> > + *
+> > + * This function gets called on device reset on ISH-TP bus
+> > + *
+> > + * Return: 0
+> > + */
+> > +static int loader_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl_data *client_data;
+> > +     struct ishtp_cl *loader_ishtp_cl =
+> > ishtp_get_drvdata(cl_device);
+> > +
+> > +     client_data = ishtp_get_client_data(loader_ishtp_cl);
+> > +
+> > +     schedule_work(&client_data->work_ishtp_reset);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static struct ishtp_cl_driver        loader_ishtp_cl_driver = {
+> > +     .name = "ish-loader",
+> > +     .guid = &loader_ishtp_guid,
+> > +     .probe = loader_ishtp_cl_probe,
+> > +     .remove = loader_ishtp_cl_remove,
+> > +     .reset = loader_ishtp_cl_reset,
+> > +};
+> > +
+> > +static int __init ish_loader_init(void)
+> > +{
+> > +     return ishtp_cl_driver_register(&loader_ishtp_cl_driver,
+> > THIS_MODULE);
+> > +}
+> > +
+> > +static void __exit ish_loader_exit(void)
+> > +{
+> > +     ishtp_cl_driver_unregister(&loader_ishtp_cl_driver);
+> > +}
+> > +
+> > +late_initcall(ish_loader_init);
+> > +module_exit(ish_loader_exit);
+> > +
+> > +module_param(dma_buf_size_limit, int, 0644);
+> > +MODULE_PARM_DESC(dma_buf_size_limit, "Limit the DMA buf size to this
+> > value in bytes");
+> > +
+> > +MODULE_DESCRIPTION("ISH ISH-TP Host firmware Loader Client Driver");
+> > +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_ALIAS("ishtp:*");
+>
