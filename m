@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89003C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DECC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A132070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B372086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582365;
-	bh=HYoTWX3g4BW3SFMRdttz7fodosr6Dmom2jeED6Oa9T4=;
+	s=default; t=1553582369;
+	bh=CqJnK4VxGxe3ZzTtXCR+fPZ5RTuwt8BRkdpM7PAdZuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LFxKPXb4baaoUnODAE9/nOyRgLMLMSruyrVsMR/p7ky3G/dsiLnUdWUpINw0cN0Xk
-	 K9gLaf2KDtEEBJClhKVkNG5EiL2ksUGM1g3zdqyjybQO5lC3GN7oeQZ329wCwWV5Wc
-	 C7u+ak4pn5V2h239ZzuqD92p10YAd8UfBnz9B0yg=
+	b=xvbtwbH3js/R+IxqBqxCCJDgQR6y2jp5LV+pZ1cbdJ5wooZhKzu6enpMB3ldF+hZQ
+	 7Z93PXTDqjHO6t0L4/ilgkJq+vYr2w0FsGrWjOEQgPbEAycrQFyPvjrI/lB+zitQvZ
+	 85y3DbtFjpbGEyESgTeQgOYA/CP/g2ZPie10A81s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732693AbfCZGjY (ORCPT
+        id S1732703AbfCZGj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:39:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732661AbfCZGjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:18 -0400
+        id S1731504AbfCZGjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:39:25 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BAB20870;
-        Tue, 26 Mar 2019 06:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787D320863;
+        Tue, 26 Mar 2019 06:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582357;
-        bh=HYoTWX3g4BW3SFMRdttz7fodosr6Dmom2jeED6Oa9T4=;
+        s=default; t=1553582365;
+        bh=CqJnK4VxGxe3ZzTtXCR+fPZ5RTuwt8BRkdpM7PAdZuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbHe+BXDNomcEhJyQFfIebzml1ZZFXamzXgqcgVr7pXlKPPeHB7hwExHGJ1H/mzF0
-         sqyggGDZoZQpytKgvC5tCDvHljmcGM9CoPbjQkOmjzPUsPmWOE2YjlOiarhuR2M6yN
-         hzDNsSsm+Z/3XJOkuIWpzXovb2i4zP+lekB7RiRA=
+        b=XlH6sl9/VYNrPwsFzgOXAIZCiZf5G0mSwFD2PN3GXGLq/2u4PwZOBs9K3DmdmHmPY
+         pi48w9LRy8eyeQQ2/q3OhZdqnzGifCPbVvRsDUS91KJICu+EYFAs/dp/+4mkRPIj50
+         7L8AMTswqupD449RxVoUGoD0JDCeRSGQwRRxdscU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 31/52] ALSA: hda - Dont trigger jackpoll_work in azx_resume
-Date:   Tue, 26 Mar 2019 15:30:18 +0900
-Message-Id: <20190326042702.537074660@linuxfoundation.org>
+        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>, stable@kernel.org
+Subject: [PATCH 5.0 33/52] ext4: fix NULL pointer dereference while journal is aborted
+Date:   Tue, 26 Mar 2019 15:30:20 +0900
+Message-Id: <20190326042702.719875504@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -64,71 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
 
-commit 744c67ffeb06f2d2493f4049ba0bd19698ce0adf upstream.
+commit fa30dde38aa8628c73a6dded7cb0bba38c27b576 upstream.
 
-The commit 3baffc4a84d7 (ALSA: hda/intel: Refactoring PM code) changed
-the behaviour of azx_resume(), it triggers the jackpoll_work after
-applying this commit.
+We see the following NULL pointer dereference while running xfstests
+generic/475:
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+PGD 8000000c84bad067 P4D 8000000c84bad067 PUD c84e62067 PMD 0
+Oops: 0000 [#1] SMP PTI
+CPU: 7 PID: 9886 Comm: fsstress Kdump: loaded Not tainted 5.0.0-rc8 #10
+RIP: 0010:ext4_do_update_inode+0x4ec/0x760
+...
+Call Trace:
+? jbd2_journal_get_write_access+0x42/0x50
+? __ext4_journal_get_write_access+0x2c/0x70
+? ext4_truncate+0x186/0x3f0
+ext4_mark_iloc_dirty+0x61/0x80
+ext4_mark_inode_dirty+0x62/0x1b0
+ext4_truncate+0x186/0x3f0
+? unmap_mapping_pages+0x56/0x100
+ext4_setattr+0x817/0x8b0
+notify_change+0x1df/0x430
+do_truncate+0x5e/0x90
+? generic_permission+0x12b/0x1a0
 
-This change introduced a new issue, all codecs are runtime active
-after S3, and will not call runtime_suspend() automatically.
+This is triggered because the NULL pointer handle->h_transaction was
+dereferenced in function ext4_update_inode_fsync_trans().
+I found that the h_transaction was set to NULL in jbd2__journal_restart
+but failed to attached to a new transaction while the journal is aborted.
 
-The root cause is the jackpoll_work calls snd_hda_power_up/down_pm,
-and it calls up_pm before snd_hdac_enter_pm is called, while calls
-the down_pm in the middle of enter_pm and leave_pm is called. This
-makes the dev->power.usage_count unbalanced after S3.
+Fix this by checking the handle before updating the inode.
 
-To fix it, let azx_resume() don't trigger jackpoll_work as before
-it did.
-
-Fixes: 3baffc4a84d7 ("ALSA: hda/intel: Refactoring PM code")
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: b436b9bef84d ("ext4: Wait for proper transaction commit on fsync")
+Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/ext4/ext4_jbd2.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -947,7 +947,7 @@ static void __azx_runtime_suspend(struct
- 	display_power(chip, false);
- }
- 
--static void __azx_runtime_resume(struct azx *chip)
-+static void __azx_runtime_resume(struct azx *chip, bool from_rt)
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -384,7 +384,7 @@ static inline void ext4_update_inode_fsy
  {
- 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
- 	struct hdac_bus *bus = azx_bus(chip);
-@@ -964,7 +964,7 @@ static void __azx_runtime_resume(struct
- 	azx_init_pci(chip);
- 	hda_intel_init_chip(chip, true);
+ 	struct ext4_inode_info *ei = EXT4_I(inode);
  
--	if (status) {
-+	if (status && from_rt) {
- 		list_for_each_codec(codec, &chip->bus)
- 			if (status & (1 << codec->addr))
- 				schedule_delayed_work(&codec->jackpoll_work,
-@@ -1016,7 +1016,7 @@ static int azx_resume(struct device *dev
- 			chip->msi = 0;
- 	if (azx_acquire_irq(chip, 1) < 0)
- 		return -EIO;
--	__azx_runtime_resume(chip);
-+	__azx_runtime_resume(chip, false);
- 	snd_power_change_state(card, SNDRV_CTL_POWER_D0);
- 
- 	trace_azx_resume(chip);
-@@ -1081,7 +1081,7 @@ static int azx_runtime_resume(struct dev
- 	chip = card->private_data;
- 	if (!azx_has_pm_runtime(chip))
- 		return 0;
--	__azx_runtime_resume(chip);
-+	__azx_runtime_resume(chip, true);
- 
- 	/* disable controller Wake Up event*/
- 	azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) &
+-	if (ext4_handle_valid(handle)) {
++	if (ext4_handle_valid(handle) && !is_handle_aborted(handle)) {
+ 		ei->i_sync_tid = handle->h_transaction->t_tid;
+ 		if (datasync)
+ 			ei->i_datasync_tid = handle->h_transaction->t_tid;
 
 
