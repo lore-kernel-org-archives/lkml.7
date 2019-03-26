@@ -2,149 +2,125 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F14C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB00C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC31520823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9BA2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 03:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yq8dP6tB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kBbnCu6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfCZDDL (ORCPT
+        id S1730624AbfCZDG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 23:03:11 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40166 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfCZDDL (ORCPT
+        Mon, 25 Mar 2019 23:06:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59218 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfCZDGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 23:03:11 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b11so917639plr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 20:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wJSCE91nRq7dxmP8eW+epFcXHvqxYHPonMa2hKnFAtQ=;
-        b=yq8dP6tBcCJ8vtGQy8q04TNHt7N8uSPuRg3f1Nd5rlzJVuPzCeu7LS0OwxbE03FCtf
-         Izf+CdjKGS5rTmiav6Z1GwSydOd3/6SlgMYZKkr8RGH+6A6MR/fAQN8iWlPWIi9OjWXo
-         eFMHL0bk8ZILwCY93M1ItFmh43pqHXus9jyH8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wJSCE91nRq7dxmP8eW+epFcXHvqxYHPonMa2hKnFAtQ=;
-        b=L57sAX/HbWMu0Kp9Q9DGNkFxpfxm0ROZbSob5q7yfWMD+cU9S/7O5122uxuNmufHVm
-         jBK9fWWlHdxkhJq9yRnScLxYxDPuzIAHjOrjfhqCGTQSHeSNUAC6qpEkTPiYaFE+LYLv
-         QcqlTEvYBJQkYVK2PWQ9+VlS2cI+Pr50akG7kl1lTul0MSkJXIeJdnVw3+T9/fLUrsHe
-         byTVvKDYfgYF+fO2QVPqIn4wvFMhU0Sbn4TjIRI/lNhuBPh99IGeZdIV3smS59WzLuni
-         dUymqfbYmOwZwwSUwW/jdfhwcmxTBJ5mKgsEPIfLfgc2csyBqazA/UtNDVB6fkjFZkeQ
-         DEbg==
-X-Gm-Message-State: APjAAAUz0tYmNU6YUH/DY/1is/yCTH3gbwmqWL0DCLN7kEJTrC3a/i4G
-        M7ls+FuVe6+WVzDge8/O2NlWog==
-X-Google-Smtp-Source: APXvYqyERBqCnPIxFLeLa0NlCn/HwX/G6BvmOmBLkhg1oLKvE6K5B1j0yljhoJnj+H0LCGKnm6PTJg==
-X-Received: by 2002:a17:902:aa5:: with SMTP id 34mr27609815plp.302.1553569390274;
-        Mon, 25 Mar 2019 20:03:10 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 140sm22599378pfb.55.2019.03.25.20.03.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 Mar 2019 20:03:08 -0700 (PDT)
-Date:   Mon, 25 Mar 2019 23:03:07 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] pid: add pidctl()
-Message-ID: <20190326030307.GA213200@google.com>
-References: <20190325162052.28987-1-christian@brauner.io>
- <CAKOZueuJSAiKU7fZR2FNDKKCktdyE-sADtWprpsNMAqYQvD9Jw@mail.gmail.com>
- <20190325173614.GB25975@google.com>
- <20190325201544.7o2kwuie3infcblp@brauner.io>
- <20190325211132.GA6494@google.com>
- <CAG48ez0K9xcSf28rXOy3k0dEL3b_4b-DfcdCO=JO7vVZeJoBcA@mail.gmail.com>
- <20190325214338.GA16969@google.com>
- <CAGLj2rEODAg+Y5D5Oxy3Gp-Yg6mqeisPnLQJ334TWSdrPW1L7A@mail.gmail.com>
+        Mon, 25 Mar 2019 23:06:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q2sEqo096804;
+        Tue, 26 Mar 2019 03:06:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=AikLAY3/yF5f7CFUPqFi56k+5aRsUE/ZO0XGmUjmvdA=;
+ b=kBbnCu6JrcJnIh+dMyMS0YRoV57YCFIdC0+Prn94Ye/BvzAZ7pySB8FGu85xX8YjmwQ/
+ BsfwITBnZKsLrKplhxRlOYla3MHJEyOL6sZQOWx9Gf9/d045QYAaduxDuJPg0X5fmVJh
+ /S9s5vuQQ/1MNgHSmTOlqfzc+nv7PVwfweEDYIqsUCnyfkbVx9+2XTjZgWMIfZ/0708Y
+ ccv7DKHhjIRUBnsxIzjYu1UZT78LDtNTOlPWn4AagFnTJazWPB2+sBD3swqodtF3dRkf
+ oUQHzj43/u2GbOQSPNV7fG9+H58djp98ZOgWUXr1j3ftvPDJJHBbJspRsrAnXxmsb21P 2w== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2re6dj7reu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 03:06:03 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q35ust024426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 03:05:56 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2Q35snL019610;
+        Tue, 26 Mar 2019 03:05:54 GMT
+Received: from [10.182.69.118] (/10.182.69.118)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 25 Mar 2019 20:05:53 -0700
+Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
+To:     Ming Lei <tom.leiming@gmail.com>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
+ <1553492318-1810-8-git-send-email-jianchao.w.wang@oracle.com>
+ <20190325134917.GA4328@localhost.localdomain>
+ <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
+ <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
+From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
+Message-ID: <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
+Date:   Tue, 26 Mar 2019 11:05:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGLj2rEODAg+Y5D5Oxy3Gp-Yg6mqeisPnLQJ334TWSdrPW1L7A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903260021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 09:54:58PM +0000, Jonathan Kowalski wrote:
-> On Mon, Mar 25, 2019 at 9:43 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Mon, Mar 25, 2019 at 10:19:26PM +0100, Jann Horn wrote:
-> > > On Mon, Mar 25, 2019 at 10:11 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > But often you don't just want to wait for a single thing to happen;
-> > > you want to wait for many things at once, and react as soon as any one
-> > > of them happens. This is why the kernel has epoll and all the other
-> > > "wait for event on FD" APIs. If waiting for a process isn't possible
-> > > with fd-based APIs like epoll, users of this API have to spin up
-> > > useless helper threads.
-> >
-> > This is true. I almost forgot about the polling requirement, sorry. So then a
-> > new syscall it is.. About what to wait for, that can be a separate parameter
-> > to pidfd_wait then.
-> >
+
+
+On 3/26/19 10:41 AM, Ming Lei wrote:
+> On Tue, Mar 26, 2019 at 9:18 AM jianchao.wang
+> <jianchao.w.wang@oracle.com> wrote:
+>>
+>> Hi Keith
+>>
+>> On 3/25/19 9:49 PM, Keith Busch wrote:
+>>> On Mon, Mar 25, 2019 at 01:38:37PM +0800, Jianchao Wang wrote:
+>>>> blk_mq_tagset_inflight_iter is not safe that it could get stale request
+>>>> in tags->rqs[]. Use blk_mq_queue_tag_inflight_iter here. A new helper
+>>>> interface nvme_iterate_inflight_rqs is introduced to iterate
+>>>> all of the ns under a ctrl.
+>>>
+>>> Nak, NVMe only iterates tags when new requests can't enter, allocated
+>>> requests can't dispatch, and dispatched commands can't complete. So
+>>> it is perfectly safe to iterate if the driver takes reasonable steps
+>>> beforehand.
+>>
+>> nvme_dev_disable just quiesce and freeze the request_queue, but not drain the enters.
+>> So there still could be someone escapes the queue freeze checking and tries to allocate
+>> request.
 > 
-> This introduces a time window where the process changes state between
-> "get pidfd" and "setup waitfd", it would be simpler if the pidfd
-> itself supported .poll and on termination the exit status was made
-> readable from the file descriptor.
+> The rq->state is just IDLE for these allocated request, so there
+> shouldn't be issue
+> in NVMe's case.
 
-It is much cleaner to add a new pidfd_wait syscall for this as discussed in
-the other thread. Adding .poll directly to the pidfd would seem to complicate
-the blocking configuration. Do we block until the task is a zombie or until
-it is dead?  That is not possible to specify easily. Also if we need to
-return other types of information from the pidfd, not just exit state, then
-it is not clear whether blocking on a pidfd just purely on exit status makes
-sense. It is much cleaner to add a new pidfd_wait syscall giving it a pidfd,
-specify what to block on (EXIT_DEAD or EXIT_ZOMBIE or both) and then return a
-wait fd that can be read/blocked and returning all the needed information on
-unblock.
+What if there used to be a io scheduler and leave some stale requests of sched tags ?
+Or the nr_hw_queues was decreased and leave the hctx->fq->flush_rq ?
 
-> Further, in the clone4 patchset, there was a mechanism to autoreap
-> such a process so that it does not interfere with waiting a process
-> does normally. How do you intend to handle this case if anyone except
-> the parent is wanting to *wait* on the process (a second process,
-> without reaping, so as to not disrupt any waiting in the parent), and
-> for things like libraries that finally can manage their own set of
-> process when pidfd_clone is added, by excluding this process from the
-> process's normal wait handling logic.
+The stable request could be some tings freed and used
+by others and the state field happen to be overwritten to non-zero...
 
-The pidfd_wait logic being discussed does not depend on or affects the
-autoreap behavior. This wait is not the traditional wait family of calls.
-It is for just getting notified about reading all the exit state of a task.
-Once I post the code, it will be clear. And I'll CC you..
-
-thanks,
-
- - Joel
-
+Thanks
+Jianchao
