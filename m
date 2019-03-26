@@ -2,112 +2,99 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1269CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A923C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5ED320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553577162;
-	bh=kxvZNI2/p8l0UeDFVYbYGrOC5qSXHkD2rUy0HVuGhek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=djHbizdIVCRg89c0M/OLn7PX6BMYPuIdI7X5qBpB7ecBmn4nUxB7S535DODZso90O
-	 u5pEz6+8oviKZIg4Us7fOtP+/mRwIOOkJ645xIfT0+jPWOkx3Bn+zJno7WUBOWxBla
-	 Dm9ESSYURaoJ9Uz6MfaS0xYtP0XS/BhAdMO+tyb4=
+	by mail.kernel.org (Postfix) with ESMTP id 293F820811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:18:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JtRpJHVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfCZFMl (ORCPT
+        id S1726500AbfCZFS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 01:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfCZFMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 01:12:41 -0400
-Received: from localhost (unknown [171.61.95.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C2020811;
-        Tue, 26 Mar 2019 05:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553577160;
-        bh=kxvZNI2/p8l0UeDFVYbYGrOC5qSXHkD2rUy0HVuGhek=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FxaoaWYj8N4ifAopQ3nM8WtytWPU9nRCu+HO0bQztFSlmidbqk0gfGtv5gpIi/zIt
-         M9v0U8eES6FvR9CDxIsaQXAmoFHDmPW9GFmMdvZGZKi7/3eVh4X+BQALT20JDWLyjX
-         MU0cPziSw8GRgDazBDFzyig4SMhRZohg7pwM/ZXs=
-Date:   Tue, 26 Mar 2019 10:42:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>
-Subject: Re: Bad file pattern in MAINTAINERS section 'QUALCOMM ETHQOS
- ETHERNET DRIVER'
-Message-ID: <20190326051234.GU5348@vkoul-mobl>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190325212742.27394-1-joe@perches.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325212742.27394-1-joe@perches.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 26 Mar 2019 01:18:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41179 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfCZFS4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 01:18:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so5021581wrq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
+         :references;
+        bh=skNEpzEm/S7yvN9Jpa1/tTPD3XXWtt116hN850XD2/E=;
+        b=JtRpJHVYPe35+MEw/iMkYbDI69d24+bO1MIxjSWpbha6KQ+85RWB+RLlBNYHK4pMB4
+         /hh4hcDeEkQkQ2p8roKonPxQKwAn1BVYAFDGg7h9rc2dbjgyh7Mqy7inu1sbHzH1orJS
+         p0evUYB3COoHn4z4Mkm7kiVnIxcpusJf82ER/8N3uvzCXTAl1ZbdgrX5qpvtq3KhAqw9
+         2erAFzJSZCUNGsyJELy8JusuKIdtOCHFzSTGfs/koRXs4cryTRF2dyXz1X5+MloR2Q42
+         CZ2zLCgxd3lzdcTw8oYddEAjsOeW6M/dZx/7J7WZ6vzb2+XZ4CSrk+E53sVZo5rj4x1i
+         st3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=skNEpzEm/S7yvN9Jpa1/tTPD3XXWtt116hN850XD2/E=;
+        b=Or4aakyF1uUtPPPnpAyTyXCobEQyEhpiDCJumMT6GKC9pICc/qfStWD5oRnAzxN9Kd
+         GTLvfnxwnLt9Q2Wy/EDA2O0ht9HJ9reMH5Z+RGJg6JNVhmIqqT69tjsiMFgp6/WfqX8x
+         lOVkmIR8fWnUOisW1b2rWWmR7zqPrIUh8SrIcDl6NRZUVuPvN1NceRnUe8y/EFo4zic+
+         b3Ob6rPb1uYeX5zm9P6IpyTI+xyBT72ug39skG6xN8CZpkFSpN5enjmBUfdkZyCgWi46
+         SrfS2qtURAw6GMdAxfsdUe0XjB/XvYgcoyh5yYN5VZWxhPIjDBtGJFVgS2zFdjaAdHBJ
+         QUow==
+X-Gm-Message-State: APjAAAVHq79HsPjxfAWQho2Ur9ayDwf6d5GLXpCbfej7gjJO+O8R1379
+        cxLe1uqaPwgoKNiNNd7Qyetj/0dasTM=
+X-Google-Smtp-Source: APXvYqxtSw5pvvqyjtDJqicXzY8Lx/ovD/uIiROc9zMKbLTZGv34Wzqu6439ZRpGl6gk/pmMBR/WpA==
+X-Received: by 2002:adf:f68d:: with SMTP id v13mr19797183wrp.6.1553577533570;
+        Mon, 25 Mar 2019 22:18:53 -0700 (PDT)
+Received: from localhost ([49.248.191.105])
+        by smtp.gmail.com with ESMTPSA id v2sm16782365wme.29.2019.03.25.22.18.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 Mar 2019 22:18:52 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, joe@perches.com,
+        andy.gross@linaro.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v1 1/1] MAINTAINERS: fix typo in file name
+Date:   Tue, 26 Mar 2019 10:48:45 +0530
+Message-Id: <8ea01476a26ce5eb059b667181262f91873b87c5.1553577179.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190325212450.25865-1-joe@perches.com>
+References: <20190325212450.25865-1-joe@perches.com>
+In-Reply-To: <cover.1553577179.git.amit.kucheria@linaro.org>
+References: <cover.1553577179.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-03-19, 14:27, Joe Perches wrote:
-> A file pattern line in this section of the MAINTAINERS file in linux-next
-> does not have a match in the linux source files.
-> 
-> This could occur because a matching filename was never added, was deleted
-> or renamed in some other commit.
-> 
-> The commits that added and if found renamed or removed the file pattern
-> are shown below.
-> 
-> Please fix this defect appropriately.
+Replace underscore with dash.
 
-Thanks Joe for the report, sending the fix.
+Fixes: e31f941cf977 ("MAINTAINERS: update list of qcom drivers")
+Reported-by: Joe Perches <joe@perches.com>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> 1: ---------------------------------------------------------------------------
-> 
-> linux-next MAINTAINERS section:
-> 
-> 	12864	QUALCOMM ETHQOS ETHERNET DRIVER
-> 	12865	M:	Vinod Koul <vkoul@kernel.org>
-> 	12866	M:	Niklas Cassel <niklas.cassel@linaro.org>
-> 	12867	L:	netdev@vger.kernel.org
-> 	12868	S:	Maintained
-> 	12869	F:	drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> -->	12870	F:	Documentation/devicetree/bindings/net/qcom,dwmac.txt
-> 
-> 2: ---------------------------------------------------------------------------
-> 
-> The most recent commit that added or modified file pattern 'Documentation/devicetree/bindings/net/qcom,dwmac.txt':
-> 
-> commit 83c177aea4c37d1a2ef1e2488b25838f70cf6571
-> Author: Vinod Koul <vkoul@kernel.org>
-> Date:   Mon Jan 21 14:43:16 2019 +0530
-> 
->     MAINTAINER: Add entry for Qualcomm ETHQOS ethernet driver
->     
->     Add myself and Niklas as maintainers for this driver
->     
->     Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
->     Signed-off-by: Vinod Koul <vkoul@kernel.org>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
-> 
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> 3: ---------------------------------------------------------------------------
-> 
-> No commit with file pattern 'Documentation/devicetree/bindings/net/qcom,dwmac.txt' was found
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3e5a5d263f29..d2c5852a3c8d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2007,7 +2007,7 @@ F:	drivers/i2c/busses/i2c-qup.c
+ F:	drivers/i2c/busses/i2c-qcom-geni.c
+ F:	drivers/mfd/ssbi.c
+ F:	drivers/mmc/host/mmci_qcom*
+-F:	drivers/mmc/host/sdhci_msm.c
++F:	drivers/mmc/host/sdhci-msm.c
+ F:	drivers/pci/controller/dwc/pcie-qcom.c
+ F:	drivers/phy/qualcomm/
+ F:	drivers/power/*/msm*
 -- 
-~Vinod
+2.17.1
+
