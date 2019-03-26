@@ -2,96 +2,293 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C458C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B17FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7274B20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113512082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732407AbfCZSMk (ORCPT
+        id S1732472AbfCZSNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:12:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:42046 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732064AbfCZSMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:12:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271F51596;
-        Tue, 26 Mar 2019 11:12:39 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32E433F575;
-        Tue, 26 Mar 2019 11:12:36 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 18:12:30 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "driverdev-devel@linuxdriverproject.org" 
-        <driverdev-devel@linuxdriverproject.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "jackm@mellanox.com" <jackm@mellanox.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/3] PCI: hv: Fix a memory leak in hv_eject_device_work()
-Message-ID: <20190326181156.GA12093@e107981-ln.cambridge.arm.com>
-References: <PU1P153MB0169E9AA13EB51DF5CFC1CE4BF420@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190326170842.GA10666@e107981-ln.cambridge.arm.com>
- <DM5PR2101MB0918F2C06BBFF7684BF179FFD75F0@DM5PR2101MB0918.namprd21.prod.outlook.com>
- <PU1P153MB0169CA2F484C02A196F9B78DBF5F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Tue, 26 Mar 2019 14:13:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58054 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732064AbfCZSNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 14:13:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1BD4AFD3;
+        Tue, 26 Mar 2019 18:13:37 +0000 (UTC)
+Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
+To:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
+        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
+        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
+        michal.lkml@markovi.net
+References: <20190301141313.15057-1-jmoreira@suse.de>
+ <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com>
+ <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz>
+ <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de>
+ <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
+From:   Joao Moreira <jmoreira@suse.de>
+Message-ID: <699e78da-36ba-8217-c509-2e9b443bd380@suse.de>
+Date:   Tue, 26 Mar 2019 15:13:29 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB0169CA2F484C02A196F9B78DBF5F0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 06:01:32PM +0000, Dexuan Cui wrote:
 
-[...]
 
-> > > Have we reached a conclusion on this ? I would like to merge this series
-> > > given that it is fixing bugs and it has hung in the balance for quite
-> > > a while but it looks like Michael is not too happy about these patches
-> > > and I need a maintainer ACK to merge them.
-> > >
-> > > Thanks,
-> > > Lorenzo
-> > 
-> > Dexuan and I have discussed the topic extensively offline.  The patch works
-> > in its current form, and I'll agree to it.
-> > 
-> > Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+On 3/26/19 1:15 PM, Joe Lawrence wrote:
+> On 3/26/19 10:40 AM, Joao Moreira wrote:
+>>
+>>
+>> On 3/20/19 4:08 PM, Miroslav Benes wrote:
+>>>>> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+>>>>> index fd03d60f6c5a..1e28ad21314c 100644
+>>>>> --- a/scripts/Makefile.build
+>>>>> +++ b/scripts/Makefile.build
+>>>>> @@ -247,6 +247,11 @@ cmd_gen_ksymdeps = \
+>>>>>        $(CONFIG_SHELL) $(srctree)/scripts/gen_ksymdeps.sh $@ >> 
+>>>>> $(dot-target).cmd
+>>>>>    endif
+>>>>> +ifdef CONFIG_LIVEPATCH
+>>>>> +cmd_livepatch = $(if $(LIVEPATCH_$(basetarget).o),            \
+>>>>> +    $(shell touch $(MODVERDIR)/$(basetarget).livepatch))
+>>>>> +endif
+>>>>> +
+>>>>>    define rule_cc_o_c
+>>>>>        $(call cmd,checksrc)
+>>>>>        $(call cmd_and_fixdep,cc_o_c)
+>>>>> @@ -283,6 +288,7 @@ $(single-used-m): $(obj)/%.o: $(src)/%.c 
+>>>>> $(recordmcount_source) $(objtool_dep) F
+>>>>>        $(call if_changed_rule,cc_o_c)
+>>>>>        @{ echo $(@:.o=.ko); echo $@; \
+>>>>>           $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
+>>>>> +    $(call cmd_livepatch)
+>>>>>    quiet_cmd_cc_lst_c = MKLST   $@
+>>>>>          cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
+>>>>
+>>>> Since cmd_livepatch is only called for single-used-m, does this mean
+>>>> that we can only klp-convert single object file livepatch modules?
+>>>>
+>>>> I stumbled upon this when trying to create a self-test module that
+>>>> incorporated two object files.  I tried adding a $(call cmd_livepatch)
+>>>> in the recipe for $(obj)/%.o, but that didn't help.  My kbuild foo
+>>>> wasn't good enough to figure this one out.
+>>>
+>>> I looked at my original code and it is a bit different there. I 
+>>> placed it
+>>> under rule_cc_o_c right after objtool command. If I remember correctly
+>>> this is the correct recipe for .c->.o. Unfortunately I forgot the 
+>>> details
+>>> and there is of course nothing about it in my notes.
+>>>
+>>> Does it help?
+>>>
+>>> Joao, is there a reason you moved it elsewhere?
+>>
+>> Hi,
+>>
+>> Unfortunately I can't remember why the chunk was moved to where it is in
+>> this version of the patch, sorry. Yet, I did try to move this into the
+>> rule cc_o_c and it seemed to work with not damage.
+>>
+>> Joe, would you kindly verify and squash properly the patch below, which
+>> places cmd_livepatch in rule_cc_o_c?
+>>
+>> Thank you.
+>>
+>> Subject: [PATCH] Move cmd_klp_convert to the right place
+>>
+>>
+>> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+>>
+>> ---
+>>
+>>    scripts/Makefile.build | 2 +-
+>>
+>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>>
+>> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+>> index 1e28ad21314c..5f66106a47d6 100644
+>> --- a/scripts/Makefile.build
+>> +++ b/scripts/Makefile.build
+>> @@ -260,6 +260,7 @@ define rule_cc_o_c
+>>           $(call cmd,objtool)
+>>           $(call cmd,modversions_c)
+>>           $(call cmd,record_mcount)
+>> +       $(call cmd,livepatch)
+>>    endef
+>>    define rule_as_o_S
+>> @@ -288,7 +289,6 @@ $(single-used-m): $(obj)/%.o: $(src)/%.c
+>> $(recordmcount_source) $(objtool_dep) F
+>>           $(call if_changed_rule,cc_o_c)
+>>           @{ echo $(@:.o=.ko); echo $@; \
+>>              $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod)
+>> -       $(call cmd_livepatch)
+>>    quiet_cmd_cc_lst_c = MKLST   $@
+>>          cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \
 > 
-> Thanks, Michael!
+> Hi Joao,
 > 
-> Hi Lorenzo,
-> All the 3 patches have got Michael's Reviewed-by.
+> This change seems to work okay for (again) single object modules, but 
+> I'm having issues with multi-object modules.
+> 
 
-Good, I asked because I do not want to merge patches with review
-questions open, thanks for the clarifications.
+Hi Joe, thanks for the sources, this made everything much easier in my 
+side :)
 
-> Previously, Stephen Hemminger, one of the Hyper-V driver maintainers, 
-> provided his Reviewed-by in the " [PATCH 0/3]" mail:
-> https://lkml.org/lkml/2019/3/5/521
+In the patch below I change a little bit the interface used to inform 
+kbuild that a module is a livepatch. Instead of defining the flag 
+LIVEPATCH_ per .o file, we define it per module (what actually makes 
+much more sense). We later use $(basetarget) in the Makefile for 
+checking the flags. By doing so, and invoking cmd_livepatch both from 
+the $(single-used-m) and $(multi-used-m) we ensure that the .livepatch 
+file is created for each module, what later in the pipeline flags the 
+invocation of klp-convert.
 
-I will reformat/rewrite the logs and notify you when queued.
+I tested the following patch with the sources you provided (with little 
+modifications, removing the .o from the LIVEPATCH_ definitions and using 
+the module name instead of the object names), achieving successful 
+compilation and conversion. I also tested against the sample 
+livepatches, thus I think it might be ok now.
 
-Thanks,
-Lorenzo
+Do you think we can go this way to solve the problem in v3?
+
+-- PATCH --
+
+Subject: [PATCH] Fix cmd_livepatch for multi-object modules 
+
+ 
+
+Signed-off-by: Joao Moreira <jmoreira@suse.de> 
+
+--- 
+
+  samples/livepatch/Makefile | 10 +++++----- 
+
+  scripts/Makefile.build     |  5 +++-- 
+
+  2 files changed, 8 insertions(+), 7 deletions(-) 
+
+ 
+
+diff --git a/samples/livepatch/Makefile b/samples/livepatch/Makefile 
+
+index 93725c434f4f..dea530840725 100644 
+
+--- a/samples/livepatch/Makefile 
+
++++ b/samples/livepatch/Makefile 
+
+@@ -1,8 +1,8 @@ 
+
+-LIVEPATCH_livepatch-sample.o := y 
+
+-LIVEPATCH_livepatch-shadow-fix1.o := y 
+
+-LIVEPATCH_livepatch-shadow-fix2.o := y 
+
+-LIVEPATCH_livepatch-callbacks-demo.o := y 
+
+-LIVEPATCH_livepatch-annotated-sample.o := y 
+
++LIVEPATCH_livepatch-sample := y 
+
++LIVEPATCH_livepatch-shadow-fix1 := y 
+
++LIVEPATCH_livepatch-shadow-fix2 := y 
+
++LIVEPATCH_livepatch-callbacks-demo := y 
+
++LIVEPATCH_livepatch-annotated-sample := y 
+
+ 
+
+  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-sample.o 
+
+  obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-mod.o 
+
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build 
+
+index dba89e605eab..52e69b4084d5 100644 
+
+--- a/scripts/Makefile.build 
+
++++ b/scripts/Makefile.build 
+
+@@ -250,7 +250,7 @@ cmd_gen_ksymdeps = \ 
+
+  endif 
+
+ 
+
+  ifdef CONFIG_LIVEPATCH 
+
+-cmd_livepatch = $(if $(LIVEPATCH_$(basetarget).o), 
+\
++cmd_livepatch = $(if $(LIVEPATCH_$(basetarget)), 
+\
+         $(shell touch $(MODVERDIR)/$(basetarget).livepatch)) 
+
+  endif 
+
+ 
+
+@@ -288,9 +288,9 @@ $(obj)/%.o: $(src)/%.c $(recordmcount_source) 
+$(objtool_dep) FORCE
+  $(single-used-m): $(obj)/%.o: $(src)/%.c $(recordmcount_source) 
+$(objtool_dep) FORCE
+         $(call cmd,force_checksrc) 
+
+         $(call if_changed_rule,cc_o_c) 
+
++       $(call cmd,livepatch) 
+
+         @{ echo $(@:.o=.ko); echo $@; \ 
+
+            $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod) 
+
+-       $(call cmd_livepatch) 
+
+ 
+
+  quiet_cmd_cc_lst_c = MKLST   $@ 
+
+        cmd_cc_lst_c = $(CC) $(c_flags) -g -c -o $*.o $< && \ 
+
+@@ -469,6 +469,7 @@ cmd_link_multi-m = $(LD) $(ld_flags) -r -o $@ 
+$(filter %.o,$^) $(cmd_secanalysis
+ 
+
+  $(multi-used-m): FORCE 
+
+         $(call if_changed,link_multi-m) 
+
++       $(call cmd,livepatch) 
+
+         @{ echo $(@:.o=.ko); echo $(filter %.o,$^); \ 
+
+            $(cmd_undef_syms); } > $(MODVERDIR)/$(@F:.o=.mod) 
+
+  $(call multi_depend, $(multi-used-m), .o, -objs -y -m) 
+
+-- 
+
+2.16.4
