@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C254C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E100C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D145C2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C002070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582775;
-	bh=m3qC3cxiAimDD1c1a0th/9Ru+Z3er7/b/+sjkpzPBbI=;
+	s=default; t=1553582797;
+	bh=3NfzcUYRE7PQW1bNsav4qR5AFpAqpVi3gSPqt3zz1PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPGBPim/4RLVNWnjolPy3GeGqd7xVQywHoVVS3RDkQHIQw+zcJ0GSrZrWZ8tbkGE2
-	 BpHfr9fXA2aDpG+Wiosanw9ROaYnjvpm3S1IQBYODXUxa9aXAd16kJYmrM5RqmWHKc
-	 VUh0/tVFhImKeNfWu8DAJh/8mPc9ay5uPgETFTUA=
+	b=IyYxJqzgux6yHmwoJUNQvnKqrUe2cIvkbo/8ZsjfBLZVgs2XoC2B9+HbNFubWYS7X
+	 LA+d5Vx2F0ctwjmqjrfa6QAIGXhLPPS81ZhomTPMgC9K9BktYjDWbD/EZRyY9Sl6WL
+	 fMHuB+4Yw0/z8j6s9WyrDRPDi5frXkHACwB4osJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731783AbfCZGqP (ORCPT
+        id S1731557AbfCZGdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731677AbfCZGdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:32 -0400
+        id S1730935AbfCZGdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:01 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E88620823;
-        Tue, 26 Mar 2019 06:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D6920856;
+        Tue, 26 Mar 2019 06:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582010;
-        bh=m3qC3cxiAimDD1c1a0th/9Ru+Z3er7/b/+sjkpzPBbI=;
+        s=default; t=1553581980;
+        bh=3NfzcUYRE7PQW1bNsav4qR5AFpAqpVi3gSPqt3zz1PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wN2UDQU+76PejCazfv8PmhofOYNx0vLGcTwiXycgPDbrNKc7LgyQ5L+smIb2vV46y
-         vVrHiG32SJMK2kjdxmGOgOv/ZIyYhHkm1yxNTt8xhCysXpCXcK1hLDHZNSmq2hMfxI
-         Bl7+7kYOA+6ocTRkFM+j8X2jBVOU83NU2n65UpUw=
+        b=eQI20oP4sE0wKILgWHC28M9nETrSVl9cy9kZ6zPbGwTWavPD3RWBqgN+ukTiytY3O
+         S8dhcmJapioSPXHaW20NzL2t+RBTZ+qWLFBQttvswV1cZL91TxX9udTXNtIPyPeFcn
+         PoVxd2c2yFpThTDd7Gewh3DysqA+/ZrCkkGzWVyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jan Viktorin <jan.viktorin@gmail.com>
-Subject: [PATCH 4.14 03/41] iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-Date:   Tue, 26 Mar 2019 15:29:40 +0900
-Message-Id: <20190326042650.064364467@linuxfoundation.org>
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 10/41] scsi: ibmvscsi: Fix empty event pool access during host removal
+Date:   Tue, 26 Mar 2019 15:29:47 +0900
+Message-Id: <20190326042650.454629037@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -58,7 +54,7 @@ X-stable: review
 X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,100 +64,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
 
-commit 4e50ce03976fbc8ae995a000c4b10c737467beaa upstream.
+commit 7f5203c13ba8a7b7f9f6ecfe5a4d5567188d7835 upstream.
 
-Take into account that sg->offset can be bigger than PAGE_SIZE when
-setting segment sg->dma_address. Otherwise sg->dma_address will point
-at diffrent page, what makes DMA not possible with erros like this:
+The event pool used for queueing commands is destroyed fairly early in the
+ibmvscsi_remove() code path. Since, this happens prior to the call so
+scsi_remove_host() it is possible for further calls to queuecommand to be
+processed which manifest as a panic due to a NULL pointer dereference as
+seen here:
 
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa70c0 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7040 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7080 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7100 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7000 flags=3D0x0020]
+PANIC: "Unable to handle kernel paging request for data at address
+0x00000000"
 
-Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
-what what can cause crashes like this:
+Context process backtrace:
 
-Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
-Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
-Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
-Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff0000=
-0301 0000000000000000
-Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffff=
-ffff 0000000000000000
-Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
-Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid =
-amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core k=
-vm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 cr=
-ct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel=
- gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_ge=
-neric drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aes=
-ni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cry=
-ptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart =
-libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore s=
-p5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cp=
-ufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E)=
- mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) d=
-m_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E)=
- libata(E) xhci_pci(E) xhci_hcd(E)
-Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
-Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W =
-  E     4.20.12-arch1-1-custom #1
-Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled =
-By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
-Feb 28 19:27:45 kernel: Call Trace:
-Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
-Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
-Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
-Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
-Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
-Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
-Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
-Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
-Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
-Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
-Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
-Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
-Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
-Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
-Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
-Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+DSISR: 0000000042000000 ????Syscall Result: 0000000000000000
+4 [c000000002cb3820] memcpy_power7 at c000000000064204
+[Link Register] [c000000002cb3820] ibmvscsi_send_srp_event at d000000003ed14a4
+5 [c000000002cb3920] ibmvscsi_send_srp_event at d000000003ed14a4 [ibmvscsi] ?(unreliable)
+6 [c000000002cb39c0] ibmvscsi_queuecommand at d000000003ed2388 [ibmvscsi]
+7 [c000000002cb3a70] scsi_dispatch_cmd at d00000000395c2d8 [scsi_mod]
+8 [c000000002cb3af0] scsi_request_fn at d00000000395ef88 [scsi_mod]
+9 [c000000002cb3be0] __blk_run_queue at c000000000429860
+10 [c000000002cb3c10] blk_delay_work at c00000000042a0ec
+11 [c000000002cb3c40] process_one_work at c0000000000dac30
+12 [c000000002cb3cd0] worker_thread at c0000000000db110
+13 [c000000002cb3d80] kthread at c0000000000e3378
+14 [c000000002cb3e30] ret_from_kernel_thread at c00000000000982c
 
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Fixes: 80187fd39dcb ('iommu/amd: Optimize map_sg and unmap_sg')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+The kernel buffer log is overfilled with this log:
+
+[11261.952732] ibmvscsi: found no event struct in pool!
+
+This patch reorders the operations during host teardown. Start by calling
+the SRP transport and Scsi_Host remove functions to flush any outstanding
+work and set the host offline. LLDD teardown follows including destruction
+of the event pool, freeing the Command Response Queue (CRQ), and unmapping
+any persistent buffers. The event pool destruction is protected by the
+scsi_host lock, and the pool is purged prior of any requests for which we
+never received a response. Finally, move the removal of the scsi host from
+our global list to the end so that the host is easily locatable for
+debugging purposes during teardown.
+
+Cc: <stable@vger.kernel.org> # v2.6.12+
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/scsi/ibmvscsi/ibmvscsi.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2548,7 +2548,12 @@ static int map_sg(struct device *dev, st
-=20
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address +=3D address + s->offset;
-+		/*
-+		 * Add in the remaining piece of the scatter-gather offset that
-+		 * was masked out when we were determining the physical address
-+		 * via (sg_phys(s) & PAGE_MASK) earlier.
-+		 */
-+		s->dma_address +=3D address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   =3D s->length;
- 	}
-=20
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2299,17 +2299,27 @@ static int ibmvscsi_probe(struct vio_dev
+ static int ibmvscsi_remove(struct vio_dev *vdev)
+ {
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	spin_lock(&ibmvscsi_driver_lock);
+-	list_del(&hostdata->host_list);
+-	spin_unlock(&ibmvscsi_driver_lock);
+-	unmap_persist_bufs(hostdata);
++	unsigned long flags;
++
++	srp_remove_host(hostdata->host);
++	scsi_remove_host(hostdata->host);
++
++	purge_requests(hostdata, DID_ERROR);
++
++	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
++	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
++
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
+ 
+ 	kthread_stop(hostdata->work_thread);
+-	srp_remove_host(hostdata->host);
+-	scsi_remove_host(hostdata->host);
++	unmap_persist_bufs(hostdata);
++
++	spin_lock(&ibmvscsi_driver_lock);
++	list_del(&hostdata->host_list);
++	spin_unlock(&ibmvscsi_driver_lock);
++
+ 	scsi_host_put(hostdata->host);
+ 
+ 	return 0;
 
 
