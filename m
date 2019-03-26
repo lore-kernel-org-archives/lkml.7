@@ -3,93 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A6FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38039C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3252075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34AE2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 13:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbfCZNcm (ORCPT
+        id S1731594AbfCZNcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 09:32:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34112 "EHLO mx1.redhat.com"
+        Tue, 26 Mar 2019 09:32:51 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24320 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbfCZNcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 09:32:41 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 72C953082E91;
-        Tue, 26 Mar 2019 13:32:41 +0000 (UTC)
-Received: from treble (ovpn-120-253.rdu2.redhat.com [10.10.120.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6ECBD804B5;
-        Tue, 26 Mar 2019 13:32:38 +0000 (UTC)
-Date:   Tue, 26 Mar 2019 08:32:36 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>
-Subject: Re: [PATCH] cpu/hotplug: Create SMT sysfs interface for all arches
-Message-ID: <20190326133236.lylrrbacznezybjm@treble>
-References: <426cde0f727f0cbadc501bb9bca8c99c4e11ac02.1551462051.git.jpoimboe@redhat.com>
- <alpine.DEB.2.21.1903242104280.1798@nanos.tec.linutronix.de>
+        id S1726175AbfCZNcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 09:32:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 06:32:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
+   d="scan'208";a="155323719"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Mar 2019 06:32:49 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id C9059205E7; Tue, 26 Mar 2019 15:32:48 +0200 (EET)
+Date:   Tue, 26 Mar 2019 15:32:48 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/6] device property: Add a function to obtain a
+ node's prefix
+Message-ID: <20190326133248.2nrm5javjw4vd2yq@paasikivi.fi.intel.com>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-4-sakari.ailus@linux.intel.com>
+ <20190326131626.GZ9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903242104280.1798@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 26 Mar 2019 13:32:41 +0000 (UTC)
+In-Reply-To: <20190326131626.GZ9224@smile.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 24, 2019 at 09:13:18PM +0100, Thomas Gleixner wrote:
-> On Fri, 1 Mar 2019, Josh Poimboeuf wrote:
-> > Make the /sys/devices/system/cpu/smt/* files available on all arches, so
-> > user space has a consistent way to detect whether SMT is enabled.
-> > 
-> > The 'control' file now shows 'notsupported' for architectures which
-> > don't yet have CONFIG_HOTPLUG_SMT.
-> 
-> I'm slowly crawling through my backlog ...
-> 
-> > --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> > +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> > @@ -514,7 +514,8 @@ Description:	Control Symetric Multi Threading (SMT)
-> >  			 "on"		SMT is enabled
-> >  			 "off"		SMT is disabled
-> >  			 "forceoff"	SMT is force disabled. Cannot be changed.
-> > -			 "notsupported" SMT is not supported by the CPU
-> > +			 "notsupported" Runtime SMT toggling is not currently
-> > +					supported for the architecture
-> 
-> Second thoughts. I'm not really convinced that changing the meaning of
-> notsupported and in fact overloading it, is the right thing to do.
-> notsupported means now:
-> 
->   CPU does not support it - OR - architecture does not support it
-> 
-> That's not pretty and we are surely not short of state space. There are
-> several options for handling this:
-> 
->  1) Do not expose the state file, just expose the active file
-> 
->  2) Expose the state file, but return -ENOTSUPP or some other sensible error
->     code
-> 
->  3) Expose the state file and let show return 'notimplemented' which is
->     more accurate. That wouldn't even require to expand the state space
->     enum. It just can be returned unconditionally.
+Hi Andy,
 
-Makes sense.  I like #3.  I can post another version.
+On Tue, Mar 26, 2019 at 03:16:26PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 26, 2019 at 02:41:03PM +0200, Sakari Ailus wrote:
+> > The prefix is used for printing purpose before a node, and it also works
+> > as a separator between two nodes.
+> > 
+> 
+> One nit below.
+> 
+> > +static const char *
+> > +acpi_fwnode_get_name_prefix(const struct fwnode_handle *fwnode)
+> > +{
+> > +	struct fwnode_handle *parent;
+> > +
+> 
+> > +	parent = fwnode_get_parent(fwnode);
+> > +	/* Root node. */
+> 
+> I guess a comment could be easier to read if it goes before parent assignment
+> line.
+
+Only if the comments are changed accordingly. What we're doing here is
+trying to figure out whether this is the root node. I can do that for v3.
+
+> 
+> > +	if (!parent)
+> > +		return "";
+> > +
+> > +	parent = fwnode_get_next_parent(parent);
+> > +	/* Second node from the root; no prefix here either. */
+> 
+> Ditto.
+> 
+> > +	if (!parent)
+> > +		return "";
+> > +
+> > +	fwnode_handle_put(parent);
+> > +
+> > +	/* ACPI device or data node. */
+> > +	return ".";
+> > +}
 
 -- 
-Josh
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
