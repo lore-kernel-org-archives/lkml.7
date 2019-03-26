@@ -2,138 +2,139 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D6DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597A6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5E820823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:53:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1pKwYUu"
+	by mail.kernel.org (Postfix) with ESMTP id 36B2A2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732543AbfCZTx0 (ORCPT
+        id S1732453AbfCZTyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:53:26 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42666 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbfCZTx0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:53:26 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v22so12255927lje.9;
-        Tue, 26 Mar 2019 12:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QlaTdYWvG+WCAOE3wzX5MphhWaKUUxDm2PjB3wKgpcg=;
-        b=d1pKwYUuF31ZcHlqnBQtGrve+uHG81tALZ/PJf4FO+QvshRxOGy8SXiuws/AXQ6Kgs
-         KDwRcPOdnGQROG4hEWfwbJPEz1+NeIDY/ENoB7/J6YyH5jlvkPEMPLjYgVVSjg4LST8h
-         IXyPaHPbs3o8iIEYzUCXFfv0V3e7vEsBU2OT9WoPKsuunPZSBdeFVw0l96mz/kdNDSLw
-         itraKFpOxHZXL5pNOgilzo51na2RbFjSkFuOLZU1PXU8EFsslDXvIWpR59Tb7rldoJaf
-         SMWKmhL+FEL+9rSpHRtrVnW27MpMa4ePUjyORu9WO5nsjr/ctTsjcDcZ6KscUh14/UIh
-         YxoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QlaTdYWvG+WCAOE3wzX5MphhWaKUUxDm2PjB3wKgpcg=;
-        b=YSd5QLsuhTpyu8D3jtRCtIq3W3ntiZXXdbm+wc4e6bx5DhkHcCCBPQHI2Avgy/OGyU
-         6uNz3rxYBEJBxScZx0nMXl7Lr3HXSsELnx4CijRik6Gyf0wIm8MlX/4/O3/8kj9vBRcX
-         megGM35pWNaTEa+qQcpCtlwnQezseVax+xf58VV1MCU4vwRLWRvumLcUksueiN9Cij8Q
-         BP/WSLXbHN4ieXClPDRby8NPo6vIQA2G0veWDUOnOMvAIvWXP4Jwqgqmmnm176GMYujX
-         XosAsFrACb134yN49rPvUnp1jSndSyjIeTEAgebf0S4DluI/hSXFbkZC87l52Zezicsd
-         MiZA==
-X-Gm-Message-State: APjAAAUWmKyNJeS3Wm3n/r3MYJqb+X4QHD17teWntIHMrRTChuRc0wxz
-        3/IYndIYHOlzfniCZEXLUMSKeJh6
-X-Google-Smtp-Source: APXvYqy7uwJvYlc98x4i7IgkyqCkkEzaulCqtjnWiyS/U1ocoCtaARndrw/LMmW8HPFTx8fsXKtVHw==
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr18395015ljg.136.1553630003609;
-        Tue, 26 Mar 2019 12:53:23 -0700 (PDT)
-Received: from [192.168.1.19] (ckd248.neoplus.adsl.tpnet.pl. [83.31.79.248])
-        by smtp.gmail.com with ESMTPSA id c64sm710697lfg.70.2019.03.26.12.53.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:53:22 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] leds: netdev trigger: use memcpy in
- device_name_store
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
-References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-1-linux@rasmusvillemoes.dk>
- <20190314140619.3309-2-linux@rasmusvillemoes.dk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <987c3e60-edb3-44f0-be28-434c70bb8659@gmail.com>
-Date:   Tue, 26 Mar 2019 20:53:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 15:54:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43294 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726207AbfCZTyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:54:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 432B180D;
+        Tue, 26 Mar 2019 12:54:38 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D4E03F575;
+        Tue, 26 Mar 2019 12:54:35 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 19:54:30 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
+ pci_devices_present_work(), if necessary
+Message-ID: <20190326195429.GA15410@e107981-ln.cambridge.arm.com>
+References: <20190304213357.16652-1-decui@microsoft.com>
+ <20190304213357.16652-4-decui@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <20190314140619.3309-2-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304213357.16652-4-decui@microsoft.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+On Mon, Mar 04, 2019 at 09:34:49PM +0000, Dexuan Cui wrote:
+> When we hot-remove a device, usually the host sends us a PCI_EJECT message,
+> and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0. But when
+> we do the quick hot-add/hot-remove test, the host may not send us the
+> PCI_EJECT message, if the guest has not fully finished the initialization
+> by sending the PCI_RESOURCES_ASSIGNED* message to the host, so it's
+> potentially unsafe to only depend on the pci_destroy_slot() in
+> hv_eject_device_work(), though create_root_hv_pci_bus() ->
+> hv_pci_assign_slots() is not called in this case. Note: in this case, the
+> host still sends the guest a PCI_BUS_RELATIONS message with
+> bus_rel->device_count == 0.
+> 
+> And, in the quick hot-add/hot-remove test, we can have such a race: before
+> pci_devices_present_work() -> new_pcichild_device() adds the new device
+> into hbus->children, we may have already received the PCI_EJECT message,
+> and hence the taklet handler hv_pci_onchannelcallback() may fail to find
+> the "hpdev" by get_pcichild_wslot(hbus, dev_message->wslot.slot), so
+> hv_pci_eject_device() is NOT called; later create_root_hv_pci_bus() ->
+> hv_pci_assign_slots() creates the slot, and the PCI_BUS_RELATIONS message
+> with bus_rel->device_count == 0 removes the device from hbus->children, and
+> we end up being unable to remove the slot in hv_pci_remove() ->
+> hv_pci_remove_slots().
+> 
+> The patch removes the slot in pci_devices_present_work() when the device
+> is removed. This can address the above race. Note 1:
+> pci_devices_present_work() and hv_eject_device_work() run in the
+> singled-threaded hbus->wq, so there is not a double-remove issue for the
+> slot. Note 2: we can't offload hv_pci_eject_device() from
+> hv_pci_onchannelcallback() to the workqueue, because we need
+> hv_pci_onchannelcallback() synchronously call hv_pci_eject_device() to
+> poll the channel's ringbuffer to work around the
+> "hangs in hv_compose_msi_msg()" issue: see
+> commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
 
-Thank you for the patch.
+This commit log is unreadable, sorry. Indentation, punctuation and
+formatting are just a mess, try to read it, you will notice by
+yourself.
 
-On 3/14/19 3:06 PM, Rasmus Villemoes wrote:
-> If userspace doesn't end the input with a newline (which can easily
-> happen if the write happens from a C program that does write(fd,
-> iface, strlen(iface))), we may end up including garbage from a
-> previous, longer value in the device_name. For example
-> 
-> # cat device_name
-> 
-> # printf 'eth12' > device_name
-> # cat device_name
-> eth12
-> # printf 'eth3' > device_name
-> # cat device_name
-> eth32
-> 
-> I highly doubt anybody is relying on this behaviour, so switch to
-> simply copying the bytes (we've already checked that size is <
-> IFNAMSIZ) and unconditionally zero-terminate it; of course, we also
-> still have to strip a trailing newline.
-> 
-> This is also preparation for future patches.
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+I basically reformatted it completely and pushed the series to
+pci/controller-fixes but that's the last time I do it since I am not an
+editor, next time I won't merge it.
+
+More importantly, these patches are marked for stable, given the series
+of fixes that triggered this series please ensure it was tested
+thoroughly because it is honestly complicate to understand and I do not
+want to backport further fixes to stable kernels on top of this.
+
+Please have a look and report back.
+
+Thanks,
+Lorenzo
+
+> Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: stable@vger.kernel.org
 > ---
->   drivers/leds/trigger/ledtrig-netdev.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/pci-hyperv.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-> index 3dd3ed46d473..8d476b92f58c 100644
-> --- a/drivers/leds/trigger/ledtrig-netdev.c
-> +++ b/drivers/leds/trigger/ledtrig-netdev.c
-> @@ -122,7 +122,8 @@ static ssize_t device_name_store(struct device *dev,
->   		trigger_data->net_dev = NULL;
->   	}
->   
-> -	strncpy(trigger_data->device_name, buf, size);
-> +	memcpy(trigger_data->device_name, buf, size);
-> +	trigger_data->device_name[size] = 0;
->   	if (size > 0 && trigger_data->device_name[size - 1] == '\n')
->   		trigger_data->device_name[size - 1] = 0;
->   
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index b489412e3502..82acd6155adf 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1776,6 +1776,10 @@ static void pci_devices_present_work(struct work_struct *work)
+>  		hpdev = list_first_entry(&removed, struct hv_pci_dev,
+>  					 list_entry);
+>  		list_del(&hpdev->list_entry);
+> +
+> +		if (hpdev->pci_slot)
+> +			pci_destroy_slot(hpdev->pci_slot);
+> +
+>  		put_pcichild(hpdev);
+>  	}
+>  
+> -- 
+> 2.19.1
 > 
-
-Added tag:
-
-Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
-
-and applied to the fixes-for-5.1-rc3 branch.
-
--- 
-Best regards,
-Jacek Anaszewski
