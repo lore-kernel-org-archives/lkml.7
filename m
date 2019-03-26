@@ -2,121 +2,128 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFD9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6297FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E12206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3605920823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r5felNL0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DHQUUckm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfCZTil (ORCPT
+        id S1732546AbfCZTjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:38:41 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33510 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCZTil (ORCPT
+        Tue, 26 Mar 2019 15:39:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44249 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732252AbfCZTjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:38:41 -0400
-Received: by mail-pl1-f195.google.com with SMTP id bg8so2101118plb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:38:41 -0700 (PDT)
+        Tue, 26 Mar 2019 15:39:48 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h16so7760665ljg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=DgUudxueHTm/QW4KmBGdf24XZ1cf36j15ieGoiJGyt0=;
-        b=r5felNL0VK5UkhOOqGyDvuBMNRfNffjUCMk5OBPVirXv+TttCFc0Bo3cDgvrjgBZHN
-         isIk+L9FXT0ld8vXynrBHKQHCZ3rstzq5g9f64ipj8DZUbO6xL1kClqFlYnDQKkA5rz/
-         9PSwnITePwJQWTu6kcBYCLQeA+u9Mu0brrIVDrbfJ3XUrm4HSyR+GLd5GBDiTYqIvDAA
-         A7zMSX7ZqUq9eJtrENhNMGSTRxkv8x3sdLp/j3HBWacyf7DSxob322eF3Kssngf5TylD
-         q09BlYNWaVsLVaXOBc3LV/IaWcz1gFeQsD5txjPUK6YKHZcY4AabptVaSiB1DX4/0Br/
-         GJ4w==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ryBCGv2xEBNEXU2aXzO4ICzRrxjpGeSrWsqtu4p1C28=;
+        b=DHQUUckmM6C45xWtksRRcF6DidaWNCeE2xk9tNguwq0DY/ceSsHGIRUrnQMjgs9sI/
+         iuhzH88YVBADhmvapBfhwZHw400mz6KoZHDFXYjum0W+g4+UBji1W8Upy4M1LjD2TljH
+         J8RH3Ziv+Z+oHdi43mHvT+HFL/AiZWMbX6S30=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DgUudxueHTm/QW4KmBGdf24XZ1cf36j15ieGoiJGyt0=;
-        b=LSVj9WlASycjjD4p3eVaPhUxLJPusQC2cXvw66UIChq51+eHOTJ1E3SoJFoOEGgTJw
-         G2mwgvAYMSo3Y7RHt5/o/scVTYio36vuIIB3t0H/vX+rPiAHWXPhLnjIf9A4SNBjiGM/
-         7f9Wi134mpc/yOUKjLKbmw/pd13kHRiyO6lTVQiY7zCCNTZFctaIqGVbAfJ6TZell+pl
-         Gw80LzvMsifrTovxU+ZbhqkWhcJ+r1uzm69rCXoU46mP8tP6w0GLr8dG5WGU+1UcVRrN
-         OC7C8JGLDwKw+oEabxSp8s5dt6XyJBRn+ula6nWyh4rfuxpRNVFezfQj2uieaScLXg5c
-         NHWg==
-X-Gm-Message-State: APjAAAXJw4rxItT0WHxRlmUOf0ZuwJE/ffDDt1VSiQyA5cY8fRoIxU7N
-        9Qv04UbWZjD1DtU4wOjZH0c=
-X-Google-Smtp-Source: APXvYqzt77PBPPJmWn87EiNsYSMEuuRRlPahYyl0svfPhm+k0SASts5ivFpqOjDiQbo42ipVHDnqMw==
-X-Received: by 2002:a17:902:a5c3:: with SMTP id t3mr33218338plq.293.1553629120756;
-        Tue, 26 Mar 2019 12:38:40 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id e1sm25088804pfn.73.2019.03.26.12.38.37
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ryBCGv2xEBNEXU2aXzO4ICzRrxjpGeSrWsqtu4p1C28=;
+        b=ZDJ4ib59WW0twjzl3GL4fX0D6vBq6SJIFYGG4WdSbtwazYYwkNLLidpdOtI7HXaKv4
+         0QH+CdApMURk+kPcDAx5S12qnFhO8bZmijuFkv8DSAmBCaju2xbFVmT6+9a4NFAIGh7S
+         OpSg2DWCU2APCCjQX/ExHrvgAHtrOALj57ULN+Lnh14vC4fYj7gV5BtoPnEM9zBY4ZKn
+         KSa6mVbx/94Zy4tcQH0+aiY78pwUswhBT0MhfelIT+A2fRGYNXX3BoNQNsnOt/wqTG1i
+         KWfF75xrjKQWLyhOgAJCw0mkt1HcoScXIbkBrsNMqRCF7ySEoKbgvy8q2seokk/aPm30
+         lLYw==
+X-Gm-Message-State: APjAAAW5k3gEwafC41B1tVISlEetGCEyhu0V2VA+gDDUJEORRB6RkxMo
+        5Vuoukl4OG4wAACZzy24tTsjGXLmIsk=
+X-Google-Smtp-Source: APXvYqx9NbyVpMUvQgGpgE9CBbvjCim6F6I4vqjnppB/1yfwJmNUK46IzOFTRgLTtE0t9IqfPlzYXg==
+X-Received: by 2002:a2e:309:: with SMTP id 9mr5795588ljd.114.1553629186274;
+        Tue, 26 Mar 2019 12:39:46 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id x2sm3112495lfg.59.2019.03.26.12.39.45
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:38:39 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 01:08:34 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>, gbastien@versatic.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: trace : fix  error directive in argument list
-Message-ID: <20190326193834.GA13540@hari-Inspiron-1545>
+        Tue, 26 Mar 2019 12:39:45 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id f23so12263627ljc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:39:45 -0700 (PDT)
+X-Received: by 2002:a2e:834d:: with SMTP id l13mr5831798ljh.97.1553629184927;
+ Tue, 26 Mar 2019 12:39:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190326170518.157317-1-evgreen@chromium.org> <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
+In-Reply-To: <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Tue, 26 Mar 2019 12:39:08 -0700
+X-Gmail-Original-Message-ID: <CAE=gft710gv2+k86pwVhucJFxAcN-AUZhGnT9Hm2gLutV+PCpg@mail.gmail.com>
+Message-ID: <CAE=gft710gv2+k86pwVhucJFxAcN-AUZhGnT9Hm2gLutV+PCpg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: msm8998: Add UFS phy reset
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below spare errors.
+On Tue, Mar 26, 2019 at 10:14 AM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> On 26/03/2019 18:05, Evan Green wrote:
+>
+> > With the new refactoring at [1], the UFS phy now controls its own
+> > destiny in toggling the phy reset bit within the UFS host controller.
+> > Add the DT pieces needed to 1) expose the reset controller from the
+> > HC, and 2) use it from the PHY. This series is based atop linux-next
+> > plus Marc's series at [2].
+> >
+> > Signed-off-by: Evan Green <evgreen@chromium.org>
+> >
+> > [1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
+> > [2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
+> >
+> > ---
+> > I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
+> > patch if it needs any fixups.
+> >
+> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > index 3d0aeb3211de..d59a2c5fe83a 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > @@ -990,6 +990,7 @@
+> >                       interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+> >                       phys = <&ufsphy_lanes>;
+> >                       phy-names = "ufsphy";
+> > +                     #reset-cells = <1>;
+> >                       lanes-per-direction = <2>;
+> >                       power-domains = <&gcc UFS_GDSC>;
+> >
+> > @@ -1039,6 +1040,7 @@
+> >                               <&gcc GCC_UFS_CLKREF_CLK>,
+> >                               <&gcc GCC_UFS_PHY_AUX_CLK>;
+> >
+> > +                     resets = <&ufshc 0>;
+> >                       ufsphy_lanes: lanes@1da7400 {
+> >                               reg = <0x01da7400 0x128>,
+> >                                     <0x01da7600 0x1fc>,
+> >
+>
+> If it's OK with you, I plan to test this patch tomorrow, and simply squash it
+> into my UFS DT submission.
 
-Sparse error:
-make C=2 CF=-D__CHECK_ENDIAN__ M=net/core
-
-./include/trace/events/net.h:171:1: error: directive in argument list
-./include/trace/events/net.h:173:1: error: directive in argument list
-./include/trace/events/net.h:175:1: error: directive in argument list
-./include/trace/events/net.h:171:1: error: directive in argument list
-./include/trace/events/net.h:173:1: error: directive in argument list
-./include/trace/events/net.h:175:1: error: directive in argument list
-
-To avoid sparse error changed
-to
-if (IS_ENABLED(CONFIG_NET_RX_BUSY_POLL))
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- include/trace/events/net.h | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/include/trace/events/net.h b/include/trace/events/net.h
-index 1efd7d9..49e6003 100644
---- a/include/trace/events/net.h
-+++ b/include/trace/events/net.h
-@@ -168,11 +168,12 @@ DECLARE_EVENT_CLASS(net_dev_rx_verbose_template,
-
-	TP_fast_assign(
-		__assign_str(name, skb->dev->name);
--#ifdef CONFIG_NET_RX_BUSY_POLL
--		__entry->napi_id = skb->napi_id;
--#else
--		__entry->napi_id = 0;
--#endif
-+
-+		if (IS_ENABLED(CONFIG_NET_RX_BUSY_POLL))
-+			__entry->napi_id = skb->napi_id;
-+		else
-+			__entry->napi_id = 0;
-+
- 		__entry->queue_mapping = skb->queue_mapping;
- 		__entry->skbaddr = skb;
- 		__entry->vlan_tagged = skb_vlan_tag_present(skb);
--- 
-2.7.4
-
+Sounds good, go ahead.
