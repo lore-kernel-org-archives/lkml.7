@@ -2,251 +2,169 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9960BC10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1348C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FE420866
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5822075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UD8t/kKd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbfCZOnw (ORCPT
+        id S1731873AbfCZOom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:43:52 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:38113 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731495AbfCZOnB (ORCPT
+        Tue, 26 Mar 2019 10:44:42 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35190 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCZOom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:43:01 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from sramani@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 26 Mar 2019 16:42:56 +0200
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x2QEgtak017688;
-        Tue, 26 Mar 2019 10:42:55 -0400
-Received: (from sramani@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x2QEgt1s016632;
-        Tue, 26 Mar 2019 10:42:55 -0400
-From:   Shravan Kumar Ramani <sramani@mellanox.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Shravan Kumar Ramani <sramani@mellanox.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/1] gpio: add driver for Mellanox BlueField GPIO controller
-Date:   Tue, 26 Mar 2019 10:42:48 -0400
-Message-Id: <6f15dd02091f5b97ef76c22b425ba6575ffa1b1a.1553610690.git.sramani@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <cover.1553610690.git.sramani@mellanox.com>
-References: <cover.1553610690.git.sramani@mellanox.com>
-In-Reply-To: <cover.1553610690.git.sramani@mellanox.com>
-References: <cover.1553610690.git.sramani@mellanox.com>
+        Tue, 26 Mar 2019 10:44:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y197so13245825wmd.0;
+        Tue, 26 Mar 2019 07:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Vqy2Dy2bc2ahOyVVYsBMTFTMSbfvsk4qhtd2C/HsgM=;
+        b=UD8t/kKdjfYjFUaek/OnOn8pI6ma/NKXMPCCPxVs24wVQwGaDfazRlxd0BBjCKdj4N
+         qvGjhlMohF4FzaOQXEmi4jlShqSIEGRXwB5Ttd+VTHecIRrFNzqHQ8negbO07a9hAmfO
+         UwgirAyiZTUjy89NqdpQQkLPHbfKhnPUzEEKkA49+/v82nMTpWooB9Pi0KWNtuAWvFqy
+         XkjsXd6x0mwsPDem/LDBzxYnFTP+XFJnow8Z+D3R+Ep+Ilv+QRHbzBvWm2ueVfCbJIFp
+         RqNizNfa3C1Vp80kqRkvbGyBjmZzvpifJSSMGs5l8bnx+8a8fy/imlnOS+7N6682uvd9
+         sSUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Vqy2Dy2bc2ahOyVVYsBMTFTMSbfvsk4qhtd2C/HsgM=;
+        b=Db3wVEytWBCezxspRy4GOhR8m0df3w6kiam9kpiLmN8n5EHT9tsx5OtjeGV0EcV8fJ
+         AoDw28qv/vInla9sKqWfI7yAaiN9bi1e2uBi0Bk7D495ddD6fCqlqzPuwY/N5JpSzgoY
+         HYBcU6PyrQr450JZkzj+Nuz9wo6tw99tR3tXZoFlJmFOnhV1onKOY+1tLLk7Ltkk1+23
+         iOE4URNFVBFHmBsuCdhWZ7NpoCpUAFDknG9hC7+39S/ak6ruwvEuyE7AYM689YqpPdmt
+         n2fTt2IDpiZ2JdeGKK1UO19vkosmizPKqsT4fj6DHJ7waYhmb+j1YO0OY4QiztVEv8YO
+         HL3w==
+X-Gm-Message-State: APjAAAW/e/lk8aXeNZZep/aPnOrP9nQvGibbnF8DuY2bDonMysXlGjna
+        tOuJ+4+GYRpYK3jsSPFz2n+wuvu6
+X-Google-Smtp-Source: APXvYqz3rzy8GkHURLClJqIhDy+VpKhhYrBNVEXg7RL5Gr6xx9H2qhjjO5WYot9XSAI0nBunCcQVOw==
+X-Received: by 2002:a1c:ef08:: with SMTP id n8mr9343301wmh.142.1553611479777;
+        Tue, 26 Mar 2019 07:44:39 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id j184sm28745548wma.47.2019.03.26.07.44.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 07:44:38 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 15:44:37 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Randolph =?utf-8?Q?Maa=C3=9Fen?= <gaireg@gaireg.de>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: tegra20-slink: change chip select action order
+Message-ID: <20190326144437.GA21654@ulmo>
+References: <20190326143050.26232-1-gaireg@gaireg.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Disposition: inline
+In-Reply-To: <20190326143050.26232-1-gaireg@gaireg.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the GPIO controller used by Mellanox
-BlueField SOCs.
 
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Shravan Kumar Ramani <sramani@mellanox.com>
----
- drivers/gpio/Kconfig      |   7 +++
- drivers/gpio/Makefile     |   1 +
- drivers/gpio/gpio-mlxbf.c | 153 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 161 insertions(+)
- create mode 100644 drivers/gpio/gpio-mlxbf.c
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526..0d9ddff 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1316,6 +1316,13 @@ config GPIO_MERRIFIELD
- 	help
- 	  Say Y here to support Intel Merrifield GPIO.
- 
-+config GPIO_MLXBF
-+	tristate "Mellanox BlueField SoC GPIO"
-+	depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || COMPILE_TEST
-+	select GPIO_GENERIC
-+	help
-+	  Say Y here if you want GPIO support on Mellanox BlueField SoC.
-+
- config GPIO_ML_IOH
- 	tristate "OKI SEMICONDUCTOR ML7213 IOH GPIO support"
- 	depends on X86 || COMPILE_TEST
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 54d5527..db8d854 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -85,6 +85,7 @@ obj-$(CONFIG_GPIO_MENZ127)	+= gpio-menz127.o
- obj-$(CONFIG_GPIO_MERRIFIELD)	+= gpio-merrifield.o
- obj-$(CONFIG_GPIO_MC33880)	+= gpio-mc33880.o
- obj-$(CONFIG_GPIO_MC9S08DZ60)	+= gpio-mc9s08dz60.o
-+obj-$(CONFIG_GPIO_MLXBF)	+= gpio-mlxbf.o
- obj-$(CONFIG_GPIO_ML_IOH)	+= gpio-ml-ioh.o
- obj-$(CONFIG_GPIO_MM_LANTIQ)	+= gpio-mm-lantiq.o
- obj-$(CONFIG_GPIO_MOCKUP)      += gpio-mockup.o
-diff --git a/drivers/gpio/gpio-mlxbf.c b/drivers/gpio/gpio-mlxbf.c
-new file mode 100644
-index 0000000..d428f42
---- /dev/null
-+++ b/drivers/gpio/gpio-mlxbf.c
-@@ -0,0 +1,153 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/acpi.h>
-+#include <linux/bitops.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+#include <linux/version.h>
-+
-+/* Number of pins on BlueField */
-+#define MLXBF_GPIO_NR 54
-+
-+/* Pad Electrical Controls. */
-+#define MLXBF_GPIO_PAD_CONTROL_FIRST_WORD 0x0700
-+#define MLXBF_GPIO_PAD_CONTROL_1_FIRST_WORD 0x0708
-+#define MLXBF_GPIO_PAD_CONTROL_2_FIRST_WORD 0x0710
-+#define MLXBF_GPIO_PAD_CONTROL_3_FIRST_WORD 0x0718
-+
-+#define MLXBF_GPIO_PIN_DIR_I 0x1040
-+#define MLXBF_GPIO_PIN_DIR_O 0x1048
-+#define MLXBF_GPIO_PIN_STATE 0x1000
-+#define MLXBF_GPIO_SCRATCHPAD 0x20
-+
-+#ifdef CONFIG_PM
-+struct mlxbf_gpio_context_save_regs {
-+	u64 scratchpad;
-+	u64 pad_control[MLXBF_GPIO_NR];
-+	u64 pin_dir_i;
-+	u64 pin_dir_o;
-+};
-+#endif
-+
-+/* Device state structure. */
-+struct mlxbf_gpio_state {
-+	struct gpio_chip gc;
-+
-+	/* Memory Address */
-+	void __iomem *base;
-+
-+#ifdef CONFIG_PM
-+	struct mlxbf_gpio_context_save_regs csave_regs;
-+#endif
-+};
-+
-+static int mlxbf_gpio_probe(struct platform_device *pdev)
-+{
-+	struct mlxbf_gpio_state *gs;
-+	struct device *dev = &pdev->dev;
-+	struct gpio_chip *gc;
-+	int ret;
-+
-+	gs = devm_kzalloc(&pdev->dev, sizeof(*gs), GFP_KERNEL);
-+	if (!gs)
-+		return -ENOMEM;
-+
-+	gs->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(gs->base))
-+		return PTR_ERR(gs->base);
-+
-+	gc = &gs->gc;
-+	ret = bgpio_init(gc, dev, 8,
-+			 gs->base + MLXBF_GPIO_PIN_STATE,
-+			 NULL,
-+			 NULL,
-+			 gs->base + MLXBF_GPIO_PIN_DIR_O,
-+			 gs->base + MLXBF_GPIO_PIN_DIR_I,
-+			 0);
-+	if (ret)
-+		return -ENODEV;
-+
-+	gc->owner = THIS_MODULE;
-+	gc->ngpio = MLXBF_GPIO_NR;
-+
-+	ret = devm_gpiochip_add_data(dev, &gs->gc, gs);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed adding memory mapped gpiochip\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, gs);
-+	dev_info(&pdev->dev, "registered Mellanox BlueField GPIO");
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int mlxbf_gpio_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct mlxbf_gpio_state *gs = platform_get_drvdata(pdev);
-+
-+	gs->csave_regs.scratchpad = readq(gs->base + MLXBF_GPIO_SCRATCHPAD);
-+	gs->csave_regs.pad_control[0] =
-+		readq(gs->base + MLXBF_GPIO_PAD_CONTROL_FIRST_WORD);
-+	gs->csave_regs.pad_control[1] =
-+		readq(gs->base + MLXBF_GPIO_PAD_CONTROL_1_FIRST_WORD);
-+	gs->csave_regs.pad_control[2] =
-+		readq(gs->base + MLXBF_GPIO_PAD_CONTROL_2_FIRST_WORD);
-+	gs->csave_regs.pad_control[3] =
-+		readq(gs->base + MLXBF_GPIO_PAD_CONTROL_3_FIRST_WORD);
-+	gs->csave_regs.pin_dir_i = readq(gs->base + MLXBF_GPIO_PIN_DIR_I);
-+	gs->csave_regs.pin_dir_o = readq(gs->base + MLXBF_GPIO_PIN_DIR_O);
-+
-+	return 0;
-+}
-+
-+static int mlxbf_gpio_resume(struct platform_device *pdev)
-+{
-+	struct mlxbf_gpio_state *gs = platform_get_drvdata(pdev);
-+
-+	writeq(gs->csave_regs.scratchpad, gs->base + MLXBF_GPIO_SCRATCHPAD);
-+	writeq(gs->csave_regs.pad_control[0],
-+	       gs->base + MLXBF_GPIO_PAD_CONTROL_FIRST_WORD);
-+	writeq(gs->csave_regs.pad_control[1],
-+	       gs->base + MLXBF_GPIO_PAD_CONTROL_1_FIRST_WORD);
-+	writeq(gs->csave_regs.pad_control[2],
-+	       gs->base + MLXBF_GPIO_PAD_CONTROL_2_FIRST_WORD);
-+	writeq(gs->csave_regs.pad_control[3],
-+	       gs->base + MLXBF_GPIO_PAD_CONTROL_3_FIRST_WORD);
-+	writeq(gs->csave_regs.pin_dir_i, gs->base + MLXBF_GPIO_PIN_DIR_I);
-+	writeq(gs->csave_regs.pin_dir_o, gs->base + MLXBF_GPIO_PIN_DIR_O);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct acpi_device_id mlxbf_gpio_acpi_match[] = {
-+	{ "MLNXBF02", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, mlxbf_gpio_acpi_match);
-+
-+static struct platform_driver mlxbf_gpio_driver = {
-+	.driver = {
-+		.name = "mlxbf_gpio",
-+		.acpi_match_table = ACPI_PTR(mlxbf_gpio_acpi_match),
-+	},
-+	.probe    = mlxbf_gpio_probe,
-+#ifdef CONFIG_PM
-+	.suspend  = mlxbf_gpio_suspend,
-+	.resume   = mlxbf_gpio_resume,
-+#endif
-+};
-+
-+module_platform_driver(mlxbf_gpio_driver);
-+
-+MODULE_DESCRIPTION("Mellanox BlueField GPIO Driver");
-+MODULE_AUTHOR("Mellanox Technologies");
-+MODULE_LICENSE("GPL");
--- 
-2.1.2
+On Tue, Mar 26, 2019 at 03:30:50PM +0100, Randolph Maa=C3=9Fen wrote:
+> To transfer via SPI the tegra20-slink driver first sets the command
+> register, which contains the chip select value, and after that the
+> command2 register, which contains the chip select line. This leads to a
+> small spike in the chip selct 0 line between the set of the value and
+> the selection of the chip select line.
+>=20
+> This commit changes the order of the register writes so that first the
+> chip select line is chosen and then the value is set, removing the
+> spike.
+>=20
+> Signed-off-by: Randolph Maa=C3=9Fen <gaireg@gaireg.de>
+> ---
+>  drivers/spi/spi-tegra20-slink.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 
+Looks good to me. Adding Sowjanya who has been looking into SPI
+recently.
+
+Thierry
+
+> diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-sl=
+ink.c
+> index 1427f343b39a..6d4679126213 100644
+> --- a/drivers/spi/spi-tegra20-slink.c
+> +++ b/drivers/spi/spi-tegra20-slink.c
+> @@ -717,9 +717,6 @@ static int tegra_slink_start_transfer_one(struct spi_=
+device *spi,
+>  	command2 =3D tspi->command2_reg;
+>  	command2 &=3D ~(SLINK_RXEN | SLINK_TXEN);
+> =20
+> -	tegra_slink_writel(tspi, command, SLINK_COMMAND);
+> -	tspi->command_reg =3D command;
+> -
+>  	tspi->cur_direction =3D 0;
+>  	if (t->rx_buf) {
+>  		command2 |=3D SLINK_RXEN;
+> @@ -729,9 +726,18 @@ static int tegra_slink_start_transfer_one(struct spi=
+_device *spi,
+>  		command2 |=3D SLINK_TXEN;
+>  		tspi->cur_direction |=3D DATA_DIR_TX;
+>  	}
+> +
+> +	/*
+> +	 * Writing to the command2 register bevore the command register prevents
+> +	 * a spike in chip_select line 0. This selects the chip_select line
+> +	 * before changing the chip_select value.
+> +	 */
+>  	tegra_slink_writel(tspi, command2, SLINK_COMMAND2);
+>  	tspi->command2_reg =3D command2;
+> =20
+> +	tegra_slink_writel(tspi, command, SLINK_COMMAND);
+> +	tspi->command_reg =3D command;
+> +
+>  	if (total_fifo_words > SLINK_FIFO_DEPTH)
+>  		ret =3D tegra_slink_start_dma_based_transfer(tspi, t);
+>  	else
+> --=20
+> 2.11.0
+>=20
+
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyaOtEACgkQ3SOs138+
+s6EE1A//Xgtd5RAaeIlQE1iF6N1TrDkckZBMA+MGB//cbClQCbyK/qoGPSCz+9hz
+yariyY0fQlISkIFU2WEHbsI+j5DnKQFZoL7+It+jFyjKDx133yqwCH2RvFVu3GRK
+S6NWE2LpRZyj2lCf3wa8YIOuY/vCylF4V8SHjXinhDwfYKkollLOj5tbh9y4vwTz
+wOcTBEEc2/TqTZQkMeCQcLrSWT1RgKLwMtSxw/8UlOtOAd+Q9WZ+/aRgfpk2aKH7
+WlmCCfdsT+Jg7i10S/vpXJpelGq6sgSB6oTsTFvyGyyLADMkeVfWjsLb67KKHPkQ
+FspCeXI+Gz8sPd3eSPpoF+6yBiXAWuQ3xIrk2TJW1ZhcqpIUGc91zHl5zmY9loLL
+Zej3ruowHgSMZLdNtw0EzZRqnDkOzz+itkvxPiKUa3T1hJtPierXmHoNlDU/mEtL
+uYaPB3CRNOTqXaZT8lcYfRSn15WvcvI4F5wXmQhTY6Dn9bHtt9+qK1mL0/IYGciz
+xwrc0E2IuBgwiQzn1EpmsMY++VmWYJuX+1qr2guc9Ol32Ki8cTaHlQ5pVs4x0p1e
++8iAAPF6E3gxdLrJApbc1bgxJ6/EbuC/69bzH23nxQNxJ2A1+rRr41Ba9lYpGT9y
+0YceWTQZfq08wPve6U/pEUX913qYJUzAHL+181fUMs89rfdNmh4=
+=nMZ4
+-----END PGP SIGNATURE-----
+
+--pf9I7BMVVzbSWLtt--
