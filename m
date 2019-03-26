@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90477C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A593C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F36120857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C9520857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581975;
-	bh=sBwvjyicwVeAiQTiK1lqJkRVfjphBUdDaAxmtOcHxRo=;
+	s=default; t=1553581979;
+	bh=vNvD7Dol6psPyKC6To++WittS1Tb8IdxC9aAPLh1w2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IZAQy+mVdiaGwFaSte4Yvys6LmKw+jz5ycjJ+FHZWiWrBIGFDckWkGE1V5t2AieY1
-	 3VU808Da/Z/0d3B+gLG1U5+M0256K5XSUVHF/QKYjKvCwzIUnpcGOo7tvDkN/P7LN2
-	 aSaujlQE6ufYZ6SbDlWFhJV+Cim4D24KPvRysbHo=
+	b=HbuTAwtIFIesuuE3yNwmONnRM3o4c468naFztH70uBURucdYZbg51QyPjKlxC8h+G
+	 ZwVnMI6g7Zs247yycbnafz+si4HoXoLuQdviGTMPtIjW2DOI25qzb0gO52eA2NRGcI
+	 G6Ub1PO44rGluAGvtDmcajUQPQthTlOne6AWeYcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbfCZGcy (ORCPT
+        id S1731540AbfCZGc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42326 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731497AbfCZGcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:32:52 -0400
+        id S1730755AbfCZGc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:32:57 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD8B20857;
-        Tue, 26 Mar 2019 06:32:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF2B520856;
+        Tue, 26 Mar 2019 06:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581972;
-        bh=sBwvjyicwVeAiQTiK1lqJkRVfjphBUdDaAxmtOcHxRo=;
+        s=default; t=1553581976;
+        bh=vNvD7Dol6psPyKC6To++WittS1Tb8IdxC9aAPLh1w2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSmM6I7TczVVcOc1ZcNgn5vikE5wuR+6woEvwQb2sDCfGeiqg6gWbEZCcBmaOR3w/
-         agHegtwEOFoz3DraUiv5LPY0gfuMlroL8wuN84zdeo2KVzjo67emTFCNB4nna62lA3
-         EJzWL3BCwHH1VlRmP/4epZFoussKCan1xzpYE6Qs=
+        b=BK5DJPAHxy2Q2mDNsiBpx4tQGDiXCtguPGUr8iw1k3v+LAMPtG7ttb0Rr1fRV6LoS
+         qjmzy3cEcuYm+WvGH8J8GagWhlhznV2QStvFggkOnoJtmjGWpSyFVwoo8pcS/HQO7k
+         45iu8O4B86KFEw5ICBj+juyb8woO3tvJhH5NvjO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <fsorenso@redhat.com>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 12/30] ext4: fix data corruption caused by unaligned direct AIO
-Date:   Tue, 26 Mar 2019 15:29:51 +0900
-Message-Id: <20190326042607.991805470@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 01/41] mmc: pxamci: fix enum type confusion
+Date:   Tue, 26 Mar 2019 15:29:38 +0900
+Message-Id: <20190326042649.985000353@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
-References: <20190326042607.558087893@linuxfoundation.org>
+In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
+References: <20190326042649.889479098@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,83 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 372a03e01853f860560eade508794dd274e9b390 upstream.
+commit e60a582bcde01158a64ff948fb799f21f5d31a11 upstream.
 
-Ext4 needs to serialize unaligned direct AIO because the zeroing of
-partial blocks of two competing unaligned AIOs can result in data
-corruption.
+clang points out several instances of mismatched types in this drivers,
+all coming from a single declaration:
 
-However it decides not to serialize if the potentially unaligned aio is
-past i_size with the rationale that no pending writes are possible past
-i_size. Unfortunately if the i_size is not block aligned and the second
-unaligned write lands past i_size, but still into the same block, it has
-the potential of corrupting the previous unaligned write to the same
-block.
+drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
+      different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
+                direction = DMA_DEV_TO_MEM;
+                          ~ ^~~~~~~~~~~~~~
+drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
+      different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
+        tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
 
-This is (very simplified) reproducer from Frank
+The behavior is correct, so this must be a simply typo from
+dma_data_direction and dma_transfer_direction being similarly named
+types with a similar purpose.
 
-    // 41472 = (10 * 4096) + 512
-    // 37376 = 41472 - 4096
-
-    ftruncate(fd, 41472);
-    io_prep_pwrite(iocbs[0], fd, buf[0], 4096, 37376);
-    io_prep_pwrite(iocbs[1], fd, buf[1], 4096, 41472);
-
-    io_submit(io_ctx, 1, &iocbs[1]);
-    io_submit(io_ctx, 1, &iocbs[2]);
-
-    io_getevents(io_ctx, 2, 2, events, NULL);
-
-Without this patch the 512B range from 40960 up to the start of the
-second unaligned write (41472) is going to be zeroed overwriting the data
-written by the first write. This is a data corruption.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-
-With this patch the data corruption is avoided because we will recognize
-the unaligned_aio and wait for the unwritten extent conversion.
-
-00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-*
-00009200  30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30
-*
-0000a200  31 31 31 31 31 31 31 31  31 31 31 31 31 31 31 31
-*
-0000b200
-
-Reported-by: Frank Sorenson <fsorenso@redhat.com>
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Fixes: e9e3bcecf44c ("ext4: serialize unaligned asynchronous DIO")
+Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    2 +-
+ drivers/mmc/host/pxamci.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode,
- 	struct super_block *sb = inode->i_sb;
- 	int blockmask = sb->s_blocksize - 1;
- 
--	if (pos >= i_size_read(inode))
-+	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
- 		return 0;
- 
- 	if ((pos | iov_iter_alignment(from)) & blockmask)
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -181,7 +181,7 @@ static void pxamci_dma_irq(void *param);
+ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+-	enum dma_data_direction direction;
++	enum dma_transfer_direction direction;
+ 	struct dma_slave_config	config;
+ 	struct dma_chan *chan;
+ 	unsigned int nob = data->blocks;
 
 
