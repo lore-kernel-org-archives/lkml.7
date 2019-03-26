@@ -2,106 +2,147 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAD1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04470C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784AA20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtKrig73"
+	by mail.kernel.org (Postfix) with ESMTP id D0F3720857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732173AbfCZPWG (ORCPT
+        id S1732193AbfCZPWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:22:06 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36695 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731652AbfCZPVu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:21:50 -0400
-Received: by mail-it1-f193.google.com with SMTP id h9so20600870itl.1;
-        Tue, 26 Mar 2019 08:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J6aYt82B/im1x/Yyr0qGXhiLTzFyVheHcnku77QlNA8=;
-        b=RtKrig73ZaeRLJqjod9yAuZZ/PW+U5Jdk9k3l6bkTPy5xRobq6AKynDzaw308lmyku
-         elR8m80GNMYSy+TnJPwQocyV42ta0RKp7pxri0wz2C/s232eRi8g+m5ZuIodWUuExD5Z
-         qEvNx59geh7gzzjRMbxbmLUdZJlisdYe3sb8b97ofCj+qMQiZPk2YX/w6zT1fEd9kvGx
-         58Na8oxWCpzxpE/Mn2qK07lVxzOX8wVE9W4hLJXO1+bexELeF35phgX09Nmrs07SS08U
-         kgqyppP8TVIrfzPCSzBshaa9UN5zysf0vCp957XfvtosUC56jRlFHDuldeVg33qIioAH
-         rrJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J6aYt82B/im1x/Yyr0qGXhiLTzFyVheHcnku77QlNA8=;
-        b=QS7fG+EX/vrEaNM7s65i+Ru5PxYVuTPGVwDc6wLGK4yaF4Ocfu+uCBz/ViOmdlm85v
-         dikHIIkIJhit/TN95WJZSqYAnet1R6dudo4zX4iVpmPko0w9tWK+D3M1RmGjgBKdXlyo
-         g93l9oOFciz0vcZe+Yv+TO1vYciVL6cmt6XOuFHUD382yiJB0aGu7ywvY5VK+sPaT3Kj
-         BU0vtRQOBBMvPunaCp7ol2AkGSnSTMC8SaVsH8b5DHgHtvgzrEnsGVBIN6i17OZRCoab
-         jRRfpGLnf80ikatRYKTNMe1XoJfIOcaQYKSekBtf3XLCrj5FAN9N/B1P3ba4AcIuTqWg
-         934w==
-X-Gm-Message-State: APjAAAVyarUfn4zAjlVmzaQKngkKECjJkioynb0RCcvfNcBRosxfoM/q
-        A1qSNh1DjybICRQsoHRfXNc=
-X-Google-Smtp-Source: APXvYqzQmMOwsVZBvJGxm8+3v+CdARmSuXNTJ1+edpRp6wzv8fzRvt9amN0gFZNZcwnMGHJzxJK47Q==
-X-Received: by 2002:a02:c4c8:: with SMTP id h8mr23250884jaj.33.1553613709403;
-        Tue, 26 Mar 2019 08:21:49 -0700 (PDT)
-Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id w14sm6861045iol.32.2019.03.26.08.21.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 08:21:48 -0700 (PDT)
-From:   George Hilliard <thirtythreeforty@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v4 1/2] staging: mt7621-mmc: Remove obsolete Kconfig flags
-Date:   Tue, 26 Mar 2019 09:21:38 -0600
-Message-Id: <20190326152139.18609-2-thirtythreeforty@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326152139.18609-1-thirtythreeforty@gmail.com>
-References: <20190326152139.18609-1-thirtythreeforty@gmail.com>
+        Tue, 26 Mar 2019 11:22:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46691 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731652AbfCZPWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:22:13 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 415CA30832EB;
+        Tue, 26 Mar 2019 15:22:13 +0000 (UTC)
+Received: from x2.localnet (ovpn-122-217.rdu2.redhat.com [10.10.122.217])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B337B825FB;
+        Tue, 26 Mar 2019 15:22:07 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, omosnace@redhat.com,
+        Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, zohar@linux.ibm.com,
+        mjg59@google.com
+Subject: Re: [PATCH ghak109 V1] audit: link integrity evm_write_xattrs record to syscall event
+Date:   Tue, 26 Mar 2019 11:22:07 -0400
+Message-ID: <2006016.NXIvICiRTL@x2>
+Organization: Red Hat
+In-Reply-To: <20190321005008.wfz3bk7q262km5fz@madcap2.tricolour.ca>
+References: <81d0122d14c4fbb3a2ad33d25fdf2dd001c7dcc7.1552737854.git.rgb@redhat.com> <CAHC9VhS61LTQMXiALRre+5_+wvwe6Wa9RN-WYNTjvz5LVsA5rw@mail.gmail.com> <20190321005008.wfz3bk7q262km5fz@madcap2.tricolour.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 26 Mar 2019 15:22:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These values are not referred to anywhere else in the kernel. Card
-detect is controlled by the device tree property "mediatek,cd-poll",
-and there is no driver support for eMMC whatsoever.
+On Wednesday, March 20, 2019 8:50:08 PM EDT Richard Guy Briggs wrote:
+> On 2019-03-20 19:48, Paul Moore wrote:
+> > On Sat, Mar 16, 2019 at 8:10 AM Richard Guy Briggs <rgb@redhat.com> 
+wrote:
+> > > In commit fa516b66a1bf ("EVM: Allow runtime modification of the set of
+> > > verified xattrs"), the call to audit_log_start() is missing a context
+> > > to
+> > > link it to an audit event. Since this event is in user context, add
+> > > the process' syscall context to the record.
+> > > 
+> > > In addition, the orphaned keyword "locked" appears in the record.
+> > > Normalize this by changing it to "xattr=(locked)".
+> > > 
+> > > Please see the github issue
+> > > https://github.com/linux-audit/audit-kernel/issues/109
+> > > 
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > > 
+> > >  security/integrity/evm/evm_secfs.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/security/integrity/evm/evm_secfs.c
+> > > b/security/integrity/evm/evm_secfs.c index 015aea8fdf1e..4171d174e9da
+> > > 100644
+> > > --- a/security/integrity/evm/evm_secfs.c
+> > > +++ b/security/integrity/evm/evm_secfs.c
+> > > @@ -192,7 +192,8 @@ static ssize_t evm_write_xattrs(struct file *file,
+> > > const char __user *buf,> > 
+> > >         if (count > XATTR_NAME_MAX)
+> > >         
+> > >                 return -E2BIG;
+> > > 
+> > > -       ab = audit_log_start(NULL, GFP_KERNEL,
+> > > AUDIT_INTEGRITY_EVM_XATTR);
+> > > +       ab = audit_log_start(audit_context(), GFP_KERNEL,
+> > > +                            AUDIT_INTEGRITY_EVM_XATTR);
+> > 
+> > This part is fine.
+> > 
+> > >         if (!ab)
+> > >         
+> > >                 return -ENOMEM;
+> > > 
+> > > @@ -222,7 +223,7 @@ static ssize_t evm_write_xattrs(struct file *file,
+> > > const char __user *buf,> > 
+> > >                 inode_lock(inode);
+> > >                 err = simple_setattr(evm_xattrs, &newattrs);
+> > >                 inode_unlock(inode);
+> > > 
+> > > -               audit_log_format(ab, "locked");
+> > > +               audit_log_format(ab, "xattr=(locked)");
+> > 
+> > Two things come to mind:
+> > 
+> > * While we can clearly trust the string above, should we be logging
+> > the xattr field value as an untrusted string so it is consistent with
+> > how we record other xattr names?
+> 
+> That would be a question for Steve.
 
-Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
----
-v2: Rewrite of v1
-v3: [Not present]
-v4: Resubmit of v2
+All fields with the same name must be represented the same way. If one 
+instance is untrusted, every instance of the same keyword must be untrusted.
 
- drivers/staging/mt7621-mmc/Kconfig | 8 --------
- 1 file changed, 8 deletions(-)
+-Steve
 
-diff --git a/drivers/staging/mt7621-mmc/Kconfig b/drivers/staging/mt7621-mmc/Kconfig
-index 1eb79cd6e22f..01f231dd8511 100644
---- a/drivers/staging/mt7621-mmc/Kconfig
-+++ b/drivers/staging/mt7621-mmc/Kconfig
-@@ -6,11 +6,3 @@ config MTK_AEE_KDUMP
- 	bool "MTK AEE KDUMP"
- 	depends on MTK_MMC
- 
--config MTK_MMC_CD_POLL
--	bool "Card Detect with Polling"
--	depends on MTK_MMC
--
--config MTK_MMC_EMMC_8BIT
--	bool "eMMC 8-bit support"
--	depends on MTK_MMC && RALINK_MT7628
--
--- 
-2.21.0
+
+> > * I'm not sure you can ever have parens in a xattr (I would hope not),
+> > but if we are going to use the xattr field, perhaps we should simply
+> > stick with the name as provided (".") so we don't ever run afoul of
+> > xattr names?  I'm curious to hear what the IMA/EVM folks think of
+> > this.
+> 
+> The legal xaddr names start with XATTR_SECURITY_PREFIX which is
+> "security." so there is no danger of collision with legal names, but I
+> suppose someone could try to use "(locked)" as a name which would look
+> identical but fail with a different res= number.  I think I prefer your
+> idea of printing the given value verbatim.
+> 
+> > paul moore
+> 
+> - RGB
+> 
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
+
+
+
 
