@@ -2,529 +2,166 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC92C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C254C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF922070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D145C2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553582775;
+	bh=m3qC3cxiAimDD1c1a0th/9Ru+Z3er7/b/+sjkpzPBbI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kPGBPim/4RLVNWnjolPy3GeGqd7xVQywHoVVS3RDkQHIQw+zcJ0GSrZrWZ8tbkGE2
+	 BpHfr9fXA2aDpG+Wiosanw9ROaYnjvpm3S1IQBYODXUxa9aXAd16kJYmrM5RqmWHKc
+	 VUh0/tVFhImKeNfWu8DAJh/8mPc9ay5uPgETFTUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbfCZGdc (ORCPT
+        id S1731783AbfCZGqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:32 -0400
-Received: from mx.socionext.com ([202.248.49.38]:11585 "EHLO mx.socionext.com"
+        Tue, 26 Mar 2019 02:46:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731664AbfCZGd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:28 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 26 Mar 2019 15:33:26 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 71778180BD4;
-        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 26 Mar 2019 15:33:26 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 211F71A15B7;
-        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
-Received: from M20VSDK.e01.socionext.com (unknown [10.213.118.34])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 0B069120487;
-        Tue, 26 Mar 2019 15:33:26 +0900 (JST)
-From:   Shinji Kanematsu <kanematsu.shinji@socionext.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
-        orito.takao@socionext.com, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com, kanematsu.shinji@socionext.com
-Subject: [PATCH 2/2] iio: counter: Add support for Milbeaut Updown Counter
-Date:   Tue, 26 Mar 2019 15:33:32 +0900
-Message-Id: <1553582012-13563-1-git-send-email-kanematsu.shinji@socionext.com>
-X-Mailer: git-send-email 1.9.1
+        id S1731677AbfCZGdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:32 -0400
+Received: from localhost (unknown [104.132.152.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E88620823;
+        Tue, 26 Mar 2019 06:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553582010;
+        bh=m3qC3cxiAimDD1c1a0th/9Ru+Z3er7/b/+sjkpzPBbI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wN2UDQU+76PejCazfv8PmhofOYNx0vLGcTwiXycgPDbrNKc7LgyQ5L+smIb2vV46y
+         vVrHiG32SJMK2kjdxmGOgOv/ZIyYhHkm1yxNTt8xhCysXpCXcK1hLDHZNSmq2hMfxI
+         Bl7+7kYOA+6ocTRkFM+j8X2jBVOU83NU2n65UpUw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Jan Viktorin <jan.viktorin@gmail.com>
+Subject: [PATCH 4.14 03/41] iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
+Date:   Tue, 26 Mar 2019 15:29:40 +0900
+Message-Id: <20190326042650.064364467@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
+References: <20190326042649.889479098@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Milbeaut Updown Counter, that can be used as counter
-or quadrature encoder.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
+------------------
+
+From: Stanislaw Gruszka <sgruszka@redhat.com>
+
+commit 4e50ce03976fbc8ae995a000c4b10c737467beaa upstream.
+
+Take into account that sg->offset can be bigger than PAGE_SIZE when
+setting segment sg->dma_address. Otherwise sg->dma_address will point
+at diffrent page, what makes DMA not possible with erros like this:
+
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa70c0 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7040 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7080 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7100 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7000 flags=3D0x0020]
+
+Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
+what what can cause crashes like this:
+
+Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
+Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
+Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
+Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff0000=
+0301 0000000000000000
+Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffff=
+ffff 0000000000000000
+Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
+Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid =
+amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core k=
+vm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 cr=
+ct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel=
+ gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_ge=
+neric drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aes=
+ni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cry=
+ptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart =
+libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore s=
+p5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cp=
+ufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E)=
+ mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) d=
+m_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E)=
+ libata(E) xhci_pci(E) xhci_hcd(E)
+Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
+Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W =
+  E     4.20.12-arch1-1-custom #1
+Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled =
+By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
+Feb 28 19:27:45 kernel: Call Trace:
+Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
+Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
+Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
+Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
+Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
+Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
+Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
+Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
+Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
+Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
+Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
+Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
+Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
+Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
+Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
+Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Fixes: 80187fd39dcb ('iommu/amd: Optimize map_sg and unmap_sg')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/counter/Kconfig               |  12 +
- drivers/iio/counter/Makefile              |   1 +
- drivers/iio/counter/milbeaut-updown.h     |  38 +++
- drivers/iio/counter/milbeaut-updown_cnt.c | 385 ++++++++++++++++++++++++++++++
- 4 files changed, 436 insertions(+)
- create mode 100644 drivers/iio/counter/milbeaut-updown.h
- create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
+ drivers/iommu/amd_iommu.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/counter/Kconfig b/drivers/iio/counter/Kconfig
-index bf1e559..a665f61 100644
---- a/drivers/iio/counter/Kconfig
-+++ b/drivers/iio/counter/Kconfig
-@@ -31,4 +31,16 @@ config STM32_LPTIMER_CNT
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called stm32-lptimer-cnt.
-+
-+config MILBEAUT_UPDOWN_CNT
-+	tristate "Milbeaut Updown Counter driver"
-+	depends on OF
-+	depends on ARCH_MILBEAUT || COMPILE_TEST
-+	help
-+	  Select this option to enable Milbeaut Updown Counter quadrature encoder
-+	  and counter driver.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called milbeaut-updown-cnt.
-+
- endmenu
-diff --git a/drivers/iio/counter/Makefile b/drivers/iio/counter/Makefile
-index 1b9a896..0cb708b 100644
---- a/drivers/iio/counter/Makefile
-+++ b/drivers/iio/counter/Makefile
-@@ -6,3 +6,4 @@
- 
- obj-$(CONFIG_104_QUAD_8)	+= 104-quad-8.o
- obj-$(CONFIG_STM32_LPTIMER_CNT)	+= stm32-lptimer-cnt.o
-+obj-$(CONFIG_MILBEAUT_UPDOWN_CNT)	+= milbeaut-updown_cnt.o
-diff --git a/drivers/iio/counter/milbeaut-updown.h b/drivers/iio/counter/milbeaut-updown.h
-new file mode 100644
-index 0000000..9a038ad
---- /dev/null
-+++ b/drivers/iio/counter/milbeaut-updown.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Milbeaut Updown parent driver
-+ * Copyright (C) 2019 Socionext Inc.
-+ */
-+
-+#ifndef _LINUX_MILBEAUT_UPDOWN_H_
-+#define _LINUX_MILBEAUT_UPDOWN_H_
-+
-+#define MLB_UPDOWN_UDCR		0x0		/* Updown Count Reg		*/
-+#define MLB_UPDOWN_RCR		0x4		/* Reload Compare Reg	*/
-+#define MLB_UPDOWN_CSR		0xC		/* Counter Status Reg	*/
-+#define MLB_UPDOWN_CCR		0x14	/* Counter Control Reg	*/
-+
-+/* MLB_UPDOWN_CSR - bit fields */
-+#define MLB_UPDOWN_CSTR		BIT(7)
-+#define MLB_UPDOWN_UDIE		BIT(5)
-+#define MLB_UPDOWN_CMPF		BIT(4)
-+#define MLB_UPDOWN_OVFF		BIT(3)
-+#define MLB_UPDOWN_UDFF		BIT(2)
-+
-+/* MLB_UPDOWN_CCR - bit fields */
-+#define MLB_UPDOWN_FIXED	BIT(15)
-+#define MLB_UPDOWN_CMS		GENMASK(11, 10)
-+#define MLB_UPDOWN_CES		GENMASK(9, 8)
-+#define MLB_UPDOWN_CTUT		BIT(6)
-+#define MLB_UPDOWN_RLDE		BIT(4)
-+
-+/* MLB_UPDOWN max count value */
-+#define MLB_UPDOWN_MAX_COUNT	0xFFFF
-+
-+/* MLB_UPDOWN rising edge detection */
-+#define MLB_UPDOWN_RISING_EDGE		BIT(9)
-+
-+/* MLB_UPDOWN mode */
-+#define MLB_UPDOWN_MODE		1
-+
-+#endif
-diff --git a/drivers/iio/counter/milbeaut-updown_cnt.c b/drivers/iio/counter/milbeaut-updown_cnt.c
-new file mode 100644
-index 0000000..a58709a
---- /dev/null
-+++ b/drivers/iio/counter/milbeaut-updown_cnt.c
-@@ -0,0 +1,385 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Milbeaut Updown counter driver
-+ *
-+ * Copyright (C) 2019 Socionext Inc.
-+ *
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/iio/events.h>
-+#include <linux/iio/iio.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include "milbeaut-updown.h"
-+
-+#define MILBEAUT_UPDOWN_IRQ_NAME		"milbeaut_updown_event"
-+#define MILBEAUT_UPDOWN_MAX_REGISTER	0x1f
-+
-+static const struct regmap_config milbeaut_updown_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = sizeof(u32),
-+	.max_register = MILBEAUT_UPDOWN_MAX_REGISTER,
-+};
-+struct milbeaut_updown_cnt {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	u32 preset;
-+	u32 polarity;
-+	u32 quadrature_mode;
-+};
-+
-+static int milbeaut_updown_is_enabled(struct milbeaut_updown_cnt *priv)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(priv->regmap, MLB_UPDOWN_CSR, &val);
-+	if (ret)
-+		return ret;
-+
-+	return FIELD_GET(MLB_UPDOWN_CSTR, val);
-+}
-+
-+static int milbeaut_updown_setup(struct milbeaut_updown_cnt *priv,
-+									int val)
-+{
-+	int ret;
-+
-+	if (val) {
-+		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
-+				MLB_UPDOWN_CMS | MLB_UPDOWN_RLDE,
-+				FIELD_PREP(MLB_UPDOWN_CMS, priv->quadrature_mode) |
-+				MLB_UPDOWN_RLDE);
-+		if (ret)
-+			return ret;
-+
-+		if (priv->quadrature_mode == MLB_UPDOWN_MODE) {
-+			ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
-+					MLB_UPDOWN_CES, MLB_UPDOWN_RISING_EDGE);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		ret = regmap_write(priv->regmap, MLB_UPDOWN_RCR, priv->preset);
-+		if (ret)
-+			return ret;
-+
-+		/* interrupt */
-+		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
-+						MLB_UPDOWN_UDIE, MLB_UPDOWN_UDIE);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CCR,
-+			MLB_UPDOWN_CTUT | MLB_UPDOWN_FIXED,
-+			MLB_UPDOWN_CTUT | MLB_UPDOWN_FIXED);
-+		if (ret)
-+			return ret;
-+
-+		val = MLB_UPDOWN_CSTR;
-+	}
-+
-+	return regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
-+								MLB_UPDOWN_CSTR, val);
-+}
-+
-+static int milbeaut_updown_write_raw(struct iio_dev *indio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 int val, int val2, long mask)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_ENABLE:
-+		if (val < 0 || val > 1)
-+			return -EINVAL;
-+
-+		ret = milbeaut_updown_is_enabled(priv);
-+		if (val && ret)
-+			return -EBUSY;
-+
-+		ret = milbeaut_updown_setup(priv, val);
-+
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int milbeaut_updown_read_raw(struct iio_dev *indio_dev,
-+				struct iio_chan_spec const *chan,
-+				int *val, int *val2, long mask)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+	u32 dat;
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = regmap_read(priv->regmap, MLB_UPDOWN_UDCR, &dat);
-+		if (ret)
-+			return ret;
-+		*val = dat;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_ENABLE:
-+		ret = milbeaut_updown_is_enabled(priv);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info milbeaut_updown_cnt_iio_info = {
-+	.read_raw = milbeaut_updown_read_raw,
-+	.write_raw = milbeaut_updown_write_raw,
-+};
-+
-+static const char *const milbeaut_updown_quadrature_modes[] = {
-+	"non-quadrature",
-+	"quadrature",
-+};
-+
-+static int milbeaut_updown_get_quadrature_mode(struct iio_dev *indio_dev,
-+					   const struct iio_chan_spec *chan)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+
-+	return priv->quadrature_mode;
-+}
-+
-+static int milbeaut_updown_set_quadrature_mode(struct iio_dev *indio_dev,
-+					   const struct iio_chan_spec *chan,
-+					   unsigned int type)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+
-+	if (milbeaut_updown_is_enabled(priv))
-+		return -EBUSY;
-+
-+	priv->quadrature_mode = type;
-+
-+	return 0;
-+}
-+
-+static const struct iio_enum milbeaut_updown_quadrature_mode_en = {
-+	.items = milbeaut_updown_quadrature_modes,
-+	.num_items = ARRAY_SIZE(milbeaut_updown_quadrature_modes),
-+	.get = milbeaut_updown_get_quadrature_mode,
-+	.set = milbeaut_updown_set_quadrature_mode,
-+};
-+
-+static const char * const milbeaut_updown_cnt_polarity[] = {
-+	"rising-edge", "falling-edge", "both-edges",
-+};
-+
-+static int milbeaut_updown_cnt_get_polarity(struct iio_dev *indio_dev,
-+					const struct iio_chan_spec *chan)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+
-+	return priv->polarity;
-+}
-+
-+static int milbeaut_updown_cnt_set_polarity(struct iio_dev *indio_dev,
-+					const struct iio_chan_spec *chan,
-+					unsigned int type)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+
-+	if (milbeaut_updown_is_enabled(priv))
-+		return -EBUSY;
-+
-+	priv->polarity = type;
-+
-+	return 0;
-+}
-+
-+static const struct iio_enum milbeaut_updown_cnt_polarity_en = {
-+	.items = milbeaut_updown_cnt_polarity,
-+	.num_items = ARRAY_SIZE(milbeaut_updown_cnt_polarity),
-+	.get = milbeaut_updown_cnt_get_polarity,
-+	.set = milbeaut_updown_cnt_set_polarity,
-+};
-+
-+static ssize_t milbeaut_updown_cnt_get_preset(struct iio_dev *indio_dev,
-+					  uintptr_t private,
-+					  const struct iio_chan_spec *chan,
-+					  char *buf)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+
-+	return snprintf(buf, PAGE_SIZE, "%u\n", priv->preset);
-+}
-+
-+static ssize_t milbeaut_updown_cnt_set_preset(struct iio_dev *indio_dev,
-+					  uintptr_t private,
-+					  const struct iio_chan_spec *chan,
-+					  const char *buf, size_t len)
-+{
-+	struct milbeaut_updown_cnt *priv = iio_priv(indio_dev);
-+	u32 check_preset;
-+	int ret;
-+
-+	if (milbeaut_updown_is_enabled(priv))
-+		return -EBUSY;
-+
-+	ret = kstrtouint(buf, 0, &check_preset);
-+	if (ret)
-+		return ret;
-+
-+	if (check_preset > MLB_UPDOWN_MAX_COUNT)
-+		return -EINVAL;
-+
-+	ret = kstrtouint(buf, 0, &priv->preset);
-+	if (ret)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static const struct iio_chan_spec_ext_info milbeaut_updown_cnt_ext_info[] = {
-+	{
-+		.name = "preset",
-+		.shared = IIO_SEPARATE,
-+		.read = milbeaut_updown_cnt_get_preset,
-+		.write = milbeaut_updown_cnt_set_preset,
-+	},
-+	IIO_ENUM("polarity", IIO_SEPARATE, &milbeaut_updown_cnt_polarity_en),
-+	IIO_ENUM_AVAILABLE("polarity", &milbeaut_updown_cnt_polarity_en),
-+	{}
-+};
-+
-+static const struct iio_event_spec milbeaut_updown_cnt_event = {
-+	.type = IIO_EV_TYPE_ROC,
-+	.dir = IIO_EV_DIR_RISING,
-+	.mask_separate = BIT(IIO_EV_INFO_ENABLE),
-+	.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
-+};
-+
-+static const struct iio_chan_spec milbeaut_updown_cnt_channels = {
-+	.type = IIO_COUNT,
-+	.channel = 0,
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+			      BIT(IIO_CHAN_INFO_ENABLE) |
-+			      BIT(IIO_CHAN_INFO_SCALE),
-+	.ext_info = milbeaut_updown_cnt_ext_info,
-+	.indexed = 1,
-+	.event_spec = &milbeaut_updown_cnt_event,
-+	.num_event_specs = 1,
-+};
-+
-+static irqreturn_t milbeaut_updown_event_handler(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct milbeaut_updown_cnt *priv;
-+	int ret;
-+
-+	priv = iio_priv(indio_dev);
-+
-+	ret = regmap_update_bits(priv->regmap, MLB_UPDOWN_CSR,
-+			MLB_UPDOWN_CMPF | MLB_UPDOWN_OVFF | MLB_UPDOWN_UDFF,
-+			0);
-+	WARN_ON_ONCE(ret < 0);
-+
-+	iio_push_event(indio_dev,
-+			       IIO_MOD_EVENT_CODE(IIO_INCLI, 0, 1,
-+						  IIO_EV_TYPE_ROC, IIO_EV_DIR_RISING),
-+			       iio_get_time_ns(indio_dev));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int milbeaut_updown_cnt_probe(struct platform_device *pdev)
-+{
-+	struct milbeaut_updown_cnt *priv;
-+	struct iio_dev *indio_dev;
-+	struct resource *res;
-+	void __iomem *mmio;
-+	int ret;
-+	int irq;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*priv));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	priv = iio_priv(indio_dev);
-+	priv->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "mux", mmio,
-+							  &milbeaut_updown_regmap_cfg);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	priv->preset = MLB_UPDOWN_MAX_COUNT;
-+	ret = of_property_read_u32(priv->dev->of_node,
-+				"cms_type", &priv->quadrature_mode);
-+	if (ret)
-+		return -ENODEV;
-+
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->dev.of_node = pdev->dev.of_node;
-+	indio_dev->info = &milbeaut_updown_cnt_iio_info;
-+	indio_dev->channels = &milbeaut_updown_cnt_channels;
-+	indio_dev->num_channels = 1;
-+
-+	/* setting request irq */
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_threaded_irq(&pdev->dev, irq,
-+			NULL, milbeaut_updown_event_handler,
-+			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+			MILBEAUT_UPDOWN_IRQ_NAME, indio_dev);
-+	if (ret < 0) {
-+		pr_err("%s request irq failed\n", __func__);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return devm_iio_device_register(&pdev->dev, indio_dev);
-+}
-+
-+static const struct of_device_id milbeaut_updown_cnt_of_match[] = {
-+	{ .compatible = "socionext,milbeaut-updown-counter", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, milbeaut_updown_cnt_of_match);
-+
-+static struct platform_driver milbeaut_updown_cnt_driver = {
-+	.probe = milbeaut_updown_cnt_probe,
-+	.driver = {
-+		.name = "milbeaut-updown-counter",
-+		.of_match_table = milbeaut_updown_cnt_of_match,
-+	},
-+};
-+module_platform_driver(milbeaut_updown_cnt_driver);
-+
-+MODULE_AUTHOR("Shinji Kanematsu <kanematsu.shinji@socionext.com>");
-+MODULE_DESCRIPTION("Milbeaut Updown counter");
-+MODULE_ALIAS("platform:milbeaut_updown_counter");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2548,7 +2548,12 @@ static int map_sg(struct device *dev, st
+=20
+ 	/* Everything is mapped - write the right values into s->dma_address */
+ 	for_each_sg(sglist, s, nelems, i) {
+-		s->dma_address +=3D address + s->offset;
++		/*
++		 * Add in the remaining piece of the scatter-gather offset that
++		 * was masked out when we were determining the physical address
++		 * via (sg_phys(s) & PAGE_MASK) earlier.
++		 */
++		s->dma_address +=3D address + (s->offset & ~PAGE_MASK);
+ 		s->dma_length   =3D s->length;
+ 	}
+=20
+
 
