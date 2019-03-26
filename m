@@ -2,128 +2,112 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E5C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8300C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBAE2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E8920830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553601743;
+	bh=lN9HXpztWmVzrb6B9KmwzfZqFzm1rWoHvbwmpdpMwKA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CZQ7SG34q57Ljc0O8zEfknvKZhrCp8iQPhDK5/ppB4zqmI8oXO2yO8ZbxqHV2ErdQ
+	 5R20dtH7FWAwoBspeOieUNxszlnLg3E32xBqmJsRQN+/5km4bG6iwtb98LGpU2k2N+
+	 Osv78wuPQ7nXEItUBFgpiuocvx8FwcuxRQOJDQNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfCZMBi (ORCPT
+        id S1731351AbfCZMCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:01:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18163 "EHLO mga07.intel.com"
+        Tue, 26 Mar 2019 08:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbfCZMBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:01:37 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 05:01:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="310509550"
-Received: from pgsmsx101.gar.corp.intel.com ([10.221.44.78])
-  by orsmga005.jf.intel.com with ESMTP; 26 Mar 2019 05:01:32 -0700
-Received: from pgsmsx109.gar.corp.intel.com (10.221.44.109) by
- PGSMSX101.gar.corp.intel.com (10.221.44.78) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 26 Mar 2019 20:01:31 +0800
-Received: from pgsmsx112.gar.corp.intel.com ([169.254.3.114]) by
- PGSMSX109.gar.corp.intel.com ([169.254.14.173]) with mapi id 14.03.0415.000;
- Tue, 26 Mar 2019 20:01:31 +0800
-From:   "Huang, Kai" <kai.huang@intel.com>
-To:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "Svahn, Kai" <kai.svahn@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v19,RESEND 16/27] x86/sgx: Add the Linux SGX Enclave
- Driver
-Thread-Topic: [PATCH v19,RESEND 16/27] x86/sgx: Add the Linux SGX Enclave
- Driver
-Thread-Index: AQHU3zlqJyshVndaUUiNLGXmU0HMwKYdUroA
-Date:   Tue, 26 Mar 2019 12:01:31 +0000
-Message-ID: <1553601688.17255.12.camel@intel.com>
-References: <20190320162119.4469-1-jarkko.sakkinen@linux.intel.com>
-         <20190320162119.4469-17-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20190320162119.4469-17-jarkko.sakkinen@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.254.24.201]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <31E7A22AF4084D48B90E7B42298F726C@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726140AbfCZMCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:02:21 -0400
+Received: from localhost (unknown [77.138.135.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC352075C;
+        Tue, 26 Mar 2019 12:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553601741;
+        bh=lN9HXpztWmVzrb6B9KmwzfZqFzm1rWoHvbwmpdpMwKA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GFVINhQhh+Wok76Jtm8an9BwMwydfOcHpzfqD7sq1heO+hWV0AJfQVGDG+awbST0+
+         XPJVbmibTRO6ctw4c+pisulPRYQFLgurRCJ+sL+//iHmq89rAgNlu9Wi651gyUIUjq
+         uGn7rLel2FZz/XGmGwMGEItl3Ld9+Fjrdgq1dzw0=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86 <x86@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] x86/apic: Reduce print level of CPU limit announcement
+Date:   Tue, 26 Mar 2019 14:02:13 +0200
+Message-Id: <20190326120213.28633-1-leon@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTAzLTIwIGF0IDE4OjIxICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6
-DQo+IEludGVsIFNvZnR3YXJlIEd1YXJkIGVYdGVuc2lvbnMgKFNHWCkgaXMgYSBzZXQgb2YgQ1BV
-IGluc3RydWN0aW9ucyB0aGF0DQo+IGNhbiBiZSB1c2VkIGJ5IGFwcGxpY2F0aW9ucyB0byBzZXQg
-YXNpZGUgcHJpdmF0ZSByZWdpb25zIG9mIGNvZGUgYW5kDQo+IGRhdGEuIFRoZSBjb2RlIG91dHNp
-ZGUgdGhlIGVuY2xhdmUgaXMgZGlzYWxsb3dlZCB0byBhY2Nlc3MgdGhlIG1lbW9yeQ0KPiBpbnNp
-ZGUgdGhlIGVuY2xhdmUgYnkgdGhlIENQVSBhY2Nlc3MgY29udHJvbC4NCj4gDQo+IFRoaXMgY29t
-bWl0IGFkZHMgdGhlIExpbnV4IFNHWCBFbmNsYXZlIERyaXZlciB0aGF0IHByb3ZpZGVzIGFuIGlv
-Y3RsIEFQSQ0KPiB0byBtYW5hZ2UgZW5jbGF2ZXMuIFRoZSBhZGRyZXNzIHJhbmdlIGZvciBhbiBl
-bmNsYXZlLCBjb21tb25seSByZWZlcnJlZA0KPiBhcyBFTFJBTkdFIGluIHRoZSBkb2N1bWVudGF0
-aW9uIChlLmcuIEludGVsIFNETSksIGlzIHJlc2VydmVkIHdpdGgNCj4gbW1hcCgpIGFnYWluc3Qg
-L2Rldi9zZ3guIEFmdGVyIHRoYXQgYSBzZXQgaW9jdGxzIGlzIHVzZWQgdG8gYnVpbGQNCj4gdGhl
-IGVuY2xhdmUgdG8gdGhlIEVMUkFOR0UuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKYXJra28gU2Fr
-a2luZW4gPGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+DQo+IENvLWRldmVsb3BlZC1i
-eTogU2VhbiBDaHJpc3RvcGhlcnNvbiA8c2Vhbi5qLmNocmlzdG9waGVyc29uQGludGVsLmNvbT4N
-Cj4gU2lnbmVkLW9mZi1ieTogU2VhbiBDaHJpc3RvcGhlcnNvbiA8c2Vhbi5qLmNocmlzdG9waGVy
-c29uQGludGVsLmNvbT4NCj4gQ28tZGV2ZWxvcGVkLWJ5OiBTZXJnZSBBeW91biA8c2VyZ2UuYXlv
-dW5AaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBTZXJnZSBBeW91biA8c2VyZ2UuYXlvdW5A
-aW50ZWwuY29tPg0KPiBDby1kZXZlbG9wZWQtYnk6IFNoYXkgS2F0ei16YW1pciA8c2hheS5rYXR6
-LXphbWlyQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogU2hheSBLYXR6LXphbWlyIDxzaGF5
-LmthdHotemFtaXJAaW50ZWwuY29tPg0KPiBDby1kZXZlbG9wZWQtYnk6IFN1cmVzaCBTaWRkaGEg
-PHN1cmVzaC5iLnNpZGRoYUBpbnRlbC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFN1cmVzaCBTaWRk
-aGEgPHN1cmVzaC5iLnNpZGRoYUBpbnRlbC5jb20+DQo+IC0tLQ0KPiAgRG9jdW1lbnRhdGlvbi9p
-b2N0bC9pb2N0bC1udW1iZXIudHh0ICAgIHwgICAxICsNCj4gIGFyY2gveDg2L0tjb25maWcgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAxNyArLQ0KPiAgYXJjaC94ODYvaW5jbHVkZS91YXBpL2Fz
-bS9zZ3guaCAgICAgICAgIHwgIDU5ICsrDQo+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9NYWtl
-ZmlsZSAgICAgICAgfCAgIDUgKy0NCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4L2RyaXZlci9N
-YWtlZmlsZSB8ICAgMyArDQo+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9kcml2ZXIvZHJpdmVy
-LmggfCAgMzggKysNCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4L2RyaXZlci9pb2N0bC5jICB8
-IDc5NSArKysrKysrKysrKysrKysrKysrKysrKysNCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4
-L2RyaXZlci9tYWluLmMgICB8IDI5MCArKysrKysrKysNCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUv
-c2d4L2VuY2wuYyAgICAgICAgICB8IDM1OCArKysrKysrKysrKw0KPiAgYXJjaC94ODYva2VybmVs
-L2NwdS9zZ3gvZW5jbC5oICAgICAgICAgIHwgIDg4ICsrKw0KPiAgYXJjaC94ODYva2VybmVsL2Nw
-dS9zZ3gvZW5jbHMuYyAgICAgICAgIHwgICAxICsNCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4
-L21haW4uYyAgICAgICAgICB8ICAgMyArDQo+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9zZ3gu
-aCAgICAgICAgICAgfCAgIDEgKw0KPiAgMTMgZmlsZXMgY2hhbmdlZCwgMTY1NyBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2luY2x1
-ZGUvdWFwaS9hc20vc2d4LmgNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3g4Ni9rZXJuZWwv
-Y3B1L3NneC9kcml2ZXIvTWFrZWZpbGUNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3g4Ni9r
-ZXJuZWwvY3B1L3NneC9kcml2ZXIvZHJpdmVyLmgNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
-L3g4Ni9rZXJuZWwvY3B1L3NneC9kcml2ZXIvaW9jdGwuYw0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4L2RyaXZlci9tYWluLmMNCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9lbmNsLmMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9lbmNsLmgNCg0KU2hvdWxkbid0IHRoZSBkcml2ZXIg
-YmUgbG9jYXRlZCBzb21ld2hlcmUgdW5kZXIgZHJpdmVycy8sIGJ1dCBub3QgdW5kZXIgYXJjaC94
-ODY/DQoNCkkgZG9uJ3QgdGhpbmsgeDg2IG1haW50YWluZXJzIHNob3VsZCBoYXZlIHRoZSBidXJk
-ZW4gdG8gcmV2aWV3IGV2ZXJ5IGNvZGUgY2hhbmdlIG1hZGUgdG8gU0dYIGRyaXZlcj8NCg0KVGhh
-bmtzLA0KLUthaQ==
+From: Leon Romanovsky <leonro@mellanox.com>
+
+Kernel is booted with less possible CPUs (possible_cpus kernel boot
+option) than available CPUs will have prints like this:
+
+[    1.131039] APIC: NR_CPUS/possible_cpus limit of 8 reached. Processor 55/0x1f ignored.
+[    1.132228] ACPI: Unable to map lapic to logical cpu number
+
+Those warnings are printed for every not-enabled CPU and on the systems
+with large number of such CPUs, we see a lot of those prints for default
+print level.
+
+Simple conversion of those prints to be in debug level removes them
+while leaving the option to debug system.
+
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+---
+ arch/x86/kernel/acpi/boot.c | 2 +-
+ arch/x86/kernel/apic/apic.c | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 8dcbf6890714..3ef8ab89c02d 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -770,7 +770,7 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
+
+ 	cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
+ 	if (cpu < 0) {
+-		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
++		pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
+ 		return cpu;
+ 	}
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index b7bcdd781651..8c2a487b5216 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
+ 	if (num_processors >= nr_cpu_ids) {
+ 		int thiscpu = max + disabled_cpus;
+
+-		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
+-			   "reached. Processor %d/0x%x ignored.\n",
+-			   max, thiscpu, apicid);
++		pr_debug(
++			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
++			max, thiscpu, apicid);
+
+ 		disabled_cpus++;
+ 		return -EINVAL;
+--
+2.20.1
+
