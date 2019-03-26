@@ -2,101 +2,112 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575DDC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7728320823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3tr4I3f"
+	by mail.kernel.org (Postfix) with ESMTP id 247E720856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553581869;
+	bh=1w5HIr9OeI6V8jjAPKE1hSQUg5y66F46G41ktzhpGvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mqCzBXBpxnWi3dyPQZ3tF81Evvr1ArvSRbGMkBXjwwsf5xxr76gNMdXEae/bBzGpj
+	 gSADI6xL9jH52xs3WeOOJuOxybDv0Z+GDsWrmoFnKdzBv/gqtZvE5tLNlEhNPPlN0q
+	 0SEj0aZWPcvncZhsAM6KC8F/mEF0dnH/MxHNVj6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfCZG2d (ORCPT
+        id S1730362AbfCZGbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:28:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37942 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfCZG2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:28:32 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g37so1149496plb.5;
-        Mon, 25 Mar 2019 23:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=9klk9DlyPNX6ZYfIChAqq8jdp3QwCHVRJFf8Xe5M+PU=;
-        b=o3tr4I3fu98XpgbdXY3MbFjsf36sDedDYTqOYZriNzQ21G6mXd4ZsNeyNOBEDqrYuD
-         L2XkewXa0bWHkS2rBOmWrA098acUvKbeYN29Gd3rPqbdttzu0kDBf1QfJUwmH9V9gAUL
-         U3SCwf3RlE2hTzNQlpcWeqNV12qHyAFs4sjD0rGXmy3tQDGvfs5psYOsUzuBrxMxUmh+
-         IgHddDrs6fTCcmamAz0So8b6J7T5sGn6jEskRhPPAkhXsKK3HPu7/Wnh97LnARTpZ0q6
-         qpy+1NxYxIxsmVOqpcSjIEjki4xkyr5H4nYb3RWEJ3VzDaK2mxc2ttfR6Rsblb+ZM+1A
-         qRig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9klk9DlyPNX6ZYfIChAqq8jdp3QwCHVRJFf8Xe5M+PU=;
-        b=ovxOKbDSVSbZHtdvaWIDw4mwL6CXYmB5YT4Qa/6/TuHhlZ90QzefDFoAkSCPok++Kf
-         /U0aCX/be5qk3A8BfynjJrlWpXltA6ckfrIQpGnWPhklqFPo4sahCFeOHLDWmHpYcRwh
-         Y//OBndCpE3+4FV4WCY3hmXqvO6+/fIjI8LdZIomCTFREX8VIZQUGc1kFAJSJKKAS1Ob
-         7f8PXSCqxl1ARkpObTzkd/SBElAAvxLcar2lz5ljt49f7B+E8Nesro7YbFOlJBjV6DwI
-         cdhubOeJrFXxu3TULfvejfvX2Y9gqdOHVdJPKiNbSzeksu3oo4PjZLWUX3Zv9Gc9XNLn
-         GJEQ==
-X-Gm-Message-State: APjAAAW8xKLcFh/IIqSf1o6ghasUt5sqz/C0AXqjeyfiSJyST4KrOIRm
-        B3pFPbgGtf+Mxb7cy3XhrtQ=
-X-Google-Smtp-Source: APXvYqxOA/AuPgKigjA5FxvfAC2vKsjFbZCbDGg4XxjJXykV2VKg0jlhMvDbvvqLnqvIKAZJjKRObg==
-X-Received: by 2002:a17:902:8d8b:: with SMTP id v11mr29974203plo.241.1553581712068;
-        Mon, 25 Mar 2019 23:28:32 -0700 (PDT)
-Received: from tianyukernel.corp.microsoft.com ([167.220.255.93])
-        by smtp.googlemail.com with ESMTPSA id e123sm26171542pfe.35.2019.03.25.23.28.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 25 Mar 2019 23:28:30 -0700 (PDT)
-From:   lantianyu1986@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     davem@davemloft.net, mchehab+samsung@kernel.org,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        tglx@linutronix.de, mingo@kernel.org, konrad.wilk@oracle.com,
-        jpoimboe@redhat.com, peterz@infradead.org, mojha@codeaurora.org,
-        jkosina@suse.cz, riel@surriel.com, peterz@infraded.org,
-        Tianyu.Lan@microsoft.com, luto@kernel.org,
-        michael.h.kelley@microsoft.com, kys@microsoft.com,
-        sashal@kernel.org, joe@perches.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Fix Hyperv vIOMMU driver file name
-Date:   Tue, 26 Mar 2019 14:28:21 +0800
-Message-Id: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 26 Mar 2019 02:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbfCZGbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:31:07 -0400
+Received: from localhost (unknown [104.132.152.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 129EE20823;
+        Tue, 26 Mar 2019 06:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553581866;
+        bh=1w5HIr9OeI6V8jjAPKE1hSQUg5y66F46G41ktzhpGvw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WaidY2ozb9ZlOJhmu5BTptfU4sTAbwrRMsUFVolGWHPZ2se4kGbZvxb85NBmZygv6
+         OKeNIrwa59MZUPL2DicM0JeZGequJT8BSAHJmZNeZFFcNFGvPRdDW6dYEyD+8qY+vM
+         BE8zHbPDzS+iKjTzk11pmO37WETv3eJvz4QNlGS4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 01/30] mmc: pxamci: fix enum type confusion
+Date:   Tue, 26 Mar 2019 15:29:40 +0900
+Message-Id: <20190326042607.615776988@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190326042607.558087893@linuxfoundation.org>
+References: <20190326042607.558087893@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lan Tianyu <Tianyu.Lan@microsoft.com>
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-The Hyperv vIOMMU file name should be "hyperv-iommu.c" rather
-than "hyperv_iommu.c". This patch is to fix it.
+------------------
 
-Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
+From: Arnd Bergmann <arnd@arndb.de>
+
+commit e60a582bcde01158a64ff948fb799f21f5d31a11 upstream.
+
+clang points out several instances of mismatched types in this drivers,
+all coming from a single declaration:
+
+drivers/mmc/host/pxamci.c:193:15: error: implicit conversion from enumeration type 'enum dma_transfer_direction' to
+      different enumeration type 'enum dma_data_direction' [-Werror,-Wenum-conversion]
+                direction = DMA_DEV_TO_MEM;
+                          ~ ^~~~~~~~~~~~~~
+drivers/mmc/host/pxamci.c:212:62: error: implicit conversion from enumeration type 'enum dma_data_direction' to
+      different enumeration type 'enum dma_transfer_direction' [-Werror,-Wenum-conversion]
+        tx = dmaengine_prep_slave_sg(chan, data->sg, host->dma_len, direction,
+
+The behavior is correct, so this must be a simply typo from
+dma_data_direction and dma_transfer_direction being similarly named
+types with a similar purpose.
+
+Fixes: 6464b7140951 ("mmc: pxamci: switch over to dmaengine use")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- MAINTAINERS | 2 +-
+ drivers/mmc/host/pxamci.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf7..403247d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7175,7 +7175,7 @@ F:	drivers/net/hyperv/
- F:	drivers/scsi/storvsc_drv.c
- F:	drivers/uio/uio_hv_generic.c
- F:	drivers/video/fbdev/hyperv_fb.c
--F:	drivers/iommu/hyperv_iommu.c
-+F:	drivers/iommu/hyperv-iommu.c
- F:	net/vmw_vsock/hyperv_transport.c
- F:	include/linux/hyperv.h
- F:	include/uapi/linux/hyperv.h
--- 
-2.7.4
+--- a/drivers/mmc/host/pxamci.c
++++ b/drivers/mmc/host/pxamci.c
+@@ -181,7 +181,7 @@ static void pxamci_dma_irq(void *param);
+ static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+-	enum dma_data_direction direction;
++	enum dma_transfer_direction direction;
+ 	struct dma_slave_config	config;
+ 	struct dma_chan *chan;
+ 	unsigned int nob = data->blocks;
+
 
