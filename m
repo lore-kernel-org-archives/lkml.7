@@ -2,280 +2,204 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
+X-Spam-Status: No, score=-14.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA16C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49763C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8E22075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AAD20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 12:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731424AbfCZMRf (ORCPT
+        id S1731471AbfCZMRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 08:17:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:35462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfCZMRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 08:17:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F6951596;
-        Tue, 26 Mar 2019 05:17:34 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1800F3F59C;
-        Tue, 26 Mar 2019 05:17:31 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 12:17:27 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, vaerov@amazon.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, zeev@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v2] PCI: al: Add Amazon Annapurna Labs PCIe host
- controller driver
-Message-ID: <20190326121727.GA4171@e107981-ln.cambridge.arm.com>
-References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
- <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
+        Tue, 26 Mar 2019 08:17:39 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:42202 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725776AbfCZMRj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 08:17:39 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 301F7634C7B;
+        Tue, 26 Mar 2019 14:17:31 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1h8l1H-0000Jz-U0; Tue, 26 Mar 2019 14:17:31 +0200
+Date:   Tue, 26 Mar 2019 14:17:31 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Mickael Guene <mickael.guene@st.com>
+Cc:     linux-media@vger.kernel.org, hugues.fruchet@st.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Document MIPID02 bindings
+Message-ID: <20190326121731.m7z5o2jbzlfxalu6@valkosipuli.retiisi.org.uk>
+References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
+ <1553594620-88280-1-git-send-email-mickael.guene@st.com>
+ <1553594620-88280-2-git-send-email-mickael.guene@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1553594620-88280-2-git-send-email-mickael.guene@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Zhou, Gustavo]
+Hi Mickael,
 
-On Tue, Mar 26, 2019 at 12:00:55PM +0200, Jonathan Chocron wrote:
-> Adding support for Amazon's Annapurna Labs PCIe driver.
-> The HW controller is based on DesignWare's IP.
+On Tue, Mar 26, 2019 at 11:03:39AM +0100, Mickael Guene wrote:
+> This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
+> bridge.
 > 
-> The HW doesn't support accessing the Root Port's config space via
-> ECAM, so we obtain its base address via an AMZN0001 device.
+> Signed-off-by: Mickael Guene <mickael.guene@st.com>
+> ---
 > 
-> Furthermore, the DesignWare PCIe controller doesn't filter out
-> config transactions sent to devices 1 and up on its bus, so they
-> are filtered by the driver.
-> All subordinate buses do support ECAM access.
+> Changes in v3: None
+> Changes in v2:
+> - Add precision about first CSI-2 port data rate
+> - Document endpoints supported properties
+> - Rename 'mipid02@14' into generic 'csi2rx@14' in example
 > 
-> Implementing specific PCI config access functions involves:
->  - Adding an init function to obtain the Root Port's base address
->    from an AMZN0001 device.
->  - Adding a new entry in the mcfg quirk array
+>  .../bindings/media/i2c/st,st-mipid02.txt           | 83 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 ++
+>  2 files changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
 > 
-> Co-developed-by: Vladimir Aerov <vaerov@amazon.com>
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Signed-off-by: Vladimir Aerov <vaerov@amazon.com>
-> Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> new file mode 100644
+> index 0000000..dfeab45
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> @@ -0,0 +1,83 @@
+> +STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+> +
+> +MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
+> +time. Active port input stream will be de-serialized and its content outputted
+> +through PARALLEL output port.
+> +CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 second
+> +input port is a single lane 800Mbps. Both ports support clock and data lane
+> +polarity swap. First port also supports data lane swap.
+> +PARALLEL output port has a maximum width of 12 bits.
+> +Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
+> +YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
+> +
+> +Required Properties:
+> +- compatible: should be "st,st-mipid02"
+> +- clocks: reference to the xclk input clock.
+> +- clock-names: should be "xclk".
+> +- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
+> +- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
+> +
+> +Optional Properties:
+> +- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
+> +	       This is an active low signal to the mipid02.
+> +
+> +Required subnodes:
+> +  - ports: A ports node with one port child node per device input and output
+> +	   port, in accordance with the video interface bindings defined in
+> +	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +	   port nodes are numbered as follows:
+> +
+> +	   Port Description
+> +	   -----------------------------
+> +	   0    CSI-2 first input port
+> +	   1    CSI-2 second input port
+> +	   2    PARALLEL output
+> +
+> +Endpoint node optional properties for CSI-2 connection are:
+> +- bus-type: if present should be 4 - MIPI CSI-2 D-PHY.
 
-Review tags should be given on public mailing lists for public
-review and I have not seen them (they were already there in v1) so
-you should drop them.
+You can drop this IMO --- there's just a single valid value so the driver
+may know that.
 
-> Changes from v1:
->   - Fix commit message comments (incl. using AMZN0001
->     instead of PNP0C02)
->   - Use the usual multi-line comment style
-> 
->  MAINTAINERS                          |  6 +++
->  drivers/acpi/pci_mcfg.c              | 12 +++++
->  drivers/pci/controller/dwc/Makefile  |  1 +
->  drivers/pci/controller/dwc/pcie-al.c | 93 ++++++++++++++++++++++++++++++++++++
->  include/linux/pci-ecam.h             |  1 +
->  5 files changed, 113 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-al.c
-> 
+> +- clock-lanes: should be set to <0> if present (clock lane on hardware lane 0).
+
+And please omit this, too, if the clock lane is always 0. Please update the
+example, too. The driver doesn't need to check that either IMO, but up to
+you.
+
+> +- data-lanes: if present should be <1> for Port 1. for Port 0 dual-lane
+> +operation should be <1 2> or <2 1>. For Port 0 single-lane operation should be
+> +<1> or <2>.
+> +- lane-polarities: any lane can be inverted.
+> +
+> +Endpoint node optional properties for PARALLEL connection are:
+> +- bus-type: if present should be 5 - Parallel.
+
+This, too, can be omitted.
+
+> +- bus-width: shall be set to <6>, <7>, <8>, <10> or <12>.
+> +- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> +- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+
+If these are optional, what are the defaults? IMO you could make them
+mandatory as well.
+
+> +
+> +Example:
+> +
+> +mipid02: csi2rx@14 {
+> +	compatible = "st,st-mipid02";
+> +	reg = <0x14>;
+> +	status = "okay";
+> +	clocks = <&clk_ext_camera_12>;
+> +	clock-names = "xclk";
+> +	VDDE-supply = <&vdd>;
+> +	VDDIN-supply = <&vdd>;
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			ep0: endpoint {
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +				remote-endpoint = <&mipi_csi2_in>;
+> +			};
+> +		};
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			ep2: endpoint {
+> +				bus-width = <8>;
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+> +				remote-endpoint = <&parallel_out>;
+> +			};
+> +		};
+> +	};
+> +};
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 32d444476a90..7a17017f9f82 100644
+> index e17ebf7..74da99d 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -11769,6 +11769,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
->  S:	Supported
->  F:	drivers/pci/controller/
+> @@ -14668,6 +14668,13 @@ S:	Maintained
+>  F:	drivers/iio/imu/st_lsm6dsx/
+>  F:	Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
 >  
-> +PCIE DRIVER FOR ANNAPURNA LABS
-> +M:	Jonathan Chocron <jonnyc@amazon.com>
-> +L:	linux-pci@vger.kernel.org
+> +ST MIPID02 CSI-2 TO PARALLEL BRIDGE DRIVER
+> +M:	Mickael Guene <mickael.guene@st.com>
+> +L:	linux-media@vger.kernel.org
+> +T:	git git://linuxtv.org/media_tree.git
 > +S:	Maintained
-> +F:	drivers/pci/controller/dwc/pcie-al.c
+> +F:	Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
+> +
+>  ST STM32 I2C/SMBUS DRIVER
+>  M:	Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+>  L:	linux-i2c@vger.kernel.org
 
-I do not think we need a maintainer file for that see below, and
-actually this quirk should be handled by DWC maintainers since it is a
-DWC quirk, not a platform one.
+-- 
+Kind regards,
 
-> +
->  PCIE DRIVER FOR AMLOGIC MESON
->  M:	Yue Wang <yue.wang@Amlogic.com>
->  L:	linux-pci@vger.kernel.org
-> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> index a4e8432fc2fb..b42be067fb83 100644
-> --- a/drivers/acpi/pci_mcfg.c
-> +++ b/drivers/acpi/pci_mcfg.c
-> @@ -52,6 +52,18 @@ struct mcfg_fixup {
->  static struct mcfg_fixup mcfg_quirks[] = {
->  /*	{ OEM_ID, OEM_TABLE_ID, REV, SEGMENT, BUS_RANGE, ops, cfgres }, */
->  
-> +#define AL_ECAM(table_id, rev, seg, ops) \
-> +	{ "AMAZON", table_id, rev, seg, MCFG_BUS_ANY, ops }
-> +
-> +	AL_ECAM("GRAVITON", 0, 0, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 1, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 2, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 3, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 4, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 5, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 6, &al_pcie_ops),
-> +	AL_ECAM("GRAVITON", 0, 7, &al_pcie_ops),
-> +
->  #define QCOM_ECAM32(seg) \
->  	{ "QCOM  ", "QDF2432 ", 1, seg, MCFG_BUS_ANY, &pci_32b_ops }
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 7bcdcdf5024e..1ea773c0070d 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -28,5 +28,6 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  # depending on whether ACPI, the DT driver, or both are enabled.
->  
->  ifdef CONFIG_PCI
-> +obj-$(CONFIG_ARM64) += pcie-al.o
->  obj-$(CONFIG_ARM64) += pcie-hisi.o
->  endif
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> new file mode 100644
-> index 000000000000..65a9776c12be
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCIe host controller driver for Amazon's Annapurna Labs IP (used in chips
-> + * such as Graviton and Alpine)
-> + *
-> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-> + *
-> + * Author: Jonathan Chocron <jonnyc@amazon.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
-> +#include <linux/pci-acpi.h>
-> +#include "../../pci.h"
-> +
-> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> +
-> +struct al_pcie_acpi  {
-> +	void __iomem *dbi_base;
-> +};
-> +
-> +static void __iomem *al_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
-> +				     int where)
-> +{
-> +	struct pci_config_window *cfg = bus->sysdata;
-> +	struct al_pcie_acpi *pcie = cfg->priv;
-> +	void __iomem *dbi_base = pcie->dbi_base;
-> +
-> +	if (bus->number == cfg->busr.start) {
-> +		/*
-> +		 * The DW PCIe core doesn't filter out transactions to other
-> +		 * devices/functions on the primary bus num, so we do this here.
-> +		 */
-> +		if (PCI_SLOT(devfn) > 0)
-> +			return NULL;
-> +		else
-> +			return dbi_base + where;
-> +	}
-> +
-> +	return pci_ecam_map_bus(bus, devfn, where);
-> +}
-> +
-> +static int al_pcie_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct acpi_device *adev = to_acpi_device(dev);
-> +	struct acpi_pci_root *root = acpi_driver_data(adev);
-> +	struct al_pcie_acpi *al_pcie;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-> +	if (!al_pcie)
-> +		return -ENOMEM;
-> +
-> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	ret = acpi_get_rc_resources(dev, "AMZN0001", root->segment, res);
-> +	if (ret) {
-> +		dev_err(dev, "can't get rc dbi base address for SEG %d\n",
-> +			root->segment);
-> +		return ret;
-> +	}
-> +
-> +	dev_dbg(dev, "Root port dbi res: %pR\n", res);
-> +
-> +	al_pcie->dbi_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(al_pcie->dbi_base)) {
-> +		long err = PTR_ERR(al_pcie->dbi_base);
-> +
-> +		dev_err(dev, "couldn't remap dbi base %pR (err:%ld)\n",
-> +			res, err);
-> +		return err;
-> +	}
-> +
-> +	cfg->priv = al_pcie;
-> +
-> +	return 0;
-> +}
-
-This code is basically identical to (apart from the string matching
-the DBI resource)
-
-drivers/pci/controller/pcie-hisi.c
-
-because, as you said, that's a DW quirk that is really not
-platform specific AFAICS.
-
-Not that I am really fond of the idea but in practice we can
-create a quirk that applies to all host controllers DW based,
-in case they want to boot with ACPI, this patch is basically
-code duplication.
-
-Thanks,
-Lorenzo
-
-> +
-> +struct pci_ecam_ops al_pcie_ops = {
-> +	.bus_shift    = 20,
-> +	.init         =  al_pcie_init,
-> +	.pci_ops      = {
-> +		.map_bus    = al_pcie_map_bus,
-> +		.read       = pci_generic_config_read,
-> +		.write      = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 29efa09d686b..a73164c85e78 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -56,6 +56,7 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
->  extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
->  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
->  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-> +extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
->  #endif
->  
->  #ifdef CONFIG_PCI_HOST_COMMON
-> -- 
-> 1.9.1
-> 
+Sakari Ailus
