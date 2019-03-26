@@ -2,124 +2,193 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAF7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED73CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6643A20856
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4E620828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XsOGXmaK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kGbhfDb0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="imOPGdkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfCZGNR (ORCPT
+        id S1726480AbfCZGSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:13:17 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:28886 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbfCZGNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:13:17 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44T15l3pJKz9v25V;
-        Tue, 26 Mar 2019 07:13:15 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=XsOGXmaK; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id x5ZNmpGQxrMq; Tue, 26 Mar 2019 07:13:15 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44T15l2ZP5z9v25T;
-        Tue, 26 Mar 2019 07:13:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553580795; bh=aUmAi91vtAFaIZb6qUCanpVzBvXxG3iUFfovfKRIkhM=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=XsOGXmaKtMZKvQ8nV9wX1fvebo41wrMeoJcnXtrbtQ3HaEkS2GHO/Bmkb0sbIE9fQ
-         50iJBPcd5OcUTPYQyAAvxJNkZbLlepPSsfoV51d9B60MJZ3D4tYXmLuSOtc+5EjYKS
-         GJKIJQ0KVVFm1WNfwWMo2+/zEHkKdyotmgWWokRo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A51B8B77C;
-        Tue, 26 Mar 2019 07:13:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id zrunFgtvlB3M; Tue, 26 Mar 2019 07:13:16 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B3BF18B74C;
-        Tue, 26 Mar 2019 07:13:15 +0100 (CET)
-Subject: Re: [PATCH 3/7] powerpc/setup: define cpu_pvr at all time
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <a2ac33258063682558fe0cac8eedcbd28aa4a141.1553242059.git.christophe.leroy@c-s.fr>
- <a3188807e85a5e0f8952d3470d9da7504bfd3e14.1553242059.git.christophe.leroy@c-s.fr>
-Message-ID: <10494441-fcc3-a01b-4f95-ce39dc1e2dd3@c-s.fr>
-Date:   Tue, 26 Mar 2019 07:13:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 02:18:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36666 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfCZGSO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:18:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1B69D60E3E; Tue, 26 Mar 2019 06:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553581093;
+        bh=y9Q2T9KjqES10fg88cgAwaPmNyiRR2VjzNBpap1Fvhk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kGbhfDb0aQcouKDu34KUu20OCQ7bS4LnJ/i5q7b0lp4H2FgJ+mg/pp+VBTqeE8nyR
+         eGnYzNCsvmcVTvolDKFhtlubVzOmJHjt+37mX0ZUZPG3J9g4+XsNxDz8xGOsrW0P97
+         nAaEBCAYxu8NRY+DKYCuRxmv460iXSxrMsF1VjJk=
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05B7860E3E;
+        Tue, 26 Mar 2019 06:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553581091;
+        bh=y9Q2T9KjqES10fg88cgAwaPmNyiRR2VjzNBpap1Fvhk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=imOPGdknXjcrrObSPbCPqHCOM9XFRH8toZUeuJBf1wi2J27pkbj+yRyloyzYej7Hm
+         86NBd03Cr8BbYIMTH4lcJhaFAgnw6Ef1snjd/+tVnapI901dnBpW/mofz+mZMeRjp2
+         A7/P1X7Pl7yLElBkOzhAEQvywUsWmd58oNc07lHQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 05B7860E3E
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f51.google.com with SMTP id s16so433582edr.3;
+        Mon, 25 Mar 2019 23:18:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAUB9upPkQxXl2BQPTGylGxLiqeTJeMpgbQNL3+SIyzJn0rWrd19
+        j2GKKofcYcDz7Fzhs4ZHMEzIGW7l/JULtSguGWg=
+X-Google-Smtp-Source: APXvYqxiM8SQiFh5zydnqLnseAafHRNFYZlDPwfVC7WnqTm8ViPRUMT4Zs7v0beQQV06fb/FSrUOySNBAcldprvRDbU=
+X-Received: by 2002:a17:906:3952:: with SMTP id g18mr16005659eje.247.1553581089693;
+ Mon, 25 Mar 2019 23:18:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a3188807e85a5e0f8952d3470d9da7504bfd3e14.1553242059.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190206051335.23799-1-bjorn.andersson@linaro.org>
+ <20190206051335.23799-9-bjorn.andersson@linaro.org> <CAD=FV=UQwsKq1TujmmmR-OiSpMvUp_0b4Vi4Rh9TMGoKgkkkCQ@mail.gmail.com>
+ <CAD=FV=Wr7nHWdQFC_+vs5-r_cBGKCsUNZ0mOMMTxdKPe56GUuQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=Wr7nHWdQFC_+vs5-r_cBGKCsUNZ0mOMMTxdKPe56GUuQ@mail.gmail.com>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Tue, 26 Mar 2019 11:47:58 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iFTb2BeZqXfLXD+R7uo+r1oAYBHMrAWKOugtn91KwhwNg@mail.gmail.com>
+Message-ID: <CAFp+6iFTb2BeZqXfLXD+R7uo+r1oAYBHMrAWKOugtn91KwhwNg@mail.gmail.com>
+Subject: Re: [PATCH v6 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Doug,
 
 
-Le 22/03/2019 à 09:08, Christophe Leroy a écrit :
-> To avoid ifdefs, define cpu_pvr at all time.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On Thu, Feb 28, 2019 at 2:34 AM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Tue, Feb 26, 2019 at 3:54 PM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Feb 5, 2019 at 9:13 PM Bjorn Andersson
+> > <bjorn.andersson@linaro.org> wrote:
+> > >
+> > > From: Sibi Sankar <sibis@codeaurora.org>
+> > >
+> > > This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+> > >
+> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >
+> > > Changes since v5:
+> > > - None
+> > >
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
+> > >  1 file changed, 58 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index 560c16616ee6..5c41f6fe3e1b 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -1612,6 +1612,64 @@
+> > >                         };
+> > >                 };
+> > >
+> > > +               mss_pil: remoteproc@4080000 {
+> > > +                       compatible = "qcom,sdm845-mss-pil";
+> > > +                       reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
+> > > +                       reg-names = "qdsp6", "rmb";
+> >
+> > I found that when I disabled IOMMU bypass by booting with
+> > "arm-smmu.disable_bypass=y" that I'd get this failure:
+> >
+> > ---
+> >
+> > [   13.633776] qcom-q6v5-mss 4080000.remoteproc: MBA booted, loading mpss
+> > [   13.647694] arm-smmu 15000000.iommu: Unexpected global fault, this
+> > could be serious
+> > [   13.660278] arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0
+> > 0x00000000, GFSYNR1 0x00000781, GFSYNR2 0x00000000
+> > ...
+> > [   14.648830] qcom-q6v5-mss 4080000.remoteproc: MPSS header
+> > authentication timed out
+> > [   14.657141] qcom-q6v5-mss 4080000.remoteproc: port failed halt
+> > [   14.664983] remoteproc remoteproc0: can't start rproc
+> > 4080000.remoteproc: -110
+> >
+> > ---
+> >
+> > Adding "iommus = <&apps_smmu 0x781 0>;" here fixed my problem.  NOTE
+> > that I'm no expert on IOMMUs so you should confirm that this is right,
+> > but if it is then maybe you could include it in the next spin of the
+> > series?  I got the "0x781" just by looking at the value of the GFSYNR1
+> > in the above splat.  I wasn't sure what to put for the mask so I put
+> > 0x0.
+>
+> Upon more testing the "iommus" line that I came up with avoids the
+> global fault but doesn't actually work.  I just get:
+>
+> qcom-q6v5-mss 4080000.remoteproc: failed to allocate mdt buffer
+>
+> I'm hoping someone from Qualcomm can help out here and say how this
+> should be solved.  Thanks!
 
-This patch introduces a sparse warning.
+I and Sibi had a chance to look at this, and we could compare things
+with MTP sdm845
+device as well.
 
-I guess we can skip it for now and rework more deeply the use of cpu_pvr 
-versus SPRN_PVR which is re-read in many places in the code.
+From the 845 block diagram it's clear that one of the MPSS paths goes
+through SMMU
+and therefore we have the SIDs 0x780 - 0x783 reserved for these streams.
+However, it is recommended to use them in a bypass mode (S2CR_TYPE_BYPASS).
 
-Christophe
+On MTP devices, the secure code programs these SIDs in SMMU and, as these
+SMRs are marked secure they are not visible to the kernel. Thus kernel wouldn't
+overwrite anything.
+However, in your case there's no such reservation by the secure code.
+In such a case,
+we may need to make SMMU aware of these SIDs in the kernel.
 
-> ---
->   arch/powerpc/kernel/setup-common.c | 12 +++++-------
->   1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-> index a90e8367ccde..a4ed9301e815 100644
-> --- a/arch/powerpc/kernel/setup-common.c
-> +++ b/arch/powerpc/kernel/setup-common.c
-> @@ -190,9 +190,7 @@ void machine_halt(void)
->   	machine_hang();
->   }
->   
-> -#ifdef CONFIG_SMP
->   DEFINE_PER_CPU(unsigned int, cpu_pvr);
-> -#endif
->   
->   static void show_cpuinfo_summary(struct seq_file *m)
->   {
-> @@ -234,11 +232,11 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->   	unsigned short maj;
->   	unsigned short min;
->   
-> -#ifdef CONFIG_SMP
-> -	pvr = per_cpu(cpu_pvr, cpu_id);
-> -#else
-> -	pvr = mfspr(SPRN_PVR);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_SMP))
-> +		pvr = per_cpu(cpu_pvr, cpu_id);
-> +	else
-> +		pvr = mfspr(SPRN_PVR);
-> +
->   	maj = (pvr >> 8) & 0xFF;
->   	min = pvr & 0xFF;
->   
-> 
+And please note that adding "iommus = <&apps_smmu 0x781 0>" to the PIL
+device may not
+be the correct thing to do, since actual MPSS data streams don't use the SMMU.
+So, configuring DMA path via SMMU isn't right.
+
+Thanks & regards
+Vivek
+
+>
+>
+> -Doug
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
