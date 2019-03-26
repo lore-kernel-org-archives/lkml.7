@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D869AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E1720863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185DD20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582243;
-	bh=ioC9M5Az5x6N3sc/gLRcRFX8RH4C2zyWVPYpiacsxKU=;
+	s=default; t=1553582248;
+	bh=gFQWJ8MiRxLeuyhFa58VBC9DZ8Mx65qGonWrWzzjtZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jjw8xFOCci3hzucOUv232g2GvSoBeFaG0xqEZBG2s1cSEImuFu1vdYEzKLAsodnME
-	 t56SbaR9oo82zM8GDyWiAs0LhfycPuft050z2+aBz6wQljqgaVZyy/BqzWDTbT8+yt
-	 N+L0hDKEXQkgMJwYbD7dMwYiX9E61mU15Nwyi30g=
+	b=wkMmbqXSSMBng2T2EjK12S0NvhUkROxUSM6YgVaWC+D572AzYXfB4WovE+B22oS/R
+	 DsImOML8wtT7apZmv++HLOs2fChwhesc1SNh/lt2Jh1WndkWCxCu5xy2iV2rFWltri
+	 T8VPH+HYXZMIHSiJb7Vhxknv7Sao4O+czOjcdXaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbfCZGhW (ORCPT
+        id S1732376AbfCZGh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:37:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:37:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731445AbfCZGhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:37:20 -0400
+        id S1731399AbfCZGhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:37:24 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 511462075E;
-        Tue, 26 Mar 2019 06:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AF82075E;
+        Tue, 26 Mar 2019 06:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582239;
-        bh=ioC9M5Az5x6N3sc/gLRcRFX8RH4C2zyWVPYpiacsxKU=;
+        s=default; t=1553582243;
+        bh=gFQWJ8MiRxLeuyhFa58VBC9DZ8Mx65qGonWrWzzjtZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MHtGohARb7uDpoluvAPgGB3RekD60WRwlGr0nB2rAIOTkRBCiGrLYY+mJ20QPcWYb
-         H6YdblERZDt5SRfTtMODSwueuE7j0kyHvdnA9dmEVjaLtYrS0PDyud/jK3bX2sBFWe
-         mU18cpuqLUVi68CHTq+9fzkUG9gMYUAX2xSEmAms=
+        b=MBLyoltlhHg/r+gmbsJTiljcAyfTHeECzyXpKyWmRT5G8vOiST1Iav+81jfol+zD+
+         AJ6GTZmaErRQ+eW5WHIgk5ar0pDsTnF4S/0OAjpg7Gh4SsIvQKHpN8YiLpD4xNTIgf
+         QEke+OUQt1EXQ7zF3vgf/wk7b3XTymcQ5m/THUDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Takashi Iwai <tiwai@suse.de>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>
-Subject: [PATCH 4.19 23/45] ALSA: x86: Fix runtime PM for hdmi-lpe-audio
-Date:   Tue, 26 Mar 2019 15:30:06 +0900
-Message-Id: <20190326042703.904595084@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Drnec <jaydee@email.cz>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 14/45] powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
+Date:   Tue, 26 Mar 2019 15:29:57 +0900
+Message-Id: <20190326042703.417534104@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -67,40 +64,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 8dfb839cfe737a17def8e5f88ee13c295230364a upstream.
+commit b5b4453e7912f056da1ca7572574cada32ecb60c upstream.
 
-Commit 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as
-"no callbacks"") broke runtime PM with lpe audio. We can no longer
-runtime suspend the GPU since the sysfs  power/control for the
-lpe-audio device no longer exists and the device is considered
-always active. We can fix this by not marking the device as
-active.
+Jakub Drnec reported:
+  Setting the realtime clock can sometimes make the monotonic clock go
+  back by over a hundred years. Decreasing the realtime clock across
+  the y2k38 threshold is one reliable way to reproduce. Allegedly this
+  can also happen just by running ntpd, I have not managed to
+  reproduce that other than booting with rtc at >2038 and then running
+  ntp. When this happens, anything with timers (e.g. openjdk) breaks
+  rather badly.
 
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Fixes: 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as "no callbacks"")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181024154825.18185-1-ville.syrjala@linux.intel.com
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Takashi Iwai <tiwai@suse.de>
+And included a test case (slightly edited for brevity):
+  #define _POSIX_C_SOURCE 199309L
+  #include <stdio.h>
+  #include <time.h>
+  #include <stdlib.h>
+  #include <unistd.h>
+
+  long get_time(void) {
+    struct timespec tp;
+    clock_gettime(CLOCK_MONOTONIC, &tp);
+    return tp.tv_sec + tp.tv_nsec / 1000000000;
+  }
+
+  int main(void) {
+    long last = get_time();
+    while(1) {
+      long now = get_time();
+      if (now < last) {
+        printf("clock went backwards by %ld seconds!\n", last - now);
+      }
+      last = now;
+      sleep(1);
+    }
+    return 0;
+  }
+
+Which when run concurrently with:
+ # date -s 2040-1-1
+ # date -s 2037-1-1
+
+Will detect the clock going backward.
+
+The root cause is that wtom_clock_sec in struct vdso_data is only a
+32-bit signed value, even though we set its value to be equal to
+tk->wall_to_monotonic.tv_sec which is 64-bits.
+
+Because the monotonic clock starts at zero when the system boots the
+wall_to_montonic.tv_sec offset is negative for current and future
+dates. Currently on a freshly booted system the offset will be in the
+vicinity of negative 1.5 billion seconds.
+
+However if the wall clock is set past the Y2038 boundary, the offset
+from wall to monotonic becomes less than negative 2^31, and no longer
+fits in 32-bits. When that value is assigned to wtom_clock_sec it is
+truncated and becomes positive, causing the VDSO assembly code to
+calculate CLOCK_MONOTONIC incorrectly.
+
+That causes CLOCK_MONOTONIC to jump ahead by ~4 billion seconds which
+it is not meant to do. Worse, if the time is then set back before the
+Y2038 boundary CLOCK_MONOTONIC will jump backward.
+
+We can fix it simply by storing the full 64-bit offset in the
+vdso_data, and using that in the VDSO assembly code. We also shuffle
+some of the fields in vdso_data to avoid creating a hole.
+
+The original commit that added the CLOCK_MONOTONIC support to the VDSO
+did actually use a 64-bit value for wtom_clock_sec, see commit
+a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to
+32 bits kernel") (Nov 2005). However just 3 days later it was
+converted to 32-bits in commit 0c37ec2aa88b ("[PATCH] powerpc: vdso
+fixes (take #2)"), and the bug has existed since then AFAICS.
+
+Fixes: 0c37ec2aa88b ("[PATCH] powerpc: vdso fixes (take #2)")
+Cc: stable@vger.kernel.org # v2.6.15+
+Link: http://lkml.kernel.org/r/HaC.ZfES.62bwlnvAvMP.1STMMj@seznam.cz
+Reported-by: Jakub Drnec <jaydee@email.cz>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/x86/intel_hdmi_audio.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/include/asm/vdso_datapage.h  |    8 ++++----
+ arch/powerpc/kernel/vdso64/gettimeofday.S |    4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/sound/x86/intel_hdmi_audio.c
-+++ b/sound/x86/intel_hdmi_audio.c
-@@ -1900,7 +1900,6 @@ static int hdmi_lpe_audio_probe(struct p
+--- a/arch/powerpc/include/asm/vdso_datapage.h
++++ b/arch/powerpc/include/asm/vdso_datapage.h
+@@ -82,10 +82,10 @@ struct vdso_data {
+ 	__u32 icache_block_size;		/* L1 i-cache block size     */
+ 	__u32 dcache_log_block_size;		/* L1 d-cache log block size */
+ 	__u32 icache_log_block_size;		/* L1 i-cache log block size */
+-	__s32 wtom_clock_sec;			/* Wall to monotonic clock */
+-	__s32 wtom_clock_nsec;
+-	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
+-	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
++	__u32 stamp_sec_fraction;		/* fractional seconds of stamp_xtime */
++	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
++	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
++	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
+    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
+    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
+ };
+--- a/arch/powerpc/kernel/vdso64/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
+@@ -92,7 +92,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 * At this point, r4,r5 contain our sec/nsec values.
+ 	 */
  
- 	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_mark_last_busy(&pdev->dev);
--	pm_runtime_set_active(&pdev->dev);
+-	lwa	r6,WTOM_CLOCK_SEC(r3)
++	ld	r6,WTOM_CLOCK_SEC(r3)
+ 	lwa	r9,WTOM_CLOCK_NSEC(r3)
  
- 	dev_dbg(&pdev->dev, "%s: handle pending notification\n", __func__);
- 	for_each_port(card_ctx, port) {
+ 	/* We now have our result in r6,r9. We create a fake dependency
+@@ -125,7 +125,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	bne     cr6,75f
+ 
+ 	/* CLOCK_MONOTONIC_COARSE */
+-	lwa     r6,WTOM_CLOCK_SEC(r3)
++	ld	r6,WTOM_CLOCK_SEC(r3)
+ 	lwa     r9,WTOM_CLOCK_NSEC(r3)
+ 
+ 	/* check if counter has updated */
 
 
