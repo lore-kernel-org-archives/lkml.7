@@ -2,163 +2,109 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96C1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C94AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C1D20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="XnoONczA"
+	by mail.kernel.org (Postfix) with ESMTP id ECAF120811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:37:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731681AbfCZQgn (ORCPT
+        id S1731827AbfCZQhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:36:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54247 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729800AbfCZQgn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:36:43 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q16so13353531wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GLaniIsP9Pgj38i/cF6fQVJt/oSPNpbEsEWUOxjxDnY=;
-        b=XnoONczAWvY0wIgCCptP6qnspanv/tQCI1Tl4k7lrM89EwlwCXQH77TeZoX8x8zr1r
-         TOqs7VerEmPfukxOU92hqzIESXbsHPFEhlcZ+FWhw1lWA5zc6TLEtjEChSFQw0mOZxRW
-         OwueOM/axyFYpzoR1bJXqd0j/eIOldVj2NWVcezjYm25taDDvONCZ+IX23NHzHhIXyZm
-         aoBoggR482YHrYPlZp9S4H71JuP+gqaALptdvGbSLKLlewKAaFPOV5JnMObAWf+WGHut
-         wmtSo3cN0jYcFNBE9078dj7LkbeySiZKtq6FSi/SLUPCQn1t7h/nvJSz4LbwGFXtoR1T
-         +mpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GLaniIsP9Pgj38i/cF6fQVJt/oSPNpbEsEWUOxjxDnY=;
-        b=dnQrKLYFpCv451zTfn3vcYQCDR9ge+7bLD7+Qdyl1X/t4XyocgMiNe4I79gOul96el
-         lkHm8MTpFSs5NnHD6tiVSAPZrJ17AtTSR02BwPByoHXE8dNb3R4U8u20TjxmKz5NC1ae
-         drbGU2A7WEox56QPCPfMEUysWvGDhZHseOC9ykOri3Fl6HyRiVRm6/++s7nqmZeamWgb
-         DA8tars+2I+pbDziY0G2H7IC0N7Fhe22WpWGpmBTSvoFYLZVl6PPEnJbYaNkeu3Qkf4Y
-         1gga7cFvfcQrRTlL2Ed9nLvDtZZo0BWSh39Mcv+qwjwQf3JMpPYeWIGnOWeMPjwr4PbD
-         2Jzw==
-X-Gm-Message-State: APjAAAXLylX4KCM85ER2mzQr05Mz/+aIyUdj5fFFcXqzVkEgTSeXYEWe
-        9M4s5TCtWNYg4RhnMuC9d4srPg==
-X-Google-Smtp-Source: APXvYqwJFcVMR0Q1Htaff5UXoS5w4Cl9jrdHlPXmdfBN118VmF9hnMem2LtWRW25NKaKHnUM7Z8KrA==
-X-Received: by 2002:a7b:c34e:: with SMTP id l14mr10286385wmj.68.1553618201592;
-        Tue, 26 Mar 2019 09:36:41 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id a17sm34884489wmg.40.2019.03.26.09.36.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 09:36:41 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 17:36:40 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
- interface
-Message-ID: <20190326163640.GD4958@nanopsycho.orion>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+        Tue, 26 Mar 2019 12:37:04 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40408 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728314AbfCZQhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:37:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8451D1596;
+        Tue, 26 Mar 2019 09:37:03 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F6A23F614;
+        Tue, 26 Mar 2019 09:37:01 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        Steve Capper <Steve.Capper@arm.com>
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+Date:   Tue, 26 Mar 2019 16:36:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
->Basic genetlink and init infrastructure for the netlink interface, register
->genetlink family "ethtool". Introduce CONFIG_ETHTOOL_NETLINK Kconfig
->option. Add interface description into Documentation/networking.
->
->Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
->---
+Hi Bhupesh,
 
-[...]
+On 20/03/2019 05:09, Bhupesh Sharma wrote:
+> With ARMv8.2-LVA architecture extension availability, arm64 hardware
+> which supports this extension can support a virtual address-space upto
+> 52-bits.
+> 
+> Since at the moment we enable the support of this extension in kernel
+> via CONFIG flags, e.g.
+>  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
+> 
+> so, there is no clear mechanism in the user-space right now to
+> determine these CONFIG flag values and hence determine the maximum
+> virtual address space supported by the underlying kernel.
+> 
+> User-space tools like 'makedumpfile' therefore are broken currently
+> as they have no proper method to calculate the 'PTRS_PER_PGD' value
+> which is required to perform a page table walk to determine the
+> physical address of a corresponding virtual address found in
+> kcore/vmcoreinfo.
+> 
+> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+> it can be used in user-space to determine the maximum virtual address
+> supported by underlying kernel.
 
+I don't think this really solves the problem, it feels fragile.
 
->diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
->new file mode 100644
->index 000000000000..85dd6dac71a2
->--- /dev/null
->+++ b/net/ethtool/netlink.c
->@@ -0,0 +1,34 @@
->+// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
->+
->+#include <linux/ethtool_netlink.h>
->+#include "netlink.h"
->+
->+/* genetlink setup */
->+
->+static const struct genl_ops ethtool_genl_ops[] = {
+I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
+You can use this to work out that the top level page table size isn't consistent with a
+48bit VA, so 52bit VA must be in use...
 
-Please be consistent with prefixes. Either use "ethtool_" or "ethnl_"
-for all functions and variables in this code.
+But wasn't your problem walking the kernel page tables? In particular the offset that we
+apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
 
+Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
+hard-codes it when it sees 52bit is in use ... somewhere.
+We haven't solved the problem!
 
->+};
->+
->+struct genl_family ethtool_genl_family = {
->+	.hdrsize	= 0,
->+	.name		= ETHTOOL_GENL_NAME,
->+	.version	= ETHTOOL_GENL_VERSION,
->+	.netnsok	= true,
->+	.parallel_ops	= true,
->+	.ops		= ethtool_genl_ops,
->+	.n_ops		= ARRAY_SIZE(ethtool_genl_ops),
->+};
->+
->+/* module setup */
->+
->+static int __init ethnl_init(void)
->+{
->+	int ret;
->+
->+	ret = genl_register_family(&ethtool_genl_family);
->+	if (WARN(ret < 0, "ethtool: genetlink family registration failed"))
+Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
+could set them the same, or different the other-way-round.
 
-Why do you need this warning? Please avoid it.
+Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
+there would be no ttbr offset.
+
+If you need another vmcoreinfo flag once that happens, we've done something wrong here.
+
+(Not to mention what happens if the TTBR1_EL1 uses 52bit va, but TTBR0_EL1 doesn't)
 
 
->+		return ret;
->+
->+	return 0;
->+}
->+
->+subsys_initcall(ethnl_init);
->diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
->new file mode 100644
->index 000000000000..63063b582ca2
->--- /dev/null
->+++ b/net/ethtool/netlink.h
->@@ -0,0 +1,12 @@
->+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->+
->+#ifndef _NET_ETHTOOL_NETLINK_H
->+#define _NET_ETHTOOL_NETLINK_H
->+
->+#include <linux/ethtool_netlink.h>
->+#include <linux/netdevice.h>
->+#include <net/genetlink.h>
->+
->+extern struct genl_family ethtool_genl_family;
->+
->+#endif /* _NET_ETHTOOL_NETLINK_H */
->-- 
->2.21.0
->
+> Suggested-by: Steve Capper <Steve.Capper@arm.com>
+
+(CC: +Steve)
+
+
+Thanks,
+
+James
