@@ -2,109 +2,140 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C94AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5E9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAF120811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC859206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WkgZ4pvB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731827AbfCZQhE (ORCPT
+        id S1731668AbfCZQio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:37:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40408 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbfCZQhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:37:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8451D1596;
-        Tue, 26 Mar 2019 09:37:03 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F6A23F614;
-        Tue, 26 Mar 2019 09:37:01 -0700 (PDT)
-Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
- vmcoreinfo
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-        Steve Capper <Steve.Capper@arm.com>
-References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
- <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
-Date:   Tue, 26 Mar 2019 16:36:59 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 12:38:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44513 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730451AbfCZQio (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:38:44 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d24so12037896otl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nvGMKneZDvgBoQO9WKpYlgMFSlMx0qHliuhIZ0RURuY=;
+        b=WkgZ4pvBsM7OaWPPaDLIlyd6tXXTgazNDrxPXuius0S2rSNexVHijpJOs1Z4VRwYIr
+         Xj2+H/gHZkMyTRmnQ7ovX2d/HVRz0kTa3uuefeUFZSdCRQFi+3kx45P6p7lvxPeJjiol
+         3HUFPmD1eFFnTGSamcs23fZfyF9aWQhF8FCM4v9afH3vceQ2REW1iiU2nZmV6kGvqr9f
+         4PZIGCKtXznBngmTSY1JPff+BXnqKAQa9siz4YBwZo7FJoxQkjVu8bELOPHawp7yfL1M
+         MgW8Tui9d3YEQZm1AgUJ39FnNmkYVQ74bGwqtPnml7658kwKc//QsteSzQR4OVM0BQSY
+         wprw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nvGMKneZDvgBoQO9WKpYlgMFSlMx0qHliuhIZ0RURuY=;
+        b=HIzxDmr51pIhamwfdBF68fuuRdGUqan3Jr3LOSzZPz2a0jx25JjLPzklzjKMdJ3PTd
+         JQ6qYFkG55PRF3nNQ/jL/XjC7TpuwXpyz1IaK0zdNsSGozLiGApqwlbax5WgyQjtqPR0
+         0WOuVbATpJkYl0hqX9UCyqNuoH74ro0Z72BwscQIcCYIPq4UQGmAt2no+AkdK/RklIjm
+         4vHori//Ku+haz49NLN2n/eJnYaK8CESi8VzUD5ewB7T8Il7iIP6yi24viaIUDi6FZMC
+         47zJaY6N+YTU/JuHP+nuIlWPZ6JP7jlnKfKh0iGNYfIPd9PItChNtny3JJjnObAeCoWh
+         tnpQ==
+X-Gm-Message-State: APjAAAVDs5jiAGJR4lUOwkAp/vkOBATyWHGO2jtwmA9LNPZ0m384d+SG
+        GZqS8M8w7YIRIO0rkaFOi4IYf52XpCxnrGLUjBDEcA==
+X-Google-Smtp-Source: APXvYqy5X9emIhngEkEG6JE1avtQDYYfkUAZZmW+xmgFKWJuIBXoMB7pqfFk+XzuxQazNZAsz/Xh13k3U9eRETBvsUc=
+X-Received: by 2002:a9d:5906:: with SMTP id t6mr22320306oth.308.1553618323107;
+ Tue, 26 Mar 2019 09:38:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190326155513.26964-1-christian@brauner.io> <20190326155513.26964-3-christian@brauner.io>
+ <CAKOZuet18Lc+N7NaXN=cOcg_q8CxDkhYVss9enVhh6RBRUXpjg@mail.gmail.com>
+ <20190326162337.o256x7hiodu2qfyg@brauner.io> <20190326163142.4eh5qpgiqvygf26w@brauner.io>
+ <20190326163452.uku4bgkessxzxvai@brauner.io>
+In-Reply-To: <20190326163452.uku4bgkessxzxvai@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 26 Mar 2019 09:38:31 -0700
+Message-ID: <CAKOZuetcp=UPRWDkLUxLTmu-vqdN6qSmN9=0uP8MUuwyLoYfEA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
+On Tue, Mar 26, 2019 at 9:34 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Tue, Mar 26, 2019 at 05:31:42PM +0100, Christian Brauner wrote:
+> > On Tue, Mar 26, 2019 at 05:23:37PM +0100, Christian Brauner wrote:
+> > > On Tue, Mar 26, 2019 at 09:17:07AM -0700, Daniel Colascione wrote:
+> > > > Thanks for the patch.
+> > > >
+> > > > On Tue, Mar 26, 2019 at 8:55 AM Christian Brauner <christian@brauner.io> wrote:
+> > > > >
+> > > > > The pidctl() syscalls builds on, extends, and improves translate_pid() [4].
+> > > > > I quote Konstantins original patchset first that has already been acked and
+> > > > > picked up by Eric before and whose functionality is preserved in this
+> > > > > syscall:
+> > > >
+> > > > We still haven't had a much-needed conversation about splitting this
+> > > > system call into smaller logical operations. It's important that we
+> > > > address this point before this patch is merged and becomes permanent
+> > > > kernel ABI.
+> > >
+> > > I don't particularly mind splitting this into an additional syscall like
+> > > e.g.  pidfd_open() but then we have - and yes, I know you'll say
+> > > syscalls are cheap - translate_pid(), and pidfd_open(). What I like
+> > > about this rn is that it connects both apis in a single syscall
+> > > and allows pidfd retrieval across pid namespaces. So I guess we'll see
+> > > what other people think.
+> >
+> > There's something to be said for
+> >
+> > pidfd_open(pid_t pid, int pidfd, unsigned int flags);
+> >
+> > /* get pidfd */
+> > int pidfd = pidfd_open(1234, -1, 0);
+> >
+> > /* convert to procfd */
+> > int procfd = pidfd_open(-1, 4, 0);
+> >
+> > /* convert to pidfd */
+> > int pidfd = pidfd_open(4, -1, 0);
+>
+> probably rather:
+>
+> int pidfd = pidfd_open(-1, 4, PIDFD_TO_PROCFD);
+> int procfd = pidfd_open(-1, 4, PROCFD_TO_PIDFD);
+> int pidfd = pidfd_open(1234, -1, 0);
 
-On 20/03/2019 05:09, Bhupesh Sharma wrote:
-> With ARMv8.2-LVA architecture extension availability, arm64 hardware
-> which supports this extension can support a virtual address-space upto
-> 52-bits.
-> 
-> Since at the moment we enable the support of this extension in kernel
-> via CONFIG flags, e.g.
->  - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
-> 
-> so, there is no clear mechanism in the user-space right now to
-> determine these CONFIG flag values and hence determine the maximum
-> virtual address space supported by the underlying kernel.
-> 
-> User-space tools like 'makedumpfile' therefore are broken currently
-> as they have no proper method to calculate the 'PTRS_PER_PGD' value
-> which is required to perform a page table walk to determine the
-> physical address of a corresponding virtual address found in
-> kcore/vmcoreinfo.
-> 
-> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
-> it can be used in user-space to determine the maximum virtual address
-> supported by underlying kernel.
-
-I don't think this really solves the problem, it feels fragile.
-
-I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and PTRS_PER_PGD=1024.
-You can use this to work out that the top level page table size isn't consistent with a
-48bit VA, so 52bit VA must be in use...
-
-But wasn't your problem walking the kernel page tables? In particular the offset that we
-apply because the tables were based on a 48bit VA shifted up in swapper_pg_dir.
-
-Where does the TTBR1_EL1 offset come from with this property? I assume makedumpfile
-hard-codes it when it sees 52bit is in use ... somewhere.
-We haven't solved the problem!
-
-Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but in the future it
-could set them the same, or different the other-way-round.
-
-Will makedumpfile using this value keep working once T1SZ is 52bit VA too? In this case
-there would be no ttbr offset.
-
-If you need another vmcoreinfo flag once that happens, we've done something wrong here.
-
-(Not to mention what happens if the TTBR1_EL1 uses 52bit va, but TTBR0_EL1 doesn't)
-
-
-> Suggested-by: Steve Capper <Steve.Capper@arm.com>
-
-(CC: +Steve)
-
-
-Thanks,
-
-James
+These three operations look like three related but distinct functions
+to me, and in the second case, the "pidfd_open" name is a bit of a
+misnomer. IMHO, the presence of an "operation name" field in any API
+is usually a good indication that we're looking at a family of related
+APIs, not a single coherent operation.
