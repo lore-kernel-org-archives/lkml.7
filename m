@@ -6,48 +6,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16CFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85913C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7FA2086C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561B320823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582111;
-	bh=2zNhWIne/jcg3g2L78ZiPHDqlDTQB/ciTgZJQc/0Nr4=;
+	s=default; t=1553582115;
+	bh=pytmc5e5A/N1LDPGJnbccu+mopuE/ovOD+0eBNYCz0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVTvga2rpwxtWAqEBUv9pOJiu2QeMmknSS1qI3tImyl4VR+Ff0HjMIafW9MrFw3iu
-	 mdceBOiWcpnPl041mx4sBN29aAFA4sGgIhdi5hd+0Mqnw9oHHULZ7ajpuNsSiNUnzw
-	 LtXyM2do89rTz3fcGtI5a6KXB6DwJkLoQeiJujw8=
+	b=y86SzW3cCzZoiWmZXNqzdEoBNPNutXgNa7TbDRu6YYPsMlZekuJwMe/ou0ORKOXQd
+	 ZKnW6wt72xRlfxnurb8bm51yErHetJAmZqTwoSx3colIAXd091soejTWrl2dzs5x5/
+	 CLPdtKixgb/FwHyka5E0yp+rF53TT1IHX7TuYv0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfCZGfK (ORCPT
+        id S1732021AbfCZGfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:35:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731961AbfCZGfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:05 -0400
+        id S1731603AbfCZGfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:35:09 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3B320823;
-        Tue, 26 Mar 2019 06:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CEF420879;
+        Tue, 26 Mar 2019 06:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582105;
-        bh=2zNhWIne/jcg3g2L78ZiPHDqlDTQB/ciTgZJQc/0Nr4=;
+        s=default; t=1553582108;
+        bh=pytmc5e5A/N1LDPGJnbccu+mopuE/ovOD+0eBNYCz0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goIUsLwvUh0e6ArxNuhJw6tzZR/fV1M2vlYQYMGryujotIA9ekKgvPzLm5odvJpgJ
-         pB3TC8K1OnKJp7nghd+HU8fxT5qzLf1I61XJpzpBXoCzWCEjeWDfna+0ev1CrBndYN
-         O82LbPn33DzY1oRAzaNAxmK94TEmdqps4XDzpPrM=
+        b=gqCoMzi+5C5ih3z9OW3ZJeXJSdxY4jzVgithkRBvWhvV+Y2Gdc/O8slx3D3P2V+t3
+         SSxrqibjxPOuoorxX5AQzgwLMOnA893JtCpxk1KxPo1Zju3c0iTttd/l9pntENWXMh
+         i8T5z4uvQCUXuVgpZjPSqP2EqM+1Etw54NQpCzqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.14 18/41] media: v4l2-ctrls.c/uvc: zero v4l2_event
-Date:   Tue, 26 Mar 2019 15:29:55 +0900
-Message-Id: <20190326042650.919864909@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 39/41] pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
+Date:   Tue, 26 Mar 2019 15:30:16 +0900
+Message-Id: <20190326042652.013337030@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -66,49 +68,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-commit f45f3f753b0a3d739acda8e311b4f744d82dc52a upstream.
+commit 5fb5caee92ba35a4a3baa61d45a78eb057e2c031 upstream.
 
-Control events can leak kernel memory since they do not fully zero the
-event. The same code is present in both v4l2-ctrls.c and uvc_ctrl.c, so
-fix both.
+Before this patch the enable signal was set before the PWM signal and
+vice-versa on power off. This sequence is wrong, at least, it is on
+the different panels datasheets that I checked, so I inverted the sequence
+to follow the specs.
 
-It appears that all other event code is properly zeroing the structure,
-it's these two places.
+For reference the following panels have the mentioned sequence:
+  - N133HSE-EA1 (Innolux)
+  - N116BGE (Innolux)
+  - N156BGE-L21 (Innolux)
+  - B101EAN0 (Auo)
+  - B101AW03 (Auo)
+  - LTN101NT05 (Samsung)
+  - CLAA101WA01A (Chunghwa)
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: syzbot+4f021cf3697781dbd9fb@syzkaller.appspotmail.com
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_ctrl.c     |    2 +-
- drivers/media/v4l2-core/v4l2-ctrls.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/backlight/pwm_bl.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -1203,7 +1203,7 @@ static void uvc_ctrl_fill_event(struct u
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -54,10 +54,11 @@ static void pwm_backlight_power_on(struc
+ 	if (err < 0)
+ 		dev_err(pb->dev, "failed to enable power supply\n");
  
- 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
++	pwm_enable(pb->pwm);
++
+ 	if (pb->enable_gpio)
+ 		gpiod_set_value_cansleep(pb->enable_gpio, 1);
  
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = v4l2_ctrl.id;
- 	ev->u.ctrl.value = value;
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1239,7 +1239,7 @@ static u32 user_flags(const struct v4l2_
+-	pwm_enable(pb->pwm);
+ 	pb->enabled = true;
+ }
  
- static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
- {
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = ctrl->id;
- 	ev->u.ctrl.changes = changes;
+@@ -66,12 +67,12 @@ static void pwm_backlight_power_off(stru
+ 	if (!pb->enabled)
+ 		return;
+ 
+-	pwm_config(pb->pwm, 0, pb->period);
+-	pwm_disable(pb->pwm);
+-
+ 	if (pb->enable_gpio)
+ 		gpiod_set_value_cansleep(pb->enable_gpio, 0);
+ 
++	pwm_config(pb->pwm, 0, pb->period);
++	pwm_disable(pb->pwm);
++
+ 	regulator_disable(pb->power_supply);
+ 	pb->enabled = false;
+ }
 
 
