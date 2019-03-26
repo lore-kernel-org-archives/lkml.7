@@ -6,46 +6,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69DEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C7320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB4220811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582537;
-	bh=j3PEHuSg/olPjr+4/RYUs3DZzDZOlzr7nd+oqh9/s4Y=;
+	s=default; t=1553582542;
+	bh=wl5wIp2aD3am9trgEnq4QK59v0CURmSAhbUEL0IZw9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ca8fzhtcpVKSTTzIkicGFjj9nkbbY7N3OjYu5UJLL02HWk6+Mcsa8ao+J3tyc5l0o
-	 m0F++tEt4i9Rwv61weYSMyrJgtVbYqyo0d/X+XHiCiRRbXL4KI0YDn1ISYVK1+QF3C
-	 ca5WwFtzi73RDTmKaGfAtYVEOKBD6ozTmbRMKdmE=
+	b=ZumrwjgUWJEUq3eQ0MLS77dXGh2nbOMEn4lHfumYIoBTUD27Yifpp8kUd8jqHQHk4
+	 sZ3C4Cm07BzJJLl6vYBEGgBrGvcEjO2RqpFemHcuj/AZ5ACb0v8RLsBzhvWpsmkHhM
+	 r5/A0sGM946ac0diaRj8SJ/21ssHGzjY5ZxLlkBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732679AbfCZGjX (ORCPT
+        id S1732658AbfCZGjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54730 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731692AbfCZGjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:39:21 -0400
+        id S1732647AbfCZGjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:39:11 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A90B120863;
-        Tue, 26 Mar 2019 06:39:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3740220879;
+        Tue, 26 Mar 2019 06:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582361;
-        bh=j3PEHuSg/olPjr+4/RYUs3DZzDZOlzr7nd+oqh9/s4Y=;
+        s=default; t=1553582350;
+        bh=wl5wIp2aD3am9trgEnq4QK59v0CURmSAhbUEL0IZw9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njhlyX5+p447ExWDuzUh+PyPQkfU8njDNxjvfMUrMqIvV68+ZOn8qCK63DHZ5ZGgO
-         WCUSGhOvf88d4otSv6NdfSTOSAOAnNf1cVnrhb+Gi7VXvyzwakJkzvzQDCpK611TiB
-         pmDCJuAnYRUVrNxuQoqlVAP86XVyrUK9puobjKeI=
+        b=bv+jW4CofX5ncO0juKuqIofzoA0IVxzoJUqgp2//Qilc9dWLPwXO4Uxe3iRKZD7Al
+         SP5HChUjAS+mKTU8gfywH9xC6xJVvcKCVIPibhxDtZENgnaqFBIuZSXMixV2zlUB2+
+         /4QNZL+v3c1SXU8xD/qHXwFWRO2+5B6ssCXWAh+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 32/52] ALSA: ac97: Fix of-node refcount unbalance
-Date:   Tue, 26 Mar 2019 15:30:19 +0900
-Message-Id: <20190326042702.611576168@linuxfoundation.org>
+        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Anup Patel <anup@brainfault.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: [PATCH 5.0 29/52] clocksource/drivers/riscv: Fix clocksource mask
+Date:   Tue, 26 Mar 2019 15:30:16 +0900
+Message-Id: <20190326042702.424504276@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -64,35 +71,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Atish Patra <atish.patra@wdc.com>
 
-commit 31d2350d602511efc9ef626b848fe521233b0387 upstream.
+commit 32d0be018f6f5ee2d5d19c4795304613560814cf upstream.
 
-ac97_of_get_child_device() take the refcount of the node explicitly
-via of_node_get(), but this leads to an unbalance.  The
-for_each_child_of_node() loop itself takes the refcount for each
-iteration node, hence you don't need to take the extra refcount
-again.
+For all riscv architectures (RV32, RV64 and RV128), the clocksource
+is a 64 bit incrementing counter.
 
-Fixes: 2225a3e6af78 ("ALSA: ac97: add codecs devicetree binding")
-Reviewed-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fix the clock source mask accordingly.
+
+Tested on both 64bit and 32 bit virt machine in QEMU.
+
+Fixes: 62b019436814 ("clocksource: new RISC-V SBI timer driver")
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Anup Patel <Anup.Patel@wdc.com>
+Cc: Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190322215411.19362-1-atish.patra@wdc.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/ac97/bus.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/timer-riscv.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/sound/ac97/bus.c
-+++ b/sound/ac97/bus.c
-@@ -84,7 +84,7 @@ ac97_of_get_child_device(struct ac97_con
- 		if ((idx != of_property_read_u32(node, "reg", &reg)) ||
- 		    !of_device_is_compatible(node, compat))
- 			continue;
--		return of_node_get(node);
-+		return node;
- 	}
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -58,7 +58,7 @@ static u64 riscv_sched_clock(void)
+ static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+ 	.name		= "riscv_clocksource",
+ 	.rating		= 300,
+-	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
++	.mask		= CLOCKSOURCE_MASK(64),
+ 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+ 	.read		= riscv_clocksource_rdtime,
+ };
+@@ -103,8 +103,7 @@ static int __init riscv_timer_init_dt(st
+ 	cs = per_cpu_ptr(&riscv_clocksource, cpuid);
+ 	clocksource_register_hz(cs, riscv_timebase);
  
- 	return NULL;
+-	sched_clock_register(riscv_sched_clock,
+-			BITS_PER_LONG, riscv_timebase);
++	sched_clock_register(riscv_sched_clock, 64, riscv_timebase);
+ 
+ 	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+ 			 "clockevents/riscv/timer:starting",
 
 
