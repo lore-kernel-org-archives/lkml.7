@@ -2,30 +2,31 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BED5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 04:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2920FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 04:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FFE20828
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 04:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE76320828
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 04:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfCZEEF (ORCPT
+        id S1726259AbfCZEMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 00:04:05 -0400
-Received: from foss.arm.com ([217.140.101.70]:58914 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbfCZEEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 00:04:05 -0400
+        Tue, 26 Mar 2019 00:12:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58958 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfCZEMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 00:12:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DC8880D;
-        Mon, 25 Mar 2019 21:04:04 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3586A80D;
+        Mon, 25 Mar 2019 21:12:07 -0700 (PDT)
 Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA45A3F59C;
-        Mon, 25 Mar 2019 21:04:00 -0700 (PDT)
-Subject: Re: [PATCH v7 7/10] KVM: arm/arm64: context-switch ptrauth registers
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DF593F59C;
+        Mon, 25 Mar 2019 21:12:03 -0700 (PDT)
+Subject: Re: [PATCH v7 8/10] KVM: arm64: Add capability to advertise ptrauth
+ for guest
 To:     Kristina Martsenko <kristina.martsenko@arm.com>,
         linux-arm-kernel@lists.infradead.org
 Cc:     Christoffer Dall <christoffer.dall@arm.com>,
@@ -40,15 +41,15 @@ Cc:     Christoffer Dall <christoffer.dall@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry@arm.com>
 References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
- <64505666-8a1f-cf64-7067-4b2dd53b0b40@arm.com>
+ <1552984243-7689-9-git-send-email-amit.kachhap@arm.com>
+ <1ea6ab95-a52e-3f14-a514-b0b747b85f3a@arm.com>
 From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <da7091a9-01b2-bead-3777-972fbb293def@arm.com>
-Date:   Tue, 26 Mar 2019 09:33:58 +0530
+Message-ID: <b46cd65c-6e4f-c946-cfb4-df95a718c48f@arm.com>
+Date:   Tue, 26 Mar 2019 09:42:01 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <64505666-8a1f-cf64-7067-4b2dd53b0b40@arm.com>
+In-Reply-To: <1ea6ab95-a52e-3f14-a514-b0b747b85f3a@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,103 +60,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 3/26/19 1:34 AM, Kristina Martsenko wrote:
+On 3/26/19 1:35 AM, Kristina Martsenko wrote:
 > On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
+>> This patch advertises the capability of pointer authentication
+>> when system supports pointer authentication and VHE mode present.
 >>
->> When pointer authentication is supported, a guest may wish to use it.
->> This patch adds the necessary KVM infrastructure for this to work, with
->> a semi-lazy context switch of the pointer auth state.
->>
->> Pointer authentication feature is only enabled when VHE is built
->> in the kernel and present in the CPU implementation so only VHE code
->> paths are modified.
->>
->> When we schedule a vcpu, we disable guest usage of pointer
->> authentication instructions and accesses to the keys. While these are
->> disabled, we avoid context-switching the keys. When we trap the guest
->> trying to use pointer authentication functionality, we change to eagerly
->> context-switching the keys, and enable the feature. The next time the
->> vcpu is scheduled out/in, we start again. However the host key save is
->> optimized and implemented inside ptrauth instruction/register access
->> trap.
->>
->> Pointer authentication consists of address authentication and generic
->> authentication, and CPUs in a system might have varied support for
->> either. Where support for either feature is not uniform, it is hidden
->> from guests via ID register emulation, as a result of the cpufeature
->> framework in the host.
->>
->> Unfortunately, address authentication and generic authentication cannot
->> be trapped separately, as the architecture provides a single EL2 trap
->> covering both. If we wish to expose one without the other, we cannot
->> prevent a (badly-written) guest from intermittently using a feature
->> which is not uniformly supported (when scheduled on a physical CPU which
->> supports the relevant feature). Hence, this patch expects both type of
->> authentication to be present in a cpu.
->>
->> This switch of key is done from guest enter/exit assembly as preperation
->> for the upcoming in-kernel pointer authentication support. Hence, these
->> key switching routines are not implemented in C code as they may cause
->> pointer authentication key signing error in some situations.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
->> , save host key in ptrauth exception trap]
 >> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
 >> Cc: Marc Zyngier <marc.zyngier@arm.com>
 >> Cc: Christoffer Dall <christoffer.dall@arm.com>
 >> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
+>>   arch/arm64/kvm/reset.c   | 4 ++++
+>>   include/uapi/linux/kvm.h | 1 +
+>>   2 files changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+>> index 00f0639..a3b269e 100644
+>> --- a/arch/arm64/kvm/reset.c
+>> +++ b/arch/arm64/kvm/reset.c
+>> @@ -92,6 +92,10 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>>   	case KVM_CAP_ARM_VM_IPA_SIZE:
+>>   		r = kvm_ipa_limit;
+>>   		break;
+>> +	case KVM_CAP_ARM_PTRAUTH:
+>> +		r = has_vhe() && system_supports_address_auth() &&
+>> +			system_supports_generic_auth();
+>> +		break;
+>>   	default:
+>>   		r = 0;
+>>   	}
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index 6d4ea4b..a553477 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -988,6 +988,7 @@ struct kvm_ppc_resize_hpt {
+>>   #define KVM_CAP_ARM_VM_IPA_SIZE 165
+>>   #define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
+>>   #define KVM_CAP_HYPERV_CPUID 167
+>> +#define KVM_CAP_ARM_PTRAUTH 168
 > 
-> [...]
-> 
->> +/* SPDX-License-Identifier: GPL-2.0
->> + * arch/arm64/include/asm/kvm_ptrauth_asm.h: Guest/host ptrauth save/restore
->> + * Copyright 2019 Arm Limited
->> + * Author: Mark Rutland <mark.rutland@arm.com>
->> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
->> + */
-> 
-> I think the license needs to be in its own comment, like
-> 
-> /* SPDX-License-Identifier: GPL-2.0 */
-yes this is indeed the format followed.
-> /* arch/arm64/include/asm/kvm_ptrauth_asm.h: ...
->   * ...
->   */
-> 
->> +
->> +#ifndef __ASM_KVM_ASM_PTRAUTH_H
->> +#define __ASM_KVM_ASM_PTRAUTH_H
-> 
-> __ASM_KVM_PTRAUTH_ASM_H ? (to match the file name)
-> 
->> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
->> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
->> +		/* Verify that KVM startup matches the conditions for ptrauth */
->> +		if (WARN_ON(!vcpu_has_ptrauth(vcpu)))
->> +			return -EINVAL;
->> +	}
-> 
-> I think this now needs to have "goto out;" instead of "return -EINVAL;",
-> since 5.1-rcX contains commit e761a927bc9a ("KVM: arm/arm64: Reset the
-> VCPU without preemption and vcpu state loaded") which changed some of
-> this code.
-ok missed the changes for this commit.
-> 
->> @@ -385,6 +385,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>   		vcpu_clear_wfe_traps(vcpu);
->>   	else
->>   		vcpu_set_wfe_traps(vcpu);
->> +
->> +	kvm_arm_vcpu_ptrauth_setup_lazy(vcpu);
-> 
-> This version of the series seems to have lost the arch/arm/ definition
-> of kvm_arm_vcpu_ptrauth_setup_lazy (previously
-> kvm_arm_vcpu_ptrauth_reset), so KVM no longer compiles for arch/arm/ :(
-
-ok my bad.
+> Since we now have two separate vcpu flags, then I think we also need two
+> capabilities here (one for address auth and one for generic auth). This
+> will allow us to support the features separately in the future if we
+> need to.
+I have no objection to your suggestion. Infact all other KVM_ARM_VCPU_* 
+features have there own capability defined. I will check other 
+architectures if they define separate capability for major/minor features.
 
 Thanks,
 Amit D
