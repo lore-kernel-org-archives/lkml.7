@@ -4,90 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC96C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B9CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DBF20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C831020823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 02:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RgHCQqzy"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hqBb0WXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfCZCRA (ORCPT
+        id S1730991AbfCZCRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 22:17:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47852 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730917AbfCZCQ7 (ORCPT
+        Mon, 25 Mar 2019 22:17:34 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15727 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730691AbfCZCRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 22:16:59 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2Q2Eg06070669;
-        Tue, 26 Mar 2019 02:16:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=MVh6iyVh6pfaPwx2nIbPIPcsC6b9eJdbN6v4Q03ZN+c=;
- b=RgHCQqzyLx+FKCqoltB6qhClmde4MmOf0jOkKB3PT3JVrOPSsoZjzbR8y9HZPCNte4QP
- BBWo1Wx7A8hzyc62oJBtsElHuFTTQSZlSTidGYqKgHYrQksCpkC2IQIZWsWh6Q4Zb1ck
- 2x1sAagesb+Qf74k3AQVSb53HSk7F7iVh0mOoX+sWA+y8GM8TpD4b2hH3DHRVssYlYkU
- uS9OhL+VyVVwKknaXKu/nxRcNx2MMaOAmpT9ouumj1ito3h+noCImL4RoAJIkWY1QAwY
- ReskAK9HpnXh0XxGSsOilPCrnFxT7kuRX4YBqEMSdp03o5NPVNhCrHniN4qXFXjQ87t3 gw== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2re6dj7mxc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 02:16:41 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2GZCj012186
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 02:16:36 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2Q2GVYv023480;
-        Tue, 26 Mar 2019 02:16:32 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 25 Mar 2019 19:16:31 -0700
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Chengguang Xu <cgxu519@gmx.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla4xxx: avoid freeing unallocated dma memory
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190322142530.904080-1-arnd@arndb.de>
-Date:   Mon, 25 Mar 2019 22:16:28 -0400
-In-Reply-To: <20190322142530.904080-1-arnd@arndb.de> (Arnd Bergmann's message
-        of "Fri, 22 Mar 2019 15:25:03 +0100")
-Message-ID: <yq1y352z8g3.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 25 Mar 2019 22:17:34 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c998bc00000>; Mon, 25 Mar 2019 19:17:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 25 Mar 2019 19:17:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 25 Mar 2019 19:17:33 -0700
+Received: from [10.19.225.182] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
+ 2019 02:17:30 +0000
+Subject: Re: [PATCH v2 00/12] Add some functionalities for Tegra soctherm
+To:     <daniel.lezcano@linaro.org>, <edubezval@gmail.com>,
+        <robh@kernel.org>
+CC:     <thierry.reding@gmail.com>, <linux-tegra@vger.kernel.org>,
+        <rui.zhang@intel.com>, <srikars@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1550744327-4677-1-git-send-email-wni@nvidia.com>
+From:   Wei Ni <wni@nvidia.com>
+Message-ID: <31c0ee3b-a8a1-ded3-0cb6-cffab8db58d8@nvidia.com>
+Date:   Tue, 26 Mar 2019 10:17:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9206 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=678 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903260015
+In-Reply-To: <1550744327-4677-1-git-send-email-wni@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553566656; bh=PEHgFA0ZGJ2auUAkA1qny9nsnNc3eQsU1h5no6ZG9fY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hqBb0WXYzMo+hpmi1/yq0P3V/aCPeIc4OMkaLtWpYvIb8vDHzjZpFcw0beO9qEFJw
+         HJ2K/eMFAOxixg0jucVtalvRXA1f01b6uCf2NxazXIO9afllgSvDyncWrJ7838EjzA
+         k2tRTbYSajxOAtlp56Zjfw0FBILt/yOd/rMCM0cfsn8VnCigVoCbPk4nNEHnJW8W/V
+         DNE8oYxUOX7TkbitLgOy96uW2igf1FkNWVq36iMrrGkS4e6L56m2Dems9skYYjsWYX
+         Z+En1TOjxbDlVNzwD/fzOZPFSMDn91AiMAjFiF6OShDenZp8hKQkZV1/XTNDb/Gu7j
+         PgjEyFTbzySEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
+Does there have any comments on this serial?
 
-Arnd,
+Thanks.
+Wei.
 
-> Clang -Wuninitialized notices that on is_qla40XX we never allocate any
-> DMA memory in get_fw_boot_info() but attempt to free it anyway:
-
-Applied to 5.2/scsi-queue, thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+On 21/2/2019 6:18 PM, Wei Ni wrote:
+> Move the hw/sw shutdown patches into this serial. There already have
+> some discussion for it in https://lkml.org/lkml/2018/12/7/225.
+> Support GPU HW throttle, thermal IRQ, set_trips(), EDP IRQ and OC
+> hw throttle.
+> 
+> Main change from v1:
+> 1. Use boolean for "nvidia,polarity-active-low".
+> 2. Add suffix "-us" for "nvidia,throttle-period".
+> 
+> 
+> Wei Ni (12):
+>   of: Add bindings of thermtrip for Tegra soctherm
+>   thermal: tegra: support hw and sw shutdown
+>   arm64: dts: tegra210: set thermtrip
+>   of: Add bindings of gpu hw throttle for Tegra soctherm
+>   thermal: tegra: add support for gpu hw-throttle
+>   arm64: dts: tegra210: set gpu hw throttle level
+>   thermal: tegra: add support for thermal IRQ
+>   thermal: tegra: add set_trips functionality
+>   thermal: tegra: add support for EDP IRQ
+>   arm64: dts: tegra210: set EDP interrupt line
+>   of: Add bindings of OC hw throttle for Tegra soctherm
+>   thermal: tegra: enable OC hw throttle
+> 
+>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  62 +-
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  20 +-
+>  drivers/thermal/tegra/soctherm.c                   | 961 +++++++++++++++++++--
+>  drivers/thermal/tegra/soctherm.h                   |  16 +
+>  drivers/thermal/tegra/tegra124-soctherm.c          |   7 +-
+>  drivers/thermal/tegra/tegra132-soctherm.c          |   7 +-
+>  drivers/thermal/tegra/tegra210-soctherm.c          |  15 +-
+>  include/dt-bindings/thermal/tegra124-soctherm.h    |   8 +-
+>  8 files changed, 1020 insertions(+), 76 deletions(-)
+> 
