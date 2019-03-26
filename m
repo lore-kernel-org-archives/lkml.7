@@ -2,169 +2,229 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E49C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B2D20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553614362;
-	bh=HhOrKWvRHBv9fmQwzjqMNqhO3P7S8NS7LERw87r+0Io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DEO+fPXDqzKQmdxvrTKxO3hNBPDYKaAuW2yQFgtqgG8/CTpsgKttROhefFZV9HApL
-	 cola/iyArD7VFZTkxu99UrNDiDiw+cFOCgJCFNhVvtgUyZNI/CBpfzzJ0CqAbmG3PE
-	 AVA1Qa/1xS033PnadYVVl5HWsxeaKQhFuLlUl6aQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6215020811
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbfCZPcl (ORCPT
+        id S1732042AbfCZPeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfCZPck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:32:40 -0400
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 589EC20811;
-        Tue, 26 Mar 2019 15:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553614360;
-        bh=HhOrKWvRHBv9fmQwzjqMNqhO3P7S8NS7LERw87r+0Io=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yuKd+89q66Qybm0VWiO82n2mw4AD8C+syxmK5cWjAij4sw7TCSGmBi/+tBcpHk7po
-         PLtfv8or545phvbLDMmg+ANiYAFoJ9y5fZtcam0VPD0i4QoeRDztbky6zIZMEq50Yf
-         cR099NwoDuYrqrooTEVIslGmUzhtVpX8WWPDA34U=
-Date:   Tue, 26 Mar 2019 17:32:35 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] x86/apic: Reduce print level of CPU limit
- announcement
-Message-ID: <20190326153235.GH22899@mtr-leonro.mtl.com>
-References: <20190326120213.28633-1-leon@kernel.org>
- <CAJZ5v0jbb+fEWWHdnZEKNOhUy=ZTsDMxy7Rwahp8O-jpBy-K9w@mail.gmail.com>
- <20190326144137.GB22899@mtr-leonro.mtl.com>
- <CAJZ5v0h1w+ZWV24SnX0g9NZORuVWHnyOjZ9Jue2_yUvvFpJB6g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h1w+ZWV24SnX0g9NZORuVWHnyOjZ9Jue2_yUvvFpJB6g@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 26 Mar 2019 11:34:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731881AbfCZPeS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:34:18 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QFY0PE077566
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:34:17 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfp4t2e53-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:34:15 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 26 Mar 2019 15:34:11 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 26 Mar 2019 15:34:09 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QFY8br47710310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 Mar 2019 15:34:08 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3460A4C05A;
+        Tue, 26 Mar 2019 15:34:08 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EA774C04A;
+        Tue, 26 Mar 2019 15:34:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.109.36])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 26 Mar 2019 15:34:06 +0000 (GMT)
+Subject: Re: [PATCH 27/27] kexec: Allow kexec_file() with appropriate IMA
+ policy when locked down
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com,
+        Matthew Garrett <mjg59@google.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org
+Date:   Tue, 26 Mar 2019 11:33:55 -0400
+In-Reply-To: <20190325220954.29054-28-matthewgarrett@google.com>
+References: <20190325220954.29054-1-matthewgarrett@google.com>
+         <20190325220954.29054-28-matthewgarrett@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032615-0012-0000-0000-000003075A46
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032615-0013-0000-0000-0000213E8387
+Message-Id: <1553614435.4115.19.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903260108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-03-25 at 15:09 -0700, Matthew Garrett wrote:
+> Systems in lockdown mode should block the kexec of untrusted kernels.
+> For x86 and ARM we can ensure that a kernel is trustworthy by validating
+> a PE signature, but this isn't possible on other architectures. On those
+> platforms we can use IMA digital signatures instead. Add a function to
+> determine whether IMA has or will verify signatures for a given event type,
+> and if so permit kexec_file() even if the kernel is otherwise locked down.
+> This is restricted to cases where CONFIG_INTEGRITY_TRUSTED_KEYRING is set
+> in order to prevent an attacker from loading additional keys at runtime.
+> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+> Cc: linux-integrity@vger.kernel.org
 
---cYtjc4pxslFTELvY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Mimi Zohar <zohar@linux.ibm.com>
 
-On Tue, Mar 26, 2019 at 04:12:27PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Mar 26, 2019 at 3:41 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Tue, Mar 26, 2019 at 01:29:54PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Mar 26, 2019 at 1:02 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > From: Leon Romanovsky <leonro@mellanox.com>
-> > > >
-> > > > Kernel is booted with less possible CPUs (possible_cpus kernel boot
-> > > > option) than available CPUs will have prints like this:
-> > > >
-> > > > [    1.131039] APIC: NR_CPUS/possible_cpus limit of 8 reached. Processor 55/0x1f ignored.
-> > > > [    1.132228] ACPI: Unable to map lapic to logical cpu number
-> > > >
-> > > > Those warnings are printed for every not-enabled CPU and on the systems
-> > > > with large number of such CPUs, we see a lot of those prints for default
-> > > > print level.
-> > > >
-> > > > Simple conversion of those prints to be in debug level removes them
-> > > > while leaving the option to debug system.
-> > >
-> > > But generally dynamic debug must be enabled in order for pr_debug()
-> > > prints to be visible which is kind of cumbersome to do via the command
-> > > line.
-> >
-> > It is doable and documented pretty well, which is uncommon :)
-> > https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html#debug-messages-during-boot-process
->
-> I know.
->
-> That's what I mean by "kind of cumbersome", because you need to know
-> which debug messages to enable upfront.
->
-> > >
-> > > > Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-> > > > ---
-> > > >  arch/x86/kernel/acpi/boot.c | 2 +-
-> > > >  arch/x86/kernel/apic/apic.c | 6 +++---
-> > > >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-> > > > index 8dcbf6890714..3ef8ab89c02d 100644
-> > > > --- a/arch/x86/kernel/acpi/boot.c
-> > > > +++ b/arch/x86/kernel/acpi/boot.c
-> > > > @@ -770,7 +770,7 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
-> > > >
-> > > >         cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
-> > > >         if (cpu < 0) {
-> > > > -               pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
-> > > > +               pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
-> > >
-> > > And this one is printed sometimes when something really goes wrong
-> > > which may be really hard to debug otherwise, so there is value in the
-> > > info level here.
-> > >
-> > > Would it be possible to avoid printing it just in some cases?
-> >
-> > This can do the trick:
-> >
-> > diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-> > index 3ef8ab89c02d..00212b3991e0 100644
-> > --- a/arch/x86/kernel/acpi/boot.c
-> > +++ b/arch/x86/kernel/acpi/boot.c
-> > @@ -770,7 +770,10 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
-> >
-> >         cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
-> >         if (cpu < 0) {
-> > -               pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
-> > +               if (cpu == -ENOENT)
-> > +                       pr_debug(PREFIX "Unable to map lapic to logical cpu number\n");
->
-> I don't think it is necessary to print this in the -ENOENT case, as
-> there is a message for that case that will be printed anyway.
+> ---
+>  include/linux/ima.h                 |  9 ++++++
+>  kernel/kexec_file.c                 |  7 +++-
+>  security/integrity/ima/ima.h        |  2 ++
+>  security/integrity/ima/ima_main.c   |  2 +-
+>  security/integrity/ima/ima_policy.c | 50 +++++++++++++++++++++++++++++
+>  5 files changed, 68 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index b5e16b8c50b7..05921227d700 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -127,4 +127,13 @@ static inline int ima_inode_removexattr(struct dentry *dentry,
+>  	return 0;
+>  }
+>  #endif /* CONFIG_IMA_APPRAISE */
+> +
+> +#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
+> +extern bool ima_appraise_signature(enum kernel_read_file_id func);
+> +#else
+> +static inline bool ima_appraise_kexec_signature(enum kernel_read_file_id func)
+> +{
+> +	return false;
+> +}
+> +#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
+>  #endif /* _LINUX_IMA_H */
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 0cfe4f6f7f85..8ffa4b75c620 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -240,7 +240,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  
+>  		ret = 0;
+>  
+> -		if (kernel_is_locked_down(reason)) {
+> +		/* If IMA is guaranteed to appraise a signature on the kexec
+> +		 * image, permit it even if the kernel is otherwise locked
+> +		 * down.
+> +		 */
+> +		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
+> +		    kernel_is_locked_down(reason)) {
+>  			ret = -EPERM;
+>  			goto out;
+>  		}
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index cc12f3449a72..fe03cc6f1ca4 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -115,6 +115,8 @@ struct ima_kexec_hdr {
+>  	u64 count;
+>  };
+>  
+> +extern const int read_idmap[];
+> +
+>  #ifdef CONFIG_HAVE_IMA_KEXEC
+>  void ima_load_kexec_buffer(void);
+>  #else
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 4ffac4f5c647..106f06dee9d1 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -442,7 +442,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+>  	return 0;
+>  }
+>  
+> -static const int read_idmap[READING_MAX_ID] = {
+> +const int read_idmap[READING_MAX_ID] = {
+>  	[READING_FIRMWARE] = FIRMWARE_CHECK,
+>  	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
+>  	[READING_MODULE] = MODULE_CHECK,
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 122797023bdb..f8f1cdb74a4f 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -1341,3 +1341,53 @@ int ima_policy_show(struct seq_file *m, void *v)
+>  	return 0;
+>  }
+>  #endif	/* CONFIG_IMA_READ_POLICY */
+> +
+> +#if defined(CONFIG_IMA_APPRAISE) && defined(CONFIG_INTEGRITY_TRUSTED_KEYRING)
+> +/*
+> + * ima_appraise_signature: whether IMA will appraise a given function using
+> + * an IMA digital signature. This is restricted to cases where the kernel
+> + * has a set of built-in trusted keys in order to avoid an attacker simply
+> + * loading additional keys.
+> + */
+> +bool ima_appraise_signature(enum kernel_read_file_id id)
+> +{
+> +	struct ima_rule_entry *entry;
+> +	bool found = false;
+> +	enum ima_hooks func;
+> +
+> +	if (id >= READING_MAX_ID)
+> +		return false;
+> +
+> +	func = read_idmap[id] ?: FILE_CHECK;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(entry, ima_rules, list) {
+> +		if (entry->action != APPRAISE)
+> +			continue;
+> +
+> +		/*
+> +		 * A generic entry will match, but otherwise require that it
+> +		 * match the func we're looking for
+> +		 */
+> +		if (entry->func && entry->func != func)
+> +			continue;
+> +
+> +		/*
+> +		 * We require this to be a digital signature, not a raw IMA
+> +		 * hash.
+> +		 */
+> +		if (entry->flags & IMA_DIGSIG_REQUIRED)
+> +			found = true;
+> +
+> +		/*
+> +		 * We've found a rule that matches, so break now even if it
+> +		 * didn't require a digital signature - a later rule that does
+> +		 * won't override it, so would be a false positive.
+> +		 */
+> +		break;
+> +	}
+> +
+> +	rcu_read_unlock();
+> +	return found;
+> +}
+> +#endif /* CONFIG_IMA_APPRAISE && CONFIG_INTEGRITY_TRUSTED_KEYRING */
 
-Agree, how do you want me to progress? Should I resend patch?
-
-Thanks
-
---cYtjc4pxslFTELvY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcmkYTAAoJEORje4g2clinbvIP/03hZF2YlaSIGnsLZP1fCy1h
-p9LF5oeHShh6x3gR5c9Cl3i+HEu475f5kqAj/HOF3NijXeZmmT0mTnOPSP2pw14I
-fuZ8EoVC0vhVb19jGmivw5bD0DlVXrfq88vExyEDmRtxqik+kzMIU33n34r0LqXQ
-zLWwkAyMnGXsywhdtqAYMNV0QDo9QCalLHBe0sHTd9HbPV2oiqB0z+wgwoCdmwKW
-jsEvU99cPNxFcoz+CIFu1t12cvZAb3znyck6tdsaS/IuzkKMW+0q34RgWdd2Au9h
-07/ifPC5tRRS5TTNNeUC4MOqp4szQdU72TW7SBkMuu1JqfKJJKk8hZKirWZLfrYi
-9SkqRDRrW8VpVuszHdbomW13XClABbX6itMOuHAinHkhwqihlPf0n1LmEpMaaffK
-sWGjn3/cY+c6xlhOvTgHbvYBF4EHJWTheL/1A08nRLWA/dxFA71NfL1X1au2Xu78
-/Uz/dH9b14NcgfWEUQuTBmBrtPwwxa1hSNJT2sC796aaPYwl1qAoI6CIGARcwfyb
-htn27dWa7Vo4Qrw7uuWWGngrTv8YCpWzEZfGi16Q1oe5h4WvefBRnhFwHdvc8WyV
-L5TH1Y5MZ3I/sRMHodQRld031Wxs9bjNOv+Rb4pzxSW5QM3Aj5ciQeDLvjfVVWfP
-xnki36E7+w3KFD1dZh+L
-=+0N5
------END PGP SIGNATURE-----
-
---cYtjc4pxslFTELvY--
