@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603E7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1A9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AAC20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9209D20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582163;
-	bh=osksYnRANX103ay6Q36JiByj9ieYJ4k7K1JZH5YKYmw=;
+	s=default; t=1553582167;
+	bh=5K7g3q9yDSrqyEsGbpuccc7IfneVKRaZbM+dat0FpDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IF+wV2+lgmY8Ko2Pk2NjIecG1EiYgL4lYtjTlEseqR5DiHhBE/SsgcNQ16w7t5VwD
-	 yY6OZHNSBtaRpWIgfV8xKLF0pZilEBpT6s9BSl9xQymKvHgSg1OWrBlXKVqEija/IX
-	 kGEP6RflFT2JZEAfD8zHim+xpZ7325mChkFBXEx8=
+	b=gw7l3NTHZvJBU9ohpY644+I92c3ueXOwziDrMNWlq63UZgmCJ3O4C1KlLrJ07Fnku
+	 xuyBv46eZkna98B8Yjvr2d40g5qgNtSD5YvN/ZKRV4RxJmhoufliiq5F6Ojxrm4PWo
+	 qkqtsstan8yYxyJDrM/boB1kY6N6nl869ad1uJ2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbfCZGgB (ORCPT
+        id S1732145AbfCZGgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48136 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbfCZGf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:35:59 -0400
+        id S1731003AbfCZGgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:03 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2BF20823;
-        Tue, 26 Mar 2019 06:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BCEA20823;
+        Tue, 26 Mar 2019 06:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582158;
-        bh=osksYnRANX103ay6Q36JiByj9ieYJ4k7K1JZH5YKYmw=;
+        s=default; t=1553582162;
+        bh=5K7g3q9yDSrqyEsGbpuccc7IfneVKRaZbM+dat0FpDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C25Z0a1ewCHOHtOWKxqkCQKupH/61zDMnusL7XV67UbCWcKf58efX6HDDiF/bFIlj
-         5C83ed3WrP4UCO2NJEk1zl2xjK5n8hTZDZfJJReITyeIyEFr9OWRPMAw+cWRrzYzUp
-         gBK0j3u0FgEj/M4ROWtkh4vjznoDeLymikFVNZwM=
+        b=XhBCGgPPYtbndw0OFaZjhFxd0qm/mznp6vx5pjegAdcp7c0T0p1DlfUVWSMt9JpoL
+         azoS4gKA4VN1YIY3i5RRNtpGkeWYBS1CUT9jrlxsVgISqVFuxDT6fgEX5+MFcurPrQ
+         1xXRN8tP7IVhIKHelBdqbYVpiX5c2GWcy0LN9T84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Deepak Rawat <drawat@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 4.19 07/45] drm/vmwgfx: Return 0 when gmrid::get_node runs out of IDs
-Date:   Tue, 26 Mar 2019 15:29:50 +0900
-Message-Id: <20190326042703.059597782@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Jan Viktorin <jan.viktorin@gmail.com>
+Subject: [PATCH 4.19 08/45] iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
+Date:   Tue, 26 Mar 2019 15:29:51 +0900
+Message-Id: <20190326042703.114490811@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
 References: <20190326042702.565683325@linuxfoundation.org>
@@ -54,7 +57,7 @@ X-stable: review
 X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,36 +67,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Deepak Rawat <drawat@vmware.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit 4b9ce3a651a37c60527101db4451a315a8b9588f upstream.
+commit 4e50ce03976fbc8ae995a000c4b10c737467beaa upstream.
 
-If it's not a system error and get_node implementation accommodate the
-buffer object then it should return 0 with memm::mm_node set to NULL.
+Take into account that sg->offset can be bigger than PAGE_SIZE when
+setting segment sg->dma_address. Otherwise sg->dma_address will point
+at diffrent page, what makes DMA not possible with erros like this:
 
-v2: Test for id != -ENOMEM instead of id == -ENOSPC.
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa70c0 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7040 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7080 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7100 flags=3D0x0020]
+xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
+address=3D0x00000000fdaa7000 flags=3D0x0020]
 
-Cc: <stable@vger.kernel.org>
-Fixes: 4eb085e42fde ("drm/vmwgfx: Convert to new IDA API")
-Signed-off-by: Deepak Rawat <drawat@vmware.com>
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
+what what can cause crashes like this:
+
+Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
+Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
+Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
+Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff0000=
+0301 0000000000000000
+Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffff=
+ffff 0000000000000000
+Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
+Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid =
+amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core k=
+vm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 cr=
+ct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel=
+ gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_ge=
+neric drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aes=
+ni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cry=
+ptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart =
+libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore s=
+p5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cp=
+ufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E)=
+ mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) d=
+m_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E)=
+ libata(E) xhci_pci(E) xhci_hcd(E)
+Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
+Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W =
+  E     4.20.12-arch1-1-custom #1
+Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled =
+By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
+Feb 28 19:27:45 kernel: Call Trace:
+Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
+Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
+Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
+Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
+Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
+Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
+Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
+Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
+Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
+Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
+Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
+Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
+Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
+Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
+Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
+Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Fixes: 80187fd39dcb ('iommu/amd: Optimize map_sg and unmap_sg')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c
-@@ -57,7 +57,7 @@ static int vmw_gmrid_man_get_node(struct
- 
- 	id = ida_alloc_max(&gman->gmr_ida, gman->max_gmr_ids - 1, GFP_KERNEL);
- 	if (id < 0)
--		return id;
-+		return (id != -ENOMEM ? 0 : id);
- 
- 	spin_lock(&gman->lock);
- 
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2543,7 +2543,12 @@ static int map_sg(struct device *dev, st
+=20
+ 	/* Everything is mapped - write the right values into s->dma_address */
+ 	for_each_sg(sglist, s, nelems, i) {
+-		s->dma_address +=3D address + s->offset;
++		/*
++		 * Add in the remaining piece of the scatter-gather offset that
++		 * was masked out when we were determining the physical address
++		 * via (sg_phys(s) & PAGE_MASK) earlier.
++		 */
++		s->dma_address +=3D address + (s->offset & ~PAGE_MASK);
+ 		s->dma_length   =3D s->length;
+ 	}
+=20
 
 
