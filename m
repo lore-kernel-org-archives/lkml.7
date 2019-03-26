@@ -2,165 +2,283 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6B9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9209D20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B822086C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582167;
-	bh=5K7g3q9yDSrqyEsGbpuccc7IfneVKRaZbM+dat0FpDc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gw7l3NTHZvJBU9ohpY644+I92c3ueXOwziDrMNWlq63UZgmCJ3O4C1KlLrJ07Fnku
-	 xuyBv46eZkna98B8Yjvr2d40g5qgNtSD5YvN/ZKRV4RxJmhoufliiq5F6Ojxrm4PWo
-	 qkqtsstan8yYxyJDrM/boB1kY6N6nl869ad1uJ2Y=
+	s=default; t=1553582173;
+	bh=t8mtjP5AI6yJLwc66jglwououCPKKzDW0kE2XmFcwn8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nms9K5EpAP4WBntcWswFm9sgLkbcRRW2KS0Wl/KKu0XhFihekevaNYzAp3fM0TrCp
+	 KTPVRBqqxdd6PsgSi1ityeJZ2TaFGEGCJtxTHjnjBQ2kVGcp0sCcTEp9qaPGcmVzxt
+	 FA/2g/klWD74q1KHL8vdGE5AG6VCMBaaucORh2QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbfCZGgG (ORCPT
+        id S1732169AbfCZGgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48238 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731003AbfCZGgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:36:03 -0400
+        id S1731786AbfCZGgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:36:10 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BCEA20823;
-        Tue, 26 Mar 2019 06:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F6F20823;
+        Tue, 26 Mar 2019 06:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582162;
-        bh=5K7g3q9yDSrqyEsGbpuccc7IfneVKRaZbM+dat0FpDc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XhBCGgPPYtbndw0OFaZjhFxd0qm/mznp6vx5pjegAdcp7c0T0p1DlfUVWSMt9JpoL
-         azoS4gKA4VN1YIY3i5RRNtpGkeWYBS1CUT9jrlxsVgISqVFuxDT6fgEX5+MFcurPrQ
-         1xXRN8tP7IVhIKHelBdqbYVpiX5c2GWcy0LN9T84=
+        s=default; t=1553582169;
+        bh=t8mtjP5AI6yJLwc66jglwououCPKKzDW0kE2XmFcwn8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rwXYLCIR0D7OZpXAu6EkddTjn8rUhQHWtIckC2P9T/PuYpuizFlF4JTh3+muT9+W9
+         jrCjvxwBYbwptuH/lbGozmk2xL7270IBl0TOBPTg8JuaT1PQh96HFSnfGi+X4qW6p9
+         F3CTNtT/dSbMFSUuep7JZFO36CM92jSub/yDUIVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jan Viktorin <jan.viktorin@gmail.com>
-Subject: [PATCH 4.19 08/45] iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-Date:   Tue, 26 Mar 2019 15:29:51 +0900
-Message-Id: <20190326042703.114490811@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/45] 4.19.32-stable review
+Date:   Tue, 26 Mar 2019 15:29:43 +0900
+Message-Id: <20190326042702.565683325@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
-References: <20190326042702.565683325@linuxfoundation.org>
+MIME-Version: 1.0
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
-MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.32-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.32-rc1
+X-KernelTest-Deadline: 2019-03-28T04:27+00:00
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+This is the start of the stable review cycle for the 4.19.32 release.
+There are 45 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-------------------
+Responses should be made by Thu Mar 28 04:26:41 UTC 2019.
+Anything received after that time might be too late.
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.32-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-commit 4e50ce03976fbc8ae995a000c4b10c737467beaa upstream.
+thanks,
 
-Take into account that sg->offset can be bigger than PAGE_SIZE when
-setting segment sg->dma_address. Otherwise sg->dma_address will point
-at diffrent page, what makes DMA not possible with erros like this:
+greg k-h
 
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa70c0 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7040 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7080 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7100 flags=3D0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=3D0x0000 =
-address=3D0x00000000fdaa7000 flags=3D0x0020]
+-------------
+Pseudo-Shortlog of commits:
 
-Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
-what what can cause crashes like this:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.32-rc1
 
-Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
-Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
-Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
-Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff0000=
-0301 0000000000000000
-Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffff=
-ffff 0000000000000000
-Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
-Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid =
-amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core k=
-vm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 cr=
-ct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel=
- gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_ge=
-neric drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aes=
-ni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cry=
-ptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart =
-libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore s=
-p5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cp=
-ufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E)=
- mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) d=
-m_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E)=
- libata(E) xhci_pci(E) xhci_hcd(E)
-Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
-Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W =
-  E     4.20.12-arch1-1-custom #1
-Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled =
-By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
-Feb 28 19:27:45 kernel: Call Trace:
-Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
-Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
-Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
-Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
-Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
-Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
-Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
-Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
-Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
-Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
-Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
-Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
-Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
-Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
-Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
-Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Baolin Wang <baolin.wang@linaro.org>
+    power: supply: charger-manager: Fix incorrect return value
 
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Fixes: 80187fd39dcb ('iommu/amd: Optimize map_sg and unmap_sg')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hui Wang <hui.wang@canonical.com>
+    ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
 
----
- drivers/iommu/amd_iommu.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda - Record the current power state before suspend/resume calls
 
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2543,7 +2543,12 @@ static int map_sg(struct device *dev, st
-=20
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address +=3D address + s->offset;
-+		/*
-+		 * Add in the remaining piece of the scatter-gather offset that
-+		 * was masked out when we were determining the physical address
-+		 * via (sg_phys(s) & PAGE_MASK) earlier.
-+		 */
-+		s->dma_address +=3D address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   =3D s->length;
- 	}
-=20
+Vlastimil Babka <vbabka@suse.cz>
+    mm, mempolicy: fix uninit memory access
+
+Waiman Long <longman@redhat.com>
+    locking/lockdep: Add debug_locks check in __lock_downgrade()
+
+Jann Horn <jannh@google.com>
+    x86/unwind: Add hardcoded ORC entry for NULL
+
+Jann Horn <jannh@google.com>
+    x86/unwind: Handle NULL pointer calls better in frame unwinder
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    loop: access lo_backing_file only when the loop device is Lo_bound
+
+Florian Westphal <fw@strlen.de>
+    netfilter: ebtables: remove BUGPRINT messages
+
+Chao Yu <yuchao0@huawei.com>
+    f2fs: fix to avoid deadlock of atomic file operations
+
+Myungho Jung <mhjungk@gmail.com>
+    RDMA/cma: Rollback source IP address if failing to acquire device
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm: Reorder set_property_atomic to avoid returning with an active ww_ctx
+
+Kefeng Wang <wangkefeng.wang@huawei.com>
+    Bluetooth: hci_ldisc: Postpone HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+
+Jeremy Cline <jcline@redhat.com>
+    Bluetooth: hci_ldisc: Initialize hci_dev before open()
+
+Myungho Jung <mhjungk@gmail.com>
+    Bluetooth: Fix decrementing reference count twice in releasing socket
+
+Myungho Jung <mhjungk@gmail.com>
+    Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
+
+Hans Verkuil <hverkuil@xs4all.nl>
+    media: v4l2-ctrls.c/uvc: zero v4l2_event
+
+zhangyi (F) <yi.zhang@huawei.com>
+    ext4: brelse all indirect buffer in ext4_ind_remove_space()
+
+Lukas Czerner <lczerner@redhat.com>
+    ext4: fix data corruption caused by unaligned direct AIO
+
+Jiufei Xue <jiufei.xue@linux.alibaba.com>
+    ext4: fix NULL pointer dereference while journal is aborted
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: ac97: Fix of-node refcount unbalance
+
+Arnd Bergmann <arnd@arndb.de>
+    ALSA: hda/ca0132 - make pci_iounmap() call conditional
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    ALSA: x86: Fix runtime PM for hdmi-lpe-audio
+
+Steve French <stfrench@microsoft.com>
+    SMB3: Fix SMB3.1.1 guest mounts to Samba
+
+Rasmus Villemoes <linux@rasmusvillemoes.dk>
+    irqchip/gic-v3-its: Fix comparison logic in lpi_range_cmp
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    objtool: Move objtool_file struct off the stack
+
+Adrian Hunter <adrian.hunter@intel.com>
+    perf probe: Fix getting the kernel map
+
+Ronnie Sahlberg <lsahlber@redhat.com>
+    cifs: allow guest mounts to work for smb3.11
+
+Chen Jie <chenjie6@huawei.com>
+    futex: Ensure that futex address is aligned in handle_futex_death()
+
+Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+    scsi: ibmvscsi: Fix empty event pool access during host removal
+
+Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+    scsi: ibmvscsi: Protect ibmvscsi_head from concurrent modificaiton
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/vdso64: Fix CLOCK_MONOTONIC inconsistencies across Y2038
+
+Archer Yan <ayan@wavecomp.com>
+    MIPS: Fix kernel crash for R6 in jump label branch function
+
+Yasha Cherikovsky <yasha.che3@gmail.com>
+    MIPS: Ensure ELF appended dtb is relocated
+
+Yifeng Li <tomli@tomli.me>
+    mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
+
+Jan Kara <jack@suse.cz>
+    udf: Fix crash on IO error during truncate
+
+Ilya Dryomov <idryomov@gmail.com>
+    libceph: wait for latest osdmap in ceph_monc_blacklist_add()
+
+Stanislaw Gruszka <sgruszka@redhat.com>
+    iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
+
+Deepak Rawat <drawat@vmware.com>
+    drm/vmwgfx: Return 0 when gmrid::get_node runs out of ID's
+
+Thomas Zimmermann <tzimmermann@suse.de>
+    drm/vmwgfx: Don't double-free the mode stored in par->set_mode
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    mmc: renesas_sdhi: limit block count to 16 bit for old revisions
+
+Alexander Shiyan <shc_work@mail.ru>
+    mmc: mxcmmc: "Revert mmc: mxcmmc: handle highmem pages"
+
+Arnd Bergmann <arnd@arndb.de>
+    mmc: pxamci: fix enum type confusion
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: firewire-motu: use 'version' field of unit directory to identify model
+
+Jaroslav Kysela <perex@perex.cz>
+    ALSA: hda - add Lenovo IdeaCentre B550 to the power_save_blacklist
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                      |   4 +-
+ arch/mips/include/asm/jump_label.h            |   8 +-
+ arch/mips/kernel/vmlinux.lds.S                |  12 ++-
+ arch/mips/loongson64/lemote-2f/irq.c          |   2 +-
+ arch/powerpc/include/asm/vdso_datapage.h      |   8 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S     |   4 +-
+ arch/x86/include/asm/unwind.h                 |   6 ++
+ arch/x86/kernel/unwind_frame.c                |  25 ++++-
+ arch/x86/kernel/unwind_orc.c                  |  17 ++++
+ drivers/block/loop.c                          |   2 +-
+ drivers/bluetooth/h4_recv.h                   |   4 +
+ drivers/bluetooth/hci_h4.c                    |   4 +
+ drivers/bluetooth/hci_ldisc.c                 |  24 +++--
+ drivers/gpu/drm/drm_mode_object.c             |   5 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_fb.c            |  12 +--
+ drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c |   2 +-
+ drivers/infiniband/core/cma.c                 |  13 ++-
+ drivers/iommu/amd_iommu.c                     |   7 +-
+ drivers/irqchip/irq-gic-v3-its.c              |   2 +-
+ drivers/media/usb/uvc/uvc_ctrl.c              |   2 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c          |   2 +-
+ drivers/mmc/host/mxcmmc.c                     |  16 +---
+ drivers/mmc/host/pxamci.c                     |   2 +-
+ drivers/mmc/host/renesas_sdhi_core.c          |   8 +-
+ drivers/power/supply/charger-manager.c        |   3 +-
+ drivers/scsi/ibmvscsi/ibmvscsi.c              |  23 ++++-
+ fs/cifs/smb2pdu.c                             |  11 ++-
+ fs/ext4/ext4_jbd2.h                           |   2 +-
+ fs/ext4/file.c                                |   2 +-
+ fs/ext4/indirect.c                            |  12 ++-
+ fs/f2fs/segment.c                             |  43 ++++++---
+ fs/udf/truncate.c                             |   3 +
+ include/linux/ceph/libceph.h                  |   2 +
+ kernel/futex.c                                |   4 +
+ kernel/locking/lockdep.c                      |   3 +
+ mm/mempolicy.c                                |   2 +-
+ net/bluetooth/hci_sock.c                      |   3 +-
+ net/bridge/netfilter/ebtables.c               | 131 ++++++++------------------
+ net/ceph/ceph_common.c                        |  18 +++-
+ net/ceph/mon_client.c                         |   9 ++
+ sound/ac97/bus.c                              |   2 +-
+ sound/firewire/motu/motu.c                    |  20 ++--
+ sound/pci/hda/hda_codec.c                     |  57 ++++++++++-
+ sound/pci/hda/hda_intel.c                     |   6 +-
+ sound/pci/hda/patch_ca0132.c                  |   2 +-
+ sound/x86/intel_hdmi_audio.c                  |   1 -
+ tools/objtool/check.c                         |   3 +-
+ tools/perf/util/probe-event.c                 |   6 +-
+ 48 files changed, 355 insertions(+), 204 deletions(-)
 
 
