@@ -2,112 +2,122 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF2C10F05
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D1BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD2920857
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA7620857
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 10:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553596602;
+	bh=yn+zcbe5vHmzuxaaXc8U6ognhrxRs3M8GUNaTIFYqt4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=umaO0aax6+4e/f9bNskRuMn1dwI0RD8fo4lLbcbR2UlJFZkaMfh7/ypPreOZjP188
+	 CTzvA1p6NM5lDz8j94sJj3XTZs1JiaY/lS0gf+uimAk9WlmO5FAY/gqAr96cAWy6v0
+	 VxGG+eCdzETke85QJD/lAgXxtDzBsyBkmjqhPJOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfCZKf5 (ORCPT
+        id S1731324AbfCZKgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 06:35:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5219 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfCZKf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 06:35:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 03:35:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,271,1549958400"; 
-   d="scan'208";a="310494053"
-Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
-  by orsmga005.jf.intel.com with ESMTP; 26 Mar 2019 03:35:53 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.146]) by
- irsmsx110.ger.corp.intel.com ([169.254.15.102]) with mapi id 14.03.0415.000;
- Tue, 26 Mar 2019 10:35:52 +0000
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-CC:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Greg KH" <gregkh@linuxfoundation.org>
-Subject: RE: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Topic: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU3W7K/qF6gc5OOEis06RmzC4AhqYR090AgAAOl4CAC99ecA==
-Date:   Tue, 26 Mar 2019 10:35:51 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
-References: <20190318094128.1488-1-elena.reshetova@intel.com>
- <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
- <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
-In-Reply-To: <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWJhYzU4NjMtNGJiZS00NGY0LWExY2YtOTkxM2YxNTVmZjcyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTTN6eGV1ZFVWdmpXVW5JWHhKWndpayt4eDh1eWFESDJXNFE2XC92bGE4eUMwXC95VlZrZHRzemRSditieWlNbTVVIn0=
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 26 Mar 2019 06:36:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33801 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfCZKgl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 06:36:41 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k21so9590284otf.1;
+        Tue, 26 Mar 2019 03:36:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/8j1B6OwetF9lBqmH6rAe0V0MqvmwARcP8TsPhZtHqQ=;
+        b=tUEQes7zzbIs06PwAD7QlfENw45jKFjbSRQPtKO4/jLaFNHNIYByoBP3kyiyZYN0OS
+         F9tqPi8D7nCAnIK4w0z9VrykwLJZuYXImKmP2DajLpHK/R8NLYrRt7e/WTCkd/7645tm
+         OoMzAaC1qkP1Lzzbc/i6IfUwGmRDLqImN2L2q2zr+30xGZjmBDbV/vj/+uIN/lSjThLE
+         fEOx6uUQD4ibdhmdCAORLBwIHMl3SjLE1Mo6VHLS0756/vSS6d+iNen6i7o1i+W2sjgq
+         cdk5m7ikTEB2FPsRGzfeldGT4C/KkjuPVBOYVO5SJAyOexcbY0H5OAm3gd1/dE83VkcY
+         TRPQ==
+X-Gm-Message-State: APjAAAVGwpwbs1PIIdNMJxKsnGoAG8YZYJ2NUl5WNiR6X2EzIU6fFuY2
+        CzseIcOgfafLE6HlDvOO5mYN58p8s0Dz9TkK6rE=
+X-Google-Smtp-Source: APXvYqz9gqwmf/hj92we5sSVxPPQgaG3L1fYFdHikS27eQ71XBNB6iRel5FOTU8JxEQ617UPxb/yevGOr8mDdFikid4=
+X-Received: by 2002:a9d:738c:: with SMTP id j12mr20483042otk.119.1553596600485;
+ Tue, 26 Mar 2019 03:36:40 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190227195836.24739-1-ulf.hansson@linaro.org>
+ <20190227195836.24739-4-ulf.hansson@linaro.org> <2942111.nn8VVVUCAL@aspire.rjw.lan>
+ <CAPDyKFr-zjhvQr-2FtiNyDig60zM=raY7+=G_dtA+H9g49RV8w@mail.gmail.com>
+In-Reply-To: <CAPDyKFr-zjhvQr-2FtiNyDig60zM=raY7+=G_dtA+H9g49RV8w@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 Mar 2019 11:36:29 +0100
+Message-ID: <CAJZ5v0gHpX0=Urwj5z+FS=PKibM1VO0B5ZEQvwnvqXbUV_=fpg@mail.gmail.com>
+Subject: Re: [PATCH v12 3/4] cpuidle: Export the next timer/tick expiration
+ for a CPU
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNb24sIE1hciAxOCwgMjAxOSBhdCAxOjE2IFBNIEFuZHkgTHV0b21pcnNraSA8bHV0b0Br
-ZXJuZWwub3JnPiB3cm90ZToNCj4gPiBPbiBNb24sIE1hciAxOCwgMjAxOSBhdCAyOjQxIEFNIEVs
-ZW5hIFJlc2hldG92YQ0KPiA+IDxlbGVuYS5yZXNoZXRvdmFAaW50ZWwuY29tPiB3cm90ZToNCj4g
-PiA+IFBlcmZvcm1hbmNlOg0KPiA+ID4NCj4gPiA+IDEpIGxtYmVuY2g6IC4vbGF0X3N5c2NhbGwg
-LU4gMTAwMDAwMCBudWxsDQo+ID4gPiAgICAgYmFzZTogICAgICAgICAgICAgICAgICAgICBTaW1w
-bGUgc3lzY2FsbDogMC4xNzc0IG1pY3Jvc2Vjb25kcw0KPiA+ID4gICAgIHJhbmRvbV9vZmZzZXQg
-KHJkdHNjKTogICAgIFNpbXBsZSBzeXNjYWxsOiAwLjE4MDMgbWljcm9zZWNvbmRzDQo+ID4gPiAg
-ICAgcmFuZG9tX29mZnNldCAocmRyYW5kKTogU2ltcGxlIHN5c2NhbGw6IDAuMzcwMiBtaWNyb3Nl
-Y29uZHMNCj4gPiA+DQo+ID4gPiAyKSAgQW5keSdzIHRlc3RzLCBtaXNjLXRlc3RzOiAuL3RpbWlu
-Z190ZXN0XzY0IDEwTSBzeXNfZW5vc3lzDQo+ID4gPiAgICAgYmFzZTogICAgICAgICAgICAgICAg
-ICAgICAxMDAwMDAwMCBsb29wcyBpbiAxLjYyMjI0cyA9IDE2Mi4yMiBuc2VjIC8gbG9vcA0KPiA+
-ID4gICAgIHJhbmRvbV9vZmZzZXQgKHJkdHNjKTogICAgIDEwMDAwMDAwIGxvb3BzIGluIDEuNjQ2
-NjBzID0gMTY0LjY2IG5zZWMgLyBsb29wDQo+ID4gPiAgICAgcmFuZG9tX29mZnNldCAocmRyYW5k
-KTogMTAwMDAwMDAgbG9vcHMgaW4gMy41MTMxNXMgPSAzNTEuMzIgbnNlYyAvIGxvb3ANCj4gPiA+
-DQo+ID4NCj4gPiBFZ2FkcyEgIFJEVFNDIGlzIG5pY2UgYW5kIGZhc3QgYnV0IHByb2JhYmx5IGZh
-aXJseSBlYXN5IHRvIGRlZmVhdC4NCj4gPiBSRFJBTkQgaXMgYXdmdWwuICBJIGhhZCBob3BlZCBm
-b3IgYmV0dGVyLg0KPiANCj4gUkRSQU5EIGNhbiBhbHNvIGZhaWwuDQo+IA0KPiA+IFNvIHBlcmhh
-cHMgd2UgbmVlZCBhIGxpdHRsZSBwZXJjcHUgYnVmZmVyIHRoYXQgY29sbGVjdHMgNjQgYml0cyBv
-Zg0KPiA+IHJhbmRvbW5lc3MgYXQgYSB0aW1lLCBzaGlmdHMgb3V0IHRoZSBuZWVkZWQgYml0cywg
-YW5kIHJlZmlsbHMgdGhlDQo+ID4gYnVmZmVyIHdoZW4gd2UgcnVuIG91dC4NCj4gDQo+IEknZCBs
-aWtlIHRvIGF2b2lkIHNhdmluZyB0aGUgX2V4YWN0XyBkZXRhaWxzIG9mIHdoZXJlIHRoZSBuZXh0
-IG9mZnNldA0KPiB3aWxsIGJlLCBidXQgaWYgbm90aGluZyBlbHNlIHdvcmtzLCB0aGlzIHNob3Vs
-ZCBiZSBva2F5LiBXZSBjYW4gdXNlIDgNCj4gYml0cyBhdCBhIHRpbWUgYW5kIGNhbGwgcHJhbmRv
-bV91MzIoKSBldmVyeSA0dGggY2FsbC4gU29tZXRoaW5nIGxpa2UNCj4gcHJhbmRvbV9ieXRlcygp
-LCBidXQgd2hlcmUgaXQgZG9lc24ndCB0aHJvdyBhd2F5IHRoZSB1bnVzZWQgYnl0ZXMuDQoNCkFj
-dHVhbGx5IEkgdGhpbmsgdGhpcyB3b3VsZCBtYWtlIHRoZSBlbmQgcmVzdWx0IGV2ZW4gd29yc2Ug
-c2VjdXJpdHktd2lzZQ0KdGhhbiBzaW1wbHkgdXNpbmcgcmR0c2MoKSBvbiBldmVyeSBzeXNjYWxs
-LiBTYXZpbmcgdGhlIHJhbmRvbW5lc3MgaW4gcGVyY3B1DQpidWZmZXIsIHdoaWNoIGlzIHByb2Jh
-Ymx5IGVhc2lseSBhY2Nlc3NpYmxlIGFuZCBjYW4gYmUgcHJvYmVkIGlmIG5lZWRlZCwNCndvdWxk
-IHN1cHBseSBhdHRhY2tlciB3aXRoIG11Y2ggbW9yZSBrbm93bGVkZ2UgYWJvdXQgdGhlIG5leHQg
-My00DQpyYW5kb20gb2Zmc2V0cyB0aGF0IHdoYXQgaGUgd291bGQgZ2V0IGlmIHdlIHVzZSAid2Vh
-ayIgcmR0c2MuIEdpdmVuIA0KdGhhdCBmb3IgYSBzdWNjZXNzZnVsIGV4cGxvaXQsIGFuIGF0dGFj
-a2VyIHdvdWxkIG5lZWQgdG8gaGF2ZSBzdGFjayBhbGlnbmVkDQpvbmNlIG9ubHksIGhhdmluZyBh
-IGtub3dsZWRnZSBvZiAzLTQgbmV4dCBvZmZzZXRzIHNvdW5kcyBsaWtlIGEgcHJlc2VudCB0byBh
-bg0KZXhwbG9pdCB3cml0ZXIuLi4gIEFkZGl0aW9uYWxseSBpdCBjcmVhdGVzIGNvbXBsZXhpdHkg
-YXJvdW5kIHRoZSBjb2RlIHRoYXQgSQ0KaGF2ZSBpc3N1ZXMganVzdGlmeWluZyB3aXRoICJzZWN1
-cml0eSIgYXJndW1lbnQgYmVjYXVzZSBvZiBhYm92ZS4uLiANCg0KSSBoYXZlIHRoZSBwYXRjaCBu
-b3cgd2l0aCBhbGxvY2EoKSBhbmQgcmR0c2MoKSB3b3JraW5nLCBJIGNhbiBwb3N0IGl0IA0KKGFs
-YmVpdCBpdCBpcyB2ZXJ5IHNpbXBsZSksIGJ1dCBJIGFtIHJlYWxseSBoZXNpdGF0aW5nIG9uIGFk
-ZGluZyB0aGUgcGVyY3B1DQpidWZmZXIgcmFuZG9tbmVzcyBzdG9yYWdlIHRvIGl0Li4uDQoNCkJl
-c3QgUmVnYXJkcywNCkVsZW5hLg0K
+On Mon, Mar 25, 2019 at 3:24 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 25 Mar 2019 at 13:21, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Wednesday, February 27, 2019 8:58:35 PM CET Ulf Hansson wrote:
+> > > To be able to predict the sleep duration for a CPU that is entering idle,
+> > > knowing when the next timer/tick is going to expire, is extremely useful.
+> > > Both the teo and the menu cpuidle governors already makes use of this
+> > > information, while selecting an idle state.
+> > >
+
+[cut]
+
+> >
+> > > +
+> > >       if (cpuidle_state_is_coupled(drv, index))
+> > >               return cpuidle_enter_state_coupled(dev, drv, index);
+> > >       return cpuidle_enter_state(dev, drv, index);
+> >
+> > Also I would clear next_hrtimer here to avoid dragging stale values
+> > around.
+>
+> Right, I can do that.
+>
+> However, at least in my case it would be an unnecessary update of the
+> variable, as I am never in a path where the value can be "stale".
+
+It easily can AFAICS.  After all, cpu_power_down_ok() need not run on
+the same CPU that is setting next_hrtimer here.
+
+> Even if one theoretically could use a stale value, it's seems likely to not
+> be an issue, don't you think?
+
+That would be because of the locking in the ->enter() callback I
+suppose?  But is it actually universally guaranteed that setting
+next_hrtimer will never be reordered with acquiring the lock?
+
+Also, there is some overhead to be avoided if cpu_power_down_ok()
+checked the next_hrtimer of the other CPUs against 0 explicitly, isn't
+it?
