@@ -2,161 +2,107 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C795C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7486F2075D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B18A2075D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 14:13:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tSJUbweK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731690AbfCZONb convert rfc822-to-8bit (ORCPT
+        id S1731736AbfCZONf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 10:13:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45288 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726285AbfCZONa (ORCPT
+        Tue, 26 Mar 2019 10:13:35 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39323 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731691AbfCZONe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 10:13:30 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QEBcUu029942;
-        Tue, 26 Mar 2019 15:12:56 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rf4ybvyjy-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 26 Mar 2019 15:12:56 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0770A49;
-        Tue, 26 Mar 2019 14:12:53 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 66451A495;
-        Tue, 26 Mar 2019 14:12:53 +0000 (GMT)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 Mar
- 2019 15:12:53 +0100
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1347.000; Tue, 26 Mar 2019 15:12:53 +0100
-From:   Mickael GUENE <mickael.guene@st.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "Hugues FRUCHET" <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Petr Cvek <petrcvekcz@gmail.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Ben Kao" <ben.kao@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Todor Tomov" <todor.tomov@linaro.org>,
-        Rui Miguel Silva <rui.silva@linaro.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        "Jacopo Mondi" <jacopo+renesas@jmondi.org>,
-        Tianshu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>
-Subject: Re: [PATCH v3 2/2] media:st-mipid02: MIPID02 CSI-2 to PARALLEL bridge
- driver
-Thread-Topic: [PATCH v3 2/2] media:st-mipid02: MIPID02 CSI-2 to PARALLEL
- bridge driver
-Thread-Index: AQHU47s4T23daefrHk6Z36vjlaOK2qYdtyWAgAAXcYCAABAYgIAABRaA
-Date:   Tue, 26 Mar 2019 14:12:52 +0000
-Message-ID: <23f2f17c-7c3d-30c0-d191-1a5c7a4a2989@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-1-git-send-email-mickael.guene@st.com>
- <1553594620-88280-3-git-send-email-mickael.guene@st.com>
- <20190326113308.mp5hqdw3ktbpcawu@paasikivi.fi.intel.com>
- <9c8fb935-5c67-d4aa-d0ba-2aae0edd2b55@st.com>
- <20190326135439.oju2k6idndjaulfj@paasikivi.fi.intel.com>
-In-Reply-To: <20190326135439.oju2k6idndjaulfj@paasikivi.fi.intel.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 26 Mar 2019 10:13:34 -0400
+Received: by mail-it1-f194.google.com with SMTP id 139so20197518ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 07:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L3m64orwlPvqN0L9P3flUz75pA7vREJUnHemqbnA/zw=;
+        b=tSJUbweK8v3iG7soWdlmbVq8OhCiDUrf2b/qwCbIFmGuwl8tdAOe1hDzeKzKuRCtKf
+         W42EP9yKgEYilXRU7mqZ4Nlv0TwOAJIMAE3a5fKgSmGCoJvSBcF1VO35ayHFrOwGcfTW
+         hjxjia38x28VDV/7oGM3ID8qnwUbflboMi+w68R3P12zThSvDnuEUf3Bx9MXfLEHn+0h
+         Wo15VfM5/o6wAJmd0+7plfB9FnDDIJkq02I4Mri0bqTsJJmrU9JfSfDLkm3+gTGnr+0Y
+         24YlBOlIRDeI3S64t2Eg2Pl4AxYtj6OHcQxBG7ndDPnINDOfE7wBKGzcGDG5RK4Y2cjO
+         G0jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L3m64orwlPvqN0L9P3flUz75pA7vREJUnHemqbnA/zw=;
+        b=B9GSbF/boMT4UJ1ns1K+fq8nrmzYRLmnNOgLv3QJRW2eiy/1p42n9nPivt1HkQUgK1
+         U4LyvzW6rOYDgFXlXM8Nxt+JVRhLv6CnDrIpG+m8t7SJ0ldU7JJ3bt3pOzd/P3wI5ab5
+         rM/thBlP1wJazxI8D7DJj1eZzG2P4BYChwfeE3Lqg+g8erVfrFmcZRFPssx8myN76HQr
+         Q2+lhxbFS5qVgcwk21+Po+zwDdRocQEfLnd+wj8eQdqGUXHKa4TIFUaH5P/M20WdBWfR
+         7Ub8NhDVgk/pCVkfTtFMoTkKCpXibDLHdjoWgpG9vC1vWG0AnZJD0vcMovywogJWWdNc
+         Yvqw==
+X-Gm-Message-State: APjAAAV/AX1FQDHKDm42Wlkpw/Peg2l7QPwVweIaEu0/me7Yw2vWuGYS
+        BB2T+JPav+4ndUgpKl/ahTZiTw==
+X-Google-Smtp-Source: APXvYqxCPEiBgJb/96puHSSERD5MG4/scpragodikUpNCTBaFT0JCdU+K4sZSSRBvlaQZdKzbDHjxw==
+X-Received: by 2002:a24:ac6b:: with SMTP id m43mr16530180iti.28.1553609613251;
+        Tue, 26 Mar 2019 07:13:33 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id k18sm8931430iob.60.2019.03.26.07.13.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 07:13:32 -0700 (PDT)
+Subject: Re: [PATCH BUGFIX IMPROVEMENT V3 0/9] lock, bfq: fix bugs, reduce
+ exec time and boost performance
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, broonie@kernel.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name,
+        fra.fra.800@gmail.com, alessio.masola@gmail.com,
+        holger@applied-asynchrony.com
+References: <20190312085935.11340-1-paolo.valente@linaro.org>
+ <E7E093AD-07CC-4B76-9675-14F0A7C4D8E1@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d8d37c06-c05c-8521-f79a-2fe1296149dd@kernel.dk>
+Date:   Tue, 26 Mar 2019 08:13:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <C8B8D80E8F814745BEDEC1ADB4FEDAD8@st.com>
-Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_10:,,
- signatures=0
+In-Reply-To: <E7E093AD-07CC-4B76-9675-14F0A7C4D8E1@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sakari,
+On 3/26/19 5:53 AM, Paolo Valente wrote:
+> 
+> 
+>> Il giorno 12 mar 2019, alle ore 09:59, Paolo Valente <paolo.valente@linaro.org> ha scritto:
+>>
+>> Hi,
+>> this is the v3 of the series
+>> https://lkml.org/lkml/2019/3/10/138
+>> that fixes some bug affecting performance, reduces execution time a
+>> little bit, and boosts throughput and responsiveness.
+>>
+>> The difference w.r.t. v2 are new fixes to the patch "block, bfq: print
+>> SHARED instead of pid for shared queues in logs", after patient checks
+>> and suggestions by Holger and Oleksandr.
+>>
+> 
+> Hi Jens,
+> have you had time to look into this?
 
-On 3/26/19 14:54, Sakari Ailus wrote:
-> Hi Mickael,
-> 
-> On Tue, Mar 26, 2019 at 12:57:03PM +0000, Mickael GUENE wrote:
-> ...
->>>> +static int mipid02_set_fmt(struct v4l2_subdev *sd,
->>>> +			   struct v4l2_subdev_pad_config *cfg,
->>>> +			   struct v4l2_subdev_format *format)
->>>> +{
->>>> +	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
->>>> +	struct mipid02_dev *bridge = to_mipid02_dev(sd);
->>>> +	struct i2c_client *client = bridge->i2c_client;
->>>> +	struct v4l2_mbus_framefmt *fmt;
->>>> +	int ret;
->>>> +
->>>> +	dev_dbg(&client->dev, "%s for %d", __func__, format->pad);
->>>> +
->>>> +	if (format->pad >= MIPID02_PAD_NB)
->>>> +		return -EINVAL;
->>>> +	/* second CSI-2 pad not yet supported */
->>>> +	if (format->pad == 1)
->>>> +		return -EINVAL;
->>>> +
->>>> +	mutex_lock(&bridge->lock);
->>>> +
->>>> +	if (bridge->streaming) {
->>>> +		ret = -EBUSY;
->>>> +		goto error;
->>>> +	}
->>>> +
->>>> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY)
->>>> +		fmt = v4l2_subdev_get_try_format(sd, cfg, format->pad);
->>>> +	else
->>>> +		fmt = &bridge->fmt;
->>>> +
->>>> +	*fmt = *mbus_fmt;
->>>
->>> What are the limits of the hardware regarding the size of the image? Aren't
->>> there any?
->>>
->> There are no limits for image size.
->>> The format on the sink pad needs to be propagated to the source pad as
->>> well. I presume there's nothing to set on the sink pad for this device, is
->>> there?
->>  User only need to set format code so the driver can configure hardware.
->>  In the mipid02 we have always the same format for sink and source. So I
->>  only store one configuration during set_fmt when called from either pad0
->> (sink) or pad2 (source). Is it the correct way to implement it ? or
->> should I only accept set_fmt on pad0 ?
->>  For get_fmt I return stored configuration for pad0 and pad2.
-> 
-> Only 76 or so characters per line, please.
-> 
-> For pad 0 (sink) the format must be settable freely (as you don't have any
-> hardware restrictions) and on the pad 2 (source) the driver converts the
-> format set on the pad 0 according to the hardware functionality. This is
-> what the link validation from the source pad onwards is based on.
-> 
- So for a set_fmt on pad 2 I return current configuration ? (as
-in my case I have the same configuration for pad 0 and pad2)
- And I only update format when set_fmt is called for pad 0 ?
+Looks ok to me, I'll queue it up for 5.2.
 
-Thanks for your help
+-- 
+Jens Axboe
 
-Rgs
-Mickael
