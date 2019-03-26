@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC5EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9B7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B84420879
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79D520856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553581994;
-	bh=NmS2t54SFK2ZAZlwgLVg9jmj25NvKBKfRJKJDiF+rRA=;
+	s=default; t=1553581999;
+	bh=c5SGd1d6ETVjNf12ZRnjEJPJ/Wi993hhDzL+jlmNdZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LV6GygwLfD+Z1TfqEWjGRI+tarSoKH8Vz0cJ3y0Zdu90pY0TddDVFiEfASrYFAdo4
-	 3LNtQpBaHDhGyGJwX+X0/jeHsDNiOCLA8ze0d5rKPrESiuH9cOwW1nbWECmkp69Gdd
-	 6RWWUJcsFiym4NnXYK7ZhWZLfHi5oOEJ2wIWZDn4=
+	b=peKLuKvokihSBLTPzcesKtGDvOoLSPrSORIFcjj/EACBNP7VM4pUFTAKtDRtcGstq
+	 0mp5zv4Lg9pzK9dryCTJV5ZDjkrl4qeghkX4wrK9CJEVFjtvfSx7I2pK934HFT6Pbw
+	 kcJ2WGV2GhuEYxiTRCSYT/H0CKvnYiI3imBC6UMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbfCZGdN (ORCPT
+        id S1731626AbfCZGdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42812 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbfCZGdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:33:11 -0400
+        id S1731611AbfCZGdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:33:16 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F33920870;
-        Tue, 26 Mar 2019 06:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CFA20856;
+        Tue, 26 Mar 2019 06:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553581991;
-        bh=NmS2t54SFK2ZAZlwgLVg9jmj25NvKBKfRJKJDiF+rRA=;
+        s=default; t=1553581994;
+        bh=c5SGd1d6ETVjNf12ZRnjEJPJ/Wi993hhDzL+jlmNdZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YK1TOEseFjTJyTg9XpIqSj6v6TUBF+OM8J2w+V9RdhorzhDbH16Hty+RJVuwxwyTK
-         /uSSaGsA23NDQB9bQhA1CcIYHQkh/1HcSLWQAcMVepr9YbenlVRbVvScx8KKYNH+Dc
-         jShLQ3LOBA0k6pjM37NMP0TRKRIi9jOfBeneY+ZU=
+        b=JqE6sha+9fwvZUvRQp37EalFxRhykolnCswbU74Gran+uRfH+OnmxeEToXmyOZJf5
+         HReB4NU2iW5jCd5KrUeFVf9z7L+AHlHeh1tXiQCwidTYhNTuDXhVuBcUkUUolKk7tT
+         sKXRtwUpHjYcPXTcxuoJyHIdDa7rrzin22JN9dPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vassili Karpov <moosotc@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.14 13/41] objtool: Move objtool_file struct off the stack
-Date:   Tue, 26 Mar 2019 15:29:50 +0900
-Message-Id: <20190326042650.709637884@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Takashi Iwai <tiwai@suse.de>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>
+Subject: [PATCH 4.14 14/41] ALSA: x86: Fix runtime PM for hdmi-lpe-audio
+Date:   Tue, 26 Mar 2019 15:29:51 +0900
+Message-Id: <20190326042650.745590731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042649.889479098@linuxfoundation.org>
 References: <20190326042649.889479098@linuxfoundation.org>
@@ -66,42 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit 0c671812f152b628bd87c0af49da032cc2a2c319 upstream.
+commit 8dfb839cfe737a17def8e5f88ee13c295230364a upstream.
 
-Objtool uses over 512k of stack, thanks to the hash table embedded in
-the objtool_file struct.  This causes an unnecessarily large stack
-allocation and breaks users with low stack limits.
+Commit 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as
+"no callbacks"") broke runtime PM with lpe audio. We can no longer
+runtime suspend the GPU since the sysfs  power/control for the
+lpe-audio device no longer exists and the device is considered
+always active. We can fix this by not marking the device as
+active.
 
-Move the struct off the stack.
-
-Fixes: 042ba73fe7eb ("objtool: Add several performance improvements")
-Reported-by: Vassili Karpov <moosotc@gmail.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/df92dcbc4b84b02ffa252f46876df125fb56e2d7.1552954176.git.jpoimboe@redhat.com
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Fixes: 46e831abe864 ("drm/i915/lpe: Mark LPE audio runtime pm as "no callbacks"")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181024154825.18185-1-ville.syrjala@linux.intel.com
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/x86/intel_hdmi_audio.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2132,9 +2132,10 @@ static void cleanup(struct objtool_file
- 	elf_close(file->elf);
- }
+--- a/sound/x86/intel_hdmi_audio.c
++++ b/sound/x86/intel_hdmi_audio.c
+@@ -1887,7 +1887,6 @@ static int hdmi_lpe_audio_probe(struct p
  
-+static struct objtool_file file;
-+
- int check(const char *_objname, bool orc)
- {
--	struct objtool_file file;
- 	int ret, warnings = 0;
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_mark_last_busy(&pdev->dev);
+-	pm_runtime_set_active(&pdev->dev);
  
- 	objname = _objname;
+ 	dev_dbg(&pdev->dev, "%s: handle pending notification\n", __func__);
+ 	for_each_port(card_ctx, port) {
 
 
