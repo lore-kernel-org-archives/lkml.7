@@ -6,54 +6,55 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EF7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73084C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2492087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4490E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582419;
-	bh=qbCNYG0yrTYp+Su9oqJA0njdbBO+vn4rkxzFTHmHmYk=;
+	s=default; t=1553582422;
+	bh=MWI4RXkWJZsDxRFqx0YQQNIiZg9Bn5a/LmvDGROxMBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVagbbtVB8vZ7f6CBxcZH6soN2wYi0zfcPph4ByZlgxtgH1vh9VfFHFzZ9i0vMpUi
-	 wjLq+07JebfclTd08+3jKeVllWsvBz80gOz5k04Bp7oAq2uFH5jBKX/uMpkLojhmPe
-	 JFm3OLzNrM44n6rUYXbNeGnMNOLwXHcc6lsH0cmw=
+	b=R4W275NYRcot80+mP25fAaoyPgRgCiBlXgwYjNpU1SJMKjtmOpcNffYdo+5EjSjLQ
+	 8cVpPsXRg7ou+f6cmLORv3bMQdCvUj+hXBmpokUiwxzSFu9NuSiUiMRGLkOdfnP09v
+	 4gxWMMJaWDqM9dvZhtBBu3Y+Dup/aj0O071eEovc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732526AbfCZGkS (ORCPT
+        id S1732813AbfCZGkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56490 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:40:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732360AbfCZGkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:40:16 -0400
+        id S1732360AbfCZGkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:40:19 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7769E2086C;
-        Tue, 26 Mar 2019 06:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DDC2087C;
+        Tue, 26 Mar 2019 06:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582415;
-        bh=qbCNYG0yrTYp+Su9oqJA0njdbBO+vn4rkxzFTHmHmYk=;
+        s=default; t=1553582418;
+        bh=MWI4RXkWJZsDxRFqx0YQQNIiZg9Bn5a/LmvDGROxMBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1mHw5slY/rFIsrWnfWiP0xGqnbD2bl9xHh+mShHlHOpN5blMzZH1DeIPAutqGsDQk
-         b0g7StwS5AbOfdyDKC/iabiVvmhyAtVpt6ON/4DJr5VZCNYZHVOH9olJl4U+ERw8FA
-         eONDLc43mf35shWmVPSdOObr8Zo9YMtLfzXoWJQU=
+        b=Fh1oosbv0ed3h+CpDD2urjUpR9Nhaza/dnEb+w+tjDJmq1WaNoSGqRoy2ji7Dlqna
+         N/5KmIGbBw/JuoBin+YNtXF6VMcOvu1F6tvQ4t17/GzNChjKX88vZ0/Zs5BVzyC3pw
+         buU2tMOL4wpLACGH5MoPf8h6LkSCuqSWJp+NPOvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH 5.0 48/52] x86/unwind: Add hardcoded ORC entry for NULL
-Date:   Tue, 26 Mar 2019 15:30:35 +0900
-Message-Id: <20190326042703.541084024@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.0 49/52] locking/lockdep: Add debug_locks check in __lock_downgrade()
+Date:   Tue, 26 Mar 2019 15:30:36 +0900
+Message-Id: <20190326042703.598339291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -72,91 +73,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Waiman Long <longman@redhat.com>
 
-commit ac5ceccce5501e43d217c596e4ee859f2a3fef79 upstream.
+commit 71492580571467fb7177aade19c18ce7486267f5 upstream.
 
-When the ORC unwinder is invoked for an oops caused by IP==0,
-it currently has no idea what to do because there is no debug information
-for the stack frame of NULL.
+Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+warning right after a previous lockdep warning. It is likely that the
+previous warning turned off lock debugging causing the lockdep to have
+inconsistency states leading to the lock downgrade warning.
 
-But if RIP is NULL, it is very likely that the last successfully executed
-instruction was an indirect CALL/JMP, and it is possible to unwind out in
-the same way as for the first instruction of a normal function. Hardcode
-a corresponding ORC entry.
+Fix that by add a check for debug_locks at the beginning of
+__lock_downgrade().
 
-With an artificially-added NULL call in prctl_set_seccomp(), before this
-patch, the trace is:
-
-Call Trace:
- ? __x64_sys_prctl+0x402/0x680
- ? __ia32_sys_prctl+0x6e0/0x6e0
- ? __do_page_fault+0x457/0x620
- ? do_syscall_64+0x6d/0x160
- ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-After this patch, the trace looks like this:
-
-Call Trace:
- __x64_sys_prctl+0x402/0x680
- ? __ia32_sys_prctl+0x6e0/0x6e0
- ? __do_page_fault+0x457/0x620
- do_syscall_64+0x6d/0x160
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-prctl_set_seccomp() still doesn't show up in the trace because for some
-reason, tail call optimization is only disabled in builds that use the
-frame pointer unwinder.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
+Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-kbuild@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190301031201.7416-2-jannh@google.com
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ kernel/locking/lockdep.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -113,6 +113,20 @@ static struct orc_entry *orc_ftrace_find
- }
- #endif
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3535,6 +3535,9 @@ static int __lock_downgrade(struct lockd
+ 	unsigned int depth;
+ 	int i;
  
-+/*
-+ * If we crash with IP==0, the last successfully executed instruction
-+ * was probably an indirect function call with a NULL function pointer,
-+ * and we don't have unwind information for NULL.
-+ * This hardcoded ORC entry for IP==0 allows us to unwind from a NULL function
-+ * pointer into its parent and then continue normally from there.
-+ */
-+static struct orc_entry null_orc_entry = {
-+	.sp_offset = sizeof(long),
-+	.sp_reg = ORC_REG_SP,
-+	.bp_reg = ORC_REG_UNDEFINED,
-+	.type = ORC_TYPE_CALL
-+};
++	if (unlikely(!debug_locks))
++		return 0;
 +
- static struct orc_entry *orc_find(unsigned long ip)
- {
- 	static struct orc_entry *orc;
-@@ -120,6 +134,9 @@ static struct orc_entry *orc_find(unsign
- 	if (!orc_init)
- 		return NULL;
- 
-+	if (ip == 0)
-+		return &null_orc_entry;
-+
- 	/* For non-init vmlinux addresses, use the fast lookup table: */
- 	if (ip >= LOOKUP_START_IP && ip < LOOKUP_STOP_IP) {
- 		unsigned int idx, start, stop;
+ 	depth = curr->lockdep_depth;
+ 	/*
+ 	 * This function is about (re)setting the class of a held lock,
 
 
