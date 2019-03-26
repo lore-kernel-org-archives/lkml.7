@@ -2,226 +2,128 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6A1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B01C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5482084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9022070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 16:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rMUjOLqZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kj77aelH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731707AbfCZQ6P (ORCPT
+        id S1731794AbfCZQ65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 12:58:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:17025 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729633AbfCZQ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 12:58:14 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44THPv5XQvz9tyyq;
-        Tue, 26 Mar 2019 17:58:11 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=rMUjOLqZ; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id mRPEEK1aMQ5F; Tue, 26 Mar 2019 17:58:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44THPv4Cmfz9tyyn;
-        Tue, 26 Mar 2019 17:58:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1553619491; bh=LD6hSdcwvQiyOzYMP5lSb0ibAdI5w/B0bCTvzjdJMOI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rMUjOLqZISmdIE6B1jHtMrvKQEmm5vf8LcThjXGq2uQq5zmFsrMSqhX0wMZorCflN
-         VvdQUOuwY4vEKk/LZROBr/v73HEkV1zvQ78GtkgVSZt/jS/eaJri/J7XoR09cUPO6r
-         zysNlRLaNu/T1pa6nA5aGrAf3ynsBBmA3yhzfW2Y=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F196D8B8DB;
-        Tue, 26 Mar 2019 17:58:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Yk3sBN4yLD5x; Tue, 26 Mar 2019 17:58:10 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 645E58B8D0;
-        Tue, 26 Mar 2019 17:58:09 +0100 (CET)
-Subject: Re: [PATCH v6 04/19] powerpc: mm: Add p?d_large() definitions
-To:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, kvm-ppc@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20190326162624.20736-1-steven.price@arm.com>
- <20190326162624.20736-5-steven.price@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <8a2efe07-b99f-3caa-fab9-47e49043bf66@c-s.fr>
-Date:   Tue, 26 Mar 2019 17:58:09 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 12:58:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43659 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729633AbfCZQ64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 12:58:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so2245154pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 09:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=/qyfPsW7gKCbvRlxk8/hqHHM+WTgixIZCzfz1ObNHKw=;
+        b=Kj77aelHKEp5JKhJMzxvuv+6XzDAuJmYWOsBSd+cR6RJ4b3x5UctW5f4l45xdMwwTC
+         xFGuueoyCPWEHkBYZZQ3HQFY0MKfmHq282iTio95b/pkj3e38CAxC/h1Gg/4HskOc4IZ
+         nKuB8eTwNIrm8YWXHZxugiCPsZGhyGnWOBK+w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=/qyfPsW7gKCbvRlxk8/hqHHM+WTgixIZCzfz1ObNHKw=;
+        b=Gww4UWebYAqpKAibxSA4U7vZtecsMfLvIAY7y1VcMNcKOlgU+YBs5PCp0/M73T3Lxw
+         F5knvja1tI4bUx+7ryWyoMgaHjktNschksGvogcMgiwEu1gzPL9BORyD57+TReayOyGZ
+         /kQH6lFDt/94r9u4QVOOP6jFC0A7h3vRWzRnDYKGV6JDE4ISmGrbPWNQ1Cl3ljIWAClj
+         UAK88pwBc4AqWOlsPj94TamZ6Yw4M+/Z1ouOdvqsF41TxB+70CwesK8b+nc8gdOt2SEZ
+         4sXjhGesfmNhVHSM75XhpIrrRegmKpvhHrZVhXs4or17Fuou8BtkZiUTt/7tpPWe6wLf
+         LbvA==
+X-Gm-Message-State: APjAAAXK0W0H6Lb6K/kWm2A1hTTY4IRHGgss1/HqElcWk3e1kxYInhBu
+        Woap6c3lZDbzrAgJtd5cqS36uMwFG2nsqQ==
+X-Google-Smtp-Source: APXvYqyNNyhFt4zjP6GLdbdf15qMmwfOqyE6MMz3K18W8HQWGc0J5jZzSQIUjW7lRm+X93PMlQ+gow==
+X-Received: by 2002:a65:4547:: with SMTP id x7mr28976718pgr.350.1553619535776;
+        Tue, 26 Mar 2019 09:58:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c130sm30405631pfb.145.2019.03.26.09.58.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 09:58:55 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190326162624.20736-5-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f53f4556-72f1-051b-0dbe-f1789521233e@arm.com>
+References: <20190325181026.247796-1-swboyd@chromium.org> <f53f4556-72f1-051b-0dbe-f1789521233e@arm.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2] genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Message-ID: <155361953432.20095.14563397546308928190@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 26 Mar 2019 09:58:54 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Marc Zyngier (2019-03-26 04:11:56)
+> Hi Stephen,
+>=20
+> On 25/03/2019 18:10, Stephen Boyd wrote:
+> > This function returns an error if a child irqchip calls
+> > irq_chip_set_wake_parent() but its parent irqchip has the
+> > IRQCHIP_SKIP_SET_WAKE flag set. Let's return 0 for success here instead
+> > because there isn't anything to do.
+> >=20
+> > This keeps the behavior consistent with how set_irq_wake_real() is
+> > implemented. That function returns 0 when the irqchip has the
+> > IRQCHIP_SKIP_SET_WAKE flag set. It doesn't attempt to walk the chain of
+> > parents and set irq wake on any chips that don't have the flag set
+> > either. If the intent is to call the .irq_set_wake() callback of the
+> > parent irqchip, then we expect irqchip implementations to omit the
+> > IRQCHIP_SKIP_SET_WAKE flag and implement an .irq_set_wake() function
+> > that calls irq_chip_set_wake_parent().
+> >=20
+> > This fixes a problem on my Qualcomm sdm845 device where I can't set wake
+> > on any GPIO interrupts after I apply work in progress wakeup irq patches
+> > to the GPIO driver. The chain of chips looks like this:
+> >=20
+> >  ARM GIC (skip) -> QCOM PDC (skip) -> QCOM GPIO
+>=20
+> nit: the parenting chain is actually built the other way around (we
+> don't express the 'child' relationship). This doesn't change anything to
+> the patch, but would make the reasoning a but easier to understand.
 
+I take it you want the sentence below to say 'parent' instead of 'child'
+then?
 
-Le 26/03/2019 à 17:26, Steven Price a écrit :
-> walk_page_range() is going to be allowed to walk page tables other than
-> those of user space. For this it needs to know when it has reached a
-> 'leaf' entry in the page tables. This information is provided by the
-> p?d_large() functions/macros.
-> 
-> For powerpc pmd_large() was already implemented, so hoist it out of the
-> CONFIG_TRANSPARENT_HUGEPAGE condition and implement the other levels.
-> 
-> Also since we now have a pmd_large always implemented we can drop the
-> pmd_is_leaf() function.
+>=20
+> >=20
+> > The GPIO controller is a child of the QCOM PDC irqchip which is a child
+> > of the ARM GIC irqchip. The QCOM PDC irqchip has the
+> > IRQCHIP_SKIP_SET_WAKE flag set, and so does the grandparent ARM GIC.
+> >=20
+> > The GPIO driver doesn't know if the parent needs to set wake or not, so
+> > it unconditionally calls irq_chip_set_wake_parent() causing this
+> > function to return a failure because the parent irqchip (PDC) doesn't
+> > have the .irq_set_wake() callback set. Returning 0 instead makes
+> > everything work and irqs from the GPIO controller can be configured for
+> > wakeup.
+> >=20
+> > Cc: Lina Iyer <ilina@codeaurora.org>
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>=20
+> Fixes: 08b55e2a9208e ("genirq: Add irqchip_set_wake_parent")
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+>=20
 
-Wouldn't it be better to drop the pmd_is_leaf() in a second patch ?
+I'm happy to resend with the commit text clarified more and the above
+tags added.
 
-Christophe
-
-> 
-> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> CC: Paul Mackerras <paulus@samba.org>
-> CC: Michael Ellerman <mpe@ellerman.id.au>
-> CC: linuxppc-dev@lists.ozlabs.org
-> CC: kvm-ppc@vger.kernel.org
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/powerpc/include/asm/book3s/64/pgtable.h | 30 ++++++++++++++------
->   arch/powerpc/kvm/book3s_64_mmu_radix.c       | 12 ++------
->   2 files changed, 24 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> index 581f91be9dd4..f6d1ac8b832e 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -897,6 +897,12 @@ static inline int pud_present(pud_t pud)
->   	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PRESENT));
->   }
->   
-> +#define pud_large	pud_large
-> +static inline int pud_large(pud_t pud)
-> +{
-> +	return !!(pud_raw(pud) & cpu_to_be64(_PAGE_PTE));
-> +}
-> +
->   extern struct page *pud_page(pud_t pud);
->   extern struct page *pmd_page(pmd_t pmd);
->   static inline pte_t pud_pte(pud_t pud)
-> @@ -940,6 +946,12 @@ static inline int pgd_present(pgd_t pgd)
->   	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PRESENT));
->   }
->   
-> +#define pgd_large	pgd_large
-> +static inline int pgd_large(pgd_t pgd)
-> +{
-> +	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
-> +}
-> +
->   static inline pte_t pgd_pte(pgd_t pgd)
->   {
->   	return __pte_raw(pgd_raw(pgd));
-> @@ -1093,6 +1105,15 @@ static inline bool pmd_access_permitted(pmd_t pmd, bool write)
->   	return pte_access_permitted(pmd_pte(pmd), write);
->   }
->   
-> +#define pmd_large	pmd_large
-> +/*
-> + * returns true for pmd migration entries, THP, devmap, hugetlb
-> + */
-> +static inline int pmd_large(pmd_t pmd)
-> +{
-> +	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> +}
-> +
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   extern pmd_t pfn_pmd(unsigned long pfn, pgprot_t pgprot);
->   extern pmd_t mk_pmd(struct page *page, pgprot_t pgprot);
-> @@ -1119,15 +1140,6 @@ pmd_hugepage_update(struct mm_struct *mm, unsigned long addr, pmd_t *pmdp,
->   	return hash__pmd_hugepage_update(mm, addr, pmdp, clr, set);
->   }
->   
-> -/*
-> - * returns true for pmd migration entries, THP, devmap, hugetlb
-> - * But compile time dependent on THP config
-> - */
-> -static inline int pmd_large(pmd_t pmd)
-> -{
-> -	return !!(pmd_raw(pmd) & cpu_to_be64(_PAGE_PTE));
-> -}
-> -
->   static inline pmd_t pmd_mknotpresent(pmd_t pmd)
->   {
->   	return __pmd(pmd_val(pmd) & ~_PAGE_PRESENT);
-> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> index f55ef071883f..1b57b4e3f819 100644
-> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> @@ -363,12 +363,6 @@ static void kvmppc_pte_free(pte_t *ptep)
->   	kmem_cache_free(kvm_pte_cache, ptep);
->   }
->   
-> -/* Like pmd_huge() and pmd_large(), but works regardless of config options */
-> -static inline int pmd_is_leaf(pmd_t pmd)
-> -{
-> -	return !!(pmd_val(pmd) & _PAGE_PTE);
-> -}
-> -
->   static pmd_t *kvmppc_pmd_alloc(void)
->   {
->   	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-> @@ -460,7 +454,7 @@ static void kvmppc_unmap_free_pmd(struct kvm *kvm, pmd_t *pmd, bool full,
->   	for (im = 0; im < PTRS_PER_PMD; ++im, ++p) {
->   		if (!pmd_present(*p))
->   			continue;
-> -		if (pmd_is_leaf(*p)) {
-> +		if (pmd_large(*p)) {
->   			if (full) {
->   				pmd_clear(p);
->   			} else {
-> @@ -593,7 +587,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
->   	else if (level <= 1)
->   		new_pmd = kvmppc_pmd_alloc();
->   
-> -	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_is_leaf(*pmd)))
-> +	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_large(*pmd)))
->   		new_ptep = kvmppc_pte_alloc();
->   
->   	/* Check if we might have been invalidated; let the guest retry if so */
-> @@ -662,7 +656,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
->   		new_pmd = NULL;
->   	}
->   	pmd = pmd_offset(pud, gpa);
-> -	if (pmd_is_leaf(*pmd)) {
-> +	if (pmd_large(*pmd)) {
->   		unsigned long lgpa = gpa & PMD_MASK;
->   
->   		/* Check if we raced and someone else has set the same thing */
-> 
