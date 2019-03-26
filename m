@@ -2,97 +2,155 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84C2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A3FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A573B20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE9A20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 17:15:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Zm11OzLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbfCZROK (ORCPT
+        id S1731755AbfCZRP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 13:14:10 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:47002 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCZROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 13:14:10 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 1FF9C20B46;
-        Tue, 26 Mar 2019 18:14:08 +0100 (CET)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id B1FB320AC5;
-        Tue, 26 Mar 2019 18:14:07 +0100 (CET)
-Subject: Re: [PATCH] arm64: dts: msm8998: Add UFS phy reset
-To:     Evan Green <evgreen@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20190326170518.157317-1-evgreen@chromium.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <71cde29a-aa10-0889-9581-8e961670bc45@free.fr>
-Date:   Tue, 26 Mar 2019 18:14:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 13:15:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38391 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfCZRP2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 13:15:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 10so8376948pfo.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 10:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p96jIXYeeeI34an2saRyEyS40uoEYuJOG5iesySK25Q=;
+        b=Zm11OzLuyJa/8SjNzJD529d00LzQsRcYj+HrxbHKU/p2UFP7rtyM0eaud1G54+OpHr
+         vJsH275SucCzezp8Ysy3hYqift9d0as4trCocTEdmhgtsFMPFtjPh1z3qeF/JpbFIwcf
+         HYjZCSKOPRfaydIyCOJdIuEvXegUti6lnFPWw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p96jIXYeeeI34an2saRyEyS40uoEYuJOG5iesySK25Q=;
+        b=BymYq52nd4qST+iPzg7sEfQUmVI4JU0oRbF67ABIMq3JJ0uSK9IgWTkOoELVONBre/
+         ChCnx8WOF40yoezVB7TQ1P/ZjuyX6QshpUe5mc8tJzKWLARmRCSDls0IarSU1B/rvrnW
+         s5xR5cBnpVq17aEkiVfiewyaS7fG208mAONRhXeyuq4bLY+sNe1Dy9VYh5Ej6cKFU2+Q
+         MFHr8C8mfjom3SwWHMTuwJTSj42jDTUD5/6lcf9hboyeKEMGoT4BLd4NmdabQLjSo8VF
+         2tgDUPVpYgh7ieNDFVTqp+JvQDHyKWFWv3DAj7y1ZTbPQgcFTXG7oJD3q4UKsrHH3nW8
+         WUCQ==
+X-Gm-Message-State: APjAAAXF3iWwiXktjfDbSoa/Zw1THCTLV/Is3VMLK9kUoXerMjyxda2W
+        D3bRdyZfGIDfo/NZj5PwaJJM49S77Pk=
+X-Google-Smtp-Source: APXvYqyAOjTl65o17HyVxxQmssCtgxBdUrYArIEdft6cV/+4MLI2qeE/i1Sw7U6rIm3jDcvsG/ssXg==
+X-Received: by 2002:a63:441b:: with SMTP id r27mr28942511pga.36.1553620528162;
+        Tue, 26 Mar 2019 10:15:28 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s15sm23842636pga.71.2019.03.26.10.15.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 10:15:26 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 13:15:25 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, dancol@google.com
+Subject: Re: [PATCH v1 2/4] pid: add pidctl()
+Message-ID: <20190326171525.GA116974@google.com>
+References: <20190326155513.26964-1-christian@brauner.io>
+ <20190326155513.26964-3-christian@brauner.io>
+ <20190326170601.GA101741@google.com>
+ <20190326170827.p2wlwsscf5u6f3i7@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <20190326170518.157317-1-evgreen@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Mar 26 18:14:08 2019 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326170827.p2wlwsscf5u6f3i7@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 18:05, Evan Green wrote:
+On Tue, Mar 26, 2019 at 06:08:28PM +0100, Christian Brauner wrote:
+[snip]
+> > > +	struct pid *struct_pid;
+> > > +	pid_t result;
+> > > +
+> > > +	if (flags)
+> > > +		return -EINVAL;
+> > > +
+> > > +	switch (cmd) {
+> > > +	case PIDCMD_QUERY_PID:
+> > > +		break;
+> > > +	case PIDCMD_QUERY_PIDNS:
+> > > +		if (pid)
+> > > +			return -EINVAL;
+> > > +		break;
+> > > +	case PIDCMD_GET_PIDFD:
+> > > +		break;
+> > > +	default:
+> > > +		return -EOPNOTSUPP;
+> > > +	}
+> > > +
+> > > +	source_ns = get_pid_ns_by_fd(source);
+> > > +	if (IS_ERR(source_ns))
+> > > +		return PTR_ERR(source_ns);
+> > > +
+> > > +	target_ns = get_pid_ns_by_fd(target);
+> > > +	if (IS_ERR(target_ns)) {
+> > > +		put_pid_ns(source_ns);
+> > > +		return PTR_ERR(target_ns);
+> > > +	}
+> > > +
+> > > +	if (cmd == PIDCMD_QUERY_PIDNS) {
+> > > +		result = pidns_related(source_ns, target_ns);
+> > > +	} else {
+> > > +		rcu_read_lock();
+> > > +		struct_pid = get_pid(find_pid_ns(pid, source_ns));
+> > > +		rcu_read_unlock();
+> > > +
+> > > +		if (struct_pid)
+> > > +			result = pid_nr_ns(struct_pid, target_ns);
+> > > +		else
+> > > +			result = -ESRCH;
+> > > +
+> > > +		if (cmd == PIDCMD_GET_PIDFD && (result > 0))
+> > > +			result = pidfd_create_fd(struct_pid, O_CLOEXEC);
+> > 
+> > pidfd_create_fd already does put_pid on errors..
+> 
+> it also takes its own reference
+> 
+> > 
+> > > +
+> > > +		if (!result)
+> > > +			result = -ENOENT;
+> > > +
+> > > +		put_pid(struct_pid);
+> > 
+> > so on error you would put_pid twice which seems odd..  I would suggest, don't
+> > release the pid ref from within pidfd_create_fd, release the ref from the
+> > caller. Speaking of which, I added to my list to convert the pid->count to
+> > refcount_t at some point :)
+> 
+> as i said, pidfd_create_fd takes its own reference
 
-> With the new refactoring at [1], the UFS phy now controls its own
-> destiny in toggling the phy reset bit within the UFS host controller.
-> Add the DT pieces needed to 1) expose the reset controller from the
-> HC, and 2) use it from the PHY. This series is based atop linux-next
-> plus Marc's series at [2].
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> 
-> [1] https://lore.kernel.org/lkml/20190321171800.104681-1-evgreen@chromium.org/
-> [2] https://lore.kernel.org/lkml/43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr/
-> 
-> ---
-> I haven't tested this. Marc, I'm hoping you'll test this out and hijack this
-> patch if it needs any fixups.
-> 
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 3d0aeb3211de..d59a2c5fe83a 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -990,6 +990,7 @@
->  			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
->  			phys = <&ufsphy_lanes>;
->  			phy-names = "ufsphy";
-> +			#reset-cells = <1>;
->  			lanes-per-direction = <2>;
->  			power-domains = <&gcc UFS_GDSC>;
->  
-> @@ -1039,6 +1040,7 @@
->  				<&gcc GCC_UFS_CLKREF_CLK>,
->  				<&gcc GCC_UFS_PHY_AUX_CLK>;
->  
-> +			resets = <&ufshc 0>;
->  			ufsphy_lanes: lanes@1da7400 {
->  				reg = <0x01da7400 0x128>,
->  				      <0x01da7600 0x1fc>,
-> 
+Oh. That was easy to miss. Fair enough. I take that comment back.
 
-If it's OK with you, I plan to test this patch tomorrow, and simply squash it
-into my UFS DT submission.
+Please also reply to the other comments I posted, thanks. Generally on LKML,
+I have seen there is an expectation to reply to all reviewer's review
+comments even if you agree with them. This helps keep the review going
+smoothly. Just my 2 cents.
 
-Regards.
+thanks,
+
+ - Joel
+
