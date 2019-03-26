@@ -2,169 +2,167 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A49FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E209FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3162420823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wR28RfZ8"
+	by mail.kernel.org (Postfix) with ESMTP id A7CBC206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553628874;
+	bh=/KBG1Y6DveuMq0Zr4sxYKpDClR/xgbJ7AmXr4IPbNWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1Sh4PG2JnYLpT7hl8ODZT+9VZV5ArqK8q9UFWHJpeBlcudBNkSA0ruh9ylkSQU6PH
+	 EgdnqOiPSozjRQ/g7vRV4gqUPpHCxTfB0Ar4PVFNO/iypb7zLz3LXCFcxja9CdygrU
+	 eWwExjJrG4bdeSTRNqIQpza2fRiQzrLmtiNQVU8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732434AbfCZTYh (ORCPT
+        id S1732057AbfCZTed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 15:24:37 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39687 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfCZTYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 15:24:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b65so2093267plb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 12:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=03p3ODFVQvd6EJVrQdS1N5Fn4xNiqjPABgOQRHIhcDc=;
-        b=wR28RfZ8qqW/OhBxbQWwxK1hqfOW99Wi+R5C9zwy0N/m8KsbEDa+ocRieqjAOL1vBl
-         fpzjl+d4iZstuTiyCkdV/5Hp3gFaJQu5KiKH4UOlGzTjOeyYQxQj/+2h5Koi7FMfDpZ4
-         cLu6YD37NBR4qIYEP5ZrsWo3itletofOp1DqA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=03p3ODFVQvd6EJVrQdS1N5Fn4xNiqjPABgOQRHIhcDc=;
-        b=jo+0OctTP/LEO3j14EliXNBckkWHk5DQy3OreW84QN352yII15727y2tGZC7neOAV8
-         Fi5POUWDkhhbKp3WDGs7UX2JS8GW7VbLjkUuCIgApIAXp5BgR5vUZVd3cNRgV2p1DTvc
-         uj7Hfft8K9O5uni2tPhTX6qlkcgJ3o56/sC6c3Ag5PpRG7EQhgu/+XBrI7U5RsPGyt68
-         QKqJMGwtsm1+mNa+SJjouMy0DW5mAW5agLZv6f/NpWXI8fP7U9YdBjvchbpgSLkMSf7x
-         Nzn7Y8tSeV7GgNmFsS2bSKuFyOdagl2O9PIXSjpBS+3J8+mXQYtNc4+72tedtvuZuIb8
-         lgMg==
-X-Gm-Message-State: APjAAAVlhqvsODHN25hE8Mg2nec8M48r/OLFgp5x4qQEREQMJ8EiKc6A
-        kiGBndiDI8vVXn2kNU8zm4BPOPEiN8k=
-X-Google-Smtp-Source: APXvYqz0CpZVgoinljCuzSh12Y9Mbmv/Ll+Vo/kIttOgigpinJboA+vihBRBMjMLEiV4rhip7GywxQ==
-X-Received: by 2002:a17:902:2963:: with SMTP id g90mr33228185plb.182.1553628272923;
-        Tue, 26 Mar 2019 12:24:32 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l12sm36761889pgn.83.2019.03.26.12.24.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 12:24:32 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        byungchul.park@lge.com, kernel-team@android.com,
-        rcu@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v2 2/4] rcutree: Add checks for dynticks counters in rcu_is_cpu_rrupt_from_idle
-Date:   Tue, 26 Mar 2019 15:24:09 -0400
-Message-Id: <20190326192411.198070-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190326192411.198070-1-joel@joelfernandes.org>
-References: <20190326192411.198070-1-joel@joelfernandes.org>
+        Tue, 26 Mar 2019 15:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727492AbfCZTed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:34:33 -0400
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D533C20823;
+        Tue, 26 Mar 2019 19:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553628872;
+        bh=/KBG1Y6DveuMq0Zr4sxYKpDClR/xgbJ7AmXr4IPbNWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=enhrMGV326WWllTxiJ09sa3zh041IZM1VPlz/khoxns7qHl1jVgoGSkDMJ91reGgx
+         KIab5mm3K620BLSCvEXEvJMi+iX02jOikR3+WV6XgI00+CIEK/7jBKRY6U1oWRro1C
+         XJKEwyZ5TgjEAgZ4B+N219+Y/NBIPsrAZcThtDyM=
+Received: by mail-ed1-f44.google.com with SMTP id d26so11834221ede.10;
+        Tue, 26 Mar 2019 12:34:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAV9KyxqTrwH8OhWjSfzO/WEeWououW21Ol7GxOIrGO4kfxGNACe
+        CUWdVIAdcu/5w0bHyl1MHjw+bvu7dWtP2+k5tdk=
+X-Google-Smtp-Source: APXvYqyMylqv9pgdmhE3kW/TzFmhTC/UF+45a5V/WooVJXJJuTFyoOm1/XHBnPCAMWlcyxzL6Qp0vpVxP+sJXFExpOk=
+X-Received: by 2002:aa7:c70a:: with SMTP id i10mr21594763edq.153.1553628870403;
+ Tue, 26 Mar 2019 12:34:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-4-git-send-email-hao.wu@intel.com> <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
+ <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
+In-Reply-To: <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Tue, 26 Mar 2019 14:33:54 -0500
+X-Gmail-Original-Message-ID: <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
+Message-ID: <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
+Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
+To:     Scott Wood <swood@redhat.com>
+Cc:     Wu Hao <hao.wu@intel.com>, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the future we would like to combine the dynticks and dynticks_nesting
-counters thus leading to simplifying the code. At the moment we cannot
-do that due to concerns about usermode upcalls appearing to RCU as half
-of an interrupt. Byungchul tried to do it in [1] but the
-"half-interrupt" concern was raised. It is half because, what RCU
-expects is rcu_irq_enter() and rcu_irq_exit() pairs when the usermode
-exception happens. However, only rcu_irq_enter() is observed. This
-concern may not be valid anymore, but at least it used to be the case.
+On Mon, Mar 25, 2019 at 5:58 PM Scott Wood <swood@redhat.com> wrote:
 
-Out of abundance of caution, Paul added warnings [2] in the RCU code
-which if not fired by 2021 may allow us to assume that such
-half-interrupt scenario cannot happen any more, which can lead to
-simplification of this code.
+Hi Scott,
 
-Summary of the changes are the following:
+>
+> On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
+> > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
+> > > In early partial reconfiguration private feature, it only
+> > > supports 32bit data width when writing data to hardware for
+> > > PR. 512bit data width PR support is an important optimization
+> > > for some specific solutions (e.g. XEON with FPGA integrated),
+> > > it allows driver to use AVX512 instruction to improve the
+> > > performance of partial reconfiguration. e.g. programming one
+> > > 100MB bitstream image via this 512bit data width PR hardware
+> > > only takes ~300ms, but 32bit revision requires ~3s per test
+> > > result.
+> > >
+> > > Please note now this optimization is only done on revision 2
+> > > of this PR private feature which is only used in integrated
+> > > solution that AVX512 is always supported.
+> > >
+> > > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
+> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > > ---
+> > >  drivers/fpga/dfl-fme-main.c |  3 ++
+> > >  drivers/fpga/dfl-fme-mgr.c  | 75 +++++++++++++++++++++++++++++++++++++-
+> > > --
+> > > -----
+> > >  drivers/fpga/dfl-fme-pr.c   | 45 ++++++++++++++++-----------
+> > >  drivers/fpga/dfl-fme.h      |  2 ++
+> > >  drivers/fpga/dfl.h          |  5 +++
+> > >  5 files changed, 99 insertions(+), 31 deletions(-)
+> > >
+> > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> > > index 086ad24..076d74f 100644
+> > > --- a/drivers/fpga/dfl-fme-main.c
+> > > +++ b/drivers/fpga/dfl-fme-main.c
+> > > @@ -21,6 +21,8 @@
+> > >  #include "dfl.h"
+> > >  #include "dfl-fme.h"
+> > >
+> > > +#define DRV_VERSION        "0.8"
+> >
+> > What is this going to be used for?  Under what circumstances will the
+> > driver version be bumped?  What does it have to do with 512-bit writes?
+> >
+> > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
+> > > +
+> > > +#include <asm/fpu/api.h>
+> > > +
+> > > +static inline void copy512(void *src, void __iomem *dst)
+> > > +{
+> > > +   kernel_fpu_begin();
+> > > +
+> > > +   asm volatile("vmovdqu64 (%0), %%zmm0;"
+> > > +                "vmovntdq %%zmm0, (%1);"
+> > > +                :
+> > > +                : "r"(src), "r"(dst));
+> > > +
+> > > +   kernel_fpu_end();
+> > > +}
+> >
+> > Shouldn't there be some sort of check that AVX512 is actually supported
+> > on the running system?
+> >
+> > Also, src should be const, and the asm statement should have a memory
+> > clobber.
+> >
+> > > +#else
+> > > +static inline void copy512(void *src, void __iomem *dst)
+> > > +{
+> > > +   WARN_ON_ONCE(1);
+> > > +}
+> > > +#endif
+> >
+> > Likewise, this will be called if a revision 2 device is used on non-x86
+> > (or on x86 with an old binutils).  The driver should fall back to 32-bit
+> > in such cases.
+>
+> Sorry, I missed the comment about revision 2 only being on integrated
+> devices -- but will that always be the case?  Seems worthwhile to check for
+> AVX512 support anyway.  And there's still the possibility of being built
+> with an old binutils such that CONFIG_AS_AVX512 is not set, or running on a
+> kernel where avx512 was disabled via a boot option.
 
-(1) In preparation for this combination of counters in the future, we
-first need to first be sure that rcu_rrupt_from_idle cannot be called
-from anywhere but a hard-interrupt because previously, the comments
-suggested otherwise so let us be sure. We discussed this here [3]. We
-use the services of lockdep to accomplish this.
+The code checks for CONFIG_AS_AVX512 above.
 
-(2) Further rcu_rrupt_from_idle() is not explicit about how it is using
-the counters which can lead to weird future bugs. This patch therefore
-makes it more explicit about the specific counter values being tested
+What boot option are you referring to?
 
-(3) Lastly, we check for counter underflows just to be sure these are
-not happening, because the previous code in rcu_rrupt_from_idle() was
-allowing the case where the counters can underflow, and the function
-would still return true. Now we are checking for specific values so let
-us be confident by additional checking, that such underflows don't
-happen. Any case, if they do, we should fix them and the screaming
-warning is appropriate. All these checks checks are NOOPs if PROVE_RCU
-and PROVE_LOCKING are disabled.
+Alan
 
-[1] https://lore.kernel.org/patchwork/patch/952349/
-[2] Commit e11ec65cc8d6 ("rcu: Add warning to detect half-interrupts")
-[3] https://lore.kernel.org/lkml/20190312150514.GB249405@google.com/
-
-Cc: byungchul.park@lge.com
-Cc: kernel-team@android.com
-Cc: rcu@vger.kernel.org
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/rcu/tree.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 9180158756d2..dbff8a274c46 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -381,16 +381,29 @@ static void __maybe_unused rcu_momentary_dyntick_idle(void)
- }
- 
- /**
-- * rcu_is_cpu_rrupt_from_idle - see if idle or immediately interrupted from idle
-+ * rcu_is_cpu_rrupt_from_idle - see if interrupted from idle
-  *
-- * If the current CPU is idle or running at a first-level (not nested)
-+ * If the current CPU is idle and running at a first-level (not nested)
-  * interrupt from idle, return true.  The caller must have at least
-  * disabled preemption.
-  */
- static int rcu_is_cpu_rrupt_from_idle(void)
- {
--	return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
--	       __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-+	/* Called only from within the scheduling-clock interrupt */
-+	lockdep_assert_in_irq();
-+
-+	/* Check for counter underflows */
-+	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-+			 "RCU dynticks_nesting counter underflow!");
-+	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-+			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-+
-+	/* Are we at first interrupt nesting level? */
-+	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-+		return false;
-+
-+	/* Does CPU appear to be idle from an RCU standpoint? */
-+	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
- }
- 
- #define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch. */
--- 
-2.21.0.392.gf8f6787159e-goog
-
+>
+> What about future revisions >= 2?  Currently the driver will treat them as
+> if they were revision < 2.  Is that intended?
+>
+> -Scott
+>
+>
