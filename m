@@ -2,170 +2,254 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A60C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 268BDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1977820830
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k6XFJyGw"
+	by mail.kernel.org (Postfix) with ESMTP id DDCC320830
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 08:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbfCZIMo (ORCPT
+        id S1731238AbfCZIMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 04:12:44 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33961 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731109AbfCZIMo (ORCPT
+        Tue, 26 Mar 2019 04:12:47 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49724 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfCZIMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 04:12:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id n11so9996212ioh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 01:12:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YdFwkF4eUySjbpG+38wjJdvK3fCy24c6M03FoBUoupk=;
-        b=k6XFJyGwJ9uMM5uZPWX/AMT7fviQV0Ld1mcPlddQHs0cPIvKIZsAGtkGGxowospoCT
-         dtY6QW0pQBRdQZw/Pzw1xGUnrxiMWMMWQoLuH0L+NTAhjv0l+Yb/scBRb8Eepi2+jpsZ
-         +ZfSqGLB3qiRjeQWh0Tgul4DOKaGm71Q8paP7zVq4PLWFJDKx4e7zw5OVJkORY5a2mpV
-         ReGqnFwm0nuny+7m0ehupOQZYBEJ5uTlS1sAE9PGHyJC7FgYKKgwDVuTukwLz/+hRlTd
-         MGNnI3tJskCS+Wu1/Aa6+rE98oi17qFjkFteyqgBOHmpSXEWFl1O8/BEaF0M9h/LvEhh
-         k/iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YdFwkF4eUySjbpG+38wjJdvK3fCy24c6M03FoBUoupk=;
-        b=kQW9OvlxROyD45rO9FZlC0v4VCLEHZLn/kuuYRzxE67zG7ZD/UUkA6PVBf9XFZZ1nE
-         xkAqZkOthKoaQ86W1IkwS1jn2l4zA8SqtJEzYJ18mUEZ2K9fVecVq+jywvCUUVIie5zv
-         AfGTUGuz+VBJd825UxzpjVFTQY9iNJ3corlqDlLcwYhX7pJK6sx6q3ILTcRCCgTGW5uA
-         1kRtFn2mOgZ3uTkikvjfwPAsDcnsa9XhtpcUyJwNTxRBnCiztw+tP369i/RE+lq92KUP
-         xCwO1IxnXDmwJ9SErweZ47Pqvux2dVQyzcf/0l3N7TmOh+QVjQFFhy8ehFuqWFk7yx+O
-         T1hg==
-X-Gm-Message-State: APjAAAVAKQpPQmMbo3pXI1WC+IgDLn0SQ/BIFavXaAGbJMK6FXuLwqfp
-        I9G02NKEgIlAjDu64LH4fllQEg==
-X-Google-Smtp-Source: APXvYqzUewoC4h/6psWy97TNreJAfbfzJbNTFpBTiFptGULlXyAtjw1mAFFx3ekIO/Ni0Jr6DpSEmg==
-X-Received: by 2002:a5e:db48:: with SMTP id r8mr20194656iop.220.1553587962220;
-        Tue, 26 Mar 2019 01:12:42 -0700 (PDT)
-Received: from google.com ([2401:fa00:fc:202:858d:45ea:f905:5ed4])
-        by smtp.gmail.com with ESMTPSA id t62sm6882457ita.35.2019.03.26.01.12.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 01:12:41 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 16:12:33 +0800
-From:   Martin Liu <liumartin@google.com>
-To:     Fengguang Wu <fengguang.wu@intel.com>
-Cc:     Mark Salyzyn <salyzyn@android.com>, akpm@linux-foundation.org,
-        axboe@kernel.dk, dchinner@redhat.com, jenhaochen@google.com,
-        salyzyn@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [RFC PATCH] mm: readahead: add readahead_shift into backing
- device
-Message-ID: <20190326081233.GA175058@google.com>
-References: <20190322154610.164564-1-liumartin@google.com>
- <20190325121628.zxlogz52go6k36on@wfg-t540p.sh.intel.com>
- <9b194e61-f2d0-82cb-30ac-95afb493b894@android.com>
- <20190326013058.ykdwxbfkk3x3pvtu@wfg-t540p.sh.intel.com>
+        Tue, 26 Mar 2019 04:12:45 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A24F63C00DD;
+        Tue, 26 Mar 2019 09:12:41 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KEtSQgcksQyD; Tue, 26 Mar 2019 09:12:35 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 55E203C00C4;
+        Tue, 26 Mar 2019 09:12:35 +0100 (CET)
+Received: from [10.72.93.172] (10.72.93.172) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
+ 2019 09:12:34 +0100
+Subject: Re: [PATCH 04/10] ALSA: aloop: Use always spin_lock_irqsave() for
+ cable->lock
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     <broonie@kernel.org>, <perex@perex.cz>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
+ <1553529644-5654-5-git-send-email-twischer@de.adit-jv.com>
+ <s5htvfr6iqh.wl-tiwai@suse.de>
+ <237e2d2d-9a8f-a273-4c40-db2c670c6858@de.adit-jv.com>
+ <s5hlg127uww.wl-tiwai@suse.de>
+From:   Timo Wischer <twischer@de.adit-jv.com>
+Message-ID: <3423ff53-7ee3-01e7-c4bf-a4f730fdfe94@de.adit-jv.com>
+Date:   Tue, 26 Mar 2019 09:12:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326013058.ykdwxbfkk3x3pvtu@wfg-t540p.sh.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <s5hlg127uww.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.72.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 09:30:58AM +0800, Fengguang Wu wrote:
-> On Mon, Mar 25, 2019 at 09:59:31AM -0700, Mark Salyzyn wrote:
-> > On 03/25/2019 05:16 AM, Fengguang Wu wrote:
-> > > Martin,
-> > > 
-> > > On Fri, Mar 22, 2019 at 11:46:11PM +0800, Martin Liu wrote:
-> > > > As the discussion https://lore.kernel.org/patchwork/patch/334982/
-> > > > We know an open file's ra_pages might run out of sync from
-> > > > bdi.ra_pages since sequential, random or error read. Current design
-> > > > is we have to ask users to reopen the file or use fdavise system
-> > > > call to get it sync. However, we might have some cases to change
-> > > > system wide file ra_pages to enhance system performance such as
-> > > > enhance the boot time by increasing the ra_pages or decrease it to
-> > > 
-> > > Do you have examples that some distro making use of larger ra_pages
-> > > for boot time optimization?
-> > 
-> > Android (if you are willing to squint and look at android-common AOSP
-> > kernels as a Distro).
-> 
-> OK. I wonder how exactly Android makes use of it. Since phones are not
-> using hard disks, so should benefit less from large ra_pages.  Would
-> you kindly point me to the code?
+On 3/25/19 17:58, Takashi Iwai wrote:
+> On Mon, 25 Mar 2019 17:40:23 +0100,
+> Timo Wischer wrote:
+>> Best regards
+>> Timo Wischer
+>> Engineering Software Base (ADITG/ESB)
+>>
+>> Tel. +49 5121 49 6938
+>> On 3/25/19 17:07, Takashi Iwai wrote:
+>>
+>>      On Mon, 25 Mar 2019 17:00:38 +0100,
+>>      <twischer@de.adit-jv.com> wrote:
+>>      
+>>          From: Timo Wischer <twischer@de.adit-jv.com>
+>>          
+>>          to allow the usage of timer callbacks from interrupt context.
+>>          For example the sound timer.
+>>          
+>>      The trigger callback is already irq-disabled.  And, open/close must
+>>      not be irq-disabled OTOH.  So these changes must be superfluous.
+>>      
+>> Hello Takashi,
+>>
+>> could you explain why open/close must not be irq-disabled?
+> The open/close callbacks get called always in sleepable context where
+> you can use mutex & co gracefully.  The only non-sleepable (atomic)
+> context is pointer and trigger callbacks.  So it's safe to use
+> spin_lock() without irq in these callbacks.
+> OTOH, the rest (open, close,hw_params, hw_free, prepare) callbacks are
+> always sleepable, hence it's safe to use spin_lock_irq() (not
+> save/restore) variant.
 >
-Yes, one of the example is as below.
-https://source.android.com/devices/tech/perf/boot-times#optimizing-i-o-
-efficiency
-> > > Suppose N read streams with equal read speed. The thrash-free memory
-> > > requirement would be (N * 2 * ra_pages).
-> > > 
-> > > If N=1000 and ra_pages=1MB, it'd require 2GB memory. Which looks
-> > > affordable in mainstream servers.
-> > That is 50% of the memory on a high end Android device ...
-> 
-> Yeah but I'm obviously not talking Android device here. Will a phone
-> serve 1000 concurrent read streams?
-> 
-For Android, some important, persistent services and native HALs might
-hold fd for a long time unless request a restart action and then would
-impact overall user experience(guess more than 100). For some low end
-devices which is a big portion of Android devices, their memory size
-might be even smaller. Thus, when the device is under memory pressure,
-this might bring more overhead to impact the performance. As current
-design, we don't have a way to shrink readahead immediately. This
-interface gives the flexibility to an adiminstrator to decide how
-readahed to participate the mitigation level base on the metric it has.
+> When a driver declares as non-atomic via PCM flag, all callbacks
+> become sleepable, but this isn't the case for aloop driver.
+>
+>> I see a potential deadlock in case of free_cable() uses only spin_lock()
+>> instead of spin_lock_irqsave().
+>> For example the following will be executed:
+>>
+>> loopback_close()
+>> free_cable()
+>> spin_lock(&dpcm->cable->lock)
+> Which spin_lock() call?  The free_cable() calls spin_lock_irq().
+>
+>>>> Interrupted by jiffies timer IRQ before calling spin_unlock()
+>> loopback_jiffies_timer_function()
+>> spin_lock_irqsave(&dpcm->cable->lock)
+>>>> DEADLOCK due to dpcm->cable->lock is already locked
+>> Do you also see this deadlock or do you see any reason why this could not
+>> happen?
+> If spin_lock_irq() is used in free_cable(), it must be OK.
+>
+>
+> Takashi
+Thanks for the detailed explanation.
 
-> > > Sorry but it sounds like introducing an unnecessarily twisted new
-> > > interface. I'm afraid it fixes the pain for 0.001% users while
-> > > bringing more puzzle to the majority others.
-> > >2B Android devices on the planet is 0.001%?
-> 
-> Nope. Sorry I didn't know about the Android usage.
-> Actually nobody mentioned it in the past discussions.
-> 
-> > I am not defending the proposed interface though, if there is something
-> > better that can be used, then looking into:
-> > > 
-> > > Then let fadvise() and shrink_readahead_size_eio() adjust that
-> > > per-file ra_pages_shift.
-> > Sounds like this would require a lot from init to globally audit and
-> > reduce the read-ahead for all open files?
-> 
-> It depends. In theory it should be possible to create a standalone
-> kernel module to dump the page cache and get the current snapshot of
-> all cached file pages. It'd be a one-shot action and don't require
-> continuous auditing.
-> 
-> [RFC] kernel facilities for cache prefetching
-> https://lwn.net/Articles/182128
-> 
-> This tool may also work. It's quick to get the list of opened files by
-> walking /proc/*/fd/, however not as easy to get the list of cached
-> file names.
-> 
-> https://github.com/tobert/pcstat
-> 
-> Perhaps we can do a simplified /proc/filecache that only dumps the
-> list of cached file names. Then let mincore() based tools take care
-> of the rest work.
-> 
-Thanks for the information, they are very useful. For Android, it would
-keep updating pretty frequently and the lists might need to be updated
-as the end users install apps, runtime optimization or get new OTA.
-Therefore, this might request pretty much effort to maintain this.
-Please kindly correct me if any misunderstanding. Thanks.
+@all:
+Please simple ignore this patch.
 
-Regards,
-Martin
+Best regards
+
+Timo
+
+>
+>
+>> Best regards
+>>
+>> Timo
+>>
+>>      thanks,
+>>      
+>>      Takashi
+>>
+>>          Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+>>          ---
+>>           sound/drivers/aloop.c | 33 +++++++++++++++++++--------------
+>>           1 file changed, 19 insertions(+), 14 deletions(-)
+>>          
+>>          diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
+>>          index 11e8ed6..c6217c4 100644
+>>          --- a/sound/drivers/aloop.c
+>>          +++ b/sound/drivers/aloop.c
+>>          @@ -272,6 +272,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>>                struct loopback_pcm *dpcm = runtime->private_data;
+>>                struct loopback_cable *cable = dpcm->cable;
+>>                int err = 0, stream = 1 << substream->stream;
+>>          +     unsigned long flags;
+>>           
+>>                switch (cmd) {
+>>                case SNDRV_PCM_TRIGGER_START:
+>>          @@ -281,39 +282,39 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+>>                                      dpcm->last_jiffies = jiffies;
+>>                                      dpcm->pcm_rate_shift = 0;
+>>                                      dpcm->last_drift = 0;
+>>          -                           spin_lock(&cable->lock);
+>>          +                           spin_lock_irqsave(&cable->lock, flags);
+>>                                      cable->running |= stream;
+>>                                      cable->pause &= ~stream;
+>>                                      err = loopback_timer_start(dpcm);
+>>          -                           spin_unlock(&cable->lock);
+>>          +                           spin_unlock_irqrestore(&cable->lock, flags);
+>>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>>                                                            loopback_active_notify(dpcm);
+>>                                      break;
+>>                case SNDRV_PCM_TRIGGER_STOP:
+>>          -                           spin_lock(&cable->lock);
+>>          +                           spin_lock_irqsave(&cable->lock, flags);
+>>                                      cable->running &= ~stream;
+>>                                      cable->pause &= ~stream;
+>>                                      err = loopback_timer_stop(dpcm);
+>>          -                           spin_unlock(&cable->lock);
+>>          +                           spin_unlock_irqrestore(&cable->lock, flags);
+>>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>>                                                            loopback_active_notify(dpcm);
+>>                                      break;
+>>                case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+>>                case SNDRV_PCM_TRIGGER_SUSPEND:
+>>          -                           spin_lock(&cable->lock);
+>>          +                           spin_lock_irqsave(&cable->lock, flags);
+>>                                      cable->pause |= stream;
+>>                                      err = loopback_timer_stop(dpcm);
+>>          -                           spin_unlock(&cable->lock);
+>>          +                           spin_unlock_irqrestore(&cable->lock, flags);
+>>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>>                                                            loopback_active_notify(dpcm);
+>>                                      break;
+>>                case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+>>                case SNDRV_PCM_TRIGGER_RESUME:
+>>          -                           spin_lock(&cable->lock);
+>>          +                           spin_lock_irqsave(&cable->lock, flags);
+>>                                      dpcm->last_jiffies = jiffies;
+>>                                      cable->pause &= ~stream;
+>>                                      err = loopback_timer_start(dpcm);
+>>          -                           spin_unlock(&cable->lock);
+>>          +                           spin_unlock_irqrestore(&cable->lock, flags);
+>>                                      if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>>                                                            loopback_active_notify(dpcm);
+>>                                      break;
+>>          @@ -557,12 +558,13 @@ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
+>>           {
+>>                struct snd_pcm_runtime *runtime = substream->runtime;
+>>                struct loopback_pcm *dpcm = runtime->private_data;
+>>          +     unsigned long flags;
+>>                snd_pcm_uframes_t pos;
+>>           
+>>          -     spin_lock(&dpcm->cable->lock);
+>>          +     spin_lock_irqsave(&dpcm->cable->lock, flags);
+>>                loopback_pos_update(dpcm->cable);
+>>                pos = dpcm->buf_pos;
+>>          -     spin_unlock(&dpcm->cable->lock);
+>>          +     spin_unlock_irqrestore(&dpcm->cable->lock, flags);
+>>                return bytes_to_frames(runtime, pos);
+>>           }
+>>           
+>>          @@ -679,10 +681,12 @@ static void free_cable(struct snd_pcm_substream *substream)
+>>                if (!cable)
+>>                                      return;
+>>                if (cable->streams[!substream->stream]) {
+>>          +                           unsigned long flags;
+>>          +
+>>                                      /* other stream is still alive */
+>>          -                           spin_lock_irq(&cable->lock);
+>>          +                           spin_lock_irqsave(&cable->lock, flags);
+>>                                      cable->streams[substream->stream] = NULL;
+>>          -                           spin_unlock_irq(&cable->lock);
+>>          +                           spin_unlock_irqrestore(&cable->lock, flags);
+>>                } else {
+>>                                      /* free the cable */
+>>                                      loopback->cables[substream->number][dev] = NULL;
+>>          @@ -698,6 +702,7 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>>                struct loopback_cable *cable = NULL;
+>>                int err = 0;
+>>                int dev = get_cable_index(substream);
+>>          +     unsigned long flags;
+>>           
+>>                mutex_lock(&loopback->cable_lock);
+>>                dpcm = kzalloc(sizeof(*dpcm), GFP_KERNEL);
+>>          @@ -753,9 +758,9 @@ static int loopback_open(struct snd_pcm_substream *substream)
+>>                else
+>>                                      runtime->hw = cable->hw;
+>>           
+>>          -     spin_lock_irq(&cable->lock);
+>>          +     spin_lock_irqsave(&cable->lock, flags);
+>>                cable->streams[substream->stream] = dpcm;
+>>          -     spin_unlock_irq(&cable->lock);
+>>          +     spin_unlock_irqrestore(&cable->lock, flags);
+>>           
+>>            unlock:
+>>                if (err < 0) {
+>>          --
+>>          2.7.4
+>>
+>>
