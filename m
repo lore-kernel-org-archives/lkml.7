@@ -2,188 +2,185 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7B3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA51C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE9C2070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA1D2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731863AbfCZPRF (ORCPT
+        id S1731972AbfCZPRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:17:05 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:53094 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbfCZPRE (ORCPT
+        Tue, 26 Mar 2019 11:17:18 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42183 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCZPRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:17:04 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 3AC5A3C013A;
-        Tue, 26 Mar 2019 16:17:01 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rORdif1CvVl9; Tue, 26 Mar 2019 16:16:54 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id A7E223C00C4;
-        Tue, 26 Mar 2019 16:16:54 +0100 (CET)
-Received: from [10.72.93.172] (10.72.93.172) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.435.0; Tue, 26 Mar
- 2019 16:16:54 +0100
-Subject: Re: [PATCH 09/10] ALSA: pcm: Add snd_pcm_ops for snd_pcm_link()
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     <broonie@kernel.org>, <perex@perex.cz>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <1553529644-5654-1-git-send-email-twischer@de.adit-jv.com>
- <1553586574-18608-1-git-send-email-twischer@de.adit-jv.com>
- <1553586574-18608-5-git-send-email-twischer@de.adit-jv.com>
- <s5ho95ym3s7.wl-tiwai@suse.de>
- <3ad5c313-ba2c-b541-8930-3f2515dfca72@de.adit-jv.com>
- <s5hr2at67ew.wl-tiwai@suse.de>
-From:   Timo Wischer <twischer@de.adit-jv.com>
-Message-ID: <68cfbf7a-5f1e-50d2-2b97-4d3c5d360b36@de.adit-jv.com>
-Date:   Tue, 26 Mar 2019 16:16:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 11:17:17 -0400
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1h8npE-0002v5-0t
+        for linux-kernel@vger.kernel.org; Tue, 26 Mar 2019 15:17:16 +0000
+Received: by mail-wm1-f71.google.com with SMTP id 16so6663282wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 08:17:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XCTT4HeI24lZ4s3NPPhbU2k8cL7vAe8DX3JDmVZbazM=;
+        b=Hri7cngtoKyYsqmAxqjtCirWHBTwU+pf8B8IuFgBU+4YKcC85p6ouMyM9Tr/e0GCOR
+         s/6wpPCbNhJZFDfKWT3HReAjVUNLPPwRx1dg3Eh7qSJW/U9N34klBXwF1tAs+sG4+vJP
+         SztMtsx3MRZIrYR+RCLN8sdiIFybJ1iuBlz8eX/Sb1mm6K5I79OE60niMACf4O+4onV3
+         00ZU773mXQkuRYlmmmPMQ6oThc70/mYjkGJYDVWgq7zZuQjc8/e8KTPkNzsa5UKsHNoZ
+         FMRRhdDnP07NklgifMyyVcRAwN06gwd3PaaqxFj9yLfrX+la6jLDUO0ixN5a8lqdh4nC
+         8MzQ==
+X-Gm-Message-State: APjAAAXUf41X7nDW6E8XynnCVt8+7iW2hGKLWf19/FBzqilpyp+lsQnr
+        K5n+aDuNAflUNsWCHon2Q7djC0kkvlc4p4KZ2n4//Nnzyu7YXpa50sOHyVPfUZyd8ospB0yuJz8
+        KPk2Xxjxu/fwynRuqL893mmGTnJTpepKMsEYRKni7qw==
+X-Received: by 2002:a5d:4e82:: with SMTP id e2mr21012580wru.164.1553613435338;
+        Tue, 26 Mar 2019 08:17:15 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxBivHfydn7RNtyhMoWS2CRXpu/+cBaGqpJDTh8Uwk5fIUH7OqwkveILOhcoG4eG45wE1pVvw==
+X-Received: by 2002:a5d:4e82:: with SMTP id e2mr21012571wru.164.1553613435168;
+        Tue, 26 Mar 2019 08:17:15 -0700 (PDT)
+Received: from localhost (host118-125-dynamic.3-87-r.retail.telecomitalia.it. [87.3.125.118])
+        by smtp.gmail.com with ESMTPSA id x192sm21091566wmf.48.2019.03.26.08.17.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 08:17:14 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 16:17:13 +0100
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, peterz@infradead.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip v3 04/10] x86/kprobes: Prohibit probing on IRQ
+ handlers directly
+Message-ID: <20190326151713.GB27897@xps-13>
+References: <154998785011.31052.1475728497912659748.stgit@devbox>
+ <154998796400.31052.8406236614820687840.stgit@devbox>
+ <20190325172334.559f8c5b@gandalf.local.home>
+ <20190326235052.793b81b121021020fb3b1e93@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <s5hr2at67ew.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.72.93.172]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326235052.793b81b121021020fb3b1e93@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 15:23, Takashi Iwai wrote:
-> On Tue, 26 Mar 2019 12:25:37 +0100,
-> Timo Wischer wrote:
->> On 3/26/19 09:35, Takashi Iwai wrote:
->>
->>      On Tue, 26 Mar 2019 08:49:33 +0100,
->>      <twischer@de.adit-jv.com> wrote:
->>      
->>          From: Timo Wischer <twischer@de.adit-jv.com>
->>          
->>          snd_pcm_link() can be called by the user as long as the device is not
->>          yet started. Therefore currently a driver which wants to iterate over
->>          the linked substreams has to do this at the start trigger. But the start
->>          trigger should not block for a long time. Therefore there is no callback
->>          which can be used to iterate over the linked substreams without delaying
->>          the start trigger.
->>          This patch introduces a new callback function which will be called after
->>          the linked substream list was updated by snd_pcm_link(). This callback
->>          function is allowed to block for a longer time without interfering the
->>          synchronized start up of linked substreams.
->>          
->>          Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
->>          
->>      Well, the idea appears interesting, but I'm afraid that the
->>      implementation is still racy.  The place you're calling the new
->>      callback isn't protected, hence the stream can be triggered while
->>      calling it.  That is, even during operating your loopback link_changed
->>      callback, another thread is able to start the stream.
->>      
->> Hi Takashi,
->>
->> As far as I got you mean the following scenario:
->>
->>    * snd_pcm_link() is called for a HW sound card
->>        + loopback_snd_timer_link_changed()
-> The start may happen at this point.
+On Tue, Mar 26, 2019 at 11:50:52PM +0900, Masami Hiramatsu wrote:
+> On Mon, 25 Mar 2019 17:23:34 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Wed, 13 Feb 2019 01:12:44 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > Prohibit probing on IRQ handlers in irqentry_text because
+> > > if it interrupts user mode, at that point we haven't changed
+> > > to kernel space yet and which eventually leads a double fault.
+> > > E.g.
+> > > 
+> > >  # echo p apic_timer_interrupt > kprobe_events
+> > 
+> > Hmm, this breaks one of my tests (which I probe on do_IRQ).
+> 
+> OK, it seems this patch is a bit redundant, because
+> I found that these interrupt handler issue has been fixed
+> by Andrea's commit before merge this patch.
+> 
+> commit a50480cb6d61d5c5fc13308479407b628b6bc1c5
+> Author: Andrea Righi <righi.andrea@gmail.com>
+> Date:   Thu Dec 6 10:56:48 2018 +0100
+> 
+>     kprobes/x86: Blacklist non-attachable interrupt functions
+>     
+>     These interrupt functions are already non-attachable by kprobes.
+>     Blacklist them explicitly so that they can show up in
+>     /sys/kernel/debug/kprobes/blacklist and tools like BCC can use this
+>     additional information.
+> 
+> This description is a bit odd (maybe his patch is after mine?) I think
+> while updating this series, the patches were merged out of order.
+> Anyway, with above patch, the core problematic probe points are blacklisted.
 
-In this case the last link status will be used and aloop will print a 
-warning "Another sound timer was requested but at least one device is 
-already running...".
+This is the previous thread when I posted my patch (not sure if it helps
+to figure out what happened - maybe it was just an out of order merge
+issue, like you said):
 
-Without this patch set a similar issue already exists. When calling 
-snd_pcm_start() before snd_pcm_link() was done the additional device 
-linked by the snd_pcm_link() will not be started.
-Therefore the application has already to take care about the order of 
-the calls.
+https://lkml.org/lkml/2018/12/6/212
 
->
->>        + loopback_snd_timer_open()
->>        + spin_lock_irqsave(&dpcm->cable->lock, flags);
->>    * snd_pcm_start() called for aloop sound card
->>        + loopback_trigger()
->>        + spin_lock(&cable->lock) -> has to wait till loopback_snd_timer_open()
->>          calls spin_unlock_irqrestore()
->>
->> So far snd_pcm_start() has to wait for loopback_snd_timer_open().
->>
->>    * loopback_snd_timer_open() will continue with
->>        + dpcm->cable->snd_timer.instance = NULL;
->>        + spin_unlock_irqrestore()
->>    * loopback_trigger() can enter the lock
->>        + loopback_snd_timer_start() will fail with -EINVAL due to
->>          (loopback_trigger == NULL)
->>
->> At least this will not result into memory corruption due to race or any other
->> wired behavior.
-> I don't expect the memory corruption, but my point is that dealing
-> with linked streams is still tricky.  It was considered for the
-> lightweight coupled start/stop operation, and something intensively
-> depending on the linked status was out of the original design...
->
->> But my expectation is that snd_pcm_link(hw, aloop) or snd_pcm_link(aloop, hw)
->> is only called by the application calling snd_pcm_start(aloop)
->> because the same aloop device cannot be opened by multiple applications at the
->> same time.
->>
->> Do you see an use case where one application would call snd_pcm_start() in
->> parallel with snd_pcm_link() (somehow configuring the device)?
-> It's not about the actual application usages but rather against the
-> malicious attacks.  Especially aloop is a virtual device that is
-> available allover the places, it may be deployed / attacked easily.
-The attack we are identifying here can only be done by the application 
-opening the aloop device.
-An application allowed to open the aloop device is anyway able to 
-manipulate the audio streaming.
-Or do you see an attack which would influence any other device/stream 
-not opened by this application?
->
->> May be we should add an additional synchronization mechanism in pcm_native.c
->> to avoid call of snd_pcm_link() in parallel with snd_pcm_start().
-> If it really matters...  Honestly speaking, I'm not fully convinced
-> whether we want to deal with this using the PCM link mechanism.
->
-> What's the motivation for using the linked streams at the first place?
-> That's one of the biggest missing piece in the whole picture.
-In general when the user uses snd_pcm_link() it expects that the linked 
-devices are somehow synchronized.
-Any applications already using snd_pcm_link() do not need to be adapted 
-to use the new feature of aloop (for example JACK or ALSA multi plugin)
+> 
+> > 
+> > It's been working for years.
+> > 
+> > 
+> > >  # echo 1 > events/kprobes/enable
+> > >  PANIC: double fault, error_code: 0x0
+> > >  CPU: 1 PID: 814 Comm: less Not tainted 4.20.0-rc3+ #30
+> > >  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
+> > >  RIP: 0010:error_entry+0x12/0xf0
+> > >  [snip]
+> > >  Call Trace:
+> > >   <ENTRY_TRAMPOLINE>
+> > >   ? native_iret+0x7/0x7
+> > >   ? async_page_fault+0x8/0x30
+> > >   ? trace_hardirqs_on_thunk+0x1c/0x1c
+> > >   ? error_entry+0x7c/0xf0
+> > >   ? async_page_fault+0x8/0x30
+> > >   ? native_iret+0x7/0x7
+> > >   ? int3+0xa/0x20
+> > >   ? trace_hardirqs_on_thunk+0x1c/0x1c
+> > >   ? error_entry+0x7c/0xf0
+> > >   ? int3+0xa/0x20
+> > >   ? apic_timer_interrupt+0x1/0x20
+> > >   </ENTRY_TRAMPOLINE>
+> > >  Kernel panic - not syncing: Machine halted.
+> > >  Kernel Offset: disabled
+> > 
+> > I'm not able to reproduce this (by removing this commit). 
+> 
+> I ensured that if I revert both of this patch and Andrea's patch,
+> I can reproduce this with probing on apic_timer_interrupt().
+> 
+> > I'm thinking something else may have changed, as I've been tracing
+> > interrupt entries for years, and interrupting userspace while doing
+> > this.
+> > 
+> > I've even added probes where ftrace isn't (where it uses an int3) and
+> > still haven't hit a problem.
+> > 
+> > I think this patch is swatting a symptom of a bug and not addressing
+> > the bug itself. Can you send me the config that triggers this?
+> 
+> Yes, it seems you're right. Andrea's commit specifically fixed the
+> issue and mine is redundant. (I'm not sure why do_IRQ is in 
+> __irqentry_text...)
 
-But when linking a HW sound card and aloop without this patch set, both 
-devices will be started in sync but
-the snd_pcm_period_eleapsed() calls of the different devices will drift. 
-To avoid this the aloop plugin can automatically use the right timer.
-If this feature is not implemented the user has to use snd_pcm_link() to 
-trigger snd_pcm_start() in sync but also has to configure the aloop 
-plugin to use the right sound timer.
-May be the linked cards can change during runtime of the system. Without 
-this feature the aloop kernel driver has to be loaded with different 
-kernel parameters
-to select the right timer.
+Not sure if there are specific reasons for that, but do_IRQ is part of
+__irqentry_text because it's explicitly marked with __irq_entry.
 
-ALSA controls cannot be used easily. Selecting the sound timer by the 
-card number could be error prone because the card ID could change 
-between system starts.
-Therefore an ALSA control supporting the card name should be used. This 
-could be for example done via an ALSA enum control. But in this case the 
-names of all sound cards of the system has to be available
-on aloop probe() call. But at this point in time the sound cards probed 
-after aloop are not available. Therefore only the sound timers of the 
-sound cards probed before aloop are selectable.
+> 
+> So, Ingo, please revert this, since this bug already has been fixed by
+> commit a50480cb6d61 ("kprobes: x86_64: blacklist non-attachable interrupt
+> functions")
+> 
+> BTW, for further error investigation, I attached my kconfig which is
+> usually I'm testing (some options can be changed) on Qemu.
+> I'm using my mini-container shellscript ( https://github.com/mhiramat/mincs 
+> ) which supports qemu-container.
+> 
+> 
+> Thank you,
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
 
->
->
-> thanks,
->
-> Takashi
+Thanks,
+-Andrea
