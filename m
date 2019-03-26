@@ -2,89 +2,99 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D161AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBBFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03622084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C9F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 20:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="mbtWQCSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbfCZUau (ORCPT
+        id S1732726AbfCZUcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 16:30:50 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35172 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731617AbfCZUat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 16:30:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y197so14420844wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 13:30:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i5/6d8DkJ+1CUc14Gu8uylUm6zElUHAUrY5oLnamC2g=;
-        b=IKJFtgpXts8vB4rQ3Qe6dcU3uR0zRqfsK2/33GYfrNDDwQKeLLdoOBHpRdkUWjH1jV
-         I3N1WLhANio/phWshsbDxu+81zwC0r9t4o+hya92dtyzROJcM/6lGEC39UTpkS0hwZmE
-         PjESgJ099qJaFX7RqWuU1NUOZV8oB/53fkxfqGafg3sztlJK+AC21QlvUuxYY63Qxsb8
-         D+ZgHWuBEPAXCn97h/Xa3XU84t1erqvarOoW+5bvd5yJvt70D3hjlMYAed5sGUaxprl0
-         naQmi904LbnkuplFwCVVdQ4+DeWqYQBsx25Zwn5u+hnKJyMcK4ji+hABmhym9HaLDmbb
-         Blzg==
-X-Gm-Message-State: APjAAAXX2hVRmRmnLQtH74YdKV+PgGlEsRGpwDA5T0kGfY0DcB+Ah/ZM
-        yd+yxcS9HQIwigLMLFyk8O8fwg==
-X-Google-Smtp-Source: APXvYqxnDOsmiZ5KzOxUoWWpkiKDJ3s8DJkvdPY/tmmx5z60i2D7VeYnRwG03SoUh7dDHNjKw5wEFQ==
-X-Received: by 2002:a1c:f61a:: with SMTP id w26mr17279326wmc.70.1553632247818;
-        Tue, 26 Mar 2019 13:30:47 -0700 (PDT)
-Received: from raver.teknoraver.net (net-93-70-69-135.cust.vodafonedsl.it. [93.70.69.135])
-        by smtp.gmail.com with ESMTPSA id z11sm10573269wmf.12.2019.03.26.13.30.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 13:30:47 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     x86@kernel.org
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] x86/realmode: don't leak kernel addresses
-Date:   Tue, 26 Mar 2019 21:30:46 +0100
-Message-Id: <20190326203046.20787-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 26 Mar 2019 16:32:33 -0400
+Received: from vps.xff.cz ([195.181.215.36]:51040 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731617AbfCZUcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 16:32:33 -0400
+X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 Mar 2019 16:32:32 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1553631994; bh=KSbTlKGKQo5g7XiP9W/kwjgCMbjOyvr5fk6KhXsUrGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mbtWQCSg7uf6f3i9ynsk+7IZcPgKERPvxW7yHB+9uEUGYGzQDnoi9cCE0E1PrCanE
+         /s0yrTLxchhS3lVLc02f1GlzkzkPNU/x0TNp76HLia3RkXYUTK000DRt5ehufeOhOp
+         2ALWGWEPV2Iz8usVVjKg9/wnY0ZuZTGOuZyzMXDM=
+Date:   Tue, 26 Mar 2019 21:26:34 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc:     Ziping Chen <techping.chan@gmail.com>, wens@csie.org,
+        robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] Re: [PATCH v3 1/3] input: sun4i-a10-lradc-keys:
+ Add support for A83T
+Message-ID: <20190326202634.di2rhacp2izeqyg3@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@free-electrons.com>,
+        Ziping Chen <techping.chan@gmail.com>, wens@csie.org,
+        robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20170624024515.4669-1-techping.chan@gmail.com>
+ <20170624024515.4669-2-techping.chan@gmail.com>
+ <20170626171342.pdr7xdiaki4i5bdt@flea.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20170626171342.pdr7xdiaki4i5bdt@flea.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-at boot "____ptrval____" is printed instead of the trampoline addresses:
+Hello,
 
-    Base memory trampoline at [(____ptrval____)] 99000 size 24576
+On Mon, Jun 26, 2017 at 07:13:42PM +0200, Maxime Ripard wrote:
+> On Sat, Jun 24, 2017 at 10:45:13AM +0800, Ziping Chen wrote:
+> > From: Ziping Chen <techping.chan@gmail.com>
+> > 
+> > Allwinner A83T SoC has a low res adc like the one
+> > in Allwinner A10 SoC, however, the A10 SoC's vref
+> > of lradc internally is divided by 2/3 and the A83T
+> > SoC's vref of lradc internally is divided by 3/4,
+> > thus add a hardware variant for it to be compatible
+> > with various devices.
+> > 
+> > Signed-off-by: Ziping Chen <techping.chan@gmail.com>
+> 
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Remove the print as we don't want to leak kernel addresses.
+Can we move on with this patch series? It's a few years and it doesn't seem that
+there is any interest/progress with lradc iio based driver, and merging this
+wouldn't block that effort anyway (as suggested in other replies).
 
-Fixes: ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- arch/x86/realmode/init.c | 2 --
- 1 file changed, 2 deletions(-)
+I can re-send the series with the changed compatible name, and add a mainline
+user of this driver (A83T based TBS-A711 tablet).
 
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index d10105825d57..47d097946872 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -20,8 +20,6 @@ void __init set_real_mode_mem(phys_addr_t mem, size_t size)
- 	void *base = __va(mem);
- 
- 	real_mode_header = (struct real_mode_header *) base;
--	printk(KERN_DEBUG "Base memory trampoline at [%p] %llx size %zu\n",
--	       base, (unsigned long long)mem, size);
- }
- 
- void __init reserve_real_mode(void)
--- 
-2.20.1
+Any objections?
+
+regards,
+	o.
+
+> Thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
+
 
