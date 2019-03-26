@@ -2,362 +2,243 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC30C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D36C10F05
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEE120823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329A72084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 19:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553626843;
+	bh=wD0qcM2zjpCg+HzkOtXBH/1ZYsacIxOzvgiHalvukMQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f7iThBPJDQJrUGkj1EEXzaNBzSQNaKmFZYDSbNHpF17MgZI3ALJKEGS4Xh9VVL92b
+	 McTQ6PI4ffH8khJ3W8I33JoycPqAflXq+xM2GY3R6wEeB5sZJBMmpRBSdaWgz6+rna
+	 3WkN5hEoKkQG2ahdbZGrrU0vFAdjIqZLgMj9BTdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfCZS5x (ORCPT
+        id S1732384AbfCZTAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:57:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731467AbfCZS5w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:57:52 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2QItvbp034956
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 14:57:51 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfs5d9sga-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 14:57:51 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Tue, 26 Mar 2019 18:57:51 -0000
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 26 Mar 2019 18:57:47 -0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2QIvfVv13500460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Mar 2019 18:57:41 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA6E3C6055;
-        Tue, 26 Mar 2019 18:57:41 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83B76C6059;
-        Tue, 26 Mar 2019 18:57:40 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 26 Mar 2019 18:57:40 +0000 (GMT)
-Subject: Re: [PATCH v6 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Tue, 26 Mar 2019 14:57:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 26 Mar 2019 15:00:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731467AbfCZTAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 15:00:41 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29A220823;
+        Tue, 26 Mar 2019 19:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553626840;
+        bh=wD0qcM2zjpCg+HzkOtXBH/1ZYsacIxOzvgiHalvukMQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P+33IALqnRL3vKHa4U7M0WPk2c4dSIzJp3mxvQOXUX3vqPoklBw/47DQjDwxXKmD0
+         DvAaRl44E3/NnpPc4e9erTlb50uuHrU5BMXwgdkEkC2kbi2VvI3DDwA5Tdg9y0ZIPx
+         0XkRPl8H/ApfeDXfUiLV7dM/tjZeVjyJ9c8pv/M8=
+Date:   Tue, 26 Mar 2019 14:00:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux@yadro.com, Srinath Mannam <srinath.mannam@broadcom.com>,
+        Marta Rybczynska <mrybczyn@kalray.eu>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v4 02/21] PCI: Fix race condition in
+ pci_enable/disable_device()
+Message-ID: <20190326190038.GL24180@google.com>
+References: <20190311133122.11417-1-s.miroshnichenko@yadro.com>
+ <20190311133122.11417-3-s.miroshnichenko@yadro.com>
 MIME-Version: 1.0
-In-Reply-To: <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032618-0036-0000-0000-00000A9E1F08
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010819; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000282; SDB=6.01180048; UDB=6.00617521; IPR=6.00960763;
- MB=3.00026167; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-26 18:57:49
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032618-0037-0000-0000-00004B2B06B7
-Message-Id: <66abb1f6-425a-df94-cc7c-f1fdec0ece9c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-26_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903260129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311133122.11417-3-s.miroshnichenko@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 10:43 AM, Pierre Morel wrote:
-> We prepare the interception of the PQAP/AQIC instruction for
-> the case the AQIC facility is enabled in the guest.
+[+cc Srinath, Marta, LKML]
+
+On Mon, Mar 11, 2019 at 04:31:03PM +0300, Sergey Miroshnichenko wrote:
+>  CPU0                                      CPU1
 > 
-> First of all we do not want to change existing behavior when
-> intercepting AP instructions without the SIE allowing the guest
-> to use AP instructions.
+>  pci_enable_device_mem()                   pci_enable_device_mem()
+>    pci_enable_bridge()                       pci_enable_bridge()
+>      pci_is_enabled()
+>        return false;
+>      atomic_inc_return(enable_cnt)
+>      Start actual enabling the bridge
+>      ...                                       pci_is_enabled()
+>      ...                                         return true;
+>      ...                                   Start memory requests <-- FAIL
+>      ...
+>      Set the PCI_COMMAND_MEMORY bit <-- Must wait for this
 > 
-> In this patch we only handle the AQIC interception allowed by
-> facility 65 which will be enabled when the complete interception
-> infrastructure will be present.
-> 
-> We add a callback inside the KVM arch structure for s390 for
-> a VFIO driver to handle a specific response to the PQAP
-> instruction with the AQIC command and only this command.
-> 
-> But we want to be able to return a correct answer to the guest
-> even there is no VFIO AP driver in the kernel.
-> Therefor, we inject the correct exceptions from inside KVM for the
-> case the callback is not initialized, which happens when the vfio_ap
-> driver is not loaded.
-> 
-> We do consider the responsability of the driver to always initialize
-> the PQAP callback if it defines queues by initializing the CRYCB for
-> a guest.
-> If the callback has been setup we call it.
-> If not we setup an answer considering that no queue is available
-> for the guest when no callback has been setup.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> This patch protects the pci_enable/disable_device() and pci_enable_bridge()
+> with mutexes.
+
+This is a subtle issue that we've tried to fix before, but we've never
+had a satisfactory solution, so I hope you've figured out the right
+fix.
+
+I'll include some links to previous discussion.  This patch is very
+similar to [2], which we didn't actually apply.  We did apply the
+patch from [3] as 40f11adc7cd9 ("PCI: Avoid race while enabling
+upstream bridges"), but it caused the regressions reported in [4,5],
+so we reverted it with 0f50a49e3008 ("Revert "PCI: Avoid race while
+enabling upstream bridges"").
+
+I think the underlying design problem is that we have a driver for
+device B calling pci_enable_device(), and it is changing the state of
+device A (an upstream bridge).  The model generally is that a driver
+should only touch the device it is bound to.
+
+It's tricky to get the locking right when several children of device A
+all need to operate on A.
+
+That's all to say I'll have to think carefully about this particular
+patch, so I'll go on to the others and come back to this one.
+
+Bjorn
+
+[1] https://lore.kernel.org/linux-pci/1494256190-28993-1-git-send-email-srinath.mannam@broadcom.com/T/#u
+    [RFC PATCH] pci: Concurrency issue in NVMe Init through PCIe switch
+
+[2] https://lore.kernel.org/linux-pci/1496135297-19680-1-git-send-email-srinath.mannam@broadcom.com/T/#u
+    [RFC PATCH v2] pci: Concurrency issue in NVMe Init through PCIe switch
+
+[3] https://lore.kernel.org/linux-pci/1501858648-22228-1-git-send-email-srinath.mannam@broadcom.com/T/#u
+    [RFC PATCH v3] pci: Concurrency issue during pci enable bridge
+
+[4] https://lore.kernel.org/linux-pci/150547971091.977464.16294045866179907260.stgit@buzz/T/#u
+    [PATCH bisected regression in 4.14] PCI: fix race while enabling upstream bridges concurrently
+
+[5] https://lore.kernel.org/linux-wireless/04c9b578-693c-1dc6-9f0f-904580231b21@kernel.dk/T/#u
+    iwlwifi firmware load broken in current -git
+
+[6] https://lore.kernel.org/linux-pci/744877924.5841545.1521630049567.JavaMail.zimbra@kalray.eu/T/#u
+    [RFC PATCH] nvme: avoid race-conditions when enabling devices
+
+> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
 > ---
->   arch/s390/include/asm/kvm_host.h      |  8 ++++
->   arch/s390/kvm/priv.c                  | 90 +++++++++++++++++++++++++++++++++++
->   drivers/s390/crypto/vfio_ap_private.h |  2 +
->   3 files changed, 100 insertions(+)
+>  drivers/pci/pci.c   | 26 ++++++++++++++++++++++----
+>  drivers/pci/probe.c |  1 +
+>  include/linux/pci.h |  1 +
+>  3 files changed, 24 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-> index a496276..624460b 100644
-> --- a/arch/s390/include/asm/kvm_host.h
-> +++ b/arch/s390/include/asm/kvm_host.h
-> @@ -18,6 +18,7 @@
->   #include <linux/kvm_host.h>
->   #include <linux/kvm.h>
->   #include <linux/seqlock.h>
-> +#include <linux/module.h>
->   #include <asm/debug.h>
->   #include <asm/cpu.h>
->   #include <asm/fpu/api.h>
-> @@ -721,8 +722,15 @@ struct kvm_s390_cpu_model {
->   	unsigned short ibc;
->   };
->   
-> +struct kvm_s390_module_hook {
-> +	int (*hook)(struct kvm_vcpu *vcpu);
-> +	void *data;
-> +	struct module *owner;
-> +};
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index f006068be209..895201d4c9e6 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1615,6 +1615,8 @@ static void pci_enable_bridge(struct pci_dev *dev)
+>  	struct pci_dev *bridge;
+>  	int retval;
+>  
+> +	mutex_lock(&dev->enable_mutex);
 > +
->   struct kvm_s390_crypto {
->   	struct kvm_s390_crypto_cb *crycb;
-> +	struct kvm_s390_module_hook *pqap_hook;
->   	__u32 crycbd;
->   	__u8 aes_kw;
->   	__u8 dea_kw;
-> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
-> index 8679bd7..793e48a 100644
-> --- a/arch/s390/kvm/priv.c
-> +++ b/arch/s390/kvm/priv.c
-> @@ -27,6 +27,7 @@
->   #include <asm/io.h>
->   #include <asm/ptrace.h>
->   #include <asm/sclp.h>
-> +#include <asm/ap.h>
->   #include "gaccess.h"
->   #include "kvm-s390.h"
->   #include "trace.h"
-> @@ -592,6 +593,93 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->   	}
->   }
->   
-> +/*
-> + * handle_pqap: Handling pqap interception
-> + * @vcpu: the vcpu having issue the pqap instruction
-> + *
-> + * We now support PQAP/AQIC instructions and we need to correctly
-> + * answer the guest even if no dedicated driver's hook is available.
-> + *
-> + * The intercepting code calls a dedicated callback for this instruction
-> + * if a driver did register one in the CRYPTO satellite of the
-> + * SIE block.
-> + *
-> + * For PQAP AQIC and TAPQ instructions, verify privilege and specifications.
-
-The two paragraphs above should be described via the comments embedded
-in the code and is not necessary here.
-
-> + *
-> + * If no callback available, the queues are not available, return this to
-> + * the caller.
-
-This implies it is specified via the return code when it is in fact
-the response code in the status word.
-
-> + * Else return the value returned by the callback.
-> + */
-
-Given this handler may be called for any PQAP instruction sub-function,
-I think the function doc should be more generic, providing:
-
-* A general description of what the function does
-* A description of each input parameter
-* A description of the value returned. If the return value is a return
-   code, the possible rc values can be enumerated with a description for
-   of the reason each particular value may be returned.
-
-> +static int handle_pqap(struct kvm_vcpu *vcpu)
-> +{
-> +	struct ap_queue_status status = {};
-> +	unsigned long reg0;
-> +	int ret;
-> +	uint8_t fc;
-> +
-> +	/* Verify that the AP instruction are available */
-> +	if (!ap_instructions_available())
-> +		return -EOPNOTSUPP;
-> +	/* Verify that the guest is allowed to use AP instructions */
-> +	if (!(vcpu->arch.sie_block->eca & ECA_APIE))
-> +		return -EOPNOTSUPP;
-> +	/*
-> +	 * The only possibly intercepted instructions when AP instructions are
-> +	 * available for the guest are AQIC and TAPQ with the t bit set
-> +	 * since we do not set IC.3 (FIII) we currently will not intercept
-> +	 * TAPQ.
-> +	 * The following code will only treat AQIC function code.
-> +	 */
-
-Simplify to:
-
-/* The only supported PQAP function is AQIC (0x03) */
-
-> +	reg0 = vcpu->run->s.regs.gprs[0];
-> +	fc = reg0 >> 24;
-> +	if (fc != 0x03) {
-> +		pr_warn("%s: Unexpected interception code 0x%02x\n",
-> +			__func__, fc);
-> +		return -EOPNOTSUPP;
+>  	bridge = pci_upstream_bridge(dev);
+>  	if (bridge)
+>  		pci_enable_bridge(bridge);
+> @@ -1622,6 +1624,7 @@ static void pci_enable_bridge(struct pci_dev *dev)
+>  	if (pci_is_enabled(dev)) {
+>  		if (!dev->is_busmaster)
+>  			pci_set_master(dev);
+> +		mutex_unlock(&dev->enable_mutex);
+>  		return;
+>  	}
+>  
+> @@ -1630,11 +1633,14 @@ static void pci_enable_bridge(struct pci_dev *dev)
+>  		pci_err(dev, "Error enabling bridge (%d), continuing\n",
+>  			retval);
+>  	pci_set_master(dev);
+> +	mutex_unlock(&dev->enable_mutex);
+>  }
+>  
+>  static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+>  {
+>  	struct pci_dev *bridge;
+> +	/* Enable-locking of bridges is performed within the pci_enable_bridge() */
+> +	bool need_lock = !dev->subordinate;
+>  	int err;
+>  	int i, bars = 0;
+>  
+> @@ -1650,8 +1656,13 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+>  		dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+>  	}
+>  
+> -	if (atomic_inc_return(&dev->enable_cnt) > 1)
+> +	if (need_lock)
+> +		mutex_lock(&dev->enable_mutex);
+> +	if (pci_is_enabled(dev)) {
+> +		if (need_lock)
+> +			mutex_unlock(&dev->enable_mutex);
+>  		return 0;		/* already enabled */
 > +	}
-> +	/* All PQAP instructions are allowed for guest kernel only */
-
-There is only one PQAP instruction with multiple sub-functions.
-/* PQAP instruction is allowed for guest kernel only */
-                         or
-/* PQAP instruction is privileged */
-
-> +	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
-> +		return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
-> +	/*
-> +	 * Common tests for PQAP instructions to generate a specification
-> +	 * exception
-> +	 */
-
-This comment is unnecessary as the individual comments below adequately
-do the job.
-
-> +	/* Zero bits overwrite produce a specification exception */
-
-This comment has no meaning unless you intimately know the architecture.
-The following would make more sense:
-
-	/* Bits 41-47 must all be zeros */
-
-It's probably not a big deal, but since we don't support PQAP(TAPQ),
-would it make more sense to make sure bits 40-47 are zeros (i.e.,
-the 't' bit is not set)?
-
-> +	if (reg0 & 0x007f0000UL)
-> +		goto specification_except;
-> +	/* If APXA is not installed APQN is limited */
-
-Wouldn't it be better to state how the APQN is limited?
-For example:
-
-	/*
-	 * If APXA is not installed, then the maximum APID is
-	 * 63 (bits 48-49 of reg0 must be zero) and the maximum
-	 * APQI is 15 (bits 56-59 must be zero)
-	 */
-
-> +	if (!(vcpu->kvm->arch.crypto.crycbd & 0x02))
-> +		if (reg0 & 0x000030f0UL)
-
-If APXA is not installed, then bits 48-49 and 56-59 must all be
-zeros. Shouldn't this mask be 0x0000c0f0UL?
-
-> +			goto specification_except;
-> +	/* AQIC needs facility 65 */
-> +	if (!test_kvm_facility(vcpu->kvm, 65))
-> +		goto specification_except;
-> +
-> +	/*
-> +	 * Verify that the hook callback is registered, lock the owner
-> +	 * and call the hook.
-> +	 */
-> +	if (vcpu->kvm->arch.crypto.pqap_hook) {
-> +		if (!try_module_get(vcpu->kvm->arch.crypto.pqap_hook->owner))
-> +			return -EOPNOTSUPP;
-> +		ret = vcpu->kvm->arch.crypto.pqap_hook->hook(vcpu);
-> +		module_put(vcpu->kvm->arch.crypto.pqap_hook->owner);
-> +		return ret;
+>  
+>  	bridge = pci_upstream_bridge(dev);
+>  	if (bridge)
+> @@ -1666,8 +1677,10 @@ static int pci_enable_device_flags(struct pci_dev *dev, unsigned long flags)
+>  			bars |= (1 << i);
+>  
+>  	err = do_pci_enable_device(dev, bars);
+> -	if (err < 0)
+> -		atomic_dec(&dev->enable_cnt);
+> +	if (err >= 0)
+> +		atomic_inc(&dev->enable_cnt);
+> +	if (need_lock)
+> +		mutex_unlock(&dev->enable_mutex);
+>  	return err;
+>  }
+>  
+> @@ -1910,15 +1923,20 @@ void pci_disable_device(struct pci_dev *dev)
+>  	if (dr)
+>  		dr->enabled = 0;
+>  
+> +	mutex_lock(&dev->enable_mutex);
+>  	dev_WARN_ONCE(&dev->dev, atomic_read(&dev->enable_cnt) <= 0,
+>  		      "disabling already-disabled device");
+>  
+> -	if (atomic_dec_return(&dev->enable_cnt) != 0)
+> +	if (atomic_dec_return(&dev->enable_cnt) != 0) {
+> +		mutex_unlock(&dev->enable_mutex);
+>  		return;
 > +	}
-> +	/*
-> +	 * It is the duty of the vfio_driver to register a hook
-> +	 * If it does not and we get an exception on AQIC we must
-> +	 * guess that there is no vfio_ap_driver at all and no one
-> +	 * to handle the guests's CRYCB and the CRYCB is empty.
-> +	 */
-
-The comment above does not make sense to me. If there is no pqap
-hook registered, then we need to handle that case for sure. But why
-mention getting an exception? Why even mention whose responsibility
-it is to set the hook when all we need to know is whether a hook is
-set or not?
-
-I am wondering whether merely setting a response code indicating the
-APQN is invalid is the correct thing to do here. First of all, if the
-guest's CRYCB is empty, then the AP bus running in the guest would not
-create any AP devices or any AP queues bound to any zcrypt driver. In
-that case, I don't think the PQAP(AQIC) would ever be issued. If a
-PQAP is intercepted, wouldn't we want to return -EOPNOTSUPP?
-
-
-
-> +	status.response_code = 0x01;
-> +	memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
-> +	return 0;
+>  
+>  	do_pci_disable_device(dev);
+>  
+>  	dev->is_busmaster = 0;
 > +
-> +specification_except:
-> +	return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
-> +}
-> +
->   static int handle_stfl(struct kvm_vcpu *vcpu)
->   {
->   	int rc;
-> @@ -878,6 +966,8 @@ int kvm_s390_handle_b2(struct kvm_vcpu *vcpu)
->   		return handle_sthyi(vcpu);
->   	case 0x7d:
->   		return handle_stsi(vcpu);
-> +	case 0xaf:
-> +		return handle_pqap(vcpu);
->   	case 0xb1:
->   		return handle_stfl(vcpu);
->   	case 0xb2:
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index 76b7f98..a910be1 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.hhttps://www.linuxmint.com/start/sylvia/
-> @@ -16,6 +16,7 @@
->   #include <linux/mdev.h>
->   #include <linux/delay.h>
->   #include <linux/mutex.h>
-> +#include <linux/kvm_host.h>
->   
->   #include "ap_bus.h"
->   
-> @@ -81,6 +82,7 @@ struct ap_matrix_mdev {
->   	struct ap_matrix matrix;
->   	struct notifier_block group_notifier;
->   	struct kvm *kvm;
-> +	struct kvm_s390_module_hook pqap_hook;
->   };
->   
->   extern int vfio_ap_mdev_register(void);
+> +	mutex_unlock(&dev->enable_mutex);
+>  }
+>  EXPORT_SYMBOL(pci_disable_device);
+>  
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2ec0df04e0dc..977a127ce791 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2267,6 +2267,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+>  	INIT_LIST_HEAD(&dev->bus_list);
+>  	dev->dev.type = &pci_dev_type;
+>  	dev->bus = pci_bus_get(bus);
+> +	mutex_init(&dev->enable_mutex);
+>  
+>  	return dev;
+>  }
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 77448215ef5b..cb2760a31fe2 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -419,6 +419,7 @@ struct pci_dev {
+>  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+>  	pci_dev_flags_t dev_flags;
+>  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+> +	struct mutex	enable_mutex;
+>  
+>  	u32		saved_config_space[16]; /* Config space saved at suspend time */
+>  	struct hlist_head saved_cap_space;
+> -- 
+> 2.20.1
 > 
-
