@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1105C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD27DC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A6520879
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B382084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 00:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="I37xfFO+"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ogMJ6ZNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfCZArW (ORCPT
+        id S1730938AbfCZAr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 Mar 2019 20:47:22 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49720 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726186AbfCZArU (ORCPT
+        Mon, 25 Mar 2019 20:47:27 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36668 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726186AbfCZArY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 Mar 2019 20:47:20 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2Q0ijNO016005
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:47:20 -0700
+        Mon, 25 Mar 2019 20:47:24 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2Q0h4XX003792
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:47:23 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=6UbTFLUkcgxLYeGzHk48r1CygFdthoR8zb7gl0ih+X4=;
- b=I37xfFO+hZaFhvhbXUfoDruf0l1bvIJtrvTx72EyroLoIPrDJVb0v2rhZIycbz+6/DdL
- giz84RyZrWv8/aUzfZTS4hyGiYt4QZsclcEH5nVsNDl42SpM2lYufkTRuewBq5skOoHb
- LyYDC5z4ayOEEJcT6koVcTT8VU8LkBqRJec= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by m0089730.ppops.net with ESMTP id 2rf3rm9jrm-7
+ content-type; s=facebook; bh=0DipYnreK6y9qvxuVL79aoo8YWq9tRY/xF9uWa/OP0k=;
+ b=ogMJ6ZNO4qHGQ/SBWBwh/ei3KivDuipa8enu6BOrRVG+R4+KQSZq0KmB6QsKnJqtGveC
+ tOXWD2Vl4FDarvHA42RnSFrBFeRqhiDrHROqm2/koQIwWy3exsTjpmwneV8uPmIfV0Al
+ SDRWEK8koDbDIHKNVPzuk5Lh5jZfzMRPq9A= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rf3e6hu9p-6
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:47:20 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 17:47:23 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Mon, 25 Mar 2019 17:47:18 -0700
+ Mon, 25 Mar 2019 17:47:20 -0700
 Received: by dev082.prn2.facebook.com (Postfix, from userid 572249)
-        id E70653703672; Mon, 25 Mar 2019 17:47:14 -0700 (PDT)
+        id 57B6C3703672; Mon, 25 Mar 2019 17:47:19 -0700 (PDT)
 Smtp-Origin-Hostprefix: dev
 From:   Andrey Ignatov <rdna@fb.com>
 Smtp-Origin-Hostname: dev082.prn2.facebook.com
@@ -53,9 +53,9 @@ CC:     Andrey Ignatov <rdna@fb.com>, <ast@kernel.org>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
 Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 bpf-next 10/21] selftests/bpf: Test BPF_CGROUP_SYSCTL
-Date:   Mon, 25 Mar 2019 17:43:36 -0700
-Message-ID: <a2e42fb49cb4acec8cd3f9fa9d7a21c80c357226.1553560621.git.rdna@fb.com>
+Subject: [PATCH v2 bpf-next 11/21] selftests/bpf: Test bpf_sysctl_get_name helper
+Date:   Mon, 25 Mar 2019 17:43:37 -0700
+Message-ID: <7ca834678d94e2c69ca21cc6989ff99b983ddd09.1553560621.git.rdna@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1553560620.git.rdna@fb.com>
 References: <cover.1553560620.git.rdna@fb.com>
@@ -71,346 +71,256 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add unit test for BPF_PROG_TYPE_CGROUP_SYSCTL program type.
+Test w/ and w/o BPF_F_SYSCTL_BASE_NAME, buffers with enough space and
+too small buffers to get E2BIG and truncated result, etc.
 
-Test that program can allow/deny access.
-Test both valid and invalid accesses to ctx->write.
-
-Example of output:
   # ./test_sysctl
-  Test case: sysctl wrong attach_type .. [PASS]
-  Test case: sysctl:read allow all .. [PASS]
-  Test case: sysctl:read deny all .. [PASS]
-  Test case: ctx:write sysctl:read read ok .. [PASS]
-  Test case: ctx:write sysctl:write read ok .. [PASS]
-  Test case: ctx:write sysctl:read write reject .. [PASS]
-  Summary: 6 PASSED, 0 FAILED
+  ...
+  Test case: sysctl_get_name sysctl_value:base ok .. [PASS]
+  Test case: sysctl_get_name sysctl_value:base E2BIG truncated .. [PASS]
+  Test case: sysctl_get_name sysctl:full ok .. [PASS]
+  Test case: sysctl_get_name sysctl:full E2BIG truncated .. [PASS]
+  Test case: sysctl_get_name sysctl:full E2BIG truncated small .. [PASS]
+  Summary: 11 PASSED, 0 FAILED
 
 Signed-off-by: Andrey Ignatov <rdna@fb.com>
 ---
- tools/testing/selftests/bpf/Makefile      |   3 +-
- tools/testing/selftests/bpf/test_sysctl.c | 291 ++++++++++++++++++++++
- 2 files changed, 293 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/test_sysctl.c
+ tools/testing/selftests/bpf/test_sysctl.c | 222 ++++++++++++++++++++++
+ 1 file changed, 222 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 77b73b892136..d3132f16faed 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -23,7 +23,7 @@ TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_lpm_map test
- 	test_align test_verifier_log test_dev_cgroup test_tcpbpf_user \
- 	test_sock test_btf test_sockmap test_lirc_mode2_user get_cgroup_id_user \
- 	test_socket_cookie test_cgroup_storage test_select_reuseport test_section_names \
--	test_netcnt test_tcpnotify_user test_sock_fields
-+	test_netcnt test_tcpnotify_user test_sock_fields test_sysctl
- 
- BPF_OBJ_FILES = $(patsubst %.c,%.o, $(notdir $(wildcard progs/*.c)))
- TEST_GEN_FILES = $(BPF_OBJ_FILES)
-@@ -93,6 +93,7 @@ $(OUTPUT)/get_cgroup_id_user: cgroup_helpers.c
- $(OUTPUT)/test_cgroup_storage: cgroup_helpers.c
- $(OUTPUT)/test_netcnt: cgroup_helpers.c
- $(OUTPUT)/test_sock_fields: cgroup_helpers.c
-+$(OUTPUT)/test_sysctl: cgroup_helpers.c
- 
- .PHONY: force
- 
 diff --git a/tools/testing/selftests/bpf/test_sysctl.c b/tools/testing/selftests/bpf/test_sysctl.c
-new file mode 100644
-index 000000000000..6d0ab09789ad
---- /dev/null
+index 6d0ab09789ad..2e7ef04503a8 100644
+--- a/tools/testing/selftests/bpf/test_sysctl.c
 +++ b/tools/testing/selftests/bpf/test_sysctl.c
-@@ -0,0 +1,291 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Facebook
-+
-+#include <fcntl.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include <linux/filter.h>
-+
-+#include <bpf/bpf.h>
-+
-+#include "bpf_rlimit.h"
-+#include "bpf_util.h"
-+#include "cgroup_helpers.h"
-+
-+#define CG_PATH			"/foo"
-+#define MAX_INSNS		512
-+
-+char bpf_log_buf[BPF_LOG_BUF_SIZE];
-+
-+struct sysctl_test {
-+	const char *descr;
-+	struct bpf_insn	insns[MAX_INSNS];
-+	enum bpf_attach_type attach_type;
-+	const char *sysctl;
-+	int open_flags;
-+	const char *newval;
-+	enum {
-+		LOAD_REJECT,
-+		ATTACH_REJECT,
-+		OP_EPERM,
-+		SUCCESS,
-+	} result;
-+};
-+
-+static struct sysctl_test tests[] = {
+@@ -128,6 +128,228 @@ static struct sysctl_test tests[] = {
+ 		.open_flags = O_RDONLY,
+ 		.result = LOAD_REJECT,
+ 	},
 +	{
-+		.descr = "sysctl wrong attach_type",
++		.descr = "sysctl_get_name sysctl_value:base ok",
 +		.insns = {
++			/* sysctl_get_name arg2 (buf) */
++			BPF_MOV64_REG(BPF_REG_7, BPF_REG_10),
++			BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, -8),
++			BPF_MOV64_IMM(BPF_REG_0, 0),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 0),
++
++			BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
++
++			/* sysctl_get_name arg3 (buf_len) */
++			BPF_MOV64_IMM(BPF_REG_3, 8),
++
++			/* sysctl_get_name arg4 (flags) */
++			BPF_MOV64_IMM(BPF_REG_4, BPF_F_SYSCTL_BASE_NAME),
++
++			/* sysctl_get_name(ctx, buf, buf_len, flags) */
++			BPF_EMIT_CALL(BPF_FUNC_sysctl_get_name),
++
++			/* if (ret == expected && */
++			BPF_JMP_IMM(BPF_JNE, BPF_REG_0, sizeof("tcp_mem") - 1, 6),
++			/*     buf == "tcp_mem\0") */
++			BPF_LD_IMM64(BPF_REG_8, 0x006d656d5f706374ULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 0),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 2),
++
++			/* return ALLOW; */
 +			BPF_MOV64_IMM(BPF_REG_0, 1),
-+			BPF_EXIT_INSN(),
-+		},
-+		.attach_type = 0,
-+		.sysctl = "kernel/ostype",
-+		.open_flags = O_RDONLY,
-+		.result = ATTACH_REJECT,
-+	},
-+	{
-+		.descr = "sysctl:read allow all",
-+		.insns = {
-+			BPF_MOV64_IMM(BPF_REG_0, 1),
++			BPF_JMP_A(1),
++
++			/* else return DENY; */
++			BPF_MOV64_IMM(BPF_REG_0, 0),
 +			BPF_EXIT_INSN(),
 +		},
 +		.attach_type = BPF_CGROUP_SYSCTL,
-+		.sysctl = "kernel/ostype",
++		.sysctl = "net/ipv4/tcp_mem",
 +		.open_flags = O_RDONLY,
 +		.result = SUCCESS,
 +	},
 +	{
-+		.descr = "sysctl:read deny all",
++		.descr = "sysctl_get_name sysctl_value:base E2BIG truncated",
 +		.insns = {
++			/* sysctl_get_name arg2 (buf) */
++			BPF_MOV64_REG(BPF_REG_7, BPF_REG_10),
++			BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, -8),
 +			BPF_MOV64_IMM(BPF_REG_0, 0),
-+			BPF_EXIT_INSN(),
-+		},
-+		.attach_type = BPF_CGROUP_SYSCTL,
-+		.sysctl = "kernel/ostype",
-+		.open_flags = O_RDONLY,
-+		.result = OP_EPERM,
-+	},
-+	{
-+		.descr = "ctx:write sysctl:read read ok",
-+		.insns = {
-+			/* If (write) */
-+			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_1,
-+				    offsetof(struct bpf_sysctl, write)),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 1, 2),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 0),
 +
-+			/* return DENY; */
-+			BPF_MOV64_IMM(BPF_REG_0, 0),
++			BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
++
++			/* sysctl_get_name arg3 (buf_len) too small */
++			BPF_MOV64_IMM(BPF_REG_3, 7),
++
++			/* sysctl_get_name arg4 (flags) */
++			BPF_MOV64_IMM(BPF_REG_4, BPF_F_SYSCTL_BASE_NAME),
++
++			/* sysctl_get_name(ctx, buf, buf_len, flags) */
++			BPF_EMIT_CALL(BPF_FUNC_sysctl_get_name),
++
++			/* if (ret == expected && */
++			BPF_JMP_IMM(BPF_JNE, BPF_REG_0, -E2BIG, 6),
++
++			/*     buf[0:7] == "tcp_me\0") */
++			BPF_LD_IMM64(BPF_REG_8, 0x00656d5f706374ULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 0),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 2),
++
++			/* return ALLOW; */
++			BPF_MOV64_IMM(BPF_REG_0, 1),
 +			BPF_JMP_A(1),
 +
-+			/* else return ALLOW; */
-+			BPF_MOV64_IMM(BPF_REG_0, 1),
++			/* else return DENY; */
++			BPF_MOV64_IMM(BPF_REG_0, 0),
 +			BPF_EXIT_INSN(),
 +		},
 +		.attach_type = BPF_CGROUP_SYSCTL,
-+		.sysctl = "kernel/ostype",
++		.sysctl = "net/ipv4/tcp_mem",
 +		.open_flags = O_RDONLY,
 +		.result = SUCCESS,
 +	},
 +	{
-+		.descr = "ctx:write sysctl:write read ok",
++		.descr = "sysctl_get_name sysctl:full ok",
 +		.insns = {
-+			/* If (write) */
-+			BPF_LDX_MEM(BPF_B, BPF_REG_7, BPF_REG_1,
-+				    offsetof(struct bpf_sysctl, write)),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 1, 2),
-+
-+			/* return DENY; */
++			/* sysctl_get_name arg2 (buf) */
++			BPF_MOV64_REG(BPF_REG_7, BPF_REG_10),
++			BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, -24),
 +			BPF_MOV64_IMM(BPF_REG_0, 0),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 0),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 8),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 16),
++
++			BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
++
++			/* sysctl_get_name arg3 (buf_len) */
++			BPF_MOV64_IMM(BPF_REG_3, 17),
++
++			/* sysctl_get_name arg4 (flags) */
++			BPF_MOV64_IMM(BPF_REG_4, 0),
++
++			/* sysctl_get_name(ctx, buf, buf_len, flags) */
++			BPF_EMIT_CALL(BPF_FUNC_sysctl_get_name),
++
++			/* if (ret == expected && */
++			BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 16, 14),
++
++			/*     buf[0:8] == "net/ipv4" && */
++			BPF_LD_IMM64(BPF_REG_8, 0x347670692f74656eULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 0),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 10),
++
++			/*     buf[8:16] == "/tcp_mem" && */
++			BPF_LD_IMM64(BPF_REG_8, 0x6d656d5f7063742fULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 8),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 6),
++
++			/*     buf[16:24] == "\0") */
++			BPF_LD_IMM64(BPF_REG_8, 0x0ULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 16),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 2),
++
++			/* return ALLOW; */
++			BPF_MOV64_IMM(BPF_REG_0, 1),
 +			BPF_JMP_A(1),
 +
-+			/* else return ALLOW; */
-+			BPF_MOV64_IMM(BPF_REG_0, 1),
++			/* else return DENY; */
++			BPF_MOV64_IMM(BPF_REG_0, 0),
 +			BPF_EXIT_INSN(),
 +		},
 +		.attach_type = BPF_CGROUP_SYSCTL,
-+		.sysctl = "kernel/domainname",
-+		.open_flags = O_WRONLY,
-+		.newval = "(none)", /* same as default, should fail anyway */
-+		.result = OP_EPERM,
++		.sysctl = "net/ipv4/tcp_mem",
++		.open_flags = O_RDONLY,
++		.result = SUCCESS,
 +	},
 +	{
-+		.descr = "ctx:write sysctl:read write reject",
++		.descr = "sysctl_get_name sysctl:full E2BIG truncated",
 +		.insns = {
-+			/* write = X */
++			/* sysctl_get_name arg2 (buf) */
++			BPF_MOV64_REG(BPF_REG_7, BPF_REG_10),
++			BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, -16),
 +			BPF_MOV64_IMM(BPF_REG_0, 0),
-+			BPF_STX_MEM(BPF_W, BPF_REG_1, BPF_REG_0,
-+				    offsetof(struct bpf_sysctl, write)),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 0),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 8),
++
++			BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
++
++			/* sysctl_get_name arg3 (buf_len) */
++			BPF_MOV64_IMM(BPF_REG_3, 16),
++
++			/* sysctl_get_name arg4 (flags) */
++			BPF_MOV64_IMM(BPF_REG_4, 0),
++
++			/* sysctl_get_name(ctx, buf, buf_len, flags) */
++			BPF_EMIT_CALL(BPF_FUNC_sysctl_get_name),
++
++			/* if (ret == expected && */
++			BPF_JMP_IMM(BPF_JNE, BPF_REG_0, -E2BIG, 10),
++
++			/*     buf[0:8] == "net/ipv4" && */
++			BPF_LD_IMM64(BPF_REG_8, 0x347670692f74656eULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 0),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 6),
++
++			/*     buf[8:16] == "/tcp_me\0") */
++			BPF_LD_IMM64(BPF_REG_8, 0x00656d5f7063742fULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 8),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 2),
++
++			/* return ALLOW; */
 +			BPF_MOV64_IMM(BPF_REG_0, 1),
++			BPF_JMP_A(1),
++
++			/* else return DENY; */
++			BPF_MOV64_IMM(BPF_REG_0, 0),
 +			BPF_EXIT_INSN(),
 +		},
 +		.attach_type = BPF_CGROUP_SYSCTL,
-+		.sysctl = "kernel/ostype",
++		.sysctl = "net/ipv4/tcp_mem",
 +		.open_flags = O_RDONLY,
-+		.result = LOAD_REJECT,
++		.result = SUCCESS,
 +	},
-+};
++	{
++		.descr = "sysctl_get_name sysctl:full E2BIG truncated small",
++		.insns = {
++			/* sysctl_get_name arg2 (buf) */
++			BPF_MOV64_REG(BPF_REG_7, BPF_REG_10),
++			BPF_ALU64_IMM(BPF_ADD, BPF_REG_7, -8),
++			BPF_MOV64_IMM(BPF_REG_0, 0),
++			BPF_STX_MEM(BPF_DW, BPF_REG_7, BPF_REG_0, 0),
 +
-+static size_t probe_prog_length(const struct bpf_insn *fp)
-+{
-+	size_t len;
++			BPF_MOV64_REG(BPF_REG_2, BPF_REG_7),
 +
-+	for (len = MAX_INSNS - 1; len > 0; --len)
-+		if (fp[len].code != 0 || fp[len].imm != 0)
-+			break;
-+	return len + 1;
-+}
++			/* sysctl_get_name arg3 (buf_len) */
++			BPF_MOV64_IMM(BPF_REG_3, 7),
 +
-+static int load_sysctl_prog(struct sysctl_test *test, const char *sysctl_path)
-+{
-+	struct bpf_insn *prog = test->insns;
-+	struct bpf_load_program_attr attr;
-+	int ret;
++			/* sysctl_get_name arg4 (flags) */
++			BPF_MOV64_IMM(BPF_REG_4, 0),
 +
-+	memset(&attr, 0, sizeof(struct bpf_load_program_attr));
-+	attr.prog_type = BPF_PROG_TYPE_CGROUP_SYSCTL;
-+	attr.insns = prog;
-+	attr.insns_cnt = probe_prog_length(attr.insns);
-+	attr.license = "GPL";
++			/* sysctl_get_name(ctx, buf, buf_len, flags) */
++			BPF_EMIT_CALL(BPF_FUNC_sysctl_get_name),
 +
-+	ret = bpf_load_program_xattr(&attr, bpf_log_buf, BPF_LOG_BUF_SIZE);
-+	if (ret < 0 && test->result != LOAD_REJECT) {
-+		log_err(">>> Loading program error.\n"
-+			">>> Verifier output:\n%s\n-------\n", bpf_log_buf);
-+	}
++			/* if (ret == expected && */
++			BPF_JMP_IMM(BPF_JNE, BPF_REG_0, -E2BIG, 6),
 +
-+	return ret;
-+}
++			/*     buf[0:8] == "net/ip\0") */
++			BPF_LD_IMM64(BPF_REG_8, 0x000070692f74656eULL),
++			BPF_LDX_MEM(BPF_DW, BPF_REG_9, BPF_REG_7, 0),
++			BPF_JMP_REG(BPF_JNE, BPF_REG_8, BPF_REG_9, 2),
 +
-+static int access_sysctl(const char *sysctl_path,
-+			 const struct sysctl_test *test)
-+{
-+	int err = 0;
-+	int fd;
++			/* return ALLOW; */
++			BPF_MOV64_IMM(BPF_REG_0, 1),
++			BPF_JMP_A(1),
 +
-+	fd = open(sysctl_path, test->open_flags | O_CLOEXEC);
-+	if (fd < 0)
-+		return fd;
-+
-+	if (test->open_flags == O_RDONLY) {
-+		char buf[128];
-+
-+		if (read(fd, buf, sizeof(buf)) == -1)
-+			goto err;
-+	} else if (test->open_flags == O_WRONLY) {
-+		if (!test->newval) {
-+			log_err("New value for sysctl is not set");
-+			goto err;
-+		}
-+		if (write(fd, test->newval, strlen(test->newval)) == -1)
-+			goto err;
-+	} else {
-+		log_err("Unexpected sysctl access: neither read nor write");
-+		goto err;
-+	}
-+
-+	goto out;
-+err:
-+	err = -1;
-+out:
-+	close(fd);
-+	return err;
-+}
-+
-+static int run_test_case(int cgfd, struct sysctl_test *test)
-+{
-+	enum bpf_attach_type atype = test->attach_type;
-+	char sysctl_path[128];
-+	int progfd = -1;
-+	int err = 0;
-+
-+	printf("Test case: %s .. ", test->descr);
-+
-+	snprintf(sysctl_path, sizeof(sysctl_path), "/proc/sys/%s",
-+		 test->sysctl);
-+
-+	progfd = load_sysctl_prog(test, sysctl_path);
-+	if (progfd < 0) {
-+		if (test->result == LOAD_REJECT)
-+			goto out;
-+		else
-+			goto err;
-+	}
-+
-+	if (bpf_prog_attach(progfd, cgfd, atype, BPF_F_ALLOW_OVERRIDE) == -1) {
-+		if (test->result == ATTACH_REJECT)
-+			goto out;
-+		else
-+			goto err;
-+	}
-+
-+	if (access_sysctl(sysctl_path, test) == -1) {
-+		if (test->result == OP_EPERM && errno == EPERM)
-+			goto out;
-+		else
-+			goto err;
-+	}
-+
-+	if (test->result != SUCCESS) {
-+		log_err("Unexpected failure");
-+		goto err;
-+	}
-+
-+	goto out;
-+err:
-+	err = -1;
-+out:
-+	/* Detaching w/o checking return code: best effort attempt. */
-+	if (progfd != -1)
-+		bpf_prog_detach(cgfd, atype);
-+	close(progfd);
-+	printf("[%s]\n", err ? "FAIL" : "PASS");
-+	return err;
-+}
-+
-+static int run_tests(int cgfd)
-+{
-+	int passes = 0;
-+	int fails = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(tests); ++i) {
-+		if (run_test_case(cgfd, &tests[i]))
-+			++fails;
-+		else
-+			++passes;
-+	}
-+	printf("Summary: %d PASSED, %d FAILED\n", passes, fails);
-+	return fails ? -1 : 0;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int cgfd = -1;
-+	int err = 0;
-+
-+	if (setup_cgroup_environment())
-+		goto err;
-+
-+	cgfd = create_and_get_cgroup(CG_PATH);
-+	if (cgfd < 0)
-+		goto err;
-+
-+	if (join_cgroup(CG_PATH))
-+		goto err;
-+
-+	if (run_tests(cgfd))
-+		goto err;
-+
-+	goto out;
-+err:
-+	err = -1;
-+out:
-+	close(cgfd);
-+	cleanup_cgroup_environment();
-+	return err;
-+}
++			/* else return DENY; */
++			BPF_MOV64_IMM(BPF_REG_0, 0),
++			BPF_EXIT_INSN(),
++		},
++		.attach_type = BPF_CGROUP_SYSCTL,
++		.sysctl = "net/ipv4/tcp_mem",
++		.open_flags = O_RDONLY,
++		.result = SUCCESS,
++	},
+ };
+ 
+ static size_t probe_prog_length(const struct bpf_insn *fp)
 -- 
 2.17.1
 
