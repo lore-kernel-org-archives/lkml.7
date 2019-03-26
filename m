@@ -2,130 +2,158 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F27C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF18206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E26206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmVLQJTE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gww6filz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732582AbfCZSng (ORCPT
+        id S1732647AbfCZSnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:43:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39054 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731755AbfCZSng (ORCPT
+        Tue, 26 Mar 2019 14:43:49 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33727 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732561AbfCZSns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:43:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t124so14051930wma.4;
-        Tue, 26 Mar 2019 11:43:34 -0700 (PDT)
+        Tue, 26 Mar 2019 14:43:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bg8so2038104plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:43:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oEMDOGRrrUkvFCxhZq/bmDBzGyzPyIczRJSS3q+zWIE=;
-        b=nmVLQJTE5ouV4KC6aW9mUbdPZEtecPnUKobsG9qQT+lSBB+yT7VMFslZgmZThqnvaJ
-         84yWEdFZwdFYo//McRRZ317sH7zrEh0pGqfgAoJ/lvHDF1Bd2vpJUYfmpVhfmiFoPWbZ
-         UiBuKhzH/Kw/D4kB0wczMl2h9xBw5Px9XlA7aOsMqzH+CwS/z24Uepw7d5kMaJIx/yjL
-         SWtbYkVezYGe0YuwNqwnQ9z0SM3jIs1X1N0fsP9Xpe69fY3C0xtov1RehkulA54cDwfj
-         ADLB3ZKLFeYyVDNhNZS+wZ6+lBaMDnK6iie9kJppwSq6E3o37Ql8DZ4/6PnU1lmp8unf
-         qhYw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vGHxDRbS/6yolL/adNeLRruWuHT6NB7eWlWIx8+XjvU=;
+        b=gww6filzbPExhR6qzMRQnTCop6Av5na2TthQoV/QeGa67VXI9i/Z1BCgbLkvNzdrNU
+         cP0Qyb606jhzgHXzKqPbY7fUXgbRDXbU/+dryjm8G8tYa0hPhNG5nDSKir3zMw6/Pl1H
+         70gsFon/xaML4byBDCpQfTkwbPtaef5dPGwTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oEMDOGRrrUkvFCxhZq/bmDBzGyzPyIczRJSS3q+zWIE=;
-        b=rLqFLF5sx7PqIobgjn2V1tz30Q+ClGobMq8VI0KJkr1gKEkWWTLQJmiNj88mNznXGh
-         PiLqTEE7dRv2HZx9hSU4YOuTttAJN1ujhmxrjy+6WErfvhlkIFZkRBJ/7C02L9njwqi4
-         iFCQOyqv/GlUmAYYYVpb0YDhZ/kEVgwindhwj6geLiD2AOSmgA0lZ7He5LP34TnTizd5
-         65iZx89a8XV9Cy/HzSBkYBOa0F8/x7+1VrrQERhBJrQzRoezDJYaIHEzZIr7Wd70bxUd
-         SR9uVCJlWGYRjq6ZLYdZmasFp2Ih5IaJDKnM5sMhT9IBM6MbOlKDMyj0ElXT8j37IPvr
-         CGPw==
-X-Gm-Message-State: APjAAAWLGBhbRWKxGdVfunCwIpUkZy3uG+fWWD5R5zO7cpjZiPegui/I
-        cCCA/j0uIQRzt8JTsy++NpM=
-X-Google-Smtp-Source: APXvYqyKgufNeYwH/zUZb/gf7uG07Dox682IgvWkdGNuRpA11hdpVSKzrxACUXFTIjFkSVuvwOqyxA==
-X-Received: by 2002:a05:600c:219:: with SMTP id 25mr9703164wmi.7.1553625814285;
-        Tue, 26 Mar 2019 11:43:34 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bc4:dc00:8c1:5e0b:d735:c3dc? (p200300EA8BC4DC0008C15E0BD735C3DC.dip0.t-ipconnect.de. [2003:ea:8bc4:dc00:8c1:5e0b:d735:c3dc])
-        by smtp.googlemail.com with ESMTPSA id f128sm36538525wme.28.2019.03.26.11.43.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 11:43:33 -0700 (PDT)
-Subject: Re: [PATCH net-next v3 1/2] net: phy: marvell10g: implement
- suspend/resume callbacks
-To:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
-References: <20190326145302.9563-1-antoine.tenart@bootlin.com>
- <20190326145302.9563-2-antoine.tenart@bootlin.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <fa54cca8-c5c9-4498-c905-8fd360178c39@gmail.com>
-Date:   Tue, 26 Mar 2019 19:43:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vGHxDRbS/6yolL/adNeLRruWuHT6NB7eWlWIx8+XjvU=;
+        b=BXoEwQve58TzdN5hIRP+lEAZncnWvsAz2UbW71b7/AR5SSwQP/qaOK9ZK2U2aMCVnH
+         Mqzlp3pAOuFv7KL/eSSJRwrMcZ1g0EqgxHmGQQ+o1Qk6rLHFbGZDNuYdzrIYQdESRzYD
+         IrMyfB2xVqmkyHi7xPKz3U/h3pA2pB1kBy6eOj0sincnV0TbQJsfpVnElynyvGX7KHhd
+         qaX3kimUL1J8pyHIbdgbLc1qqT3kENNo/tKHOA1+TnPrZw7PY5wQR9xoXG1mzt+FuNY4
+         DvRTW+CAcVAtx3kgg6mWOSWwduNRGgca3FhGjZXoHvFu3it7/LSJncc+mnHZFg+FFdni
+         FVTg==
+X-Gm-Message-State: APjAAAWp4vMa0XEax/263t0Uz6sLUv5Kif4HUuYOkQKc5cSX9xfNOD7v
+        5mAPbtryMBlS7JO5BCOkkKIm1sMPu+E=
+X-Google-Smtp-Source: APXvYqwE/E/Y7PUn3zcnGNBoOmjUnCDapV/wnSH53R1Qfb98x2zAnU56RgSLxkiLSYyEB+kLQtqe7A==
+X-Received: by 2002:a17:902:8609:: with SMTP id f9mr33006813plo.85.1553625828180;
+        Tue, 26 Mar 2019 11:43:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id r86sm30619660pfa.82.2019.03.26.11.43.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 11:43:47 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:43:46 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Kyle Lin <linkyle0915@gmail.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: stats: Use lock by stat to replace global spin
+ lock
+Message-ID: <20190326184346.GY112750@google.com>
+References: <20190325072933.215946-1-linkyle0915@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190326145302.9563-2-antoine.tenart@bootlin.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190325072933.215946-1-linkyle0915@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.03.2019 15:53, Antoine Tenart wrote:
-> This patch adds the suspend/resume callbacks for Marvell 10G PHYs. The
-> three PCS (base-t, base-r and 1000base-x) are set in low power (the PCS
-> are powered down) when the PHY isn't used.
+On Mon, Mar 25, 2019 at 03:29:33PM +0800, Kyle Lin wrote:
+> Stats is updated by each policy, using the lock by stat can
+> reduce the contention.
 > 
-At least for the 3310 the datasheet mentions that via VEND2.f001.11
-the port can be powered down completely. As this would simplify the code,
-did you test this?
-
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Kyle Lin <linkyle0915@gmail.com>
 > ---
->  drivers/net/phy/marvell10g.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  drivers/cpufreq/cpufreq_stats.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-> index 100b401b1f4a..b56cd35182d5 100644
-> --- a/drivers/net/phy/marvell10g.c
-> +++ b/drivers/net/phy/marvell10g.c
-> @@ -226,11 +226,25 @@ static int mv3310_probe(struct phy_device *phydev)
+> diff --git a/drivers/cpufreq/cpufreq_stats.c b/drivers/cpufreq/cpufreq_stats.c
+> index e2db5581489a..17beb1bc7e16 100644
+> --- a/drivers/cpufreq/cpufreq_stats.c
+> +++ b/drivers/cpufreq/cpufreq_stats.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
 >  
->  static int mv3310_suspend(struct phy_device *phydev)
->  {
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_T + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_R + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_1000BASEX + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> +
->  	return 0;
->  }
+> -static DEFINE_SPINLOCK(cpufreq_stats_lock);
 >  
->  static int mv3310_resume(struct phy_device *phydev)
->  {
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_T + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, 0);
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_R + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, 0);
-> +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_1000BASEX + MDIO_CTRL1,
-> +		       MDIO_CTRL1_LPOWER, 0);
-> +
->  	return mv3310_hwmon_config(phydev, true);
->  }
->  
-> 
+>  struct cpufreq_stats {
+>  	unsigned int total_trans;
+> @@ -23,6 +22,7 @@ struct cpufreq_stats {
+>  	unsigned int state_num;
+>  	unsigned int last_index;
+>  	u64 *time_in_state;
+> +	spinlock_t lock;        /*spinlock for stats update*/
 
+nit: not sure if the comment adds much value. If it stay there it
+needs a blank after '/*' and another before '*/'
+
+>  	unsigned int *freq_table;
+>  	unsigned int *trans_table;
+>  };
+> @@ -39,12 +39,12 @@ static void cpufreq_stats_clear_table(struct cpufreq_stats *stats)
+>  {
+>  	unsigned int count = stats->max_state;
+>  
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	memset(stats->time_in_state, 0, count * sizeof(u64));
+>  	memset(stats->trans_table, 0, count * count * sizeof(int));
+>  	stats->last_time = get_jiffies_64();
+>  	stats->total_trans = 0;
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
+>  }
+>  
+>  static ssize_t show_total_trans(struct cpufreq_policy *policy, char *buf)
+> @@ -62,9 +62,9 @@ static ssize_t show_time_in_state(struct cpufreq_policy *policy, char *buf)
+>  	if (policy->fast_switch_enabled)
+>  		return 0;
+>  
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	cpufreq_stats_update(stats);
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
+>  
+>  	for (i = 0; i < stats->state_num; i++) {
+>  		len += sprintf(buf + len, "%u %llu\n", stats->freq_table[i],
+> @@ -211,6 +211,7 @@ void cpufreq_stats_create_table(struct cpufreq_policy *policy)
+>  	stats->state_num = i;
+>  	stats->last_time = get_jiffies_64();
+>  	stats->last_index = freq_table_get_index(stats, policy->cur);
+> +	spin_lock_init(&stats->lock);
+>  
+>  	policy->stats = stats;
+>  	ret = sysfs_create_group(&policy->kobj, &stats_attr_group);
+> @@ -242,11 +243,11 @@ void cpufreq_stats_record_transition(struct cpufreq_policy *policy,
+>  	if (old_index == -1 || new_index == -1 || old_index == new_index)
+>  		return;
+>  
+> -	spin_lock(&cpufreq_stats_lock);
+> +	spin_lock(&stats->lock);
+>  	cpufreq_stats_update(stats);
+>  
+>  	stats->last_index = new_index;
+>  	stats->trans_table[old_index * stats->max_state + new_index]++;
+>  	stats->total_trans++;
+> -	spin_unlock(&cpufreq_stats_lock);
+> +	spin_unlock(&stats->lock);
+>  }
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
