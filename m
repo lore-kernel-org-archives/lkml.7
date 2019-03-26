@@ -2,108 +2,304 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CB0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA67DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0D82070D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ThlmGBMa"
+	by mail.kernel.org (Postfix) with ESMTP id B072C2070D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 15:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbfCZPUG (ORCPT
+        id S1732038AbfCZPUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 11:20:06 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16592 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731978AbfCZPUF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 11:20:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9a43270001>; Tue, 26 Mar 2019 08:20:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 26 Mar 2019 08:20:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 26 Mar 2019 08:20:04 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 Mar
- 2019 15:19:59 +0000
-Subject: Re: [PATCH 4.19 00/45] 4.19.32-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190326042702.565683325@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <879360b6-5584-493f-4386-6f67ceb2ad16@nvidia.com>
-Date:   Tue, 26 Mar 2019 15:19:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 26 Mar 2019 11:20:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41134 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbfCZPUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 11:20:07 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6A1BD5D5564A2A8C5FA8;
+        Tue, 26 Mar 2019 23:20:02 +0800 (CST)
+Received: from S00345302A-PC.china.huawei.com (10.202.227.237) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 26 Mar 2019 23:19:55 +0800
+From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+To:     <lorenzo.pieralisi@arm.com>, <robin.murphy@arm.com>
+CC:     <andrew.murray@arm.com>, <jean-philippe.brucker@arm.com>,
+        <will.deacon@arm.com>, <mark.rutland@arm.com>,
+        <guohanjun@huawei.com>, <john.garry@huawei.com>,
+        <pabba@codeaurora.org>, <vkilari@codeaurora.org>,
+        <rruigrok@codeaurora.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        <neil.m.leeder@gmail.com>
+Subject: [PATCH v7 1/4] ACPI/IORT: Add support for PMCG
+Date:   Tue, 26 Mar 2019 15:17:50 +0000
+Message-ID: <20190326151753.19384-2-shameerali.kolothum.thodi@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
+In-Reply-To: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
+References: <20190326151753.19384-1-shameerali.kolothum.thodi@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190326042702.565683325@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553613607; bh=QTBPdlnCXSoy0l+dGbTiqPwTkiUrr6iJxptc7mX9o1M=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ThlmGBMaVZD/5h/6qkegQUhox1pth6Z+6c7hmmXhtux3Lfx5sQjsHTlxnHWtRGHoc
-         p/Nkj5MRl4sfgoUkB4d7J2HzmouwT3FBqEM7ppA0eQyyZr2MArBIs0TXqSRF35ZyHi
-         C/VRQtNQfQfJZfFFSGYoaMX04VugMptNbZkl1sfuDvLxic70W6wySw6yOYQcH2gCIL
-         R9USebt/PVb3xx31F0EhoLf+HYXz5zqZ03yeFidPcK/KsEcU4PEhh5jnApMSYgCZD5
-         3DISLNil6FR0uxp5WXKM8wyCFkzUG+qDkJXALQsWJUuNfLnev6k3U2mZ3jGuor7d/N
-         FvHXKWer7DDHQ==
+Content-Type: text/plain
+X-Originating-IP: [10.202.227.237]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Neil Leeder <nleeder@codeaurora.org>
 
-On 26/03/2019 06:29, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.32 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu Mar 28 04:26:41 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.32-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Add support for the SMMU Performance Monitor Counter Group
+information from ACPI. This is in preparation for its use
+in the SMMUv3 PMU driver.
 
-All tests are passing for Tegra ...
+Signed-off-by: Neil Leeder <nleeder@codeaurora.org>
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+---
+ drivers/acpi/arm64/iort.c | 117 ++++++++++++++++++++++++++++++++++++----------
+ include/linux/acpi_iort.h |   7 +++
+ 2 files changed, 100 insertions(+), 24 deletions(-)
 
-Test results for stable-v4.19:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    28 tests:	28 pass, 0 fail
-
-Linux version:	4.19.32-rc1-g91ed293
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index e48894e..e2c9b26 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -356,7 +356,8 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+ 	if (map->flags & ACPI_IORT_ID_SINGLE_MAPPING) {
+ 		if (node->type == ACPI_IORT_NODE_NAMED_COMPONENT ||
+ 		    node->type == ACPI_IORT_NODE_PCI_ROOT_COMPLEX ||
+-		    node->type == ACPI_IORT_NODE_SMMU_V3) {
++		    node->type == ACPI_IORT_NODE_SMMU_V3 ||
++		    node->type == ACPI_IORT_NODE_PMCG) {
+ 			*id_out = map->output_base;
+ 			return parent;
+ 		}
+@@ -394,6 +395,8 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ 		}
+ 
+ 		return smmu->id_mapping_index;
++	case ACPI_IORT_NODE_PMCG:
++		return 0;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1218,14 +1221,23 @@ static void __init arm_smmu_v3_init_resources(struct resource *res,
+ 	}
+ }
+ 
+-static bool __init arm_smmu_v3_is_coherent(struct acpi_iort_node *node)
++static void __init arm_smmu_v3_dma_configure(struct device *dev,
++					     struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu_v3 *smmu;
++	enum dev_dma_attr attr;
+ 
+ 	/* Retrieve SMMUv3 specific data */
+ 	smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
+ 
+-	return smmu->flags & ACPI_IORT_SMMU_V3_COHACC_OVERRIDE;
++	attr = (smmu->flags & ACPI_IORT_SMMU_V3_COHACC_OVERRIDE) ?
++			DEV_DMA_COHERENT : DEV_DMA_NON_COHERENT;
++
++	/* We expect the dma masks to be equivalent for all SMMUv3 set-ups */
++	dev->dma_mask = &dev->coherent_dma_mask;
++
++	/* Configure DMA for the page table walker */
++	acpi_dma_configure(dev, attr);
+ }
+ 
+ #if defined(CONFIG_ACPI_NUMA)
+@@ -1301,30 +1313,82 @@ static void __init arm_smmu_init_resources(struct resource *res,
+ 	}
+ }
+ 
+-static bool __init arm_smmu_is_coherent(struct acpi_iort_node *node)
++static void __init arm_smmu_dma_configure(struct device *dev,
++					  struct acpi_iort_node *node)
+ {
+ 	struct acpi_iort_smmu *smmu;
++	enum dev_dma_attr attr;
+ 
+ 	/* Retrieve SMMU specific data */
+ 	smmu = (struct acpi_iort_smmu *)node->node_data;
+ 
+-	return smmu->flags & ACPI_IORT_SMMU_COHERENT_WALK;
++	attr = (smmu->flags & ACPI_IORT_SMMU_COHERENT_WALK) ?
++			DEV_DMA_COHERENT : DEV_DMA_NON_COHERENT;
++
++	/* We expect the dma masks to be equivalent for SMMU set-ups */
++	dev->dma_mask = &dev->coherent_dma_mask;
++
++	/* Configure DMA for the page table walker */
++	acpi_dma_configure(dev, attr);
++}
++
++static int __init arm_smmu_v3_pmcg_count_resources(struct acpi_iort_node *node)
++{
++	struct acpi_iort_pmcg *pmcg;
++
++	/* Retrieve PMCG specific data */
++	pmcg = (struct acpi_iort_pmcg *)node->node_data;
++
++	/*
++	 * There are always 2 memory resources.
++	 * If the overflow_gsiv is present then add that for a total of 3.
++	 */
++	return pmcg->overflow_gsiv ? 3 : 2;
++}
++
++static void __init arm_smmu_v3_pmcg_init_resources(struct resource *res,
++						   struct acpi_iort_node *node)
++{
++	struct acpi_iort_pmcg *pmcg;
++
++	/* Retrieve PMCG specific data */
++	pmcg = (struct acpi_iort_pmcg *)node->node_data;
++
++	res[0].start = pmcg->page0_base_address;
++	res[0].end = pmcg->page0_base_address + SZ_4K - 1;
++	res[0].flags = IORESOURCE_MEM;
++	res[1].start = pmcg->page1_base_address;
++	res[1].end = pmcg->page1_base_address + SZ_4K - 1;
++	res[1].flags = IORESOURCE_MEM;
++
++	if (pmcg->overflow_gsiv)
++		acpi_iort_register_irq(pmcg->overflow_gsiv, "overflow",
++				       ACPI_EDGE_SENSITIVE, &res[2]);
++}
++
++static int __init arm_smmu_v3_pmcg_add_platdata(struct platform_device *pdev)
++{
++	u32 model = IORT_SMMU_V3_PMCG_GENERIC;
++
++	return platform_device_add_data(pdev, &model, sizeof(model));
+ }
+ 
+ struct iort_dev_config {
+ 	const char *name;
+ 	int (*dev_init)(struct acpi_iort_node *node);
+-	bool (*dev_is_coherent)(struct acpi_iort_node *node);
++	void (*dev_dma_configure)(struct device *dev,
++				  struct acpi_iort_node *node);
+ 	int (*dev_count_resources)(struct acpi_iort_node *node);
+ 	void (*dev_init_resources)(struct resource *res,
+ 				     struct acpi_iort_node *node);
+ 	void (*dev_set_proximity)(struct device *dev,
+ 				    struct acpi_iort_node *node);
++	int (*dev_add_platdata)(struct platform_device *pdev);
+ };
+ 
+ static const struct iort_dev_config iort_arm_smmu_v3_cfg __initconst = {
+ 	.name = "arm-smmu-v3",
+-	.dev_is_coherent = arm_smmu_v3_is_coherent,
++	.dev_dma_configure = arm_smmu_v3_dma_configure,
+ 	.dev_count_resources = arm_smmu_v3_count_resources,
+ 	.dev_init_resources = arm_smmu_v3_init_resources,
+ 	.dev_set_proximity = arm_smmu_v3_set_proximity,
+@@ -1332,9 +1396,16 @@ static const struct iort_dev_config iort_arm_smmu_v3_cfg __initconst = {
+ 
+ static const struct iort_dev_config iort_arm_smmu_cfg __initconst = {
+ 	.name = "arm-smmu",
+-	.dev_is_coherent = arm_smmu_is_coherent,
++	.dev_dma_configure = arm_smmu_dma_configure,
+ 	.dev_count_resources = arm_smmu_count_resources,
+-	.dev_init_resources = arm_smmu_init_resources
++	.dev_init_resources = arm_smmu_init_resources,
++};
++
++static const struct iort_dev_config iort_arm_smmu_v3_pmcg_cfg __initconst = {
++	.name = "arm-smmu-v3-pmcg",
++	.dev_count_resources = arm_smmu_v3_pmcg_count_resources,
++	.dev_init_resources = arm_smmu_v3_pmcg_init_resources,
++	.dev_add_platdata = arm_smmu_v3_pmcg_add_platdata,
+ };
+ 
+ static __init const struct iort_dev_config *iort_get_dev_cfg(
+@@ -1345,6 +1416,8 @@ static __init const struct iort_dev_config *iort_get_dev_cfg(
+ 		return &iort_arm_smmu_v3_cfg;
+ 	case ACPI_IORT_NODE_SMMU:
+ 		return &iort_arm_smmu_cfg;
++	case ACPI_IORT_NODE_PMCG:
++		return &iort_arm_smmu_v3_pmcg_cfg;
+ 	default:
+ 		return NULL;
+ 	}
+@@ -1362,7 +1435,6 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
+ 	struct fwnode_handle *fwnode;
+ 	struct platform_device *pdev;
+ 	struct resource *r;
+-	enum dev_dma_attr attr;
+ 	int ret, count;
+ 
+ 	pdev = platform_device_alloc(ops->name, PLATFORM_DEVID_AUTO);
+@@ -1393,19 +1465,19 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
+ 		goto dev_put;
+ 
+ 	/*
+-	 * Add a copy of IORT node pointer to platform_data to
+-	 * be used to retrieve IORT data information.
++	 * Platform devices based on PMCG nodes uses platform_data to
++	 * pass the hardware model info to the driver. For others, add
++	 * a copy of IORT node pointer to platform_data to be used to
++	 * retrieve IORT data information.
+ 	 */
+-	ret = platform_device_add_data(pdev, &node, sizeof(node));
++	if (ops->dev_add_platdata)
++		ret = ops->dev_add_platdata(pdev);
++	else
++		ret = platform_device_add_data(pdev, &node, sizeof(node));
++
+ 	if (ret)
+ 		goto dev_put;
+ 
+-	/*
+-	 * We expect the dma masks to be equivalent for
+-	 * all SMMUs set-ups
+-	 */
+-	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+-
+ 	fwnode = iort_get_fwnode(node);
+ 
+ 	if (!fwnode) {
+@@ -1415,11 +1487,8 @@ static int __init iort_add_platform_device(struct acpi_iort_node *node,
+ 
+ 	pdev->dev.fwnode = fwnode;
+ 
+-	attr = ops->dev_is_coherent && ops->dev_is_coherent(node) ?
+-			DEV_DMA_COHERENT : DEV_DMA_NON_COHERENT;
+-
+-	/* Configure DMA for the page table walker */
+-	acpi_dma_configure(&pdev->dev, attr);
++	if (ops->dev_dma_configure)
++		ops->dev_dma_configure(&pdev->dev, node);
+ 
+ 	iort_set_device_domain(&pdev->dev, node);
+ 
+diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
+index 38cd77b..052ef7b 100644
+--- a/include/linux/acpi_iort.h
++++ b/include/linux/acpi_iort.h
+@@ -26,6 +26,13 @@
+ #define IORT_IRQ_MASK(irq)		(irq & 0xffffffffULL)
+ #define IORT_IRQ_TRIGGER_MASK(irq)	((irq >> 32) & 0xffffffffULL)
+ 
++/*
++ * PMCG model identifiers for use in smmu pmu driver. Please note
++ * that this is purely for the use of software and has nothing to
++ * do with hardware or with IORT specification.
++ */
++#define IORT_SMMU_V3_PMCG_GENERIC        0x00000000 /* Generic SMMUv3 PMCG */
++
+ int iort_register_domain_token(int trans_id, phys_addr_t base,
+ 			       struct fwnode_handle *fw_node);
+ void iort_deregister_domain_token(int trans_id);
 -- 
-nvpublic
+2.7.4
+
+
