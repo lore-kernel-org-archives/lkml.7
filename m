@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C670EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFE72087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C222070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 06:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553582329;
-	bh=ZYkinD2QvCwncyJKQKp02rtjgOZSAVqW29jVdDmjfR0=;
+	s=default; t=1553582332;
+	bh=OBUSxS5Pd1Gs1n/kLZ7PrbncXkdSTFuyCZIszl8f32k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rh11+HMWaLsQeoRk+uE5VaGNRY1m+y28uUucwnxbH1Zcsejhe8Biavzf8mTZhEe3i
-	 8aFoS0zR3Pxe4yXfLRJI5K4RDHQhxO1s7vUNvm2XCooHB2vNmEQx+ySpc0T1d9OC1m
-	 ScFOa/QG/RMr9FVSvWWiIs0r4HcZ9lrKMXvpzSsc=
+	b=HLKfIQwxfxZWdK7QzepuHBEXIPpMCboHbaNPQG7u7wYbQN234knBMrRDhiPY1iko6
+	 hGtaEyjqjWqz/CbqnPRNQMcpIiodMbs4RzFq4ixhwm53T7qC6ZuScL35NPi+9APwiZ
+	 ATMBMuiVrK9U17bRqTkm8mFHJohGC0lc3yFVoXSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732319AbfCZGir (ORCPT
+        id S1732599AbfCZGiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 02:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 02:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732579AbfCZGio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 02:38:44 -0400
+        id S1731674AbfCZGis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 02:38:48 -0400
 Received: from localhost (unknown [104.132.152.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5F1D2087C;
-        Tue, 26 Mar 2019 06:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2422E2070B;
+        Tue, 26 Mar 2019 06:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553582324;
-        bh=ZYkinD2QvCwncyJKQKp02rtjgOZSAVqW29jVdDmjfR0=;
+        s=default; t=1553582327;
+        bh=OBUSxS5Pd1Gs1n/kLZ7PrbncXkdSTFuyCZIszl8f32k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGY8N1KVKt2wja/cmabvRtK6TsS6pBnZ92VcVsOEU7RPkxZeLeJWANV4Ipozfo+gY
-         JBXRXjSUDOBqQZyGm6lFAkWHIw1CvZ2PpwnjMBRMCyrU8lJWGk0ymIHCrWRiEfX7iQ
-         /w4rkYPR8zwXn8UW2drvd8Ba7aogvecadS4n7WtM=
+        b=cOEvSoAThDbC74dmWmZWoi0+YIt0ZeaNAMX+e+ox1mD9iujmU8DmUx4nlviA1MoqF
+         To4ZteA08ZiVhVJ8VZpdZLsiXySyzDHjmVLD0DDfmTfeiCXBvj7gnuTGLc9DYbsCRN
+         /AtcaI6WNroTEhjSUJ2fAKvkU/d+KkuiH2r0q694=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Phong Hoang <phong.hoang.wz@renesas.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 06/52] mmc: renesas_sdhi: limit block count to 16 bit for old revisions
-Date:   Tue, 26 Mar 2019 15:29:53 +0900
-Message-Id: <20190326042701.287677548@linuxfoundation.org>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.0 07/52] drm/amdgpu: fix invalid use of change_bit
+Date:   Tue, 26 Mar 2019 15:29:54 +0900
+Message-Id: <20190326042701.327682053@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190326042700.963224437@linuxfoundation.org>
 References: <20190326042700.963224437@linuxfoundation.org>
@@ -68,58 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Christian König <christian.koenig@amd.com>
 
-commit c9a9497ccef205ed4ed2e247011382627876d831 upstream.
+commit 72464382fc2d3673eb51f21a57f2c0a320c1552f upstream.
 
-R-Car Gen2 has two different SDHI incarnations in the same chip. The
-older one does not support the recently introduced 32 bit register
-access to the block count register. Make sure we use this feature only
-after the first known version.
+We only need to clear the bit in a 32bit integer.
 
-Thanks to the Renesas Testing team for this bug report!
+This fixes a crah on ARM64 and PPC64LE caused by
+"drm/amdgpu: update the vm invalidation engine layout V2"
 
-Fixes: 5603731a15ef ("mmc: tmio: fix access width of Block Count Register")
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Tested-by: Phong Hoang <phong.hoang.wz@renesas.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/renesas_sdhi_core.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -634,6 +634,7 @@ int renesas_sdhi_probe(struct platform_d
- 	struct renesas_sdhi *priv;
- 	struct resource *res;
- 	int irq, ret, i;
-+	u16 ver;
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -738,7 +738,7 @@ static int gmc_v9_0_allocate_vm_inv_eng(
+ 		}
  
- 	of_data = of_device_get_match_data(&pdev->dev);
+ 		ring->vm_inv_eng = inv_eng - 1;
+-		change_bit(inv_eng - 1, (unsigned long *)(&vm_inv_engs[vmhub]));
++		vm_inv_engs[vmhub] &= ~(1 << ring->vm_inv_eng);
  
-@@ -766,12 +767,17 @@ int renesas_sdhi_probe(struct platform_d
- 	if (ret)
- 		goto efree;
- 
-+	ver = sd_ctrl_read16(host, CTL_VERSION);
-+	/* GEN2_SDR104 is first known SDHI to use 32bit block count */
-+	if (ver < SDHI_VER_GEN2_SDR104 && mmc_data->max_blk_count > U16_MAX)
-+		mmc_data->max_blk_count = U16_MAX;
-+
- 	ret = tmio_mmc_host_probe(host);
- 	if (ret < 0)
- 		goto edisclk;
- 
- 	/* One Gen2 SDHI incarnation does NOT have a CBSY bit */
--	if (sd_ctrl_read16(host, CTL_VERSION) == SDHI_VER_GEN2_SDR50)
-+	if (ver == SDHI_VER_GEN2_SDR50)
- 		mmc_data->flags &= ~TMIO_MMC_HAVE_CBSY;
- 
- 	/* Enable tuning iff we have an SCC and a supported mode */
+ 		dev_info(adev->dev, "ring %s uses VM inv eng %u on hub %u\n",
+ 			 ring->name, ring->vm_inv_eng, ring->funcs->vmhub);
 
 
