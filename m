@@ -2,86 +2,86 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BF6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC46C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536F9206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553624865;
-	bh=DHbjnyiLLmEg6ENHMoS954rnrw07sdP+5a7HGtgLUSw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qOUf6jJrX882pQCxPOC5S6+XvUqsklENz3UvPk6T8Bthayp9N9SRHv5iUHVRhLAr1
-	 Zg3B7vb6yA7NEjEwW2SDzhSXPb2XpzyB6rNvwiz5H5DOFdA+aewcoqtFE3HsCgwti3
-	 lSkttDGvakPgRidej/Ef3ltrz4o1DkNzPlh1U/nc=
+	by mail.kernel.org (Postfix) with ESMTP id 22D6B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 18:27:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TeIQdxla"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbfCZS1o (ORCPT
+        id S1732552AbfCZS14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 14:27:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45000 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732061AbfCZS1o (ORCPT
+        Tue, 26 Mar 2019 14:27:56 -0400
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:49704 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732061AbfCZS14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 14:27:44 -0400
-Received: by mail-ed1-f67.google.com with SMTP id x10so11624458edh.11;
-        Tue, 26 Mar 2019 11:27:42 -0700 (PDT)
+        Tue, 26 Mar 2019 14:27:56 -0400
+Received: by mail-oi1-f201.google.com with SMTP id h5so5706879oih.16
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 11:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=I8m7o5W+KXgqL155yuBqKYkypPnZyCLZZT5sEKvSeq4=;
+        b=TeIQdxlaEAnwJiziIOm4C/26mSLLjqSOehPpim2HMY7wW9ln4e77/vUYHrPe2Qsgtu
+         n5/t9xcp4n0CROs+Z01AbnJYjLwqGAG9Vxi07V1AtKMjtcRrSsh30GOVYcNY2yR4h3wu
+         Fz6wEamNMo1JgIQ2Afj63tuCVfURLFypB6AvVWMUkS6HuoOkEgfJazwviTZoTZ3pRIcL
+         GPRhXPjBQYQzzVv27yD8x56v9wKm0IkBKnI76cJYbYNj2oI4OGSBBefZc5yVvNcbwTv/
+         mBy5Bhx86xPb8rUZNmHora32OCSfPbdJbOaZoSUrDfFSf+bUMJsUYl8bsg6f83nADmPF
+         o9uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XEBSUxfngiyxJTMuOC2iszm8NvoPSPzRZrJrrrb07OI=;
-        b=LfruEC0QTjLDOfHuYCPvlNvkJbsNBXnzIMQ699Xcg+FNvoJDYegL72ubP/rPZj0YKy
-         /YwwoJmI/1cd4UN3HmgVR0zOUAZJYN5SDwX8lEpeNj7fYPHBhzzucXo4ZczHbnZlO0eD
-         p1LdVapYAZpXD6BSRraZqil+MVpIxB1g276/+kK+W6vHDztK/XzkPKDe7Q5vi29hv9qV
-         rX4aBHRGMhHzhxfzpCIQKOonPJCJn8eK5P/HP7JGVFptIxHGGnl3PDSYrUH6u21ragkC
-         sA68BLrlzv8n15mvlvzrX6XAHpC1WiJfJ+PPBMUGva2OAqNKIgl25IEuSZXEyhqEk6sb
-         zYWw==
-X-Gm-Message-State: APjAAAX8ocYNTpWZMoIs5YhHtwNwvDTo1wEP63MFyBsB3UNnfvIrBAhD
-        sR8UsYLiEbKNhe45BEIZbvZsSQsAfSGEnSc/wHI=
-X-Google-Smtp-Source: APXvYqzzzUaq5vyem1OogFImYJPdHIG/PydRDPoiEJZuMP35ihE6PE2q9CauXdmthUZDE+esXeaGmu5oc3JRFfIuGeo=
-X-Received: by 2002:a50:89fa:: with SMTP id h55mr21105766edh.296.1553624862406;
- Tue, 26 Mar 2019 11:27:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <e2810a5317d3a109a98204e883fd1461f77b9339.1551160674.git.len.brown@intel.com>
- <4dd94a34999d6db4ced7a0759c02f7cd93729dc4.1551160674.git.len.brown@intel.com> <20190226190658.GS2861@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190226190658.GS2861@worktop.programming.kicks-ass.net>
-From:   Len Brown <lenb@kernel.org>
-Date:   Tue, 26 Mar 2019 14:27:30 -0400
-Message-ID: <CAJvTdKmg4YwzYGfPZKdAFZCqA6hFROdSVT46iDk0mb1rL-TKvg@mail.gmail.com>
-Subject: Re: [PATCH 07/14] powercap/intel_rapl: Simplify rapl_find_package()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=I8m7o5W+KXgqL155yuBqKYkypPnZyCLZZT5sEKvSeq4=;
+        b=Ch8FIYsOy57WesNqkBP3oiLeI6EwI9Bv8UxZMO4BAw53N7PvIRMneZP+YNXHdGYdwV
+         gTiloh3sQoylSwykYh46FI92lvudieW8CZ22pB2OvdVAQfxFBRxpUKqixOnQ2wFOTfUD
+         LZOQkRR1NUe6daSi0LFZ6d8wQAGr80W2Y237nnTRzcAdWi/VmYF5hVOekjSdsOFh2XOx
+         y9IPZjJLHEnSqihf2yKZ7ffeoDNLk4qtCrEtCyHdRmX9scV8duvZH83g/hp9CYdodmXp
+         +eo97a7F9m9+qqzWMVgvCribKdXiee2kkjbewGz81ZVaDpaxSCfPr8I7VWeZpARIvqXd
+         k1rA==
+X-Gm-Message-State: APjAAAXrkgKIV5IwbgQh8KAzd0P4gXUpa/TcohnU185CynHuj6gE5AJ1
+        8a1XLaTjmhBIo7r/yAxykj/VZX4CtxfgpDEgV+PKaQ==
+X-Google-Smtp-Source: APXvYqwfKZWimNq2mn2Y6T+dsHydtEbaYSfOjjbKlTpgKrK+uLnXYOCGvh9NhG/DbETd+vavN4vYPhn38s4TdSuwtoTt9w==
+X-Received: by 2002:aca:31cb:: with SMTP id x194mr16782535oix.71.1553624875808;
+ Tue, 26 Mar 2019 11:27:55 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 11:27:16 -0700
+Message-Id: <20190326182742.16950-1-matthewgarrett@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH V31 00/25] Add support for kernel lockdown
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com,
+        linux-api@vger.kernel.org, luto@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 2:07 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Feb 26, 2019 at 01:20:05AM -0500, Len Brown wrote:
-> > -static struct rapl_package *find_package_by_id(int id)
-> > +static struct rapl_package *rapl_find_package(int cpu)
-> >  {
-> > +     int id = topology_physical_package_id(cpu);
-> >       struct rapl_package *rp;
->
-> Which you'll change to topology_physical_die_id() in the next patch.
->
-> If you respin the series again, could we pick a better name?
+Updates: Based on Andy's feedback, lockdown is now a tristate and can be
+made stricter at runtime. The states are "none", "integrity" and
+"confidentiality". "none" results in no behavioural change, "integrity"
+enables features that prevent untrusted code from being run in ring 0,
+and "confidentiality" is a superset of "integrity" that also disables
+features that may be used to extract secret information from the kernel
+at runtime. I've also modified the bpf patch so that only the calls
+documented as giving the ability to read in-kernel data are locked down,
+rather than all functionality being disabled - I'm not a bpf expert so
+would gladly go for further review here. Long term, it'd be preferable
+to be able to tag secrets held by the kernel and grant access to
+everything else, but I'm open to further feedback here. And at Greg's
+request, debugfs is now largely disabled once the system is locked down.
 
-Done.
-I called this routine "rapl_find_package_domain()" -- since that is
-what it does --
-it finds what RAPL calls a "Package Domain", no matter if that domain
-is implemented in the topology by a die or a physical package.
+In the general case, I'd expect distributions to opt for nothing
+stricter than "integrity" - "confidentiality" seems more suitable for
+more special-case scenarios.
 
-thanks,
-Len Brown, Intel Open Source Technology Center
+
