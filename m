@@ -2,103 +2,77 @@ Return-Path: <SRS0=4nbc=R5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A621BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681ECC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7024720823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="v3mqQ7mr"
+	by mail.kernel.org (Postfix) with ESMTP id 3E37320856
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 Mar 2019 05:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbfCZFnB (ORCPT
+        id S1731086AbfCZFoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 01:43:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38808 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730377AbfCZFnA (ORCPT
+        Tue, 26 Mar 2019 01:44:02 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50725 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfCZFoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 01:43:00 -0400
-Received: by mail-vs1-f66.google.com with SMTP id s2so5605109vsi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xgItU0iuQXmDd8+M01D0UyRQB/txnZWDcxqvXjJC+lA=;
-        b=v3mqQ7mrzm5H2aqKTM1Ml93tGUzSg58rJLGu++dhDa/G7LfwLXRvFPKP4y6KorwF1F
-         lebTvFFZmQYhF1KNhWArWyTyFpTYYjP1PuYkwUsA5GJDKc0sBoLZnbFbhe0AKj06A5J9
-         YsLVp0LJDMVYQlpkifFM1KF0pNU9KeVwGmLzVopMUY5sLp5uXQDlDP6X2pPyWQzTaJyO
-         SjDPWkIbSuPaj8mVwaQpFpxTtbFQ9Nc634GnoqXvBuhj+FMcuhbRyjxyTWy+Eoe4S+M5
-         Jw3LbveBqkKOmDaNJLR2GNpyd/0PJbNCMnXvvoDx8Bi+stQCNlR0JQOlcpUVPpROv58g
-         1Wqg==
+        Tue, 26 Mar 2019 01:44:02 -0400
+Received: by mail-io1-f69.google.com with SMTP id s24so9458249ioe.17
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Mar 2019 22:44:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xgItU0iuQXmDd8+M01D0UyRQB/txnZWDcxqvXjJC+lA=;
-        b=ZII+jlnMDfjtdqt0zDNwNx1iDDYOlsNaraYqfGgpATW9eulAZTEjUN0UuFmzwZEszP
-         iIp5DttowQitVXeekRNvi2sEWygPne8QtP5q5F0rNrzXy7+iA7KktiwbtjFlWBXaNaw/
-         HRSKBPK2fpSXqXUe7wTz/HI/HoxTQcL+JLNSn695/1NdyBtJtwstF/fCpW6TATvlCZ0G
-         pvb/7ivpFSZgDlf3iMSfKcIDYQlJpNDwQ3VFBBAE9kpJFRQhMWi0gpd6ASwHQf+o+myV
-         uGfKbsAMN+BcMBxbdUcCuIvzIiMMqYYQgGcCYMoe6mYUNSIHWthfjPw7FbZ9VeXIgnIj
-         k1Dw==
-X-Gm-Message-State: APjAAAXbjSoqlFW9z2kRCk2eMTPXbzt3IF0d0an+Y/Oihq+2LXOAXBax
-        okefAD1VSDvPWCkgVquZAL73+UFSHKVcZjaXugJaEA==
-X-Google-Smtp-Source: APXvYqwOtqIV8FyVT+1C3rEYAZB2M1RbPT4GIPnq4pz88NvXFZAWGsghbHQpNMlFV5SgNLiRjhLFofVZPbL/PAosK7M=
-X-Received: by 2002:a67:f505:: with SMTP id u5mr10367422vsn.159.1553578979644;
- Mon, 25 Mar 2019 22:42:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1TkUpKsmlvatpbMPOJZlrVefntTX85Tjiz7qOFvWkTo=;
+        b=sqHgHBcrWqoAzm71fRVhQTa7pYmwxwDXOcBEJFC+LqDI3aOjJOE9TA7DUYPUHN8oBb
+         jQYIS5eC2+2SklBtryXL5zbHKJZNbhYwb6ki5mPxHoiAllpv8xk7UxIhMJ6CkK/kP/H8
+         O1PZ+G+vcB39UKsIhkIveiVvwHCNZIR/PcZqykKFoPsKDVPcHdy+nTfyBiBSGESta6Fz
+         lEbpqROZyOnevl4Clg/RMLMmqxpAue6a8CXOslaDCDUdJ3354hJTrMpn4mj19eYDPtQb
+         2DQmJKCxttHSSxEV71PJ+mfP8Vajzh63/ANolPmJFY2fgMYNEdllo6L3DTfLoWvd0CkZ
+         N/vQ==
+X-Gm-Message-State: APjAAAV4h4DD/MrOYwzTAT5wLmC49vM359/KGubdpFHbQIxRg005DYQQ
+        1l3JFVxuXZ6+HR9S8y1Qoveyndmco8+33RwsHWx3Wyqa8Syc
+X-Google-Smtp-Source: APXvYqxGeQOIrT4dU49V/kZkgjboGzDUBvXSkPEKOjC+PMn9Q5Gck9hNeZJObC6GUP4HWmj2WnITCWJKCpJ5dQl81ipDBQ4tMqvP
 MIME-Version: 1.0
-References: <20190326052139.11784-1-vkoul@kernel.org>
-In-Reply-To: <20190326052139.11784-1-vkoul@kernel.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 26 Mar 2019 11:12:48 +0530
-Message-ID: <CAHLCerOv+HkWskZwoAN+rTFb7kXoNC+DbNd3zRWf0dEdhd3D2w@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINER: Fix Qualcomm ETHQOS ethernet DT file
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:660c:381:: with SMTP id x1mr2340628itj.78.1553579041447;
+ Mon, 25 Mar 2019 22:44:01 -0700 (PDT)
+Date:   Mon, 25 Mar 2019 22:44:01 -0700
+In-Reply-To: <000000000000b99324057af4dabb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e567590584f8cec6@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in bpf_prog_kallsyms_find
+From:   syzbot <syzbot+66d6b1d3055f1d9ee4f3@syzkaller.appspotmail.com>
+To:     ast@fb.com, ast@kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:52 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Commit 83c177aea4c3: ("MAINTAINER: Add entry for Qualcomm ETHQOS
-> ethernet driver") added incorrect filename for DT binding, fix the same.
->
-> Fixes: 83c177aea4c3 ("MAINTAINER: Add entry for Qualcomm ETHQOS ethernet driver")
-> Reported-By: Joe Perches <joe@perches.com>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+syzbot has bisected this bug to:
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+commit f4d7e40a5b7157e1329c3c5b10f60d8289fc2941
+Author: Alexei Starovoitov <ast@fb.com>
+Date:   Fri Dec 15 01:55:06 2017 +0000
 
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e17ebf70b548..74c654d89a43 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12849,7 +12849,7 @@ M:      Niklas Cassel <niklas.cassel@linaro.org>
->  L:     netdev@vger.kernel.org
->  S:     Maintained
->  F:     drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> -F:     Documentation/devicetree/bindings/net/qcom,dwmac.txt
-> +F:     Documentation/devicetree/bindings/net/qcom,ethqos.txt
->
->  QUALCOMM GENERIC INTERFACE I2C DRIVER
->  M:     Alok Chauhan <alokc@codeaurora.org>
-> --
-> 2.20.1
->
+     bpf: introduce function calls (verification)
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17b5a0cd200000
+start commit:   592ee43f bpf: fix null pointer dereference on pointer offl..
+git tree:       bpf-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1475a0cd200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1075a0cd200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e5cbc38ae27657e
+dashboard link: https://syzkaller.appspot.com/bug?extid=66d6b1d3055f1d9ee4f3
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e4ec25400000
+
+Reported-by: syzbot+66d6b1d3055f1d9ee4f3@syzkaller.appspotmail.com
+Fixes: f4d7e40a5b71 ("bpf: introduce function calls (verification)")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
