@@ -2,53 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E8CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C7BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F1D2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1B7217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709757;
-	bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
+	s=default; t=1553709761;
+	bh=mx7AU5o7JgyEMh48NL+uha0qBt9zCAhWs1GDDBiOTEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0OL5R79V0zA9/vAiXUfrWRfc/QnQCKYkfSIRijSutR4S86i+jJ1e2t1CPQkvYvL1
-	 l3PjMouAe4tr5qlllXrnAi5ZYj761M4HD5rO3cihyU2CGI+09vsYdbF2sEbz0HCOvm
-	 9LT4vuDq5efg+22QFr30l8Kb6G2WrIhCWbfXpLu0=
+	b=pnE3iAUsIsNG5BwGWdJIfDWjWJuSprsKth7Y95lX76/cJel49vW1KkNoEzHzOAalN
+	 Mp6dbigx/WIC0WjNlZjLVrARWX277yY9/HaQH8OWTLT4fCTYUsRF9bwevzuBqAzi69
+	 JwbtkjX7BtMMWLU1yOix0EZonYiqMIzzyK4noRGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbfC0SCf (ORCPT
+        id S1731267AbfC0SCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbfC0SCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:02:32 -0400
+        id S1730973AbfC0SCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:02:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CCB221738;
-        Wed, 27 Mar 2019 18:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B4721855;
+        Wed, 27 Mar 2019 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709752;
-        bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
+        s=default; t=1553709756;
+        bh=mx7AU5o7JgyEMh48NL+uha0qBt9zCAhWs1GDDBiOTEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+qhOEuKxe42Yc70i0H6Br06Hu6JvHrxBxNhIALsMRVW6o+vU8HHPrYjsbqWGS44L
-         Uv5y2jHOCxbZ2TMuXL3mFf3edcBAVFcj/YWekianrYEflx8v6AxY4MWG5h+5gRNKsy
-         vhc7DqIo9dL3yfG0e3bTJ7rPQu+E2rBeoe2axUs4=
+        b=o+e+UsKKrsbRu7Wk+HIr+gqqRTbLenlU1B9clbN1gXNVeC1q336qaMnNXIXZACEQZ
+         eLQwwm8n4Uhhq9+YigvFHGVs+az5E2Vnn4Qgt8DwhCSaUOc7NKcuHA7tACHTFTJdYk
+         q27lGLqqv16nBnj1etq55Rw0vJTJd5zQPQLngly0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Jens Axboe <axboe@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 019/262] include/linux/relay.h: fix percpu annotation in struct rchan
-Date:   Wed, 27 Mar 2019 13:57:54 -0400
-Message-Id: <20190327180158.10245-19-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 022/262] net: stmmac: Avoid sometimes uninitialized Clang warnings
+Date:   Wed, 27 Mar 2019 13:57:57 -0400
+Message-Id: <20190327180158.10245-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -60,53 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
+[ Upstream commit df103170854e87124ee7bdd2bca64b178e653f97 ]
 
-The percpu member of this structure is declared as:
-	struct ... ** __percpu member;
-So its type is:
-	__percpu pointer to pointer to struct ...
+When building with -Wsometimes-uninitialized, Clang warns:
 
-But looking at how it's used, its type should be:
-	pointer to __percpu pointer to struct ...
-and it should thus be declared as:
-	struct ... * __percpu *member;
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
 
-So fix the placement of '__percpu' in the definition of this
-structures.
+Clang is concerned with the use of stmmac_do_void_callback (which
+stmmac_get_timestamp and stmmac_config_sub_second_increment wrap),
+as it may fail to initialize these values if the if condition was ever
+false (meaning the callbacks don't exist). It's not wrong because the
+callbacks (get_timestamp and config_sub_second_increment respectively)
+are the ones that initialize the variables. While it's unlikely that the
+callbacks are ever going to disappear and make that condition false, we
+can easily avoid this warning by zero initialize the variables.
 
-This silents a few Sparse's warnings like:
-	warning: incorrect type in initializer (different address spaces)
-	  expected void const [noderef] <asn:3> *__vpp_verify
-	  got struct sched_domain **
-
-Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
-Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: Jens Axboe <axboe@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/384
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/relay.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index e1bdf01a86e2..c759f96e39c1 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -66,7 +66,7 @@ struct rchan
- 	struct kref kref;		/* channel refcount */
- 	void *private_data;		/* for user-defined data */
- 	size_t last_toobig;		/* tried to log event > subbuf size */
--	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
-+	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
- 	int is_global;			/* One global buffer ? */
- 	struct list_head list;		/* for channel list */
- 	struct dentry *parent;		/* parent dentry passed to open */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 685d20472358..019ab99e65bb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -474,7 +474,7 @@ static void stmmac_get_tx_hwtstamp(struct stmmac_priv *priv,
+ 				   struct dma_desc *p, struct sk_buff *skb)
+ {
+ 	struct skb_shared_hwtstamps shhwtstamp;
+-	u64 ns;
++	u64 ns = 0;
+ 
+ 	if (!priv->hwts_tx_en)
+ 		return;
+@@ -513,7 +513,7 @@ static void stmmac_get_rx_hwtstamp(struct stmmac_priv *priv, struct dma_desc *p,
+ {
+ 	struct skb_shared_hwtstamps *shhwtstamp = NULL;
+ 	struct dma_desc *desc = p;
+-	u64 ns;
++	u64 ns = 0;
+ 
+ 	if (!priv->hwts_rx_en)
+ 		return;
+@@ -558,8 +558,8 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 	u32 snap_type_sel = 0;
+ 	u32 ts_master_en = 0;
+ 	u32 ts_event_en = 0;
++	u32 sec_inc = 0;
+ 	u32 value = 0;
+-	u32 sec_inc;
+ 	bool xmac;
+ 
+ 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
 -- 
 2.19.1
 
