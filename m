@@ -2,168 +2,349 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04770C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D045C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F8C2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA5082070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:02:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Clwxjaqi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KYIJ8Z9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732582AbfC0KBZ (ORCPT
+        id S1732857AbfC0KCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:01:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45927 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfC0KBZ (ORCPT
+        Wed, 27 Mar 2019 06:02:11 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:55106 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfC0KCL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:01:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id v20so17998087qtv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 03:01:24 -0700 (PDT)
+        Wed, 27 Mar 2019 06:02:11 -0400
+Received: by mail-it1-f194.google.com with SMTP id w18so24437295itj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 03:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oxwvMwPRR/kW60NJy/oGOH1LXGfdyo9R5AHxVtcWyyE=;
-        b=ClwxjaqihMkrQXqIIOrKao0c39iOSw7Ho1lXceLqeulvL+mMBtPGX5+Ev2zYdNOYrw
-         IaPwLB+O3G0vZGZxiyR0pYFkQfSoLy1NvMDKz2jOe/gaq/3KhAUg1L41vBMUarMAKk9N
-         EaxEZ/jY8dldExHE6XWTk4aMNZdg1k5lTnXzeR47wXJ2DvtvPKMPT1Z2HvZetMWydPsO
-         ZrqfiJgzRZzHQNwG08OjDdZ6UvTLriZdoIREuJJTuGRtk5PliDLby3oB43mZLV+EWu1j
-         lni5bg6DgspSqxtZOU4CSRU1sSIwX99gxPx5sMw88b4ydSAl/VJGWiHxZL/JhSAuNvCE
-         vSvw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+VLzeyLMdtCQvXkU4RKTaJDTW9VOoDXGyE7olCvYU8I=;
+        b=KYIJ8Z9DbIgRPpqbVU4DFqFAPHfS6tROxYOdIGHOmbq/Lg2UmTNWEJRGp06Vke3pyb
+         uK4FwbpU38Hg7WIt+9uSgmmBISHWnXDwIZZ0ZcaWsBJkGCvt979WU7Tq3Omu4pi/Zjfj
+         0TWEDgGa3QYvgSPRSzzZbJsoBSSf4zc7pZNtdgrg/Sq65hQN+KOmcWgzyjTEf2mNKsMc
+         uJ6NWnKA3RCk5WbAV7QFzcSDW6YCj/T0QqdwrAEAL3qylEOw1Cb8c0KM7CzR3I+Ta0hk
+         AoVpsWrhqNN56PQYWghBP/ZO71PiJTCBuqulXBuVzyYxjg+2fMLdsJmZoDl3mx611bYl
+         doQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oxwvMwPRR/kW60NJy/oGOH1LXGfdyo9R5AHxVtcWyyE=;
-        b=g7A/3kf95AwuFdJHojoSe559mruAcYSguhiBxq0eDahaXMYy6Y7V7Z1cZy1U8nIBGT
-         WgCdCQfacOJl6WgqcakrhmOSGLDOxhj5vCDPpExUJPjS95S6zoLXx9OEaFh2tIfM/4SV
-         ugN4cqtm4yStftQLFxU5YZlzpUDG6lrwFqOz+QrVIT15ZxjjwMAaoXvwqGKVC9TLMcI7
-         559sc2sK5FLs48tocnwaQ7PzEw0rWCRbE6CcB66gLDBxJxiNnblp7Jw2iF8Ry3c4slTL
-         thLv87e2GdqjNf27p8L14+4pJnsjRarRyc3gERczTsLzonNKSHMvLC/Jwo2QqdjY7+nW
-         pD3w==
-X-Gm-Message-State: APjAAAUwW0l9lOpT9eAiXV/wX8RPYEtYx+4+tYRZCq7gX73WVmXD+3GX
-        PO08ujvdf5xnnGsjce8MoAI=
-X-Google-Smtp-Source: APXvYqxprxidzXzQ4S79UIQkNVeyz93gN4gNz6hSHHV5T+NUgGhiDEqVOoBhCdbHHy6yJB8Vv+Px0A==
-X-Received: by 2002:ac8:f6e:: with SMTP id l43mr30129361qtk.322.1553680883870;
-        Wed, 27 Mar 2019 03:01:23 -0700 (PDT)
-Received: from centos-dev.localdomain (pool-173-66-89-81.washdc.fios.verizon.net. [173.66.89.81])
-        by smtp.gmail.com with ESMTPSA id e22sm13618137qte.42.2019.03.27.03.01.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 03:01:23 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 06:00:14 -0400
-From:   Ryan Thibodeaux <thibodux@gmail.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Dario Faggioli <dfaggioli@suse.com>,
-        luca abeni <luca.abeni@santannapisa.it>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
-        jgross@suse.com, ryan.thibodeaux@starlab.io
-Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
-Message-ID: <20190327100014.GA9663@centos-dev.localdomain>
-References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
- <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
- <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
- <20190323114151.5cebf31b@sweethome>
- <20190325130530.56603806@luca64>
- <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
- <a32c8b1d7866ee3b074b1d674b40e03e51dbd54a.camel@suse.com>
- <907547fa-a7e8-8dca-dabf-dd063705f196@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+VLzeyLMdtCQvXkU4RKTaJDTW9VOoDXGyE7olCvYU8I=;
+        b=NI/295xeukywAhT7hckaGpZ3V4U11pLCEoWsF+qamX5dybQbCJp50g/uAFvpASQIXU
+         DlkQZ4AEiHXFuTq5yx22Xr1fNGyj31mcrJ7gcLu8o1gSHcGGe/ewRxB6JXdufwvqYLog
+         ryDzKY2LjGkvI/oizWoBGXpP0WVxFp7erewKTZrbftsq0IipVWJM83rHcWsg+yCyE0Xh
+         MCnMwFPe6FuU0BaynN0ldMiLiu/I9C66J0vU4TePgRReOzu4i77eB3G+dnTSESpMfXMc
+         app8sJ4B3yunC8Fei4k0L49eHL/lOPS/iI0xPDcaBgPXP4mwmPTcTb3JWqmatWGzxxZI
+         TCWA==
+X-Gm-Message-State: APjAAAVR5JdxmbIKQ9eREeyMzE9Qgur2ex8rVHebkyhMhOIjuDCyQh64
+        BDGMr1DxxvMTJ+ylflCG628wA6gVxyipaY75DQEAKw==
+X-Google-Smtp-Source: APXvYqwEGYTFs8mwcj5XZDvnBmx4wSXsgU8JxMuU6qBeLrVUaEsvhGhuqr7z1odPg/2OumDLEmoYvlIGrxN3jItlslY=
+X-Received: by 2002:a24:3ac8:: with SMTP id m191mr2711977itm.74.1553680929569;
+ Wed, 27 Mar 2019 03:02:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <907547fa-a7e8-8dca-dabf-dd063705f196@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190325135557.3423-1-axel.lin@ingics.com>
+In-Reply-To: <20190325135557.3423-1-axel.lin@ingics.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Mar 2019 11:01:58 +0100
+Message-ID: <CAMRc=MfvguEhfqXBWa8o12WF6xbHM7yEiOZC+N01UDAQYQs7Zg@mail.gmail.com>
+Subject: Re: [PATCH] regulator: max77650: Convert MAX77651 SBB1 to pickable
+ linear range
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 07:21:31PM -0400, Boris Ostrovsky wrote:
-> On 3/26/19 5:13 AM, Dario Faggioli wrote:
-> > On Mon, 2019-03-25 at 09:43 -0400, Boris Ostrovsky wrote:
-> >> On 3/25/19 8:05 AM, luca abeni wrote:
-> >>> The picture shows the latencies measured with an unpatched guest
-> >>> kernel
-> >>> and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary
-> >>> small
-> >>> value :).
-> >>> All the experiments have been performed booting the hypervisor with
-> >>> a
-> >>> small timer_slop (the hypervisor's one) value. So, they show that
-> >>> decreasing the hypervisor's timer_slop is not enough to measure low
-> >>> latencies with cyclictest.
-> >> I have a couple of questions:
-> >> * Does it make sense to make this a tunable for other clockevent
-> >> devices
-> >> as well?
-> >>
-> > So, AFAIUI, the thing is as follows. In clockevents_program_event(), we
-> > keep the delta between now and the next timer event within
-> > dev->max_delta_ns and dev->min_delta_ns:
-> >
-> >   delta = min(delta, (int64_t) dev->max_delta_ns);
-> >   delta = max(delta, (int64_t) dev->min_delta_ns);
-> >
-> > For Xen (well, for the Xen clock) we have:
-> >
-> >   .max_delta_ns = 0xffffffff,
-> >   .min_delta_ns = TIMER_SLOP,
-> >
-> > which means a guest can't ask for a timer to fire earlier than 100us
-> > ahead, which is a bit too coarse, especially on contemporary hardware.
-> >
-> > For "lapic_deadline" (which was what was in use in KVM guests, in our
-> > experiments) we have:
-> >
-> >   lapic_clockevent.max_delta_ns = clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
-> >   lapic_clockevent.min_delta_ns = clockevent_delta2ns(0xF, &lapic_clockevent);
-> >
-> > Which means max is 0x7FFFFF device ticks, and min is 0xF.
-> > clockevent_delta2ns() does the conversion from ticks to ns, basing on
-> > the results of the APIC calibration process. It calls cev_delta2ns()
-> > which does some scaling, shifting, divs, etc, and, at the very end,
-> > this:
-> >
-> >   /* Deltas less than 1usec are pointless noise */
-> >   return clc > 1000 ? clc : 1000;
-> >
-> > So, as Ryan is also saying, the actual minimum, in this case, depends
-> > on hardware, with a sanity check of "never below 1us" (which is quite
-> > smaller than 100us!)
-> >
-> > Of course, the actual granularity depends on hardware in the Xen case
-> > as well, but that is handled in Xen itself. And we have mechanisms in
-> > place in there to avoid timer interrupt storms (like, ahem, the Xen's
-> > 'timer_slop' boot parameter... :-P)
-> >
-> > And this is basically why I was also thinking we can/should lower the
-> > default value of TIMER_SLOP, here in the Xen clock implementation in
-> > Linux.
-> 
-> What do you think would be a sane value? 10us? Should we then still keep
-> this patch?
-> 
-> My concern would be that if we change the current value and it turns out
-> to be very wrong we'd then have no recourse.
-> 
-> 
-> -boris
-> 
+pon., 25 mar 2019 o 14:56 Axel Lin <axel.lin@ingics.com> napisa=C5=82(a):
+>
+> The pickable linear range is suitable for The MAX77651 SBB1.
+> According to MAX77651 TV_SBB1 Code Table:
+> Use BIT[1:0] as range selectors.
+> Use BIT[5:2] as selectors for each linear range.
+>
+> The MAX77651 SBB1 supports up to selector 57, selector 58 ~ 63 are RSVD,
+> thus set n_voltage to 58.
+>
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+> Hi Bartosz,
+> I don't have this h/w, please help to review and test this patch.
+> Thanks,
+> Axel
+>
+>  drivers/regulator/max77650-regulator.c | 134 +++++++++----------------
+>  1 file changed, 45 insertions(+), 89 deletions(-)
+>
+> diff --git a/drivers/regulator/max77650-regulator.c b/drivers/regulator/m=
+ax77650-regulator.c
+> index 5c4f86c98510..24b4a0a3c3bb 100644
+> --- a/drivers/regulator/max77650-regulator.c
+> +++ b/drivers/regulator/max77650-regulator.c
+> @@ -20,6 +20,8 @@
+>
+>  #define MAX77650_REGULATOR_V_LDO_MASK          GENMASK(6, 0)
+>  #define MAX77650_REGULATOR_V_SBB_MASK          GENMASK(5, 0)
+> +#define MAX77651_REGULATOR_V_SBB1_MASK         GENMASK(5, 2)
+> +#define MAX77651_REGULATOR_V_SBB1_RANGE_MASK   GENMASK(1, 0)
+>
+>  #define MAX77650_REGULATOR_AD_MASK             BIT(3)
+>  #define MAX77650_REGULATOR_AD_DISABLED         0x00
+> @@ -27,6 +29,8 @@
+>
+>  #define MAX77650_REGULATOR_CURR_LIM_MASK       GENMASK(7, 6)
+>
+> +static struct max77650_regulator_desc max77651_SBB1_desc;
+> +
+>  enum {
+>         MAX77650_REGULATOR_ID_LDO =3D 0,
+>         MAX77650_REGULATOR_ID_SBB0,
+> @@ -41,43 +45,20 @@ struct max77650_regulator_desc {
+>         unsigned int regB;
+>  };
+>
+> -static const unsigned int max77651_sbb1_regulator_volt_table[] =3D {
+> -       2400000, 3200000, 4000000, 4800000,
+> -       2450000, 3250000, 4050000, 4850000,
+> -       2500000, 3300000, 4100000, 4900000,
+> -       2550000, 3350000, 4150000, 4950000,
+> -       2600000, 3400000, 4200000, 5000000,
+> -       2650000, 3450000, 4250000, 5050000,
+> -       2700000, 3500000, 4300000, 5100000,
+> -       2750000, 3550000, 4350000, 5150000,
+> -       2800000, 3600000, 4400000, 5200000,
+> -       2850000, 3650000, 4450000, 5250000,
+> -       2900000, 3700000, 4500000,       0,
+> -       2950000, 3750000, 4550000,       0,
+> -       3000000, 3800000, 4600000,       0,
+> -       3050000, 3850000, 4650000,       0,
+> -       3100000, 3900000, 4700000,       0,
+> -       3150000, 3950000, 4750000,       0,
+> +static const unsigned int max77651_sbb1_volt_range_sel[] =3D {
+> +       0x0, 0x1, 0x2, 0x3
+>  };
+>
+> -#define MAX77651_REGULATOR_SBB1_SEL_DEC(_val) \
+> -               (((_val & 0x3c) >> 2) | ((_val & 0x03) << 4))
+> -#define MAX77651_REGULATOR_SBB1_SEL_ENC(_val) \
+> -               (((_val & 0x30) >> 4) | ((_val & 0x0f) << 2))
+> -
+> -#define MAX77650_REGULATOR_SBB1_SEL_DECR(_val)                         \
+> -       do {                                                            \
+> -               _val =3D MAX77651_REGULATOR_SBB1_SEL_DEC(_val);          =
+ \
+> -               _val--;                                                 \
+> -               _val =3D MAX77651_REGULATOR_SBB1_SEL_ENC(_val);          =
+ \
+> -       } while (0)
+> -
+> -#define MAX77650_REGULATOR_SBB1_SEL_INCR(_val)                         \
+> -       do {                                                            \
+> -               _val =3D MAX77651_REGULATOR_SBB1_SEL_DEC(_val);          =
+ \
+> -               _val++;                                                 \
+> -               _val =3D MAX77651_REGULATOR_SBB1_SEL_ENC(_val);          =
+ \
+> -       } while (0)
+> +static const struct regulator_linear_range max77651_sbb1_volt_ranges[] =
+=3D {
+> +       /* range index 0 */
+> +       REGULATOR_LINEAR_RANGE(2400000, 0x00, 0x0f, 50000),
+> +       /* range index 1 */
+> +       REGULATOR_LINEAR_RANGE(3200000, 0x00, 0x0f, 50000),
+> +       /* range index 2 */
+> +       REGULATOR_LINEAR_RANGE(4000000, 0x00, 0x0f, 50000),
+> +       /* range index 3 */
+> +       REGULATOR_LINEAR_RANGE(4800000, 0x00, 0x09, 50000),
+> +};
+>
+>  static const unsigned int max77650_current_limit_table[] =3D {
+>         1000000, 866000, 707000, 500000,
+> @@ -130,6 +111,7 @@ static int max77650_regulator_disable(struct regulato=
+r_dev *rdev)
+>  static int max77650_regulator_set_voltage_sel(struct regulator_dev *rdev=
+,
+>                                               unsigned int sel)
+>  {
+> +       struct max77650_regulator_desc *rdesc =3D rdev_get_drvdata(rdev);
+>         int rv =3D 0, curr, diff;
+>         bool ascending;
+>
+> @@ -137,15 +119,24 @@ static int max77650_regulator_set_voltage_sel(struc=
+t regulator_dev *rdev,
+>          * If the regulator is disabled, we can program the desired
+>          * voltage right away.
+>          */
+> -       if (!max77650_regulator_is_enabled(rdev))
+> -               return regulator_set_voltage_sel_regmap(rdev, sel);
+> +       if (!max77650_regulator_is_enabled(rdev)) {
+> +               if (rdesc =3D=3D &max77651_SBB1_desc)
+> +                       return regulator_set_voltage_sel_pickable_regmap(=
+rdev,
+> +                                                                        =
+sel);
+> +               else
+> +                       return regulator_set_voltage_sel_regmap(rdev, sel=
+);
+> +       }
+>
+>         /*
+>          * Otherwise we need to manually ramp the output voltage up/down
+>          * one step at a time.
+>          */
+>
+> -       curr =3D regulator_get_voltage_sel_regmap(rdev);
+> +       if (rdesc =3D=3D &max77651_SBB1_desc)
+> +               curr =3D regulator_get_voltage_sel_pickable_regmap(rdev);
+> +       else
+> +               curr =3D regulator_get_voltage_sel_regmap(rdev);
+> +
+>         if (curr < 0)
+>                 return curr;
+>
+> @@ -162,57 +153,18 @@ static int max77650_regulator_set_voltage_sel(struc=
+t regulator_dev *rdev,
+>          * the selector equals 0.
+>          */
+>         for (ascending ? curr++ : curr--;; ascending ? curr++ : curr--) {
+> -               rv =3D regulator_set_voltage_sel_regmap(rdev, curr);
+> -               if (rv)
+> -                       return rv;
+> -
+> -               if (curr =3D=3D sel)
+> -                       break;
+> -       }
+> -
+> -       return 0;
+> -}
+> -
+> -/*
+> - * Special case: non-linear voltage table for max77651 SBB1 - software
+> - * must ensure the voltage is ramped in 50mV increments.
+> - */
+> -static int max77651_regulator_sbb1_set_voltage_sel(struct regulator_dev =
+*rdev,
+> -                                                  unsigned int sel)
+> -{
+> -       int rv =3D 0, curr, vcurr, vdest, vdiff;
+> -
+> -       /*
+> -        * If the regulator is disabled, we can program the desired
+> -        * voltage right away.
+> -        */
+> -       if (!max77650_regulator_is_enabled(rdev))
+> -               return regulator_set_voltage_sel_regmap(rdev, sel);
+> -
+> -       curr =3D regulator_get_voltage_sel_regmap(rdev);
+> -       if (curr < 0)
+> -               return curr;
+> -
+> -       if (curr =3D=3D sel)
+> -               return 0; /* Already there. */
+> -
+> -       vcurr =3D max77651_sbb1_regulator_volt_table[curr];
+> -       vdest =3D max77651_sbb1_regulator_volt_table[sel];
+> -       vdiff =3D vcurr - vdest;
+> -
+> -       for (;;) {
+> -               if (vdiff > 0)
+> -                       MAX77650_REGULATOR_SBB1_SEL_DECR(curr);
+> +               if (rdesc =3D=3D &max77651_SBB1_desc)
+> +                       rv =3D regulator_set_voltage_sel_pickable_regmap(=
+rdev,
+> +                                                                      cu=
+rr);
+>                 else
+> -                       MAX77650_REGULATOR_SBB1_SEL_INCR(curr);
+> +                       rv =3D regulator_set_voltage_sel_regmap(rdev, cur=
+r);
+>
+> -               rv =3D regulator_set_voltage_sel_regmap(rdev, curr);
+>                 if (rv)
+>                         return rv;
+>
+>                 if (curr =3D=3D sel)
+>                         break;
+> -       };
+> +       }
+>
+>         return 0;
+>  }
+> @@ -241,14 +193,14 @@ static const struct regulator_ops max77650_regulato=
+r_SBB_ops =3D {
+>         .set_active_discharge   =3D regulator_set_active_discharge_regmap=
+,
+>  };
+>
+> -/* Special case for max77651 SBB1 - non-linear voltage mapping. */
+> +/* Special case for max77651 SBB1 - pickable linear-range voltage mappin=
+g. */
+>  static const struct regulator_ops max77651_SBB1_regulator_ops =3D {
+>         .is_enabled             =3D max77650_regulator_is_enabled,
+>         .enable                 =3D max77650_regulator_enable,
+>         .disable                =3D max77650_regulator_disable,
+> -       .list_voltage           =3D regulator_list_voltage_table,
+> -       .get_voltage_sel        =3D regulator_get_voltage_sel_regmap,
+> -       .set_voltage_sel        =3D max77651_regulator_sbb1_set_voltage_s=
+el,
+> +       .list_voltage           =3D regulator_list_voltage_pickable_linea=
+r_range,
+> +       .get_voltage_sel        =3D regulator_get_voltage_sel_pickable_re=
+gmap,
+> +       .set_voltage_sel        =3D max77650_regulator_set_voltage_sel,
+>         .get_current_limit      =3D regulator_get_current_limit_regmap,
+>         .set_current_limit      =3D regulator_set_current_limit_regmap,
+>         .set_active_discharge   =3D regulator_set_active_discharge_regmap=
+,
+> @@ -345,9 +297,13 @@ static struct max77650_regulator_desc max77651_SBB1_=
+desc =3D {
+>                 .supply_name            =3D "in-sbb1",
+>                 .id                     =3D MAX77650_REGULATOR_ID_SBB1,
+>                 .ops                    =3D &max77651_SBB1_regulator_ops,
+> -               .volt_table             =3D max77651_sbb1_regulator_volt_=
+table,
+> -               .n_voltages =3D ARRAY_SIZE(max77651_sbb1_regulator_volt_t=
+able),
+> -               .vsel_mask              =3D MAX77650_REGULATOR_V_SBB_MASK=
+,
+> +               .linear_range_selectors =3D max77651_sbb1_volt_range_sel,
+> +               .linear_ranges          =3D max77651_sbb1_volt_ranges,
+> +               .n_linear_ranges        =3D ARRAY_SIZE(max77651_sbb1_volt=
+_ranges),
+> +               .n_voltages             =3D 58,
+> +               .vsel_range_mask        =3D MAX77651_REGULATOR_V_SBB1_RAN=
+GE_MASK,
+> +               .vsel_range_reg         =3D MAX77650_REG_CNFG_SBB1_A,
+> +               .vsel_mask              =3D MAX77651_REGULATOR_V_SBB1_MAS=
+K,
+>                 .vsel_reg               =3D MAX77650_REG_CNFG_SBB1_A,
+>                 .active_discharge_off   =3D MAX77650_REGULATOR_AD_DISABLE=
+D,
+>                 .active_discharge_on    =3D MAX77650_REGULATOR_AD_ENABLED=
+,
+> --
+> 2.17.1
+>
 
-Speaking out of turn but as a participant in this thread, I would not
-assume to change the default value for all cases without significant
-testing by the community, touching a variety of configurations.
+Hi,
 
-It feels like changing the default has a non-trivial amount of 
-unknowns that would need to be addressed.
+what tree is this patch based on, because it doesn't apply on top of v5.1-r=
+c2.
 
-Not surprisingly, I am biased to the approach of my patch which
-does not change the default but offers flexibility to all.
-
-- Ryan
+Bart
