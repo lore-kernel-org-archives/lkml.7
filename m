@@ -2,134 +2,115 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A374C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59008C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99C9206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A20206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F92JhV41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfC0QMN (ORCPT
+        id S1727800AbfC0QMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:12:13 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45699 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbfC0QMN (ORCPT
+        Wed, 27 Mar 2019 12:12:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40262 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbfC0QMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:12:13 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h9B9p-00016N-BI; Wed, 27 Mar 2019 17:12:05 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h9B9n-00021I-CH; Wed, 27 Mar 2019 17:12:03 +0100
-Date:   Wed, 27 Mar 2019 17:12:03 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Tal Shorer <tal.shorer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     rostedt@goodmis.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org
-Subject: Re: [Patch v3 2/2] tracing: gpio: add Kconfig option for
- enabling/disabling trace events
-Message-ID: <20190327161158.GA26067@taurus.defre.kleine-koenig.org>
-References: <CAFDyS3Nuq8FPx4z5GW1Ht+NBGd+8O9rjPZ+DaMU1XU1QYgA=2g@mail.gmail.com>
- <1438432079-11704-1-git-send-email-tal.shorer@gmail.com>
- <1438432079-11704-4-git-send-email-tal.shorer@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
-In-Reply-To: <1438432079-11704-4-git-send-email-tal.shorer@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 27 Mar 2019 12:12:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c207so9935434pfc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jkZ2hr27HPMhS9m1VJNrg0kukcfh5YaVg9wVSXAsMPg=;
+        b=F92JhV41FO7etqxGJ+p1TOFdjzMvn1yeJYSAfvfxD+tvO1KLYxG/p/uSy19nARkpMl
+         jZfH3w+sMD34FGXm+p62SAXESAW3817vaAPe6pZ0Z1hgTwDF/kSKwJx2rHddR9sc8Owa
+         FJV+XcpwoklnbfwDm+oZtsh8zoUUZuAdDY3XB7wArJG5TGtXVHpfx/kSbZblH7Ky9jj5
+         rNA0UKsPwFjkOm//ozr3Wvp28Wfn2Wqt/wUhn60Jspap3QLjc92nOva/9tjli5cJ2hPh
+         tW2b2ADEaCMw8jzbkeOeUyBt619Bk+iGbJuXQbhUjpV9rZFn9q1p/Q55jjZL0J6hdmwA
+         s/UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jkZ2hr27HPMhS9m1VJNrg0kukcfh5YaVg9wVSXAsMPg=;
+        b=WwS9RqzXYGXDd4W+tsZZNQECKIvsCA6RdsXNOXOljuZhvNjKLTnj10jUw/gbEctFCk
+         2xcISH4k+SVXVYXvlXQ8J7c7bz+VscFktKx2uEqj/qO5+iLDN9jg3UZ3TscWpWd/NI6O
+         gtnNfRgJxTIj4ivfCi73RRZPQFOWnyTUHXvkmnHMA/n4LDbLlkn9XgEADGSx0NiInd3e
+         UsqRbTIB77Iz7yBoqU/8HHmgalG5y8SuccVNMQE4WKzuyk7jCrmavduX/AuQh3CmooNi
+         PX2+Pix8QbxMjLH5XgPqLccD9PnNJT1HmhmBs265FOxrQ5y5JRyjbwsoW/9y0jsXHaSn
+         vq+g==
+X-Gm-Message-State: APjAAAWhIBSoS8SjwqIFkrQFDq8pVJB4GJg9VdBoyg9AL7k36wdkKL0I
+        XgwCjlFp8BkoDC9I5r+4PFI=
+X-Google-Smtp-Source: APXvYqwBn9gnmzPfntdGH9Wu5eH7fT4kYRuxbUpdoAh0ZlJclARI69st9OHesKdZGfLyUzXWp7duYg==
+X-Received: by 2002:a63:4343:: with SMTP id q64mr5635918pga.105.1553703139536;
+        Wed, 27 Mar 2019 09:12:19 -0700 (PDT)
+Received: from CentOS76.localdomain.localdomain ([49.205.222.128])
+        by smtp.gmail.com with ESMTPSA id l187sm27218206pgl.75.2019.03.27.09.12.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 09:12:18 -0700 (PDT)
+From:   jagdsh.linux@gmail.com
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        airlied@linux.ie, daniel@ffwll.ch, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Subject: [PATCH] gpu:drm: Remove duplicate headers
+Date:   Thu, 28 Mar 2019 02:41:56 +0530
+Message-Id: <1553721116-37832-1-git-send-email-jagdsh.linux@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Remove duplicate headers which are included twice.
 
-On Sat, Aug 01, 2015 at 03:27:58PM +0300, Tal Shorer wrote:
-> Add a new options to trace Kconfig, CONFIG_TRACING_EVENTS_GPIO, that is
-> used for enabling/disabling compilation of gpio function trace events.
->=20
-> Signed-off-by: Tal Shorer <tal.shorer@gmail.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  include/trace/events/gpio.h | 4 ++++
->  kernel/trace/Kconfig        | 7 +++++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/include/trace/events/gpio.h b/include/trace/events/gpio.h
-> index 927a8ad..2da73b9 100644
-> --- a/include/trace/events/gpio.h
-> +++ b/include/trace/events/gpio.h
-> @@ -1,6 +1,10 @@
->  #undef TRACE_SYSTEM
->  #define TRACE_SYSTEM gpio
-> =20
-> +#ifndef CONFIG_TRACING_EVENTS_GPIO
-> +#define NOTRACE
-> +#endif
-> +
->  #if !defined(_TRACE_GPIO_H) || defined(TRACE_HEADER_MULTI_READ)
->  #define _TRACE_GPIO_H
-> =20
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 3b9a48a..67a1731 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -635,6 +635,13 @@ config TRACE_ENUM_MAP_FILE
-> =20
->  	If unsure, say N
-> =20
-> +config TRACING_EVENTS_GPIO
-> +	bool "Trace gpio events"
-> +	depends on GPIOLIB
-> +	default y
-> +	help
-> +	  Enable tracing events for gpio subsystem
-> +
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+---
+ drivers/gpu/drm/bridge/panel.c       | 1 -
+ drivers/gpu/drm/i915/intel_display.c | 7 -------
+ 2 files changed, 8 deletions(-)
 
-It happened a few times to me since this patch was merged (in 4.4-rc1)
-that I worked on a system with tracing enabled but
-/sys/kernel/debug/tracing/events/gpio were missing because of
-CONFIG_TRACING_EVENTS_GPIO=3Dn. This is annoying and I wonder what is the
-motivating purpose of allowing to disable gpio events. There is no other
-event type that can be disabled with kconfig symbols. Theoretically the
-overhead should be so small, that having these events enabled
-unconditionally should be fine, shouldn't it?
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index 38eeaf8..eb9567d 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -15,7 +15,6 @@
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_modeset_helper_vtables.h>
+ #include <drm/drm_probe_helper.h>
+-#include <drm/drm_panel.h>
+ 
+ struct panel_bridge {
+ 	struct drm_bridge bridge;
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index ccb6163..1166342 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -51,14 +51,7 @@
+ #include "intel_dsi.h"
+ #include "intel_frontbuffer.h"
+ 
+-#include "intel_drv.h"
+-#include "intel_dsi.h"
+-#include "intel_frontbuffer.h"
+-
+-#include "i915_drv.h"
+-#include "i915_gem_clflush.h"
+ #include "i915_reset.h"
+-#include "i915_trace.h"
+ 
+ /* Primary plane formats for gen <= 3 */
+ static const u32 i8xx_primary_formats[] = {
+-- 
+1.8.3.1
 
-Best regards
-Uwe
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAlyboMkACgkQwfwUeK3K
-7AmWjgf/fn7Is0y04lkAl6ET2ZTTC4yh7aLtitivQZ7q6GrULaPfhWO8GEj7lOxR
-Q7N9N3WZrqtR/TWAd4VuYsDPpQoLkWrFSgQS4qh1okV1evmTnRUuWkiAluLvizLS
-tU29YxSf4TPNgcn91hpFMNIGbPMBPolnWLF718VtaRXhowz4RvqNQMplGnUc0G53
-yZ+d3EganFx8pgVpG1NIBhgT5Pi/oRV/URDF1epZEOgHA+2VifrE04Um+dzugo3U
-xGBaP4rWCT8HSWPFQM6JgpMyjVzKQ0wsKzxIgQtgX6et11IrWtytMZxgaz0L1U1p
-w1Rp1uJCw0HagsV6zo4idA2auO5Kgw==
-=/vx7
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
