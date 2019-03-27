@@ -2,59 +2,56 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED641C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D427C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7DA217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1455421734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709816;
-	bh=8Hux6TbSRnoEgQ9f+YXXsBoJwgZklORkaD1SDS0Dcbk=;
+	s=default; t=1553709820;
+	bh=wuNY7ljoIS1ZD31d45BkhQfHoi82zPOiPMuDdesqbJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2pIa0abvOQQ/oPXjHjL0Ye9WxW5sC+gNPPwVsv4Z1tFKLLPZTRDungyu6jl+RtMua
-	 3UBWnab1JNvrw41pjPWd89aAqf2uItLrwR8w0uRL/ueTXLmnJ35S28rwLutapp6ad6
-	 XC9y+PJP297ARmZDGJa6gCLs/BjAVVYUvoCu+0tg=
+	b=f/5Pi9tXOUuRvMTNgETf4/ElLgkElje08Hy7QCKwpdjtlGcEyDb2cK7rW1OIaMgQu
+	 hbVBS9la87rJUb8rXEKU5ZqClGvXS3BKZh1zDNB37E84R9O990FxQMTCTu2ycpgGWg
+	 hJpq26jep+Li32FIBncBVPtfNIvMQUwkGmEmMMqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732609AbfC0SDf (ORCPT
+        id S1728911AbfC0SDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732545AbfC0SDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:33 -0400
+        id S1729164AbfC0SDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6070321734;
-        Wed, 27 Mar 2019 18:03:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32128217D9;
+        Wed, 27 Mar 2019 18:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709812;
-        bh=8Hux6TbSRnoEgQ9f+YXXsBoJwgZklORkaD1SDS0Dcbk=;
+        s=default; t=1553709815;
+        bh=wuNY7ljoIS1ZD31d45BkhQfHoi82zPOiPMuDdesqbJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcjcU8E0P8OQwCCuWuw4ZpzQnthLOjVSBJt5DkyYtTMh6/Yq/EEnL6ISg2wUwV22L
-         jrjNARKuTWYsLj+cDDl1btQ7ifTMG7/ONHOOZeobHRiTZj7lAQ/Crh2oZ04pBU23Bj
-         dJWVXz/lpYdAKJB0FTOmZUHqZm11RLyOsLP/+cxc=
+        b=1zxqOrdxXqogK+s4zVm1WrAQmaKM4W14i6Zt/7HEYKUKondByXoxQ4D3S610e/YK6
+         Oxo7moihOYrNi/VpXm61AdnmJs1GlcS9hEl8vU6/xRZeq1Y7jRUpWCxzI+UeeXZZsv
+         iFohT/9JMVUpieT2JwW0Izaeild6Jzqfut00pDgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 052/262] perf beauty msg_flags: Add missing %s lost when adding prefix suppression logic
-Date:   Wed, 27 Mar 2019 13:58:27 -0400
-Message-Id: <20190327180158.10245-52-sashal@kernel.org>
+Cc:     Honghui Zhang <honghui.zhang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 054/262] PCI: mediatek: Fix memory mapped IO range size computation
+Date:   Wed, 27 Mar 2019 13:58:29 -0400
+Message-Id: <20190327180158.10245-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,65 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-[ Upstream commit c3b81a500f35241a4c16febe0a015e572cf2c492 ]
+[ Upstream commit c61df57343bf05743f8abbb31eec9a6f05820dd1 ]
 
-When the prefix suppresion/enabling logic was added, I forgot to add an
-extra %, which ended up chopping off the strings:
+Mediatek's HW assigns a MMIO address range (typically starts from
+0x20000000 to 0x2fffffff for both mt2712 and mt7622) for PCI usage.
 
-Before:
+This MMIO address space represents the address space that can
+be allocated to PCI devices through Base Address Registers.
 
-  # perf trace -e *mmsg --map-dump syscalls
-  [299] = 1,
-  [307] = 1,
-  DNS Res~ver #3/14587 sendmmsg(106<socket:[3462393]>, 0x7f252b0fcaf0, 2, MSG_) = 2
-  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_, NULL) = 1
-  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
-  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
-  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
-  DNS Res~ver #3/14587 sendmmsg(148<socket:[3460636]>, 0x7f252b0fcaf0, 2, MSG_) = 2
-  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
-  ^C#
+Even though the full MMIO address range is available to be allocated, it
+should be enabled by the PCIE_AHB_TRANS_BASE register in the host
+controller and the size that is enabled is determined by AHB2PCIE_SIZE
+bits in this register.
 
-After:
+Owing to a bug in the MMIO window size computation, current code does
+not enable the full size of the available MMIO address range in the
+PCI host controller; if the PCI devices BARs requested size exceeds the
+size enabled through the PCIE_AHB_TRANS_BASE register the requests
+targeting the disabled address address space will be blocked by the root
+complex causing a system error.
 
-  # perf trace -e *mmsg --map-dump syscalls
-  [299] = 1,
-  [307] = 1,
-  NetworkManager/17467 sendmmsg(22<socket:[3466493]>, 0x7f28927f9bb0, 2, MSG_NOSIGNAL) = 2
-  pool/17478 sendmmsg(10<socket:[3466523]>, 0x7f2769f95e90, 2, MSG_NOSIGNAL) = 2
-  DNS Res~ver #3/14587 sendmmsg(121<socket:[3466132]>, 0x7f252b0fcaf0, 2, MSG_NOSIGNAL) = 2
-  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_DONTWAIT, NULL) = 1
-  Socket Thread/17433 sendmmsg(121<socket:[3460903]>, 0x7f252668baf0, 2, MSG_NOSIGNAL) = 2
-  ^C#
+Existing code has never run into a system error in production because
+even half of the enabled MMIO range (128MB) is big enough for typical
+devices BAR requests (4MB) but the full MMIO address range should
+be enabled regardless.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Fixes: c65c83ffe904 ("perf trace: Allow asking for not suppressing common string prefixes")
-Link: https://lkml.kernel.org/n/tip-t2eu1rqx710k6jr4814mlzg7@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fix the MMIO window size computation by using resource_size(mem) instead
+of mem->end - mem->start.
+
+Since the MMIO window size for both MT2712 and MT7622 is 0x10000000,
+this change will update the parameter passed to fls() from 0xfffffff to
+0x10000000 and calculate the whole memory mapped IO range size
+correctly.
+
+Detected through coccinelle semantic patch (and related warning):
+
+scripts/coccinelle/api/resource_size.cocci:
+
+pcie-mediatek.c:720:13-16: WARNING: Suspicious code. resource_size is maybe missing with mem
+
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+[lorenzo.pieralisi@arm.com: rewrote the commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/msg_flags.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/pcie-mediatek.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
-index d66c66315987..ea68db08b8e7 100644
---- a/tools/perf/trace/beauty/msg_flags.c
-+++ b/tools/perf/trace/beauty/msg_flags.c
-@@ -29,7 +29,7 @@ static size_t syscall_arg__scnprintf_msg_flags(char *bf, size_t size,
- 		return scnprintf(bf, size, "NONE");
- #define	P_MSG_FLAG(n) \
- 	if (flags & MSG_##n) { \
--		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
-+		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
- 		flags &= ~MSG_##n; \
- 	}
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 55e471c18e8d..c42fe5c4319f 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -654,7 +654,6 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 	struct resource *mem = &pcie->mem;
+ 	const struct mtk_pcie_soc *soc = port->pcie->soc;
+ 	u32 val;
+-	size_t size;
+ 	int err;
  
+ 	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+@@ -706,8 +705,8 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		mtk_pcie_enable_msi(port);
+ 
+ 	/* Set AHB to PCIe translation windows */
+-	size = mem->end - mem->start;
+-	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
++	val = lower_32_bits(mem->start) |
++	      AHB2PCIE_SIZE(fls(resource_size(mem)));
+ 	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
+ 
+ 	val = upper_32_bits(mem->start);
 -- 
 2.19.1
 
