@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813BAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26367C10F0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402F02087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E300E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709784;
-	bh=rEv3uEDX/9eDVE6ijmR3wJxVK9HSSrqxfjradNw4TW0=;
+	s=default; t=1553709788;
+	bh=+jk2+eMtoryh6ZVMjD+QAzN+Jd9/NnV1bRmX8xEIWOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtafZmDZMGbcS9lnTaYdTm1VtpCFfZkPecDpYF5GD8XV1sOMGV+K1eZ2ER4MZPfd0
-	 +JywB1NFFQZsxHQ949cMVpNtDXYYsrnIwvZFEzpsF251ZnsiBhEvJXRDPPWO9CPCrk
-	 5akG1/9PdUzQEl3zN0094SDLZvMdZRl+B47FRal8=
+	b=nTm8sK6x2c7g3CnZjqBZM7UtpTYsY07ZbRiR6QHTI/aSzdphfxncwQVBJM7NOq4i8
+	 BPBHlUr3QpWBdNhHjnOv2MYJln05kvRwPTxt5T/Rp4FW2HPQPuqkNd4G+wmrZFl+rz
+	 e3DrhBW8HWSdX5v9o7M6ADh7mHlFvTDDK2NU0bVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbfC0SDD (ORCPT
+        id S1731975AbfC0SDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731250AbfC0SDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:01 -0400
+        id S1731851AbfC0SDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 001B72177E;
-        Wed, 27 Mar 2019 18:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 448172082F;
+        Wed, 27 Mar 2019 18:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709779;
-        bh=rEv3uEDX/9eDVE6ijmR3wJxVK9HSSrqxfjradNw4TW0=;
+        s=default; t=1553709782;
+        bh=+jk2+eMtoryh6ZVMjD+QAzN+Jd9/NnV1bRmX8xEIWOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wj9yvsU2u42IAoK1JymRKKsJy7QnB3+gD7bRqx/p3RSxJrCN5fhoUW7wtvTQg1+2J
-         bJ/m8v3tG9kOgmIxi2fPY1Se9qrv7iS1V46BvxH73aZ9/6ZvSpdA7G2ZQgvLGKfR7I
-         QoCo28tGIzhkG07VQTIWTrtD2y3qPgM8yR8zT4gU=
+        b=ZKWQjRB3v92S+v39Eda6ihSPGo7844B4bD+snEDvg4t0/7VM4jcZQo65Nj061wxUy
+         JxcHDfxyVk8yi3wD9EA4UjLHfwwqDsh4qSrTXJ1Gf8DHcJtnzPvppXAjsG+yu2lUka
+         h8htGUw1TetxyPM4H6bEokQismWpgbaiHCR5i7y8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 034/262] docs/core-api/mm: fix user memory accessors formatting
-Date:   Wed, 27 Mar 2019 13:58:09 -0400
-Message-Id: <20190327180158.10245-34-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 035/262] mm,oom: don't kill global init via memory.oom.group
+Date:   Wed, 27 Mar 2019 13:58:10 -0400
+Message-Id: <20190327180158.10245-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,178 +61,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit bc8ff3ca6589d63c6d10f5ee8bed38f74851b469 ]
+[ Upstream commit d342a0b38674867ea67fde47b0e1e60ffe9f17a2 ]
 
-The descriptions of userspace memory access functions had minor issues
-with formatting that made kernel-doc unable to properly detect the
-function/macro names and the return value sections:
+Since setting global init process to some memory cgroup is technically
+possible, oom_kill_memcg_member() must check it.
 
-./arch/x86/include/asm/uaccess.h:80: info: Scanning doc for
-./arch/x86/include/asm/uaccess.h:139: info: Scanning doc for
-./arch/x86/include/asm/uaccess.h:231: info: Scanning doc for
-./arch/x86/include/asm/uaccess.h:505: info: Scanning doc for
-./arch/x86/include/asm/uaccess.h:530: info: Scanning doc for
-./arch/x86/lib/usercopy_32.c:58: info: Scanning doc for
-./arch/x86/lib/usercopy_32.c:69: warning: No description found for return
-value of 'clear_user'
-./arch/x86/lib/usercopy_32.c:78: info: Scanning doc for
-./arch/x86/lib/usercopy_32.c:90: warning: No description found for return
-value of '__clear_user'
+  Tasks in /test1 are going to be killed due to memory.oom.group set
+  Memory cgroup out of memory: Killed process 1 (systemd) total-vm:43400kB, anon-rss:1228kB, file-rss:3992kB, shmem-rss:0kB
+  oom_reaper: reaped process 1 (systemd), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b
 
-Fix the formatting.
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-Link: http://lkml.kernel.org/r/1549549644-4903-3-git-send-email-rppt@linux.ibm.com
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
+int main(int argc, char *argv[])
+{
+	static char buffer[10485760];
+	static int pipe_fd[2] = { EOF, EOF };
+	unsigned int i;
+	int fd;
+	char buf[64] = { };
+	if (pipe(pipe_fd))
+		return 1;
+	if (chdir("/sys/fs/cgroup/"))
+		return 1;
+	fd = open("cgroup.subtree_control", O_WRONLY);
+	write(fd, "+memory", 7);
+	close(fd);
+	mkdir("test1", 0755);
+	fd = open("test1/memory.oom.group", O_WRONLY);
+	write(fd, "1", 1);
+	close(fd);
+	fd = open("test1/cgroup.procs", O_WRONLY);
+	write(fd, "1", 1);
+	snprintf(buf, sizeof(buf) - 1, "%d", getpid());
+	write(fd, buf, strlen(buf));
+	close(fd);
+	snprintf(buf, sizeof(buf) - 1, "%lu", sizeof(buffer) * 5);
+	fd = open("test1/memory.max", O_WRONLY);
+	write(fd, buf, strlen(buf));
+	close(fd);
+	for (i = 0; i < 10; i++)
+		if (fork() == 0) {
+			char c;
+			close(pipe_fd[1]);
+			read(pipe_fd[0], &c, 1);
+			memset(buffer, 0, sizeof(buffer));
+			sleep(3);
+			_exit(0);
+		}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	sleep(3);
+	return 0;
+}
+
+[   37.052923][ T9185] a.out invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+[   37.056169][ T9185] CPU: 4 PID: 9185 Comm: a.out Kdump: loaded Not tainted 5.0.0-rc4-next-20190131 #280
+[   37.059205][ T9185] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[   37.062954][ T9185] Call Trace:
+[   37.063976][ T9185]  dump_stack+0x67/0x95
+[   37.065263][ T9185]  dump_header+0x51/0x570
+[   37.066619][ T9185]  ? trace_hardirqs_on+0x3f/0x110
+[   37.068171][ T9185]  ? _raw_spin_unlock_irqrestore+0x3d/0x70
+[   37.069967][ T9185]  oom_kill_process+0x18d/0x210
+[   37.071515][ T9185]  out_of_memory+0x11b/0x380
+[   37.072936][ T9185]  mem_cgroup_out_of_memory+0xb6/0xd0
+[   37.074601][ T9185]  try_charge+0x790/0x820
+[   37.076021][ T9185]  mem_cgroup_try_charge+0x42/0x1d0
+[   37.077629][ T9185]  mem_cgroup_try_charge_delay+0x11/0x30
+[   37.079370][ T9185]  do_anonymous_page+0x105/0x5e0
+[   37.080939][ T9185]  __handle_mm_fault+0x9cb/0x1070
+[   37.082485][ T9185]  handle_mm_fault+0x1b2/0x3a0
+[   37.083819][ T9185]  ? handle_mm_fault+0x47/0x3a0
+[   37.085181][ T9185]  __do_page_fault+0x255/0x4c0
+[   37.086529][ T9185]  do_page_fault+0x28/0x260
+[   37.087788][ T9185]  ? page_fault+0x8/0x30
+[   37.088978][ T9185]  page_fault+0x1e/0x30
+[   37.090142][ T9185] RIP: 0033:0x7f8b183aefe0
+[   37.091433][ T9185] Code: 20 f3 44 0f 7f 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f 84 00 00 00 00 00 <66> 44 0f 7f 01 66 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41
+[   37.096917][ T9185] RSP: 002b:00007fffc5d329e8 EFLAGS: 00010206
+[   37.098615][ T9185] RAX: 00000000006010e0 RBX: 0000000000000008 RCX: 0000000000c30000
+[   37.100905][ T9185] RDX: 00000000010010c0 RSI: 0000000000000000 RDI: 00000000006010e0
+[   37.103349][ T9185] RBP: 0000000000000000 R08: 00007f8b188f4740 R09: 0000000000000000
+[   37.105797][ T9185] R10: 00007fffc5d32420 R11: 00007f8b183aef40 R12: 0000000000000005
+[   37.108228][ T9185] R13: 0000000000000000 R14: ffffffffffffffff R15: 0000000000000000
+[   37.110840][ T9185] memory: usage 51200kB, limit 51200kB, failcnt 125
+[   37.113045][ T9185] memory+swap: usage 0kB, limit 9007199254740988kB, failcnt 0
+[   37.115808][ T9185] kmem: usage 0kB, limit 9007199254740988kB, failcnt 0
+[   37.117660][ T9185] Memory cgroup stats for /test1: cache:0KB rss:49484KB rss_huge:30720KB shmem:0KB mapped_file:0KB dirty:0KB writeback:0KB inactive_anon:0KB active_anon:49700KB inactive_file:0KB active_file:0KB unevictable:0KB
+[   37.123371][ T9185] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,oom_memcg=/test1,task_memcg=/test1,task=a.out,pid=9188,uid=0
+[   37.128158][ T9185] Memory cgroup out of memory: Killed process 9188 (a.out) total-vm:14456kB, anon-rss:10324kB, file-rss:504kB, shmem-rss:0kB
+[   37.132710][ T9185] Tasks in /test1 are going to be killed due to memory.oom.group set
+[   37.132833][   T54] oom_reaper: reaped process 9188 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.135498][ T9185] Memory cgroup out of memory: Killed process 1 (systemd) total-vm:43400kB, anon-rss:1228kB, file-rss:3992kB, shmem-rss:0kB
+[   37.143434][ T9185] Memory cgroup out of memory: Killed process 9182 (a.out) total-vm:14456kB, anon-rss:76kB, file-rss:588kB, shmem-rss:0kB
+[   37.144328][   T54] oom_reaper: reaped process 1 (systemd), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.147585][ T9185] Memory cgroup out of memory: Killed process 9183 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.157222][ T9185] Memory cgroup out of memory: Killed process 9184 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:508kB, shmem-rss:0kB
+[   37.157259][ T9185] Memory cgroup out of memory: Killed process 9185 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.157291][ T9185] Memory cgroup out of memory: Killed process 9186 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:508kB, shmem-rss:0kB
+[   37.157306][   T54] oom_reaper: reaped process 9183 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.157328][ T9185] Memory cgroup out of memory: Killed process 9187 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:512kB, shmem-rss:0kB
+[   37.157452][ T9185] Memory cgroup out of memory: Killed process 9189 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.158733][ T9185] Memory cgroup out of memory: Killed process 9190 (a.out) total-vm:14456kB, anon-rss:552kB, file-rss:512kB, shmem-rss:0kB
+[   37.160083][   T54] oom_reaper: reaped process 9186 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.160187][   T54] oom_reaper: reaped process 9189 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.206941][   T54] oom_reaper: reaped process 9185 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.212300][ T9185] Memory cgroup out of memory: Killed process 9191 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:512kB, shmem-rss:0kB
+[   37.212317][   T54] oom_reaper: reaped process 9190 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.218860][ T9185] Memory cgroup out of memory: Killed process 9192 (a.out) total-vm:14456kB, anon-rss:1080kB, file-rss:512kB, shmem-rss:0kB
+[   37.227667][   T54] oom_reaper: reaped process 9192 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.292323][ T9193] abrt-hook-ccpp (9193) used greatest stack depth: 10480 bytes left
+[   37.351843][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b
+[   37.354833][    T1] CPU: 7 PID: 1 Comm: systemd Kdump: loaded Not tainted 5.0.0-rc4-next-20190131 #280
+[   37.357876][    T1] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[   37.361685][    T1] Call Trace:
+[   37.363239][    T1]  dump_stack+0x67/0x95
+[   37.365010][    T1]  panic+0xfc/0x2b0
+[   37.366853][    T1]  do_exit+0xd55/0xd60
+[   37.368595][    T1]  do_group_exit+0x47/0xc0
+[   37.370415][    T1]  get_signal+0x32a/0x920
+[   37.372449][    T1]  ? _raw_spin_unlock_irqrestore+0x3d/0x70
+[   37.374596][    T1]  do_signal+0x32/0x6e0
+[   37.376430][    T1]  ? exit_to_usermode_loop+0x26/0x9b
+[   37.378418][    T1]  ? prepare_exit_to_usermode+0xa8/0xd0
+[   37.380571][    T1]  exit_to_usermode_loop+0x3e/0x9b
+[   37.382588][    T1]  prepare_exit_to_usermode+0xa8/0xd0
+[   37.384594][    T1]  ? page_fault+0x8/0x30
+[   37.386453][    T1]  retint_user+0x8/0x18
+[   37.388160][    T1] RIP: 0033:0x7f42c06974a8
+[   37.389922][    T1] Code: Bad RIP value.
+[   37.391788][    T1] RSP: 002b:00007ffc3effd388 EFLAGS: 00010213
+[   37.394075][    T1] RAX: 000000000000000e RBX: 00007ffc3effd390 RCX: 0000000000000000
+[   37.396963][    T1] RDX: 000000000000002a RSI: 00007ffc3effd390 RDI: 0000000000000004
+[   37.399550][    T1] RBP: 00007ffc3effd680 R08: 0000000000000000 R09: 0000000000000000
+[   37.402334][    T1] R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
+[   37.404890][    T1] R13: ffffffffffffffff R14: 0000000000000884 R15: 000056460b1ac3b0
+
+Link: http://lkml.kernel.org/r/201902010336.x113a4EO027170@www262.sakura.ne.jp
+Fixes: 3d8b38eb81cac813 ("mm, oom: introduce memory.oom.group")
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h | 24 ++++++++++++------------
- arch/x86/lib/usercopy_32.c     |  8 ++++----
- 2 files changed, 16 insertions(+), 16 deletions(-)
+ mm/oom_kill.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index c1334aaaa78d..f3aed639dccd 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -76,7 +76,7 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
- #endif
- 
- /**
-- * access_ok: - Checks if a user space pointer is valid
-+ * access_ok - Checks if a user space pointer is valid
-  * @addr: User space pointer to start of block to check
-  * @size: Size of block to check
-  *
-@@ -85,12 +85,12 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
-  *
-  * Checks if a pointer to a block of memory in user space is valid.
-  *
-- * Returns true (nonzero) if the memory block may be valid, false (zero)
-- * if it is definitely invalid.
-- *
-  * Note that, depending on architecture, this function probably just
-  * checks that the pointer is in the user space range - after calling
-  * this function, memory access functions may still return -EFAULT.
-+ *
-+ * Return: true (nonzero) if the memory block may be valid, false (zero)
-+ * if it is definitely invalid.
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 26ea8636758f..da0e44914085 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -928,7 +928,8 @@ static void __oom_kill_process(struct task_struct *victim)
   */
- #define access_ok(addr, size)					\
- ({									\
-@@ -135,7 +135,7 @@ extern int __get_user_bad(void);
- __typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
- 
- /**
-- * get_user: - Get a simple variable from user space.
-+ * get_user - Get a simple variable from user space.
-  * @x:   Variable to store result.
-  * @ptr: Source address, in user space.
-  *
-@@ -149,7 +149,7 @@ __typeof__(__builtin_choose_expr(sizeof(x) > sizeof(0UL), 0ULL, 0UL))
-  * @ptr must have pointer-to-simple-variable type, and the result of
-  * dereferencing @ptr must be assignable to @x without a cast.
-  *
-- * Returns zero on success, or -EFAULT on error.
-+ * Return: zero on success, or -EFAULT on error.
-  * On error, the variable @x is set to zero.
-  */
- /*
-@@ -227,7 +227,7 @@ extern void __put_user_4(void);
- extern void __put_user_8(void);
- 
- /**
-- * put_user: - Write a simple value into user space.
-+ * put_user - Write a simple value into user space.
-  * @x:   Value to copy to user space.
-  * @ptr: Destination address, in user space.
-  *
-@@ -241,7 +241,7 @@ extern void __put_user_8(void);
-  * @ptr must have pointer-to-simple-variable type, and @x must be assignable
-  * to the result of dereferencing @ptr.
-  *
-- * Returns zero on success, or -EFAULT on error.
-+ * Return: zero on success, or -EFAULT on error.
-  */
- #define put_user(x, ptr)					\
- ({								\
-@@ -503,7 +503,7 @@ struct __large_struct { unsigned long buf[100]; };
- } while (0)
- 
- /**
-- * __get_user: - Get a simple variable from user space, with less checking.
-+ * __get_user - Get a simple variable from user space, with less checking.
-  * @x:   Variable to store result.
-  * @ptr: Source address, in user space.
-  *
-@@ -520,7 +520,7 @@ struct __large_struct { unsigned long buf[100]; };
-  * Caller must check the pointer with access_ok() before calling this
-  * function.
-  *
-- * Returns zero on success, or -EFAULT on error.
-+ * Return: zero on success, or -EFAULT on error.
-  * On error, the variable @x is set to zero.
-  */
- 
-@@ -528,7 +528,7 @@ struct __large_struct { unsigned long buf[100]; };
- 	__get_user_nocheck((x), (ptr), sizeof(*(ptr)))
- 
- /**
-- * __put_user: - Write a simple value into user space, with less checking.
-+ * __put_user - Write a simple value into user space, with less checking.
-  * @x:   Value to copy to user space.
-  * @ptr: Destination address, in user space.
-  *
-@@ -545,7 +545,7 @@ struct __large_struct { unsigned long buf[100]; };
-  * Caller must check the pointer with access_ok() before calling this
-  * function.
-  *
-- * Returns zero on success, or -EFAULT on error.
-+ * Return: zero on success, or -EFAULT on error.
-  */
- 
- #define __put_user(x, ptr)						\
-diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
-index bfd94e7812fc..7d290777246d 100644
---- a/arch/x86/lib/usercopy_32.c
-+++ b/arch/x86/lib/usercopy_32.c
-@@ -54,13 +54,13 @@ do {									\
- } while (0)
- 
- /**
-- * clear_user: - Zero a block of memory in user space.
-+ * clear_user - Zero a block of memory in user space.
-  * @to:   Destination address, in user space.
-  * @n:    Number of bytes to zero.
-  *
-  * Zero a block of memory in user space.
-  *
-- * Returns number of bytes that could not be cleared.
-+ * Return: number of bytes that could not be cleared.
-  * On success, this will be zero.
-  */
- unsigned long
-@@ -74,14 +74,14 @@ clear_user(void __user *to, unsigned long n)
- EXPORT_SYMBOL(clear_user);
- 
- /**
-- * __clear_user: - Zero a block of memory in user space, with less checking.
-+ * __clear_user - Zero a block of memory in user space, with less checking.
-  * @to:   Destination address, in user space.
-  * @n:    Number of bytes to zero.
-  *
-  * Zero a block of memory in user space.  Caller must check
-  * the specified block with access_ok() before calling this function.
-  *
-- * Returns number of bytes that could not be cleared.
-+ * Return: number of bytes that could not be cleared.
-  * On success, this will be zero.
-  */
- unsigned long
+ static int oom_kill_memcg_member(struct task_struct *task, void *unused)
+ {
+-	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN) {
++	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN &&
++	    !is_global_init(task)) {
+ 		get_task_struct(task);
+ 		__oom_kill_process(task);
+ 	}
 -- 
 2.19.1
 
