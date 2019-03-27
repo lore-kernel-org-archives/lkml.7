@@ -2,132 +2,110 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B684C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D45C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593F1206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B497206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="leBDzQpK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="VflhqV3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbfC0Lm1 (ORCPT
+        id S1728718AbfC0Lmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:42:27 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53434 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfC0Lm0 (ORCPT
+        Wed, 27 Mar 2019 07:42:33 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:55824 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfC0Lmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:42:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q16so15805539wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 04:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YNNdbSS+C3KJAabfM9Oo1cBSnZKSRht7rzVdKUeZ6F0=;
-        b=leBDzQpK8dYKG+NM4xP5w+oTyJYG5WWEhS5kvnN0UcM+D2SuFxRxv46g5EZ9QtRIfk
-         GgEHV3D98wAbU87hp1GW8xVKm0QvMQ1rtGLfZ3lXPC2JTvGhoT7fVyPWLwHbKrPaLk3g
-         uq+v84/6VbwUv/jTwx64qtPTGdAyvhCpIhRE3p+pfODBkxD1IWz3nmP7S4oaY5DseX0h
-         iQaViAAUzSro5l9MQwuDBnrs9RqcmdhJW59Vneo82bq8QltnbAYEqBoEKs2tLMx3ElDs
-         CZaTkCg6Egobrk3UkSbPLD3bqjfdcqiEv82RZAwacQLNBWeodPOpVr2bQ/AkkOaiyysY
-         bceA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YNNdbSS+C3KJAabfM9Oo1cBSnZKSRht7rzVdKUeZ6F0=;
-        b=DH6O1ywVekg1bX817ej63w6hmkjLm6/grlBar1CSlmM5J+yMTUekCM15imHzOFz957
-         r71ltPDfoa15/QNIW67JIuRWPRSWkfFCKe3hbSJcjzREpS++H975kb2eJsXgVNMVjR/X
-         xKEa6MvesVWLDs3s8vL9fwNASDiLkcnvd7Zfc7LB2EIPQYHMKYBuRv+o3cFyB36Fy1QQ
-         KbDRfhOn9Ad5oACq7RuhexAU5bvRjfayeFu+Hq4a3UJYMCMadlVkS1F+eZI7rBNWVny6
-         /vfSEt7gtsNl4+yLTy4E8umrcoUzaVu4sT4FAawlB5j3fk+qhcMTZLZTdwQDDRcWLUWu
-         UJJQ==
-X-Gm-Message-State: APjAAAWNWer3kmO0Z9i0Q9Ye4TumxVbo1rogvIRrQcRMudMEsINQcPF5
-        Imho4kCgIwURXJZw7JXcfW5JMK7FXcJDk3V29Nagrw==
-X-Google-Smtp-Source: APXvYqxwNOCUbbIVKFyWW/n2pea8HQ53zOVo5USOjGCNbbaJPHEwdBuNU3w9Eh2giuxdKIkODLu82TRP2KHZoVzAghg=
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr9709637wmg.132.1553686944711;
- Wed, 27 Mar 2019 04:42:24 -0700 (PDT)
+        Wed, 27 Mar 2019 07:42:32 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 79B2525B7E0;
+        Wed, 27 Mar 2019 22:42:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
+        t=1553686950; bh=+LxG612hogtyb3lg37IijIIpcZzkgm67Lwdv9khiTis=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VflhqV3k/RvT5MSUkhbC2iFJuR7ilyPO1D+zVgetftE28k74czs9ph+41bMFy+nNS
+         ftwCmoktoXOB3QyTE+Nrb+auNQLLIQkk78gJI/yGZ4uI8vT0Cm+UaEQhM62DLOwwVL
+         JehbJm7V6QQykl40n03FjaWEBYqAkDIhwD0yyIGs=
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id AEFEA940376; Wed, 27 Mar 2019 12:42:28 +0100 (CET)
+Date:   Wed, 27 Mar 2019 12:42:28 +0100
+From:   Simon Horman <horms@verge.net.au>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-pm@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/1] thermal: stm32: simplify getting .driver_data
+Message-ID: <20190327114228.am642i64hscpfx2r@verge.net.au>
+References: <20190319163635.30891-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-References: <20190327100201.32220-1-anup.patel@wdc.com> <7edf91f1-1df5-5513-d372-d84edd12edf3@garyguo.net>
-In-Reply-To: <7edf91f1-1df5-5513-d372-d84edd12edf3@garyguo.net>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 27 Mar 2019 17:12:13 +0530
-Message-ID: <CAAhSdy1+rc9ge02uqNvse5Z6XmDxsRH0G=5GnMsh+6m1LMLFYg@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Implement ASID allocator
-To:     Gary Guo <gary@garyguo.net>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190319163635.30891-1-wsa+renesas@sang-engineering.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 4:57 PM Gary Guo <gary@garyguo.net> wrote:
->
-> Hi Anup,
->
-> This won't work in an actual hardware with ASID support. There're more
+On Tue, Mar 19, 2019 at 05:36:35PM +0100, Wolfram Sang wrote:
+> We should get 'driver_data' from 'struct device' directly. Going via
+> platform_device is an unneeded step back and forth.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Can you elaborate why?
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-This implementation is based on Linux ARM64 ASID allocator which is
-tested for large number of CPUs on real HW.
-
-> interactions with TLB flushes that need to be considered. You won't see
-
-Yap, already considered. Please point me to unhandled case.
-
-> this on both QEMU and SiFive board, as QEMU does not have ASID, so it
-> pretends that ASID is supported by just flushing its TLB everytime you
-
-Nope, it does not. It detects whether ASID is supported or not. If supported
-it will also figure-out number of ASID bits supported by HW.
-
-SiFive board does not have ASID bits so this implementation successfully
-detects that number of ASID bits are 0 and fallbacks to original way of
-local TLB flushes.
-
-> change sptbr. I suspect the performance gain you see is just due to
-> saved TLB flush as TLB flush is super expensive in QEMU (all translation
-> block jumps need to be cleared).
-
-Yes, performance gain is due to saved TLB flushes.
-
-On HW which supports ASID bits, we will see more performance
-improvements.
-
->
-> I have my version here https://github.com/nbdd0121/linux/tree/asid. I
-> haven't done code cleanups yet, but this version has correctness of its
-> ASID code tested on our TLB simulator tool (which unfortunately I can't
-> share right now as it involves with unpublished works).
-
-Except few minor differences. You version of ASID allocator is same as
-mine. In fact there are lot of similar code framgements in your version
-compared to Linux ARM64 as well. I am sure this patch will work for you.
-
->
-> In fact my submit my previous patch series exactly as the basis of this
-> patch.
-
-This patch is based your patch series so I suggest you take this patch
-and try it on your simulator.
-
-Suggestions and improvements to this patch are welcomed.
-
-I would be happy if you can assist me to try on your HW.
-
-Regards,
-Anup
+> ---
+> 
+> Build tested only. buildbot is happy.
+> 
+>  drivers/thermal/st/stm_thermal.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+> index bbd73c5a4a4e..cf9ddc52f30e 100644
+> --- a/drivers/thermal/st/stm_thermal.c
+> +++ b/drivers/thermal/st/stm_thermal.c
+> @@ -570,8 +570,7 @@ static int stm_thermal_prepare(struct stm_thermal_sensor *sensor)
+>  static int stm_thermal_suspend(struct device *dev)
+>  {
+>  	int ret;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct stm_thermal_sensor *sensor = platform_get_drvdata(pdev);
+> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
+>  
+>  	ret = stm_thermal_sensor_off(sensor);
+>  	if (ret)
+> @@ -585,8 +584,7 @@ static int stm_thermal_suspend(struct device *dev)
+>  static int stm_thermal_resume(struct device *dev)
+>  {
+>  	int ret;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct stm_thermal_sensor *sensor = platform_get_drvdata(pdev);
+> +	struct stm_thermal_sensor *sensor = dev_get_drvdata(dev);
+>  
+>  	ret = stm_thermal_prepare(sensor);
+>  	if (ret)
+> -- 
+> 2.11.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
