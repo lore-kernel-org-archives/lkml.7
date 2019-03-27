@@ -2,162 +2,128 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA76C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596A9C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CEA2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216912075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:36:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="akhvXEaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733280AbfC0Gfs (ORCPT
+        id S1733206AbfC0Ggm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:35:48 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:47506 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733222AbfC0Gfs (ORCPT
+        Wed, 27 Mar 2019 02:36:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50004 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbfC0Ggm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:35:48 -0400
-Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=chariottest7)
-        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.91)
-        (envelope-from <luca@coelho.fi>)
-        id 1h929z-0003TG-IH; Wed, 27 Mar 2019 08:35:40 +0200
-Message-ID: <5f9c8beda0e925b079aa9342ce1c9523659837a4.camel@coelho.fi>
-From:   Luca Coelho <luca@coelho.fi>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laura Abbott <labbott@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org
-Date:   Wed, 27 Mar 2019 08:35:37 +0200
-In-Reply-To: <20190327015346.GA17979@kroah.com>
-References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
-         <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
-         <20190327012600.GA3649@kroah.com>
-         <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
-         <20190327015346.GA17979@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Wed, 27 Mar 2019 02:36:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2R6Yfng059993;
+        Wed, 27 Mar 2019 06:36:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=D9n/427Y0ZJaDNYYfd63kTni3Cy9YZP1DNO8fb7PF6E=;
+ b=akhvXEaWCUrS/jJ4DO0LonH/wwYfGvzKlHHXU9CubqeKI6iVaSTlvdR/K+SAaoXT97vD
+ hvTayQPNBcARrT860d7DyYG3hTyWFR/XcC+0j+Fsq87VDodCl6U8PsI+XtnKyesDmW4/
+ zP6WhliggBPnNNnisbncVLOHIWvxP8vxx0rWdG0w2jTJtQDYaUBrAiwayKZXiqoBxPv1
+ hXI/Y5lE0i07nm4jsg3pCWi2CPgLrEuQKt70ljgmSFHFmM+S/FY87WK77NTbLTXGeCKr
+ vE5qQXo8pnC6XRkCcwqwElG4RdIcfEnSnU03t17kKRA61Yrywdsjh/qPuOvqAAtUEDEd Gw== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2re6djemsk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 06:36:28 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2R6aQTJ029701
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 06:36:27 GMT
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2R6aJqn012388;
+        Wed, 27 Mar 2019 06:36:19 GMT
+Received: from kadam (/197.157.0.42)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 Mar 2019 23:36:18 -0700
+Date:   Wed, 27 Mar 2019 09:36:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Larry.Finger@lwfinger.net,
+        hadess@hadess.net, hdegoede@redhat.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: core: fix line over 80 characters
+ warning
+Message-ID: <20190327063606.GD32590@kadam>
+References: <20190326182309.GA33380@auvm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
- debugfs_create functions
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326182309.GA33380@auvm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9207 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903270047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-27 at 10:53 +0900, Greg Kroah-Hartman wrote:
-> On Tue, Mar 26, 2019 at 06:47:33PM -0700, Laura Abbott wrote:
-> > On 3/26/19 6:26 PM, Greg Kroah-Hartman wrote:
-> > > On Tue, Mar 26, 2019 at 04:55:54PM -0700, Laura Abbott wrote:
-> > > > On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
-> > > > > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > > index 33b0af24a537..c52cdc538678 100644
-> > > > > --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > > @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
-> > > > >    #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
-> > > > >    	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
-> > > > >    #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
-> > > > > -		if (!debugfs_create_file(#name, mode, parent, vif,	\
-> > > > > -					 &iwl_dbgfs_##name##_ops))	\
-> > > > > -			goto err;					\
-> > > > > +		debugfs_create_file(#name, mode, parent, vif,		\
-> > > > > +				    &iwl_dbgfs_##name##_ops);		\
-> > > > >    	} while (0)
-> > > > >    MVM_DEBUGFS_READ_FILE_OPS(mac_params);
-> > > > > @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
-> > > > >    	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
-> > > > > -	if (!mvmvif->dbgfs_dir) {
-> > > > > -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
-> > > > > -			dbgfs_dir);
-> > > > > -		return;
-> > > > > -	}
-> > > > > -
-> > > > >    	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
-> > > > >    	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
-> > > > >    	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
-> > > > > @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
-> > > > >    	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
-> > > > >    						     mvm->debugfs_dir, buf);
-> > > > > -	if (!mvmvif->dbgfs_slink)
-> > > > > -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
-> > > > > -			dbgfs_dir);
-> > > > > -	return;
-> > > > > -err:
-> > > > > -	IWL_ERR(mvm, "Can't create debugfs entity\n");
-> > > > >    }
-> > > > 
-> > > > Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
-> > > > of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
-> > > > ("debugfs: return error values, not NULL") because the error checking is
-> > > > no longer correct in this driver.
-> > > > 
-> > > > Based on https://patchwork.kernel.org/patch/10865839/, it looks like
-> > > > this is supposed to go in for 5.2 but this needs to go in now as
-> > > > the error checking is currently broken without it. Can this get queued
-> > > > for Linus so we can get it in 5.0 stable?
-> > > 
-> > > That's odd, I can't see how the error checking is wrong here.  If the
-> > > directory is not created, an error will be returned, which should be
-> > > able to be handled by debugfs_create_file().
-> > > 
-> > > So with this patch does the error go away?
-> > > 
-> > 
-> > The full patch didn't apply cleanly and I didn't try to backport it
-> > for the reporter to test. I was going off of the theory that if the
-> > patch was there it would fix the problem.
-> > 
-> > What I _think_ is going wrong is dbgfs_dir is actually an errno value:
-> > 
-> > 
-> >         struct dentry *dbgfs_dir = vif->debugfs_dir;
-> >         struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
-> >         char buf[100];
-> > 
-> >         /*
-> >          * Check if debugfs directory already exist before creating it.
-> >          * This may happen when, for example, resetting hw or suspend-resume
-> >          */
-> >         if (!dbgfs_dir || mvmvif->dbgfs_dir)
-> >                 return;
-> > 
-> > 
-> > so this blows up in the snprintf
-> > 
-> >         snprintf(buf, 100, "../../../%pd3/%pd",
-> >                  dbgfs_dir,
-> >                  mvmvif->dbgfs_dir);
+On Tue, Mar 26, 2019 at 11:55:07PM +0530, Anirudh Rayabharam wrote:
+> Shorten the expression by re-using the part that was already computed to
+
+This confused me.  Better to phrase it like:
+
+Shorten the expression by using the "psecuritypriv" pointer.
+
+> fix the line over 80 characters warning reported by checkpatch.pl.
 > 
-> Ah, yeah, that's horrible.  They had the name before, why pull it out of
-> the dentry again?  That will blow up hard, but maybe printk should check
-> to see if the pointer really is a pointer first.
-
-I agree this is ugly.  But do you mean we could use
-("../../../%pd3/%s", dbgfs_dir, "iwlmvm")? Or how did we have the name?
-
-Also, this would solve the sprintf() problem, but still wouldn't solve
-the real issue, which is not check for ERR in dbgfs_dir.
-
-
-> > Unless I misunderstood what the debugfs error change did. I think this
-> > also means the if check needs to look for IS_ERR and not just !dbgfs_dir.
+> Signed-off-by: Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_ap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Yes, that is correct.
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> index 18fabf5ff44b..bc0230672457 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+> @@ -2336,8 +2336,8 @@ void rtw_ap_restore_network(struct adapter *padapter)
+>  			Update_RA_Entry(padapter, psta);
+>  			/* pairwise key */
+>  			/* per sta pairwise key and settings */
+> -			if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
+> -				(padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
+> +			if ((psecuritypriv->dot11PrivacyAlgrthm == _TKIP_) ||
+> +				(psecuritypriv->dot11PrivacyAlgrthm == _AES_)) {
 
-Yeah, we can do that.  So this patch doesn't need to be sent for
-v5.1-rc* and v5.0, right? At least I don't see how it would fix the
-issue.  What we need is a new patch with the IS_ERR check.
+It's better to align it slightly different as well.  In the kernel we
+would normally align the second condition to match the first one.
 
---
-Cheers,
-Luca.
+I probably would have gotten rid of the parenthesis as well.  I don't
+like double parenthesis around == because I reserve that for =
+assignment conditions.
 
+			if (psecuritypriv->dot11PrivacyAlgrthm == _TKIP_ ||
+			    psecuritypriv->dot11PrivacyAlgrthm == _AES_) {
+				rtw_setstakey_cmd(padapter, psta, true, false);
+
+When you're changing just a couple lines like this you can get away with
+making multiple white space changes at the same time because the One
+Thing that the patch does is "Clean up a Condition".  There is some
+flexibility in the One thing Per Patch rule, but you have to sell it in
+the right way.  The patch description would be:
+
+  Checkpatch.pl complains that this line is over 80 characters.  We
+  should use the "psecuritypriv" for consistency.  It's not aligned
+  properly and there are too many parenthesis.
+
+  This patch just cleans up a condition, it doesn't affect runtime.
+
+regards,
+dan carpenter
