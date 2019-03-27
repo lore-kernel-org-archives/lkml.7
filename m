@@ -6,72 +6,85 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE81C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B402075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2B62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbfC0XlC (ORCPT
+        id S1731066AbfC0XlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:41:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46342 "EHLO mx1.redhat.com"
+        Wed, 27 Mar 2019 19:41:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46366 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbfC0XlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:41:01 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725601AbfC0XlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 19:41:07 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C567930BC666;
-        Wed, 27 Mar 2019 23:41:00 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F3AC30BC666;
+        Wed, 27 Mar 2019 23:41:07 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF21322706;
-        Wed, 27 Mar 2019 23:40:59 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0EB960FDE;
+        Wed, 27 Mar 2019 23:41:06 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 03/68] vfs: Fix refcounting of filenames in fs_parser
+Subject: [RFC PATCH 04/68] vfs: Provide sb->s_iflags settings in fs_context
+ struct
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com
-Date:   Wed, 27 Mar 2019 23:40:59 +0000
-Message-ID: <155373005910.7602.15928901793963598025.stgit@warthog.procyon.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com
+Date:   Wed, 27 Mar 2019 23:41:06 +0000
+Message-ID: <155373006604.7602.11874595648703180211.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
 References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 27 Mar 2019 23:41:00 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 27 Mar 2019 23:41:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix an overput in which filename_lookup() unconditionally drops a ref to
-the filename it was given, but this isn't taken account of in the caller,
-fs_lookup_param().
+Provide a field in the fs_context struct through which bits in the
+sb->s_iflags superblock field can be set.
 
-Addresses-Coverity-ID: 1443811 ("Use after free")
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-fsdevel@vger.kernel.org
 ---
 
- fs/fs_parser.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/super.c                 |    1 +
+ include/linux/fs_context.h |    1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index 842e8f749db6..be86703ec371 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -268,6 +268,7 @@ int fs_lookup_param(struct fs_context *fc,
- 		return invalf(fc, "%s: not usable as path", param->key);
+diff --git a/fs/super.c b/fs/super.c
+index 583a0124bc39..6c3acd633cca 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -543,6 +543,7 @@ struct super_block *sget_fc(struct fs_context *fc,
  	}
- 
-+	f->refcnt++; /* filename_lookup() drops our ref. */
- 	ret = filename_lookup(param->dirfd, f, flags, _path, NULL);
- 	if (ret < 0) {
- 		errorf(fc, "%s: Lookup failure for '%s'", param->key, f->name);
+ 	fc->s_fs_info = NULL;
+ 	s->s_type = fc->fs_type;
++	s->s_iflags |= fc->s_iflags;
+ 	strlcpy(s->s_id, s->s_type->name, sizeof(s->s_id));
+ 	list_add_tail(&s->s_list, &super_blocks);
+ 	hlist_add_head(&s->s_instances, &s->s_type->fs_supers);
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index eaca452088fa..98b44ad89378 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -86,6 +86,7 @@ struct fs_context {
+ 	void			*s_fs_info;	/* Proposed s_fs_info */
+ 	unsigned int		sb_flags;	/* Proposed superblock flags (SB_*) */
+ 	unsigned int		sb_flags_mask;	/* Superblock flags that were changed */
++	unsigned int		s_iflags;	/* OR'd with sb->s_iflags */
+ 	unsigned int		lsm_flags;	/* Information flags from the fs to the LSM */
+ 	enum fs_context_purpose	purpose:8;
+ 	bool			need_free:1;	/* Need to call ops->free() */
 
