@@ -2,103 +2,106 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3D4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9CEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12829206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Ofmje5At"
+	by mail.kernel.org (Postfix) with ESMTP id 62F67206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553713197;
+	bh=H1Q3UTz9+NVrsikrO78D3/zIdMEBARu4F+GwfKWfWXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P/xzz///KLeed52UIahNStYbxTRynqnpr9H6NdnQP4b6SEUWXInAXsTuIUyrnAb3J
+	 N7W/GeUgG0VO9EDRCN6AP8zLA9feTTTlQPHc60Q2b6a5+FD2b7KrbcfG0APneHzf3o
+	 rkbooYQwk07ZjvOMMsXlt9zXiwhKsgs3plHYSGJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389738AbfC0SPB (ORCPT
+        id S2389969AbfC0S74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:01 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45569 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389713AbfC0SO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:57 -0400
-Received: by mail-qt1-f195.google.com with SMTP id v20so19948889qtv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=/GQ3PoXyTSRUtE1BhjDpnMLjUgf+n2ekMVq0YuFfjJA=;
-        b=Ofmje5At1uBCTAvYa4Ci2jETuoPaMHv7iGQlVPbYHuuEc23giA3sFtE6B0YUKRxG2Y
-         LP7ILExr1YL+bhZln/f1sSjFWyezHaiRLeCTC05Aus4ox29UPbldbyGBio1s+rh7BRA2
-         +GpmMP8QRMqPvgcMZeegz07sjdVv0pKbbvN/FHO/tcq8i1OqmbxV30mwkIQYLpxwba8c
-         xCrXIcdaqx8mQLB8lRL9iRSGGl+fcrLWy/u63Z+qq5OWfVMkaynEOKMEE5bc60LwG7mQ
-         kAVIk9Q2IiSuvOlpPfLOc04Gi46DRN8rfm+wH7QMrpEG1ZCfy1Ljsyd2bndfAkEfaboC
-         kvlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=/GQ3PoXyTSRUtE1BhjDpnMLjUgf+n2ekMVq0YuFfjJA=;
-        b=kS1EY+3W7ZrnsYNRgoD6bo54Li5WiL1tXr8q1+dzK2VX92j4+smrKptvediFrypvme
-         /V6hI8CTyLvcXqDN49+xKhv+E8Uj46QeqIbXwW7yherDhIJ6DLAmeGKUObBdBw0pqJXU
-         BAJUcb2b04aRn9TW1JeNPI7iLuq5Nl+ApQbvIa//gqXTEgq5Hvl00Xv1LbOzfwLuKz3T
-         6Rz5c8gyhsXKoypXVmphyaKI9vU7HWq3LOsUUT0KZN9WCwW6c3963Q+3zQN69pj7ETwE
-         yJ1A2KpokrmrJDyM/Dh4zRxjld34BlAgd+GxTmpS2tnIaDR4XshhuAgxX7PNLaSGYhKF
-         7+ig==
-X-Gm-Message-State: APjAAAXylMchBURMPpoy4dOAKOttjmCROb6pidcoy0/4KLkpf9qlwse5
-        BHZr7mXvRxtt63jCjdRmPFSPFw==
-X-Google-Smtp-Source: APXvYqxvImDs6yLw9cyOtwrI4l2k7I5+t+hMucuo2Aq8VcBmeWs3CDLnuXrGtv9arzeW3onNM6oBFg==
-X-Received: by 2002:ac8:2692:: with SMTP id 18mr31963871qto.343.1553710496568;
-        Wed, 27 Mar 2019 11:14:56 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id r201sm5912689qke.37.2019.03.27.11.14.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 11:14:56 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 11:14:52 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, oss-drivers@netronome.com
-Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.0 192/262] nfp: bpf: correct the
- behavior for shifts by zero
-Message-ID: <20190327111452.379db173@cakuba.netronome.com>
-In-Reply-To: <20190327180158.10245-192-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
-        <20190327180158.10245-192-sashal@kernel.org>
-Organization: Netronome Systems, Ltd.
+        Wed, 27 Mar 2019 14:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389730AbfC0SPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E495A2177E;
+        Wed, 27 Mar 2019 18:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710499;
+        bh=H1Q3UTz9+NVrsikrO78D3/zIdMEBARu4F+GwfKWfWXc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qSPXw22k5yjZ2jnK1MwH6tOl6kUTShH8ewpsvJrHX1l+qx3i3FXHK4EvCR7es7pGf
+         /Y5mRkSJvFKwQq0msBbSyBpfTCqHGIVmLfJumqJB+iNEALC8UERI+tEgRZFEF9M5i1
+         Zu/AVzLwB1fpWHnf9xOrjkXV6jjr2ypRLbN3xSg4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 146/192] bpf: fix missing prototype warnings
+Date:   Wed, 27 Mar 2019 14:09:38 -0400
+Message-Id: <20190327181025.13507-146-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 14:00:47 -0400, Sasha Levin wrote:
-> From: Jiong Wang <jiong.wang@netronome.com>
-> 
-> [ Upstream commit db0a4b3b6b83a081a9ec309cc8178e5c9b4706a5 ]
-> 
-> Shifts by zero do nothing, and should be treated as nops.
-> 
-> Even though compiler is not supposed to generate such instructions and
-> manual written assembly is unlikely to have them, but they are legal
-> instructions and have defined behavior.
-> 
-> This patch correct existing shifts code-gen to make sure they do nothing
-> when shift amount is zero except when the instruction is ALU32 for which
-> high bits need to be cleared.
-> 
-> For shift amount bigger than type size, already, NFP JIT back-end errors
-> out for immediate shift and only low 5 bits will be taken into account for
-> indirect shift which is the same as x86.
-> 
-> Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+From: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-Nope.
+[ Upstream commit 116bfa96a255123ed209da6544f74a4f2eaca5da ]
+
+Compiling with W=1 generates warnings:
+
+  CC      kernel/bpf/core.o
+kernel/bpf/core.c:721:12: warning: no previous prototype for ?bpf_jit_alloc_exec_limit? [-Wmissing-prototypes]
+  721 | u64 __weak bpf_jit_alloc_exec_limit(void)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c:757:14: warning: no previous prototype for ?bpf_jit_alloc_exec? [-Wmissing-prototypes]
+  757 | void *__weak bpf_jit_alloc_exec(unsigned long size)
+      |              ^~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c:762:13: warning: no previous prototype for ?bpf_jit_free_exec? [-Wmissing-prototypes]
+  762 | void __weak bpf_jit_free_exec(void *addr)
+      |             ^~~~~~~~~~~~~~~~~
+
+All three are weak functions that archs can override, provide
+proper prototypes for when a new arch provides their own.
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/filter.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 1a39d57eb88f..037610845892 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -844,7 +844,9 @@ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
+ 		     unsigned int alignment,
+ 		     bpf_jit_fill_hole_t bpf_fill_ill_insns);
+ void bpf_jit_binary_free(struct bpf_binary_header *hdr);
+-
++u64 bpf_jit_alloc_exec_limit(void);
++void *bpf_jit_alloc_exec(unsigned long size);
++void bpf_jit_free_exec(void *addr);
+ void bpf_jit_free(struct bpf_prog *fp);
+ 
+ struct bpf_prog *bpf_jit_blind_constants(struct bpf_prog *fp);
+-- 
+2.19.1
+
