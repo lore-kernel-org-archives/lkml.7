@@ -3,52 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8546C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063772147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95B321738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710308;
-	bh=N9El1QgCwlZJSAn/fSdrSfe9N/eU0DMi/j8oTseZafs=;
+	s=default; t=1553710312;
+	bh=7UOoLXlUFszD+HcmlaWF9eaK77r1jF6eGS1PpY37ZRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWwibPNr/aop5CrGY670+8IatS498it/80XQwXs+jog0HDZhO5xO3paMbFdj+03eQ
-	 ff9qe+JOApn13ZM2YlaDIY9dpunPIJpDLXPlxm12PC9Ze7n2jTrE2k0JVzdZ3rKQha
-	 KAN8zMrY8M00PT+yal0F3rI2DXH8y3z8u5ilMx2U=
+	b=0cjrSzPWGEm7zzqFBMwqaB6HRSR+b3rJ0Eel3BDA+7LJDIPajk88z2Q+jr8qdKa4m
+	 voEqIe2KlA9MbdIleQpfUER2vqOAFhij245JpgTktIAJadzOpurphsZ9Ep/DqvQ+o9
+	 M1z9AQcLsFkQG2nY+V+UBhwytbmfhLLdWbwHXkUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389093AbfC0SLq (ORCPT
+        id S2389112AbfC0SLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389051AbfC0SLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:39 -0400
+        id S2389054AbfC0SLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1963F217F5;
-        Wed, 27 Mar 2019 18:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9011E2054F;
+        Wed, 27 Mar 2019 18:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710298;
-        bh=N9El1QgCwlZJSAn/fSdrSfe9N/eU0DMi/j8oTseZafs=;
+        s=default; t=1553710300;
+        bh=7UOoLXlUFszD+HcmlaWF9eaK77r1jF6eGS1PpY37ZRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uua3uykCMdzhcFhhuXRjrXjghGOlx8YjpmDAxF6EK7bHJcA/s40z+btn7m2fvSZK7
-         Y1NsvblE24N08CesiGm8SlcrUHauv9s7HBCgDtB2vi4ffjtElY/JWwMEWNMf5NX2Gg
-         nuSeQz+5C+tj9P0Dbcd+NplBLY2dDLkln0TSd5Q4=
+        b=wEqjOoDzz6w++B47crp7+r8CTueEdfABVGkQZ9IVRDLbKGIskVg3gtRAykSO2r7bZ
+         xw/7lYRkocjJIc4ZwpoYoXtw+ZatGyRHuCSXV5FJPoc5j//EucUsUA6KBD+i/d2GYy
+         ++uAprdv9FgR+DCdKluuU1kOQvf8KupK1WwoJBCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/192] netfilter: conntrack: tcp: only close if RST matches exact sequence
-Date:   Wed, 27 Mar 2019 14:07:54 -0400
-Message-Id: <20190327181025.13507-42-sashal@kernel.org>
+Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 044/192] fs: fix guard_bio_eod to check for real EOD errors
+Date:   Wed, 27 Mar 2019 14:07:56 -0400
+Message-Id: <20190327181025.13507-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -60,213 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Carlos Maiolino <cmaiolino@redhat.com>
 
-[ Upstream commit be0502a3f2e94211a8809a09ecbc3a017189b8fb ]
+[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
 
-TCP resets cause instant transition from established to closed state
-provided the reset is in-window.  Endpoints that implement RFC 5961
-require resets to match the next expected sequence number.
-RST segments that are in-window (but that do not match RCV.NXT) are
-ignored, and a "challenge ACK" is sent back.
+guard_bio_eod() can truncate a segment in bio to allow it to do IO on
+odd last sectors of a device.
 
-Main problem for conntrack is that its a middlebox, i.e.  whereas an end
-host might have ACK'd SEQ (and would thus accept an RST with this
-sequence number), conntrack might not have seen this ACK (yet).
+It already checks if the IO starts past EOD, but it does not consider
+the possibility of an IO request starting within device boundaries can
+contain more than one segment past EOD.
 
-Therefore we can't simply flag RSTs with non-exact match as invalid.
+In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
+underflow bvec->bv_len.
 
-This updates RST processing as follows:
+Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
 
-1. If the connection is in a state other than ESTABLISHED, nothing is
-   changed, RST is subject to normal in-window check.
+This situation has been found on filesystems such as isofs and vfat,
+which doesn't check the device size before mount, if the device is
+smaller than the filesystem itself, a readahead on such filesystem,
+which spans EOD, can trigger this situation, leading a call to
+zero_user() with a wrong size possibly corrupting memory.
 
-2. If the RSTs sequence number either matches exactly RCV.NXT,
-   connection state moves to CLOSE.
+I didn't see any crash, or didn't let the system run long enough to
+check if memory corruption will be hit somewhere, but adding
+instrumentation to guard_bio_end() to check truncated_bytes size, was
+enough to see the error.
 
-3. The same applies if the RST sequence number aligns with a previous
-   packet in the same direction.
+The following script can trigger the error.
 
-In all other cases, the connection remains in ESTABLISHED state.
-If the normal-in-window check passes, the timeout will be lowered
-to that of CLOSE.
+MNT=/mnt
+IMG=./DISK.img
+DEV=/dev/loop0
 
-If the peer sends a challenge ack, connection timeout will be reset.
+mkfs.vfat $IMG
+mount $IMG $MNT
+cp -R /etc $MNT &> /dev/null
+umount $MNT
 
-If the challenge ACK triggers another RST (RST was valid after all),
-this 2nd RST will match expected sequence and conntrack state changes to
-CLOSE.
+losetup -D
 
-If no challenge ACK is received, the connection will time out after
-CLOSE seconds (10 seconds by default), just like without this patch.
+losetup --find --show --sizelimit 16247280 $IMG
+mount $DEV $MNT
 
-Packetdrill test case:
+find $MNT -type f -exec cat {} + >/dev/null
 
-0.000 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-0.000 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-0.000 bind(3, ..., ...) = 0
-0.000 listen(3, 1) = 0
+Kudos to Eric Sandeen for coming up with the reproducer above
 
-0.100 < S 0:0(0) win 32792 <mss 1460,sackOK,nop,nop,nop,wscale 7>
-0.100 > S. 0:0(0) ack 1 win 64240 <mss 1460,nop,nop,sackOK,nop,wscale 7>
-0.200 < . 1:1(0) ack 1 win 257
-0.200 accept(3, ..., ...) = 4
-
-// Receive a segment.
-0.210 < P. 1:1001(1000) ack 1 win 46
-0.210 > . 1:1(0) ack 1001
-
-// Application writes 1000 bytes.
-0.250 write(4, ..., 1000) = 1000
-0.250 > P. 1:1001(1000) ack 1001
-
-// First reset, old sequence. Conntrack (correctly) considers this
-// invalid due to failed window validation (regardless of this patch).
-0.260 < R  2:2(0) ack 1001 win 260
-
-// 2nd reset, but too far ahead sequence.  Same: correctly handled
-// as invalid.
-0.270 < R 99990001:99990001(0) ack 1001 win 260
-
-// in-window, but not exact sequence.
-// Current Linux kernels might reply with a challenge ack, and do not
-// remove connection.
-// Without this patch, conntrack state moves to CLOSE.
-// With patch, timeout is lowered like CLOSE, but connection stays
-// in ESTABLISHED state.
-0.280 < R 1010:1010(0) ack 1001 win 260
-
-// Expect challenge ACK
-0.281 > . 1001:1001(0) ack 1001 win 501
-
-// With or without this patch, RST will cause connection
-// to move to CLOSE (sequence number matches)
-// 0.282 < R 1001:1001(0) ack 1001 win 260
-
-// ACK
-0.300 < . 1001:1001(0) ack 1001 win 257
-
-// more data could be exchanged here, connection
-// is still established
-
-// Client closes the connection.
-0.610 < F. 1001:1001(0) ack 1001 win 260
-0.650 > . 1001:1001(0) ack 1002
-
-// Close the connection without reading outstanding data
-0.700 close(4) = 0
-
-// so one more reset.  Will be deemed acceptable with patch as well:
-// connection is already closing.
-0.701 > R. 1001:1001(0) ack 1002 win 501
-// End packetdrill test case.
-
-With patch, this generates following conntrack events:
-   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [UNREPLIED]
-[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80
-[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
-[UPDATE] 120 FIN_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
-[UPDATE] 60 CLOSE_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
-[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
-
-Without patch, first RST moves connection to close, whereas socket state
-does not change until FIN is received.
-   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [UNREPLIED]
-[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80
-[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
-[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
-
-Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_tcp.c | 50 ++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 10 deletions(-)
+ fs/buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
-index 247b89784a6f..842f3f86fb2e 100644
---- a/net/netfilter/nf_conntrack_proto_tcp.c
-+++ b/net/netfilter/nf_conntrack_proto_tcp.c
-@@ -769,6 +769,12 @@ static int tcp_error(struct net *net, struct nf_conn *tmpl,
- 	return NF_ACCEPT;
- }
+diff --git a/fs/buffer.c b/fs/buffer.c
+index c083c4b3c1e7..a550e0d8e965 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3027,6 +3027,13 @@ void guard_bio_eod(int op, struct bio *bio)
+ 	/* Uhhuh. We've got a bio that straddles the device size! */
+ 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
  
-+static bool nf_conntrack_tcp_established(const struct nf_conn *ct)
-+{
-+	return ct->proto.tcp.state == TCP_CONNTRACK_ESTABLISHED &&
-+	       test_bit(IPS_ASSURED_BIT, &ct->status);
-+}
++	/*
++	 * The bio contains more than one segment which spans EOD, just return
++	 * and let IO layer turn it into an EIO
++	 */
++	if (truncated_bytes > bvec->bv_len)
++		return;
 +
- /* Returns verdict for packet, or -1 for invalid. */
- static int tcp_packet(struct nf_conn *ct,
- 		      const struct sk_buff *skb,
-@@ -963,16 +969,38 @@ static int tcp_packet(struct nf_conn *ct,
- 			new_state = TCP_CONNTRACK_ESTABLISHED;
- 		break;
- 	case TCP_CONNTRACK_CLOSE:
--		if (index == TCP_RST_SET
--		    && (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET)
--		    && before(ntohl(th->seq), ct->proto.tcp.seen[!dir].td_maxack)) {
--			/* Invalid RST  */
--			spin_unlock_bh(&ct->lock);
--			nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
--			return -NF_ACCEPT;
-+		if (index != TCP_RST_SET)
-+			break;
-+
-+		if (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET) {
-+			u32 seq = ntohl(th->seq);
-+
-+			if (before(seq, ct->proto.tcp.seen[!dir].td_maxack)) {
-+				/* Invalid RST  */
-+				spin_unlock_bh(&ct->lock);
-+				nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
-+				return -NF_ACCEPT;
-+			}
-+
-+			if (!nf_conntrack_tcp_established(ct) ||
-+			    seq == ct->proto.tcp.seen[!dir].td_maxack)
-+				break;
-+
-+			/* Check if rst is part of train, such as
-+			 *   foo:80 > bar:4379: P, 235946583:235946602(19) ack 42
-+			 *   foo:80 > bar:4379: R, 235946602:235946602(0)  ack 42
-+			 */
-+			if (ct->proto.tcp.last_index == TCP_ACK_SET &&
-+			    ct->proto.tcp.last_dir == dir &&
-+			    seq == ct->proto.tcp.last_end)
-+				break;
-+
-+			/* ... RST sequence number doesn't match exactly, keep
-+			 * established state to allow a possible challenge ACK.
-+			 */
-+			new_state = old_state;
- 		}
--		if (index == TCP_RST_SET
--		    && ((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
-+		if (((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
- 			 && ct->proto.tcp.last_index == TCP_SYN_SET)
- 			|| (!test_bit(IPS_ASSURED_BIT, &ct->status)
- 			    && ct->proto.tcp.last_index == TCP_ACK_SET))
-@@ -988,7 +1016,7 @@ static int tcp_packet(struct nf_conn *ct,
- 			 * segments we ignored. */
- 			goto in_window;
- 		}
--		/* Just fall through */
-+		break;
- 	default:
- 		/* Keep compilers happy. */
- 		break;
-@@ -1023,6 +1051,8 @@ static int tcp_packet(struct nf_conn *ct,
- 	if (ct->proto.tcp.retrans >= tn->tcp_max_retrans &&
- 	    timeouts[new_state] > timeouts[TCP_CONNTRACK_RETRANS])
- 		timeout = timeouts[TCP_CONNTRACK_RETRANS];
-+	else if (unlikely(index == TCP_RST_SET))
-+		timeout = timeouts[TCP_CONNTRACK_CLOSE];
- 	else if ((ct->proto.tcp.seen[0].flags | ct->proto.tcp.seen[1].flags) &
- 		 IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED &&
- 		 timeouts[new_state] > timeouts[TCP_CONNTRACK_UNACK])
+ 	/* Truncate the bio.. */
+ 	bio->bi_iter.bi_size -= truncated_bytes;
+ 	bvec->bv_len -= truncated_bytes;
 -- 
 2.19.1
 
