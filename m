@@ -2,70 +2,160 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A517C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47865C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65622087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC3A2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfC0Omi (ORCPT
+        id S1728358AbfC0Oon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 10:42:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49005 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbfC0Omi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 10:42:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 07:42:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,277,1549958400"; 
-   d="scan'208";a="144330923"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Mar 2019 07:42:22 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 248173015ED; Wed, 27 Mar 2019 07:42:22 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 07:42:22 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@kernel.org,
-        eranian@google.com, alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH V4 04/23] perf/x86/intel: Support adaptive PEBSv4
-Message-ID: <20190327144222.GT18020@tassilo.jf.intel.com>
-References: <20190326160901.4887-1-kan.liang@linux.intel.com>
- <20190326160901.4887-5-kan.liang@linux.intel.com>
- <20190326222441.GP18020@tassilo.jf.intel.com>
- <9d267395-fda8-d111-52a2-e7cdcdf7d24b@linux.intel.com>
+        Wed, 27 Mar 2019 10:44:43 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1545 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726147AbfC0Oon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 10:44:43 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2REetnp016025;
+        Wed, 27 Mar 2019 15:44:23 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2rddhbrg0u-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 27 Mar 2019 15:44:23 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DA55834;
+        Wed, 27 Mar 2019 14:44:22 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ACA615905;
+        Wed, 27 Mar 2019 14:44:22 +0000 (GMT)
+Received: from [10.48.0.237] (10.75.127.46) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 27 Mar
+ 2019 15:44:21 +0100
+Subject: Re: [PATCH V4 4/5] mmc: mmci: stm32: define get_dctrl_cfg
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
+ <1553677532-3539-5-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFrGRojw5jmGZ_J-nmP4bHqd0BnKwyKweAr6aLD4C4NMPQ@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <bef06e28-4521-af86-adf4-bc904280707a@st.com>
+Date:   Wed, 27 Mar 2019 15:44:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d267395-fda8-d111-52a2-e7cdcdf7d24b@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAPDyKFrGRojw5jmGZ_J-nmP4bHqd0BnKwyKweAr6aLD4C4NMPQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> We need to call perf_event_overflow() for the last record of each event.
-> It's hard to detect which record is the last record of the event with one
-> pass walking.
+
+
+On 3/27/19 11:54 AM, Ulf Hansson wrote:
+> On Wed, 27 Mar 2019 at 10:05, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch defines get_dctrl_cfg callback for sdmmc variant.
+>> sdmmc variant has specific stm32 transfer modes.
+>> sdmmc data transfer mode selection could be:
+>> -Block data transfer ending on block count.
+>> -SDIO multibyte data transfer.
+>> -MMC Stream data transfer (not used).
+>> -Block data transfer ending with STOP_TRANSMISSION command.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.h             |  5 +++++
+>>   drivers/mmc/host/mmci_stm32_sdmmc.c | 18 ++++++++++++++++++
+>>   2 files changed, 23 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 35c91d0..82e9f94 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -131,6 +131,11 @@
+>>   /* Control register extensions in the Qualcomm versions */
+>>   #define MCI_DPSM_QCOM_DATA_PEND        BIT(17)
+>>   #define MCI_DPSM_QCOM_RX_DATA_PEND BIT(20)
+>> +/* Control register extensions in STM32 versions */
+>> +#define MCI_DPSM_STM32_MODE_BLOCK      (0 << 2)
+>> +#define MCI_DPSM_STM32_MODE_SDIO       (1 << 2)
+>> +#define MCI_DPSM_STM32_MODE_STREAM     (2 << 2)
+>> +#define MCI_DPSM_STM32_MODE_BLOCK_STOP (3 << 2)
+>>
+>>   #define MMCIDATACNT            0x030
+>>   #define MMCISTATUS             0x034
+>> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> index cfbfc6f..8e83ae6 100644
+>> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+>> @@ -265,10 +265,28 @@ static void mmci_sdmmc_set_pwrreg(struct mmci_host *host, unsigned int pwr)
+>>          }
+>>   }
+>>
+>> +static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+>> +{
+>> +       u32 datactrl;
+>> +
+>> +       datactrl = mmci_dctrl_blksz(host);
+>> +
+>> +       if (host->mmc->card && mmc_card_sdio(host->mmc->card) &&
+>> +           host->data->blocks == 1)
+>> +               datactrl |= MCI_DPSM_STM32_MODE_SDIO;
+>> +       else if (host->data->stop && !host->mrq->sbc)
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK_STOP;
 > 
-> Also, I'm not sure how much we can save with one pass walking. The
-> optimization should only benefit large PEBS. The total number of records for
-> large PEBS should not be huge.
-> I will evaluate the performance impact of one pass walking. If there is
-> observed performance improvement, I will submit a separate patch later.
+> Just a question here. Does this mean that the controller sends the
+> stop command automatically when a transfer has finished successfully?
+
+The controller not sends the stop command, this bit is just an 
+information for the Data State Machine to know how the data transfer 
+finish.
+
+Regards,
+Ludo
+
 > 
-> For now, I think we can still use the mature two pass walking method.
-
-Okay sounds reasonable to keep it then.
-
-Thanks,
-
--Andi
+>> +       else
+>> +               datactrl |= MCI_DPSM_STM32_MODE_BLOCK;
+>> +
+>> +       return datactrl;
+>> +}
+>> +
+>>   static struct mmci_host_ops sdmmc_variant_ops = {
+>>          .validate_data = sdmmc_idma_validate_data,
+>>          .prep_data = sdmmc_idma_prep_data,
+>>          .unprep_data = sdmmc_idma_unprep_data,
+>> +       .get_datactrl_cfg = sdmmc_get_dctrl_cfg,
+>>          .dma_setup = sdmmc_idma_setup,
+>>          .dma_start = sdmmc_idma_start,
+>>          .dma_finalize = sdmmc_idma_finalize,
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
