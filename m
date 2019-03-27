@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EAFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73020C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B98206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425D0206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713166;
-	bh=cAJdoIJ7dipTvZE6+8mq730rVFGEq5TSR6itAyzIt2g=;
+	s=default; t=1553713177;
+	bh=tFeNp6xCiZeNYkO2BJ7gGcX3pgY0wjQG9gAkEM1G8oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiPelC+U7ywTIz8gwW0b+CB7D5GHC9R/UjBu/FOhoqmOwv5fys1lYRmq+gf2Ahy7j
-	 bRA1oFVvZAW4bVU1gT+iRiu9lNm0XRIiABeINlXJPrKYO204LKFPGuAYZU19Lbiy+P
-	 8IroVyaBY+F8NolMMU1kCxRfLM4pZ5rkE/NMzNTY=
+	b=BHH7xeaELLqezGgJpARWL5IXD1RQGrMusA652PG20mU+JSULIU2KKJF55n4ReV4Kv
+	 fDWlnqfe72M1zWKL0v3WgLL/DcvS+bOOzpnfV4l5+SpHmdqvTUiSzskgVHfXnSL/hB
+	 3gtfjLRJdQzYvwR3EgrJ3ZR8T40EUIwngwdXZHvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389777AbfC0SPJ (ORCPT
+        id S2389892AbfC0S7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58448 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389482AbfC0SPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:04 -0400
+        id S2389224AbfC0SPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A782147C;
-        Wed, 27 Mar 2019 18:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3FB020449;
+        Wed, 27 Mar 2019 18:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710503;
-        bh=cAJdoIJ7dipTvZE6+8mq730rVFGEq5TSR6itAyzIt2g=;
+        s=default; t=1553710505;
+        bh=tFeNp6xCiZeNYkO2BJ7gGcX3pgY0wjQG9gAkEM1G8oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xy9Q82GWkRVDwozBpHaRBlrp81sTli58xKUKe/HZ+PohvDfSCG6sRkqWnNnUhwirt
-         4wCLGK9ieN3eup9xqPgQcTTh/xfNzHbL7H1Ng43QidWEgh72Q0qFkOnzHdMs2r9Q51
-         xb4SlXnyQPAKZblD1aq4ZQhzH6K4pAqw8vlZjfNs=
+        b=Aqe7uKlF1v9ZtSuArorD4hovd/p75LtfWyEK2S4xGIzRMxMnEYw0+c2lIBaJNnfF1
+         VB+6sdTtfH0M5MF59LIKRKHjKd939OTp0urQzt1p0JWj+GJbSwXDLY6OkaVF2h/qAS
+         HsQoAWmRGJ5q/Th+FMj2kv7d+oyp+alH9hXzEV6A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 148/192] powerpc/64s: Clear on-stack exception marker upon exception return
-Date:   Wed, 27 Mar 2019 14:09:40 -0400
-Message-Id: <20190327181025.13507-148-sashal@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 149/192] cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
+Date:   Wed, 27 Mar 2019 14:09:41 -0400
+Message-Id: <20190327181025.13507-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,80 +56,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit eddd0b332304d554ad6243942f87c2fcea98c56b ]
+[ Upstream commit 51bee5abeab2058ea5813c5615d6197a23dbf041 ]
 
-The ppc64 specific implementation of the reliable stacktracer,
-save_stack_trace_tsk_reliable(), bails out and reports an "unreliable
-trace" whenever it finds an exception frame on the stack. Stack frames
-are classified as exception frames if the STACK_FRAME_REGS_MARKER
-magic, as written by exception prologues, is found at a particular
-location.
+The only user of cgroup_subsys->free() callback is pids_cgrp_subsys which
+needs pids_free() to uncharge the pid.
 
-However, as observed by Joe Lawrence, it is possible in practice that
-non-exception stack frames can alias with prior exception frames and
-thus, that the reliable stacktracer can find a stale
-STACK_FRAME_REGS_MARKER on the stack. It in turn falsely reports an
-unreliable stacktrace and blocks any live patching transition to
-finish. Said condition lasts until the stack frame is
-overwritten/initialized by function call or other means.
+However, ->free() is called from __put_task_struct()->cgroup_free() and this
+is too late. Even the trivial program which does
 
-In principle, we could mitigate this by making the exception frame
-classification condition in save_stack_trace_tsk_reliable() stronger:
-in addition to testing for STACK_FRAME_REGS_MARKER, we could also take
-into account that for all exceptions executing on the kernel stack
-  - their stack frames's backlink pointers always match what is saved
-    in their pt_regs instance's ->gpr[1] slot and that
-  - their exception frame size equals STACK_INT_FRAME_SIZE, a value
-    uncommonly large for non-exception frames.
+	for (;;) {
+		int pid = fork();
+		assert(pid >= 0);
+		if (pid)
+			wait(NULL);
+		else
+			exit(0);
+	}
 
-However, while these are currently true, relying on them would make
-the reliable stacktrace implementation more sensitive towards future
-changes in the exception entry code. Note that false negatives, i.e.
-not detecting exception frames, would silently break the live patching
-consistency model.
+can run out of limits because release_task()->call_rcu(delayed_put_task_struct)
+implies an RCU gp after the task/pid goes away and before the final put().
 
-Furthermore, certain other places (diagnostic stacktraces, perf, xmon)
-rely on STACK_FRAME_REGS_MARKER as well.
+Test-case:
 
-Make the exception exit code clear the on-stack
-STACK_FRAME_REGS_MARKER for those exceptions running on the "normal"
-kernel stack and returning to kernelspace: because the topmost frame
-is ignored by the reliable stack tracer anyway, returns to userspace
-don't need to take care of clearing the marker.
+	mkdir -p /tmp/CG
+	mount -t cgroup2 none /tmp/CG
+	echo '+pids' > /tmp/CG/cgroup.subtree_control
 
-Furthermore, as I don't have the ability to test this on Book 3E or 32
-bits, limit the change to Book 3S and 64 bits.
+	mkdir /tmp/CG/PID
+	echo 2 > /tmp/CG/PID/pids.max
 
-Fixes: df78d3f61480 ("powerpc/livepatch: Implement reliable stack tracing for the consistency model")
-Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+	perl -e 'while ($p = fork) { wait; } $p // die "fork failed: $!\n"' &
+	echo $! > /tmp/CG/PID/cgroup.procs
+
+Without this patch the forking process fails soon after migration.
+
+Rename cgroup_subsys->free() to cgroup_subsys->release() and move the callsite
+into the new helper, cgroup_release(), called by release_task() which actually
+frees the pid(s).
+
+Reported-by: Herton R. Krzesinski <hkrzesin@redhat.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/entry_64.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/cgroup-defs.h |  2 +-
+ include/linux/cgroup.h      |  2 ++
+ kernel/cgroup/cgroup.c      | 15 +++++++++------
+ kernel/cgroup/pids.c        |  4 ++--
+ kernel/exit.c               |  1 +
+ 5 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 2206912ea4f0..1f39ce40ae11 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -989,6 +989,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r2,_NIP(r1)
- 	mtspr	SPRN_SRR0,r2
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 22254c1fe1c5..6002275937f5 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -597,7 +597,7 @@ struct cgroup_subsys {
+ 	void (*cancel_fork)(struct task_struct *task);
+ 	void (*fork)(struct task_struct *task);
+ 	void (*exit)(struct task_struct *task);
+-	void (*free)(struct task_struct *task);
++	void (*release)(struct task_struct *task);
+ 	void (*bind)(struct cgroup_subsys_state *root_css);
  
-+	/*
-+	 * Leaving a stale exception_marker on the stack can confuse
-+	 * the reliable stack unwinder later on. Clear it.
-+	 */
-+	li	r2,0
-+	std	r2,STACK_FRAME_OVERHEAD-16(r1)
-+
- 	ld	r0,GPR0(r1)
- 	ld	r2,GPR2(r1)
- 	ld	r3,GPR3(r1)
+ 	bool early_init:1;
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 32c553556bbd..ca51b2c15bcc 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -119,6 +119,7 @@ extern int cgroup_can_fork(struct task_struct *p);
+ extern void cgroup_cancel_fork(struct task_struct *p);
+ extern void cgroup_post_fork(struct task_struct *p);
+ void cgroup_exit(struct task_struct *p);
++void cgroup_release(struct task_struct *p);
+ void cgroup_free(struct task_struct *p);
+ 
+ int cgroup_init_early(void);
+@@ -699,6 +700,7 @@ static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
+ static inline void cgroup_cancel_fork(struct task_struct *p) {}
+ static inline void cgroup_post_fork(struct task_struct *p) {}
+ static inline void cgroup_exit(struct task_struct *p) {}
++static inline void cgroup_release(struct task_struct *p) {}
+ static inline void cgroup_free(struct task_struct *p) {}
+ 
+ static inline int cgroup_init_early(void) { return 0; }
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index e710ac7fbbbf..63dae7e0ccae 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -195,7 +195,7 @@ static u64 css_serial_nr_next = 1;
+  */
+ static u16 have_fork_callback __read_mostly;
+ static u16 have_exit_callback __read_mostly;
+-static u16 have_free_callback __read_mostly;
++static u16 have_release_callback __read_mostly;
+ static u16 have_canfork_callback __read_mostly;
+ 
+ /* cgroup namespace for init task */
+@@ -5240,7 +5240,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
+ 
+ 	have_fork_callback |= (bool)ss->fork << ss->id;
+ 	have_exit_callback |= (bool)ss->exit << ss->id;
+-	have_free_callback |= (bool)ss->free << ss->id;
++	have_release_callback |= (bool)ss->release << ss->id;
+ 	have_canfork_callback |= (bool)ss->can_fork << ss->id;
+ 
+ 	/* At system boot, before all subsystems have been
+@@ -5676,16 +5676,19 @@ void cgroup_exit(struct task_struct *tsk)
+ 	} while_each_subsys_mask();
+ }
+ 
+-void cgroup_free(struct task_struct *task)
++void cgroup_release(struct task_struct *task)
+ {
+-	struct css_set *cset = task_css_set(task);
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+-	do_each_subsys_mask(ss, ssid, have_free_callback) {
+-		ss->free(task);
++	do_each_subsys_mask(ss, ssid, have_release_callback) {
++		ss->release(task);
+ 	} while_each_subsys_mask();
++}
+ 
++void cgroup_free(struct task_struct *task)
++{
++	struct css_set *cset = task_css_set(task);
+ 	put_css_set(cset);
+ }
+ 
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 9829c67ebc0a..c9960baaa14f 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -247,7 +247,7 @@ static void pids_cancel_fork(struct task_struct *task)
+ 	pids_uncharge(pids, 1);
+ }
+ 
+-static void pids_free(struct task_struct *task)
++static void pids_release(struct task_struct *task)
+ {
+ 	struct pids_cgroup *pids = css_pids(task_css(task, pids_cgrp_id));
+ 
+@@ -342,7 +342,7 @@ struct cgroup_subsys pids_cgrp_subsys = {
+ 	.cancel_attach 	= pids_cancel_attach,
+ 	.can_fork	= pids_can_fork,
+ 	.cancel_fork	= pids_cancel_fork,
+-	.free		= pids_free,
++	.release	= pids_release,
+ 	.legacy_cftypes	= pids_files,
+ 	.dfl_cftypes	= pids_files,
+ 	.threaded	= true,
+diff --git a/kernel/exit.c b/kernel/exit.c
+index d607e23fd0c3..5c0964dc805a 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -219,6 +219,7 @@ void release_task(struct task_struct *p)
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
++	cgroup_release(p);
+ 	release_thread(p);
+ 	call_rcu(&p->rcu, delayed_put_task_struct);
+ 
 -- 
 2.19.1
 
