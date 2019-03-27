@@ -2,78 +2,292 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EC6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C018CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB7120700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D0A21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfC0Vzv (ORCPT
+        id S1727483AbfC0WAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:55:51 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51767 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfC0Vzv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:55:51 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h9GWO-0002vQ-U5; Wed, 27 Mar 2019 22:55:45 +0100
-Date:   Wed, 27 Mar 2019 22:55:44 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andi Kleen <ak@linux.intel.com>
-cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
- .text
-In-Reply-To: <20190327204049.GW18020@tassilo.jf.intel.com>
-Message-ID: <alpine.DEB.2.21.1903272217240.1789@nanos.tec.linutronix.de>
-References: <20190321220009.29334-3-andi@firstfloor.org> <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de> <20190326213803.GN18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de> <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org>
- <alpine.DEB.2.21.1903270820530.1789@nanos.tec.linutronix.de> <20190327145918.GU18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903271600050.1789@nanos.tec.linutronix.de> <20190327154522.GV18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903271958320.1789@nanos.tec.linutronix.de>
- <20190327204049.GW18020@tassilo.jf.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 27 Mar 2019 18:00:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbfC0WAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:00:41 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2752B72668;
+        Wed, 27 Mar 2019 22:00:40 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14F1D60857;
+        Wed, 27 Mar 2019 22:00:29 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 18:00:27 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V5 08/10] audit: add containerid filtering
+Message-ID: <20190327220027.lekonsru6bifzp2h@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <3f02f7b56d2fba2918ff6fe90fcfa3ae558faff8.1552665316.git.rgb@redhat.com>
+ <CAFqZXNt0O8b54isxuXv1fbtv+UKRw0Lnyut2n0FGFEMme-SdkQ@mail.gmail.com>
+ <20190318234716.4moownrpylloiu3g@madcap2.tricolour.ca>
+ <CAFqZXNu7d28D=2G0jjAmrYAyKzYgkeGGLwRB1ekvteUbA9G_tw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqZXNu7d28D=2G0jjAmrYAyKzYgkeGGLwRB1ekvteUbA9G_tw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 27 Mar 2019 22:00:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019, Andi Kleen wrote:
-> > 
-> > It's static so it's scope is within the file and whatever GCC does with
-> > that C function it has to respect that it accesses static data. If that's
-> > not true then this really needs to be fixed at the compiler side and not in
-> > the kernel.
+On 2019-03-27 22:41, Ondrej Mosnacek wrote:
+> On Tue, Mar 19, 2019 at 12:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-03-18 21:02, Ondrej Mosnacek wrote:
+> > > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > >
+> > > > Implement audit container identifier filtering using the AUDIT_CONTID
+> > > > field name to send an 8-character string representing a u64 since the
+> > > > value field is only u32.
+> > > >
+> > > > Sending it as two u32 was considered, but gathering and comparing two
+> > > > fields was more complex.
+> > > >
+> > > > The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
+> > > >
+> > > > See: https://github.com/linux-audit/audit-kernel/issues/91
+> > > > See: https://github.com/linux-audit/audit-userspace/issues/40
+> > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > > > ---
+> > > >  include/linux/audit.h      |  1 +
+> > > >  include/uapi/linux/audit.h |  5 ++++-
+> > > >  kernel/audit.h             |  1 +
+> > > >  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  kernel/auditsc.c           |  3 +++
+> > > >  5 files changed, 56 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > > index 6db5aba7cc01..fa19fa408931 100644
+> > > > --- a/include/linux/audit.h
+> > > > +++ b/include/linux/audit.h
+> > > > @@ -77,6 +77,7 @@ struct audit_field {
+> > > >         u32                             type;
+> > > >         union {
+> > > >                 u32                     val;
+> > > > +               u64                     val64;
+> > > >                 kuid_t                  uid;
+> > > >                 kgid_t                  gid;
+> > > >                 struct {
+> > > > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> > > > index a6383e28b2c8..741ab6f38294 100644
+> > > > --- a/include/uapi/linux/audit.h
+> > > > +++ b/include/uapi/linux/audit.h
+> > > > @@ -265,6 +265,7 @@
+> > > >  #define AUDIT_LOGINUID_SET     24
+> > > >  #define AUDIT_SESSIONID        25      /* Session ID */
+> > > >  #define AUDIT_FSTYPE   26      /* FileSystem Type */
+> > > > +#define AUDIT_CONTID   27      /* Container ID */
+> > > >
+> > > >                                 /* These are ONLY useful when checking
+> > > >                                  * at syscall exit time (AUDIT_AT_EXIT). */
+> > > > @@ -345,6 +346,7 @@ enum {
+> > > >  #define AUDIT_FEATURE_BITMAP_SESSIONID_FILTER  0x00000010
+> > > >  #define AUDIT_FEATURE_BITMAP_LOST_RESET                0x00000020
+> > > >  #define AUDIT_FEATURE_BITMAP_FILTER_FS         0x00000040
+> > > > +#define AUDIT_FEATURE_BITMAP_CONTAINERID       0x00000080
+> > > >
+> > > >  #define AUDIT_FEATURE_BITMAP_ALL (AUDIT_FEATURE_BITMAP_BACKLOG_LIMIT | \
+> > > >                                   AUDIT_FEATURE_BITMAP_BACKLOG_WAIT_TIME | \
+> > > > @@ -352,7 +354,8 @@ enum {
+> > > >                                   AUDIT_FEATURE_BITMAP_EXCLUDE_EXTEND | \
+> > > >                                   AUDIT_FEATURE_BITMAP_SESSIONID_FILTER | \
+> > > >                                   AUDIT_FEATURE_BITMAP_LOST_RESET | \
+> > > > -                                 AUDIT_FEATURE_BITMAP_FILTER_FS)
+> > > > +                                 AUDIT_FEATURE_BITMAP_FILTER_FS | \
+> > > > +                                 AUDIT_FEATURE_BITMAP_CONTAINERID)
+> > > >
+> > > >  /* deprecated: AUDIT_VERSION_* */
+> > > >  #define AUDIT_VERSION_LATEST           AUDIT_FEATURE_BITMAP_ALL
+> > > > diff --git a/kernel/audit.h b/kernel/audit.h
+> > > > index 2a1a8b8a8019..3a40b608bf8d 100644
+> > > > --- a/kernel/audit.h
+> > > > +++ b/kernel/audit.h
+> > > > @@ -230,6 +230,7 @@ static inline int audit_hash_ino(u32 ino)
+> > > >
+> > > >  extern int audit_match_class(int class, unsigned syscall);
+> > > >  extern int audit_comparator(const u32 left, const u32 op, const u32 right);
+> > > > +extern int audit_comparator64(const u64 left, const u32 op, const u64 right);
+> > > >  extern int audit_uid_comparator(kuid_t left, u32 op, kuid_t right);
+> > > >  extern int audit_gid_comparator(kgid_t left, u32 op, kgid_t right);
+> > > >  extern int parent_len(const char *path);
+> > > > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> > > > index add360b46b38..516b8e58959e 100644
+> > > > --- a/kernel/auditfilter.c
+> > > > +++ b/kernel/auditfilter.c
+> > > > @@ -410,6 +410,7 @@ static int audit_field_valid(struct audit_entry *entry, struct audit_field *f)
+> > > >         /* FALL THROUGH */
+> > > >         case AUDIT_ARCH:
+> > > >         case AUDIT_FSTYPE:
+> > > > +       case AUDIT_CONTID:
+> > > >                 if (f->op != Audit_not_equal && f->op != Audit_equal)
+> > > >                         return -EINVAL;
+> > > >                 break;
+> > > > @@ -582,6 +583,14 @@ static struct audit_entry *audit_data_to_entry(struct audit_rule_data *data,
+> > > >                         }
+> > > >                         entry->rule.exe = audit_mark;
+> > > >                         break;
+> > > > +               case AUDIT_CONTID:
+> > > > +                       if (f->val != sizeof(u64))
+> > > > +                               goto exit_free;
+> > > > +                       str = audit_unpack_string(&bufp, &remain, f->val);
+> > > > +                       if (IS_ERR(str))
+> > > > +                               goto exit_free;
+> > > > +                       f->val64 = ((u64 *)str)[0];
+> > > > +                       break;
+> > > >                 }
+> > > >         }
+> > > >
+> > > > @@ -664,6 +673,11 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
+> > > >                         data->buflen += data->values[i] =
+> > > >                                 audit_pack_string(&bufp, audit_mark_path(krule->exe));
+> > > >                         break;
+> > > > +               case AUDIT_CONTID:
+> > > > +                       data->buflen += data->values[i] = sizeof(u64);
+> > > > +                       for (i = 0; i < sizeof(u64); i++)
+> > > > +                               ((char *)bufp)[i] = ((char *)&f->val64)[i];
+> > >
+> > > How about just:
+> > >
+> > > memcpy(bufp, &f->val64, sizeof(u64));
+> > >
+> > > instead of the awkward for loop? It is simpler and also more in line
+> > > with the code in audit_pack_string().
+> >
+> > I'll grant you that.  I'll use that instead.
 > 
-> Ok so you did the statics with undefined size, so kind of an extern static. 
-> That's a weird construct (not sure if it's even allowed in standard C), but
-> somehow it seems to work in gcc with the inline assembler.
-
-Strict C89 does not allow that, but it does not allow a lot of other things
-the kernel does.
-
-> I checked the code general and with the .globl in NATIVE_LABEL the
-
-With or without? I removed that as well.
-
-> generated assembler looks like it should work even for LTO yes.
+> Assuming the above tweak will be done, you can add:
 > 
-> I guess it's an interesting alternative to making them all global.
-> Maybe that will work for more cases too.
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-Pretty much preferred over making static stuff global all over the place.
+Thanks.  In the process of fixing that, I had also found a buffer
+pointer increment bug which has been fixed and a new test added to check
+for both.
 
-Thanks,
+> > > Also, doesn't this loop interfere with the outer loop that also uses
+> > > 'i' as the control variable?
+> >
+> > Yes, it does.  Thank you for catching that.  Doing a auditctl -l reveals
+> > this.
+> >
+> > > > +                       break;
+> > > >                 case AUDIT_LOGINUID_SET:
+> > > >                         if (krule->pflags & AUDIT_LOGINUID_LEGACY && !f->val) {
+> > > >                                 data->fields[i] = AUDIT_LOGINUID;
+> > > > @@ -750,6 +764,10 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
+> > > >                         if (!gid_eq(a->fields[i].gid, b->fields[i].gid))
+> > > >                                 return 1;
+> > > >                         break;
+> > > > +               case AUDIT_CONTID:
+> > > > +                       if (a->fields[i].val64 != b->fields[i].val64)
+> > > > +                               return 1;
+> > > > +                       break;
+> > > >                 default:
+> > > >                         if (a->fields[i].val != b->fields[i].val)
+> > > >                                 return 1;
+> > > > @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
+> > > >         }
+> > > >  }
+> > > >
+> > > > +int audit_comparator64(u64 left, u32 op, u64 right)
+> > > > +{
+> > > > +       switch (op) {
+> > > > +       case Audit_equal:
+> > > > +               return (left == right);
+> > > > +       case Audit_not_equal:
+> > > > +               return (left != right);
+> > > > +       case Audit_lt:
+> > > > +               return (left < right);
+> > > > +       case Audit_le:
+> > > > +               return (left <= right);
+> > > > +       case Audit_gt:
+> > > > +               return (left > right);
+> > > > +       case Audit_ge:
+> > > > +               return (left >= right);
+> > > > +       case Audit_bitmask:
+> > > > +               return (left & right);
+> > > > +       case Audit_bittest:
+> > > > +               return ((left & right) == right);
+> > > > +       default:
+> > > > +               BUG();
+> > > > +               return 0;
+> > > > +       }
+> > > > +}
+> > > > +
+> > > >  int audit_uid_comparator(kuid_t left, u32 op, kuid_t right)
+> > > >  {
+> > > >         switch (op) {
+> > > > @@ -1344,6 +1387,10 @@ int audit_filter(int msgtype, unsigned int listtype)
+> > > >                                 result = audit_comparator(audit_loginuid_set(current),
+> > > >                                                           f->op, f->val);
+> > > >                                 break;
+> > > > +                       case AUDIT_CONTID:
+> > > > +                               result = audit_comparator64(audit_get_contid(current),
+> > > > +                                                             f->op, f->val64);
+> > > > +                               break;
+> > > >                         case AUDIT_MSGTYPE:
+> > > >                                 result = audit_comparator(msgtype, f->op, f->val);
+> > > >                                 break;
+> > > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > > index aa5d13b4fbbb..2d74238e9638 100644
+> > > > --- a/kernel/auditsc.c
+> > > > +++ b/kernel/auditsc.c
+> > > > @@ -616,6 +616,9 @@ static int audit_filter_rules(struct task_struct *tsk,
+> > > >                 case AUDIT_LOGINUID_SET:
+> > > >                         result = audit_comparator(audit_loginuid_set(tsk), f->op, f->val);
+> > > >                         break;
+> > > > +               case AUDIT_CONTID:
+> > > > +                       result = audit_comparator64(audit_get_contid(tsk), f->op, f->val64);
+> > > > +                       break;
+> > > >                 case AUDIT_SUBJ_USER:
+> > > >                 case AUDIT_SUBJ_ROLE:
+> > > >                 case AUDIT_SUBJ_TYPE:
+> > >
+> > > Ondrej Mosnacek <omosnace at redhat dot com>
+> >
+> > - RGB
+> >
+> > Richard Guy Briggs <rgb@redhat.com>
+> 
+> Ondrej Mosnacek <omosnace at redhat dot com>
 
-	tglx
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
