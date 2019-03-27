@@ -2,97 +2,110 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED80EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5A1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C740D2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7402075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:51:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OuRLQ+Oy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BlD4CfMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfC0NvR (ORCPT
+        id S1730135AbfC0Nvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:51:17 -0400
-Received: from sauhun.de ([88.99.104.3]:36268 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfC0NvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:51:16 -0400
-Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
-        by pokefinder.org (Postfix) with ESMTPSA id ECECF2E35A5;
-        Wed, 27 Mar 2019 14:51:14 +0100 (CET)
-Date:   Wed, 27 Mar 2019 14:51:14 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stefan Lengfeld <contact@stefanchrist.eu>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [RFC PATCH v2 6/7] i2c: tegra-bpmp: convert to use new atomic
- callbacks
-Message-ID: <20190327135114.GF5345@kunai>
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
- <20190302134735.4393-7-wsa+renesas@sang-engineering.com>
- <20190326202005.s3ktyth42lfjirx2@porty>
+        Wed, 27 Mar 2019 09:51:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54850 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfC0Nvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:51:38 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 08B05614BF; Wed, 27 Mar 2019 13:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694698;
+        bh=KxokdBIqoYyFoX2ngml16DnO3NPhFo/yTC5kKcnh+PA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OuRLQ+OyO30uB2rlOGZfckDP6V24kk0rZkoZT1TSOquGOHN7wtTqwANxDbregUt6o
+         eAZRVRnczFCiooEs7CtOcTjs2PnMVOcje+Jvti54q+wXYfam18h7xLUAvuc2ugBCeL
+         kzHoG1ibFUV6jG7B0pGZTmW0vrLUbrZWaEViB7vQ=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 93F0460FEB;
+        Wed, 27 Mar 2019 13:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694694;
+        bh=KxokdBIqoYyFoX2ngml16DnO3NPhFo/yTC5kKcnh+PA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BlD4CfMiShe76BIQHVw5n9hAEe3JFRgw8Et4GJBArL0krEqrvbVLcC01XKvkVlarK
+         gc5x9Dt3GoGh4F6PnUQzMgNMs1crZSA7KQ0iqQWuG5GhEWOTNB3P7QLvvvhAj0zBHn
+         h3/nPOE/4rJ8k3KN4+oGceg8KMyfULqD8KDF3toE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 93F0460FEB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] MAINTAINERS: Fix Hyperv vIOMMU driver file name
+To:     lantianyu1986@gmail.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, tglx@linutronix.de, mingo@kernel.org,
+        konrad.wilk@oracle.com, jpoimboe@redhat.com, peterz@infradead.org,
+        jkosina@suse.cz, riel@surriel.com, peterz@infraded.org,
+        Tianyu.Lan@microsoft.com, luto@kernel.org,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        sashal@kernel.org, joe@perches.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <2220cf2a-5ee0-bcd3-fa86-972234f526a0@codeaurora.org>
+Date:   Wed, 27 Mar 2019 19:21:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RE3pQJLXZi4fr8Xo"
-Content-Disposition: inline
-In-Reply-To: <20190326202005.s3ktyth42lfjirx2@porty>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553581701-25250-1-git-send-email-Tianyu.Lan@microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---RE3pQJLXZi4fr8Xo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/26/2019 11:58 AM, lantianyu1986@gmail.com wrote:
+> From: Lan Tianyu <Tianyu.Lan@microsoft.com>
+>
+> The Hyperv vIOMMU file name should be "hyperv-iommu.c" rather
 
-> > +static int tegra_bpmp_i2c_xfer(struct i2c_adapter *adapter,
-> > +			       struct i2c_msg *msgs, int num)
-> > +
-> > +{
-> > +	return tegra_bpmp_i2c_xfer_common(adapter, msgs, num, false);
-> > +}
-> > +
-> > +static int tegra_bpmp_i2c_xfer_atomic(struct i2c_adapter *adapter,
-> > +				      struct i2c_msg *msgs, int num)
-> > +
->=20
-> Here and between the function prototype of 'tegra_bpmp_i2c_xfer' and
-> it's function body is a unneeded blank line. Nitpick.
+s/vIOMMU/IOMMU
 
-Thanks, fixed!
+> than "hyperv_iommu.c". This patch is to fix it.
+>
+> Signed-off-by: Lan Tianyu <Tianyu.Lan@microsoft.com>
 
 
---RE3pQJLXZi4fr8Xo
-Content-Type: application/pgp-signature; name="signature.asc"
+Make the above change otherwise looks good.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
------BEGIN PGP SIGNATURE-----
+-Mukesh
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlybf9IACgkQFA3kzBSg
-KbbNzBAAjvch4rn4f/kdEFZ49DuydIgWhOBQ8vX0PTq/gepmHvRfc4AW/e0LsixM
-XnPZiQQErviDLilZdEDFdXz5KnBc4c2wnymbAFwg4N8b2h7h+1cRcg21ze9wsTBr
-mviw4p00Ly7XrED32o3kY0VQ97ulypjyaagbzs5w62aVoOV2FPCOysyAZh9qA4Nt
-6Mz2KUiy2jkFSRdgG6VxEBLi3jkTGIGmz9GB1ZH541cwPNMG53olqllViQSmTJkL
-XCI51hVf5LQdCgrYFWBY8mkje4fQuj8G/lQYsWPg+zScuQxxprhtIHq+qxqUfqul
-Zf6g7MhMFKWq1QWg7aYetyUKoYWOzC3ZX1RNxKDcn0LorYiSoZeKRxmMvzHxKJgQ
-D45IEYlZASsaWd5w5HSrllTfCG2fKYpQj3/Dywxr1gPNsfD9RCJeR95WgIYUXSI+
-V+JnNrk97koU+EfntYwr8MQbUmoyklBfThuYPR+k2HEfGfPYVHVSVS5ZguEqC7vQ
-FzaAzu/vO+d9Szzo1+8g6nl8znq6DZo76TXbCFSs8kDLpQzl6c4jT0izEd0TJvQ3
-hFAxiWe2tnbmgl7f4pZlVIGkuw9/sC8V/2fy3oTXoClQCT8YyzmqdxL5iOJ4A5Yx
-ANB7Ve19kReJYtZdFN/nj7tVf0JBIa6g1UeSNQDSBP08nHNn72I=
-=1kMO
------END PGP SIGNATURE-----
-
---RE3pQJLXZi4fr8Xo--
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e17ebf7..403247d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7175,7 +7175,7 @@ F:	drivers/net/hyperv/
+>   F:	drivers/scsi/storvsc_drv.c
+>   F:	drivers/uio/uio_hv_generic.c
+>   F:	drivers/video/fbdev/hyperv_fb.c
+> -F:	drivers/iommu/hyperv_iommu.c
+> +F:	drivers/iommu/hyperv-iommu.c
+>   F:	net/vmw_vsock/hyperv_transport.c
+>   F:	include/linux/hyperv.h
+>   F:	include/uapi/linux/hyperv.h
