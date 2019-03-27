@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F17C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA884C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1259F205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEFE205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712428;
-	bh=4boexCSvbIANl711eLcEK2PrZfhSrN40Sjqponto9lM=;
+	s=default; t=1553712435;
+	bh=FQ4Gk/WmIbwjjh6nUTTRaRZBgSLouaNNhi1LHqZGFTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDqZhBkNLwdNK1Qb/kPPlFuCHFt7KicRC8YRbHxa/gg4tm3Kgx2s6XgERxaR4UPRC
-	 VAt/s9qTv+dMKyMpbgaLbr3/JMKjsxbxqvch/l+ykzW1pBY0bwWO+hbJyHe0563/F5
-	 cFW+yrrdP4MGocF5OR/QbaM6C1z/uKkkNgT7Sns8=
+	b=y7oOJUF6C280nmbCXkdUY59T/ioGFtwFYyIew8JeJcJzLVe7O1vokESCFm3NTKnrD
+	 YbmOUc2x70tAG+6f0sV5GLvnm0zFsKD3iz4KVRV2WNttCPIYbEXvG0Zy6KxJEH7vOM
+	 1Vh7AYvbKvCTJHGQTuJnjgwFIRCmQ11UDkIvXsek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390876AbfC0SUM (ORCPT
+        id S2390849AbfC0SUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390813AbfC0ST5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:57 -0400
+        id S2389939AbfC0SUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC942063F;
-        Wed, 27 Mar 2019 18:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA40D2070B;
+        Wed, 27 Mar 2019 18:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710796;
-        bh=4boexCSvbIANl711eLcEK2PrZfhSrN40Sjqponto9lM=;
+        s=default; t=1553710802;
+        bh=FQ4Gk/WmIbwjjh6nUTTRaRZBgSLouaNNhi1LHqZGFTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P8SHXUMu/NF3qwQNHcr14otDSYGUTlg7rYoyADW2izhMSzWSaSCRcx7IS+07mL6ZJ
-         9+aW66XGHZTom3h6/gmqUihaIhlqy/sU42gi3XIDNdXE7o45uKrRE20uz0rMYgrLAK
-         /Qsk1jUO4Nj0z0WjwZZ9qqhDDUX5d3n+wqcSulQ8=
+        b=P0S+zk+FYudpliDcELsGD3oDQmNXD7QR9pwLad/GxUvm0VaI0cJxjDE2IWFRVpYfN
+         tELCzOa6W1NDEv8vw3iTOCyZNaaRQ850bMe0yW+I8KTwCxhRLRgj1us7XnYEjnKgMh
+         HvGzCqqT8Ejcz5yOVgR+eWvVvhulWkbocUwq1NaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 104/123] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
-Date:   Wed, 27 Mar 2019 14:16:08 -0400
-Message-Id: <20190327181628.15899-104-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 107/123] dmaengine: imx-dma: fix warning comparison of distinct pointer types
+Date:   Wed, 27 Mar 2019 14:16:11 -0400
+Message-Id: <20190327181628.15899-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,66 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 ]
+[ Upstream commit 9227ab5643cb8350449502dd9e3168a873ab0e3b ]
 
-The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
-as length value. The opt->len however is in control over the remote user
-and can be used by an attacker to gain access beyond the bounds of the
-actual packet.
+The warning got introduced by commit 930507c18304 ("arm64: add basic
+Kconfig symbols for i.MX8"). Since it got enabled for arm64. The warning
+haven't been seen before since size_t was 'unsigned int' when built on
+arm32.
 
-To prevent any potential leak of heap memory, it is enough to check that
-the resulting len calculation after calling l2cap_get_conf_opt is not
-below zero. A well formed packet will always return >= 0 here and will
-end with the length value being zero after the last option has been
-parsed. In case of malformed packets messing with the opt->len field the
-length value will become negative. If that is the case, then just abort
-and ignore the option.
+../drivers/dma/imx-dma.c: In function ‘imxdma_sg_next’:
+../include/linux/kernel.h:846:29: warning: comparison of distinct pointer types lacks a cast
+   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                             ^~
+../include/linux/kernel.h:860:4: note: in expansion of macro ‘__typecheck’
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^~~~~~~~~~~
+../include/linux/kernel.h:870:24: note: in expansion of macro ‘__safe_cmp’
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^~~~~~~~~~
+../include/linux/kernel.h:879:19: note: in expansion of macro ‘__careful_cmp’
+ #define min(x, y) __careful_cmp(x, y, <)
+                   ^~~~~~~~~~~~~
+../drivers/dma/imx-dma.c:288:8: note: in expansion of macro ‘min’
+  now = min(d->len, sg_dma_len(sg));
+        ^~~
 
-In case an attacker uses a too short opt->len value, then garbage will
-be parsed, but that is protected by the unknown option handling and also
-the option parameter size checks.
+Rework so that we use min_t and pass in the size_t that returns the
+minimum of two values, using the specified type.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Olof Johansson <olof@lixom.net>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/imx-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 9b7907ebfa01..7a8a58af8c98 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -3336,6 +3336,8 @@ static int l2cap_parse_conf_req(struct l2cap_chan *chan, void *data, size_t data
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index cb37730f9272..6eb1f05f7c3c 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -290,7 +290,7 @@ static inline int imxdma_sg_next(struct imxdma_desc *d)
+ 	struct scatterlist *sg = d->sg;
+ 	unsigned long now;
  
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
-+		if (len < 0)
-+			break;
+-	now = min(d->len, sg_dma_len(sg));
++	now = min_t(size_t, d->len, sg_dma_len(sg));
+ 	if (d->len != IMX_DMA_LENGTH_LOOP)
+ 		d->len -= now;
  
- 		hint  = type & L2CAP_CONF_HINT;
- 		type &= L2CAP_CONF_MASK;
-@@ -3547,6 +3549,8 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_MTU:
-@@ -3727,6 +3731,8 @@ static void l2cap_conf_rfc_get(struct l2cap_chan *chan, void *rsp, int len)
- 
- 	while (len >= L2CAP_CONF_OPT_SIZE) {
- 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-+		if (len < 0)
-+			break;
- 
- 		switch (type) {
- 		case L2CAP_CONF_RFC:
 -- 
 2.19.1
 
