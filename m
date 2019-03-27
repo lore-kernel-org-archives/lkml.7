@@ -2,100 +2,102 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C03C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B7EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D2020449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TyrKgrHI"
+	by mail.kernel.org (Postfix) with ESMTP id 3C9F12082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553710562;
+	bh=O0wDP1jtDCbk/j3iImVCP0Rk1gOZStQWkpcI2ft03Io=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TDddjglr7YkzO6krRpnWy/f29tmu9I7qY9CW7ZNLFR+t1d9wfha3cB7NZXchFazLc
+	 5XMyEdP6M4x8GIVKR5QRn/Db6bMdHIEUj5f8lx10PHWnuNq9+Y9pTMoeoYqE4a4iNk
+	 hdonhWe90S+C3poqoKtSkBkGdmZ5DZiKh2bAiGyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389670AbfC0SP6 (ORCPT
+        id S2389451AbfC0SQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:58 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38168 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389927AbfC0SPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:54 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g1so10495333qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=EcSrPMl1JUJwbCY92iztc9qaOBbPIQ/hlneZl4HYObo=;
-        b=TyrKgrHId+UYpgCdscy1hsk/ZJchlsP41gEIoj2w/IkpPD9torUKlTt0iwPdSDWCr/
-         zXbEPgvWGr8IkNoavSeXmpYhipcG0Mxl8xVRMx514voffH9mKe4TxBgLE+ADKjkVq2uJ
-         oKJT03Jakrgu851DQ0bqKHKWbn94J0Fmwm57PfvgeZhcdZypqY3o1e/3dIkWUzpmZSN8
-         Q5ko3LGTujcXFtNpGYnuqybcyzX6KKeuI9yqQptqzqteS9+zUcZ6n48Bh4Qs1Z5BBMjE
-         dEWbNTp4IiSCuIJ87EaSh/7F47Z4GEdxE1CIdcDmu/LqUsta1HJgFdtVuEcmLaWC2tMz
-         vp0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=EcSrPMl1JUJwbCY92iztc9qaOBbPIQ/hlneZl4HYObo=;
-        b=T1ae29vi2jXJ4KAlrSTSeInBuG5S6b7JB24zKxGRfgTC14RgEpsJ5hvS1Ld4FWY6lK
-         Q+rqciky5UV6LabPfDLvhxEDqT4ttf5EmD/MwOzFr/lCD+2JqHPX4U6ar9Wdx6K8EIib
-         yOdAsLWoxfsvJCz6zgai2dhVACUKbP81r2/7/HeChxKGQ3c4UzFO3Qt4RwPlcVEkf0I1
-         vrPVKWxZP5elJW31xq3WiqvIUyKP0Wv/D/t9ONbaWCtVFNV1AwNeoYqziodWF/yDT3xZ
-         H6pk1+edDWptbWw9c3qdITsklV0KiIDo+hzSEIMUQvDr/3pOSWT+UsKPDMCZB51AtZ8H
-         Gi7g==
-X-Gm-Message-State: APjAAAVuPoZGYzcKoqvgQPrSLbH9C//lfa6P/bkZfCHfgOCTMFxvzlh7
-        QulqHmgelEAK4ULQqt4F2V8Zvw==
-X-Google-Smtp-Source: APXvYqy0pes/HIhQyn4baHq6yseP6CuIFrm6CpgT4TPQyJYaaz/+LcQdDc9XhyeDLenOKDG4q35ZMA==
-X-Received: by 2002:a37:59c5:: with SMTP id n188mr29677597qkb.208.1553710553792;
-        Wed, 27 Mar 2019 11:15:53 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id e22sm14373304qte.42.2019.03.27.11.15.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 11:15:53 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 11:15:49 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        John Hurley <john.hurley@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        oss-drivers@netronome.com, netdev@vger.kernel.org
-Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.0 234/262] nfp: flower: tidy
- tunnel related private data
-Message-ID: <20190327111549.32911fa7@cakuba.netronome.com>
-In-Reply-To: <20190327180158.10245-234-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
-        <20190327180158.10245-234-sashal@kernel.org>
-Organization: Netronome Systems, Ltd.
+        Wed, 27 Mar 2019 14:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389948AbfC0SPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15E92183E;
+        Wed, 27 Mar 2019 18:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710555;
+        bh=O0wDP1jtDCbk/j3iImVCP0Rk1gOZStQWkpcI2ft03Io=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oRODjLOumFE5+ZQI6zKRaDKdP8bftY7+2B8wodYGsnMmmoL004V3EBboXIAKh+e38
+         Exjpx4v6QXIPnvqynL+NElxD89YBnC0VUGeaHOYoiCitclLcTScNXKe+PB/SYlV7j+
+         05ndctd+YP+h3ye88wLZSD0C606PfmmPNt+X32tY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 176/192] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
+Date:   Wed, 27 Mar 2019 14:10:08 -0400
+Message-Id: <20190327181025.13507-176-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 14:01:29 -0400, Sasha Levin wrote:
-> From: John Hurley <john.hurley@netronome.com>
-> 
-> [ Upstream commit f3b975778c176b01eba10f869a5a64c6b8550c23 ]
-> 
-> Recent additions to the flower app private data have grouped the variables
-> of a given feature into a struct and added that struct to the main private
-> data struct.
-> 
-> In keeping with this, move all tunnel related private data to their own
-> struct. This has no affect on functionality but improves readability and
-> maintenance of the code.
-> 
-> Signed-off-by: John Hurley <john.hurley@netronome.com>
-> Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Not a fix.
+[ Upstream commit 890880ddfdbe256083170866e49c87618b706ac7 ]
 
-Is there a way to request patches under drivers/net/ethernet/netronome
-to only be considered if they have an explicit Fixes tag?
+When drivers pass non-empty lists of modifiers for initializing their
+planes, we can infer that they allow framebuffer modifiers and set the
+driver's allow_fb_modifiers mode config element.
+
+In case the allow_fb_modifiers element was not set (some drivers tend
+to set them after registering planes), the modifiers will still be
+registered but won't be available to userspace unless the flag is set
+later. However in that case, the IN_FORMATS blob won't be created.
+
+In order to avoid this case and generally reduce the trouble associated
+with the flag, always set allow_fb_modifiers when a non-empty list of
+format modifiers is passed at plane init.
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190104085610.5829-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_plane.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
+index 6153cbda239f..d36b1be632d9 100644
+--- a/drivers/gpu/drm/drm_plane.c
++++ b/drivers/gpu/drm/drm_plane.c
+@@ -211,6 +211,9 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 			format_modifier_count++;
+ 	}
+ 
++	if (format_modifier_count)
++		config->allow_fb_modifiers = true;
++
+ 	plane->modifier_count = format_modifier_count;
+ 	plane->modifiers = kmalloc_array(format_modifier_count,
+ 					 sizeof(format_modifiers[0]),
+-- 
+2.19.1
+
