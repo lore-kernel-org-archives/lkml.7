@@ -2,841 +2,163 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BFEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D0DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5462120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711465;
-	bh=2eFB98HI6sBvWg1Q4QYsBwL15kONZ0gGOhzEENvTwiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ivbqXIpCM58DBkrQ6s2QnuBSeUXW8R1XGBETOg2HW6DD8Owt0mFx2kvbxQag6Hckb
-	 DMAuX3EL4jR01aTtElbNnQufD/LkLbbGjDtZGQUZqAykf+mpsP0eSzDNWhdjgkr7r4
-	 qd5ls+nnATGU4KMR6/yF5SC3ZNr9R3XjpMoF/deQ=
+	by mail.kernel.org (Postfix) with ESMTP id BE37D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391907AbfC0SbD (ORCPT
+        id S2404225AbfC0SbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391643AbfC0S0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:06 -0400
-Received: from localhost (unknown [88.128.80.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0298B20651;
-        Wed, 27 Mar 2019 18:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711164;
-        bh=2eFB98HI6sBvWg1Q4QYsBwL15kONZ0gGOhzEENvTwiw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vXscATuYFIOmoakoUxED+UL+8RqGQan6dWyC03KbBgixsv0aEyR4d60DGTr218dZD
-         ZwzTYSz/6dI6yTxAtfO8xwzJlCZGZEWKVctHVJQn/l8P2Dz4aYR2M/ooAQePeFTeZE
-         8bgOUYM66XxZ4rtxf6al2CLyul5uT8Em4u3pVchg=
-Date:   Wed, 27 Mar 2019 23:57:10 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 4.9.166
-Message-ID: <20190327145710.GB7990@kroah.com>
-References: <20190327145705.GA7990@kroah.com>
+        Wed, 27 Mar 2019 14:31:10 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:38435 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391630AbfC0SbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:31:08 -0400
+Received: by mail-it1-f200.google.com with SMTP id r136so830534ith.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:31:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=uryPLxACeQUy+emw4YowAzfgEUIoTGYQCrCWVFd0hPg=;
+        b=TjHtW7k0XL8qNx3SedYzBxchHgF5FpqpeOZ8tLoOqfOd4j3gn4Vuw7ZYXPGm9rZwSN
+         GtvEjS+VZ21Xnfz026+Lg8CAk/1mR/U4FXA0DK6NNB9ix9jNZDhqunQ90mLQ5Nh1DQSd
+         RVk5+3eXv4zBLczTjOtcutSpZ+TjbeJj1VsQ3hjTVAP4Gm15UlQmThwzgAMxYeiW/zAP
+         jVm8T30V/3ABcdvWbxCgv8pIfk1bv2HNWX7T3X7b3fpuXVap0wx69kyG3pVXjtNgzRKi
+         dtxl2T4LfhLXCM+dz//fto+8FsbGY/lL2ftXahA5bgkBF+c0Yq9bLW4OO6PCOOK/+IjB
+         dXRw==
+X-Gm-Message-State: APjAAAXaQS5xOI+TIgtguIF7sVfq+qhmkRkZo8hZ4cnhRerJydVyt7IZ
+        PthvwniVLiJ9PPkPuPfprldfeAOLa0qFXia49kjMFxxq9gHb
+X-Google-Smtp-Source: APXvYqyMVkPuEyDq9MbiwaLhUHB9CI5mfak9ojgaBuvgHWcWGOa/YwXD1MfCwaZgc6RXh3MBWAFpm49+VW9KLyWXcndJzvWC/PID
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327145705.GA7990@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Received: by 2002:a05:660c:288:: with SMTP id s8mr941828itl.25.1553711466975;
+ Wed, 27 Mar 2019 11:31:06 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 11:31:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000012a28e058517a481@google.com>
+Subject: INFO: rcu detected stall in sys_bpf
+From:   syzbot <syzbot+c70685d9eac9589eaffc@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        xdp-newbies@vger.kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Makefile b/Makefile
-index 9b61da532c42..90478086eff5 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,6 +1,6 @@
- VERSION = 4
- PATCHLEVEL = 9
--SUBLEVEL = 165
-+SUBLEVEL = 166
- EXTRAVERSION =
- NAME = Roaring Lionus
- 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 5963be2e05f0..28bef94cf792 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -266,10 +266,12 @@ void die(const char *str, struct pt_regs *regs, int err)
- {
- 	struct thread_info *thread = current_thread_info();
- 	int ret;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&die_lock, flags);
- 
- 	oops_enter();
- 
--	raw_spin_lock_irq(&die_lock);
- 	console_verbose();
- 	bust_spinlocks(1);
- 	ret = __die(str, err, thread, regs);
-@@ -279,13 +281,15 @@ void die(const char *str, struct pt_regs *regs, int err)
- 
- 	bust_spinlocks(0);
- 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
--	raw_spin_unlock_irq(&die_lock);
- 	oops_exit();
- 
- 	if (in_interrupt())
- 		panic("Fatal exception in interrupt");
- 	if (panic_on_oops)
- 		panic("Fatal exception");
-+
-+	raw_spin_unlock_irqrestore(&die_lock, flags);
-+
- 	if (ret != NOTIFY_STOP)
- 		do_exit(SIGSEGV);
- }
-diff --git a/arch/mips/include/asm/jump_label.h b/arch/mips/include/asm/jump_label.h
-index e77672539e8e..e4456e450f94 100644
---- a/arch/mips/include/asm/jump_label.h
-+++ b/arch/mips/include/asm/jump_label.h
-@@ -21,15 +21,15 @@
- #endif
- 
- #ifdef CONFIG_CPU_MICROMIPS
--#define NOP_INSN "nop32"
-+#define B_INSN "b32"
- #else
--#define NOP_INSN "nop"
-+#define B_INSN "b"
- #endif
- 
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
--	asm_volatile_goto("1:\t" NOP_INSN "\n\t"
--		"nop\n\t"
-+	asm_volatile_goto("1:\t" B_INSN " 2f\n\t"
-+		"2:\tnop\n\t"
- 		".pushsection __jump_table,  \"aw\"\n\t"
- 		WORD_INSN " 1b, %l[l_yes], %0\n\t"
- 		".popsection\n\t"
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index f0a0e6d62be3..2d965d91fee4 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -138,6 +138,13 @@ SECTIONS
- 	PERCPU_SECTION(1 << CONFIG_MIPS_L1_CACHE_SHIFT)
- #endif
- 
-+#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
-+	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
-+		*(.appended_dtb)
-+		KEEP(*(.appended_dtb))
-+	}
-+#endif
-+
- #ifdef CONFIG_RELOCATABLE
- 	. = ALIGN(4);
- 
-@@ -162,11 +169,6 @@ SECTIONS
- 	__appended_dtb = .;
- 	/* leave space for appended DTB */
- 	. += 0x100000;
--#elif defined(CONFIG_MIPS_ELF_APPENDED_DTB)
--	.appended_dtb : AT(ADDR(.appended_dtb) - LOAD_OFFSET) {
--		*(.appended_dtb)
--		KEEP(*(.appended_dtb))
--	}
- #endif
- 	/*
- 	 * Align to 64K in attempt to eliminate holes before the
-diff --git a/arch/mips/loongson64/lemote-2f/irq.c b/arch/mips/loongson64/lemote-2f/irq.c
-index cab5f43e0e29..d371f0294cbb 100644
---- a/arch/mips/loongson64/lemote-2f/irq.c
-+++ b/arch/mips/loongson64/lemote-2f/irq.c
-@@ -102,7 +102,7 @@ static struct irqaction ip6_irqaction = {
- static struct irqaction cascade_irqaction = {
- 	.handler = no_action,
- 	.name = "cascade",
--	.flags = IRQF_NO_THREAD,
-+	.flags = IRQF_NO_THREAD | IRQF_NO_SUSPEND,
- };
- 
- void __init mach_init_irq(void)
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c b/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
-index aec6e9eef489..55884cb5a0fc 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_fb.c
-@@ -531,11 +531,9 @@ static int vmw_fb_set_par(struct fb_info *info)
- 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_PVSYNC)
- 	};
--	struct drm_display_mode *old_mode;
- 	struct drm_display_mode *mode;
- 	int ret;
- 
--	old_mode = par->set_mode;
- 	mode = drm_mode_duplicate(vmw_priv->dev, &new_mode);
- 	if (!mode) {
- 		DRM_ERROR("Could not create new fb mode.\n");
-@@ -546,11 +544,7 @@ static int vmw_fb_set_par(struct fb_info *info)
- 	mode->vdisplay = var->yres;
- 	vmw_guess_mode_timing(mode);
- 
--	if (old_mode && drm_mode_equal(old_mode, mode)) {
--		drm_mode_destroy(vmw_priv->dev, mode);
--		mode = old_mode;
--		old_mode = NULL;
--	} else if (!vmw_kms_validate_mode_vram(vmw_priv,
-+	if (!vmw_kms_validate_mode_vram(vmw_priv,
- 					mode->hdisplay *
- 					DIV_ROUND_UP(var->bits_per_pixel, 8),
- 					mode->vdisplay)) {
-@@ -613,8 +607,8 @@ static int vmw_fb_set_par(struct fb_info *info)
- 	schedule_delayed_work(&par->local_work, 0);
- 
- out_unlock:
--	if (old_mode)
--		drm_mode_destroy(vmw_priv->dev, old_mode);
-+	if (par->set_mode)
-+		drm_mode_destroy(vmw_priv->dev, par->set_mode);
- 	par->set_mode = mode;
- 
- 	drm_modeset_unlock_all(vmw_priv->dev);
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index ca22483d253f..c1233d0288a0 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2599,7 +2599,12 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address += address + s->offset;
-+		/*
-+		 * Add in the remaining piece of the scatter-gather offset that
-+		 * was masked out when we were determining the physical address
-+		 * via (sg_phys(s) & PAGE_MASK) earlier.
-+		 */
-+		s->dma_address += address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   = s->length;
- 	}
- 
-diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index 20397aba6849..d92967e2e385 100644
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -1203,7 +1203,7 @@ static void uvc_ctrl_fill_event(struct uvc_video_chain *chain,
- 
- 	__uvc_query_v4l2_ctrl(chain, ctrl, mapping, &v4l2_ctrl);
- 
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = v4l2_ctrl.id;
- 	ev->u.ctrl.value = value;
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index bd6884223a0d..c56d649fa7da 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -1231,7 +1231,7 @@ static u32 user_flags(const struct v4l2_ctrl *ctrl)
- 
- static void fill_event(struct v4l2_event *ev, struct v4l2_ctrl *ctrl, u32 changes)
- {
--	memset(ev->reserved, 0, sizeof(ev->reserved));
-+	memset(ev, 0, sizeof(*ev));
- 	ev->type = V4L2_EVENT_CTRL;
- 	ev->id = ctrl->id;
- 	ev->u.ctrl.changes = changes;
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index c763b404510f..3e139692fe8f 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -181,7 +181,7 @@ static void pxamci_dma_irq(void *param);
- static void pxamci_setup_data(struct pxamci_host *host, struct mmc_data *data)
- {
- 	struct dma_async_tx_descriptor *tx;
--	enum dma_data_direction direction;
-+	enum dma_transfer_direction direction;
- 	struct dma_slave_config	config;
- 	struct dma_chan *chan;
- 	unsigned int nob = data->blocks;
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 21aec5c252ee..bbfe7be214e1 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -4277,7 +4277,7 @@ static void ath10k_tpc_config_disp_tables(struct ath10k *ar,
- 							    rate_code[i],
- 							    type);
- 			snprintf(buff, sizeof(buff), "%8d ", tpc[j]);
--			strncat(tpc_value, buff, strlen(buff));
-+			strlcat(tpc_value, buff, sizeof(tpc_value));
- 		}
- 		tpc_stats->tpc_table[type].pream_idx[i] = pream_idx;
- 		tpc_stats->tpc_table[type].rate_code[i] = rate_code[i];
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index e664ca7c0afd..13f23c00538b 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -1212,7 +1212,6 @@ static int charger_extcon_init(struct charger_manager *cm,
- 	if (ret < 0) {
- 		pr_info("Cannot register extcon_dev for %s(cable: %s)\n",
- 			cable->extcon_name, cable->name);
--		ret = -EINVAL;
- 	}
- 
- 	return ret;
-@@ -1634,7 +1633,7 @@ static int charger_manager_probe(struct platform_device *pdev)
- 
- 	if (IS_ERR(desc)) {
- 		dev_err(&pdev->dev, "No platform data (desc) found\n");
--		return -ENODEV;
-+		return PTR_ERR(desc);
- 	}
- 
- 	cm = devm_kzalloc(&pdev->dev,
-diff --git a/drivers/rtc/rtc-lib.c b/drivers/rtc/rtc-lib.c
-index e6bfb9c42a10..5b136bdc03d4 100644
---- a/drivers/rtc/rtc-lib.c
-+++ b/drivers/rtc/rtc-lib.c
-@@ -52,13 +52,11 @@ EXPORT_SYMBOL(rtc_year_days);
-  */
- void rtc_time64_to_tm(time64_t time, struct rtc_time *tm)
- {
--	unsigned int month, year;
--	unsigned long secs;
-+	unsigned int month, year, secs;
- 	int days;
- 
- 	/* time must be positive */
--	days = div_s64(time, 86400);
--	secs = time - (unsigned int) days * 86400;
-+	days = div_s64_rem(time, 86400, &secs);
- 
- 	/* day of the week, 1970-01-01 was a Thursday */
- 	tm->tm_wday = (days + 4) % 7;
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 5cfd56f08ffb..0b858414c558 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1348,10 +1348,11 @@ static int ufshcd_comp_devman_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	u32 upiu_flags;
- 	int ret = 0;
- 
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
- 
- 	ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE);
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
-@@ -1375,10 +1376,11 @@ static int ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	u32 upiu_flags;
- 	int ret = 0;
- 
--	if (hba->ufs_version == UFSHCI_VERSION_20)
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
--	else
-+	if ((hba->ufs_version == UFSHCI_VERSION_10) ||
-+	    (hba->ufs_version == UFSHCI_VERSION_11))
- 		lrbp->command_type = UTP_CMD_TYPE_SCSI;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
- 
- 	if (likely(lrbp->cmd)) {
- 		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index 699447aa8b43..747560feb63e 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -36,7 +36,7 @@
- #define SPRD_FIFO_SIZE		128
- #define SPRD_DEF_RATE		26000000
- #define SPRD_BAUD_IO_LIMIT	3000000
--#define SPRD_TIMEOUT		256
-+#define SPRD_TIMEOUT		256000
- 
- /* the offset of serial registers and BITs for them */
- /* data registers */
-@@ -63,6 +63,7 @@
- 
- /* interrupt clear register */
- #define SPRD_ICLR		0x0014
-+#define SPRD_ICLR_TIMEOUT	BIT(13)
- 
- /* line control register */
- #define SPRD_LCR		0x0018
-@@ -298,7 +299,8 @@ static irqreturn_t sprd_handle_irq(int irq, void *dev_id)
- 		return IRQ_NONE;
- 	}
- 
--	serial_out(port, SPRD_ICLR, ~0);
-+	if (ims & SPRD_IMSR_TIMEOUT)
-+		serial_out(port, SPRD_ICLR, SPRD_ICLR_TIMEOUT);
- 
- 	if (ims & (SPRD_IMSR_RX_FIFO_FULL |
- 		SPRD_IMSR_BREAK_DETECT | SPRD_IMSR_TIMEOUT))
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 5e6136d2ed71..c6578b321838 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -763,18 +763,21 @@ void usb_destroy_configuration(struct usb_device *dev)
- 		return;
- 
- 	if (dev->rawdescriptors) {
--		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
-+		for (i = 0; i < dev->descriptor.bNumConfigurations &&
-+				i < USB_MAXCONFIG; i++)
- 			kfree(dev->rawdescriptors[i]);
- 
- 		kfree(dev->rawdescriptors);
- 		dev->rawdescriptors = NULL;
- 	}
- 
--	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
-+	for (c = 0; c < dev->descriptor.bNumConfigurations &&
-+			c < USB_MAXCONFIG; c++) {
- 		struct usb_host_config *cf = &dev->config[c];
- 
- 		kfree(cf->string);
--		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
-+		for (i = 0; i < cf->desc.bNumInterfaces &&
-+				i < USB_MAXINTERFACES; i++) {
- 			if (cf->intf_cache[i])
- 				kref_put(&cf->intf_cache[i]->ref,
- 					  usb_release_interface_cache);
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index d95ae092f154..baa1510a5298 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -54,10 +54,11 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb, int brightness)
- 	if (err < 0)
- 		dev_err(pb->dev, "failed to enable power supply\n");
- 
-+	pwm_enable(pb->pwm);
-+
- 	if (pb->enable_gpio)
- 		gpiod_set_value_cansleep(pb->enable_gpio, 1);
- 
--	pwm_enable(pb->pwm);
- 	pb->enabled = true;
- }
- 
-@@ -66,12 +67,12 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
- 	if (!pb->enabled)
- 		return;
- 
--	pwm_config(pb->pwm, 0, pb->period);
--	pwm_disable(pb->pwm);
--
- 	if (pb->enable_gpio)
- 		gpiod_set_value_cansleep(pb->enable_gpio, 0);
- 
-+	pwm_config(pb->pwm, 0, pb->period);
-+	pwm_disable(pb->pwm);
-+
- 	regulator_disable(pb->power_supply);
- 	pb->enabled = false;
- }
-diff --git a/fs/dcache.c b/fs/dcache.c
-index 29c0286bd638..05bad55352bb 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -1522,7 +1522,7 @@ static void check_and_drop(void *_data)
- {
- 	struct detach_data *data = _data;
- 
--	if (!data->mountpoint && !data->select.found)
-+	if (!data->mountpoint && list_empty(&data->select.dispose))
- 		__d_drop(data->select.start);
- }
- 
-@@ -1564,17 +1564,15 @@ void d_invalidate(struct dentry *dentry)
- 
- 		d_walk(dentry, &data, detach_and_collect, check_and_drop);
- 
--		if (data.select.found)
-+		if (!list_empty(&data.select.dispose))
- 			shrink_dentry_list(&data.select.dispose);
-+		else if (!data.mountpoint)
-+			return;
- 
- 		if (data.mountpoint) {
- 			detach_mounts(data.mountpoint);
- 			dput(data.mountpoint);
- 		}
--
--		if (!data.mountpoint && !data.select.found)
--			break;
--
- 		cond_resched();
- 	}
- }
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index f97611171023..4b7cc1af03a0 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -391,7 +391,7 @@ static inline void ext4_update_inode_fsync_trans(handle_t *handle,
- {
- 	struct ext4_inode_info *ei = EXT4_I(inode);
- 
--	if (ext4_handle_valid(handle)) {
-+	if (ext4_handle_valid(handle) && !is_handle_aborted(handle)) {
- 		ei->i_sync_tid = handle->h_transaction->t_tid;
- 		if (datasync)
- 			ei->i_datasync_tid = handle->h_transaction->t_tid;
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index 08fca4add1e2..fe76d0957a1f 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -79,7 +79,7 @@ ext4_unaligned_aio(struct inode *inode, struct iov_iter *from, loff_t pos)
- 	struct super_block *sb = inode->i_sb;
- 	int blockmask = sb->s_blocksize - 1;
- 
--	if (pos >= i_size_read(inode))
-+	if (pos >= ALIGN(i_size_read(inode), sb->s_blocksize))
- 		return 0;
- 
- 	if ((pos | iov_iter_alignment(from)) & blockmask)
-diff --git a/fs/ext4/indirect.c b/fs/ext4/indirect.c
-index 58229c1b4a3d..14007e621d2a 100644
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1385,10 +1385,14 @@ int ext4_ind_remove_space(handle_t *handle, struct inode *inode,
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
-+			while (partial > chain) {
-+				BUFFER_TRACE(partial->bh, "call brelse");
-+				brelse(partial->bh);
-+			}
-+			while (partial2 > chain2) {
-+				BUFFER_TRACE(partial2->bh, "call brelse");
-+				brelse(partial2->bh);
-+			}
- 			return 0;
- 		}
- 
-diff --git a/fs/udf/truncate.c b/fs/udf/truncate.c
-index 42b8c57795cb..c6ce7503a329 100644
---- a/fs/udf/truncate.c
-+++ b/fs/udf/truncate.c
-@@ -260,6 +260,9 @@ void udf_truncate_extents(struct inode *inode)
- 			epos.block = eloc;
- 			epos.bh = udf_tread(sb,
- 					udf_get_lb_pblock(sb, &eloc, 0));
-+			/* Error reading indirect block? */
-+			if (!epos.bh)
-+				return;
- 			if (elen)
- 				indirect_ext_len =
- 					(elen + sb->s_blocksize - 1) >>
-diff --git a/include/linux/ceph/libceph.h b/include/linux/ceph/libceph.h
-index a8a574897d3c..fe757514feb1 100644
---- a/include/linux/ceph/libceph.h
-+++ b/include/linux/ceph/libceph.h
-@@ -276,6 +276,8 @@ extern void ceph_destroy_client(struct ceph_client *client);
- extern int __ceph_open_session(struct ceph_client *client,
- 			       unsigned long started);
- extern int ceph_open_session(struct ceph_client *client);
-+int ceph_wait_for_latest_osdmap(struct ceph_client *client,
-+				unsigned long timeout);
- 
- /* pagevec.c */
- extern void ceph_release_page_vector(struct page **pages, int num_pages);
-diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
-index 197a30d221e9..146054ceea8e 100644
---- a/include/net/inet_connection_sock.h
-+++ b/include/net/inet_connection_sock.h
-@@ -289,11 +289,6 @@ static inline int inet_csk_reqsk_queue_len(const struct sock *sk)
- 	return reqsk_queue_len(&inet_csk(sk)->icsk_accept_queue);
- }
- 
--static inline int inet_csk_reqsk_queue_young(const struct sock *sk)
--{
--	return reqsk_queue_len_young(&inet_csk(sk)->icsk_accept_queue);
--}
--
- static inline int inet_csk_reqsk_queue_is_full(const struct sock *sk)
- {
- 	return inet_csk_reqsk_queue_len(sk) >= sk->sk_max_ack_backlog;
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 30fe0432c46d..2e766ffff2cb 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -3110,6 +3110,10 @@ int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
- {
- 	u32 uval, uninitialized_var(nval), mval;
- 
-+	/* Futex address must be 32bit aligned */
-+	if ((((unsigned long)uaddr) % sizeof(*uaddr)) != 0)
-+		return -1;
-+
- retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 26fc428476b9..d5b779d7e79f 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3446,6 +3446,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	unsigned int depth;
- 	int i;
- 
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
-diff --git a/lib/int_sqrt.c b/lib/int_sqrt.c
-index 1ef4cc344977..1afb545a37c5 100644
---- a/lib/int_sqrt.c
-+++ b/lib/int_sqrt.c
-@@ -22,6 +22,9 @@ unsigned long int_sqrt(unsigned long x)
- 		return x;
- 
- 	m = 1UL << (BITS_PER_LONG - 2);
-+	while (m > x)
-+		m >>= 2;
-+
- 	while (m != 0) {
- 		b = y + m;
- 		y >>= 1;
-diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-index c88a6007e643..ca1836941f3c 100644
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -826,8 +826,6 @@ static int hci_sock_release(struct socket *sock)
- 	if (!sk)
- 		return 0;
- 
--	hdev = hci_pi(sk)->hdev;
--
- 	switch (hci_pi(sk)->channel) {
- 	case HCI_CHANNEL_MONITOR:
- 		atomic_dec(&monitor_promisc);
-@@ -849,6 +847,7 @@ static int hci_sock_release(struct socket *sock)
- 
- 	bt_sock_unlink(&hci_sk_list, sk);
- 
-+	hdev = hci_pi(sk)->hdev;
- 	if (hdev) {
- 		if (hci_pi(sk)->channel == HCI_CHANNEL_USER) {
- 			/* When releasing an user channel exclusive access,
-diff --git a/net/ceph/ceph_common.c b/net/ceph/ceph_common.c
-index 464e88599b9d..bf0294cf4d22 100644
---- a/net/ceph/ceph_common.c
-+++ b/net/ceph/ceph_common.c
-@@ -699,7 +699,6 @@ int __ceph_open_session(struct ceph_client *client, unsigned long started)
- }
- EXPORT_SYMBOL(__ceph_open_session);
- 
--
- int ceph_open_session(struct ceph_client *client)
- {
- 	int ret;
-@@ -715,6 +714,23 @@ int ceph_open_session(struct ceph_client *client)
- }
- EXPORT_SYMBOL(ceph_open_session);
- 
-+int ceph_wait_for_latest_osdmap(struct ceph_client *client,
-+				unsigned long timeout)
-+{
-+	u64 newest_epoch;
-+	int ret;
-+
-+	ret = ceph_monc_get_version(&client->monc, "osdmap", &newest_epoch);
-+	if (ret)
-+		return ret;
-+
-+	if (client->osdc.osdmap->epoch >= newest_epoch)
-+		return 0;
-+
-+	ceph_osdc_maybe_request_map(&client->osdc);
-+	return ceph_monc_wait_osdmap(&client->monc, newest_epoch, timeout);
-+}
-+EXPORT_SYMBOL(ceph_wait_for_latest_osdmap);
- 
- static int __init init_ceph_lib(void)
- {
-diff --git a/net/ceph/mon_client.c b/net/ceph/mon_client.c
-index 500481003de4..288c1fcbcdf6 100644
---- a/net/ceph/mon_client.c
-+++ b/net/ceph/mon_client.c
-@@ -914,6 +914,15 @@ int ceph_monc_blacklist_add(struct ceph_mon_client *monc,
- 	mutex_unlock(&monc->mutex);
- 
- 	ret = wait_generic_request(req);
-+	if (!ret)
-+		/*
-+		 * Make sure we have the osdmap that includes the blacklist
-+		 * entry.  This is needed to ensure that the OSDs pick up the
-+		 * new blacklist before processing any future requests from
-+		 * this client.
-+		 */
-+		ret = ceph_wait_for_latest_osdmap(monc->client, 0);
-+
- out:
- 	put_generic_request(req);
- 	return ret;
-diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-index 28ad6f187e19..1d6d3aaa8c3d 100644
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -596,13 +596,7 @@ int dccp_v4_conn_request(struct sock *sk, struct sk_buff *skb)
- 	if (inet_csk_reqsk_queue_is_full(sk))
- 		goto drop;
- 
--	/*
--	 * Accept backlog is full. If we have already queued enough
--	 * of warm entries in syn queue, drop request. It is better than
--	 * clogging syn queue with openreqs with exponentially increasing
--	 * timeout.
--	 */
--	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1)
-+	if (sk_acceptq_is_full(sk))
- 		goto drop;
- 
- 	req = inet_reqsk_alloc(&dccp_request_sock_ops, sk, true);
-diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-index 6cbcf399d22b..93c706172f40 100644
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -328,7 +328,7 @@ static int dccp_v6_conn_request(struct sock *sk, struct sk_buff *skb)
- 	if (inet_csk_reqsk_queue_is_full(sk))
- 		goto drop;
- 
--	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1)
-+	if (sk_acceptq_is_full(sk))
- 		goto drop;
- 
- 	req = inet_reqsk_alloc(&dccp6_request_sock_ops, sk, true);
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 48fe63c4fe24..cd4f13dda49e 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6374,13 +6374,7 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
- 			goto drop;
- 	}
- 
--
--	/* Accept backlog is full. If we have already queued enough
--	 * of warm entries in syn queue, drop request. It is better than
--	 * clogging syn queue with openreqs with exponentially increasing
--	 * timeout.
--	 */
--	if (sk_acceptq_is_full(sk) && inet_csk_reqsk_queue_young(sk) > 1) {
-+	if (sk_acceptq_is_full(sk)) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_LISTENOVERFLOWS);
- 		goto drop;
- 	}
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index c6b046ddefdd..1b5e217d1bb2 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3004,6 +3004,7 @@ static void hda_call_codec_resume(struct hda_codec *codec)
- 		hda_jackpoll_work(&codec->jackpoll_work.work);
- 	else
- 		snd_hda_jack_report_sync(codec);
-+	codec->core.dev.power.power_state = PMSG_ON;
- 	atomic_dec(&codec->core.in_pm);
- }
- 
-@@ -3036,10 +3037,62 @@ static int hda_codec_runtime_resume(struct device *dev)
- }
- #endif /* CONFIG_PM */
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int hda_codec_force_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	/* The get/put pair below enforces the runtime resume even if the
-+	 * device hasn't been used at suspend time.  This trick is needed to
-+	 * update the jack state change during the sleep.
-+	 */
-+	pm_runtime_get_noresume(dev);
-+	ret = pm_runtime_force_resume(dev);
-+	pm_runtime_put(dev);
-+	return ret;
-+}
-+
-+static int hda_codec_pm_suspend(struct device *dev)
-+{
-+	dev->power.power_state = PMSG_SUSPEND;
-+	return pm_runtime_force_suspend(dev);
-+}
-+
-+static int hda_codec_pm_resume(struct device *dev)
-+{
-+	dev->power.power_state = PMSG_RESUME;
-+	return hda_codec_force_resume(dev);
-+}
-+
-+static int hda_codec_pm_freeze(struct device *dev)
-+{
-+	dev->power.power_state = PMSG_FREEZE;
-+	return pm_runtime_force_suspend(dev);
-+}
-+
-+static int hda_codec_pm_thaw(struct device *dev)
-+{
-+	dev->power.power_state = PMSG_THAW;
-+	return hda_codec_force_resume(dev);
-+}
-+
-+static int hda_codec_pm_restore(struct device *dev)
-+{
-+	dev->power.power_state = PMSG_RESTORE;
-+	return hda_codec_force_resume(dev);
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
- /* referred in hda_bind.c */
- const struct dev_pm_ops hda_codec_driver_pm = {
--	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
--				pm_runtime_force_resume)
-+#ifdef CONFIG_PM_SLEEP
-+	.suspend = hda_codec_pm_suspend,
-+	.resume = hda_codec_pm_resume,
-+	.freeze = hda_codec_pm_freeze,
-+	.thaw = hda_codec_pm_thaw,
-+	.poweroff = hda_codec_pm_suspend,
-+	.restore = hda_codec_pm_restore,
-+#endif /* CONFIG_PM_SLEEP */
- 	SET_RUNTIME_PM_OPS(hda_codec_runtime_suspend, hda_codec_runtime_resume,
- 			   NULL)
- };
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e128d1c71c30..3ff025b64527 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2132,9 +2132,10 @@ static void cleanup(struct objtool_file *file)
- 	elf_close(file->elf);
- }
- 
-+static struct objtool_file file;
-+
- int check(const char *_objname, bool orc)
- {
--	struct objtool_file file;
- 	int ret, warnings = 0;
- 
- 	objname = _objname;
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    ab8bba4e Add linux-next specific files for 20190326
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=147da22f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8b5e4ab01fbe59f3
+dashboard link: https://syzkaller.appspot.com/bug?extid=c70685d9eac9589eaffc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c70685d9eac9589eaffc@syzkaller.appspotmail.com
+
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	1-...!: (10499 ticks this GP) idle=4d6/1/0x4000000000000002  
+softirq=15531/15535 fqs=1
+rcu: 	 (t=10500 jiffies g=12661 q=236)
+rcu: rcu_preempt kthread starved for 10498 jiffies! g12661 f0x0  
+RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     R  running task    29176    10      2 0x80000000
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x817/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1971 [inline]
+  rcu_gp_kthread+0x962/0x17b0 kernel/rcu/tree.c:2128
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+NMI backtrace for cpu 1
+CPU: 1 PID: 10138 Comm: syz-executor.4 Not tainted 5.1.0-rc2-next-20190326  
+#11
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree.c:1223
+  print_cpu_stall kernel/rcu/tree.c:1360 [inline]
+  check_cpu_stall kernel/rcu/tree.c:1434 [inline]
+  rcu_pending kernel/rcu/tree.c:3103 [inline]
+  rcu_sched_clock_irq.cold+0x500/0xa4a kernel/rcu/tree.c:2544
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:161
+  tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1272
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x33e/0xde0 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1035 [inline]
+  smp_apic_timer_interrupt+0x120/0x570 arch/x86/kernel/apic/apic.c:1060
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+  </IRQ>
+RIP: 0010:bpf_prog_d4faa897062613d4+0x534/0x1000
+Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc  
+cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 55 <48> 89 e5 48 81  
+ec 28 00 00 00 48 83 ed 28 48 89 5d 00 4c 89 6d 08
+RSP: 0018:ffff88804e95fac0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: ffffffffa0008533 RBX: ffff88804e95fba8 RCX: ffffc9000e663000
+RDX: 0000000000040000 RSI: ffffc90001965038 RDI: ffff88804e95fc68
+RBP: ffff88804e95fbd0 R08: ffff888096eda6c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: 00000000ffffffff R14: ffffc90001965000 R15: 0000000003d7c302
+  bpf_prog_test_run_xdp+0x24f/0x4c0 net/bpf/test_run.c:235
+  bpf_prog_test_run kernel/bpf/syscall.c:1969 [inline]
+  __do_sys_bpf+0x15c2/0x3e50 kernel/bpf/syscall.c:2728
+  __se_sys_bpf kernel/bpf/syscall.c:2672 [inline]
+  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2672
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458209
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f74d2a2dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458209
+RDX: 0000000000000028 RSI: 0000000020000240 RDI: 000000000000000a
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f74d2a2e6d4
+R13: 00000000004be3c5 R14: 00000000004cea20 R15: 00000000ffffffff
+net_ratelimit: 2 callbacks suppressed
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+protocol 88fb is buggy, dev hsr_slave_0
+protocol 88fb is buggy, dev hsr_slave_1
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
