@@ -2,130 +2,142 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6EAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE52C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8839E206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6Zs5WVm"
+	by mail.kernel.org (Postfix) with ESMTP id 49CB7206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbfC0PPK (ORCPT
+        id S1729333AbfC0PPW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 11:15:10 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40784 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbfC0PPK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 11:15:10 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b11so3457091plr.7;
-        Wed, 27 Mar 2019 08:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b3+1IHopH84D/nrpmyaF02B+wdE/nIwmLo+NmobSkq8=;
-        b=D6Zs5WVmJMSNO0hy+zAx7r4sycG76HBywte/wfDNwG+Vg33oOMaZcx/mYPLKMB4NxO
-         XQpT5dJBvlztrtwoXfI9Psz8KaSJMX9NaqT2GhsEpjleyzA3IvLHaI/J2NTCtps3Aju9
-         jvCAEiuwD2kNT8+SVRA8v7RZB2fjl6fijMt3Yjl0LW4GJQa/6ZFSKFq9nkOGJ1la4dYa
-         BgK8O2xOZYZXtYfU0j2CzAfzPvT8XLSQCuXz9894UbzatAQncMie+nbBl3t5ZevQl8iJ
-         DbnBrGQRA9nUKei2Kfxk8QxdhGrzkDYj/6yOC1XX393wvuAOmey4QUFCNyqugCe0bL+k
-         wstw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b3+1IHopH84D/nrpmyaF02B+wdE/nIwmLo+NmobSkq8=;
-        b=DStU1xxw7WTFg6u7He9MsHRndbX3A0ewiw8BqD0gkrcplhnndFlkMqCpT1iLm8tNXC
-         yL8tUBnnOtn3eesn69QWE2jubodM2So2llsAFVsgjqp0Pcm+CcYVq8LdwKoO8EUYptU0
-         3P9tjYPF/eGpb+eozzDz0dkUeLhlpmDPbZ43vtqagPWfL0W06RzZBSZOOk0KYoLGXjKg
-         9H2i0zXAaTnPcrpESClvHesvtWIZz2twCud3p5lzPDF9TSoZl67vICUYUnX9BGrKuuZ1
-         HNk0L/isLh8hMAGk7IHUZ75zw1EUis34tind+Gd1ynlJxu5J4aznlFfno9+MVQqqKLvd
-         CpFg==
-X-Gm-Message-State: APjAAAXPiFbO0S8XsdYl8ge2Dhn1gCDHKjZWgW8Q3YYZay75ju+IJTZx
-        Zwz8QAhyDQSo40pg1XGsdl4=
-X-Google-Smtp-Source: APXvYqxnx8gTx/W7ZYd0mBsiadwg5eMhF24yZ+BKwc3TbYSzt7AWJsIvoiIn03U4JUkci7I5riiUBQ==
-X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr25873648plo.328.1553699709074;
-        Wed, 27 Mar 2019 08:15:09 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::ca40])
-        by smtp.gmail.com with ESMTPSA id u17sm3126733pfn.19.2019.03.27.08.15.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 08:15:08 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 08:15:05 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Luca Boccassi <bluca@debian.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
-Message-ID: <20190327151503.5pdaqiwb7ugm3ly4@ast-mbp>
-References: <20190327091437.68ec6903@canb.auug.org.au>
- <20190327015623.ur46t5gdmraagi2q@ast-mbp>
- <df699947253913a7e572fd1252b99e594431e261.camel@debian.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 27 Mar 2019 11:15:22 -0400
+Received: from prv1-mh.provo.novell.com ([137.65.248.33]:42282 "EHLO
+        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbfC0PPV (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
+        Wed, 27 Mar 2019 11:15:21 -0400
+Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
+        with Novell_GroupWise; Wed, 27 Mar 2019 09:15:21 -0600
+Message-Id: <5C9B93870200007800222289@prv1-mh.provo.novell.com>
+X-Mailer: Novell GroupWise Internet Agent 18.1.0 
+Date:   Wed, 27 Mar 2019 09:15:19 -0600
+From:   "Jan Beulich" <JBeulich@suse.com>
+To:     <mingo@elte.hu>, <tglx@linutronix.de>, <hpa@zytor.com>
+Cc:     "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        "Juergen Gross" <jgross@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 RESEND] x86: modernize sync_bitops.h
+References: <5B30C2C302000078001CD6D1@prv1-mh.provo.novell.com>
+ <5B30C2C302000000000FA99B@prv1-mh.provo.novell.com>
+ <5B30C2C302000078001FE5A0@prv1-mh.provo.novell.com>
+ <5BF52F4D02000000001006ED@prv1-mh.provo.novell.com>
+ <5BF52F4D020000780022227E@prv1-mh.provo.novell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Content-Disposition: inline
-In-Reply-To: <df699947253913a7e572fd1252b99e594431e261.camel@debian.org>
-User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 09:26:02AM +0000, Luca Boccassi wrote:
-> On Tue, 2019-03-26 at 18:56 -0700, Alexei Starovoitov wrote:
-> > On Wed, Mar 27, 2019 at 09:14:37AM +1100, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Today's linux-next merge of the bpf-next tree got a conflict in:
-> > > 
-> > >   tools/lib/bpf/Makefile
-> > > 
-> > > between commit:
-> > > 
-> > >   1d382264d911 ("bpf, libbpf: fix version info and add it to shared
-> > > object")
-> > > 
-> > > from the net tree and commit:
-> > > 
-> > >   60e4786e229d ("tools/bpf: generate pkg-config file for libbpf")
-> > > 
-> > > from the bpf-next tree.
-> > > 
-> > > I fixed it up (see below) and can carry the fix as necessary. This
-> > > is now fixed as far as linux-next is concerned, but any non trivial
-> > > conflicts should be mentioned to your upstream maintainer when your
-> > > tree
-> > > is submitted for merging.  You may also want to consider
-> > > cooperating
-> > > with the maintainer of the conflicting tree to minimise any
-> > > particularly
-> > > complex conflicts.
-> > 
-> > argh. that's a heavy conflict.
-> > Since that patch was at the top of the bpf-next I removed it for now
-> > and will re-apply when bpf-next gets merged cleanly into net-next and
-> > we bring back net changes into bpf-next. Sorry Luca.
-> 
-> No worries - for the next time, should I have based the patch on net-
-> next rather than bpf-next?
+Add missing insn suffixes and use rmwcc.h just like was (more or less)
+recently done for bitops.h as well.
 
-new bpf related features -> bpf-next tree
-bpf bugfixes -> bpf tree
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+---
+v2: Re-base over rmwcc.h changes.
+---
+ arch/x86/include/asm/sync_bitops.h |   31 +++++++++----------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
 
-Linus hasn't pulled Dave's PR yet: https://patchwork.ozlabs.org/patch/1066321/
-We need these fixes to land his tree first,
-then get propagated into net-next and then bpf-next will get them as well.
-Sorry for this unfortunate delay.
-This lib/bpf/Makefile conflict is not the only one we're waiting for.
-There are verifier and other libbpf fixes in there.
+--- a/arch/x86/include/asm/sync_bitops.h
++++ b/arch/x86/include/asm/sync_bitops.h
+@@ -14,6 +14,8 @@
+  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
+  */
+ 
++#include <asm/rmwcc.h>
++
+ #define ADDR (*(volatile long *)addr)
+ 
+ /**
+@@ -29,7 +31,7 @@
+  */
+ static inline void sync_set_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("lock; bts %1,%0"
++	asm volatile("lock; " __ASM_SIZE(bts) " %1,%0"
+ 		     : "+m" (ADDR)
+ 		     : "Ir" (nr)
+ 		     : "memory");
+@@ -47,7 +49,7 @@ static inline void sync_set_bit(long nr,
+  */
+ static inline void sync_clear_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("lock; btr %1,%0"
++	asm volatile("lock; " __ASM_SIZE(btr) " %1,%0"
+ 		     : "+m" (ADDR)
+ 		     : "Ir" (nr)
+ 		     : "memory");
+@@ -64,7 +66,7 @@ static inline void sync_clear_bit(long n
+  */
+ static inline void sync_change_bit(long nr, volatile unsigned long *addr)
+ {
+-	asm volatile("lock; btc %1,%0"
++	asm volatile("lock; " __ASM_SIZE(btc) " %1,%0"
+ 		     : "+m" (ADDR)
+ 		     : "Ir" (nr)
+ 		     : "memory");
+@@ -78,14 +80,9 @@ static inline void sync_change_bit(long
+  * This operation is atomic and cannot be reordered.
+  * It also implies a memory barrier.
+  */
+-static inline int sync_test_and_set_bit(long nr, volatile unsigned long *addr)
++static inline bool sync_test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
+-	unsigned char oldbit;
+-
+-	asm volatile("lock; bts %2,%1\n\tsetc %0"
+-		     : "=qm" (oldbit), "+m" (ADDR)
+-		     : "Ir" (nr) : "memory");
+-	return oldbit;
++	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(bts), *addr, c, "Ir", nr);
+ }
+ 
+ /**
+@@ -98,12 +95,7 @@ static inline int sync_test_and_set_bit(
+  */
+ static inline int sync_test_and_clear_bit(long nr, volatile unsigned long *addr)
+ {
+-	unsigned char oldbit;
+-
+-	asm volatile("lock; btr %2,%1\n\tsetc %0"
+-		     : "=qm" (oldbit), "+m" (ADDR)
+-		     : "Ir" (nr) : "memory");
+-	return oldbit;
++	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btr), *addr, c, "Ir", nr);
+ }
+ 
+ /**
+@@ -116,12 +108,7 @@ static inline int sync_test_and_clear_bi
+  */
+ static inline int sync_test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
+-	unsigned char oldbit;
+-
+-	asm volatile("lock; btc %2,%1\n\tsetc %0"
+-		     : "=qm" (oldbit), "+m" (ADDR)
+-		     : "Ir" (nr) : "memory");
+-	return oldbit;
++	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btc), *addr, c, "Ir", nr);
+ }
+ 
+ #define sync_test_bit(nr, addr) test_bit(nr, addr)
+
+
+
 
