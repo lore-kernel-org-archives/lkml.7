@@ -2,113 +2,106 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F39C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E13EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF952075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553677265;
-	bh=5W/UBvbEs0k+d15uktBNUYnCva1DKMQQWMHXop7I5P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Onb7fRbmyqZgs3GdNTOkE2TS51Nu9SwN97dZTQltsqBmHOr+yiORfYLmoVY/aatp3
-	 yYnH1etdKNnseqE2FAtroAZKUarKIN/fY0kCZFhFmIkbHstmxB5f8PU03M1Sr3lzmQ
-	 2vRE9pxDlPFjhtnE780i8MPLO6juBPWxgKatnW44=
+	by mail.kernel.org (Postfix) with ESMTP id 16F272075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbfC0JBE (ORCPT
+        id S1732470AbfC0JDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:01:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48914 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbfC0JBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:01:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 898C5AC86;
-        Wed, 27 Mar 2019 09:01:01 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 10:01:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190327090100.GD11927@dhcp22.suse.cz>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190326135837.GP28406@dhcp22.suse.cz>
- <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
- <20190326183731.GV28406@dhcp22.suse.cz>
- <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 27 Mar 2019 05:03:02 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60699 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfC0JDC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:03:02 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1h94SZ-0000QZ-Na; Wed, 27 Mar 2019 09:03:00 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     axboe@kernel.dk
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] libata: Return correct rc status in sata_pmp_eh_recover_pm() pwhen ATA_DFLAG_DETACH is set
+Date:   Wed, 27 Mar 2019 17:02:54 +0800
+Message-Id: <20190327090254.10365-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 19:58:56, Yang Shi wrote:
-> 
-> 
-> On 3/26/19 11:37 AM, Michal Hocko wrote:
-> > On Tue 26-03-19 11:33:17, Yang Shi wrote:
-> > > 
-> > > On 3/26/19 6:58 AM, Michal Hocko wrote:
-> > > > On Sat 23-03-19 12:44:25, Yang Shi wrote:
-> > > > > With Dave Hansen's patches merged into Linus's tree
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308fd01d9fb33a16f64d2fd95f8830a4
-> > > > > 
-> > > > > PMEM could be hot plugged as NUMA node now. But, how to use PMEM as NUMA node
-> > > > > effectively and efficiently is still a question.
-> > > > > 
-> > > > > There have been a couple of proposals posted on the mailing list [1] [2].
-> > > > > 
-> > > > > The patchset is aimed to try a different approach from this proposal [1]
-> > > > > to use PMEM as NUMA nodes.
-> > > > > 
-> > > > > The approach is designed to follow the below principles:
-> > > > > 
-> > > > > 1. Use PMEM as normal NUMA node, no special gfp flag, zone, zonelist, etc.
-> > > > > 
-> > > > > 2. DRAM first/by default. No surprise to existing applications and default
-> > > > > running. PMEM will not be allocated unless its node is specified explicitly
-> > > > > by NUMA policy. Some applications may be not very sensitive to memory latency,
-> > > > > so they could be placed on PMEM nodes then have hot pages promote to DRAM
-> > > > > gradually.
-> > > > Why are you pushing yourself into the corner right at the beginning? If
-> > > > the PMEM is exported as a regular NUMA node then the only difference
-> > > > should be performance characteristics (module durability which shouldn't
-> > > > play any role in this particular case, right?). Applications which are
-> > > > already sensitive to memory access should better use proper binding already.
-> > > > Some NUMA topologies might have quite a large interconnect penalties
-> > > > already. So this doesn't sound like an argument to me, TBH.
-> > > The major rationale behind this is we assume the most applications should be
-> > > sensitive to memory access, particularly for meeting the SLA. The
-> > > applications run on the machine may be agnostic to us, they may be sensitive
-> > > or non-sensitive. But, assuming they are sensitive to memory access sounds
-> > > safer from SLA point of view. Then the "cold" pages could be demoted to PMEM
-> > > nodes by kernel's memory reclaim or other tools without impairing the SLA.
-> > > 
-> > > If the applications are not sensitive to memory access, they could be bound
-> > > to PMEM or allowed to use PMEM (nice to have allocation on DRAM) explicitly,
-> > > then the "hot" pages could be promoted to DRAM.
-> > Again, how is this different from NUMA in general?
-> 
-> It is still NUMA, users still can see all the NUMA nodes.
+During system resume from suspend, this can be observed on ASM1062 PMP
+controller:
+<6>[12007.593358] ata10.01: SATA link down (SStatus 0 SControl 330)
+<6>[12007.593469] ata10.02: hard resetting link
+<6>[12007.908353] ata10.02: SATA link down (SStatus 0 SControl 330)
+<6>[12007.911149] ata10.00: configured for UDMA/133
+<0>[12007.972508] Kernel panic - not syncing: stack-protector: Kernel
+stack is corrupted in: sata_pmp_eh_recover+0xa2b/0xa40
+<0>[12007.972508]
+<4>[12007.972515] CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
+4.15.0-46-generic #49-Ubuntu
+<4>[12007.972517] Hardware name: System manufacturer System Product
+Name/A320M-C, BIOS 1001 12/10/2017
+<4>[12007.972518] Call Trace:
+<4>[12007.972525] dump_stack+0x63/0x8b
+<4>[12007.972530] panic+0xe4/0x244
+<4>[12007.972533] ? sata_pmp_eh_recover+0xa2b/0xa40
+<4>[12007.972536] __stack_chk_fail+0x19/0x20
+<4>[12007.972538] sata_pmp_eh_recover+0xa2b/0xa40
+<4>[12007.972543] ? ahci_do_softreset+0x260/0x260 [libahci]
+<4>[12007.972545] ? ahci_do_hardreset+0x140/0x140 [libahci]
+<4>[12007.972547] ? ata_phys_link_offline+0x60/0x60
+<4>[12007.972549] ? ahci_stop_engine+0xc0/0xc0 [libahci]
+<4>[12007.972552] sata_pmp_error_handler+0x22/0x30
+<4>[12007.972554] ahci_error_handler+0x45/0x80 [libahci]
+<4>[12007.972556] ata_scsi_port_error_handler+0x29b/0x770
+<4>[12007.972558] ? ata_scsi_cmd_error_handler+0x101/0x140
+<4>[12007.972559] ata_scsi_error+0x95/0xd0
+<4>[12007.972562] ? scsi_try_target_reset+0x90/0x90
+<4>[12007.972563] scsi_error_handler+0xd0/0x5b0
+<4>[12007.972566] kthread+0x121/0x140
+<4>[12007.972567] ? scsi_eh_get_sense+0x200/0x200
+<4>[12007.972569] ? kthread_create_worker_on_cpu+0x70/0x70
+<4>[12007.972572] ret_from_fork+0x22/0x40
+<0>[12007.972591] Kernel Offset: 0xcc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
-No, Linux NUMA implementation makes all numa nodes available by default
-and provides an API to opt-in for more fine tuning. What you are
-suggesting goes against that semantic and I am asking why. How is pmem
-NUMA node any different from any any other distant node in principle?
+Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
+set, sata_pmp_eh_recover() continues to run. During retry it triggers
+the stack protector.
+
+Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
+jump to pmp_fail directly.
+
+BugLink: https://bugs.launchpad.net/bugs/1821434
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/ata/libata-pmp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
+index 2ae1799f4992..51eeaea65833 100644
+--- a/drivers/ata/libata-pmp.c
++++ b/drivers/ata/libata-pmp.c
+@@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
+ 
+ 	if (dev->flags & ATA_DFLAG_DETACH) {
+ 		detach = 1;
++		rc = -ENODEV;
+ 		goto fail;
+ 	}
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
