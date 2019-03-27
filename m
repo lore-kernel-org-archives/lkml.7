@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A28C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194E2C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3098121738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE692177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709906;
-	bh=u2gYrfJBu25SovInffio7GBUBKv8Fo1qUfGtX/mMjKc=;
+	s=default; t=1553709910;
+	bh=G3lsaZVnsAn9stcRdD1TEO+6ZzGaalYkdpwWE+LwnXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lj1JQRspb88m4aBpcttV5JBFzJy5KBARShvbtGt3M3luLDUelthDfGyo0TKWBcsIF
-	 eT/tHlSn0dNQ/0Mmj4XMZEN+ehll+IjJPRu/D5sEINQBDTqe0QXNBiIk4J/umsp2jk
-	 LMTuuhirvRD/7Pa0FfbkM1BXtDb125MZE9nVTs0A=
+	b=rX7oCPoqwI4W+5LZui2jRiKGKp4c/wAZUmDpMEGBomYj05dEdf28iIXIYb1wjelMd
+	 3K34R8GcpxS39QV5Od+QLEYK2RdQ4TNiguF/mI+BLl8vfl3wZqr2Mzshs4fMg/+18o
+	 IVyNzFVtIsOcHAJ9GDQ0dOSeDIu/DAoYFlBWxf/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbfC0SFE (ORCPT
+        id S2387590AbfC0SFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387515AbfC0SE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:57 -0400
+        id S1731431AbfC0SFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3596621738;
-        Wed, 27 Mar 2019 18:04:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F15F217D9;
+        Wed, 27 Mar 2019 18:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709897;
-        bh=u2gYrfJBu25SovInffio7GBUBKv8Fo1qUfGtX/mMjKc=;
+        s=default; t=1553709899;
+        bh=G3lsaZVnsAn9stcRdD1TEO+6ZzGaalYkdpwWE+LwnXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zuuvnBgrwA2+kHchUr4d6L3r7asylkRf+7IFlKMKE4q1cb72WMiCMrZ26W6zNeoYV
-         m3dC2HvaHc8W+3+V39HA60SZVG/LsrS4ySOPRu2IIHo1vFlQNKd+V/b6MOlRTZIJNd
-         GR8FLOBpTsFf0MD2AXR/NmksdVTCOdEAFn4ioick=
+        b=dESOzM4VYyI3V4XOzBXs2Xpg7RrRF/XD7S56m4yQEzeBIyA1rcx2Li+dT4NE/HXBW
+         Ognayso9w1D60e/9RPnpBYaAHfrUGenY8mTX82UymaE7tzOefXF8mz8bA2SrZkiQvF
+         QgTrLVs/kVNP3B4Rc2eQvHnCs+VLWHp2tFH0LGwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 095/262] veth: Fix -Wformat-truncation
-Date:   Wed, 27 Mar 2019 13:59:10 -0400
-Message-Id: <20190327180158.10245-95-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 097/262] mlxsw: spectrum: Avoid -Wformat-truncation warnings
+Date:   Wed, 27 Mar 2019 13:59:12 -0400
+Message-Id: <20190327180158.10245-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -60,49 +59,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit abdf47aab4123ece48877cab4153db44fe4dc340 ]
+[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
 
-Provide a precision hint to snprintf() in order to eliminate a
--Wformat-truncation warning provided below. A maximum of 11 characters
-is allowed to reach a maximum of 32 - 1 characters given a possible
-maximum value of queues using up to UINT_MAX which occupies 10
-characters. Incidentally 11 is the number of characters for
-"xdp_packets" which is the largest string we append.
+Give precision identifiers to the two snprintf() formatting the priority
+and TC strings to avoid producing these two warnings:
 
-drivers/net/veth.c: In function 'veth_get_strings':
-drivers/net/veth.c:118:47: warning: '%s' directive output may be
-truncated writing up to 31 bytes into a region of size between 12 and 21
-[-Wformat-truncation=]
-     snprintf(p, ETH_GSTRING_LEN, "rx_queue_%u_%s",
-                                               ^~
-drivers/net/veth.c:118:5: note: 'snprintf' output between 12 and 52
-bytes into a destination of size 32
-     snprintf(p, ETH_GSTRING_LEN, "rx_queue_%u_%s",
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       i, veth_rq_stats_desc[j].desc);
-       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_prio_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
+directive output may be truncated writing between 1 and 3 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
+output between 3 and 36 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_prio_stats[i].str, prio);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_tc_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
+directive output may be truncated writing between 1 and 11 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
+output between 3 and 44 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_tc_stats[i].str, tc);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/veth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index f412ea1cef18..b203d1867959 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -115,7 +115,8 @@ static void veth_get_strings(struct net_device *dev, u32 stringset, u8 *buf)
- 		p += sizeof(ethtool_stats_keys);
- 		for (i = 0; i < dev->real_num_rx_queues; i++) {
- 			for (j = 0; j < VETH_RQ_STATS_LEN; j++) {
--				snprintf(p, ETH_GSTRING_LEN, "rx_queue_%u_%s",
-+				snprintf(p, ETH_GSTRING_LEN,
-+					 "rx_queue_%u_%.11s",
- 					 i, veth_rq_stats_desc[j].desc);
- 				p += ETH_GSTRING_LEN;
- 			}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index b65e274b02e9..cbdee5164be7 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2105,7 +2105,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
+ 	int i;
+ 
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
+ 		*p += ETH_GSTRING_LEN;
+ 	}
+@@ -2116,7 +2116,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
+ 	int i;
+ 
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
+ 		*p += ETH_GSTRING_LEN;
+ 	}
 -- 
 2.19.1
 
