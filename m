@@ -2,131 +2,196 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C367C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3274D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:22:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="fj2q6R2k"
+	by mail.kernel.org (Postfix) with ESMTP id 249FD20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553728986;
+	bh=PrmqpMfzrltuLaGCdjfRl8DBwx7XjCtT2crtDMEMEYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yFP4uXCuasI+pYDZGTGZCtRuE/Vo8X0tvE2hgYYBAD/pS5a8Wc5JLSSTmXz8hYcwP
+	 Bi41cxlrkEO9ixeZIUlGOc+03cBMN82MH/unxH81d/JyPBqVlIj+4OWpI1sworjFX9
+	 aNCOTkaGpoBGrobFZrsxVEnWnoXOXWW+6faOkaJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfC0XWW (ORCPT
+        id S1729153AbfC0XXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:22:22 -0400
-Received: from sonic302-28.consmr.mail.gq1.yahoo.com ([98.137.68.154]:46816
-        "EHLO sonic302-28.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbfC0XWW (ORCPT
+        Wed, 27 Mar 2019 19:23:04 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36119 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfC0XXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:22:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1553728941; bh=N1Y/xduTzQ6OCXrnnL0IaMKjTfMgIdc3bfsoLE+5rlg=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=fj2q6R2kHAt0j1d8EWDP9nKXw2cakpe+P6FdQcBU+DYmb4miOiT5loYR0Ny4SB1KESJrm92mDuS21RN3p0n0PmWc95fB4bLVugaOtanxuL72qTrKAfwG1wszyd94p50f1XN25Ydixiy2duoOivV6PsWNed9V5Q/YmnIRU9uT91vLp993bwSf6nUsEcq1w1AnqYU0qZk+gOJvft7MXoTUGshMQgVKnJLILCAsnV8e4cB8/QWd+WHv8T2GMUs3d8np2VOSMjGEDZlKFGzRFTal0Dno5NbGc0fmK8oqI6I7V1bw+Xu/E7riq2TgxOohZNTm/1S4cts9nMjeLeKr+1J5Mw==
-X-YMail-OSG: sSnwK4MVM1n_3LlM8eBw_W0JdHYIHM8dc8OWjwNKcf9EvIMDwsP3cv74VH3ol4B
- mI9LvJe7jm27oyFQoEu9EIurbPw3b3IgNHzD915x4AsTw.VTb5zpFCWaZnPYMomGFV0a99rx84Nt
- AtVozKluqfmw6wIXb7C7MERsvveF_XAjW7AUYSzl7sa6bnX515PnIVFIw9V2sfQKzSy73MgPjHpX
- WHvmP2AgUBXpRgJfBtT1zy0VBlCIHWWiZ_yTU09j34gHi50U2JKKs0ygcQoOdA8SzsexxZqgVcSw
- .4l.2XbKV6_xejPvQ0xIOXvoi0Lx_0HFjDFkCS.onV.qlK5T39VyV.9K_tae4K3NCI0VJ47iud0_
- GJ8VkaaQJdVC0uXvt2x8B0PerB9FSG0V8X91A3MEZJxOxF2Ctf7og_IF6v6p_MNnOTTQAwr5puSz
- 8fBAB2orY23hwwbPQyI8ATNMnsQaJAkPEX.OzfD7P3N.HSgIPYctoURCUWEM.DEag3ORrpWgQZm5
- 3.wpRRap1l24gG5nYat1lJvUtBYRWY437kWmig7RsozKmaBt6nH8PPvUGUtoF1SYNHJEJMVbCaqR
- ME2u.QgeXzbUdjpGFgofjmN372k8a0TZtNqeF4zI89X4DhqmucNQG7OOBXVoO34NyN5tLUVeHlNu
- 7YhBKZ6TM7RDj.__MaNZEMRslDdTD0g68GWOL8YJTt_riOczpbbjB4TXexVUXEtjwQDjkdGLgtjp
- viNoA1xz8jNKY0meoAmY2dhZZn3jVxw1jc71xrjz_iyE2ag5QuMizXqBrbjbsbHuwnEHaoHICyUN
- WZpbKRje0E_jIYSfNk5AnfRtn_Z7oVgyHRWHgUIAKH6FoSe4VIN4T7NB_LQCtzcDbgZOYgwSaloJ
- g451y016Y5pQKSpc7axo0Xff1e4HgNPLgSAdqs84VVBNmjm4NkI82LXlg2SPvmKPtrafXbSJkfrL
- BXWMBpBkaORzX.ypXyZ0SKscsAdFGxqx.gThYWwtT5t7FPpLknyU4nMzx3bS2Vzj_20a5ZfZkqY5
- DyK6_vlUQRontjc5UpJmJzYwhfYQBmlPOpfGmysPKGhSrpSUlUX3VVUsdplXcTP7X9MFebnMwn3L
- NB6cZfsX0Xdo6tg35z3r13ql4Da6tCEUUZlO7s1d_73sb7P0xIXx4tlq6VCifKd8W
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.gq1.yahoo.com with HTTP; Wed, 27 Mar 2019 23:22:21 +0000
-Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
-          by smtp411.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c47a114b913bbcdfe59eab58e290194c;
-          Wed, 27 Mar 2019 23:22:16 +0000 (UTC)
-Subject: Re: Linux 5.1-rc2
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
- <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
- <alpine.LRH.2.21.1903260607500.13529@namei.org>
- <8811b2e4-28e1-2f01-024b-fb7d0196483f@i-love.sakura.ne.jp>
- <CAGXu5jJZ1H1RFMFBxPsoBW+T17ya+50-d7-31Gr9ciRgpCOaDA@mail.gmail.com>
- <98289cd2-095a-f0cd-e405-887ecbba0030@i-love.sakura.ne.jp>
- <CAGXu5jKWECKxksJWPpCkBKG+wB26DhYK=nYBpuuoS+Pv9AsNwQ@mail.gmail.com>
- <e1f6f5a6-9fce-2e95-4593-79f1e836bac5@i-love.sakura.ne.jp>
- <CAGXu5jL0YzgQR_p9otyOX4+00a0i7Tfv9aLqauZFZs4-Kfjakg@mail.gmail.com>
- <ea75aace-a493-b2fa-1fef-d6ae76085c39@i-love.sakura.ne.jp>
- <d067619e-8c7f-94ec-a835-fc86d1b449e3@schaufler-ca.com>
- <366dcec3-1599-9e56-4660-44791e1c7a45@infradead.org>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <3bca3aa4-ee37-cd1d-448a-c2e8c4aee81a@schaufler-ca.com>
-Date:   Wed, 27 Mar 2019 16:22:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 27 Mar 2019 19:23:04 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o74so16605080ota.3;
+        Wed, 27 Mar 2019 16:23:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X9izbOMUwCRZa6WzDZaRDFv5zdrlITT7TLbKNQaKL5w=;
+        b=Px6d8zhP0LerNAB8wREjGV3R3XdyLUzA5EHzTSnVLVGej2nfeQtnSY8eLG1tXkwqQP
+         C6zpx0j13NeWLawuD88/Hq1336Fq/k+7XZxONZiP1Bd0wV1awxK02zDW/jX6GElpyW6b
+         Imqwp/wv6f8I3L+JdTBDAcmMbLqvvOslqCXdzUojGo+4mNPRextXvUgMVOkdiXzDHsdB
+         bFzvZJSUaLqBjYQm+jSNQEPuCwCPc3KepTugOhLIYwTJ6+x2Y1LQC4ecL4SIC9XUDnYe
+         bNQecKTt4KblTLG3DwwnBlXYpFTzrSC7PGnVBYHldNl7Fx8xUJNnqdJHL33uodRRtsg3
+         jucA==
+X-Gm-Message-State: APjAAAUycYkVRpcsIPSHSXjSBC8He0/9grtUIVZLnKHLb3ITfTqjI/B0
+        QQ8rXRMHGI2BYU/TdusFUw==
+X-Google-Smtp-Source: APXvYqxRxLfFmtCS9Atsb4CfYTnhkh1cjGl8kaUIj7Qb6oIaRyYlGzDqBXBdbCAHYIO3ovOPfUZztg==
+X-Received: by 2002:a05:6830:1248:: with SMTP id s8mr27615188otp.234.1553728983265;
+        Wed, 27 Mar 2019 16:23:03 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x89sm8824006ota.30.2019.03.27.16.23.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 16:23:01 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 18:23:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH 2/8] dt-bindings: remoteproc: add bindings for stm32
+ remote processor driver
+Message-ID: <20190327232301.GA2172@bogus>
+References: <1551795849-13672-1-git-send-email-fabien.dessenne@st.com>
+ <1551795849-13672-3-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-In-Reply-To: <366dcec3-1599-9e56-4660-44791e1c7a45@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551795849-13672-3-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/2019 3:55 PM, Randy Dunlap wrote:
-> On 3/27/19 3:23 PM, Casey Schaufler wrote:
->> On 3/27/2019 3:05 PM, Tetsuo Handa wrote:
->>> On 2019/03/28 6:43, Kees Cook wrote:
->>>>>> I don't see problems for an exclusive LSM user (AA, SELinux, Smack)
->>>>>> also initializing TOMOYO, though. It should be a no-op. Is there some
->>>>>> situation where this is not true?
->>>>> There should be no problem except some TOMOYO messages are printed.
->>>> Okay, so I should send my latest version of the patch to James? Or do
->>>> you explicitly want TOMOYO removed from all the CONFIG_LSM default
->>>> lines except when selected by CONFIG_DEFAULT_SECURITY_TOMOYO? (I worry
->>>> the latter will lead to less testing of the stacking.)
->>>>
->>> My approach is "opt-in" while your approach is "opt-out". And the problem
->>> here is that people might fail to change CONFIG_LSM from the default value
->>> to what they need. (And Jakub did not change CONFIG_LSM to reflect
->>> CONFIG_DEFAULT_SECURITY_APPARMOR from the old config.) Thus, I suggest
->>> "opt-in" approach; which includes up to only one legacy major LSM and allows
->>> people to change the default value to include multiple legacy major LSMs.
->>>
->>> You can propose your latest version. If SELinux/Smack/AppArmor people
->>> prefer "opt-out" approach, I'm fine with "opt-out" approach.
->> In the long haul we want people to use CONFIG_LSM to set their
->> list of modules. Providing a backward compatible CONFIG_DEFAULT_SECURITY_BLAH
->> makes some sense, but it's important that we encourage a mindset change.
->> Maybe with CONFIG_DEFAULT_SECURITY_LIST with a a full list, which uses the
->> value from CONFIG_LSM, and make it the default?
->>
-> Hi,
->
-> I'm still confused.  Does this mindset change include removing support of
-> SECURITY_DAC?
+On Tue, Mar 05, 2019 at 03:24:03PM +0100, Fabien Dessenne wrote:
+> Add the device tree bindings document for the stm32 remoteproc devices.
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  .../devicetree/bindings/remoteproc/stm32-rproc.txt | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> new file mode 100644
+> index 0000000..cc90c88
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+> @@ -0,0 +1,67 @@
+> +STMicroelectronics STM32 Remoteproc
+> +-----------------------------------
+> +This document defines the binding for the remoteproc component that loads and
+> +boots firmwares on the ST32MP family chipset.
+> +
+> +Required properties:
+> +- compatible:	Must be "st,stm32mp1-rproc"
 
-No.
+'rproc' is what this is called in the h/w manual?
 
->    If so, where was this discussed and decided?
+> +- reg:		Address ranges of the remote processor dedicated memories.
+> +		The parent node should provide an appropriate ranges property
+> +		for properly translating these into bus addresses.
+> +- resets:	Reference to a reset controller asserting the remote processor.
+> +- reset-names:	Must be "mcu_rst"
 
-linux-security-module@vger.kernel.org on threads related to security
-module stacking. It's easy to get the same result with a CONFIG_LSM
-that includes none of the SELinux, Smack, TOMOYO or AppArmor.
+-names is kind of pointless when there is only 1 entry.
 
-> And if so (again), that feels like enforcing some kind of policy in the kernel.
+> +- st,syscfg-holdboot: Reference to the system configuration which holds the
+> +		remote processor reset hold boot
+> +	1st cell: phandle of syscon block
+> +	2nd cell: register offset containing the hold boot setting
+> +	3rd cell: register bitmask for the hold boot field
+> +- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
+> +		zone mode
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the RCC trust zone mode setting
+> +	3rd cell: register bitmask for the RCC trust zone mode bit
+> +
+> +Optional properties:
+> +- interrupt-parent: phandle to the interrupt controller node.
 
-Again, not so. It's a change from "The not-more-the One Major Module" to
-"Whatever set of policies works for you". The NULL set is completely
-supported. The current flap is that it's more difficult to express doing
-things the old way. Kees and Tetsuo are hashing out how best to support
-old .confg files in support of automated tools.
+This is implied.
 
+> +- interrupts:	Should contain the watchdog interrupt
+> +- interrupt-names: Must be "wdg"
 
-> thanks.
+-names is kind of pointless when there is only 1 entry.
+
+> +- mboxes:	List of phandle and mailbox channel specifiers:
+
+How would one talk to the processor if this is optional?
+
+> +		- a channel (a) used to communicate through virtqueues with the
+> +		  remote proc.
+> +		  Bi-directional channel:
+> +		      - from local to remote = send message
+> +		      - from remote to local = send message ack
+> +		- a channel (b) working the opposite direction of channel (a)
+> +		- a channel (c) used by the local proc to notify the remote proc
+> +		  that it is about to be shut down.
+> +		  Mono-directional channel:
+
+Unidirectional
+
+> +		      - from local to remote, where ACK from the remote means
+> +		        that it is ready for shutdown
+> +- mbox-names:	This property is required if the mboxes property is used.
+> +		- must be "vq0" for channel (a)
+> +		- must be "vq1" for channel (b)
+> +		- must be "shutdown" for channel (c)
+> +- memory-region: list of phandles to the reserved memory regions associated with
+> +		the remoteproc device
+> +		(see ../reserved-memory/reserved-memory.txt)
+
+How many?
+
+> +- st,syscfg-pdds: Reference to the system configuration which holds the remote
+> +		processor deep sleep setting
+> +	1st cell: phandle to syscon block
+> +	2nd cell: register offset containing the deep sleep setting
+> +	3rd cell: register bitmask for the deep sleep bit
+> +- auto_boot:	If defined, when remoteproc is probed, it looks for a default
+> +		firmware and if it finds some, it loads the firmware and starts
+> +		the remote processor.
+
+How do you know what is and isn't default firmware? Seems like this 
+could be accomplished using the standard 'firmware-name' to specify what 
+firmware to load and boot.
+
+> +- recovery:	If defined, remoteproc enables the crash recovery process.
+
+Doesn't seem like a static DT property. This is a feature to enable or 
+something you set on boot to recover?
+
+> +
+> +Example:
+> +	m4_rproc: m4@0 {
+> +		compatible = "st,stm32mp1-rproc";
+> +		reg = <0x00000000 0x10000>,
+> +		      <0x10000000 0x40000>,
+> +		      <0x30000000 0x40000>;
+> +		resets = <&rcc MCU_R>;
+> +		reset-names = "mcu_rst";
+> +		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
+> +		st,syscfg-tz = <&rcc 0x000 0x1>;
+> +	};
+> -- 
+> 2.7.4
+> 
