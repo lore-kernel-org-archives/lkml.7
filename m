@@ -2,193 +2,140 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0428C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A2320811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB67206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbfC0EiE (ORCPT
+        id S1726257AbfC0ExK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 00:38:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725730AbfC0EiE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 00:38:04 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R4YhjZ093653
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 00:38:02 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfy7apbjn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 00:38:02 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 27 Mar 2019 04:38:00 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Mar 2019 04:37:57 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2R4buul54853724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 04:37:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2F8F11C052;
-        Wed, 27 Mar 2019 04:37:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C35111C04C;
-        Wed, 27 Mar 2019 04:37:56 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Mar 2019 04:37:56 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 780FAA00E2;
-        Wed, 27 Mar 2019 15:37:54 +1100 (AEDT)
-Subject: Re: [PATCH v2]  arch/powerpc: Rework local_paca to avoid LTO
- warnings
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>
-Date:   Wed, 27 Mar 2019 15:37:54 +1100
-In-Reply-To: <1553579424.0r39b9otz6.astroid@bobo.none>
-References: <20190313034208.13134-1-alastair@au1.ibm.com>
-         <20190314023125.10076-1-alastair@au1.ibm.com>
-         <1553579424.0r39b9otz6.astroid@bobo.none>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 27 Mar 2019 00:53:10 -0400
+Received: from mga14.intel.com ([192.55.52.115]:11951 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfC0ExK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 00:53:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 21:53:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,275,1549958400"; 
+   d="scan'208";a="332379504"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Mar 2019 21:53:07 -0700
+Date:   Wed, 27 Mar 2019 12:37:43 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
+Message-ID: <20190327043743.GA20968@hao-dev>
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-4-git-send-email-hao.wu@intel.com>
+ <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
+ <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
+ <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
+ <580c6c604d3915c105f076fc7f22ab5da98598fc.camel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032704-0008-0000-0000-000002D1F4F9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032704-0009-0000-0000-0000223E2439
-Message-Id: <8d8a97e145758b92c2760012373f5217877a035c.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=953 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903270031
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <580c6c604d3915c105f076fc7f22ab5da98598fc.camel@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 15:58 +1000, Nicholas Piggin wrote:
-> Alastair D'Silva's on March 14, 2019 12:31 pm:
-> > From: Alastair D'Silva <alastair@d-silva.org>
+On Tue, Mar 26, 2019 at 04:22:34PM -0500, Scott Wood wrote:
+> On Tue, 2019-03-26 at 14:33 -0500, Alan Tull wrote:
+> > On Mon, Mar 25, 2019 at 5:58 PM Scott Wood <swood@redhat.com> wrote:
 > > 
-> > When building an LTO kernel, the existing code generates warnings:
-> >     ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
-> >         ‘local_paca’ used for multiple global register variables
-> >      register struct paca_struct *local_paca asm("r13");
-> >                                   ^
-> >     ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
-> >         ‘local_paca’
-> 
-> Isn't this a bogus warning? It doesn't look like there's a way to 
-> define it any other way.
-
-There isn't any other way to define it as a global. However, the
-warning is legitimate.
-
-The compiler sees that there are multiple global register variables,
-all pointing at the same register.
-
-The compiler can only determine this when LTO is used, as otherwise it
-only sees the one in the current compilation unit, whicd disappears by
-the time the kernel is linked.
-
-> 
-> > This patch reworks local_paca into an inline getter & setter
-> > function,
-> > which addresses the warning.
+> > Hi Scott,
 > > 
-> > Changelog:
-> > V2
-> >   - Address whitespace issues
-> >   - keep new implementation close to where the old implementation
-> > was
+> > > On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
+> > > > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
+> > > > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
+> > > > > +
+> > > > > +#include <asm/fpu/api.h>
+> > > > > +
+> > > > > +static inline void copy512(void *src, void __iomem *dst)
+> > > > > +{
+> > > > > +   kernel_fpu_begin();
+> > > > > +
+> > > > > +   asm volatile("vmovdqu64 (%0), %%zmm0;"
+> > > > > +                "vmovntdq %%zmm0, (%1);"
+> > > > > +                :
+> > > > > +                : "r"(src), "r"(dst));
+> > > > > +
+> > > > > +   kernel_fpu_end();
+> > > > > +}
+> > > > 
+> > > > Shouldn't there be some sort of check that AVX512 is actually
+> > > > supported
+> > > > on the running system?
+> > > > 
+> > > > Also, src should be const, and the asm statement should have a memory
+> > > > clobber.
+
+Yes, I will fix this in the next version.
+
+> > > > 
+> > > > > +#else
+> > > > > +static inline void copy512(void *src, void __iomem *dst)
+> > > > > +{
+> > > > > +   WARN_ON_ONCE(1);
+> > > > > +}
+> > > > > +#endif
+> > > > 
+> > > > Likewise, this will be called if a revision 2 device is used on non-
+> > > > x86
+> > > > (or on x86 with an old binutils).  The driver should fall back to 32-
+> > > > bit
+> > > > in such cases.
+
+Unfortunately revision 2 is only for integrated FPGA solution, and it doesn't
+support any fallback solution (original 32bit data partial reconfiguration is
+not supported any more), so driver has to WARN in such path.
+
+> > > 
+> > > Sorry, I missed the comment about revision 2 only being on integrated
+> > > devices -- but will that always be the case?  Seems worthwhile to check
+> > > for
+> > > AVX512 support anyway.  And there's still the possibility of being built
+> > > with an old binutils such that CONFIG_AS_AVX512 is not set, or running
+> > > on a
+> > > kernel where avx512 was disabled via a boot option.
 > > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  arch/powerpc/include/asm/paca.h | 37 +++++++++++++++++++++++++--
-> > ------
-> >  arch/powerpc/kernel/paca.c      |  2 +-
-> >  2 files changed, 29 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/include/asm/paca.h
-> > b/arch/powerpc/include/asm/paca.h
-> > index e843bc5d1a0f..2fa0b43357c9 100644
-> > --- a/arch/powerpc/include/asm/paca.h
-> > +++ b/arch/powerpc/include/asm/paca.h
-> > @@ -34,19 +34,38 @@
-> >  #include <asm/cpuidle.h>
-> >  #include <asm/atomic.h>
-> >  
-> > -register struct paca_struct *local_paca asm("r13");
-> > -
-> >  #if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
-> >  extern unsigned int debug_smp_processor_id(void); /* from
-> > linux/smp.h */
-> > -/*
-> > - * Add standard checks that preemption cannot occur when using
-> > get_paca():
-> > - * otherwise the paca_struct it points to may be the wrong one
-> > just after.
-> > - */
-> > -#define get_paca()	((void) debug_smp_processor_id(), local_paca)
-> > -#else
-> > -#define get_paca()	local_paca
-> >  #endif
-> >  
-> > +static inline struct paca_struct *get_paca_no_preempt_check(void)
-> > +{
-> > +	register struct paca_struct *paca asm("r13");
-> > +
-> > +	return paca;
-> > +}
+> > The code checks for CONFIG_AS_AVX512 above.
 > 
-> Problem is it now changes the global register variable to a local 
-> register variable. The compiler would presumably be within its rights
-> to "cache" that return value or use another register for it, which
-> is not really what we want.
+> That just indicates that binutils supports it.  Plus, the code does not
+> check for CONFIG_AS_AVX512 when deciding whether to set pr_datawidth to 64
+> (and thus call copy512), so you'll get a WARN_ON rather than falling back to
+> 32-bit.
 > 
+> > What boot option are you referring to?
 > 
+> clearcpuid=304
 
-I've confirmed that at least with GCC 8.2.0, the generated assembler is
-similar, but yes, the compiler may be free to take a copy into another
-register (although that would be a terrible optimisation), and then
-operate on that value.
+Just tried it, my system was down after running above AVX512 with this option.
 
-Subsequent uses would still have to call the function (ie. fetch the
-data from r13) regardless, so I believe this scenario is safe.
+I agree that it needs to add some check code to make sure it's safe to run
+such instructions. I will add some cpu_feature_enabled() check in the next
+version.
 
-Can you think of a scenario where this is a problem?
+Thanks a lot for the review and comments.
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Hao
 
+> 
+> -Scott
+> 
