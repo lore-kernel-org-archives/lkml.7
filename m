@@ -2,126 +2,100 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D40C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C03C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3B521850
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710556;
-	bh=SeuXXXEJshdCjxNBfiXdPj39+UBW8JBgmx3N6Jlwr0I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1DBVEGTvJGtlVi5oEjiLTJrRVoXIXcXqmbcrKoFUYN87I2hsDEipXm3Fdi/DHz7M
-	 XaoPv8X2te/iXjEKibIWuDbKrFedg3UY8Y8uHM1Ba9HRxcicnmcHAHrJF2eXB+nvfS
-	 Xn97XfbPwNyZpGPoUWE1Fu4l6sOPocHeWMu92KKM=
+	by mail.kernel.org (Postfix) with ESMTP id 47D2020449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TyrKgrHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389662AbfC0SPy (ORCPT
+        id S2389670AbfC0SP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 27 Mar 2019 14:15:58 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38168 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389927AbfC0SPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 14:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbfC0SPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA9A217D9;
-        Wed, 27 Mar 2019 18:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710550;
-        bh=SeuXXXEJshdCjxNBfiXdPj39+UBW8JBgmx3N6Jlwr0I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hFXHPKK+2c9xJA+7+8PB2R4GjtTCGWrMxh7iFVclwSVNKvD5WadNTcooNTRqwamcU
-         jC5yo48kCJP3O5+jb6d8A9umyQ4A+51yzsjj997JJH3ZvLWzLrvUf6PiwxEPjz6IID
-         k29BybciNqkcLKfM3l0ik82X4FxtEezUOBTRSn+M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 172/192] media: rcar-vin: Allow independent VIN link enablement
-Date:   Wed, 27 Mar 2019 14:10:04 -0400
-Message-Id: <20190327181025.13507-172-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+Received: by mail-qk1-f194.google.com with SMTP id g1so10495333qki.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=EcSrPMl1JUJwbCY92iztc9qaOBbPIQ/hlneZl4HYObo=;
+        b=TyrKgrHId+UYpgCdscy1hsk/ZJchlsP41gEIoj2w/IkpPD9torUKlTt0iwPdSDWCr/
+         zXbEPgvWGr8IkNoavSeXmpYhipcG0Mxl8xVRMx514voffH9mKe4TxBgLE+ADKjkVq2uJ
+         oKJT03Jakrgu851DQ0bqKHKWbn94J0Fmwm57PfvgeZhcdZypqY3o1e/3dIkWUzpmZSN8
+         Q5ko3LGTujcXFtNpGYnuqybcyzX6KKeuI9yqQptqzqteS9+zUcZ6n48Bh4Qs1Z5BBMjE
+         dEWbNTp4IiSCuIJ87EaSh/7F47Z4GEdxE1CIdcDmu/LqUsta1HJgFdtVuEcmLaWC2tMz
+         vp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=EcSrPMl1JUJwbCY92iztc9qaOBbPIQ/hlneZl4HYObo=;
+        b=T1ae29vi2jXJ4KAlrSTSeInBuG5S6b7JB24zKxGRfgTC14RgEpsJ5hvS1Ld4FWY6lK
+         Q+rqciky5UV6LabPfDLvhxEDqT4ttf5EmD/MwOzFr/lCD+2JqHPX4U6ar9Wdx6K8EIib
+         yOdAsLWoxfsvJCz6zgai2dhVACUKbP81r2/7/HeChxKGQ3c4UzFO3Qt4RwPlcVEkf0I1
+         vrPVKWxZP5elJW31xq3WiqvIUyKP0Wv/D/t9ONbaWCtVFNV1AwNeoYqziodWF/yDT3xZ
+         H6pk1+edDWptbWw9c3qdITsklV0KiIDo+hzSEIMUQvDr/3pOSWT+UsKPDMCZB51AtZ8H
+         Gi7g==
+X-Gm-Message-State: APjAAAVuPoZGYzcKoqvgQPrSLbH9C//lfa6P/bkZfCHfgOCTMFxvzlh7
+        QulqHmgelEAK4ULQqt4F2V8Zvw==
+X-Google-Smtp-Source: APXvYqy0pes/HIhQyn4baHq6yseP6CuIFrm6CpgT4TPQyJYaaz/+LcQdDc9XhyeDLenOKDG4q35ZMA==
+X-Received: by 2002:a37:59c5:: with SMTP id n188mr29677597qkb.208.1553710553792;
+        Wed, 27 Mar 2019 11:15:53 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e22sm14373304qte.42.2019.03.27.11.15.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 11:15:53 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 11:15:49 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        John Hurley <john.hurley@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        oss-drivers@netronome.com, netdev@vger.kernel.org
+Subject: Re: [oss-drivers] [PATCH AUTOSEL 5.0 234/262] nfp: flower: tidy
+ tunnel related private data
+Message-ID: <20190327111549.32911fa7@cakuba.netronome.com>
+In-Reply-To: <20190327180158.10245-234-sashal@kernel.org>
+References: <20190327180158.10245-1-sashal@kernel.org>
+        <20190327180158.10245-234-sashal@kernel.org>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+On Wed, 27 Mar 2019 14:01:29 -0400, Sasha Levin wrote:
+> From: John Hurley <john.hurley@netronome.com>
+> 
+> [ Upstream commit f3b975778c176b01eba10f869a5a64c6b8550c23 ]
+> 
+> Recent additions to the flower app private data have grouped the variables
+> of a given feature into a struct and added that struct to the main private
+> data struct.
+> 
+> In keeping with this, move all tunnel related private data to their own
+> struct. This has no affect on functionality but improves readability and
+> maintenance of the code.
+> 
+> Signed-off-by: John Hurley <john.hurley@netronome.com>
+> Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit c5ff0edb8e2270a75935c73217fb0de1abd2d910 ]
+Not a fix.
 
-There is a block of code in rvin_group_link_notify() that prevents
-enabling a link to a VIN node if any entity in the media graph is
-in use. This prevents enabling a VIN link even if there is an in-use
-entity somewhere in the graph that is independent of the link's
-pipeline.
-
-For example, the code block will prevent enabling a link from
-the first rcar-csi2 receiver to a VIN node even if there is an
-enabled link somewhere far upstream on the second independent
-rcar-csi2 receiver pipeline.
-
-If this code block is meant to prevent modifying a link if any entity
-in the graph is actively involved in streaming (because modifying
-the CHSEL register fields can disrupt any/all running streams), then
-the entities stream counts should be checked rather than the use counts.
-
-(There is already such a check in __media_entity_setup_link() that verifies
-the stream_count of the link's source and sink entities are both zero,
-but that is insufficient, since there should be no running streams in
-the entire graph).
-
-Modify the code block to check the entity stream_count instead of the
-use_count (and elaborate on the comment). VIN node links can now be
-enabled even if there are other independent in-use entities that are
-not streaming.
-
-Fixes: c0cc5aef31 ("media: rcar-vin: add link notify for Gen3")
-
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/rcar-vin/rcar-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index ce09799976ef..e1085e3ab3cc 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -131,9 +131,13 @@ static int rvin_group_link_notify(struct media_link *link, u32 flags,
- 	    !is_media_entity_v4l2_video_device(link->sink->entity))
- 		return 0;
- 
--	/* If any entity is in use don't allow link changes. */
-+	/*
-+	 * Don't allow link changes if any entity in the graph is
-+	 * streaming, modifying the CHSEL register fields can disrupt
-+	 * running streams.
-+	 */
- 	media_device_for_each_entity(entity, &group->mdev)
--		if (entity->use_count)
-+		if (entity->stream_count)
- 			return -EBUSY;
- 
- 	mutex_lock(&group->lock);
--- 
-2.19.1
-
+Is there a way to request patches under drivers/net/ethernet/netronome
+to only be considered if they have an explicit Fixes tag?
