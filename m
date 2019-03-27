@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDEAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB4D205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE80205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712677;
-	bh=/8zq+DSUEBi/V9NH+cw5PcLRowCaAPfWJXD6S7/LDto=;
+	s=default; t=1553712688;
+	bh=x+oj0nRiZDeCDYd6C/mubO5MsI5eRSSXLo1D0W8rASE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFB4h8Y8bvYoFM5WgvXwJ/5Rk4kpVMNH5PoF85TH6IpxxdHk3dkRUlyYo+aBCZNy3
-	 +dvQ3O2FPeJ8QZgaIVcJBSBF3vpJ73s3YjZ8+8rDtR8VR4AcOZE/2BMIReG6gvHMK6
-	 oZxnHL5tg32Eg9xG4PuXR7oEcFsp7Hk6oh2qB7LQ=
+	b=BNxpB5plZR56aN2lui81yzxNnYe4n7PjWKHWebYJ87uyN7xln6usVUJojEhbWdQfe
+	 Rz5fyt+BEpCsi+vhDJ/oBt+az8d3umk3MA73A5MgWTyepOjB0OcuH74XdxYPCCRgZv
+	 6iqUVyTllQUscJi5PPzdI9sVqfghFHoxBsc8gd14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390833AbfC0SvP (ORCPT
+        id S2391157AbfC0Sv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:51:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34704 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390428AbfC0SSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:03 -0400
+        id S2390412AbfC0SR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CE620449;
-        Wed, 27 Mar 2019 18:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF6F621741;
+        Wed, 27 Mar 2019 18:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710682;
-        bh=/8zq+DSUEBi/V9NH+cw5PcLRowCaAPfWJXD6S7/LDto=;
+        s=default; t=1553710678;
+        bh=x+oj0nRiZDeCDYd6C/mubO5MsI5eRSSXLo1D0W8rASE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNkxfCNvzv8Aoji+3E/F1fzSk8hB3K4/u77U/4KlcAtdjX1PZWhKI+s0vRbpMLS3m
-         tzYwM1v/Q9NCCN1eg9YUQHkVvnwl4+T/3hExGHYVXMYKlcNElcpRy3KfU1wi/jqAZZ
-         X54jLaCLjW+ONKihF3W+/R7HapTLd4jwYgtK+8ZI=
+        b=DHNyoekhVDx+k5YXsoys1mwy94LuiLSOMFdR09W5E2XnwUaI0ux65pHIW19L3sDd2
+         XqiLH+6d1VwaupI52TDKD0OZQYbRhRqC2K1zXFs3KLTaYl7GNaO4rX0UZSoCG5gToW
+         JRfRLPUQInMfCAljLSQKvcQaiwQwr2uepod1HPuo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 052/123] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 27 Mar 2019 14:15:16 -0400
-Message-Id: <20190327181628.15899-52-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 049/123] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
+Date:   Wed, 27 Mar 2019 14:15:13 -0400
+Message-Id: <20190327181628.15899-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,79 +58,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+The apq8016 driver leaves the of-node refcount at aborting from the
+loop of for_each_child_of_node() in the error path.  Not only the
+iterator node of for_each_child_of_node(), the children nodes referred
+from it for codec and cpu have to be properly unreferenced.
 
-    megasas_init_adapter_fusion()
-
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
-
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
-
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index d0abee3e6ed9..7f1ecd264652 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4087,6 +4087,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
+diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
+index d49adc822a11..8e6b88d68ca6 100644
+--- a/sound/soc/qcom/apq8016_sbc.c
++++ b/sound/soc/qcom/apq8016_sbc.c
+@@ -163,41 +163,52 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 
+ 		if (!cpu || !codec) {
+ 			dev_err(dev, "Can't find cpu/codec DT node\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+ 		if (!link->cpu_of_node) {
+ 			dev_err(card->dev, "error getting cpu phandle\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
+ 
+ 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting cpu dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+ 
+ 		if (ret < 0) {
+ 			dev_err(card->dev, "error getting codec dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->platform_of_node = link->cpu_of_node;
+ 		ret = of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai_link name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->stream_name = link->name;
+ 		link->init = apq8016_sbc_dai_init;
+ 		link++;
++
++		of_node_put(cpu);
++		of_node_put(codec);
  	}
  
- 	return 0;
+ 	return data;
++
++ error:
++	of_node_put(np);
++	of_node_put(cpu);
++	of_node_put(codec);
++	return ERR_PTR(ret);
+ }
+ 
+ static const struct snd_soc_dapm_widget apq8016_sbc_dapm_widgets[] = {
 -- 
 2.19.1
 
