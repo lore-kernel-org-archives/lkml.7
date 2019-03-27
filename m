@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B228C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5011C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C806420657
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9822020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711736;
-	bh=0GeFLqzHQLfpdgOsr+WrItFgsrT0nWF5qjUKA1HQrpk=;
+	s=default; t=1553711748;
+	bh=XtLNk+7F3yKI42NxjKCYxEjfVRvUaikUKsDjQtSqi2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jeWu7/Y7KrAKGZLmFzIinbsxAqtfIqCMb/dYPgFNuylx4oW6u3JTzg1HHVSeBus+J
-	 9NmPD8ENoxB7AoDUuWjZCCh7FGONFRT6L8644c00Kjzj2xc66dngiOMLiLZDgWv4I3
-	 xCFl0xskNmfQ4KgsEjvL7x5Y2TqxwdLW8LYZepXs=
+	b=evifsDq1GAhQBJQsEsO+C4IH8vPt3zOngJ4x7Bz4HL4r9xpe+krbRdxNAPGQBDtw9
+	 UqOQ/dlbF63HNo1/teuHdvrVojOOdXIwYKqOLSeXIqitw4zv6IYZEbLrKcOwDTFUqg
+	 72ywZa2Deu3Gn84bH0vriCpcTEplTVpBmtIRbBCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391710AbfC0Sff (ORCPT
+        id S2403994AbfC0SYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43226 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:24:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391088AbfC0SYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:19 -0400
+        id S2391166AbfC0SYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BCEE2147C;
-        Wed, 27 Mar 2019 18:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E8062177E;
+        Wed, 27 Mar 2019 18:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711059;
-        bh=0GeFLqzHQLfpdgOsr+WrItFgsrT0nWF5qjUKA1HQrpk=;
+        s=default; t=1553711048;
+        bh=XtLNk+7F3yKI42NxjKCYxEjfVRvUaikUKsDjQtSqi2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qCUR09zVuJ9FbCEYQR6IqqOyWlF13uNKZWch13RR3h2UhGv3dfkJVJXvrKrX15Zb4
-         A86NHZoJZbk4RttekhjKxBq45/TbHp29hRcQmu2qSZOrjuUhKuIOgysDINsWg6nl+K
-         CyeYQLrhTRFY/dfOZ1/lczlTSr5fZ8Y7PZ0Rbht0=
+        b=O6KlwAzKUMZuTW07CwmKuCPQm6dgtn0+PfAbEdPjSoyiqUxpSkyVtdfmT8j+vyQf4
+         sLhWj7bQMcz/+pbP+9YT4/TizSakMWlW1lFXbpGiqd1LHSf7wnquieMf6S83KHMqxW
+         VbNBw5XOV2etxDiVtVpDlfUoNLONpd0M7m9abP4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 33/63] media: s5p-g2d: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 14:22:53 -0400
-Message-Id: <20190327182323.18577-33-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 27/63] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
+Date:   Wed, 27 Mar 2019 14:22:47 -0400
+Message-Id: <20190327182323.18577-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -59,63 +58,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
+[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+The apq8016 driver leaves the of-node refcount at aborting from the
+loop of for_each_child_of_node() in the error path.  Not only the
+iterator node of for_each_child_of_node(), the children nodes referred
+from it for codec and cpu have to be properly unreferenced.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
-
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
-
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-index e1936d9d27da..2b939555cccb 100644
---- a/drivers/media/platform/s5p-g2d/g2d.c
-+++ b/drivers/media/platform/s5p-g2d/g2d.c
-@@ -497,7 +497,7 @@ static void device_run(void *prv)
- {
- 	struct g2d_ctx *ctx = prv;
- 	struct g2d_dev *dev = ctx->dev;
--	struct vb2_buffer *src, *dst;
-+	struct vb2_v4l2_buffer *src, *dst;
- 	unsigned long flags;
- 	u32 cmd = 0;
+diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
+index 1efdf0088ecd..886f2027e671 100644
+--- a/sound/soc/qcom/apq8016_sbc.c
++++ b/sound/soc/qcom/apq8016_sbc.c
+@@ -98,13 +98,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
  
-@@ -512,10 +512,10 @@ static void device_run(void *prv)
- 	spin_lock_irqsave(&dev->ctrl_lock, flags);
+ 		if (!cpu || !codec) {
+ 			dev_err(dev, "Can't find cpu/codec DT node\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
  
- 	g2d_set_src_size(dev, &ctx->in);
--	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
-+	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
+ 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+ 		if (!link->cpu_of_node) {
+ 			dev_err(card->dev, "error getting cpu phandle\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
  
- 	g2d_set_dst_size(dev, &ctx->out);
--	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
-+	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
+ 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
+@@ -116,13 +118,13 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting cpu dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
  
- 	g2d_set_rop4(dev, ctx->rop);
- 	g2d_set_flip(dev, ctx->flip);
+ 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->platform_of_node = link->cpu_of_node;
+@@ -132,15 +134,24 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai_link name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->stream_name = link->name;
+ 		link->init = apq8016_sbc_dai_init;
+ 		link++;
++
++		of_node_put(cpu);
++		of_node_put(codec);
+ 	}
+ 
+ 	return data;
++
++ error:
++	of_node_put(np);
++	of_node_put(cpu);
++	of_node_put(codec);
++	return ERR_PTR(ret);
+ }
+ 
+ static int apq8016_sbc_platform_probe(struct platform_device *pdev)
 -- 
 2.19.1
 
