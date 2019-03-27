@@ -6,48 +6,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7843FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDE5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AA2206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D2D206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713235;
-	bh=bhAx/Z6hrQ1PTZCGYtZPThL9JVRqAP4JU18vPhYLyfM=;
+	s=default; t=1553713243;
+	bh=f4oZ0TGLycpFXCJ0TWPvfjCCGCNxWk1juifR0am6S9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aq632gYjPrw9lL5rfaKe7nebrOk11nCwtp+LZqlE64RDhJsdbXm/Kk/sHnOgRFkcN
-	 U+xDZgM4Rrp0IlS51+tx3NSbhqth4bu2XeU/rl7bdd8fCc6h1ps5VAb4PtyqFRrS4m
-	 FV3Tuoly/Uv2OJ2jQTHaW6pjzBM7dS2G5eKZczwE=
+	b=iOLvCaiMSIlxzOaaGl62d8IgSyarn7Cnsmbm+l4x62cWBIuP+w/ifvyd5FvB+rLCJ
+	 5PB8wSzrFfQlARJeG5nlJ0duCzDN5s5I55W/kTHy3E5HYKxUW2dIbVsB+BPrEYgbSz
+	 xJxfOmF/zedqaeVbyVNt5VreYiNwQv79UQIAdSYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389810AbfC0TAe (ORCPT
+        id S2389914AbfC0TAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57868 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389386AbfC0SOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:37 -0400
+        id S2388839AbfC0SOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA5A21871;
-        Wed, 27 Mar 2019 18:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E41232177E;
+        Wed, 27 Mar 2019 18:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710476;
-        bh=bhAx/Z6hrQ1PTZCGYtZPThL9JVRqAP4JU18vPhYLyfM=;
+        s=default; t=1553710475;
+        bh=f4oZ0TGLycpFXCJ0TWPvfjCCGCNxWk1juifR0am6S9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwOvT2ijsCLoyTlQsIpOu8aazQ9BdlFqm/1+ov3yXkTTrSIrmFmR8HP+KQbhzjp+6
-         A4F5QZzF+NAOfN4idBBUVZdTyT++TCcbywL5/WKkHt73rrwvE6037+FjUMR7cAwd1h
-         p/6ERYpUP/VqftlC04VehxNBw6wTXRy93IfVeWw0=
+        b=ez9eUg80eN6Rq3ecokbOhEH2vMuSmy5QG4cO1Cn4n+ATuf3mAEOHhgeiNfFuyD7Ky
+         9HN4c3orpYdPMlYICq0BfEvqKxd19o5/jllzALLPU4BkEt24k6gH0dbtd0yPp2xB6x
+         jReEfXAWQjxti2V71ctXa2Pue41jvMsnwBo7eOMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 138/192] drm/vkms: Bugfix extra vblank frame
-Date:   Wed, 27 Mar 2019 14:09:30 -0400
-Message-Id: <20190327181025.13507-138-sashal@kernel.org>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 137/192] sched/core: Use READ_ONCE()/WRITE_ONCE() in move_queued_task()/task_rq_lock()
+Date:   Wed, 27 Mar 2019 14:09:29 -0400
+Message-Id: <20190327181025.13507-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,67 +63,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shayenne Moura <shayenneluzmoura@gmail.com>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-[ Upstream commit def35e7c592616bc09be328de8795e5e624a3cf8 ]
+[ Upstream commit c546951d9c9300065bad253ecdf1ac59ce9d06c8 ]
 
-kms_flip tests are breaking on vkms when simulate vblank because vblank
-event sequence count returns one extra frame after arm vblank event to
-make a page flip.
+move_queued_task() synchronizes with task_rq_lock() as follows:
 
-When vblank interrupt happens, userspace processes the vblank event and
-issues the next page flip command. Kernel calls queue_work to call
-commit_planes and arm the new page flip. The next vblank picks up the
-newly armed vblank event and vblank interrupt happens again.
+	move_queued_task()		task_rq_lock()
 
-The arm and vblank event are asynchronous, then, on the next vblank, we
-receive x+2 from `get_vblank_timestamp`, instead x+1, although timestamp
-and vblank seqno matches.
+	[S] ->on_rq = MIGRATING		[L] rq = task_rq()
+	WMB (__set_task_cpu())		ACQUIRE (rq->lock);
+	[S] ->cpu = new_cpu		[L] ->on_rq
 
-Function `get_vblank_timestamp` is reached by 2 ways:
+where "[L] rq = task_rq()" is ordered before "ACQUIRE (rq->lock)" by an
+address dependency and, in turn, "ACQUIRE (rq->lock)" is ordered before
+"[L] ->on_rq" by the ACQUIRE itself.
 
-  - from `drm_mode_page_flip_ioctl`: driver is doing one atomic
-    operation to synchronize planes in the same output. There is no
-    vblank simulation, the `drm_crtc_arm_vblank_event` function adds 1
-    on vblank count, and the variable in_vblank_irq is false
-  - from `vkms_vblank_simulate`: since the driver is doing a vblank
-    simulation, the variable in_vblank_irq is true.
+Use READ_ONCE() to load ->cpu in task_rq() (c.f., task_cpu()) to honor
+this address dependency.  Also, mark the accesses to ->cpu and ->on_rq
+with READ_ONCE()/WRITE_ONCE() to comply with the LKMM.
 
-Fix this problem subtracting one vblank period from vblank_time when
-`get_vblank_timestamp` is called from trace `drm_mode_page_flip_ioctl`,
-i.e., is not a real vblank interrupt, and getting the timestamp and
-vblank seqno when it is a real vblank interrupt.
-
-The reason for all this is that get_vblank_timestamp always supplies the
-timestamp for the next vblank event. The hrtimer is the vblank
-simulator, and it needs the correct previous value to present the next
-vblank. Since this is how hw timestamp registers work and what the
-vblank core expects.
-
-Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/171e6e1c239cbca0c3df7183ed8acdfeeace9cf4.1548856186.git.shayenneluzmoura@gmail.com
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190121155240.27173-1-andrea.parri@amarulasolutions.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/sched.h | 4 ++--
+ kernel/sched/core.c   | 9 +++++----
+ kernel/sched/sched.h  | 6 +++---
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 1ea2dd35bca9..0a271f762a0a 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -55,6 +55,9 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
- 
- 	*vblank_time = output->vblank_hrtimer.node.expires;
- 
-+	if (!in_vblank_irq)
-+		*vblank_time -= output->period_ns;
-+
- 	return true;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4abb5bd74b04..5dc024e28397 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1737,9 +1737,9 @@ static __always_inline bool need_resched(void)
+ static inline unsigned int task_cpu(const struct task_struct *p)
+ {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+-	return p->cpu;
++	return READ_ONCE(p->cpu);
+ #else
+-	return task_thread_info(p)->cpu;
++	return READ_ONCE(task_thread_info(p)->cpu);
+ #endif
  }
  
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 152a0b0c91bb..9a4f57d7e931 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -107,11 +107,12 @@ struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
+ 		 *					[L] ->on_rq
+ 		 *	RELEASE (rq->lock)
+ 		 *
+-		 * If we observe the old CPU in task_rq_lock, the acquire of
++		 * If we observe the old CPU in task_rq_lock(), the acquire of
+ 		 * the old rq->lock will fully serialize against the stores.
+ 		 *
+-		 * If we observe the new CPU in task_rq_lock, the acquire will
+-		 * pair with the WMB to ensure we must then also see migrating.
++		 * If we observe the new CPU in task_rq_lock(), the address
++		 * dependency headed by '[L] rq = task_rq()' and the acquire
++		 * will pair with the WMB to ensure we then also see migrating.
+ 		 */
+ 		if (likely(rq == task_rq(p) && !task_on_rq_migrating(p))) {
+ 			rq_pin_lock(rq, rf);
+@@ -910,7 +911,7 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
+ {
+ 	lockdep_assert_held(&rq->lock);
+ 
+-	p->on_rq = TASK_ON_RQ_MIGRATING;
++	WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
+ 	dequeue_task(rq, p, DEQUEUE_NOCLOCK);
+ 	set_task_cpu(p, new_cpu);
+ 	rq_unlock(rq, rf);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b63172288f7b..4c7a837d7c14 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1331,9 +1331,9 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
+ 	 */
+ 	smp_wmb();
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+-	p->cpu = cpu;
++	WRITE_ONCE(p->cpu, cpu);
+ #else
+-	task_thread_info(p)->cpu = cpu;
++	WRITE_ONCE(task_thread_info(p)->cpu, cpu);
+ #endif
+ 	p->wake_cpu = cpu;
+ #endif
+@@ -1434,7 +1434,7 @@ static inline int task_on_rq_queued(struct task_struct *p)
+ 
+ static inline int task_on_rq_migrating(struct task_struct *p)
+ {
+-	return p->on_rq == TASK_ON_RQ_MIGRATING;
++	return READ_ONCE(p->on_rq) == TASK_ON_RQ_MIGRATING;
+ }
+ 
+ /*
 -- 
 2.19.1
 
