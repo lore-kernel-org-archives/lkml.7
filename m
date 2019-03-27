@@ -2,42 +2,39 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A102C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2783FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C763F20700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA3520700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:16:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732911AbfC0KPU (ORCPT
+        id S1733134AbfC0KQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:15:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35142 "EHLO mx1.suse.de"
+        Wed, 27 Mar 2019 06:16:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35310 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfC0KPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:15:20 -0400
+        id S1725827AbfC0KQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:16:16 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 284E1AE7A;
-        Wed, 27 Mar 2019 10:15:18 +0000 (UTC)
-Message-ID: <0226eb8f5b20acd07e1bdd49c855e692ecad6306.camel@suse.de>
+        by mx1.suse.de (Postfix) with ESMTP id 63D00AD2F;
+        Wed, 27 Mar 2019 10:16:15 +0000 (UTC)
+Message-ID: <3ea28268d51c6d9befecf273e1295ba11f8d3b06.camel@suse.de>
 Subject: Re: [PATCH v3] HID: core: move Usage Page concatenation to Main item
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     "Junge, Terry" <terry.junge@poly.com>,
-        Jiri Kosina <jikos@kernel.org>,
+To:     Oliver Neukum <oneukum@suse.com>, Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "oneukum@suse.de" <oneukum@suse.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Wed, 27 Mar 2019 11:15:16 +0100
-In-Reply-To: <BYAPR02MB560738248E330DF46CAA199A8A5F0@BYAPR02MB5607.namprd02.prod.outlook.com>
+Cc:     Terry.Junge@plantronics.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 27 Mar 2019 11:16:13 +0100
+In-Reply-To: <1553679302.14990.0.camel@suse.com>
 References: <20190326200331.25934-1-nsaenzjulienne@suse.de>
-         <BYAPR02MB560738248E330DF46CAA199A8A5F0@BYAPR02MB5607.namprd02.prod.outlook.com>
+         <1553679302.14990.0.camel@suse.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-0MzzpiNQ/MdpCQZBnVyu"
+        protocol="application/pgp-signature"; boundary="=-mUp3K+XZ82nz6aO0pkje"
 User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,220 +43,52 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-0MzzpiNQ/MdpCQZBnVyu
+--=-mUp3K+XZ82nz6aO0pkje
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Terry, thanks for the review!
+Hi Oliver, thanks for the review!
 
-On Tue, 2019-03-26 at 22:43 +0000, Junge, Terry wrote:
-> Hi Nicolas,
->=20
-> This patch looks good except for one comment/question below.
->=20
-> Thanks,
-> Terry
->=20
-> On Tuesday, March 26, 2019 1:04 PM Nicolas Saenz Julienne <
-> nsaenzjulienne@suse.de> wrote:
-> > As seen on some USB wireless keyboards manufactured by Primax, the HID
-> > parser was using some assumptions that are not always true. In this cas=
-e
-> > it's s
-> > the fact that, inside the scope of a main item, an Usage Page will alwa=
-ys
-> > precede an Usage.
-> >=20
-> > The spec is not pretty clear as 6.2.2.7 states "Any usage that follows =
-is
-> > interpreted as a Usage ID and concatenated with the Usage Page".
-> > While 6.2.2.8 states "When the parser encounters a main item it concate=
-nates
-> > the last declared Usage Page with a Usage to form a complete usage valu=
-e."
-> > Being somewhat contradictory it was decided to match Window's
-> > implementation, which follows 6.2.2.8.
-> >=20
-> > In summary, the patch moves the Usage Page concatenation from the local
-> > item parsing function to the main item parsing function.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >=20
-> > v2->v3: - Update patch title
-> >=20
-> > v1->v2: - Add usage concatenation to hid_scan_main()
-> > 	- Rework tests in hid-tools, making sure no-one is failing
-> >=20
-> > drivers/hid/hid-core.c | 40 ++++++++++++++++++++++++++++------------
-> > include/linux/hid.h    |  1 +
-> > 2 files changed, 29 insertions(+), 12 deletions(-)
-> >=20
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c index
-> > 9993b692598f..40c836ce3248 100644
+On Wed, 2019-03-27 at 10:35 +0100, Oliver Neukum wrote:
+> On Di, 2019-03-26 at 21:03 +0100, Nicolas Saenz Julienne wrote:
 > > --- a/drivers/hid/hid-core.c
 > > +++ b/drivers/hid/hid-core.c
 > > @@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct
 > > hid_parser *parser, unsigned type)
-> >  * Add a usage to the temporary parser table.
-> >  */
-> >=20
+> >   * Add a usage to the temporary parser table.
+> >   */
+> > =20
 > > -static int hid_add_usage(struct hid_parser *parser, unsigned usage)
-> > +static int hid_add_usage(struct hid_parser *parser, unsigned usage,
-> > +__u8 size)
-> > {
-> > 	if (parser->local.usage_index >=3D HID_MAX_USAGES) {
-> > 		hid_err(parser->device, "usage index exceeded\n");
-> > 		return -1;
-> > 	}
-> > 	parser->local.usage[parser->local.usage_index] =3D usage;
-> > +	parser->local.usage_size[parser->local.usage_index] =3D size;
-> > 	parser->local.collection_index[parser->local.usage_index] =3D
-> > 		parser->collection_stack_ptr ?
-> > 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
-> > @@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *par=
-ser,
-> > struct hid_item *item)
-> > 			return 0;
-> > 		}
-> >=20
-> > -		if (item->size <=3D 2)
-> > -			data =3D (parser->global.usage_page << 16) + data;
-> > -
-> > -		return hid_add_usage(parser, data);
-> > +		return hid_add_usage(parser, data, item->size);
-> >=20
-> > 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
-> >=20
-> > @@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *pars=
-er,
-> > struct hid_item *item)
-> > 			return 0;
-> > 		}
-> >=20
-> > -		if (item->size <=3D 2)
-> > -			data =3D (parser->global.usage_page << 16) + data;
-> > -
-> > 		parser->local.usage_minimum =3D data;
-> > 		return 0;
-> >=20
-> > @@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *pars=
-er,
-> > struct hid_item *item)
-> > 			return 0;
-> > 		}
-> >=20
-> > -		if (item->size <=3D 2)
-> > -			data =3D (parser->global.usage_page << 16) + data;
-> > -
-> > 		count =3D data - parser->local.usage_minimum;
-> > 		if (count + parser->local.usage_index >=3D HID_MAX_USAGES) {
-> > 			/*
-> > @@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *pars=
-er,
-> > struct hid_item *item)
-> > 		}
-> >=20
-> > 		for (n =3D parser->local.usage_minimum; n <=3D data; n++)
-> > -			if (hid_add_usage(parser, n)) {
-> > +			if (hid_add_usage(parser, n, item->size)) {
-> > 				dbg_hid("hid_add_usage failed\n");
-> > 				return -1;
-> > 			}
-> > @@ -547,6 +539,26 @@ static int hid_parser_local(struct hid_parser *par=
-ser,
-> > struct hid_item *item)
-> > 	return 0;
-> > }
-> >=20
-> > +/*
-> > + * Concatenate Usage Pages into Usages where relevant:
-> > + * As per specification, 6.2.2.8: "When the parser encounters a main
-> > +item it
-> > + * concatenates the last declared Usage Page with a Usage to form a
-> > +complete
-> > + * usage value."
-> > + */
-> > +
-> > +static void hid_concatenate_usage_page(struct hid_parser *parser) {
-> > +	unsigned usages;
-> > +	int i;
-> > +
-> > +	usages =3D max_t(unsigned, parser->local.usage_index,
-> > +				 parser->global.report_count);
+> > +static int hid_add_usage(struct hid_parser *parser, unsigned usage, __=
+u8
+> > size)
 >=20
-> I don't think we need to worry about global.report_count here,
-> just concatenate for the usages currently in the local queue so could
-> this be simplified by removing usages and just using local.usage_index?
->=20
->         for (i =3D 0; i < local.usage_index; i++)
+> No need to use the __u8 style inside the kernel. u8 will do.
 
-Sounds about right.
+Noted, fixed for v4.
 
 >=20
-> > +
-> > +	for (i =3D 0; i < usages; i++)
-> > +		if (parser->local.usage_size[i] <=3D 2)
-> > +			parser->local.usage[i] +=3D parser->global.usage_page
-> > << 16; }
-> > +
-> > /*
-> >  * Process a main item.
-> >  */
-> > @@ -556,6 +568,8 @@ static int hid_parser_main(struct hid_parser *parse=
-r,
-> > struct hid_item *item)
-> > 	__u32 data;
-> > 	int ret;
-> >=20
-> > +	hid_concatenate_usage_page(parser);
-> > +
-> > 	data =3D item_udata(item);
-> >=20
-> > 	switch (item->tag) {
-> > @@ -765,6 +779,8 @@ static int hid_scan_main(struct hid_parser *parser,
-> > struct hid_item *item)
-> > 	__u32 data;
-> > 	int i;
-> >=20
-> > +	hid_concatenate_usage_page(parser);
-> > +
-> > 	data =3D item_udata(item);
-> >=20
-> > 	switch (item->tag) {
-> > diff --git a/include/linux/hid.h b/include/linux/hid.h index
-> > f9707d1dcb58..d1fb4b678873 100644
-> > --- a/include/linux/hid.h
-> > +++ b/include/linux/hid.h
-> > @@ -417,6 +417,7 @@ struct hid_global {
-> >=20
-> > struct hid_local {
-> > 	unsigned usage[HID_MAX_USAGES]; /* usage array */
-> > +	__u8 usage_size[HID_MAX_USAGES]; /* usage size array */
-> > 	unsigned collection_index[HID_MAX_USAGES]; /* collection index
-> > array */
-> > 	unsigned usage_index;
-> > 	unsigned usage_minimum;
-> > --
-> > 2.21.0
+> 	Regards
+> 		Oliver
+>=20
 
 
---=-0MzzpiNQ/MdpCQZBnVyu
+--=-mUp3K+XZ82nz6aO0pkje
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlybTTQACgkQlfZmHno8
-x/7/Vgf/UiRVrv2IOVhaj2wOpE6rYHjnqeLs8LA7Y0SpFKwc51HAPwSRzjTO+L8l
-byxiE/sdqDwGtoK+1cDYO2m4zvsb41IhiE/+6yLINeV90UsEcXmN5jLA+qvHTG87
-UOCvB+UZbTjyMC7g9U+xxLKmQC12x3phKNbWL8kzyITPtzGA0hQgx7iJ0Zo/9Zcf
-MoiQR9au1prHJZ05GnjNZ/84geuKsDFWnlieJQUnHZMTTY37p9jeJRwIi6jZVghJ
-ZBeywdrV4rl5+sHkPgaX3YPO4g5mldwEbV0AMuUDuQHumUftb8ASwHiSN9T4hOph
-5MZLbTLmnZEQpBH0Pfjwp4M/yf+J2g==
-=BW3o
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlybTW0ACgkQlfZmHno8
+x/7DXggAqpMi5OD/MzO3QKe+MsiQAQJlI70NyUiUtDaJOkB1zVUM1dub8hvpeH9c
+2gBJCMcUOqBuCpQ6OVfB2Gtp8l+J4/6Ng19veubKHm1LFTA3XYbf+8l/iQ8IMuzO
+ft/OTsHv6b/r6HkuLj0682lROuBmeJCerADbw63a2t84vHHbBCU6iaRzOuizFOTK
+Nis3n+Hipw7JSnwyNt6XvBoHIbhAVXr/IzsRVntV0nM13YxlQBDOywyt0q0bSMZV
+XGR4NWebReYaTurH3G1n97aOM3NTVwsaiwt26epb1Nzs5VVmAeUUGBtk97lRMogb
+x8P9D2Lc4j6yyUHgtoQNvsnnMoZu/A==
+=ULv/
 -----END PGP SIGNATURE-----
 
---=-0MzzpiNQ/MdpCQZBnVyu--
+--=-mUp3K+XZ82nz6aO0pkje--
 
