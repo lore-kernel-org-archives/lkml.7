@@ -2,106 +2,130 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9301C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B99C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEDD2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE2F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732582AbfC0J0J convert rfc822-to-8bit (ORCPT
+        id S1732739AbfC0J0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 27 Mar 2019 05:26:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53118 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726237AbfC0J0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 05:26:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33365 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729489AbfC0J0G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:26:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q1so17653843wrp.0;
-        Wed, 27 Mar 2019 02:26:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=yBMLoHOl082TnS8zsdQPe5JQB1/9lZ/UzvMcb+XEpbw=;
-        b=YAcWCArHR2bs+ZsaMrv7MB7Md+1+9EU0hMJfixKVbykN6YyLnbM/1t0bfBP6nnmEpR
-         Rr7cCQw4Dli9/RQTJGkb00jgqKGKVqHHHAs/3rJ5lmbxOaUOJLz/0/wrIQYeX6xfIWJk
-         6r2WPG6LNmAaqi4mDjmAjg82O8m7kWtp5CnN4n15/geHiktS5LhMGqMGtI7rKUpv14xL
-         zI6+y6VccjYqn9u36TFLMwf+39MMedSAtevo1VP/gJvt2ZOnmzP0BmaCFG/yZ25EFJxy
-         NjW+PS4FyXnGVPK3QTX0olZxzXVkAZ173VKjnB0HBhRIpqNJEVAYZO3F5/WfuFI9zB8J
-         MJcA==
-X-Gm-Message-State: APjAAAULDwJfKKXhMIK/xsqRnA6mh7oujpChv/QerLehrzwj/+YZACM2
-        7k99H3mov51D6ORnC6oWWIbt0Y5A
-X-Google-Smtp-Source: APXvYqzvB8qsZ/VyiUEoQ79bLzoR6jSope5lHBP7wy+9FlwXkiTgn5yA5VU1FbEQzvhG95uOfNK+ZA==
-X-Received: by 2002:a5d:66c2:: with SMTP id k2mr21632728wrw.312.1553678764312;
-        Wed, 27 Mar 2019 02:26:04 -0700 (PDT)
-Received: from localhost ([2a01:4b00:f419:6f00:b00c:66c8:99df:336])
-        by smtp.gmail.com with ESMTPSA id a10sm29674089wrs.19.2019.03.27.02.26.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 02:26:03 -0700 (PDT)
-Message-ID: <df699947253913a7e572fd1252b99e594431e261.camel@debian.org>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
-From:   Luca Boccassi <bluca@debian.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 27 Mar 2019 09:26:02 +0000
-In-Reply-To: <20190327015623.ur46t5gdmraagi2q@ast-mbp>
-References: <20190327091437.68ec6903@canb.auug.org.au>
-         <20190327015623.ur46t5gdmraagi2q@ast-mbp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1 
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9390FACE8;
+        Wed, 27 Mar 2019 09:26:06 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 36BB0E1404; Wed, 27 Mar 2019 10:26:04 +0100 (CET)
+Date:   Wed, 27 Mar 2019 10:26:04 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
+ interface
+Message-ID: <20190327092604.GP26076@unicorn.suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+ <20190326120909.GF2230@nanopsycho>
+ <20190326132427.GK26076@unicorn.suse.cz>
+ <20190326134251.GA5181@nanopsycho.orion>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326134251.GA5181@nanopsycho.orion>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 18:56 -0700, Alexei Starovoitov wrote:
-> On Wed, Mar 27, 2019 at 09:14:37AM +1100, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Today's linux-next merge of the bpf-next tree got a conflict in:
-> > 
-> >   tools/lib/bpf/Makefile
-> > 
-> > between commit:
-> > 
-> >   1d382264d911 ("bpf, libbpf: fix version info and add it to shared
-> > object")
-> > 
-> > from the net tree and commit:
-> > 
-> >   60e4786e229d ("tools/bpf: generate pkg-config file for libbpf")
-> > 
-> > from the bpf-next tree.
-> > 
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your
-> > tree
-> > is submitted for merging.  You may also want to consider
-> > cooperating
-> > with the maintainer of the conflicting tree to minimise any
-> > particularly
-> > complex conflicts.
+On Tue, Mar 26, 2019 at 02:42:51PM +0100, Jiri Pirko wrote:
+> Tue, Mar 26, 2019 at 02:24:27PM CET, mkubecek@suse.cz wrote:
+> >On Tue, Mar 26, 2019 at 01:09:09PM +0100, Jiri Pirko wrote:
+> >> Mon, Mar 25, 2019 at 06:08:09PM CET, mkubecek@suse.cz wrote:
+> >> >+Device identification
+> >> >+---------------------
+> >> >+
+> >> >+When appropriate, network device is identified by a nested attribute named
+> >> >+ETHA_*_DEV. This attribute can contain
+> >> 
+> >> Isn't it ETHA_DEV_*? I must admit I'm a bit confused.
+> >
+> >ETHA_*_DEV is the nesting attribute (e.g. ETHA_SETTINGS_DEV), ETHA_DEV_*
+> >(ETHA_DEV_INDEX and ETHA_DEV_NAME) are in the nest.
 > 
-> argh. that's a heavy conflict.
-> Since that patch was at the top of the bpf-next I removed it for now
-> and will re-apply when bpf-next gets merged cleanly into net-next and
-> we bring back net changes into bpf-next. Sorry Luca.
+> Yeah. I wonder why you need to duplicate this. Can this be in top-lever
+> attr enum that is shared among all commands? It is there anyway and
+> looks a bit silly to have "DEV" attr separate for every command.
+> Something like this:
+> 
+> ATTR_IFINDEX
+> ATTR_IFNAME
+> ATTR_SOMEOTHER (flags perhaps)
+> ATTR_CMD_SPECIFIC_NEST_START
+>   ATTR_CMDX_SOMETHING
+>   ATTR_CMDX_SOMETHING2
+>   ATTR_CMDX_SOMETHING3
+> ATTR_CMD_SPECIFIC_NEST_END
 
-No worries - for the next time, should I have based the patch on net-
-next rather than bpf-next?
+I would rather prefer the opposite:
 
--- 
-Kind regards,
-Luca Boccassi
+ATTR_HEADER
+    ATTR_IFINDEX
+    ATTR_IFNAME
+    ATTR_INFO_MASK
+    ATTR_PER_QUEUE
+ATTR_CMDX_SOMETHING
+ATTR_CMDX_SOMETHING2
+ATTR_CMDX_SOMETHING3
+...
+
+This way the "header" with universal attributes (not specfic to
+a particular message type) would be kept together at the beginning even
+after we need to add some more later and command specific attributes
+would still have fixed numbers (starting from 2). I'll think about it
+some more and check what would be pros and cons of the two variants
+when parsing and generating the messages.
+
+> >> >+Messages of type "get" are used by userspace to request information and
+> >> >+usually do not contain any attributes (that may be added later for dump
+> >> >+filtering). Kernel response is in the form of corresponding "set" message;
+> >> 
+> >> Okay. Do we want reply to "*_cmd_something_get" command to be
+> >> "*_cmd_something_set". That sounds odd. Why reply has to be "cmd"? Why
+> >> not something like "reply" or "response"?
+> >> This should work for both "doit/dumpit" and notifications.
+> >
+> >As stated right below, the aim is to use the same format for replies to
+> >GET requests as userspace uses for related SET requests. We could use
+> >different id (genlmsghdr::cmd) but that seemed like a waste for no actual
+> >gain.
+> 
+> I understand. I just wonder if the replies/notifications could use the
+> same name, not having "set" in it. I know we have it like this in many
+> netlink ifaces, it is however confusing to users. So once we are doing
+> this from scratch, we can do it differently.
+
+How about
+
+  ETHTOOL_MSG_GET_FOO  for get requests
+  ETHTOOL_MSG_FOO      for get replies, notifications and set requests
+  ETHTOOL_MSG_ACT_FOO  for actions (renegotiation, reset, blinking, ...)
+
+?
+
+Michal
