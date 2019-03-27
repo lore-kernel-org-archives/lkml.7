@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF46CC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EFAC10F0A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C84B2146F
+	by mail.kernel.org (Postfix) with ESMTP id E6F7E2146F
 	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbfC0JUI (ORCPT
+        id S1732906AbfC0JUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:20:08 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:18097 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732777AbfC0JUG (ORCPT
+        Wed, 27 Mar 2019 05:20:14 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:33878 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732224AbfC0JUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:20:06 -0400
-X-UUID: 34d90b31ea844033b2112d97436c4dc7-20190327
-X-UUID: 34d90b31ea844033b2112d97436c4dc7-20190327
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Wed, 27 Mar 2019 05:20:13 -0400
+X-UUID: b66a57cad7d44bb48ac11ffa5b13f976-20190327
+X-UUID: b66a57cad7d44bb48ac11ffa5b13f976-20190327
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <wangyan.wang@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2012835614; Wed, 27 Mar 2019 17:20:01 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Mar
- 2019 17:19:58 +0800
+        with ESMTP id 528647066; Wed, 27 Mar 2019 17:20:10 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Mar
+ 2019 17:20:08 +0800
 Received: from mszsdclx1067.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 27 Mar 2019 17:19:57 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 27 Mar 2019 17:20:07 +0800
 From:   wangyan wang <wangyan.wang@mediatek.com>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, CK Hu <ck.hu@mediatek.com>
@@ -48,9 +48,9 @@ CC:     wangyan wang <wangyan.wang@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH V7 4/6] drm/mediatek: fix the rate and divder of hdmi phy for MT2701
-Date:   Wed, 27 Mar 2019 17:19:27 +0800
-Message-ID: <20190327091929.73162-5-wangyan.wang@mediatek.com>
+Subject: [PATCH V7 6/6] drm/mediatek: fix the rate of parent for hdmi phy in MT2701
+Date:   Wed, 27 Mar 2019 17:19:29 +0800
+Message-ID: <20190327091929.73162-7-wangyan.wang@mediatek.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <20190327091929.73162-1-wangyan.wang@mediatek.com>
 References: <20190327091929.73162-1-wangyan.wang@mediatek.com>
@@ -64,30 +64,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: chunhui dai <chunhui.dai@mediatek.com>
 
-Fixes: 0fc721b2968e ("drm/mediatek: add hdmi driver for MT2701 and MT7623")
+We should not change the rate of parent for hdmi phy when
+doing round_rate for this clock. The parent clock of hdmi
+phy must be the same as it. We change it when doing set_rate
+only.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
 Signed-off-by: wangyan wang <wangyan.wang@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 19 -------------------
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  4 ----
+ drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  7 +++++++
+ drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c | 14 ++++++++++++++
+ 4 files changed, 21 insertions(+), 23 deletions(-)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+index 370309d684ec..f753ee72971e 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+@@ -15,25 +15,6 @@ static const struct phy_ops mtk_hdmi_phy_dev_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
+-long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+-			     unsigned long *parent_rate)
+-{
+-	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
+-
+-	hdmi_phy->pll_rate = rate;
+-	if (rate <= 74250000)
+-		*parent_rate = rate;
+-	else
+-		*parent_rate = rate / 2;
+-
+-	return rate;
+-}
+-
+-u32 mtk_hdmi_phy_read(struct mtk_hdmi_phy *hdmi_phy, u32 offset)
+-{
+-	return readl(hdmi_phy->regs + offset);
+-}
+-
+ void mtk_hdmi_phy_clear_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+ 			     u32 bits)
+ {
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+index 446e2acd1926..4d4de4de8977 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+@@ -42,7 +42,6 @@ struct mtk_hdmi_phy {
+ 	unsigned int ibias_up;
+ };
+ 
+-u32 mtk_hdmi_phy_read(struct mtk_hdmi_phy *hdmi_phy, u32 offset);
+ void mtk_hdmi_phy_clear_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+ 			     u32 bits);
+ void mtk_hdmi_phy_set_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+@@ -50,9 +49,6 @@ void mtk_hdmi_phy_set_bits(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+ void mtk_hdmi_phy_mask(struct mtk_hdmi_phy *hdmi_phy, u32 offset,
+ 		       u32 val, u32 mask);
+ struct mtk_hdmi_phy *to_mtk_hdmi_phy(struct clk_hw *hw);
+-long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+-			     unsigned long *parent_rate);
+-
+ extern struct platform_driver mtk_hdmi_phy_driver;
+ extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf;
+ extern struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf;
 diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-index fb26a83988dc..cb0c68c94013 100644
+index cb0c68c94013..6fb4ca943463 100644
 --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
 +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-@@ -114,8 +114,8 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+@@ -152,6 +152,13 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 			  RG_HDMITX_DRV_IBIAS_MASK);
+ 	return 0;
+ }
++
++static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long *parent_rate)
++{
++	return rate;
++}
++
+ static unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
+ 				       unsigned long parent_rate)
+ {
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+index 63dde42521b8..3a339f516613 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+@@ -285,6 +285,20 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	return 0;
+ }
  
- 	if (rate <= 64000000)
- 		pos_div = 3;
--	else if (rate <= 12800000)
--		pos_div = 1;
-+	else if (rate <= 128000000)
-+		pos_div = 2;
- 	else
- 		pos_div = 1;
- 
++static long mtk_hdmi_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long *parent_rate)
++{
++	struct mtk_hdmi_phy *hdmi_phy = to_mtk_hdmi_phy(hw);
++
++	hdmi_phy->pll_rate = rate;
++	if (rate <= 74250000)
++		*parent_rate = rate;
++	else
++		*parent_rate = rate / 2;
++
++	return rate;
++}
++
+ static unsigned long mtk_hdmi_pll_recalc_rate(struct clk_hw *hw,
+ 				       unsigned long parent_rate)
+ {
 -- 
 2.14.1
 
