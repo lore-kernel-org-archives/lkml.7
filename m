@@ -2,115 +2,96 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1E9C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4DA2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553656880;
-	bh=wWJZg7hFW30nvHrRJ3216p8dXbFyJgzZYr2WaKsfWww=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vS10Wy7F1uIV62hcetoDWYmYbGMb3DTq2KDcW6RH4VLuYWwwpaGnAY9w4rToT8o/N
-	 2U2NdS9VgWMiUVIUQiMuLYaOMayl3jefkB1Da/e67Vp5dRNBkGXQFlU45wXILuvp8h
-	 MbNXzssY2sIbfpM+SYGBZLp/Yfef9Yhwla8ZFTPE=
+	by mail.kernel.org (Postfix) with ESMTP id 98B4F2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732832AbfC0DVT (ORCPT
+        id S1732414AbfC0DlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 23:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727452AbfC0DVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 23:21:18 -0400
-Received: from devbox (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608422087E;
-        Wed, 27 Mar 2019 03:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553656877;
-        bh=wWJZg7hFW30nvHrRJ3216p8dXbFyJgzZYr2WaKsfWww=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H+rKWIw9ZGBwzg0IY8jynL0h37sz7beRWOAWspESzJagiFaHiWAHgUP3LsCDvb2Fd
-         MhUlUk+l9qTyGG8+g1WoR4L5nUMM7DBsOffnFmipE+b8CF+qKQ27NqdyJOLkzhBacT
-         ERbzzNL94IXHIqgqzovfuPQhuDHo139COOHGziA8=
-Date:   Wed, 27 Mar 2019 12:21:12 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH tip/core/rcu 1/2] doc/kprobes: Update obsolete RCU
- update functions
-Message-Id: <20190327122112.1993060d4b8500125adf9c2d@kernel.org>
-In-Reply-To: <20190326230050.16840-1-paulmck@linux.ibm.com>
-References: <20190326230011.GA16275@linux.ibm.com>
-        <20190326230050.16840-1-paulmck@linux.ibm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 26 Mar 2019 23:41:24 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:54931 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727511AbfC0DlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 23:41:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TNkXKFO_1553658075;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TNkXKFO_1553658075)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 27 Mar 2019 11:41:19 +0800
+Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, riel@surriel.com,
+        hannes@cmpxchg.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, keith.busch@intel.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
+        ying.huang@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
+ <20190324222040.GE31194@localhost.localdomain>
+ <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
+ <20190327003541.GE4328@localhost.localdomain>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
+Date:   Tue, 26 Mar 2019 20:41:15 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190327003541.GE4328@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019 16:00:49 -0700
-"Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-
-> The RCU flavors have been consolidated, so this commit replaces mentions
-> of the now-obsolete synchronize_sched() function with synchronize_rcu().
-
-Thank you for updating!
-
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-> 
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: <linux-doc@vger.kernel.org>
-> ---
->  Documentation/kprobes.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/kprobes.txt b/Documentation/kprobes.txt
-> index 10f4499e677c..ee60e519438a 100644
-> --- a/Documentation/kprobes.txt
-> +++ b/Documentation/kprobes.txt
-> @@ -243,10 +243,10 @@ Optimization
->  ^^^^^^^^^^^^
->  
->  The Kprobe-optimizer doesn't insert the jump instruction immediately;
-> -rather, it calls synchronize_sched() for safety first, because it's
-> +rather, it calls synchronize_rcu() for safety first, because it's
->  possible for a CPU to be interrupted in the middle of executing the
-> -optimized region [3]_.  As you know, synchronize_sched() can ensure
-> -that all interruptions that were active when synchronize_sched()
-> +optimized region [3]_.  As you know, synchronize_rcu() can ensure
-> +that all interruptions that were active when synchronize_rcu()
->  was called are done, but only if CONFIG_PREEMPT=n.  So, this version
->  of kprobe optimization supports only kernels with CONFIG_PREEMPT=n [4]_.
->  
-> -- 
-> 2.17.1
-> 
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+On 3/26/19 5:35 PM, Keith Busch wrote:
+> On Mon, Mar 25, 2019 at 12:49:21PM -0700, Yang Shi wrote:
+>> On 3/24/19 3:20 PM, Keith Busch wrote:
+>>> How do these pages eventually get to swap when migration fails? Looks
+>>> like that's skipped.
+>> Yes, they will be just put back to LRU. Actually, I don't expect it would be
+>> very often to have migration fail at this stage (but I have no test data to
+>> support this hypothesis) since the pages have been isolated from LRU, so
+>> other reclaim path should not find them anymore.
+>>
+>> If it is locked by someone else right before migration, it is likely
+>> referenced again, so putting back to LRU sounds not bad.
+>>
+>> A potential improvement is to have sync migration for kswapd.
+> Well, it's not that migration fails only if the page is recently
+> referenced. Migration would fail if there isn't available memory in
+> the migration node, so this implementation carries an expectation that
+> migration nodes have higher free capacity than source nodes. And since
+> your attempting THP's without ever splitting them, that also requires
+> lower fragmentation for a successful migration.
+
+Yes, it is possible. However, migrate_pages() already has logic to 
+handle such case. If the target node has not enough space for migrating 
+THP in a whole, it would split THP then retry with base pages.
+
+Swapping THP has been optimized to swap in a whole too. It would try to 
+add THP into swap cache in a whole, split THP if the attempt fails, then 
+add base pages into swap cache.
+
+So, I think we can leave this to migrate_pages() without splitting in 
+advance all the time.
+
+Thanks,
+Yang
+
+>
+> Applications, however, may allocate and pin pages directly out of that
+> migration node to the point it does not have so much free capacity or
+> physical continuity, so we probably shouldn't assume it's the only way
+> to reclaim pages.
+
