@@ -2,52 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D16C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFD0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7372F2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E1A2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710414;
-	bh=UZZfJAd/MIxbV9rLNwTB/IdN3PAoh7/9gJ2oJMOfL+0=;
+	s=default; t=1553710420;
+	bh=9foi206G+tyuuhB8g9JugR+nv//DuJh7gTBh4m/0VW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JpfozY6pKHylmFvmN5ExdeQIJGt42yki4ljSe/QSqX0ITEIn5U8ixoPfajZKMs9Eq
-	 TaAWXHDo1mvL+pz6AQtzikxyvYOvDPFRrS+ihbkI3Fg0REzaprs2ATNpKCaLOsAN80
-	 pWtN/ktnsKVj/YrMIJeXrGVD7Uat8u0VooEN1uEA=
+	b=HNngwG4hXc9df402GZ5qPc7aAlZ2bQgFeYt7sK+0jBqnVoyrAREXNVBJYSyjGw61O
+	 cCLHCw4ih1BOwcLgsKgQ25QgjO70LMI8fuVmMfxhW+v6LFdgGyiR86/RnucjTsrmZc
+	 EAPIluLtjLp4KyuLKZj70CMxq5bUEWV7tAG3tBog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389454AbfC0SNd (ORCPT
+        id S2388704AbfC0SNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389429AbfC0SNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:30 -0400
+        id S2389429AbfC0SNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:13:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 991D221741;
-        Wed, 27 Mar 2019 18:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81D3A21741;
+        Wed, 27 Mar 2019 18:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710408;
-        bh=UZZfJAd/MIxbV9rLNwTB/IdN3PAoh7/9gJ2oJMOfL+0=;
+        s=default; t=1553710414;
+        bh=9foi206G+tyuuhB8g9JugR+nv//DuJh7gTBh4m/0VW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BP7Wll+4QVjdLRaL1RSBOhKATf9JWzDeIM6dUdN6wP7+2XgTJCoD53RGCM04IzfqO
-         6H38XG171TOW4lnjYMwqsvwdvABlldVVBeqCgda5CbedHKU7hU0pXeX1EVjEejTCn9
-         zPKslBOMR3g1Ccvu9BP+yjimzIPfGQXfv5mOvFtg=
+        b=q/3tHokFBamUL0S06/aItEsShsN8ItPVbyyVvnrBZkkjw+rm4slN0UEQt6Bv6ftRI
+         7RW4sAxgBJoHx5FeAfNI8dGz1Ybe9GZlh9jdKsU8b/XkpDwypNsohn2GP5J+jfNmBv
+         2ttbSKxZIeeDqRfaWYIvP78VNMjYLUawUM4mvsME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chieh-Min Wang <chiehminw@synology.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 106/192] netfilter: conntrack: fix cloned unconfirmed skb->_nfct race in __nf_conntrack_confirm
-Date:   Wed, 27 Mar 2019 14:08:58 -0400
-Message-Id: <20190327181025.13507-106-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 107/192] ARM: 8833/1: Ensure that NEON code always compiles with Clang
+Date:   Wed, 27 Mar 2019 14:08:59 -0400
+Message-Id: <20190327181025.13507-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,130 +58,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chieh-Min Wang <chiehminw@synology.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 13f5251fd17088170c18844534682d9cab5ff5aa ]
+[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
 
-For bridge(br_flood) or broadcast/multicast packets, they could clone
-skb with unconfirmed conntrack which break the rule that unconfirmed
-skb->_nfct is never shared.  With nfqueue running on my system, the race
-can be easily reproduced with following warning calltrace:
+While building arm32 allyesconfig, I ran into the following errors:
 
-[13257.707525] CPU: 0 PID: 12132 Comm: main Tainted: P        W       4.4.60 #7744
-[13257.707568] Hardware name: Qualcomm (Flattened Device Tree)
-[13257.714700] [<c021f6dc>] (unwind_backtrace) from [<c021bce8>] (show_stack+0x10/0x14)
-[13257.720253] [<c021bce8>] (show_stack) from [<c0449e10>] (dump_stack+0x94/0xa8)
-[13257.728240] [<c0449e10>] (dump_stack) from [<c022a7e0>] (warn_slowpath_common+0x94/0xb0)
-[13257.735268] [<c022a7e0>] (warn_slowpath_common) from [<c022a898>] (warn_slowpath_null+0x1c/0x24)
-[13257.743519] [<c022a898>] (warn_slowpath_null) from [<c06ee450>] (__nf_conntrack_confirm+0xa8/0x618)
-[13257.752284] [<c06ee450>] (__nf_conntrack_confirm) from [<c0772670>] (ipv4_confirm+0xb8/0xfc)
-[13257.761049] [<c0772670>] (ipv4_confirm) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
-[13257.769725] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
-[13257.777108] [<c06e7af0>] (nf_hook_slow) from [<c07f20b4>] (br_nf_post_routing+0x274/0x31c)
-[13257.784486] [<c07f20b4>] (br_nf_post_routing) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
-[13257.792556] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
-[13257.800458] [<c06e7af0>] (nf_hook_slow) from [<c07e5580>] (br_forward_finish+0x94/0xa4)
-[13257.808010] [<c07e5580>] (br_forward_finish) from [<c07f22ac>] (br_nf_forward_finish+0x150/0x1ac)
-[13257.815736] [<c07f22ac>] (br_nf_forward_finish) from [<c06e8df0>] (nf_reinject+0x108/0x170)
-[13257.824762] [<c06e8df0>] (nf_reinject) from [<c06ea854>] (nfqnl_recv_verdict+0x3d8/0x420)
-[13257.832924] [<c06ea854>] (nfqnl_recv_verdict) from [<c06e940c>] (nfnetlink_rcv_msg+0x158/0x248)
-[13257.841256] [<c06e940c>] (nfnetlink_rcv_msg) from [<c06e5564>] (netlink_rcv_skb+0x54/0xb0)
-[13257.849762] [<c06e5564>] (netlink_rcv_skb) from [<c06e4ec8>] (netlink_unicast+0x148/0x23c)
-[13257.858093] [<c06e4ec8>] (netlink_unicast) from [<c06e5364>] (netlink_sendmsg+0x2ec/0x368)
-[13257.866348] [<c06e5364>] (netlink_sendmsg) from [<c069fb8c>] (sock_sendmsg+0x34/0x44)
-[13257.874590] [<c069fb8c>] (sock_sendmsg) from [<c06a03dc>] (___sys_sendmsg+0x1ec/0x200)
-[13257.882489] [<c06a03dc>] (___sys_sendmsg) from [<c06a11c8>] (__sys_sendmsg+0x3c/0x64)
-[13257.890300] [<c06a11c8>] (__sys_sendmsg) from [<c0209b40>] (ret_fast_syscall+0x0/0x34)
+  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
+  '-mfloat-abi=softfp -mfpu=neon'
 
-The original code just triggered the warning but do nothing. It will
-caused the shared conntrack moves to the dying list and the packet be
-droppped (nf_ct_resolve_clash returns NF_DROP for dying conntrack).
+  In file included from lib/raid6/neon1.c:27:
+  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
+  error: "NEON support not enabled"
 
-- Reproduce steps:
+Building V=1 showed NEON_FLAGS getting passed along to Clang but
+__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
+only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
+which is the '-march' value for allyesconfig.
 
-+----------------------------+
-|          br0(bridge)       |
-|                            |
-+-+---------+---------+------+
-  | eth0|   | eth1|   | eth2|
-  |     |   |     |   |     |
-  +--+--+   +--+--+   +---+-+
-     |         |          |
-     |         |          |
-  +--+-+     +-+--+    +--+-+
-  | PC1|     | PC2|    | PC3|
-  +----+     +----+    +----+
+>From lib/Basic/Targets/ARM.cpp in the Clang source:
 
-iptables -A FORWARD -m mark --mark 0x1000000/0x1000000 -j NFQUEUE --queue-num 100 --queue-bypass
+  // This only gets set when Neon instructions are actually available, unlike
+  // the VFP define, hence the soft float and arch check. This is subtly
+  // different from gcc, we follow the intent which was that it should be set
+  // when Neon instructions are actually available.
+  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
+    Builder.defineMacro("__ARM_NEON", "1");
+    Builder.defineMacro("__ARM_NEON__");
+    // current AArch32 NEON implementations do not support double-precision
+    // floating-point even when it is present in VFP.
+    Builder.defineMacro("__ARM_NEON_FP",
+                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
+  }
 
-ps: Our nfq userspace program will set mark on packets whose connection
-has already been processed.
+Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
+beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
+definined by Clang. This doesn't functionally change anything because
+that code will only run where NEON is supported, which is implicitly
+armv7.
 
-PC1 sends broadcast packets simulated by hping3:
+Link: https://github.com/ClangBuiltLinux/linux/issues/287
 
-hping3 --rand-source --udp 192.168.1.255 -i u100
-
-- Broadcast racing flow chart is as follow:
-
-br_handle_frame
-  BR_HOOK(NFPROTO_BRIDGE, NF_BR_PRE_ROUTING, br_handle_frame_finish)
-  // skb->_nfct (unconfirmed conntrack) is constructed at PRE_ROUTING stage
-  br_handle_frame_finish
-    // check if this packet is broadcast
-    br_flood_forward
-      br_flood
-        list_for_each_entry_rcu(p, &br->port_list, list) // iterate through each port
-          maybe_deliver
-            deliver_clone
-              skb = skb_clone(skb)
-              __br_forward
-                BR_HOOK(NFPROTO_BRIDGE, NF_BR_FORWARD,...)
-                // queue in our nfq and received by our userspace program
-                // goto __nf_conntrack_confirm with process context on CPU 1
-    br_pass_frame_up
-      BR_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,...)
-      // goto __nf_conntrack_confirm with softirq context on CPU 0
-
-Because conntrack confirm can happen at both INPUT and POSTROUTING
-stage.  So with NFQUEUE running, skb->_nfct with the same unconfirmed
-conntrack could race on different core.
-
-This patch fixes a repeating kernel splat, now it is only displayed
-once.
-
-Signed-off-by: Chieh-Min Wang <chiehminw@synology.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ Documentation/arm/kernel_mode_neon.txt | 4 ++--
+ arch/arm/lib/Makefile                  | 2 +-
+ arch/arm/lib/xor-neon.c                | 2 +-
+ lib/raid6/Makefile                     | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 895171a2e1f1..9a249478abf2 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -901,10 +901,18 @@ __nf_conntrack_confirm(struct sk_buff *skb)
- 	 * REJECT will give spurious warnings here.
- 	 */
+diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
+index 525452726d31..b9e060c5b61e 100644
+--- a/Documentation/arm/kernel_mode_neon.txt
++++ b/Documentation/arm/kernel_mode_neon.txt
+@@ -6,7 +6,7 @@ TL;DR summary
+ * Use only NEON instructions, or VFP instructions that don't rely on support
+   code
+ * Isolate your NEON code in a separate compilation unit, and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp'
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
+ * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
+   NEON code
+ * Don't sleep in your NEON code, and be aware that it will be executed with
+@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
+ Therefore, the recommended and only supported way of using NEON/VFP in the
+ kernel is by adhering to the following rules:
+ * isolate the NEON code in a separate compilation unit and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp';
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
+ * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
+   into the unit containing the NEON code from a compilation unit which is *not*
+   built with the GCC flag '-mfpu=neon' set.
+diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+index ad25fd1872c7..0bff0176db2c 100644
+--- a/arch/arm/lib/Makefile
++++ b/arch/arm/lib/Makefile
+@@ -39,7 +39,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
+ $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
  
--	/* No external references means no one else could have
--	 * confirmed us.
-+	/* Another skb with the same unconfirmed conntrack may
-+	 * win the race. This may happen for bridge(br_flood)
-+	 * or broadcast/multicast packets do skb_clone with
-+	 * unconfirmed conntrack.
- 	 */
--	WARN_ON(nf_ct_is_confirmed(ct));
-+	if (unlikely(nf_ct_is_confirmed(ct))) {
-+		WARN_ON_ONCE(1);
-+		nf_conntrack_double_unlock(hash, reply_hash);
-+		local_bh_enable();
-+		return NF_DROP;
-+	}
-+
- 	pr_debug("Confirming conntrack %p\n", ct);
- 	/* We have to check the DYING flag after unlink to prevent
- 	 * a race against nf_ct_get_next_corpse() possibly called from
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+-  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
++  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
+   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
+ endif
+diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
+index 2c40aeab3eaa..c691b901092f 100644
+--- a/arch/arm/lib/xor-neon.c
++++ b/arch/arm/lib/xor-neon.c
+@@ -14,7 +14,7 @@
+ MODULE_LICENSE("GPL");
+ 
+ #ifndef __ARM_NEON__
+-#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
++#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
+ #endif
+ 
+ /*
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index 7ed43eaa02ef..5e0d55c54100 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -40,7 +40,7 @@ endif
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+ NEON_FLAGS := -ffreestanding
+ ifeq ($(ARCH),arm)
+-NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
++NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+ endif
+ CFLAGS_recov_neon_inner.o += $(NEON_FLAGS)
+ ifeq ($(ARCH),arm64)
 -- 
 2.19.1
 
