@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F91C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD7AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4538D206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D13321734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714529;
-	bh=OZnzfQtAcv4CmDRzqVcFUGt7eonZAy/6rtZox1kFOCc=;
+	s=default; t=1553714532;
+	bh=Aw51D3dFq+SHYFP4bkygBxYF3FzCG3/YZ0jZlOKBKEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liQMt3qOWTKthQgBFsB9dVtoNs/BlHWrkpjSpnqgXyrh1p80z+EES9SOiJ5ZhRtAx
-	 k/NARcV+q9xZ/nshydqF0aUeFZ6i7osJt5l/pPlMVudunWdfTuIlbLHZkAsA0il+by
-	 JiUrN0aeoXv1cfOtEu6K6MsbXfhCN+irMTrh3jQA=
+	b=jYy90tVmQnxGYkK8nsLhSXjOvgYL56wzRqMC6izrM4YowqkZREck0k2zH/ZzCpafA
+	 XhtaEsi0Wc2D3Nwt0tT4HSWsFTu61i78FCNJ+40WmmRaOCg4w7V7bKPNT/Gh2puCkO
+	 h7toaMC9RygyUOz3h8j8AbztINempoVeNGlIg4vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387967AbfC0SGg (ORCPT
+        id S2388096AbfC0TWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48162 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731036AbfC0SGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:32 -0400
+        id S1733214AbfC0SGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074C521738;
-        Wed, 27 Mar 2019 18:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FFA2063F;
+        Wed, 27 Mar 2019 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709991;
-        bh=OZnzfQtAcv4CmDRzqVcFUGt7eonZAy/6rtZox1kFOCc=;
+        s=default; t=1553709995;
+        bh=Aw51D3dFq+SHYFP4bkygBxYF3FzCG3/YZ0jZlOKBKEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=puSbFfZR57r7OUWg1SlcYrSRXtKdE4mIjJuXTPrXLopa2j4VNfnMAMixawHiS9wLL
-         V6v4M6SE98IgtIvv+pgYQyuea6Rq5hI7HlVMI0DOyXDv7VKkg521Wsb9ExJWFhMqoF
-         Vt1XJ13xKyg4lT0RSJEtFKvB+VtlZqAXlE6UEWYM=
+        b=mGJE040D6aM8xh0/QciPU2Hgq8Uq/6XbaEw2PPsxoujRd7PJ/sMWtHEnbBrLk4Pw6
+         mxMz/Du6T603XNMXj7LLbIRQDqtMPmUVyTvO6qwbhHw6YfNRbNtxLF64vyO+k84rJU
+         3HEj6Ab01c2bWYI6p2wlYYBOHS3ycHMdxZ8KYmpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Emil Velikov <emil.velikov@collabora.com>,
-        intel-gfx@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 147/262] drm: allow render capable master with DRM_AUTH ioctls
-Date:   Wed, 27 Mar 2019 14:00:02 -0400
-Message-Id: <20190327180158.10245-147-sashal@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 148/262] =?UTF-8?q?selftests:=20ir:=20fix=20wa?= =?UTF-8?q?rning:=20"%s"=20directive=20output=20may=20be=20truncated=20?= =?UTF-8?q?=E2=80=99=20directive=20output=20may=20be=20truncated?=
+Date:   Wed, 27 Mar 2019 14:00:03 -0400
+Message-Id: <20190327180158.10245-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,97 +57,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Velikov <emil.velikov@collabora.com>
+From: Shuah Khan <shuah@kernel.org>
 
-[ Upstream commit 8059add0478e29cb641936011a8fcc9ce9fd80be ]
+[ Upstream commit ed675ed9da6d951322efd72d739d6b5ce1c18f02 ]
 
-There are cases (in mesa and applications) where one would open the
-primary node without properly authenticating the client.
+Fix the following warning by sizing the buffer to max. of sysfs
+path max. size + d_name max. size.
 
-Sometimes we don't check if the authentication succeeds, but there's
-also cases we simply forget to do it.
+gcc -Wall -O2 -I../../../include/uapi ir_loopback.c  -o ../tools/testing/selftests/ir/ir_loopback
+ir_loopback.c: In function ‘lirc_open’:
+ir_loopback.c:71:37: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 95 [-Wformat-truncation=]
+    snprintf(buf, sizeof(buf), "/dev/%s", dent->d_name);
+                                     ^~
+In file included from /usr/include/stdio.h:862:0,
+                 from ir_loopback.c:14:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:64:10: note: ‘__builtin___snprintf_chk’ output between 6 and 261 bytes into a destination of size 100
+   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        __bos (__s), __fmt, __va_arg_pack ());
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The former was a case for Mesa where it did not not check the return
-value of drmGetMagic() [1]. That was fixed recently although, there's
-the question of older drivers or other apps that exbibit this behaviour.
-
-While omitting the call results in issues as seen in [2] and [3].
-
-In the libva case, libva itself doesn't authenticate the DRM client and
-the vaGetDisplayDRM documentation doesn't mention if the app should
-either.
-
-As of today, the official vainfo utility doesn't authenticate.
-
-To workaround issues like these, some users resort to running their apps
-under sudo. Which admittedly isn't always a good idea.
-
-Since any DRIVER_RENDER driver has sufficient isolation between clients,
-we can use that, for unauthenticated [primary node] ioctls that require
-DRM_AUTH. But only if the respective ioctl is tagged as DRM_RENDER_ALLOW.
-
-v2:
-- Rework/simplify if check (Daniel V)
-- Add examples to commit messages, elaborate. (Daniel V)
-
-v3:
-- Use single unlikely (Daniel V)
-
-[1] https://gitlab.freedesktop.org/mesa/mesa/blob/2bc1f5c2e70fe3b4d41f060af9859bc2a94c5b62/src/egl/drivers/dri2/platform_wayland.c#L1136
-[2] https://lists.freedesktop.org/archives/libva/2016-July/004185.html
-[3] https://gitlab.freedesktop.org/mesa/kmscube/issues/1
-Testcase: igt/core_unauth_vs_render
-Cc: intel-gfx@lists.freedesktop.org
-Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190114085408.15933-2-emil.l.velikov@gmail.com
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Acked-by: Sean Young <sean@mess.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_ioctl.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ tools/testing/selftests/ir/ir_loopback.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
-index 7e6746b2d704..8c1d38a82366 100644
---- a/drivers/gpu/drm/drm_ioctl.c
-+++ b/drivers/gpu/drm/drm_ioctl.c
-@@ -508,6 +508,13 @@ int drm_version(struct drm_device *dev, void *data,
- 	return err;
- }
+diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
+index 858c19caf224..8cdf1b89ac9c 100644
+--- a/tools/testing/selftests/ir/ir_loopback.c
++++ b/tools/testing/selftests/ir/ir_loopback.c
+@@ -27,6 +27,8 @@
  
-+static inline bool
-+drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
-+{
-+	return drm_core_check_feature(dev, DRIVER_RENDER) &&
-+		(flags & DRM_RENDER_ALLOW);
-+}
-+
- /**
-  * drm_ioctl_permit - Check ioctl permissions against caller
-  *
-@@ -522,14 +529,19 @@ int drm_version(struct drm_device *dev, void *data,
-  */
- int drm_ioctl_permit(u32 flags, struct drm_file *file_priv)
+ #define TEST_SCANCODES	10
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
++#define SYSFS_PATH_MAX 256
++#define DNAME_PATH_MAX 256
+ 
+ static const struct {
+ 	enum rc_proto proto;
+@@ -56,7 +58,7 @@ static const struct {
+ int lirc_open(const char *rc)
  {
-+	const struct drm_device *dev = file_priv->minor->dev;
-+
- 	/* ROOT_ONLY is only for CAP_SYS_ADMIN */
- 	if (unlikely((flags & DRM_ROOT_ONLY) && !capable(CAP_SYS_ADMIN)))
- 		return -EACCES;
+ 	struct dirent *dent;
+-	char buf[100];
++	char buf[SYSFS_PATH_MAX + DNAME_PATH_MAX];
+ 	DIR *d;
+ 	int fd;
  
--	/* AUTH is only for authenticated or render client */
--	if (unlikely((flags & DRM_AUTH) && !drm_is_render_client(file_priv) &&
--		     !file_priv->authenticated))
--		return -EACCES;
-+	/* AUTH is only for master ... */
-+	if (unlikely((flags & DRM_AUTH) && drm_is_primary_client(file_priv))) {
-+		/* authenticated ones, or render capable on DRM_RENDER_ALLOW. */
-+		if (!file_priv->authenticated &&
-+		    !drm_render_driver_and_ioctl(dev, flags))
-+			return -EACCES;
-+	}
- 
- 	/* MASTER is only for master or control clients */
- 	if (unlikely((flags & DRM_MASTER) &&
 -- 
 2.19.1
 
