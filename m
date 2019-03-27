@@ -6,79 +6,78 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A433C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07551206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529F0206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbfC0Fcv (ORCPT
+        id S1732380AbfC0Fc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:32:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39298 "EHLO
+        Wed, 27 Mar 2019 01:32:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36800 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726214AbfC0Fcd (ORCPT
+        by vger.kernel.org with ESMTP id S1726185AbfC0Fc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:32:33 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R5TU1J047226
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:31 -0400
+        Wed, 27 Mar 2019 01:32:28 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R5TLYv061191
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:27 -0400
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rfxfj181c-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfy7aqra8-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:31 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:27 -0400
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 27 Mar 2019 05:32:29 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        Wed, 27 Mar 2019 05:32:25 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Mar 2019 05:32:26 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2R5WPIX45220094
+        Wed, 27 Mar 2019 05:32:22 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2R5WLQo40960242
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 05:32:25 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49F6511C04C;
-        Wed, 27 Mar 2019 05:32:25 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6EA611C04A;
-        Wed, 27 Mar 2019 05:32:24 +0000 (GMT)
+        Wed, 27 Mar 2019 05:32:22 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3D79A405F;
+        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22440A4062;
+        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Mar 2019 05:32:24 +0000 (GMT)
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 9C90DA0206;
-        Wed, 27 Mar 2019 16:32:23 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0C27AA00BD;
+        Wed, 27 Mar 2019 16:32:20 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
-Cc:     Greg Kurz <groug@kaod.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
         Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 4/7] ocxl: Allow external drivers to use OpenCAPI contexts
-Date:   Wed, 27 Mar 2019 16:31:33 +1100
+Subject: [PATCH v4 2/7] ocxl: Don't pass pci_dev around
+Date:   Wed, 27 Mar 2019 16:31:31 +1100
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327053137.15173-1-alastair@au1.ibm.com>
 References: <20190327053137.15173-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19032705-0028-0000-0000-00000358B774
+x-cbid: 19032705-0028-0000-0000-00000358B773
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032705-0029-0000-0000-0000241771B4
-Message-Id: <20190327053137.15173-5-alastair@au1.ibm.com>
+x-cbparentid: 19032705-0029-0000-0000-0000241771B2
+Message-Id: <20190327053137.15173-3-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1903270038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -87,196 +86,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Most OpenCAPI operations require a valid context, so
-exposing these functions to external drivers is necessary.
+This data is already available in a struct
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Reviewed-by: Greg Kurz <groug@kaod.org>
 ---
- drivers/misc/ocxl/context.c       | 22 ++++++++++-------
- drivers/misc/ocxl/file.c          |  8 ++-----
- drivers/misc/ocxl/ocxl_internal.h |  6 -----
- include/misc/ocxl.h               | 39 +++++++++++++++++++++++++++++++
- 4 files changed, 55 insertions(+), 20 deletions(-)
+ drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-index c73a859d2224..b60e674ac019 100644
---- a/drivers/misc/ocxl/context.c
-+++ b/drivers/misc/ocxl/context.c
-@@ -4,15 +4,17 @@
- #include "trace.h"
- #include "ocxl_internal.h"
- 
--struct ocxl_context *ocxl_context_alloc(void)
--{
--	return kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
--}
--
--int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-+int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 		struct address_space *mapping)
- {
- 	int pasid;
-+	struct ocxl_context *ctx;
-+
-+	*context = kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
-+	if (!*context)
-+		return -ENOMEM;
-+
-+	ctx = *context;
- 
- 	ctx->afu = afu;
- 	mutex_lock(&afu->contexts_lock);
-@@ -43,6 +45,7 @@ int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
- 	ocxl_afu_get(afu);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(ocxl_context_alloc);
- 
- /*
-  * Callback for when a translation fault triggers an error
-@@ -63,7 +66,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
- 	wake_up_all(&ctx->events_wq);
- }
- 
--int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
-+int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
- {
- 	int rc;
- 
-@@ -75,7 +78,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
- 	}
- 
- 	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
--			current->mm->context.id, ctx->tidr, amr, current->mm,
-+			mm->context.id, ctx->tidr, amr, mm,
- 			xsl_fault_error, ctx);
- 	if (rc)
- 		goto out;
-@@ -85,6 +88,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
- 	mutex_unlock(&ctx->status_mutex);
+diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+index 1a4411b72d35..2f2fe12eac1e 100644
+--- a/drivers/misc/ocxl/core.c
++++ b/drivers/misc/ocxl/core.c
+@@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
  	return rc;
  }
-+EXPORT_SYMBOL_GPL(ocxl_context_attach);
  
- static vm_fault_t map_afu_irq(struct vm_area_struct *vma, unsigned long address,
- 		u64 offset, struct ocxl_context *ctx)
-@@ -243,6 +247,7 @@ int ocxl_context_detach(struct ocxl_context *ctx)
+-static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_actag(struct ocxl_afu *afu)
+ {
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int actag_count, actag_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+ 
+ 	/*
+ 	 * if there were not enough actags for the function, each afu
+@@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+ 		fn->actag_enabled / fn->actag_supported;
+ 	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+ 	if (actag_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+ 			actag_count, actag_offset);
+ 		return actag_offset;
  	}
+ 	afu->actag_base = fn->actag_base + actag_offset;
+ 	afu->actag_enabled = actag_count;
+ 
+-	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->actag_base, afu->actag_enabled);
+-	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+ 		afu->actag_base, afu->actag_enabled);
  	return 0;
  }
-+EXPORT_SYMBOL_GPL(ocxl_context_detach);
- 
- void ocxl_context_detach_all(struct ocxl_afu *afu)
- {
-@@ -280,3 +285,4 @@ void ocxl_context_free(struct ocxl_context *ctx)
- 	ocxl_afu_put(ctx->afu);
- 	kfree(ctx);
+@@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+ 	ocxl_actag_afu_free(afu->fn, start_offset, size);
  }
-+EXPORT_SYMBOL_GPL(ocxl_context_free);
-diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-index 7a38ea5af9db..8225892a5d77 100644
---- a/drivers/misc/ocxl/file.c
-+++ b/drivers/misc/ocxl/file.c
-@@ -61,11 +61,7 @@ static int afu_open(struct inode *inode, struct file *file)
- 	if (!info)
- 		return -ENODEV;
  
--	ctx = ocxl_context_alloc();
--	if (!ctx)
--		return -ENOMEM;
--
--	rc = ocxl_context_init(ctx, info->afu, inode->i_mapping);
-+	rc = ocxl_context_alloc(&ctx, info->afu, inode->i_mapping);
+-static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_pasid(struct ocxl_afu *afu)
+ {
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int pasid_count, pasid_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+ 
+ 	/*
+ 	 * We only support the case where the function configuration
+@@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	pasid_count = 1 << afu->config.pasid_supported_log;
+ 	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+ 	if (pasid_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+ 			pasid_count, pasid_offset);
+ 		return pasid_offset;
+ 	}
+@@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	afu->pasid_count = 0;
+ 	afu->pasid_max = pasid_count;
+ 
+-	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->pasid_base,
+ 				afu->config.pasid_supported_log);
+-	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+ 		afu->pasid_base, pasid_count);
+ 	return 0;
+ }
+@@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+ 	WARN_ON(fn->bar_used[idx] < 0);
+ }
+ 
+-static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
++static int map_mmio_areas(struct ocxl_afu *afu)
+ {
+ 	int rc;
++	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
+ 
+ 	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+ 	if (rc)
+@@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	}
+ 
+ 	afu->global_mmio_start =
+-		pci_resource_start(dev, afu->config.global_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+ 		afu->config.global_mmio_offset;
+ 	afu->pp_mmio_start =
+-		pci_resource_start(dev, afu->config.pp_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+ 		afu->config.pp_mmio_offset;
+ 
+ 	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+@@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	if (!afu->global_mmio_ptr) {
+ 		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+ 		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+-		dev_err(&dev->dev, "Error mapping global mmio area\n");
++		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
  	if (rc)
  		return rc;
  
-@@ -90,7 +86,7 @@ static long afu_ioctl_attach(struct ocxl_context *ctx,
- 		return -EINVAL;
+-	rc = assign_afu_actag(afu, dev);
++	rc = assign_afu_actag(afu);
+ 	if (rc)
+ 		return rc;
  
- 	amr = arg.amr & mfspr(SPRN_UAMOR);
--	rc = ocxl_context_attach(ctx, amr);
-+	rc = ocxl_context_attach(ctx, amr, current->mm);
- 	return rc;
+-	rc = assign_afu_pasid(afu, dev);
++	rc = assign_afu_pasid(afu);
+ 	if (rc) {
+ 		reclaim_afu_actag(afu);
+ 		return rc;
+ 	}
+ 
+-	rc = map_mmio_areas(afu, dev);
++	rc = map_mmio_areas(afu);
+ 	if (rc) {
+ 		reclaim_afu_pasid(afu);
+ 		reclaim_afu_actag(afu);
+@@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+ 	device_unregister(&afu->dev);
  }
  
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 53b6c64a1bf0..de6c16237742 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -130,15 +130,9 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
-  */
- int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+-static struct ocxl_fn *alloc_function(struct pci_dev *dev)
++static struct ocxl_fn *alloc_function(void)
+ {
+ 	struct ocxl_fn *fn;
  
--struct ocxl_context *ocxl_context_alloc(void);
--int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
--			struct address_space *mapping);
--int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
- int ocxl_context_mmap(struct ocxl_context *ctx,
- 			struct vm_area_struct *vma);
--int ocxl_context_detach(struct ocxl_context *ctx);
- void ocxl_context_detach_all(struct ocxl_afu *afu);
--void ocxl_context_free(struct ocxl_context *ctx);
- 
- int ocxl_sysfs_register_afu(struct ocxl_file_info *info);
- void ocxl_sysfs_unregister_afu(struct ocxl_file_info *info);
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 8bafd748e380..e4704632eac5 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -48,6 +48,7 @@ struct ocxl_fn_config {
- // These are opaque outside the ocxl driver
- struct ocxl_afu;
- struct ocxl_fn;
-+struct ocxl_context;
- 
- // Device detection & initialisation
- 
-@@ -116,6 +117,44 @@ const struct ocxl_fn_config *ocxl_function_config(struct ocxl_fn *fn);
-  */
- void ocxl_function_close(struct ocxl_fn *fn);
- 
-+// Context allocation
+@@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+ 	INIT_LIST_HEAD(&fn->afu_list);
+ 	INIT_LIST_HEAD(&fn->pasid_list);
+ 	INIT_LIST_HEAD(&fn->actag_list);
 +
-+/**
-+ * Allocate an OpenCAPI context
-+ *
-+ * @context: The OpenCAPI context to allocate, must be freed with ocxl_context_free
-+ * @afu: The AFU the context belongs to
-+ * @mapping: The mapping to unmap when the context is closed (may be NULL)
-+ */
-+int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
-+			struct address_space *mapping);
-+
-+/**
-+ * Free an OpenCAPI context
-+ *
-+ * @ctx: The OpenCAPI context to free
-+ */
-+void ocxl_context_free(struct ocxl_context *ctx);
-+
-+/**
-+ * Grant access to an MM to an OpenCAPI context
-+ * @ctx: The OpenCAPI context to attach
-+ * @amr: The value of the AMR register to restrict access
-+ * @mm: The mm to attach to the context
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
-+				struct mm_struct *mm);
-+
-+/**
-+ * Detach an MM from an OpenCAPI context
-+ * @ctx: The OpenCAPI context to attach
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+int ocxl_context_detach(struct ocxl_context *ctx);
-+
- // AFU Metadata
+ 	return fn;
+ }
  
- /**
+@@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+ 	struct ocxl_fn *fn;
+ 	int rc;
+ 
+-	fn = alloc_function(dev);
++	fn = alloc_function();
+ 	if (!fn)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
 2.20.1
 
