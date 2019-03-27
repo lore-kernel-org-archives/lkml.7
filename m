@@ -2,104 +2,86 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBE1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6915EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E5921734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8F82147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711441;
-	bh=G29KAmivEVauUP9kmJQ62V5Z8ACbEWa485xV7vn5CXw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HlZO4mFuQ6Sz9fAjWv417BzmJmz7oKbzSmiaBNJX6jM7MbfpTTGFyC0g19MIuJlHH
-	 Cz/25yA4QmPDqELZ9w8qLGm9XjV8hwx/Uup9yFthbMVVR3eKkO0wt2DTk7+cQIKzm1
-	 sYqNDfS9M9GxtPT79wB089APu64vjelhbTaYkez8=
+	s=default; t=1553711445;
+	bh=FEebj0502C3pFhHspUOoBenpKH2Cm67GYCFW9wmbjw8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H8xW7KY+sj+Rgtd6Pa6d2IHjWZsM6EUVHSTX31Pu7SqUvNUL9x49ufEgyi9vYjTrL
+	 9qndOsrIg+dcFXpNit8aA0MKW/ylmy6ThPYot+Rj4rXfGATQRXyqkhgMtqVmmxQtUP
+	 msDx3lQ05pWPE6yIkF1age2zleE7phPG91UPq79U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391823AbfC0Saj (ORCPT
+        id S2391925AbfC0Sao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45706 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391656AbfC0S0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:07 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2391656AbfC0Sal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:30:41 -0400
+Received: from localhost (unknown [88.128.80.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5768C2063F;
-        Wed, 27 Mar 2019 18:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E0A02147C;
+        Wed, 27 Mar 2019 18:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711167;
-        bh=G29KAmivEVauUP9kmJQ62V5Z8ACbEWa485xV7vn5CXw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hyLcDRcUqyIy74vDrXEERFNexbfNI7NraN/XgnyiTTAZcH4dvJofAjHGkZkEYU+BW
-         b6/U+pEMAJXCnVoNFzjDpzf166NPxd+cTk+0zJhbcbJe3AkUPNmsJ8GbtcsNO/0Yi2
-         A4EpwwbysL7fVbWyg2CnZSa0s710cP3AaO33+GRw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 24/41] bcache: fix input overflow to cache set sysfs file io_error_halflife
-Date:   Wed, 27 Mar 2019 14:25:01 -0400
-Message-Id: <20190327182518.19394-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
-References: <20190327182518.19394-1-sashal@kernel.org>
+        s=default; t=1553711441;
+        bh=FEebj0502C3pFhHspUOoBenpKH2Cm67GYCFW9wmbjw8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1Qhbn+l7hFrMmzWdg7Yr9Y6H0SOHHOCJRbFUQH5kJJCmHIEcnAFTJx2W6uSnQgmMO
+         rIisQtBgpwc3estXTCtwc7+yOfAw8otbXa9OcZt7S35U4yxaH6xRtQQthYZylPVM8D
+         0mb0AqbGyqke+Kq+7PQkZmk1RtfS6fbA/teowemQ=
+Date:   Thu, 28 Mar 2019 03:29:47 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked
+ down
+Message-ID: <20190327182947.GA9371@kroah.com>
+References: <20190326182742.16950-1-matthewgarrett@google.com>
+ <20190326182742.16950-26-matthewgarrett@google.com>
+ <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
+ <20190327003057.GA27311@kroah.com>
+ <CALCETrVDDf4dj3Md1Nxc5P_NCToXGnAbEO3bGfwgKSfeVmU4Kw@mail.gmail.com>
+ <20190327050615.GA548@kroah.com>
+ <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
+ <20190327053342.GA17484@kroah.com>
+ <CALCETrUW=r=xyr4pGiGnn9zUEevf=z6PP3111Ds6qguV5SjYUQ@mail.gmail.com>
+ <CACdnJus=zXgmNas+XVkWfe+ohAHEGMYLtfuYe0TH-eE=4p0oRw@mail.gmail.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACdnJus=zXgmNas+XVkWfe+ohAHEGMYLtfuYe0TH-eE=4p0oRw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+On Wed, Mar 27, 2019 at 10:42:18AM -0700, Matthew Garrett wrote:
+> On Wed, Mar 27, 2019 at 10:40 AM Andy Lutomirski <luto@kernel.org> wrote:
+> > As far as I'm concerned, preventing root from crashing the system
+> > should not be a design goal of lockdown at all.  And I think that the
+> > "integrity" mode should be as non-annoying as possible, so I think we
+> > should allow reading from debugfs.
+> 
+> I have no horse in this game - I'm happy to bring back the previous
+> approach for integrity mode and block reads entirely in
+> confidentiality mode, but I'd rather not spend another release cycle
+> arguing about it.
 
-[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
+I really do not care either way about any of this :)
 
-Cache set sysfs entry io_error_halflife is used to set c->error_decay.
-c->error_decay is in type unsigned int, and it is converted by
-strtoul_or_return(), therefore overflow to c->error_decay is possible
-for a large input value.
-
-This patch fixes the overflow by using strtoul_safe_clamp() to convert
-input string to an unsigned long value in range [0, UINT_MAX], then
-divides by 88 and set it to c->error_decay.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/bcache/sysfs.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 5a5c1f1bd8a5..87daccbbc61b 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -645,8 +645,17 @@ STORE(__bch_cache_set)
- 		c->error_limit = strtoul_or_return(buf) << IO_ERROR_SHIFT;
- 
- 	/* See count_io_errors() for why 88 */
--	if (attr == &sysfs_io_error_halflife)
--		c->error_decay = strtoul_or_return(buf) / 88;
-+	if (attr == &sysfs_io_error_halflife) {
-+		unsigned long v = 0;
-+		ssize_t ret;
-+
-+		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
-+		if (!ret) {
-+			c->error_decay = v / 88;
-+			return size;
-+		}
-+		return ret;
-+	}
- 
- 	sysfs_strtoul(journal_delay_ms,		c->journal_delay_ms);
- 	sysfs_strtoul(verify,			c->verify);
--- 
-2.19.1
-
+greg k-h
