@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7F7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E69A2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E813206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711153;
-	bh=YoqSCTvrpaRL0qkU+1ywch6Hao+elaF2icblq+ovbus=;
+	s=default; t=1553711161;
+	bh=2lXrXpyqa7BiMbFvzsRVrfOsxWCms1EHHH8Mz/Q5dZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9yNKtuJPJevXsiFBr7csFRnbbRzOC3S9GZdq6XFP3cXCo7CGjjM5nCepLy/Nd9SL
-	 KrQfBscONGvlDYOfeuQYJktn0Yg5f9ehb77Mk+G17v3dhVNc5x8x9MdSMwKfDOAwjA
-	 Wxzq62nNOKwJOvdxrIG+OoDG+yAY5+h+5Vija3ic=
+	b=llrm8StwWnbKxqVeDELYf9RSpbiaBI2l83dGSF9AblyYWr7po092J1n3tb6whTsEJ
+	 zHMVdibZVm5BazcmYE0prjLfRd3HqfOq+EuVg+k+HajzlyC6m+RmGKY+WN/m2ck9O7
+	 tkuITilQzVsyuFKyAXuY9kdAR4mWm2qUd1avYmsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404279AbfC0SZw (ORCPT
+        id S2391579AbfC0S0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404247AbfC0SZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:47 -0400
+        id S2404018AbfC0SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB5720449;
-        Wed, 27 Mar 2019 18:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1462063F;
+        Wed, 27 Mar 2019 18:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711145;
-        bh=YoqSCTvrpaRL0qkU+1ywch6Hao+elaF2icblq+ovbus=;
+        s=default; t=1553711151;
+        bh=2lXrXpyqa7BiMbFvzsRVrfOsxWCms1EHHH8Mz/Q5dZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3ib7jBie+60xrsAp4QNG0RSzobIjA4aDx/Q3BySaC32bhUP65XpjIjvdOhGARC4E
-         qOTJPXKO6WhYqwMrWI5BIcHfgAWhS8Su4Kpl9CvFDPKyWT/dpsy8p5AexWFNtjrlVf
-         eAvwoGluMDgB2Ar4a3sZLXX8TLU/tfgK0EcO3ChA=
+        b=bDx0KnJMlLum6BsgR1Yq89iGxZgExPw5GNLUPYYksMbfme6D0QiAfJ5DaF0FU9h37
+         uqtb3Wvojlr5nFcplA80RK6pzvvWi/Uwn0kHl3EiNraqVxbaphteEQgmrNlQ5yqxOH
+         TNOiI3dpOrEorhWPu51aE02gn+gFwT3XagP+VkbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 14/41] ARM: 8840/1: use a raw_spinlock_t in unwind
-Date:   Wed, 27 Mar 2019 14:24:51 -0400
-Message-Id: <20190327182518.19394-14-sashal@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 18/41] scsi: megaraid_sas: return error when create DMA pool failed
+Date:   Wed, 27 Mar 2019 14:24:55 -0400
+Message-Id: <20190327182518.19394-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -57,92 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
+[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
 
-Mostly unwind is done with irqs enabled however SLUB may call it with
-irqs disabled while creating a new SLUB cache.
+when create DMA pool for cmd frames failed, we should return -ENOMEM,
+instead of 0.
+In some case in:
 
-I had system freeze while loading a module which called
-kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
-interrupts and then
+    megasas_init_adapter_fusion()
 
-->new_slab_objects()
- ->new_slab()
-  ->setup_object()
-   ->setup_object_debug()
-    ->init_tracking()
-     ->set_track()
-      ->save_stack_trace()
-       ->save_stack_trace_tsk()
-        ->walk_stackframe()
-         ->unwind_frame()
-          ->unwind_find_idx()
-           =>spin_lock_irqsave(&unwind_lock);
+    -->megasas_alloc_cmds()
+       -->megasas_create_frame_pool
+          create DMA pool failed,
+        --> megasas_free_cmds() [1]
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+    -->megasas_alloc_cmds_fusion()
+       failed, then goto fail_alloc_cmds.
+    -->megasas_free_cmds() [2]
+
+we will call megasas_free_cmds twice, [1] will kfree cmd_list,
+[2] will use cmd_list.it will cause a problem:
+
+Unable to handle kernel NULL pointer dereference at virtual address
+00000000
+pgd = ffffffc000f70000
+[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
+*pmd=0000001fbf894003, *pte=006000006d000707
+Internal error: Oops: 96000005 [#1] SMP
+ Modules linked in:
+ CPU: 18 PID: 1 Comm: swapper/0 Not tainted
+ task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
+ PC is at megasas_free_cmds+0x30/0x70
+ LR is at megasas_free_cmds+0x24/0x70
+ ...
+ Call trace:
+ [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
+ [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
+ [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
+ [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
+ [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
+ [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
+ [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
+ [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
+ [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
+  [<ffffffc000539e88>] driver_attach+0x28/0x34
+ [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
+ [<ffffffc00053b234>] driver_register+0x6c/0x138
+ [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
+ [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
+ [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
+ [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
+ [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
+
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/unwind.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index cbb85c5fabf9..5184fe85d167 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
- static const struct unwind_idx *__origin_unwind_idx;
- extern const struct unwind_idx __stop_unwind_idx[];
- 
--static DEFINE_SPINLOCK(unwind_lock);
-+static DEFINE_RAW_SPINLOCK(unwind_lock);
- static LIST_HEAD(unwind_tables);
- 
- /* Convert a prel31 symbol to an absolute address */
-@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 		/* module unwind tables */
- 		struct unwind_table *table;
- 
--		spin_lock_irqsave(&unwind_lock, flags);
-+		raw_spin_lock_irqsave(&unwind_lock, flags);
- 		list_for_each_entry(table, &unwind_tables, list) {
- 			if (addr >= table->begin_addr &&
- 			    addr < table->end_addr) {
-@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 				break;
- 			}
- 		}
--		spin_unlock_irqrestore(&unwind_lock, flags);
-+		raw_spin_unlock_irqrestore(&unwind_lock, flags);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 1ff0ece87644..24cc8786ff06 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3743,6 +3743,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
+ 	if (megasas_create_frame_pool(instance)) {
+ 		printk(KERN_DEBUG "megasas: Error creating frame DMA pool\n");
+ 		megasas_free_cmds(instance);
++		return -ENOMEM;
  	}
  
- 	pr_debug("%s: idx = %p\n", __func__, idx);
-@@ -530,9 +530,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
- 	tab->begin_addr = text_addr;
- 	tab->end_addr = text_addr + text_size;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_add_tail(&tab->list, &unwind_tables);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	return tab;
- }
-@@ -544,9 +544,9 @@ void unwind_table_del(struct unwind_table *tab)
- 	if (!tab)
- 		return;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_del(&tab->list);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	kfree(tab);
- }
+ 	return 0;
 -- 
 2.19.1
 
