@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8E8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B84C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6520B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C30F2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbfC0IqY (ORCPT
+        id S1733242AbfC0Iqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:46:24 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:45741 "EHLO
+        Wed, 27 Mar 2019 04:46:39 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52829 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732754AbfC0Io4 (ORCPT
+        with ESMTP id S1732567AbfC0Iot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:44:56 -0400
+        Wed, 27 Mar 2019 04:44:49 -0400
 X-Originating-IP: 90.88.32.136
 Received: from mc-bl-xps13.lan (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
         (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id BA9254000B;
-        Wed, 27 Mar 2019 08:44:52 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 6974E4000B;
+        Wed, 27 Mar 2019 08:44:45 +0000 (UTC)
 From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -35,9 +35,9 @@ Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
         ymarkman@marvell.com, mw@semihalf.com,
         Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next 08/18] net: mvpp2: debugfs: Allow reading the flow table from debugfs
-Date:   Wed, 27 Mar 2019 09:44:12 +0100
-Message-Id: <20190327084422.4209-9-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 05/18] net: mvpp2: cls: Rename MVPP2_N_FLOWS to MVPP2_N_PRS_FLOWS
+Date:   Wed, 27 Mar 2019 09:44:09 +0100
+Message-Id: <20190327084422.4209-6-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327084422.4209-1-maxime.chevallier@bootlin.com>
 References: <20190327084422.4209-1-maxime.chevallier@bootlin.com>
@@ -48,138 +48,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Classifier flow table is the central part of the PPv2 Classifier,
-since it describes all classification steps performed for each flow.
+The macro definition MVPP2_N_FLOWS is ambiguous because it really
+represents the number of entries in the Header Parser that are used to
+identify the classification flows.
 
-It has 512 entries, shared between all ports, which are divided into
-sequences that are pointed-to by the decoding table. Being able to see
-which entries in the flow table were hit is a key point when
-implementing and debugging classification offload.
-
-This commit allows reading each flow table entry's hit count
-independently, with a clear-on-read behaviour.
+Rename the macro to clearly state that we represent the number of flows
+in the Header Parser.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- .../ethernet/marvell/mvpp2/mvpp2_debugfs.c    | 69 +++++++++++++++++--
- 1 file changed, 63 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h         |  2 ++
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c     | 10 +++++-----
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h     |  3 ++-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c |  2 +-
+ 4 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-index 5c2f84a2741e..4100d82eca75 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-@@ -23,6 +23,11 @@ struct mvpp2_dbgfs_flow_entry {
- 	struct mvpp2 *priv;
- };
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+index 1356fc4fbccb..6220284798b1 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+@@ -612,6 +612,8 @@
+ #define MVPP2_BIT_TO_WORD(bit)		((bit) / 32)
+ #define MVPP2_BIT_IN_WORD(bit)		((bit) % 32)
  
-+struct mvpp2_dbgfs_flow_tbl_entry {
-+	int id;
-+	struct mvpp2 *priv;
-+};
++#define MVPP2_N_PRS_FLOWS		52
 +
- struct mvpp2_dbgfs_port_flow_entry {
- 	struct mvpp2_port *port;
- 	struct mvpp2_dbgfs_flow_entry *dbg_fe;
-@@ -32,6 +37,9 @@ struct mvpp2_dbgfs_entries {
- 	/* Entries for Header Parser debug info */
- 	struct mvpp2_dbgfs_prs_entry prs_entries[MVPP2_PRS_TCAM_SRAM_SIZE];
+ /* RSS constants */
+ #define MVPP22_RSS_TABLE_ENTRIES	32
  
-+	/* Entries for Classifier Flow Table debug info */
-+	struct mvpp2_dbgfs_flow_tbl_entry flt_entries[MVPP2_CLS_FLOWS_TBL_SIZE];
-+
- 	/* Entries for Classifier flows debug info */
- 	struct mvpp2_dbgfs_flow_entry flow_entries[MVPP2_N_PRS_FLOWS];
- 
-@@ -41,10 +49,9 @@ struct mvpp2_dbgfs_entries {
- 
- static int mvpp2_dbgfs_flow_flt_hits_show(struct seq_file *s, void *unused)
- {
--	struct mvpp2_dbgfs_flow_entry *entry = s->private;
--	int id = MVPP2_FLOW_C2_ENTRY(entry->flow);
-+	struct mvpp2_dbgfs_flow_tbl_entry *entry = s->private;
- 
--	u32 hits = mvpp2_cls_flow_hits(entry->priv, id);
-+	u32 hits = mvpp2_cls_flow_hits(entry->priv, entry->id);
- 
- 	seq_printf(s, "%u\n", hits);
- 
-@@ -474,9 +481,6 @@ static int mvpp2_dbgfs_flow_entry_init(struct dentry *parent,
- 	entry->flow = flow;
- 	entry->priv = priv;
- 
--	debugfs_create_file("flow_hits", 0444, flow_entry_dir, entry,
--			    &mvpp2_dbgfs_flow_flt_hits_fops);
--
- 	debugfs_create_file("dec_hits", 0444, flow_entry_dir, entry,
- 			    &mvpp2_dbgfs_flow_dec_hits_fops);
- 
-@@ -575,6 +579,55 @@ static int mvpp2_dbgfs_prs_init(struct dentry *parent, struct mvpp2 *priv)
- 	return 0;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+index 9e3b9036b75a..853254846f30 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -22,7 +22,7 @@
+ 	}							\
  }
  
-+static int mvpp2_dbgfs_flow_tbl_entry_init(struct dentry *parent,
-+					   struct mvpp2 *priv, int id)
-+{
-+	struct mvpp2_dbgfs_flow_tbl_entry *entry;
-+	struct dentry *flow_tbl_entry_dir;
-+	char flow_tbl_entry_name[10];
-+
-+	if (id >= MVPP2_CLS_FLOWS_TBL_SIZE)
-+		return -EINVAL;
-+
-+	sprintf(flow_tbl_entry_name, "%03d", id);
-+
-+	flow_tbl_entry_dir = debugfs_create_dir(flow_tbl_entry_name, parent);
-+	if (!flow_tbl_entry_dir)
-+		return -ENOMEM;
-+
-+	entry = &priv->dbgfs_entries->flt_entries[id];
-+
-+	entry->id = id;
-+	entry->priv = priv;
-+
-+	debugfs_create_file("hits", 0444, flow_tbl_entry_dir, entry,
-+			    &mvpp2_dbgfs_flow_flt_hits_fops);
-+
-+	return 0;
-+}
-+
-+static int mvpp2_dbgfs_cls_init(struct dentry *parent, struct mvpp2 *priv)
-+{
-+	struct dentry *cls_dir, *flow_tbl_dir;
-+	int i, ret;
-+
-+	cls_dir = debugfs_create_dir("classifier", parent);
-+	if (!cls_dir)
-+		return -ENOMEM;
-+
-+	flow_tbl_dir = debugfs_create_dir("flow_table", cls_dir);
-+	if (!flow_tbl_dir)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < MVPP2_CLS_FLOWS_TBL_SIZE; i++) {
-+		ret = mvpp2_dbgfs_flow_tbl_entry_init(flow_tbl_dir, priv, i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int mvpp2_dbgfs_port_init(struct dentry *parent,
- 				 struct mvpp2_port *port)
- {
-@@ -637,6 +690,10 @@ void mvpp2_dbgfs_init(struct mvpp2 *priv, const char *name)
- 	if (ret)
- 		goto err;
+-static struct mvpp2_cls_flow cls_flows[MVPP2_N_FLOWS] = {
++static struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
+ 	/* TCP over IPv4 flows, Not fragmented, no vlan tag */
+ 	MVPP2_DEF_FLOW(TCP_V4_FLOW, MVPP2_FL_IP4_TCP_NF_UNTAG,
+ 		       MVPP22_CLS_HEK_IP4_5T,
+@@ -599,7 +599,7 @@ static int mvpp2_flow_set_hek_fields(struct mvpp2_cls_flow_entry *fe,
  
-+	ret = mvpp2_dbgfs_cls_init(mvpp2_dir, priv);
-+	if (ret)
-+		goto err;
+ struct mvpp2_cls_flow *mvpp2_cls_flow_get(int flow)
+ {
+-	if (flow >= MVPP2_N_FLOWS)
++	if (flow >= MVPP2_N_PRS_FLOWS)
+ 		return NULL;
+ 
+ 	return &cls_flows[flow];
+@@ -624,7 +624,7 @@ static int mvpp2_port_rss_hash_opts_set(struct mvpp2_port *port, int flow_type,
+ 	int i, engine, flow_index;
+ 	u16 hash_opts;
+ 
+-	for (i = 0; i < MVPP2_N_FLOWS; i++) {
++	for (i = 0; i < MVPP2_N_PRS_FLOWS; i++) {
+ 		flow = mvpp2_cls_flow_get(i);
+ 		if (!flow)
+ 			return -EINVAL;
+@@ -713,7 +713,7 @@ static u16 mvpp2_port_rss_hash_opts_get(struct mvpp2_port *port, int flow_type)
+ 	int i, flow_index;
+ 	u16 hash_opts = 0;
+ 
+-	for (i = 0; i < MVPP2_N_FLOWS; i++) {
++	for (i = 0; i < MVPP2_N_PRS_FLOWS; i++) {
+ 		flow = mvpp2_cls_flow_get(i);
+ 		if (!flow)
+ 			return 0;
+@@ -737,7 +737,7 @@ static void mvpp2_cls_port_init_flows(struct mvpp2 *priv)
+ 	struct mvpp2_cls_flow *flow;
+ 	int i;
+ 
+-	for (i = 0; i < MVPP2_N_FLOWS; i++) {
++	for (i = 0; i < MVPP2_N_PRS_FLOWS; i++) {
+ 		flow = mvpp2_cls_flow_get(i);
+ 		if (!flow)
+ 			break;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
+index 9ffbb4f4675d..22d7d9a587b0 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
+@@ -169,6 +169,8 @@ enum mvpp2_cls_lu_type {
+ /* LU Type defined for all engines, and specified in the flow table */
+ #define MVPP2_CLS_LU_TYPE_MASK			0x3f
+ 
++#define MVPP2_N_FLOWS		(MVPP2_FL_LAST - MVPP2_FL_START)
 +
- 	for (i = 0; i < priv->port_count; i++) {
- 		ret = mvpp2_dbgfs_port_init(mvpp2_dir, priv->port_list[i]);
+ struct mvpp2_cls_flow {
+ 	/* The L2-L4 traffic flow type */
+ 	int flow_type;
+@@ -183,7 +185,6 @@ struct mvpp2_cls_flow {
+ 	struct mvpp2_prs_result_info prs_ri;
+ };
+ 
+-#define MVPP2_N_FLOWS	52
+ 
+ #define MVPP2_ENTRIES_PER_FLOW			(MVPP2_MAX_PORTS + 1)
+ #define MVPP2_FLOW_C2_ENTRY(id)			((((id) - MVPP2_FL_START) * \
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+index f9744a61e5dd..97e0ef130a61 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+@@ -557,7 +557,7 @@ static int mvpp2_dbgfs_flow_init(struct dentry *parent, struct mvpp2 *priv)
+ 	if (!flow_dir)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < MVPP2_N_FLOWS; i++) {
++	for (i = 0; i < MVPP2_N_PRS_FLOWS; i++) {
+ 		ret = mvpp2_dbgfs_flow_entry_init(flow_dir, priv, i);
  		if (ret)
+ 			return ret;
 -- 
 2.20.1
 
