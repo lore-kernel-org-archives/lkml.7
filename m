@@ -6,35 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F59AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B46206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D16A2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731891AbfC0NDe (ORCPT
+        id S1731809AbfC0NDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:03:34 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:49704 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731513AbfC0NDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 09:03:32 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TNmt4bn_1553691753;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TNmt4bn_1553691753)
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44755 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728315AbfC0NDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:03:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TNmZ5w-_1553691746;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TNmZ5w-_1553691746)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 Mar 2019 21:02:33 +0800
+          Wed, 27 Mar 2019 21:02:26 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     alex.shi@linux.alibaba.com, harryxiyou@gmail.com, corbet@lwn.net,
         leoyang.li@nxp.com, linux-doc@vger.kernel.org
-Cc:     Federico Vaga <federico.vaga@vaga.pv.it>,
-        SeongJae Park <sj38.park@gmail.com>,
-        James Morris <james.morris@microsoft.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 40/42] docs/zh_CN: redirect the submitting-patches to Chinese doc
-Date:   Wed, 27 Mar 2019 21:01:46 +0800
-Message-Id: <20190327130148.3258-41-alex.shi@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 24/42] docs/zh_CN: add submit-checklist file
+Date:   Wed, 27 Mar 2019 21:01:30 +0800
+Message-Id: <20190327130148.3258-25-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
 References: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
@@ -46,159 +42,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have latest Chinese version submitting-patches.rst, it's time to
-use it in other docs.
+Now it appears in 'make htmldocs' in Chinese version.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Federico Vaga <federico.vaga@vaga.pv.it>
-Cc: SeongJae Park <sj38.park@gmail.com>
-Cc: James Morris <james.morris@microsoft.com>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../translations/zh_CN/process/5.Posting.rst          | 11 ++++++-----
- .../translations/zh_CN/process/8.Conclusion.rst       |  6 +++---
- Documentation/translations/zh_CN/process/howto.rst    |  4 ++--
- .../zh_CN/process/stable-kernel-rules.rst             |  2 +-
- .../translations/zh_CN/process/submit-checklist.rst   |  2 +-
- .../translations/zh_CN/process/submitting-drivers.rst |  2 +-
- 6 files changed, 14 insertions(+), 13 deletions(-)
+ .../zh_CN/process/submit-checklist.rst        | 102 ++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/process/submit-checklist.rst
 
-diff --git a/Documentation/translations/zh_CN/process/5.Posting.rst b/Documentation/translations/zh_CN/process/5.Posting.rst
-index 425b805c85a1..66b33fe58f3d 100644
---- a/Documentation/translations/zh_CN/process/5.Posting.rst
-+++ b/Documentation/translations/zh_CN/process/5.Posting.rst
-@@ -12,7 +12,7 @@
- 内核开发社区已经发展出一套用于发布补丁的约定和过程；遵循这些约定和过程将使
- 参与其中的每个人的生活更加轻松。本文件将试图合理详细地涵盖这些期望；更多信息
- 也可在以下文件中找到
--:ref:`Documentation/process/submitting-patches.rst <submittingpatches>`,
-+:ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`,
- :ref:`Documentation/process/submitting-drivers.rst  <submittingdrivers>`
- 和 :ref:`Documentation/process/submit-checklist.rst <submitchecklist>`.
- 
-@@ -145,7 +145,7 @@ bug搜寻人员想知道补丁是否负责他们正在追查的问题，想知
- 其传递给diff。
- 
- 上面提到的标签用于描述各种开发人员如何与这个补丁的开发相关联。
--:ref:`documentation/process/submitting-patches.rst <submittingpatches>`
-+:ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
- 文档中对它们进行了详细描述；下面是一个简短的总结。每一行的格式如下：
- 
- ::
-@@ -155,7 +155,8 @@ bug搜寻人员想知道补丁是否负责他们正在追查的问题，想知
- 常用的标签有：
- 
-  - Signed-off-by: 这是一个开发人员的证明，他或她有权提交补丁以包含到内核中。
--   这是开发来源认证协议，其全文可在:ref:`documentation/process/submitting-patches.rst <submittingpatches>`
-+   这是开发来源认证协议，其全文可在
-+   :ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
-    中找到，如果没有适当的签字，则不能合并到主线中。
- 
-  - Co-developed-by: 声明补丁也是由另一个开发人员和原始作者一起创建的。当多
-@@ -167,7 +168,7 @@ bug搜寻人员想知道补丁是否负责他们正在追查的问题，想知
-  - Tested-by: 声明指定的人已经测试了补丁并发现它可以工作。
- 
-  - Reviewed-by: 指定的开发人员已经审查了补丁的正确性；有关详细信息，请参阅
--   :ref:`documentation/process/submitting-patches.rst <submittingpatches>`
-+   :ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
- 
-  - Reported-by: 指定报告此修补程序修复的问题的用户；此标记用于提供感谢。
- 
-@@ -209,7 +210,7 @@ bug搜寻人员想知道补丁是否负责他们正在追查的问题，想知
-  - 将副本发送到相关邮件列表，或者，如果没有其他应用，则发送到Linux内核列表。
- 
-  - 如果您正在修复一个bug，请考虑该修复是否应进入下一个稳定更新。如果是这样，
--   stable@vger.kernel.org应该得到补丁的副本。另外，在补丁本身的标签中添加
-+   stable@vger.kernel.org 应该得到补丁的副本。另外，在补丁本身的标签中添加
-    一个“cc:stable@vger.kernel.org”；这将使稳定团队在修复进入主线时收到通知。
- 
- 当为一个补丁选择接收者时，最好知道你认为谁最终会接受这个补丁并将其合并。虽然
-diff --git a/Documentation/translations/zh_CN/process/8.Conclusion.rst b/Documentation/translations/zh_CN/process/8.Conclusion.rst
-index c164edc34687..2bbd76161e10 100644
---- a/Documentation/translations/zh_CN/process/8.Conclusion.rst
-+++ b/Documentation/translations/zh_CN/process/8.Conclusion.rst
-@@ -11,13 +11,13 @@
- 关于Linux内核开发和相关主题的信息来源很多。首先是在内核源代码分发中找到的
- 文档目录。顶级 :ref:`Documentation/translations/zh_CN/process/howto.rst <cn_process_howto>`
- 文件是一个重要的起点
--:ref:`process/submitting-patches.rst <submittingpatches>`
--和:ref:`process/submitting-drivers.rst <submittingdrivers>`
-+:ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
-+和 :ref:`process/submitting-drivers.rst <submittingdrivers>`
- 也是所有内核开发人员都应该阅读的内容。许多内部内核API都是使用kerneldoc机制
- 记录的；“make htmldocs”或“make pdfdocs”可用于以HTML或PDF格式生成这些文档（
- 尽管某些发行版提供的tex版本会遇到内部限制，无法正确处理文档）。
- 
--不同的网站在各个细节层次上讨论内核开发。您的作者想谦虚地建议用http://lwn.net/
-+不同的网站在各个细节层次上讨论内核开发。您的作者想谦虚地建议用 http://lwn.net/
- 作为来源；有关许多特定内核主题的信息可以通过以下网址的lwn内核索引找到：
- 
-         http://lwn.net/kernel/index/
-diff --git a/Documentation/translations/zh_CN/process/howto.rst b/Documentation/translations/zh_CN/process/howto.rst
-index c876c3ad7f4b..83429c9cbcf4 100644
---- a/Documentation/translations/zh_CN/process/howto.rst
-+++ b/Documentation/translations/zh_CN/process/howto.rst
-@@ -95,7 +95,7 @@ Linux内核代码中包含有大量的文档。这些文档对于学习如何与
-     范。大多数维护者只会接收符合规定的补丁，很多人也只会帮忙检查符合风格
-     的代码。
- 
--  :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
-+  :ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
-   :ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`
- 
-     这两份文档明确描述如何创建和发送补丁，其中包括（但不仅限于)：
-@@ -328,7 +328,7 @@ MAINTAINERS文件中可以找到不同话题对应的邮件列表。
- 这几行。将你的评论加在被引用的段落之间而不要放在邮件的顶部。
- 
- 如果你在邮件中附带补丁，请确认它们是可以直接阅读的纯文本（如
--:ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
-+:ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
- 文档中所述）。内核开发者们不希望遇到附件或者被压缩了的补丁。只有这样才能
- 保证他们可以直接评论你的每行代码。请确保你使用的邮件发送程序不会修改空格
- 和制表符。一个防范性的测试方法是先将邮件发送给自己，然后自己尝试是否可以
-diff --git a/Documentation/translations/zh_CN/process/stable-kernel-rules.rst b/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
-index fb048c42ae48..fba361f2ddfd 100644
---- a/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
-+++ b/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
-@@ -33,7 +33,7 @@
-   - 没有“理论上的竞争条件”，除非能给出竞争条件如何被利用的解释。
-   - 不能存在任何的“琐碎的”修正（拼写修正，去掉多余空格之类的）。
-   - 必须被相关子系统的维护者接受。
--  - 必须遵循Documentation/process/submitting-patches.rst里的规则。
-+  - 必须遵循Documentation/translations/zh_CN/process/submitting-patches.rst里的规则。
- 
- 向稳定版代码树提交补丁的过程：
- ------------------------------
 diff --git a/Documentation/translations/zh_CN/process/submit-checklist.rst b/Documentation/translations/zh_CN/process/submit-checklist.rst
-index 9ee1cb4cdab6..c931273e1487 100644
---- a/Documentation/translations/zh_CN/process/submit-checklist.rst
+new file mode 100644
+index 000000000000..012f2bf88a35
+--- /dev/null
 +++ b/Documentation/translations/zh_CN/process/submit-checklist.rst
-@@ -12,7 +12,7 @@ Linux内核补丁提交清单
- 的事情。
- 
- 这些都是在
--:ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
-+:ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
- 和其他有关提交Linux内核补丁的文档中提供的。
- 
- 1) 如果使用工具，则包括定义/声明该工具的文件。不要依赖于其他头文件拉入您使用
-diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-index 3be51d998c80..72c6cd935821 100644
---- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-@@ -22,7 +22,7 @@
- 兴趣的是显卡驱动程序，你也许应该访问 XFree86 项目(http://www.xfree86.org/)
- 和／或 X.org 项目 (http://x.org)。
- 
--另请参阅 Documentation/process/submitting-patches.rst 文档。
-+另请参阅 Documentation/Documentation/translations/zh_CN/process/submitting-patches.rst 文档。
- 
- 
- 分配设备号
+@@ -0,0 +1,102 @@
++.. _cn_submitchecklist:
++
++Linux内核补丁提交清单
++~~~~~~~~~~~~~~~~~~~~~
++
++如果开发人员希望看到他们的内核补丁提交更快地被接受，那么他们应该做一些基本
++的事情。
++
++这些都是在
++:ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
++和其他有关提交Linux内核补丁的文档中提供的。
++
++1) 如果使用工具，则包括定义/声明该工具的文件。不要依赖于其他头文件拉入您使用
++   的头文件。
++
++2) 干净的编译：
++
++   a) 使用适用或修改的 ``CONFIG`` 选项 ``=y``、``=m`` 和 ``=n`` 。没有GCC
++      警告/错误，没有链接器警告/错误。
++
++   b) 通过allnoconfig、allmodconfig
++
++   c) 使用 ``O=builddir`` 时可以成功编译
++
++3) 通过使用本地交叉编译工具或其他一些构建场在多个CPU体系结构上构建。
++
++4) PPC64是一种很好的交叉编译检查体系结构，因为它倾向于对64位的数使用无符号
++   长整型。
++
++5) 如下所述 :ref:`Documentation/process/coding-style.rst <codingstyle>`.
++   检查您的补丁是否为常规样式。在提交（ ``scripts/check patch.pl`` ）之前，
++   使用补丁样式检查器检查是否有轻微的冲突。您应该能够处理您的补丁中存在的所有
++   违规行为。
++
++6) 任何新的或修改过的 ``CONFIG`` 选项都不会弄脏配置菜单，并默认为关闭，除非
++   它们符合 ``Documentation/kbuild/kconfig-language.txt`` 中记录的异常条件,
++   菜单属性：默认值.
++
++7) 所有新的 ``kconfig`` 选项都有帮助文本。
++
++8) 已仔细审查了相关的 ``Kconfig`` 组合。这很难用测试来纠正——脑力在这里是有
++   回报的。
++
++9) 用 sparse 检查干净。
++
++10) 使用 ``make checkstack`` 和 ``make namespacecheck`` 并修复他们发现的任何
++    问题。
++
++    .. note::
++
++        ``checkstack`` 并没有明确指出问题，但是任何一个在堆栈上使用超过512
++        字节的函数都可以进行更改。
++
++11) 包括 :ref:`kernel-doc <kernel_doc>` 内核文档以记录全局内核API。（静态函数
++    不需要，但也可以。）使用 ``make htmldocs`` 或 ``make pdfdocs`` 检查
++    :ref:`kernel-doc <kernel_doc>` 并修复任何问题。
++
++12) 通过以下选项同时启用的测试 ``CONFIG_PREEMPT``, ``CONFIG_DEBUG_PREEMPT``,
++    ``CONFIG_DEBUG_SLAB``, ``CONFIG_DEBUG_PAGEALLOC``, ``CONFIG_DEBUG_MUTEXES``,
++    ``CONFIG_DEBUG_SPINLOCK``, ``CONFIG_DEBUG_ATOMIC_SLEEP``,
++    ``CONFIG_PROVE_RCU`` and ``CONFIG_DEBUG_OBJECTS_RCU_HEAD``
++
++13) 已经过构建和运行时测试，包括有或没有 ``CONFIG_SMP``, ``CONFIG_PREEMPT``.
++
++14) 如果补丁程序影响IO/磁盘等：使用或不使用 ``CONFIG_LBDAF`` 进行测试。
++
++15) 所有代码路径都已在启用所有lockdep功能的情况下运行。
++
++16) 所有新的/proc条目都记录在 ``Documentation/``
++
++17) 所有新的内核引导参数都记录在
++    Documentation/admin-guide/kernel-parameters.rst 中。
++
++18) 所有新的模块参数都记录在 ``MODULE_PARM_DESC()``
++
++19) 所有新的用户空间接口都记录在 ``Documentation/ABI/`` 中。有关详细信息，
++    请参阅 ``Documentation/ABI/README`` 。更改用户空间接口的补丁应该抄送
++    linux-api@vger.kernel.org。
++
++20) 检查是否全部通过 ``make headers_check`` 。
++
++21) 已通过至少注入slab和page分配失败进行检查。请参阅 ``Documentation/fault-injection/``
++    如果新代码是实质性的，那么添加子系统特定的故障注入可能是合适的。
++
++22) 新添加的代码已经用 ``gcc -W`` 编译（使用 ``make EXTRA-CFLAGS=-W`` ）。这
++    将产生大量噪声，但对于查找诸如“警告：有符号和无符号之间的比较”之类的错误
++    很有用。
++
++23) 在它被合并到-mm补丁集中之后进行测试，以确保它仍然与所有其他排队的补丁以
++    及VM、VFS和其他子系统中的各种更改一起工作。
++
++24) 所有内存屏障例如 ``barrier()``, ``rmb()``, ``wmb()`` 都需要源代码中的注
++    释来解释它们正在执行的操作及其原因的逻辑。
++
++25) 如果补丁添加了任何ioctl，那么也要更新 ``Documentation/ioctl/ioctl-number.txt``
++
++26) 如果修改后的源代码依赖或使用与以下 ``Kconfig`` 符号相关的任何内核API或
++    功能，则在禁用相关 ``Kconfig`` 符号和/或 ``=m`` （如果该选项可用）的情况
++    下测试以下多个构建[并非所有这些都同时存在，只是它们的各种/随机组合]：
++
++    ``CONFIG_SMP``, ``CONFIG_SYSFS``, ``CONFIG_PROC_FS``, ``CONFIG_INPUT``, ``CONFIG_PCI``, ``CONFIG_BLOCK``, ``CONFIG_PM``, ``CONFIG_MAGIC_SYSRQ``,
++    ``CONFIG_NET``, ``CONFIG_INET=n`` (但是后者伴随 ``CONFIG_NET=y``).
 -- 
 2.19.1.856.g8858448bb
 
