@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D4FC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CF5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8629C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1A92082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="eyB1tjix"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vicXpbPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfC0XRS (ORCPT
+        id S1731953AbfC0XRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:17:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58708 "EHLO
+        Wed, 27 Mar 2019 19:17:22 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:58748 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfC0XRQ (ORCPT
+        with ESMTP id S1726102AbfC0XRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:17:16 -0400
+        Wed, 27 Mar 2019 19:17:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553728633; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1553728639; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=OwUsbI8IxO1V1yE1w8GK6J9zL51AaRpn3nDzojyNNEo=;
-        b=eyB1tjixTkrvz1EOlNWuXL16/CZWzLcoSraTjC+p7C41udlb/wDT5hv+fS7xWqDHgefoSK
-        7hVMiGXNDE+U9w9EA6DXsY2BEkZaU9oZb/Nuwkjuv1xYplwc528I1LW+NUKVCktRFjONeI
-        u8pQUhj1EasxhRKU5j6u5DHl7bl1EuY=
+        bh=XhLng3suBiZ2PLO2z7A3l2ORblQjHoPUvLQwQ2gl/jQ=;
+        b=vicXpbPf/s28/UN+Zcm+YTOCCW8+Kax7WXUIp/ZsUbld8yqYyYc00xpoQOObDbiFrd9pn9
+        DCCUki9JQ+AYZA9kGpPutAn6+T1wvO1pDAmcVDWEWXwHfEyLH+1KV0JXqxTqKWeuxfDS0+
+        P69m77bVF5nlLdS0jrJe4WMeSmtrcBI=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,9 +48,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v11 08/27] watchdog: jz4740: Use regmap provided by TCU driver
-Date:   Thu, 28 Mar 2019 00:16:12 +0100
-Message-Id: <20190327231631.15708-9-paul@crapouillou.net>
+Subject: [PATCH v11 09/27] watchdog: jz4740: Avoid starting watchdog in set_timeout
+Date:   Thu, 28 Mar 2019 00:16:13 +0100
+Message-Id: <20190327231631.15708-10-paul@crapouillou.net>
 In-Reply-To: <20190327231631.15708-1-paul@crapouillou.net>
 References: <20190327231631.15708-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,109 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we broke the ABI by changing the clock, the driver was also
-updated to use the regmap provided by the TCU driver.
+Previously the jz4740_wdt_set_timeout() function was starting the timer
+unconditionally, even if it was stopped when that function was entered.
+
+Now, the timer will be restarted only if it was already running before
+this function is called.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- drivers/watchdog/jz4740_wdt.c | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ drivers/watchdog/jz4740_wdt.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 1d504ecf45e1..0f54306aee25 100644
+index 0f54306aee25..45d9495170e5 100644
 --- a/drivers/watchdog/jz4740_wdt.c
 +++ b/drivers/watchdog/jz4740_wdt.c
-@@ -13,6 +13,7 @@
-  *
-  */
- 
-+#include <linux/mfd/ingenic-tcu.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/types.h>
-@@ -25,10 +26,7 @@
- #include <linux/slab.h>
- #include <linux/err.h>
- #include <linux/of.h>
--
--#define JZ_REG_WDT_TIMER_DATA     0x0
--#define JZ_REG_WDT_COUNTER_ENABLE 0x4
--#define JZ_REG_WDT_TIMER_COUNTER  0x8
-+#include <linux/regmap.h>
- 
- #define DEFAULT_HEARTBEAT 5
- #define MAX_HEARTBEAT     2048
-@@ -48,7 +46,7 @@ MODULE_PARM_DESC(heartbeat,
- 
- struct jz4740_wdt_drvdata {
- 	struct watchdog_device wdt;
--	void __iomem *base;
-+	struct regmap *map;
- 	struct clk *clk;
- 	unsigned long clk_rate;
- };
-@@ -57,7 +55,7 @@ static int jz4740_wdt_ping(struct watchdog_device *wdt_dev)
+@@ -64,13 +64,15 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
  {
  	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
- 
--	writew(0x0, drvdata->base + JZ_REG_WDT_TIMER_COUNTER);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TCNT, 0);
- 	return 0;
- }
- 
-@@ -67,12 +65,12 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
  	u16 timeout_value = (u16)(drvdata->clk_rate * new_timeout);
++	u32 tcer;
  
--	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TCER, 0);
++	regmap_read(drvdata->map, TCU_REG_WDT_TCER, &tcer);
+ 	regmap_write(drvdata->map, TCU_REG_WDT_TCER, 0);
  
--	writew((u16)timeout_value, drvdata->base + JZ_REG_WDT_TIMER_DATA);
--	writew(0x0, drvdata->base + JZ_REG_WDT_TIMER_COUNTER);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TDR, timeout_value);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TCNT, 0);
+ 	regmap_write(drvdata->map, TCU_REG_WDT_TDR, timeout_value);
+ 	regmap_write(drvdata->map, TCU_REG_WDT_TCNT, 0);
  
--	writeb(0x1, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TCER, TCU_WDT_TCER_TCEN);
+-	regmap_write(drvdata->map, TCU_REG_WDT_TCER, TCU_WDT_TCER_TCEN);
++	regmap_write(drvdata->map, TCU_REG_WDT_TCER, tcer & TCU_WDT_TCER_TCEN);
  
  	wdt_dev->timeout = new_timeout;
  	return 0;
-@@ -96,7 +94,7 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
- {
- 	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+@@ -86,6 +88,7 @@ static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
+ 		return ret;
  
--	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
-+	regmap_write(drvdata->map, TCU_REG_WDT_TCER, 0);
- 	clk_disable_unprepare(drvdata->clk);
+ 	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
++	regmap_write(drvdata->map, TCU_REG_WDT_TCER, TCU_WDT_TCER_TCEN);
  
  	return 0;
-@@ -138,7 +136,6 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct jz4740_wdt_drvdata *drvdata;
- 	struct watchdog_device *jz4740_wdt;
--	struct resource	*res;
- 	long rate;
- 	int ret;
- 
-@@ -174,10 +171,11 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(jz4740_wdt, nowayout);
- 	watchdog_set_drvdata(jz4740_wdt, drvdata);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	drvdata->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(drvdata->base))
--		return PTR_ERR(drvdata->base);
-+	drvdata->map = dev_get_regmap(dev->parent, NULL);
-+	if (!drvdata->map) {
-+		dev_err(dev, "regmap not found\n");
-+		return -EINVAL;
-+	}
- 
- 	ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
- 	if (ret < 0)
+ }
 -- 
 2.11.0
 
