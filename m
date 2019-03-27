@@ -2,86 +2,87 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6251C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC8DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9838921734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCA62146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553692411;
-	bh=ldyO8hXl6NzVcqV0X1ccrFDZLQrtwPRyFbaP5VC0zIY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PGxS0OtBYlRtk1vM7E7yr2sIiKrscd7p32wFlZpNGQYxMKPRO9t2aUkKqfIVM76ig
-	 73OEW1DMpiwADBshRlfDFLQGK11oDi3MH7pJbzKRBASCEVQcphAPm9IAedt0qvgTpo
-	 YENoQ3rn6P25IL7nX5/VAYMSQ5RZpJJClyUZfMvo=
+	s=default; t=1553692510;
+	bh=KjSD+aCYL/x5+QmPOrYaXOA/aVMJFLfLjNZCXLXNOAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wnr+o1x8QN7nY9GpD/GqpU0Ul1O6cJQ0jBDw6Kd/4OC6uxfqI7yGA87Fm75NJYRIc
+	 aVN1k7xzdxBRfMB2K3PLrsKqBr/fXgZcJFE7tBjmEqftfu26b8kmr5G/bqao6GH55T
+	 fxuk+dsHnk3JF69MJJk6SDlknueoYtxDn/je62S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfC0NNa (ORCPT
+        id S1729224AbfC0NPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfC0NN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:13:29 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BA221773;
-        Wed, 27 Mar 2019 13:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553692409;
-        bh=ldyO8hXl6NzVcqV0X1ccrFDZLQrtwPRyFbaP5VC0zIY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tvwsQFJTuDVfa0jegPO6stpVEPdegcd4DGBpNy01AP+MmfeXwG9taBFRCzQ2xwppB
-         dYWXqjcCAOOIBES4HAy/gHp0udoDplgKGiF7wxMMKQQEQ5M6VAbiM0IW6g+Wlfxc9q
-         GNSbnORYS3sEDElxYqJFwykSx6SCjNIM6kLhd3Rc=
-Received: by mail-qt1-f181.google.com with SMTP id d13so13999367qth.5;
-        Wed, 27 Mar 2019 06:13:29 -0700 (PDT)
-X-Gm-Message-State: APjAAAU2rETCSX6KsC8WKgaiUiWiGN3QyrkVv6r4aLCIsxm5pxgMRjJU
-        lPcxcWheIRwBEz2J7pScbKtQKkHhQYSkisZRwg==
-X-Google-Smtp-Source: APXvYqz8FVRPXTmPYEoUGBnOPU0JvMFcTskTfjhJQPvgWJY6PudZW1ULZBglipzA6zR6RS1csLuD+qXwHjzp3eo9BTI=
-X-Received: by 2002:ac8:7647:: with SMTP id i7mr29089899qtr.38.1553692408279;
- Wed, 27 Mar 2019 06:13:28 -0700 (PDT)
+        Wed, 27 Mar 2019 09:15:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35884 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728101AbfC0NPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:15:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7D0A9AFD1;
+        Wed, 27 Mar 2019 13:15:07 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 14:15:06 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        hannes@cmpxchg.org, david@redhat.com, vbabka@suse.cz,
+        willy@infradead.org, akpm@linux-foundation.org,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH] mm/page-flags: Check enforce parameter in PF_ONLY_HEAD()
+Message-ID: <20190327131506.GI11927@dhcp22.suse.cz>
+References: <1553689672-28343-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-References: <20190326133938.oitfjxlx2kou26lm@arbad>
-In-Reply-To: <20190326133938.oitfjxlx2kou26lm@arbad>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 27 Mar 2019 08:13:17 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
-Message-ID: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
-Subject: Re: [PATCH v2] devantech-srf04.yaml: transform DT binding to YAML
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553689672-28343-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 8:40 AM Andreas Klinger <ak@it-klinger.de> wrote:
->
-> devantech-srf04.yaml: yaml devicetree binding for iio ultrasonic
-> proximity driver of devantech srf04
->
-> use devantech-srf04.txt, transform binding into yaml and remove the
-> outdated DT documentation
->
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
->  .../bindings/iio/proximity/devantech-srf04.yaml    | 59 ++++++++++++++++++++++
->  2 files changed, 59 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+[Cc Nick]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed 27-03-19 17:57:52, Anshuman Khandual wrote:
+> Just check for enforce parameter in PF_ONLY_HEAD() wrapper before calling
+> VM_BUG_ON_PGFLAGS() for tail pages.
+
+Why is this an actual fix? Only TESTPAGEFLAG doesn't enforce the check
+but I suspect that Nick just wanted the check to be _always_ performed
+as the name suggests. What kind of problem are you trying to solve?
+
+> Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  include/linux/page-flags.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 9f8712a4b1a5..82539e287bc6 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -229,7 +229,7 @@ static inline void page_init_poison(struct page *page, size_t size)
+>  #define PF_ANY(page, enforce)	PF_POISONED_CHECK(page)
+>  #define PF_HEAD(page, enforce)	PF_POISONED_CHECK(compound_head(page))
+>  #define PF_ONLY_HEAD(page, enforce) ({					\
+> -		VM_BUG_ON_PGFLAGS(PageTail(page), page);		\
+> +		VM_BUG_ON_PGFLAGS(enforce && PageTail(page), page);	\
+>  		PF_POISONED_CHECK(page); })
+>  #define PF_NO_TAIL(page, enforce) ({					\
+>  		VM_BUG_ON_PGFLAGS(enforce && PageTail(page), page);	\
+> -- 
+> 2.20.1
+> 
+
+-- 
+Michal Hocko
+SUSE Labs
