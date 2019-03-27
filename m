@@ -6,51 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27751C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170F8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED66E2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7FF2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712205;
-	bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
+	s=default; t=1553712213;
+	bh=TblNBVOkdAhOPwWf2nktlqjhN4Ftu9aCTyBhrGow1vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDd94qaPxuII87FPE4lG6AgZoMuTOf0uFLOl+SZ0nBIlQjRAqmJdC8jnjI5FaSRBA
-	 zlSC6itosfYyRcNkbAP2cLCw7VNKCG5RYsiqumeSWbv8vy5v5EtkM8x+GcAn4rZYF3
-	 /GLFHoLikIuYMYc/fZgsF9Q9ir8Qr+wcrgc76upU=
+	b=vOhu3bcURjijIXW1AVB3EmrHmBsV1GGy4bD2y40XMVAklytbakBP98Uo0NK/tFON5
+	 rG9XJI3MHWAKGTk3zeOHmpxaq8g+0rAeJDaq6gP9oo8eZwVVtvJiebwQa7s1ugCecL
+	 dVeZPebw8Nf6ISMLB2AA3/2DCP6I5p6ePMxAljiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391911AbfC0SnX (ORCPT
+        id S1727837AbfC0Snc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39546 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:43:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391204AbfC0SVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:37 -0400
+        id S2390632AbfC0SVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED29C20449;
-        Wed, 27 Mar 2019 18:21:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D639E2082F;
+        Wed, 27 Mar 2019 18:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710896;
-        bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
+        s=default; t=1553710895;
+        bh=TblNBVOkdAhOPwWf2nktlqjhN4Ftu9aCTyBhrGow1vo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=io8gtQ+Hwr5UzZPvXzMLMe4OPfom+RP5wJHVAH61pY5YJCCC0mk9U88hsXFLuJYCr
-         Bp+NcZ4H8BuYSaaX559HmW80ua3Z/f3vKLMY62o6Rl1ebRS4LEpmnB8gNFEYgWlpik
-         JcbYaV8JeG2IX3TqrVGpnxXhthjIBKHb9n96hfP4=
+        b=jslJmU5KXn3OY1JPUIKmYGyb9+bKl63qX1AXZwm4zaUPT3Hv5cBaP+OWeCDBaVmdK
+         voBw5gvsgklKSrvyv7s+9dJYO5cyA51W8IBe9DOlxSnu8NJn2X8J9FVXhOLhrKrOq0
+         WuFC1cYzFPi/c34Jl4R1Y8rnLAI5p/b0OJ1CZVcs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 34/87] IB/mlx4: Increase the timeout for CM cache
-Date:   Wed, 27 Mar 2019 14:19:47 -0400
-Message-Id: <20190327182040.17444-34-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 33/87] mlxsw: spectrum: Avoid -Wformat-truncation warnings
+Date:   Wed, 27 Mar 2019 14:19:46 -0400
+Message-Id: <20190327182040.17444-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,103 +57,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
+[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+Give precision identifiers to the two snprintf() formatting the priority
+and TC strings to avoid producing these two warnings:
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
-in a cache.
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_prio_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
+directive output may be truncated writing between 1 and 3 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
+output between 3 and 36 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_prio_stats[i].str, prio);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_tc_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
+directive output may be truncated writing between 1 and 11 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
+output between 3 and 44 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_tc_stats[i].str, tc);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Following the RDMA Connection Manager (CM) protocol, it is clear when
-an entry has to evicted form the cache. But life is not perfect,
-remote peers may die or be rebooted. Hence, it's a timeout to wipe out
-a cache entry, when the PF driver assumes the remote peer has gone.
-
-During workloads where a high number of QPs are destroyed concurrently,
-excessive amount of CM DREQ retries has been observed
-
-The problem can be demonstrated in a bare-metal environment, where two
-nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
-have 16 vPorts per physical server.
-
-64 processes are associated with each vPort and creates and destroys
-one QP for each of the remote 64 processes. That is, 1024 QPs per
-vPort, all in all 16K QPs. The QPs are created/destroyed using the
-CM.
-
-When tearing down these 16K QPs, excessive CM DREQ retries (and
-duplicates) are observed. With some cat/paste/awk wizardry on the
-infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
-nodes:
-
-cm_rx_duplicates:
-      dreq  2102
-cm_rx_msgs:
-      drep  1989
-      dreq  6195
-       rep  3968
-       req  4224
-       rtu  4224
-cm_tx_msgs:
-      drep  4093
-      dreq 27568
-       rep  4224
-       req  3968
-       rtu  3968
-cm_tx_retries:
-      dreq 23469
-
-Note that the active/passive side is equally distributed between the
-two nodes.
-
-Enabling pr_debug in cm.c gives tons of:
-
-[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
-1,sl_cm_id: 0xd393089f} is NULL!
-
-By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
-tear-down phase of the application is reduced from approximately 90 to
-50 seconds. Retries/duplicates are also significantly reduced:
-
-cm_rx_duplicates:
-      dreq  2460
-[]
-cm_tx_retries:
-      dreq  3010
-       req    47
-
-Increasing the timeout further didn't help, as these duplicates and
-retries stems from a too short CMA timeout, which was 20 (~4 seconds)
-on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
-numbers fell down to about 10 for both of them.
-
-Adjustment of the CMA timeout is not part of this commit.
-
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/cm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
-index 39a488889fc7..5dc920fe1326 100644
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -39,7 +39,7 @@
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 22a5916e477e..cc847e0cac2d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -1565,7 +1565,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
+ 	int i;
  
- #include "mlx4_ib.h"
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
+ 		*p += ETH_GSTRING_LEN;
+ 	}
+@@ -1576,7 +1576,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
+ 	int i;
  
--#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
-+#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
- 
- struct id_map_entry {
- 	struct rb_node node;
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
+ 		*p += ETH_GSTRING_LEN;
+ 	}
 -- 
 2.19.1
 
