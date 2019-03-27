@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C8DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99392C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6FA204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6117C204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713730;
-	bh=ZfPRE0qoC2mUov0JT3SmR2h405g8KymZc7JWKgqNaTc=;
+	s=default; t=1553713734;
+	bh=0GvJ4QiK5qJxLpjYNk2eBqDxTD0OZyskBRj1Qn12pTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kKsEtOl4GiLxSoVqfDs6DwVzEdRiMtwFhR+mFImxYiDV7XRkgtMPDqOWINm/eQv/5
-	 7jkawdk2AXgyzZSQuMQWz5XocOzpL+fG3QmuLIOg8015hA4mbmANSsH7oAPjhsiz5+
-	 v/LvB5Wo5HnB/WmeV05t05nDxhN4z1Hyc32Z2Ndg=
+	b=WEFgIGp969PtyhSMC/GuryDyl4PBHL+f6g/QqXVciB0P5jI0RIZiW89Cf7IvxLJF0
+	 1rLnokjvg2CWX10m9E0xM0FEutD1uFP0jdIKbXt7fn9GQakuZAjk2+huax6N9Dw1Ah
+	 1AKiodLBsGvHjkvjswQYJNWBvmfAUfptA9G3PeAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389084AbfC0SLo (ORCPT
+        id S2389277AbfC0TIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53954 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389038AbfC0SLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:34 -0400
+        id S2389076AbfC0SLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ECD72183E;
-        Wed, 27 Mar 2019 18:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F189921741;
+        Wed, 27 Mar 2019 18:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710294;
-        bh=ZfPRE0qoC2mUov0JT3SmR2h405g8KymZc7JWKgqNaTc=;
+        s=default; t=1553710302;
+        bh=0GvJ4QiK5qJxLpjYNk2eBqDxTD0OZyskBRj1Qn12pTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqXQXmWcVvPWvcUQyXZcRy47WnOowRTt5SP2VYmRKPSQ/zMkEmIfYiAVJcFcb3mlm
-         xobqw6R1KhTa6QTC/1ob6pG4Bwp5NJ4+9BohQhG+4WgG5urvRhr/miXE69HbaiCLZc
-         mXit0OoCer7kQqVCEPGjkMlZxFyqc4HGOE+Rzy1k=
+        b=mxXoAV/5dwXTX7dVrJPTdzD97pzHdCmegSjGN+BFvlr1qtcF7Tf4X46XXtcb73ZX3
+         wIzBd4x7XXLJw/uYSvkEjqLHB3cVJEVRO/nHCm7pY1YWcbgdDU1flttaH3qErCZoVN
+         WuBo/a4O7zhHtk1A6aDWrRkxXZVzmwC0S6g/i5cg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 039/192] cifs: Fix NULL pointer dereference of devname
-Date:   Wed, 27 Mar 2019 14:07:51 -0400
-Message-Id: <20190327181025.13507-39-sashal@kernel.org>
+Cc:     Tony Jones <tonyj@suse.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 045/192] tools lib traceevent: Fix buffer overflow in arg_eval
+Date:   Wed, 27 Mar 2019 14:07:57 -0400
+Message-Id: <20190327181025.13507-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,60 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yao Liu <yotta.liu@ucloud.cn>
+From: Tony Jones <tonyj@suse.de>
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
 
-There is a NULL pointer dereference of devname in strspn()
+Fix buffer overflow observed when running perf test.
 
-The oops looks something like:
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
 
-Fix this by adding a NULL check on devname in cifs_parse_devname()
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index a5ea742654aa..f31339db45fd 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1347,6 +1347,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 75de355a63d6..10985d991ed2 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2416,7 +2416,7 @@ static int arg_num_eval(struct print_arg *arg, long long *val)
+ static char *arg_eval (struct print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
-+
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+ 	switch (arg->type) {
+ 	case PRINT_ATOM:
 -- 
 2.19.1
 
