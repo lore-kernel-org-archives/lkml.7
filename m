@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EA8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39B2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 883CA2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908D42075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715179;
-	bh=LZAMRbWj6YIz0nyzX700ZvhA3w5bIiuo25m9k+FuR1o=;
+	s=default; t=1553715190;
+	bh=Pnka2KWCFbN+CL3GfPF+gtjWz7b5RKVBpofK6u/R8E8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cATgsfLOEJpeW/ddian0KE0G4CisR6F3WraUjsfOHj6/v+Vh1CY3RLivMMMvW9B1b
-	 3YnY8IqbQC3s9SM9gkVLqYbRXdYXw/NiJCP/UUhjVBe4eQd1hDazCjVw9raDefcpbA
-	 ep0HbAqilVKX9OOUeoAWJ/QY8tFL4HIkAqj99Spg=
+	b=D9R8wW8Hj/FzI1dAhpOaV59hk3t9r5FQhyAb/y3Qv7cWMHvDdLi2JfoDHogMAPBOK
+	 vMK23UvtPCpwc2tQfHvQWmhm8RFiq0l2/ETRsNIrm9zpEuSiSr0aFnOKInSWLxhQLm
+	 Y2VsN6B3mwjQe0dTCbdjPOBcUpchZ2z4LdZgzxt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732672AbfC0Tc6 (ORCPT
+        id S2387803AbfC0TdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42568 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbfC0SCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:02:37 -0400
+        id S1730874AbfC0SCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:02:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E92F2184C;
-        Wed, 27 Mar 2019 18:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7784F217D7;
+        Wed, 27 Mar 2019 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709757;
-        bh=LZAMRbWj6YIz0nyzX700ZvhA3w5bIiuo25m9k+FuR1o=;
+        s=default; t=1553709753;
+        bh=Pnka2KWCFbN+CL3GfPF+gtjWz7b5RKVBpofK6u/R8E8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gW5C4Dvy7hUz1d7CphEyiQUgNxf8J06s252SCFsYeg5KtO473wJuzhT4BLUU3/GDj
-         M9XtpyVLrn2qLqv77WsygJKfP83vd5Xa5WZs2TuybXYyp5PkHqSt8h6dkvosM0L1MW
-         psYKQ+LNO6Fvy1dIjcgR1b685e9TDkqrMTBmfrWY=
+        b=qlmzwNQUvj+sQ8OwTMIoNF7VOenjAZPXYXJFscCDeTe9BylS00ZWUxQZWAKAjm7Wq
+         ALcGsfk3DwbT5Q0bvGGtYbXNpe8uCRSu8IjmlMHua5wqIo+3lrA3j86VivwBuBT21Q
+         rovPoVt0GUKd05HglLtsUi8JsHigZfKJdWbzSZHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 023/262] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
-Date:   Wed, 27 Mar 2019 13:57:58 -0400
-Message-Id: <20190327180158.10245-23-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 020/262] netfilter: nf_tables: fix set double-free in abort path
+Date:   Wed, 27 Mar 2019 13:57:55 -0400
+Message-Id: <20190327180158.10245-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,64 +58,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
+[ Upstream commit 40ba1d9b4d19796afc9b7ece872f5f3e8f5e2c13 ]
 
-The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
-dynamically allocate a struct member, but this is normally intended for
-local variables.
+The abort path can cause a double-free of an anonymous set.
+Added-and-to-be-aborted rule looks like this:
 
-Building with clang, I get a warning for a few locations that check the
-address of the cpumask_var_t:
+udp dport { 137, 138 } drop
 
-drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+The to-be-aborted transaction list looks like this:
 
-As far as I can tell, the code is still correct, as the truth value of
-the pointer is what we need in this configuration. To get rid of
-the warning, use cpumask_available() instead of checking the
-pointer directly.
+newset
+newsetelem
+newsetelem
+rule
 
-Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This gets walked in reverse order, so first pass disables the rule, the
+set elements, then the set.
+
+After synchronize_rcu(), we then destroy those in same order: rule, set
+element, set element, newset.
+
+Problem is that the anonymous set has already been bound to the rule, so
+the rule (lookup expression destructor) already frees the set, when then
+cause use-after-free when trying to delete the elements from this set,
+then try to free the set again when handling the newset expression.
+
+Rule releases the bound set in first place from the abort path, this
+causes the use-after-free on set element removal when undoing the new
+element transactions. To handle this, skip new element transaction if
+set is bound from the abort path.
+
+This is still causes the use-after-free on set element removal.  To
+handle this, remove transaction from the list when the set is already
+bound.
+
+Joint work with Florian Westphal.
+
+Fixes: f6ac85858976 ("netfilter: nf_tables: unbind set in rule from commit path")
+Bugzilla: https://bugzilla.netfilter.org/show_bug.cgi?id=1325
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/net/netfilter/nf_tables.h |  6 ++----
+ net/netfilter/nf_tables_api.c     | 17 +++++++++++------
+ 2 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index 9a7f70db20c7..733d9172425b 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
+index b4984bbbe157..3d58acf94dd2 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -416,7 +416,8 @@ struct nft_set {
+ 	unsigned char			*udata;
+ 	/* runtime data below here */
+ 	const struct nft_set_ops	*ops ____cacheline_aligned;
+-	u16				flags:14,
++	u16				flags:13,
++					bound:1,
+ 					genmask:2;
+ 	u8				klen;
+ 	u8				dlen;
+@@ -1329,15 +1330,12 @@ struct nft_trans_rule {
+ struct nft_trans_set {
+ 	struct nft_set			*set;
+ 	u32				set_id;
+-	bool				bound;
+ };
  
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
--		    (enic->msix[i].affinity_mask &&
-+		    (cpumask_available(enic->msix[i].affinity_mask) &&
- 		     !cpumask_empty(enic->msix[i].affinity_mask)))
- 			continue;
- 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
-@@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i)		||
- 		    enic_is_notify_intr(enic, i)	||
--		    !enic->msix[i].affinity_mask	||
-+		    !cpumask_available(enic->msix[i].affinity_mask) ||
- 		    cpumask_empty(enic->msix[i].affinity_mask))
- 			continue;
- 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
-@@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->wq_count; i++) {
- 		int wq_intr = enic_msix_wq_intr(enic, i);
+ #define nft_trans_set(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set)
+ #define nft_trans_set_id(trans)	\
+ 	(((struct nft_trans_set *)trans->data)->set_id)
+-#define nft_trans_set_bound(trans)	\
+-	(((struct nft_trans_set *)trans->data)->bound)
  
--		if (enic->msix[wq_intr].affinity_mask &&
-+		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
- 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
- 			netif_set_xps_queue(enic->netdev,
- 					    enic->msix[wq_intr].affinity_mask,
+ struct nft_trans_chain {
+ 	bool				update;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 4893f248dfdc..e1724f9d8b9d 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -127,7 +127,7 @@ static void nft_set_trans_bind(const struct nft_ctx *ctx, struct nft_set *set)
+ 	list_for_each_entry_reverse(trans, &net->nft.commit_list, list) {
+ 		if (trans->msg_type == NFT_MSG_NEWSET &&
+ 		    nft_trans_set(trans) == set) {
+-			nft_trans_set_bound(trans) = true;
++			set->bound = true;
+ 			break;
+ 		}
+ 	}
+@@ -6617,8 +6617,7 @@ static void nf_tables_abort_release(struct nft_trans *trans)
+ 		nf_tables_rule_destroy(&trans->ctx, nft_trans_rule(trans));
+ 		break;
+ 	case NFT_MSG_NEWSET:
+-		if (!nft_trans_set_bound(trans))
+-			nft_set_destroy(nft_trans_set(trans));
++		nft_set_destroy(nft_trans_set(trans));
+ 		break;
+ 	case NFT_MSG_NEWSETELEM:
+ 		nft_set_elem_destroy(nft_trans_elem_set(trans),
+@@ -6691,8 +6690,11 @@ static int __nf_tables_abort(struct net *net)
+ 			break;
+ 		case NFT_MSG_NEWSET:
+ 			trans->ctx.table->use--;
+-			if (!nft_trans_set_bound(trans))
+-				list_del_rcu(&nft_trans_set(trans)->list);
++			if (nft_trans_set(trans)->bound) {
++				nft_trans_destroy(trans);
++				break;
++			}
++			list_del_rcu(&nft_trans_set(trans)->list);
+ 			break;
+ 		case NFT_MSG_DELSET:
+ 			trans->ctx.table->use++;
+@@ -6700,8 +6702,11 @@ static int __nf_tables_abort(struct net *net)
+ 			nft_trans_destroy(trans);
+ 			break;
+ 		case NFT_MSG_NEWSETELEM:
++			if (nft_trans_elem_set(trans)->bound) {
++				nft_trans_destroy(trans);
++				break;
++			}
+ 			te = (struct nft_trans_elem *)trans->data;
+-
+ 			te->set->ops->remove(net, te->set, &te->elem);
+ 			atomic_dec(&te->set->nelems);
+ 			break;
 -- 
 2.19.1
 
