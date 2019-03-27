@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB5AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651CEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A8B2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F85217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711326;
-	bh=sYYHvKeWC88YLOkAVkldwoRznvvxDdT5buVntOmPy9w=;
+	s=default; t=1553711332;
+	bh=lpJ0iUG2IJLw6/nawZNIUXUC8iQySeOPLpQ6dIinuYI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zNF2yJkD9dbfGX18yEcYnO7XLrlJctxTiR5viE7qyjRyA9WVYqxzTdjmtwW7jJOUh
-	 IBrqLtBxV3U9XhdyMBZ6dtWzBcMqaUqUpo5NYqCbx85Slwz+MQJYSYX+c7k2UFTqeJ
-	 pGfgqpZtmw0jijOQQHx7P5grHmqhefGtRkipOobU=
+	b=BC2Q6QlpbUbwTAAgRgxC5+3akX8xAPRxSBkkIcpaKislHEZ97v0eni2PbR+VE5uBc
+	 5G/TrB453erYtZdY78woHCa/iqH5ikNGUWk6DLMc8er4U+vQiS4trZH/PWT2uJ/5U0
+	 ieLZsQy1HdLUBoMQu/AFOlI+v/Ujet6ttF8aRctc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391930AbfC0S2o (ORCPT
+        id S2391950AbfC0S2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48878 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391917AbfC0S2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:28:42 -0400
+        id S2391911AbfC0S2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:28:39 -0400
 Received: from localhost (unknown [88.128.80.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D7D2082F;
-        Wed, 27 Mar 2019 18:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 445662087C;
+        Wed, 27 Mar 2019 18:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711321;
-        bh=sYYHvKeWC88YLOkAVkldwoRznvvxDdT5buVntOmPy9w=;
+        s=default; t=1553711318;
+        bh=lpJ0iUG2IJLw6/nawZNIUXUC8iQySeOPLpQ6dIinuYI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kubmpPdUaNWLF3NbONxOVi9dU1k6E/aOgsnLX8SkZI8VQddTCuvHgKuO3LYZNgVs1
-         rLG54uuOy5kCYfnZsUsuU6NyFRUJi7578ukbGGQuHjNTwQpMtbIwphOFBY389/5Dmp
-         vthPSjyQYvQkQmMbbqqSkmhKXnG4yalRbJ7VQRNI=
-Date:   Thu, 28 Mar 2019 01:51:02 +0900
+        b=C3ISchI3IT6qZ4yYukBsMu+Oi1XD1ZTNPkuBfhXdYXkIdsuJ1gxOeltY8Y7fSSRjC
+         bin33HCJDpkKstXFhMPF4kfP/Tv32QWo8Z/9c2QT4m4xUOnE5Ac++KEOJlCjXQRIJp
+         nPpgf750mS8F18MhQ6anb76hDdh/rC/Oug2TszvU=
+Date:   Thu, 28 Mar 2019 01:49:22 +0900
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Sven Van Asbroeck <thesven73@gmail.com>
 Cc:     robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
@@ -52,37 +52,29 @@ Cc:     robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
         maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org,
         linux-netdev@vger.kernel.org
 Subject: Re: [PATCH v9 0/6] Add Fieldbus subsystem + support HMS Profinet card
-Message-ID: <20190327165102.GA26051@kroah.com>
+Message-ID: <20190327164922.GA12063@kroah.com>
 References: <20190318180338.23964-1-TheSven73@gmail.com>
- <20190327164922.GA12063@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190327164922.GA12063@kroah.com>
+In-Reply-To: <20190318180338.23964-1-TheSven73@gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 01:49:22AM +0900, Greg KH wrote:
-> On Mon, Mar 18, 2019 at 02:03:32PM -0400, Sven Van Asbroeck wrote:
-> > This patch:
-> >   1. adds a Fieldbus subsystem
-> >   2. adds support for the HMS Industrial Networks AB Profinet card.
-> > 
+On Mon, Mar 18, 2019 at 02:03:32PM -0400, Sven Van Asbroeck wrote:
+> This patch:
+>   1. adds a Fieldbus subsystem
+>   2. adds support for the HMS Industrial Networks AB Profinet card.
 > 
-> <snip>
-> 
-> Can I get a follow-on patch to add a TODO file to this directory in
-> staging saying what needs to be done to the code to get it out of
-> staging?
 
-Actually, just add it to the resend when you fix up the following build
-errors that I get when I applied this series and built it:
+<snip>
 
-ERROR: "devm_regulator_register" [drivers/staging/fieldbus/anybuss/arcx-anybus.ko] undefined!
-ERROR: "rdev_get_drvdata" [drivers/staging/fieldbus/anybuss/arcx-anybus.ko] undefined!
+Can I get a follow-on patch to add a TODO file to this directory in
+staging saying what needs to be done to the code to get it out of
+staging?
 
 thanks,
 
