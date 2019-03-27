@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42563C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F190C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CEA2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7072075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715099;
-	bh=ivaTjn1jSV5RyjTdZjh90E05Ur4A5uE28t4p8BVbvH0=;
+	s=default; t=1553715106;
+	bh=pPf0xG7tuJ/KeSsZbMSwoj8AVi5Un66nVo/A/1eQSFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2mFToM/2JRDxXsRzRDgJtxBwKSgsAIJrKfwq6ruobR50VsisHW3u1XO3YdFLltfi5
-	 VUDGO5jZQxadkwxakCcEsaji4vFkeXWeTR5xI3vdEXl2SgzB2fdNBpqrvVJxYhcIxR
-	 YrKL3fKi67MAxt9BoxfL2UqE142k0TNlI/Eo0Cco=
+	b=d1zqTS4XFqRZZxGSkCCrrEwsU4IHj2NBjNx6YKGXtXwUN7UhTtdClcr78PBPPM0Hn
+	 053kipLrHS6EbqvE50CBiiqhivWd4K44o8SxGtwjLlnIGrBEtR7b+F3VwUMiRx/i9G
+	 Rqm8EQblzm1M6S0fP6hMX02cy6VeWTS9Axd8ap/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfC0SDO (ORCPT
+        id S1733203AbfC0Tbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731851AbfC0SDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:12 -0400
+        id S1731250AbfC0SDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53348217F9;
-        Wed, 27 Mar 2019 18:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D64121738;
+        Wed, 27 Mar 2019 18:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709791;
-        bh=ivaTjn1jSV5RyjTdZjh90E05Ur4A5uE28t4p8BVbvH0=;
+        s=default; t=1553709783;
+        bh=pPf0xG7tuJ/KeSsZbMSwoj8AVi5Un66nVo/A/1eQSFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MrhfaG5IpPJcBKGXBUKD9STs53I/yePxyTJzbX9O5IfY1CPYmIk4eun+h90HMZU9d
-         g7AwA9mHv+BwPC0CxVigdCwglQ24MPQg8Dht2w03ZHSZpNCDKPldLUDZtnHp8k6VCv
-         PwdtOKLLAhVsePeBkUm6+6VRB816hfgImAJbG1OI=
+        b=CaENcYPGYio1KqBnWQi9APPoYaZrdGohufPuawQZc6bmaKTC+HEtPqHFEQfeb6r89
+         I88mB8kxI+OtVjI4yYiXc2533KwBuE+4qxIVzV9fwR0/I6x6XWKoHF2JNNgSYxV6nc
+         QTMDL77c0VJaKPZprfS3hg6l7PPmpxyDUaGu3ku0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 5.0 039/262] mm/slab.c: kmemleak no scan alien caches
-Date:   Wed, 27 Mar 2019 13:58:14 -0400
-Message-Id: <20190327180158.10245-39-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 036/262] memcg: killed threads should not invoke memcg OOM killer
+Date:   Wed, 27 Mar 2019 13:58:11 -0400
+Message-Id: <20190327180158.10245-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -63,151 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 92d1d07daad65c300c7d0b68bbef8867e9895d54 ]
+[ Upstream commit 7775face207922ea62a4e96b9cd45abfdc7b9840 ]
 
-Kmemleak throws endless warnings during boot due to in
-__alloc_alien_cache(),
+If a memory cgroup contains a single process with many threads
+(including different process group sharing the mm) then it is possible
+to trigger a race when the oom killer complains that there are no oom
+elible tasks and complain into the log which is both annoying and
+confusing because there is no actual problem.  The race looks as
+follows:
 
-    alc = kmalloc_node(memsize, gfp, node);
-    init_arraycache(&alc->ac, entries, batch);
-    kmemleak_no_scan(ac);
+P1				oom_reaper		P2
+try_charge						try_charge
+  mem_cgroup_out_of_memory
+    mutex_lock(oom_lock)
+      out_of_memory
+        oom_kill_process(P1,P2)
+         wake_oom_reaper
+    mutex_unlock(oom_lock)
+    				oom_reap_task
+							  mutex_lock(oom_lock)
+							    select_bad_process # no victim
 
-Kmemleak does not track the array cache (alc->ac) but the alien cache
-(alc) instead, so let it track the latter by lifting kmemleak_no_scan()
-out of init_arraycache().
+The problem is more visible with many threads.
 
-There is another place that calls init_arraycache(), but
-alloc_kmem_cache_cpus() uses the percpu allocation where will never be
-considered as a leak.
+Fix this by checking for fatal_signal_pending from
+mem_cgroup_out_of_memory when the oom_lock is already held.
 
-  kmemleak: Found object by alias at 0xffff8007b9aa7e38
-  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
-  Call trace:
-   dump_backtrace+0x0/0x168
-   show_stack+0x24/0x30
-   dump_stack+0x88/0xb0
-   lookup_object+0x84/0xac
-   find_and_get_object+0x84/0xe4
-   kmemleak_no_scan+0x74/0xf4
-   setup_kmem_cache_node+0x2b4/0x35c
-   __do_tune_cpucache+0x250/0x2d4
-   do_tune_cpucache+0x4c/0xe4
-   enable_cpucache+0xc8/0x110
-   setup_cpu_cache+0x40/0x1b8
-   __kmem_cache_create+0x240/0x358
-   create_cache+0xc0/0x198
-   kmem_cache_create_usercopy+0x158/0x20c
-   kmem_cache_create+0x50/0x64
-   fsnotify_init+0x58/0x6c
-   do_one_initcall+0x194/0x388
-   kernel_init_freeable+0x668/0x688
-   kernel_init+0x18/0x124
-   ret_from_fork+0x10/0x18
-  kmemleak: Object 0xffff8007b9aa7e00 (size 256):
-  kmemleak:   comm "swapper/0", pid 1, jiffies 4294697137
-  kmemleak:   min_count = 1
-  kmemleak:   count = 0
-  kmemleak:   flags = 0x1
-  kmemleak:   checksum = 0
-  kmemleak:   backtrace:
-       kmemleak_alloc+0x84/0xb8
-       kmem_cache_alloc_node_trace+0x31c/0x3a0
-       __kmalloc_node+0x58/0x78
-       setup_kmem_cache_node+0x26c/0x35c
-       __do_tune_cpucache+0x250/0x2d4
-       do_tune_cpucache+0x4c/0xe4
-       enable_cpucache+0xc8/0x110
-       setup_cpu_cache+0x40/0x1b8
-       __kmem_cache_create+0x240/0x358
-       create_cache+0xc0/0x198
-       kmem_cache_create_usercopy+0x158/0x20c
-       kmem_cache_create+0x50/0x64
-       fsnotify_init+0x58/0x6c
-       do_one_initcall+0x194/0x388
-       kernel_init_freeable+0x668/0x688
-       kernel_init+0x18/0x124
-  kmemleak: Not scanning unknown object at 0xffff8007b9aa7e38
-  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
-  Call trace:
-   dump_backtrace+0x0/0x168
-   show_stack+0x24/0x30
-   dump_stack+0x88/0xb0
-   kmemleak_no_scan+0x90/0xf4
-   setup_kmem_cache_node+0x2b4/0x35c
-   __do_tune_cpucache+0x250/0x2d4
-   do_tune_cpucache+0x4c/0xe4
-   enable_cpucache+0xc8/0x110
-   setup_cpu_cache+0x40/0x1b8
-   __kmem_cache_create+0x240/0x358
-   create_cache+0xc0/0x198
-   kmem_cache_create_usercopy+0x158/0x20c
-   kmem_cache_create+0x50/0x64
-   fsnotify_init+0x58/0x6c
-   do_one_initcall+0x194/0x388
-   kernel_init_freeable+0x668/0x688
-   kernel_init+0x18/0x124
-   ret_from_fork+0x10/0x18
+The oom bypass is safe because we do the same early in the try_charge
+path already.  The situation migh have changed in the mean time.  It
+should be safe to check for fatal_signal_pending and tsk_is_oom_victim
+but for a better code readability abstract the current charge bypass
+condition into should_force_charge and reuse it from that path.  "
 
-Link: http://lkml.kernel.org/r/20190129184518.39808-1-cai@lca.pw
-Fixes: 1fe00d50a9e8 ("slab: factor out initialization of array cache")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
+Link: http://lkml.kernel.org/r/01370f70-e1f6-ebe4-b95e-0df21a0bc15e@i-love.sakura.ne.jp
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ mm/memcontrol.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 91c1863df93d..757e646baa5d 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -550,14 +550,6 @@ static void start_cpu_timer(int cpu)
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index af7f18b32389..79a7d2a06bba 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -248,6 +248,12 @@ enum res_type {
+ 	     iter != NULL;				\
+ 	     iter = mem_cgroup_iter(NULL, iter, NULL))
  
- static void init_arraycache(struct array_cache *ac, int limit, int batch)
++static inline bool should_force_charge(void)
++{
++	return tsk_is_oom_victim(current) || fatal_signal_pending(current) ||
++		(current->flags & PF_EXITING);
++}
++
+ /* Some nice accessors for the vmpressure. */
+ struct vmpressure *memcg_to_vmpressure(struct mem_cgroup *memcg)
  {
--	/*
--	 * The array_cache structures contain pointers to free object.
--	 * However, when such objects are allocated or transferred to another
--	 * cache the pointers are not cleared and they could be counted as
--	 * valid references during a kmemleak scan. Therefore, kmemleak must
--	 * not scan such objects.
--	 */
--	kmemleak_no_scan(ac);
- 	if (ac) {
- 		ac->avail = 0;
- 		ac->limit = limit;
-@@ -573,6 +565,14 @@ static struct array_cache *alloc_arraycache(int node, int entries,
- 	struct array_cache *ac = NULL;
+@@ -1389,8 +1395,13 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 	};
+ 	bool ret;
  
- 	ac = kmalloc_node(memsize, gfp, node);
+-	mutex_lock(&oom_lock);
+-	ret = out_of_memory(&oc);
++	if (mutex_lock_killable(&oom_lock))
++		return true;
 +	/*
-+	 * The array_cache structures contain pointers to free object.
-+	 * However, when such objects are allocated or transferred to another
-+	 * cache the pointers are not cleared and they could be counted as
-+	 * valid references during a kmemleak scan. Therefore, kmemleak must
-+	 * not scan such objects.
++	 * A few threads which were not waiting at mutex_lock_killable() can
++	 * fail to bail out. Therefore, check again after holding oom_lock.
 +	 */
-+	kmemleak_no_scan(ac);
- 	init_arraycache(ac, entries, batchcount);
- 	return ac;
++	ret = should_force_charge() || out_of_memory(&oc);
+ 	mutex_unlock(&oom_lock);
+ 	return ret;
  }
-@@ -667,6 +667,7 @@ static struct alien_cache *__alloc_alien_cache(int node, int entries,
+@@ -2209,9 +2220,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 	 * bypass the last charges so that they can exit quickly and
+ 	 * free their memory.
+ 	 */
+-	if (unlikely(tsk_is_oom_victim(current) ||
+-		     fatal_signal_pending(current) ||
+-		     current->flags & PF_EXITING))
++	if (unlikely(should_force_charge()))
+ 		goto force;
  
- 	alc = kmalloc_node(memsize, gfp, node);
- 	if (alc) {
-+		kmemleak_no_scan(alc);
- 		init_arraycache(&alc->ac, entries, batch);
- 		spin_lock_init(&alc->lock);
- 	}
+ 	/*
 -- 
 2.19.1
 
