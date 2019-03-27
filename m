@@ -2,102 +2,69 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0FBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C6220449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DAA20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711215;
-	bh=ifyBJmvU5x3CJzsNRKEbjYFDX0xTqN86y560fUi/TJY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tG5sl8mGlfwcLcKtqtGWxyhG2Yb0Ft7TWkJ5shV1grl7FVGyWbA//hOjkbaruxonw
-	 ufWLb5i6uvjwIZPoFkV1sAiMFoFiXOsYROG6ZKb1Yx1QAsKa2i/1T3uNqEybV1wf+y
-	 SrPfzhA7SacrtUwoOssyKagzdEYVlxH+n0jV2suo=
+	s=default; t=1553711218;
+	bh=KXj8oBX2qzB/GbIGrLUv7Ge6UxUdH2Os7y8LoW0vjOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z63US7BlKEQR3nWd7LK3Uksio1ybfcd6OM4kHfISzq7O9pTY5lGU+JjrhM0RBXI4f
+	 +f1YkkpTUSHrmt0XPw18B9+DPeDdc41eorrK8cBTxyYF4muLvKjoJzQUgLxwcz5x/+
+	 yXSxWLVMd9rhtnMt6xiVFO2IYqL+WxislT7BxAfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391781AbfC0S0x (ORCPT
+        id S2391574AbfC0S05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:26:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391721AbfC0S0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2404329AbfC0SZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:56 -0400
+Received: from localhost (unknown [88.128.80.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37DDC206BA;
-        Wed, 27 Mar 2019 18:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BEE2206BA;
+        Wed, 27 Mar 2019 18:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711194;
-        bh=ifyBJmvU5x3CJzsNRKEbjYFDX0xTqN86y560fUi/TJY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THqHK20KNxvFuLZxe450QrpyTBMFjOo1Wyh5OnvpwmwTexSF1ba5BYEZBk1vZYbUg
-         VfZUCPR49WPEfVrzW6dRIB1LrsBGCA01Uz3yugKWdwAqNcVAJKHWZ+xCrSPBaUOIZN
-         B9MIgBTLCLRaGrvEs3RNUcVMxQ9b6Np/p+7Fmk7s=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Brian Vincent <brainn@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 3.18 41/41] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
-Date:   Wed, 27 Mar 2019 14:25:18 -0400
-Message-Id: <20190327182518.19394-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
-References: <20190327182518.19394-1-sashal@kernel.org>
+        s=default; t=1553711156;
+        bh=KXj8oBX2qzB/GbIGrLUv7Ge6UxUdH2Os7y8LoW0vjOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I8iRfD2XozhjfL4zDVXcPxylfdAMpvvjccn9xge7vwPfNIuLClOB3NcVxyTQR6b8C
+         5fpTnaVvsZ44XzAo0IBEMIFn0hW616kbTrsFnUWusbzcKlkTSH04ZdB1c7zDywgUUp
+         4GoX2pw9r4q7jUOPI+H/Fu1JLaWzjhNZJKIUPoas=
+Date:   Wed, 27 Mar 2019 23:38:59 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Cunningham <wjcunningham7@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        dan.carpenter@oracle.com
+Subject: Re: [PATCH] Staging: emxx_udc: emxx_udc: Fixed a coding style error
+Message-ID: <20190327143859.GA29204@kroah.com>
+References: <20190326134723.GA32229@titus.pi.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190326134723.GA32229@titus.pi.local>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+On Tue, Mar 26, 2019 at 09:47:23AM -0400, Will Cunningham wrote:
+> Removed unnecessary parentheses.
+> 
+> Signed-off-by: Will Cunningham <wjcunningham7@gmail.com>
+> ---
+>  drivers/staging/emxx_udc/emxx_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
+Someone else sent this patch right before you did, sorry.
 
-We aren't supposed to force a stop+start between every i2c msg
-when performing multi message transfers. This should eg. cause
-the DDC segment address to be reset back to 0 between writing
-the segment address and reading the actual EDID extension block.
-
-To quote the E-DDC spec:
-"... this standard requires that the segment pointer be
- reset to 00h when a NO ACK or a STOP condition is received."
-
-Since we're going to touch this might as well consult the
-I2C_M_STOP flag to determine whether we want to force the stop
-or not.
-
-Cc: Brian Vincent <brainn@gmail.com>
-References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
-Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 7113c95f5ad0..e4c8c594ea15 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2816,6 +2816,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
- 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
- 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
- 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
-+		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
- 	}
- 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
- 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
--- 
-2.19.1
-
+greg k-h
