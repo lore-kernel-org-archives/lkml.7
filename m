@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB3DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94102C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E0121738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6597220449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710498;
-	bh=CNyzgmQlVVZObtHTQXU+S8sVQB1oL3W9h1AuiRvSM/E=;
+	s=default; t=1553710504;
+	bh=Nlyv/P3XnIj8QnVwrFCdC9+n/KBHVGk/KMUPek5gJZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6N30pTL1UgMJEm1TbPS4sy2q0qF35UAiFWIeqXRch8M3AsOPSVqH2czf0Q442Wrv
-	 NJNhPAZhW8/KIQx3BcbmQgK6DKQKsux5BxhXbRBctgusf6ZB97Q/t1MRIQ6ZMsZOTE
-	 6/JI9l0OLAHl9CSQH1UfHMUNAA14zz/VmGdfmOkk=
+	b=wH5+dkeWyz6nreE5iRklY4LHJGWIcp63he4xGS9jn1h2uoqmEELIFRM/ARpIfBfCM
+	 8IjrhLNZCON96Yu2796GTUIMUYhEwqew/e2n4MjxMT7PYy7dG5EdGma2PkRw5rQQ1a
+	 cwPCqSVowiYZQ8iqYp25uN491MQZGW1JxhC0Oq0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389709AbfC0SO5 (ORCPT
+        id S2389757AbfC0SPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389689AbfC0SOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:47 -0400
+        id S2389710AbfC0SPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1588521738;
-        Wed, 27 Mar 2019 18:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA162184D;
+        Wed, 27 Mar 2019 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710486;
-        bh=CNyzgmQlVVZObtHTQXU+S8sVQB1oL3W9h1AuiRvSM/E=;
+        s=default; t=1553710498;
+        bh=Nlyv/P3XnIj8QnVwrFCdC9+n/KBHVGk/KMUPek5gJZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdqC3TyasukO04xPkZwLSCPrAI8dl6i9Ki1mfsdsIQXVliHQoqOHeslPTweHNO5wO
-         /t28mqVl6XG1E7KNKW76pDwFsWxmCiiFCKib//t7cg69Zr27FCG74ZYE2ByXMXtmXu
-         SjlcyawcqaR/ZdaMZlC8sUElmEcIOlpV3zl472eA=
+        b=UvGebIwmofA7AMqyF7SsI7vcWQbRK5SC85J40eTnZpNo4Tx5BgSzSr+08BQ0AlcK9
+         PjLBzeuuJUIby0N2yFtb86BS5CaTg0C+xZK+TlmjG+gWuq5zSE9pASqjtFk02rlho6
+         tVJKcbF+7LViREL6z2B8vNyu3s6F1xG8T3lxUjqo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 142/192] mt7601u: bump supported EEPROM version
-Date:   Wed, 27 Mar 2019 14:09:34 -0400
-Message-Id: <20190327181025.13507-142-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 145/192] block, bfq: fix in-service-queue check for queue merging
+Date:   Wed, 27 Mar 2019 14:09:37 -0400
+Message-Id: <20190327181025.13507-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,61 +57,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislaw Gruszka <sgruszka@redhat.com>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
+[ Upstream commit 058fdecc6de7cdecbf4c59b851e80eb2d6c5295f ]
 
-As reported by Michael eeprom 0d is supported and work with the driver.
+When a new I/O request arrives for a bfq_queue, say Q, bfq checks
+whether that request is close to
+(a) the head request of some other queue waiting to be served, or
+(b) the last request dispatched for the in-service queue (in case Q
+itself is not the in-service queue)
 
-Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
-with 0d EEPORM looks like this:
+If a queue, say Q2, is found for which the above condition holds, then
+bfq merges Q and Q2, to hopefully get a more sequential I/O in the
+resulting merged queue, and thus a possibly higher throughput.
 
-RSSI offset: 0 0
-Reference temp: f9
-LNA gain: 8
-Reg channels: 1-14
-Per rate power:
-	 raw:05 bw20:05 bw40:05
-	 raw:05 bw20:05 bw40:05
-	 raw:03 bw20:03 bw40:03
-	 raw:03 bw20:03 bw40:03
-	 raw:04 bw20:04 bw40:04
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:02 bw20:02 bw40:02
-	 raw:00 bw20:00 bw40:00
-Per channel power:
-	 tx_power  ch1:09 ch2:09
-	 tx_power  ch3:0a ch4:0a
-	 tx_power  ch5:0a ch6:0a
-	 tx_power  ch7:0b ch8:0b
-	 tx_power  ch9:0b ch10:0b
-	 tx_power  ch11:0b ch12:0b
-	 tx_power  ch13:0b ch14:0b
+Case (b) is checked by comparing the new request for Q with the last
+request dispatched, assuming that the latter necessarily belonged to the
+in-service queue. Unfortunately, this assumption is no longer always
+correct, since commit d0edc2473be9 ("block, bfq: inject other-queue I/O
+into seeky idle queues on NCQ flash").
 
-Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+When the assumption does not hold, queues that must not be merged may be
+merged, causing unexpected loss of control on per-queue service
+guarantees.
+
+This commit solves this problem by adding an extra field, which stores
+the actual last request dispatched for the in-service queue, and by
+using this new field to correctly check case (b).
+
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bfq-iosched.c | 5 ++++-
+ block/bfq-iosched.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-index 662d12703b69..57b503ae63f1 100644
---- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-+++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-@@ -17,7 +17,7 @@
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 653100fb719e..c5e2c5a01182 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2215,7 +2215,8 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
- struct mt7601u_dev;
+ 	if (in_service_bfqq && in_service_bfqq != bfqq &&
+ 	    likely(in_service_bfqq != &bfqd->oom_bfqq) &&
+-	    bfq_rq_close_to_sector(io_struct, request, bfqd->last_position) &&
++	    bfq_rq_close_to_sector(io_struct, request,
++				   bfqd->in_serv_last_pos) &&
+ 	    bfqq->entity.parent == in_service_bfqq->entity.parent &&
+ 	    bfq_may_be_close_cooperator(bfqq, in_service_bfqq)) {
+ 		new_bfqq = bfq_setup_merge(bfqq, in_service_bfqq);
+@@ -2755,6 +2756,8 @@ static void bfq_update_peak_rate(struct bfq_data *bfqd, struct request *rq)
+ 	bfq_update_rate_reset(bfqd, rq);
+ update_last_values:
+ 	bfqd->last_position = blk_rq_pos(rq) + blk_rq_sectors(rq);
++	if (RQ_BFQQ(rq) == bfqd->in_service_queue)
++		bfqd->in_serv_last_pos = bfqd->last_position;
+ 	bfqd->last_dispatch = now_ns;
+ }
  
--#define MT7601U_EE_MAX_VER			0x0c
-+#define MT7601U_EE_MAX_VER			0x0d
- #define MT7601U_EEPROM_SIZE			256
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index a8a2e5aca4d4..d5e9e60cb1a5 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -469,6 +469,9 @@ struct bfq_data {
+ 	/* on-disk position of the last served request */
+ 	sector_t last_position;
  
- #define MT7601U_DEFAULT_TX_POWER		6
++	/* position of the last served request for the in-service queue */
++	sector_t in_serv_last_pos;
++
+ 	/* time of last request completion (ns) */
+ 	u64 last_completion;
+ 
 -- 
 2.19.1
 
