@@ -6,50 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F513C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EFEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF322070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284E521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711994;
-	bh=nzw6NS/MtDkgG/Y2W1X7xtWF4nDDjzt8jOGA9YuQgFc=;
+	s=default; t=1553711996;
+	bh=9+VbxPXqyVaC6ds4kj39egbF6cyIe1wtvhs2xjsi1Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q28s+9fi6epEfd7SdbaNQsR7lfJtvPlV7Ct5TvZsMH/UpHjCMO8bO/Ov0Wlw2+Q11
-	 NqExW9N4kjPNy8YnljT6QLP7wUx41K8PBO7dQjQEz9nUHbucZaNYLYeNHVoPJmjmlr
-	 lWkFgginZr5mlpu9DdjfM+UVWdWum7YvHA6x7gfA=
+	b=VAIeORX6jktbcD8iYnuSDAMYLie3pAXv3tXJy3J7HTEKhAzDCqeCFDB7JL6DaN+Fp
+	 JQvi+380zPyu33azVvatDSegNHr4GewK79Wyl3VYkifQNgoY7EzgZWyXXu9WO5vRDw
+	 ljOECA1Pko13n+tE8uE5K8Bs8AJ1uM001XH5N2/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391387AbfC0SXB (ORCPT
+        id S2391538AbfC0Sjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:39:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391033AbfC0SUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:55 -0400
+        id S2391384AbfC0SXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E679121738;
-        Wed, 27 Mar 2019 18:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D782620449;
+        Wed, 27 Mar 2019 18:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710854;
-        bh=nzw6NS/MtDkgG/Y2W1X7xtWF4nDDjzt8jOGA9YuQgFc=;
+        s=default; t=1553710980;
+        bh=9+VbxPXqyVaC6ds4kj39egbF6cyIe1wtvhs2xjsi1Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekj+hZ2HLh+9fNyXCBZ9QFoCQ5pzx7rwo5JnYvUqTi5O6yp33U0ZVnF6ejrLGsV39
-         phl/q3sL+KX6vqCpT+qTlAp3XrZXmXoThj2SvgNDUIjLKvTHzdmZKWgDW3qIBns0nq
-         kspG6u8zCRIbLVRFyrGCeYOUrR1rQY12vT5PYM10=
+        b=QAineV4R2Wufaktbx5HE89IwBSjBzFn9eAgcoN5GJzm6vmwE3r88h/YPsyNveSL3I
+         esY+Z28b8FNtwE4mZ7JQs2BLiVKXhImUvTrbP2G3WaN1QTWVMxO/cxl5CsiBOuhBJS
+         9Oqbjc296d9ltftam4xe4zyEMwaGPVeDlS+gAnfc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/87] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
-Date:   Wed, 27 Mar 2019 14:19:21 -0400
-Message-Id: <20190327182040.17444-8-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 75/87] dmaengine: imx-dma: fix warning comparison of distinct pointer types
+Date:   Wed, 27 Mar 2019 14:20:28 -0400
+Message-Id: <20190327182040.17444-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,64 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
+[ Upstream commit 9227ab5643cb8350449502dd9e3168a873ab0e3b ]
 
-The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
-dynamically allocate a struct member, but this is normally intended for
-local variables.
+The warning got introduced by commit 930507c18304 ("arm64: add basic
+Kconfig symbols for i.MX8"). Since it got enabled for arm64. The warning
+haven't been seen before since size_t was 'unsigned int' when built on
+arm32.
 
-Building with clang, I get a warning for a few locations that check the
-address of the cpumask_var_t:
+../drivers/dma/imx-dma.c: In function ‘imxdma_sg_next’:
+../include/linux/kernel.h:846:29: warning: comparison of distinct pointer types lacks a cast
+   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                             ^~
+../include/linux/kernel.h:860:4: note: in expansion of macro ‘__typecheck’
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^~~~~~~~~~~
+../include/linux/kernel.h:870:24: note: in expansion of macro ‘__safe_cmp’
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^~~~~~~~~~
+../include/linux/kernel.h:879:19: note: in expansion of macro ‘__careful_cmp’
+ #define min(x, y) __careful_cmp(x, y, <)
+                   ^~~~~~~~~~~~~
+../drivers/dma/imx-dma.c:288:8: note: in expansion of macro ‘min’
+  now = min(d->len, sg_dma_len(sg));
+        ^~~
 
-drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
+Rework so that we use min_t and pass in the size_t that returns the
+minimum of two values, using the specified type.
 
-As far as I can tell, the code is still correct, as the truth value of
-the pointer is what we need in this configuration. To get rid of
-the warning, use cpumask_available() instead of checking the
-pointer directly.
-
-Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Olof Johansson <olof@lixom.net>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/imx-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index 89acf7bc4cf9..b73d9ba9496c 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -120,7 +120,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 1cfa1d9bc971..f8786f60cdc1 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -290,7 +290,7 @@ static inline int imxdma_sg_next(struct imxdma_desc *d)
+ 	struct scatterlist *sg = d->sg;
+ 	unsigned long now;
  
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
--		    (enic->msix[i].affinity_mask &&
-+		    (cpumask_available(enic->msix[i].affinity_mask) &&
- 		     !cpumask_empty(enic->msix[i].affinity_mask)))
- 			continue;
- 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
-@@ -149,7 +149,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->intr_count; i++) {
- 		if (enic_is_err_intr(enic, i)		||
- 		    enic_is_notify_intr(enic, i)	||
--		    !enic->msix[i].affinity_mask	||
-+		    !cpumask_available(enic->msix[i].affinity_mask) ||
- 		    cpumask_empty(enic->msix[i].affinity_mask))
- 			continue;
- 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
-@@ -162,7 +162,7 @@ static void enic_set_affinity_hint(struct enic *enic)
- 	for (i = 0; i < enic->wq_count; i++) {
- 		int wq_intr = enic_msix_wq_intr(enic, i);
+-	now = min(d->len, sg_dma_len(sg));
++	now = min_t(size_t, d->len, sg_dma_len(sg));
+ 	if (d->len != IMX_DMA_LENGTH_LOOP)
+ 		d->len -= now;
  
--		if (enic->msix[wq_intr].affinity_mask &&
-+		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
- 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
- 			netif_set_xps_queue(enic->netdev,
- 					    enic->msix[wq_intr].affinity_mask,
 -- 
 2.19.1
 
