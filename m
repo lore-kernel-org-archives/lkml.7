@@ -4,63 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F4BC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D82217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951FC21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709830;
-	bh=MGfIoXnzyNJ/KAFrw5ZJrFi7P/sOO+b797C3j3DpCrs=;
+	s=default; t=1553709833;
+	bh=7wUPbZkJITs8WNWaUZ2FE8UIAYfVCDgYIHQi6Mz7fTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2HWu7CXcVBAV74oSnGcBrpG+EXH1OM6a2AA1AOh8T5VPS/BAXK/NzVJSU7NagYvpM
-	 95P/EnH2rpIGz4MWbsUiPMOZ3SYtR05cnr8Gda1FqsknNBRnFdxyTmgsnf4B4Xpnst
-	 yQrT4V4hEWSLhRFBNBlKyjyBfjDlxdvcziUuOISw=
+	b=HcDgNDp4MYuzXkLAYJarKnReA2B/+VIYcsoRTMmWDkuluF4m//nIJWKuxCYLY/5JI
+	 OjvWzVnOafOIC1YRHCXWiceJf2t+xZXDzuYdVqisu7mjK7VTv2U04OqGC6CrNwZlkK
+	 QFgOjgp6w0GsQKVnkOZZVHpbAHAZIe3d1thglYY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732867AbfC0SDt (ORCPT
+        id S1732942AbfC0SDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732685AbfC0SDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:47 -0400
+        id S1732879AbfC0SDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9AB42087C;
-        Wed, 27 Mar 2019 18:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B32E02082F;
+        Wed, 27 Mar 2019 18:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709827;
-        bh=MGfIoXnzyNJ/KAFrw5ZJrFi7P/sOO+b797C3j3DpCrs=;
+        s=default; t=1553709829;
+        bh=7wUPbZkJITs8WNWaUZ2FE8UIAYfVCDgYIHQi6Mz7fTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKJDa9lqPCT5FrQKRqlbe33Y1Ye8nJS7oPjbXYzBZXdORbP2sT2Gk9qQ/a+zaOe+r
-         56eY7JaZIzN0iAPiS8P7be/uC6PxgIAFcyBrhSvdPoWSPmaep2ZwWuIFnw4qKCwHN4
-         ZhUQpFgGkEsWbo2bsOhgFsFweXmOBPHTka2uJitQ=
+        b=fA7QzsmwKEPte3aF1varQjBXcoPkgU7297OMsbSC8RhHDGwNG/K6Y0BoTM8dVcopH
+         xoaM7xRxjaULNR1QBqv0AjrpW/+hxRT7ctKmFqRhlMIPO2fYzAmUbof7Wj3yWb4yrO
+         6LoXN3Gm4N43O5sT7is+ny/JwoksTu15M1D5p8WY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-nvdimm@lists.01.org,
-        linux-mm@kvack.org, Huang Ying <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, Keith Busch <keith.busch@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 061/262] mm/resource: Return real error codes from walk failures
-Date:   Wed, 27 Mar 2019 13:58:36 -0400
-Message-Id: <20190327180158.10245-61-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 062/262] PCI/PME: Fix hotplug/sysfs remove deadlock in pcie_pme_remove()
+Date:   Wed, 27 Mar 2019 13:58:37 -0400
+Message-Id: <20190327180158.10245-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -72,80 +57,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 5cd401ace914dc68556c6d2fcae0c349444d5f86 ]
+[ Upstream commit 95c80bc6952b6a5badc7b702d23e5bf14d251e7c ]
 
-walk_system_ram_range() can return an error code either becuase
-*it* failed, or because the 'func' that it calls returned an
-error.  The memory hotplug does the following:
+Dongdong reported a deadlock triggered by a hotplug event during a sysfs
+"remove" operation:
 
-	ret = walk_system_ram_range(..., func);
-        if (ret)
-		return ret;
+  pciehp 0000:00:0c.0:pcie004: Slot(0-1): Link Up
+  # echo 1 > 0000:00:0c.0/remove
 
-and 'ret' makes it out to userspace, eventually.  The problem
-s, walk_system_ram_range() failues that result from *it* failing
-(as opposed to 'func') return -1.  That leads to a very odd
--EPERM (-1) return code out to userspace.
+  PME and hotplug share an MSI/MSI-X vector.  The sysfs "remove" side is:
 
-Make walk_system_ram_range() return -EINVAL for internal
-failures to keep userspace less confused.
+    remove_store
+       pci_stop_and_remove_bus_device_locked
+	 pci_lock_rescan_remove
+	 pci_stop_and_remove_bus_device
+	   ...
+	   pcie_pme_remove
+	     pcie_pme_suspend
+	       synchronize_irq        # wait for hotplug IRQ handler
+	 pci_unlock_rescan_remove
 
-This return code is compatible with all the callers that I
-audited.
+  The hotplug side is:
 
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ross Zwisler <zwisler@kernel.org>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: linux-nvdimm@lists.01.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Yaowei Bai <baiyaowei@cmss.chinamobile.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+    pciehp_ist
+       pciehp_handle_presence_or_link_change
+	 pciehp_configure_device
+	   pci_lock_rescan_remove     # wait for pci_unlock_rescan_remove()
+
+  INFO: task bash:10913 blocked for more than 120 seconds.
+
+  # ps -ax |grep D
+   PID TTY      STAT   TIME COMMAND
+  10913 ttyAMA0  Ds+    0:00 -bash
+  14022 ?        D      0:00 [irq/745-pciehp]
+
+  # cat /proc/14022/stack
+  __switch_to+0x94/0xd8
+  pci_lock_rescan_remove+0x20/0x28
+  pciehp_configure_device+0x30/0x140
+  pciehp_handle_presence_or_link_change+0x324/0x458
+  pciehp_ist+0x1dc/0x1e0
+
+  # cat /proc/10913/stack
+  __switch_to+0x94/0xd8
+  synchronize_irq+0x8c/0xc0
+  pcie_pme_suspend+0xa4/0x118
+  pcie_pme_remove+0x20/0x40
+  pcie_port_remove_service+0x3c/0x58
+  ...
+  pcie_port_device_remove+0x2c/0x48
+  pcie_portdrv_remove+0x68/0x78
+  pci_device_remove+0x48/0x120
+  ...
+  pci_stop_bus_device+0x84/0xc0
+  pci_stop_and_remove_bus_device_locked+0x24/0x40
+  remove_store+0xa4/0xb8
+  dev_attr_store+0x44/0x60
+  sysfs_kf_write+0x58/0x80
+
+It is incorrect to call pcie_pme_suspend() from pcie_pme_remove() for two
+reasons.
+
+First, pcie_pme_suspend() calls synchronize_irq(), which will wait for the
+native hotplug interrupt handler as well as for the PME one, because they
+share one IRQ (as per the spec).  That may deadlock if hotplug is signaled
+while pcie_pme_remove() is running and the latter calls
+pci_lock_rescan_remove() before the former.
+
+Second, if pcie_pme_suspend() figures out that wakeup needs to be enabled
+for the port, it will return without disabling the interrupt as expected by
+pcie_pme_remove() which was overlooked by commit c7b5a4e6e8fb ("PCI / PM:
+Fix native PME handling during system suspend/resume").
+
+To fix that, rework pcie_pme_remove() to disable the PME interrupt, clear
+its status and prevent the PME worker function from re-enabling it before
+calling free_irq() on it, which should be sufficient.
+
+Fixes: c7b5a4e6e8fb ("PCI / PM: Fix native PME handling during system suspend/resume")
+Link: https://lore.kernel.org/linux-pci/c7697e7c-e1af-13e4-8491-0a3996e6ab5d@huawei.com
+Reported-by: Dongdong Liu <liudongdong3@huawei.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[bhelgaas: add URL and deadlock details from Dongdong]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/resource.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/pme.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 915c02e8e5dd..ca7ed5158cff 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -382,7 +382,7 @@ static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
- 				 int (*func)(struct resource *, void *))
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index 1a8b85051b1b..efa5b552914b 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -363,6 +363,16 @@ static bool pcie_pme_check_wakeup(struct pci_bus *bus)
+ 	return false;
+ }
+ 
++static void pcie_pme_disable_interrupt(struct pci_dev *port,
++				       struct pcie_pme_service_data *data)
++{
++	spin_lock_irq(&data->lock);
++	pcie_pme_interrupt_enable(port, false);
++	pcie_clear_root_pme_status(port);
++	data->noirq = true;
++	spin_unlock_irq(&data->lock);
++}
++
+ /**
+  * pcie_pme_suspend - Suspend PCIe PME service device.
+  * @srv: PCIe service device to suspend.
+@@ -387,11 +397,7 @@ static int pcie_pme_suspend(struct pcie_device *srv)
+ 			return 0;
+ 	}
+ 
+-	spin_lock_irq(&data->lock);
+-	pcie_pme_interrupt_enable(port, false);
+-	pcie_clear_root_pme_status(port);
+-	data->noirq = true;
+-	spin_unlock_irq(&data->lock);
++	pcie_pme_disable_interrupt(port, data);
+ 
+ 	synchronize_irq(srv->irq);
+ 
+@@ -427,9 +433,11 @@ static int pcie_pme_resume(struct pcie_device *srv)
+  */
+ static void pcie_pme_remove(struct pcie_device *srv)
  {
- 	struct resource res;
--	int ret = -1;
-+	int ret = -EINVAL;
+-	pcie_pme_suspend(srv);
++	struct pcie_pme_service_data *data = get_service_data(srv);
++
++	pcie_pme_disable_interrupt(srv->port, data);
+ 	free_irq(srv->irq, srv);
+-	kfree(get_service_data(srv));
++	kfree(data);
+ }
  
- 	while (start < end &&
- 	       !find_next_iomem_res(start, end, flags, desc, first_lvl, &res)) {
-@@ -462,7 +462,7 @@ int walk_system_ram_range(unsigned long start_pfn, unsigned long nr_pages,
- 	unsigned long flags;
- 	struct resource res;
- 	unsigned long pfn, end_pfn;
--	int ret = -1;
-+	int ret = -EINVAL;
- 
- 	start = (u64) start_pfn << PAGE_SHIFT;
- 	end = ((u64)(start_pfn + nr_pages) << PAGE_SHIFT) - 1;
+ static struct pcie_port_service_driver pcie_pme_driver = {
 -- 
 2.19.1
 
