@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B63C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE2CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9852320651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF4D20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711682;
-	bh=c6ao1lWcf6sSmP7L0SxW9MmPppUTAM2X2gP1bd1W+34=;
+	s=default; t=1553711697;
+	bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p89Lyu3XzGWLiNBo5PBBPUtoqf1fVbEbqt15PDUCf2bQJRD4bVLHWSq/2Tr/l88Zn
-	 tbKyy05g7I+1/z+Y01oUwaHA1Nci9CFKhpbh0uUKjwqBI3CmAxjsP6bTc8vYcN0+p6
-	 xMZLeKM5auOxMWhfwdSgU4KiGH4sd+ZcGqotF0vc=
+	b=ltL4teks3wxtt3DV9zsctf0iEyb6dcRISODmN+Io6+tnp7B9/Jl0ODiMK3kABTa8M
+	 rAGISjhM5iZRte823AOEDlgUT6HE97z+M6IGG8YEhQMyNdrwKJa04TOwXZVCz3F1DD
+	 mGU9SyH+0cwGliBDPStuklUPaDjrs0sI1gIyHQ70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392009AbfC0Sel (ORCPT
+        id S2404084AbfC0Se4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391586AbfC0SYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:44 -0400
+        id S2404029AbfC0SYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5258C2177E;
-        Wed, 27 Mar 2019 18:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2FEC2183F;
+        Wed, 27 Mar 2019 18:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711083;
-        bh=c6ao1lWcf6sSmP7L0SxW9MmPppUTAM2X2gP1bd1W+34=;
+        s=default; t=1553711079;
+        bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVqgRda3XDINkLPgcTrW4x+D5AlMkJ+NuibDhLMj1Ta1Nu9Uq2kaSgn2T9nZScEXo
-         3VGCG6jzESae3S+WbgG/5Y0weQ0wa6xqdTybMMbtt70JaXXixQAPUTbsVSuZSJknD+
-         71eEKEHva8mtUCTA94uJIv6anStWTLYFfjSJ4dok=
+        b=P/myEO9716473vbFFTmEZpcykYhtFWFoJjeY9VKZzsuczT0762vDNtaFCrBTguR04
+         /fASVTW/PWAAZ/tFTGFItlGGWk1DJNnlySBnRp/YnAIyZNImvTjVkT//TNg8DE14aw
+         73/AQQBC2Kswfk5qlsLJ8GL97DhehWRomSEtRZg0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     wen yang <yellowriver2010@hotmail.com>,
-        Wen Yang <yellowriver2010@hotmil.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 45/63] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
-Date:   Wed, 27 Mar 2019 14:23:05 -0400
-Message-Id: <20190327182323.18577-45-sashal@kernel.org>
+Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 42/63] fbdev: fbmem: fix memory access if logo is bigger than the screen
+Date:   Wed, 27 Mar 2019 14:23:02 -0400
+Message-Id: <20190327182323.18577-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -65,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wen yang <yellowriver2010@hotmail.com>
+From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 
-[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
+[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+There is no clipping on the x or y axis for logos larger that the framebuffer
+size. Therefore: a logo bigger than screen size leads to invalid memory access:
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[    1.254664] Backtrace:
+[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
+[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
+[    1.254774]  r4:c6a3e800
+[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
+[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
+[    1.254852]  r4:c6808c00
+[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
+[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
+[    1.254928]  r4:c6808c00
+[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
+[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+
+So prevent displaying a logo bigger than screen size and avoid invalid
+memory access.
+
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/core/fbmem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 1b05d1c5d9fd..a32fe14b4687 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -659,6 +659,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- asrc_fail:
- 	of_node_put(asrc_np);
- 	of_node_put(codec_np);
-+	put_device(&cpu_pdev->dev);
- fail:
- 	of_node_put(cpu_np);
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index ea2bd6208a2f..9eae191728d2 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -425,6 +425,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
+ {
+ 	unsigned int x;
  
++	if (image->width > info->var.xres || image->height > info->var.yres)
++		return;
++
+ 	if (rotate == FB_ROTATE_UR) {
+ 		for (x = 0;
+ 		     x < num && image->dx + image->width <= info->var.xres;
 -- 
 2.19.1
 
