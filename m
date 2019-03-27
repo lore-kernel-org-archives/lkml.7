@@ -2,107 +2,161 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C195BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4494C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917B32087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:51:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDLDNyQy"
+	by mail.kernel.org (Postfix) with ESMTP id 9A8762087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553651634;
+	bh=qFm6xqS6aWDk2U471Dmq7ANR4B9/ETmWfaeKFXjErLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kxzl/zbNcMrAL10nLprGumS3D5De6bT8T139RzKVu9Vr3b181IxNKC637KNqcVDB4
+	 ngUX+DbBfuYYZz5uUyvRqrZ4zvOcRGQPeW32/GNI9FAYQCqw6Lu38OdRS1ExKZGrwP
+	 +3PGbW++hoLupJqA74hIhatIkoTV6yodtIAfurn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732762AbfC0BvN (ORCPT
+        id S1732371AbfC0Bxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 21:51:13 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:56117 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732114AbfC0BvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 21:51:05 -0400
-Received: by mail-it1-f195.google.com with SMTP id z126so22930259itd.5;
-        Tue, 26 Mar 2019 18:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5QSaziYjkmv23ZIocqo6YaM3iWHVUdwZxhQSM3dO/v4=;
-        b=dDLDNyQyBUVfcdVQ/KkVim18X7Bi3NJNtTmtH1VWvtumD4tk6CCvpqAw16k5DaFRID
-         1QZKEE/pGz7JDfNgXG3vKUwQWGjfDPGh57yUbIrR7g/Tf5JtFXL6zO7FW+69Qj7GyTa5
-         LIvcxrrgRa9v/DAjrQP/OeXiwcgYnbceWocpdcOLURJBmS1V1fbfQpJasY5fN5w7XNdl
-         Jk69+7doqQebaqk/HbEna6BpADnK9lCjodUo64WcbVEhKT/HrNLYVn8or4oJNC8emLZc
-         qJkFxCCZKHm4Zsp01u3KB0V00s3eqSt/AmE/i2be9Lar+on92nmzj4VqObE4Ulp0HD8O
-         bEFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5QSaziYjkmv23ZIocqo6YaM3iWHVUdwZxhQSM3dO/v4=;
-        b=YS9GiohToSAoW6b/zzYSG/YbVUVqS0r4RkeZ3ttPTPQ4iCVtHaF3NpRzXtdHGX5PrD
-         eFtrDbuKzhLineoKCpDDgP5CJ3l/TXQCs5J1QvbKvcwBl2Bw3sd0hDh9v2dGgx7aSNpL
-         HDKz1ITk/JR7gxKJ4KGxN8ZExbmF6+YHtMjNmgdAQMudqV8sB6wLytf57qWW+x4ks6ag
-         bICJ92cZNaeclFhVcGifv2aIg5HcJboutR1sUc0dzfmkKKCv7bvaSEC9CJkk3Ff58AIo
-         ZdNCtmtFD3El3rOkehxe+2TfAIK94OrEjIfrqtTaYnPcRHqMsi60bIsUyr+Yyt5KgMYm
-         TJ2w==
-X-Gm-Message-State: APjAAAXYIRoAHKTTwGlbXP6o5i/uEYv0Uz5Gq8Boxpwc89toqUUpIgbQ
-        2LLrSxE2/ApQRaI911Hoodo=
-X-Google-Smtp-Source: APXvYqxtISPv53sdT40H/+S5yVKZjgiPogMq/sltWCMrLw6uBCVGRUDqecXzuoWDmxh6fdvYhgJOig==
-X-Received: by 2002:a02:a50a:: with SMTP id e10mr26166581jam.104.1553651465007;
-        Tue, 26 Mar 2019 18:51:05 -0700 (PDT)
-Received: from localhost.localdomain (c-73-242-244-99.hsd1.nm.comcast.net. [73.242.244.99])
-        by smtp.gmail.com with ESMTPSA id e27sm4550040ioc.14.2019.03.26.18.51.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 18:51:04 -0700 (PDT)
-From:   George Hilliard <thirtythreeforty@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v5 1/2] staging: mt7621-mmc: Remove obsolete Kconfig flags
-Date:   Tue, 26 Mar 2019 19:50:56 -0600
-Message-Id: <20190327015057.9568-2-thirtythreeforty@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190327015057.9568-1-thirtythreeforty@gmail.com>
-References: <20190327015057.9568-1-thirtythreeforty@gmail.com>
+        Tue, 26 Mar 2019 21:53:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731483AbfC0Bxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 21:53:53 -0400
+Received: from localhost (mobile-166-137-177-030.mycingular.net [166.137.177.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29012087E;
+        Wed, 27 Mar 2019 01:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553651631;
+        bh=qFm6xqS6aWDk2U471Dmq7ANR4B9/ETmWfaeKFXjErLM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GhGFyFeoQCZx1mdqu2dREI0FLdmBZw/HBykquxpPwZwCSbUqUVeknUJ/SRu+n6kjD
+         GNi1tdRDPL+NK1xn5OdTYSK7GWzcXxiEUdOrjtzp4l0gzWL7hUVaEgcQYWdGSo6wUi
+         /O51rEDSEPxeFE9fZJlKLU7N/SKejMnqDvwOlTEM=
+Date:   Wed, 27 Mar 2019 10:53:46 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
+ debugfs_create functions
+Message-ID: <20190327015346.GA17979@kroah.com>
+References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
+ <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
+ <20190327012600.GA3649@kroah.com>
+ <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These values are not referred to anywhere else in the kernel. Card
-detect is controlled by the device tree property "mediatek,cd-poll",
-and there is no driver support for eMMC whatsoever.
+On Tue, Mar 26, 2019 at 06:47:33PM -0700, Laura Abbott wrote:
+> On 3/26/19 6:26 PM, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 26, 2019 at 04:55:54PM -0700, Laura Abbott wrote:
+> > > On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
+> > > > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > index 33b0af24a537..c52cdc538678 100644
+> > > > --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
+> > > >    #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
+> > > >    	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
+> > > >    #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
+> > > > -		if (!debugfs_create_file(#name, mode, parent, vif,	\
+> > > > -					 &iwl_dbgfs_##name##_ops))	\
+> > > > -			goto err;					\
+> > > > +		debugfs_create_file(#name, mode, parent, vif,		\
+> > > > +				    &iwl_dbgfs_##name##_ops);		\
+> > > >    	} while (0)
+> > > >    MVM_DEBUGFS_READ_FILE_OPS(mac_params);
+> > > > @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+> > > >    	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
+> > > > -	if (!mvmvif->dbgfs_dir) {
+> > > > -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
+> > > > -			dbgfs_dir);
+> > > > -		return;
+> > > > -	}
+> > > > -
+> > > >    	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
+> > > >    	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
+> > > >    	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
+> > > > @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+> > > >    	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
+> > > >    						     mvm->debugfs_dir, buf);
+> > > > -	if (!mvmvif->dbgfs_slink)
+> > > > -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
+> > > > -			dbgfs_dir);
+> > > > -	return;
+> > > > -err:
+> > > > -	IWL_ERR(mvm, "Can't create debugfs entity\n");
+> > > >    }
+> > > 
+> > > Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
+> > > of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
+> > > ("debugfs: return error values, not NULL") because the error checking is
+> > > no longer correct in this driver.
+> > > 
+> > > Based on https://patchwork.kernel.org/patch/10865839/, it looks like
+> > > this is supposed to go in for 5.2 but this needs to go in now as
+> > > the error checking is currently broken without it. Can this get queued
+> > > for Linus so we can get it in 5.0 stable?
+> > 
+> > That's odd, I can't see how the error checking is wrong here.  If the
+> > directory is not created, an error will be returned, which should be
+> > able to be handled by debugfs_create_file().
+> > 
+> > So with this patch does the error go away?
+> > 
+> 
+> The full patch didn't apply cleanly and I didn't try to backport it
+> for the reporter to test. I was going off of the theory that if the
+> patch was there it would fix the problem.
+> 
+> What I _think_ is going wrong is dbgfs_dir is actually an errno value:
+> 
+> 
+>         struct dentry *dbgfs_dir = vif->debugfs_dir;
+>         struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+>         char buf[100];
+> 
+>         /*
+>          * Check if debugfs directory already exist before creating it.
+>          * This may happen when, for example, resetting hw or suspend-resume
+>          */
+>         if (!dbgfs_dir || mvmvif->dbgfs_dir)
+>                 return;
+> 
+> 
+> so this blows up in the snprintf
+> 
+>         snprintf(buf, 100, "../../../%pd3/%pd",
+>                  dbgfs_dir,
+>                  mvmvif->dbgfs_dir);
 
-Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
----
-v2: Rewrite of v1
-v3: [Not present]
-v4: Resubmit of v2
-v5: No change from v4
+Ah, yeah, that's horrible.  They had the name before, why pull it out of
+the dentry again?  That will blow up hard, but maybe printk should check
+to see if the pointer really is a pointer first.
 
- drivers/staging/mt7621-mmc/Kconfig | 8 --------
- 1 file changed, 8 deletions(-)
+> Unless I misunderstood what the debugfs error change did. I think this
+> also means the if check needs to look for IS_ERR and not just !dbgfs_dir.
 
-diff --git a/drivers/staging/mt7621-mmc/Kconfig b/drivers/staging/mt7621-mmc/Kconfig
-index 1eb79cd6e22f..01f231dd8511 100644
---- a/drivers/staging/mt7621-mmc/Kconfig
-+++ b/drivers/staging/mt7621-mmc/Kconfig
-@@ -6,11 +6,3 @@ config MTK_AEE_KDUMP
- 	bool "MTK AEE KDUMP"
- 	depends on MTK_MMC
- 
--config MTK_MMC_CD_POLL
--	bool "Card Detect with Polling"
--	depends on MTK_MMC
--
--config MTK_MMC_EMMC_8BIT
--	bool "eMMC 8-bit support"
--	depends on MTK_MMC && RALINK_MT7628
--
--- 
-2.21.0
+Yes, that is correct.
 
+thanks,
+
+greg k-h
