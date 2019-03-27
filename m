@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0723EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58199C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D0F204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA0D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391927AbfC0SdS (ORCPT
+        id S2391975AbfC0SdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:33:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51482 "EHLO
+        Wed, 27 Mar 2019 14:33:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51487 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390579AbfC0SdP (ORCPT
+        with ESMTP id S2390945AbfC0SdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:33:15 -0400
+        Wed, 27 Mar 2019 14:33:23 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1h9DMO-0004Tc-0W; Wed, 27 Mar 2019 19:33:12 +0100
+        id 1h9DMM-0004Tc-OB; Wed, 27 Mar 2019 19:33:10 +0100
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>,
         linux-rt-users <linux-rt-users@vger.kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 3/4] powerpc/pseries/iommu: Use a locallock instead local_irq_save()
-Date:   Wed, 27 Mar 2019 19:33:09 +0100
-Message-Id: <20190327183310.1015-3-bigeasy@linutronix.de>
+Subject: [PATCH 1/4] printk: An all-in-one commit to fix build failures
+Date:   Wed, 27 Mar 2019 19:33:07 +0100
+Message-Id: <20190327183310.1015-1-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327183310.1015-1-bigeasy@linutronix.de>
+In-Reply-To: <20190320171511.icjhdlulgal2yeho@linutronix.de>
 References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
- <20190327183310.1015-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,89 +42,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The locallock protects the per-CPU variable tce_page. The function
-attempts to allocate memory while tce_page is protected (by disabling
-interrupts).
+From: John Ogness <john.ogness@linutronix.de>
 
-Use local_irq_save() instead of local_irq_disable().
+This commit contains addresses several build failures which were
+reported by the kbuild test robot.
+The fixes were folded into the original commits.
 
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/powerpc/platforms/pseries/iommu.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/traps.c    |  1 -
+ arch/powerpc/kernel/watchdog.c |  5 -----
+ kernel/printk/printk.c         | 16 ++++++++++++++--
+ lib/printk_ringbuffer.c        |  8 +++++++-
+ 4 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 8fc8fe0b98485..14ecedbd8ff12 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -38,6 +38,7 @@
- #include <linux/of.h>
- #include <linux/iommu.h>
- #include <linux/rculist.h>
-+#include <linux/locallock.h>
- #include <asm/io.h>
- #include <asm/prom.h>
- #include <asm/rtas.h>
-@@ -191,6 +192,7 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index 7a1de34f38c85..314be8e39d1fd 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -174,7 +174,6 @@ extern void panic_flush_kmsg_start(void)
+ 
+ extern void panic_flush_kmsg_end(void)
+ {
+-	printk_safe_flush_on_panic();
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 	bust_spinlocks(0);
+ 	debug_locks_off();
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index 3c6ab22a0c4e3..bf98181c5b309 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -181,11 +181,6 @@ static void watchdog_smp_panic(int cpu, u64 tb)
+ 
+ 	wd_smp_unlock(&flags);
+ 
+-	printk_safe_flush();
+-	/*
+-	 * printk_safe_flush() seems to require another print
+-	 * before anything actually goes out to console.
+-	 */
+ 	if (sysctl_hardlockup_all_cpu_backtrace)
+ 		trigger_allbutself_cpu_backtrace();
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5cfd8ea445362..997d07b6bf975 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -370,6 +370,18 @@ static u64 clear_seq;
+ #define LOG_LEVEL(v)		((v) & 0x07)
+ #define LOG_FACILITY(v)		((v) >> 3 & 0xff)
+ 
++/* Return log buffer address */
++char *log_buf_addr_get(void)
++{
++	return printk_rb.buffer;
++}
++
++/* Return log buffer size */
++u32 log_buf_len_get(void)
++{
++	return (1 << printk_rb.size_bits);
++}
++
+ /* human readable text of the record */
+ static char *log_text(const struct printk_log *msg)
+ {
+@@ -1910,7 +1922,7 @@ asmlinkage int vprintk_emit(int facility, int level,
  }
+ EXPORT_SYMBOL(vprintk_emit);
  
- static DEFINE_PER_CPU(__be64 *, tce_page);
-+static DEFINE_LOCAL_IRQ_LOCK(tcp_page_lock);
+-__printf(1, 0) int vprintk_func(const char *fmt, va_list args)
++static __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
+ {
+ 	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+ }
+@@ -2684,7 +2696,7 @@ static int __init init_printk_kthread(void)
+ }
+ late_initcall(init_printk_kthread);
  
- static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 				     long npages, unsigned long uaddr,
-@@ -211,7 +213,8 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		                           direction, attrs);
+-int vprintk_deferred(const char *fmt, va_list args)
++static int vprintk_deferred(const char *fmt, va_list args)
+ {
+ 	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
+ }
+diff --git a/lib/printk_ringbuffer.c b/lib/printk_ringbuffer.c
+index ce33b5add5a17..9a31d7dbdc005 100644
+--- a/lib/printk_ringbuffer.c
++++ b/lib/printk_ringbuffer.c
+@@ -196,8 +196,14 @@ void prb_commit(struct prb_handle *h)
+ 
+ 	if (changed) {
+ 		atomic_long_inc(&rb->wq_counter);
+-		if (wq_has_sleeper(rb->wq))
++		if (wq_has_sleeper(rb->wq)) {
++#ifdef CONFIG_IRQ_WORK
+ 			irq_work_queue(rb->wq_work);
++#else
++			if (!in_nmi())
++				wake_up_interruptible_all(rb->wq);
++#endif
++		}
  	}
- 
--	local_irq_save(flags);	/* to protect tcep and the page behind it */
-+	/* to protect tcep and the page behind it */
-+	local_lock_irqsave(tcp_page_lock, flags);
- 
- 	tcep = __this_cpu_read(tce_page);
- 
-@@ -222,7 +225,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
- 		/* If allocation fails, fall back to the loop implementation */
- 		if (!tcep) {
--			local_irq_restore(flags);
-+			local_unlock_irqrestore(tcp_page_lock, flags);
- 			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
- 					    direction, attrs);
- 		}
-@@ -256,7 +259,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		tcenum += limit;
- 	} while (npages > 0 && !rc);
- 
--	local_irq_restore(flags);
-+	local_unlock_irqrestore(tcp_page_lock, flags);
- 
- 	if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
- 		ret = (int)rc;
-@@ -414,13 +417,14 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
- 	u64 rc = 0;
- 	long l, limit;
- 
--	local_irq_disable();	/* to protect tcep and the page behind it */
-+	/* to protect tcep and the page behind it */
-+	local_lock_irq(tcp_page_lock);
- 	tcep = __this_cpu_read(tce_page);
- 
- 	if (!tcep) {
- 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
- 		if (!tcep) {
--			local_irq_enable();
-+			local_unlock_irq(tcp_page_lock);
- 			return -ENOMEM;
- 		}
- 		__this_cpu_write(tce_page, tcep);
-@@ -466,7 +470,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
- 
- 	/* error cleanup: caller will clear whole range */
- 
--	local_irq_enable();
-+	local_unlock_irq(tcp_page_lock);
- 	return rc;
  }
  
 -- 
