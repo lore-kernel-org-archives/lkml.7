@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46651C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B79321738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5422082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710886;
-	bh=62NBNnPu9SNnmesvvyF6HAsOH7LdsagTCki+Evg2+HA=;
+	s=default; t=1553710890;
+	bh=zRyu5tVHzZ4oXZu1Pnm9Bga9xA3dembngA7lxWvIrDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmDaJ3S3Gs2Um2kXEImAAtlpYYaGNE2W8PPZPsCDLXfkdUHPXLGD4aBkWXJG0Pgk3
-	 /vsFPOBG1/gAXm6bmJRBzF9T7tymplzW1FQQmIdckB/JAIRtj9G5xLK8EkKREtD0/3
-	 1W1dFvrqSURNU2AnPrKRtV1cz1rqdPFtxyJZ8+Yw=
+	b=Ce41KsynEWV9heCzsG9n3ajlieSchxbHzqLHsQyWZr+PhHgHQjOH6jL780xFnMVLk
+	 /FdAcyQGbJWkPx85QsKa/L3eeEcpPSYiqLVWr3tyt//S9Yo6EZ8iRDGSd/brIQARQp
+	 Q/6Xraa3FtPPxPdmNeFFM3qGwQWUodss2S/Ny5qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391169AbfC0SVZ (ORCPT
+        id S2391179AbfC0SV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391145AbfC0SVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:22 -0400
+        id S2391145AbfC0SV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1C72147C;
-        Wed, 27 Mar 2019 18:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5376E2082F;
+        Wed, 27 Mar 2019 18:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710881;
-        bh=62NBNnPu9SNnmesvvyF6HAsOH7LdsagTCki+Evg2+HA=;
+        s=default; t=1553710885;
+        bh=zRyu5tVHzZ4oXZu1Pnm9Bga9xA3dembngA7lxWvIrDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsNzh6/OdF4NPphrCF46p4xmmYjcBT0JFkbK9vdOMK8yf4nDb7QVwn7KLsWMv+gED
-         jkCUsAneTEjH2EPc689LfiG8FTsharjwccu4fxvaA6LpNN6I3P2Wyf4rxLQxGBXk+m
-         5cA6Rhiw84ygAQKdEJAtcpreg4riXOnT3Skr/F3c=
+        b=Ns5WuiHSBPjxBYP4oYrKXFcUyuYGavEs5QyZj7bnfm7tA5Tprnu3AQf3vMr9cnCby
+         cfwkQ3Xl5KgtfW2wd4W8xLqEXz6a3BEYOjAUs+Jfxflb2uArEzCgiOV2v5bZAHbqWc
+         66evLuerVQmbKM7IJBjm00KwNixMEDAUiRZ267ZE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 24/87] wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
-Date:   Wed, 27 Mar 2019 14:19:37 -0400
-Message-Id: <20190327182040.17444-24-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 26/87] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Wed, 27 Mar 2019 14:19:39 -0400
+Message-Id: <20190327182040.17444-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -60,68 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit de77a53c2d1e8fb3621e63e8e1f0f0c9a1a99ff7 ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-ies1 or ies2 might be null when code inside
-_wil_cfg80211_merge_extra_ies access them.
-Add explicit check for null and make sure ies1/ies2 are not
-accessed in such a case.
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
-spos might be null and be accessed inside
-_wil_cfg80211_merge_extra_ies.
-Add explicit check for null in the while condition statement
-and make sure spos is not accessed in such a case.
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-Signed-off-by: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
+
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/cfg80211.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
-index d117240d9a73..b8eeaef17edc 100644
---- a/drivers/net/wireless/ath/wil6210/cfg80211.c
-+++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
-@@ -1005,6 +1005,12 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	u8 *buf, *dpos;
- 	const u8 *spos;
- 
-+	if (!ies1)
-+		ies1_len = 0;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 64c6af2c8559..e96e3a5808b3 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -901,8 +901,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
 +
-+	if (!ies2)
-+		ies2_len = 0;
-+
- 	if (ies1_len == 0 && ies2_len == 0) {
- 		*merged_ies = NULL;
- 		*merged_len = 0;
-@@ -1014,17 +1020,19 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	buf = kmalloc(ies1_len + ies2_len, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
--	memcpy(buf, ies1, ies1_len);
-+	if (ies1)
-+		memcpy(buf, ies1, ies1_len);
- 	dpos = buf + ies1_len;
- 	spos = ies2;
--	while (spos + 1 < ies2 + ies2_len) {
-+	while (spos && (spos + 1 < ies2 + ies2_len)) {
- 		/* IE tag at offset 0, length at offset 1 */
- 		u16 ielen = 2 + spos[1];
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
  
- 		if (spos + ielen > ies2 + ies2_len)
- 			break;
- 		if (spos[0] == WLAN_EID_VENDOR_SPECIFIC &&
--		    !_wil_cfg80211_find_ie(ies1, ies1_len, spos, ielen)) {
-+		    (!ies1 || !_wil_cfg80211_find_ie(ies1, ies1_len,
-+						     spos, ielen))) {
- 			memcpy(dpos, spos, ielen);
- 			dpos += ielen;
- 		}
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
