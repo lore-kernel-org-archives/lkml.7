@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D97C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD7AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8539F2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6598121738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711043;
-	bh=sibjC50ab+YdmYUQ3o0p5tMVCisCF6Q07skiVXG9gxQ=;
+	s=default; t=1553711045;
+	bh=coYlqhuuXfOWH8CqsEw6y6jLFfagIKoQOjBmqY8bs5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TOGGWczGqisnK1S4CziQZXhSwClUMxkbWgepUeEf3rnsdMQVdsna5Wl3FFohq3bXm
-	 dH5NV6c0DmUjx2BqSjVPQ9xvjunxNCOV/plEEaROxp5u6bqg78C0eftO7EgsIqxNgH
-	 Ion9bYmWCWwv4j6wbCUeh71e6/IMMoMljuAro6HI=
+	b=gPSbnUmNtlTGosmdC5m/kPsFR0++YeKVwNiJspGBT5Qlx7XsWCRCidMKqxtRytyA8
+	 ykUgKFNzKHfhf+ZTUKpQXs26xpT5awMUg24YgmarRPMUH0SJu5386G50B60+OapAQY
+	 tIiOgYaypVOallDOtGJAq+HIHvNLCBMzVSoV+h+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403960AbfC0SYB (ORCPT
+        id S2403971AbfC0SYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403920AbfC0SX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:58 -0400
+        id S2403940AbfC0SX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B7462070B;
-        Wed, 27 Mar 2019 18:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E534F20643;
+        Wed, 27 Mar 2019 18:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711037;
-        bh=sibjC50ab+YdmYUQ3o0p5tMVCisCF6Q07skiVXG9gxQ=;
+        s=default; t=1553711036;
+        bh=coYlqhuuXfOWH8CqsEw6y6jLFfagIKoQOjBmqY8bs5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ex8ZWZIqWvzwrzbBUS3FfAQaAM8fkNBXPpGVQeuPfgOryhPvpvgCXF0La0eo8gt/3
-         5deT8/UQLKOMUHE9JMYcb5yf44NSHJy1anfHKBVA9EVNTySX8AYh8CAXlGWpid3SzF
-         VsuwWlJQ2mJ3ow8cVZkAA4UL9r4fH63hO6IkMFLU=
+        b=fhE0bX+OVfl8+1PK1SVXKj/UFYOUk1uZJ5ecnjd3YkINp74EJ4mGqrr3+QZzkW+cs
+         JI8/94bD+9PhswAj1JkXrzb7tjYLgQjzjHfxzyR44H3L+AbxPrZtw/XVcypc2KMC4g
+         6d7pAcKGvVjBecj8QNujhr5QD6lBh7Uz5b/21Ivs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/63] usb: chipidea: Grab the (legacy) USB PHY by phandle first
-Date:   Wed, 27 Mar 2019 14:22:40 -0400
-Message-Id: <20190327182323.18577-20-sashal@kernel.org>
+Cc:     Tony Jones <tonyj@suse.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 19/63] tools lib traceevent: Fix buffer overflow in arg_eval
+Date:   Wed, 27 Mar 2019 14:22:39 -0400
+Message-Id: <20190327182323.18577-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -58,57 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Tony Jones <tonyj@suse.de>
 
-[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
+[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
 
-According to the chipidea driver bindings, the USB PHY is specified via
-the "phys" phandle node. However, this only takes effect for USB PHYs
-that use the common PHY framework. For legacy USB PHYs, a simple lookup
-based on the USB PHY type is done instead.
+Fix buffer overflow observed when running perf test.
 
-This does not play out well when more than one USB PHY is registered,
-since the first registered PHY matching the type will always be
-returned regardless of what the driver was bound to.
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-Fix this by looking up the PHY based on the "phys" phandle node.
-Although generic PHYs are rather matched by their "phys-name" and not
-the "phys" phandle directly, there is no helper for similar lookup on
-legacy PHYs and it's probably not worth the effort to add it.
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
 
-When no legacy USB PHY is found by phandle, fallback to grabbing any
-registered USB2 PHY. This ensures backward compatibility if some users
-were actually relying on this mechanism.
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 57ee43512992..dee22d8effda 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -913,8 +913,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
-+		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
-+							  0);
- 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
-+
-+		/* Fallback to grabbing any registered USB2 PHY */
-+		if (IS_ERR(ci->usb_phy) &&
-+		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
-+			ci->usb_phy = devm_usb_get_phy(dev->parent,
-+						       USB_PHY_TYPE_USB2);
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 6e4a10fe9dd0..743746a3c50d 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2419,7 +2419,7 @@ static int arg_num_eval(struct print_arg *arg, long long *val)
+ static char *arg_eval (struct print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+ 	switch (arg->type) {
+ 	case PRINT_ATOM:
 -- 
 2.19.1
 
