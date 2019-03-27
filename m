@@ -2,100 +2,102 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC280C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFCEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CF820449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D62B20449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="OutQNHoD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AViqVceg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pP15t0rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfC0M6Z (ORCPT
+        id S1729371AbfC0M6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:58:25 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42785 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfC0M6Y (ORCPT
+        Wed, 27 Mar 2019 08:58:30 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49236 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfC0M6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:58:24 -0400
-Received: by mail-io1-f65.google.com with SMTP id c4so13928911ioh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 05:58:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xh2orCj5BZSvNdKGHYK4ruXtT1eX2tXY1HuSqNPSZCs=;
-        b=OutQNHoDQX6sN9m5I+0k3Aw647qq2yAa8RYa1jVtiGv0r4g4iZQOhEQ7rpQphvWBcv
-         RnSj23iqzerHdelS9i99IwMMk+ioSaa6EvY5Z0g/1YFWQDrz/MeONVJpbRWkM0a5GCBO
-         mM/BXxcdJQuuYoEJ7UuoELFvAc30/41s8+hfw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xh2orCj5BZSvNdKGHYK4ruXtT1eX2tXY1HuSqNPSZCs=;
-        b=uf124kq/b+UH5WSpRxp6nYciVuIvwtB3mnZx0/aBCK9+EsR01CTMt7vpBYb/2IoIL5
-         tWOPYwUJ28SIY01sZiH3JeAyAV8we7fvHZVu4lPy1j/B4VMEcvSJ7wuLcBL4PWXEpt8Z
-         2g5WMvuMOD4DSsH3+by9z2XEQP56D8lr59uv9jqNBNEzQG0qvggJ1LYDFFuKKBAe1rwx
-         Hc9kriJYbjI21vgEe1G3B2TLfipft7ZZNC+47yss9vRvJ0797xKfG/UUCcTudFuj9Fpn
-         hh9bxbzRQUVMdrvoP8o+rVX+K3QLXBNIAL4O4yuMcmvyzDnCimU8fyM+ztsGPxzIf1N0
-         bu9A==
-X-Gm-Message-State: APjAAAVOdym/YqxLOjkvLP608/GGjSBpcRIBge3s6fQJDEwVv0uBHMhj
-        V8pF8EG6ZGnqsRPpwjzu/wMB61BeY7nMYv8rBpymog==
-X-Google-Smtp-Source: APXvYqxkj680fw14RlsvRc7+2HNIL0m/cjFSKhQapznDR4Skb5r4UIpcI6PCMxPjerXrrUkpwe8kZ57dc4BTGZQ9FBg=
-X-Received: by 2002:a6b:d80a:: with SMTP id y10mr23916022iob.114.1553691503732;
- Wed, 27 Mar 2019 05:58:23 -0700 (PDT)
+        Wed, 27 Mar 2019 08:58:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2527960A44; Wed, 27 Mar 2019 12:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553691504;
+        bh=d78/h/tHRsNnx9gRlWBavJP4nZRXWlNrGu1vdw/qw4U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AViqVceghdeotuDtBHCrcOAziTsjPD0aVxU5FqO1MMMbCEtNIFmWib+IWPfdTkL2K
+         hyKFwAggv7CzsFufdFCqXN0GfcaxNvphBE/YjfzQRKBOOVi22bE2k7cy/Xm/tMPN5P
+         2akZWv9WYiNbH5EijL+UWupIGRP1U15bdsTclDlw=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C86DF60736;
+        Wed, 27 Mar 2019 12:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553691503;
+        bh=d78/h/tHRsNnx9gRlWBavJP4nZRXWlNrGu1vdw/qw4U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pP15t0rxOoP+i9OBkxAS2voMB7k1V2OwumxniZ+bUxIBnBUkx/7OfOS7kiq1GZ1q0
+         f8R6S8jw/ZbYdl3QBisTxyBFq5hDgBj1kSJc+SQyXJFHJTxkVvlILtyUSWWGaF2pxp
+         jbURJOeWXz2/qf/tfHDlnpCaC80jPiZ28r4B18Lo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C86DF60736
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] media: vpss: fix a potential NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190323025106.15865-1-kjlu@umn.edu>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <f54947a6-8b9c-18d5-4e9b-d33d504131c6@codeaurora.org>
+Date:   Wed, 27 Mar 2019 18:28:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-References: <20190212204109.3528-1-jagan@amarulasolutions.com>
- <20190212204109.3528-2-jagan@amarulasolutions.com> <CAMty3ZA401nRh+nqFUcVMOv+or8NWoYU+y72gUPONy7ovyqgSw@mail.gmail.com>
- <20190218202705.GA19088@ravnborg.org> <CAMty3ZCQY+BSAFe=8Z0X29nK9tRz+7s3BFTiAmQ7CD_eNTL-LQ@mail.gmail.com>
- <CAMty3ZCo7ZEaPqUc=O=4N6XDBe+6tAE7AzH258U=hw8uvj-F_g@mail.gmail.com>
-In-Reply-To: <CAMty3ZCo7ZEaPqUc=O=4N6XDBe+6tAE7AzH258U=hw8uvj-F_g@mail.gmail.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 27 Mar 2019 18:28:12 +0530
-Message-ID: <CAMty3ZCxOWBvdZVyKCLYnWp4KSjeOMQ-SRndyH=g3fLYTfPGsA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] drm/panel: Add Feiyang FY07024DI26A30-D MIPI-DSI
- LCD panel
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula@amarulasolutions.com,
-        Sam Ravnborg <sam@ravnborg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190323025106.15865-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David or Daniel or Thierry,
 
-On Sat, Mar 9, 2019 at 1:48 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+On 3/23/2019 8:21 AM, Kangjie Lu wrote:
+> In case ioremap fails, the fix returns -ENOMEM to avoid NULL
+> pointer dereference.
 >
-> Hi,
->
-> On Thu, Feb 28, 2019 at 11:02 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > Hi Thierry,
-> >
-> > On Tue, Feb 19, 2019 at 1:57 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > Hi Thierry
-> > >
-> > > > Pleas let me know if you any further comments on this?
-> > > No further comments from my side, and I consider it
-> > > ready to apply.
-> >
-> > Would you please pick this?
->
-> Gentle ping.
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-Would any one pick or comment about this? It has been in ML for weeks
-with couple of gentle pings and irc queries.
 
-Jagan.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+> ---
+>   drivers/media/platform/davinci/vpss.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+> index 19cf6853411e..89a86c19579b 100644
+> --- a/drivers/media/platform/davinci/vpss.c
+> +++ b/drivers/media/platform/davinci/vpss.c
+> @@ -518,6 +518,11 @@ static int __init vpss_init(void)
+>   		return -EBUSY;
+>   
+>   	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+> +	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+> +		release_mem_region(VPSS_CLK_CTRL, 4);
+> +		return -ENOMEM;
+> +	}
+> +
+>   	writel(VPSS_CLK_CTRL_VENCCLKEN |
+>   		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
+>   
