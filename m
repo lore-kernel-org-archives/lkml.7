@@ -2,125 +2,240 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D56AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2635C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7F52075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4C92075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="GSp2gQ4y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i2AiOdRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfC0IWR (ORCPT
+        id S1732304AbfC0IWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:22:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43607 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfC0IWR (ORCPT
+        Wed, 27 Mar 2019 04:22:42 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36459 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfC0IWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:22:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v32so17776417qtc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:22:16 -0700 (PDT)
+        Wed, 27 Mar 2019 04:22:42 -0400
+Received: by mail-it1-f195.google.com with SMTP id h9so24706322itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9N7G4SXxxflaznZL02nr8bUCHyyuiqF79wG1F3oBrPI=;
-        b=GSp2gQ4ytZBtekjDDokDRdU6CUSQVMwkSpCODQIxR5OdnFs6ghXrWhP1876s2jvR6A
-         q9pzhPCMU6DxcS8uD3BMxNotxI3OVsOJW8EMQWDyyKJn4FQDk0GH3jK5HPqYpSWZKrl2
-         WfrPxk0lig7aWwzlJ+dzPI4cEP9dtKEcjhRqYorBjYK0nvAICm4Bc4Z+QjJvnjy/lcK7
-         BRyxvst866QrFakSgfLKohIbv3I+9boaKMHWfshBn9jvDMUa9fTrr5GePas5W6FAMprl
-         cMpceZF7BEyrgXXezXDRgSZFvAdY87RcgAwIJDSKzQcAqa0z3zsW1DRudcYvA6c3cKnb
-         akkQ==
+        bh=zjedTqzCU/khXFD8XYPaJrkvkl9uSUvKbec7Mxv8XZk=;
+        b=i2AiOdRqNLUHSEbYAt5Xkw0hJJSo3uivppLILkcVZaEtwrRs7y+BdxjcSve8qQg7uP
+         WWp1AoThuQWzoSjR3C3qnxx9BS2vEjS5iMIK1FA9UXdh8uZxSRsWFDEZxi0rh37ePauK
+         6F1eHxfBHBDvDo18QDcj6MQjQwffCMMnFZla62F8Tq/Vx9hLWWRsm2FteOzknOLWD9JE
+         IzrY5mU4d3oeEnjI/FmpCdkdPtXRucHo7Dz/N3FXnQle51BQ+rY6O/s0i5pH/1lI8ofA
+         iSgPwBxJtZ75ai53N6Hfd0SL8uGtl5giJNk5ziz5+6zNkI9B85VxlaFOGpSHwlZoeLWN
+         aqIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9N7G4SXxxflaznZL02nr8bUCHyyuiqF79wG1F3oBrPI=;
-        b=lqWQtalVaPQ+xQq5RqcRRzRXFEhjr1K66jGvXWo8385tUMK96p/13Wlnu9Cy3NWpu1
-         8o4nMXqkjeyl+bhi+Or3EhNKFlT36Oqh3mpnpct3NunQjuSLbmtXJNwO+sPOBZrySH1w
-         udPVclF0PpsUw4CVvmvvAcQfZJj4XOlSclU+ApveGHqWuNDwagIAcj2LCfqnHYUQZ2zc
-         taTkGik1k9bGEjkn3s7Z9ca2QA00CgHE1DJaFV/dQjMJwZyafWWHHnocjvaOfhZjqzpH
-         1tGtDNffqIg3MCC8/HkPL22j2noYzl+vf4YpPV3FSDOQM8WWbQn2YSrRF8MKT02or8Li
-         Tkjw==
-X-Gm-Message-State: APjAAAXyERVg8selvmylbAVHhKbm34TX9467v95W0cgNnKnV7tWA/niM
-        1cuqilVv8yxNLnNOJVwl1Sy9GxeSFYscjGA0pzSF7A==
-X-Google-Smtp-Source: APXvYqxT2BL45ouNGKh25w9jDR6X4LrWWaOYfKSen/rDMe21j3MChBGFAhWhJ8cIEZq80x/KF54QiD+ImWmFyBGsdjQ=
-X-Received: by 2002:ac8:f24:: with SMTP id e33mr30614964qtk.256.1553674936231;
- Wed, 27 Mar 2019 01:22:16 -0700 (PDT)
+        bh=zjedTqzCU/khXFD8XYPaJrkvkl9uSUvKbec7Mxv8XZk=;
+        b=H8bbsbJeuSmSUI4bu+koEZMjKPsrPHLIhgoe4yOAvIAptjVKY76K32A4SwYTjxOliB
+         kAmOD1/2mLBcyT4GP9ZI4jGVxqkZD5t/hZY4Ijh4zA6o2HU2nrk9uNC1nB6atyzwdYpM
+         7ri4vnNahVyUt40PN0H1aVtmdyQWTKdlkgYKd9G3n9McCNwM9ss9QmvNIhbofYIhsDgS
+         VfMfJ7IkZlyF2i72kvQSVDi6spd88/KSGTBR20rvpSGJ2ZCnKY9zbBdk+Rgg/mzPg/Y1
+         tRPDv7MuFFjfpzNqqMWktlJ29cFxgebupv7H0iq8L1owmsHRUxEuaHsbVO9d5K7+C/yc
+         vqsQ==
+X-Gm-Message-State: APjAAAXuJu+Uqkies6HFd4h9xAd8ZlZsAZzMtgtOc/fK1DAstqDjWC8F
+        p4pKuKdbAaeXi5zOs+8H4KCpRT1rEsmJVgckpPG0Tw==
+X-Google-Smtp-Source: APXvYqwIzlo6wKjk2OkGKHnNzI/KBiud4QIlTKjzOGf+tmV35PqMB/d2tRnghOy/s3kGReEX7ABgR7SOSJ50s6ArSLY=
+X-Received: by 2002:a02:84ab:: with SMTP id f40mr23840821jai.72.1553674960905;
+ Wed, 27 Mar 2019 01:22:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20171115080446.GY17200@lahna.fi.intel.com> <018180A5-B0D2-418E-9DBC-EF5F310F7295@endlessm.com>
- <20171115101302.GA17200@lahna.fi.intel.com> <CAB4CAwc-SFtw4+74Qe-vX57JRGDjJMt9xM2+ev3OiipzwxBPBw@mail.gmail.com>
- <20171116124431.GS17200@lahna.fi.intel.com> <CAB4CAwfHx8DgCYk0piVnrTa7YP2=6A8Le4ekoENFPyNVF9g1rw@mail.gmail.com>
- <20171117064904.GZ17200@lahna.fi.intel.com> <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
- <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
- <20171121120422.GR22431@lahna.fi.intel.com>
-In-Reply-To: <20171121120422.GR22431@lahna.fi.intel.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 27 Mar 2019 16:22:04 +0800
-Message-ID: <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Chris Chiu <chiu@endlessm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+References: <0000000000004cd71f05850f17c2@google.com>
+In-Reply-To: <0000000000004cd71f05850f17c2@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 27 Mar 2019 09:22:29 +0100
+Message-ID: <CACT4Y+Yt9vfk1OM1b3fsVJ_i+qZx7kz71ty6heDE3GwujGNevQ@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in __icmp_send
+To:     syzbot <syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mika,
-
-Digging up this old thread again...
-
-On Tue, Nov 21, 2017 at 8:13 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+On Wed, Mar 27, 2019 at 9:19 AM syzbot
+<syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com> wrote:
 >
-> On Tue, Nov 21, 2017 at 07:54:26PM +0800, Chris Chiu wrote:
-> > Yup, I checked the value of the corresponded pin. It shows following before
-> > suspend
-> > pin 18 (GPIO_18) GPIO 0x40800102 0x00024075
-> >
-> > Then after resume
-> > pin 18 (GPIO_18) GPIO 0x40800102 0x00024075 [ACPI]
+> Hello,
 >
-> OK, so ownership is changed to ACPI.
+> syzbot found the following crash on:
 >
-> > What else register do you suggest me to compare? The PADCFG2 is invalid
+> HEAD commit:    1d965c4d Merge branch 'Refactor-flower-classifier-to-remov..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14ff71df200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
+> dashboard link: https://syzkaller.appspot.com/bug?extid=aa9105f99c12b6abfe27
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
-> It's fine APL does not have PADCFG2.
+> Unfortunately, I don't have any reproducer for this crash yet.
 >
-> Hmm, I don't understand how this can work in Windows either. The Windows
-> people told me that they don't save and restore anything else than
-> padcfg registers + ie. If the ownership is changed to ACPI it means you
-> don't get interrupts anymore (only GPEs) and that applies to Windows as
-> well.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com
 
-In the mails after the one quoted above, we reported back to you that
-the new BIOS from Asus solved the issue.
+Eric, do you think this is also fixed by "tun: properly test for
+IFF_UP" as the bug in icmp6_send?
 
-However, during the time that has followed, we have had numerous user
-reports from Asus E403NA, X540NA, and X541NA laptops (basically the
-same models that we originally discussed) where the touchpad stops
-working after suspend/resume, even with the latest BIOS. We managed to
-get an affected E403NA unit in-hands again, and confirmed that
-HOSTSW_OWN was being lost like we had observed before.
-
-Unfortunately as this was a customer laptop we had to return it
-immediately, before we could investigate further. We don't have access
-to any more units since they are old models now.
-
-However I'm wondering if you have any other ideas or if you think
-something like our workaround patch might be acceptable under these
-circumstances:
-https://github.com/endlessm/linux/commit/f391452299f62a3d0cbe5333be90f69e9895d8ff
-
-Thanks
-Daniel
+> ==================================================================
+> BUG: KASAN: use-after-free in atomic_read
+> include/asm-generic/atomic-instrumented.h:26 [inline]
+> BUG: KASAN: use-after-free in queued_spin_trylock
+> include/asm-generic/qspinlock.h:69 [inline]
+> BUG: KASAN: use-after-free in do_raw_spin_trylock+0x6a/0x180
+> kernel/locking/spinlock_debug.c:119
+> Read of size 4 at addr ffff88808a28ccd4 by task syz-executor.0/17585
+>
+> CPU: 0 PID: 17585 Comm: syz-executor.0 Not tainted 5.0.0+ #105
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   <IRQ>
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+>   kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+>   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>   check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+>   kasan_check_read+0x11/0x20 mm/kasan/common.c:102
+>   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+>   queued_spin_trylock include/asm-generic/qspinlock.h:69 [inline]
+>   do_raw_spin_trylock+0x6a/0x180 kernel/locking/spinlock_debug.c:119
+>   __raw_spin_trylock include/linux/spinlock_api_smp.h:89 [inline]
+>   _raw_spin_trylock+0x1c/0x80 kernel/locking/spinlock.c:128
+>   spin_trylock include/linux/spinlock.h:339 [inline]
+>   icmp_xmit_lock net/ipv4/icmp.c:219 [inline]
+>   __icmp_send+0x553/0x1400 net/ipv4/icmp.c:666
+>   icmp_send include/net/icmp.h:47 [inline]
+>   ipv4_link_failure+0x31/0x210 net/ipv4/route.c:1190
+>   dst_link_failure include/net/dst.h:416 [inline]
+>   arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
+>   neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
+>   neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
+>   call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+>   expire_timers kernel/time/timer.c:1362 [inline]
+>   __run_timers kernel/time/timer.c:1681 [inline]
+>   __run_timers kernel/time/timer.c:1649 [inline]
+>   run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+>   __do_softirq+0x266/0x95a kernel/softirq.c:293
+>   invoke_softirq kernel/softirq.c:374 [inline]
+>   irq_exit+0x180/0x1d0 kernel/softirq.c:414
+>   exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+>   smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
+>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+>   </IRQ>
+> RIP: 0010:filename_mountpoint+0x25d/0x3c0 fs/namei.c:2722
+> Code: 14 02 4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 1c 01 00 00
+> 45 8b 24 24 31 ff 44 89 e6 e8 58 ea ba ff 45 85 e4 74 62 <e8> ce e8 ba ff
+> e8 49 2a fe ff 4c 89 f7 e8 81 f2 ff ff e8 bc e8 ba
+> RSP: 0018:ffff8880a857fc30 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> RAX: dffffc0000000000 RBX: 1ffff110150aff88 RCX: ffffffff81b57ad4
+> RDX: 1ffff1100bd8e54c RSI: ffffffff81b57ae2 RDI: ffff88805ec72a60
+> RBP: ffff8880a857fdc8 R08: ffff88805ec72300 R09: 0000000000000001
+> R10: 000000000000001c R11: ffff8880ae82de3b R12: 0000000000000000
+> R13: 0000000000000000 R14: ffff888097790e00 R15: ffff8880a857fe68
+>   user_path_mountpoint_at+0x3a/0x50 fs/namei.c:2745
+>   ksys_umount+0x167/0xf00 fs/namespace.c:1687
+>   __do_sys_umount fs/namespace.c:1713 [inline]
+>   __se_sys_umount fs/namespace.c:1711 [inline]
+>   __x64_sys_umount+0x54/0x80 fs/namespace.c:1711
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45ac57
+> Code: 44 00 00 b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8e fb ff c3
+> 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 2d 8e fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffe6359ff08 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045ac57
+> RDX: 0000000000402ea0 RSI: 0000000000000002 RDI: 00007ffe6359ffb0
+> RBP: 00000000000019e0 R08: 0000000000000000 R09: 000000000000000d
+> R10: 0000000000000006 R11: 0000000000000202 R12: 00007ffe635a1040
+> R13: 0000000000bfa940 R14: 0000000000000000 R15: 00007ffe635a1040
+>
+> Allocated by task 12478:
+>   save_stack+0x45/0xd0 mm/kasan/common.c:75
+>   set_track mm/kasan/common.c:87 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:497 [inline]
+>   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+>   kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
+>   slab_post_alloc_hook mm/slab.h:436 [inline]
+>   slab_alloc mm/slab.c:3392 [inline]
+>   kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3554
+>   getname_flags fs/namei.c:138 [inline]
+>   getname_flags+0xd6/0x5b0 fs/namei.c:128
+>   getname+0x1a/0x20 fs/namei.c:209
+>   do_sys_open+0x2c9/0x5d0 fs/open.c:1057
+>   __do_sys_open fs/open.c:1081 [inline]
+>   __se_sys_open fs/open.c:1076 [inline]
+>   __x64_sys_open+0x7e/0xc0 fs/open.c:1076
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> Freed by task 12478:
+>   save_stack+0x45/0xd0 mm/kasan/common.c:75
+>   set_track mm/kasan/common.c:87 [inline]
+>   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+>   kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+>   __cache_free mm/slab.c:3498 [inline]
+>   kmem_cache_free+0x86/0x260 mm/slab.c:3764
+>   putname+0xef/0x130 fs/namei.c:259
+>   do_sys_open+0x318/0x5d0 fs/open.c:1072
+>   __do_sys_open fs/open.c:1081 [inline]
+>   __se_sys_open fs/open.c:1076 [inline]
+>   __x64_sys_open+0x7e/0xc0 fs/open.c:1076
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> The buggy address belongs to the object at ffff88808a28c780
+>   which belongs to the cache names_cache of size 4096
+> The buggy address is located 1364 bytes inside of
+>   4096-byte region [ffff88808a28c780, ffff88808a28d780)
+> The buggy address belongs to the page:
+> page:ffffea000228a300 count:1 mapcount:0 mapping:ffff88812c2d8dc0 index:0x0
+> compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea00025c8908 ffffea0001840a08 ffff88812c2d8dc0
+> raw: 0000000000000000 ffff88808a28c780 0000000100000001 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff88808a28cb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff88808a28cc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff88808a28cc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                                   ^
+>   ffff88808a28cd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff88808a28cd80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000004cd71f05850f17c2%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
