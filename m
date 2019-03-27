@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5950DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB4EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE4B21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CB92147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710512;
-	bh=ZU5RwbfEiO7IsGOqU7Wof/yoOaZkodhg/2O0X7EmJQc=;
+	s=default; t=1553710514;
+	bh=41dify9q1NKwIhdbNUZMLhV89COXe+eijwqW6kA8Hb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2E0LFNh/WtVq5wwaZESkhMUNaAlxCxd+stVWqGHYoBnbZYkR+NQUuG7fnJCMuZLY7
-	 fXai9ggFXJWnGn4iiJPzA59IOEzwZJdrBTp54Joc0+Lq56ChSZsYXhomJEvMUZ2YAq
-	 haEnErSPSdrsAyqGHfU/0C1uiD4e1mT1eyyL+Kdk=
+	b=fqfoupNg+7EZQfUhukuPycvedg6SUZnnJw4A1MRLS8HHYpqV72h6bIyQ7s8phWnzj
+	 9RE5GNG5BdTLMr0s+sENGSrkOnImVa7l7SRUrmSzKPKZ8YZi9mXQvDxtX0pT5LPTyt
+	 DmxXzqYDXpaD/habp9ONAnG+jZkIYbIPpu3hu5Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389787AbfC0SPL (ORCPT
+        id S2389797AbfC0SPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389768AbfC0SPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388996AbfC0SPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 14:15:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF44D2183E;
-        Wed, 27 Mar 2019 18:15:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 426502082F;
+        Wed, 27 Mar 2019 18:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710506;
-        bh=ZU5RwbfEiO7IsGOqU7Wof/yoOaZkodhg/2O0X7EmJQc=;
+        s=default; t=1553710508;
+        bh=41dify9q1NKwIhdbNUZMLhV89COXe+eijwqW6kA8Hb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1sPx/Ql3XXd77IJhcZiEgTEOS2RBQNhU4qtmjLHUVQqXs4VAaFbPBsXmuA5k3wuQ+
-         iZXOAjbAoA23rYCDjfSudUQbFfcrWmImVG8ejAP+cfgh322oB+VnWz6hYDEgh/d0h6
-         XhVINVRBzZ0Qu78aMucTicdk8PESbauzzoOH2V4Q=
+        b=H8axxG8E2iAKNiXNFB67/DQHn9IbcB2146EKLgxFUzbKc6qeBydqjxeVF38mf8JiH
+         k/HjgNNhRGeh4e+thr9KPHyIIO3BSJpd7jjoBc02OsBJKaYbmIyXxE67YOcz6FZtKS
+         ZSwUr3W77tnexl6hvPNP36cFmLxT3DIe1DGrgbkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 150/192] backlight: pwm_bl: Use gpiod_get_value_cansleep() to get initial state
-Date:   Wed, 27 Mar 2019 14:09:42 -0400
-Message-Id: <20190327181025.13507-150-sashal@kernel.org>
+Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 151/192] tty: increase the default flip buffer limit to 2*640K
+Date:   Wed, 27 Mar 2019 14:09:43 -0400
+Message-Id: <20190327181025.13507-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,66 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 
-[ Upstream commit cec2b18832e26bc866bef2be22eff4e25bbc4034 ]
+[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
 
-gpiod_get_value() gives out a warning if access to the underlying gpiochip
-requires sleeping, which is common for I2C based chips:
+We increase the default limit for buffer memory allocation by a factor of
+10 to 640K to prevent data loss when using fast serial interfaces.
 
-    WARNING: CPU: 0 PID: 77 at drivers/gpio/gpiolib.c:2500 gpiod_get_value+0xd0/0x100
-    Modules linked in:
-    CPU: 0 PID: 77 Comm: kworker/0:2 Not tainted 4.14.0-rc3-00589-gf32897915d48-dirty #90
-    Hardware name: Allwinner sun4i/sun5i Families
-    Workqueue: events deferred_probe_work_func
-    [<c010ec50>] (unwind_backtrace) from [<c010b784>] (show_stack+0x10/0x14)
-    [<c010b784>] (show_stack) from [<c0797224>] (dump_stack+0x88/0x9c)
-    [<c0797224>] (dump_stack) from [<c0125b08>] (__warn+0xe8/0x100)
-    [<c0125b08>] (__warn) from [<c0125bd0>] (warn_slowpath_null+0x20/0x28)
-    [<c0125bd0>] (warn_slowpath_null) from [<c037069c>] (gpiod_get_value+0xd0/0x100)
-    [<c037069c>] (gpiod_get_value) from [<c03778d0>] (pwm_backlight_probe+0x238/0x508)
-    [<c03778d0>] (pwm_backlight_probe) from [<c0411a2c>] (platform_drv_probe+0x50/0xac)
-    [<c0411a2c>] (platform_drv_probe) from [<c0410224>] (driver_probe_device+0x238/0x2e8)
-    [<c0410224>] (driver_probe_device) from [<c040e820>] (bus_for_each_drv+0x44/0x94)
-    [<c040e820>] (bus_for_each_drv) from [<c040ff0c>] (__device_attach+0xb0/0x114)
-    [<c040ff0c>] (__device_attach) from [<c040f4f8>] (bus_probe_device+0x84/0x8c)
-    [<c040f4f8>] (bus_probe_device) from [<c040f944>] (deferred_probe_work_func+0x50/0x14c)
-    [<c040f944>] (deferred_probe_work_func) from [<c013be84>] (process_one_work+0x1ec/0x414)
-    [<c013be84>] (process_one_work) from [<c013ce5c>] (worker_thread+0x2b0/0x5a0)
-    [<c013ce5c>] (worker_thread) from [<c0141908>] (kthread+0x14c/0x154)
-    [<c0141908>] (kthread) from [<c0107ab0>] (ret_from_fork+0x14/0x24)
+For example when using RS485 without flow-control at speeds of 1Mbit/s
+an upwards we've run into problems such as applications being too slow
+to read out this buffer (on embedded devices based on imx53 or imx6).
 
-This was missed in commit 0c9501f823a4 ("backlight: pwm_bl: Handle gpio
-that can sleep"). The code was then moved to a separate function in
-commit 7613c922315e ("backlight: pwm_bl: Move the checks for initial power
-state to a separate function").
+If you want to write transmitted data to a slow SD card and thus have
+realtime requirements, this limit can become a problem.
 
-The only usage of gpiod_get_value() is during the probe stage, which is
-safe to sleep in. Switch to gpiod_get_value_cansleep().
+That shouldn't be the case and 640K buffers fix such problems for us.
 
-Fixes: 0c9501f823a4 ("backlight: pwm_bl: Handle gpio that can sleep")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This value is a maximum limit for allocation only. It has no effect
+on systems that currently run fine. When transmission is slow enough
+applications and hardware can keep up and increasing this limit
+doesn't change anything.
+
+It only _allows_ to allocate more than 2*64K in cases we currently fail to
+allocate memory despite having some.
+
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/pwm_bl.c | 2 +-
+ drivers/tty/tty_buffer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 6bde543452f2..7ddc0930e98c 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -425,7 +425,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- 	 */
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index ae3ce330200e..ee3aa57bc0e7 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -26,7 +26,7 @@
+  * Byte threshold to limit memory consumption for flip buffers.
+  * The actual memory limit is > 2x this amount.
+  */
+-#define TTYB_DEFAULT_MEM_LIMIT	65536
++#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
  
- 	/* if the enable GPIO is disabled, do not enable the backlight */
--	if (pb->enable_gpio && gpiod_get_value(pb->enable_gpio) == 0)
-+	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
- 		return FB_BLANK_POWERDOWN;
- 
- 	/* The regulator is disabled, do not enable the backlight */
+ /*
+  * We default to dicing tty buffer allocations to this many characters
 -- 
 2.19.1
 
