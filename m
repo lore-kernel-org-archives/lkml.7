@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7DEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9122C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F317121734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893B021738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709890;
-	bh=/oYZVCgnCBklrRFTrSv6nhFinr/JaO+dksrUsFlPl2E=;
+	s=default; t=1553709893;
+	bh=ZMuoFbMQLeQInMYKPHhbPFpm+kkH4WrQKQOX7aB28uY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tWOtC8pkT1DAWsxUFGsL8kE0rUTAgLSPPAC8MS49vpqrK4G340h/yr2Lxinhg0FKP
-	 U5Jb0/bcXJyyAfnCV8UZ5IZHMEizoAS94g46Lmp8Z/KYQeQrjGR+tgvaap9B/GpOXP
-	 G5WfxmMrijTZUGff3Z8QU5MeZGOtkHtJEgmlgDUc=
+	b=HF5KWFB9Z4PSVRjUld4Dk9J+SVbN5pNxS5S/aYek4V8/ffhJuuEWiurujay3pOhTt
+	 IBIqddNo65euCOZuDhhj2gQ5nUbEhAxLSL06giZqP++Ho83laBmgSrlYOcCHvjCyRK
+	 Vr78a1zQYuuay42EZzf5jhB7KRJuPfAb1s9IrScA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbfC0SEt (ORCPT
+        id S1731736AbfC0SEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45530 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387434AbfC0SEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:44 -0400
+        id S2387451AbfC0SEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE1C2063F;
-        Wed, 27 Mar 2019 18:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C8FD2063F;
+        Wed, 27 Mar 2019 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709883;
-        bh=/oYZVCgnCBklrRFTrSv6nhFinr/JaO+dksrUsFlPl2E=;
+        s=default; t=1553709886;
+        bh=ZMuoFbMQLeQInMYKPHhbPFpm+kkH4WrQKQOX7aB28uY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEPeH2HC8Uzfw45DZK9xQgYvIEJM8qdHTFIm8xqWhYH+8/RbVtsLVoqPu1anfvbHh
-         xYPzfw/QEFgYpGD4256PJk9BuolwH+0W9KtvCqGH6jHV3y4a4kw1tANe734Zfj7rGc
-         kiXvinOfx7kNmtWgwPlmbtt6RynDlBtkNaBp5XwM=
+        b=aIDfUUk3TMJwabYeue11KprIThmiYYFwpR/cxIoGqM4QTEQhgbsa5tahOWZ7RwvZW
+         H6kQTd7ee2STPfq6TY1Dh6De2Ti8IOXgMGNiKrFyxtY+9GylGk/2yNfSorJHumGuv1
+         oVxqskqeoG3aDOIJCIAgLr6Bz9y/wGXS9yTcsHx0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 088/262] ice: fix ice_remove_rule_internal vsi_list handling
-Date:   Wed, 27 Mar 2019 13:59:03 -0400
-Message-Id: <20190327180158.10245-88-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 090/262] btrfs: qgroup: Make qgroup async transaction commit more aggressive
+Date:   Wed, 27 Mar 2019 13:59:05 -0400
+Message-Id: <20190327180158.10245-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,81 +56,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit f9264dd687f8d3f9104c9900f8f3e5e419f27c55 ]
+[ Upstream commit f5fef4593653dfa2a865c485bb81415de51d5c99 ]
 
-When adding multiple VLANs to the same VSI, the ice_add_vlan code will
-share the VSI list, so as not to create multiple unnecessary VSI lists.
+[BUG]
+Btrfs qgroup will still hit EDQUOT under the following case:
 
-Consider the following flow
+  $ dev=/dev/test/test
+  $ mnt=/mnt/btrfs
+  $ umount $mnt &> /dev/null
+  $ umount $dev &> /dev/null
 
-  ice_add_vlan(hw, <VSI 0 VID 7, VSI 0 VID 8, VSI 0 VID 9>)
+  $ mkfs.btrfs -f $dev
+  $ mount $dev $mnt -o nospace_cache
 
-Where we add three VLAN filters for VIDs 7, 8, and 9, all for VSI 0.
+  $ btrfs subv create $mnt/subv
+  $ btrfs quota enable $mnt
+  $ btrfs quota rescan -w $mnt
+  $ btrfs qgroup limit -e 1G $mnt/subv
 
-The ice_add_vlan will create a single vsi_list and share it among all
-the filters.
+  $ fallocate -l 900M $mnt/subv/padding
+  $ sync
 
-Later, if we try to remove a VLAN,
+  $ rm $mnt/subv/padding
 
-  ice_remove_vlan(hw, <VSI 0 VID 7>)
+  # Hit EDQUOT
+  $ xfs_io -f -c "pwrite 0 512M" $mnt/subv/real_file
 
-Then the removal code will update the vsi_list and remove VSI 0 from it.
-But, since the vsi_list is shared, this breaks the list for the other
-users who reference it. We actually even free the VSI list memory, and
-may result in segmentation faults.
+[CAUSE]
+Since commit a514d63882c3 ("btrfs: qgroup: Commit transaction in advance
+to reduce early EDQUOT"), btrfs is not forced to commit transaction to
+reclaim more quota space.
 
-This is due to the way that VLAN rule share VSI lists with reference
-counts, and is caused because we call ice_rem_update_vsi_list even when
-the ref_cnt is greater than one.
+Instead, we just check pertrans metadata reservation against some
+threshold and try to do asynchronously transaction commit.
 
-To fix this, handle the case where ref_cnt is greater than one
-separately. In this case, we need to remove the associated rule without
-modifying the vsi_list, since it is currently being referenced by
-another rule. Instead, we just need to decrement the VSI list ref_cnt.
+However in above case, the pertrans metadata reservation is pretty small
+thus it will never trigger asynchronous transaction commit.
 
-The case for handling sharing of VSI lists with multiple VSIs is not
-currently supported by this code. No such rules will be created today,
-and this code will require changes if/when such code is added.
+[FIX]
+Instead of only accounting pertrans metadata reservation, we calculate
+how much free space we have, and if there isn't much free space left,
+commit transaction asynchronously to try to free some space.
 
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Reviewed-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This may slow down the fs when we have less than 32M free qgroup space,
+but should reduce a lot of false EDQUOT, so the cost should be
+acceptable.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_switch.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/btrfs/qgroup.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
-index 2e5693107fa4..8d602247eb44 100644
---- a/drivers/net/ethernet/intel/ice/ice_switch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_switch.c
-@@ -1538,9 +1538,20 @@ ice_remove_rule_internal(struct ice_hw *hw, u8 recp_id,
- 	} else if (!list_elem->vsi_list_info) {
- 		status = ICE_ERR_DOES_NOT_EXIST;
- 		goto exit;
-+	} else if (list_elem->vsi_list_info->ref_cnt > 1) {
-+		/* a ref_cnt > 1 indicates that the vsi_list is being
-+		 * shared by multiple rules. Decrement the ref_cnt and
-+		 * remove this rule, but do not modify the list, as it
-+		 * is in-use by other rules.
-+		 */
-+		list_elem->vsi_list_info->ref_cnt--;
-+		remove_rule = true;
- 	} else {
--		if (list_elem->vsi_list_info->ref_cnt > 1)
--			list_elem->vsi_list_info->ref_cnt--;
-+		/* a ref_cnt of 1 indicates the vsi_list is only used
-+		 * by one rule. However, the original removal request is only
-+		 * for a single VSI. Update the vsi_list first, and only
-+		 * remove the rule if there are no further VSIs in this list.
-+		 */
- 		vsi_handle = f_entry->fltr_info.vsi_handle;
- 		status = ice_rem_update_vsi_list(hw, vsi_handle, list_elem);
- 		if (status)
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 4e473a998219..f7a7ac82c86a 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2842,16 +2842,15 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
+ /*
+  * Two limits to commit transaction in advance.
+  *
+- * For RATIO, it will be 1/RATIO of the remaining limit
+- * (excluding data and prealloc meta) as threshold.
++ * For RATIO, it will be 1/RATIO of the remaining limit as threshold.
+  * For SIZE, it will be in byte unit as threshold.
+  */
+-#define QGROUP_PERTRANS_RATIO		32
+-#define QGROUP_PERTRANS_SIZE		SZ_32M
++#define QGROUP_FREE_RATIO		32
++#define QGROUP_FREE_SIZE		SZ_32M
+ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
+ 				const struct btrfs_qgroup *qg, u64 num_bytes)
+ {
+-	u64 limit;
++	u64 free;
+ 	u64 threshold;
+ 
+ 	if ((qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_RFER) &&
+@@ -2870,20 +2869,21 @@ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
+ 	 */
+ 	if ((qg->lim_flags & (BTRFS_QGROUP_LIMIT_MAX_RFER |
+ 			      BTRFS_QGROUP_LIMIT_MAX_EXCL))) {
+-		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL)
+-			limit = qg->max_excl;
+-		else
+-			limit = qg->max_rfer;
+-		threshold = (limit - qg->rsv.values[BTRFS_QGROUP_RSV_DATA] -
+-			    qg->rsv.values[BTRFS_QGROUP_RSV_META_PREALLOC]) /
+-			    QGROUP_PERTRANS_RATIO;
+-		threshold = min_t(u64, threshold, QGROUP_PERTRANS_SIZE);
++		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL) {
++			free = qg->max_excl - qgroup_rsv_total(qg) - qg->excl;
++			threshold = min_t(u64, qg->max_excl / QGROUP_FREE_RATIO,
++					  QGROUP_FREE_SIZE);
++		} else {
++			free = qg->max_rfer - qgroup_rsv_total(qg) - qg->rfer;
++			threshold = min_t(u64, qg->max_rfer / QGROUP_FREE_RATIO,
++					  QGROUP_FREE_SIZE);
++		}
+ 
+ 		/*
+ 		 * Use transaction_kthread to commit transaction, so we no
+ 		 * longer need to bother nested transaction nor lock context.
+ 		 */
+-		if (qg->rsv.values[BTRFS_QGROUP_RSV_META_PERTRANS] > threshold)
++		if (free < threshold)
+ 			btrfs_commit_transaction_locksafe(fs_info);
+ 	}
+ 
 -- 
 2.19.1
 
