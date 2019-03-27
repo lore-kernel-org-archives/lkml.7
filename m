@@ -2,100 +2,90 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB57C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4862F20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:50:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iIwuV8N2"
+	by mail.kernel.org (Postfix) with ESMTP id 08A2C2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfC0Wu5 (ORCPT
+        id S1729324AbfC0Wws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:50:57 -0400
-Received: from ozlabs.org ([203.11.71.1]:33819 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfC0Wu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:50:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44V3BN5wHhz9sR0;
-        Thu, 28 Mar 2019 09:50:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553727053;
-        bh=DG+ruyGeW4FpjNJbCYvuJiDmm3ruIB+VH5OlVJb5OxI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iIwuV8N2vzeQl5xn+IgAIeM+J2dCnxEHTDx8D+WQiGMJa0YlR2N3QaPIKZM0AN+YT
-         8H0735zaE01kMs4D4unCv8tfTah2wso0FONaTfFByHKEP7c+ZgKDa3qmrLqnVvZMDV
-         zxsir7UQLvCCLXjnUa16JYwabH6+GXRGxdUkfIzBsss2ytGCXvgMGSJQIL3XemFUCq
-         zXjH/f10MSy9SwC8wCeHMb8nXcbk6kf9kZtAGLcqNreE96FqqWnEJa9K6vyOpWCeyw
-         9KtLY5rfv8tvZlEOhWUn3ezOr73VqkQoKxk9GDtuDHmCpnS0gkQPGnalMq1mTP4uOd
-         aN2f7hlUJvXwg==
-Date:   Thu, 28 Mar 2019 09:50:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: linux-next: Tree for Mar 27 (sunxi clk & mfd)
-Message-ID: <20190328095036.734adbba@canb.auug.org.au>
-In-Reply-To: <641a04ec-e2e6-4263-e77e-d272058c18c9@infradead.org>
-References: <20190327145020.2fff97b8@canb.auug.org.au>
-        <641a04ec-e2e6-4263-e77e-d272058c18c9@infradead.org>
+        Wed, 27 Mar 2019 18:52:48 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51837 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbfC0Wwr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:52:47 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h9HPA-0003qn-BB; Wed, 27 Mar 2019 23:52:20 +0100
+Date:   Wed, 27 Mar 2019 23:52:19 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+cc:     Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
+In-Reply-To: <20190327222014.GA32540@altlinux.org>
+Message-ID: <alpine.DEB.2.21.1903272351110.1789@nanos.tec.linutronix.de>
+References: <20190228192746.GA13021@embeddedor> <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de> <20190326151244.GC16837@redhat.com> <20190327012606.GA16532@altlinux.org> <alpine.DEB.2.21.1903271527110.1789@nanos.tec.linutronix.de>
+ <20190327222014.GA32540@altlinux.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2y/24R9YVVfBV9eqHhF_Wc6"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2y/24R9YVVfBV9eqHhF_Wc6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 28 Mar 2019, Dmitry V. Levin wrote:
+> On Wed, Mar 27, 2019 at 03:29:16PM +0100, Thomas Gleixner wrote:
+> > On Wed, 27 Mar 2019, Dmitry V. Levin wrote:
+> > > On Tue, Mar 26, 2019 at 04:12:45PM +0100, Oleg Nesterov wrote:
+> > > > On 03/23, Thomas Gleixner wrote:
+> > > [...]
+> > > > >  2) syscall_set_arguments() has been introduced in 2008 and we still have
+> > > > >     no caller. Instead of polishing it, can it be removed completely or are
+> > > > >     there plans to actually use it?
+> > > > 
+> > > > I think it can die.
+> > > 
+> > > When PTRACE_GET_SYSCALL_INFO is finally squeezed into the kernel,
+> > > we could discuss adding PTRACE_SET_SYSCALL_INFO as well, and it
+> > > will need syscall_set_arguments().
+> > 
+> > So if that ever happens, then adding the code back isn't rocket
+> > science. But if not, then there is no point in carrying the dead horse
+> > around another 11 years.
+> 
+> Given that it took me roughly 4 months to get a relatively simple revert
+> of commit 5e937a9ae913 accepted into linux-next, adding the code back
+> might be time-consuming.
+> 
+> Could we delay the removal of syscall_set_arguments() until
+> PTRACE_GET_SYSCALL_INFO is merged into the kernel?
+> I hope it won't take another 11 years.
 
-Hi Randy,
+Hope dies last :)
 
-On Wed, 27 Mar 2019 13:32:26 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
-te:
->
-> on i386 or x86_64:
->=20
-> WARNING: unmet direct dependencies detected for MFD_SUN6I_PRCM
->   Depends on [n]: HAS_IOMEM [=3Dy] && ARCH_SUNXI
->   Selected by [y]:
->   - CLK_SUNXI_PRCM_SUN8I [=3Dy] && COMMON_CLK [=3Dy] && CLK_SUNXI [=3Dy]
+Seriously. If we keep it can we at least remove all the unused arguments
+which we have on both functions to simplify the whole mess?
 
-I reported that a while ago (x86_64 allmodconfig after the merge of the
-sunxi tree).  Apparently there is a fix out there but it hasn't been
-applied yet.
+Thanks,
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2y/24R9YVVfBV9eqHhF_Wc6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyb/jwACgkQAVBC80lX
-0GzdgAf/eg6NADI6jioc4zeNy5YSgPVmpghBePkE3A5Lh5xJ1Ity/75vcaInsOLJ
-O8fQm4eOn/mSyY+s18/nYXH2naVn5/ea5uszxmf9FplhaKRN14wvYiiupxg0J+mQ
-Fk2EzLCuaxSTorJbdJ4i/nRmeKL4Sje+iMh9ZuNgom8MwFysfeSyTp0hoP8eWIvy
-HvP5TBqDA9kLgV2XzKZ2erEELHDPp4Y5bRA5pgvEAFtQqZ/k2m+pEZ221fb62LMI
-6iSf1wxAJLYHNCdDa0wTCUWO0QZ8yIqCnC5moybhF+taU0dJDR49wG7WcCeYGiIA
-DwezjKXBNwRQjSmsnel1bm53HhXziw==
-=Ibwh
------END PGP SIGNATURE-----
-
---Sig_/2y/24R9YVVfBV9eqHhF_Wc6--
+	tglx
