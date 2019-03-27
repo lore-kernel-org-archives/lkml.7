@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC60C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65DEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67202075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5436217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709965;
-	bh=ixiqsnzWBhq/GarlKDTCLii+8mXyrwwAijBqCtgZYZs=;
+	s=default; t=1553709973;
+	bh=U7tU5y2CRENKlerLOQ5CeCmU75qni7Iu4sfRbfu8gk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJqukC/oqpEDqhVQ+duSn6pZaXyM4iqYI0kbB4DNzbkGBnPChkX1PXamYATqNLqL7
-	 FkdbkPJRYXc4dtLeoIS5Pvkb7j5rsoXsAAX5MmaIfBYq981jTNHbPEs9H1WiMLuZ5H
-	 07pjfGPH7clS/QTDsSZA+YQPwzo8wMcaDUmzqRxs=
+	b=p177LNxaQsywAF6ZyKIF9QiOWSureIpZEQyYMrs4IFAws9Z7HmpGOC/V4q93qM0cl
+	 IEuOhAEUf6gcyk5eRJfDXK/HNpklAt3r6H2UQmKPsk0BCPpfvNUquGDxnofa+v04Ox
+	 j42VMEEHfN28O5u6g4hoZG3/YueCXt0bxCCTXn1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387854AbfC0SGE (ORCPT
+        id S1733129AbfC0SGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387816AbfC0SF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:57 -0400
+        id S2387865AbfC0SGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39832183F;
-        Wed, 27 Mar 2019 18:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5B2E217D9;
+        Wed, 27 Mar 2019 18:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709956;
-        bh=ixiqsnzWBhq/GarlKDTCLii+8mXyrwwAijBqCtgZYZs=;
+        s=default; t=1553709967;
+        bh=U7tU5y2CRENKlerLOQ5CeCmU75qni7Iu4sfRbfu8gk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6ILLjqyKNwtPvTnjJ6uLjC7ek7EcORJmJq7inGhcNNSK8A939sz/WG3XUHEGAqpT
-         232fN4QXRf6DUvnoTEgNkljqnc0te7Orsnh4pyXd14CQ91JQwaZRwD4wwD0o6cUHwA
-         t6xZshgOC/lbQesPTVV7/6PL6d5U2vUd6Y/qrpMk=
+        b=XX3LhIyhKtv8c6DZJpnc2ADJZDTfC/hxK4e8nFV2Ykk4AYhgvf6f1qIiJhE/Csaz6
+         KLcoDtSS0X4rIMUEXpv9naItaBowr1PgD6VDBWflo10b50pSC9gozOQZUNfeNcAZBZ
+         FrTq55RYzwtWl487hsasGBFlTd7UmZvJ8FlblKI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aurelien Jarno <aurelien@aurel32.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "H . J . Lu" <hjl.tools@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 131/262] vfs: fix preadv64v2 and pwritev64v2 compat syscalls with offset == -1
-Date:   Wed, 27 Mar 2019 13:59:46 -0400
-Message-Id: <20190327180158.10245-131-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 136/262] regulator: core: Take lock before applying system load
+Date:   Wed, 27 Mar 2019 13:59:51 -0400
+Message-Id: <20190327180158.10245-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,55 +57,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Jarno <aurelien@aurel32.net>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit cc4b1242d7e3b42eed73881fc749944146493e4f ]
+[ Upstream commit e5e21f70bfd3a201e627b48aed82793d1bcd6f78 ]
 
-The preadv2 and pwritev2 syscalls are supposed to emulate the readv and
-writev syscalls when offset == -1. Therefore the compat code should
-check for offset before calling do_compat_preadv64 and
-do_compat_pwritev64. This is the case for the preadv2 and pwritev2
-syscalls, but handling of offset == -1 is missing in their 64-bit
-equivalent.
+Take the regulator lock before applying system load.
 
-This patch fixes that, calling do_compat_readv and do_compat_writev when
-offset == -1. This fixes the following glibc tests on x32:
- - misc/tst-preadvwritev2
- - misc/tst-preadvwritev64v2
+Fixes the following lockdep splat:
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+[    5.583581] WARNING: CPU: 1 PID: 16 at drivers/regulator/core.c:925 drms_uA_update+0x114/0x360
+[    5.588467] Modules linked in:
+[    5.596833] CPU: 1 PID: 16 Comm: kworker/1:0 Not tainted 5.0.0-rc6-next-20190213-00002-g0fce66ab480f #18
+[    5.599933] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    5.609544] Workqueue: events qcom_channel_state_worker
+[    5.616209] pstate: 60000005 (nZCv daif -PAN -UAO)
+[    5.621152] pc : drms_uA_update+0x114/0x360
+[    5.626006] lr : drms_uA_update+0x110/0x360
+[    5.630084] sp : ffff0000124b3490
+[    5.634242] x29: ffff0000124b3490 x28: ffff800005326e00
+[    5.637735] x27: ffff0000124b35f8 x26: 000000000032bc48
+[    5.643117] x25: ffff800004c7e800 x24: ffff800004c6d500
+[    5.648411] x23: ffff800004c38a80 x22: 00000000000000d1
+[    5.653706] x21: 00000000001ab3f0 x20: ffff800004c7e800
+[    5.659001] x19: ffff0000114c3000 x18: ffffffffffffffff
+[    5.664297] x17: 0000000000000000 x16: 0000000000000000
+[    5.669592] x15: ffff0000114c3808 x14: 0720072007200720
+[    5.674888] x13: 00000000199c9b28 x12: ffff80002bcccc40
+[    5.680183] x11: ffff000012286000 x10: ffff0000114c3808
+[    5.685477] x9 : 0720072007200720 x8 : ffff000010e9e808
+[    5.690772] x7 : ffff0000106da568 x6 : 0000000000000000
+[    5.696067] x5 : 0000000000000000 x4 : 0000000000000000
+[    5.701362] x3 : 0000000000000004 x2 : 0000000000000000
+[    5.706658] x1 : 0000000000000000 x0 : 0000000000000000
+[    5.711952] Call trace:
+[    5.717223]  drms_uA_update+0x114/0x360
+[    5.719405]  regulator_register+0xb30/0x1140
+[    5.723230]  devm_regulator_register+0x4c/0xa8
+[    5.727745]  rpm_reg_probe+0xfc/0x1b0
+[    5.731992]  platform_drv_probe+0x50/0xa0
+[    5.735727]  really_probe+0x20c/0x2b8
+[    5.739718]  driver_probe_device+0x58/0x100
+[    5.743368]  __device_attach_driver+0x90/0xd0
+[    5.747363]  bus_for_each_drv+0x64/0xc8
+[    5.751870]  __device_attach+0xd8/0x138
+[    5.755516]  device_initial_probe+0x10/0x18
+[    5.759341]  bus_probe_device+0x98/0xa0
+[    5.763502]  device_add+0x3d0/0x640
+[    5.767319]  of_device_add+0x48/0x58
+[    5.770793]  of_platform_device_create_pdata+0xb0/0x128
+[    5.774629]  of_platform_bus_create+0x174/0x370
+[    5.779569]  of_platform_populate+0x78/0xe0
+[    5.784082]  qcom_smd_rpm_probe+0x80/0xa0
+[    5.788245]  rpmsg_dev_probe+0x114/0x1a0
+[    5.792411]  really_probe+0x20c/0x2b8
+[    5.796401]  driver_probe_device+0x58/0x100
+[    5.799964]  __device_attach_driver+0x90/0xd0
+[    5.803960]  bus_for_each_drv+0x64/0xc8
+[    5.808468]  __device_attach+0xd8/0x138
+[    5.812115]  device_initial_probe+0x10/0x18
+[    5.815936]  bus_probe_device+0x98/0xa0
+[    5.820099]  device_add+0x3d0/0x640
+[    5.823916]  device_register+0x1c/0x28
+[    5.827391]  rpmsg_register_device+0x4c/0x90
+[    5.831216]  qcom_channel_state_worker+0x170/0x298
+[    5.835651]  process_one_work+0x294/0x6e8
+[    5.840241]  worker_thread+0x40/0x450
+[    5.844318]  kthread+0x11c/0x120
+[    5.847961]  ret_from_fork+0x10/0x18
+[    5.851260] irq event stamp: 9090
+[    5.854820] hardirqs last  enabled at (9089): [<ffff000010160798>] console_unlock+0x3e0/0x5b0
+[    5.858086] hardirqs last disabled at (9090): [<ffff0000100817cc>] do_debug_exception+0x104/0x140
+[    5.866596] softirqs last  enabled at (9086): [<ffff000010082024>] __do_softirq+0x474/0x574
+[    5.875446] softirqs last disabled at (9079): [<ffff0000100f2254>] irq_exit+0x13c/0x148
+[    5.883598] ---[ end trace 6984ef7f081afa21 ]---
+
+Fixes: fa94e48e13a1 ("regulator: core: Apply system load even if no consumer loads")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/regulator/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index ff3c5e6f87cf..27b69b85d49f 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1238,6 +1238,9 @@ COMPAT_SYSCALL_DEFINE5(preadv64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_readv(fd, vec, vlen, flags);
-+
- 	return do_compat_preadv64(fd, vec, vlen, pos, flags);
- }
- #endif
-@@ -1344,6 +1347,9 @@ COMPAT_SYSCALL_DEFINE5(pwritev64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_writev(fd, vec, vlen, flags);
-+
- 	return do_compat_pwritev64(fd, vec, vlen, pos, flags);
- }
- #endif
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index b9d7b45c7295..e2caf11598c7 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1349,7 +1349,9 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+ 		 * We'll only apply the initial system load if an
+ 		 * initial mode wasn't specified.
+ 		 */
++		regulator_lock(rdev);
+ 		drms_uA_update(rdev);
++		regulator_unlock(rdev);
+ 	}
+ 
+ 	if ((rdev->constraints->ramp_delay || rdev->constraints->ramp_disable)
 -- 
 2.19.1
 
