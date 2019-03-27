@@ -6,60 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6B8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E136CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2B0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC791205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712378;
-	bh=aRCaDEZ7J492eqtYHO4dr/ttyPPNJ/AcsZcz8KWJjqg=;
+	s=default; t=1553712392;
+	bh=VMRfwbAB08X04V1pPVpgGIVuECQJ+B+zMe85QbcnTBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LaxNvc8to/dqaknGrTOlN2pzpAiPU9kTPxqCHaahSCLzUrcrysBPE0oGVsGn2InHY
-	 tK45toBGcHX0R4VDOrTrXH26wUrDam3nADoXz3aKW2J8dce7Mixdr4At8dikB3H8Cd
-	 p6w9hf4J0QpFt8R3TWz8/QAz1u+3EPYJlZ1IveE0=
+	b=huwo7FMreKyLR6qZ7RwO8fXJzpAS8pgKLrKH4aGbZZgaKL5NPyxDTvL7jwbvWha5O
+	 APJgQ1IqrJrj4rcoBZxm94AnGyQVvXrs6FqHAPcGxviJ2IotFQnk34l1f+Q5rlabO9
+	 qx5qUIbTHfcIfteyn89VHJ6GEDF/rTlxHoeyAw9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390955AbfC0SUg (ORCPT
+        id S2390906AbfC0SU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390661AbfC0SUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:34 -0400
+        id S2390641AbfC0SUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78BA32147C;
-        Wed, 27 Mar 2019 18:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0C520651;
+        Wed, 27 Mar 2019 18:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710833;
-        bh=aRCaDEZ7J492eqtYHO4dr/ttyPPNJ/AcsZcz8KWJjqg=;
+        s=default; t=1553710818;
+        bh=VMRfwbAB08X04V1pPVpgGIVuECQJ+B+zMe85QbcnTBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=viL5ljA75a9DRfSKR7fXZm9WMKkxzrpkintETtIxE6COp5yrl5au13bLGPPCAQBfR
-         /4LK2J5z1tFFIYYDrLLiO9r7jvyHRJMbx72c8hdYG2uTebPFOdTjmY6E0OksU3Ak7v
-         cXNKpuuCVtcNmND7pMDMH2wuSh4BdH/7gSbG+0dc=
+        b=ypdD1J5lCb2UPfK0uDcnz4Wy79KmvQOEEYWzwnbvT3OvkV0GH9ws9IM79LctjubeA
+         Gzdj6vKSoCM/oMXwaX+X9ELRJuPjTha3sUTAV6/BxFqTG0FfWGBGnPialE6zycisJF
+         jjA7FID6AcbG5WaR6CudUf/VAZhrPXef6lT30N+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, dima@golovin.in, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 118/123] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Wed, 27 Mar 2019 14:16:22 -0400
-Message-Id: <20190327181628.15899-118-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 113/123] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
+Date:   Wed, 27 Mar 2019 14:16:17 -0400
+Message-Id: <20190327181628.15899-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,76 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael Ávila de Espíndola <rafael@espindo.la>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit 890880ddfdbe256083170866e49c87618b706ac7 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+When drivers pass non-empty lists of modifiers for initializing their
+planes, we can infer that they allow framebuffer modifiers and set the
+driver's allow_fb_modifiers mode config element.
 
-Section 3.10.8 of ld.bfd's documentation states:
+In case the allow_fb_modifiers element was not set (some drivers tend
+to set them after registering planes), the modifiers will still be
+registered but won't be available to userspace unless the flag is set
+later. However in that case, the IN_FORMATS blob won't be created.
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
+In order to avoid this case and generally reduce the trouble associated
+with the flag, always set allow_fb_modifiers when a non-empty list of
+format modifiers is passed at plane init.
 
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
-
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
-
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
-
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
-
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190104085610.5829-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_plane.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index b854ebf5851b..2384a2ae5ec3 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -390,7 +390,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
+index 7a00351d5b5d..71186bf90760 100644
+--- a/drivers/gpu/drm/drm_plane.c
++++ b/drivers/gpu/drm/drm_plane.c
+@@ -203,6 +203,9 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
+ 			format_modifier_count++;
+ 	}
  
++	if (format_modifier_count)
++		config->allow_fb_modifiers = true;
++
+ 	plane->modifier_count = format_modifier_count;
+ 	plane->modifiers = kmalloc_array(format_modifier_count,
+ 					 sizeof(format_modifiers[0]),
 -- 
 2.19.1
 
