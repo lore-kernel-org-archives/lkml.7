@@ -2,200 +2,85 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEA0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0080EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1BA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB26A2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DT2XcLen"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HPBuI6zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbfC0LKX (ORCPT
+        id S1732942AbfC0LOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:10:23 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18574 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfC0LKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:10:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9b5a1b0000>; Wed, 27 Mar 2019 04:10:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 27 Mar 2019 04:10:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 27 Mar 2019 04:10:21 -0700
-Received: from [10.24.44.155] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 11:10:19 +0000
-Subject: Re: [PATCH v2 1/2] bus: tegra-aconnect: use devm_clk_*() helpers
-To:     <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1552452119-6574-1-git-send-email-spujar@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <32ab970f-d6a3-1232-77f1-41f97cc04f9a@nvidia.com>
-Date:   Wed, 27 Mar 2019 16:40:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 27 Mar 2019 07:14:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44386 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729489AbfC0LOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 07:14:51 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E4161EC0428;
+        Wed, 27 Mar 2019 12:14:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553685290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dc0vaMLNDTywpiZTPp+4509zisE8B0qa4I4qrOBwXEw=;
+        b=HPBuI6zprx08DUThKIn0c7Ie6Jt5KRg5tjTDWnpZBYUvbLO15uB2NmzUy+l08gchrOc8Nd
+        TJo+MpVdnYpKondiQ5DQZ+9AaawPZyfZHnJCo4z1eKa8Awbw3sXLjBk3lni6aXc3QpP1XC
+        Lysz/rGAUd/czttbEkhtMIjvUYeziUk=
+Date:   Wed, 27 Mar 2019 12:14:52 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
+ announcement
+Message-ID: <20190327111452.GC32571@zn.tnic>
+References: <20190327090905.5588-1-leon@kernel.org>
+ <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
+ <20190327093844.GO22899@mtr-leonro.mtl.com>
+ <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
+ <20190327095337.GP22899@mtr-leonro.mtl.com>
+ <20190327101133.GQ22899@mtr-leonro.mtl.com>
+ <20190327101815.GB32571@zn.tnic>
+ <20190327105024.GR22899@mtr-leonro.mtl.com>
 MIME-Version: 1.0
-In-Reply-To: <1552452119-6574-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553685019; bh=IhJb2nqPkz/hMBzG2tc6tEfrJ4LPJ3b+pV/uT8fvHUM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=DT2XcLenQCl4Z7xGn/mIf0yNu8g1SdoZQ9PONaZBPtK89+9nqRG/K9dhYdHI7wNAK
-         KCpd/HT1YWyHwaF5v4KK3CiE8INPOt36CEV6imCbkBoMuqiPHls8mncuvjbOu/Slb3
-         ogOctOz6qwAa+J9E6OTaU1fKt848XAF9pzgc6iX+fDdcVkiNjdzptcFeEQaI270Vjy
-         FFGYUKTK/tEvYyIRPmrBISph8U75Pwe7VWzgWRJQ2eqiqil98aciRT31Bw/a4Mb+Au
-         jhkVzW7PKXfTyubvm9QP8c6HKmiAMlLbu1KWl65meC7R4BuUYWFPIb0mZe+igCY2Io
-         SvMEMBgyXkOug==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190327105024.GR22899@mtr-leonro.mtl.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Reviewers,
+On Wed, Mar 27, 2019 at 12:50:24PM +0200, Leon Romanovsky wrote:
+> It is how we are internally running verification and development,
+> with KERN_DEBUG level, we need it to catch bugs.
 
-Request for review and approval.
+And what is the big deal with seeing those messages? Why are *exactly*
+those two such a big problem and the gazillion other debug messages are
+fine?
 
-Thanks,
-Sameer.
+> This "some config option" is dynamic debug prints and most probably it
+> is enabled in your or any kernel developer in the world.
 
-On 3/13/2019 10:11 AM, Sameer Pujar wrote:
-> aconnect bus driver is using pm_clk_*() interface for managing clocks.
-> With this, clocks seem to be always ON. This happens on Tegra devices
-> which use BPMP co-processor to manage clock resources, where clocks
-> are enabled during prepare phase. This is necessary because calls to
-> BPMP are always blocking. When pm_clk_*() interface is used on such
-> Tegra devices, clock prepare count is not balanced till driver remove()
-> gets executed and hence clocks are seen ON always. Thus this patch
-> replaces pm_clk_*() with devm_clk_*() framework.
->
-> Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
-> Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->   drivers/bus/tegra-aconnect.c | 64 ++++++++++++++++++++++++++++++--------------
->   1 file changed, 44 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/bus/tegra-aconnect.c b/drivers/bus/tegra-aconnect.c
-> index 084ae28..9349157 100644
-> --- a/drivers/bus/tegra-aconnect.c
-> +++ b/drivers/bus/tegra-aconnect.c
-> @@ -12,28 +12,38 @@
->   #include <linux/module.h>
->   #include <linux/of_platform.h>
->   #include <linux/platform_device.h>
-> -#include <linux/pm_clock.h>
->   #include <linux/pm_runtime.h>
->   
-> +struct tegra_aconnect {
-> +	struct clk	*ape_clk;
-> +	struct clk	*apb2ape_clk;
-> +};
-> +
->   static int tegra_aconnect_probe(struct platform_device *pdev)
->   {
-> -	int ret;
-> +	struct tegra_aconnect *aconnect;
->   
->   	if (!pdev->dev.of_node)
->   		return -EINVAL;
->   
-> -	ret = pm_clk_create(&pdev->dev);
-> -	if (ret)
-> -		return ret;
-> +	aconnect = devm_kzalloc(&pdev->dev, sizeof(struct tegra_aconnect),
-> +				GFP_KERNEL);
-> +	if (!aconnect)
-> +		return -ENOMEM;
->   
-> -	ret = of_pm_clk_add_clk(&pdev->dev, "ape");
-> -	if (ret)
-> -		goto clk_destroy;
-> +	aconnect->ape_clk = devm_clk_get(&pdev->dev, "ape");
-> +	if (IS_ERR(aconnect->ape_clk)) {
-> +		dev_err(&pdev->dev, "Can't retrieve ape clock\n");
-> +		return PTR_ERR(aconnect->ape_clk);
-> +	}
->   
-> -	ret = of_pm_clk_add_clk(&pdev->dev, "apb2ape");
-> -	if (ret)
-> -		goto clk_destroy;
-> +	aconnect->apb2ape_clk = devm_clk_get(&pdev->dev, "apb2ape");
-> +	if (IS_ERR(aconnect->apb2ape_clk)) {
-> +		dev_err(&pdev->dev, "Can't retrieve apb2ape clock\n");
-> +		return PTR_ERR(aconnect->apb2ape_clk);
-> +	}
->   
-> +	dev_set_drvdata(&pdev->dev, aconnect);
->   	pm_runtime_enable(&pdev->dev);
->   
->   	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> @@ -41,30 +51,44 @@ static int tegra_aconnect_probe(struct platform_device *pdev)
->   	dev_info(&pdev->dev, "Tegra ACONNECT bus registered\n");
->   
->   	return 0;
-> -
-> -clk_destroy:
-> -	pm_clk_destroy(&pdev->dev);
-> -
-> -	return ret;
->   }
->   
->   static int tegra_aconnect_remove(struct platform_device *pdev)
->   {
->   	pm_runtime_disable(&pdev->dev);
->   
-> -	pm_clk_destroy(&pdev->dev);
-> -
->   	return 0;
->   }
->   
->   static int tegra_aconnect_runtime_resume(struct device *dev)
->   {
-> -	return pm_clk_resume(dev);
-> +	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(aconnect->ape_clk);
-> +	if (ret) {
-> +		dev_err(dev, "ape clk_enable failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(aconnect->apb2ape_clk);
-> +	if (ret) {
-> +		clk_disable_unprepare(aconnect->ape_clk);
-> +		dev_err(dev, "apb2ape clk_enable failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->   }
->   
->   static int tegra_aconnect_runtime_suspend(struct device *dev)
->   {
-> -	return pm_clk_suspend(dev);
-> +	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(aconnect->ape_clk);
-> +	clk_disable_unprepare(aconnect->apb2ape_clk);
-> +
-> +	return 0;
->   }
->   
->   static const struct dev_pm_ops tegra_aconnect_pm_ops = {
+I personally don't use it because it only gets in the way.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
