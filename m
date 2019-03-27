@@ -2,140 +2,95 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1B7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AB32146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4532087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gf8aCqdA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LN/oBY2a"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VwKUcHV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfC0N1t (ORCPT
+        id S1730032AbfC0N2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:27:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59962 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfC0N1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:27:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A3CF760364; Wed, 27 Mar 2019 13:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553693267;
-        bh=+TLQQ0u4IfciTDa2AH1cuWXrbQskbKNjeH47EHeFnio=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gf8aCqdA+sa5VVftHhYao4bl4dJ7ZUomiqcImcMwUelprRw2vb0U+Cn0uR5FR1QEc
-         sNZZxjcXoLhDHXdR7s4nSfnmhoaTljnip7xiaReitr+FBAMcWD17+kqueyStz1Qe/z
-         ieQK4E9wbNHtHPeJAVAtPoyELIzd9kICeSW4eVeI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 6726260A44;
-        Wed, 27 Mar 2019 13:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553693265;
-        bh=+TLQQ0u4IfciTDa2AH1cuWXrbQskbKNjeH47EHeFnio=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LN/oBY2aCyEgPKXtsPw8CFV41/EwpfyrSm8w3K9+xuOJsSuoGp1+RTMJwoYK1d7lR
-         PJJz4TYdja8/gCoC/apNUNm8VSRuou3j2sms+IQutj7sJCk+pkkys3xZ7BNF4RwZ5W
-         4DspjmVDheNjeP/MRMR2MBtuw1qkZ+D8kg3p/Q1s=
+        Wed, 27 Mar 2019 09:28:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36602 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729607AbfC0N2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:28:06 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EFAAA1EC014B;
+        Wed, 27 Mar 2019 14:28:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553693284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=7qTz0uTWMtK6x7ClRm+ljT0eSvDxnKav3O9ffZ/1+lM=;
+        b=VwKUcHV08ODOvFctoZKnT4kCPmBRt/65Qz2etf6IQ0oLirWzl56H3KAm4xUZSFRaO7xUC0
+        3Rn8iVMGPKmxE828o5d9Lq4Z9mw/7xNCDs8U4X7vfbV3oPqHBEIQ/dkjv5enIq30sBdhAU
+        gMw6Grxu5jcoFkhVR8zV3h2h5CDuef0=
+Date:   Wed, 27 Mar 2019 14:28:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>
+Cc:     frederic@kernel.org, gustavo@embeddedor.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Subject: Re: WARNING in arch_install_hw_breakpoint
+Message-ID: <20190327132805.GG32571@zn.tnic>
+References: <000000000000639f6a0584d11b82@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 Mar 2019 18:57:45 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        andy.gross@linaro.org, david.brown@linaro.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v2 2/9] soc: qcom: rpmpd: Add support to set rpmpd state
- to max
-In-Reply-To: <696866e5-740a-f7b0-5193-f79b5c1e908c@codeaurora.org>
-References: <20190324175007.29040-1-sibis@codeaurora.org>
- <20190324175007.29040-3-sibis@codeaurora.org>
- <696866e5-740a-f7b0-5193-f79b5c1e908c@codeaurora.org>
-Message-ID: <8543face9c79a2b04d4234c41a84897a@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <000000000000639f6a0584d11b82@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-25 09:36, Rajendra Nayak wrote:
-> On 3/24/2019 11:20 PM, Sibi Sankar wrote:
->> Add support to set rpmpd state to max across SoCs.
+On Sat, Mar 23, 2019 at 11:22:06PM -0700, syzbot wrote:
+> Hello,
 > 
-> Changelog could be better, 'rpmpd max state varies across SoCs
-> and SoC families, add support in the driver to make it SoC/SoC
-> family specific'
-
-will use this in v3
-
+> syzbot found the following crash on:
 > 
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   drivers/soc/qcom/rpmpd.c | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
->> index 235d01870dd8..71fdfafad2ea 100644
->> --- a/drivers/soc/qcom/rpmpd.c
->> +++ b/drivers/soc/qcom/rpmpd.c
->> @@ -83,12 +83,14 @@ struct rpmpd {
->>   	const int res_type;
->>   	const int res_id;
->>   	struct qcom_smd_rpm *rpm;
->> +	unsigned int max_state;
->>   	__le32 key;
->>   };
->>     struct rpmpd_desc {
->>   	struct rpmpd **rpmpds;
->>   	size_t num_pds;
->> +	unsigned int max_state;
->>   };
->>     static DEFINE_MUTEX(rpmpd_lock);
->> @@ -114,6 +116,7 @@ static struct rpmpd *msm8996_rpmpds[] = {
->>   static const struct rpmpd_desc msm8996_desc = {
->>   	.rpmpds = msm8996_rpmpds,
->>   	.num_pds = ARRAY_SIZE(msm8996_rpmpds),
->> +	.max_state = MAX_RPMPD_STATE,
+> HEAD commit:    fd1f297b Merge tag 'drm-fixes-2019-03-22' of git://anongit..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1574f56d200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31fb246de2a622
+> dashboard link: https://syzkaller.appspot.com/bug?extid=370a6b0f11867bf13515
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1157b7cf200000
 > 
-> Maybe this needs to be renamed to avoid confusion, 
-> MAX_8996_RPMPD_STATE?
-
-sure
-
+> Bisection is inconclusive: the bug happens on the oldest tested release.
 > 
->>   };
->>     static const struct of_device_id rpmpd_match_table[] = {
->> @@ -225,8 +228,8 @@ static int rpmpd_set_performance(struct 
->> generic_pm_domain *domain,
->>   	int ret = 0;
->>   	struct rpmpd *pd = domain_to_rpmpd(domain);
->>   -	if (state > MAX_RPMPD_STATE)
->> -		state = MAX_RPMPD_STATE;
->> +	if (state > pd->max_state)
->> +		state = pd->max_state;
->>     	mutex_lock(&rpmpd_lock);
->>   @@ -287,6 +290,7 @@ static int rpmpd_probe(struct platform_device 
->> *pdev)
->>   		}
->>     		rpmpds[i]->rpm = rpm;
->> +		rpmpds[i]->max_state = desc->max_state;
->>   		rpmpds[i]->pd.power_off = rpmpd_power_off;
->>   		rpmpds[i]->pd.power_on = rpmpd_power_on;
->>   		rpmpds[i]->pd.set_performance_state = rpmpd_set_performance;
->> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ca39b3200000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ca39b3200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14ca39b3200000
+
+So I've tried running your .config in both an AMD and an Intel guest
+like this:
+
+./syz-execprog -repeat=0 repro.syz
+
+and killed it after 30K executed programs without success in
+reproducing.
+
+Either I'm missing something and my environment doesn't match yours -
+because looking at your console output it happens almost immediately
+after starting - or it has been fixed in the meantime...
+
+Hmmm.
 
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
