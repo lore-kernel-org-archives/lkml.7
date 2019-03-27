@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1619FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50007C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF6F2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2007C2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709842;
-	bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
+	s=default; t=1553709844;
+	bh=sLMwQcevGfBq0KbV71LfP6MGB2pFjKAuD5ONjyeeVtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WcJHCbzrcERaz6YKmawlF75oVKRhGBMfa70QDIeVRvPdgB+TC0kaJuKNWnLBlWiQ6
-	 JB+OFoQKwa9BnZW5ljoOBze0Zq6xSdkPARc4e1bFgK9vj6kvRXcSD6w6t3hL4iPD9S
-	 LhLe3w7wqlz3nTpBnfmmN5kmOFJlar0R7onsWe6E=
+	b=Ss9lGqWHjoSJeLHNfF4i9njGComFzzf8mZ2mc3ei/s0wryB2P4V3I+MbS5bmcI+gg
+	 WiEovMAXiH3B1BnecGxbIiDWxNdikDJAUm0NjmRfhQpkqH7gGugwwQZQn4BIAPD25n
+	 arHANMys3dTZb8hXhpIcndLGi5g1f5YcBwWPiKYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbfC0SEC (ORCPT
+        id S1733124AbfC0SEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 27 Mar 2019 14:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44416 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:44362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbfC0SD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:58 -0400
+        id S1733019AbfC0SD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488EA2075C;
-        Wed, 27 Mar 2019 18:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 320D121734;
+        Wed, 27 Mar 2019 18:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709838;
-        bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
+        s=default; t=1553709835;
+        bh=sLMwQcevGfBq0KbV71LfP6MGB2pFjKAuD5ONjyeeVtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5+2twr5Pf05DyBdQzH4iiEJaalQAJHWBbGpnyvWlx3qjrUqckBlZ/K936PA9T0K3
-         pLeTKSEk1FGBirSO9liU7YoKwmaMoVcHazJ857qWHIf8cnGiB8WvW/jwIBnrmNd6ut
-         hoChlp9z7T+vfFCpvkm/shhYxvGugWMlafO5Sv4g=
+        b=vjkGyqRlwrAKGlrR+OrGmdQY9O5VpL4hli+mm+Ik3+7sE+GAnpeJnYSdVobjjWN9q
+         899viOS7Yl4tTC61DO5abFHkt+MvpUahgB6mMNJVmfuT1QK0xoVuP/eZGAaASHAsPM
+         0cUYN3D3kvs6Gu0s2TT+CCkqJWZPJ1X8d3XJpOvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 067/262] crypto: crypto4xx - add missing of_node_put after of_device_is_available
-Date:   Wed, 27 Mar 2019 13:58:42 -0400
-Message-Id: <20190327180158.10245-67-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>, johannes.berg@intel.com,
+        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 066/262] lockdep/lib/tests: Fix run_tests.sh
+Date:   Wed, 27 Mar 2019 13:58:41 -0400
+Message-Id: <20190327180158.10245-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,62 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
+[ Upstream commit d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba ]
 
-Add an of_node_put when a tested device node is not available.
+Apparently the execute bits were set for the tests/*.sh scripts on my
+test setup but these are not set in the kernel tree. Fix this by adding
+the interpreter path in front of the script paths.
 
-The semantic patch that fixes this problem is as follows
-(http://coccinelle.lip6.fr):
-
-// <smpl>
-@@
-identifier f;
-local idexpression e;
-expression x;
-@@
-
-e = f(...);
-... when != of_node_put(e)
-    when != x = e
-    when != e = x
-    when any
-if (<+...of_device_is_available(e)...+>) {
-  ... when != of_node_put(e)
-(
-  return e;
-|
-+ of_node_put(e);
-  return ...;
-)
-}
-// </smpl>
-
-Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: johannes.berg@intel.com
+Cc: tj@kernel.org
+Fixes: 5ecb8e94b494 ("tools/lib/lockdep/tests: Improve testing accuracy") # v5.0-rc1
+Link: https://lkml.kernel.org/r/20190214230058.196511-23-bvanassche@acm.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/lib/lockdep/run_tests.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 5e63742b0d22..53ab1f140a26 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
- 
- 	/* Find the TRNG device node and map it */
- 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
--	if (!trng || !of_device_is_available(trng))
-+	if (!trng || !of_device_is_available(trng)) {
-+		of_node_put(trng);
- 		return;
-+	}
- 
- 	dev->trng_base = of_iomap(trng, 0);
- 	of_node_put(trng);
+diff --git a/tools/lib/lockdep/run_tests.sh b/tools/lib/lockdep/run_tests.sh
+index c8fbd0306960..11f425662b43 100755
+--- a/tools/lib/lockdep/run_tests.sh
++++ b/tools/lib/lockdep/run_tests.sh
+@@ -11,7 +11,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	testname=$(basename "$i" .c)
+ 	echo -ne "$testname... "
+ 	if gcc -o "tests/$testname" -pthread "$i" liblockdep.a -Iinclude -D__USE_LIBLOCKDEP &&
+-		timeout 1 "tests/$testname" 2>&1 | "tests/${testname}.sh"; then
++		timeout 1 "tests/$testname" 2>&1 | /bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
+ 	else
+ 		echo "FAILED!"
+@@ -24,7 +24,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		timeout 1 ./lockdep "tests/$testname" 2>&1 |
+-		"tests/${testname}.sh"; then
++		/bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
+ 	else
+ 		echo "FAILED!"
+@@ -37,7 +37,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD + Valgrind) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		{ timeout 10 valgrind --read-var-info=yes ./lockdep "./tests/$testname" >& "tests/${testname}.vg.out"; true; } &&
+-		"tests/${testname}.sh" < "tests/${testname}.vg.out" &&
++		/bin/bash "tests/${testname}.sh" < "tests/${testname}.vg.out" &&
+ 		! grep -Eq '(^==[0-9]*== (Invalid |Uninitialised ))|Mismatched free|Source and destination overlap| UME ' "tests/${testname}.vg.out"; then
+ 		echo "PASSED!"
+ 	else
 -- 
 2.19.1
 
