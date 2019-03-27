@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F13FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A89BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6002064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB91E2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714221;
-	bh=Z6IzR8lFTOsHcZF+2cPPUcdxhjRNeMfvf62yGLVB3o8=;
+	s=default; t=1553714230;
+	bh=9HW+LNGQfFAKv2EHtKFzIh+vOdioNa5rysTU1cPnZD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5GlB0Agjmj4a6oEvoY5c3MogNF6gUj9ZYABlXRuRi7I+ojFIXjdKMmRrrRtMV6D8
-	 rI+H42rTQQ83QOa/BLgl1M0I/eo9dpZOr3jVoae+OP6bTqz4GulKn0/twnPYH6IGNS
-	 8UuSul37qZWjwhY0P3/2xjzzVgYFoP7cGXeQjwII=
+	b=Ej8BunhbmR/XHp8vtEwshm3WQHkgmCsiY26jEStLd1/fO4KZjXGAuktIM2mM/MqhQ
+	 NRzju/Tp3S16W3xa99/MKCvIxOBQXKJG7t1561b8gidbJivUrjfXqHU0c7HaN+eo2d
+	 LCZUd+w38b1jwDOb4DFxCZ2c1bTjkAB16bha9xgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388463AbfC0SI5 (ORCPT
+        id S2388434AbfC0SIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388436AbfC0SIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:54 -0400
+        id S2388385AbfC0SIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A4C32063F;
-        Wed, 27 Mar 2019 18:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC172063F;
+        Wed, 27 Mar 2019 18:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710133;
-        bh=Z6IzR8lFTOsHcZF+2cPPUcdxhjRNeMfvf62yGLVB3o8=;
+        s=default; t=1553710123;
+        bh=9HW+LNGQfFAKv2EHtKFzIh+vOdioNa5rysTU1cPnZD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYagz+GrDahWJ85k8Ds8kVJklasrA/WOzwi190fVMkHplt8p37f9WLjvkrdT9Y1Bo
-         0I9N8kqwqfwfKuc1NFk+VcNlee9eJH1yIvPgRW1tlB6SQZvd4IPwYRFr24ew7leWwo
-         jIVogb8NY7oBpPkLjv5xcE7bM68rIMFk3Mej7pv8=
+        b=dmXp9zl537V29aQ+itGsBGL452ukbTFaVkwK4IBBpcx6gvjVb58Zepfsbv76iCElm
+         wrFI9LVQ/o06RbfjOki0TvsFFeH3y/wr+6e0/HClW42D+vWs0KmUpfFNajUjFz2rsb
+         VGoQwOsFHw+e1pIXb3sI1z/NT1/3CsQIbNTtrDEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= 
-        <jerome.debretagne@gmail.com>, Darren Hart <dvhart@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 211/262] platform/x86: intel-hid: Missing power button release on some Dell models
-Date:   Wed, 27 Mar 2019 14:01:06 -0400
-Message-Id: <20190327180158.10245-211-sashal@kernel.org>
+Cc:     Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        "Michael W . Bringmann" <mwb@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 206/262] powerpc/pseries: Perform full re-add of CPU for topology update post-migration
+Date:   Wed, 27 Mar 2019 14:01:01 -0400
+Message-Id: <20190327180158.10245-206-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,63 +58,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-[ Upstream commit e97a34563d18606ee5db93e495382a967f999cd4 ]
+[ Upstream commit 81b61324922c67f73813d8a9c175f3c153f6a1c6 ]
 
-Power button suspend for some Dell models was added in:
+On pseries systems, performing a partition migration can result in
+altering the nodes a CPU is assigned to on the destination system. For
+exampl, pre-migration on the source system CPUs are in node 1 and 3,
+post-migration on the destination system CPUs are in nodes 2 and 3.
 
-commit 821b85366284 ("platform/x86: intel-hid: Power button suspend on Dell Latitude 7275")
+Handling the node change for a CPU can cause corruption in the slab
+cache if we hit a timing where a CPUs node is changed while cache_reap()
+is invoked. The corruption occurs because the slab cache code appears
+to rely on the CPU and slab cache pages being on the same node.
 
-by checking against the power button press notification (0xCE) to report
-the power button press event. The corresponding power button release
-notification (0xCF) was caught and ignored to stop it from being reported
-as an "unknown event" in the logs.
+The current dynamic updating of a CPUs node done in arch/powerpc/mm/numa.c
+does not prevent us from hitting this scenario.
 
-The missing button release event is creating issues on Android-x86, as
-reported on the project mailing list for a Dell Latitude 5175 model, since
-the events are expected in down/up pairs.
+Changing the device tree property update notification handler that
+recognizes an affinity change for a CPU to do a full DLPAR remove and
+add of the CPU instead of dynamically changing its node resolves this
+issue.
 
-Report the power button release event to fix this issue.
-
-Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
-Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
-Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-[dvhart: corrected commit reference format per checkpatch]
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Signed-off-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Tested-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/topology.h          |  2 ++
+ arch/powerpc/mm/numa.c                       |  9 +--------
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index e28bcf61b126..bc0d55a59015 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -363,7 +363,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	 * the 5-button array, but still send notifies with power button
- 	 * event code to this device object on power button actions.
- 	 *
--	 * Report the power button press; catch and ignore the button release.
-+	 * Report the power button press and release.
- 	 */
- 	if (!priv->array) {
- 		if (event == 0xce) {
-@@ -372,8 +372,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 			return;
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index a4a718dbfec6..f85e2b01c3df 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -132,6 +132,8 @@ static inline void shared_proc_topology_init(void) {}
+ #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
+ #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
+ #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
++
++int dlpar_cpu_readd(int cpu);
+ #endif
+ #endif
+ 
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 8ec2ed30d44c..bdb663da7327 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1464,13 +1464,6 @@ static void reset_topology_timer(void)
+ 
+ #ifdef CONFIG_SMP
+ 
+-static void stage_topology_update(int core_id)
+-{
+-	cpumask_or(&cpu_associativity_changes_mask,
+-		&cpu_associativity_changes_mask, cpu_sibling_mask(core_id));
+-	reset_topology_timer();
+-}
+-
+ static int dt_update_callback(struct notifier_block *nb,
+ 				unsigned long action, void *data)
+ {
+@@ -1483,7 +1476,7 @@ static int dt_update_callback(struct notifier_block *nb,
+ 		    !of_prop_cmp(update->prop->name, "ibm,associativity")) {
+ 			u32 core_id;
+ 			of_property_read_u32(update->dn, "reg", &core_id);
+-			stage_topology_update(core_id);
++			rc = dlpar_cpu_readd(core_id);
+ 			rc = NOTIFY_OK;
  		}
+ 		break;
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 2f8e62163602..97feb6e79f1a 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -802,6 +802,25 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
+ 	return rc;
+ }
  
--		if (event == 0xcf)
-+		if (event == 0xcf) {
-+			input_report_key(priv->input_dev, KEY_POWER, 0);
-+			input_sync(priv->input_dev);
- 			return;
-+		}
- 	}
- 
- 	/* 0xC0 is for HID events, other values are for 5 button array */
++int dlpar_cpu_readd(int cpu)
++{
++	struct device_node *dn;
++	struct device *dev;
++	u32 drc_index;
++	int rc;
++
++	dev = get_cpu_device(cpu);
++	dn = dev->of_node;
++
++	rc = of_property_read_u32(dn, "ibm,my-drc-index", &drc_index);
++
++	rc = dlpar_cpu_remove_by_index(drc_index);
++	if (!rc)
++		rc = dlpar_cpu_add(drc_index);
++
++	return rc;
++}
++
+ int dlpar_cpu(struct pseries_hp_errorlog *hp_elog)
+ {
+ 	u32 count, drc_index;
 -- 
 2.19.1
 
