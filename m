@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77876C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC75DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C872063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01E1217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710904;
-	bh=hA1EA4E8n/ipPxwcO4eDjpYs9zDg611IJg7EcKT+weQ=;
+	s=default; t=1553710907;
+	bh=AFfioc7Jl/ZYZ1nAZUr7bArBHRtUxAlR67iMr/GBcW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d53NIrjPHDbxU+w5h2K34S2tV6NZQhWAbvEe5r+WJjyPasotzXKFO3LcKJo2mexHo
-	 wdYuM8lej9Fg6StxWSbElHbn4VxDdJlf+4s3AWNh2+2Bxx3vMcZezaIOl0TK7M8vpP
-	 WbFh6bCbbvqM9rLewxg0Dfbf4rEBJSwJiOJAtlbA=
+	b=nwej/rcYUjBqVtOEaVVm4J9XLgW1BbRhIfcinROlH1eWhbt7yoxOnFBqDjQWDa4Ya
+	 F1J/3Afzm5dHeygd5WgcNFxOafMQ8HhBJO8Z/Q6r2dzhbRDaC5lWl1ERddzvxXJplB
+	 xFMPPZJstrGO/Be5xs3kYaA9OXQIwI/CZ8kCU+a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403780AbfC0SVm (ORCPT
+        id S2391228AbfC0SVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391212AbfC0SVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:38 -0400
+        id S2403776AbfC0SVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129B92087C;
-        Wed, 27 Mar 2019 18:21:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB5420651;
+        Wed, 27 Mar 2019 18:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710897;
-        bh=hA1EA4E8n/ipPxwcO4eDjpYs9zDg611IJg7EcKT+weQ=;
+        s=default; t=1553710901;
+        bh=AFfioc7Jl/ZYZ1nAZUr7bArBHRtUxAlR67iMr/GBcW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OKpyHpcpWqP5tBeUiaAQp9QfqFH/CShhUc2WU71ItjPVxZNsQWwTl34gryRz0JiyA
-         n6iuvyCRzdJ8uVCIgeub8ujQaFCB0kg6tvHAQ6IW3dNVoTtCjYYNavqow1scNQO1TX
-         eMvgU9leuKs8LSPDNrNIi9UgkCdCQwgmn62/k0aU=
+        b=MX1Hqct28HkO8ge+1JcglFoOl4l1RijiIYfZTiKlptgZ6D8BsS6zeuFpAefSQsaYq
+         Kweflc6veA0qUU3OYp+3/9baXTtSc/s9v1C4vzfKVjkyayWM4+L3S/WWdyqPVV9eDD
+         fx+7/pR1VozXQzRc1iHkohq+W/a+PTs7tmA0zrg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 35/87] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
-Date:   Wed, 27 Mar 2019 14:19:48 -0400
-Message-Id: <20190327182040.17444-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 37/87] perf test: Fix failure of 'evsel-tp-sched' test on s390
+Date:   Wed, 27 Mar 2019 14:19:50 -0400
+Message-Id: <20190327182040.17444-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,88 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
+[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
 
-The apq8016 driver leaves the of-node refcount at aborting from the
-loop of for_each_child_of_node() in the error path.  Not only the
-iterator node of for_each_child_of_node(), the children nodes referred
-from it for codec and cpu have to be properly unreferenced.
+Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+causes test case 14 "Parse sched tracepoints fields" to fail on s390.
 
-Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This test succeeds on x86.
+
+In fact this test now fails on all architectures with type char treated
+as type unsigned char.
+
+The root cause is the signed-ness of character arrays in the tracepoints
+sched_switch for structure members prev_comm and next_comm.
+
+On s390 the output of:
+
+ [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:0;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:0;
+
+reveals the character arrays prev_comm and next_comm are per
+default unsigned char and have values in the range of 0..255.
+
+On x86 both fields are signed as this output shows:
+ [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:1;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:1;
+
+and the character arrays prev_comm and next_comm are per default signed
+char and have values in the range of -1..127.  The implementation of
+type char is architecture specific.
+
+Since the character arrays in both tracepoints sched_switch and
+sched_wakeup should contain ascii characters, simply omit the check for
+signedness in the test case.
+
+Output before:
+
+  [root@m35lp76 perf]# ./perf test -F 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
+  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
+  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
+  ---- end ----
+  14: Parse sched tracepoints fields                        : FAILED!
+  [root@m35lp76 perf]#
+
+Output after:
+
+  [root@m35lp76 perf]# ./perf test -Fv 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  ---- end ----
+  Parse sched tracepoints fields: Ok
+  [root@m35lp76 perf]#
+
+Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ tools/perf/tests/evsel-tp-sched.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-index 07f91e918b23..754742018515 100644
---- a/sound/soc/qcom/apq8016_sbc.c
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -114,13 +114,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 
- 		if (!cpu || !codec) {
- 			dev_err(dev, "Can't find cpu/codec DT node\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
- 		if (!link->cpu_of_node) {
- 			dev_err(card->dev, "error getting cpu phandle\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
-@@ -132,28 +134,37 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting cpu dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->platform_of_node = link->cpu_of_node;
- 		ret = of_property_read_string(np, "link-name", &link->name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai_link name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->stream_name = link->name;
- 		link->init = apq8016_sbc_dai_init;
- 		link++;
-+
-+		of_node_put(cpu);
-+		of_node_put(codec);
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index 66b53f10eb18..ea772d41e472 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -42,7 +42,7 @@ int test__perf_evsel__tp_sched_test(int subtest __maybe_unused)
+ 		return -1;
  	}
  
- 	return data;
-+
-+ error:
-+	of_node_put(np);
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+	return ERR_PTR(ret);
- }
+-	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
+ 		ret = -1;
  
- static const struct snd_soc_dapm_widget apq8016_sbc_dapm_widgets[] = {
+ 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
+@@ -54,7 +54,7 @@ int test__perf_evsel__tp_sched_test(int subtest __maybe_unused)
+ 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
+ 		ret = -1;
+ 
+-	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
+@@ -72,7 +72,7 @@ int test__perf_evsel__tp_sched_test(int subtest __maybe_unused)
+ 		return -1;
+ 	}
+ 
+-	if (perf_evsel__test_field(evsel, "comm", 16, true))
++	if (perf_evsel__test_field(evsel, "comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "pid", 4, true))
 -- 
 2.19.1
 
