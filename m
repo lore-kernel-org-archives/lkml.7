@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850C3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5690D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FD2206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713314;
-	bh=K6D8LcRubxmDeT7CNye2dAHuKMxpQRe/dJEaP8VKITg=;
+	s=default; t=1553713318;
+	bh=LR1E7ls6GspKL+LS6IAuEa9IGXbCO373aLev2FG4McY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0qhqc1O+IqHwThFCHvvFgPOMKevo2J6xoU5zusV5Q1c0C1TLDIWV+cnw1D/TZEt4u
-	 vOxN9f6tLqr65x9CZCiPv4o2jyHqdA4HHE/As/U7jMTdSDfz2U0FOvYp6IpoYEgawm
-	 glr/D7ZYJzAAV1ldhzglnXsSkDZrQNH9qS9eeIaA=
+	b=VmCAMH4xh8Q7z9+NPtXyVAQV1yXpRcXG3DyLpCP313vEg6n59A8vXlDgvF5E3E101
+	 AUi3xZCimyLsdpNOGa6TISodJzexOsfrSJnj8sjwgVgYVQnXmla4VsthOq0g93kHn1
+	 iNBN1iF9+zdzK+u0sZBz4+7tPQ2UB8RFRukSxFZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389550AbfC0SOB (ORCPT
+        id S2389882AbfC0TB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56798 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389200AbfC0SN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:58 -0400
+        id S2389541AbfC0SOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61922054F;
-        Wed, 27 Mar 2019 18:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E766B21850;
+        Wed, 27 Mar 2019 18:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710437;
-        bh=K6D8LcRubxmDeT7CNye2dAHuKMxpQRe/dJEaP8VKITg=;
+        s=default; t=1553710439;
+        bh=LR1E7ls6GspKL+LS6IAuEa9IGXbCO373aLev2FG4McY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4+VGe/K2LaUOv1OfFE0arDajbOZkRFUTQKT+FtFngwjR6aPN3VyGyk3LqrETN0qL
-         vuDYu0I2VMm8bMJHXQKn31PBFJY2fVafU73A7T62EtCjKFJ9VvgDcrQk5/c8bibNAs
-         HtzknN5jypSVnz9GHexE3oqYrfmpG/yGoEhq0nuo=
+        b=CJcXTLZ2eDidEaV0ToMrQy5ikW+w5VHWlXqaqGRQNKuKcndLEYUPvJKLuHmPbRS39
+         2JsgZxLPBsv1iHDws5xJ+9bzhoXY1tLujNxg1jJ1mhmK3OL/g9g03TmKTxJWv8/6mU
+         +CXzVD1+kXRJc9UKyzhDDRWaolHnH/9GGl2ukb5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/192] net: marvell: mvpp2: fix stuck in-band SGMII negotiation
-Date:   Wed, 27 Mar 2019 14:09:10 -0400
-Message-Id: <20190327181025.13507-118-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 120/192] net: phy: consider latched link-down status in polling mode
+Date:   Wed, 27 Mar 2019 14:09:12 -0400
+Message-Id: <20190327181025.13507-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,82 +57,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 316734fdcf70900a83065360cff11a5826919067 ]
+[ Upstream commit 93c0970493c71f264e6c3c7caf1ff24a9e1de786 ]
 
-It appears that the mvpp22 can get stuck with SGMII negotiation.  The
-symptoms are that in-band negotiation never completes and the partner
-(eg, PHY) never reports SGMII link up, or if it supports negotiation
-bypass, goes into negotiation bypass mode (which will happen when the
-PHY sees that the MAC is alive but gets no response.)
+The link status value latches link-down events. To get the current
+status we read the register twice in genphy_update_link(). There's
+a potential risk that we miss a link-down event in polling mode.
+This may cause issues if the user e.g. connects his machine to a
+different network.
 
-Triggering the PHY end of the link to re-negotiate results in the
-bypass bit clearing on the PHY, and then re-setting - indicating that
-the problem is at the mvpp22 GMAC end.
+On the other hand reading the latched value may cause issues in
+interrupt mode. Following scenario:
 
-Asserting the GMAC reset and de-asserting it resolves the issue.
-Arrange to assert the GMAC reset at probe time, and deassert it only
-after we have configured the GMAC for the appropriate mode.  This
-resolves the issue.
+- After boot link goes up
+- phy_start() is called triggering an aneg restart, hence link goes
+  down and link-down info is latched.
+- After aneg has finished link goes up and triggers an interrupt.
+  Interrupt handler reads link status, means it reads the latched
+  "link is down" info. But there won't be another interrupt as long
+  as link stays up, therefore phylib will never recognize that link
+  is up.
 
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Deal with both scenarios by reading the register twice in interrupt
+mode only.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/phy/phy-c45.c    | 10 ++++++++--
+ drivers/net/phy/phy_device.c | 13 +++++++++----
+ 2 files changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index f8e4808a8317..9988c89ed9fd 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1372,13 +1372,9 @@ static void mvpp2_port_reset(struct mvpp2_port *port)
- 	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
- 		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index e1225545362d..0ba3607585bd 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -147,9 +147,15 @@ int genphy_c45_read_link(struct phy_device *phydev, u32 mmd_mask)
+ 		mmd_mask &= ~BIT(devad);
  
--	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
--		    ~MVPP2_GMAC_PORT_RESET_MASK;
-+	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
-+	      MVPP2_GMAC_PORT_RESET_MASK;
- 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
--
--	while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
--	       MVPP2_GMAC_PORT_RESET_MASK)
--		continue;
- }
- 
- /* Change maximum receive size of the port */
-@@ -4445,12 +4441,15 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
- 			      const struct phylink_link_state *state)
+ 		/* The link state is latched low so that momentary link
+-		 * drops can be detected.  Do not double-read the status
+-		 * register if the link is down.
++		 * drops can be detected. Do not double-read the status
++		 * in polling mode to detect such short link drops.
+ 		 */
++		if (!phy_polling_mode(phydev)) {
++			val = phy_read_mmd(phydev, devad, MDIO_STAT1);
++			if (val < 0)
++				return val;
++		}
++
+ 		val = phy_read_mmd(phydev, devad, MDIO_STAT1);
+ 		if (val < 0)
+ 			return val;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 2c32c795f5dd..8a96d985a52f 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1503,10 +1503,15 @@ int genphy_update_link(struct phy_device *phydev)
  {
- 	u32 an, ctrl0, ctrl2, ctrl4;
-+	u32 old_ctrl2;
+ 	int status;
  
- 	an = readl(port->base + MVPP2_GMAC_AUTONEG_CONFIG);
- 	ctrl0 = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
- 	ctrl2 = readl(port->base + MVPP2_GMAC_CTRL_2_REG);
- 	ctrl4 = readl(port->base + MVPP22_GMAC_CTRL_4_REG);
- 
-+	old_ctrl2 = ctrl2;
-+
- 	/* Force link down */
- 	an &= ~MVPP2_GMAC_FORCE_LINK_PASS;
- 	an |= MVPP2_GMAC_FORCE_LINK_DOWN;
-@@ -4523,6 +4522,12 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
- 	writel(ctrl2, port->base + MVPP2_GMAC_CTRL_2_REG);
- 	writel(ctrl4, port->base + MVPP22_GMAC_CTRL_4_REG);
- 	writel(an, port->base + MVPP2_GMAC_AUTONEG_CONFIG);
-+
-+	if (old_ctrl2 & MVPP2_GMAC_PORT_RESET_MASK) {
-+		while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
-+		       MVPP2_GMAC_PORT_RESET_MASK)
-+			continue;
+-	/* Do a fake read */
+-	status = phy_read(phydev, MII_BMSR);
+-	if (status < 0)
+-		return status;
++	/* The link state is latched low so that momentary link
++	 * drops can be detected. Do not double-read the status
++	 * in polling mode to detect such short link drops.
++	 */
++	if (!phy_polling_mode(phydev)) {
++		status = phy_read(phydev, MII_BMSR);
++		if (status < 0)
++			return status;
 +	}
- }
  
- static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
+ 	/* Read link and autonegotiation status */
+ 	status = phy_read(phydev, MII_BMSR);
 -- 
 2.19.1
 
