@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9753EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32FC2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6AA2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714105;
-	bh=bQA4rep4aoj+gAR143fIhWCpWxLbReAsPfQHlFROyJU=;
+	s=default; t=1553714109;
+	bh=92zrjK9+2OxQcwL86HWfOxqPvfxC31dI70oNFNOH2VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiYkI1cVIPL0mRUkpW4ipHehiJCdKEbPglAhiOwiPVsxmgwJkqRhdJEV08v9eg7dc
-	 /Q5RJxrgOsdpO9PHue94gqumPitqqSw4J1G8ret79MvevS7vy2BRZCWHCwMwkbkqNb
-	 gizydVOxUN2YmdsoOwtbih6/0hXnfWPmJalVm0hQ=
+	b=rCpd6hxm95rMdIJo63R/fLJ4nBURhMaR3AzBRVk4dT1cSsrSYUZ9LcwJagPAf1OIT
+	 70bdqhMu+tFdy0BrmobIhUABDMyCvJgammkknxX6anZE/SmGdPGARwNE60r4MpyX1P
+	 v7RvFHoTUEzLIyl9t5aASBmbJaN/mfcq6wzRi0Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388789AbfC0TPE (ORCPT
+        id S2387874AbfC0SJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388575AbfC0SJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:30 -0400
+        id S2388538AbfC0SJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC16F21738;
-        Wed, 27 Mar 2019 18:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E762063F;
+        Wed, 27 Mar 2019 18:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710169;
-        bh=bQA4rep4aoj+gAR143fIhWCpWxLbReAsPfQHlFROyJU=;
+        s=default; t=1553710157;
+        bh=92zrjK9+2OxQcwL86HWfOxqPvfxC31dI70oNFNOH2VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0PdMydSrTQU+kt0uyo7sQLr7McLBCJj5bBAlcV/5Lj+kG0Nb87YAaCGFZf7z//H2
-         e1KO9N402bplm+WXz+NMZs8PAwDkDaJ9jn1RZvnzrBwLYEPH7q7DmW3nfKMIf4Xben
-         H/MsGqbpftHO5k/N35kjyju8yQoA6eN1Yp4u0UmI=
+        b=GP06BADXhNoAUXKJEkHEI2ReMVit3ntLFf+L72oA9wdOcffm8b/ZRkZxpRG5kLkGj
+         jVEi1mLYsaAUkHqu7jsJcPaGeapgbz0WjPCgfXBL8iqIsXZj2xY7cn1xtRGDhG7zvV
+         Q+tHlh01VS+MitvdpmTWnlgejnb+tLOz5Do13wSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 232/262] dmaengine: qcom_hidma: initialize tx flags in hidma_prep_dma_*
-Date:   Wed, 27 Mar 2019 14:01:27 -0400
-Message-Id: <20190327180158.10245-232-sashal@kernel.org>
+Cc:     Myungho Jung <mhjungk@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 225/262] Bluetooth: hci_uart: Check if socket buffer is ERR_PTR in h4_recv_buf()
+Date:   Wed, 27 Mar 2019 14:01:20 -0400
+Message-Id: <20190327180158.10245-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,55 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+From: Myungho Jung <mhjungk@gmail.com>
 
-[ Upstream commit 875aac8a46424e5b73a9ff7f40b83311b609e407 ]
+[ Upstream commit 1dc2d785156cbdc80806c32e8d2c7c735d0b4721 ]
 
-In async_tx_test_ack(), it uses flags in struct dma_async_tx_descriptor
-to check the ACK status. As hidma reuses the descriptor in a free list
-when hidma_prep_dma_*(memcpy/memset) is called, the flag will keep ACKed
-if the descriptor has been used before. This will cause a BUG_ON in
-async_tx_quiesce().
+h4_recv_buf() callers store the return value to socket buffer and
+recursively pass the buffer to h4_recv_buf() without protection. So,
+ERR_PTR returned from h4_recv_buf() can be dereferenced, if called again
+before setting the socket buffer to NULL from previous error. Check if
+skb is ERR_PTR in h4_recv_buf().
 
-  kernel BUG at crypto/async_tx/async_tx.c:282!
-  Internal error: Oops - BUG: 0 1 SMP
-  ...
-  task: ffff8017dd3ec000 task.stack: ffff8017dd3e8000
-  PC is at async_tx_quiesce+0x54/0x78 [async_tx]
-  LR is at async_trigger_callback+0x98/0x110 [async_tx]
-
-This patch initializes flags in dma_async_tx_descriptor by the flags
-passed from the caller when hidma_prep_dma_*(memcpy/memset) is called.
-
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reported-by: syzbot+017a32f149406df32703@syzkaller.appspotmail.com
+Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/bluetooth/h4_recv.h | 4 ++++
+ drivers/bluetooth/hci_h4.c  | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index ea219bca116d..411f91fde734 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -416,6 +416,7 @@ hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dest, dma_addr_t src,
- 	if (!mdesc)
- 		return NULL;
+diff --git a/drivers/bluetooth/h4_recv.h b/drivers/bluetooth/h4_recv.h
+index b432651f8236..307d82166f48 100644
+--- a/drivers/bluetooth/h4_recv.h
++++ b/drivers/bluetooth/h4_recv.h
+@@ -60,6 +60,10 @@ static inline struct sk_buff *h4_recv_buf(struct hci_dev *hdev,
+ 					  const struct h4_recv_pkt *pkts,
+ 					  int pkts_count)
+ {
++	/* Check for error from previous call */
++	if (IS_ERR(skb))
++		skb = NULL;
++
+ 	while (count) {
+ 		int i, len;
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     src, dest, len, flags,
- 				     HIDMA_TRE_MEMCPY);
-@@ -448,6 +449,7 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
- 	if (!mdesc)
- 		return NULL;
+diff --git a/drivers/bluetooth/hci_h4.c b/drivers/bluetooth/hci_h4.c
+index fb97a3bf069b..5d97d77627c1 100644
+--- a/drivers/bluetooth/hci_h4.c
++++ b/drivers/bluetooth/hci_h4.c
+@@ -174,6 +174,10 @@ struct sk_buff *h4_recv_buf(struct hci_dev *hdev, struct sk_buff *skb,
+ 	struct hci_uart *hu = hci_get_drvdata(hdev);
+ 	u8 alignment = hu->alignment ? hu->alignment : 1;
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     value, dest, len, flags,
- 				     HIDMA_TRE_MEMSET);
++	/* Check for error from previous call */
++	if (IS_ERR(skb))
++		skb = NULL;
++
+ 	while (count) {
+ 		int i, len;
+ 
 -- 
 2.19.1
 
