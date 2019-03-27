@@ -2,92 +2,96 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AE4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49648C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A882070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bfoo41Ws"
+	by mail.kernel.org (Postfix) with ESMTP id 200192070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfC0LtS (ORCPT
+        id S1728621AbfC0Lte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:49:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49490 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbfC0LtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:49:17 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 58F8D1EC014B;
-        Wed, 27 Mar 2019 12:49:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553687356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=YWgQL6NnX4XYeyup95DGbobB7jXrFU02gxP1axHpfF4=;
-        b=bfoo41Ws/m4UZIIIkrXwywjcUGZChm0GUaAQERG7ielcE0MiIVkBbLWPZV//7ooDnr5GhK
-        DXdnvbPpKnIwg1OUFJjQre1W13LiBEyP8tdXmW5YeYmbZSseFMqlNXKWht4yFNv815ROsb
-        aB4W/3nRNfbG+2bknB26CG6En8MxgM4=
-Date:   Wed, 27 Mar 2019 12:49:17 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
- announcement
-Message-ID: <20190327114917.GD32571@zn.tnic>
-References: <20190327090905.5588-1-leon@kernel.org>
- <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
- <20190327093844.GO22899@mtr-leonro.mtl.com>
- <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
- <20190327095337.GP22899@mtr-leonro.mtl.com>
- <20190327101133.GQ22899@mtr-leonro.mtl.com>
- <20190327101815.GB32571@zn.tnic>
- <20190327105024.GR22899@mtr-leonro.mtl.com>
- <20190327111452.GC32571@zn.tnic>
- <20190327113628.GS22899@mtr-leonro.mtl.com>
+        Wed, 27 Mar 2019 07:49:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53306 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728245AbfC0Lte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 07:49:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B9CA374;
+        Wed, 27 Mar 2019 04:49:33 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0307E3F557;
+        Wed, 27 Mar 2019 04:49:30 -0700 (PDT)
+Subject: Re: [PATCH v7 9/10] KVM: arm64: docs: document KVM support of pointer
+ authentication
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
+ <1552984243-7689-10-git-send-email-amit.kachhap@arm.com>
+ <23e4a9d4-e9e1-2c1f-32ce-e7fd96080437@arm.com>
+ <20190327104428.GV3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <bdd480a4-44b3-7ddf-44f5-5b55e6251ced@arm.com>
+Date:   Wed, 27 Mar 2019 17:19:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190327113628.GS22899@mtr-leonro.mtl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190327104428.GV3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 01:36:28PM +0200, Leon Romanovsky wrote:
-> At the end, it is reduced to our usage, we are running QEMU inside
-> docker to test kernel changes with limitation on number of CPUs to use.
-> The systems are optimized to boot kernel as soon as possible in order
-> to run tests and on my machine (64 CPUs) reduce is visible: from ~2.6
-> sec to ~2.3 sec from execution to kernel boot.
+Hi,
 
-You're kidding, right?
+On 3/27/19 4:14 PM, Dave Martin wrote:
+> On Mon, Mar 25, 2019 at 08:05:49PM +0000, Kristina Martsenko wrote:
+>> On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
+>>> This adds sections for KVM API extension for pointer authentication.
+>>> A brief description about usage of pointer authentication for KVM guests
+>>> is added in the arm64 documentations.
+>>>
+>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>> Cc: kvmarm@lists.cs.columbia.edu
+>>
+>> I think it makes sense to also update the Kconfig symbol description for
+>> CONFIG_ARM64_PTR_AUTH, since it currently only mentions userspace
+>> support, but now the option also enables KVM guest support.
+>>
+>> It's also worth mentioning that CONFIG_ARM64_VHE=y is required for guest
+>> support.
+> 
+> Is it worth making this dependency explicit in Kconfig?
+Currently there is discrepancy that userspace supports ptrauth in both 
+nVHE/VHE mode and KVM guest only in VHE mode. I suppose adding explicit 
+dependency flag here makes both of them similar.
 
-0.3 sec boot time "improvement" for a kernel on which you run tests
-which take orders of magnitude longer (I assume). And you want to hide
-this message in the upstream kernel because you want to minimally speed
-up *your* *specific* usage ?
-
-And we still are wasting time talking about this?!
-
-Oh boy.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks,
+Amit D
+> 
+> For SVE, I have
+> 
+> config ARM64_SVE
+> 	depends on !KVM || ARM64_VHE
+> 
+> to implement this.
+> 
+> Cheers
+> ---Dave
+> 
