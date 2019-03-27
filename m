@@ -6,50 +6,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91BCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E73C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EDF2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BE3218A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710372;
-	bh=Uep2DAo+ipiaBuuoh8Iwp10WnwEO3T6/faRIrlpb23g=;
+	s=default; t=1553710376;
+	bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BKB6Dn3VPesnJJ7X6iXVh59Vy7J4SzgtM6rmo/4tbPruUveR70mgvV3I1Ry0M6S3g
-	 048oFRvYSFzNlxIEM26rRIb/UFb7fgDhn/br6HT3g4eEiKQKW/Dvn1ule35m+zImE9
-	 Wb94SLHNbZchgc3Uo3ahtozXUmrzE5VhZzCkNKyI=
+	b=mcKSZ59asbD/d8JbjYrDvzbRduPA8mD/JzEI1ofhM2650Qf7DQzcmkimIZnEyTJ5f
+	 3L7/yLU4PYc3OzdM2HSgwlM3D8nmeUxVmKR7bNkHSWGydrZ6jJVOuqfdRAFjHAsqXz
+	 Aay0UdkPw04RAEmHOoIfEW8YGOR/Hhi+Is/sgUvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389280AbfC0SMu (ORCPT
+        id S2388865AbfC0SMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389267AbfC0SMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:48 -0400
+        id S2389278AbfC0SMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6AA21738;
-        Wed, 27 Mar 2019 18:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBDB2147C;
+        Wed, 27 Mar 2019 18:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710367;
-        bh=Uep2DAo+ipiaBuuoh8Iwp10WnwEO3T6/faRIrlpb23g=;
+        s=default; t=1553710369;
+        bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKKYJUgBYTvpe0G2MtlrWzJv2bLu1N5pV8hZ+SBYuTYTN3MPR4wh9zTacut58Lgy0
-         aBD+WheNqxlzBksGozGklzSIG/HyzrsFHS4lGKhEzM/1JoPLZzH9muowXiJGo8CxLI
-         31hIgShDaXZjzIJwW5LeKwkhuJNBLZ7Gs5VmJxAw=
+        b=A/mnKS7RL5Wv7hKQ0p7ZBo5/e43Jcw6JfRgzkpSNS4sKvQ/sVSM7JqtCljMvfjEI9
+         XK6zZL2p9FnjKbpdYJI+cfGsqf4RwrjX/9kmWJnQoymhxIYyPv6jvI+rZ9lq+Ear/c
+         2d/3EI5N/NIIiMoHOfcFP3J1FyVw5N/C6ZNKRU4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     He Kuang <hekuang@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Wen Yang <yellowriver2010@hotmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 082/192] perf report: Don't shadow inlined symbol with different addr range
-Date:   Wed, 27 Mar 2019 14:08:34 -0400
-Message-Id: <20190327181025.13507-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 083/192] SoC: imx-sgtl5000: add missing put_device()
+Date:   Wed, 27 Mar 2019 14:08:35 -0400
+Message-Id: <20190327181025.13507-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -61,71 +69,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: He Kuang <hekuang@huawei.com>
+From: Wen Yang <yellowriver2010@hotmail.com>
 
-[ Upstream commit 7346195e8643482968f547483e0d823ec1982fab ]
+[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
 
-We can't assume inlined symbols with the same name are equal, because
-their address range may be different. This will cause the symbols with
-different addresses be shadowed when adding to the hist entry, and lead
-to ERANGE error when checking the symbol address during sample parse,
-the addr should be within the range of [sym.start, sym.end].
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-The error message is like: "0x36aea60 [0x8]: failed to process type: 68".
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
+./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
 
-The second parameter of symbol__new() is the length of the fake symbol
-for the inline frame, which is the subtraction of the end and start
-address of base_sym.
-
-Signed-off-by: He Kuang <hekuang@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: aa441895f7b4 ("perf report: Compare symbol name for inlined frames when sorting")
-Link: http://lkml.kernel.org/r/20190219130531.15692-1-hekuang@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/sort.c    | 10 ++++++++--
- tools/perf/util/srcline.c |  2 +-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ sound/soc/fsl/imx-sgtl5000.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index b284276ec963..46daa22b86e3 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -229,8 +229,14 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
- 	if (sym_l == sym_r)
- 		return 0;
- 
--	if (sym_l->inlined || sym_r->inlined)
--		return strcmp(sym_l->name, sym_r->name);
-+	if (sym_l->inlined || sym_r->inlined) {
-+		int ret = strcmp(sym_l->name, sym_r->name);
-+
-+		if (ret)
-+			return ret;
-+		if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
-+			return 0;
-+	}
- 
- 	if (sym_l->start != sym_r->start)
- 		return (int64_t)(sym_r->start - sym_l->start);
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index e767c4a9d4d2..af3f9b9f1e8b 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -104,7 +104,7 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 	} else {
- 		/* create a fake symbol for the inline frame */
- 		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
--					 base_sym ? base_sym->end : 0,
-+					 base_sym ? (base_sym->end - base_sym->start) : 0,
- 					 base_sym ? base_sym->binding : 0,
- 					 base_sym ? base_sym->type : 0,
- 					 funcname);
+diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
+index c29200cf755a..9b9a7ec52905 100644
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -108,6 +108,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
+ 		ret = -EPROBE_DEFER;
+ 		goto fail;
+ 	}
++	put_device(&ssi_pdev->dev);
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
 -- 
 2.19.1
 
