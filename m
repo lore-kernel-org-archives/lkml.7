@@ -2,50 +2,50 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1A9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581F1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9134E20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135CA2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715249;
-	bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
+	s=default; t=1553715258;
+	bh=9ElKJuzDyHrkWakQI+32P+O5Xac+9AhAmn1E3/OhgFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1+LufugZq7aVA9+JHE8M6wJ966w0z+++R6hkLfwykwkKDnOe8UVzZPtpj8pbpLXNx
-	 3ATglGszdUknUEGDxwgIDr50Yn5D5XzlpNxCmJOZq2GLaOApPgtQYUcjXHWVl2zNCz
-	 g39t4mrtTrHcPVpSE2XvlTCBo2gaPh/TzJolszuA=
+	b=MIu+ieheIL0Aqr1FdfZ+aFJIf5fZ/Oj87A1BNwuw9jwAbTAicsNQb2S1DmvXm19Cj
+	 XFC16rF9aDxlWliLJpXFRuBSYLcv5xwhk8qrSzJRaw620VF3qJnTcoFoXAFSvPoMSF
+	 WCD5pMBEP9fkkb483hn8+/yIfuYRCk03ZHcSriBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfC0SCP (ORCPT
+        id S1729259AbfC0SCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42014 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729309AbfC0SCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:02:12 -0400
+        id S1729100AbfC0SCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:02:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF9DE2082F;
-        Wed, 27 Mar 2019 18:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAD852147C;
+        Wed, 27 Mar 2019 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709731;
-        bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
+        s=default; t=1553709726;
+        bh=9ElKJuzDyHrkWakQI+32P+O5Xac+9AhAmn1E3/OhgFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+ra5LiC7hq25IQh+VZCN5fn4z8zBRxl5QP/COmN0vgtOUIWa7sZHPW2fWQMQqFdp
-         PiO5Fh8uJjcvs8xS7IeZYZ4gBt6Aygt4VKkq3UtZLv5ujXo3J2r4tFwUJK+xECV18n
-         PHob6da10VukxpWa1l2w/SIpiaM1jOb5l7UEGOgg=
+        b=TAmBnGpxh15WI3B9E10piBXqhbnP4BbAmmwUObh+vRpZTM24P1FjLN0Hj2RXas4gp
+         RP47tQtTvk8jFp4ZPcwmyMYMqK1uKp62zepdeG5XcJpTmWsXuuMS+H/za15pwmNCAC
+         KxOKr4OBj/ITilaKp/9jd0eG26fN3Lx8htixd4pE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Taylor <louis@kragniz.eu>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 009/262] i2c: sis630: correct format strings
-Date:   Wed, 27 Mar 2019 13:57:44 -0400
-Message-Id: <20190327180158.10245-9-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.0 007/262] f2fs: fix to avoid deadlock of atomic file operations
+Date:   Wed, 27 Mar 2019 13:57:42 -0400
+Message-Id: <20190327180158.10245-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,61 +57,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Taylor <louis@kragniz.eu>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 60f7691c624b41a05bfc3493d9b0519e7951b7ef ]
+[ Upstream commit 48432984d718c95cf13e26d487c2d1b697c3c01f ]
 
-When compiling with -Wformat, clang warns:
+Thread A				Thread B
+- __fput
+ - f2fs_release_file
+  - drop_inmem_pages
+   - mutex_lock(&fi->inmem_lock)
+   - __revoke_inmem_pages
+    - lock_page(page)
+					- open
+					- f2fs_setattr
+					- truncate_setsize
+					 - truncate_inode_pages_range
+					  - lock_page(page)
+					  - truncate_cleanup_page
+					   - f2fs_invalidate_page
+					    - drop_inmem_page
+					    - mutex_lock(&fi->inmem_lock);
 
-drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS,
-                        ^~~~~~~~~~~~~~~~~~~~
+We may encounter above ABBA deadlock as reported by Kyungtae Kim:
 
-drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I'm reporting a bug in linux-4.17.19: "INFO: task hung in
+drop_inmem_page" (no reproducer)
 
-drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-                                          ~~~~~   ^~~~~~~~~~~~~~~~~~~~
+I think this might be somehow related to the following:
+https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
 
-This patch fixes the format strings to use the format type for int.
+=========================================
+INFO: task syz-executor7:10822 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D27024 10822   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
+ __mutex_lock_common kernel/locking/mutex.c:833 [inline]
+ __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
+ mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
+ drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
+ f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
+ do_invalidatepage mm/truncate.c:165 [inline]
+ truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
+ truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
+ truncate_inode_pages mm/truncate.c:478 [inline]
+ truncate_pagecache+0x6d/0x90 mm/truncate.c:801
+ truncate_setsize+0x81/0xa0 mm/truncate.c:826
+ f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
+ notify_change+0xa62/0xe80 fs/attr.c:313
+ do_truncate+0x12e/0x1e0 fs/open.c:63
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
+INFO: task syz-executor7:10858 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor7   D28880 10858   6346 0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
+ rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
+ call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
+ __down_write arch/x86/include/asm/rwsem.h:142 [inline]
+ down_write+0x58/0xa0 kernel/locking/rwsem.c:72
+ inode_lock include/linux/fs.h:713 [inline]
+ do_truncate+0x120/0x1e0 fs/open.c:61
+ do_last fs/namei.c:2955 [inline]
+ path_openat+0x2042/0x29f0 fs/namei.c:3505
+ do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
+ do_sys_open+0x35e/0x4e0 fs/open.c:1101
+ __do_sys_open fs/open.c:1119 [inline]
+ __se_sys_open fs/open.c:1114 [inline]
+ __x64_sys_open+0x89/0xc0 fs/open.c:1114
+ do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
+RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
+RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
+INFO: task syz-executor5:10829 blocked for more than 120 seconds.
+      Not tainted 4.17.19 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor5   D28760 10829   6308 0x80000002
+Call Trace:
+ context_switch kernel/sched/core.c:2867 [inline]
+ __schedule+0x721/0x1e60 kernel/sched/core.c:3515
+ schedule+0x88/0x1c0 kernel/sched/core.c:3559
+ io_schedule+0x21/0x80 kernel/sched/core.c:5179
+ wait_on_page_bit_common mm/filemap.c:1100 [inline]
+ __lock_page+0x2b5/0x390 mm/filemap.c:1273
+ lock_page include/linux/pagemap.h:483 [inline]
+ __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
+ drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
+ f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
+ __fput+0x2c7/0x780 fs/file_table.c:209
+ ____fput+0x1a/0x20 fs/file_table.c:243
+ task_work_run+0x151/0x1d0 kernel/task_work.c:113
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0x8ba/0x30a0 kernel/exit.c:865
+ do_group_exit+0x13b/0x3a0 kernel/exit.c:968
+ get_signal+0x6bb/0x1650 kernel/signal.c:2482
+ do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
+ exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
+ prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
+ do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4497b9
+RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
+RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This patch tries to use trylock_page to mitigate such deadlock condition
+for fix.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-sis630.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/segment.c | 43 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
-index 1e6805b5cef2..a57aa4fe51a4 100644
---- a/drivers/i2c/busses/i2c-sis630.c
-+++ b/drivers/i2c/busses/i2c-sis630.c
-@@ -478,7 +478,7 @@ static int sis630_setup(struct pci_dev *sis630_dev)
- 	if (!request_region(smbus_base + SMB_STS, SIS630_SMB_IOREGION,
- 			    sis630_driver.name)) {
- 		dev_err(&sis630_dev->dev,
--			"I/O Region 0x%04hx-0x%04hx for SMBus already in use.\n",
-+			"I/O Region 0x%04x-0x%04x for SMBus already in use.\n",
- 			smbus_base + SMB_STS,
- 			smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
- 		retval = -EBUSY;
-@@ -528,7 +528,7 @@ static int sis630_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	sis630_adapter.dev.parent = &dev->dev;
- 
- 	snprintf(sis630_adapter.name, sizeof(sis630_adapter.name),
--		 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-+		 "SMBus SIS630 adapter at %04x", smbus_base + SMB_STS);
- 
- 	return i2c_add_adapter(&sis630_adapter);
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 9b79056d705d..e1b1d390b329 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -215,7 +215,8 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
  }
+ 
+ static int __revoke_inmem_pages(struct inode *inode,
+-				struct list_head *head, bool drop, bool recover)
++				struct list_head *head, bool drop, bool recover,
++				bool trylock)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct inmem_pages *cur, *tmp;
+@@ -227,7 +228,16 @@ static int __revoke_inmem_pages(struct inode *inode,
+ 		if (drop)
+ 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
+ 
+-		lock_page(page);
++		if (trylock) {
++			/*
++			 * to avoid deadlock in between page lock and
++			 * inmem_lock.
++			 */
++			if (!trylock_page(page))
++				continue;
++		} else {
++			lock_page(page);
++		}
+ 
+ 		f2fs_wait_on_page_writeback(page, DATA, true, true);
+ 
+@@ -318,13 +328,19 @@ void f2fs_drop_inmem_pages(struct inode *inode)
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+-	mutex_lock(&fi->inmem_lock);
+-	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
+-	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+-	if (!list_empty(&fi->inmem_ilist))
+-		list_del_init(&fi->inmem_ilist);
+-	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+-	mutex_unlock(&fi->inmem_lock);
++	while (!list_empty(&fi->inmem_pages)) {
++		mutex_lock(&fi->inmem_lock);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, true);
++
++		if (list_empty(&fi->inmem_pages)) {
++			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
++			if (!list_empty(&fi->inmem_ilist))
++				list_del_init(&fi->inmem_ilist);
++			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
++		}
++		mutex_unlock(&fi->inmem_lock);
++	}
+ 
+ 	clear_inode_flag(inode, FI_ATOMIC_FILE);
+ 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+@@ -429,12 +445,15 @@ static int __f2fs_commit_inmem_pages(struct inode *inode)
+ 		 * recovery or rewrite & commit last transaction. For other
+ 		 * error number, revoking was done by filesystem itself.
+ 		 */
+-		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
++		err = __revoke_inmem_pages(inode, &revoke_list,
++						false, true, false);
+ 
+ 		/* drop all uncommitted pages */
+-		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
++		__revoke_inmem_pages(inode, &fi->inmem_pages,
++						true, false, false);
+ 	} else {
+-		__revoke_inmem_pages(inode, &revoke_list, false, false);
++		__revoke_inmem_pages(inode, &revoke_list,
++						false, false, false);
+ 	}
+ 
+ 	return err;
 -- 
 2.19.1
 
