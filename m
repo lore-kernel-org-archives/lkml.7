@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 018B2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C440C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A6D2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6374F2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711772;
-	bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
+	s=default; t=1553711776;
+	bh=N2D3tRTCEJe65RgguQNsfrN0M4cgYkispMOAjYJ+6Os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MF9FHrGrZr8vx8ilEOU6Ygqm0rUHoGDl/qlfYfQBxQUgLJJWsIVeRUdmfocgy2OVM
-	 Mq63u+KQHD/CpCICtpIxAVrlpAbgGY0aSwu3syXQ8A8KB5jVhmAMDNOTcmOsriTwpP
-	 cAm7oilqEtMQGB1Tlvi9k9jmK9ztkdEu8rmef/qM=
+	b=Yqvlqx8JD27Va6sscxKgsBZcOKuPu3BSHV/dC2Rb1C9TFpFU8/ppKVRx3abgt7GJ8
+	 8N0s8Y3l0kecjoNf6ahCW29//U4giH6D5RJdFlrfnotGX16ha/L2KZ/2BSTbHX4pcH
+	 Ug8Pn3j8Pa7CdN+R6MlrePJ3noJiIz3AKDHW6JYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404213AbfC0SgL (ORCPT
+        id S2391834AbfC0SgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391550AbfC0SYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:07 -0400
+        id S2389437AbfC0SYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4695A21738;
-        Wed, 27 Mar 2019 18:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40542063F;
+        Wed, 27 Mar 2019 18:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711047;
-        bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
+        s=default; t=1553711044;
+        bh=N2D3tRTCEJe65RgguQNsfrN0M4cgYkispMOAjYJ+6Os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXydE70gpOIx1HVKCNCQyIB2f52UuWRuAGP9JU4dGi26VLlhQg+TNqqoc7hcdvpu2
-         eT/Es7aEbUS7gJumqemL+wgFAjMHx0jjSaItnnScau/2UVwp1SD1KIlmuno7y/oUKR
-         SfdQ5fTLYcNfCmX3XkdimhBIuz4fTCQ3DjaOeBpM=
+        b=prhFooA6Uf10Uime07wk/doNI+OJwZvvbuRaTN6fGCxnknGWL4cvsspa2EFLa2PI6
+         9ahaACZXTQ46zZANMHHYgOim/OBC8sw5ipkQ2fHoeQu2+U+N0kWUSssqNZLt7Vq6Kv
+         SljzLFL4Y+Bh/jWTP9XXIY/qn+zTM4Ki9hPMQ4Ss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 26/63] IB/mlx4: Increase the timeout for CM cache
-Date:   Wed, 27 Mar 2019 14:22:46 -0400
-Message-Id: <20190327182323.18577-26-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 24/63] mmc: omap: fix the maximum timeout setting
+Date:   Wed, 27 Mar 2019 14:22:44 -0400
+Message-Id: <20190327182323.18577-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,103 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
-in a cache.
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
 
-Following the RDMA Connection Manager (CM) protocol, it is clear when
-an entry has to evicted form the cache. But life is not perfect,
-remote peers may die or be rebooted. Hence, it's a timeout to wipe out
-a cache entry, when the PF driver assumes the remote peer has gone.
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
 
-During workloads where a high number of QPs are destroyed concurrently,
-excessive amount of CM DREQ retries has been observed
+Fix by using 0xfd as the maximum timeout.
 
-The problem can be demonstrated in a bare-metal environment, where two
-nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
-have 16 vPorts per physical server.
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
 
-64 processes are associated with each vPort and creates and destroys
-one QP for each of the remote 64 processes. That is, 1024 QPs per
-vPort, all in all 16K QPs. The QPs are created/destroyed using the
-CM.
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
 
-When tearing down these 16K QPs, excessive CM DREQ retries (and
-duplicates) are observed. With some cat/paste/awk wizardry on the
-infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
-nodes:
-
-cm_rx_duplicates:
-      dreq  2102
-cm_rx_msgs:
-      drep  1989
-      dreq  6195
-       rep  3968
-       req  4224
-       rtu  4224
-cm_tx_msgs:
-      drep  4093
-      dreq 27568
-       rep  4224
-       req  3968
-       rtu  3968
-cm_tx_retries:
-      dreq 23469
-
-Note that the active/passive side is equally distributed between the
-two nodes.
-
-Enabling pr_debug in cm.c gives tons of:
-
-[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
-1,sl_cm_id: 0xd393089f} is NULL!
-
-By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
-tear-down phase of the application is reduced from approximately 90 to
-50 seconds. Retries/duplicates are also significantly reduced:
-
-cm_rx_duplicates:
-      dreq  2460
-[]
-cm_tx_retries:
-      dreq  3010
-       req    47
-
-Increasing the timeout further didn't help, as these duplicates and
-retries stems from a too short CMA timeout, which was 20 (~4 seconds)
-on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
-numbers fell down to about 10 for both of them.
-
-Adjustment of the CMA timeout is not part of this commit.
-
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ drivers/mmc/host/omap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
-index 39a488889fc7..5dc920fe1326 100644
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -39,7 +39,7 @@
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index 5bcf4f45f8b4..20d422558fa3 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -921,7 +921,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
+ }
  
- #include "mlx4_ib.h"
- 
--#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
-+#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
- 
- struct id_map_entry {
- 	struct rb_node node;
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 -- 
 2.19.1
 
