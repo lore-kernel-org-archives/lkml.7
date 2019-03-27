@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8A2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A8FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1582082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29202082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hk8sxpii"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="OtVcgFSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733190AbfC0XSG (ORCPT
+        id S1733230AbfC0XSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:18:06 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:59528 "EHLO
+        Wed, 27 Mar 2019 19:18:10 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:59590 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732979AbfC0XSD (ORCPT
+        with ESMTP id S1733164AbfC0XSH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:18:03 -0400
+        Wed, 27 Mar 2019 19:18:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1553728680; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1553728684; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=atf0ej3oIfTr6kclnjZ7r8yX+La9UJl2lE532ffBQWw=;
-        b=hk8sxpiiamN/S/TaYEbNWfBg7PLpnWU4XIvDmSn8IThUVJbYPA1f7QIvl5UQnReRJ1HC5E
-        MQod2XYwsMjplrXbpDfSsgdLjcrR81MzIdTfH/na8wnAIEjd+WI3uljGAIHxCtNeanfIp0
-        Ai02Xh5T7/inKjDzV7lV+KXUV1sFoZw=
+        bh=ka4onLI32P6QSiyTqTOYiXU4C2Q8s1zZFk8NMlE3pt4=;
+        b=OtVcgFShqVChYyu8E9BLzG5mDVbgSnJDYx/rEVlhIEBXAbJYsNUyUvUudSb5E6nzzbfuLQ
+        WTJjdQPZqy+B0c87BxHn9mGIKJAW2j1F2aePZjT59R7oIVgwR0PjFoRnGCz0k9HYeFW5/H
+        b3NYk5xnjqNfGICBr5uIXX54gIo18rI=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,9 +48,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v11 23/27] MIPS: CI20: Reduce system timer and clocksource to 3 MHz
-Date:   Thu, 28 Mar 2019 00:16:27 +0100
-Message-Id: <20190327231631.15708-24-paul@crapouillou.net>
+Subject: [PATCH v11 24/27] MIPS: CI20: defconfig: enable OST driver
+Date:   Thu, 28 Mar 2019 00:16:28 +0100
+Message-Id: <20190327231631.15708-25-paul@crapouillou.net>
 In-Reply-To: <20190327231631.15708-1-paul@crapouillou.net>
 References: <20190327231631.15708-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,29 +58,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default clock (48 MHz) is too fast for the system timer.
+The OST driver provides a clocksource and sched_clock that are much more
+accurate than the default ones.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/configs/ci20_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 4f7b1fa31cf5..30b01cfaaf5a 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -238,3 +238,9 @@
- 		bias-disable;
- 	};
- };
-+
-+&tcu {
-+	/* 3 MHz for the system timer and clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
-+	assigned-clock-rates = <3000000>, <3000000>;
-+};
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index 412800d5d7e0..2f101c7c1749 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -105,6 +105,7 @@ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_JZ4740=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_JZ4780=y
++CONFIG_INGENIC_OST=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_MEMORY=y
+ CONFIG_EXT4_FS=y
 -- 
 2.11.0
 
