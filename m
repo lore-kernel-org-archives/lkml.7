@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E45C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A27EC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AA4206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B592217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714267;
-	bh=xLT6k7kjlNbFvtR7VLCfH2Eq2uRTmbS90p2bYbo4kbM=;
+	s=default; t=1553714271;
+	bh=wiBNtt7w3Hcq7fxB52lMT81otl/nnJhqu4dHJTQJCSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F+3kO4f2XGO1sKuzZBealf+H0o+uCQYjOBmRnPuZliXKVY4DDaZfEXAJsxKOjnrs+
-	 is7Md3jVU2O1QEgO77D0ijCykFacmQI93HdB2TYSvhp3FWdH8GlsUTRbIGmlxDthlk
-	 4iM2mrci49JLf1FvyzZNFCq7+dW9wdCW3QWjepQo=
+	b=ey1bBA1mRNod/vxRYvs0Kgm9k8Ok8WrbzdvnbJG0SNDxLQjrT6M1EIVrEjyCLC5QX
+	 o9soUebAj6yp7PA9NUwZdiTXmcq03atArIX4koVRRJKEQnXoiOhzqjZEkqtIuCmFQC
+	 Nyhp2KXsu/fjFjUrovPAcXvFKD/ispadplAelVYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfC0SIr (ORCPT
+        id S2387942AbfC0SIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388344AbfC0SId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:33 -0400
+        id S2388356AbfC0SIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB772063F;
-        Wed, 27 Mar 2019 18:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF812183F;
+        Wed, 27 Mar 2019 18:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710112;
-        bh=xLT6k7kjlNbFvtR7VLCfH2Eq2uRTmbS90p2bYbo4kbM=;
+        s=default; t=1553710114;
+        bh=wiBNtt7w3Hcq7fxB52lMT81otl/nnJhqu4dHJTQJCSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qt80UJ/WRNp6kknph2wNyh60llhTFq7lsuY9QJUts+02pPu/5oDK4+OFymUCzGZQ7
-         5IYsOmhwFS4q5OY1NUPa6e03VyZQoCgMdA5byHTZYicqEXa4bmcm2vxciuYKbv1bV8
-         DridnQ/z4oxL7u/H3fvSi9lLbjiiXYOZd+xstfko=
+        b=nsxeekbQdryYNBtZp031yBL48SFlDrlP7ncJND6Z9H3dwI/rjIA1NtmtYxLC4KFtZ
+         ctoD3wHISodPlD65RgZUM7VXsOxNHh4mnhdbxxcJEdoIqU6I7X011SZueHAU4DB7xF
+         0LlEyXCCeEs3glkGqqyf3jfkYvIpKEhoc0Q0G7ew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 201/262] selftests/bpf: skip verifier tests for unsupported program types
-Date:   Wed, 27 Mar 2019 14:00:56 -0400
-Message-Id: <20190327180158.10245-201-sashal@kernel.org>
+Cc:     Nicolai Stange <nstange@suse.de>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 202/262] powerpc/64s: Clear on-stack exception marker upon exception return
+Date:   Wed, 27 Mar 2019 14:00:57 -0400
+Message-Id: <20190327180158.10245-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -60,71 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Nicolai Stange <nstange@suse.de>
 
-[ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
+[ Upstream commit eddd0b332304d554ad6243942f87c2fcea98c56b ]
 
-Use recently introduced bpf_probe_prog_type() to skip tests in the
-test_verifier() if bpf_verify_program() fails. The skipped test is
-indicated in the output.
+The ppc64 specific implementation of the reliable stacktracer,
+save_stack_trace_tsk_reliable(), bails out and reports an "unreliable
+trace" whenever it finds an exception frame on the stack. Stack frames
+are classified as exception frames if the STACK_FRAME_REGS_MARKER
+magic, as written by exception prologues, is found at a particular
+location.
 
-Example:
+However, as observed by Joe Lawrence, it is possible in practice that
+non-exception stack frames can alias with prior exception frames and
+thus, that the reliable stacktracer can find a stale
+STACK_FRAME_REGS_MARKER on the stack. It in turn falsely reports an
+unreliable stacktrace and blocks any live patching transition to
+finish. Said condition lasts until the stack frame is
+overwritten/initialized by function call or other means.
 
-...
-679/p bpf_get_stack return R0 within range SKIP (unsupported program
-type 5)
-680/p ld_abs: invalid op 1 OK
-...
-Summary: 863 PASSED, 165 SKIPPED, 3 FAILED
+In principle, we could mitigate this by making the exception frame
+classification condition in save_stack_trace_tsk_reliable() stronger:
+in addition to testing for STACK_FRAME_REGS_MARKER, we could also take
+into account that for all exceptions executing on the kernel stack
+  - their stack frames's backlink pointers always match what is saved
+    in their pt_regs instance's ->gpr[1] slot and that
+  - their exception frame size equals STACK_INT_FRAME_SIZE, a value
+    uncommonly large for non-exception frames.
 
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+However, while these are currently true, relying on them would make
+the reliable stacktrace implementation more sensitive towards future
+changes in the exception entry code. Note that false negatives, i.e.
+not detecting exception frames, would silently break the live patching
+consistency model.
+
+Furthermore, certain other places (diagnostic stacktraces, perf, xmon)
+rely on STACK_FRAME_REGS_MARKER as well.
+
+Make the exception exit code clear the on-stack
+STACK_FRAME_REGS_MARKER for those exceptions running on the "normal"
+kernel stack and returning to kernelspace: because the topmost frame
+is ignored by the reliable stack tracer anyway, returns to userspace
+don't need to take care of clearing the marker.
+
+Furthermore, as I don't have the ability to test this on Book 3E or 32
+bits, limit the change to Book 3S and 64 bits.
+
+Fixes: df78d3f61480 ("powerpc/livepatch: Implement reliable stack tracing for the consistency model")
+Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
+Signed-off-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_verifier.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/entry_64.S | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 2fd90d456892..9a967983abed 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -34,6 +34,7 @@
- #include <linux/if_ether.h>
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index 435927f549c4..a2c168b395d2 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -1002,6 +1002,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	ld	r2,_NIP(r1)
+ 	mtspr	SPRN_SRR0,r2
  
- #include <bpf/bpf.h>
-+#include <bpf/libbpf.h>
- 
- #ifdef HAVE_GENHDR
- # include "autoconf.h"
-@@ -59,6 +60,7 @@
- 
- #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
- static bool unpriv_disabled = false;
-+static int skips;
- 
- struct bpf_test {
- 	const char *descr;
-@@ -15946,6 +15948,11 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 		pflags |= BPF_F_ANY_ALIGNMENT;
- 	fd_prog = bpf_verify_program(prog_type, prog, prog_len, pflags,
- 				     "GPL", 0, bpf_vlog, sizeof(bpf_vlog), 1);
-+	if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
-+		printf("SKIP (unsupported program type %d)\n", prog_type);
-+		skips++;
-+		goto close_fds;
-+	}
- 
- 	expected_ret = unpriv && test->result_unpriv != UNDEF ?
- 		       test->result_unpriv : test->result;
-@@ -16099,7 +16106,7 @@ static bool test_as_unpriv(struct bpf_test *test)
- 
- static int do_test(bool unpriv, unsigned int from, unsigned int to)
- {
--	int i, passes = 0, errors = 0, skips = 0;
-+	int i, passes = 0, errors = 0;
- 
- 	for (i = from; i < to; i++) {
- 		struct bpf_test *test = &tests[i];
++	/*
++	 * Leaving a stale exception_marker on the stack can confuse
++	 * the reliable stack unwinder later on. Clear it.
++	 */
++	li	r2,0
++	std	r2,STACK_FRAME_OVERHEAD-16(r1)
++
+ 	ld	r0,GPR0(r1)
+ 	ld	r2,GPR2(r1)
+ 	ld	r3,GPR3(r1)
 -- 
 2.19.1
 
