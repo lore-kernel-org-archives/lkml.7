@@ -2,36 +2,39 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1270CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A27C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8F42075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9422075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733134AbfC0GTi (ORCPT
+        id S1733183AbfC0GTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:19:38 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:19691 "EHLO
+        Wed, 27 Mar 2019 02:19:40 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:9163 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725730AbfC0GTg (ORCPT
+        with ESMTP id S1733081AbfC0GTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:19:36 -0400
-X-UUID: cbcb8e45ab9c4edf9bb6c7e4b97f26d8-20190327
-X-UUID: cbcb8e45ab9c4edf9bb6c7e4b97f26d8-20190327
+        Wed, 27 Mar 2019 02:19:38 -0400
+X-UUID: 8d37c2de0a1b443a9bb2b8bfc883da93-20190327
+X-UUID: 8d37c2de0a1b443a9bb2b8bfc883da93-20190327
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
         (envelope-from <yongqiang.niu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1310697454; Wed, 27 Mar 2019 14:19:32 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+        with ESMTP id 644361798; Wed, 27 Mar 2019 14:19:32 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
  mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Mar 2019 14:19:30 +0800
+ 15.0.1395.4; Wed, 27 Mar 2019 14:19:31 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 27 Mar 2019 14:19:31 +0800
 Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Mar 2019 14:19:29 +0800
+ Transport; Wed, 27 Mar 2019 14:19:30 +0800
 From:   <yongqiang.niu@mediatek.com>
 To:     <ck.hu@mediatek.com>, <p.zabel@pengutronix.de>,
         <robh+dt@kernel.org>, <matthias.bgg@gmail.com>
@@ -41,14 +44,16 @@ CC:     <airlied@linux.ie>, <mark.rutland@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
         <yt.shen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v2 00/25] add drm support for MT8183
-Date:   Wed, 27 Mar 2019 14:18:56 +0800
-Message-ID: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v2 01/25] arm64: dts: add display nodes for mt8183
+Date:   Wed, 27 Mar 2019 14:18:57 +0800
+Message-ID: <1553667561-25447-2-git-send-email-yongqiang.niu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 5FC5F967ED3C29AE1785445935188A9FAA9EED26B1137B9E5F5605692EB2845B2000:8
 X-MTK:  N
+X-TM-SNTS-SMTP: 768C39259380DE8688E88B6029D11691537F3DC53D956FBE0ACD3BCBC1494D7F2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,64 +61,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This series are based on 5.1-rc1 and provide 25 patches to
-support mediatek SOC MT8183
+This patch add display nodes for mt8183
 
-Changes since v1:
-- fix reviewed issue in v1
-- add dts for mt8183 display nodes
-- adjust display clock control flow in patch 22
-- add vmap support for mediatek drm in patch 23
-- fix page offset issue for mmap function in patch 24
-- enable allow_fb_modifiers for mediatek drm in patch 25
+Change-Id: I9ce7081a2159ec7cc199999285b0390b01de43fe
+Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 107 +++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
 
-Yongqiang Niu (25):
-  arm64: dts: add display nodes for mt8183
-  dt-bindings: mediatek: add binding for mt8183 display
-  drm/mediatek: add mutex mod into ddp private data
-  drm/mediatek: add mutex sof into ddp private data
-  drm/mediatek: split DISP_REG_CONFIG_DSI_SEL setting into another use
-    case
-  drm/mediatek: redefine mtk_ddp_sout_sel
-  drm/mediatek: move rdma sout from mtk_ddp_mout_en into
-    mtk_ddp_sout_sel
-  drm/mediatek: add ddp component CCORR
-  drm/mediatek: add mmsys private data for ddp path config
-  drm/mediatek: add commponent OVL0_2L
-  drm/mediatek: add component OVL1_2L
-  drm/mediatek: add component DITHER
-  drm/mediatek: add gmc_bits for ovl private data
-  drm/medaitek: add layer_nr for ovl private data
-  drm/mediatek: add function to background color input select for
-    ovl/ovl_2l direct link
-  drm/mediatek: add ddp write register common api
-  drm/mediatek: add background color input select function for
-    ovl/ovl_2l
-  drm/mediatek: add RDMA fifo size error handle
-  drm/mediatek: add function mtk_ddp_comp_get_type
-  drm/mediatek: add ovl0/ovl0_2l usecase
-  drm/mediatek: add support for mediatek SOC MT8183
-  drm/mediatek: adjust ddp clock control flow
-  drm/mediatek: add vmap support for mediatek drm
-  drm/mediatek: respect page offset for PRIME mmap calls
-  drm/mediatek: enable allow_fb_modifiers for mediatek drm
-
- .../bindings/display/mediatek/mediatek,disp.txt    |  37 +-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi           | 107 +++++
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  81 +++-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  21 +-
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  68 +++-
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 444 ++++++++++++++++-----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        |  87 ++++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  28 ++
- drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  61 +++
- drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
- drivers/gpu/drm/mediatek/mtk_drm_gem.c             |  14 +-
- drivers/gpu/drm/mediatek/mtk_drm_gem.h             |   1 +
- drivers/gpu/drm/mediatek/mtk_drm_plane.c           |  15 +-
- 14 files changed, 838 insertions(+), 141 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 75c4881..f219dbd 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -16,6 +16,14 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		ovl0 = &ovl0;
++		ovl_2l0 = &ovl0_2l;
++		ovl_2l1 = &ovl1_2l;
++		rdma0 = &rdma0;
++		rdma1 = &rdma1;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -317,6 +325,105 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		display_components: dispsys@14000000 {
++			compatible = "mediatek,mt8183-display";
++			reg = <0 0x14000000 0 0x1000>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++		};
++
++		ovl0: ovl@14008000 {
++			compatible = "mediatek,mt8183-disp-ovl";
++			reg = <0 0x14008000 0 0x1000>;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL0>;
++			iommus = <&iommu M4U_PORT_DISP_OVL0>;
++			mediatek,larb = <&larb0>;
++		};
++
++		ovl0_2l: ovl@14009000 {
++			compatible = "mediatek,mt8183-disp-ovl-2l";
++			reg = <0 0x14009000 0 0x1000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL0_2L>;
++			iommus = <&iommu M4U_PORT_DISP_2L_OVL0_LARB0>;
++			mediatek,larb = <&larb0>;
++		};
++
++		ovl1_2l: ovl@1400a000 {
++			compatible = "mediatek,mt8183-disp-ovl-2l";
++			reg = <0 0x1400a000 0 0x1000>;
++			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_OVL1_2L>;
++			iommus = <&iommu M4U_PORT_DISP_2L_OVL1_LARB0>;
++			mediatek,larb = <&larb0>;
++		};
++
++		rdma0: rdma@1400b000 {
++			compatible = "mediatek,mt8183-disp-rdma";
++			reg = <0 0x1400b000 0 0x1000>;
++			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
++			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
++			mediatek,larb = <&larb0>;
++		};
++
++		rdma1: rdma@1400c000 {
++			compatible = "mediatek,mt8183-disp-rdma1";
++			reg = <0 0x1400c000 0 0x1000>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
++			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
++			mediatek,larb = <&larb0>;
++		};
++
++		color0: color@1400e000 {
++			compatible = "mediatek,mt8183-disp-color",
++				     "mediatek,mt8173-disp-color";
++			reg = <0 0x1400e000 0 0x1000>;
++			interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_COLOR0>;
++		};
++
++		ccorr0: ccorr@1400f000 {
++			compatible = "mediatek,mt8183-disp-ccorr";
++			reg = <0 0x1400f000 0 0x1000>;
++			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_CCORR0>;
++		};
++
++		aal0: aal@14010000 {
++			compatible = "mediatek,mt8183-disp-aal",
++				     "mediatek,mt8173-disp-aal";
++			reg = <0 0x14010000 0 0x1000>;
++			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_AAL0>;
++		};
++
++		gamma0: gamma@14011000 {
++			compatible = "mediatek,mt8183-disp-gamma",
++				     "mediatek,mt8173-disp-gamma";
++			reg = <0 0x14011000 0 0x1000>;
++			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_GAMMA0>;
++		};
++
++		dither0: dither@14012000 {
++			compatible = "mediatek,mt8183-disp-dither";
++			reg = <0 0x14012000 0 0x1000>;
++			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			clocks = <&mmsys CLK_MM_DISP_DITHER0>;
++		};
++
+ 		smi_common: smi@14019000 {
+ 			compatible = "mediatek,mt8183-smi-common", "syscon";
+ 			reg = <0 0x14019000 0 0x1000>;
 -- 
 1.8.1.1.dirty
 
