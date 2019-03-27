@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9519620651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0705920449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711254;
-	bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
+	s=default; t=1553711260;
+	bh=c3XWfLwZP22Jpout+dc3uFSGqpSJb2NxuqbbgaIuvXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9GujrMkdumwhsHA/p1Lyuru3QL8WeEAS+zjXp+v70I2+q597cHy0L6cwIHozCkAk
-	 FGmBu9qve8ELFTtiROa3Lqu3buiATMDWBQQyLrmoS9vSLYs8zYj4Oh9f2jealq81em
-	 0r2KItT7mv6oTmKFF2Q7cTl6YXzYf2IJncrpbDSU=
+	b=Nuyffvp8VicjrAthrtXfPzR7C2NiWUHUFsPVNb/8CsqOyAOSoxWzlCBmdKIt41JG9
+	 m5d2mA62/ZmZ4Wq+0vDU3I5jdlVlfu3BFAlUjXANkLwXzj/R87DEcUUaDPJPvukiGl
+	 L+3O4klDyK97C7gAzWCPsZKCMDGiJtpI+dnrLGZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391704AbfC0S0a (ORCPT
+        id S2391820AbfC0S1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45822 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391675AbfC0S0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:12 -0400
+        id S2391699AbfC0S0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D29F20651;
-        Wed, 27 Mar 2019 18:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FBC220449;
+        Wed, 27 Mar 2019 18:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711172;
-        bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
+        s=default; t=1553711189;
+        bh=c3XWfLwZP22Jpout+dc3uFSGqpSJb2NxuqbbgaIuvXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFm4eWAB2UpNVsdWB8xE6953u+PLwkE3jgtY41C3tp17UnwY7VU80QXOogUZ5TnAF
-         /1Nz1JlAPBbUlmZbBnUc/QqsdDvbYJqn/zuvFdgn9Jc3NCWAK2VrfhmTDWb5MRvhBb
-         dz0RArrRJdTpNXPOtfQZ7xb0YxWsJY+eXkLq03e0=
+        b=0xxPc37UeQ7T698naH8gknnDvv0aXZA8GJzX2FRyHkHTeFAEtg7ei36AOwoyUUhuU
+         xweVT8qykYJp0bVZr0On28r/yLSiXHq58LknWB65qfPIDTyMVC0Kf7U5vqzK3QfRzT
+         acBaFGV9d4YNtcsdjvzvJYqEp3MQHCiLpcUgMZi4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 27/41] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Wed, 27 Mar 2019 14:25:04 -0400
-Message-Id: <20190327182518.19394-27-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 38/41] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
+Date:   Wed, 27 Mar 2019 14:25:15 -0400
+Message-Id: <20190327182518.19394-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -61,52 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Zumeng Chen <zumeng.chen@gmail.com>
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
+failed instead of meaningless goto out to avoid the following memory leak
+reports(Only the last one listed):
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+unreferenced object 0xc28a9a00 (size 512):
+  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<6624adab>] kmemleak_alloc+0x40/0x74
+    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
+    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
+    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
+    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
+    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
+    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
+    [<7e1d425a>] process_one_work+0x284/0x42c
+    [<55f9432e>] worker_thread+0x2fc/0x48c
+    [<abb582c6>] kthread+0x148/0x160
+    [<63144b13>] ret_from_fork+0x14/0x2c
+    [< (null)>] (null)
+    [<1f6e7715>] 0xffffffff
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
-
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index ea2bd6208a2f..9eae191728d2 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -425,6 +425,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index 575c8f6d4009..16b69b026f8f 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -1110,8 +1110,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
+ 		goto out;
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
-+
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
+ 	ret = wl12xx_fetch_firmware(wl, plt);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		kfree(wl->fw_status);
++		kfree(wl->raw_fw_status);
++		kfree(wl->tx_res_if);
++	}
+ 
+ out:
+ 	return ret;
 -- 
 2.19.1
 
