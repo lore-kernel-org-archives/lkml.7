@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E00FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5422082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4102F21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710890;
-	bh=zRyu5tVHzZ4oXZu1Pnm9Bga9xA3dembngA7lxWvIrDs=;
+	s=default; t=1553710895;
+	bh=slLbllFuVhZcN5ojRIQlFSAirIPkdKoRiETWE52JJ00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ce41KsynEWV9heCzsG9n3ajlieSchxbHzqLHsQyWZr+PhHgHQjOH6jL780xFnMVLk
-	 /FdAcyQGbJWkPx85QsKa/L3eeEcpPSYiqLVWr3tyt//S9Yo6EZ8iRDGSd/brIQARQp
-	 Q/6Xraa3FtPPxPdmNeFFM3qGwQWUodss2S/Ny5qM=
+	b=Xj69TF95vDoYAAbX0eVOjZHGBHBDftgEOOjT9aFWYL9in+n+et5k9178UpD9PEyo2
+	 N+lu4duET7pxqsVvbjpGmX9f/vvH5fvFLfvHlJcejpr5ihFEgdraFVzPdtt3iJCh2+
+	 nMefbcGOq++euRK3X7Zjw0UpGgKdx8hwO0JavKuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391179AbfC0SV3 (ORCPT
+        id S2391200AbfC0SVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391145AbfC0SV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:26 -0400
+        id S2390309AbfC0SV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5376E2082F;
-        Wed, 27 Mar 2019 18:21:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C112087C;
+        Wed, 27 Mar 2019 18:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710885;
-        bh=zRyu5tVHzZ4oXZu1Pnm9Bga9xA3dembngA7lxWvIrDs=;
+        s=default; t=1553710886;
+        bh=slLbllFuVhZcN5ojRIQlFSAirIPkdKoRiETWE52JJ00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ns5WuiHSBPjxBYP4oYrKXFcUyuYGavEs5QyZj7bnfm7tA5Tprnu3AQf3vMr9cnCby
-         cfwkQ3Xl5KgtfW2wd4W8xLqEXz6a3BEYOjAUs+Jfxflb2uArEzCgiOV2v5bZAHbqWc
-         66evLuerVQmbKM7IJBjm00KwNixMEDAUiRZ267ZE=
+        b=sUzHQ0IlAYg+uDsxW9kO0Cot+acJDCOdRu7mpRAvYkPmiAVoJYnqzbQkGzyJEWtq/
+         7tHfv/jMYfgRGFNlMsAKuO31zTxWQpxS/12LuuBJVDytJ7oHvP9hVlZ52GaAKdV0S4
+         SuA9eibuC6LZyTBxb+L2z5W3Jtw/jaGkYUVea1lk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 26/87] usb: chipidea: Grab the (legacy) USB PHY by phandle first
-Date:   Wed, 27 Mar 2019 14:19:39 -0400
-Message-Id: <20190327182040.17444-26-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 27/87] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 27 Mar 2019 14:19:40 -0400
+Message-Id: <20190327182040.17444-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -59,57 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-According to the chipidea driver bindings, the USB PHY is specified via
-the "phys" phandle node. However, this only takes effect for USB PHYs
-that use the common PHY framework. For legacy USB PHYs, a simple lookup
-based on the USB PHY type is done instead.
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-This does not play out well when more than one USB PHY is registered,
-since the first registered PHY matching the type will always be
-returned regardless of what the driver was bound to.
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-Fix this by looking up the PHY based on the "phys" phandle node.
-Although generic PHYs are rather matched by their "phys-name" and not
-the "phys" phandle directly, there is no helper for similar lookup on
-legacy PHYs and it's probably not worth the effort to add it.
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-When no legacy USB PHY is found by phandle, fallback to grabbing any
-registered USB2 PHY. This ensures backward compatibility if some users
-were actually relying on this mechanism.
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Here is the contexts for the three functions so far:
+
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
+
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 64c6af2c8559..e96e3a5808b3 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -901,8 +901,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
-+		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
-+							  0);
- 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
-+
-+		/* Fallback to grabbing any registered USB2 PHY */
-+		if (IS_ERR(ci->usb_phy) &&
-+		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
-+			ci->usb_phy = devm_usb_get_phy(dev->parent,
-+						       USB_PHY_TYPE_USB2);
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 27a6d3c6cb7c..67f6f134abc4 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -219,7 +219,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
+ 
+@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
+ 
+@@ -1095,7 +1095,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
+ 
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
