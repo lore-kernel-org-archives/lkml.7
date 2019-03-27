@@ -4,59 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D4DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3746C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29525217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869BE21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710282;
-	bh=K7yYPLFx3amT6R6Xjhn3baqyYjcaDBPufusH8XHJqtk=;
+	s=default; t=1553710285;
+	bh=WdmQgRIbsX1+YzmGj+BKXgVr+VMblmgBINPQyxdkqKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Epb8suj6MbEk4WeoC296+yVgIqfFwoZ9c+9+r+7flzQpfsE0ixn25BGLMFCve62zs
-	 fyVZ5sLfwzkraHguSemJ8zk6k6MJWlOzo5Kvw5/yaosH4jvBIXcXMgYZLDaIUW0YGZ
-	 MIBvDL2uricqhCXKadhDtKGyrugWabgyYCgCsbGs=
+	b=pBaDhgyiBylRtxtud29E8ixz8Xqg1CcbMFDiYl/SSv1mcQmS88S8W+fuOEMf4PNNS
+	 ISObj8AgzOVMmJ+S2IF9c+Uv3shdIo9mKGHQAa901ofXrWLkCL12Yxg02YBZTO5nxU
+	 DpSA3DW5Tnl+ATH/+gxSLYCvlGCdejSRwAyPu5AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389007AbfC0SLV (ORCPT
+        id S2388323AbfC0SLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387810AbfC0SLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:17 -0400
+        id S2388996AbfC0SLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB472177E;
-        Wed, 27 Mar 2019 18:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C8B7217F5;
+        Wed, 27 Mar 2019 18:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710277;
-        bh=K7yYPLFx3amT6R6Xjhn3baqyYjcaDBPufusH8XHJqtk=;
+        s=default; t=1553710278;
+        bh=WdmQgRIbsX1+YzmGj+BKXgVr+VMblmgBINPQyxdkqKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVHdg0rVq8eNju3G6S7KkSfeUe/MBwAnCfm6Sc3ctN/nqju+cAVtImfiOFFmnOle0
-         RsPT0WGNQ3GL2gMQj6Q3AkIo7U7mvwC6V5PnORKsfXd9jzWPko8R2ahpvKaB3a9M7b
-         TPJ3cyx1EmPLYNbV4sTt/NpELlEhuYCF8l8ESWDU=
+        b=GgaXlprqZeI1L+9dTxxeHXWpJ3RIULCbaq0ZQ/c1ZOcow7pI2mS+Z3oABUuiP11Ag
+         SQVFuMGDrUeD9eyc8X3dqxTVKxYDDiJav+W+tCRxtdZOfVd/x1dXhepye/lRZPRwHJ
+         41DlnV5I0NjE3A90QqeQf4DgN8R0NsGq+SzslkFA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Ingo Molnar <mingo@elte.hu>,
-        Joel Fernandes <joelaf@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Qian Cai <cai@lca.pw>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 028/192] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
-Date:   Wed, 27 Mar 2019 14:07:40 -0400
-Message-Id: <20190327181025.13507-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 029/192] mm/slab.c: kmemleak no scan alien caches
+Date:   Wed, 27 Mar 2019 14:07:41 -0400
+Message-Id: <20190327181025.13507-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -68,62 +62,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
+[ Upstream commit 92d1d07daad65c300c7d0b68bbef8867e9895d54 ]
 
-One of the vmalloc stress test case triggers the kernel BUG():
+Kmemleak throws endless warnings during boot due to in
+__alloc_alien_cache(),
 
-  <snip>
-  [60.562151] ------------[ cut here ]------------
-  [60.562154] kernel BUG at mm/vmalloc.c:512!
-  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
-  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
-  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
-  <snip>
+    alc = kmalloc_node(memsize, gfp, node);
+    init_arraycache(&alc->ac, entries, batch);
+    kmemleak_no_scan(ac);
 
-it can happen due to big align request resulting in overflowing of
-calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
+Kmemleak does not track the array cache (alc->ac) but the alien cache
+(alc) instead, so let it track the latter by lifting kmemleak_no_scan()
+out of init_arraycache().
 
-Fix it by checking if calculated address is within vstart/vend range.
+There is another place that calls init_arraycache(), but
+alloc_kmem_cache_cpus() uses the percpu allocation where will never be
+considered as a leak.
 
-Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+  kmemleak: Found object by alias at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   lookup_object+0x84/0xac
+   find_and_get_object+0x84/0xe4
+   kmemleak_no_scan+0x74/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+  kmemleak: Object 0xffff8007b9aa7e00 (size 256):
+  kmemleak:   comm "swapper/0", pid 1, jiffies 4294697137
+  kmemleak:   min_count = 1
+  kmemleak:   count = 0
+  kmemleak:   flags = 0x1
+  kmemleak:   checksum = 0
+  kmemleak:   backtrace:
+       kmemleak_alloc+0x84/0xb8
+       kmem_cache_alloc_node_trace+0x31c/0x3a0
+       __kmalloc_node+0x58/0x78
+       setup_kmem_cache_node+0x26c/0x35c
+       __do_tune_cpucache+0x250/0x2d4
+       do_tune_cpucache+0x4c/0xe4
+       enable_cpucache+0xc8/0x110
+       setup_cpu_cache+0x40/0x1b8
+       __kmem_cache_create+0x240/0x358
+       create_cache+0xc0/0x198
+       kmem_cache_create_usercopy+0x158/0x20c
+       kmem_cache_create+0x50/0x64
+       fsnotify_init+0x58/0x6c
+       do_one_initcall+0x194/0x388
+       kernel_init_freeable+0x668/0x688
+       kernel_init+0x18/0x124
+  kmemleak: Not scanning unknown object at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   kmemleak_no_scan+0x90/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+
+Link: http://lkml.kernel.org/r/20190129184518.39808-1-cai@lca.pw
+Fixes: 1fe00d50a9e8 ("slab: factor out initialization of array cache")
+Signed-off-by: Qian Cai <cai@lca.pw>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Thomas Garnier <thgarnie@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmalloc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ mm/slab.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 91a789a46b12..a46ec261a44e 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -498,7 +498,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
- 	}
+diff --git a/mm/slab.c b/mm/slab.c
+index fad6839e8eab..49007b825683 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -563,14 +563,6 @@ static void start_cpu_timer(int cpu)
  
- found:
--	if (addr + size > vend)
+ static void init_arraycache(struct array_cache *ac, int limit, int batch)
+ {
+-	/*
+-	 * The array_cache structures contain pointers to free object.
+-	 * However, when such objects are allocated or transferred to another
+-	 * cache the pointers are not cleared and they could be counted as
+-	 * valid references during a kmemleak scan. Therefore, kmemleak must
+-	 * not scan such objects.
+-	 */
+-	kmemleak_no_scan(ac);
+ 	if (ac) {
+ 		ac->avail = 0;
+ 		ac->limit = limit;
+@@ -586,6 +578,14 @@ static struct array_cache *alloc_arraycache(int node, int entries,
+ 	struct array_cache *ac = NULL;
+ 
+ 	ac = kmalloc_node(memsize, gfp, node);
 +	/*
-+	 * Check also calculated address against the vstart,
-+	 * because it can be 0 because of big align request.
++	 * The array_cache structures contain pointers to free object.
++	 * However, when such objects are allocated or transferred to another
++	 * cache the pointers are not cleared and they could be counted as
++	 * valid references during a kmemleak scan. Therefore, kmemleak must
++	 * not scan such objects.
 +	 */
-+	if (addr + size > vend || addr < vstart)
- 		goto overflow;
++	kmemleak_no_scan(ac);
+ 	init_arraycache(ac, entries, batchcount);
+ 	return ac;
+ }
+@@ -680,6 +680,7 @@ static struct alien_cache *__alloc_alien_cache(int node, int entries,
  
- 	va->va_start = addr;
+ 	alc = kmalloc_node(memsize, gfp, node);
+ 	if (alc) {
++		kmemleak_no_scan(alc);
+ 		init_arraycache(&alc->ac, entries, batch);
+ 		spin_lock_init(&alc->lock);
+ 	}
 -- 
 2.19.1
 
