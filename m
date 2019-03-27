@@ -2,204 +2,143 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1060BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8E8205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10682075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712868;
-	bh=TE4JuFnVZu2VK7ygOrOsl0YzYGMMsv1/pqEL2aJyCbs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rV/B47kPQWaEKjyRc2fZG7zMA7GvNzugS0ynFS4YNcYC1fMuYos+S5LlTWLZTRGkK
-	 QfFJS5F08htlleD7e2YnLoHH5aTnN6y6dWvdY+2PzS0L+e/FLp1w7UbN3na4o7IW8E
-	 0W9jCGpWzeiu/x34QCj2lIknLaL7hh5ibL1aAiAA=
+	s=default; t=1553712871;
+	bh=E3Q5HtLpNPfx2zwWqZOBRuYTBgj1lyQvUCG6mQLDC0w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zbydjOf0cGWHP0jscGC0601c55lsGDaMMggF9uvXWbdnPzqEEz80AtsDxvdFEhUUl
+	 zFZXI6qDnNuuB/e1azv2ciNbkkQdrBchrAA5FDmdaMY7A18SlQALDO+VcuTQ5GvwV1
+	 XXYiuCEnZZushig/Xn6zekz9oyKatOB8ZDtgJyRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390353AbfC0Sy1 (ORCPT
+        id S2390168AbfC0SRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:54:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39316 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390170AbfC0SRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9ED1AAD73;
-        Wed, 27 Mar 2019 18:17:02 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 19:17:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, cl@linux.com,
-        willy@infradead.org, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] kmemleak: survive in a low-memory situation
-Message-ID: <20190327181700.GO11927@dhcp22.suse.cz>
-References: <20190327005948.24263-1-cai@lca.pw>
- <20190327084432.GA11927@dhcp22.suse.cz>
- <20190327172955.GB17247@arrakis.emea.arm.com>
+        Wed, 27 Mar 2019 14:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389330AbfC0SPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:53 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4406520449;
+        Wed, 27 Mar 2019 18:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710552;
+        bh=E3Q5HtLpNPfx2zwWqZOBRuYTBgj1lyQvUCG6mQLDC0w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0Oxl6oRrprVXY9/0gnFdHR5dpZ982s8PbsfPcxAFhCJvll7ng1YcQIH0jl7KfEZq+
+         Y/zYHiYoBAmotcb19QiAfTYMNwYML0dXcIVM+WAcEo9s5odh+XqHLJ+vhR+x5NxLgf
+         0sNi+M+2NggDCj4vmAlVX7d/DqRq4AdjXAkxYv9I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 173/192] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Wed, 27 Mar 2019 14:10:05 -0400
+Message-Id: <20190327181025.13507-173-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327172955.GB17247@arrakis.emea.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27-03-19 17:29:57, Catalin Marinas wrote:
-[...]
-> Quick attempt below and it needs some more testing (pretty random pick
-> of the EMERGENCY_POOL_SIZE value). Also, with __GFP_NOFAIL removed, are
-> the other flags safe or we should trim them further?
+From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
-I would be still careful about __GFP_NORETRY. I pressume that the
-primary purpose is to prevent from the OOM killer but this makes the
-allocation failure much more likely. So if anything __GFP_RETRY_MAYFAIL
-would suite better for that purpose. But I am not really sure that this
-is worth bothering.
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-> ---------------8<-------------------------------
-> >From dc4194539f8191bb754901cea74c86e7960886f8 Mon Sep 17 00:00:00 2001
-> From: Catalin Marinas <catalin.marinas@arm.com>
-> Date: Wed, 27 Mar 2019 17:20:57 +0000
-> Subject: [PATCH] mm: kmemleak: Add an emergency allocation pool for kmemleak
->  objects
-> 
-> This patch adds an emergency pool for struct kmemleak_object in case the
-> normal kmem_cache_alloc() fails under the gfp constraints passed by the
-> slab allocation caller. The patch also removes __GFP_NOFAIL which does
-> not play well with other gfp flags (introduced by commit d9570ee3bd1d,
-> "kmemleak: allow to coexist with fault injection").
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-Thank you! This is definitely a step into the right direction. Maybe the
-pool allocation logic will need some tuning - e.g. does it make sense to
-allocate into the pool from sleepable allocations - or is it sufficient
-to refill on free. Something for the real workloads to tell, I guess.
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  mm/kmemleak.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 57 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> index 6c318f5ac234..366a680cff7c 100644
-> --- a/mm/kmemleak.c
-> +++ b/mm/kmemleak.c
-> @@ -127,7 +127,7 @@
->  /* GFP bitmask for kmemleak internal allocations */
->  #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
->  				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
-> -				 __GFP_NOWARN | __GFP_NOFAIL)
-> +				 __GFP_NOWARN)
->  
->  /* scanning area inside a memory block */
->  struct kmemleak_scan_area {
-> @@ -191,11 +191,16 @@ struct kmemleak_object {
->  #define HEX_ASCII		1
->  /* max number of lines to be printed */
->  #define HEX_MAX_LINES		2
-> +/* minimum emergency pool size */
-> +#define EMERGENCY_POOL_SIZE	(NR_CPUS * 4)
->  
->  /* the list of all allocated objects */
->  static LIST_HEAD(object_list);
->  /* the list of gray-colored objects (see color_gray comment below) */
->  static LIST_HEAD(gray_list);
-> +/* emergency pool allocation */
-> +static LIST_HEAD(emergency_list);
-> +static int emergency_pool_size;
->  /* search tree for object boundaries */
->  static struct rb_root object_tree_root = RB_ROOT;
->  /* rw_lock protecting the access to object_list and object_tree_root */
-> @@ -467,6 +472,43 @@ static int get_object(struct kmemleak_object *object)
->  	return atomic_inc_not_zero(&object->use_count);
->  }
->  
-> +/*
-> + * Emergency pool allocation and freeing. kmemleak_lock must not be held.
-> + */
-> +static struct kmemleak_object *emergency_alloc(void)
-> +{
-> +	unsigned long flags;
-> +	struct kmemleak_object *object;
-> +
-> +	write_lock_irqsave(&kmemleak_lock, flags);
-> +	object = list_first_entry_or_null(&emergency_list, typeof(*object), object_list);
-> +	if (object) {
-> +		list_del(&object->object_list);
-> +		emergency_pool_size--;
-> +	}
-> +	write_unlock_irqrestore(&kmemleak_lock, flags);
-> +
-> +	return object;
-> +}
-> +
-> +/*
-> + * Return true if object added to the emergency pool, false otherwise.
-> + */
-> +static bool emergency_free(struct kmemleak_object *object)
-> +{
-> +	unsigned long flags;
-> +
-> +	if (emergency_pool_size >= EMERGENCY_POOL_SIZE)
-> +		return false;
-> +
-> +	write_lock_irqsave(&kmemleak_lock, flags);
-> +	list_add(&object->object_list, &emergency_list);
-> +	emergency_pool_size++;
-> +	write_unlock_irqrestore(&kmemleak_lock, flags);
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * RCU callback to free a kmemleak_object.
->   */
-> @@ -485,7 +527,8 @@ static void free_object_rcu(struct rcu_head *rcu)
->  		hlist_del(&area->node);
->  		kmem_cache_free(scan_area_cache, area);
->  	}
-> -	kmem_cache_free(object_cache, object);
-> +	if (!emergency_free(object))
-> +		kmem_cache_free(object_cache, object);
->  }
->  
->  /*
-> @@ -577,6 +620,8 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
->  	unsigned long untagged_ptr;
->  
->  	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
-> +	if (!object)
-> +		object = emergency_alloc();
->  	if (!object) {
->  		pr_warn("Cannot allocate a kmemleak_object structure\n");
->  		kmemleak_disable();
-> @@ -2127,6 +2172,16 @@ void __init kmemleak_init(void)
->  			kmemleak_warning = 0;
->  		}
->  	}
-> +
-> +	/* populate the emergency allocation pool */
-> +	while (emergency_pool_size < EMERGENCY_POOL_SIZE) {
-> +		struct kmemleak_object *object;
-> +
-> +		object = kmem_cache_alloc(object_cache, GFP_KERNEL);
-> +		if (!object)
-> +			break;
-> +		emergency_free(object);
-> +	}
->  }
->  
->  /*
+Tested on s5pv210-galaxys (Samsung i9000 phone).
 
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
+
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 29daecf8de7d..350afaa29a62 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1293,13 +1293,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
+ }
+ 
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1326,11 +1329,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1339,11 +1342,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
-Michal Hocko
-SUSE Labs
+2.19.1
+
