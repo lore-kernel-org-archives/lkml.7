@@ -2,93 +2,150 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C87C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EA2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 834D9205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2F62082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="soKNkdjP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gA1Vo8EU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfC0QVF (ORCPT
+        id S1727872AbfC0QVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:21:05 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39728 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfC0QVE (ORCPT
+        Wed, 27 Mar 2019 12:21:36 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35848 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfC0QVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:21:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b65so3547680plb.6;
-        Wed, 27 Mar 2019 09:21:04 -0700 (PDT)
+        Wed, 27 Mar 2019 12:21:35 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h18so733653wml.1;
+        Wed, 27 Mar 2019 09:21:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U/9jRmdo4t+mthWLkD+v8SrxVZzn2m3THYoN0qUy4SQ=;
-        b=soKNkdjPxPxylTavqSlN5O1IWCvLbC9+4Gi/SSXt8216tn5g7STQV1+tqG9iWI3f/j
-         8l/vNCEe2Y6OvAliTq4k+7flxk8xb8YUHTbg08jVA5FNwE0gwqGrRAm2+PsRYaq7kDy6
-         KB1snQ6EE+uP1pdZXUicxVhbK/WH0pMr6VdijCgI9iqwtXlXfAGJ9Bs6cN/JNLS+wR6Y
-         V/aU6qir6Vk+N5DmIX6D7dr7/5Tz4olaOU7DGO/v2XN0KhHevwqx18fyD52mgZPVPGZW
-         7RfrK/Df10vQ8XbrXsHvVJOxtCN8HUCGEuLOi/UGCnyRdiMSmg3ik54ktr5DlDFNGkmA
-         etqA==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fzU5auTccU5PwKa7tj270YAaaEZPigGaLDrCmjoL81o=;
+        b=gA1Vo8EUPWIFOTv7uSf6beeW90S4avQL64/mC57JNnz0FEsDweK0DWXMMUb++zUg29
+         ZplakFcnTAqHw9/A6RkTQVrxaZAZ5B4F1ZZluJeqV+hC3Y/kyRe1gj1tr4uZOBB298B+
+         U/wMtnVAAjZEXeUHMjSEftkoEcm/R0wP6TP/EOlTlGD+9wAqXv8j4qU/Iu74aSvzDhET
+         oDC3v//De2oEuPL5Olzj3mK5t0CCC517OFf0/+fYS0gkXlXzo+j0OFDagmZttcilI0OE
+         kRGAoPD+1eadF4VEEJmkCzfkKDuMNDjW9rSc2xR3H0aZ8H1/+vbES3EHuh3RRSNIpuNK
+         FqeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U/9jRmdo4t+mthWLkD+v8SrxVZzn2m3THYoN0qUy4SQ=;
-        b=aURnD1sT4jojE+8sqzTQHYIYAGW8wo5zVWxNNlk6H8BsnW4GRaOXD5joka9nI3/7VA
-         a2vcH3kIDiOckvRlwBM8niSF6Ypjy/0zxnlXtXeu5CjJ/IChOBd31oeaJm09mj0QsDpe
-         EB2DB61YgdLd9mlzSqJce5/E07LNmYuMyd50j/yvDslL2CPH0BcDFoCd4GjX5XS5qVz0
-         gyjogiBwZjV7eipS8Lo8PVZn6IGbuRNEllAXuCmffJ4Q4v2eYxhfYgNNmNS99StevCJ6
-         magy4G0FwNw3Sdfbey1epcpz+CzGcamPdgAJXPRnqk6t8rUE5VsOIgTsRzcfAwC2fJsl
-         43TA==
-X-Gm-Message-State: APjAAAWzNH8B7mtOAmXbmUn52waMr4FjLT+Z8rQn8JRgYHyHdE47nY4W
-        zpmmwEIB0YSt/ra60TI3Orm3l41a
-X-Google-Smtp-Source: APXvYqzuqplRhQBpmb7LQIO1w+pO7cINVYBTYrwDZ98dsoX2I35O+kh0OprJh/WEBwfWP+GaZJYq2g==
-X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr38596312plk.282.1553703664042;
-        Wed, 27 Mar 2019 09:21:04 -0700 (PDT)
-Received: from CentOS76.localdomain.localdomain ([49.205.222.128])
-        by smtp.gmail.com with ESMTPSA id h19sm40306448pfd.130.2019.03.27.09.21.01
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fzU5auTccU5PwKa7tj270YAaaEZPigGaLDrCmjoL81o=;
+        b=uORhQxhGJH/6xqbfBr8zt8Dvr7p32slLduA2f9ECUUQEslhs5boQFI2Mj2Ahxh+k1C
+         ajvrPlcGgsxP2TF7/lWnMmn/PV6qKU1HMiAVVYi7AKavQA+KPssv/0PbL2LT9uY4Cm9/
+         d10vrKdVo8l/podqZ3GvTTumdETSkXfjFeGSLt8s0OgtiYpZVgo4/iVNSkSLQhTUDvJu
+         96OJcEndvaIRx0y9+5HkllP0NVRHjRMqVH0vPSyv6qXUMyAPAnlpz3EOem75wbwUGHQC
+         KzSIa7wxOg9C3KcVqjhFjPKKdwyBVeSyx2aK93sFGpNNFy1bvRlMRLQRWeNyXP8cmwz4
+         8fhw==
+X-Gm-Message-State: APjAAAWbA6iiqcHtpX8gv7ew/ov6Fqw7tpbiYq1ieXFpVLYmP7fF5Huu
+        bExmh/btSGAvwASsgI+mhs6xpNdP
+X-Google-Smtp-Source: APXvYqxJelIjTt2itPoNmy+JM8CnUQW35SOWQ+w/ft2dtMdAqB8ZDHRbftvF0PkoY+ibnbaQGz7ieA==
+X-Received: by 2002:a1c:81cc:: with SMTP id c195mr5646253wmd.61.1553703692702;
+        Wed, 27 Mar 2019 09:21:32 -0700 (PDT)
+Received: from [10.67.50.115] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id a22sm218765wmj.44.2019.03.27.09.21.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 09:21:03 -0700 (PDT)
-From:   jagdsh.linux@gmail.com
-To:     ysato@users.sourceforge.jp, dalias@libc.org, paul.burton@mips.com,
-        arnd@arndb.de
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Subject: [PATCH] arch:sh:mach-sh03/rtc.c : Remove duplicate header
-Date:   Thu, 28 Mar 2019 02:50:42 +0530
-Message-Id: <1553721642-38293-1-git-send-email-jagdsh.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 27 Mar 2019 09:21:31 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: mdio-bcm-unimac: remove redundant !timeout
+ check
+To:     Colin King <colin.king@canonical.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190327161520.23064-1-colin.king@canonical.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <f0cc34fe-c692-d414-dc1e-9d03c8da8dc2@gmail.com>
+Date:   Wed, 27 Mar 2019 09:21:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190327161520.23064-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+On 3/27/19 9:15 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The check for zero timeout is always true at the end of the proceeding
+> while loop; the only other exit path in the loop is if the unimac MDIO
+> is not busy.  Remove the redundant zero timeout check and always
+> return -ETIMEDOUT on this timeout return path.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Remove duplicate header which is included twice.
-
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
----
- arch/sh/boards/mach-sh03/rtc.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/sh/boards/mach-sh03/rtc.c b/arch/sh/boards/mach-sh03/rtc.c
-index 8b23ed7..165e2cc 100644
---- a/arch/sh/boards/mach-sh03/rtc.c
-+++ b/arch/sh/boards/mach-sh03/rtc.c
-@@ -14,7 +14,6 @@
- #include <linux/rtc.h>
- #include <linux/spinlock.h>
- #include <linux/io.h>
--#include <linux/rtc.h>
- #include <linux/platform_device.h>
- 
- #define RTC_BASE	0xb0000000
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-1.8.3.1
-
+Florian
