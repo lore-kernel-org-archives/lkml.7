@@ -2,51 +2,52 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BIGNUM_EMAILS,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1304FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F70BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DC22063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46D42063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710163;
-	bh=Lql4fw7Z23xHhyhqm+ANyNtw4O98bH+Edjzt+UaE+iE=;
+	s=default; t=1553710175;
+	bh=TU11IEFQmzAcat+wyr6E/gYvnDZhZQZoN/16brW+tII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ipMsbavTfOsb+zzPjf752LULsMeQaPN3ISsN4pS9N0fdqwtXAX/dtWkg6i7I6zaDB
-	 u94SXhKARAxtG6lf9GVQx75L1PjtCBzAOb8+x/l0Co8AsWnT0sOcN8vh10bsLurnO8
-	 WUDZKuo8dkEirqibWDHJaLQy/DhTs/DfKN0ZUC4o=
+	b=J2ECos6nr1kZfEYcuCgNbZ0ATodxFl5wfBnFJTKJh4Kv9+s7tDHhVXIxkJhh0A/QU
+	 b76YlMFhGcJyFg4GOsJ6U8gepx8jXtwe9xTe3X/EVVkUZOr1FkVHmwyrygn/J3doQT
+	 mM2fdOfeRXrdcs5cK5Aa3pvYluCBjBDZaDkCLvDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388558AbfC0SJW (ORCPT
+        id S2388599AbfC0SJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388521AbfC0SJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:16 -0400
+        id S2388574AbfC0SJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC897217F5;
-        Wed, 27 Mar 2019 18:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533392177E;
+        Wed, 27 Mar 2019 18:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710155;
-        bh=Lql4fw7Z23xHhyhqm+ANyNtw4O98bH+Edjzt+UaE+iE=;
+        s=default; t=1553710168;
+        bh=TU11IEFQmzAcat+wyr6E/gYvnDZhZQZoN/16brW+tII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6v+Da6IcMx1LLYQ9EQbR2UMirHOZjE7FpwlQMuNmHHU6+VG7M/01/97L9nFmTdGO
-         J++IWmVw533Cgv8UOxSEpr8d0EnPY8IAwo5igLtAOAce5kkll0ztVk2Fb5ne2WGwgz
-         SoqLLwLQ/aolJ9BlsiRo/z5qw15IcEz7m75vXtiY=
+        b=fTr8sK2nOlX1jbgfTuR4FRfbFErlU8dOSzH+nUwDNTtl012rfV9LU0xAo87fPb1ca
+         LImfz9beXEE9FivUhKP8eoYli82tMIRR3KYjc6Xr84XU1ddjvHo1qx+ku9KpIBMqKO
+         7o97x/B1iz5Wx2+BJxgEyuqOcyd5/JNelENDmiuI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.0 223/262] f2fs: fix to initialize variable to avoid UBSAN/smatch warning
-Date:   Wed, 27 Mar 2019 14:01:18 -0400
-Message-Id: <20190327180158.10245-223-sashal@kernel.org>
+Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
+        Joey Zheng <yu.zheng@hxt-semitech.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 231/262] dmaengine: qcom_hidma: assign channel cookie correctly
+Date:   Wed, 27 Mar 2019 14:01:26 -0400
+Message-Id: <20190327180158.10245-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,99 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
 
-[ Upstream commit f9aa52a8cbe09fe25244d59c29660bbe635df613 ]
+[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
 
-As Dan Carpenter as below:
+When dma_cookie_complete() is called in hidma_process_completed(),
+dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
+hidma_txn_is_success() will be called to use channel cookie
+mchan->last_success to do additional DMA status check. Current code
+assigns mchan->last_success after dma_cookie_complete(). This causes
+a race condition of dma_cookie_status() returns DMA_COMPLETE before
+mchan->last_success is assigned correctly. The race will cause
+hidma_tx_status() return DMA_ERROR but the transaction is actually a
+success. Moreover, in async_tx case, it will cause a timeout panic
+in async_tx_quiesce().
 
-The patch df634f444ee9: "f2fs: use rb_*_cached friends" from Oct 4,
-2018, leads to the following static checker warning:
+ Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
+ transaction
+ ...
+ Call trace:
+ [<ffff000008089994>] dump_backtrace+0x0/0x1f4
+ [<ffff000008089bac>] show_stack+0x24/0x2c
+ [<ffff00000891e198>] dump_stack+0x84/0xa8
+ [<ffff0000080da544>] panic+0x12c/0x29c
+ [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
+ [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
+ [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
+ [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
+ [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
+ [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
+ [<ffff000008736538>] md_thread+0x108/0x168
+ [<ffff0000080fb1cc>] kthread+0x10c/0x138
+ [<ffff000008084d34>] ret_from_fork+0x10/0x18
 
-	fs/f2fs/extent_cache.c:606 f2fs_update_extent_tree_range()
-	error: uninitialized symbol 'leftmost'.
-
-And also Eric Biggers, and Kyungtae Kim reported, there is an UBSAN
-warning described as below:
-
-We report a bug in linux-4.20.2: "UBSAN: Undefined behaviour in
-fs/f2fs/extent_cache.c"
-
-kernel config: https://kt0755.github.io/etc/config_v4.20_stable
-repro: https://kt0755.github.io/etc/repro.4a3e7.c (f2fs is mounted on
-/mnt/f2fs/)
-
-This arose in f2fs_update_extent_tree_range (fs/f2fs/extent_cache.c:605).
-It seems that, for some reason, its last argument became "24"
-although that was supposed to be bool type.
-
-=========================================
-UBSAN: Undefined behaviour in fs/f2fs/extent_cache.c:605:4
-load of value 24 is not a valid value for type '_Bool'
-CPU: 0 PID: 6774 Comm: syz-executor5 Not tainted 4.20.2 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xb1/0x118 lib/dump_stack.c:113
- ubsan_epilogue+0x12/0x94 lib/ubsan.c:159
- __ubsan_handle_load_invalid_value+0x17a/0x1be lib/ubsan.c:457
- f2fs_update_extent_tree_range+0x1d4a/0x1d50 fs/f2fs/extent_cache.c:605
- f2fs_update_extent_cache+0x2b6/0x350 fs/f2fs/extent_cache.c:804
- f2fs_update_data_blkaddr+0x61/0x70 fs/f2fs/data.c:656
- f2fs_outplace_write_data+0x1d6/0x4b0 fs/f2fs/segment.c:3140
- f2fs_convert_inline_page+0x86d/0x2060 fs/f2fs/inline.c:163
- f2fs_convert_inline_inode+0x6b5/0xad0 fs/f2fs/inline.c:208
- f2fs_preallocate_blocks+0x78b/0xb00 fs/f2fs/data.c:982
- f2fs_file_write_iter+0x31b/0xf40 fs/f2fs/file.c:3062
- call_write_iter include/linux/fs.h:1857 [inline]
- new_sync_write fs/read_write.c:474 [inline]
- __vfs_write+0x538/0x6e0 fs/read_write.c:487
- vfs_write+0x1b3/0x520 fs/read_write.c:549
- ksys_write+0xde/0x1c0 fs/read_write.c:598
- __do_sys_write fs/read_write.c:610 [inline]
- __se_sys_write fs/read_write.c:607 [inline]
- __x64_sys_write+0x7e/0xc0 fs/read_write.c:607
- do_syscall_64+0xbe/0x4f0 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-Code: e8 8c 9f 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 0f 83 9b 6b fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1ea15edc68 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f1ea15ee6cc RCX: 00000000004497b9
-RDX: 0000000000001000 RSI: 0000000020000140 RDI: 0000000000000013
-RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 000000000000bb50 R14: 00000000006f4bf0 R15: 00007f1ea15ee700
-=========================================
-
-As I checked, this uninitialized variable won't cause extent cache
-corruption, but in order to avoid such kind of warning of both UBSAN
-and smatch, fix to initialize related variable.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: Eric Biggers <ebiggers@google.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/extent_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/qcom/hidma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-index 1cb0fcc67d2d..caf77fe8ac07 100644
---- a/fs/f2fs/extent_cache.c
-+++ b/fs/f2fs/extent_cache.c
-@@ -506,7 +506,7 @@ static void f2fs_update_extent_tree_range(struct inode *inode,
- 	unsigned int end = fofs + len;
- 	unsigned int pos = (unsigned int)fofs;
- 	bool updated = false;
--	bool leftmost;
-+	bool leftmost = false;
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 43d4b00b8138..ea219bca116d 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -138,24 +138,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
+ 		desc = &mdesc->desc;
+ 		last_cookie = desc->cookie;
  
- 	if (!et)
- 		return;
++		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
++
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
++		if (llstat == DMA_COMPLETE) {
++			mchan->last_success = last_cookie;
++			result.result = DMA_TRANS_NOERROR;
++		} else {
++			result.result = DMA_TRANS_ABORTED;
++		}
++
+ 		dma_cookie_complete(desc);
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+-		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
+ 		dmaengine_desc_get_callback(desc, &cb);
+ 
+ 		dma_run_dependencies(desc);
+ 
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
+ 		list_move(&mdesc->node, &mchan->free);
+-
+-		if (llstat == DMA_COMPLETE) {
+-			mchan->last_success = last_cookie;
+-			result.result = DMA_TRANS_NOERROR;
+-		} else
+-			result.result = DMA_TRANS_ABORTED;
+-
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+ 		dmaengine_desc_callback_invoke(&cb, &result);
 -- 
 2.19.1
 
