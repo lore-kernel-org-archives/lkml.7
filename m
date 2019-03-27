@@ -2,143 +2,120 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E7EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6956C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A03920651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54C2206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X98tPKAj"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pYiORcp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfC0Rs2 (ORCPT
+        id S1728489AbfC0Rsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:48:28 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8577 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbfC0Rs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:48:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9bb7640000>; Wed, 27 Mar 2019 10:48:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 27 Mar 2019 10:48:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 27 Mar 2019 10:48:26 -0700
-Received: from [10.8.0.10] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 17:48:25 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     Keith Busch <kbusch@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>, <mhocko@suse.com>,
-        <mgorman@techsingularity.net>, <riel@surriel.com>,
-        <hannes@cmpxchg.org>, <akpm@linux-foundation.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
-Date:   Wed, 27 Mar 2019 10:48:24 -0700
-X-Mailer: MailMate (1.12.4r5622)
-Message-ID: <33FCCD53-4A4D-4115-9AC3-6C35A300169F@nvidia.com>
-In-Reply-To: <de044f93-c4e8-8b8b-9372-e15ca74e7696@intel.com>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
- <20190324222040.GE31194@localhost.localdomain>
- <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
- <20190327003541.GE4328@localhost.localdomain>
- <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
- <20190327130822.GD7389@localhost.localdomain>
- <2C32F713-2156-4B58-B5C1-789C1821EBB9@nvidia.com>
- <de044f93-c4e8-8b8b-9372-e15ca74e7696@intel.com>
+        Wed, 27 Mar 2019 13:48:42 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47750 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727405AbfC0Rsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:48:41 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26C101EC023E;
+        Wed, 27 Mar 2019 18:48:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553708920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=g2YdIQv/hQoChlCSzcNe/bLUtkhiY13PPEnV3MCGJeA=;
+        b=pYiORcp/pNttOn7hSNxJ8iglDuquP0pRijP2OkKdyYONVPoLV8xaZF4FVTLEHV9lyc3IXK
+        vsP3OWo7Pj/2SB5PESDpMpb301OMDvIFuIGzSxnVwmWH3bmIjNouiWyugtud8bQ7w4MCcI
+        kmqaoouzPitE/SJxLk94szUCiUyRC3k=
+Date:   Wed, 27 Mar 2019 18:48:41 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: WARNING in arch_install_hw_breakpoint
+Message-ID: <20190327174841.GI32571@zn.tnic>
+References: <000000000000639f6a0584d11b82@google.com>
+ <20190327132805.GG32571@zn.tnic>
+ <CACT4Y+bHd938t-w++LBO-yHMWP1cXpn+U=AVL+8mMfTBYk86=g@mail.gmail.com>
+ <20190327151725.GH32571@zn.tnic>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_DA82EAD0-1665-4A6E-B1C4-471399DCFEE3_=";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553708900; bh=3uC4woD28mUbj6hka+LT/3mMwTXJ9j6nWGLKp/z7ZUA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=X98tPKAj4hWpv3TDBg8/pHxYNSMGqMi0/QaE8gplerWMfZSBIc5ZnYiexlpuTHm0o
-         Gh8qlMZOGrJxuIQZ3EGawHq1OGSdGasO+R/gupi7qVvTIhjIl+p9dfY89xDP/sY+4c
-         xGVQs5HisiJNKQN5WonEb10vr7v7TAKurUWE/CMSjtrZh7cY69nvcxrOfqAXURsXbx
-         XZI0IzLMkN7sGzSybiFTccCD1qpfY2xYl0nHJ4vDv3GBYcg6ER3xLdFpKs8QeqkvaL
-         PllnVqu5PE39ToT7MgShFrCpP1u9SxCgny8QpPf7jWiUCpCG3+CFGnNK+v9nzfOV6M
-         ZoZToMd+wPGKA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190327151725.GH32571@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_DA82EAD0-1665-4A6E-B1C4-471399DCFEE3_=
-Content-Type: text/plain; markup=markdown
+On Wed, Mar 27, 2019 at 04:17:25PM +0100, Borislav Petkov wrote:
+> On Wed, Mar 27, 2019 at 02:45:24PM +0100, Dmitry Vyukov wrote:
+> > And run this program:
+> > https://syzkaller.appspot.com/text?tag=ReproC&x=15439f27200000
+> 
+> Yap, that worked in my guest, after segfaulting a lot first:
+> 
+> [  101.600512][ T7333] Code: Bad RIP value.
+> [  101.606103][ T7337] repro[7337]: segfault at 155555585 ip 0000000155555585 sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
+> [  101.606248][ T7338] repro[7338]: segfault at 25555554e ip 000000025555554e sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
+> [  101.608498][ T7337] Code: Bad RIP value.
+> [  101.610442][ T7338] Code: Bad RIP value.
+> [  101.611417][ T7341] repro[7341]: segfault at 0 ip 0000000000000000 sp 00000000200002c8 error 14
+> [  101.613342][ T7341] Code: Bad RIP value.
+> [  101.613798][ T7345] repro[7345]: segfault at 0 ip 0000000000000000 sp 00000000200002c8 error 14
+> [  101.614292][ T7342] repro[7342]: segfault at 45555554e ip 000000045555554e sp 00007ffff7f98f10 error 14 in repro[555555554000+1000]
+> [  101.615809][ T7345] Code: Bad RIP value.
+> [  101.616777][ T7348] repro[7348]: segfault at 155555585 ip 0000000155555585 sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
+> [  101.616802][ T7348] Code: Bad RIP value.
+> [  101.617733][ T7342] Code: Bad RIP value.
+> [  105.321676][T11024] ------------[ cut here ]------------
+> [  105.324183][T11024] Can't find any breakpoint slot
+> [  105.324229][T11024] WARNING: CPU: 0 PID: 11024 at arch/x86/kernel/hw_breakpoint.c:121 arch_install_hw_breakpoint+0x2d1/0x3a0
 
-On 27 Mar 2019, at 10:05, Dave Hansen wrote:
+Ok, after adding some debug output, it looks like this (newlines mine):
 
-> On 3/27/19 10:00 AM, Zi Yan wrote:
->> I ask this because I observe that migrating a list of pages can
->> achieve higher throughput compared to migrating individual page.
->> For example, migrating 512 4KB pages can achieve ~750MB/s
->> throughput, whereas migrating one 4KB page might only achieve
->> ~40MB/s throughput. The experiments were done on a two-socket
->> machine with two Xeon E5-2650 v3 @ 2.30GHz across the QPI link.
->
-> What kind of migration?
->
-> If you're talking about doing sys_migrate_pages() one page at a time,
-> that's a world away from doing something inside of the kernel one page
-> at a time.
+[  200.921625][ T8029]    repro-8029    0d..4 200923254us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
 
-For 40MB/s vs 750MB/s, they were using sys_migrate_pages(). Sorry about
-the confusion there. As I measure only the migrate_pages() in the kernel,
-the throughput becomes:
-migrating 4KB page: 0.312GB/s vs migrating 512 4KB pages: 0.854GB/s.
-They are still >2x difference.
+[  200.922507][ T8029]    repro-8029    0d..4 200923257us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+[  200.923397][ T8029]    repro-8029    0d..4 200923259us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
 
-Furthermore, if we only consider the migrate_page_copy() in mm/migrate.c,
-which only calls copy_highpage() and migrate_page_states(), the throughput
-becomes:
-migrating 4KB page: 1.385GB/s vs migrating 512 4KB pages: 1.983GB/s.
-The gap is smaller, but migrating 512 4KB pages still achieves 40% more
-throughput.
+[  200.924294][ T8029]    repro-8029    0d..4 200923262us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+[  200.925175][ T8029]    repro-8029    0d..4 200923264us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
+[  200.926054][ T8029]    repro-8029    0d..4 200923266us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
 
-Do these numbers make sense to you?
+[  200.926933][ T8029]    repro-8029    0d..4 200923270us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+[  200.927816][ T8029]    repro-8029    0d..4 200923271us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
+[  200.928695][ T8029]    repro-8029    0d..4 200923273us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
+[  200.929573][ T8029]    repro-8029    0d..4 200923275us : arch_install_hw_breakpoint: i: 3, slot: ffff88806991ed00
 
---
-Best Regards,
-Yan Zi
+which basically shows how this thread adds 4 breakpoints and hits the
+warn on on the 5th.
 
---=_MailMate_DA82EAD0-1665-4A6E-B1C4-471399DCFEE3_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
+Now, that code I've seen only once or twice so I don't have a very smart
+guess but it looks to me like arch_install_hw_breakpoint() or something
+scheduling the events above that, should check HBP_NUM and not schedule
+more than 4 hw breakpoints. Or..?
 
------BEGIN PGP SIGNATURE-----
+Frederic, I know you know this code... :-)
 
-iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAlybt2gPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqK2AIQAIRQiK8keuvId46x28T0mxfxbYEnY9JeawL+
-A3wFyX7orcvpKhU34luIwqi1cidMS64yzUj6QImSMvHTbUJS94BAXUFXE3iEhvTo
-tJlB8OvVsB0y6rItgU0sNelNw0cjI5zl4/Z0950ljRGrFAB5eLSpadsXSkQRzF/n
-dUrea31T/Lw7nK1DQY0Zd3U7hIPXdB3N9And5zIm9L3SEC7dgIULYgfm6x09Q7fr
-9ylKEFlXne3RPaBXbGkfBnS7GkqlLzpLMRfzIFvV1aVqOVS75IR6hYg/Jli+X4UL
-5svPHFnaxnTEE74fkEIKpVYiZDot3wc1UjGc/EQ7TTC5ZOOtp9bZROoEGQKgraAs
-aRGB4yeLKac7LHD2sa0YI6mUtTl7mXscsSH1j7DM8LnX+svcZCk4lPpsW21DMYtA
-s8lg13dBs2Y4oIV5MC85McxTfJj2w39c7kpgUxkZH49hJnZA94YSETS3SvdYZr2j
-cT3uDMX6Kt/zQkWjcTZjiUp38ZNhg1NZtvrODf6SeVVXR+KSPxPp4rCd99MKDfT7
-AiTlHYsE2dHa2JTp8CMZUw61RVpjjvy97C/uNiWTGquzKu69yvyD8ooCgeXtIi3b
-AYCxDjlEITvVG+CSfZBwj4eDdeBRcar20dQNss1ZYxNy2bSFwiDOH7HLx/NqOg4y
-0Cm+F72l
-=Zvlc
------END PGP SIGNATURE-----
+-- 
+Regards/Gruss,
+    Boris.
 
---=_MailMate_DA82EAD0-1665-4A6E-B1C4-471399DCFEE3_=--
+Good mailing practices for 400: avoid top-posting and trim the reply.
