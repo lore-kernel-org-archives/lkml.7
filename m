@@ -6,47 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7701C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF98B2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45A92087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710786;
-	bh=kyuPe6LLAT2VYnpQrQJqfBLWMDmmenAa1jSpaUXaeeQ=;
+	s=default; t=1553710792;
+	bh=5ajKLTLFNg5YW71NpkUMr/xOEwbOtIt9ISp001EicTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpHo/5l2VfIPkwP/Wg9r54bxJrERVm5Zb5wqoZuGW6YJVr4yvkFf2yEvOxZCkzJlZ
-	 3yCH5EvUMuiCcKfPbkWPQm3L29XPrxVJ9KCKPbuGH0KK5moILQJ8TgZyaC+lCr3oP6
-	 On2MHN1uMsIajLcYsHjZuUwtf+BeNX9RSTeSV/1o=
+	b=r2sN2qeG+Qr4fHX7tO615dthmXyVzOjdeTTuliFwCoWIPHFCXGN6kOXD2JHBK4Dlw
+	 UT7MVB+HNHUkJwMJzKpLi5D5U0S1SvWBTQ3bDx1ZR4ZxM0hu3aY7QRje9diAagt9St
+	 pSoYlwM4mm+OikHIDbPPXVK0zvmmkbgLCkYAjLd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390758AbfC0STp (ORCPT
+        id S2390789AbfC0STv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:19:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390743AbfC0STj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:39 -0400
+        id S2390238AbfC0STs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF4EB2063F;
-        Wed, 27 Mar 2019 18:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36B1520449;
+        Wed, 27 Mar 2019 18:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710778;
-        bh=kyuPe6LLAT2VYnpQrQJqfBLWMDmmenAa1jSpaUXaeeQ=;
+        s=default; t=1553710787;
+        bh=5ajKLTLFNg5YW71NpkUMr/xOEwbOtIt9ISp001EicTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePI+v8VKASxIV7hZOA9RgcUt4LSA9vF8XTBaop78/3oGo/Dne2Bil7vOp9OrUtn72
-         4LULnPq5lpZpquzz6ywXyaY9RyFTV6dsG4c73pFM5pWSMszruhvaPOPqW+Eq1PclQ7
-         M9ukY71NfQLlBOYpKXq2QX9JZog5hhDW8rpzF/Wg=
+        b=LsEkKZpGA2z8pccXKR+7F56f9QnI6McShQbmm3QaGKsxfKDy/oma+jSfTz7n27Edb
+         DiRdjc/vmtmk56s7p133eD3pmklQPe9oth5WWLpNCxGjcEI4t3j5R5fTULqqf3gs0S
+         KVjUZZ31JfE0DrEoRlU0bde7pVcGHlt5jUaIG1zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 097/123] tty: increase the default flip buffer limit to 2*640K
-Date:   Wed, 27 Mar 2019 14:16:01 -0400
-Message-Id: <20190327181628.15899-97-sashal@kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 100/123] media: mt9m111: set initial frame size other than 0x0
+Date:   Wed, 27 Mar 2019 14:16:04 -0400
+Message-Id: <20190327181628.15899-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,51 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Akinobu Mita <akinobu.mita@gmail.com>
 
-[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
+[ Upstream commit 29856308137de1c21eda89411695f4fc6e9780ff ]
 
-We increase the default limit for buffer memory allocation by a factor of
-10 to 640K to prevent data loss when using fast serial interfaces.
+This driver sets initial frame width and height to 0x0, which is invalid.
+So set it to selection rectangle bounds instead.
 
-For example when using RS485 without flow-control at speeds of 1Mbit/s
-an upwards we've run into problems such as applications being too slow
-to read out this buffer (on embedded devices based on imx53 or imx6).
+This is detected by v4l2-compliance detected.
 
-If you want to write transmitted data to a slow SD card and thus have
-realtime requirements, this limit can become a problem.
-
-That shouldn't be the case and 640K buffers fix such problems for us.
-
-This value is a maximum limit for allocation only. It has no effect
-on systems that currently run fine. When transmission is slow enough
-applications and hardware can keep up and increasing this limit
-doesn't change anything.
-
-It only _allows_ to allocate more than 2*64K in cases we currently fail to
-allocate memory despite having some.
-
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Cc: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/mt9m111.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 217114227f8d..cf11882d2602 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -25,7 +25,7 @@
-  * Byte threshold to limit memory consumption for flip buffers.
-  * The actual memory limit is > 2x this amount.
-  */
--#define TTYB_DEFAULT_MEM_LIMIT	65536
-+#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
- 
- /*
-  * We default to dicing tty buffer allocations to this many characters
+diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
+index 99b992e46702..5b10f74fcc32 100644
+--- a/drivers/media/i2c/mt9m111.c
++++ b/drivers/media/i2c/mt9m111.c
+@@ -974,6 +974,8 @@ static int mt9m111_probe(struct i2c_client *client,
+ 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
+ 	mt9m111->rect.width	= MT9M111_MAX_WIDTH;
+ 	mt9m111->rect.height	= MT9M111_MAX_HEIGHT;
++	mt9m111->width		= mt9m111->rect.width;
++	mt9m111->height		= mt9m111->rect.height;
+ 	mt9m111->fmt		= &mt9m111_colour_fmts[0];
+ 	mt9m111->lastpage	= -1;
+ 	mutex_init(&mt9m111->power_lock);
 -- 
 2.19.1
 
