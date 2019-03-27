@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70845C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44850C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FECC2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1586C2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710041;
-	bh=/qgWYDLeMFWwL0C5FYRRMoxmwYrH5ceDB/8PKmQ5AHg=;
+	s=default; t=1553710044;
+	bh=xCL6z6qBX8ib2Z0Foj+e6nTdaaCAXy004wAiHVt12g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7oVAk1mQg1bQAYjIDpk8lYUHP44AYu8aLjVQw/faUyIvGluTZYJSBwvCwakBsaYJ
-	 Gp5PH0m0GFF+jv4M4Z66WfHSSQkpsqtyeYOScEjsqMqAbL3ekSme22GJAeOc20d563
-	 NElIdMsqQWoUBvyx/MyLBZJtCRRF5MTo7Wym+dAs=
+	b=BTULw4Ruo/0KKMem5A/Z283S3sXlUFsxFt+BxvYkGGRt9FlkFgXNanL+zWG8gkhY/
+	 uGsgh3v0K2gNM7coqVepiO40da+AtlF8lrP+lvLQywhzMoluQRPpFAOzMgpk+aF0A7
+	 swBHGxt/AywIVpvj1VnlNl/oAmpV58vK6K7h0Izk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388149AbfC0SHT (ORCPT
+        id S2388162AbfC0SHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388110AbfC0SHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:14 -0400
+        id S2388147AbfC0SHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D44021734;
-        Wed, 27 Mar 2019 18:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E36B52075C;
+        Wed, 27 Mar 2019 18:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710033;
-        bh=/qgWYDLeMFWwL0C5FYRRMoxmwYrH5ceDB/8PKmQ5AHg=;
+        s=default; t=1553710038;
+        bh=xCL6z6qBX8ib2Z0Foj+e6nTdaaCAXy004wAiHVt12g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ws3OEMljyowhB7vJEX87gXE8lpd/dxiTe95bLvLthdPBmK5gZPjspKd3i9zL9tj5p
-         bnH0u4udfwfGR+xf7+Q1e9Y7w04d8ZAB8HRTDQMcne9PmJHRy6/8WzexZfiVfCxuM8
-         FdkavRiA+43nr9/KIaU7orYGPCx/F7lDuoIbONTY=
+        b=SfUCWnYzYQvhNKbdQT7HiUUEFmAwCSPIhXoLSd8FSx5ILHwCex/quRUQzK6t9t2qh
+         R47yhBnECcn0F9S96sC2fbOFClA8NoVFKTfqEb2ugArNMNfp2sMBWaTjwZirnGrM0e
+         6yIAO4V7uMFwb4vnblkxepEVjetxrq4ZTJQnYAcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 165/262] net: marvell: mvpp2: fix stuck in-band SGMII negotiation
-Date:   Wed, 27 Mar 2019 14:00:20 -0400
-Message-Id: <20190327180158.10245-165-sashal@kernel.org>
+Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 168/262] fbdev: fbmem: fix memory access if logo is bigger than the screen
+Date:   Wed, 27 Mar 2019 14:00:23 -0400
+Message-Id: <20190327180158.10245-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,82 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 
-[ Upstream commit 316734fdcf70900a83065360cff11a5826919067 ]
+[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
 
-It appears that the mvpp22 can get stuck with SGMII negotiation.  The
-symptoms are that in-band negotiation never completes and the partner
-(eg, PHY) never reports SGMII link up, or if it supports negotiation
-bypass, goes into negotiation bypass mode (which will happen when the
-PHY sees that the MAC is alive but gets no response.)
+There is no clipping on the x or y axis for logos larger that the framebuffer
+size. Therefore: a logo bigger than screen size leads to invalid memory access:
 
-Triggering the PHY end of the link to re-negotiate results in the
-bypass bit clearing on the PHY, and then re-setting - indicating that
-the problem is at the mvpp22 GMAC end.
+[    1.254664] Backtrace:
+[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
+[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
+[    1.254774]  r4:c6a3e800
+[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
+[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
+[    1.254852]  r4:c6808c00
+[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
+[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
+[    1.254928]  r4:c6808c00
+[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
+[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
 
-Asserting the GMAC reset and de-asserting it resolves the issue.
-Arrange to assert the GMAC reset at probe time, and deassert it only
-after we have configured the GMAC for the appropriate mode.  This
-resolves the issue.
+So prevent displaying a logo bigger than screen size and avoid invalid
+memory access.
 
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/core/fbmem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 16066c2d5b3a..931beac3359d 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1380,13 +1380,9 @@ static void mvpp2_port_reset(struct mvpp2_port *port)
- 	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
- 		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
- 
--	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
--		    ~MVPP2_GMAC_PORT_RESET_MASK;
-+	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
-+	      MVPP2_GMAC_PORT_RESET_MASK;
- 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
--
--	while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
--	       MVPP2_GMAC_PORT_RESET_MASK)
--		continue;
- }
- 
- /* Change maximum receive size of the port */
-@@ -4543,12 +4539,15 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
- 			      const struct phylink_link_state *state)
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index cb43a2258c51..4721491e6c8c 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -431,6 +431,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
  {
- 	u32 an, ctrl0, ctrl2, ctrl4;
-+	u32 old_ctrl2;
+ 	unsigned int x;
  
- 	an = readl(port->base + MVPP2_GMAC_AUTONEG_CONFIG);
- 	ctrl0 = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
- 	ctrl2 = readl(port->base + MVPP2_GMAC_CTRL_2_REG);
- 	ctrl4 = readl(port->base + MVPP22_GMAC_CTRL_4_REG);
- 
-+	old_ctrl2 = ctrl2;
++	if (image->width > info->var.xres || image->height > info->var.yres)
++		return;
 +
- 	/* Force link down */
- 	an &= ~MVPP2_GMAC_FORCE_LINK_PASS;
- 	an |= MVPP2_GMAC_FORCE_LINK_DOWN;
-@@ -4621,6 +4620,12 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
- 	writel(ctrl2, port->base + MVPP2_GMAC_CTRL_2_REG);
- 	writel(ctrl4, port->base + MVPP22_GMAC_CTRL_4_REG);
- 	writel(an, port->base + MVPP2_GMAC_AUTONEG_CONFIG);
-+
-+	if (old_ctrl2 & MVPP2_GMAC_PORT_RESET_MASK) {
-+		while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
-+		       MVPP2_GMAC_PORT_RESET_MASK)
-+			continue;
-+	}
- }
- 
- static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
+ 	if (rotate == FB_ROTATE_UR) {
+ 		for (x = 0;
+ 		     x < num && image->dx + image->width <= info->var.xres;
 -- 
 2.19.1
 
