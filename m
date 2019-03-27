@@ -3,207 +3,417 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47FBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ECFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884EC2146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PmXBc/r5"
+	by mail.kernel.org (Postfix) with ESMTP id C1DDA2146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553694336;
+	bh=F77sOGDxccbuL3lpnw26bQDuOP3CqPxvACw5USGlqBo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1PBq0N3o5YP2RsFfRDLTkKSowkhAseoVOL8o0b3i7WI4Eopqx77EPjBb8bU9pQh9J
+	 uRFNSKwKxBGWULobSyRE8sxO2npBrqHjpYPKCdUJzB1TKKqGVZqAghIS1k3xPmO4Bv
+	 kAN4sP0B8gUMlIRp5zHvfQ+g63XshiVwVSQb2/hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfC0Nn2 (ORCPT
+        id S1729224AbfC0Npf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:43:28 -0400
-Received: from mail-eopbgr70081.outbound.protection.outlook.com ([40.107.7.81]:58341
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728324AbfC0Nn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UA1vj5bKWGJq3ekz/gKYY8pCRCdIzsvnkGT0nkaq4tc=;
- b=PmXBc/r5htt6AHaYNzxPI87nnucWXF5VbwyVcHcADmaUNFfoow02B/tqaoywGgL6FZ+iI9+fWq367UYvz03QegP0Up0iGJHmjEY3oYJo7UqccJkkZohOTJk7SoMqErwg1lMKMXFH3froW4SAy0zTRoMlIleTSj/juoosE1/cmd4=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1SPR8PMB24.eurprd04.prod.outlook.com (10.166.44.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Wed, 27 Mar 2019 13:43:17 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::80a9:797d:58c0:1295]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::80a9:797d:58c0:1295%3]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
- 13:43:17 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Steven Price <steven.price@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        Ying Zhang <ying.zhang22455@nxp.com>
-CC:     "upstream-release@linux.nxdi.nxp.com" 
-        <upstream-release@linux.nxdi.nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND] i2c: imx: defer probing on dma channel request
-Thread-Topic: [RESEND] i2c: imx: defer probing on dma channel request
-Thread-Index: AQHU4x+p/rwFVSG6cE2tH9IQ48eyYqYclZ+AgALqMQA=
-Date:   Wed, 27 Mar 2019 13:43:17 +0000
-Message-ID: <1f3a370e-1c47-2fcb-6816-2b136713c68d@nxp.com>
-References: <20190325153016.12626-1-laurentiu.tudor@nxp.com>
- <873b5aeb-e20a-de6b-515e-bc8fcc263452@arm.com>
-In-Reply-To: <873b5aeb-e20a-de6b-515e-bc8fcc263452@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b64a14f0-b357-458d-8693-08d6b2ba2b26
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1SPR8PMB24;
-x-ms-traffictypediagnostic: VI1SPR8PMB24:
-x-microsoft-antispam-prvs: <VI1SPR8PMB2490C13954D782B935AA1BEC580@VI1SPR8PMB24.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(136003)(39860400002)(376002)(51234002)(189003)(199004)(54906003)(229853002)(110136005)(31686004)(8676002)(99286004)(6636002)(8936002)(71190400001)(71200400001)(31696002)(316002)(478600001)(6486002)(6436002)(14454004)(2501003)(97736004)(45080400002)(68736007)(53936002)(6512007)(44832011)(105586002)(186003)(305945005)(102836004)(25786009)(6116002)(4326008)(6246003)(3846002)(106356001)(2616005)(26005)(53546011)(476003)(2906002)(5660300002)(14444005)(66066001)(486006)(6506007)(86362001)(81156014)(81166006)(446003)(36756003)(7736002)(11346002)(256004)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1SPR8PMB24;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y86aVpWyl639BsFK6/TjfJ6JHXQVvApYuuKl6Adud4ApGd1c7mLT1ViHtIGtCPPb5Mom7kD//n//w+TfJqVp+Bts1Zm6rCOVfNmVvMNsR2qEGQCncOXN80cy+P6mEJxc651W/J/7w8lgBB6jpEGPrjnOSeM+pMKCKdc7hlkVN1ThbuG0y/r/63HVcim/EVA/CIV0yc9mKTZyC6zOX3Rk+bXK1pOYZ0qXyY8l9JPYX4ov2wqThQ3JOeYehypQJAPjYwsq+HoVMZIYvS5m6XEl2DsMqlNXOCDjhCXfxl+HpnkwH27BkI1mry3rghfwvrhyri0acig05Yu6Rm0mVQaWICKPsydVB7eDRrK6P9gbzzm+hLwEx3cBZdlbeKbHAkJ20Pwoq0HDcYUAlG2k2FXijbjcBF6Q+T22QfsOs2Fuvk8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FBD239C3274503438825854AB3A0E7EE@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 Mar 2019 09:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728101AbfC0Npf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:45:35 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9398204FD;
+        Wed, 27 Mar 2019 13:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553694333;
+        bh=F77sOGDxccbuL3lpnw26bQDuOP3CqPxvACw5USGlqBo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S30mIV3D7juPET4pUTyhm2EbzDNM/JaSzCt3XzvsY0lgZGSHCIMGS1dpwvifVCFvm
+         xq/E83Nb0V4ql3q1DysW2sSTvtc6ATrfSIvUhyrbpdpCknqCXHizPK0OF4MqXnI14v
+         cSQgcOCdHgQNbOK7EABWnk6W2RrcxJTtXk6CDkZA=
+Subject: Re: [PATCH v12 1/5] media: Media Device Allocator API
+To:     Hans Verkuil <hverkuil@xs4all.nl>, mchehab@kernel.org,
+        perex@perex.cz, tiwai@suse.com
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, shuah <shuah@kernel.org>
+References: <cover.1553634246.git.shuah@kernel.org>
+ <1e22c34b011c3c1fd793a623fb59c82081d46038.1553634246.git.shuah@kernel.org>
+ <f2b75327-5e79-d316-9599-6420b99aa140@xs4all.nl>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c80f31fd-4308-29ea-9c12-9ae4caacb087@kernel.org>
+Date:   Wed, 27 Mar 2019 07:45:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b64a14f0-b357-458d-8693-08d6b2ba2b26
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 13:43:17.5719
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR8PMB24
+In-Reply-To: <f2b75327-5e79-d316-9599-6420b99aa140@xs4all.nl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCkp1c3QgRllJLCBJJ20gc3RpbGwgc2VlaW5nIGlzc3VlcyB3aXRoIHRoZSBkbWEg
-ZHJpdmVyIGNvbXBpbGVkIF9vdXRfLCANCnRyeWluZyB0byB0ZXN0IGkyYyB3aXRob3V0IGRtYSBz
-dXBwb3J0LiBJIGdldCB0aGUgY3Jhc2ggYmVsb3cgaW4gZ2VuZXJpYyANCmRyaXZlciBjb2RlIGxh
-dGVyIGluIHRoZSBib290IHByb2Nlc3MsIGRlYnVnIGlzIGluIHByb2dyZXNzLg0KDQpQLlMuIFRo
-aXMgaXMgc2VlbiBvbiBhbiBOWFAgTFMxMDQzQSBjaGlwLg0KDQpbICAgIDUuMTUyNjk3XSBVbmFi
-bGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgDQp2aXJ0dWFs
-IGFkZHJlc3MgMDAwMDAwMDAwMDAwMDAxMA0KWyAgICA1LjE2MTQ4M10gTWVtIGFib3J0IGluZm86
-DQpbICAgIDUuMTY0MzExXSAgIEVTUiA9IDB4OTYwMDAwMDQNClsgICAgNS4xNjc0MDddICAgRXhj
-ZXB0aW9uIGNsYXNzID0gREFCVCAoY3VycmVudCBFTCksIElMID0gMzIgYml0cw0KWyAgICA1LjE3
-MzM5MV0gZGV2aWNlX2luaXRpYWxpemU6IGRldiA9IGZmZmY4MDAwMjc3NTY4MDgNClsgICAgNS4x
-Nzg0NDZdIHVzYiA0LTE6IG5ldyBTdXBlclNwZWVkIEdlbiAxIFVTQiBkZXZpY2UgbnVtYmVyIDIg
-dXNpbmcgDQp4aGNpLWhjZA0KWyAgICA1LjE4NTQ4OV0gICBTRVQgPSAwLCBGblYgPSAwDQpbICAg
-IDUuMTg4NTMyXSAgIEVBID0gMCwgUzFQVFcgPSAwDQpbICAgIDUuMTkxNjc2XSBEYXRhIGFib3J0
-IGluZm86DQpbICAgIDUuMTk0NTk5XSAgIElTViA9IDAsIElTUyA9IDB4MDAwMDAwMDQNClsgICAg
-NS4xOTg0NzZdICAgQ00gPSAwLCBXblIgPSAwDQpbICAgIDUuMjAxNDg1XSBbMDAwMDAwMDAwMDAw
-MDAxMF0gdXNlciBhZGRyZXNzIGJ1dCBhY3RpdmVfbW0gaXMgc3dhcHBlcg0KWyAgICA1LjIwNzg5
-NF0gSW50ZXJuYWwgZXJyb3I6IE9vcHM6IDk2MDAwMDA0IFsjMV0gUFJFRU1QVCBTTVANClsgICAg
-NS4yMTM0NTVdIE1vZHVsZXMgbGlua2VkIGluOg0KWyAgICA1LjIxNjUwMl0gQ1BVOiAwIFBJRDog
-MTggQ29tbToga3dvcmtlci8wOjEgTm90IHRhaW50ZWQgDQo1LjEuMC1yYzItbmV4dC0yMDE5MDMy
-Ny0wMDAyMS1nN2IxYTRjMDc1MzgxLWRpcnR5ICMxNQ0KWyAgICA1LjIyNjQ4OV0gSGFyZHdhcmUg
-bmFtZTogTFMxMDQzQSBSREIgQm9hcmQgKERUKQ0KWyAgICA1LjIzMTE4OV0gV29ya3F1ZXVlOiBl
-dmVudHMgZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jDQpbICAgIDUuMjM2MzE3XSBwc3RhdGU6IGEw
-MDAwMDA1IChOekN2IGRhaWYgLVBBTiAtVUFPKQ0KWyAgICA1LjI0MTA5OF0gcGMgOiBkZXZpY2Vf
-cmVvcmRlcl90b190YWlsKzB4MTNjLzB4MWI4DQpbICAgIDUuMjQ1OTY1XSBsciA6IGRldmljZV9y
-ZW9yZGVyX3RvX3RhaWwrMHhkOC8weDFiOA0KWyAgICA1LjI1MDc0M10gc3AgOiBmZmZmMDAwMDEx
-ODIzYzcwDQpbICAgIDUuMjU0MDQ2XSB4Mjk6IGZmZmYwMDAwMTE4MjNjNzAgeDI4OiAwMDAwMDAw
-MDAwMDAwMDAwDQpbICAgIDUuMjU5MzQ3XSB4Mjc6IGZmZmYwMDAwMTE3YWJjZDggeDI2OiBmZmZm
-MDAwMDExMjkzYTIwDQpbICAgIDUuMjY0NjQ5XSB4MjU6IGZmZmYwMDAwMTEwMmEwMDAgeDI0OiBm
-ZmZmMDAwMDExMDJhNzA4DQpbICAgIDUuMjY5OTUwXSB4MjM6IGZmZmYwMDAwMTEwMmE3MDAgeDIy
-OiBmZmZmMDAwMDEwZDI4MDAwDQpbICAgIDUuMjc1MjUxXSB4MjE6IGZmZmY4MDAwNzM5M2I5YTAg
-eDIwOiBmZmZmZmZmZmZmZmZmZmY4DQpbICAgIDUuMjgwNTUyXSB4MTk6IGZmZmY4MDAwNzM5M2I4
-ZjAgeDE4OiBmZmZmZmZmZmZmZmZmZmZmDQpbICAgIDUuMjg1ODUzXSB4MTc6IDAwMDAwMDAwMDAw
-MDAwMDIgeDE2OiAwMDAwMDAwMDAwMDAwMDAwDQpbICAgIDUuMjkxMTU0XSB4MTU6IGZmZmYwMDAw
-MTEyN2Q2YzggeDE0OiAwMDAwMDAwMDAwMDAwMTdlDQpbICAgIDUuMjk2NDU0XSB4MTM6IDAwMDAw
-MDAwMDAwMDAwMDEgeDEyOiAwMDAwMDAwMDAwMDAwMDAwDQpbICAgIDUuMzAxNzU1XSB4MTE6IDAw
-MDAwMDAwMDAwMDAwMDAgeDEwOiAwMDAwMDAwMDAwMDAwOTgwDQpbICAgIDUuMzA3MDU1XSB4OSA6
-IGZmZmYwMDAwMTE4MjM4YzAgeDggOiBmZmZmODAwMDczODcyNTYwDQpbICAgIDUuMzEyMzU2XSB4
-NyA6IGZmZmY4MDAwNzM4NzFkMDAgeDYgOiAwMDAwMDAwMDAwMDAwMDU4DQpbICAgIDUuMzE3NjU2
-XSB4NSA6IDAwMDAwMDAwMDAwMDAwMGYgeDQgOiAwMDAwMDAwMDAwMDAwMTAwDQpbICAgIDUuMzIy
-OTU3XSB4MyA6IDAwMDA4MDAwNmEzNTEwMDAgeDIgOiAwOTkxZWMwNWI3NTM0MjAwDQpbICAgIDUu
-MzI4MjU3XSB4MSA6IGZmZmZmZmZmZmZmZmZmZjggeDAgOiAwMDAwMDAwMDAwMDAwMDAwDQpbICAg
-IDUuMzMzNTYwXSBQcm9jZXNzIGt3b3JrZXIvMDoxIChwaWQ6IDE4LCBzdGFjayBsaW1pdCA9IA0K
-MHgoX19fX3B0cnZhbF9fX18pKQ0KWyAgICA1LjM0MDUwOV0gQ2FsbCB0cmFjZToNClsgICAgNS4z
-NDI5NDVdICBkZXZpY2VfcmVvcmRlcl90b190YWlsKzB4MTNjLzB4MWI4DQpbICAgIDUuMzQ3NDY2
-XSAgZGV2aWNlX2Zvcl9lYWNoX2NoaWxkKzB4NTAvMHhhOA0KWyAgICA1LjM1MTcyNV0gIGRldmlj
-ZV9yZW9yZGVyX3RvX3RhaWwrMHhjNC8weDFiOA0KWyAgICA1LjM1NjE1N10gIGRldmljZV9wbV9t
-b3ZlX3RvX3RhaWwrMHgzNC8weDUwDQpbICAgIDUuMzYwNTAyXSAgZGVmZXJyZWRfcHJvYmVfd29y
-a19mdW5jKzB4NjQvMHhhMA0KWyAgICA1LjM2NTAyM10gIHByb2Nlc3Nfb25lX3dvcmsrMHgxYzgv
-MHgzMjANClsgICAgNS4zNjkwMjFdICB3b3JrZXJfdGhyZWFkKzB4MjM0LzB4NDI4DQpbICAgIDUu
-MzcyNzYxXSAga3RocmVhZCsweGY0LzB4MTIwDQpbICAgIDUuMzc1ODkyXSAgcmV0X2Zyb21fZm9y
-aysweDEwLzB4MTgNClsgICAgNS4zNzk0NThdIENvZGU6IDkxMWMyMzE4IDkxMWMwMmY3IGQwMDA0
-ZTE5IGI0MDAwMjc0IChmOTQwMGU4NCkNClsgICAgNS4zODU1NDFdIC0tLVsgZW5kIHRyYWNlIGFi
-NGIxNTFkMzQ2YThkNDEgXS0tLQ0KDQotLS0NCkJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQoNCk9u
-IDI1LjAzLjIwMTkgMTk6MTIsIFN0ZXZlbiBQcmljZSB3cm90ZToNCj4gT24gMjUvMDMvMjAxOSAx
-NTozMCwgbGF1cmVudGl1LnR1ZG9yQG54cC5jb20gd3JvdGU6DQo+PiBGcm9tOiBMYXVyZW50aXUg
-VHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPg0KPj4NCj4+IElmIHRoZSBkbWEgY29udHJv
-bGxlciBpcyBub3QgeWV0IHByb2JlZCwgZGVmZXIgaTJjIHByb2JlLg0KPj4gVGhlIGVycm9yIHBh
-dGggaW4gcHJvYmUgd2FzIHNsaWdodGx5IG1vZGlmaWVkIChubyBmdW5jdGlvbmFsIGNoYW5nZSkN
-Cj4gDQo+IFRoZXJlIGlzIGEgZnVuY3Rpb25hbCBjaGFuZ2UgZm9yIGNhc2VzIGxpa2U6DQo+IA0K
-Pj4gCXJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoJnBkZXYtPmRldik7DQo+PiAJaWYgKHJldCA8
-IDApDQo+PiAJCWdvdG8gcnBtX2Rpc2FibGU7DQo+IA0KPiAuLi5hcyBycG1fZGlzYWJsZSB3aWxs
-IG5vIGxvbmdlciBmYWxsIHRocm91Z2ggdG8gdGhlIGNhbGwgb2YNCj4gY2xrX2Rpc2FibGVfdW5w
-cmVwYXJlKCkuDQo+IA0KPj4gdG8gYXZvaWQgdHJpZ2dlcmluZyB0aGlzIFdBUk5fT04oKToNCj4+
-ICJjZy1wbGwwLWRpdjEgYWxyZWFkeSBkaXNhYmxlZA0KPj4gV0FSTklORzogQ1BVOiAxIFBJRDog
-MSBhdCBkcml2ZXJzL2Nsay9jbGsuYzo4MjggY2xrX2NvcmVfZGlzYWJsZSsweGE4LzB4YjAiDQo+
-IA0KPiBJJ20gYWxzbyBub3Qgc3VyZSBob3cgdGhpcyBXQVJOX09OIHdhcyBoaXQuIGkyY19pbXhf
-cHJvYmUoKSBjYWxscw0KPiBjbGtfcHJlcGFyZV9lbmFibGUoKSB3aGljaCBzaG91bGQgaW5jcmVt
-ZW50IHRoZSByZWZlcmVuY2UgY291bnQuIFNvIGl0DQo+IHNob3VsZCBhbHdheXMgYmUgcG9zc2li
-bGUgdG8gZGVjcmVtZW10IHRoZSBlbmFibGVfY291bnQuIFdoYXQgYW0gSSBtaXNzaW5nPw0KPiAN
-Cj4+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5j
-b20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1pbXguYyB8IDIxICsrKysr
-KysrKysrKystLS0tLS0tLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwg
-OCBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2VzL2ky
-Yy1pbXguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMNCj4+IGluZGV4IDQyZmVkNDAx
-OThhMC4uNGUzNGIxNTcyNzU2IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2ky
-Yy1pbXguYw0KPj4gKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1pbXguYw0KPj4gQEAgLTEx
-MTEsNyArMTExMSw4IEBAIHN0YXRpYyBpbnQgaTJjX2lteF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPj4gICAJCQkJcGRldi0+bmFtZSwgaTJjX2lteCk7DQo+PiAgIAlpZiAo
-cmV0KSB7DQo+PiAgIAkJZGV2X2VycigmcGRldi0+ZGV2LCAiY2FuJ3QgY2xhaW0gaXJxICVkXG4i
-LCBpcnEpOw0KPj4gLQkJZ290byBjbGtfZGlzYWJsZTsNCj4+ICsJCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShpMmNfaW14LT5jbGspOw0KPj4gKwkJcmV0dXJuIHJldDsNCj4+ICAgCX0NCj4+ICAgDQo+
-PiAgIAkvKiBJbml0IHF1ZXVlICovDQo+PiBAQCAtMTE2MSwxOSArMTE2MiwyNSBAQCBzdGF0aWMg
-aW50IGkyY19pbXhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICAgCXBt
-X3J1bnRpbWVfbWFya19sYXN0X2J1c3koJnBkZXYtPmRldik7DQo+PiAgIAlwbV9ydW50aW1lX3B1
-dF9hdXRvc3VzcGVuZCgmcGRldi0+ZGV2KTsNCj4+ICAgDQo+PiArCS8qIEluaXQgRE1BIGNvbmZp
-ZyBpZiBzdXBwb3J0ZWQgKi8NCj4+ICsJcmV0ID0gaTJjX2lteF9kbWFfcmVxdWVzdChpMmNfaW14
-LCBwaHlfYWRkcik7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9E
-RUZFUikNCj4+ICsJCQlkZXZfaW5mbygmcGRldi0+ZGV2LCAiY2FuJ3QgdXNlIERNQSwgdXNpbmcg
-UElPIGluc3RlYWQuXG4iKTsNCj4+ICsJCWVsc2UNCj4+ICsJCQlnb3RvIGRlbF9hZGFwdGVyOw0K
-Pj4gKwl9DQo+PiArDQo+IA0KPiBUaGlzIGNhbiBiZSBzaW1wbGlmaWVkIGJ5IHJldmVyc2luZyB0
-aGUgY29uZGl0aW9uOg0KPiANCj4gCWlmIChyZXQpIHsNCj4gCQlpZiAocmV0ID09IC1FUFJPQkVf
-REVGRVIpDQo+IAkJCWdvdG8gZGVsX2FkYXB0ZXI7DQo+IAkJZGV2X2luZm8oKTsNCj4gCX0NCj4g
-DQo+IG9yIGV2ZW46DQo+IA0KPiAJaWYgKHJldCA9PSAtRVBST0JFX0RFRkVSKQ0KPiAJCWdvdG8g
-ZGVsX2FkYXB0ZXI7DQo+IAllbHNlIGlmIChyZXQpDQo+IAkJZGV2X2luZm8oKTsNCj4gDQo+PiAg
-IAlkZXZfZGJnKCZpMmNfaW14LT5hZGFwdGVyLmRldiwgImNsYWltZWQgaXJxICVkXG4iLCBpcnEp
-Ow0KPj4gICAJZGV2X2RiZygmaTJjX2lteC0+YWRhcHRlci5kZXYsICJkZXZpY2UgcmVzb3VyY2Vz
-OiAlcFJcbiIsIHJlcyk7DQo+PiAgIAlkZXZfZGJnKCZpMmNfaW14LT5hZGFwdGVyLmRldiwgImFk
-YXB0ZXIgbmFtZTogXCIlc1wiXG4iLA0KPj4gICAJCWkyY19pbXgtPmFkYXB0ZXIubmFtZSk7DQo+
-PiAgIA0KPj4gLQkvKiBJbml0IERNQSBjb25maWcgaWYgc3VwcG9ydGVkICovDQo+PiAtCXJldCA9
-IGkyY19pbXhfZG1hX3JlcXVlc3QoaTJjX2lteCwgcGh5X2FkZHIpOw0KPj4gLQlpZiAocmV0IDwg
-MCkNCj4+IC0JCWdvdG8gY2xrX25vdGlmaWVyX3VucmVnaXN0ZXI7DQo+PiAtDQo+PiAgIAlkZXZf
-aW5mbygmaTJjX2lteC0+YWRhcHRlci5kZXYsICJJTVggSTJDIGFkYXB0ZXIgcmVnaXN0ZXJlZFxu
-Iik7DQo+PiAgIAlyZXR1cm4gMDsgICAvKiBSZXR1cm4gT0sgKi8NCj4+ICAgDQo+PiArZGVsX2Fk
-YXB0ZXI6DQo+PiArCWkyY19kZWxfYWRhcHRlcigmaTJjX2lteC0+YWRhcHRlcik7DQo+IA0KPiBU
-aGlzIGxvb2tzIGxpa2UgYSBzZXBhcmF0ZSBmaXggKHByZXZpb3VzbHkgdGhlIGNhbGwgdG8NCj4g
-aTJjX2FkZF9udW1iZXJlZF9hZGFwdGVyKCkgd2FzIG5vdCB1bmRvbmUgaW4gY2FzZSBvZiBsYXRl
-ciBlcnJvcnMpLiBJdA0KPiB3b3J0aCBzcGVsbGluZyB0aGlzIG91dCBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2UuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBTdGV2ZQ0KPiANCj4+ICAgY2xrX25vdGlmaWVy
-X3VucmVnaXN0ZXI6DQo+PiAgIAljbGtfbm90aWZpZXJfdW5yZWdpc3RlcihpMmNfaW14LT5jbGss
-ICZpMmNfaW14LT5jbGtfY2hhbmdlX25iKTsNCj4+ICAgcnBtX2Rpc2FibGU6DQo+PiBAQCAtMTE4
-Miw4ICsxMTg5LDYgQEAgc3RhdGljIGludCBpMmNfaW14X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpDQo+PiAgIAlwbV9ydW50aW1lX3NldF9zdXNwZW5kZWQoJnBkZXYtPmRldik7
-DQo+PiAgIAlwbV9ydW50aW1lX2RvbnRfdXNlX2F1dG9zdXNwZW5kKCZwZGV2LT5kZXYpOw0KPj4g
-ICANCj4+IC1jbGtfZGlzYWJsZToNCj4+IC0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGkyY19pbXgt
-PmNsayk7DQo+PiAgIAlyZXR1cm4gcmV0Ow0KPj4gICB9DQo+PiAgIA0KPj4NCj4g
+Hi Hans,
+
+On 3/27/19 4:37 AM, Hans Verkuil wrote:
+> Hi Shuah,
+> 
+> Some comments at the end. I suspect you still have to do more work :-(
+
+I am okay with doing more work. I am expecting it since, I am not happy
+with the config options that are in play. More on this below.
+
+> 
+> On 3/27/19 3:24 AM, Shuah Khan wrote:
+>> Media Device Allocator API to allows multiple drivers share a media device.
+>> This API solves a very common use-case for media devices where one physical
+>> device (an USB stick) provides both audio and video. When such media device
+>> exposes a standard USB Audio class, a proprietary Video class, two or more
+>> independent drivers will share a single physical USB bridge. In such cases,
+>> it is necessary to coordinate access to the shared resource.
+>>
+>> Using this API, drivers can allocate a media device with the shared struct
+>> device as the key. Once the media device is allocated by a driver, other
+>> drivers can get a reference to it. The media device is released when all
+>> the references are released.
+>>
+>> Signed-off-by: Shuah Khan <shuah@kernel.org>
+>> ---
+>>   Documentation/media/kapi/mc-core.rst |  41 ++++++++
+>>   drivers/media/Makefile               |   6 ++
+>>   drivers/media/media-dev-allocator.c  | 142 +++++++++++++++++++++++++++
+>>   include/media/media-dev-allocator.h  |  54 ++++++++++
+>>   4 files changed, 243 insertions(+)
+>>   create mode 100644 drivers/media/media-dev-allocator.c
+>>   create mode 100644 include/media/media-dev-allocator.h
+>>
+>> diff --git a/Documentation/media/kapi/mc-core.rst b/Documentation/media/kapi/mc-core.rst
+>> index f930725e0d6b..05bba0b61748 100644
+>> --- a/Documentation/media/kapi/mc-core.rst
+>> +++ b/Documentation/media/kapi/mc-core.rst
+>> @@ -259,6 +259,45 @@ Subsystems should facilitate link validation by providing subsystem specific
+>>   helper functions to provide easy access for commonly needed information, and
+>>   in the end provide a way to use driver-specific callbacks.
+>>   
+>> +Media Controller Device Allocator API
+>> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> +
+>> +When the media device belongs to more than one driver, the shared media
+>> +device is allocated with the shared struct device as the key for look ups.
+>> +
+>> +The shared media device should stay in registered state until the last
+>> +driver unregisters it. In addition, the media device should be released when
+>> +all the references are released. Each driver gets a reference to the media
+>> +device during probe, when it allocates the media device. If media device is
+>> +already allocated, the allocate API bumps up the refcount and returns the
+>> +existing media device. The driver puts the reference back in its disconnect
+>> +routine when it calls :c:func:`media_device_delete()`.
+>> +
+>> +The media device is unregistered and cleaned up from the kref put handler to
+>> +ensure that the media device stays in registered state until the last driver
+>> +unregisters the media device.
+>> +
+>> +**Driver Usage**
+>> +
+>> +Drivers should use the appropriate media-core routines to manage the shared
+>> +media device life-time handling the two states:
+>> +1. allocate -> register -> delete
+>> +2. get reference to already registered device -> delete
+>> +
+>> +call :c:func:`media_device_delete()` routine to make sure the shared media
+>> +device delete is handled correctly.
+>> +
+>> +**driver probe:**
+>> +Call :c:func:`media_device_usb_allocate()` to allocate or get a reference
+>> +Call :c:func:`media_device_register()`, if media devnode isn't registered
+>> +
+>> +**driver disconnect:**
+>> +Call :c:func:`media_device_delete()` to free the media_device. Freeing is
+>> +handled by the kref put handler.
+>> +
+>> +API Definitions
+>> +^^^^^^^^^^^^^^^
+>> +
+>>   .. kernel-doc:: include/media/media-device.h
+>>   
+>>   .. kernel-doc:: include/media/media-devnode.h
+>> @@ -266,3 +305,5 @@ in the end provide a way to use driver-specific callbacks.
+>>   .. kernel-doc:: include/media/media-entity.h
+>>   
+>>   .. kernel-doc:: include/media/media-request.h
+>> +
+>> +.. kernel-doc:: include/media/media-dev-allocator.h
+>> diff --git a/drivers/media/Makefile b/drivers/media/Makefile
+>> index 985d35ec6b29..20b488067ec2 100644
+>> --- a/drivers/media/Makefile
+>> +++ b/drivers/media/Makefile
+>> @@ -6,6 +6,12 @@
+>>   media-objs	:= media-device.o media-devnode.o media-entity.o \
+>>   		   media-request.o
+>>   
+>> +ifeq ($(CONFIG_USB),y)
+>> +	ifeq ($(CONFIG_MODULES),y)
+>> +		media-objs += media-dev-allocator.o
+>> +	endif
+>> +endif
+>> +
+>>   #
+>>   # I2C drivers should come before other drivers, otherwise they'll fail
+>>   # when compiled as builtin drivers
+>> diff --git a/drivers/media/media-dev-allocator.c b/drivers/media/media-dev-allocator.c
+>> new file mode 100644
+>> index 000000000000..a37515254009
+>> --- /dev/null
+>> +++ b/drivers/media/media-dev-allocator.c
+>> @@ -0,0 +1,142 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * media-dev-allocator.c - Media Controller Device Allocator API
+>> + *
+>> + * Copyright (c) 2018 Shuah Khan <shuah@kernel.org>
+>> + *
+>> + * Credits: Suggested by Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> + */
+>> +
+>> +/*
+>> + * This file adds a global refcounted Media Controller Device Instance API.
+>> + * A system wide global media device list is managed and each media device
+>> + * includes a kref count. The last put on the media device releases the media
+>> + * device instance.
+>> + *
+>> + */
+>> +
+>> +#include <linux/kref.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/usb.h>
+>> +
+>> +#include <media/media-device.h>
+>> +
+>> +static LIST_HEAD(media_device_list);
+>> +static DEFINE_MUTEX(media_device_lock);
+>> +
+>> +struct media_device_instance {
+>> +	struct media_device mdev;
+>> +	struct module *owner;
+>> +	struct list_head list;
+>> +	struct kref refcount;
+>> +};
+>> +
+>> +static inline struct media_device_instance *
+>> +to_media_device_instance(struct media_device *mdev)
+>> +{
+>> +	return container_of(mdev, struct media_device_instance, mdev);
+>> +}
+>> +
+>> +static void media_device_instance_release(struct kref *kref)
+>> +{
+>> +	struct media_device_instance *mdi =
+>> +		container_of(kref, struct media_device_instance, refcount);
+>> +
+>> +	dev_dbg(mdi->mdev.dev, "%s: mdev=%p\n", __func__, &mdi->mdev);
+>> +
+>> +	mutex_lock(&media_device_lock);
+>> +
+>> +	media_device_unregister(&mdi->mdev);
+>> +	media_device_cleanup(&mdi->mdev);
+>> +
+>> +	list_del(&mdi->list);
+>> +	mutex_unlock(&media_device_lock);
+>> +
+>> +	kfree(mdi);
+>> +}
+>> +
+>> +/* Callers should hold media_device_lock when calling this function */
+>> +static struct media_device *__media_device_get(struct device *dev,
+>> +						const char *module_name,
+>> +						struct module *modp)
+>> +{
+>> +	struct media_device_instance *mdi;
+>> +
+>> +	list_for_each_entry(mdi, &media_device_list, list) {
+>> +
+>> +		if (mdi->mdev.dev != dev)
+>> +			continue;
+>> +
+>> +		kref_get(&mdi->refcount);
+>> +
+>> +		/* get module reference for the media_device owner */
+>> +		if (modp != mdi->owner && !try_module_get(mdi->owner))
+>> +			dev_err(dev, "%s: try_module_get() error\n", __func__);
+>> +		dev_dbg(dev, "%s: get mdev=%p module_name %s\n",
+>> +			__func__, &mdi->mdev, module_name);
+>> +		return &mdi->mdev;
+>> +	}
+>> +
+>> +	mdi = kzalloc(sizeof(*mdi), GFP_KERNEL);
+>> +	if (!mdi)
+>> +		return NULL;
+>> +
+>> +	mdi->owner = modp;
+>> +	kref_init(&mdi->refcount);
+>> +	list_add_tail(&mdi->list, &media_device_list);
+>> +
+>> +	dev_dbg(dev, "%s: alloc mdev=%p module_name %s\n", __func__,
+>> +		&mdi->mdev, module_name);
+>> +	return &mdi->mdev;
+>> +}
+>> +
+>> +struct media_device *media_device_usb_allocate(struct usb_device *udev,
+>> +					       const char *module_name)
+>> +{
+>> +	struct media_device *mdev;
+>> +	struct module *modptr;
+>> +
+>> +	mutex_lock(&module_mutex);
+>> +	modptr = find_module(module_name);
+>> +	mutex_unlock(&module_mutex);
+>> +
+>> +	mutex_lock(&media_device_lock);
+>> +	mdev = __media_device_get(&udev->dev, module_name, modptr);
+>> +	if (!mdev) {
+>> +		mutex_unlock(&media_device_lock);
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	/* check if media device is already initialized */
+>> +	if (!mdev->dev)
+>> +		__media_device_usb_init(mdev, udev, udev->product,
+>> +					module_name);
+>> +	mutex_unlock(&media_device_lock);
+>> +	return mdev;
+>> +}
+>> +EXPORT_SYMBOL_GPL(media_device_usb_allocate);
+>> +
+>> +void media_device_delete(struct media_device *mdev, const char *module_name)
+>> +{
+>> +	struct media_device_instance *mdi = to_media_device_instance(mdev);
+>> +	struct module *modptr;
+>> +
+>> +	dev_dbg(mdi->mdev.dev, "%s: mdev=%p module_name %s\n",
+>> +		__func__, &mdi->mdev, module_name);
+>> +
+>> +	mutex_lock(&module_mutex);
+>> +	modptr = find_module(module_name);
+>> +	mutex_unlock(&module_mutex);
+>> +
+>> +	mutex_lock(&media_device_lock);
+>> +	/* put module reference if media_device owner is not THIS_MODULE */
+>> +	if (mdi->owner != modptr) {
+>> +		module_put(mdi->owner);
+>> +		dev_dbg(mdi->mdev.dev,
+>> +			"%s decremented owner module reference\n", __func__);
+>> +	}
+>> +	mutex_unlock(&media_device_lock);
+>> +	kref_put(&mdi->refcount, media_device_instance_release);
+>> +}
+>> +EXPORT_SYMBOL_GPL(media_device_delete);
+>> diff --git a/include/media/media-dev-allocator.h b/include/media/media-dev-allocator.h
+>> new file mode 100644
+>> index 000000000000..69aee9a4b4c1
+>> --- /dev/null
+>> +++ b/include/media/media-dev-allocator.h
+>> @@ -0,0 +1,54 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ */
+>> +/*
+>> + * media-dev-allocator.h - Media Controller Device Allocator API
+>> + *
+>> + * Copyright (c) 2018 Shuah Khan <shuah@kernel.org>
+>> + *
+>> + * Credits: Suggested by Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> + */
+>> +
+>> +/*
+>> + * This file adds a global ref-counted Media Controller Device Instance API.
+>> + * A system wide global media device list is managed and each media device
+>> + * includes a kref count. The last put on the media device releases the media
+>> + * device instance.
+>> + */
+>> +
+>> +#ifndef _MEDIA_DEV_ALLOCTOR_H
+>> +#define _MEDIA_DEV_ALLOCTOR_H
+>> +
+>> +struct usb_device;
+>> +
+>> +#if defined(CONFIG_MEDIA_CONTROLLER) && defined(CONFIG_USB) && \
+>> +	defined(CONFIG_MODULES)
+>> +/**
+>> + * media_device_usb_allocate() - Allocate and return struct &media device
+>> + *
+>> + * @udev:		struct &usb_device pointer
+>> + * @module_name:	should be filled with %KBUILD_MODNAME
+>> + *
+>> + * This interface should be called to allocate a Media Device when multiple
+>> + * drivers share usb_device and the media device. This interface allocates
+>> + * &media_device structure and calls media_device_usb_init() to initialize
+>> + * it.
+>> + *
+>> + */
+>> +struct media_device *media_device_usb_allocate(struct usb_device *udev,
+>> +					       char *module_name);
+>> +/**
+>> + * media_device_delete() - Release media device. Calls kref_put().
+>> + *
+>> + * @mdev:		struct &media_device pointer
+>> + * @module_name:	should be filled with %KBUILD_MODNAME
+>> + *
+>> + * This interface should be called to put Media Device Instance kref.
+>> + */
+>> +void media_device_delete(struct media_device *mdev, char *module_name);
+>> +#else
+>> +static inline struct media_device *media_device_usb_allocate(
+>> +			struct usb_device *udev, char *module_name)
+>> +			{ return NULL; }
+>> +static inline void media_device_delete(
+>> +			struct media_device *mdev, char *module_name) { }
+>> +#endif /* CONFIG_MEDIA_CONTROLLER && CONFIG_USB && CONFIG_MODULES */
+> 
+> I am still getting sparse warnings:
+> 
+> drivers/media/media-dev-allocator.c /home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:94:21:  warning: symbol 'media_device_usb_allocate' was not declared. Should it be static?
+> drivers/media/media-dev-allocator.c /home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:120:6:  warning: symbol 'media_device_delete' was not declared. Should it be static?
+> drivers/media/media-dev-allocator.c:94:22: warning: no previous prototype for 'media_device_usb_allocate' [-Wmissing-prototypes]
+> drivers/media/media-dev-allocator.c:120:6: warning: no previous prototype for 'media_device_delete' [-Wmissing-prototypes]
+
+I didn't see the warns - maybe I have to upgrade to the latest gcc.
+
+> 
+> This makes sense since if the #if above evaluates to 0, then the
+> static inlines are used. But in media-dev-allocator.c these functions
+> are still present without a corresponding prototype.
+> 
+> You likely need a similar #if in media-dev-allocator.c.
+> 
+> Have you tested this if CONFIG_MODULES is not set? Does au0828 still work
+> w.r.t. sharing the shared resource? Has the driver been tested when MEDIA_CONTROLLER
+> is not set? Should au0828 select MEDIA_CONTROLLER explicitly perhaps?
+
+Unfortunately without MEDIA_CONTROLLER and CONFIG_MODULES, no sharing
+happening. The only way to ensure sharing in all cases, is selecting
+MEDIA_CONTROLLER and MODULES in au0828 and that will make sure
+snd-usb-audio enables SND_USB_AUDIO_USE_MEDIA_CONTROLLER and all of
+the sharing logic works.
+
+> 
+> My main concern is that it looks like au0828's probe() will now fail if MODULES is
+> not set.
+> 
+
+Agreed. At the moment, we have too many config options in play even
+before this work. Maybe it is time au0828 selected MEDIA_CONTROLLER
+and CONFIG_MODULES - this will make sure all of this works.
+
+I was hoping to start the config option discussion, so we can decide on
+a set of options to select from these drivers.
+
+thanks,
+-- Shuah
+
