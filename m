@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D61C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB441C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B70B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD57D206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714667;
-	bh=noN8CU8ZXLNqR3EFWdAk9AisetoVyOwzL0YZhfRmSVg=;
+	s=default; t=1553714678;
+	bh=D0g1jANusSy37pMB1z+g1OsJxUBEISQD2tz4/Jr7G+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDyxAbTOcNWdQJIbtmqf/JNgd0NQFPbXE105I3+yssN7G00HY+T//pJMTXwzp6p82
-	 1/QYN/tmRvurbdlhuRm08XNPhrIAULro2lhW425vZDvkie8rKH859B59L/YeiEnjz+
-	 oSYTL457x1PEQE0fwpIi1NFPFN+tdAV9IQzV+3wk=
+	b=MCa/E/Y/zzti4Bt0PNjWscLfwOgkCA4exFF0o3UZX9w6tt402wWvOSMx7otH5V+IM
+	 0XJe7JgD+CHbSLtuon7cfS1j32yiRk6wJoI6GRnET4c4RW+8bsk74X00PqjZVWVZtv
+	 9eCjckt++KlxvIYVDj0N/80ly4AsSUy5UC82Qu6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbfC0TYZ (ORCPT
+        id S2387749AbfC0SFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47018 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731515AbfC0SFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:44 -0400
+        id S2387736AbfC0SFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9652075C;
-        Wed, 27 Mar 2019 18:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C365217F5;
+        Wed, 27 Mar 2019 18:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709942;
-        bh=noN8CU8ZXLNqR3EFWdAk9AisetoVyOwzL0YZhfRmSVg=;
+        s=default; t=1553709935;
+        bh=D0g1jANusSy37pMB1z+g1OsJxUBEISQD2tz4/Jr7G+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RajsjObItmtXpuC1ioe/OoJkdLdCKraLfOqj4HGXzcthQVyo4zzYhEWPptN4qDLjz
-         xBRpUOmvaGSOxneSyml95yggjMQL9GVH3dpr+c1mrJCaJpL6HvaR6ctXhPAypeHgfu
-         ZR11sjwfzBIkJzo14uXxnZmhJ1KWU10pRBV0C4eg=
+        b=2WURxLNObmkb4YTUqRAMMx0D9bteCS9XYIyAPYePavBEZh8NN3FoTiBsFkbVMha4w
+         caCPstUaZDPvC5KFYwvlYNr2gNVPS8RTASnaq/K2jDxc8h7JtzbJfxiGEwLo7gT9YI
+         tia55IuBsRomGoTkF4igP7B4JbWO0rSe9HkLBs9M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 125/262] media: mtk-jpeg: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 13:59:40 -0400
-Message-Id: <20190327180158.10245-125-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 120/262] media: sh_veu: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 13:59:35 -0400
+Message-Id: <20190327180158.10245-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -61,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 1b275e4e8b70dbff9850874b30831c1bd8d3c504 ]
+[ Upstream commit 43c145195c7fc3025ee7ecfc67112ac1c82af7c2 ]
 
 Fix the assigned type of mem2mem buffer handling API.
 Namely, these functions:
@@ -87,150 +86,29 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ drivers/media/platform/sh_veu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-index 2a5d5002c27e..f761e4d8bf2a 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-@@ -702,7 +702,7 @@ static void mtk_jpeg_buf_queue(struct vb2_buffer *vb)
- 	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, to_vb2_v4l2_buffer(vb));
- }
- 
--static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
-+static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- 				 enum v4l2_buf_type type)
+diff --git a/drivers/media/platform/sh_veu.c b/drivers/media/platform/sh_veu.c
+index 09ae64a0004c..d277cc674349 100644
+--- a/drivers/media/platform/sh_veu.c
++++ b/drivers/media/platform/sh_veu.c
+@@ -273,13 +273,13 @@ static void sh_veu_process(struct sh_veu_dev *veu,
+ static void sh_veu_device_run(void *priv)
  {
- 	if (V4L2_TYPE_IS_OUTPUT(type))
-@@ -714,7 +714,7 @@ static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
- {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	int ret = 0;
- 
- 	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-@@ -724,14 +724,14 @@ static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
- 	return 0;
- err:
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_QUEUED);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
- 	return ret;
- }
- 
- static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 
- 	/*
- 	 * STREAMOFF is an acknowledgment for source change event.
-@@ -743,7 +743,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 		struct mtk_jpeg_src_buf *src_buf;
- 
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
--		src_buf = mtk_jpeg_vb2_to_srcbuf(vb);
-+		src_buf = mtk_jpeg_vb2_to_srcbuf(&vb->vb2_buf);
- 		mtk_jpeg_set_queue_data(ctx, &src_buf->dec_param);
- 		ctx->state = MTK_JPEG_RUNNING;
- 	} else if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-@@ -751,7 +751,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 	}
- 
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_ERROR);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
- 
- 	pm_runtime_put_sync(ctx->jpeg->dev);
- }
-@@ -807,7 +807,7 @@ static void mtk_jpeg_device_run(void *priv)
- {
- 	struct mtk_jpeg_ctx *ctx = priv;
- 	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+ 	struct sh_veu_dev *veu = priv;
 -	struct vb2_buffer *src_buf, *dst_buf;
 +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	unsigned long flags;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
-@@ -817,11 +817,11 @@ static void mtk_jpeg_device_run(void *priv)
  
- 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+ 	src_buf = v4l2_m2m_next_src_buf(veu->m2m_ctx);
+ 	dst_buf = v4l2_m2m_next_dst_buf(veu->m2m_ctx);
  
- 	if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
--		for (i = 0; i < dst_buf->num_planes; i++)
--			vb2_set_plane_payload(dst_buf, i, 0);
-+		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
- 		buf_state = VB2_BUF_STATE_DONE;
- 		goto dec_end;
- 	}
-@@ -833,8 +833,8 @@ static void mtk_jpeg_device_run(void *priv)
- 		return;
- 	}
- 
--	mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
--	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
-+	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
-+	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
- 		goto dec_end;
- 
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
-@@ -849,8 +849,8 @@ static void mtk_jpeg_device_run(void *priv)
- dec_end:
- 	v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+ 	if (src_buf && dst_buf)
+-		sh_veu_process(veu, src_buf, dst_buf);
++		sh_veu_process(veu, &src_buf->vb2_buf, &dst_buf->vb2_buf);
  }
  
-@@ -921,7 +921,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- {
- 	struct mtk_jpeg_dev *jpeg = priv;
- 	struct mtk_jpeg_ctx *ctx;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	u32	dec_irq_ret;
-@@ -938,7 +938,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 
- 	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
- 
- 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
- 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-@@ -948,15 +948,15 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 		goto dec_end;
- 	}
- 
--	for (i = 0; i < dst_buf->num_planes; i++)
--		vb2_set_plane_payload(dst_buf, i,
-+	for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+		vb2_set_plane_payload(&dst_buf->vb2_buf, i,
- 				      jpeg_src_buf->dec_param.comp_size[i]);
- 
- 	buf_state = VB2_BUF_STATE_DONE;
- 
- dec_end:
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- 	return IRQ_HANDLED;
- }
+ 		/* ========== video ioctls ========== */
 -- 
 2.19.1
 
