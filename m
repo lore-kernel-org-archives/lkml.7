@@ -2,58 +2,55 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F17C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2761C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FE0206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49D4206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714562;
-	bh=QL4Jdhcm0T948hTOALqx0jaZgtEGuT2ddJmBJqKD1to=;
+	s=default; t=1553714574;
+	bh=r4H3MnEG6K1JOHY8zGpWAFv1R2zrx3u/CZV9Xe46kZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=owm9smWIBfzCbVrLaEe1zGlmgDyrcvKc18zGrFjphtwQyfunzxX5wULE2juV4fDOA
-	 OXUWxS6u7c8r1L8ZjAhHEAftpZoJ4B3upMCLDqpMzpWNriImhLyHIF0SA5dAY1n+fJ
-	 82LMrVxUgX55OMGbuQuEcBvlzszKdlWOpBNZayuc=
+	b=0U4O80OsL7DDA0KN+Ts6BG3VKB63gCtjNEfcCUQuqEV9iwNroXcGSeYImJttqLsfp
+	 xdqPF4h7+ai+V/DY5FQssNJXxpvGeeizTkzaZmsg9nsahkoh7YW3cqyJlTQ8a/5lQX
+	 E5h/no0wBVGeGxZIk2n4/gJZzHrdCeJmj9Ra9U/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbfC0SGT (ORCPT
+        id S2387877AbfC0SGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47800 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfC0SGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:16 -0400
+        id S1731756AbfC0SGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF335217F9;
-        Wed, 27 Mar 2019 18:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E0BF217F5;
+        Wed, 27 Mar 2019 18:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709975;
-        bh=QL4Jdhcm0T948hTOALqx0jaZgtEGuT2ddJmBJqKD1to=;
+        s=default; t=1553709961;
+        bh=r4H3MnEG6K1JOHY8zGpWAFv1R2zrx3u/CZV9Xe46kZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCO2BoDAN750BWMVwVCYotmb39AC5DGlCWF89Yth6XnCAcfOtyPs2K45gtWohnrZL
-         o4W3OpnxJvBhHcbUVqDlP+OoVmffsBzV7dpLN2MYr2iCFYDRDqxc12COqiqInB8Ghi
-         laPmWdqWOdSVWpAISNHji1uQDM2diWy8FRAucfMo=
+        b=nx6rbkGx67LhiYNASoOcDGSeXowl9ED0FXUKMnIrQUaDcCAE9dXrHMufTy0yGLNu6
+         RgWnMgZdw82FLvq6+Hd9Kp4oPDwF/+RNospdQz9petzAwJKwX0dEv4nbuMSeyzRtA8
+         dhzl1fp5xfFN4BCw32Sl8K0MWkkcUF0oGne4Sfjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@fb.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 140/262] tools build: Add test-reallocarray.c to test-all.c to fix the build
-Date:   Wed, 27 Mar 2019 13:59:55 -0400
-Message-Id: <20190327180158.10245-140-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 134/262] efi: Fix build error due to enum collision between efi.h and ima.h
+Date:   Wed, 27 Mar 2019 13:59:49 -0400
+Message-Id: <20190327180158.10245-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -65,188 +62,283 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit a96c03e8cdcf123384319f312d0a08a7a760bb35 ]
+[ Upstream commit 5c418dc789a3898717ebf2caa5716ba91a7150b2 ]
 
-When a test is in the FEATURE_TESTS_BASIC list in tools/build/Makefile.feature
-must be added to tools/build/feature/test-all.c, because the successfull
-compilation and linking of that test-all.bin file means that all the
-features listed in FEATURE_TESTS_BASIC are present in the system, so we
-don't have to go on feature by feature test building them.
+The following commit:
 
-Since reallocarray() is expected to be present in modern systems, it has
-a place in FEATURE_TESTS_BASIC, so that we speed up the build process
-building just that file.
+  a893ea15d764 ("tpm: move tpm_chip definition to include/linux/tpm.h")
 
-For older systems, such as ubuntu:16.04 (build failure reported by Jin
-Yao) debian:8, and for the current flagship RHEL distro, RHEL7, the
-build will fail as test-all.bin (without test-reallocarray.c included)
-passes but reallocarray() isn't present, making the build fail with:
+introduced a build error when both IMA and EFI are enabled:
 
-    CC       /tmp/build/perf/libbpf.o
-    MKDIR    /tmp/build/perf/fs/
-    CC       /tmp/build/perf/fs/tracing_path.o
-    LD       /tmp/build/perf/fd/libapi-in.o
-    CC       /tmp/build/perf/bpf.o
-  libbpf.c: In function 'bpf_object__add_program':
-  libbpf.c:367:10: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
-    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
-            ^
-  libbpf.c:367:2: error: nested extern declaration of 'reallocarray' [-Werror=nested-externs]
-    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
-    ^
-  libbpf.c:367:8: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-    progs = reallocarray(progs, nr_progs + 1, sizeof(progs[0]));
-          ^
-  libbpf.c: In function 'bpf_object__elf_collect':
-  libbpf.c:887:10: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-      reloc = reallocarray(reloc, nr_reloc,
-            ^
-  libbpf.c: In function 'bpf_program__reloc_text':
-  libbpf.c:1394:12: error: assignment makes pointer from integer without a cast [-Werror=int-conversion]
-     new_insn = reallocarray(prog->insns, new_cnt, sizeof(*insn));
-              ^
-    CC       /tmp/build/perf/nlattr.o
+    In file included from ../security/integrity/ima/ima_fs.c:30:
+    ../security/integrity/ima/ima.h:176:7: error: redeclaration of enumerator "NONE"
 
-Even with:
+What happens is that both headers (ima.h and efi.h) defines the same
+'NONE' constant, and it broke when they started getting included from
+the same file:
 
-  $ grep reallocarray /tmp/build/perf/FEATURE-DUMP
-  feature-reallocarray=1
-  $
+Rework to prefix the EFI enum with 'EFI_*'.
 
-Which ubuntu:16.04.5 LTS doesn't have:
-
-  perfbuilder@38a153a1bba8:/$ head -2 /etc/os-release
-  NAME="Ubuntu"
-  VERSION="16.04.5 LTS (Xenial Xerus)"
-  perfbuilder@38a153a1bba8:/$ find /usr/include/ -name "*.h" | xargs grep -w reallocarray
-  perfbuilder@38a153a1bba8:/$
-
-Fix it by including it to test-all.c, which ends up forcing the
-individual tests to be triggered and for the build process to notice
-that indeed reallocarray() is not there:
-
-  perfbuilder@38a153a1bba8:/$ cat /tmp/build/perf/feature/test-all.make.output
-  In file included from test-all.c:178:0:
-  test-reallocarray.c: In function 'main_test_reallocarray':
-  test-reallocarray.c:7:11: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
-    return !!reallocarray(NULL, 1, 1);
-             ^
-  cc1: all warnings being treated as errors
-  perfbuilder@38a153a1bba8:/$
-
-That is the only test that is failing on Ubuntu 16.03.5 LTS, so all
-tests are forced:
-
-  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$ ls -lSr *.make.output
-  <SNIP successful tests>
-  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-dwarf.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 14:16 test-cplus-demangle.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-bpf.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder   0 Feb 14 15:00 test-backtrace.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 104 Feb 14 15:00 test-bionic.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 107 Feb 14 15:00 test-libunwind-x86.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 115 Feb 14 15:00 test-libunwind-aarch64.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 122 Feb 14 15:00 test-libbabeltrace.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 254 Feb 14 15:00 test-reallocarray.make.output
-  -rw-r--r--. 1 perfbuilder perfbuilder 312 Feb 14 15:00 test-all.make.output
-  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$
-
-And that reallocarray() one shows:
-
-  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$ cat test-reallocarray.make.output
-  test-reallocarray.c: In function 'main':
-  test-reallocarray.c:7:11: error: implicit declaration of function 'reallocarray' [-Werror=implicit-function-declaration]
-    return !!reallocarray(NULL, 1, 1);
-             ^
-  cc1: all warnings being treated as errors
-  perfbuilder@38a153a1bba8:/tmp/build/perf/feature$
-
-Which now generates the expected result:
-
-  perfbuilder@38a153a1bba8:~$ grep reallocarray /tmp/build/perf/FEATURE-DUMP
-  feature-reallocarray=0
-  perfbuilder@38a153a1bba8:~$
-
-The fallback mechanism kicks in and libbpf and perf are again buildable
-in systems without reallocarray():
-
-  $ cat tools/include/tools/libc_compat.h
-  // SPDX-License-Identifier: (LGPL-2.0+ OR BSD-2-Clause)
-  /* Copyright (C) 2018 Netronome Systems, Inc. */
-
-  #ifndef __TOOLS_LIBC_COMPAT_H
-  #define __TOOLS_LIBC_COMPAT_H
-
-  #include <stdlib.h>
-  #include <linux/overflow.h>
-
-  #ifdef COMPAT_NEED_REALLOCARRAY
-  static inline void *reallocarray(void *ptr, size_t nmemb, size_t size)
-  {
-	  size_t bytes;
-
-	  if (unlikely(check_mul_overflow(nmemb, size, &bytes)))
-		  return NULL;
-	  return realloc(ptr, bytes);
-  }
-  #endif
-  #endif
-  $
-
-Reported-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@fb.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Fixes: 531b014e7a2f ("tools: bpf: make use of reallocarray")
-Link: https://lkml.kernel.org/n/tip-aonqku8axii8rxki5g11w40b@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190215165551.12220-2-ard.biesheuvel@linaro.org
+[ Cleaned up the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/feature/test-all.c          | 5 +++++
- tools/build/feature/test-reallocarray.c | 2 ++
- 2 files changed, 7 insertions(+)
+ arch/x86/platform/efi/quirks.c          |  4 +--
+ drivers/firmware/efi/runtime-wrappers.c | 48 ++++++++++++-------------
+ include/linux/efi.h                     | 26 +++++++-------
+ 3 files changed, 39 insertions(+), 39 deletions(-)
 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 20cdaa4fc112..93f485098161 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -178,6 +178,10 @@
- # include "test-libaio.c"
- #undef main
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 17456a1d3f04..6c571ae86947 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -717,7 +717,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * "efi_mm" cannot be used to check if the page fault had occurred
+ 	 * in the firmware context because efi=old_map doesn't use efi_pgd.
+ 	 */
+-	if (efi_rts_work.efi_rts_id == NONE)
++	if (efi_rts_work.efi_rts_id == EFI_NONE)
+ 		return;
  
-+#define main main_test_reallocarray
-+# include "test-reallocarray.c"
-+#undef main
-+
- int main(int argc, char *argv[])
- {
- 	main_test_libpython();
-@@ -219,6 +223,7 @@ int main(int argc, char *argv[])
- 	main_test_setns();
- 	main_test_libopencsd();
- 	main_test_libaio();
-+	main_test_reallocarray();
+ 	/*
+@@ -742,7 +742,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * because this case occurs *very* rarely and hence could be improved
+ 	 * on a need by basis.
+ 	 */
+-	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
++	if (efi_rts_work.efi_rts_id == EFI_RESET_SYSTEM) {
+ 		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
+ 		machine_real_restart(MRR_BIOS);
+ 		return;
+diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+index e2abfdb5cee6..698745c249e8 100644
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -85,7 +85,7 @@ struct efi_runtime_work efi_rts_work;
+ 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
+ 									\
+ exit:									\
+-	efi_rts_work.efi_rts_id = NONE;					\
++	efi_rts_work.efi_rts_id = EFI_NONE;				\
+ 	efi_rts_work.status;						\
+ })
  
- 	return 0;
+@@ -175,50 +175,50 @@ static void efi_call_rts(struct work_struct *work)
+ 	arg5 = efi_rts_work.arg5;
+ 
+ 	switch (efi_rts_work.efi_rts_id) {
+-	case GET_TIME:
++	case EFI_GET_TIME:
+ 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
+ 				       (efi_time_cap_t *)arg2);
+ 		break;
+-	case SET_TIME:
++	case EFI_SET_TIME:
+ 		status = efi_call_virt(set_time, (efi_time_t *)arg1);
+ 		break;
+-	case GET_WAKEUP_TIME:
++	case EFI_GET_WAKEUP_TIME:
+ 		status = efi_call_virt(get_wakeup_time, (efi_bool_t *)arg1,
+ 				       (efi_bool_t *)arg2, (efi_time_t *)arg3);
+ 		break;
+-	case SET_WAKEUP_TIME:
++	case EFI_SET_WAKEUP_TIME:
+ 		status = efi_call_virt(set_wakeup_time, *(efi_bool_t *)arg1,
+ 				       (efi_time_t *)arg2);
+ 		break;
+-	case GET_VARIABLE:
++	case EFI_GET_VARIABLE:
+ 		status = efi_call_virt(get_variable, (efi_char16_t *)arg1,
+ 				       (efi_guid_t *)arg2, (u32 *)arg3,
+ 				       (unsigned long *)arg4, (void *)arg5);
+ 		break;
+-	case GET_NEXT_VARIABLE:
++	case EFI_GET_NEXT_VARIABLE:
+ 		status = efi_call_virt(get_next_variable, (unsigned long *)arg1,
+ 				       (efi_char16_t *)arg2,
+ 				       (efi_guid_t *)arg3);
+ 		break;
+-	case SET_VARIABLE:
++	case EFI_SET_VARIABLE:
+ 		status = efi_call_virt(set_variable, (efi_char16_t *)arg1,
+ 				       (efi_guid_t *)arg2, *(u32 *)arg3,
+ 				       *(unsigned long *)arg4, (void *)arg5);
+ 		break;
+-	case QUERY_VARIABLE_INFO:
++	case EFI_QUERY_VARIABLE_INFO:
+ 		status = efi_call_virt(query_variable_info, *(u32 *)arg1,
+ 				       (u64 *)arg2, (u64 *)arg3, (u64 *)arg4);
+ 		break;
+-	case GET_NEXT_HIGH_MONO_COUNT:
++	case EFI_GET_NEXT_HIGH_MONO_COUNT:
+ 		status = efi_call_virt(get_next_high_mono_count, (u32 *)arg1);
+ 		break;
+-	case UPDATE_CAPSULE:
++	case EFI_UPDATE_CAPSULE:
+ 		status = efi_call_virt(update_capsule,
+ 				       (efi_capsule_header_t **)arg1,
+ 				       *(unsigned long *)arg2,
+ 				       *(unsigned long *)arg3);
+ 		break;
+-	case QUERY_CAPSULE_CAPS:
++	case EFI_QUERY_CAPSULE_CAPS:
+ 		status = efi_call_virt(query_capsule_caps,
+ 				       (efi_capsule_header_t **)arg1,
+ 				       *(unsigned long *)arg2, (u64 *)arg3,
+@@ -242,7 +242,7 @@ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_TIME, tm, tc, NULL, NULL, NULL);
++	status = efi_queue_work(EFI_GET_TIME, tm, tc, NULL, NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
  }
-diff --git a/tools/build/feature/test-reallocarray.c b/tools/build/feature/test-reallocarray.c
-index 8170de35150d..8f6743e31da7 100644
---- a/tools/build/feature/test-reallocarray.c
-+++ b/tools/build/feature/test-reallocarray.c
-@@ -6,3 +6,5 @@ int main(void)
- {
- 	return !!reallocarray(NULL, 1, 1);
+@@ -253,7 +253,7 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_TIME, tm, NULL, NULL, NULL, NULL);
++	status = efi_queue_work(EFI_SET_TIME, tm, NULL, NULL, NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
  }
-+
-+#undef _GNU_SOURCE
+@@ -266,7 +266,7 @@ static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm, NULL,
++	status = efi_queue_work(EFI_GET_WAKEUP_TIME, enabled, pending, tm, NULL,
+ 				NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -278,7 +278,7 @@ static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
++	status = efi_queue_work(EFI_SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
+ 				NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -294,7 +294,7 @@ static efi_status_t virt_efi_get_variable(efi_char16_t *name,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_VARIABLE, name, vendor, attr, data_size,
++	status = efi_queue_work(EFI_GET_VARIABLE, name, vendor, attr, data_size,
+ 				data);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -308,7 +308,7 @@ static efi_status_t virt_efi_get_next_variable(unsigned long *name_size,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_NEXT_VARIABLE, name_size, name, vendor,
++	status = efi_queue_work(EFI_GET_NEXT_VARIABLE, name_size, name, vendor,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -324,7 +324,7 @@ static efi_status_t virt_efi_set_variable(efi_char16_t *name,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_VARIABLE, name, vendor, &attr, &data_size,
++	status = efi_queue_work(EFI_SET_VARIABLE, name, vendor, &attr, &data_size,
+ 				data);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -359,7 +359,7 @@ static efi_status_t virt_efi_query_variable_info(u32 attr,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(QUERY_VARIABLE_INFO, &attr, storage_space,
++	status = efi_queue_work(EFI_QUERY_VARIABLE_INFO, &attr, storage_space,
+ 				remaining_space, max_variable_size, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -391,7 +391,7 @@ static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
++	status = efi_queue_work(EFI_GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -407,7 +407,7 @@ static void virt_efi_reset_system(int reset_type,
+ 			"could not get exclusive access to the firmware\n");
+ 		return;
+ 	}
+-	efi_rts_work.efi_rts_id = RESET_SYSTEM;
++	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
+ 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
+ 	up(&efi_runtime_lock);
+ }
+@@ -423,7 +423,7 @@ static efi_status_t virt_efi_update_capsule(efi_capsule_header_t **capsules,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(UPDATE_CAPSULE, capsules, &count, &sg_list,
++	status = efi_queue_work(EFI_UPDATE_CAPSULE, capsules, &count, &sg_list,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -441,7 +441,7 @@ static efi_status_t virt_efi_query_capsule_caps(efi_capsule_header_t **capsules,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(QUERY_CAPSULE_CAPS, capsules, &count,
++	status = efi_queue_work(EFI_QUERY_CAPSULE_CAPS, capsules, &count,
+ 				max_size, reset_type, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 28604a8d0aa9..a86485ac7c87 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1699,19 +1699,19 @@ extern int efi_tpm_eventlog_init(void);
+  * fault happened while executing an efi runtime service.
+  */
+ enum efi_rts_ids {
+-	NONE,
+-	GET_TIME,
+-	SET_TIME,
+-	GET_WAKEUP_TIME,
+-	SET_WAKEUP_TIME,
+-	GET_VARIABLE,
+-	GET_NEXT_VARIABLE,
+-	SET_VARIABLE,
+-	QUERY_VARIABLE_INFO,
+-	GET_NEXT_HIGH_MONO_COUNT,
+-	RESET_SYSTEM,
+-	UPDATE_CAPSULE,
+-	QUERY_CAPSULE_CAPS,
++	EFI_NONE,
++	EFI_GET_TIME,
++	EFI_SET_TIME,
++	EFI_GET_WAKEUP_TIME,
++	EFI_SET_WAKEUP_TIME,
++	EFI_GET_VARIABLE,
++	EFI_GET_NEXT_VARIABLE,
++	EFI_SET_VARIABLE,
++	EFI_QUERY_VARIABLE_INFO,
++	EFI_GET_NEXT_HIGH_MONO_COUNT,
++	EFI_RESET_SYSTEM,
++	EFI_UPDATE_CAPSULE,
++	EFI_QUERY_CAPSULE_CAPS,
+ };
+ 
+ /*
 -- 
 2.19.1
 
