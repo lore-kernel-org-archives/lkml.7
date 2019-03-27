@@ -2,196 +2,126 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4857C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D155C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72C272075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5CA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MZg2oWcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387666AbfC0GVi (ORCPT
+        id S2387591AbfC0GV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:21:38 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6509 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733082AbfC0GTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:19:39 -0400
-X-UUID: a5a7e2e66dee4cbca364f43b66b438f8-20190327
-X-UUID: a5a7e2e66dee4cbca364f43b66b438f8-20190327
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1392214704; Wed, 27 Mar 2019 14:19:34 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Mar 2019 14:19:32 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Mar 2019 14:19:32 +0800
-From:   <yongqiang.niu@mediatek.com>
-To:     <ck.hu@mediatek.com>, <p.zabel@pengutronix.de>,
-        <robh+dt@kernel.org>, <matthias.bgg@gmail.com>
-CC:     <airlied@linux.ie>, <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH v2 03/25] drm/mediatek: add mutex mod into ddp private data
-Date:   Wed, 27 Mar 2019 14:18:59 +0800
-Message-ID: <1553667561-25447-4-git-send-email-yongqiang.niu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+        Wed, 27 Mar 2019 02:21:58 -0400
+Received: from mail-eopbgr40041.outbound.protection.outlook.com ([40.107.4.41]:26348
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732992AbfC0GV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:21:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J5YyC5el3pvayqUTWcokVk5ZVoVJyoWi3xhCdsF50jk=;
+ b=MZg2oWcOzod4omWqO/lJnPEyAnKLVk/YRA/tclDigqlTquHfnJK+O8K6lb+Yyp2gN5fpBhLSudvy2CTCCpI66zw/yTNaL7FMRojL8IkGT6XuX3eBxFnfMgi7NsjEM6M0YbKYyGLPfyknoJ/Spyf6qog9Ur2lRt0mq61EFWVZ4IM=
+Received: from DB6PR0801MB1990.eurprd08.prod.outlook.com (10.168.81.21) by
+ DB6PR0801MB1399.eurprd08.prod.outlook.com (10.168.11.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 06:21:55 +0000
+Received: from DB6PR0801MB1990.eurprd08.prod.outlook.com
+ ([fe80::1150:dc18:a9dc:e17f]) by DB6PR0801MB1990.eurprd08.prod.outlook.com
+ ([fe80::1150:dc18:a9dc:e17f%2]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 06:21:55 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+CC:     Brian Starkey <Brian.Starkey@arm.com>,
+        Joe Perches <joe@perches.com>, Daniel Vetter <daniel@ffwll.ch>,
+        DRI-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, nd <nd@arm.com>
+Subject: Re: [PATCH] MAINTAINERS: Fix pattern for Documentation path for Arm
+ Mali Komeda
+Thread-Topic: [PATCH] MAINTAINERS: Fix pattern for Documentation path for Arm
+ Mali Komeda
+Thread-Index: AQHU5GVfhxPPSVk2CEGmggPenazxlA==
+Date:   Wed, 27 Mar 2019 06:21:54 +0000
+Message-ID: <20190327062147.GA8455@james-ThinkStation-P300>
+References: <20190325233040.30983-1-joe@perches.com>
+ <20190326103203.8891-1-Liviu.Dudau@arm.com>
+In-Reply-To: <20190326103203.8891-1-Liviu.Dudau@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.9.4 (2018-02-28)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0212.apcprd02.prod.outlook.com
+ (2603:1096:201:20::24) To DB6PR0801MB1990.eurprd08.prod.outlook.com
+ (2603:10a6:4:6c::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 557cb6e1-34b0-4df2-640b-08d6b27c81fa
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB6PR0801MB1399;
+x-ms-traffictypediagnostic: DB6PR0801MB1399:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <DB6PR0801MB1399D89D6C103F7B57A740A2B3580@DB6PR0801MB1399.eurprd08.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(346002)(396003)(136003)(39860400002)(376002)(189003)(199004)(86362001)(105586002)(5660300002)(52116002)(33656002)(14454004)(3846002)(6116002)(81156014)(99286004)(1076003)(7736002)(305945005)(68736007)(71190400001)(81166006)(8676002)(106356001)(386003)(71200400001)(55236004)(4744005)(478600001)(76176011)(102836004)(6506007)(8936002)(26005)(14444005)(66066001)(229853002)(6486002)(256004)(6436002)(2906002)(316002)(54906003)(33716001)(58126008)(6862004)(486006)(4326008)(186003)(53936002)(6512007)(476003)(97736004)(6246003)(25786009)(9686003)(11346002)(6636002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0801MB1399;H:DB6PR0801MB1990.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V01KHjKd1WkXiIEajPj1MUtd+HyVwHtS+y3C60Q592UwAqqNa4FWwV0/Y1kMlEbv2n/i2Ldal90WK7z9s72+6mL8T+EuCTzvas6SIrFv4u7seP/NuMSzux/m+pXa3bcfWjlVFv4rOtkq9VorZQgUuSVCdYe0oefd+hKKaadhHmLTVjDokEhSGPr6PO2Mer2Ckaq7HXeM68zl0POZvljxyU+XwozpLoS6gMdOxgPIZldfcDlQ2wZXQlotQvuSoIOQ3JTeUg2LBDvEtVns7Ow6GkfpUe+Zim/CwISZBSDkSzCN8CC1NISpijiTQt3klb7zEEDYP8+asJDAQa/MSUn+AhArVnC4fCi86TCh4lsimjmD/OmKyG0z9FJv8UZv0IECc6CfQ4weC3n3eQxdRD9zDruYHxCFKhpZrtmPnFSbfOc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <37D96E6DC2D7934EB2BF81182EF4DB0A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 4C4CCE23DD6210CFA1931511556D1D347202E2045C5BDAA9DCCC44DBFFFC98812000:8
-X-MTK:  N
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 557cb6e1-34b0-4df2-640b-08d6b27c81fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 06:21:54.9676
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1399
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Tue, Mar 26, 2019 at 10:32:03AM +0000, Liviu Dudau wrote:
+> The Device Tree bindings documentation file is in a simplified path
+> that doesn't match the MAINTAINERS entry.
+>=20
+> Reported-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Liviu Dudau <liviu.dudau@arm.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e17ebf70b5480..9fa4686212bdd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1167,7 +1167,7 @@ S:	Supported
+>  T:	git git://linux-arm.org/linux-ld.git for-upstream/mali-dp
+>  F:	drivers/gpu/drm/arm/display/include/
+>  F:	drivers/gpu/drm/arm/display/komeda/
+> -F:	Documentation/devicetree/bindings/display/arm/arm,komeda.txt
+> +F:	Documentation/devicetree/bindings/display/arm,komeda.txt
+>  F:	Documentation/gpu/komeda-kms.rst
+> =20
+>  ARM MALI-DP DRM DRIVER
+> --=20
+> 2.21.0
 
-mutex0 MOD register offset not always 0x2C.
-for mt8183, that offset will be 0x30,
-add this regsiter offset into private data
+--
+Thank you for fixing this problem.
 
-Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 53 +++++++++++++++++++++++++---------
- 1 file changed, 39 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 579ce28..7f0d46e 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -41,10 +41,12 @@
- #define DISP_REG_CONFIG_DSI_SEL			0x050
- #define DISP_REG_CONFIG_DPI_SEL			0x064
- 
-+#define MT2701_DISP_MUTEX0_MOD0 0x2C
-+
- #define DISP_REG_MUTEX_EN(n)	(0x20 + 0x20 * (n))
- #define DISP_REG_MUTEX(n)	(0x24 + 0x20 * (n))
- #define DISP_REG_MUTEX_RST(n)	(0x28 + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD(n)	(0x2c + 0x20 * (n))
-+#define DISP_REG_MUTEX_MOD(data, n)	((data)->mutex_mod_reg + 0x20 * (n))
- #define DISP_REG_MUTEX_SOF(n)	(0x30 + 0x20 * (n))
- #define DISP_REG_MUTEX_MOD2(n)	(0x34 + 0x20 * (n))
- 
-@@ -147,12 +149,17 @@ struct mtk_disp_mutex {
- 	bool claimed;
- };
- 
-+struct mtk_ddp_data {
-+	const unsigned int *mutex_mod;
-+	unsigned int mutex_mod_reg;
-+};
-+
- struct mtk_ddp {
- 	struct device			*dev;
- 	struct clk			*clk;
- 	void __iomem			*regs;
- 	struct mtk_disp_mutex		mutex[10];
--	const unsigned int		*mutex_mod;
-+	const struct mtk_ddp_data	*data;
- };
- 
- static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-@@ -202,6 +209,21 @@ struct mtk_ddp {
- 	[DDP_COMPONENT_WDMA1] = MT8173_MUTEX_MOD_DISP_WDMA1,
- };
- 
-+static const struct mtk_ddp_data mt2701_ddp_driver_data = {
-+	.mutex_mod = mt2701_mutex_mod,
-+	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+};
-+
-+static const struct mtk_ddp_data mt2712_ddp_driver_data = {
-+	.mutex_mod = mt2712_mutex_mod,
-+	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+};
-+
-+static const struct mtk_ddp_data mt8173_ddp_driver_data = {
-+	.mutex_mod = mt8173_mutex_mod,
-+	.mutex_mod_reg = MT2701_DISP_MUTEX0_MOD0,
-+};
-+
- static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
- 				    enum mtk_ddp_comp_id next,
- 				    unsigned int *addr)
-@@ -464,15 +486,15 @@ void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
- 		reg = MUTEX_SOF_DPI1;
- 		break;
- 	default:
--		if (ddp->mutex_mod[id] < 32) {
--			offset = DISP_REG_MUTEX_MOD(mutex->id);
-+		if (ddp->data->mutex_mod[id] < 32) {
-+			offset = DISP_REG_MUTEX_MOD(ddp->data, mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg |= 1 << ddp->mutex_mod[id];
-+			reg |= 1 << ddp->data->mutex_mod[id];
- 			writel_relaxed(reg, ddp->regs + offset);
- 		} else {
- 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg |= 1 << (ddp->mutex_mod[id] - 32);
-+			reg |= 1 << (ddp->data->mutex_mod[id] - 32);
- 			writel_relaxed(reg, ddp->regs + offset);
- 		}
- 		return;
-@@ -502,15 +524,15 @@ void mtk_disp_mutex_remove_comp(struct mtk_disp_mutex *mutex,
- 			       ddp->regs + DISP_REG_MUTEX_SOF(mutex->id));
- 		break;
- 	default:
--		if (ddp->mutex_mod[id] < 32) {
--			offset = DISP_REG_MUTEX_MOD(mutex->id);
-+		if (ddp->data->mutex_mod[id] < 32) {
-+			offset = DISP_REG_MUTEX_MOD(ddp->data, mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg &= ~(1 << ddp->mutex_mod[id]);
-+			reg &= ~(1 << ddp->data->mutex_mod[id]);
- 			writel_relaxed(reg, ddp->regs + offset);
- 		} else {
- 			offset = DISP_REG_MUTEX_MOD2(mutex->id);
- 			reg = readl_relaxed(ddp->regs + offset);
--			reg &= ~(1 << (ddp->mutex_mod[id] - 32));
-+			reg &= ~(1 << (ddp->data->mutex_mod[id] - 32));
- 			writel_relaxed(reg, ddp->regs + offset);
- 		}
- 		break;
-@@ -585,7 +607,7 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 		return PTR_ERR(ddp->regs);
- 	}
- 
--	ddp->mutex_mod = of_device_get_match_data(dev);
-+	ddp->data = of_device_get_match_data(dev);
- 
- 	platform_set_drvdata(pdev, ddp);
- 
-@@ -598,9 +620,12 @@ static int mtk_ddp_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id ddp_driver_dt_match[] = {
--	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
--	{ .compatible = "mediatek,mt2712-disp-mutex", .data = mt2712_mutex_mod},
--	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
-+	{ .compatible = "mediatek,mt2701-disp-mutex",
-+	  .data = &mt2701_ddp_driver_data},
-+	{ .compatible = "mediatek,mt2712-disp-mutex",
-+	  .data = &mt2712_ddp_driver_data},
-+	{ .compatible = "mediatek,mt8173-disp-mutex",
-+	  .data = &mt8173_ddp_driver_data},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ddp_driver_dt_match);
--- 
-1.8.1.1.dirty
-
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
