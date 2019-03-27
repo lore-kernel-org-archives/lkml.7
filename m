@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36455C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD111C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0640E206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC4A206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713815;
-	bh=Mh/4AwY9a0OWVofv47T5bGj6Q2yFFjAdYT4sKx0s80w=;
+	s=default; t=1553713818;
+	bh=oDc5v9fkAqteU5FYo88ERwOh2+2uL/PzQz3vwp04joU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAE/DXChRYtV8dfhbdE/ih5JQTQ3tBKx2f4ThjFcXXA5dNA5N5MpVPVUkxhGYjC/2
-	 7KNZAzPmX9JkBY2ID5PCxXS9pxgPb4+PqxzmUK2g4JC3BXeCpMqHM6Xzqf+awmyTg5
-	 JukBnD14MVLk87s/8g3+TEqCWlRGulREpXL4zi10=
+	b=umnTa7SXcr7hSeJqgOgOnxcgAYoVEXvUS1SrghO9AArbZlUOEiomXSFBFmqbRVFcp
+	 ObQ9eILWHf7Jk6gDRda9Dxmn2qpDGeLQ0EKWFNFO+UHiYlijkWqja7vTBt1yNiuT45
+	 dmke6QpgffLCewNc5OxrnwiSf70jT+afDbYBbhQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389790AbfC0TKO (ORCPT
+        id S2389722AbfC0TKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53436 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388289AbfC0SLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:11 -0400
+        id S1733260AbfC0SLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFA7217F5;
-        Wed, 27 Mar 2019 18:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42C08217D9;
+        Wed, 27 Mar 2019 18:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710270;
-        bh=Mh/4AwY9a0OWVofv47T5bGj6Q2yFFjAdYT4sKx0s80w=;
+        s=default; t=1553710269;
+        bh=oDc5v9fkAqteU5FYo88ERwOh2+2uL/PzQz3vwp04joU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SA2lh+AAUVQkL1+HzlZZifq6G7DmYcdtg3FFhWcZXK2VIzXdmEe3DWEWNinc+94Mv
-         oOgcj4eZrKdGUMEyDe5V/BKJ8NS9seMg8WgJh7rBuBC7F3+eT7Fv6J3iKThsmkzYCg
-         ma206JbQDKh6bI4vQ5eg1ORJpFo7Lv+a4+D1UOfg=
+        b=oQLBn7fwgHFkVmtGWHZMLb/+89S8Jt7f/4Ix3T8c/OseUuMl8Fzz4ZnkaPL7moTJM
+         Cg7LkYC+h3ysCKCcJSQGwA/sF3xXj3qQaxaScBEHr0MRfHdL5SczfLve73SZ9Vi4IR
+         MY4q4hLxtSSvnIBeEzbtgjCkTflm/WRHa2Yp8cF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        David Rientjes <rientjes@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 026/192] memcg: killed threads should not invoke memcg OOM killer
-Date:   Wed, 27 Mar 2019 14:07:38 -0400
-Message-Id: <20190327181025.13507-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 025/192] mm,oom: don't kill global init via memory.oom.group
+Date:   Wed, 27 Mar 2019 14:07:37 -0400
+Message-Id: <20190327181025.13507-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -64,95 +63,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 7775face207922ea62a4e96b9cd45abfdc7b9840 ]
+[ Upstream commit d342a0b38674867ea67fde47b0e1e60ffe9f17a2 ]
 
-If a memory cgroup contains a single process with many threads
-(including different process group sharing the mm) then it is possible
-to trigger a race when the oom killer complains that there are no oom
-elible tasks and complain into the log which is both annoying and
-confusing because there is no actual problem.  The race looks as
-follows:
+Since setting global init process to some memory cgroup is technically
+possible, oom_kill_memcg_member() must check it.
 
-P1				oom_reaper		P2
-try_charge						try_charge
-  mem_cgroup_out_of_memory
-    mutex_lock(oom_lock)
-      out_of_memory
-        oom_kill_process(P1,P2)
-         wake_oom_reaper
-    mutex_unlock(oom_lock)
-    				oom_reap_task
-							  mutex_lock(oom_lock)
-							    select_bad_process # no victim
+  Tasks in /test1 are going to be killed due to memory.oom.group set
+  Memory cgroup out of memory: Killed process 1 (systemd) total-vm:43400kB, anon-rss:1228kB, file-rss:3992kB, shmem-rss:0kB
+  oom_reaper: reaped process 1 (systemd), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+  Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b
 
-The problem is more visible with many threads.
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-Fix this by checking for fatal_signal_pending from
-mem_cgroup_out_of_memory when the oom_lock is already held.
+int main(int argc, char *argv[])
+{
+	static char buffer[10485760];
+	static int pipe_fd[2] = { EOF, EOF };
+	unsigned int i;
+	int fd;
+	char buf[64] = { };
+	if (pipe(pipe_fd))
+		return 1;
+	if (chdir("/sys/fs/cgroup/"))
+		return 1;
+	fd = open("cgroup.subtree_control", O_WRONLY);
+	write(fd, "+memory", 7);
+	close(fd);
+	mkdir("test1", 0755);
+	fd = open("test1/memory.oom.group", O_WRONLY);
+	write(fd, "1", 1);
+	close(fd);
+	fd = open("test1/cgroup.procs", O_WRONLY);
+	write(fd, "1", 1);
+	snprintf(buf, sizeof(buf) - 1, "%d", getpid());
+	write(fd, buf, strlen(buf));
+	close(fd);
+	snprintf(buf, sizeof(buf) - 1, "%lu", sizeof(buffer) * 5);
+	fd = open("test1/memory.max", O_WRONLY);
+	write(fd, buf, strlen(buf));
+	close(fd);
+	for (i = 0; i < 10; i++)
+		if (fork() == 0) {
+			char c;
+			close(pipe_fd[1]);
+			read(pipe_fd[0], &c, 1);
+			memset(buffer, 0, sizeof(buffer));
+			sleep(3);
+			_exit(0);
+		}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	sleep(3);
+	return 0;
+}
 
-The oom bypass is safe because we do the same early in the try_charge
-path already.  The situation migh have changed in the mean time.  It
-should be safe to check for fatal_signal_pending and tsk_is_oom_victim
-but for a better code readability abstract the current charge bypass
-condition into should_force_charge and reuse it from that path.  "
+[   37.052923][ T9185] a.out invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+[   37.056169][ T9185] CPU: 4 PID: 9185 Comm: a.out Kdump: loaded Not tainted 5.0.0-rc4-next-20190131 #280
+[   37.059205][ T9185] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[   37.062954][ T9185] Call Trace:
+[   37.063976][ T9185]  dump_stack+0x67/0x95
+[   37.065263][ T9185]  dump_header+0x51/0x570
+[   37.066619][ T9185]  ? trace_hardirqs_on+0x3f/0x110
+[   37.068171][ T9185]  ? _raw_spin_unlock_irqrestore+0x3d/0x70
+[   37.069967][ T9185]  oom_kill_process+0x18d/0x210
+[   37.071515][ T9185]  out_of_memory+0x11b/0x380
+[   37.072936][ T9185]  mem_cgroup_out_of_memory+0xb6/0xd0
+[   37.074601][ T9185]  try_charge+0x790/0x820
+[   37.076021][ T9185]  mem_cgroup_try_charge+0x42/0x1d0
+[   37.077629][ T9185]  mem_cgroup_try_charge_delay+0x11/0x30
+[   37.079370][ T9185]  do_anonymous_page+0x105/0x5e0
+[   37.080939][ T9185]  __handle_mm_fault+0x9cb/0x1070
+[   37.082485][ T9185]  handle_mm_fault+0x1b2/0x3a0
+[   37.083819][ T9185]  ? handle_mm_fault+0x47/0x3a0
+[   37.085181][ T9185]  __do_page_fault+0x255/0x4c0
+[   37.086529][ T9185]  do_page_fault+0x28/0x260
+[   37.087788][ T9185]  ? page_fault+0x8/0x30
+[   37.088978][ T9185]  page_fault+0x1e/0x30
+[   37.090142][ T9185] RIP: 0033:0x7f8b183aefe0
+[   37.091433][ T9185] Code: 20 f3 44 0f 7f 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f 84 00 00 00 00 00 <66> 44 0f 7f 01 66 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41
+[   37.096917][ T9185] RSP: 002b:00007fffc5d329e8 EFLAGS: 00010206
+[   37.098615][ T9185] RAX: 00000000006010e0 RBX: 0000000000000008 RCX: 0000000000c30000
+[   37.100905][ T9185] RDX: 00000000010010c0 RSI: 0000000000000000 RDI: 00000000006010e0
+[   37.103349][ T9185] RBP: 0000000000000000 R08: 00007f8b188f4740 R09: 0000000000000000
+[   37.105797][ T9185] R10: 00007fffc5d32420 R11: 00007f8b183aef40 R12: 0000000000000005
+[   37.108228][ T9185] R13: 0000000000000000 R14: ffffffffffffffff R15: 0000000000000000
+[   37.110840][ T9185] memory: usage 51200kB, limit 51200kB, failcnt 125
+[   37.113045][ T9185] memory+swap: usage 0kB, limit 9007199254740988kB, failcnt 0
+[   37.115808][ T9185] kmem: usage 0kB, limit 9007199254740988kB, failcnt 0
+[   37.117660][ T9185] Memory cgroup stats for /test1: cache:0KB rss:49484KB rss_huge:30720KB shmem:0KB mapped_file:0KB dirty:0KB writeback:0KB inactive_anon:0KB active_anon:49700KB inactive_file:0KB active_file:0KB unevictable:0KB
+[   37.123371][ T9185] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,oom_memcg=/test1,task_memcg=/test1,task=a.out,pid=9188,uid=0
+[   37.128158][ T9185] Memory cgroup out of memory: Killed process 9188 (a.out) total-vm:14456kB, anon-rss:10324kB, file-rss:504kB, shmem-rss:0kB
+[   37.132710][ T9185] Tasks in /test1 are going to be killed due to memory.oom.group set
+[   37.132833][   T54] oom_reaper: reaped process 9188 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.135498][ T9185] Memory cgroup out of memory: Killed process 1 (systemd) total-vm:43400kB, anon-rss:1228kB, file-rss:3992kB, shmem-rss:0kB
+[   37.143434][ T9185] Memory cgroup out of memory: Killed process 9182 (a.out) total-vm:14456kB, anon-rss:76kB, file-rss:588kB, shmem-rss:0kB
+[   37.144328][   T54] oom_reaper: reaped process 1 (systemd), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.147585][ T9185] Memory cgroup out of memory: Killed process 9183 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.157222][ T9185] Memory cgroup out of memory: Killed process 9184 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:508kB, shmem-rss:0kB
+[   37.157259][ T9185] Memory cgroup out of memory: Killed process 9185 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.157291][ T9185] Memory cgroup out of memory: Killed process 9186 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:508kB, shmem-rss:0kB
+[   37.157306][   T54] oom_reaper: reaped process 9183 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.157328][ T9185] Memory cgroup out of memory: Killed process 9187 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:512kB, shmem-rss:0kB
+[   37.157452][ T9185] Memory cgroup out of memory: Killed process 9189 (a.out) total-vm:14456kB, anon-rss:6228kB, file-rss:512kB, shmem-rss:0kB
+[   37.158733][ T9185] Memory cgroup out of memory: Killed process 9190 (a.out) total-vm:14456kB, anon-rss:552kB, file-rss:512kB, shmem-rss:0kB
+[   37.160083][   T54] oom_reaper: reaped process 9186 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.160187][   T54] oom_reaper: reaped process 9189 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.206941][   T54] oom_reaper: reaped process 9185 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.212300][ T9185] Memory cgroup out of memory: Killed process 9191 (a.out) total-vm:14456kB, anon-rss:4180kB, file-rss:512kB, shmem-rss:0kB
+[   37.212317][   T54] oom_reaper: reaped process 9190 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.218860][ T9185] Memory cgroup out of memory: Killed process 9192 (a.out) total-vm:14456kB, anon-rss:1080kB, file-rss:512kB, shmem-rss:0kB
+[   37.227667][   T54] oom_reaper: reaped process 9192 (a.out), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[   37.292323][ T9193] abrt-hook-ccpp (9193) used greatest stack depth: 10480 bytes left
+[   37.351843][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b
+[   37.354833][    T1] CPU: 7 PID: 1 Comm: systemd Kdump: loaded Not tainted 5.0.0-rc4-next-20190131 #280
+[   37.357876][    T1] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/13/2018
+[   37.361685][    T1] Call Trace:
+[   37.363239][    T1]  dump_stack+0x67/0x95
+[   37.365010][    T1]  panic+0xfc/0x2b0
+[   37.366853][    T1]  do_exit+0xd55/0xd60
+[   37.368595][    T1]  do_group_exit+0x47/0xc0
+[   37.370415][    T1]  get_signal+0x32a/0x920
+[   37.372449][    T1]  ? _raw_spin_unlock_irqrestore+0x3d/0x70
+[   37.374596][    T1]  do_signal+0x32/0x6e0
+[   37.376430][    T1]  ? exit_to_usermode_loop+0x26/0x9b
+[   37.378418][    T1]  ? prepare_exit_to_usermode+0xa8/0xd0
+[   37.380571][    T1]  exit_to_usermode_loop+0x3e/0x9b
+[   37.382588][    T1]  prepare_exit_to_usermode+0xa8/0xd0
+[   37.384594][    T1]  ? page_fault+0x8/0x30
+[   37.386453][    T1]  retint_user+0x8/0x18
+[   37.388160][    T1] RIP: 0033:0x7f42c06974a8
+[   37.389922][    T1] Code: Bad RIP value.
+[   37.391788][    T1] RSP: 002b:00007ffc3effd388 EFLAGS: 00010213
+[   37.394075][    T1] RAX: 000000000000000e RBX: 00007ffc3effd390 RCX: 0000000000000000
+[   37.396963][    T1] RDX: 000000000000002a RSI: 00007ffc3effd390 RDI: 0000000000000004
+[   37.399550][    T1] RBP: 00007ffc3effd680 R08: 0000000000000000 R09: 0000000000000000
+[   37.402334][    T1] R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
+[   37.404890][    T1] R13: ffffffffffffffff R14: 0000000000000884 R15: 000056460b1ac3b0
 
-Link: http://lkml.kernel.org/r/01370f70-e1f6-ebe4-b95e-0df21a0bc15e@i-love.sakura.ne.jp
+Link: http://lkml.kernel.org/r/201902010336.x113a4EO027170@www262.sakura.ne.jp
+Fixes: 3d8b38eb81cac813 ("mm, oom: introduce memory.oom.group")
 Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ mm/oom_kill.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 9518aefd8cbb..7c712c4565e6 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -248,6 +248,12 @@ enum res_type {
- 	     iter != NULL;				\
- 	     iter = mem_cgroup_iter(NULL, iter, NULL))
- 
-+static inline bool should_force_charge(void)
-+{
-+	return tsk_is_oom_victim(current) || fatal_signal_pending(current) ||
-+		(current->flags & PF_EXITING);
-+}
-+
- /* Some nice accessors for the vmpressure. */
- struct vmpressure *memcg_to_vmpressure(struct mem_cgroup *memcg)
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index e66ac8a47dd6..dbddb7a409dd 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -915,7 +915,8 @@ static void __oom_kill_process(struct task_struct *victim)
+  */
+ static int oom_kill_memcg_member(struct task_struct *task, void *unused)
  {
-@@ -1382,8 +1388,13 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	};
- 	bool ret;
- 
--	mutex_lock(&oom_lock);
--	ret = out_of_memory(&oc);
-+	if (mutex_lock_killable(&oom_lock))
-+		return true;
-+	/*
-+	 * A few threads which were not waiting at mutex_lock_killable() can
-+	 * fail to bail out. Therefore, check again after holding oom_lock.
-+	 */
-+	ret = should_force_charge() || out_of_memory(&oc);
- 	mutex_unlock(&oom_lock);
- 	return ret;
- }
-@@ -2200,9 +2211,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	 * bypass the last charges so that they can exit quickly and
- 	 * free their memory.
- 	 */
--	if (unlikely(tsk_is_oom_victim(current) ||
--		     fatal_signal_pending(current) ||
--		     current->flags & PF_EXITING))
-+	if (unlikely(should_force_charge()))
- 		goto force;
- 
- 	/*
+-	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN) {
++	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN &&
++	    !is_global_init(task)) {
+ 		get_task_struct(task);
+ 		__oom_kill_process(task);
+ 	}
 -- 
 2.19.1
 
