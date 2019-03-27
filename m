@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A60752184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C299221734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfC0Vgv (ORCPT
+        id S1729315AbfC0Vgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:36:51 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58652 "EHLO ale.deltatee.com"
+        Wed, 27 Mar 2019 17:36:54 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58662 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbfC0Vgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:36:49 -0400
+        id S1728257AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 17:36:50 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE3-0006DK-7y; Wed, 27 Mar 2019 15:36:48 -0600
+        id 1h9GE3-0006DJ-81; Wed, 27 Mar 2019 15:36:49 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE2-0006Ch-8E; Wed, 27 Mar 2019 15:36:46 -0600
+        id 1h9GE2-0006Ce-4j; Wed, 27 Mar 2019 15:36:46 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
@@ -34,21 +34,20 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Zong Li <zongbox@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>
-Date:   Wed, 27 Mar 2019 15:36:40 -0600
-Message-Id: <20190327213643.23789-5-logang@deltatee.com>
+        Antony Pavlov <antonynpavlov@gmail.com>,
+        "Stefan O'Rear" <sorear2@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>
+Date:   Wed, 27 Mar 2019 15:36:39 -0600
+Message-Id: <20190327213643.23789-4-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
 References: <20190327213643.23789-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, anup.patel@wdc.com, atish.patra@wdc.com, palmer@sifive.com, paul.walmsley@sifive.com, zongbox@gmail.com, rppt@linux.ibm.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, antonynpavlov@gmail.com, sorear2@gmail.com, anup.patel@wdc.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 4/7] RISC-V: Update page tables to cover the whole linear mapping
+Subject: [PATCH 3/7] RISC-V: Rework kernel's virtual address space mapping
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,107 +55,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the new virtual address changes in an earlier patch, we want the
-page tables to cover more of the linear mapping region. Instead of
-only mapping from PAGE_OFFSET and up, we instead map starting
-from an aligned version of va_pa_offset such that all of the physical
-address space will be mapped.
+The motivation for this is to support P2P transactions. P2P requires
+having struct pages for IO memory which means the linear mapping must
+be able to cover all of the IO regions. Unfortunately with Sv39 we are
+not able to cover all the IO regions available on existing hardware,
+but we can do better than what we currently do (which only cover's
+physical memory).
+
+To this end, we restructure the kernel's virtual address space region.
+We position the vmemmap at the beginning of the region (based on how
+many virtual address bits we have) and the VMALLOC region comes
+immediately after. The linear mapping then takes up the remaining space.
+PAGE_OFFSET will need to be within the linear mapping but may not be
+the start of the mapping seeing many machines don't have RAM at address
+zero and we may still want to access lower addresses through the
+linear mapping.
+
+With these changes, on a 64-bit system the virtual memory map (with
+sparsemem enabled) will be:
+
+32-bit:
+
+00000000 - 7fffffff   user space, different per mm (2G)
+80000000 - 81ffffff   virtual memory map (32MB)
+82000000 - bfffffff   vmalloc/ioremap space (1GB - 32MB)
+c0000000 - ffffffff   direct mapping of all phys. memory (1GB)
+
+64-bit, Sv39:
+
+0000000000000000 - 0000003fffffffff  user space, different per mm (256GB)
+hole caused by [38:63] sign extension
+ffffffc000000000 - ffffffc0ffffffff  virtual memory map (4GB)
+ffffffc100000000 - ffffffd0ffffffff  vmalloc/ioremap spac (64GB)
+ffffffd100000000 - ffffffffffffffff  linear mapping of phys. space (188GB)
+
+On the Sifive hardware this allows us to provide struct pages for
+the lower I/O TileLink address ranges, the 32-bit and 34-bit DRAM areas
+and 172GB of 240GB of the high I/O TileLink region. Once we progress to
+Sv48 we should be able to cover all the available memory regions..
+
+For the MAXPHYSMEM_2GB case, the physical memory must be in the highest
+2GB of address space, so we cannot cover the any of the I/O regions
+that are higher than it but we do cover the lower I/O TileLink range.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: "Stefan O'Rear" <sorear2@gmail.com>
 Cc: Anup Patel <anup.patel@wdc.com>
-Cc: Atish Patra <atish.patra@wdc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Zong Li <zongbox@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/riscv/kernel/setup.c |  1 -
- arch/riscv/mm/init.c      | 27 +++++++++++++++------------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ arch/riscv/Kconfig               |  2 +-
+ arch/riscv/include/asm/page.h    |  2 --
+ arch/riscv/include/asm/pgtable.h | 27 ++++++++++++++++++---------
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index ecb654f6a79e..8286df8be31a 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -59,7 +59,6 @@ EXPORT_SYMBOL(empty_zero_page);
- /* The lucky hart to first increment this variable will boot the other cores */
- atomic_t hart_lottery;
- unsigned long boot_cpu_hartid;
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 76fc340ae38e..d21e6a12e8b6 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -71,7 +71,7 @@ config PAGE_OFFSET
+ 	hex
+ 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+ 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+-	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
++	default 0xffffffd200000000 if 64BIT && MAXPHYSMEM_128GB
+ 
+ config ARCH_FLATMEM_ENABLE
+ 	def_bool y
+diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+index 2a546a52f02a..fa0b8058a246 100644
+--- a/arch/riscv/include/asm/page.h
++++ b/arch/riscv/include/asm/page.h
+@@ -31,8 +31,6 @@
+  */
+ #define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
+ 
+-#define KERN_VIRT_SIZE (-PAGE_OFFSET)
 -
- void __init parse_dtb(unsigned int hartid, void *dtb)
- {
- 	if (early_init_dt_scan(__va(dtb)))
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index b9d50031e78f..315194557c3d 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -150,8 +150,8 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
- pgd_t trampoline_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+ #ifndef __ASSEMBLY__
  
- #ifndef __PAGETABLE_PMD_FOLDED
--#define NUM_SWAPPER_PMDS ((uintptr_t)-PAGE_OFFSET >> PGDIR_SHIFT)
--pmd_t swapper_pmd[PTRS_PER_PMD*((-PAGE_OFFSET)/PGDIR_SIZE)] __page_aligned_bss;
-+#define NUM_SWAPPER_PMDS ((uintptr_t)-VMALLOC_END >> PGDIR_SHIFT)
-+pmd_t swapper_pmd[PTRS_PER_PMD*((-VMALLOC_END)/PGDIR_SIZE)] __page_aligned_bss;
- pmd_t trampoline_pmd[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
- pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
- #endif
-@@ -180,13 +180,18 @@ asmlinkage void __init setup_vm(void)
- 	extern char _start;
- 	uintptr_t i;
- 	uintptr_t pa = (uintptr_t) &_start;
-+	uintptr_t linear_start;
-+	uintptr_t off;
- 	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
+ #define PAGE_UP(addr)	(((addr)+((PAGE_SIZE)-1))&(~((PAGE_SIZE)-1)))
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 5a9fea00ba09..2a5070540996 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -89,22 +89,31 @@ extern pgd_t swapper_pg_dir[];
+ #define __S110	PAGE_SHARED_EXEC
+ #define __S111	PAGE_SHARED_EXEC
  
- 	va_pa_offset = PAGE_OFFSET - pa;
- 	pfn_base = PFN_DOWN(pa);
+-#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+-#define VMALLOC_END      (PAGE_OFFSET - 1)
+-#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
++#define KERN_SPACE_START	(-1UL << (CONFIG_VA_BITS - 1))
  
-+	linear_start = ALIGN_DOWN(va_pa_offset, PGDIR_SIZE);
-+	off = linear_start - va_pa_offset;
+ /*
+  * Roughly size the vmemmap space to be large enough to fit enough
+  * struct pages to map half the virtual address space. Then
+  * position vmemmap directly below the VMALLOC region.
+  */
+-#define VMEMMAP_SHIFT \
+-	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+-#define VMEMMAP_SIZE	(1UL << VMEMMAP_SHIFT)
+-#define VMEMMAP_END	(VMALLOC_START - 1)
+-#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
+-
++#ifdef CONFIG_SPARSEMEM
++#define VMEMMAP_SIZE	(UL(1) << (CONFIG_VA_BITS - PAGE_SHIFT - 1 + \
++				   STRUCT_PAGE_MAX_SHIFT))
++#define VMEMMAP_START	(KERN_SPACE_START)
++#define VMEMMAP_END	(VMEMMAP_START + VMEMMAP_SIZE - 1)
+ #define vmemmap		((struct page *)VMEMMAP_START)
++#else
++#define VMEMMAP_END	KERN_SPACE_START
++#endif
 +
- 	/* Sanity check alignment and size */
--	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
-+	BUG_ON(linear_start <= VMALLOC_END);
- 	BUG_ON((pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
++#ifdef CONFIG_32BIT
++#define VMALLOC_SIZE	((1UL << 30) - VMEMMAP_SIZE)
++#else
++#define VMALLOC_SIZE	(64UL << 30)
++#endif
++
++#define VMALLOC_START	(VMEMMAP_END + 1)
++#define VMALLOC_END	(VMALLOC_START + VMALLOC_SIZE - 1)
  
- #ifndef __PAGETABLE_PMD_FOLDED
-@@ -195,15 +200,14 @@ asmlinkage void __init setup_vm(void)
- 			__pgprot(_PAGE_TABLE));
- 	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(pa), prot);
- 
--	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
--		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
--
-+	for (i = 0; i < (-linear_start)/PGDIR_SIZE; ++i) {
-+		size_t o = (linear_start >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
- 		swapper_pg_dir[o] =
- 			pfn_pgd(PFN_DOWN((uintptr_t)swapper_pmd) + i,
- 				__pgprot(_PAGE_TABLE));
- 	}
- 	for (i = 0; i < ARRAY_SIZE(swapper_pmd); i++)
--		swapper_pmd[i] = pfn_pmd(PFN_DOWN(pa + i * PMD_SIZE), prot);
-+		swapper_pmd[i] = pfn_pmd(PFN_DOWN(off + i * PMD_SIZE), prot);
- 
- 	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
- 		pfn_pgd(PFN_DOWN((uintptr_t)fixmap_pmd),
-@@ -215,11 +219,10 @@ asmlinkage void __init setup_vm(void)
- 	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
- 		pfn_pgd(PFN_DOWN(pa), prot);
- 
--	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
--		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
--
--		swapper_pg_dir[o] =
--			pfn_pgd(PFN_DOWN(pa + i * PGDIR_SIZE), prot);
-+	for (i = 0; i < (-linear_start)/PGDIR_SIZE; ++i) {
-+		size_t o = (linear_start >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
-+		swapper_pg_dir[o] = pfn_pgd(PFN_DOWN(off + i * PGDIR_SIZE),
-+					    prot);
- 	}
- 
- 	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
+ /*
+  * ZERO_PAGE is a global shared page that is always zero,
 -- 
 2.20.1
 
