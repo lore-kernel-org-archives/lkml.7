@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42009C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2F4C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D862075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717F42087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712530;
-	bh=tb8OruciGvVLbDeJB3kI449kU4bSbn9E+WCZX6FL2zI=;
+	s=default; t=1553712534;
+	bh=eAFGoFiULWBE4EdLXOMOB4GkEaKm0VCMh0CIYwirF/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PHJfx6Jbb4q7UI6wlaMdUNb4IWiatcjggkUhYz557/UE/b3PiX7yF34wSlHoYYFfX
-	 mGvjWHAKFx+O/mxS8ElMmPJLS6nNaB1+jaBZVhNaCTQEY8GHH0Q6dbfeuI4Yl7tJCc
-	 tjRMtBEkQzOWvV+BFhI7hrZrqxO6DMrMNgUs+ENw=
+	b=KgFbFcidHHfygnt2m0lLIGpqlt591eIYgUXpGf3OOmcv2oJ9x+xthEySzbfrR7G1j
+	 S5i4+NcWwr0/KkIALjJHQ5A2yianuDxPgBg6PDwm8cWgzPqSHsaytFQDQLmaujdjs7
+	 TL3fBFpe3KVOQ5uecM56NlAfDSaO2KH4AhJ+mHbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390644AbfC0STC (ORCPT
+        id S2391175AbfC0Ssx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36160 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390042AbfC0STA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:00 -0400
+        id S2390318AbfC0STB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7675F21738;
-        Wed, 27 Mar 2019 18:18:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 751F52070B;
+        Wed, 27 Mar 2019 18:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710739;
-        bh=tb8OruciGvVLbDeJB3kI449kU4bSbn9E+WCZX6FL2zI=;
+        s=default; t=1553710740;
+        bh=eAFGoFiULWBE4EdLXOMOB4GkEaKm0VCMh0CIYwirF/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7FpVoE2dFnyo+h/XE4CzzCXSSYm+ehUoSQ/xa+JHAWOnHdlkgME7rc3FozmoccgA
-         i2c3SOjsQIhylfiSO6YCTdJ0EiACETJ6pPRz049LRItJTrlmPr5JEP+hNqwQsvFUVx
-         ERNx7JYnM5VlKPTxthbp/mjkeunEjNhoqMfbaEGE=
+        b=nI4dG8XrEB7gULQCMpdSDxlGrcjoTZ7n0cI8lyv4LdBjnt5JdvamfEqBFrEUR1Mhb
+         aNT49gnYR9LmZfYbQbanbUp/ERahBFvdk9jsh02NyXlSrK29bqTyEmPC9L3rDqf7qA
+         3nOSxxHcnjzEmQQr3A2NI+lNglEDQq/zjr6mxXFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 081/123] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Wed, 27 Mar 2019 14:15:45 -0400
-Message-Id: <20190327181628.15899-81-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 082/123] e1000e: fix cyclic resets at link up with active tx
+Date:   Wed, 27 Mar 2019 14:15:46 -0400
+Message-Id: <20190327181628.15899-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,99 +58,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
 
-The following traceback is sometimes seen when booting an image in qemu:
+I'm seeing series of e1000e resets (sometimes endless) at system boot
+if something generates tx traffic at this time. In my case this is
+netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
+have been disabled in order to enable jumbo frames" from e1000e itself.
+As result e1000_watchdog_task sees used tx buffer while carrier is off
+and start this reset cycle again.
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
+[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
+[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   27.174495] 8021q: 802.1Q VLAN Support v1.8
+[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
+[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
+[   30.898564] netpoll: netconsole: local port 6666
+[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
+[   30.898567] netpoll: netconsole: interface 'eth1'
+[   30.898568] netpoll: netconsole: remote port 6666
+[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
+[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
+[   30.917747] console [netcon0] enabled
+[   30.917749] netconsole: network logging started
+[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
 
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
+This patch flushes tx buffers only once when carrier is off
+rather than at each watchdog iteration.
 
-Use a static atomic to ensure that the function is executed exactly once.
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 930b49606a8c..ea6558d4864c 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 5c364321d3c6..3c214a47c1c4 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5306,8 +5306,13 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
++			 *
++			 * If the link is lost the controller stops DMA, but
++			 * if there is queued Tx work it cannot be done.  So
++			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
++			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
++			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5330,14 +5335,6 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3689,9 +3690,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
- 
- static void cdrom_sysctl_register(void)
- {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3702,8 +3703,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
+-	/* If the link is lost the controller stops DMA, but
+-	 * if there is queued Tx work it cannot be done.  So
+-	 * reset the controller to flush the Tx packet buffers.
+-	 */
+-	if (!netif_carrier_ok(netdev) &&
+-	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
+-		adapter->flags |= FLAG_RESTART_NOW;
 -
--	initialized = 1;
- }
- 
- static void cdrom_sysctl_unregister(void)
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 -- 
 2.19.1
 
