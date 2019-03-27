@@ -3,50 +3,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CFFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988A2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347C2205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AA0205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712780;
-	bh=yChwtWAW1xGyqZqsyQ5Exdv9dH+3dE1pv+0qtoBA+gA=;
+	s=default; t=1553712792;
+	bh=YFGDJeDT/9ISdfpuQ1J/FTsmV9BUwYce9LFuQn6S5TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uTiYRuDp7dT+MVi3BTOmLsB/NI9CKaZa4+tNOkFd2qXqx2Xl8xyhW8lLIU4C/KgJX
-	 cUc6N+wfxedCt7goNgo2wTbqO/cYQETNSTU23ysUgPiOwXzd4cy1BtP3fdcstp8vAW
-	 Q01O6fMrQGBmUo2Ue5bjficcI5jUbtxDk/a8C5c0=
+	b=EINogq0haD2XoKvjCRGIK6W0yCPIe3CwJIJLDmF2Zi7Dw5NygPDbeTQib0qAntPUB
+	 p/sNMin85j+3L2Xd8mBz7RfrRnVOrmKAeGkkicSHP9bne9SmW6NCyDNQsNf5w5oGNH
+	 5Ki7eJMDuwIMGDMBtbAn+/5MBlzaLHsw8VJnsknA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390301AbfC0SR2 (ORCPT
+        id S2390558AbfC0SxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390284AbfC0SRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:25 -0400
+        id S2390266AbfC0SRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 866CA20449;
-        Wed, 27 Mar 2019 18:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BDC42177E;
+        Wed, 27 Mar 2019 18:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710644;
-        bh=yChwtWAW1xGyqZqsyQ5Exdv9dH+3dE1pv+0qtoBA+gA=;
+        s=default; t=1553710643;
+        bh=YFGDJeDT/9ISdfpuQ1J/FTsmV9BUwYce9LFuQn6S5TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QQiWMfFT32U/nzixAsJNwSbyKTXzME/ocRHlCLIgFApel8zsfwSIHtKItesq6f+FF
-         c5isY6n0mHUf4AkjMp/Zui6D8M1i2JAVn2PGNpIdXOBQb3kLmVlPnCJakqkHV6DVHC
-         Bn5snNKUYSnLst4mP54YzikBu6aW8V4gmYEJZz1E=
+        b=0xKhHvB5HmkFk39TNt+3vMU5Si1nbtXY03BKTr3ijnh/wRWGzb7ORJ8BegaKh2oxG
+         uSB33bRuzq1542CFBEntSEeJs8jwpJ9mDdJMMQdTmOPgXiQtPSwBf1z1B4n5XIW3U9
+         uCwI3QCaBrxD4CFkSjljJ//f1vBY2a8Cv61s3tEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 030/123] fs: fix guard_bio_eod to check for real EOD errors
-Date:   Wed, 27 Mar 2019 14:14:54 -0400
-Message-Id: <20190327181628.15899-30-sashal@kernel.org>
+Cc:     luojiajun <luojiajun3@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 029/123] jbd2: fix invalid descriptor block checksum
+Date:   Wed, 27 Mar 2019 14:14:53 -0400
+Message-Id: <20190327181628.15899-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,79 +56,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlos Maiolino <cmaiolino@redhat.com>
+From: luojiajun <luojiajun3@huawei.com>
 
-[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
+[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
 
-guard_bio_eod() can truncate a segment in bio to allow it to do IO on
-odd last sectors of a device.
+In jbd2_journal_commit_transaction(), if we are in abort mode,
+we may flush the buffer without setting descriptor block checksum
+by goto start_journal_io. Then fs is mounted,
+jbd2_descriptor_block_csum_verify() failed.
 
-It already checks if the IO starts past EOD, but it does not consider
-the possibility of an IO request starting within device boundaries can
-contain more than one segment past EOD.
+[  271.379811] EXT4-fs (vdd): shut down requested (2)
+[  271.381827] Aborting journal on device vdd-8.
+[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
+[  271.598023] JBD2: recovery failed
+[  271.598484] EXT4-fs (vdd): error loading journal
 
-In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
-underflow bvec->bv_len.
+Fix this problem by keep setting descriptor block checksum if the
+descriptor buffer is not NULL.
 
-Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
+This checksum problem can be reproduced by xfstests generic/388.
 
-This situation has been found on filesystems such as isofs and vfat,
-which doesn't check the device size before mount, if the device is
-smaller than the filesystem itself, a readahead on such filesystem,
-which spans EOD, can trigger this situation, leading a call to
-zero_user() with a wrong size possibly corrupting memory.
-
-I didn't see any crash, or didn't let the system run long enough to
-check if memory corruption will be hit somewhere, but adding
-instrumentation to guard_bio_end() to check truncated_bytes size, was
-enough to see the error.
-
-The following script can trigger the error.
-
-MNT=/mnt
-IMG=./DISK.img
-DEV=/dev/loop0
-
-mkfs.vfat $IMG
-mount $IMG $MNT
-cp -R /etc $MNT &> /dev/null
-umount $MNT
-
-losetup -D
-
-losetup --find --show --sizelimit 16247280 $IMG
-mount $DEV $MNT
-
-find $MNT -type f -exec cat {} + >/dev/null
-
-Kudos to Eric Sandeen for coming up with the reproducer above
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: luojiajun <luojiajun3@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/jbd2/commit.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 8086cc8ff0bc..bdca7b10e239 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3084,6 +3084,13 @@ void guard_bio_eod(int op, struct bio *bio)
- 	/* Uhhuh. We've got a bio that straddles the device size! */
- 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 3c1c31321d9b..d11401afd52f 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -693,9 +693,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                            the last tag we set up. */
  
-+	/*
-+	 * The bio contains more than one segment which spans EOD, just return
-+	 * and let IO layer turn it into an EIO
-+	 */
-+	if (truncated_bytes > bvec->bv_len)
-+		return;
+ 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
+-
+-			jbd2_descriptor_block_csum_set(journal, descriptor);
+ start_journal_io:
++			if (descriptor)
++				jbd2_descriptor_block_csum_set(journal,
++							descriptor);
 +
- 	/* Truncate the bio.. */
- 	bio->bi_iter.bi_size -= truncated_bytes;
- 	bvec->bv_len -= truncated_bytes;
+ 			for (i = 0; i < bufs; i++) {
+ 				struct buffer_head *bh = wbuf[i];
+ 				/*
 -- 
 2.19.1
 
