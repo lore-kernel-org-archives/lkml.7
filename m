@@ -2,73 +2,82 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0157C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18785C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEFB21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D041F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553692007;
-	bh=E0liOdubiccWd4jUYz0WTmCqryO/xUq9WkYiL2KxGn8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tasCqzj7dSU/iukhkLlfm11a2k1k8k4w5i5keGTsvuLYEvuVJNKM8A0JSTNiC/0Kf
-	 FNQ1gIslqSbIz8AOsAtf3P5RMogG/4QkxnkMuGxfogYeuntZuijMca9LRY0H3jgVAF
-	 1rFCya2tChtD2kPGkne1/VX1UOhF4fTMw1o1KKKw=
+	s=default; t=1553692033;
+	bh=ehdrA8XSdTsuYLvjpIvD3FM2sG47CInE45L5IymLs8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hyF1uMKrG2ajTshyzSWI0jVhf/Ljs2dg6w5zHsK2uGy9+7sSpIh74ptvezx7EAxEg
+	 N7prK/OiemdNv3VUzMgiAm4Lx8kIlpM/IKUS4ZsNoNK2SxYVGs/roKp9Z+xrWa50Z7
+	 3e/TwmHhV75OFHOZho2hba6/J8JiGo+RZq8GRwrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbfC0NGq (ORCPT
+        id S1730098AbfC0NHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 09:07:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54578 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfC0NGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:06:45 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962FF206DF;
-        Wed, 27 Mar 2019 13:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553692005;
-        bh=E0liOdubiccWd4jUYz0WTmCqryO/xUq9WkYiL2KxGn8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=nlVvXshvmp+ws/Vc/rfpiiU8mRYKkUZEsjH/q+xNtXsJvACaaYBH0wYPjfQp9w+og
-         P0c36kVZXNpQHkxo2HNFpBY8Bl0/OpqcCETnQJATFgMYUSLN0Vs4xSaeP8YS55ABu2
-         1ZM2qH8rQ99OBwB/TWvfMpDJmHUTAZi4P2rDDf1M=
-Date:   Wed, 27 Mar 2019 14:06:40 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/1] hid: hid-sensor-custom: simplify getting
- .driver_data
-In-Reply-To: <20190319163638.31003-1-wsa+renesas@sang-engineering.com>
-Message-ID: <nycvar.YFH.7.76.1903271406260.19912@cbobk.fhfr.pm>
-References: <20190319163638.31003-1-wsa+renesas@sang-engineering.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1728101AbfC0NHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:07:12 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 06:07:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,276,1549958400"; 
+   d="scan'208";a="331140619"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2019 06:07:10 -0700
+Date:   Wed, 27 Mar 2019 07:08:22 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     "mhocko@suse.com" <mhocko@suse.com>,
+        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
+        "riel@surriel.com" <riel@surriel.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
+Message-ID: <20190327130822.GD7389@localhost.localdomain>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
+ <20190324222040.GE31194@localhost.localdomain>
+ <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
+ <20190327003541.GE4328@localhost.localdomain>
+ <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019, Wolfram Sang wrote:
-
-> We should get 'driver_data' from 'struct device' directly. Going via
-> platform_device is an unneeded step back and forth.
+On Tue, Mar 26, 2019 at 08:41:15PM -0700, Yang Shi wrote:
+> On 3/26/19 5:35 PM, Keith Busch wrote:
+> > migration nodes have higher free capacity than source nodes. And since
+> > your attempting THP's without ever splitting them, that also requires
+> > lower fragmentation for a successful migration.
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Yes, it is possible. However, migrate_pages() already has logic to 
+> handle such case. If the target node has not enough space for migrating 
+> THP in a whole, it would split THP then retry with base pages.
 
-Applied to for-5.2/sensor, thanks.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Oh, you're right, my mistake on splitting. So you have a good best effort
+migrate, but I still think it can fail for legitimate reasons that should
+have a swap fallback.
