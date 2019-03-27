@@ -2,152 +2,135 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8B1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791D32082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:38:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="vTcAG2pw"
+	by mail.kernel.org (Postfix) with ESMTP id CA1E22082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553679532;
+	bh=pOeUWjCEjqIPYdUtHTlQaKJz1adP8wMYU1VnogojRwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eIiUdQuMsewhB6yRJhWPW9HlevkR7O8GWSURZPQFoIYeNfUAFARqV0wHgLnxqvlAH
+	 kWwbCqQB04NpjxvtUVw/nqX+FISHrwB8RQcqTwjtwhe88tx+2OyGj/LOFgOVNKpXGx
+	 LZl7LJ0+WKNbe7KcD6LGXrr1TnyF/XyHTYjF0SiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbfC0Jir (ORCPT
+        id S1732800AbfC0Jiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:38:47 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34271 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfC0Jiq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:38:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p10so17716665wrq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 02:38:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BASfTB8zxvOB/m2/uM3UEGAV+xZB5ehdYZbQyVWvTb4=;
-        b=vTcAG2pwN22eC6Jo/yr383B9zCsiUIT4Xqp/Fee41BlJzJC2ZWaq/bMFlFSgYGwiZ3
-         WIWZhpRijxCJyAXqSoiXDZjec0/3D1JxSkhNExe0qMPCZH0KcWld8Rzz4qsf8H1R16qX
-         EvEshbng5J0rZcTeY0/qUYejKIenkkkM/fhbhOFB0dCBO349uKrVsiBLcR747vF+jjKp
-         AXx6q7ujxsublPpP2IbgjlXruBL1r57zgZ8MSW7FhDIQIoOZXtX6AR2O349Xmxp6Mw62
-         mm8cOkz56Bc1RO/99TOODlS6QboXZZWTyR+1JGy+HqLqFTmws1xf79wrH3/42Tk2zgA+
-         D2vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BASfTB8zxvOB/m2/uM3UEGAV+xZB5ehdYZbQyVWvTb4=;
-        b=fzlVnLcL0Oo8gXlsDEov1y+ZkLGQaNuY5B7VyZZnTvkOprkm9oKLAW5SbY7nbJAZQo
-         x5cXFx8fymwdE99EYw4gPkW5nsbYdegF1xdB2q0LzAvbQdk5CJ34UAoF7VOHsu42MfO5
-         sB+5HTk/1CEXMZiFl8/A7JXaCSWOyewHwFOeSLPZP9s4Dn6LUSVY5Ug5A/ojdFxjyKWG
-         MvrGC/6qwDtZlyAX7iM4XvboKQogO6SbmBMU7aaBvwI1m19Vhe7MPF8OYRd4VBZWfXhy
-         S5cLETlxpiubgewLm0czo9T2dw1BFfrvEdMLgi9X5bguJWTc7xsAm0fCKFzBI2Sv1VzE
-         i46A==
-X-Gm-Message-State: APjAAAVefO7ovk4CTDvLX/OBB+hjvJwWSRc/piEiMRr+FujgjYRvo6hT
-        D/ardO6uluMi3Di3tQhMjk9iOWK2LP4=
-X-Google-Smtp-Source: APXvYqzBGYA8ERpKrGt/L40n13aQ7JaI41/CRGGJ2W+pHUC1vUJSmCH33BSCoFSC/1oufQvuQtCugg==
-X-Received: by 2002:adf:e50d:: with SMTP id j13mr22549024wrm.165.1553679524985;
-        Wed, 27 Mar 2019 02:38:44 -0700 (PDT)
-Received: from localhost (ip-94-113-223-73.net.upcbroadband.cz. [94.113.223.73])
-        by smtp.gmail.com with ESMTPSA id a9sm21805628wrt.29.2019.03.27.02.38.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 02:38:44 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 10:38:43 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 08/22] ethtool: support for netlink
- notifications
-Message-ID: <20190327093843.GB6979@nanopsycho>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <3578e5f334acf11b84e75d0ee41c072340a7b085.1553532199.git.mkubecek@suse.cz>
- <20190326163400.GC4958@nanopsycho.orion>
- <20190326181720.GO26076@unicorn.suse.cz>
+        Wed, 27 Mar 2019 05:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfC0Jis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:38:48 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0806D2075E;
+        Wed, 27 Mar 2019 09:38:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553679527;
+        bh=pOeUWjCEjqIPYdUtHTlQaKJz1adP8wMYU1VnogojRwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pOA6xN9juyvv9kYIKtV8CnmOfs9/oyjAdOTiBHgXUVfeuzJT74x8WEuf+GEjBCNAC
+         FtI/klsvaLwZG1bx3zfkHj4RIrhRu1H9I0F0PYpBn+qP1XyY/rhrb/8Wr7ZhBV30+o
+         vzibzrxCOHrlAM+E2EIZMz6lnzkm8AWEoDKaeJLQ=
+Date:   Wed, 27 Mar 2019 11:38:44 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
+ announcement
+Message-ID: <20190327093844.GO22899@mtr-leonro.mtl.com>
+References: <20190327090905.5588-1-leon@kernel.org>
+ <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="W/+CTqSGWdiRg+8j"
 Content-Disposition: inline
-In-Reply-To: <20190326181720.GO26076@unicorn.suse.cz>
+In-Reply-To: <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Mar 26, 2019 at 07:17:20PM CET, mkubecek@suse.cz wrote:
->On Tue, Mar 26, 2019 at 05:34:00PM +0100, Jiri Pirko wrote:
->> Mon, Mar 25, 2019 at 06:08:18PM CET, mkubecek@suse.cz wrote:
->> >+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
->> >+		    unsigned int cmd, u32 req_mask, const void *data)
->> >+{
->> >+	if (unlikely(!ethnl_ok))
->> 
->> Why do you need this?
+
+--W/+CTqSGWdiRg+8j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Mar 27, 2019 at 02:17:40AM -0700, Joe Perches wrote:
+> On Wed, 2019-03-27 at 11:09 +0200, Leon Romanovsky wrote:
+> > Kernel is booted with less possible CPUs (possible_cpus kernel boot
+> > option) than available CPUs will have prints like this:
+> []
+> > diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> []
+> > @@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
+> >  	if (num_processors >= nr_cpu_ids) {
+> >  		int thiscpu = max + disabled_cpus;
+> >
+> > -		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
+> > -			   "reached. Processor %d/0x%x ignored.\n",
+> > -			   max, thiscpu, apicid);
+> > +		pr_debug(
+> > +			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
+> > +			max, thiscpu, apicid);
 >
->If genetlink family registration fails, ethtool_notify() can be still
->called from other code (e.g. the ethtool ioctl interface). In such case,
->better bail out right away than fail somewhere later (probably after
->preparing the message which can't be sent anyway).
-
-Again, haven't seen this in any other gen netlink implementation. Why do
-they not need it?
-
-
+> 2 lines please
 >
->> >+		return;
->> >+	ASSERT_RTNL();
->> >+
->> >+	if (likely(cmd < ARRAY_SIZE(ethnl_notify_handlers) &&
->> >+		   ethnl_notify_handlers[cmd]))
->> >+		ethnl_notify_handlers[cmd](dev, extack, cmd, req_mask, data);
->> >+	else
->> >+		WARN_ONCE(1, "notification %u not implemented (dev=%s, req_mask=0x%x)\n",
->> >+			  cmd, netdev_name(dev), req_mask);
->> >+}
->> >+EXPORT_SYMBOL(ethtool_notify);
->> 
->> Please be consistent with prefixes. Rest of the code (most of it) has
->> prefix "ethnl".
->
->The reason why I used ethtool_ prefix here was that this function is an
->entry point which can be called from anywhere and other code doesn't
->care if we are using netlink or something else. But as any caller would
->need to include <linux/ethtool_netlink.h> anyway to get the constants
->for cmd and req_mask, there is no point hiding the fact. I'll rename it
->to ethnl_notify().
+> 		pr_debug("APIC: etc...",
+> 			 max, thiscpu, ...);
 
-Okay.
-
+It was two lines before, but I changed for two reasons:
+ * It helped me to grep the source code to find the origin of dmesg warning.
+ * i got checkpatch warning about spitted string, can you please fix checkpatch do not complain?
 
 >
->> >diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
->> >index b8a6cd3dc3e3..5f2299548915 100644
->> >--- a/net/ethtool/netlink.h
->> >+++ b/net/ethtool/netlink.h
->> >@@ -11,6 +11,8 @@
->> > #define ETHNL_SET_ERRMSG(info, msg) \
->> > 	do { if (info) GENL_SET_ERR_MSG(info, msg); } while (0)
->> > 
->> >+extern u32 ethnl_bcast_seq;
->> 
->> Why do you need to have this in header? Second, it is not used by
->> anything. Please don't introduce variables that are not used. Introduce
->> them only in patch where you use it.
+> And this would probably be better as
 >
->It's the same as with ethtool_genl_family. I'll make it static as well
->until it's used in some other file.
+> 		printk(KERN_DEBUG "APIC: etc...",
+> 		 ...)
+>
+> to avoid the need to compile with DEBUG or enable
+> with CONFIG_DYNAMIC_DEBUG
 
-Not only static. You should remove it as you are not using it in this
-patch at all.
+You don't need anything like this, just provide dyndbg parameters
+through kernel command line.
 
+Thanks
 
 >
->Michal
+>
+>
+
+--W/+CTqSGWdiRg+8j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJcm0SkAAoJEORje4g2clinN7QP/jZp/ADzvPaJ9EySTUBmx+9Z
+AzQOi6t2y8WQfWIhYUbsXrDKRo9cE2EekNCpZyDj1XVFORoa1lPDAWsMZgY1Isgk
+L6MXAt9NmdWXENzmADPdVmgnoEC93EM0+ZLiH9wjLMelAHe3R3ZJd7+ki/XG9h5O
+4K1IVlZwZEx7jctvXKXl1AE5Kag2tntF2V1XFjxPDjoLpdKrUnIC2ceDzkSY+RQU
+ivffCAaoXA92TysNzyXK+1kjNJkUBMro5Bn1jq5qdFBhc71PuCd3MfFNOm40aTRK
+MeG4ncpSTOFFk5JnrYHnYJf9dQOVrN0KvvmT3Jxdy4tnfiJpn6aBd4jSpfcagtM7
+N//+Bc1Cmyy41wCB2gaCKsU0C2/uF8Ca5AXN2jfCp8bel6cACHwSabTr7NgR6sRs
+UL4K9b5WXycnH3fDMINDMlz6bcr4lbQ9ymlCNA5BP44DkQInHgdCgcjXcd31nQid
+GbcDzrXoOf50ycNCEgVw6jcx1rHkcExcGMFQ3PkRJ6a1cYtgtq4MtTVOgsQrK64e
+rrhZKhoDraLFQqshg6rBDB9n+P7kEZ00U+dKjsdXCWLjqbZBlv6npbDplbTIGvRJ
+a7itpqOBI0/hmdhijj/9kBbuKiRJ98oV7j1ubu3HzKegObLFUQA5i2qWNu+9snmJ
+bES/RlwjkYx6zd+Vuz29
+=bJ+i
+-----END PGP SIGNATURE-----
+
+--W/+CTqSGWdiRg+8j--
