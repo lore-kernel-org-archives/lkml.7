@@ -6,51 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC93C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E0CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D5220651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A582087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711090;
-	bh=cpj3OyXAiRrDYbYyGvBGtewMNyBP+AyVyjp/zzH0w6k=;
+	s=default; t=1553711095;
+	bh=CNyzgmQlVVZObtHTQXU+S8sVQB1oL3W9h1AuiRvSM/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pL6tMVGWUIceyJNZa9oOvKHPnzaJQDUM4Wb8j3z5GHjLB8np5zWy8ZB5MUj7IuLDs
-	 9Da+De3WW/bpFMb5YRFidkJJSGZc73HNi7AeQIiI+s4djgw5Q4nxo7qChn3DqChNDX
-	 aeQxzvu2/fHxm2u0f+mc8f+GhN66ThTVaQaFkwtQ=
+	b=V0KMjHGZtaHqQYK2t7XvfjjAAkcB3VlBPQQSvoGMadrX7CZetRj4XaZXWOCnYA1Bd
+	 skm9SqJBW6sYrPNTIo0Yhzust/0LoFeBfkw5PndD37F0sHKkzpy+lswGcI9oTSHf5X
+	 QQI5LDUF7KZeYzPwysmOuMuCMtU/0hBQA7rAU8jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404068AbfC0SYt (ORCPT
+        id S2391608AbfC0SYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391067AbfC0SYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:46 -0400
+        id S2404055AbfC0SYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E0F2183F;
-        Wed, 27 Mar 2019 18:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 091C72070B;
+        Wed, 27 Mar 2019 18:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711085;
-        bh=cpj3OyXAiRrDYbYyGvBGtewMNyBP+AyVyjp/zzH0w6k=;
+        s=default; t=1553711087;
+        bh=CNyzgmQlVVZObtHTQXU+S8sVQB1oL3W9h1AuiRvSM/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3VzbJKGiqGO77M0+gLByQ1EUOBr5XxMbwh/qGOwpsGT36+/3GcE2TowAfOJdFce1
-         Llvj4sfrUaHkRm4w3s8eNAW92SGhnusJ8ZSzNm/OQagfJqjuNeX3Trwpb6WMdzGoCT
-         GcA94Ve8nMhHPYTynedHjo9CwxeuzZXk+aT0Kynk=
+        b=pP5cBLFD0YtNbhMg4OOKMnVYWw29VyByqXsOcPsjQjP18Dj4jd02IL5GLAhL19Pvm
+         rGqwNt6XrXNYe8L2koN9Wqd3c0TFvq3xNuj4nBDSbnup7zolR49fOsN3FKOmoT+M37
+         SKiekdSrfm2scxqgRfkrMOorOZB1P54V9pd2ryyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 46/63] locking/lockdep: Add debug_locks check in __lock_downgrade()
-Date:   Wed, 27 Mar 2019 14:23:06 -0400
-Message-Id: <20190327182323.18577-46-sashal@kernel.org>
+Cc:     Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 48/63] mt7601u: bump supported EEPROM version
+Date:   Wed, 27 Mar 2019 14:23:08 -0400
+Message-Id: <20190327182323.18577-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -62,50 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-[ Upstream commit 71492580571467fb7177aade19c18ce7486267f5 ]
+[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
 
-Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-warning right after a previous lockdep warning. It is likely that the
-previous warning turned off lock debugging causing the lockdep to have
-inconsistency states leading to the lock downgrade warning.
+As reported by Michael eeprom 0d is supported and work with the driver.
 
-Fix that by add a check for debug_locks at the beginning of
-__lock_downgrade().
+Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
+with 0d EEPORM looks like this:
 
-Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+RSSI offset: 0 0
+Reference temp: f9
+LNA gain: 8
+Reg channels: 1-14
+Per rate power:
+	 raw:05 bw20:05 bw40:05
+	 raw:05 bw20:05 bw40:05
+	 raw:03 bw20:03 bw40:03
+	 raw:03 bw20:03 bw40:03
+	 raw:04 bw20:04 bw40:04
+	 raw:00 bw20:00 bw40:00
+	 raw:00 bw20:00 bw40:00
+	 raw:00 bw20:00 bw40:00
+	 raw:02 bw20:02 bw40:02
+	 raw:00 bw20:00 bw40:00
+Per channel power:
+	 tx_power  ch1:09 ch2:09
+	 tx_power  ch3:0a ch4:0a
+	 tx_power  ch5:0a ch6:0a
+	 tx_power  ch7:0b ch8:0b
+	 tx_power  ch9:0b ch10:0b
+	 tx_power  ch11:0b ch12:0b
+	 tx_power  ch13:0b ch14:0b
+
+Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 774ab79d3ec7..a49c565529a0 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3314,6 +3314,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
- 	unsigned int depth;
- 	int i;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
+index 662d12703b69..57b503ae63f1 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
++++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
+@@ -17,7 +17,7 @@
  
-+	if (unlikely(!debug_locks))
-+		return 0;
-+
- 	depth = curr->lockdep_depth;
- 	/*
- 	 * This function is about (re)setting the class of a held lock,
+ struct mt7601u_dev;
+ 
+-#define MT7601U_EE_MAX_VER			0x0c
++#define MT7601U_EE_MAX_VER			0x0d
+ #define MT7601U_EEPROM_SIZE			256
+ 
+ #define MT7601U_DEFAULT_TX_POWER		6
 -- 
 2.19.1
 
