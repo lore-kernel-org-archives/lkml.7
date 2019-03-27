@@ -2,55 +2,57 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F02FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE6DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272AB20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8415420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711574;
-	bh=776HbyHyvqD5bY7/lMiqR39wLK9StWacjT4+ZpxLPug=;
+	s=default; t=1553711579;
+	bh=vq4ET4IxaIhoc74iCLk29yr+/C+YKyVjHQ/seRZtFcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g87hPM4RANjh2MbvQFJhTgd17P9ZsYBbJ/paX2f8LbV/EXhey74tvd4mC+tTK1d2y
-	 qMs66Tdtgp8VtLQHVbN50li7D+XtfqNQDPXGE3xcuEjlccFc7SJU6J9Kzy1Vei8Hks
-	 Q8k7jul/YPpLcb5qBiHXAGCREp/WzIHO4H0V6f2A=
+	b=O3I1RAuzQbcGuzVsov0L8DEQIh3Rr+uBH8/wYBmDlv+w6OeUVMkVyTzMTPHLLScNl
+	 jQnTTX4M9iyyQ5yU74zrhOYEYUBOkQG6ANfVXTweddXqdiUG3eD7iMtKM5NbIlfqc1
+	 Xu6XN8lsICJWXunwn8X/IhDbeXAImXAel0hV6QvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391926AbfC0Say (ORCPT
+        id S2391870AbfC0Sc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:30:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391649AbfC0S0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:06 -0400
+        id S2404153AbfC0SZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D432184C;
-        Wed, 27 Mar 2019 18:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA70521734;
+        Wed, 27 Mar 2019 18:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711166;
-        bh=776HbyHyvqD5bY7/lMiqR39wLK9StWacjT4+ZpxLPug=;
+        s=default; t=1553711117;
+        bh=vq4ET4IxaIhoc74iCLk29yr+/C+YKyVjHQ/seRZtFcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATCYsYv/SMMvyWsWqeR8BCYfVyrMaRTUQ21AaIVJ+2LzUYtSlPEOO1EQY8Jx2/rZd
-         PuUw31ptI+x3jv6/naZRJdoU7cgNkD1S6QB9yb/ZieY1he0GN/g1NCT/jV9rfkJrkS
-         KSYbPiiRy0TeSg/xcl2Q+Q49ztzfqMRk6eF+HrJw=
+        b=prBg4XHye7D3bKdX3dENhyx9ZgJWAPcVA2hS/wL7VbEbO0fbQ2gHQdkgojHi+wI4N
+         fDddmJkgpMRwCXzT48GScspetPe+KCRbIFHR7y+ZkMhyGXTW51oYM+r0lbntw1joV0
+         woXDQELDYvxxCL9pcyX7AOwRpIhjGbHukOmzKv0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 23/41] ALSA: PCM: check if ops are defined before suspending PCM
-Date:   Wed, 27 Mar 2019 14:25:00 -0400
-Message-Id: <20190327182518.19394-23-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Brian Vincent <brainn@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 63/63] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
+Date:   Wed, 27 Mar 2019 14:23:23 -0400
+Message-Id: <20190327182323.18577-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
-References: <20190327182518.19394-1-sashal@kernel.org>
+In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
+References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit d9c0b2afe820fa3b3f8258a659daee2cc71ca3ef ]
+[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
 
-BE dai links only have internal PCM's and their substream ops may
-not be set. Suspending these PCM's will result in their
- ops->trigger() being invoked and cause a kernel oops.
-So skip suspending PCM's if their ops are NULL.
+We aren't supposed to force a stop+start between every i2c msg
+when performing multi message transfers. This should eg. cause
+the DDC segment address to be reset back to 0 between writing
+the segment address and reading the actual EDID extension block.
 
-[ NOTE: this change is required now for following the recent PCM core
-  change to get rid of snd_pcm_suspend() call.  Since DPCM BE takes
-  the runtime carried from FE while keeping NULL ops, it can hit this
-  bug.  See details at:
-     https://github.com/thesofproject/linux/pull/582
-  -- tiwai ]
+To quote the E-DDC spec:
+"... this standard requires that the segment pointer be
+ reset to 00h when a NO ACK or a STOP condition is received."
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Since we're going to touch this might as well consult the
+I2C_M_STOP flag to determine whether we want to force the stop
+or not.
+
+Cc: Brian Vincent <brainn@gmail.com>
+References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
+Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_native.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index afdb678cc757..14ea26291733 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1308,6 +1308,14 @@ int snd_pcm_suspend_all(struct snd_pcm *pcm)
- 			/* FIXME: the open/close code should lock this as well */
- 			if (substream->runtime == NULL)
- 				continue;
-+
-+			/*
-+			 * Skip BE dai link PCM's that are internal and may
-+			 * not have their substream ops set.
-+			 */
-+			if (!substream->ops)
-+				continue;
-+
- 			err = snd_pcm_suspend(substream);
- 			if (err < 0 && err != -EBUSY)
- 				return err;
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 5a1bafb5ecbb..ff12d926eb65 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3019,6 +3019,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
+ 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
+ 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
+ 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
++		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
+ 	}
+ 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
+ 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
 -- 
 2.19.1
 
