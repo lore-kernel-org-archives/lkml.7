@@ -2,152 +2,114 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0DDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6D6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE372087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710715;
-	bh=CuzjeY4s4b46XczcAQIrD9ZF85EVr3w4qnAcTlPhPXk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TPuNua8zIkd1k+j3cCNa6+PecY/kk1xaluPrj3jHPerGBKOYCtoxqqDK8gB0X7zw/
-	 Ex6sG4qs7zs5P4xHAxtVOEUMg9upZB4TkoBeb/GniXPOsVN14jJAWlhZqOH/rsYqxb
-	 qYoUFmwhP3KfTaEI8dmoaLLyWTuHtUqPirR7wV3k=
+	by mail.kernel.org (Postfix) with ESMTP id 1851D2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390542AbfC0SSd (ORCPT
+        id S2390259AbfC0SSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389903AbfC0SSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 27 Mar 2019 14:18:40 -0400
+Received: from mx3-rdu2.redhat.com ([66.187.233.73]:49760 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390539AbfC0SSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:34 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 490862087C;
-        Wed, 27 Mar 2019 18:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710709;
-        bh=CuzjeY4s4b46XczcAQIrD9ZF85EVr3w4qnAcTlPhPXk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSZExMbVoWO/DjMmewW6fRAaunBzdNNugHJxhcz0crCZ+cmIIKTMJ+Ibn5UffMYlF
-         2fPpjIDkbO7mB/7n+W1NHi4bHbcjbicYWSfcVVdtPS6tFTT7OQP7h1oJQCy22GsKnl
-         23X1rJnRTvsfow/cs8ymR7Ehy7aC8SCp0KYxfTo8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Emil Velikov <emil.velikov@collabora.com>,
-        intel-gfx@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 068/123] drm: allow render capable master with DRM_AUTH ioctls
-Date:   Wed, 27 Mar 2019 14:15:32 -0400
-Message-Id: <20190327181628.15899-68-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
-References: <20190327181628.15899-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B2AECB9F3;
+        Wed, 27 Mar 2019 18:18:33 +0000 (UTC)
+Received: from slave.localdomain.com (unknown [10.64.242.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DC59111DCFB;
+        Wed, 27 Mar 2019 18:18:31 +0000 (UTC)
+From:   Masatake YAMATO <yamato@redhat.com>
+To:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        akpm@linux-foundation.org
+Cc:     linux-fsdevel@vger.kernel.org, yamato@redhat.com
+Subject: [PATCH v2] eventfd: prepare id to userspace via fdinfo
+Date:   Thu, 28 Mar 2019 03:18:23 +0900
+Message-Id: <20190327181823.20222-1-yamato@redhat.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.11.55.1]); Wed, 27 Mar 2019 18:18:33 +0000 (UTC)
+X-Greylist: inspected by milter-greylist-4.5.16 (mx1.redhat.com [10.11.55.1]); Wed, 27 Mar 2019 18:18:33 +0000 (UTC) for IP:'10.11.54.3' DOMAIN:'int-mx03.intmail.prod.int.rdu2.redhat.com' HELO:'smtp.corp.redhat.com' FROM:'yamato@redhat.com' RCPT:''
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Velikov <emil.velikov@collabora.com>
+Finding endpoints of an IPC channel is one of essential task to
+understand how a user program works. Procfs and netlink socket provide
+enough hints to find endpoints for IPC channels like pipes, unix
+sockets, and pseudo terminals. However, there is no simple way to find
+endpoints for an eventfd file from userland. An inode number doesn't
+hint. Unlike pipe, all eventfd files share the same inode object.
 
-[ Upstream commit 8059add0478e29cb641936011a8fcc9ce9fd80be ]
+To provide the way to find endpoints of an eventfd file, this patch
+adds "eventfd-id" field to /proc/PID/fdinfo of eventfd as identifier.
+Integers managed by an IDA are used as ids.
 
-There are cases (in mesa and applications) where one would open the
-primary node without properly authenticating the client.
+A tool like lsof can utilize the information to print endpoints.
 
-Sometimes we don't check if the authentication succeeds, but there's
-also cases we simply forget to do it.
+Change in v2:
+Use integers as ids instead of memory addresses of eventfd contexts.
 
-The former was a case for Mesa where it did not not check the return
-value of drmGetMagic() [1]. That was fixed recently although, there's
-the question of older drivers or other apps that exbibit this behaviour.
-
-While omitting the call results in issues as seen in [2] and [3].
-
-In the libva case, libva itself doesn't authenticate the DRM client and
-the vaGetDisplayDRM documentation doesn't mention if the app should
-either.
-
-As of today, the official vainfo utility doesn't authenticate.
-
-To workaround issues like these, some users resort to running their apps
-under sudo. Which admittedly isn't always a good idea.
-
-Since any DRIVER_RENDER driver has sufficient isolation between clients,
-we can use that, for unauthenticated [primary node] ioctls that require
-DRM_AUTH. But only if the respective ioctl is tagged as DRM_RENDER_ALLOW.
-
-v2:
-- Rework/simplify if check (Daniel V)
-- Add examples to commit messages, elaborate. (Daniel V)
-
-v3:
-- Use single unlikely (Daniel V)
-
-[1] https://gitlab.freedesktop.org/mesa/mesa/blob/2bc1f5c2e70fe3b4d41f060af9859bc2a94c5b62/src/egl/drivers/dri2/platform_wayland.c#L1136
-[2] https://lists.freedesktop.org/archives/libva/2016-July/004185.html
-[3] https://gitlab.freedesktop.org/mesa/kmscube/issues/1
-Testcase: igt/core_unauth_vs_render
-Cc: intel-gfx@lists.freedesktop.org
-Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190114085408.15933-2-emil.l.velikov@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Masatake YAMATO <yamato@redhat.com>
 ---
- drivers/gpu/drm/drm_ioctl.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ fs/eventfd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
-index 53f319369de5..8ae2e9a5573b 100644
---- a/drivers/gpu/drm/drm_ioctl.c
-+++ b/drivers/gpu/drm/drm_ioctl.c
-@@ -486,6 +486,13 @@ int drm_version(struct drm_device *dev, void *data,
- 	return err;
+diff --git a/fs/eventfd.c b/fs/eventfd.c
+index 08d3bd602f73..ce8fa15cebe5 100644
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -21,6 +21,9 @@
+ #include <linux/eventfd.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
++#include <linux/idr.h>
++
++DEFINE_IDA(eventfd_ida);
+ 
+ struct eventfd_ctx {
+ 	struct kref kref;
+@@ -35,6 +38,7 @@ struct eventfd_ctx {
+ 	 */
+ 	__u64 count;
+ 	unsigned int flags;
++	int id;
+ };
+ 
+ /**
+@@ -69,6 +73,8 @@ EXPORT_SYMBOL_GPL(eventfd_signal);
+ 
+ static void eventfd_free_ctx(struct eventfd_ctx *ctx)
+ {
++	if (ctx->id >= 0)
++		ida_simple_remove(&eventfd_ida, ctx->id);
+ 	kfree(ctx);
  }
  
-+static inline bool
-+drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
-+{
-+	return drm_core_check_feature(dev, DRIVER_RENDER) &&
-+		(flags & DRM_RENDER_ALLOW);
-+}
-+
- /**
-  * drm_ioctl_permit - Check ioctl permissions against caller
-  *
-@@ -500,14 +507,19 @@ int drm_version(struct drm_device *dev, void *data,
-  */
- int drm_ioctl_permit(u32 flags, struct drm_file *file_priv)
- {
-+	const struct drm_device *dev = file_priv->minor->dev;
-+
- 	/* ROOT_ONLY is only for CAP_SYS_ADMIN */
- 	if (unlikely((flags & DRM_ROOT_ONLY) && !capable(CAP_SYS_ADMIN)))
- 		return -EACCES;
+@@ -297,6 +303,7 @@ static void eventfd_show_fdinfo(struct seq_file *m, struct file *f)
+ 	seq_printf(m, "eventfd-count: %16llx\n",
+ 		   (unsigned long long)ctx->count);
+ 	spin_unlock_irq(&ctx->wqh.lock);
++	seq_printf(m, "eventfd-id: %d\n", ctx->id);
+ }
+ #endif
  
--	/* AUTH is only for authenticated or render client */
--	if (unlikely((flags & DRM_AUTH) && !drm_is_render_client(file_priv) &&
--		     !file_priv->authenticated))
--		return -EACCES;
-+	/* AUTH is only for master ... */
-+	if (unlikely((flags & DRM_AUTH) && drm_is_primary_client(file_priv))) {
-+		/* authenticated ones, or render capable on DRM_RENDER_ALLOW. */
-+		if (!file_priv->authenticated &&
-+		    !drm_render_driver_and_ioctl(dev, flags))
-+			return -EACCES;
-+	}
+@@ -400,6 +407,7 @@ static int do_eventfd(unsigned int count, int flags)
+ 	init_waitqueue_head(&ctx->wqh);
+ 	ctx->count = count;
+ 	ctx->flags = flags;
++	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
  
- 	/* MASTER is only for master or control clients */
- 	if (unlikely((flags & DRM_MASTER) && 
+ 	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
+ 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
 -- 
-2.19.1
+2.17.2
 
