@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871A1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D3CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5404220700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F5720700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dbAKiXgM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DnmUN7VI"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MVOnGCxj";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y+JGehiP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfC0MjM (ORCPT
+        id S1730419AbfC0Mjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:39:12 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56294 "EHLO
+        Wed, 27 Mar 2019 08:39:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57996 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729701AbfC0MjL (ORCPT
+        with ESMTP id S1726233AbfC0Mjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:39:11 -0400
+        Wed, 27 Mar 2019 08:39:41 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B8F236115C; Wed, 27 Mar 2019 12:39:09 +0000 (UTC)
+        id 3FF1E613A3; Wed, 27 Mar 2019 12:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553690350;
-        bh=8D/0riTkj2w8EmCFstVvEXJuSKH46ZoGUsfPQFpiK68=;
+        s=default; t=1553690380;
+        bh=4Y6RkaB0AykZ4q71OBhEdfBOkqirJigLfKWZ9ZQU31c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbAKiXgMxKLVnG3KSVph1gmpEeadZ2qbZOcb/GrvvQtIGMfOO8UoU10m7o4JbnQis
-         brCjjQvzEfPitTc/9Jynw7uupgPqyhth60OAcLKsfDJnUQch1844pm09FBJuj8a6yv
-         edMdJM5W0lysQwap9AWuPdS4jxjKG9jHbSfEoeIM=
+        b=MVOnGCxjir2twCj19l6WzIpVbF44fJifm9c0mwO7Kbw8y6KgAA0u59Y/hHm2LcXSN
+         UJXgaU+/zIQ68ymH5n13LxfkkSTIsyfIR1mEHonmzhnecYkHOaUXwFY3fCo/cvVWph
+         UXRqvApANuxf3+IlI3UHs9tdaACJHQgPF2bGQJlw=
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AD6B60FEE;
-        Wed, 27 Mar 2019 12:39:03 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51BC5611BE;
+        Wed, 27 Mar 2019 12:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553690347;
-        bh=8D/0riTkj2w8EmCFstVvEXJuSKH46ZoGUsfPQFpiK68=;
+        s=default; t=1553690372;
+        bh=4Y6RkaB0AykZ4q71OBhEdfBOkqirJigLfKWZ9ZQU31c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnmUN7VI9i5DRpHJtPzJeYXrFHS30kUtW/ocFAaLs+/G4j3QdN0C/kPwf/bwFc14g
-         khimANDLSp77JNQPy72ZTMRaikS+0aid5OnUI3TgY5xk6C3epG1qpUmvflSU8UAQIK
-         oytmxe3ny/h/dw2FQm93fpZ1pFt+G7IMSpw+BEoE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AD6B60FEE
+        b=Y+JGehiPv864rx6t9IWde9DqaEcq4c6CocGWSOP95VvhpxqE2qnVF+6Lfxp+sLZsL
+         I0U29rkGaySJCGQVl1wKneT3yHwBliqbWrBlXg+TkJHG8KqifK7wQqPPWbxGp/mf1n
+         3ivbbCHY00FO4dtNuArrm6qWgy5eOuPWf14VV3zQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51BC5611BE
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -54,9 +55,9 @@ To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
 Cc:     david.brown@linaro.org, mark.rutland@arm.com,
         linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
         devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 4/9] dt-bindings: power: Add rpm power domain bindings for qcs404
-Date:   Wed, 27 Mar 2019 18:08:27 +0530
-Message-Id: <20190327123832.11566-5-sibis@codeaurora.org>
+Subject: [PATCH v3 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
+Date:   Wed, 27 Mar 2019 18:08:32 +0530
+Message-Id: <20190327123832.11566-10-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327123832.11566-1-sibis@codeaurora.org>
 References: <20190327123832.11566-1-sibis@codeaurora.org>
@@ -67,65 +68,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Add the rpmpd node on the msm8998 and define the available levels.
 
-Add RPM power domain bindings for the qcs404 family of SoC
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[sibis: Add supported rpmpd states for qcs404]
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-skip adding Rob's R-b due to some additional changes
-https://lore.kernel.org/lkml/20190325223343.GA27389@bogus/
-
- .../devicetree/bindings/power/qcom,rpmpd.txt  |  1 +
- include/dt-bindings/power/qcom-rpmpd.h        | 22 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-index 980e5413d18f..172ccf940c5c 100644
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-@@ -6,6 +6,7 @@ which then translates it into a corresponding voltage on a rail
- Required Properties:
-  - compatible: Should be one of the following
- 	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
-+	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
- 	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
-  - #power-domain-cells: number of cells in Power domain specifier
- 	must be 1.
-diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-index 87d9c6611682..450378662944 100644
---- a/include/dt-bindings/power/qcom-rpmpd.h
-+++ b/include/dt-bindings/power/qcom-rpmpd.h
-@@ -36,4 +36,26 @@
- #define MSM8996_VDDSSCX		5
- #define MSM8996_VDDSSCX_VFC	6
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 3fd0769fe648..b7e3e0646b9b 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -4,6 +4,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8998.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
++#include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/gpio/gpio.h>
  
-+/* QCS404 Power Domains */
-+#define QCS404_VDDMX		0
-+#define QCS404_VDDMX_AO		1
-+#define QCS404_VDDMX_VFL	2
-+#define QCS404_LPICX		3
-+#define QCS404_LPICX_VFL	4
-+#define QCS404_LPIMX		5
-+#define QCS404_LPIMX_VFL	6
+ / {
+@@ -272,6 +273,56 @@
+ 				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
+ 				#clock-cells = <1>;
+ 			};
 +
-+/* RPM SMD Power Domain performance levels */
-+#define RPM_SMD_LEVEL_RETENTION       16
-+#define RPM_SMD_LEVEL_RETENTION_PLUS  32
-+#define RPM_SMD_LEVEL_MIN_SVS         48
-+#define RPM_SMD_LEVEL_LOW_SVS         64
-+#define RPM_SMD_LEVEL_SVS             128
-+#define RPM_SMD_LEVEL_SVS_PLUS        192
-+#define RPM_SMD_LEVEL_NOM             256
-+#define RPM_SMD_LEVEL_NOM_PLUS        320
-+#define RPM_SMD_LEVEL_TURBO           384
-+#define RPM_SMD_LEVEL_TURBO_NO_CPR    416
-+#define RPM_SMD_LEVEL_BINNING         512
++			rpmpd: power-controller {
++				compatible = "qcom,msm8998-rpmpd";
++				#power-domain-cells = <1>;
++				operating-points-v2 = <&rpmpd_opp_table>;
 +
- #endif
++				rpmpd_opp_table: opp-table {
++					compatible = "operating-points-v2";
++
++					rpmpd_opp_ret: opp1 {
++						opp-level = <RPM_SMD_LEVEL_RETENTION>;
++					};
++
++					rpmpd_opp_ret_plus: opp2 {
++						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
++					};
++
++					rpmpd_opp_min_svs: opp3 {
++						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
++					};
++
++					rpmpd_opp_low_svs: opp4 {
++						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
++					};
++
++					rpmhpd_opp_svs: opp5 {
++						opp-level = <RPM_SMD_LEVEL_SVS>;
++					};
++
++					rpmhpd_opp_svs_plus: opp6 {
++						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
++					};
++
++					rpmhpd_opp_nom: opp7 {
++						opp-level = <RPM_SMD_LEVEL_NOM>;
++					};
++
++					rpmhpd_opp_nom_plus: opp8 {
++						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
++					};
++
++					rpmhpd_opp_turbo: opp9 {
++						opp-level = <RPM_SMD_LEVEL_TURBO>;
++					};
++
++					rpmhpd_opp_turbo_plus: opp10 {
++						opp-level = <RPM_SMD_LEVEL_BINNING>;
++					};
++				};
++			};
+ 		};
+ 	};
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
