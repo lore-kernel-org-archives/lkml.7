@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C274C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FFAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADC32064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDD82064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714178;
-	bh=B79Hd6X3KLWO53HyK6zgiFcV+EC8nALm1QMiX27vHpA=;
+	s=default; t=1553714190;
+	bh=C+m6dDbr8RtFbwiDPqHtgWLlpOXUXxJZlReMOk2cRm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zyie0Kia2VDDBfcpLbLjq5SDux1GsZzIGs/IMAy9j/bNSZF/16aXOiaUcydNqZvd6
-	 i0qJgMJiYeAGBhi03pCgevi2n/coS9YQWV24bWWUn4Ky76F10E+qcaa0tqpErh/zd2
-	 GMujT7nuK5B/RAM1hGRYZ0lMwqmrEh7k2F4VsA98=
+	b=CAYfqILx7EnQ5PwDDU/VsIaznDwK4N7wYTf5oQMtwmykRtDF0nNgRzmm/CsYlM3Ci
+	 zlQAopm63k1CfxIQ3bauO/DBb/0w0fkNrLMOtUP/WW7q2jxZyHTe75rg+KYtuesZQF
+	 NIN20lC8Dk0DUXDyiIElYjfgIHyAxnJ/IU3DtyZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbfC0TQQ (ORCPT
+        id S2388800AbfC0TQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732800AbfC0SJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:09 -0400
+        id S2388492AbfC0SJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B82592147C;
-        Wed, 27 Mar 2019 18:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28264217F5;
+        Wed, 27 Mar 2019 18:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710148;
-        bh=B79Hd6X3KLWO53HyK6zgiFcV+EC8nALm1QMiX27vHpA=;
+        s=default; t=1553710144;
+        bh=C+m6dDbr8RtFbwiDPqHtgWLlpOXUXxJZlReMOk2cRm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woVdXMAxdCP8U5xPsduzWQ1E14kfAqlygnWfdFxXcr5GFTyDDnlO11Qr44qaW65fA
-         yr1Mq1Y3sWhb0RpxQ8+jRlStrNcfroK63EM/tbLTGqQUGUKH62Uk8yYSKqkWR2vTcf
-         DbH9UQRsP40/1qkdXOC5Mxn9Q4g1vC+3epLdjrA8=
+        b=PncUpHO6W+29BM1e2K5+O/Cd7cmQeqguHxXqJph9gG4S2oDF0uoZoifdysISfLNtf
+         bwjsVK8/d6xGDmspX3GtsjWMrb9EVWGUHMENP0eyg1NeKbzVcY6JY2UGvX2Nan752p
+         wONwPCXrDZl+9Qt+ML5s/1zsSeCrfNXsYGqqYXCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 218/262] selftests/bpf: suppress readelf stderr when probing for BTF support
-Date:   Wed, 27 Mar 2019 14:01:13 -0400
-Message-Id: <20190327180158.10245-218-sashal@kernel.org>
+Cc:     David Tolnay <dtolnay@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 216/262] hwrng: virtio - Avoid repeated init of completion
+Date:   Wed, 27 Mar 2019 14:01:11 -0400
+Message-Id: <20190327180158.10245-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,57 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: David Tolnay <dtolnay@gmail.com>
 
-[ Upstream commit 2f0921262ba943fe9d9f59037a033927d8c4789b ]
+[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
 
-Before:
-$ make -s -C tools/testing/selftests/bpf
-readelf: Error: Missing knowledge of 32-bit reloc types used in DWARF
-sections of machine number 247
-readelf: Warning: unable to apply unsupported reloc type 10 to section
-.debug_info
-readelf: Warning: unable to apply unsupported reloc type 1 to section
-.debug_info
-readelf: Warning: unable to apply unsupported reloc type 10 to section
-.debug_info
+The virtio-rng driver uses a completion called have_data to wait for a
+virtio read to be fulfilled by the hypervisor. The completion is reset
+before placing a buffer on the virtio queue and completed by the virtio
+callback once data has been written into the buffer.
 
-After:
-$ make -s -C tools/testing/selftests/bpf
+Prior to this commit, the driver called init_completion on this
+completion both during probe as well as when registering virtio buffers
+as part of a hwrng read operation. The second of these init_completion
+calls should instead be reinit_completion because the have_data
+completion has already been inited by probe. As described in
+Documentation/scheduler/completion.txt, "Calling init_completion() twice
+on the same completion object is most likely a bug".
 
-v2:
-* use llvm-readelf instead of redirecting binutils' readelf stderr to
-  /dev/null
+This bug was present in the initial implementation of virtio-rng in
+f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
+then the have_data completion was a single static completion rather than
+a member of one of potentially multiple virtrng_info structs as
+implemented later by 08e53fbdb85c ("virtio-rng: support multiple
+virtio-rng devices"). The original driver incorrectly used
+init_completion rather than INIT_COMPLETION to reset have_data during
+read.
 
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
+Chrome OS virtual machine monitor, and confirming that the virtio-rng
+driver successfully produces random bytes from the host.
+
+Signed-off-by: David Tolnay <dtolnay@gmail.com>
+Tested-by: David Tolnay <dtolnay@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/hw_random/virtio-rng.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 41ab7a3668b3..936f726f7cd9 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -96,6 +96,7 @@ $(BPFOBJ): force
- CLANG ?= clang
- LLC   ?= llc
- LLVM_OBJCOPY ?= llvm-objcopy
-+LLVM_READELF ?= llvm-readelf
- BTF_PAHOLE ?= pahole
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index b89df66ea1ae..7abd604e938c 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
  
- PROBE := $(shell $(LLC) -march=bpf -mcpu=probe -filetype=null /dev/null 2>&1)
-@@ -132,7 +133,7 @@ BTF_PAHOLE_PROBE := $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
- BTF_OBJCOPY_PROBE := $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usage.*llvm')
- BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
- 			  $(CLANG) -target bpf -O2 -g -c -x c - -o ./llvm_btf_verify.o; \
--			  readelf -S ./llvm_btf_verify.o | grep BTF; \
-+			  $(LLVM_READELF) -S ./llvm_btf_verify.o | grep BTF; \
- 			  /bin/rm -f ./llvm_btf_verify.o)
+ 	if (!vi->busy) {
+ 		vi->busy = true;
+-		init_completion(&vi->have_data);
++		reinit_completion(&vi->have_data);
+ 		register_buffer(vi, buf, size);
+ 	}
  
- ifneq ($(BTF_LLVM_PROBE),)
 -- 
 2.19.1
 
