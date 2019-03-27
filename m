@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7073EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20892C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A40521738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E792B20449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710852;
-	bh=r3AicDZTnogb14/ee0i8E+ZhBTLG7vdoaUwfgVCYG7Q=;
+	s=default; t=1553710863;
+	bh=6GVQbf2lt4o4cJkr8iHWK16691svUJpHtzL7mxaGbtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=efZEkSyGKT1jT8ouvbQoQedRxOpHKEiDB2MwNJzaF6HQUlzrf0mxPHC+Avmkf9ORi
-	 GKcJzI8zU5I3kY+wfYoDDDZx8bsWQGZ+6hbfV3RDqXmExGg7s76tPi0jjpAN29vFJf
-	 +n614JHFM5AhJpzXE7V1WcWjdg8TwbUfgg2kF+3A=
+	b=lNvrN83lz1/XfbFl+tmx0MzZejFcR+GnYc6gVS/iqSBYObv5ozvSeut03bCK1GxPH
+	 vV9ibEkGSVFksCqWi+CiowvrzQRMps5pOTokeXPEUa+Q/bkJYSjPfJ/h1xpq046m8w
+	 kyxmEkJEQTbA9pnHSvdzb4lEkA0bN6C5uXWiqx2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390732AbfC0SUv (ORCPT
+        id S2391077AbfC0SVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391019AbfC0SUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:48 -0400
+        id S2390700AbfC0SUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1EF02063F;
-        Wed, 27 Mar 2019 18:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77EB2082F;
+        Wed, 27 Mar 2019 18:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710847;
-        bh=r3AicDZTnogb14/ee0i8E+ZhBTLG7vdoaUwfgVCYG7Q=;
+        s=default; t=1553710851;
+        bh=6GVQbf2lt4o4cJkr8iHWK16691svUJpHtzL7mxaGbtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7pNWNvlRxwYTWqTr6YHjzTBChkPvr1x1nqxZ8k4AEymifSIU1udJLkBoHZ88fHe4
-         LvAertVEKKdFeBKzaEJv7kt15+Aatp5gPLKDZEn4gDY1npW+tpkAGWCtkvLce+ReS7
-         4M4KbFmyb/eznfXbzZIbowp+oEgxeu8rWsyma9t8=
+        b=FlnNWzZqv+mH50N2umszljbEPJuoky42aKuqZ9qW1+li2276hqAbjLafqhU44B/Av
+         s4or7/EE3muwnkt2/503cOnWScMTw6T6a2ZMdhLGmjhlSj6LzcUi5EvP1LiTpA5ju3
+         b/62P8GQy1tkq5EDiqEmvZpLVxS0UbJynXZYa1dw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Jens Axboe <axboe@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 04/87] tracing: kdb: Fix ftdump to not sleep
-Date:   Wed, 27 Mar 2019 14:19:17 -0400
-Message-Id: <20190327182040.17444-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 06/87] include/linux/relay.h: fix percpu annotation in struct rchan
+Date:   Wed, 27 Mar 2019 14:19:19 -0400
+Message-Id: <20190327182040.17444-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,143 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 31b265b3baaf55f209229888b7ffea523ddab366 ]
+[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
 
-As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
-BUG for "sleeping function called from invalid context".
+The percpu member of this structure is declared as:
+	struct ... ** __percpu member;
+So its type is:
+	__percpu pointer to pointer to struct ...
 
-kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
-atomic context.  A very simple solution for this is to add allocation
-flags to ring_buffer_read_prepare() so kdb can call it without
-triggering the allocation error.  This patch does that.
+But looking at how it's used, its type should be:
+	pointer to __percpu pointer to struct ...
+and it should thus be declared as:
+	struct ... * __percpu *member;
 
-Note that in the original email thread about this, it was suggested
-that perhaps the solution for kdb was to either preallocate the buffer
-ahead of time or create our own iterator.  I'm hoping that this
-alternative of adding allocation flags to ring_buffer_read_prepare()
-can be considered since it means I don't need to duplicate more of the
-core trace code into "trace_kdb.c" (for either creating my own
-iterator or re-preparing a ring allocator whose memory was already
-allocated).
+So fix the placement of '__percpu' in the definition of this
+structures.
 
-NOTE: another option for kdb is to actually figure out how to make it
-reuse the existing ftrace_dump() function and totally eliminate the
-duplication.  This sounds very appealing and actually works (the "sr
-z" command can be seen to properly dump the ftrace buffer).  The
-downside here is that ftrace_dump() fully consumes the trace buffer.
-Unless that is changed I'd rather not use it because it means "ftdump
-| grep xyz" won't be very useful to search the ftrace buffer since it
-will throw away the whole trace on the first grep.  A future patch to
-dump only the last few lines of the buffer will also be hard to
-implement.
+This silents a few Sparse's warnings like:
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
 
-[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
-
-Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
-
-Reported-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
+Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Jens Axboe <axboe@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ring_buffer.h | 2 +-
- kernel/trace/ring_buffer.c  | 5 +++--
- kernel/trace/trace.c        | 6 ++++--
- kernel/trace/trace_kdb.c    | 6 ++++--
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ include/linux/relay.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 19d0778ec382..121c8f99ecdd 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -125,7 +125,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
- 		    unsigned long *lost_events);
- 
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
- void ring_buffer_read_prepare_sync(void);
- void ring_buffer_read_start(struct ring_buffer_iter *iter);
- void ring_buffer_read_finish(struct ring_buffer_iter *iter);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index f316e90ad538..5473dcaaca8d 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4037,6 +4037,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
-  * @buffer: The ring buffer to read from
-  * @cpu: The cpu buffer to iterate over
-+ * @flags: gfp flags to use for memory allocation
-  *
-  * This performs the initial preparations necessary to iterate
-  * through the buffer.  Memory is allocated, buffer recording
-@@ -4054,7 +4055,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * This overall must be paired with ring_buffer_read_finish.
-  */
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
-@@ -4062,7 +4063,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return NULL;
- 
--	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
-+	iter = kmalloc(sizeof(*iter), flags);
- 	if (!iter)
- 		return NULL;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f18dedf9195e..d4773939c054 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3449,7 +3449,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
--				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+				ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+							 cpu, GFP_KERNEL);
- 		}
- 		ring_buffer_read_prepare_sync();
- 		for_each_tracing_cpu(cpu) {
-@@ -3459,7 +3460,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	} else {
- 		cpu = iter->cpu_file;
- 		iter->buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+						 cpu, GFP_KERNEL);
- 		ring_buffer_read_prepare_sync();
- 		ring_buffer_read_start(iter->buffer_iter[cpu]);
- 		tracing_iter_reset(iter, cpu);
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 57149bce6aad..896458285fdd 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -50,14 +50,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter.buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu, GFP_ATOMIC);
- 			ring_buffer_read_start(iter.buffer_iter[cpu]);
- 			tracing_iter_reset(&iter, cpu);
- 		}
- 	} else {
- 		iter.cpu_file = cpu_file;
- 		iter.buffer_iter[cpu_file] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu_file, GFP_ATOMIC);
- 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
- 		tracing_iter_reset(&iter, cpu_file);
- 	}
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index 68c1448e56bb..2560f8706408 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -65,7 +65,7 @@ struct rchan
+ 	struct kref kref;		/* channel refcount */
+ 	void *private_data;		/* for user-defined data */
+ 	size_t last_toobig;		/* tried to log event > subbuf size */
+-	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
++	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
+ 	int is_global;			/* One global buffer ? */
+ 	struct list_head list;		/* for channel list */
+ 	struct dentry *parent;		/* parent dentry passed to open */
 -- 
 2.19.1
 
