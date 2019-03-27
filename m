@@ -2,58 +2,63 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC14C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABCEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E082075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC122070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712103;
-	bh=OCVPpK2ztKpcXNE3xhRbxdrR3/nCBbHVBN7mXaAJFhs=;
+	s=default; t=1553712114;
+	bh=R9ZHvQ8Du4A/E/C7p2SHCKRdCRP0ARMNbWyMpobFLgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KC/e/e/07MNK3N15WZ1LXdy/kD2R5eOYLCHwx1vFAyRzROhygrF3sGaSM16Za0aoL
-	 E2cxNmuvlEod+JccA8heyVGDmklWLaV8T/av8IbMQvAQcJ5MvrfpQwC+GjFmU1CSl1
-	 gN1SFmQV2RRofmZJAhhvcNDLr0qzq1jx+K6CUt3g=
+	b=UGQGYZMToQqMQgtwgTw/Qp5B4912DtMRJFURM+losM92njuQ2g0FCBvOILwHJEUwK
+	 6hK6WGqVXZT/EF+AQvMHELBxA53t1PCuPIdAv0B8GYh8nBgAkVCce4jBQUOl+ITuHH
+	 bBd+mpfz7hi4DRYtHWxEROKcHra/TVJv/YNDdCng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391812AbfC0Slm (ORCPT
+        id S2403836AbfC0SWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403847AbfC0SWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:21 -0400
+        id S2391063AbfC0SWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07C1E2063F;
-        Wed, 27 Mar 2019 18:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A70620449;
+        Wed, 27 Mar 2019 18:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710940;
-        bh=OCVPpK2ztKpcXNE3xhRbxdrR3/nCBbHVBN7mXaAJFhs=;
+        s=default; t=1553710933;
+        bh=R9ZHvQ8Du4A/E/C7p2SHCKRdCRP0ARMNbWyMpobFLgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QtxcAEnf0C2Q+k0TGRONu4GJcpEC3xM5JkMQGy6mFxNN7iX/Sf6djgyDUh9x7hRlV
-         KKdWXTHSMPA7puH9tT7K72XsdGstJFCzet0rIC9nTF5AkQp+DO/aM9wxhJr0KOkBwR
-         SAD/yBpAwu5/l2UiyUe4Dn0PonFp7/Q9WYGj02G0=
+        b=EK3FUcyKtuwlP7M2bO7CN1lSsDXLt7WTlo65XQwDyjxectiYj0LrkvY+kUkVt2bHM
+         viGTmtLTpAyMGLTiumwBTyRlWE/xzWizWeBfqgxPgSdbEKqQM0PyQZGYIhcTe24j1b
+         C8SeOsK4fV8X70P3gHH9ICUyPiibeyQPEWWBk5NI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        Zeng Tao <prime.zeng@hisilicon.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Thinh Nguyen <thinh.nguyen@synopsys.com>,
+        Chen Yu <chenyu56@huawei.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 55/87] genirq: Avoid summation loops for /proc/stat
-Date:   Wed, 27 Mar 2019 14:20:08 -0400
-Message-Id: <20190327182040.17444-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 51/87] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
+Date:   Wed, 27 Mar 2019 14:20:04 -0400
+Message-Id: <20190327182040.17444-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -65,156 +70,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 1136b0728969901a091f0471968b2b76ed14d9ad ]
+[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
 
-Waiman reported that on large systems with a large amount of interrupts the
-readout of /proc/stat takes a long time to sum up the interrupt
-statistics. In principle this is not a problem. but for unknown reasons
-some enterprise quality software reads /proc/stat with a high frequency.
+Since the 5.0 merge window opened, I've been seeing frequent
+crashes on suspend and reboot with the trace:
 
-The reason for this is that interrupt statistics are accounted per cpu. So
-the /proc/stat logic has to sum up the interrupt stats for each interrupt.
+[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
+[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
+...
+[   36.950666] Call trace:
+[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
+[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
+[   36.950692]  complete+0x28/0x70
+[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
+[   36.950713]  usb_gadget_giveback_request+0x34/0x108
+[   36.950721]  dwc3_gadget_giveback+0x50/0x68
+[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
+[   36.950731]  irq_thread_fn+0x30/0x88
+[   36.950734]  irq_thread+0x114/0x1b0
+[   36.950739]  kthread+0x104/0x130
+[   36.950747]  ret_from_fork+0x10/0x1c
 
-This can be largely avoided for interrupts which are not marked as
-'PER_CPU' interrupts by simply adding a per interrupt summation counter
-which is incremented along with the per interrupt per cpu counter.
+I isolated this down to in ffs_epfile_io():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
 
-The PER_CPU interrupts need to avoid that and use only per cpu accounting
-because they share the interrupt number and the interrupt descriptor and
-concurrent updates would conflict or require unwanted synchronization.
+Where the completion done is setup on the stack:
+  DECLARE_COMPLETION_ONSTACK(done);
 
-Reported-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lkml.kernel.org/r/20190208135020.925487496@linutronix.de
+Then later we setup a request and queue it, and wait for it:
+  if (unlikely(wait_for_completion_interruptible(&done))) {
+    /*
+    * To avoid race condition with ffs_epfile_io_complete,
+    * dequeue the request first then check
+    * status. usb_ep_dequeue API should guarantee no race
+    * condition with req->complete callback.
+    */
+    usb_ep_dequeue(ep->ep, req);
+    interrupted = ep->status < 0;
+  }
 
-8<-------------
+The problem is, that we end up being interrupted, dequeue the
+request, and exit.
 
-v2: Undo the unintentional layout change of struct irq_desc.
+But then the irq triggers and we try calling complete() on the
+context pointer which points to now random stack space, which
+results in the panic.
 
- include/linux/irqdesc.h |    1 +
- kernel/irq/chip.c       |   12 ++++++++++--
- kernel/irq/internals.h  |    8 +++++++-
- kernel/irq/irqdesc.c    |    7 ++++++-
- 4 files changed, 24 insertions(+), 4 deletions(-)
+Alan Stern pointed out there is a bug here, in that the snippet
+above "assumes that usb_ep_dequeue() waits until the request has
+been completed." And that:
 
+    wait_for_completion(&done);
+
+Is needed right after the usb_ep_dequeue().
+
+Thus this patch implements that change. With it I no longer see
+the crashes on suspend or reboot.
+
+This issue seems to have been uncovered by behavioral changes in
+the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
+remove wait_end_transfer").
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Zeng Tao <prime.zeng@hisilicon.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Cc: Chen Yu <chenyu56@huawei.com>
+Cc: Jerry Zhang <zhangjerry@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Vincent Pelletier <plr.vincent@gmail.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/irqdesc.h |  1 +
- kernel/irq/chip.c       | 12 ++++++++++--
- kernel/irq/internals.h  |  8 +++++++-
- kernel/irq/irqdesc.c    |  7 ++++++-
- 4 files changed, 24 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
-index c9be57931b58..bb5547a83daf 100644
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -61,6 +61,7 @@ struct irq_desc {
- 	unsigned int		core_internal_state__do_not_mess_with_it;
- 	unsigned int		depth;		/* nested irq disables */
- 	unsigned int		wake_depth;	/* nested wake enables */
-+	unsigned int		tot_count;
- 	unsigned int		irq_count;	/* For detecting broken IRQs */
- 	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
- 	unsigned int		irqs_unhandled;
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index f30110e1b8c9..9e745cc0726d 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -729,7 +729,11 @@ void handle_percpu_irq(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 04eb64381d92..927ac0ee09b7 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1008,6 +1008,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ 			 * condition with req->complete callback.
+ 			 */
+ 			usb_ep_dequeue(ep->ep, req);
++			wait_for_completion(&done);
+ 			interrupted = ep->status < 0;
+ 		}
  
--	kstat_incr_irqs_this_cpu(desc);
-+	/*
-+	 * PER CPU interrupts are not serialized. Do not touch
-+	 * desc->tot_count.
-+	 */
-+	__kstat_incr_irqs_this_cpu(desc);
- 
- 	if (chip->irq_ack)
- 		chip->irq_ack(&desc->irq_data);
-@@ -758,7 +762,11 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
--	kstat_incr_irqs_this_cpu(desc);
-+	/*
-+	 * PER CPU interrupts are not serialized. Do not touch
-+	 * desc->tot_count.
-+	 */
-+	__kstat_incr_irqs_this_cpu(desc);
- 
- 	if (chip->irq_ack)
- 		chip->irq_ack(&desc->irq_data);
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index bc226e783bd2..22e3f29a30d8 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -199,12 +199,18 @@ static inline bool irqd_has_set(struct irq_data *d, unsigned int mask)
- 
- #undef __irqd_to_state
- 
--static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
-+static inline void __kstat_incr_irqs_this_cpu(struct irq_desc *desc)
- {
- 	__this_cpu_inc(*desc->kstat_irqs);
- 	__this_cpu_inc(kstat.irqs_sum);
- }
- 
-+static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
-+{
-+	__kstat_incr_irqs_this_cpu(desc);
-+	desc->tot_count++;
-+}
-+
- static inline int irq_desc_get_node(struct irq_desc *desc)
- {
- 	return irq_common_data_get_node(&desc->irq_common_data);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 77977f55dff7..5e0ea17d01a6 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -109,6 +109,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
- 	desc->depth = 1;
- 	desc->irq_count = 0;
- 	desc->irqs_unhandled = 0;
-+	desc->tot_count = 0;
- 	desc->name = NULL;
- 	desc->owner = owner;
- 	for_each_possible_cpu(cpu)
-@@ -880,11 +881,15 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- unsigned int kstat_irqs(unsigned int irq)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
--	int cpu;
- 	unsigned int sum = 0;
-+	int cpu;
- 
- 	if (!desc || !desc->kstat_irqs)
- 		return 0;
-+	if (!irq_settings_is_per_cpu_devid(desc) &&
-+	    !irq_settings_is_per_cpu(desc))
-+	    return desc->tot_count;
-+
- 	for_each_possible_cpu(cpu)
- 		sum += *per_cpu_ptr(desc->kstat_irqs, cpu);
- 	return sum;
 -- 
 2.19.1
 
