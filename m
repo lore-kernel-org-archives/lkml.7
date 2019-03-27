@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BE2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1372DC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA93A2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A6A21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709856;
-	bh=PS9cLOtuEHtVrC6GCM+3U4hVfZYr9gBjv0rFFMGxhio=;
+	s=default; t=1553709859;
+	bh=+W6VUCVrIpcmWFqKcp0pIpX60Gkp26gcNaowHqC7Gtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNsDwybvU5vyAsT3sIt46hWrtPh2kqA8K/vym5pNY4aFI116uGQx2K1Ih6maROwhl
-	 y53lbEuWqObnkksp9vZD1XvPiETm6ugVTyldr8Sy69E9tfoJVjT77UIUzjxHlxGIsY
-	 d7f+84izi3JQ7MxrNr5NdPFvF/1LuQzm4U/N7dMw=
+	b=hwE0iRb16mLC8UF/NLbGxxlgt8GicolgtHe7wp6a97clYa+KiV9coM299dVWVvANU
+	 mi6lePapa6/0qTGAftlg93XdNbS8GwyDYpna+pGlt6koSoudUMR6oy+3zBR6hH+JRY
+	 1GKMLTKXtkkw8i/B6eWy42KtBV13+9qBruT5b0Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbfC0SEO (ORCPT
+        id S1730396AbfC0SES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44664 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733148AbfC0SEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:06 -0400
+        id S1733195AbfC0SEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E160E2063F;
-        Wed, 27 Mar 2019 18:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAA0F21738;
+        Wed, 27 Mar 2019 18:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709845;
-        bh=PS9cLOtuEHtVrC6GCM+3U4hVfZYr9gBjv0rFFMGxhio=;
+        s=default; t=1553709853;
+        bh=+W6VUCVrIpcmWFqKcp0pIpX60Gkp26gcNaowHqC7Gtk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsaHK2ICNwF2Gc9G4ZSxU/M7eFvge+QjAPjSuPN2z3SCsVUOslSf832wBL+djO0zK
-         iyJD2C1QX1ZCXxmHP6mGlEhOpFxheODPEL3hgfWKebYRp7GXF+Bf3APXtZyMlSjvpo
-         pHYiP0LXHSV/X5FVd8tsDPiekman9vqjt3He8E3Y=
+        b=bgJITxEpB+k+54l9hmH+5eA6ZNWvWx5O+JJ5lcvsoQ6IrksK8n1mL9dJcJejSsaLc
+         LqzTu9nqfRQ7+sUunP2iFfTJON6FgwGJMjBOAJcCksn5TKEbeIHdKTJLplfl+J71iu
+         z8j2mD1GLJ537F6QSb8SJbF0YzXQNjKw9z0Xp0N8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 070/262] drm/amd/display: Pass app_tf by value rather than by reference
-Date:   Wed, 27 Mar 2019 13:58:45 -0400
-Message-Id: <20190327180158.10245-70-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 073/262] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 27 Mar 2019 13:58:48 -0400
+Message-Id: <20190327180158.10245-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,97 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit 672e78cab819ebe31e3b9b8abac367be8a110472 ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-Clang warns when an expression that equals zero is used as a null
-pointer constant (in lieu of NULL):
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:4435:3:
-warning: expression which evaluates to zero treated as a null pointer
-constant of type 'const enum color_transfer_func *'
-[-Wnon-literal-null-conversion]
-                TRANSFER_FUNC_UNKNOWN,
-                ^~~~~~~~~~~~~~~~~~~~~
-1 warning generated.
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-This warning is caused by commit bb47de736661 ("drm/amdgpu: Set FreeSync
-state using drm VRR properties") and it could be solved by using NULL
-instead of TRANSFER_FUNC_UNKNOWN or casting TRANSFER_FUNC_UNKNOWN as a
-pointer. However, after looking into it, there doesn't appear to be a
-good reason to pass app_tf by reference as it is never mutated along the
-way. This is the only code path in which app_tf is used:
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-mod_freesync_build_vrr_infopacket ->
-    build_vrr_infopacket_v2 ->
-        build_vrr_infopacket_fs2_data
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
 
-Neither mod_freesync_build_vrr_infopacket or build_vrr_infopacket_v2
-modify app_tf's value and build_vrr_infopacket_fs2_data expects just
-the value so we can avoid dereferencing anything by just passing in
-app_tf's value to mod_freesync_build_vrr_infopacket and
-build_vrr_infopacket_v2.
+Here is the contexts for the three functions so far:
 
-There is no functional change because build_vrr_infopacket_fs2_data
-doesn't do anything if TRANSFER_FUNC_UNKNOWN is passed to it, the same
-as not calling build_vrr_infopacket_fs2_data at all like before this
-change when NULL was used for app_tf.
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 7 +++----
- drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h  | 2 +-
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 1544ed3f1747..945e845f3358 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -656,7 +656,7 @@ static void build_vrr_infopacket_v1(enum signal_type signal,
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index dd0d516f65e2..53380e07b40e 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
  
- static void build_vrr_infopacket_v2(enum signal_type signal,
- 		const struct mod_vrr_params *vrr,
--		const enum color_transfer_func *app_tf,
-+		enum color_transfer_func app_tf,
- 		struct dc_info_packet *infopacket)
- {
- 	unsigned int payload_size = 0;
-@@ -664,8 +664,7 @@ static void build_vrr_infopacket_v2(enum signal_type signal,
- 	build_vrr_infopacket_header_v2(signal, infopacket, &payload_size);
- 	build_vrr_infopacket_data(vrr, infopacket);
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
  
--	if (app_tf != NULL)
--		build_vrr_infopacket_fs2_data(*app_tf, infopacket);
-+	build_vrr_infopacket_fs2_data(app_tf, infopacket);
+@@ -788,7 +788,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
  
- 	build_vrr_infopacket_checksum(&payload_size, infopacket);
+@@ -1079,7 +1079,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
  
-@@ -676,7 +675,7 @@ void mod_freesync_build_vrr_infopacket(struct mod_freesync *mod_freesync,
- 		const struct dc_stream_state *stream,
- 		const struct mod_vrr_params *vrr,
- 		enum vrr_packet_type packet_type,
--		const enum color_transfer_func *app_tf,
-+		enum color_transfer_func app_tf,
- 		struct dc_info_packet *infopacket)
- {
- 	/* SPD info packet for FreeSync */
-diff --git a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h b/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
-index 949a8b62aa98..063af6258fd9 100644
---- a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
-+++ b/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
-@@ -145,7 +145,7 @@ void mod_freesync_build_vrr_infopacket(struct mod_freesync *mod_freesync,
- 		const struct dc_stream_state *stream,
- 		const struct mod_vrr_params *vrr,
- 		enum vrr_packet_type packet_type,
--		const enum color_transfer_func *app_tf,
-+		enum color_transfer_func app_tf,
- 		struct dc_info_packet *infopacket);
- 
- void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
