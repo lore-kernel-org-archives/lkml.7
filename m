@@ -2,215 +2,249 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3610C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9AEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750B42087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D0B72087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbfC0LXm convert rfc822-to-8bit (ORCPT
+        id S1732193AbfC0LYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:23:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44546 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbfC0LXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:23:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DA61730642A8;
-        Wed, 27 Mar 2019 11:23:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D61883B06;
-        Wed, 27 Mar 2019 11:23:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <ad854f75-6b42-7d8a-2cc6-cbcf528c8458@redhat.com>
-References: <ad854f75-6b42-7d8a-2cc6-cbcf528c8458@redhat.com> <155301260319.7556.1326405089184672936.stgit@warthog.procyon.org.uk> <155301261082.7556.2558480789011010142.stgit@warthog.procyon.org.uk>
-To:     Andrew Price <anprice@redhat.com>
-Cc:     dhowells@redhat.com, miklos@szeredi.hu, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] vfs: Create fs_context-aware mount_bdev() replacement
+        Wed, 27 Mar 2019 07:24:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47856 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726262AbfC0LYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 07:24:52 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8FC72B528003A6F37B6C;
+        Wed, 27 Mar 2019 19:24:49 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Wed, 27 Mar 2019
+ 19:24:41 +0800
+Subject: Re: [RFC PATCH v2 1/3] resource: Request IO port regions from
+ children of ioport_resource
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
+ <1553105650-28012-2-git-send-email-john.garry@huawei.com>
+ <20190325233255.GF24180@google.com>
+ <b9164269-c2a1-e0fa-4c17-2d06fb42f39b@huawei.com>
+ <20190326224810.GY24180@google.com>
+CC:     <rafael@kernel.org>, <arnd@arndb.de>, <lorenzo.pieralisi@arm.com>,
+        <bp@suse.de>, <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
+        <linuxarm@huawei.com>, <andy.shevchenko@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2343a281-eb6e-99f9-4600-96931d00d215@huawei.com>
+Date:   Wed, 27 Mar 2019 11:24:33 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <14986.1553685803.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 27 Mar 2019 11:23:23 +0000
-Message-ID: <14987.1553685803@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 27 Mar 2019 11:23:41 +0000 (UTC)
+In-Reply-To: <20190326224810.GY24180@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew Price <anprice@redhat.com> wrote:
+On 26/03/2019 22:48, Bjorn Helgaas wrote:
+> [+cc Catalin, Will, linux-arm-kernel]
+>
+>> From my checking, the f71882fg hwmon is accessed via the super-io interface
+>> on the PCH on x86. The super-io interface is at fixed addresses, those being
+>> 0x2e and 0x4e.
+>>
+>> Please see the following:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/hwmon/f71805f.c?h=v5.1-rc2#n1621
+>>
+>> and
+>>
+>> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/8-series-chipset-pch-datasheet.pdf
+>> (Table 9.2).
+>>
+>> On x86 systems, these PCH IO ports will be mapped on a PCI bus, like:
+>>
+>> $more /proc/ioports
+>> 0000-0cf7 : PCI Bus 0000:00
+>>   0000-001f : dma1
+>>   0020-0021 : pic1
+>>   0040-0043 : timer0
+>>   0050-0053 : timer1
+>>   0060-0060 : keyboard
+>>   0064-0064 : keyboard
+>>   0070-0077 : rtc0
+>>   0080-008f : dma page reg
+>>   00a0-00a1 : pic2
+>>   00c0-00df : dma2
+>>   00f0-00ff : fpu
+>>
+>> So, the idea in the patch is that if PCI Bus 0000:00 does not exist because
+>> of no PCI host, then we should fail a request to an IO port region.
+>
 
-> > +		up_write(&s->s_umount);
-> > +		blkdev_put(bdev, fc->bdev_mode);
-> > +		down_write(&s->s_umount);
-> 
-> fc->bdev should be NULLed here (or, on the way out of sget_fc() might be more
-> appropriate) otherwise we get a double-blkdev_put() leading to NULL pointer
-> derefs later. This happens when I mount a device twice and then unmount them,
-> or mount it 3 times.
+Hi Bjorn,
 
-How about the attached changes?  Note that they conflict a bit with the mtd
-changes from where I took the destructor piece.
+> I'm not convinced about this last sentence.
+>
+> It's true that on most modern systems, including that Intel PCH, the
+> Super I/O controller is attached via an LPC bridge on a PCI bus.
+>
+> But I don't think it's an actual requirement that PCI be involved.
+> There certainly once were systems, e.g., PC/104, that had ISA devices
+> but no PCI.  Maybe Super I/O attached via ISA is obsolete enough that
+> we don't care any more, but I really don't know.
 
-David
----
-commit 161602f963ae5a05bdb834461f7a4896286fbde0
-Author: David Howells <dhowells@redhat.com>
-Date:   Wed Mar 27 11:12:57 2019 +0000
+OK, fine. So if this is true, then this patch falls apart.
 
-    bdev handling fix
+However I don't know for sure either. I would still like to think that 
+these legacy ISA system should still insert a bus resource under 
+ioport_resource, from which devices on that bus should request resources.
 
-diff --git a/fs/fs_context.c b/fs/fs_context.c
-index 9e22fe6aafe7..fc8fda4b9fe9 100644
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -425,10 +425,8 @@ void put_fs_context(struct fs_context *fc)
- 
- 	if (fc->need_free && fc->ops && fc->ops->free)
- 		fc->ops->free(fc);
--#ifdef CONFIG_BLOCK
--	if (fc->bdev)
--		blkdev_put(fc->bdev, fc->bdev_mode);
--#endif
-+	if (fc->dev_destructor)
-+		fc->dev_destructor(fc);
- 
- 	security_free_mnt_opts(&fc->security);
- 	put_net(fc->net_ns);
-diff --git a/fs/super.c b/fs/super.c
-index 85851adb0f19..e9e678d2c37c 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1211,8 +1211,17 @@ int vfs_get_super(struct fs_context *fc,
- EXPORT_SYMBOL(vfs_get_super);
- 
- #ifdef CONFIG_BLOCK
-+static void fc_bdev_destructor(struct fs_context *fc)
-+{
-+	if (fc->bdev) {
-+		blkdev_put(fc->bdev, fc->bdev_mode);
-+		fc->bdev = NULL;
-+	}
-+}
-+
- static int set_bdev_super_fc(struct super_block *s, struct fs_context *fc)
- {
-+	s->s_mode = fc->bdev_mode;
- 	s->s_bdev = fc->bdev;
- 	s->s_dev = s->s_bdev->bd_dev;
- 	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
-@@ -1252,6 +1261,9 @@ int vfs_get_block_super(struct fs_context *fc,
- 		return PTR_ERR(bdev);
- 	}
- 
-+	fc->dev_destructor = fc_bdev_destructor;
-+	fc->bdev = bdev;
-+
- 	/* Once the superblock is inserted into the list by sget_fc(), s_umount
- 	 * will protect the lockfs code from trying to start a snapshot while
- 	 * we are mounting
-@@ -1260,18 +1272,14 @@ int vfs_get_block_super(struct fs_context *fc,
- 	if (bdev->bd_fsfreeze_count > 0) {
- 		mutex_unlock(&bdev->bd_fsfreeze_mutex);
- 		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
--		error = -EBUSY;
--		goto error_bdev;
-+		return -EBUSY;
- 	}
- 
--	fc->bdev = bdev;
- 	fc->sb_flags |= SB_NOSEC;
- 	s = sget_fc(fc, test_bdev_super_fc, set_bdev_super_fc);
- 	mutex_unlock(&bdev->bd_fsfreeze_mutex);
--	if (IS_ERR(s)) {
--		error = PTR_ERR(s);
--		goto error_bdev;
--	}
-+	if (IS_ERR(s))
-+		return PTR_ERR(s);
- 
- 	if (s->s_root) {
- 		/* Don't summarily change the RO/RW state. */
-@@ -1281,16 +1289,10 @@ int vfs_get_block_super(struct fs_context *fc,
- 			goto error_sb;
- 		}
- 
--		/* s_umount nests inside bd_mutex during __invalidate_device().
--		 * blkdev_put() acquires bd_mutex and can't be called under
--		 * s_umount.  Drop s_umount temporarily.  This is safe as we're
--		 * holding an active reference.
-+		/* Leave fc->bdev to fc_bdev_destructor() to clean up to avoid
-+		 * locking conflicts.
- 		 */
--		up_write(&s->s_umount);
--		blkdev_put(bdev, fc->bdev_mode);
--		down_write(&s->s_umount);
- 	} else {
--		s->s_mode = fc->bdev_mode;
- 		snprintf(s->s_id, sizeof(s->s_id), "%pg", bdev);
- 		sb_set_blocksize(s, block_size(bdev));
- 		error = fill_super(s, fc);
-@@ -1307,11 +1309,7 @@ int vfs_get_block_super(struct fs_context *fc,
- 
- error_sb:
- 	deactivate_locked_super(s);
--error_bdev:
--	if (fc->bdev) {
--		blkdev_put(fc->bdev, fc->bdev_mode);
--		fc->bdev = NULL;
--	}
-+	/* Leave fc->bdev to fc_bdev_destructor() to clean up */
- 	return error;
- }
- EXPORT_SYMBOL(vfs_get_block_super);
-@@ -1521,8 +1519,13 @@ int vfs_get_tree(struct fs_context *fc)
- 	 * on the superblock.
- 	 */
- 	error = fc->ops->get_tree(fc);
--	if (error < 0)
-+	if (error < 0) {
-+		if (fc->dev_destructor) {
-+			fc->dev_destructor(fc);
-+			fc->dev_destructor = NULL;
-+		}
- 		return error;
-+	}
- 
- 	if (!fc->root) {
- 		pr_err("Filesystem %s get_tree() didn't set fc->root\n",
-diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-index cb49b92f02af..9af788a3ef8e 100644
---- a/include/linux/fs_context.h
-+++ b/include/linux/fs_context.h
-@@ -76,7 +76,9 @@ struct fs_context {
- 	const struct fs_context_operations *ops;
- 	struct file_system_type	*fs_type;
- 	void			*fs_private;	/* The filesystem's context */
--	struct block_device	*bdev;		/* The backing blockdev (if applicable) */
-+	union {
-+		struct block_device *bdev;	/* The backing blockdev (if applicable) */
-+	};
- 	struct dentry		*root;		/* The root and superblock */
- 	struct user_namespace	*user_ns;	/* The user namespace for this mount */
- 	struct net		*net_ns;	/* The network namespace for this mount */
-@@ -93,6 +95,7 @@ struct fs_context {
- 	enum fs_context_purpose	purpose:8;
- 	bool			need_free:1;	/* Need to call ops->free() */
- 	bool			global:1;	/* Goes into &init_user_ns */
-+	void (*dev_destructor)(struct fs_context *fc); /* For block or mtd */
- };
- 
- struct fs_context_operations {
+>
+>>> On x86, I think inb/inw/inl from a port where nothing responds
+>>> probably just returns ~0, and outb/outw/outl just get dropped.
+>>> Shouldn't arm64 do the same, without crashing?
+>>
+>> That would be ideal and we're doing something similar in patch 2/3.
+>>
+>> So on ARM64 we have to IO remap the PCI IO resource. If this mapping is not
+>> done (due to no PCI host), then any inb/inw/inl calls will crash the system.
+>
+> My take is that ARM64 is responsible for implementing inb/inw/inl in
+> such a way that they don't crash.  I don't think it's practical to
+> update all the old ISA drivers or even the core code to work around
+> that.
+
+As I mentioned below, I was actually also fixing up inb/inw/inl et al 
+for arm64 such that they don't crash the system in this case. This was 
+in patch 2/3.
+
+So on arm64 - which defines PCI_IOBASE - we need to IO remap the PCI IO 
+space resource. If this is not done and we access PCI IO space, then we 
+crash.
+
+However with the introduction of logical PIO space in commit 
+031e3601869c, we can test this mapping by ensuring that we have a 
+logical PIO region registered. If there is none, then we can discard the 
+access.
+
+However this would only be for when INDIRECT_PIO is defined. Maybe I can 
+make it work for when INDIRECT_PIO is not defined, or even drop 
+!INDIRECT_PIO support.
+
+A final note on hwmon f71882fg: even with the change in 2/3, this driver 
+still accesses IO ports 0x2e and 0x4e, which would not be a PCH fixed IO 
+port on !x86 systems, so far from ideal.
+
+I saw that in commit 746cdfbf01c0 ("hwmon: Avoid building drivers for 
+powerpc that read/write ISA addresses"), PPC would not build these 
+drivers, as, like arm, it has no native ISA.
+
+>
+>> So in patch 2/3, I am also making the change to the logical PIO inb/inw/inl
+>> accessors to discard accesses when no PCI MMIO regions are registered in
+>> logical PIO space.
+>>
+>> This is really a second line of defense (this patch being the first).
+>>
+>>>> root@(none)$root@(none)$ insmod f71882fg.ko
+>>>> [  152.215377] Unable to handle kernel paging request at virtual address ffff7dfffee0002e
+>>>> [  152.231299] Mem abort info:
+>>>> [  152.236898]   ESR = 0x96000046
+>>>> [  152.243019]   Exception class = DABT (current EL), IL = 32 bits
+>>>> [  152.254905]   SET = 0, FnV = 0
+>>>> [  152.261024]   EA = 0, S1PTW = 0
+>>>> [  152.267320] Data abort info:
+>>>> [  152.273091]   ISV = 0, ISS = 0x00000046
+>>>> [  152.280784]   CM = 0, WnR = 1
+>>>> [  152.286730] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+>>>> [  152.300537] [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
+>>>> [  152.318016] Internal error: Oops: 96000046 [#1] PREEMPT SMP
+>>>> [  152.329199] Modules linked in: f71882fg(+)
+>>>> [  152.337415] CPU: 8 PID: 2732 Comm: insmod Not tainted 5.1.0-rc1-00002-gab1a0e9200b8-dirty #102
+>>>> [  152.354712] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+>>>> [  152.373058] pstate: 80000005 (Nzcv daif -PAN -UAO)
+>>>> [  152.382675] pc : logic_outb+0x54/0xb8
+>>>> [  152.390017] lr : f71882fg_find+0x64/0x390 [f71882fg]
+>>>> [  152.399977] sp : ffff000013393aa0
+>>>> [  152.406618] x29: ffff000013393aa0 x28: ffff000008b98b10
+>>>> [  152.417278] x27: ffff000013393df0 x26: 0000000000000100
+>>>> [  152.427938] x25: ffff801f8c872d30 x24: ffff000011420000
+>>>> [  152.438598] x23: ffff801fb49d2940 x22: ffff000011291000
+>>>> [  152.449257] x21: 000000000000002e x20: 0000000000000087
+>>>> [  152.459917] x19: ffff000013393b44 x18: ffffffffffffffff
+>>>> [  152.470577] x17: 0000000000000000 x16: 0000000000000000
+>>>> [  152.481236] x15: ffff00001127d6c8 x14: ffff801f8cfd691c
+>>>> [  152.491896] x13: 0000000000000000 x12: 0000000000000000
+>>>> [  152.502555] x11: 0000000000000003 x10: 0000801feace2000
+>>>> [  152.513215] x9 : 0000000000000000 x8 : ffff841fa654f280
+>>>> [  152.523874] x7 : 0000000000000000 x6 : 0000000000ffc0e3
+>>>> [  152.534534] x5 : ffff000011291360 x4 : ffff801fb4949f00
+>>>> [  152.545194] x3 : 0000000000ffbffe x2 : 76e767a63713d500
+>>>> [  152.555853] x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
+>>>> [  152.566514] Process insmod (pid: 2732, stack limit = 0x(____ptrval____))
+>>>> [  152.579968] Call trace:
+>>>> [  152.584863]  logic_outb+0x54/0xb8
+>>>> [  152.591506]  f71882fg_find+0x64/0x390 [f71882fg]
+>>>> [  152.600768]  f71882fg_init+0x38/0xc70 [f71882fg]
+>>>> [  152.610031]  do_one_initcall+0x5c/0x198
+>>>> [  152.617723]  do_init_module+0x54/0x1b0
+>>>> [  152.625237]  load_module+0x1dc4/0x2158
+>>>> [  152.632752]  __se_sys_init_module+0x14c/0x1e8
+>>>> [  152.641490]  __arm64_sys_init_module+0x18/0x20
+>>>> [  152.650404]  el0_svc_common+0x5c/0x100
+>>>> [  152.657919]  el0_svc_handler+0x2c/0x80
+>>>> [  152.665433]  el0_svc+0x8/0xc
+>>>> [  152.671202] Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
+>>>> [  152.683434] ---[ end trace fd4f35b610829a48 ]---
+>>>> Segmentation fault
+>>>> root@(none)$
+>>>
+>>>> Note that the f71882fg driver correctly calls request_muxed_region().
+>>>>
+>>>> This issue was originally reported in [1].
+>>>>
+>>>> This patch changes the functionality of request{muxed_}_region() to
+>>>> request a region from a direct child descendent of the top
+>>>> ioport_resource.
+>>>>
+>>>> In this, if the IO port region has not been mapped for a particular IO
+>>>> region, the PCI IO resource would also not have been inserted, and so a
+>>>> suitable child region will not exist. As such,
+>>>> request_{muxed_}region() calls will fail.
+>>>>
+>>>> A side note: there are many drivers in the kernel which fail to even call
+>>>> request_{muxed_}region() prior to IO port accesses, and they also need to
+>>>> be fixed (to call request_{muxed_}region(), as appropriate) separately.
+>>>>
+>>>> [1] https://www.spinics.net/lists/linux-pci/msg49821.html
+>>>
+>>> Please use a https://lore.kernel.org/ URL instead of spinics.net.
+>>
+>> ok, I hope that I can find this old thread.
+>
+> The beauty of lore.kernel.org is that the URL contains the Message-ID, so
+> it's easy build the URL and it would contain useful information even if
+> lore.kernel.org disappeared:
+>
+> https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
+>
+
+ok, great.
+
+Thanks again,
+John
+
+> Bjorn
+>
+
