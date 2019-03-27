@@ -2,51 +2,49 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96C7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2102070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B2E2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711084;
-	bh=irWPg9giv7Zsvr+H2ZJHdfps6BwsELJY4P6m1BaHF9g=;
+	s=default; t=1553711086;
+	bh=z7C7NRDkjoIKdlDa22OZtasceb2qhekQGLHsDx9SIXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NchWlFzt4RG6LrpiiYNXl8yiLrK8QaZhxSHzAe0qoUxNvMCGmaFxDsdF+sO6zSnqC
-	 2gPmadUWbdjmjUM9WQl1cg+HoU5/Icnk7p+dsfaPJMWsot2zdUaLG0TH3aH5CTcvGf
-	 JwziKQZYJOJNMlEzcvJCcio3jxUjYBA8EbRTc11I=
+	b=BO0gb8CLObLNZsWSFmmk9euc60ZFtYMkhITfJ8NxvGtA+iJOWRWTj7xBALigRFlRF
+	 Mz9TO3O/3tFl67QOaFj8YUR/bOMpIewfDabIZSlTlNlAXbeSZHrrL7fXubpXxOxXlM
+	 LOfB3yb4a355Y+HBnTCJ9JJP6FU2g2Fqx7+IkLxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404047AbfC0SYn (ORCPT
+        id S2391355AbfC0SYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390941AbfC0SYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:32 -0400
+        id S2404039AbfC0SYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A461E20449;
-        Wed, 27 Mar 2019 18:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5FC2063F;
+        Wed, 27 Mar 2019 18:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711071;
-        bh=irWPg9giv7Zsvr+H2ZJHdfps6BwsELJY4P6m1BaHF9g=;
+        s=default; t=1553711080;
+        bh=z7C7NRDkjoIKdlDa22OZtasceb2qhekQGLHsDx9SIXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMaRSCWd12npO1BQeW1QReI/saYEVFpJaH62dU+ru1fjDLY+s/g7BVwu31JKCmBj6
-         sI/4GYdi7PO6kWAWR2iamwNOkBGfKPojl0L04CgbaIL9GhJggR6FXFWJNtPXDl48J+
-         oDDKI3MxWf4rBSrBPuGcJT8OqllBdFznKRjdXePc=
+        b=sDuhsSLSwSf5WXBmPm09gDOp8KOCd1wUZwyNyDwJ7xNvPZqXXoZ9UHgflDvG7T9a/
+         whOJJZXPuEgX7bUGC9KQj73H5OTOU0QQjcUj1jylZ78XUj9etyz0UGXX1Fh8ZuDPIQ
+         ysa6a08n9iAoGPGUd5rbrAIdJOiyMkuW7sXvS1uQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 37/63] ARM: 8833/1: Ensure that NEON code always compiles with Clang
-Date:   Wed, 27 Mar 2019 14:22:57 -0400
-Message-Id: <20190327182323.18577-37-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 43/63] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Wed, 27 Mar 2019 14:23:03 -0400
+Message-Id: <20190327182323.18577-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -58,122 +56,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-While building arm32 allyesconfig, I ran into the following errors:
+The following traceback is sometimes seen when booting an image in qemu:
 
-  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
-  '-mfloat-abi=softfp -mfpu=neon'
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-  In file included from lib/raid6/neon1.c:27:
-  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
-  error: "NEON support not enabled"
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-Building V=1 showed NEON_FLAGS getting passed along to Clang but
-__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
-only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
-which is the '-march' value for allyesconfig.
+Use a static atomic to ensure that the function is executed exactly once.
 
->From lib/Basic/Targets/ARM.cpp in the Clang source:
-
-  // This only gets set when Neon instructions are actually available, unlike
-  // the VFP define, hence the soft float and arch check. This is subtly
-  // different from gcc, we follow the intent which was that it should be set
-  // when Neon instructions are actually available.
-  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
-    Builder.defineMacro("__ARM_NEON", "1");
-    Builder.defineMacro("__ARM_NEON__");
-    // current AArch32 NEON implementations do not support double-precision
-    // floating-point even when it is present in VFP.
-    Builder.defineMacro("__ARM_NEON_FP",
-                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
-  }
-
-Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
-beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
-definined by Clang. This doesn't functionally change anything because
-that code will only run where NEON is supported, which is implicitly
-armv7.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/287
-
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm/kernel_mode_neon.txt | 4 ++--
- arch/arm/lib/Makefile                  | 2 +-
- arch/arm/lib/xor-neon.c                | 2 +-
- lib/raid6/Makefile                     | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
-index 525452726d31..b9e060c5b61e 100644
---- a/Documentation/arm/kernel_mode_neon.txt
-+++ b/Documentation/arm/kernel_mode_neon.txt
-@@ -6,7 +6,7 @@ TL;DR summary
- * Use only NEON instructions, or VFP instructions that don't rely on support
-   code
- * Isolate your NEON code in a separate compilation unit, and compile it with
--  '-mfpu=neon -mfloat-abi=softfp'
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
- * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
-   NEON code
- * Don't sleep in your NEON code, and be aware that it will be executed with
-@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
- Therefore, the recommended and only supported way of using NEON/VFP in the
- kernel is by adhering to the following rules:
- * isolate the NEON code in a separate compilation unit and compile it with
--  '-mfpu=neon -mfloat-abi=softfp';
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
- * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
-   into the unit containing the NEON code from a compilation unit which is *not*
-   built with the GCC flag '-mfpu=neon' set.
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index d8a780799506..06348a3d50c2 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -35,7 +35,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
- $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index d203940203b6..aee23092f50e 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
  
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
--  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
-+  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
-   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
- endif
-diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-index 2c40aeab3eaa..c691b901092f 100644
---- a/arch/arm/lib/xor-neon.c
-+++ b/arch/arm/lib/xor-neon.c
-@@ -14,7 +14,7 @@
- MODULE_LICENSE("GPL");
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3677,9 +3678,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
  
- #ifndef __ARM_NEON__
--#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-+#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
- #endif
+ static void cdrom_sysctl_register(void)
+ {
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
  
- /*
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 3b10a48fa040..a84efd4aad37 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -23,7 +23,7 @@ endif
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
- NEON_FLAGS := -ffreestanding
- ifeq ($(ARCH),arm)
--NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
-+NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
- endif
- ifeq ($(ARCH),arm64)
- CFLAGS_REMOVE_neon1.o += -mgeneral-regs-only
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3690,8 +3691,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
+ }
+ 
+ static void cdrom_sysctl_unregister(void)
 -- 
 2.19.1
 
