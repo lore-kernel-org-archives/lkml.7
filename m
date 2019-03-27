@@ -6,49 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25285C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9222087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC16D2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710580;
-	bh=7mCxjLYr52gKbQdXUbZ/4pYseNDNUZlPxQgeLhg+Q+g=;
+	s=default; t=1553710585;
+	bh=UZYtGBwLlAtlVhpWS6zCDUYUv2qfEbVZk7YavJ5pYPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKPVA748DuOH4WRqzHdDIkUdE1TZgTb+MIgDqOgIK9FWS38FwAfWsjhXd643DWIxu
-	 fEGEryGQoTz5WiH2gWc4IvUms9/VmTPCLUDuXOUXYuwJHrdefusw0qMAapUC4r1AaK
-	 QArlz5IvwjwAACmi2WwFG9qLee4n0NPbOqKURaMQ=
+	b=glrlEtMwtbiWw7UiA464aIBKpgI6kazwsm18JRF7b9Mp7ReMvZVDKwk5hhIQx3B4U
+	 I2rWChfDG7shoElStvsFO5kVZbIOTl6hHGULZDwVwXOjdCq67pPdn1UaNmF0izjWs1
+	 llHIcRMem91q98lwyeXvy96wOaNeOiZlFIzp8AF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbfC0SQT (ORCPT
+        id S2390035AbfC0SQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389960AbfC0SQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:07 -0400
+        id S2389485AbfC0SQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 227202183E;
-        Wed, 27 Mar 2019 18:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC5A2082F;
+        Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710567;
-        bh=7mCxjLYr52gKbQdXUbZ/4pYseNDNUZlPxQgeLhg+Q+g=;
+        s=default; t=1553710578;
+        bh=UZYtGBwLlAtlVhpWS6zCDUYUv2qfEbVZk7YavJ5pYPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKOEnEtwnhDZofkAvjzJk4M+R5hlPRU7H0xYL7+aH6zQ9pxKT+w03GmANzm5eEobL
-         Cbjt7xmJfeokghp0kQd1PeUQu08r7/OBfhGY4NUzIcAan7YSamIq9+xQsMZQttHCFO
-         0gdCk1WRL/z9nkLftP3NJxrasbkmn7tpVwyFuWPo=
+        b=W4zAihwK80Zx/DM4+HpjgmN+G+MFgokmvBnZxpxHWK1ODX4cRLrzEbXxsnpoXnuYr
+         lVqpNmKLz3dFP3lKoBTcoMrSt20hYYm8V0j3GcD7P3mcpIql7cdXM3O75qyeGpQAPI
+         7BIPck7cM0jpzfkH/EyFWKkm3/ySRcXmWFLjW59o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 180/192] brcmfmac: Use firmware_request_nowarn for the clm_blob
-Date:   Wed, 27 Mar 2019 14:10:12 -0400
-Message-Id: <20190327181025.13507-180-sashal@kernel.org>
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 186/192] dmaengine: tegra: avoid overflow of byte tracking
+Date:   Wed, 27 Mar 2019 14:10:18 -0400
+Message-Id: <20190327181025.13507-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -60,55 +57,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-[ Upstream commit 4ad0be160544ffbdafb7cec39bb8e6dd0a97317a ]
+[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
 
-The linux-firmware brcmfmac firmware files contain an embedded table with
-per country allowed channels and strength info.
+The dma_desc->bytes_transferred counter tracks the number of bytes
+moved by the DMA channel. This is then used to calculate the information
+passed back in the in the tegra_dma_tx_status callback, which is usually
+fine.
 
-For recent hardware these versions of the firmware are specially build for
-linux-firmware, the firmware files directly available from Cypress rely on
-a separate clm_blob file for this info.
+When the DMA channel is configured as continous, then the bytes_transferred
+counter will increase over time and eventually overflow to become negative
+so the residue count will become invalid and the ALSA sound-dma code will
+report invalid hardware pointer values to the application. This results in
+some users becoming confused about the playout position and putting audio
+data in the wrong place.
 
-For some unknown reason Cypress refuses to provide the standard firmware
-files + clm_blob files it uses elsewhere for inclusion into linux-firmware,
-instead relying on these special builds with the clm_blob info embedded.
-This means that the linux-firmware firmware versions often lag behind,
-but I digress.
+To fix this issue, always ensure the bytes_transferred field is modulo the
+size of the request. We only do this for the case of the cyclic transfer
+done ISR as anyone attempting to move 2GiB of DMA data in one transfer
+is unlikely.
 
-The brcmfmac driver does support the separate clm_blob file and always
-tries to load this. Currently we use request_firmware for this. This means
-that on any standard install, using the standard combo of linux-kernel +
-linux-firmware, we will get a warning:
-"Direct firmware load for ... failed with error -2"
+Note, we don't fix the issue that we should /never/ transfer a negative
+number of bytes so we could make those fields unsigned.
 
-On top of this, brcmfmac itself prints: "no clm_blob available (err=-2),
-device may have limited channels available".
-
-This commit switches to firmware_request_nowarn, fixing almost any brcmfmac
-device logging the warning (it leaves the brcmfmac info message in place).
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-index cd3651069d0c..27893af63ebc 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-@@ -149,7 +149,7 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
- 		return err;
- 	}
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 9a558e30c461..8219ab88a507 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -636,7 +636,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
  
--	err = request_firmware(&clm, clm_name, bus->dev);
-+	err = firmware_request_nowarn(&clm, clm_name, bus->dev);
- 	if (err) {
- 		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
- 			   err);
+ 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
+ 	dma_desc = sgreq->dma_desc;
+-	dma_desc->bytes_transferred += sgreq->req_len;
++	/* if we dma for long enough the transfer count will wrap */
++	dma_desc->bytes_transferred =
++		(dma_desc->bytes_transferred + sgreq->req_len) %
++		dma_desc->bytes_requested;
+ 
+ 	/* Callback need to be call */
+ 	if (!dma_desc->cb_count)
 -- 
 2.19.1
 
