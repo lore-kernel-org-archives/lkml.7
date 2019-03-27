@@ -6,58 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907722070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFEC2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712184;
-	bh=yndFG5TDCiBAyRfMNpx2aFT8XMkFs6scNwzQFgVIs1g=;
+	s=default; t=1553712190;
+	bh=i4J60JcTR2AZDGF22aA/OXqKdTRnPaeZ853LEL+myt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZYbrbrrlCs6E5w7ibneIobWT9DdHn+4ph3C5Fkihdk3+L0Z4ijNNPGz4iF9bwY9gI
-	 Dq6X/LUra5wf1M9yZ9v4CNR49CxWOtILGRksWm2eiLe1AUAif7/27RP9Vl/ywDbBB9
-	 5YdnLySNUhPJJnoaBXe3WZLUSgS4lXmtUv/jaEds=
+	b=1pBDXsKJ5mPbVgRACCYTDmXgXfYGhrV6yVti0Go7G8r9GHBdBeFDT4nQkimzdS39W
+	 0ZNnWvTStgJo/OL2+1KWfBbG8nNAP22BEzhw5TYmQlUuAEXccGepywm8f0e3xX+9kx
+	 Bl/Ev8vBgKBBcN/8mO9LUpYAYdR+8HH/UHMY6VtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391835AbfC0SnD (ORCPT
+        id S2403771AbfC0SVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:43:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390658AbfC0SVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:44 -0400
+        id S2391196AbfC0SVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D44AF2082F;
-        Wed, 27 Mar 2019 18:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 823BC20643;
+        Wed, 27 Mar 2019 18:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710903;
-        bh=yndFG5TDCiBAyRfMNpx2aFT8XMkFs6scNwzQFgVIs1g=;
+        s=default; t=1553710893;
+        bh=i4J60JcTR2AZDGF22aA/OXqKdTRnPaeZ853LEL+myt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nLPBikNZ9r7QzAsMT3sSf/wUrp1D5rG7fiCVSpq+2rVJCcP1ZIhiq4KQWSE+/Q65o
-         +xppZ/bFUVfzll6r4gdZcw/z1dW2uDe7YUKXzAnUXtZgzQiM3ioi+tk86AJMadpP1W
-         9z1WNgwJ2L3R8B6OJiz3i0qHpz/xRzmza27qB3Ng=
+        b=ujTL8YN1iboUDF66HoVYQcRHfUZumBdWVOF095okmVJIP1V9U18FKQ8nIuQLDtrDz
+         alNMMv/IGV5MYywxyU5GP3uRCIHJ7iew3cTLfIfVJJ4Gw2Pz5S/lMIzP3qCnB3UM3s
+         b+V7z2WmdZBppxXMuibXHqc3J+v+vB6AoK8a3RuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 38/87] SoC: imx-sgtl5000: add missing put_device()
-Date:   Wed, 27 Mar 2019 14:19:51 -0400
-Message-Id: <20190327182040.17444-38-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 31/87] mmc: omap: fix the maximum timeout setting
+Date:   Wed, 27 Mar 2019 14:19:44 -0400
+Message-Id: <20190327182040.17444-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -69,56 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
+
+Fix by using 0xfd as the maximum timeout.
+
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
+
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index b99e0b5e00e9..8e525f7ac08d 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -115,6 +115,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
- 	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index a4bf14e21b5e..21dfce21aa63 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
+ }
+ 
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 -- 
 2.19.1
 
