@@ -2,196 +2,126 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DECC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44C8C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F97206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61E2206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbfC0WK2 (ORCPT
+        id S1727810AbfC0WLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:10:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56674 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfC0WK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:10:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1EF68CD4A8;
-        Wed, 27 Mar 2019 22:10:27 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD6E8182D0;
-        Wed, 27 Mar 2019 22:10:15 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 18:10:13 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        netfilter-devel@vger.kernel.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Simo Sorce <simo@redhat.com>, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V5 04/10] audit: log container info of syscalls
-Message-ID: <20190327221012.42vjkifdfifuaczi@madcap2.tricolour.ca>
-References: <cover.1552665316.git.rgb@redhat.com>
- <85fcd0a81adef25cb60b2e479bbb380e76dbf999.1552665316.git.rgb@redhat.com>
- <CAFqZXNvM+d_MKGVykLtcHkwwZhO_UOYACJQu-92tEOvkk7uMrQ@mail.gmail.com>
+        Wed, 27 Mar 2019 18:11:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47101 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfC0WLx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:11:53 -0400
+Received: from mail-wm1-f71.google.com ([209.85.128.71])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1h9Glz-0005Ug-HV
+        for linux-kernel@vger.kernel.org; Wed, 27 Mar 2019 22:11:51 +0000
+Received: by mail-wm1-f71.google.com with SMTP id t82so630448wmg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 15:11:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WXjYdAUAnz6+/eYr5Y7Yrp7ylVTll3WJTmB9qgkkyAw=;
+        b=P7mUiiUrSjQlMPMltOx4/jpy5L8f6ENspWRpPG8xg9qFD0ea7wkstJJedDzS0/9p1W
+         0adzq5jllBaXieeyE12HzQ6WyJ/U33qdr0VCypYeqwxieQHjgrUAxTWQKWPAL4M28xq3
+         OIxMQ65uM4HveNO8yAqiE92dXqcQXMznJQVqj7T+F/3XPxAqJjvT57YTmtM6Sn4XZwxi
+         lCuHV7V91sgYQa+DfZhFqyvGiLYzp2CAeqCSYez4gg1RyZfKsv0nhGtISvJILr82qo4r
+         fE9ml2BRfbzUMIC2qoopKHAiZxC9Pqq/L6kQ3O3FzG/Iu/Z0HnykIqU8/oHuPMq8k2Ju
+         8CFQ==
+X-Gm-Message-State: APjAAAW2t5J7gXPDXxWj/7HYPNTdi5HxfuvuWSBWEwU+PIxULJ0zKkuJ
+        6QrtKw3cQkNHTGtpfL14OngYs2sKzkyywoMKekv2n97QEgK/TGx/5uLtNNY5Gu2h2N3dv/YQa5/
+        sm7z7hONMIPI6z7++Rd0Rhisy6vCcxh6JrroMry4RQA==
+X-Received: by 2002:adf:e692:: with SMTP id r18mr26623163wrm.231.1553724711241;
+        Wed, 27 Mar 2019 15:11:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwLjebGTxkNWh5ddJr8xfJP3+1SU4iS1hyl/Xn/2kqvtWKIT2j4IFVTagZuYXFHiPFvAiOs/A==
+X-Received: by 2002:adf:e692:: with SMTP id r18mr26623150wrm.231.1553724710969;
+        Wed, 27 Mar 2019 15:11:50 -0700 (PDT)
+Received: from localhost (host141-127-dynamic.17-87-r.retail.telecomitalia.it. [87.17.127.141])
+        by smtp.gmail.com with ESMTPSA id o17sm22708991wrw.73.2019.03.27.15.11.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 15:11:50 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 23:11:49 +0100
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Pravin B Shelar <pshelar@ovn.org>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        dev@openvswitch.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] openvswitch: fix flow actions reallocation
+Message-ID: <20190327221148.GA16096@xps-13>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFqZXNvM+d_MKGVykLtcHkwwZhO_UOYACJQu-92tEOvkk7uMrQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 27 Mar 2019 22:10:27 +0000 (UTC)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-27 22:01, Ondrej Mosnacek wrote:
-> On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > Create a new audit record AUDIT_CONTAINER_ID to document the audit
-> > container identifier of a process if it is present.
-> >
-> > Called from audit_log_exit(), syscalls are covered.
-> >
-> > A sample raw event:
-> > type=SYSCALL msg=audit(1519924845.499:257): arch=c000003e syscall=257 success=yes exit=3 a0=ffffff9c a1=56374e1cef30 a2=241 a3=1b6 items=2 ppid=606 pid=635 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=3 comm="bash" exe="/usr/bin/bash" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="tmpcontainerid"
-> > type=CWD msg=audit(1519924845.499:257): cwd="/root"
-> > type=PATH msg=audit(1519924845.499:257): item=0 name="/tmp/" inode=13863 dev=00:27 mode=041777 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:tmp_t:s0 nametype= PARENT cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
-> > type=PATH msg=audit(1519924845.499:257): item=1 name="/tmp/tmpcontainerid" inode=17729 dev=00:27 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=unconfined_u:object_r:user_tmp_t:s0 nametype=CREATE cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0
-> > type=PROCTITLE msg=audit(1519924845.499:257): proctitle=62617368002D6300736C65657020313B206563686F2074657374203E202F746D702F746D70636F6E7461696E65726964
-> > type=CONTAINER_ID msg=audit(1519924845.499:257): contid=123458
-> >
-> > See: https://github.com/linux-audit/audit-kernel/issues/90
-> > See: https://github.com/linux-audit/audit-userspace/issues/51
-> > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > Acked-by: Steve Grubb <sgrubb@redhat.com>
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> 
-> Barring one minor nit below,
-> 
-> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-> 
-> > ---
-> >  include/linux/audit.h      |  5 +++++
-> >  include/uapi/linux/audit.h |  1 +
-> >  kernel/audit.c             | 21 +++++++++++++++++++++
-> >  kernel/auditsc.c           |  2 ++
-> >  4 files changed, 29 insertions(+)
-> >
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 301337776193..43438192ca2a 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -199,6 +199,8 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
-> >         return tsk->audit->contid;
-> >  }
-> >
-> > +extern void audit_log_contid(struct audit_context *context, u64 contid);
-> > +
-> >  extern u32 audit_enabled;
-> >  #else /* CONFIG_AUDIT */
-> >  static inline int audit_alloc(struct task_struct *task)
-> > @@ -265,6 +267,9 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
-> >         return AUDIT_CID_UNSET;
-> >  }
-> >
-> > +static inline void audit_log_contid(struct audit_context *context, u64 contid)
-> > +{ }
-> > +
-> >  #define audit_enabled AUDIT_OFF
-> >  #endif /* CONFIG_AUDIT */
-> >
-> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> > index d475cf3b4d7f..a6383e28b2c8 100644
-> > --- a/include/uapi/linux/audit.h
-> > +++ b/include/uapi/linux/audit.h
-> > @@ -115,6 +115,7 @@
-> >  #define AUDIT_REPLACE          1329    /* Replace auditd if this packet unanswerd */
-> >  #define AUDIT_KERN_MODULE      1330    /* Kernel Module events */
-> >  #define AUDIT_FANOTIFY         1331    /* Fanotify access decision */
-> > +#define AUDIT_CONTAINER_ID     1332    /* Container ID */
-> >
-> >  #define AUDIT_AVC              1400    /* SE Linux avc denial or grant */
-> >  #define AUDIT_SELINUX_ERR      1401    /* Internal SE Linux Errors */
-> > diff --git a/kernel/audit.c b/kernel/audit.c
-> > index b5c702abeb42..8cc0e88d7f2a 100644
-> > --- a/kernel/audit.c
-> > +++ b/kernel/audit.c
-> > @@ -2127,6 +2127,27 @@ void audit_log_session_info(struct audit_buffer *ab)
-> >         audit_log_format(ab, "auid=%u ses=%u", auid, sessionid);
-> >  }
-> >
-> > +/*
-> > + * audit_log_contid - report container info
-> > + * @context: task or local context for record
-> > + * @contid: container ID to report
-> > + */
-> > +void audit_log_contid(struct audit_context *context, u64 contid)
-> > +{
-> > +       struct audit_buffer *ab;
-> > +
-> > +       if (!audit_contid_valid(contid))
-> > +               return;
-> > +       /* Generate AUDIT_CONTAINER_ID record with container ID */
-> > +       ab = audit_log_start(context, GFP_KERNEL, AUDIT_CONTAINER_ID);
-> > +       if (!ab)
-> > +               return;
-> > +       audit_log_format(ab, "contid=%llu", contid);
-> 
-> Just realized that you *might* get a compiler/static checker warning
-> since u64 could technically be something else than unsigned long long
-> on some arches... maybe this is not case in the kernel, but might be
-> safer to cast it to unsigned long long before passing to
-> audit_log_format(). Possibly there are similar occurrences in previous
-> (later) patches that I didn't (won't) notice.
+The flow action buffer can be resized if it's not big enough to contain
+all the requested flow actions. However, this resize doesn't take into
+account the new requested size, the buffer is only increased by a factor
+of 2x. This might be not enough to contain the new data, causing a
+buffer overflow, for example:
 
-Ok, since it is guaranteed to be at least 64 bits, a cast won't truncate
-it.
+[   42.044472] =============================================================================
+[   42.045608] BUG kmalloc-96 (Not tainted): Redzone overwritten
+[   42.046415] -----------------------------------------------------------------------------
 
-> > +       audit_log_end(ab);
-> > +       return;
-> > +}
-> > +EXPORT_SYMBOL(audit_log_contid);
-> > +
-> >  void audit_log_key(struct audit_buffer *ab, char *key)
-> >  {
-> >         audit_log_format(ab, " key=");
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 8090eff7868d..a8c8b44b954d 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -1548,6 +1548,8 @@ static void audit_log_exit(void)
-> >
-> >         audit_log_proctitle();
-> >
-> > +       audit_log_contid(context, audit_get_contid(current));
-> > +
-> >         /* Send end of event record to help user space know we are finished */
-> >         ab = audit_log_start(context, GFP_KERNEL, AUDIT_EOE);
-> >         if (ab)
-> 
-> Ondrej Mosnacek <omosnace at redhat dot com>
+[   42.047715] Disabling lock debugging due to kernel taint
+[   42.047716] INFO: 0x8bf2c4a5-0x720c0928. First byte 0x0 instead of 0xcc
+[   42.048677] INFO: Slab 0xbc6d2040 objects=29 used=18 fp=0xdc07dec4 flags=0x2808101
+[   42.049743] INFO: Object 0xd53a3464 @offset=2528 fp=0xccdcdebb
 
-- RGB
+[   42.050747] Redzone 76f1b237: cc cc cc cc cc cc cc cc                          ........
+[   42.051839] Object d53a3464: 6b 6b 6b 6b 6b 6b 6b 6b 0c 00 00 00 6c 00 00 00  kkkkkkkk....l...
+[   42.053015] Object f49a30cc: 6c 00 0c 00 00 00 00 00 00 00 00 03 78 a3 15 f6  l...........x...
+[   42.054203] Object acfe4220: 20 00 02 00 ff ff ff ff 00 00 00 00 00 00 00 00   ...............
+[   42.055370] Object 21024e91: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.056541] Object 070e04c3: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.057797] Object 948a777a: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.059061] Redzone 8bf2c4a5: 00 00 00 00                                      ....
+[   42.060189] Padding a681b46e: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Fix by making sure the new buffer is properly resized to contain all the
+requested data.
+
+BugLink: https://bugs.launchpad.net/bugs/1813244
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+ net/openvswitch/flow_netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
+index 691da853bef5..e6f789badaa3 100644
+--- a/net/openvswitch/flow_netlink.c
++++ b/net/openvswitch/flow_netlink.c
+@@ -2306,14 +2306,14 @@ static struct nlattr *reserve_sfa_size(struct sw_flow_actions **sfa,
+ 
+ 	struct sw_flow_actions *acts;
+ 	int new_acts_size;
+-	int req_size = NLA_ALIGN(attr_len);
++	size_t req_size = NLA_ALIGN(attr_len);
+ 	int next_offset = offsetof(struct sw_flow_actions, actions) +
+ 					(*sfa)->actions_len;
+ 
+ 	if (req_size <= (ksize(*sfa) - next_offset))
+ 		goto out;
+ 
+-	new_acts_size = ksize(*sfa) * 2;
++	new_acts_size = max(req_size, ksize(*sfa) * 2);
+ 
+ 	if (new_acts_size > MAX_ACTIONS_BUFSIZE) {
+ 		if ((MAX_ACTIONS_BUFSIZE - next_offset) < req_size) {
+-- 
+2.19.1
+
