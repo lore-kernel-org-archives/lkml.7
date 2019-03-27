@@ -2,87 +2,202 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A2DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52EBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CCB208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CBD2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiZYWv98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbfC0E6O (ORCPT
+        id S1732304AbfC0E6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 00:58:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:62793 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725613AbfC0E6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 00:58:13 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 21:58:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,275,1549958400"; 
-   d="scan'208";a="156135964"
-Received: from yannluen-mobl.ccr.corp.intel.com (HELO localhost) ([10.249.254.205])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2019 21:58:07 -0700
-Date:   Wed, 27 Mar 2019 06:58:06 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Denis Kenzior <denkenz@gmail.com>
-Cc:     James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Mimi Zohar <zohar@us.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        James Morris <james.morris@microsoft.com>
-Subject: Re: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
-Message-ID: <20190327045806.GD15397@linux.intel.com>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190325212705.26837-1-joe@perches.com>
- <20190326113725.GA10898@linux.intel.com>
- <1553602220.3960.29.camel@linux.ibm.com>
- <1553610317.2900.2.camel@linux.ibm.com>
- <c7f70a06-65a5-a1cd-69c5-dae7567b851f@gmail.com>
+        Wed, 27 Mar 2019 00:58:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43203 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbfC0E6b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 00:58:31 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so9124893pfd.10;
+        Tue, 26 Mar 2019 21:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=D+VKB8odm/iRn7Qlf3NsRe6rs5PO9H8u0I72DJse46A=;
+        b=QiZYWv98mpUpZW7djHUVZS0MEFySpQjFTUP9fp/wlZ4PeMl2XJrN+g9Gh/8jgXbwzt
+         3wv+5c9twrrKcbT8FeddPYDk+IqFi8Nwyt/U6UOqdSK3VREjeRNF/ZuSKx1HoBwyqPz9
+         AtAAN7uKcl06iTl7mY6OOfFp7z8cS7jyzl+9nDlKIq2bRATR1rf7QXPGFr1FrRFws3YB
+         tvGe4gWIRkyPXkush5lGWK1HtIq4SaHazEUidxScUcmdtmDE3upJnCuqrH5D0j6dZYmj
+         uToISTrJJlneDT1//jBoWeynokP6ehckgWqJVjzz09I98YJ41YgIvXvOdp+zRzzUN3nr
+         hoiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=D+VKB8odm/iRn7Qlf3NsRe6rs5PO9H8u0I72DJse46A=;
+        b=VmWvbSqqqgtF6PqXJ1ShiNiIRk3or+9UTWygI0PpCf2YXneQiLJe06QHkr4RFas/mj
+         xEUw55o4XWOK1Mt0iv+NebZrIKw0k35620pKDY0lLTjb8GMLWVvhMczuksHLf1GhBYGP
+         xtqHB9hFBmsCWo8im4Ls1TybO+NWyWAze8J+zRbeNRndUk8HLoPTNd6j2AUv+5L3nMHV
+         Gb/2XpmignF/87RvYgCJQJye4SrBR6958vED7lwrfAvmAtva8bAe4GM8OPVSTbYHGE+U
+         W8+aB/P3pskHAGRsfMARRAtdab+sfKlwJQwoQuQM75LzBjmJcAQcQfYDQT5GAsfb9PZS
+         LH1Q==
+X-Gm-Message-State: APjAAAUpNXRf8k5Hbf1QFr/Q1CIsGnvu5NjE4zAG596Adrkz7eBTqwFG
+        2Y4ksrnIY1YkuVc6/6mtNy4=
+X-Google-Smtp-Source: APXvYqxE+ztDBBrFWBqATimDFtBanMe9IkMpfq68fj7mvbOYiy6sJk9MwgvB5X80CHzRbaQi1yE0LQ==
+X-Received: by 2002:a63:fb45:: with SMTP id w5mr32663083pgj.118.1553662710330;
+        Tue, 26 Mar 2019 21:58:30 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c0a5:6014:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id j8sm24879147pff.183.2019.03.26.21.58.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 21:58:29 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v13 03/11] gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+Date:   Wed, 27 Mar 2019 13:59:24 +0900
+Message-Id: <d4b9f9d582368b6c1073d9b02fd5f4f785c167e2.1553661964.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1553661964.git.vilhelm.gray@gmail.com>
+References: <cover.1553661964.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7f70a06-65a5-a1cd-69c5-dae7567b851f@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 09:59:40AM -0500, Denis Kenzior wrote:
-> Hi James,
-> 
-> On 03/26/2019 09:25 AM, James Bottomley wrote:
-> > Looking at the contents of linux/keys/trusted.h, it looks like the
-> > wrong decision to move it.  The contents are way too improperly named
-> > and duplicative to be in a standard header.  It's mostly actually TPM
-> > code including a redefinition of the tpm_buf structure, so it doesn't
-> > even seem to be necessary for trusted keys.
-> The reason this was done was because asym_tpm.c needed a bunch of the same
-> functionality already provided by trusted.c, e.g. TSS_authmac and friends.
-> 
-> > 
-> > If you want to fix this as a bug, I'd move it back again, but long term
-> > I think it should simply be combined with trusted.c because nothing
-> > else can include it sanely anyway.
-> 
-> Ideally I'd like to see the TPM subsystem expose these functions using some
-> proper API / library abstraction.  David Howells had an RFC patch set that
-> tried to address some of this a while back.  Not sure if that went anywhere.
+Replace verbose implementation in get_multiple/set_multiple callbacks
+with for_each_set_clump8 macro to simplify code and improve clarity.
 
-I think it'd be best to expose tpm_buf API to outside and allow trusted
-keys code to construct the TPM commands. It is a single consumer use
-(e.g. not like PCR operations where it does make sense to consolidate
-to the TPM subsystem).
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+---
+ drivers/gpio/gpio-104-dio-48e.c | 73 ++++++++++-----------------------
+ 1 file changed, 21 insertions(+), 52 deletions(-)
 
-/Jarkko
+diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
+index 92c8f944bf64..2fc6d2b11d25 100644
+--- a/drivers/gpio/gpio-104-dio-48e.c
++++ b/drivers/gpio/gpio-104-dio-48e.c
+@@ -183,46 +183,25 @@ static int dio48e_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(port_state & mask);
+ }
+ 
++static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
++
+ static int dio48e_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+ 	unsigned long *bits)
+ {
+ 	struct dio48e_gpio *const dio48egpio = gpiochip_get_data(chip);
+-	size_t i;
+-	static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
+-	const unsigned int gpio_reg_size = 8;
+-	unsigned int bits_offset;
+-	size_t word_index;
+-	unsigned int word_offset;
+-	unsigned long word_mask;
+-	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
++	unsigned long offset;
++	unsigned long gpio_mask;
++	unsigned int port_addr;
+ 	unsigned long port_state;
+ 
+ 	/* clear bits array to a clean slate */
+ 	bitmap_zero(bits, chip->ngpio);
+ 
+-	/* get bits are evaluated a gpio port register at a time */
+-	for (i = 0; i < ARRAY_SIZE(ports); i++) {
+-		/* gpio offset in bits array */
+-		bits_offset = i * gpio_reg_size;
+-
+-		/* word index for bits array */
+-		word_index = BIT_WORD(bits_offset);
+-
+-		/* gpio offset within current word of bits array */
+-		word_offset = bits_offset % BITS_PER_LONG;
+-
+-		/* mask of get bits for current gpio within current word */
+-		word_mask = mask[word_index] & (port_mask << word_offset);
+-		if (!word_mask) {
+-			/* no get bits in this port so skip to next one */
+-			continue;
+-		}
+-
+-		/* read bits from current gpio port */
+-		port_state = inb(dio48egpio->base + ports[i]);
++	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
++		port_addr = dio48egpio->base + ports[offset / 8];
++		port_state = inb(port_addr) & gpio_mask;
+ 
+-		/* store acquired bits at respective bits array offset */
+-		bits[word_index] |= (port_state << word_offset) & word_mask;
++		bitmap_set_value8(bits, port_state, offset);
+ 	}
+ 
+ 	return 0;
+@@ -252,37 +231,27 @@ static void dio48e_gpio_set_multiple(struct gpio_chip *chip,
+ 	unsigned long *mask, unsigned long *bits)
+ {
+ 	struct dio48e_gpio *const dio48egpio = gpiochip_get_data(chip);
+-	unsigned int i;
+-	const unsigned int gpio_reg_size = 8;
+-	unsigned int port;
+-	unsigned int out_port;
+-	unsigned int bitmask;
++	unsigned long offset;
++	unsigned long gpio_mask;
++	size_t index;
++	unsigned int port_addr;
++	unsigned long bitmask;
+ 	unsigned long flags;
+ 
+-	/* set bits are evaluated a gpio register size at a time */
+-	for (i = 0; i < chip->ngpio; i += gpio_reg_size) {
+-		/* no more set bits in this mask word; skip to the next word */
+-		if (!mask[BIT_WORD(i)]) {
+-			i = (BIT_WORD(i) + 1) * BITS_PER_LONG - gpio_reg_size;
+-			continue;
+-		}
++	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
++		index = offset / 8;
++		port_addr = dio48egpio->base + ports[index];
+ 
+-		port = i / gpio_reg_size;
+-		out_port = (port > 2) ? port + 1 : port;
+-		bitmask = mask[BIT_WORD(i)] & bits[BIT_WORD(i)];
++		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
+ 
+ 		raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+ 
+ 		/* update output state data and set device gpio register */
+-		dio48egpio->out_state[port] &= ~mask[BIT_WORD(i)];
+-		dio48egpio->out_state[port] |= bitmask;
+-		outb(dio48egpio->out_state[port], dio48egpio->base + out_port);
++		dio48egpio->out_state[index] &= ~gpio_mask;
++		dio48egpio->out_state[index] |= bitmask;
++		outb(dio48egpio->out_state[index], port_addr);
+ 
+ 		raw_spin_unlock_irqrestore(&dio48egpio->lock, flags);
+-
+-		/* prepare for next gpio register set */
+-		mask[BIT_WORD(i)] >>= gpio_reg_size;
+-		bits[BIT_WORD(i)] >>= gpio_reg_size;
+ 	}
+ }
+ 
+-- 
+2.21.0
+
