@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E10DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBB2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C652206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EE52146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfC0NCr (ORCPT
+        id S1730894AbfC0NCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:02:47 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:46750 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730516AbfC0NCp (ORCPT
+        Wed, 27 Mar 2019 09:02:49 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:51555 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730457AbfC0NCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:02:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TNmt4c2_1553691754;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TNmt4c2_1553691754)
+        Wed, 27 Mar 2019 09:02:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TNmL6qF_1553691751;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TNmL6qF_1553691751)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 Mar 2019 21:02:34 +0800
+          Wed, 27 Mar 2019 21:02:32 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     alex.shi@linux.alibaba.com, harryxiyou@gmail.com, corbet@lwn.net,
         leoyang.li@nxp.com, linux-doc@vger.kernel.org
-Cc:     Tom Levy <tomlevy93@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 42/42] docs/zh_CN: update co-developed-by info after English version
-Date:   Wed, 27 Mar 2019 21:01:48 +0800
-Message-Id: <20190327130148.3258-43-alex.shi@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 37/42] docs/zh_CN: redirect howto.rst link to Chinese version
+Date:   Wed, 27 Mar 2019 21:01:43 +0800
+Message-Id: <20190327130148.3258-38-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
 References: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
@@ -42,92 +42,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 24a2bb90741b ("docs: Clarify the usage and sign-off requirements for Co-developed-by")
-give more info of co-developed-by tag usage. update Chinese docs to
-follow it.
+The howto doc is translated from latest version. Now it's time to
+point the link to it.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Tom Levy <tomlevy93@gmail.com>
 Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../translations/zh_CN/process/5.Posting.rst  |  7 ++--
- .../zh_CN/process/submitting-patches.rst      | 35 +++++++++++++++++--
- 2 files changed, 37 insertions(+), 5 deletions(-)
+ .../translations/zh_CN/process/8.Conclusion.rst     | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/5.Posting.rst b/Documentation/translations/zh_CN/process/5.Posting.rst
-index a8a6a7dacd7f..b3a5a352d4d6 100644
---- a/Documentation/translations/zh_CN/process/5.Posting.rst
-+++ b/Documentation/translations/zh_CN/process/5.Posting.rst
-@@ -159,8 +159,11 @@ bug搜寻人员想知道补丁是否负责他们正在追查的问题，想知
-    :ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
-    中找到，如果没有适当的签字，则不能合并到主线中。
+diff --git a/Documentation/translations/zh_CN/process/8.Conclusion.rst b/Documentation/translations/zh_CN/process/8.Conclusion.rst
+index 32b4e617a451..c164edc34687 100644
+--- a/Documentation/translations/zh_CN/process/8.Conclusion.rst
++++ b/Documentation/translations/zh_CN/process/8.Conclusion.rst
+@@ -9,12 +9,13 @@
+ ========
  
-- - Co-developed-by: 声明补丁也是由另一个开发人员和原始作者一起创建的。当多
--   个人在一个补丁上工作时，这很有用。注意，此人也需要在补丁中有一个签名行。
-+ - Co-developed-by: 声明补丁是由多个开发人员共同创建的；当几个人在一个补丁上
-+   工作时，它用于将属性赋予共同作者（除了 From: 所赋予的作者之外）。因为
-+   Co-developed-by: 表示作者身份，所以每个共同开发人, 必须紧跟在相关合作作者
-+   的签名之后。具体内容和示例可以在以下文件中找到
-+   :ref:`Documentation/translations/zh_CN/process/submitting-patches.rst <cn_submittingpatches>`
+ 关于Linux内核开发和相关主题的信息来源很多。首先是在内核源代码分发中找到的
+-文档目录。顶级:ref:`process/howto.rst <process_howto>` 文件是一个重要的起点
+-:ref:`process/submitting-patches.rst <submittingpatches>` 和
+-:ref:`process/submitting-drivers.rst <submittingdrivers>` 也是所有内核开发
+-人员都应该阅读的内容。许多内部内核API都是使用kerneldoc机制记录的；
+-“make htmldocs”或“make pdfdocs”可用于以HTML或PDF格式生成这些文档（尽管某些
+-发行版提供的tex版本会遇到内部限制，无法正确处理文档）。
++文档目录。顶级 :ref:`Documentation/translations/zh_CN/process/howto.rst <cn_process_howto>`
++文件是一个重要的起点
++:ref:`process/submitting-patches.rst <submittingpatches>`
++和:ref:`process/submitting-drivers.rst <submittingdrivers>`
++也是所有内核开发人员都应该阅读的内容。许多内部内核API都是使用kerneldoc机制
++记录的；“make htmldocs”或“make pdfdocs”可用于以HTML或PDF格式生成这些文档（
++尽管某些发行版提供的tex版本会遇到内部限制，无法正确处理文档）。
  
-  - Acked-by: 表示另一个开发人员（通常是相关代码的维护人员）同意补丁适合包含
-    在内核中。
-diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
-index 93239649fb71..850c295a07a0 100644
---- a/Documentation/translations/zh_CN/process/submitting-patches.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
-@@ -427,8 +427,37 @@ Acked-by：不一定表示对整个补丁的确认。例如，如果一个补丁
- 这是唯一一个标签，它可以在没有被它命名的人显式操作的情况下添加，但它应该表明
- 这个人是在补丁上抄送的。讨论中包含了潜在利益相关方。
- 
--Co-developed-by: 声明补丁也是由另一个开发人员和原始作者一起创建的。当多个人
--在一个补丁上工作时，这很有用。注意，此人也需要在补丁中有一个 Signed-off-by:
-+Co-developed-by: 声明补丁是由多个开发人员共同创建的；当几个人在一个补丁上工
-+作时，它用于将属性赋予共同作者（除了 From: 所赋予的作者之外）。因为
-+Co-developed-by: 表示作者身份，所以每个共同开发人：必须紧跟在相关合作作者的
-+签名之后。标准的签核程序要求：标记的签核顺序应尽可能反映补丁的时间历史，而不
-+管作者是通过 From ：还是由 Co-developed-by: 共同开发的。值得注意的是，最后一
-+个签字人：必须始终是提交补丁的开发人员。
-+
-+注意，当作者也是电子邮件标题“发件人：”行中列出的人时，“From: ” 标记是可选的。
-+
-+作者提交的补丁程序示例::
-+
-+	<changelog>
-+
-+	Co-developed-by: First Co-Author <first@coauthor.example.org>
-+	Signed-off-by: First Co-Author <first@coauthor.example.org>
-+	Co-developed-by: Second Co-Author <second@coauthor.example.org>
-+	Signed-off-by: Second Co-Author <second@coauthor.example.org>
-+	Signed-off-by: From Author <from@author.example.org>
-+
-+合作开发者提交的补丁示例::
-+
-+	From: From Author <from@author.example.org>
-+
-+	<changelog>
-+
-+	Co-developed-by: Random Co-Author <random@coauthor.example.org>
-+	Signed-off-by: Random Co-Author <random@coauthor.example.org>
-+	Signed-off-by: From Author <from@author.example.org>
-+	Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
-+	Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
-+
- 
- 13）使用报告人：、测试人：、审核人：、建议人：、修复人：
- --------------------------------------------------------
-@@ -538,7 +567,7 @@ e-mail 标题中的“一句话概述”扼要的描述 e-mail 中的补丁。
-     Subject: [PATCHv2 001/207] x86: fix eflags tracking
- 
- "From" 行是信体里的最上面一行，具有如下格式：
--        From: Original Author <author@example.com>
-+        From: Patch Author <author@example.com>
- 
- "From" 行指明在永久改动日志里，谁会被确认为作者。如果没有 "From" 行，那
- 么邮件头里的 "From: " 行会被用来决定改动日志中的作者。
+ 不同的网站在各个细节层次上讨论内核开发。您的作者想谦虚地建议用http://lwn.net/
+ 作为来源；有关许多特定内核主题的信息可以通过以下网址的lwn内核索引找到：
 -- 
 2.19.1.856.g8858448bb
 
