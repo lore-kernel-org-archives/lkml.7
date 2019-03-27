@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B0DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A25C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1762082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370DA205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712231;
-	bh=2LOZ6A76XpqH99uMSSpJhUhCWEBhsNKuXxUPC2QpjxQ=;
+	s=default; t=1553712241;
+	bh=CjKiHWI05/x76D+X94vuHkBAJqJ087B+MN6AGMLLp54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlOd8I9LGZ2dE8tVQ7sOpnLIUgmzaGS3nLvoPiLkm9VaGhCUPOAMDzJ1jb0M52GXJ
-	 3Yi64YH52AlZ52Hs/5pEHjkbJGsEbAEooAhSnwIDjhViE1Rh94STTe5AKcnXG6vQwN
-	 l/qoidmMt/9NjU9sni8QnrkYnd7EGlCHkJwNUFhw=
+	b=fkA/2rW1KU1sDVz+Z+Us6nDwZWA0G+j4INL/5r73WSX2jU4NnNmf9AWzjMvQY/Vta
+	 A1uYT8jPP/KlVqPHThfmRfySU0gNjQbdUWTZGbnVPaOe/QDoPUhtzYQ2SiLg0sWh4w
+	 voGafwAtWAZgwp5E1ss450bbm67NQn2AbaSHqthI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392016AbfC0Snp (ORCPT
+        id S2391687AbfC0SoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391188AbfC0SVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:31 -0400
+        id S2390317AbfC0SV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E464720651;
-        Wed, 27 Mar 2019 18:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC2C217F5;
+        Wed, 27 Mar 2019 18:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710890;
-        bh=2LOZ6A76XpqH99uMSSpJhUhCWEBhsNKuXxUPC2QpjxQ=;
+        s=default; t=1553710887;
+        bh=CjKiHWI05/x76D+X94vuHkBAJqJ087B+MN6AGMLLp54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCpEM86XIkMcYPBA8L8R6v/K355GvZ2+ATChjACF8bfVgxyCa+kkXFEA0qraE8Ft7
-         4DVQ51LWUCNHxFnVxm5st9DbUb7elw1q3z/0kEIJBSFwdxoxIT7BgpqOft/o66+pRM
-         zGi1XPxh4mjH4Q3Y67heAmJjgzcd1FksEGBPT3Bs=
+        b=u+QibimYujqxwsL92d182sPcydRK+XOOKoHMqxFRZSekBzSqR+mxwSP9p25Wu60TB
+         Xxdga3KPZ9p9+Ja4Zdb6dhSPgwMyVIIyYDlIAjypHqvqeDgf3+kn8KJQb9hgJU5WBM
+         ZOwK0Xm4ew4OpEl5El9odPjQmPFdihYijCMQN7H8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 30/87] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
-Date:   Wed, 27 Mar 2019 14:19:43 -0400
-Message-Id: <20190327182040.17444-30-sashal@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 28/87] coresight: etm4x: Add support to enable ETMv4.2
+Date:   Wed, 27 Mar 2019 14:19:41 -0400
+Message-Id: <20190327182040.17444-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -59,51 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
+[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
 
-L1 tables are allocated with __get_dma_pages, and therefore already
-ignored by kmemleak.
+SDM845 has ETMv4.2 and can use the existing etm4x driver.
+But the current etm driver checks only for ETMv4.0 and
+errors out for other etm4x versions. This patch adds this
+missing support to enable SoC's with ETMv4x to use same
+driver by checking only the ETM architecture major version
+number.
 
-Without this, the kernel would print this error message on boot,
-when the first L1 table is allocated:
+Without this change, we get below error during etm probe:
 
-[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
-[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
-[    2.831227] Workqueue: events deferred_probe_work_func
-[    2.836353] Call trace:
-...
-[    2.852532]  paint_ptr+0xa0/0xa8
-[    2.855750]  kmemleak_ignore+0x38/0x6c
-[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
-[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
-[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
-...
+/ # dmesg | grep etm
+[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
 
-Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+With this change, etm probe is successful:
+
+/ # dmesg | grep etm
+[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
+ drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index d68a552cfe8d..3085b47fac1d 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -207,7 +207,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
- 		if (dma != virt_to_phys(table))
- 			goto out_unmap;
- 	}
--	kmemleak_ignore(table);
-+	if (lvl == 2)
-+		kmemleak_ignore(table);
- 	return table;
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 4db8d6a4d0cb..da27f8edba50 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -61,7 +61,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
  
- out_unmap:
+ static bool etm4_arch_supported(u8 arch)
+ {
+-	switch (arch) {
++	/* Mask out the minor version number */
++	switch (arch & 0xf0) {
+ 	case ETM_ARCH_V4:
+ 		break;
+ 	default:
 -- 
 2.19.1
 
