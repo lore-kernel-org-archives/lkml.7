@@ -6,46 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42B9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B036C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8BB42070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D348217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712003;
-	bh=ZgrSHB4xl6vk3l4DmgUmOTBWnGEbjGP3YfKtVJxCpdk=;
+	s=default; t=1553712008;
+	bh=CwJP2eLuk+apzsegnVV348udYkGg6KG2Q4tYijPHw6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGIFZ7juPB0sZZX+uNCEx6GYr1Xjz6E6iw7dN9EqQy8ztQZE7uRd05JLOBEw68If5
-	 pnu8zZ9Tc24BYNLbHpinQSFEVyYpuY8FYFcR/pRPr4EuHzSqlv/d8RtxYwiQV2kxgp
-	 KzpEaKj6UEB82fF2wwbQxQhW5UNuemZewA84wWn4=
+	b=zq+u/Bv/aUL7FPAvpmwPmlIj49qfgygIwcEQfHCBnKuGDcKtgXulAgnJAGPMgKJOv
+	 KU6l8lALec1zEFgFwI2YnxSbSNQHRtpjEdKQzCZb5WQsGeTcNULKJywEm10QoCsN3B
+	 q4mDoI0qJkuWsphwIpyT8YMKPaKc8BOmPSx4sgeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403937AbfC0SkC (ORCPT
+        id S2391045AbfC0SW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41228 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391046AbfC0SXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:00 -0400
+        id S2390493AbfC0SUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D79262147C;
-        Wed, 27 Mar 2019 18:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C2352087C;
+        Wed, 27 Mar 2019 18:20:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710979;
-        bh=ZgrSHB4xl6vk3l4DmgUmOTBWnGEbjGP3YfKtVJxCpdk=;
+        s=default; t=1553710853;
+        bh=CwJP2eLuk+apzsegnVV348udYkGg6KG2Q4tYijPHw6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNag8VSbsOk2dDnAiIo3+LhRMLJkiaK59IsFVI4Y5DnmJeKd0EAbsUu45KBWj0Ksk
-         ihQv+wtsIrpcWiJWI3EkwOime/O0yhEz0aEbnr8l/8UL3y7/pzXna7ftRceVWFKp46
-         9yUWLCxUxP4TJthqmypMYZwwGk+7qaENwQcf1eYw=
+        b=pZ/FM8vluJYNK4fKFTSHaruJolgi/R4fXkNPsmsI9CqQAeW4jjsVu/z6H6VblIvG4
+         5i7XB3AMYNqsty1qKVXiebUUdLgiVY9W89BnZtLpUx1lepWh1W4CSUndEGepqlB7tP
+         XDv6g3dfL+/a1jB4gPlCuXQFlqWhdlb1MpQwPjjo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Buland Singh <bsingh@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 74/87] hpet: Fix missing '=' character in the __setup() code of hpet_mmap_enable
-Date:   Wed, 27 Mar 2019 14:20:27 -0400
-Message-Id: <20190327182040.17444-74-sashal@kernel.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/87] sysctl: handle overflow for file-max
+Date:   Wed, 27 Mar 2019 14:19:20 -0400
+Message-Id: <20190327182040.17444-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,58 +65,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Buland Singh <bsingh@redhat.com>
+From: Christian Brauner <christian@brauner.io>
 
-[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
+[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+Currently, when writing
 
-Before this patch:
+  echo 18446744073709551616 > /proc/sys/fs/file-max
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
+crashes the system.
 
-[    0.204152] HPET mmap disabled
+This commit sets the max and min value for file-max.  The max value is
+set to long int.  Any higher value cannot currently be used as the
+percpu counters are long ints and not unsigned integers.
 
-dmesg output with the kernel command line parameter hpet_mmap=0
+Note that the file-max value is ultimately parsed via
+__do_proc_doulongvec_minmax().  This function does not report error when
+min or max are exceeded.  Which means if a value largen that long int is
+written userspace will not receive an error instead the old value will be
+kept.  There is an argument to be made that this should be changed and
+__do_proc_doulongvec_minmax() should return an error when a dedicated min
+or max value are exceeded.  However this has the potential to break
+userspace so let's defer this to an RFC patch.
 
-[    0.204192] HPET mmap disabled
-
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+[christian@brauner.io: v4]
+  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sysctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 50272fe81f26..818a8d40e5c9 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -376,7 +376,7 @@ static __init int hpet_mmap_enable(char *str)
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
- }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
- 
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
- {
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index efd340a510a9..5515d578095b 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -125,6 +125,7 @@ static int __maybe_unused one = 1;
+ static int __maybe_unused two = 2;
+ static int __maybe_unused four = 4;
+ static unsigned long one_ul = 1;
++static unsigned long long_max = LONG_MAX;
+ static int one_hundred = 100;
+ static int one_thousand = 1000;
+ #ifdef CONFIG_PRINTK
+@@ -1682,6 +1683,8 @@ static struct ctl_table fs_table[] = {
+ 		.maxlen		= sizeof(files_stat.max_files),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_doulongvec_minmax,
++		.extra1		= &zero,
++		.extra2		= &long_max,
+ 	},
+ 	{
+ 		.procname	= "nr_open",
 -- 
 2.19.1
 
