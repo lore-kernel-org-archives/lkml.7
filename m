@@ -6,40 +6,50 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AC3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588D12087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9842087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfC0MTm convert rfc822-to-8bit (ORCPT
+        id S1728621AbfC0MVz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:19:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:46324 "EHLO gloria.sntech.de"
+        Wed, 27 Mar 2019 08:21:55 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46466 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbfC0MTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:19:41 -0400
+        id S1726233AbfC0MVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:21:55 -0400
 Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1h97Wr-0003Tt-K0; Wed, 27 Mar 2019 13:19:37 +0100
+        id 1h97Yi-0003Ud-Bl; Wed, 27 Mar 2019 13:21:32 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     mka@chromium.org, ryandcase@chromium.org,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Alexis Ballier <aballier@gentoo.org>,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: ARM: dts: rockchip: Add bindings for rk3288-veyron-mighty
-Date:   Wed, 27 Mar 2019 13:19:36 +0100
-Message-ID: <1915099.lzZODYNdzv@phil>
-In-Reply-To: <20190325162005.99391-1-dianders@chromium.org>
-References: <20190325162005.99391-1-dianders@chromium.org>
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
+Date:   Wed, 27 Mar 2019 13:21:31 +0100
+Message-ID: <1591627.dSi6EvuFCI@phil>
+In-Reply-To: <CAPDyKFpPh7TZqRfUX7x52aUeY69-i3NSo5XtuwTjN8yHqdAVDw@mail.gmail.com>
+References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com> <20190322113808.16858-3-christoph.muellner@theobroma-systems.com> <CAPDyKFpPh7TZqRfUX7x52aUeY69-i3NSo5XtuwTjN8yHqdAVDw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="iso-8859-1"
@@ -48,16 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 25. März 2019, 17:20:04 CET schrieb Douglas Anderson:
-> Mighty is basically the same Chromebook as Jaq but it has a full-sized
-> SD slot and some different (slightly more rugged) plastics around it.
-> Like Jaq, Mighty may show up with various different brandings but all
-> of them have the same board inside.
+Am Montag, 25. März 2019, 14:27:26 CET schrieb Ulf Hansson:
+> On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
+> <christoph.muellner@theobroma-systems.com> wrote:
+> >
+> > When using direct commands (DCMDs) on an RK3399, we get spurious
+> > CQE completion interrupts for the DCMD transaction slot (#31):
+> >
+> > [  931.196520] ------------[ cut here ]------------
+> > [  931.201702] mmc1: cqhci: spurious TCN for tag 31
+> > [  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
+> > [  931.206909] Modules linked in:
+> > [  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
+> > [  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
+> > [  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
+> > [  931.206927] pc : cqhci_irq+0x2e4/0x490
+> > [  931.206931] lr : cqhci_irq+0x2e4/0x490
+> > [  931.206933] sp : ffff00000e54bc80
+> > [  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
+> > [  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
+> > [  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
+> > [  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
+> > [  931.206953] x21: 0000000000000002 x20: 000000000000001f
+> > [  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
+> > [  931.206961] x17: 0000000000000000 x16: 0000000000000000
+> > [  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
+> > [  931.206970] x13: 0720072007200720 x12: 0720072007200720
+> > [  931.206975] x11: 0720072007200720 x10: 0720072007200720
+> > [  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
+> > [  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
+> > [  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
+> > [  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
+> > [  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
+> > [  931.207001] Call trace:
+> > [  931.207005]  cqhci_irq+0x2e4/0x490
+> > [  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
+> > [  931.207013]  sdhci_irq+0x98/0x930
+> > [  931.207019]  irq_forced_thread_fn+0x2c/0xa0
+> > [  931.207023]  irq_thread+0x114/0x1c0
+> > [  931.207027]  kthread+0x128/0x130
+> > [  931.207032]  ret_from_fork+0x10/0x20
+> > [  931.207035] ---[ end trace 0000000000000002 ]---
+> >
+> > The driver shows this message only for the first spurious interrupt
+> > by using WARN_ONCE(). Changing this to WARN() shows, that this is
+> > happening quite frequently (up to once a second).
+> >
+> > Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
+> > does not mention that spurious TCN interrupts for DCMDs can be simply
+> > ignored, we must assume that using this feature is not working reliably.
+> >
+> > The current implementation uses DCMD for REQ_OP_FLUSH only, and
+> > I could not see any performance/power impact when disabling
+> > this optional feature for RK3399.
+> >
+> > Therefore this patch disables DCMDs for RK3399.
+> >
+> > Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> > Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> FYI, I leave this for arm-soc to pick up.
 
-applied both patches for 5.2
+I've duplicated your fixes+stable tags and applied for 5.2
 
 Thanks
 Heiko
