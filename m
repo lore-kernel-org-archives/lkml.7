@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E739C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A89C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E832075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719322075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfC0Vg4 (ORCPT
+        id S1730107AbfC0VhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:36:56 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58676 "EHLO ale.deltatee.com"
+        Wed, 27 Mar 2019 17:37:00 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58672 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728329AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 17:36:50 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE4-0006DM-EI; Wed, 27 Mar 2019 15:36:49 -0600
+        id 1h9GE4-0006DN-EM; Wed, 27 Mar 2019 15:36:49 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE2-0006Cn-FL; Wed, 27 Mar 2019 15:36:46 -0600
+        id 1h9GE2-0006Cq-Is; Wed, 27 Mar 2019 15:36:46 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
@@ -34,21 +34,22 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Stefan O'Rear" <sorear2@gmail.com>,
+        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
         Anup Patel <anup.patel@wdc.com>, Zong Li <zong@andestech.com>,
-        Guo Ren <ren_guo@c-sky.com>
-Date:   Wed, 27 Mar 2019 15:36:42 -0600
-Message-Id: <20190327213643.23789-7-logang@deltatee.com>
+        Guo Ren <ren_guo@c-sky.com>,
+        "Stefan O'Rear" <sorear2@gmail.com>
+Date:   Wed, 27 Mar 2019 15:36:43 -0600
+Message-Id: <20190327213643.23789-8-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
 References: <20190327213643.23789-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, rppt@linux.ibm.com, sorear2@gmail.com, anup.patel@wdc.com, zong@andestech.com, ren_guo@c-sky.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, ldufour@linux.vnet.ibm.com, rppt@linux.vnet.ibm.com, anup.patel@wdc.com, zong@andestech.com, ren_guo@c-sky.com, sorear2@gmail.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 6/7] RISC-V: Implement memory hot remove
+Subject: [PATCH 7/7] RISC-V: Implement pte_devmap()
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,276 +57,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implementing arch_remove_memory() and filling in vmemap_free() allows
-us to declare ARCH_ENABLE_MEMORY_HOTREMOVE.
+Use the 2nd software bit in the PTE as the devmap bit and add the
+appropriate accessors.
 
-arch_remove_memory() is very similar to x86 and we roughly copy the
-remove_pagetable() function from x86 but with a bunch of the unnecessary
-features stripped out.
+This also allows us to set ARCH_HAS_ZONE_DEVICE.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: "Stefan O'Rear" <sorear2@gmail.com>
+Cc: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Cc: Anup Patel <anup.patel@wdc.com>
 Cc: Zong Li <zong@andestech.com>
 Cc: Guo Ren <ren_guo@c-sky.com>
+Cc: "Stefan O'Rear" <sorear2@gmail.com>
 ---
- arch/riscv/Kconfig                  |   3 +
- arch/riscv/include/asm/pgtable-64.h |   2 +
- arch/riscv/include/asm/pgtable.h    |   5 +
- arch/riscv/mm/init.c                | 186 ++++++++++++++++++++++++++++
- 4 files changed, 196 insertions(+)
+ arch/riscv/Kconfig                    |  1 +
+ arch/riscv/include/asm/pgtable-bits.h |  8 ++++++--
+ arch/riscv/include/asm/pgtable.h      | 10 ++++++++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 9477214a00e7..2cb39b4d6d6b 100644
+index 2cb39b4d6d6b..d365d7e17ed2 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -86,6 +86,9 @@ config ARCH_SELECT_MEMORY_MODEL
- config ARCH_ENABLE_MEMORY_HOTPLUG
- 	def_bool y
+@@ -49,6 +49,7 @@ config RISCV
+ 	select GENERIC_IRQ_MULTI_HANDLER
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select HAVE_EBPF_JIT if 64BIT
++	select ARCH_HAS_ZONE_DEVICE
  
-+config ARCH_ENABLE_MEMORY_HOTREMOVE
-+	def_bool y
+ config MMU
+ 	def_bool y
+diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
+index 470755cb7558..9555d419a46f 100644
+--- a/arch/riscv/include/asm/pgtable-bits.h
++++ b/arch/riscv/include/asm/pgtable-bits.h
+@@ -30,9 +30,11 @@
+ #define _PAGE_GLOBAL    (1 << 5)    /* Global */
+ #define _PAGE_ACCESSED  (1 << 6)    /* Set by hardware on any access */
+ #define _PAGE_DIRTY     (1 << 7)    /* Set by hardware on any write */
+-#define _PAGE_SOFT      (1 << 8)    /* Reserved for software */
++#define _PAGE_SOFT1     (1 << 8)    /* Reserved for software */
++#define _PAGE_SOFT2     (1 << 9)    /* Reserved for software */
+ 
+-#define _PAGE_SPECIAL   _PAGE_SOFT
++#define _PAGE_SPECIAL   _PAGE_SOFT1
++#define _PAGE_DEVMAP	_PAGE_SOFT2
+ #define _PAGE_TABLE     _PAGE_PRESENT
+ 
+ /*
+@@ -41,6 +43,8 @@
+  */
+ #define _PAGE_PROT_NONE _PAGE_READ
+ 
++#define __HAVE_ARCH_PTE_DEVMAP
 +
- config STACKTRACE_SUPPORT
- 	def_bool y
+ #define _PAGE_PFN_SHIFT 10
  
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 7aa0ea9bd8bb..d369be5467cf 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -67,6 +67,8 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
- }
- 
- #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-+#define p4d_index(addr) (((addr) >> P4D_SHIFT) & (PTRS_PER_P4D - 1))
- 
- static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
- {
+ /* Set of bits to preserve across pte_modify() */
 diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 2a5070540996..e071e2be3a6c 100644
+index e071e2be3a6c..a0e6a5f8bbb5 100644
 --- a/arch/riscv/include/asm/pgtable.h
 +++ b/arch/riscv/include/asm/pgtable.h
-@@ -173,6 +173,11 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- 	return (unsigned long)pfn_to_virt(pmd_val(pmd) >> _PAGE_PFN_SHIFT);
+@@ -248,6 +248,11 @@ static inline int pte_special(pte_t pte)
+ 	return pte_val(pte) & _PAGE_SPECIAL;
  }
  
-+static inline struct page *pud_page(pud_t pud)
++static inline int pte_devmap(pte_t pte)
 +{
-+	return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
++	return pte_val(pte) & _PAGE_DEVMAP;
 +}
 +
- /* Yields the page frame number (PFN) of a page table entry */
- static inline unsigned long pte_pfn(pte_t pte)
+ /* static inline pte_t pte_rdprotect(pte_t pte) */
+ 
+ static inline pte_t pte_wrprotect(pte_t pte)
+@@ -289,6 +294,11 @@ static inline pte_t pte_mkspecial(pte_t pte)
+ 	return __pte(pte_val(pte) | _PAGE_SPECIAL);
+ }
+ 
++static inline pte_t pte_mkdevmap(pte_t pte)
++{
++	return __pte(pte_val(pte) | _PAGE_SPECIAL | _PAGE_DEVMAP);
++}
++
+ /* Modify page protection bits */
+ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
  {
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 0a54c3adf0ac..fffe1238434e 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -240,9 +240,175 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- #endif
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
-+static void __meminit free_pagetable(struct page *page, int order)
-+{
-+	unsigned long magic;
-+	unsigned int nr_pages = 1 << order;
-+
-+	/* bootmem page has reserved flag */
-+	if (PageReserved(page)) {
-+		__ClearPageReserved(page);
-+
-+		magic = (unsigned long)page->freelist;
-+		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
-+			while (nr_pages--)
-+				put_page_bootmem(page++);
-+		} else {
-+			while (nr_pages--)
-+				free_reserved_page(page++);
-+		}
-+	} else {
-+		free_pages((unsigned long)page_address(page), order);
-+	}
-+}
-+
-+static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd)
-+{
-+	pte_t *pte;
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PTE; i++) {
-+		pte = pte_start + i;
-+		if (!pte_none(*pte))
-+			return;
-+	}
-+
-+	/* free a pte table */
-+	free_pagetable(pmd_page(*pmd), 0);
-+	spin_lock(&init_mm.page_table_lock);
-+	pmd_clear(pmd);
-+	spin_unlock(&init_mm.page_table_lock);
-+}
-+
-+static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud)
-+{
-+	pmd_t *pmd;
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		pmd = pmd_start + i;
-+		if (!pmd_none(*pmd))
-+			return;
-+	}
-+
-+	/* free a pmd table */
-+	free_pagetable(pud_page(*pud), 0);
-+	spin_lock(&init_mm.page_table_lock);
-+	pud_clear(pud);
-+	spin_unlock(&init_mm.page_table_lock);
-+}
-+
-+static void __meminit
-+remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	pte_t *pte;
-+
-+	pte = pte_start + pte_index(addr);
-+	for (; addr < end; addr = next, pte++) {
-+		next = (addr + PAGE_SIZE) & PAGE_MASK;
-+		if (next > end)
-+			next = end;
-+
-+		if (!pte_present(*pte))
-+			continue;
-+
-+		free_pagetable(pte_page(*pte), 0);
-+
-+		spin_lock(&init_mm.page_table_lock);
-+		pte_clear(&init_mm, addr, pte);
-+		spin_unlock(&init_mm.page_table_lock);
-+	}
-+
-+	flush_tlb_all();
-+}
-+
-+static void __meminit
-+remove_pmd_table(pmd_t *pmd_start, unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	pte_t *pte_base;
-+	pmd_t *pmd;
-+
-+	pmd = pmd_start + pmd_index(addr);
-+	for (; addr < end; addr = next, pmd++) {
-+		next = pmd_addr_end(addr, end);
-+
-+		if (!pmd_present(*pmd))
-+			continue;
-+
-+		pte_base = (pte_t *)pmd_page_vaddr(*pmd);
-+		remove_pte_table(pte_base, addr, next);
-+		free_pte_table(pte_base, pmd);
-+	}
-+}
-+
-+static void __meminit
-+remove_pud_table(pud_t *pud_start, unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	pmd_t *pmd_base;
-+	pud_t *pud;
-+
-+	pud = pud_start + pud_index(addr);
-+	for (; addr < end; addr = next, pud++) {
-+		next = pud_addr_end(addr, end);
-+
-+		if (!pud_present(*pud))
-+			continue;
-+
-+		pmd_base = pmd_offset(pud, 0);
-+		remove_pmd_table(pmd_base, addr, next);
-+		free_pmd_table(pmd_base, pud);
-+	}
-+}
-+
-+static void __meminit
-+remove_p4d_table(p4d_t *p4d_start, unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	pud_t *pud_base;
-+	p4d_t *p4d;
-+
-+	p4d = p4d_start + p4d_index(addr);
-+	for (; addr < end; addr = next, p4d++) {
-+		next = p4d_addr_end(addr, end);
-+
-+		if (!p4d_present(*p4d))
-+			continue;
-+
-+		pud_base = pud_offset(p4d, 0);
-+		remove_pud_table(pud_base, addr, next);
-+	}
-+}
-+
-+/* start and end are both virtual address. */
-+static void __meminit
-+remove_pagetable(unsigned long start, unsigned long end)
-+{
-+	unsigned long next;
-+	unsigned long addr;
-+	pgd_t *pgd;
-+	p4d_t *p4d;
-+
-+	for (addr = start; addr < end; addr = next) {
-+		next = pgd_addr_end(addr, end);
-+
-+		pgd = pgd_offset_k(addr);
-+		if (!pgd_present(*pgd))
-+			continue;
-+
-+		p4d = p4d_offset(pgd, 0);
-+		remove_p4d_table(p4d, addr, next);
-+	}
-+
-+	flush_tlb_all();
-+}
-+
- void vmemmap_free(unsigned long start, unsigned long end,
- 		  struct vmem_altmap *altmap)
- {
-+	remove_pagetable(start, end);
- }
- 
- int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
-@@ -264,4 +430,24 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
- 	return ret;
- }
- 
-+#ifdef CONFIG_MEMORY_HOTREMOVE
-+int __ref arch_remove_memory(int nid, u64 start, u64 size,
-+			     struct vmem_altmap *altmap)
-+{
-+	unsigned long start_pfn = start >> PAGE_SHIFT;
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	struct page *page = pfn_to_page(start_pfn);
-+	struct zone *zone;
-+	int ret;
-+
-+	if (altmap)
-+		page += vmem_altmap_offset(altmap);
-+	zone = page_zone(page);
-+	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
-+	WARN_ON_ONCE(ret);
-+
-+	return ret;
-+}
-+
-+#endif
- #endif
 -- 
 2.20.1
 
