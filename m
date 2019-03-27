@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D1DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A912FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6056221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8332177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710349;
-	bh=OPSrZb5CmsXXaPDBbnBvI9RpJMraM8yr5tKaoDSYuyI=;
+	s=default; t=1553710356;
+	bh=S4n0aZimLdD4R+tsUCTIIZdShqHluTM1NeplZyOBN9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPai4WALYytEuncwT92R4kLW+1K7TboWXoNX/jILkCnXv9HCegWFh7N9g83qT7qtZ
-	 6ZG4ZUNSGqYalMnrrU4zMN5uEmlPiE8mkGFkWwPpGx/9smg2mEldcFWX+RdIsm2qnd
-	 yPZvCuSbnPBAhjX/jHZIOr+muAthXHx7HkJYLzgI=
+	b=Uo2evvVmSf5rS01njnr7j6+BtmYxoVua2fnwmYqL8bc96Yb9PjBv+8NrjUOw+MeUF
+	 LmmV5S25Z0icABxPk6Y/sdKXeASM9pE+uAZxFXmS34upIcTyDX8KN9Re9+oXKcrb6X
+	 B3qANoL0dIRwBJg/iRAfh6Y367A8sG7sIKJzp4hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389207AbfC0SM1 (ORCPT
+        id S2389226AbfC0SMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54814 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388933AbfC0SMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:23 -0400
+        id S2388920AbfC0SMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D802D2183E;
-        Wed, 27 Mar 2019 18:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C772184C;
+        Wed, 27 Mar 2019 18:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710342;
-        bh=OPSrZb5CmsXXaPDBbnBvI9RpJMraM8yr5tKaoDSYuyI=;
+        s=default; t=1553710344;
+        bh=S4n0aZimLdD4R+tsUCTIIZdShqHluTM1NeplZyOBN9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HULg525ppOF0TMBoPj4aYXGE51JHJognd0fm3jIxUc5TiXQCKv5Gc7kxtTlp2/eE+
-         YWrwSVzjJMdwAOvGP+HMWfxA1U83l3IOxfgIG6FkViRwIs/oHbvbpbIH1c2qGxICOq
-         strZJ3C2OuMaglw0ZwXkZtVQxkUSYTrkhFa5qwQA=
+        b=qficIF4+xXNdL6DGH23RbbDmNWJjiFMHUhGaVZyHRNb8EusSgfNNSmFoCyae5wO4P
+         3Gqp4OSIWtZz4DZRYnEVYK3ZaY7dEYibvjhi/ivY/1BQ+J86Z+w29WyMLX72dUFcgc
+         0JHUskHSSGpIjwAdyQfE960wK8jvfUFr4IeU9zXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Pasternak <vadimp@mellanox.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/192] platform/mellanox: mlxreg-hotplug: Fix KASAN warning
-Date:   Wed, 27 Mar 2019 14:08:19 -0400
-Message-Id: <20190327181025.13507-67-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 069/192] IB/mlx4: Increase the timeout for CM cache
+Date:   Wed, 27 Mar 2019 14:08:21 -0400
+Message-Id: <20190327181025.13507-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,166 +58,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit e4c275f77624961b56cce397814d9d770a45ac59 ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-Fix the following KASAN warning produced when booting a 64-bit kernel:
-[   13.334750] BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
-[   13.342166] Read of size 8 at addr ffff880235067178 by task kworker/2:1/42
-[   13.342176] CPU: 2 PID: 42 Comm: kworker/2:1 Not tainted 4.20.0-rc1+ #106
-[   13.342179] Hardware name: Mellanox Technologies Ltd. MSN2740/Mellanox x86 SFF board, BIOS 5.6.5 06/07/2016
-[   13.342190] Workqueue: events deferred_probe_work_func
-[   13.342194] Call Trace:
-[   13.342206]  dump_stack+0xc7/0x15b
-[   13.342214]  ? show_regs_print_info+0x5/0x5
-[   13.342220]  ? kmsg_dump_rewind_nolock+0x59/0x59
-[   13.342234]  ? _raw_write_lock_irqsave+0x100/0x100
-[   13.351593]  print_address_description+0x73/0x260
-[   13.351603]  kasan_report+0x260/0x380
-[   13.351611]  ? find_first_bit+0x19/0x70
-[   13.351619]  find_first_bit+0x19/0x70
-[   13.351630]  mlxreg_hotplug_work_handler+0x73c/0x920 [mlxreg_hotplug]
-[   13.351639]  ? __lock_text_start+0x8/0x8
-[   13.351646]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351656]  ? mlxreg_hotplug_remove+0x1e0/0x1e0 [mlxreg_hotplug]
-[   13.351663]  ? regmap_volatile+0x40/0xb0
-[   13.351668]  ? regcache_write+0x4c/0x90
-[   13.351676]  ? mlxplat_mlxcpld_reg_write+0x24/0x30 [mlx_platform]
-[   13.351681]  ? _regmap_write+0xea/0x220
-[   13.351688]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351696]  ? devm_add_action+0x70/0x70
-[   13.351701]  ? mutex_unlock+0x1d/0x40
-[   13.351710]  mlxreg_hotplug_probe+0x82e/0x989 [mlxreg_hotplug]
-[   13.351723]  ? mlxreg_hotplug_work_handler+0x920/0x920 [mlxreg_hotplug]
-[   13.351731]  ? sysfs_do_create_link_sd.isra.2+0xf4/0x190
-[   13.351737]  ? sysfs_rename_link_ns+0xf0/0xf0
-[   13.351743]  ? devres_close_group+0x2b0/0x2b0
-[   13.351749]  ? pinctrl_put+0x20/0x20
-[   13.351755]  ? acpi_dev_pm_attach+0x2c/0xd0
-[   13.351763]  platform_drv_probe+0x70/0xd0
-[   13.351771]  really_probe+0x480/0x6e0
-[   13.351778]  ? device_attach+0x10/0x10
-[   13.351784]  ? __lock_text_start+0x8/0x8
-[   13.351790]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351797]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351806]  ? __driver_attach+0x190/0x190
-[   13.351812]  driver_probe_device+0x17d/0x1a0
-[   13.351819]  ? __driver_attach+0x190/0x190
-[   13.351825]  bus_for_each_drv+0xd6/0x130
-[   13.351831]  ? bus_rescan_devices+0x20/0x20
-[   13.351837]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351845]  __device_attach+0x18c/0x230
-[   13.351852]  ? device_bind_driver+0x70/0x70
-[   13.351859]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351866]  bus_probe_device+0xea/0x110
-[   13.351874]  deferred_probe_work_func+0x1c9/0x290
-[   13.351882]  ? driver_deferred_probe_add+0x1d0/0x1d0
-[   13.351889]  ? preempt_notifier_dec+0x20/0x20
-[   13.351897]  ? read_word_at_a_time+0xe/0x20
-[   13.351904]  ? strscpy+0x151/0x290
-[   13.351912]  ? set_work_pool_and_clear_pending+0x9c/0xf0
-[   13.351918]  ? __switch_to_asm+0x34/0x70
-[   13.351924]  ? __switch_to_asm+0x40/0x70
-[   13.351929]  ? __switch_to_asm+0x34/0x70
-[   13.351935]  ? __switch_to_asm+0x40/0x70
-[   13.351942]  process_one_work+0x5cc/0xa00
-[   13.351952]  ? pwq_dec_nr_in_flight+0x1e0/0x1e0
-[   13.351960]  ? pci_mmcfg_check_reserved+0x80/0xb8
-[   13.351967]  ? run_rebalance_domains+0x250/0x250
-[   13.351980]  ? stack_access_ok+0x35/0x80
-[   13.351986]  ? deref_stack_reg+0xa1/0xe0
-[   13.351994]  ? schedule+0xcd/0x250
-[   13.352000]  ? worker_enter_idle+0x2d6/0x330
-[   13.352006]  ? __schedule+0xeb0/0xeb0
-[   13.352014]  ? fork_usermode_blob+0x130/0x130
-[   13.352019]  ? mutex_lock+0xa7/0x100
-[   13.352026]  ? _raw_spin_lock_irq+0x98/0xf0
-[   13.352032]  ? _raw_read_unlock_irqrestore+0x30/0x30
-[   13.352037] i2c i2c-2: Added multiplexed i2c bus 11
-[   13.352043]  worker_thread+0x181/0xa80
-[   13.352052]  ? __switch_to_asm+0x34/0x70
-[   13.352058]  ? __switch_to_asm+0x40/0x70
-[   13.352064]  ? process_one_work+0xa00/0xa00
-[   13.352070]  ? __switch_to_asm+0x34/0x70
-[   13.352076]  ? __switch_to_asm+0x40/0x70
-[   13.352081]  ? __switch_to_asm+0x34/0x70
-[   13.352086]  ? __switch_to_asm+0x40/0x70
-[   13.352092]  ? __switch_to_asm+0x34/0x70
-[   13.352097]  ? __switch_to_asm+0x40/0x70
-[   13.352105]  ? __schedule+0x3d6/0xeb0
-[   13.352112]  ? migrate_swap_stop+0x470/0x470
-[   13.352119]  ? save_stack+0x89/0xb0
-[   13.352127]  ? kmem_cache_alloc_trace+0xe5/0x570
-[   13.352132]  ? kthread+0x59/0x1d0
-[   13.352138]  ? ret_from_fork+0x35/0x40
-[   13.352154]  ? __schedule+0xeb0/0xeb0
-[   13.352161]  ? remove_wait_queue+0x150/0x150
-[   13.352169]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.352175]  ? __lock_text_start+0x8/0x8
-[   13.352183]  ? process_one_work+0xa00/0xa00
-[   13.352188]  kthread+0x1a4/0x1d0
-[   13.352195]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[   13.352202]  ret_from_fork+0x35/0x40
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-[   13.353879] The buggy address belongs to the page:
-[   13.353885] page:ffffea0008d419c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-[   13.353890] flags: 0x2ffff8000000000()
-[   13.353897] raw: 02ffff8000000000 ffffea0008d419c8 ffffea0008d419c8 0000000000000000
-[   13.353903] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-[   13.353905] page dumped because: kasan: bad access detected
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-[   13.353908] Memory state around the buggy address:
-[   13.353912]  ffff880235067000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353917]  ffff880235067080: 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04
-[   13.353921] >ffff880235067100: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 f2 f2 f2 f2 04
-[   13.353923]                                                                 ^
-[   13.353927]  ffff880235067180: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 00 00 00 00 00
-[   13.353931]  ffff880235067200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353933] ==================================================================
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-The warning is caused by the below loop:
-	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-while "asserted" is declared as 'unsigned'.
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-The casting of 32-bit unsigned integer pointer to a 64-bit unsigned long
-pointer. There are two problems here.
-It causes the access of four extra byte, which can corrupt memory
-The 32-bit pointer address may not be 64-bit aligned.
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
-The fix changes variable "asserted" to "unsigned long".
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
 
-Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
+
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
+
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index b6d44550d98c..eca16d00e310 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -248,7 +248,8 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 			   struct mlxreg_core_item *item)
- {
- 	struct mlxreg_core_data *data;
--	u32 asserted, regval, bit;
-+	unsigned long asserted;
-+	u32 regval, bit;
- 	int ret;
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index fedaf8260105..8c79a480f2b7 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
- 	/*
-@@ -281,7 +282,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 	asserted = item->cache ^ regval;
- 	item->cache = regval;
+ #include "mlx4_ib.h"
  
--	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-+	for_each_set_bit(bit, &asserted, 8) {
- 		data = item->data + bit;
- 		if (regval & BIT(bit)) {
- 			if (item->inversed)
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
+ 
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
