@@ -2,123 +2,80 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D068C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056E1C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABFC2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B6D2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="vlsBPzLh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="kRlm4b3S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732659AbfC0Jb7 (ORCPT
+        id S1732717AbfC0Jcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:31:59 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37175 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731754AbfC0Jb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:31:59 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u2so10758036lfd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 02:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=QJ0+9pnY8ZG3wKcYs2cciImTaew8jxFZK74Pbq47FPM=;
-        b=vlsBPzLhdZ3TxQcGomuScsculbSk9yIK+sCA2B7gw+V/32W2lkR+0T4JQdwd8p2dbJ
-         S9lAaqjKf0dkBbOy4hO5s5jMSeDCH4GMnKAe7pCUK0aC4tqZ+D72syQ25iihZuIBmEsz
-         S8DLaT48DzUT7HDZqbeMNqTHnN2KFVb19waiqwNFrMxcbL2idwYIvpJFUuo5I5EZ6RVd
-         fv2sNnv/80BfP/S88vJGzFM/qFYIhzSYhC7VDki5nx/htLC423Jsvi2WeQLzv31yl5nr
-         UEk5jOgvj/zKfXv10FHDWYy+ZKhjEw6Pn5dnQZpslLFxVnNfypOY3Up27wPJ3UGbJ7VV
-         aD0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=QJ0+9pnY8ZG3wKcYs2cciImTaew8jxFZK74Pbq47FPM=;
-        b=f1Y/wyxwRTqutpAi9zTU4Z/qRTNkMPznzyBhD+AnKHePVnG6tmXHhrgXSmBgJN/yKl
-         ukJl2XzdiBbqacajq8S99ZpiRevvSJpysQpURvC/BaalBeXgd5/3kLRmZ4KOBKPCEIPz
-         zcRK61PGumrourQFlqba9A+2bNhfQKv7Zfc7zXpJUuz91BDsdEH0/we+97vBAMBuBqDa
-         Ksv8xFrlGOjVpa3NfCgwqFtJ+/baR4Oh1NwNHVCJHgXsUGOY6qOcJwyg2MEX6t6Q/PEw
-         gv0NJugoDgkAHwLtygfOVVz4dIXKYVlMVzPLr/t+zFS9Lhow+IlshsTf4ltuoQyKGfVL
-         Slpw==
-X-Gm-Message-State: APjAAAVjZwM+/TggCMGxbNH1r3o6vNQPm4MDz3+gnFNZ+R9nxIpddkTm
-        /+FU0hAzgbBFV1W+OIHqHuvkNQ==
-X-Google-Smtp-Source: APXvYqw68X4s40N8NLdcYG9PtKhSgtYz0QF3tRMcmxIq0ixjsOsorC/WNwNyNUnW0ygQBqr0wmXtiQ==
-X-Received: by 2002:a19:550d:: with SMTP id n13mr18918218lfe.26.1553679116869;
-        Wed, 27 Mar 2019 02:31:56 -0700 (PDT)
-Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
-        by smtp.gmail.com with ESMTPSA id r27sm3890889lfn.87.2019.03.27.02.31.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 02:31:55 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 10:31:54 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Nguyen An Hoan <na-hoan@jinso.co.jp>
-Cc:     linux-renesas-soc@vger.kernel.org, geert+renesas@glider.be,
-        rui.zhang@intel.com, jslaby@suse.com,
-        wsa+renesas@sang-engineering.com, edubezval@gmail.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kuninori.morimoto.gx@renesas.com, yoshihiro.shimoda.uh@renesas.com,
-        h-inayoshi@jinso.co.jp, nv-dung@jinso.co.jp, cv-dong@jinso.co.jp
-Subject: Re: [RESEND PATCH] thermal: rcar_gen3_thermal: Fix init value of
- IRQCTL register
-Message-ID: <20190327093154.GA23466@bigcity.dyn.berto.se>
-References: <1553677398-7896-1-git-send-email-na-hoan@jinso.co.jp>
+        Wed, 27 Mar 2019 05:32:46 -0400
+Received: from m13-68.163.com ([220.181.13.68]:60379 "EHLO m13-68.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfC0Jcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:32:45 -0400
+X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Mar 2019 05:32:44 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=G5oi1
+        9ZA0X4816eHrENqAbN3PPrrhPtsFymGAe9GwJY=; b=kRlm4b3SDDkrFIGYUQLpr
+        8EiEEytZ11lpCVUdnwlylW5tpOZK0lA1xRmwh9rouxZYhhT39DcrIvTafqMrEIrv
+        rIo/b9DyoejisWoQTRqckWjB4jGUfNiO5kOiJyo1XjTcGF77N9ph7srOgr7Xln0p
+        sag++0+0K6ygsqWPzL390o=
+Received: from luferry$163.com ( [42.120.75.132] ) by ajax-webmail-wmsvr68
+ (Coremail) ; Wed, 27 Mar 2019 17:17:18 +0800 (CST)
+X-Originating-IP: [42.120.75.132]
+Date:   Wed, 27 Mar 2019 17:17:18 +0800 (CST)
+From:   luferry <luferry@163.com>
+To:     "Christoph Hellwig" <hch@lst.de>
+Cc:     "Jens Axboe" <axboe@kernel.dk>,
+        "Dongli Zhang" <dongli.zhang@oracle.com>,
+        "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] make blk_mq_map_queues more friendly for cpu
+ topology
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
+In-Reply-To: <20190327081619.GG20525@lst.de>
+References: <20190325152640.48120-1-luferry@163.com>
+ <20190326073954.GD21617@lst.de>
+ <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
+ <20190327081619.GG20525@lst.de>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1553677398-7896-1-git-send-email-na-hoan@jinso.co.jp>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Message-ID: <764f3c.12445.169be70834b.Coremail.luferry@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: RMGowACnB+WeP5tc06siAA--.37485W
+X-CM-SenderInfo: poxiv2lu16il2tof0z/1tbitB+EWlSIbM+hQwACsq
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hoan,
-
-Thanks for your work, and sorry for dropping the ball on this in v2.
-
-On 2019-03-27 18:03:18 +0900, Nguyen An Hoan wrote:
-> From: Hoan Nguyen An <na-hoan@jinso.co.jp>
-> 
-> Fix setting value for IRQCTL register. We are setting the last 6 bits
-> of (IRQCTL) to be 1 (0x3f), this is only suitable for H3ES1.*, according
-> to Hardware manual values 1 are "setting prohibited" for Gen3.
-> 
-> Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index 88fa41c..2482795 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -307,7 +307,7 @@ static void rcar_gen3_thermal_init(struct rcar_gen3_thermal_tsc *tsc)
->  
->  	usleep_range(1000, 2000);
->  
-> -	rcar_gen3_thermal_write(tsc, REG_GEN3_IRQCTL, 0x3F);
-> +	rcar_gen3_thermal_write(tsc, REG_GEN3_IRQCTL, 0);
->  	rcar_gen3_thermal_write(tsc, REG_GEN3_IRQMSK, 0);
->  	rcar_gen3_thermal_write(tsc, REG_GEN3_IRQEN, IRQ_TEMPD1 | IRQ_TEMP2);
->  
-> -- 
-> 2.7.4
-> 
-
--- 
-Regards,
-Niklas Söderlund
+CgoKQWN0dWFsbHksICBJIGp1c3QgYm91Z2h0IG9uZSB2bSBmcm9tIHB1YmxpYyBjbG91ZCBwcm92
+aWRlciBhbmQgcnVuIGludG8gdGhpcyBwcm9ibGVtLgphZnRlciByZWFkaW5nIGNvZGUgYW5kIGNv
+bXBhcmUgcGNpIGRldmljZSBpbmZvLCBJIHJlcHJvZHVjZSB0aGlzIHNjZW5hcmlvLgoKU2luY2Ug
+Y29tbW9uIHVzZXJzIGNhbm5vdCBjaGFuZ2UgbXNpIHZlY3RvciBudW1iZXJzLCBzbyBJIHN1Z2dl
+c3QgYmxrX21xX21hcF9xdWV1ZXMgdG8gYmUgCm1vcmUgZnJpZW5kbHkuIGJsa19tcV9tYXBfcXVl
+dWVzIG1heSBiZSB0aGUgIGxhc3QgY2hvaWNlLiAKCgoKCgpBdCAyMDE5LTAzLTI3IDE2OjE2OjE5
+LCAiQ2hyaXN0b3BoIEhlbGx3aWciIDxoY2hAbHN0LmRlPiB3cm90ZToKPk9uIFR1ZSwgTWFyIDI2
+LCAyMDE5IGF0IDAzOjU1OjEwUE0gKzA4MDAsIGx1ZmVycnkgd3JvdGU6Cj4+IAo+PiAKPj4gCj4+
+IEF0IDIwMTktMDMtMjYgMTU6Mzk6NTQsICJDaHJpc3RvcGggSGVsbHdpZyIgPGhjaEBsc3QuZGU+
+IHdyb3RlOgo+PiA+V2h5IGlzbid0IHRoaXMgdXNpbmcgdGhlIGF1dG9tYXRpYyBQQ0ktbGV2ZWwg
+YWZmaW5pdHkgYXNzaWdubWVudCB0bwo+PiA+c3RhcnQgd2l0aD8KPj4gCj4+IFdoZW4gZW5hYmxl
+IHZpcnRpby1ibGsgd2l0aCBtdWx0aSBxdWV1ZXMgYnV0IHdpdGggb25seSAyIG1zaXgtdmVjdG9y
+Lgo+PiB2cF9kZXYtPnBlcl92cV92ZWN0b3JzIHdpbGwgYmUgZmFsc2UsIHZwX2dldF92cV9hZmZp
+bnRpdHkgd2lsbCByZXR1cm4gTlVMTCBkaXJlY3RseQo+PiBzbyBibGtfbXFfdmlydGlvX21hcF9x
+dWV1ZXMgd2lsbCBmYWxsYmFjayB0byBibGtfbXFfbWFwX3F1ZXVlcy4KPgo+V2hhdCBpcyB0aGUg
+cG9pbnQgb2YgdGhlIG11bHRpcXVldWUgbW9kZSBpZiB5b3UgZG9uJ3QgaGF2ZSBlbm91Z2gKPih2
+aXJ0dWFsKSBNU0ktWCB2ZWN0b3JzPwo=
