@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B98C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155BEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553DE2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D947420449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710984;
-	bh=GXd+FQv0I7gyn1dAW5umAnm2VA0c5bCFeh2R2DDhkws=;
+	s=default; t=1553710986;
+	bh=pF7cRpKupTgJir7JwcqQ1gcxxdEG2FsTFsJXmzOPQh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqxneZ3hpoOMxQZNlKTQeeGfhxAujXPjDMDPAY55NhTsYudWDJ/FdY6FwyqTYVjSQ
-	 50tiy7V9G2nZZZ+dnejI/bYd6Siu4KKHOc6E4NRBWKOwuLXXlMJRlqbqe/sg3Dk5x6
-	 RH1T2tXU3xw9nCg7BlPvJoTaJLERKCtY47pDR8fs=
+	b=XhVwoxgkpxQvRdxOXKm0MTDyN3hW7Vw9SmOZ8CMuiiv3x4GOsHKqnisfDLa66riFl
+	 9Dibbcx6FZhF6ZNWBVsQ6KAPr63Ds1FFO93SIyLoBineJmnfqKp7KHSEOZAKB8OgIR
+	 qKJEoLxZIODtozLaVcM58cwoLh7uZozNn6CG9L2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391397AbfC0SXC (ORCPT
+        id S2390923AbfC0SXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391375AbfC0SW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:58 -0400
+        id S2391394AbfC0SXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94A1720449;
-        Wed, 27 Mar 2019 18:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D2D20651;
+        Wed, 27 Mar 2019 18:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710977;
-        bh=GXd+FQv0I7gyn1dAW5umAnm2VA0c5bCFeh2R2DDhkws=;
+        s=default; t=1553710982;
+        bh=pF7cRpKupTgJir7JwcqQ1gcxxdEG2FsTFsJXmzOPQh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0bkh6MsHOeC/yG3OwQfYq4bJ66+lXMwQ5GIhPJA0QMYaATpA3KrhIhQLVepyZ5CdE
-         1PveP7oG11ZIFx/KEIATTyZvlgWiDwv9gvJItr9qOdxlnnDsM4tQPsa0TSdhZ69rzJ
-         KGLtb519NB3zWqv9D5ABCGKdUtHYRsgCsUY/zZio=
+        b=inUFkwuzkpT1TGndjm8mEBtwqac8PYed0YgbNFOPjperuAw+WqoT7R0dMsXMJeMQk
+         Zc6cn6HbSU9PMOuUmXevBWTpk7xhquctxow8iFJE2Q3T5dHQ8yqUUtBWRaUA8l0ahr
+         +0YKaWfwaKQvoYywnsDjv9k63pSuqRN+W+BIMxhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Song Hongyan <hongyan.song@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 72/87] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
-Date:   Wed, 27 Mar 2019 14:20:25 -0400
-Message-Id: <20190327182040.17444-72-sashal@kernel.org>
+Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
+        Joey Zheng <yu.zheng@hxt-semitech.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 76/87] dmaengine: qcom_hidma: assign channel cookie correctly
+Date:   Wed, 27 Mar 2019 14:20:29 -0400
+Message-Id: <20190327182040.17444-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,63 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hongyan <hongyan.song@intel.com>
+From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
 
-[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
+[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
 
-Host driver should handle interrupt mask register earlier than wake up ish FW
-else there will be conditions when FW interrupt comes, host PIMR register still
-not set ready, so move the interrupt mask setting before ish_wakeup.
+When dma_cookie_complete() is called in hidma_process_completed(),
+dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
+hidma_txn_is_success() will be called to use channel cookie
+mchan->last_success to do additional DMA status check. Current code
+assigns mchan->last_success after dma_cookie_complete(). This causes
+a race condition of dma_cookie_status() returns DMA_COMPLETE before
+mchan->last_success is assigned correctly. The race will cause
+hidma_tx_status() return DMA_ERROR but the transaction is actually a
+success. Moreover, in async_tx case, it will cause a timeout panic
+in async_tx_quiesce().
 
-Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
-conditions host driver received a busy_clear interrupt (before the busy_clear
-mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
-the interrupt will never be cleared, causing the DEVICE not sending following
-IRQ.
+ Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
+ transaction
+ ...
+ Call trace:
+ [<ffff000008089994>] dump_backtrace+0x0/0x1f4
+ [<ffff000008089bac>] show_stack+0x24/0x2c
+ [<ffff00000891e198>] dump_stack+0x84/0xa8
+ [<ffff0000080da544>] panic+0x12c/0x29c
+ [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
+ [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
+ [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
+ [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
+ [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
+ [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
+ [<ffff000008736538>] md_thread+0x108/0x168
+ [<ffff0000080fb1cc>] kthread+0x10c/0x138
+ [<ffff000008084d34>] ret_from_fork+0x10/0x18
 
-Since PISR clear should not be called for the CHV device we do this change.
-After the change, both ISH2HOST interrupt and busy_clear interrupt will be
-considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
-from IPC_IS_BUSY check.
-
-Signed-off-by: Song Hongyan <hongyan.song@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/dma/qcom/hidma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
-index 0c9ac4d5d850..41d44536aa15 100644
---- a/drivers/hid/intel-ish-hid/ipc/ipc.c
-+++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
-@@ -92,7 +92,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
- 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
- 	} else {
- 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
--		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
-+		interrupt_generated = !!pisr_val;
-+		/* only busy-clear bit is RW, others are RO */
-+		if (pisr_val)
-+			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
- 	}
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index e244e10a94b5..5444f39bf939 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -131,24 +131,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
+ 		desc = &mdesc->desc;
+ 		last_cookie = desc->cookie;
  
- 	return interrupt_generated;
-@@ -795,11 +798,11 @@ int ish_hw_start(struct ishtp_device *dev)
- {
- 	ish_set_host_rdy(dev);
- 
-+	set_host_ready(dev);
++		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
 +
- 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
- 	ish_wakeup(dev);
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
++		if (llstat == DMA_COMPLETE) {
++			mchan->last_success = last_cookie;
++			result.result = DMA_TRANS_NOERROR;
++		} else {
++			result.result = DMA_TRANS_ABORTED;
++		}
++
+ 		dma_cookie_complete(desc);
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
  
--	set_host_ready(dev);
+-		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
+ 		dmaengine_desc_get_callback(desc, &cb);
+ 
+ 		dma_run_dependencies(desc);
+ 
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
+ 		list_move(&mdesc->node, &mchan->free);
 -
- 	/* wait for FW-initiated reset flow */
- 	if (!dev->recvd_hw_ready)
- 		wait_event_interruptible_timeout(dev->wait_hw_ready,
+-		if (llstat == DMA_COMPLETE) {
+-			mchan->last_success = last_cookie;
+-			result.result = DMA_TRANS_NOERROR;
+-		} else
+-			result.result = DMA_TRANS_ABORTED;
+-
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+ 		dmaengine_desc_callback_invoke(&cb, &result);
 -- 
 2.19.1
 
