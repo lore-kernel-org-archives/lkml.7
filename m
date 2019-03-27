@@ -2,113 +2,101 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9B9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2AEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF382075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712155;
-	bh=hD2RJPnaS6Es29brTXoGgh69te7zm5LCCsCvee9+LEs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQcMsMhm5v6UvWx6uTaOiHWoGvJ2FiCxAbSEUqZsr/UMDUibrHWcReref9FvK+UND
-	 P6zmP6OfTpw5S9Z5cYPETzv9D8MwQk/1FatFYDb9F9zqtmuRN0uLhqKL6NjSHOZ/KC
-	 QGYL3Bckvpmi+CaiXZlDBIkKJs1DvhzPYwCL8a9g=
+	by mail.kernel.org (Postfix) with ESMTP id D9E6D2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjRrlJ/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391246AbfC0Sm2 (ORCPT
+        id S2391466AbfC0Sml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390445AbfC0SV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:56 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF9A20651;
-        Wed, 27 Mar 2019 18:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710916;
-        bh=hD2RJPnaS6Es29brTXoGgh69te7zm5LCCsCvee9+LEs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTXlSteVgD6qzWJ5i/R+THI8dvVpmQ59N3vUsEPvSP8H5b0A3XLStZ/POq2SZLJL3
-         Eq9k7dB5/U01lcCbcYPy/2/tEfmMBon+bw6JeA9oimvrWl0QF+ft0DU7LTdfAGc6M7
-         rsIkZxg8ocQkQ3ovrRfhStKFI2mUrkgyPzpjva5Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kazior <michal@plume.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 45/87] leds: lp55xx: fix null deref on firmware load failure
-Date:   Wed, 27 Mar 2019 14:19:58 -0400
-Message-Id: <20190327182040.17444-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
-References: <20190327182040.17444-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 14:42:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33070 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbfC0Smi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:42:38 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bg8so3717328plb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dVB+Wj9UZO7gQ/N+/6EyF4+bcwcw/DAMjGzAnDrQl2g=;
+        b=bjRrlJ/9a192FSR7+f6s8erxI31x3OnSPNfpJSBLxziDSPitgVkHFMoFCDRJbCH6oU
+         u9iFun+TCamlYJio2pnj4hM6Y5k6j2uI4tJvKsLHlgu0zg2G5i1IvUCquMRCVJe5X1Ix
+         9o9HgmZTSIH0bYzWTGitYEjezfTsSmzez95vc7RvUSl1F1DMzHuUEt1qWGEl9CoMxN1d
+         fkwyEsa22SEJ5ri6Ko/udr4UpomS2ZXd22suhF9XgJ4Kj8zyVqtspIEZjJaCQ6Mt/HAf
+         i2a1/NZ1TwIyzRSQSVD7ud1y3oLa/GiEEMUG6Xa418xmo8akQYdLKXGg+45EyweRMBK5
+         TuIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dVB+Wj9UZO7gQ/N+/6EyF4+bcwcw/DAMjGzAnDrQl2g=;
+        b=BuxP4ARrjltw6i6YNXc11gQdxbvCwzRocmjAoK6HWSy8xxFfkFA1OatPUuLf9LuWse
+         kH4hCaMDzDgvuhFHM7iNgzphKevHa7oCndVeF1xiqE1jDIj9b4ZSQTJUHgaifQGvL9SH
+         QrpSirxpOHrRDe9rUtIzyxiX84MsCWWFYnfed/s1HdvVlgzDYrJ0bOT19ELk8cV+NiF1
+         G1UksdYn0QQijfEcbdWmdQJ6c/95NUHDNJHhYqYFxZLCmsCfJz8DJkkbt1fIhrko3kb5
+         suHy15lawrRtLN/Z4Yr3waiEhzTuSldPUi7TipOrqomcKDuhIdX1dtxaWGIwH0FKa9zr
+         xOTg==
+X-Gm-Message-State: APjAAAXlz4N3jWJ75Rv+45CwYgs8XTIrZ/w1khxVf5WD4ELNsi23N94c
+        FAvpCbsR1OV0VhhXY5jo90Q=
+X-Google-Smtp-Source: APXvYqxgRRn7KJSKtuGuYE8Ppsl/RqXLOPI66I6wIDpcKeTKvGEvQFNlyFwPaxWqgfeISfhR4eFEdA==
+X-Received: by 2002:a17:902:2983:: with SMTP id h3mr39436984plb.332.1553712157170;
+        Wed, 27 Mar 2019 11:42:37 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id v18sm28129738pfm.165.2019.03.27.11.42.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 11:42:36 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 11:42:32 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     robin.murphy@arm.com, vdumpa@nvidia.com, linux@armlinux.org.uk,
+        catalin.marinas@arm.com, will.deacon@arm.com, joro@8bytes.org,
+        m.szyprowski@samsung.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        tony@atomide.com
+Subject: Re: [PATCH v2 RFC/RFT 0/5] Save single pages from CMA area
+Message-ID: <20190327184231.GA13287@Asurada-Nvidia>
+References: <20190326230131.16275-1-nicoleotsuka@gmail.com>
+ <20190327080821.GB20336@lst.de>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327080821.GB20336@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kazior <michal@plume.com>
+On Wed, Mar 27, 2019 at 09:08:21AM +0100, Christoph Hellwig wrote:
+> On Tue, Mar 26, 2019 at 04:01:26PM -0700, Nicolin Chen wrote:
+> > This series of patches try to save single pages from CMA area bypassing
+> > all CMA single page alloctions and allocating normal pages instead, as
+> > all addresses within one single page are contiguous.
+> > 
+> > We had once applied the PATCH-5 but reverted it as actually not all the
+> > callers handled the fallback allocations. Per Robin's suggestion, let's
+> > stuff alloc_pages()/free_page() fallbacks to those callers before having
+> > PATCH-5.
+> 
+> Given the problems this has caused so far I'd like to see a good
+> explanation of why this optimization is so important that all the churn
+> is even worth it..
 
-[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
+With certain downstream user cases, we had run into a CMA exhaustion
+situation, and this was one of the changes that eased the problem. I
+have all the reasoning in the PATCH-5 commit message. And what Robin
+tested can also justify for it:
+https://lore.kernel.org/patchwork/patch/1004934/#1190139
 
-I've stumbled upon a kernel crash and the logs
-pointed me towards the lp5562 driver:
-
-> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
-> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
-> ...
-> <3>[306073.924886] lp5562 0-0030: firmware request failed
-> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
-> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
-> ...
-
-After taking a look I noticed firmware_release()
-could be called with either NULL or a dangling
-pointer.
-
-Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
-Signed-off-by: Michal Kazior <michal@plume.com>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/leds/leds-lp55xx-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 5377f22ff994..e2655953667c 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
- 
- 	if (!fw) {
- 		dev_err(dev, "firmware request failed\n");
--		goto out;
-+		return;
- 	}
- 
- 	/* handling firmware data is chip dependent */
-@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
- 
- 	mutex_unlock(&chip->lock);
- 
--out:
- 	/* firmware should be released for other channel use */
- 	release_firmware(chip->fw);
-+	chip->fw = NULL;
- }
- 
- static int lp55xx_request_firmware(struct lp55xx_chip *chip)
--- 
-2.19.1
-
+Thanks
