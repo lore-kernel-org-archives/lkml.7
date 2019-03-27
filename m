@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B413C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764C5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A82C2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48651206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714085;
-	bh=e45cM2WgidIGs7IgVAuofmMVPFcRQacvL4u/PQRtuRI=;
+	s=default; t=1553714099;
+	bh=8VuFBaLEkf8mdppgFFuBuHokOjCw2Of3H8Zc96e82eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlD5KumCXFjkNNijA9dA5r612Wj5JBJ8Vef1i06jLBC/UEr4S36AGiauFvDrKjjO/
-	 WlKv+oGLczv/dH4dCBfwXUH3fa02ssZalmimWI4Yw6bUApFxSh6CF2rENmyEULnG5K
-	 httL7AaUmSXlVKLy+TKFNHhntNq61btXrJw/wR5g=
+	b=H6vwtuxkYg3r0KZO35FDeQtoAjKEUHKyZJQkM3jgEIMPFuoYwX4H0RjCFgvu+jJMf
+	 WpCx4U1ijLDh4CJyfPcAIriSgu88ofhd6xwBNTp1EY+TMrfFR9zGC1VDOkdbz/tOP0
+	 Suu505zT6HWi2KmpTkfH5K3yr/5QujGfhDzdXoYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389060AbfC0TOo (ORCPT
+        id S2388582AbfC0SJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51448 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388580AbfC0SJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:38 -0400
+        id S2388564AbfC0SJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E79D42147C;
-        Wed, 27 Mar 2019 18:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EAC6217D9;
+        Wed, 27 Mar 2019 18:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710176;
-        bh=e45cM2WgidIGs7IgVAuofmMVPFcRQacvL4u/PQRtuRI=;
+        s=default; t=1553710165;
+        bh=8VuFBaLEkf8mdppgFFuBuHokOjCw2Of3H8Zc96e82eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZsIKk4D9H0UNxuNTx5YN8Puyt/OfEBul2akGSPJB53tutFvvBs/5DBIffICuEy/g
-         qmb8WdOVs8q4wvidSP8NPPc/XugXmOUxmMuvvfuu69WdsUX6vbG9X7NBBL9E20iUwD
-         vHvxN5wqkUDGDTWiOxTifBBXJ1iNP7JoWuvWM/JM=
+        b=s7hcGVJhHSeK7LqTBCFm0x1WQLyRRwblnhtZGaYcYYKOKJ5N7C5slwGDIiKK5VUvj
+         cA9Yj64ewr8A65Tf1kTf2xV9EnujGExIQ+87UsHYXLb7RTG86KUjDyN/xhJzcHsh4p
+         AhBMR1dWolaR6auisMjWbHyf80xDssaUXTi5kF4E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 235/262] media: rcar-vin: Allow independent VIN link enablement
-Date:   Wed, 27 Mar 2019 14:01:30 -0400
-Message-Id: <20190327180158.10245-235-sashal@kernel.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, cai@gmx.us,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        linux-arm-kernel@lists.infradead.org, longman@redhat.com,
+        marc.zyngier@arm.com, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 229/262] cpu/hotplug: Mute hotplug lockdep during init
+Date:   Wed, 27 Mar 2019 14:01:24 -0400
+Message-Id: <20190327180158.10245-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,67 +66,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-[ Upstream commit c5ff0edb8e2270a75935c73217fb0de1abd2d910 ]
+[ Upstream commit ce48c457b95316b9a01b5aa9d4456ce820df94b4 ]
 
-There is a block of code in rvin_group_link_notify() that prevents
-enabling a link to a VIN node if any entity in the media graph is
-in use. This prevents enabling a VIN link even if there is an in-use
-entity somewhere in the graph that is independent of the link's
-pipeline.
+Since we've had:
 
-For example, the code block will prevent enabling a link from
-the first rcar-csi2 receiver to a VIN node even if there is an
-enabled link somewhere far upstream on the second independent
-rcar-csi2 receiver pipeline.
+  commit cb538267ea1e ("jump_label/lockdep: Assert we hold the hotplug lock for _cpuslocked() operations")
 
-If this code block is meant to prevent modifying a link if any entity
-in the graph is actively involved in streaming (because modifying
-the CHSEL register fields can disrupt any/all running streams), then
-the entities stream counts should be checked rather than the use counts.
+we've been getting some lockdep warnings during init, such as on HiKey960:
 
-(There is already such a check in __media_entity_setup_link() that verifies
-the stream_count of the link's source and sink entities are both zero,
-but that is insufficient, since there should be no running streams in
-the entire graph).
+[    0.820495] WARNING: CPU: 4 PID: 0 at kernel/cpu.c:316 lockdep_assert_cpus_held+0x3c/0x48
+[    0.820498] Modules linked in:
+[    0.820509] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G S                4.20.0-rc5-00051-g4cae42a #34
+[    0.820511] Hardware name: HiKey960 (DT)
+[    0.820516] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
+[    0.820520] pc : lockdep_assert_cpus_held+0x3c/0x48
+[    0.820523] lr : lockdep_assert_cpus_held+0x38/0x48
+[    0.820526] sp : ffff00000a9cbe50
+[    0.820528] x29: ffff00000a9cbe50 x28: 0000000000000000
+[    0.820533] x27: 00008000b69e5000 x26: ffff8000bff4cfe0
+[    0.820537] x25: ffff000008ba69e0 x24: 0000000000000001
+[    0.820541] x23: ffff000008fce000 x22: ffff000008ba70c8
+[    0.820545] x21: 0000000000000001 x20: 0000000000000003
+[    0.820548] x19: ffff00000a35d628 x18: ffffffffffffffff
+[    0.820552] x17: 0000000000000000 x16: 0000000000000000
+[    0.820556] x15: ffff00000958f848 x14: 455f3052464d4d34
+[    0.820559] x13: 00000000769dde98 x12: ffff8000bf3f65a8
+[    0.820564] x11: 0000000000000000 x10: ffff00000958f848
+[    0.820567] x9 : ffff000009592000 x8 : ffff00000958f848
+[    0.820571] x7 : ffff00000818ffa0 x6 : 0000000000000000
+[    0.820574] x5 : 0000000000000000 x4 : 0000000000000001
+[    0.820578] x3 : 0000000000000000 x2 : 0000000000000001
+[    0.820582] x1 : 00000000ffffffff x0 : 0000000000000000
+[    0.820587] Call trace:
+[    0.820591]  lockdep_assert_cpus_held+0x3c/0x48
+[    0.820598]  static_key_enable_cpuslocked+0x28/0xd0
+[    0.820606]  arch_timer_check_ool_workaround+0xe8/0x228
+[    0.820610]  arch_timer_starting_cpu+0xe4/0x2d8
+[    0.820615]  cpuhp_invoke_callback+0xe8/0xd08
+[    0.820619]  notify_cpu_starting+0x80/0xb8
+[    0.820625]  secondary_start_kernel+0x118/0x1d0
 
-Modify the code block to check the entity stream_count instead of the
-use_count (and elaborate on the comment). VIN node links can now be
-enabled even if there are other independent in-use entities that are
-not streaming.
+We've also had a similar warning in sched_init_smp() for every
+asymmetric system that would enable the sched_asym_cpucapacity static
+key, although that was singled out in:
 
-Fixes: c0cc5aef31 ("media: rcar-vin: add link notify for Gen3")
+  commit 40fa3780bac2 ("sched/core: Take the hotplug lock in sched_init_smp()")
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Those warnings are actually harmless, since we cannot have hotplug
+operations at the time they appear. Instead of starting to sprinkle
+useless hotplug lock operations in the init codepaths, mute the
+warnings until they start warning about real problems.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: cai@gmx.us
+Cc: daniel.lezcano@linaro.org
+Cc: dietmar.eggemann@arm.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: longman@redhat.com
+Cc: marc.zyngier@arm.com
+Cc: mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/1545243796-23224-2-git-send-email-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-vin/rcar-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ kernel/cpu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-index f0719ce24b97..aef8d8dab6ab 100644
---- a/drivers/media/platform/rcar-vin/rcar-core.c
-+++ b/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -131,9 +131,13 @@ static int rvin_group_link_notify(struct media_link *link, u32 flags,
- 	    !is_media_entity_v4l2_video_device(link->sink->entity))
- 		return 0;
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d1c6d152da89..025f419d16f6 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -313,6 +313,15 @@ void cpus_write_unlock(void)
  
--	/* If any entity is in use don't allow link changes. */
+ void lockdep_assert_cpus_held(void)
+ {
 +	/*
-+	 * Don't allow link changes if any entity in the graph is
-+	 * streaming, modifying the CHSEL register fields can disrupt
-+	 * running streams.
++	 * We can't have hotplug operations before userspace starts running,
++	 * and some init codepaths will knowingly not take the hotplug lock.
++	 * This is all valid, so mute lockdep until it makes sense to report
++	 * unheld locks.
 +	 */
- 	media_device_for_each_entity(entity, &group->mdev)
--		if (entity->use_count)
-+		if (entity->stream_count)
- 			return -EBUSY;
++	if (system_state < SYSTEM_RUNNING)
++		return;
++
+ 	percpu_rwsem_assert_held(&cpu_hotplug_lock);
+ }
  
- 	mutex_lock(&group->lock);
 -- 
 2.19.1
 
