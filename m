@@ -2,145 +2,158 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C5AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65A5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B9221734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDB12146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QM11JzkU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QqSyu0VY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfC0NUI (ORCPT
+        id S1729762AbfC0NVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:20:08 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35849 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729357AbfC0NUF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:20:05 -0400
-Received: by mail-qk1-f195.google.com with SMTP id k130so9827355qke.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 06:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l4fjnacWfr7ROwk+qn6pHWtMzGtc/5ptQvPedds8vQ0=;
-        b=QM11JzkUcYckTxkGOmUsCXn78K9ej64Kyie6ZInvxKkNvyXA6N6olJ1d9rAq5YKECk
-         w/FoIoKVU23QLqRUvKI0WPlTzq6O5zjyy/Reake4SxUU51O/oCOPypfPR/guzp2f+UvS
-         1L9NN3PWTdEYy4yAtFWn8MyK1iEq4+i2d816zi4ydMkr3oohkoK1mhrq0k2TmNl45hsP
-         ImJaMqIuYKvV42KBthtOeVGbIfWh7EN12hiUUnZObpg5XuKCYsAKQ43URQHhnEOBTVC7
-         xsCmGVcZQWOm8mSX3yXce6BNwj+DkyS/ceNhhTsvNZ66YmSm+U7icH9hetfPkzEWgXyB
-         ei4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l4fjnacWfr7ROwk+qn6pHWtMzGtc/5ptQvPedds8vQ0=;
-        b=O3H5wk5gi9t/KSCfaBPRVkuwxLBjNwmfw1vmAdvMra+glP+EJVJ2kwaUwNJ1Ddk9Xf
-         zoaxTx5Sh3RwoX/REKOwLmA7c6fa0TUS0bFRokDVgI88IKnc03r1CtAQOKRqGD1yPtIH
-         VrxSMVZtQQ3WgfjjIhims8KgSN7MUblqKiib3ZGFydZ9CoXoJYPZM8DVjkj8FAmsyb15
-         c4AYy5GkXgp2WYD7qeQ2YGlbPWMFdnQER7HPWRgwNtjHE+f6Jr5UZr71y/HrS5qBkHlo
-         eHrz1jcgsZZSMnGTcQnkZSkIJusmmSIBjk8Wgzt9QwZVEBX4fcnovse0ge0Zfelmd0xO
-         4ktg==
-X-Gm-Message-State: APjAAAUgzqGsbgqalpMtQHoLLP3d7/ESUGdE7ykgiwn79keLC+B5+P9U
-        rewqhCTq/hnuxv88n6uN5olKNQ==
-X-Google-Smtp-Source: APXvYqzHkbT75ETj1cUC3d+8FYiORFm2d7QB5VlMsyOUuZ4K27p9q7fzIWAMDLRHDXVx1696y9aNgw==
-X-Received: by 2002:a37:e315:: with SMTP id y21mr29721733qki.233.1553692805095;
-        Wed, 27 Mar 2019 06:20:05 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id q6sm817560qkj.87.2019.03.27.06.20.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 06:20:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1h98TL-0003Mi-6v; Wed, 27 Mar 2019 10:20:03 -0300
-Date:   Wed, 27 Mar 2019 10:20:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     Faisal Latif <faisal.latif@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] infiniband: i40iw: fix potential NULL pointer
- dereferences
-Message-ID: <20190327132003.GA12891@ziepe.ca>
-References: <9DD61F30A802C4429A01CA4200E302A7A5A6FAA8@fmsmsx124.amr.corp.intel.com>
- <20190315065715.18249-1-kjlu@umn.edu>
+        Wed, 27 Mar 2019 09:21:10 -0400
+Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:29764
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725829AbfC0NVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:21:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4blFGcbg9F5HkNxQleqIKChFzEPTqs2mXu435AnAu0=;
+ b=QqSyu0VYQMlJANBQmhNAe981HpGT6g7pEaV8fuhbHAbxjVuHT14LxCpnSjRGLkPIV1sTQOMs+iJpM+UQoqlCFmbtOWiOQw/vAk2qeenKVjDaQpMpYdfk82IZnLVJ7/iN8qc3qwsTfjfZqbXNg0g98s4uFgAnjhRWTEvwEuuKcfQ=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB6051.eurprd04.prod.outlook.com (20.179.35.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 13:21:05 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769%2]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 13:21:05 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI wakeup
+Thread-Topic: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI
+ wakeup
+Thread-Index: AQHU5J/uL6RBBX3AA0GxPKCBIrMc4A==
+Date:   Wed, 27 Mar 2019 13:21:05 +0000
+Message-ID: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0701CA0038.eurprd07.prod.outlook.com
+ (2603:10a6:800:90::24) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [212.146.100.6]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a5bd5ea-8e37-42a4-f439-08d6b2b710e8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB6051;
+x-ms-traffictypediagnostic: AM0PR04MB6051:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB60518A37EF1ED816E77C3A0DF6580@AM0PR04MB6051.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(25786009)(14444005)(68736007)(4326008)(6436002)(5660300002)(6116002)(71200400001)(71190400001)(3846002)(256004)(8936002)(8676002)(6636002)(2501003)(66066001)(305945005)(2906002)(53936002)(81156014)(6512007)(7736002)(81166006)(7416002)(97736004)(6486002)(36756003)(54906003)(6306002)(44832011)(50226002)(486006)(106356001)(6506007)(386003)(186003)(110136005)(102836004)(966005)(14454004)(476003)(86362001)(99286004)(52116002)(478600001)(316002)(2616005)(26005)(105586002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6051;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xfNChds0TnW/8KAmZfUTn60p4tg5NdXtUJGJevvC5OAK2sF7p7MrbS6ZAA+bUeISCbMSZDkKd8+Lfhv5zXMizqYf9hZNIfIS+ktey9+cl/8YIeUr7xjKEGmklOPfKhkTxLdY3Bl1X/fXPUZZQJZtcVccmAfPRPFxgdGMKvwBr9lit8KODC6C4KFqSTNzYKKfuZX5YgjHYLhALfXsB4cvYGEkt+O+Ftp1uhCD7dv4/0+qq/2msuF6Zl2/tWkaLU4jMv+hZTG5GZd/BjiFNUUwUfYILmuDBTbpGmZ9qZnCfur4KIu8SoqZzymVSIZFrzmRWzhlvlTlyf00RLQ2bsBMLHohHG36ZPxZoLZLuM2pMbUcZPuioofR7WDYcLCiS+09WvVmk14qXfBlD8GSAHaPahswIX+/bi9++M9w0z3bcSA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315065715.18249-1-kjlu@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a5bd5ea-8e37-42a4-f439-08d6b2b710e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 13:21:05.4897
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 01:57:14AM -0500, Kangjie Lu wrote:
-> alloc_ordered_workqueue may fail and return NULL.
-> The fix captures the failure and handles it properly to avoid
-> potential NULL pointer dereferences.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> ---
-> V2: add return value to capture the error code
-> ---
->  drivers/infiniband/hw/i40iw/i40iw.h      |  2 +-
->  drivers/infiniband/hw/i40iw/i40iw_cm.c   | 19 ++++++++++++++++---
->  drivers/infiniband/hw/i40iw/i40iw_main.c |  5 ++++-
->  3 files changed, 21 insertions(+), 5 deletions(-)
+This work is a workaround I'm looking into (more as a background task)
+in order to add support for cpuidle on i.MX8MQ based platforms.
 
-applied to for-next thanks
- 
-> diff --git a/drivers/infiniband/hw/i40iw/i40iw.h b/drivers/infiniband/hw/i40iw/i40iw.h
-> index 2f2b4426ded7..8feec35f95a7 100644
-> --- a/drivers/infiniband/hw/i40iw/i40iw.h
-> +++ b/drivers/infiniband/hw/i40iw/i40iw.h
-> @@ -552,7 +552,7 @@ enum i40iw_status_code i40iw_obj_aligned_mem(struct i40iw_device *iwdev,
->  
->  void i40iw_request_reset(struct i40iw_device *iwdev);
->  void i40iw_destroy_rdma_device(struct i40iw_ib_device *iwibdev);
-> -void i40iw_setup_cm_core(struct i40iw_device *iwdev);
-> +int i40iw_setup_cm_core(struct i40iw_device *iwdev);
->  void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core);
->  void i40iw_process_ceq(struct i40iw_device *, struct i40iw_ceq *iwceq);
->  void i40iw_process_aeq(struct i40iw_device *);
-> diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-> index 206cfb0016f8..2e20786b9a57 100644
-> --- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-> +++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-> @@ -3237,7 +3237,7 @@ void i40iw_receive_ilq(struct i40iw_sc_vsi *vsi, struct i40iw_puda_buf *rbuf)
->   * core
->   * @iwdev: iwarp device structure
->   */
-> -void i40iw_setup_cm_core(struct i40iw_device *iwdev)
-> +int i40iw_setup_cm_core(struct i40iw_device *iwdev)
->  {
->  	struct i40iw_cm_core *cm_core = &iwdev->cm_core;
->  
-> @@ -3256,9 +3256,20 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
->  
->  	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
->  						    WQ_MEM_RECLAIM);
-> +	if (!cm_core->event_wq)
-> +		goto error;
->  
->  	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
->  						      WQ_MEM_RECLAIM);
-> +	if (!cm_core->disconn_wq)
-> +		goto error;
-> +
-> +	return 0;
-> +error:
-> +	i40iw_cleanup_cm_core(&iwdev->cm_core);
-> +	i40iw_pr_err("fail to setup CM core");
+The main idea here is getting around the missing GIC wake_request signal
+(due to integration design issue) by waking up a each individual core throu=
+gh
+some dedicated SW power-up bits inside the power controller (GPC) right bef=
+ore
+every IPI is requested for that each individual core.
 
-But I deleted this print, memory allocation failures already print
-enough
+This work is basically composed of four parts (in kernel):
 
-Jason
+ - the cpuidle core poking mechanism along with the related sched/irq_work =
+calls
+ - the cpuidle-arm ops addition in order to support poking, along with the
+   'local-wakeup-poke' DT idle state knob
+ - the psci and cpu_ops cpu_poke addition
+ - the i.MX8MQ specific idle states in dts
+
+There is also a change needed in TF-A which is available here:
+
+  https://lists.trustedfirmware.org/pipermail/tf-a/2019-March/000009.html
+
+Abel Vesa (7):
+  sched: idle: Add sched get idle state helper
+  cpuidle: Add cpu poke support
+  smp: Poke the cores before requesting IPI
+  psci: Add cpu_poke ops to support core poking
+  cpuidle-arm: Add ops to support poke alonside enter
+  cpuidle-arm: Add arm64 wake helper for cpu_poke op
+  arm64: dts: imx8mq: Add cpu-sleep state with poke wake-up enabled
+
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 20 ++++++++++++++++++
+ arch/arm64/include/asm/cpu_ops.h          |  1 +
+ arch/arm64/include/asm/cpuidle.h          |  6 ++++++
+ arch/arm64/kernel/cpuidle.c               |  8 ++++++++
+ arch/arm64/kernel/psci.c                  |  1 +
+ drivers/cpuidle/cpuidle-arm.c             | 13 +++++++++++-
+ drivers/cpuidle/cpuidle.c                 | 34 +++++++++++++++++++++++++++=
+++++
+ drivers/cpuidle/dt_idle_states.c          | 15 +++++++++-----
+ drivers/cpuidle/dt_idle_states.h          | 10 +++++++++
+ drivers/firmware/psci.c                   |  6 ++++++
+ include/linux/cpuidle.h                   |  7 +++++++
+ include/linux/psci.h                      |  1 +
+ include/uapi/linux/psci.h                 |  2 ++
+ kernel/irq_work.c                         | 19 ++++++++++++++---
+ kernel/sched/core.c                       | 16 ++++++++++-----
+ kernel/sched/idle.c                       | 11 ++++++++++
+ kernel/smp.c                              | 10 ++++++++-
+ kernel/time/tick-broadcast.c              |  4 ++++
+ 18 files changed, 169 insertions(+), 15 deletions(-)
+
+--=20
+2.7.4
+
