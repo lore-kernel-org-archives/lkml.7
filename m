@@ -2,188 +2,93 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E254C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145C2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D44205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20DD20700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbfC0KS5 (ORCPT
+        id S1733089AbfC0KT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:18:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35592 "EHLO mx1.suse.de"
+        Wed, 27 Mar 2019 06:19:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35656 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731904AbfC0KS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:18:57 -0400
+        id S1725827AbfC0KTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:19:25 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4BA91AD2F;
-        Wed, 27 Mar 2019 10:18:55 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     oneukum@suse.de, Terry.Junge@plantronics.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] HID: core: move Usage Page concatenation to Main item
-Date:   Wed, 27 Mar 2019 11:18:48 +0100
-Message-Id: <20190327101848.25477-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.21.0
+        by mx1.suse.de (Postfix) with ESMTP id 0ED68AD2F;
+        Wed, 27 Mar 2019 10:19:24 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 855C1E1404; Wed, 27 Mar 2019 11:19:23 +0100 (CET)
+Date:   Wed, 27 Mar 2019 11:19:23 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 07/22] ethtool: netlink bitset handling
+Message-ID: <20190327101923.GR26076@unicorn.suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <9123f942b484ef4bbb684bb1f4aa2b70d673a259.1553532199.git.mkubecek@suse.cz>
+ <20190326155911.GA4958@nanopsycho.orion>
+ <20190326175932.GN26076@unicorn.suse.cz>
+ <20190327095749.GD6979@nanopsycho>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327095749.GD6979@nanopsycho>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As seen on some USB wireless keyboards manufactured by Primax, the HID
-parser was using some assumptions that are not always true. In this case
-it's s the fact that, inside the scope of a main item, an Usage Page
-will always precede an Usage.
+On Wed, Mar 27, 2019 at 10:57:49AM +0100, Jiri Pirko wrote:
+> Tue, Mar 26, 2019 at 06:59:32PM CET, mkubecek@suse.cz wrote:
+> >On Tue, Mar 26, 2019 at 04:59:11PM +0100, Jiri Pirko wrote:
+> >> Mon, Mar 25, 2019 at 06:08:15PM CET, mkubecek@suse.cz wrote:
+> >> >Declare attribute type constants and add helper functions to generate and
+> >> >parse arbitrary length bit sets.
+> >> 
+> >> Hmm, this looks like a lot of work. Two things:
+> >> 1) This is generic. Not really related to ethtool in any way. Could this
+> >>    be done in netlink common code?
+> >
+> >I suppose it could if other netlink based APIs would be interested in
+> >using it. The only ethtool specific part is the support for "legacy
+> >style names" (fixed size strings) but that is something I'm not really
+> >happy about.  Perhaps it's time to return to the original idea of
+> >supporting only arrays of (char *) and creating them around existing
+> >fixed size ones.
+> 
+> Wait, could you please describe this more?
 
-The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
-is interpreted as a Usage ID and concatenated with the Usage Page".
-While 6.2.2.8 states "When the parser encounters a main item it
-concatenates the last declared Usage Page with a Usage to form a
-complete usage value." Being somewhat contradictory it was decided to
-match Window's implementation, which follows 6.2.2.8.
+At the moment, there are two formats of bit name tables. Legacy format
+which is used by ioctl string sets, e.g.
 
-In summary, the patch moves the Usage Page concatenation from the local
-item parsing function to the main item parsing function.
+const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
+	...
+};
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+(the same is provided by NIC drivers with ethtool_ops::get_strings())
+and simple format used for newly added string sets, e.g.
 
-v3->v4: - Use u8 instead of __u8
-        - Remove overly complex usage size calculation
+const char *const link_mode_names[] = {
+	...
+};
 
-v2->v3: - Update patch title
+If the bitset implementation is to be used by other APIs, legacy format
+support would make little sense so I would suggest to drop legacy format
+support from bitset code and build a (const char **) "index" for ethtool
+legacy string arrays before passing it to bitset related functions.
 
-v1->v2: - Add usage concatenation to hid_scan_main()
-        - Rework tests in hid-tools, making sure no-one is failing
-
- drivers/hid/hid-core.c | 36 ++++++++++++++++++++++++------------
- include/linux/hid.h    |  1 +
- 2 files changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 9993b692598f..852bbd303d9a 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
-  * Add a usage to the temporary parser table.
-  */
- 
--static int hid_add_usage(struct hid_parser *parser, unsigned usage)
-+static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
- {
- 	if (parser->local.usage_index >= HID_MAX_USAGES) {
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
- 	parser->local.usage[parser->local.usage_index] = usage;
-+	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
- 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
-@@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
--		return hid_add_usage(parser, data);
-+		return hid_add_usage(parser, data, item->size);
- 
- 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
- 
-@@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		parser->local.usage_minimum = data;
- 		return 0;
- 
-@@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 			return 0;
- 		}
- 
--		if (item->size <= 2)
--			data = (parser->global.usage_page << 16) + data;
--
- 		count = data - parser->local.usage_minimum;
- 		if (count + parser->local.usage_index >= HID_MAX_USAGES) {
- 			/*
-@@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 		}
- 
- 		for (n = parser->local.usage_minimum; n <= data; n++)
--			if (hid_add_usage(parser, n)) {
-+			if (hid_add_usage(parser, n, item->size)) {
- 				dbg_hid("hid_add_usage failed\n");
- 				return -1;
- 			}
-@@ -547,6 +539,22 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
- 	return 0;
- }
- 
-+/*
-+ * Concatenate Usage Pages into Usages where relevant:
-+ * As per specification, 6.2.2.8: "When the parser encounters a main item it
-+ * concatenates the last declared Usage Page with a Usage to form a complete
-+ * usage value."
-+ */
-+
-+static void hid_concatenate_usage_page(struct hid_parser *parser)
-+{
-+	int i;
-+
-+	for (i = 0; i < parser->local.usage_index; i++)
-+		if (parser->local.usage_size[i] <= 2)
-+			parser->local.usage[i] += parser->global.usage_page << 16;
-+}
-+
- /*
-  * Process a main item.
-  */
-@@ -556,6 +564,8 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int ret;
- 
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
- 
- 	switch (item->tag) {
-@@ -765,6 +775,8 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
- 	__u32 data;
- 	int i;
- 
-+	hid_concatenate_usage_page(parser);
-+
- 	data = item_udata(item);
- 
- 	switch (item->tag) {
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index f9707d1dcb58..ac0c70b4ce10 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -417,6 +417,7 @@ struct hid_global {
- 
- struct hid_local {
- 	unsigned usage[HID_MAX_USAGES]; /* usage array */
-+	u8 usage_size[HID_MAX_USAGES]; /* usage size array */
- 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
- 	unsigned usage_index;
- 	unsigned usage_minimum;
--- 
-2.21.0
-
+Michal
