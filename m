@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE95C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3673C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EADE206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D76206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714772;
-	bh=3us/v9f8j5BYRgqxZZlbrsxO9WOuZuT2mCaJ0oYJW1E=;
+	s=default; t=1553714782;
+	bh=OPSrZb5CmsXXaPDBbnBvI9RpJMraM8yr5tKaoDSYuyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KevvlpIbuGq0L2aAeGNRgU+Ql8Ye6i/v8TExdjXcjmFg2G6nRC5kjavWQmLYfGlfM
-	 2MMF1qYbNjpxMHU7oB2bMUIh0EFBOxlBUT3A9kPzklHZOWmYZXA705uMPZlbUN7WKH
-	 OP1XeFBWhMokzZWJi8yV5PrdPUH9U8ihN6GwkLKA=
+	b=0TM0OoWoiTJnYlPxcID4JsiNw3W6CZWVWPf0QxQNoTcZmcGzdK21unqB1JEfKZK7G
+	 0mDwXKlf7AHGvTjqVJ8zN66+G+Faylsqx4jrILpxZGOaLKCw9TKyVxx35pEX/wTQaN
+	 MDisHElL7N5EuSMDb+jy1B6yqWVmlyNYAv+TLlfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbfC0T0L (ORCPT
+        id S2387849AbfC0T0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387569AbfC0SFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:05 -0400
+        id S2387555AbfC0SFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09BEA2075C;
-        Wed, 27 Mar 2019 18:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79CC217D9;
+        Wed, 27 Mar 2019 18:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709903;
-        bh=3us/v9f8j5BYRgqxZZlbrsxO9WOuZuT2mCaJ0oYJW1E=;
+        s=default; t=1553709902;
+        bh=OPSrZb5CmsXXaPDBbnBvI9RpJMraM8yr5tKaoDSYuyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WAHcTycuuDmfjghDP7bWRJKsTGKnQCk6jamcI63P42wSaAztCMiJj+fpJRMrfcTpk
-         T2n8efCNyGmXmVBWZ6P3JYnOT0QSwYyxLQrqTAq60oZTR2zD3lMR8j7JYFi5XvoTwr
-         DurAGrSN3E1Rhqyhqj0+ZaH6SFuDTRwip6oxX3Dc=
+        b=m44YatJ964VZ4XaV9PWgdJ8/DiI7iUGyiVtIuMrHL+z27ECN++s2aAtIR7RF5cv7g
+         Pq1FDfjOapnvNWX3TffRZl2dUOxpYoOw/uJd6T+dkuNcgCfxN6QYjm3cbjnkrNqeRC
+         wDavd3CYLpjn6ixvFMcMzOkvJuNTk2N+7+LJf5dg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 101/262] loop: set GENHD_FL_NO_PART_SCAN after blkdev_reread_part()
-Date:   Wed, 27 Mar 2019 13:59:16 -0400
-Message-Id: <20190327180158.10245-101-sashal@kernel.org>
+Cc:     Vadim Pasternak <vadimp@mellanox.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 100/262] platform/mellanox: mlxreg-hotplug: Fix KASAN warning
+Date:   Wed, 27 Mar 2019 13:59:15 -0400
+Message-Id: <20190327180158.10245-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,86 +58,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 758a58d0bc67457f1215321a536226654a830eeb ]
+[ Upstream commit e4c275f77624961b56cce397814d9d770a45ac59 ]
 
-Commit 0da03cab87e6
-("loop: Fix deadlock when calling blkdev_reread_part()") moves
-blkdev_reread_part() out of the loop_ctl_mutex. However,
-GENHD_FL_NO_PART_SCAN is set before __blkdev_reread_part(). As a result,
-__blkdev_reread_part() will fail the check of GENHD_FL_NO_PART_SCAN and
-will not rescan the loop device to delete all partitions.
+Fix the following KASAN warning produced when booting a 64-bit kernel:
+[   13.334750] BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
+[   13.342166] Read of size 8 at addr ffff880235067178 by task kworker/2:1/42
+[   13.342176] CPU: 2 PID: 42 Comm: kworker/2:1 Not tainted 4.20.0-rc1+ #106
+[   13.342179] Hardware name: Mellanox Technologies Ltd. MSN2740/Mellanox x86 SFF board, BIOS 5.6.5 06/07/2016
+[   13.342190] Workqueue: events deferred_probe_work_func
+[   13.342194] Call Trace:
+[   13.342206]  dump_stack+0xc7/0x15b
+[   13.342214]  ? show_regs_print_info+0x5/0x5
+[   13.342220]  ? kmsg_dump_rewind_nolock+0x59/0x59
+[   13.342234]  ? _raw_write_lock_irqsave+0x100/0x100
+[   13.351593]  print_address_description+0x73/0x260
+[   13.351603]  kasan_report+0x260/0x380
+[   13.351611]  ? find_first_bit+0x19/0x70
+[   13.351619]  find_first_bit+0x19/0x70
+[   13.351630]  mlxreg_hotplug_work_handler+0x73c/0x920 [mlxreg_hotplug]
+[   13.351639]  ? __lock_text_start+0x8/0x8
+[   13.351646]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351656]  ? mlxreg_hotplug_remove+0x1e0/0x1e0 [mlxreg_hotplug]
+[   13.351663]  ? regmap_volatile+0x40/0xb0
+[   13.351668]  ? regcache_write+0x4c/0x90
+[   13.351676]  ? mlxplat_mlxcpld_reg_write+0x24/0x30 [mlx_platform]
+[   13.351681]  ? _regmap_write+0xea/0x220
+[   13.351688]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351696]  ? devm_add_action+0x70/0x70
+[   13.351701]  ? mutex_unlock+0x1d/0x40
+[   13.351710]  mlxreg_hotplug_probe+0x82e/0x989 [mlxreg_hotplug]
+[   13.351723]  ? mlxreg_hotplug_work_handler+0x920/0x920 [mlxreg_hotplug]
+[   13.351731]  ? sysfs_do_create_link_sd.isra.2+0xf4/0x190
+[   13.351737]  ? sysfs_rename_link_ns+0xf0/0xf0
+[   13.351743]  ? devres_close_group+0x2b0/0x2b0
+[   13.351749]  ? pinctrl_put+0x20/0x20
+[   13.351755]  ? acpi_dev_pm_attach+0x2c/0xd0
+[   13.351763]  platform_drv_probe+0x70/0xd0
+[   13.351771]  really_probe+0x480/0x6e0
+[   13.351778]  ? device_attach+0x10/0x10
+[   13.351784]  ? __lock_text_start+0x8/0x8
+[   13.351790]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351797]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351806]  ? __driver_attach+0x190/0x190
+[   13.351812]  driver_probe_device+0x17d/0x1a0
+[   13.351819]  ? __driver_attach+0x190/0x190
+[   13.351825]  bus_for_each_drv+0xd6/0x130
+[   13.351831]  ? bus_rescan_devices+0x20/0x20
+[   13.351837]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351845]  __device_attach+0x18c/0x230
+[   13.351852]  ? device_bind_driver+0x70/0x70
+[   13.351859]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351866]  bus_probe_device+0xea/0x110
+[   13.351874]  deferred_probe_work_func+0x1c9/0x290
+[   13.351882]  ? driver_deferred_probe_add+0x1d0/0x1d0
+[   13.351889]  ? preempt_notifier_dec+0x20/0x20
+[   13.351897]  ? read_word_at_a_time+0xe/0x20
+[   13.351904]  ? strscpy+0x151/0x290
+[   13.351912]  ? set_work_pool_and_clear_pending+0x9c/0xf0
+[   13.351918]  ? __switch_to_asm+0x34/0x70
+[   13.351924]  ? __switch_to_asm+0x40/0x70
+[   13.351929]  ? __switch_to_asm+0x34/0x70
+[   13.351935]  ? __switch_to_asm+0x40/0x70
+[   13.351942]  process_one_work+0x5cc/0xa00
+[   13.351952]  ? pwq_dec_nr_in_flight+0x1e0/0x1e0
+[   13.351960]  ? pci_mmcfg_check_reserved+0x80/0xb8
+[   13.351967]  ? run_rebalance_domains+0x250/0x250
+[   13.351980]  ? stack_access_ok+0x35/0x80
+[   13.351986]  ? deref_stack_reg+0xa1/0xe0
+[   13.351994]  ? schedule+0xcd/0x250
+[   13.352000]  ? worker_enter_idle+0x2d6/0x330
+[   13.352006]  ? __schedule+0xeb0/0xeb0
+[   13.352014]  ? fork_usermode_blob+0x130/0x130
+[   13.352019]  ? mutex_lock+0xa7/0x100
+[   13.352026]  ? _raw_spin_lock_irq+0x98/0xf0
+[   13.352032]  ? _raw_read_unlock_irqrestore+0x30/0x30
+[   13.352037] i2c i2c-2: Added multiplexed i2c bus 11
+[   13.352043]  worker_thread+0x181/0xa80
+[   13.352052]  ? __switch_to_asm+0x34/0x70
+[   13.352058]  ? __switch_to_asm+0x40/0x70
+[   13.352064]  ? process_one_work+0xa00/0xa00
+[   13.352070]  ? __switch_to_asm+0x34/0x70
+[   13.352076]  ? __switch_to_asm+0x40/0x70
+[   13.352081]  ? __switch_to_asm+0x34/0x70
+[   13.352086]  ? __switch_to_asm+0x40/0x70
+[   13.352092]  ? __switch_to_asm+0x34/0x70
+[   13.352097]  ? __switch_to_asm+0x40/0x70
+[   13.352105]  ? __schedule+0x3d6/0xeb0
+[   13.352112]  ? migrate_swap_stop+0x470/0x470
+[   13.352119]  ? save_stack+0x89/0xb0
+[   13.352127]  ? kmem_cache_alloc_trace+0xe5/0x570
+[   13.352132]  ? kthread+0x59/0x1d0
+[   13.352138]  ? ret_from_fork+0x35/0x40
+[   13.352154]  ? __schedule+0xeb0/0xeb0
+[   13.352161]  ? remove_wait_queue+0x150/0x150
+[   13.352169]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.352175]  ? __lock_text_start+0x8/0x8
+[   13.352183]  ? process_one_work+0xa00/0xa00
+[   13.352188]  kthread+0x1a4/0x1d0
+[   13.352195]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[   13.352202]  ret_from_fork+0x35/0x40
 
-Below are steps to reproduce the issue:
+[   13.353879] The buggy address belongs to the page:
+[   13.353885] page:ffffea0008d419c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+[   13.353890] flags: 0x2ffff8000000000()
+[   13.353897] raw: 02ffff8000000000 ffffea0008d419c8 ffffea0008d419c8 0000000000000000
+[   13.353903] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+[   13.353905] page dumped because: kasan: bad access detected
 
-step1 # dd if=/dev/zero of=tmp.raw bs=1M count=100
-step2 # losetup -P /dev/loop0 tmp.raw
-step3 # parted /dev/loop0 mklabel gpt
-step4 # parted -a none -s /dev/loop0 mkpart primary 64s 1
-step5 # losetup -d /dev/loop0
+[   13.353908] Memory state around the buggy address:
+[   13.353912]  ffff880235067000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.353917]  ffff880235067080: 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04
+[   13.353921] >ffff880235067100: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 f2 f2 f2 f2 04
+[   13.353923]                                                                 ^
+[   13.353927]  ffff880235067180: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 00 00 00 00 00
+[   13.353931]  ffff880235067200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.353933] ==================================================================
 
-Step5 will not be able to delete /dev/loop0p1 (introduced by step4) and
-there is below kernel warning message:
+The warning is caused by the below loop:
+	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
+while "asserted" is declared as 'unsigned'.
 
-[  464.414043] __loop_clr_fd: partition scan of loop0 failed (rc=-22)
+The casting of 32-bit unsigned integer pointer to a 64-bit unsigned long
+pointer. There are two problems here.
+It causes the access of four extra byte, which can corrupt memory
+The 32-bit pointer address may not be 64-bit aligned.
 
-This patch sets GENHD_FL_NO_PART_SCAN after blkdev_reread_part().
+The fix changes variable "asserted" to "unsigned long".
 
-Fixes: 0da03cab87e6 ("loop: Fix deadlock when calling blkdev_reread_part()")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index cf5538942834..23aa2e9b3be0 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1089,16 +1089,12 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
- 	}
- 	mapping_set_gfp_mask(filp->f_mapping, gfp);
--	lo->lo_state = Lo_unbound;
- 	/* This is safe: open() is still holding a reference. */
- 	module_put(THIS_MODULE);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index b6d44550d98c..eca16d00e310 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -248,7 +248,8 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 			   struct mlxreg_core_item *item)
+ {
+ 	struct mlxreg_core_data *data;
+-	u32 asserted, regval, bit;
++	unsigned long asserted;
++	u32 regval, bit;
+ 	int ret;
  
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
- 	lo_number = lo->lo_number;
--	lo->lo_flags = 0;
--	if (!part_shift)
--		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	loop_unprepare_queue(lo);
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
-@@ -1120,6 +1116,23 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 		/* Device is gone, no point in returning error */
- 		err = 0;
- 	}
-+
-+	/*
-+	 * lo->lo_state is set to Lo_unbound here after above partscan has
-+	 * finished.
-+	 *
-+	 * There cannot be anybody else entering __loop_clr_fd() as
-+	 * lo->lo_backing_file is already cleared and Lo_rundown state
-+	 * protects us from all the other places trying to change the 'lo'
-+	 * device.
-+	 */
-+	mutex_lock(&loop_ctl_mutex);
-+	lo->lo_flags = 0;
-+	if (!part_shift)
-+		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
-+	lo->lo_state = Lo_unbound;
-+	mutex_unlock(&loop_ctl_mutex);
-+
  	/*
- 	 * Need not hold loop_ctl_mutex to fput backing file.
- 	 * Calling fput holding loop_ctl_mutex triggers a circular
+@@ -281,7 +282,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 	asserted = item->cache ^ regval;
+ 	item->cache = regval;
+ 
+-	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
++	for_each_set_bit(bit, &asserted, 8) {
+ 		data = item->data + bit;
+ 		if (regval & BIT(bit)) {
+ 			if (item->inversed)
 -- 
 2.19.1
 
