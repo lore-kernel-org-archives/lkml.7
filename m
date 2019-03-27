@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E20C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0871F2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BC52075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714870;
-	bh=7Hc6eC1JfvLyibrm9PSNkKrIva2ev4UJQuojWJQPLLk=;
+	s=default; t=1553714880;
+	bh=e18Kwa6lcRZV897UrfI1Epi5G+4cyPYQubDOBb14SmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gy3JzPySNtkkkDFvs9aG/DXV+BCyF7PyoC0JOPnqt7oXsmq+g937BxU0r+xxHMTeL
-	 UyjnTABSKROx35QmIw7aZyF8Bjbsjyi7okTLPNLWlgJLvyKzsYUVBmsQWK6uNJ9kbp
-	 lv9C48Cud0h8AJetA8/QLs/65T7JrCzH08FkTdo0=
+	b=RKSz8i2rvrho9LA/ew6fv1LD5xWSXq3AZ3PoRMbaTd4pAmtXWUiBq6kDH5yB8NHHq
+	 LshjbouLjTUyd2XfaP1USjdVE2odcPe6HrhR3bmgprm48zfW16NRFv2MFSr/359kru
+	 g2bFVuEEkiouxH/b4ar2liyYkhYOIHa89n5ZmYE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387741AbfC0T1r (ORCPT
+        id S2387792AbfC0T17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733312AbfC0SEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:39 -0400
+        id S1733270AbfC0SEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91192075C;
-        Wed, 27 Mar 2019 18:04:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD8B9217F9;
+        Wed, 27 Mar 2019 18:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709878;
-        bh=7Hc6eC1JfvLyibrm9PSNkKrIva2ev4UJQuojWJQPLLk=;
+        s=default; t=1553709869;
+        bh=e18Kwa6lcRZV897UrfI1Epi5G+4cyPYQubDOBb14SmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCnjMhORuWtWPs+Fke9EnsUvZ9x45pbT6NNrqF0YWs82FRZg0QuXna5sjJTtQGc7K
-         QECKLqZ9D7tiTCXz3/CBzRHStu/z50Zx6/SvPX5W8e7DDrjoIZC3CUzPDBOVFI25JN
-         HoyC1PVRxeNoec+pFwdBe2kNDRA7LvHAK6PVG2dw=
+        b=dpYelAGmg2yx3qthsOtGUPkX/V8ezohTD9Uq4WANdq53KsenZpF+AlVlMaO4s4T4w
+         OcTG4vUttMTNX5enuoz8Fg4E2pEi0a2mfbZ+yRbsrwVrMmlM16a64c1i3MTNMTp78V
+         G1cf8ycvIBskK5ls/ZzQpTb/HM8TCwWrXFV3YIKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 084/262] ARM: 8845/1: use unified assembler in c files
-Date:   Wed, 27 Mar 2019 13:58:59 -0400
-Message-Id: <20190327180158.10245-84-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 081/262] coresight: etm4x: Add support to enable ETMv4.2
+Date:   Wed, 27 Mar 2019 13:58:56 -0400
+Message-Id: <20190327180158.10245-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,99 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit b7e8c9397cd4efe6567d2728f091f1b728025533 ]
+[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
 
-Use unified assembler syntax (UAL) in inline assembler. Divided
-syntax is considered deprecated. This will also allow to build
-the kernel using LLVM's integrated assembler.
+SDM845 has ETMv4.2 and can use the existing etm4x driver.
+But the current etm driver checks only for ETMv4.0 and
+errors out for other etm4x versions. This patch adds this
+missing support to enable SoC's with ETMv4x to use same
+driver by checking only the ETM architecture major version
+number.
 
-When compiling non-Thumb2 GCC always emits a ".syntax divided"
-at the beginning of the inline assembly which makes the
-assembler fail. Since GCC 5 there is the -masm-syntax-unified
-GCC option which make GCC assume unified syntax asm and hence
-emits ".syntax unified" even in ARM mode. However, the option
-is broken since GCC version 6 (see GCC PR88648 [1]). Work
-around by adding ".syntax unified" as part of the inline
-assembly.
+Without this change, we get below error during etm probe:
 
-[0] https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html#index-masm-syntax-unified
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88648
+/ # dmesg | grep etm
+[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+With this change, etm probe is successful:
+
+/ # dmesg | grep etm
+[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/copypage-v4mc.c | 3 ++-
- arch/arm/mm/copypage-v4wb.c | 3 ++-
- arch/arm/mm/copypage-v4wt.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mm/copypage-v4mc.c b/arch/arm/mm/copypage-v4mc.c
-index b03202cddddb..f74cdce6d4da 100644
---- a/arch/arm/mm/copypage-v4mc.c
-+++ b/arch/arm/mm/copypage-v4mc.c
-@@ -45,6 +45,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	int tmp;
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 53e2fb6e86f6..fe76b176974a 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -55,7 +55,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
  
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
- 1:	mcr	p15, 0, %1, c7, c6, 1		@ 1   invalidate D line\n\
- 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
-@@ -56,7 +57,7 @@ static void mc_copy_user_page(void *from, void *to)
- 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
--	ldmneia	%0!, {r2, r3, ip, lr}		@ 4\n\
-+	ldmiane	%0!, {r2, r3, ip, lr}		@ 4\n\
- 	bne	1b				@ "
- 	: "+&r" (from), "+&r" (to), "=&r" (tmp)
- 	: "2" (PAGE_SIZE / 64)
-diff --git a/arch/arm/mm/copypage-v4wb.c b/arch/arm/mm/copypage-v4wb.c
-index cd3e165afeed..6d336740aae4 100644
---- a/arch/arm/mm/copypage-v4wb.c
-+++ b/arch/arm/mm/copypage-v4wb.c
-@@ -27,6 +27,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
- 	int tmp;
- 
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 1:	mcr	p15, 0, %0, c7, c6, 1		@ 1   invalidate D line\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
-@@ -38,7 +39,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
--	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
-+	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	bne	1b				@ 1\n\
- 	mcr	p15, 0, %1, c7, c10, 4		@ 1   drain WB"
- 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
-diff --git a/arch/arm/mm/copypage-v4wt.c b/arch/arm/mm/copypage-v4wt.c
-index 8614572e1296..3851bb396442 100644
---- a/arch/arm/mm/copypage-v4wt.c
-+++ b/arch/arm/mm/copypage-v4wt.c
-@@ -25,6 +25,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
- 	int tmp;
- 
- 	asm volatile ("\
-+	.syntax unified\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 1:	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4+1\n\
-@@ -34,7 +35,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
- 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	subs	%2, %2, #1			@ 1\n\
- 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
--	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
-+	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
- 	bne	1b				@ 1\n\
- 	mcr	p15, 0, %2, c7, c7, 0		@ flush ID cache"
- 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
+ static bool etm4_arch_supported(u8 arch)
+ {
+-	switch (arch) {
++	/* Mask out the minor version number */
++	switch (arch & 0xf0) {
+ 	case ETM_ARCH_V4:
+ 		break;
+ 	default:
 -- 
 2.19.1
 
