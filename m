@@ -4,171 +4,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C321C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5283CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F3F206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F22B206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oK/DuX2W"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IvZHSl+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfC0RAe (ORCPT
+        id S1727999AbfC0RBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:00:34 -0400
-Received: from mail-eopbgr140080.outbound.protection.outlook.com ([40.107.14.80]:41991
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727172AbfC0RAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:00:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpIOEMkbHWcZyOoTO5CvlvLyXVEsnmcK+8fDQMWue8Q=;
- b=oK/DuX2WwIVaoWGtsZXn5Zy7BY+yy0/7d9tAydX9Px3P/A7sFNergNgTzwPhX2HC+Gd2fOHf6dUCBT5idZIWb4VsDsR92vvO9BRve5goo3QLPrv/uDmBTlp00wQdTluJfDfROMQ4eLpitdaMFtIMkPU8bvx6SMzTP/rsLAvEtWc=
-Received: from VI1PR04MB5533.eurprd04.prod.outlook.com (20.178.122.159) by
- VI1PR04MB4845.eurprd04.prod.outlook.com (20.177.49.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Wed, 27 Mar 2019 17:00:28 +0000
-Received: from VI1PR04MB5533.eurprd04.prod.outlook.com
- ([fe80::35aa:e13a:52ea:e5e6]) by VI1PR04MB5533.eurprd04.prod.outlook.com
- ([fe80::35aa:e13a:52ea:e5e6%4]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
- 17:00:28 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>
-CC:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Cosmin Samoila <cosmin.samoila@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Mircea Pop <mircea.pop@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, Jun Li <jun.li@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        Zening Wang <zening.wang@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        BOUGH CHEN <haibo.chen@nxp.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        Leo Zhang <leo.zhang@nxp.com>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
-        Han Xu <han.xu@nxp.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI wakeup
-Thread-Topic: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI
- wakeup
-Thread-Index: AQHU5J/uL6RBBX3AA0GxPKCBIrMc4KYfnrmAgAADs4CAAAJMgIAADy+A
-Date:   Wed, 27 Mar 2019 17:00:28 +0000
-Message-ID: <d31f84030f48f3dad9dd5d144724979543006406.camel@nxp.com>
-References: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
-         <1553701479.2561.38.camel@pengutronix.de>
-         <564216aa-1144-71de-e887-00c58f466bf5@arm.com>
-         <1553702767.2561.40.camel@pengutronix.de>
-In-Reply-To: <1553702767.2561.40.camel@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a664d03-5d5c-44ce-702b-08d6b2d5b70c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB4845;
-x-ms-traffictypediagnostic: VI1PR04MB4845:
-x-microsoft-antispam-prvs: <VI1PR04MB48451AC41479E00F55866CC1EE580@VI1PR04MB4845.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(346002)(396003)(136003)(199004)(189003)(44832011)(81156014)(5660300002)(476003)(186003)(2616005)(81166006)(25786009)(71190400001)(71200400001)(446003)(478600001)(6436002)(7416002)(86362001)(14454004)(36756003)(93886005)(486006)(4326008)(8676002)(76176011)(26005)(11346002)(8936002)(53546011)(102836004)(256004)(97736004)(14444005)(66066001)(6512007)(229853002)(6506007)(110136005)(6486002)(6116002)(3846002)(54906003)(68736007)(53936002)(7736002)(2906002)(118296001)(2501003)(305945005)(6636002)(106356001)(316002)(99286004)(105586002)(6246003)(50226002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4845;H:VI1PR04MB5533.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /xgtGbZDrhLZjXWJh28Az1YUrcZdnYR9fY64Y12nacgd2xF0+418brgXPQKw438GB60MBR+n7ZzbxgSJTSab9/LIC6WnzH8Z0PNCXL8fpcXo/zKkvwsThFTucvGFu6m+38BWi0PJh/7uxEgiYkx/6qIOwVvimJgMFj66ABphxkkjYkPpLwMCxMGXOpZu65idRNKGVZK7Rsg4pnYA0BrCAQz8bMYpATGv5CfW77eEzRo82/PWa59AA6RJkuEU6+pgfN+QhER4ylH8gE9pLXRuTiZkcNODC7yDxBcMgUT0PNk/7J+3o+XEC1/HC6w0y0xYGiuAmk6gKlSldLfqm7c/TA9vQK5dUaRit59zFb+lUqUcJSvve5PsLJCviFop5bGAJwxuOXh6u/WthwqHshbX/l5rlofhdbreQ/NCRlcGfz4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EA7658F140F4CE4784042BA68E59627F@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 Mar 2019 13:01:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17863 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727172AbfC0RBJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:01:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9bac420000>; Wed, 27 Mar 2019 10:00:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 27 Mar 2019 10:00:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 27 Mar 2019 10:00:52 -0700
+Received: from [10.2.164.169] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 17:00:52 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Keith Busch <kbusch@kernel.org>
+CC:     Yang Shi <yang.shi@linux.alibaba.com>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <riel@surriel.com>,
+        <hannes@cmpxchg.org>, <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
+Date:   Wed, 27 Mar 2019 10:00:51 -0700
+X-Mailer: MailMate (1.12.4r5622)
+Message-ID: <2C32F713-2156-4B58-B5C1-789C1821EBB9@nvidia.com>
+In-Reply-To: <20190327130822.GD7389@localhost.localdomain>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
+ <20190324222040.GE31194@localhost.localdomain>
+ <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
+ <20190327003541.GE4328@localhost.localdomain>
+ <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
+ <20190327130822.GD7389@localhost.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a664d03-5d5c-44ce-702b-08d6b2d5b70c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 17:00:28.6916
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4845
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_FDAFDC66-07F4-44F7-9872-93BE2994CEDA_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553706051; bh=Io+E5uEESZPp1e9HALilVFuhRQtmhI/36F2P/dMd/ho=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=IvZHSl+tgFV6D4idQxZTXdUfHMcBl+ShUvrE5uXkfGG4Db3DX2DHDQh17O39LV+ce
+         Ufm4OpM6vpWU7wTDnsIDvtuihTe+yCyZWkJMVuXSaQii6g+GCdajD7ejGKrXwOWFvH
+         R2Tun0CTNZO/Vkemb6HWBLBraOi3aIdjCFOLV4Cndo0UtQ8Nk7AxveDhV+p9tD2iqm
+         /atJ0ZPWGg+7QVN+2YnXt/yrnwtHVUneUR+WzjMOoeyKie6OewIkspWPJkeuUCLiCo
+         EDAoZJpQJlva3Fb6BtW0Obq1cnGuDCzePtOcgsTLGk6KA/RQvAzf2JCfjvBdh5q4fr
+         7dbfuZb7tL7zg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTAzLTI3IGF0IDE3OjA2ICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToNCj4g
-QW0gTWl0dHdvY2gsIGRlbiAyNy4wMy4yMDE5LCAxNTo1NyArMDAwMCBzY2hyaWViIE1hcmMgWnlu
-Z2llcjoNCj4gPiBPbiAyNy8wMy8yMDE5IDE1OjQ0LCBMdWNhcyBTdGFjaCB3cm90ZToNCj4gPiA+
-IEFtIE1pdHR3b2NoLCBkZW4gMjcuMDMuMjAxOSwgMTM6MjEgKzAwMDAgc2NocmllYiBBYmVsIFZl
-c2E6DQo+ID4gPiA+IFRoaXMgd29yayBpcyBhIHdvcmthcm91bmQgSSdtIGxvb2tpbmcgaW50byAo
-bW9yZSBhcyBhIGJhY2tncm91bmQgdGFzaykNCj4gPiA+ID4gaW4gb3JkZXIgdG8gYWRkIHN1cHBv
-cnQgZm9yIGNwdWlkbGUgb24gaS5NWDhNUSBiYXNlZCBwbGF0Zm9ybXMuDQo+ID4gPiA+IA0KPiA+
-ID4gPiBUaGUgbWFpbiBpZGVhIGhlcmUgaXMgZ2V0dGluZyBhcm91bmQgdGhlIG1pc3NpbmcgR0lD
-IHdha2VfcmVxdWVzdCBzaWduYWwNCj4gPiA+ID4gKGR1ZSB0byBpbnRlZ3JhdGlvbiBkZXNpZ24g
-aXNzdWUpIGJ5IHdha2luZyB1cCBhIGVhY2ggaW5kaXZpZHVhbCBjb3JlIHRocm91Z2gNCj4gPiA+
-ID4gc29tZSBkZWRpY2F0ZWQgU1cgcG93ZXItdXAgYml0cyBpbnNpZGUgdGhlIHBvd2VyIGNvbnRy
-b2xsZXIgKEdQQykgcmlnaHQgYmVmb3JlDQo+ID4gPiA+IGV2ZXJ5IElQSSBpcyByZXF1ZXN0ZWQg
-Zm9yIHRoYXQgZWFjaCBpbmRpdmlkdWFsIGNvcmUuDQo+ID4gPiANCj4gPiA+IEp1c3QgYSBnZW5l
-cmFsIGNvbW1lbnQsIHdpdGhvdXQgZ29pbmcgaW50byB0aGUgZGV0YWlscyBvZiB0aGlzIHNlcmll
-czoNCj4gPiA+IHRoaXMgaXNzdWUgaXMgbm90IG9ubHkgYWZmZWN0aW5nIElQSXMsIGJ1dCBhbHNv
-IE1TSXMgdGVybWluYXRlZCBhdCB0aGUNCj4gPiA+IEdJQy4gQ3VycmVudGx5IE1TSXMgYXJlIHRl
-cm1pbmF0ZWQgYXQgdGhlIFBDSWUgY29yZSwgYnV0IHRlcm1pbmF0aW5nDQo+ID4gPiB0aGVtIGF0
-IHRoZSBHSUMgaXMgY2xlYXJseSBwcmVmZXJhYmxlLCBhcyB0aGlzIGFsbG93cyBhc3NpZ25pbmcg
-Q1BVDQo+ID4gPiBhZmZpbml0eSB0byBpbmRpdmlkdWFsIE1TSXMgYW5kIGxvd2VycyBJUlEgc2Vy
-dmljZSBvdmVyaGVhZC4NCj4gPiA+IA0KPiA+ID4gSSdtIG5vdCBzdXJlIHdoYXQgdGhlIGNvbnNl
-cXVlbmNlcyBhcmUgZm9yIHVwc3RyZWFtIExpbnV4IHN1cHBvcnQgeWV0LA0KPiA+ID4gYnV0IHdl
-IHNob3VsZCBrZWVwIGluIG1pbmQgdGhhdCBoYXZpbmcgYSB3b3JrYXJvdW5kIGZvciBJUElzIGlz
-IG9ubHkNCj4gPiA+IHNvbHZpbmcgcGFydCBvZiB0aGUgaXNzdWUuDQo+ID4gDQo+ID4gSWYgdGhp
-cyBlcnJhdHVtIGlzIGFmZmVjdGluZyBtb3JlIHRoYW4ganVzdCBJUElzLCB0aGVuIGluZGVlZCBJ
-IGRvbid0DQo+ID4gc2VlIGhvdyB0aGlzIHBhdGNoIHNlcmllcyBzb2x2ZXMgYW55dGhpbmcuDQo+
-ID4gDQo+ID4gQnV0IHRoZSBlcnJhdHVtIGRvY3VtZW50YXRpb24gc2VlbXMgdG8gaW1wbHkgdGhh
-dCBvbmx5IFNHSXMgYXJlDQo+ID4gYWZmZWN0ZWQsIGFuZCBnb2VzIGFzIGZhciBhcyBzdWdnZXN0
-aW5nIHRvIHVzZSBhbiBleHRlcm5hbCBpbnRlcnJ1cHQNCj4gPiB3b3VsZCBzb2x2ZSBpdC4gSG93
-IGNvbWVzIHRoaXMgaXMgbm90IHRoZSBjYXNlPyBPciBpcyBpdCB0aGF0IGFueXRoaW5nDQo+ID4g
-ZGlyZWN0bHkgcm91dGVkIHRvIGEgcmVkaXN0cmlidXRvciBpcyBhbHNvIGFmZmVjdGVkPyBUaGlz
-IHdvdWxkIGJyZWFrDQo+ID4gTFBJcyAoYW5kIHRodXMgTVNJcykgYW5kIFBQSXMgKHRoZSBDUFUg
-dGltZXIsIGFtb25nIG90aGVycykuDQo+ID4gDQo+ID4gV2hhdCBpcyB0aGUgKmV4YWN0KiBzdGF0
-dXMgb2YgdGhpcyB0aGluZz8gSSBoYXZlIHRoZSB1Z2x5IGZlZWxpbmcgdGhhdA0KPiA+IHRoZSB0
-cnVlIHdvcmthcm91bmQgaXMganVzdCB0byBkaXNhYmxlIGNwdWlkbGUuDQo+IA0KPiBBcyBmYXIg
-YXMgSSB1bmRlcnN0YW5kIHRoZSBlcnJhdHVtLCB0aGUgYmFzaWMgaXNzdWUgaXMgdGhhdCB0aGUg
-R0lDDQo+IHdha2VfcmVxdWVzdCBzaWduYWxzIGFyZSBub3QgY29ubmVjdGVkIHRvIHRoZSBHUEMg
-KHRoZSBDUFUvcGVyaXBoZXJhbA0KPiBwb3dlciBzZXF1ZW5jZXIpLiBUaGUgU1BJcyBhcmUgcm91
-dGVkIHRocm91Z2ggdGhlIEdQQyBhbmQgdGh1cyBhcmUNCj4gdmlzaWJsZSBhcyB3YWtldXAgc291
-cmNlcywgd2hpY2ggaXMgd2h5IHRoZSB3b3JrYXJvdW5kIG9mIHVzaW5nIGFuDQo+IGV4dGVybmFs
-IFNQSSBhcyB3YWtldXAgdHJpZ2dlciBmb3IgdGhlIElQSSB3b3Jrcy4NCg0KV2UgaGFkIGEga2Vy
-bmVsIHdvcmthcm91bmQgZm9yIElQSXMgaW4gb3VyIGludGVybmFsIHRyZWUgZm9yIGEgbG9uZw0K
-dGltZSBhbmQgSSBkb24ndCB0aGluayB3ZSBkbyBhbnl0aGluZyBzcGVjaWFsIGZvciBQQ0kuIERv
-ZXMgUENJIE1TSQ0KcmVhbGx5IGJ5cGFzcyB0aGUgR1BDIG9uIDhtcT8NCg0KQWRkaW5nIFJpY2hh
-cmQvSmFja3ksIHRoZXkgbWlnaHQga25vdyBhYm91dCB0aGlzLg0KDQpUaGlzIHNlZW1zIGxpa2Ug
-c29tZXRoaW5nIG9mIGEgY29ybmVyIGNhc2UgdG8gbWUsIGRvbid0IG1hbnkgaW14IGJvYXJkcw0K
-c2hpcCB3aXRob3V0IFBDSTsgZXNwZWNpYWxseSBmb3IgbG93LXBvd2VyIHNjZW5hcmlvcz8gSWYg
-cmVxdWlyZWQgaXQNCm1pZ2h0IGJlIHJlYXNvbmFibGUgdG8gYWRkIGFuIGFkZGl0aW9uYWwgd29y
-a2Fyb3VuZCB0byBkaXNhYmxlIGFsbA0KY3B1aWRsZSBpZiBwY2kgbXNpcyBhcmUgdXNlZC4NCg0K
-LS0NClJlZ2FyZHMsDQpMZW9uYXJkDQo=
+--=_MailMate_FDAFDC66-07F4-44F7-9872-93BE2994CEDA_=
+Content-Type: text/plain; markup=markdown
+
+On 27 Mar 2019, at 6:08, Keith Busch wrote:
+
+> On Tue, Mar 26, 2019 at 08:41:15PM -0700, Yang Shi wrote:
+>> On 3/26/19 5:35 PM, Keith Busch wrote:
+>>> migration nodes have higher free capacity than source nodes. And since
+>>> your attempting THP's without ever splitting them, that also requires
+>>> lower fragmentation for a successful migration.
+>>
+>> Yes, it is possible. However, migrate_pages() already has logic to
+>> handle such case. If the target node has not enough space for migrating
+>> THP in a whole, it would split THP then retry with base pages.
+>
+> Oh, you're right, my mistake on splitting. So you have a good best effort
+> migrate, but I still think it can fail for legitimate reasons that should
+> have a swap fallback.
+
+Does this mean we might want to factor out the page reclaim code in shrink_page_list()
+and call it for each page, which fails to migrate to PMEM. Or do you still prefer
+to migrate one page at a time, like what you did in your patch?
+
+I ask this because I observe that migrating a list of pages can achieve higher
+throughput compared to migrating individual page. For example, migrating 512 4KB
+pages can achieve ~750MB/s throughput, whereas migrating one 4KB page might only
+achieve ~40MB/s throughput. The experiments were done on a two-socket machine
+with two Xeon E5-2650 v3 @ 2.30GHz across the QPI link.
+
+
+--
+Best Regards,
+Yan Zi
+
+--=_MailMate_FDAFDC66-07F4-44F7-9872-93BE2994CEDA_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAlybrEMPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqK/twP/3lcO6kKxaHl/38KpTngJX//h7UJzoANsSrb
+le5gVdUnBGP9KnFWyltBDEbNggucShHm+U5hFBvrkDzY/fO8BJTM5ypXiPxDr7h1
+5XyvCJuuBtSE24X5autv1xF4QKIHTb69N9uojoMy4WYyQmnuuuMTC6vFICUinQuL
+pQHHtx2VxINXRVPOcW6XMYxBopW5+MuYyXtFRrT9+tEQvJ9Fw3Gwg0JwuiEZx9Sh
+aUJhOrg+43Lfs0ES0i31Mw7KD+csr/uii+HVdOT/FBEtge8QvxlV2FxBnINkpHa6
+xVo5cWoNbo++rdpobmnOsjQvJ01WWyoaTwvHOITU5zmH85IVraI0N7G5PsCMuexB
+Hvvndlo+WNcGTvF3YgQgLb/0xRjqT77Jwli7rXMNhihXLyw5cZrGTwueEJV8saou
+oXDw7WzLUokCPPuhdicKt8uQ+encxv20TxGxZrPCu9hL+7+s/DLZ3BhwptTkvhbF
+TQeGbfbCKTlifJ3AqSi1041vwxTz2C0moUz5kWIgf2rZG/NlM8S6AwPv2hHTxzLZ
+PEtY7fdJCEYLk5DPkkwBxpiH/JM/yyQLH0WOHYpbxWxtR/5CMnE+YR1JNL2hKs7e
+kOalkTxRURDb/3+uGUAPWEY+VWOhzU5DIsO28zXopEQCWB+sVYinCLhUdgroRgAD
+Bx5LaaKT
+=HFOS
+-----END PGP SIGNATURE-----
+
+--=_MailMate_FDAFDC66-07F4-44F7-9872-93BE2994CEDA_=--
