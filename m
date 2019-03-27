@@ -2,53 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9528521738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0682082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711126;
-	bh=ETUIxRvNr4obvfqXpnvcNfxLTG9vINn7D3DWO1ixhdk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orN/dQ/NDTWNpVnU+e/LrVZK4GlYpxI6dqTEC7HmHMo0DWCcJrf4aGsTK6Lv2An52
-	 mhUnJVk9R+2ogJQRfXtDOlpagz8ZCxk93eHcDLU4G4VUJ3CDQd9S7k759xyDAe6DsJ
-	 vGV/uq8745iM8BFHuBRErBD5C/wHJ7zjv/LtbEk8=
+	s=default; t=1553711128;
+	bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uWOy2KYx6ubDIwJ1b9Ml1YxidfqBa1nl21bNtJ40xoqi2krWrTmhtlztWg2MZIl9A
+	 roWLY7i/9NmKex0ELdIw5bRcwDA1V3p17L3I77kAkaqCmp/WLzm6r9kCC2g2ecTEzj
+	 cbjjMaE38+l20TTSgk2Nk1Z8XvkchGwLU4sYa/cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404182AbfC0SZZ (ORCPT
+        id S2404196AbfC0SZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391320AbfC0SZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:17 -0400
+        id S2391336AbfC0SZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BACCF21871;
-        Wed, 27 Mar 2019 18:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F352082F;
+        Wed, 27 Mar 2019 18:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711116;
-        bh=ETUIxRvNr4obvfqXpnvcNfxLTG9vINn7D3DWO1ixhdk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=StQTLJob/6QfHsJ17t71F5APGVDrHy7G38JWAed0jSnu4E9MKjS/aULoOkFhOl1QI
-         rw0NhPyUby618sLHO3hJudPTXd2ftdLIzrlXUPZvzQCpeohRt7foD7M1f/XUN7OnJG
-         l0aSPf6UFqCJ0+ZzsQgDdHBjZTPw07Fs3hDxjYM0=
+        s=default; t=1553711120;
+        bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zmhOWLXphUQUanEBneJNlb2ddwJQ2aeLFFUAsIRk4iTVgLputYccDxKXrFsH21PvK
+         B5uQvc+ElhFkeVguGzQyI1Qq6jKxeeL2nUvPNBKuqAZSy4ZlqA10RDGass9BdxgcMX
+         94nTggGfXgQ7o9J0GuwE9Q2EEQCv+IbfNkqiIf8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 62/63] dmaengine: tegra: avoid overflow of byte tracking
-Date:   Wed, 27 Mar 2019 14:23:22 -0400
-Message-Id: <20190327182323.18577-62-sashal@kernel.org>
+Cc:     Louis Taylor <louis@kragniz.eu>, Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 01/41] i2c: sis630: correct format strings
+Date:   Wed, 27 Mar 2019 14:24:38 -0400
+Message-Id: <20190327182518.19394-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
-References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,55 +55,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+From: Louis Taylor <louis@kragniz.eu>
 
-[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
+[ Upstream commit 60f7691c624b41a05bfc3493d9b0519e7951b7ef ]
 
-The dma_desc->bytes_transferred counter tracks the number of bytes
-moved by the DMA channel. This is then used to calculate the information
-passed back in the in the tegra_dma_tx_status callback, which is usually
-fine.
+When compiling with -Wformat, clang warns:
 
-When the DMA channel is configured as continous, then the bytes_transferred
-counter will increase over time and eventually overflow to become negative
-so the residue count will become invalid and the ALSA sound-dma code will
-report invalid hardware pointer values to the application. This results in
-some users becoming confused about the playout position and putting audio
-data in the wrong place.
+drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
+      'unsigned short' but the argument has type 'int' [-Wformat]
+                        smbus_base + SMB_STS,
+                        ^~~~~~~~~~~~~~~~~~~~
 
-To fix this issue, always ensure the bytes_transferred field is modulo the
-size of the request. We only do this for the case of the cyclic transfer
-done ISR as anyone attempting to move 2GiB of DMA data in one transfer
-is unlikely.
+drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
+      'unsigned short' but the argument has type 'int' [-Wformat]
+                        smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note, we don't fix the issue that we should /never/ transfer a negative
-number of bytes so we could make those fields unsigned.
+drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
+      'unsigned short' but the argument has type 'int' [-Wformat]
+                 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
+                                          ~~~~~   ^~~~~~~~~~~~~~~~~~~~
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This patch fixes the format strings to use the format type for int.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-sis630.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index c8f79dcaaee8..67f201b8dcda 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -632,7 +632,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
+index 1e6805b5cef2..a57aa4fe51a4 100644
+--- a/drivers/i2c/busses/i2c-sis630.c
++++ b/drivers/i2c/busses/i2c-sis630.c
+@@ -478,7 +478,7 @@ static int sis630_setup(struct pci_dev *sis630_dev)
+ 	if (!request_region(smbus_base + SMB_STS, SIS630_SMB_IOREGION,
+ 			    sis630_driver.name)) {
+ 		dev_err(&sis630_dev->dev,
+-			"I/O Region 0x%04hx-0x%04hx for SMBus already in use.\n",
++			"I/O Region 0x%04x-0x%04x for SMBus already in use.\n",
+ 			smbus_base + SMB_STS,
+ 			smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
+ 		retval = -EBUSY;
+@@ -528,7 +528,7 @@ static int sis630_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	sis630_adapter.dev.parent = &dev->dev;
  
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
- 	dma_desc = sgreq->dma_desc;
--	dma_desc->bytes_transferred += sgreq->req_len;
-+	/* if we dma for long enough the transfer count will wrap */
-+	dma_desc->bytes_transferred =
-+		(dma_desc->bytes_transferred + sgreq->req_len) %
-+		dma_desc->bytes_requested;
+ 	snprintf(sis630_adapter.name, sizeof(sis630_adapter.name),
+-		 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
++		 "SMBus SIS630 adapter at %04x", smbus_base + SMB_STS);
  
- 	/* Callback need to be call */
- 	if (!dma_desc->cb_count)
+ 	return i2c_add_adapter(&sis630_adapter);
+ }
 -- 
 2.19.1
 
