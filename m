@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DCCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D91FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5580221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDEA2184C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710236;
-	bh=ZunxTUGEH0njokrEZzzmTlojq7MXuu35t/ND50oqQu0=;
+	s=default; t=1553710239;
+	bh=c5n3XUEqOT274p3tKOYVTcpeJr1MfUb+fwHxZGfTR2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sE6zLV2vPu8Tuqd9PmJNftpE8KCPD+b5DNIspns7FGpGE4Jml0O6qYjw7dZrVuwHv
-	 83z0JTDTxcWucUhp6u5S2km/atTXbpqi26um/LWjMmklNdDe66aquk+0IkfYADgCSj
-	 jfRZRw4HgGLk8HYq1QfuMJYPW8v2QJV1jGP3Nfxw=
+	b=Tc3xv4TB2edKCZlZjf9tQolQuz72rSwPC19upVGrW3MApK97Oiv5z1q9gvmW6PbTx
+	 tRWVFCGWeZSutNJ2vlqqtLIrXxFY7NwDff7LmHA1E5ahte0q9kLQVrbCW04bdvEUY6
+	 PX1MtKnQkYuY3+S76SUFcPNQXiUskgo5n1YMfUnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbfC0SKf (ORCPT
+        id S2388855AbfC0SKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52596 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388354AbfC0SKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:32 -0400
+        id S2388829AbfC0SKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C9F2184C;
-        Wed, 27 Mar 2019 18:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8822521738;
+        Wed, 27 Mar 2019 18:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710231;
-        bh=ZunxTUGEH0njokrEZzzmTlojq7MXuu35t/ND50oqQu0=;
+        s=default; t=1553710230;
+        bh=c5n3XUEqOT274p3tKOYVTcpeJr1MfUb+fwHxZGfTR2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcUSgh50JVI6YcOCYjqp2e+qOAZ68zN3OoJ+Y0/2jbFcl4X5OaoyhE/OPA0pNaGz/
-         tmhhPqU/OEesCzXla6GoUfrOf/xtFmeTNmtP95gcyYysAF3mkMd4PJmDDthLu69DVR
-         wSj5/0JRXW3jCESw9x8LmI4ERZX4SQNCxHTdWruQ=
+        b=akaXrpvDWVy6XT1/EXMYeuv5bnBO0OsCCxSMfZf1fN70GvWmGHDhmHQifW3ih0iew
+         Z5o1LZZnitwY2g0RWibBNfIiOWl3O9K+MNr4dZpk9nBb32QLhjchUla63kQUpMumoN
+         2d0d2rve1zwxvrfbuuQ6CICkXTUMdefVgXmLekxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 005/192] f2fs: fix to avoid deadlock of atomic file operations
-Date:   Wed, 27 Mar 2019 14:07:17 -0400
-Message-Id: <20190327181025.13507-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 004/192] f2fs: fix to avoid deadlock in f2fs_read_inline_dir()
+Date:   Wed, 27 Mar 2019 14:07:16 -0400
+Message-Id: <20190327181025.13507-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,228 +59,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 48432984d718c95cf13e26d487c2d1b697c3c01f ]
+[ Upstream commit aadcef64b22f668c1a107b86d3521d9cac915c24 ]
 
-Thread A				Thread B
-- __fput
- - f2fs_release_file
-  - drop_inmem_pages
-   - mutex_lock(&fi->inmem_lock)
-   - __revoke_inmem_pages
-    - lock_page(page)
-					- open
-					- f2fs_setattr
-					- truncate_setsize
-					 - truncate_inode_pages_range
-					  - lock_page(page)
-					  - truncate_cleanup_page
-					   - f2fs_invalidate_page
-					    - drop_inmem_page
-					    - mutex_lock(&fi->inmem_lock);
+As Jiqun Li reported in bugzilla:
 
-We may encounter above ABBA deadlock as reported by Kyungtae Kim:
+https://bugzilla.kernel.org/show_bug.cgi?id=202883
 
-I'm reporting a bug in linux-4.17.19: "INFO: task hung in
-drop_inmem_page" (no reproducer)
+sometimes, dead lock when make system call SYS_getdents64 with fsync() is
+called by another process.
 
-I think this might be somehow related to the following:
-https://groups.google.com/forum/#!searchin/syzkaller-bugs/INFO$3A$20task$20hung$20in$20%7Csort:date/syzkaller-bugs/c6soBTrdaIo/AjAzPeIzCgAJ
+monkey running on android9.0
 
-=========================================
-INFO: task syz-executor7:10822 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D27024 10822   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- schedule_preempt_disabled+0x18/0x30 kernel/sched/core.c:3617
- __mutex_lock_common kernel/locking/mutex.c:833 [inline]
- __mutex_lock+0x5bd/0x1410 kernel/locking/mutex.c:893
- mutex_lock_nested+0x1b/0x20 kernel/locking/mutex.c:908
- drop_inmem_page+0xcb/0x810 fs/f2fs/segment.c:327
- f2fs_invalidate_page+0x337/0x5e0 fs/f2fs/data.c:2401
- do_invalidatepage mm/truncate.c:165 [inline]
- truncate_cleanup_page+0x261/0x330 mm/truncate.c:187
- truncate_inode_pages_range+0x552/0x1610 mm/truncate.c:367
- truncate_inode_pages mm/truncate.c:478 [inline]
- truncate_pagecache+0x6d/0x90 mm/truncate.c:801
- truncate_setsize+0x81/0xa0 mm/truncate.c:826
- f2fs_setattr+0x44f/0x1270 fs/f2fs/file.c:781
- notify_change+0xa62/0xe80 fs/attr.c:313
- do_truncate+0x12e/0x1e0 fs/open.c:63
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e459c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e45a6cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071bea0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e45a700
-INFO: task syz-executor7:10858 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor7   D28880 10858   6346 0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:565 [inline]
- rwsem_down_write_failed+0x5e6/0xc90 kernel/locking/rwsem-xadd.c:594
- call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
- __down_write arch/x86/include/asm/rwsem.h:142 [inline]
- down_write+0x58/0xa0 kernel/locking/rwsem.c:72
- inode_lock include/linux/fs.h:713 [inline]
- do_truncate+0x120/0x1e0 fs/open.c:61
- do_last fs/namei.c:2955 [inline]
- path_openat+0x2042/0x29f0 fs/namei.c:3505
- do_filp_open+0x1bd/0x2c0 fs/namei.c:3540
- do_sys_open+0x35e/0x4e0 fs/open.c:1101
- __do_sys_open fs/open.c:1119 [inline]
- __se_sys_open fs/open.c:1114 [inline]
- __x64_sys_open+0x89/0xc0 fs/open.c:1114
- do_syscall_64+0xc4/0x4e0 arch/x86/entry/common.c:287
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f734e3b4c68 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007f734e3b56cc RCX: 00000000004497b9
-RDX: 0000000000000104 RSI: 00000000000a8280 RDI: 0000000020000080
-RBP: 000000000071c238 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000007230 R14: 00000000006f02d0 R15: 00007f734e3b5700
-INFO: task syz-executor5:10829 blocked for more than 120 seconds.
-      Not tainted 4.17.19 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor5   D28760 10829   6308 0x80000002
-Call Trace:
- context_switch kernel/sched/core.c:2867 [inline]
- __schedule+0x721/0x1e60 kernel/sched/core.c:3515
- schedule+0x88/0x1c0 kernel/sched/core.c:3559
- io_schedule+0x21/0x80 kernel/sched/core.c:5179
- wait_on_page_bit_common mm/filemap.c:1100 [inline]
- __lock_page+0x2b5/0x390 mm/filemap.c:1273
- lock_page include/linux/pagemap.h:483 [inline]
- __revoke_inmem_pages+0xb35/0x11c0 fs/f2fs/segment.c:231
- drop_inmem_pages+0xa3/0x3e0 fs/f2fs/segment.c:306
- f2fs_release_file+0x2c7/0x330 fs/f2fs/file.c:1556
- __fput+0x2c7/0x780 fs/file_table.c:209
- ____fput+0x1a/0x20 fs/file_table.c:243
- task_work_run+0x151/0x1d0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x8ba/0x30a0 kernel/exit.c:865
- do_group_exit+0x13b/0x3a0 kernel/exit.c:968
- get_signal+0x6bb/0x1650 kernel/signal.c:2482
- do_signal+0x84/0x1b70 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop+0x155/0x190 arch/x86/entry/common.c:162
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:265 [inline]
- do_syscall_64+0x445/0x4e0 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4497b9
-RSP: 002b:00007f1c68e74ce8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 000000000071bf80 RCX: 00000000004497b9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000071bf80
-RBP: 000000000071bf80 R08: 0000000000000000 R09: 000000000071bf58
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f1c68e759c0 R15: 00007f1c68e75700
+1.  task 9785 held sbi->cp_rwsem and waiting lock_page()
+2.  task 10349 held mm_sem and waiting sbi->cp_rwsem
+3. task 9709 held lock_page() and waiting mm_sem
 
-This patch tries to use trylock_page to mitigate such deadlock condition
-for fix.
+so this is a dead lock scenario.
 
+task stack is show by crash tools as following
+
+crash_arm64> bt ffffffc03c354080
+PID: 9785   TASK: ffffffc03c354080  CPU: 1   COMMAND: "RxIoScheduler-3"
+>> #7 [ffffffc01b50fac0] __lock_page at ffffff80081b11e8
+
+crash-arm64> bt 10349
+PID: 10349  TASK: ffffffc018b83080  CPU: 1   COMMAND: "BUGLY_ASYNC_UPL"
+>> #3 [ffffffc01f8cfa40] rwsem_down_read_failed at ffffff8008a93afc
+     PC: 00000033  LR: 00000000  SP: 00000000  PSTATE: ffffffffffffffff
+
+crash-arm64> bt 9709
+PID: 9709   TASK: ffffffc03e7f3080  CPU: 1   COMMAND: "IntentService[A"
+>> #3 [ffffffc001e67850] rwsem_down_read_failed at ffffff8008a93afc
+>> #8 [ffffffc001e67b80] el1_ia at ffffff8008084fc4
+     PC: ffffff8008274114  [compat_filldir64+120]
+     LR: ffffff80083584d4  [f2fs_fill_dentries+448]
+     SP: ffffffc001e67b80  PSTATE: 80400145
+    X29: ffffffc001e67b80  X28: 0000000000000000  X27: 000000000000001a
+    X26: 00000000000093d7  X25: ffffffc070d52480  X24: 0000000000000008
+    X23: 0000000000000028  X22: 00000000d43dfd60  X21: ffffffc001e67e90
+    X20: 0000000000000011  X19: ffffff80093a4000  X18: 0000000000000000
+    X17: 0000000000000000  X16: 0000000000000000  X15: 0000000000000000
+    X14: ffffffffffffffff  X13: 0000000000000008  X12: 0101010101010101
+    X11: 7f7f7f7f7f7f7f7f  X10: 6a6a6a6a6a6a6a6a   X9: 7f7f7f7f7f7f7f7f
+     X8: 0000000080808000   X7: ffffff800827409c   X6: 0000000080808000
+     X5: 0000000000000008   X4: 00000000000093d7   X3: 000000000000001a
+     X2: 0000000000000011   X1: ffffffc070d52480   X0: 0000000000800238
+>> #9 [ffffffc001e67be0] f2fs_fill_dentries at ffffff80083584d0
+     PC: 0000003c  LR: 00000000  SP: 00000000  PSTATE: 000000d9
+    X12: f48a02ff X11: d4678960 X10: d43dfc00  X9: d4678ae4
+     X8: 00000058  X7: d4678994  X6: d43de800  X5: 000000d9
+     X4: d43dfc0c  X3: d43dfc10  X2: d46799c8  X1: 00000000
+     X0: 00001068
+
+Below potential deadlock will happen between three threads:
+Thread A		Thread B		Thread C
+- f2fs_do_sync_file
+ - f2fs_write_checkpoint
+  - down_write(&sbi->node_change) -- 1)
+			- do_page_fault
+			 - down_write(&mm->mmap_sem) -- 2)
+			  - do_wp_page
+			   - f2fs_vm_page_mkwrite
+						- getdents64
+						 - f2fs_read_inline_dir
+						  - lock_page -- 3)
+  - f2fs_sync_node_pages
+   - lock_page -- 3)
+			    - __do_map_lock
+			     - down_read(&sbi->node_change) -- 1)
+						  - f2fs_fill_dentries
+						   - dir_emit
+						    - compat_filldir64
+						     - do_page_fault
+						      - down_read(&mm->mmap_sem) -- 2)
+
+Since f2fs_readdir is protected by inode.i_rwsem, there should not be
+any updates in inode page, we're safe to lookup dents in inode page
+without its lock held, so taking off the lock to improve concurrency
+of readdir and avoid potential deadlock.
+
+Reported-by: Jiqun Li <jiqun.li@unisoc.com>
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 43 +++++++++++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+ fs/f2fs/inline.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 30779aaa9dba..1fa6f8185766 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -216,7 +216,8 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 115dc219344b..92703efde36e 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -661,6 +661,12 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (IS_ERR(ipage))
+ 		return PTR_ERR(ipage);
+ 
++	/*
++	 * f2fs_readdir was protected by inode.i_rwsem, it is safe to access
++	 * ipage without page's lock held.
++	 */
++	unlock_page(ipage);
++
+ 	inline_dentry = inline_data_addr(inode, ipage);
+ 
+ 	make_dentry_ptr_inline(inode, &d, inline_dentry);
+@@ -669,7 +675,7 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (!err)
+ 		ctx->pos = d.max;
+ 
+-	f2fs_put_page(ipage, 1);
++	f2fs_put_page(ipage, 0);
+ 	return err < 0 ? err : 0;
  }
  
- static int __revoke_inmem_pages(struct inode *inode,
--				struct list_head *head, bool drop, bool recover)
-+				struct list_head *head, bool drop, bool recover,
-+				bool trylock)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct inmem_pages *cur, *tmp;
-@@ -228,7 +229,16 @@ static int __revoke_inmem_pages(struct inode *inode,
- 		if (drop)
- 			trace_f2fs_commit_inmem_page(page, INMEM_DROP);
- 
--		lock_page(page);
-+		if (trylock) {
-+			/*
-+			 * to avoid deadlock in between page lock and
-+			 * inmem_lock.
-+			 */
-+			if (!trylock_page(page))
-+				continue;
-+		} else {
-+			lock_page(page);
-+		}
- 
- 		f2fs_wait_on_page_writeback(page, DATA, true);
- 
-@@ -317,13 +327,19 @@ void f2fs_drop_inmem_pages(struct inode *inode)
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
- 
--	mutex_lock(&fi->inmem_lock);
--	__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
--	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
--	if (!list_empty(&fi->inmem_ilist))
--		list_del_init(&fi->inmem_ilist);
--	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
--	mutex_unlock(&fi->inmem_lock);
-+	while (!list_empty(&fi->inmem_pages)) {
-+		mutex_lock(&fi->inmem_lock);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, true);
-+
-+		if (list_empty(&fi->inmem_pages)) {
-+			spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
-+			if (!list_empty(&fi->inmem_ilist))
-+				list_del_init(&fi->inmem_ilist);
-+			spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
-+		}
-+		mutex_unlock(&fi->inmem_lock);
-+	}
- 
- 	clear_inode_flag(inode, FI_ATOMIC_FILE);
- 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
-@@ -427,12 +443,15 @@ static int __f2fs_commit_inmem_pages(struct inode *inode)
- 		 * recovery or rewrite & commit last transaction. For other
- 		 * error number, revoking was done by filesystem itself.
- 		 */
--		err = __revoke_inmem_pages(inode, &revoke_list, false, true);
-+		err = __revoke_inmem_pages(inode, &revoke_list,
-+						false, true, false);
- 
- 		/* drop all uncommitted pages */
--		__revoke_inmem_pages(inode, &fi->inmem_pages, true, false);
-+		__revoke_inmem_pages(inode, &fi->inmem_pages,
-+						true, false, false);
- 	} else {
--		__revoke_inmem_pages(inode, &revoke_list, false, false);
-+		__revoke_inmem_pages(inode, &revoke_list,
-+						false, false, false);
- 	}
- 
- 	return err;
 -- 
 2.19.1
 
