@@ -2,154 +2,122 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6E7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD273C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DC82064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718972082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="KObLylx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732689AbfC0F0I (ORCPT
+        id S1726469AbfC0F3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:26:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:44911 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfC0F0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:26:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 22:26:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,275,1549958400"; 
-   d="scan'208";a="156141349"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2019 22:26:04 -0700
-Date:   Wed, 27 Mar 2019 13:10:40 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
-Message-ID: <20190327051040.GB20968@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-4-git-send-email-hao.wu@intel.com>
- <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
- <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 27 Mar 2019 01:29:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33678 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfC0F3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 01:29:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i19so539427pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 22:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=onJCl9JbHvAGDKE2nntWOowFWWdzQk48dF3hmrDvys8=;
+        b=KObLylx+2ouYzD5oC/vd5zSi0s/at+b5t9Vc899hnndZuDda30qhb+5E03rubefc/1
+         QbebhBz6rqc+KXWc8nUs13QhpotdWqgq4BPJP0Xpio7Ds2wH6mITBnLtI2opQFZZ6tNc
+         BKzj89Xj2zskMokb7GLMh2lGRSIKNlnIab6VruaC8v5xZv4RVQQNF1bjcktvNagKTi1k
+         E4ZbINMgEb+oa/2qMWM01IBVYN1RipFq7NDGemmItGOOSBzrOBCXDrMd67NzujoQSqz9
+         EJs/UkFJ1r+iS9tBqc4auso3Hb6h6my56Nrcvx1VegN5zkBq+mS2qt2Q6rGa7Kia9QqB
+         AL1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=onJCl9JbHvAGDKE2nntWOowFWWdzQk48dF3hmrDvys8=;
+        b=hOU9exTXzskiX85ibdDj/J1tjJ3G7vlW1FoDUvlTOTg4Pbyi8D6D1MlvpMAenr7Uu/
+         YvB5719jvAGClfoLlOt+9gQEcy8miJWqTrpYGGF14H1rnfTuwtP+H0gBN8y7P6GwdL+t
+         C9tMmAddZFi5vZf7yDTWJB0u1Mfm/T9H7eKuuosqsEG3a0GAzqgZAUtYI5beDD4j8sTP
+         GgXpCX04XYp9g0RUBHSeTIrS8fUHsqA+QTiDTJu8AaSkaknESjdfic9m0Y8XrjDKCPUA
+         PuugH6fi7Px9Pe3CsGb2x/lLZR57FhGlUhuMIIheTzJVh8D6amIzQPZnraz2AhJXLKSr
+         Q2Pg==
+X-Gm-Message-State: APjAAAXQGwgXtHfjtc//95DhOJ74rtfunqQ1/aodiyJnVtsXvC4JJp+i
+        kBpvmC/Fe8lC0V5hXMrhsS74Aw==
+X-Google-Smtp-Source: APXvYqziA1UyQTvdCl8fKaQgMJHaPeM48luw2LS39X5RqxSeetiK9LgqDBY99xrdfsF+DEnrwA//OA==
+X-Received: by 2002:a63:d015:: with SMTP id z21mr31835257pgf.215.1553664583157;
+        Tue, 26 Mar 2019 22:29:43 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:c5c0:7bcb:4a38:a44a? ([2601:646:c200:1ef2:c5c0:7bcb:4a38:a44a])
+        by smtp.gmail.com with ESMTPSA id i64sm30385333pfb.112.2019.03.26.22.29.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 22:29:42 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked down
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16D57)
+In-Reply-To: <20190327050615.GA548@kroah.com>
+Date:   Tue, 26 Mar 2019 22:29:41 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
+References: <20190326182742.16950-1-matthewgarrett@google.com> <20190326182742.16950-26-matthewgarrett@google.com> <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com> <20190327003057.GA27311@kroah.com> <CALCETrVDDf4dj3Md1Nxc5P_NCToXGnAbEO3bGfwgKSfeVmU4Kw@mail.gmail.com> <20190327050615.GA548@kroah.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 25, 2019 at 05:58:36PM -0500, Scott Wood wrote:
-> On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
-> > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
-> > > In early partial reconfiguration private feature, it only
-> > > supports 32bit data width when writing data to hardware for
-> > > PR. 512bit data width PR support is an important optimization
-> > > for some specific solutions (e.g. XEON with FPGA integrated),
-> > > it allows driver to use AVX512 instruction to improve the
-> > > performance of partial reconfiguration. e.g. programming one
-> > > 100MB bitstream image via this 512bit data width PR hardware
-> > > only takes ~300ms, but 32bit revision requires ~3s per test
-> > > result.
-> > > 
-> > > Please note now this optimization is only done on revision 2
-> > > of this PR private feature which is only used in integrated
-> > > solution that AVX512 is always supported.
-> > > 
-> > > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > ---
-> > >  drivers/fpga/dfl-fme-main.c |  3 ++
-> > >  drivers/fpga/dfl-fme-mgr.c  | 75 +++++++++++++++++++++++++++++++++++++-
-> > > --
-> > > -----
-> > >  drivers/fpga/dfl-fme-pr.c   | 45 ++++++++++++++++-----------
-> > >  drivers/fpga/dfl-fme.h      |  2 ++
-> > >  drivers/fpga/dfl.h          |  5 +++
-> > >  5 files changed, 99 insertions(+), 31 deletions(-)
-> > > 
-> > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> > > index 086ad24..076d74f 100644
-> > > --- a/drivers/fpga/dfl-fme-main.c
-> > > +++ b/drivers/fpga/dfl-fme-main.c
-> > > @@ -21,6 +21,8 @@
-> > >  #include "dfl.h"
-> > >  #include "dfl-fme.h"
-> > >  
-> > > +#define DRV_VERSION	"0.8"
-> > 
-> > What is this going to be used for?  Under what circumstances will the
-> > driver version be bumped?  What does it have to do with 512-bit writes?
 
-This patchset adds more features to this driver, so i would like to add
-a DRV_VERSION there as an initial one. In the future, if some new features
-or extensions for existing features (e.g. new revision of a private feature)
-are added we need to bump this version.
 
-> > 
-> > > +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
-> > > +
-> > > +#include <asm/fpu/api.h>
-> > > +
-> > > +static inline void copy512(void *src, void __iomem *dst)
-> > > +{
-> > > +	kernel_fpu_begin();
-> > > +
-> > > +	asm volatile("vmovdqu64 (%0), %%zmm0;"
-> > > +		     "vmovntdq %%zmm0, (%1);"
-> > > +		     :
-> > > +		     : "r"(src), "r"(dst));
-> > > +
-> > > +	kernel_fpu_end();
-> > > +}
-> > 
-> > Shouldn't there be some sort of check that AVX512 is actually supported
-> > on the running system?
-> > 
-> > Also, src should be const, and the asm statement should have a memory
-> > clobber.
-> > 
-> > > +#else
-> > > +static inline void copy512(void *src, void __iomem *dst)
-> > > +{
-> > > +	WARN_ON_ONCE(1);
-> > > +}
-> > > +#endif
-> > 
-> > Likewise, this will be called if a revision 2 device is used on non-x86
-> > (or on x86 with an old binutils).  The driver should fall back to 32-bit
-> > in such cases.
-> 
-> Sorry, I missed the comment about revision 2 only being on integrated
-> devices -- but will that always be the case?  Seems worthwhile to check for
-> AVX512 support anyway.  And there's still the possibility of being built
-> with an old binutils such that CONFIG_AS_AVX512 is not set, or running on a
-> kernel where avx512 was disabled via a boot option.
-> 
-> What about future revisions >= 2?  Currently the driver will treat them as
-> if they were revision < 2.  Is that intended?
+> On Mar 26, 2019, at 10:06 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+>=20
+>> On Tue, Mar 26, 2019 at 09:29:14PM -0700, Andy Lutomirski wrote:
+>>> On Tue, Mar 26, 2019 at 5:31 PM Greg KH <gregkh@linuxfoundation.org> wro=
+te:
+>>>=20
+>>>> On Tue, Mar 26, 2019 at 12:20:24PM -0700, Andy Lutomirski wrote:
+>>>> On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
+>>>> <matthewgarrett@google.com> wrote:
+>>>>>=20
+>>>>> From: Matthew Garrett <mjg59@google.com>
+>>>>>=20
+>>>>> debugfs has not been meaningfully audited in terms of ensuring that
+>>>>> userland cannot trample over the kernel. At Greg's request, disable
+>>>>> access to it entirely when the kernel is locked down. This is done at
+>>>>> open() time rather than init time as the kernel lockdown status may be=
 
-Yes, it's intended. Currently we don't have any hardware with revisions > 2,
-and support new revisions may need new code. :)  e.g. currently revision is
-used to tell 32bit vs 512bit PR, but in future revisions, it may have new
-capability registers for this purpose.
+>>>>> made stricter at runtime.
+>>>>=20
+>>>> Ugh.  Some of those files are very useful.  Could this perhaps still
+>>>> allow O_RDONLY if we're in INTEGRITY mode?
+>>>=20
+>>> Useful for what?  Debugging, sure, but for "normal operation", no kernel=
 
-Thanks
-Hao
+>>> functionality should ever require debugfs.  If it does, that's a bug and=
 
-> 
-> -Scott
-> 
+>>> should be fixed.
+>>>=20
+>>=20
+>> I semi-regularly read files in debugfs to diagnose things, and I think
+>> it would be good for this to work on distro kernels.
+>=20
+> Doing that for debugging is wonderful.  People who want this type of
+> "lock down" are trading potential security for diagnositic ability.
+>=20
+
+I think you may be missing the point of splitting lockdown to separate integ=
+rity and confidentiality.  Can you actually think of a case where *reading* a=
+ debugfs file can take over a kernel?=
