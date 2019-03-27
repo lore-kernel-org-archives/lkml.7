@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F194FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD9EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C577A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D2F206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713128;
-	bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
+	s=default; t=1553713143;
+	bh=kNxeRssS15Mu3XzNbNieKFZGtWnkMtZdrUFNMnw2dTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTN4TGLiX/8BNyb1c5APOVpkb7V0Qz30wMHnyAm+ntUDjmP43I2jQhI0guInxS9O3
-	 dzRF14iCbNCCFDbc2SbCZ6aI2E0FJVxTjaSwNnQTxiq8dxi4IIhAeBnvTZsRM6aMGU
-	 m0JyWD+z9z9fO0prsvXMoIOhLMIL3F3jNOkY66BI=
+	b=olz25wIqPigtYsiOgfKRl8wmPtwJBYAZ4E0ez86g6hkeNJxApWQysxsITWkNeIVWG
+	 sxCarjPNu8nxFt3qvErCDet/TbZ3co9FnVwsfca9rgilqX7c3KYjTREmSGRPU0n6w7
+	 WO0RH1uHf1+QVqhofyliqbRwPr2KsPebQT/+2UtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbfC0S6r (ORCPT
+        id S2389819AbfC0SPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59170 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389360AbfC0SPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:35 -0400
+        id S2389266AbfC0SPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A9542082F;
-        Wed, 27 Mar 2019 18:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1FF6217F9;
+        Wed, 27 Mar 2019 18:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710534;
-        bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
+        s=default; t=1553710516;
+        bh=kNxeRssS15Mu3XzNbNieKFZGtWnkMtZdrUFNMnw2dTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GFqpMXlmmokq2n90h1LR/0gjIglZbXIYy+EGGPXDvUNpdY3bLIHcYkhrWOGfB1aIz
-         /FacAVVDdY+XkPpnqY0FGCYBxiY1FXaIJWbFW0Z4oK8KHP+m1/x+ZELFb8GiW4kh8c
-         HUgQDtET/bWBCh4HoC15lXBvdV0Ttosu9eYh6rY0=
+        b=Mlh6LRvTRrF2SNIBiTfRyo7wCYibrGF5CRu2m6H2Gp6hYDEE/M0dC5HYfQMlV+MZE
+         HGsMlKXoI9e0MP5aEmzE3zWeYGiRB1J4HGYg8O0wBAlLveO1WM0ccu1LQEIMe8pvH6
+         jPA6b6ZFviRQ+PwacLCHcuxE30Y/ADiip7Wq8MR8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Timo Alho <talho@nvidia.com>, Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 161/192] soc/tegra: fuse: Fix illegal free of IO base address
-Date:   Wed, 27 Mar 2019 14:09:53 -0400
-Message-Id: <20190327181025.13507-161-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 153/192] drm/amd/display: Enable vblank interrupt during CRC capture
+Date:   Wed, 27 Mar 2019 14:09:45 -0400
+Message-Id: <20190327181025.13507-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -56,108 +58,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Timo Alho <talho@nvidia.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 51294bf6b9e897d595466dcda5a3f2751906a200 ]
+[ Upstream commit 428da2bdb05d76c48d0bd8fbfa2e4c102685be08 ]
 
-On cases where device tree entries for fuse and clock provider are in
-different order, fuse driver needs to defer probing. This leads to
-freeing incorrect IO base address as the fuse->base variable gets
-overwritten once during first probe invocation. This leads to the
-following spew during boot:
+[Why]
+In order to read CRC events when CRC capture is enabled the vblank
+interrput handler needs to be running for the CRTC. The handler is
+enabled while there is an active vblank reference.
 
-[    3.082285] Trying to vfree() nonexistent vm area (00000000cfe8fd94)
-[    3.082308] WARNING: CPU: 5 PID: 126 at /hdd/l4t/kernel/stable/mm/vmalloc.c:1511 __vunmap+0xcc/0xd8
-[    3.082318] Modules linked in:
-[    3.082330] CPU: 5 PID: 126 Comm: kworker/5:1 Tainted: G S                4.19.7-tegra-gce119d3 #1
-[    3.082340] Hardware name: quill (DT)
-[    3.082353] Workqueue: events deferred_probe_work_func
-[    3.082364] pstate: 40000005 (nZcv daif -PAN -UAO)
-[    3.082372] pc : __vunmap+0xcc/0xd8
-[    3.082379] lr : __vunmap+0xcc/0xd8
-[    3.082385] sp : ffff00000a1d3b60
-[    3.082391] x29: ffff00000a1d3b60 x28: 0000000000000000
-[    3.082402] x27: 0000000000000000 x26: ffff000008e8b610
-[    3.082413] x25: 0000000000000000 x24: 0000000000000009
-[    3.082423] x23: ffff000009221a90 x22: ffff000009f6d000
-[    3.082432] x21: 0000000000000000 x20: 0000000000000000
-[    3.082442] x19: ffff000009f6d000 x18: ffffffffffffffff
-[    3.082452] x17: 0000000000000000 x16: 0000000000000000
-[    3.082462] x15: ffff0000091396c8 x14: 0720072007200720
-[    3.082471] x13: 0720072007200720 x12: 0720072907340739
-[    3.082481] x11: 0764076607380765 x10: 0766076307300730
-[    3.082491] x9 : 0730073007300730 x8 : 0730073007280720
-[    3.082501] x7 : 0761076507720761 x6 : 0000000000000102
-[    3.082510] x5 : 0000000000000000 x4 : 0000000000000000
-[    3.082519] x3 : ffffffffffffffff x2 : ffff000009150ff8
-[    3.082528] x1 : 3d95b1429fff5200 x0 : 0000000000000000
-[    3.082538] Call trace:
-[    3.082545]  __vunmap+0xcc/0xd8
-[    3.082552]  vunmap+0x24/0x30
-[    3.082561]  __iounmap+0x2c/0x38
-[    3.082569]  tegra_fuse_probe+0xc8/0x118
-[    3.082577]  platform_drv_probe+0x50/0xa0
-[    3.082585]  really_probe+0x1b0/0x288
-[    3.082593]  driver_probe_device+0x58/0x100
-[    3.082601]  __device_attach_driver+0x98/0xf0
-[    3.082609]  bus_for_each_drv+0x64/0xc8
-[    3.082616]  __device_attach+0xd8/0x130
-[    3.082624]  device_initial_probe+0x10/0x18
-[    3.082631]  bus_probe_device+0x90/0x98
-[    3.082638]  deferred_probe_work_func+0x74/0xb0
-[    3.082649]  process_one_work+0x1e0/0x318
-[    3.082656]  worker_thread+0x228/0x450
-[    3.082664]  kthread+0x128/0x130
-[    3.082672]  ret_from_fork+0x10/0x18
-[    3.082678] ---[ end trace 0810fe6ba772c1c7 ]---
+When running IGT tests there will often be no active vblank reference
+but the test expects to read a CRC value. This is valid usage (and
+works on i915 since they have a CRC interrupt handler) so the reference
+to the vblank should be grabbed while capture is active.
 
-Fix this by retaining the value of fuse->base until driver has
-successfully probed.
+This issue was found running:
 
-Signed-off-by: Timo Alho <talho@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+igt@kms_plane_multiple@atomic-pipe-b-tiling-none
+
+The pipe-b is the only one in the initial commit and was not previously
+active so no vblank reference is grabbed. The vblank interrupt is
+not enabled and the test times out.
+
+[How]
+Keep a reference to the vblank as long as CRC capture is enabled.
+If userspace never explicitly disables it then the reference is
+also dropped when removing the CRTC from the context (stream = NULL).
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 14 ++++++-
+ .../drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c | 42 +++++++++----------
+ 2 files changed, 34 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index a33ee8ef8b6b..51625703399e 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -137,13 +137,17 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	fuse->phys = res->start;
- 	fuse->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(fuse->base))
--		return PTR_ERR(fuse->base);
-+	if (IS_ERR(fuse->base)) {
-+		err = PTR_ERR(fuse->base);
-+		fuse->base = base;
-+		return err;
-+	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index c57e85f08e23..2b8b892eb846 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4390,10 +4390,22 @@ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
+ 	 */
+ 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		struct dm_crtc_state *dm_old_crtc_state = to_dm_crtc_state(old_crtc_state);
++		struct dm_crtc_state *dm_new_crtc_state = to_dm_crtc_state(new_crtc_state);
+ 		struct amdgpu_crtc *acrtc = to_amdgpu_crtc(crtc);
  
- 	fuse->clk = devm_clk_get(&pdev->dev, "fuse");
- 	if (IS_ERR(fuse->clk)) {
- 		dev_err(&pdev->dev, "failed to get FUSE clock: %ld",
- 			PTR_ERR(fuse->clk));
-+		fuse->base = base;
- 		return PTR_ERR(fuse->clk);
- 	}
- 
-@@ -152,8 +156,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 
- 	if (fuse->soc->probe) {
- 		err = fuse->soc->probe(fuse);
--		if (err < 0)
-+		if (err < 0) {
-+			fuse->base = base;
- 			return err;
+-		if (drm_atomic_crtc_needs_modeset(new_crtc_state) && dm_old_crtc_state->stream)
++		if (drm_atomic_crtc_needs_modeset(new_crtc_state)
++		    && dm_old_crtc_state->stream) {
++			/*
++			 * CRC capture was enabled but not disabled.
++			 * Release the vblank reference.
++			 */
++			if (dm_new_crtc_state->crc_enabled) {
++				drm_crtc_vblank_put(crtc);
++				dm_new_crtc_state->crc_enabled = false;
++			}
++
+ 			manage_dm_interrupts(adev, acrtc, false);
 +		}
  	}
+ 	/* Add check here for SoC's that support hardware cursor plane, to
+ 	 * unset legacy_cursor_update */
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
+index 6a6d977ddd7a..36a0bed9af07 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
+@@ -51,6 +51,7 @@ int amdgpu_dm_crtc_set_crc_source(struct drm_crtc *crtc, const char *src_name,
+ {
+ 	struct dm_crtc_state *crtc_state = to_dm_crtc_state(crtc->state);
+ 	struct dc_stream_state *stream_state = crtc_state->stream;
++	bool enable;
  
- 	if (tegra_fuse_create_sysfs(&pdev->dev, fuse->soc->info->size,
+ 	enum amdgpu_dm_pipe_crc_source source = dm_parse_crc_source(src_name);
+ 
+@@ -65,28 +66,27 @@ int amdgpu_dm_crtc_set_crc_source(struct drm_crtc *crtc, const char *src_name,
+ 		return -EINVAL;
+ 	}
+ 
++	enable = (source == AMDGPU_DM_PIPE_CRC_SOURCE_AUTO);
++
++	if (!dc_stream_configure_crc(stream_state->ctx->dc, stream_state,
++				     enable, enable))
++		return -EINVAL;
++
+ 	/* When enabling CRC, we should also disable dithering. */
+-	if (source == AMDGPU_DM_PIPE_CRC_SOURCE_AUTO) {
+-		if (dc_stream_configure_crc(stream_state->ctx->dc,
+-					    stream_state,
+-					    true, true)) {
+-			crtc_state->crc_enabled = true;
+-			dc_stream_set_dither_option(stream_state,
+-						    DITHER_OPTION_TRUN8);
+-		}
+-		else
+-			return -EINVAL;
+-	} else {
+-		if (dc_stream_configure_crc(stream_state->ctx->dc,
+-					    stream_state,
+-					    false, false)) {
+-			crtc_state->crc_enabled = false;
+-			dc_stream_set_dither_option(stream_state,
+-						    DITHER_OPTION_DEFAULT);
+-		}
+-		else
+-			return -EINVAL;
+-	}
++	dc_stream_set_dither_option(stream_state,
++				    enable ? DITHER_OPTION_TRUN8
++					   : DITHER_OPTION_DEFAULT);
++
++	/*
++	 * Reading the CRC requires the vblank interrupt handler to be
++	 * enabled. Keep a reference until CRC capture stops.
++	 */
++	if (!crtc_state->crc_enabled && enable)
++		drm_crtc_vblank_get(crtc);
++	else if (crtc_state->crc_enabled && !enable)
++		drm_crtc_vblank_put(crtc);
++
++	crtc_state->crc_enabled = enable;
+ 
+ 	*values_cnt = 3;
+ 	/* Reset crc_skipped on dm state */
 -- 
 2.19.1
 
