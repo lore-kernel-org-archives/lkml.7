@@ -2,51 +2,52 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50924C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC282064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B752064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713880;
-	bh=atYNR1HJUYApAKU3brvnzxD54r4XPa6MGDUlBL3BrCc=;
+	s=default; t=1553713890;
+	bh=RE6O71OLZB+86K9AakC8QOF3EyP1hvnBeySdVfvZH+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZsxP0M3HIMhohg1BmS+JGV98y42TEQRJus1Ue5C3zvr99s1E4TQS7kOKgL+v4V3Q
-	 bRVa9Qoq9rcqhazaSEvML0XxUA+2ZfvL9ruj9tPxF5zoqsMzbj0wDPT7x51cU4ZYAs
-	 EFUATLgQDBgv5fWPQF2uM4LgmYrcNY08OygXzq8c=
+	b=vLf4cKXuHLQ8CNgWIvrkMPVAtT11pUXVs8sx5wt7AEujqJ30JYidcn2cN4XY8L4Hf
+	 kLTGbefDhnIbZiLhGV11rTWnDGK1OpFO1AZ/OoTrM9dAFmxj9ofspbvqJz6QElJaW6
+	 tZq+tGBAOsriCx22cPmOe9HMfQ0R15/r2mUsogh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbfC0TLS (ORCPT
+        id S2388892AbfC0SKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52868 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388428AbfC0SKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:46 -0400
+        id S2388854AbfC0SKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C615221855;
-        Wed, 27 Mar 2019 18:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73EF2183E;
+        Wed, 27 Mar 2019 18:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710245;
-        bh=atYNR1HJUYApAKU3brvnzxD54r4XPa6MGDUlBL3BrCc=;
+        s=default; t=1553710236;
+        bh=RE6O71OLZB+86K9AakC8QOF3EyP1hvnBeySdVfvZH+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMwOg6WyzJWuZ2KFROfpn+dup4QuMv8/JQZyozvuR0mCfGIqirQ/s29m20c2gmJ+y
-         PQ93I+7JtUgmYP29/+BEF+GCYimU1cqUJvHBcPvBwiAN7kfW5d8L9Am1UWfcBm1zRW
-         pUu5QAhGATmhqz0UpqFzchvB63/u4X+3q8iSN4Vk=
+        b=TUgRHk1WK4QRUUeF8GY+rlWVi4VmPO4ZatAD+lxHU3TVEgRVAC+9HrMVXc0p2X9/H
+         7OWWIq9/QZ02taf3+BDFlRJ1eXMZCPq0bBEPI25WstxE8QRc+Qz7KmrsP86IMogjzo
+         5Ap2rE6edxDC4AqoU6eo9YuvPLCbgs5mCQWmYxRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/192] net: stmmac: Avoid sometimes uninitialized Clang warnings
-Date:   Wed, 27 Mar 2019 14:07:25 -0400
-Message-Id: <20190327181025.13507-13-sashal@kernel.org>
+Cc:     Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Mohamad Haj Yahia <mohamad@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 008/192] net/mlx5: Avoid panic when setting vport rate
+Date:   Wed, 27 Mar 2019 14:07:20 -0400
+Message-Id: <20190327181025.13507-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,70 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
 
-[ Upstream commit df103170854e87124ee7bdd2bca64b178e653f97 ]
+[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
 
-When building with -Wsometimes-uninitialized, Clang warns:
+If we try to set VFs rate on a VF (not PF) net device, the kernel
+will be crash. The commands are show as below:
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
+$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
 
-Clang is concerned with the use of stmmac_do_void_callback (which
-stmmac_get_timestamp and stmmac_config_sub_second_increment wrap),
-as it may fail to initialize these values if the if condition was ever
-false (meaning the callbacks don't exist). It's not wrong because the
-callbacks (get_timestamp and config_sub_second_increment respectively)
-are the ones that initialize the variables. While it's unlikely that the
-callbacks are ever going to disappear and make that condition false, we
-can easily avoid this warning by zero initialize the variables.
+If not applied the first patch ("net/mlx5: Avoid panic when setting
+vport mac, getting vport config"), the command:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/384
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+$ ip link set $MLX_VF0 vf 0 rate 100
+
+can also crash the kernel.
+
+[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
+[ 1650.007092]  do_setlink+0x982/0xd20
+[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
+[ 1650.007374]  rtnl_newlink+0x43/0x60
+[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
+[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
+[ 1650.007519]  netlink_unicast+0x17f/0x230
+[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
+[ 1650.007592]  sock_sendmsg+0x36/0x50
+[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
+[ 1650.007963]  __sys_sendmsg+0x58/0xa0
+[ 1650.007998]  do_syscall_64+0x5b/0x180
+[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
+Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
+Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 43ab9e905bed..886176be818e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -474,7 +474,7 @@ static void stmmac_get_tx_hwtstamp(struct stmmac_priv *priv,
- 				   struct dma_desc *p, struct sk_buff *skb)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index d6706475a3ba..886a4a77c47f 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2044,19 +2044,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
+ int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
+ 				u32 max_rate, u32 min_rate)
  {
- 	struct skb_shared_hwtstamps shhwtstamp;
--	u64 ns;
-+	u64 ns = 0;
+-	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
+-	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
+-					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
+-	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
+ 	struct mlx5_vport *evport;
++	u32 fw_max_bw_share;
+ 	u32 previous_min_rate;
+ 	u32 divider;
++	bool min_rate_supported;
++	bool max_rate_supported;
+ 	int err = 0;
  
- 	if (!priv->hwts_tx_en)
- 		return;
-@@ -513,7 +513,7 @@ static void stmmac_get_rx_hwtstamp(struct stmmac_priv *priv, struct dma_desc *p,
- {
- 	struct skb_shared_hwtstamps *shhwtstamp = NULL;
- 	struct dma_desc *desc = p;
--	u64 ns;
-+	u64 ns = 0;
+ 	if (!ESW_ALLOWED(esw))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport))
+ 		return -EINVAL;
++
++	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
++	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
++				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
++	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
++
+ 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
+ 		return -EOPNOTSUPP;
  
- 	if (!priv->hwts_rx_en)
- 		return;
-@@ -558,8 +558,8 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
- 	u32 snap_type_sel = 0;
- 	u32 ts_master_en = 0;
- 	u32 ts_event_en = 0;
-+	u32 sec_inc = 0;
- 	u32 value = 0;
--	u32 sec_inc;
- 	bool xmac;
- 
- 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
 -- 
 2.19.1
 
