@@ -2,193 +2,361 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B9BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C32C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C692054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:43:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WDv4wpdP"
+	by mail.kernel.org (Postfix) with ESMTP id DB5262075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfC0Um7 (ORCPT
+        id S1728429AbfC0Uoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 16:42:59 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19199 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfC0Um6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 16:42:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9bdf160000>; Wed, 27 Mar 2019 13:37:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 27 Mar 2019 13:37:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 27 Mar 2019 13:37:47 -0700
-Received: from [10.2.162.144] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 20:37:47 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     Keith Busch <kbusch@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>, <mhocko@suse.com>,
-        <mgorman@techsingularity.net>, <riel@surriel.com>,
-        <hannes@cmpxchg.org>, <akpm@linux-foundation.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
-Date:   Wed, 27 Mar 2019 13:37:46 -0700
-X-Mailer: MailMate (1.12.4r5622)
-Message-ID: <6A903D34-A293-4056-B135-6FA227DE1828@nvidia.com>
-In-Reply-To: <3fd20a95-7f2d-f395-73f6-21561eae9912@intel.com>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
- <20190324222040.GE31194@localhost.localdomain>
- <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
- <20190327003541.GE4328@localhost.localdomain>
- <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
- <20190327130822.GD7389@localhost.localdomain>
- <2C32F713-2156-4B58-B5C1-789C1821EBB9@nvidia.com>
- <de044f93-c4e8-8b8b-9372-e15ca74e7696@intel.com>
- <33FCCD53-4A4D-4115-9AC3-6C35A300169F@nvidia.com>
- <3fd20a95-7f2d-f395-73f6-21561eae9912@intel.com>
+        Wed, 27 Mar 2019 16:44:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57192 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbfC0Uoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 16:44:32 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C0A17D0D8;
+        Wed, 27 Mar 2019 20:44:31 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-19.phx2.redhat.com [10.3.112.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CDC3160852;
+        Wed, 27 Mar 2019 20:44:20 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 16:44:17 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Subject: Re: [PATCH ghak90 V5 02/10] audit: add container id
+Message-ID: <20190327204417.xnpmba43g6m3g4sx@madcap2.tricolour.ca>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <19917968bb133ff644258b95dcbff522a83a2af1.1552665316.git.rgb@redhat.com>
+ <CAFqZXNtyzb8LVghoKEwYDC2vkZVbytcEahwpP49_QDR+tM=PNQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_2BEEEC6C-1579-462B-8F1F-950E33DD9DA3_=";
-        micalg=pgp-sha1; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553719062; bh=h36SjGYinWxbAr88VzsF+G4sIWd6jVLSJPZTBRLBtF4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=WDv4wpdPTmvMVsOp5DLAZLpm1eO2fYzW5JwqOM/b7eWwEP0/j4paEshOSfmkoAlHm
-         eWSwPOBGBekT0YMn+yix5ksiQfFB4lxpo5K9NWCAUK9a9eM+vpRupSBX9KRn6BaM/p
-         CSH7jrbSXyK8/N3g/1krBo36Z/Uex/gl7ekFeo29beNQXjcoc+OCfNnxpPmeC7pEpu
-         51cw6tucUDRg1nxIJWVJ5uNcUyBmpa7qc2djucHG1bL8GTP2N6mxPXbsIIYxMuopaG
-         y62jS5H5ZNnargM9K/r3zrgJd+9tMef49GIbFk8uond+joeC8MXzCOnR0byygSLv4l
-         yhOapVQn6ypNA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqZXNtyzb8LVghoKEwYDC2vkZVbytcEahwpP49_QDR+tM=PNQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 27 Mar 2019 20:44:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_2BEEEC6C-1579-462B-8F1F-950E33DD9DA3_=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 2019-03-27 21:38, Ondrej Mosnacek wrote:
+> On Fri, Mar 15, 2019 at 7:33 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Implement the proc fs write to set the audit container identifier of a
+> > process, emitting an AUDIT_CONTAINER_OP record to document the event.
+> >
+> > This is a write from the container orchestrator task to a proc entry of
+> > the form /proc/PID/audit_containerid where PID is the process ID of the
+> > newly created task that is to become the first task in a container, or
+> > an additional task added to a container.
+> >
+> > The write expects up to a u64 value (unset: 18446744073709551615).
+> >
+> > The writer must have capability CAP_AUDIT_CONTROL.
+> >
+> > This will produce a record such as this:
+> >   type=CONTAINER_OP msg=audit(2018-06-06 12:39:29.636:26949) : op=set opid=2209 old-contid=18446744073709551615 contid=123456 pid=628 auid=root uid=root tty=ttyS0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=bash exe=/usr/bin/bash res=yes
+> >
+> > The "op" field indicates an initial set.  The "pid" to "ses" fields are
+> > the orchestrator while the "opid" field is the object's PID, the process
+> > being "contained".  Old and new audit container identifier values are
+> > given in the "contid" fields, while res indicates its success.
+> >
+> > It is not permitted to unset the audit container identifier.
+> > A child inherits its parent's audit container identifier.
+> >
+> > See: https://github.com/linux-audit/audit-kernel/issues/90
+> > See: https://github.com/linux-audit/audit-userspace/issues/51
+> > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> > Acked-by: Steve Grubb <sgrubb@redhat.com>
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> 
+> Note that you have duplicate Signed-off here ^^
 
-On 27 Mar 2019, at 11:00, Dave Hansen wrote:
+Yeah, I caught a few of those for v6 and a number of other formatting
+issues.
 
-> On 3/27/19 10:48 AM, Zi Yan wrote:
->> For 40MB/s vs 750MB/s, they were using sys_migrate_pages(). Sorry
->> about the confusion there. As I measure only the migrate_pages() in
->> the kernel, the throughput becomes: migrating 4KB page: 0.312GB/s
->> vs migrating 512 4KB pages: 0.854GB/s. They are still >2x
->> difference.
->>
->> Furthermore, if we only consider the migrate_page_copy() in
->> mm/migrate.c, which only calls copy_highpage() and
->> migrate_page_states(), the throughput becomes: migrating 4KB page:
->> 1.385GB/s vs migrating 512 4KB pages: 1.983GB/s. The gap is
->> smaller, but migrating 512 4KB pages still achieves 40% more
->> throughput.
->>
->> Do these numbers make sense to you?
->
-> Yes.  It would be very interesting to batch the migrations in the
-> kernel and see how it affects the code.  A 50% boost is interesting,
-> but not if it's only in microbenchmarks and takes 2k lines of code.
->
-> 50% is *very* interesting if it happens in the real world and we can
-> do it in 10 lines of code.
->
-> So, let's see what the code looks like.
+> Took me a while to understand the flow in audit_set_contid(), but once
+> understood it all made perfect sense, so:
+> 
+> Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> 
+> 
+> > ---
+> >  fs/proc/base.c             | 36 ++++++++++++++++++++++++
+> >  include/linux/audit.h      | 25 +++++++++++++++++
+> >  include/uapi/linux/audit.h |  2 ++
+> >  kernel/audit.c             | 68 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 131 insertions(+)
+> >
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index a23651ce6960..2505c46c8701 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -1294,6 +1294,40 @@ static ssize_t proc_sessionid_read(struct file * file, char __user * buf,
+> >         .read           = proc_sessionid_read,
+> >         .llseek         = generic_file_llseek,
+> >  };
+> > +
+> > +static ssize_t proc_contid_write(struct file *file, const char __user *buf,
+> > +                                  size_t count, loff_t *ppos)
+> > +{
+> > +       struct inode *inode = file_inode(file);
+> > +       u64 contid;
+> > +       int rv;
+> > +       struct task_struct *task = get_proc_task(inode);
+> > +
+> > +       if (!task)
+> > +               return -ESRCH;
+> > +       if (*ppos != 0) {
+> > +               /* No partial writes. */
+> > +               put_task_struct(task);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       rv = kstrtou64_from_user(buf, count, 10, &contid);
+> > +       if (rv < 0) {
+> > +               put_task_struct(task);
+> > +               return rv;
+> > +       }
+> > +
+> > +       rv = audit_set_contid(task, contid);
+> > +       put_task_struct(task);
+> > +       if (rv < 0)
+> > +               return rv;
+> > +       return count;
+> > +}
+> > +
+> > +static const struct file_operations proc_contid_operations = {
+> > +       .write          = proc_contid_write,
+> > +       .llseek         = generic_file_llseek,
+> > +};
+> >  #endif
+> >
+> >  #ifdef CONFIG_FAULT_INJECTION
+> > @@ -3005,6 +3039,7 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+> >  #ifdef CONFIG_AUDIT
+> >         REG("loginuid",   S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> >         REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> > +       REG("audit_containerid", S_IWUSR, proc_contid_operations),
+> >  #endif
+> >  #ifdef CONFIG_FAULT_INJECTION
+> >         REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > @@ -3393,6 +3428,7 @@ static int proc_tid_comm_permission(struct inode *inode, int mask)
+> >  #ifdef CONFIG_AUDIT
+> >         REG("loginuid",  S_IWUSR|S_IRUGO, proc_loginuid_operations),
+> >         REG("sessionid",  S_IRUGO, proc_sessionid_operations),
+> > +       REG("audit_containerid", S_IWUSR, proc_contid_operations),
+> >  #endif
+> >  #ifdef CONFIG_FAULT_INJECTION
+> >         REG("make-it-fail", S_IRUGO|S_IWUSR, proc_fault_inject_operations),
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index bde346e73f0c..301337776193 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -89,6 +89,7 @@ struct audit_field {
+> >  struct audit_task_info {
+> >         kuid_t                  loginuid;
+> >         unsigned int            sessionid;
+> > +       u64                     contid;
+> >  #ifdef CONFIG_AUDITSYSCALL
+> >         struct audit_context    *ctx;
+> >  #endif
+> > @@ -189,6 +190,15 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+> >         return tsk->audit->sessionid;
+> >  }
+> >
+> > +extern int audit_set_contid(struct task_struct *tsk, u64 contid);
+> > +
+> > +static inline u64 audit_get_contid(struct task_struct *tsk)
+> > +{
+> > +       if (!tsk->audit)
+> > +               return AUDIT_CID_UNSET;
+> > +       return tsk->audit->contid;
+> > +}
+> > +
+> >  extern u32 audit_enabled;
+> >  #else /* CONFIG_AUDIT */
+> >  static inline int audit_alloc(struct task_struct *task)
+> > @@ -250,6 +260,11 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+> >         return AUDIT_SID_UNSET;
+> >  }
+> >
+> > +static inline u64 audit_get_contid(struct task_struct *tsk)
+> > +{
+> > +       return AUDIT_CID_UNSET;
+> > +}
+> > +
+> >  #define audit_enabled AUDIT_OFF
+> >  #endif /* CONFIG_AUDIT */
+> >
+> > @@ -606,6 +621,16 @@ static inline bool audit_loginuid_set(struct task_struct *tsk)
+> >         return uid_valid(audit_get_loginuid(tsk));
+> >  }
+> >
+> > +static inline bool audit_contid_valid(u64 contid)
+> > +{
+> > +       return contid != AUDIT_CID_UNSET;
+> > +}
+> > +
+> > +static inline bool audit_contid_set(struct task_struct *tsk)
+> > +{
+> > +       return audit_contid_valid(audit_get_contid(tsk));
+> > +}
+> > +
+> >  static inline void audit_log_string(struct audit_buffer *ab, const char *buf)
+> >  {
+> >         audit_log_n_string(ab, buf, strlen(buf));
+> > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> > index 36a7e3f18e69..d475cf3b4d7f 100644
+> > --- a/include/uapi/linux/audit.h
+> > +++ b/include/uapi/linux/audit.h
+> > @@ -71,6 +71,7 @@
+> >  #define AUDIT_TTY_SET          1017    /* Set TTY auditing status */
+> >  #define AUDIT_SET_FEATURE      1018    /* Turn an audit feature on or off */
+> >  #define AUDIT_GET_FEATURE      1019    /* Get which features are enabled */
+> > +#define AUDIT_CONTAINER_OP     1020    /* Define the container id and information */
+> >
+> >  #define AUDIT_FIRST_USER_MSG   1100    /* Userspace messages mostly uninteresting to kernel */
+> >  #define AUDIT_USER_AVC         1107    /* We filter this differently */
+> > @@ -471,6 +472,7 @@ struct audit_tty_status {
+> >
+> >  #define AUDIT_UID_UNSET (unsigned int)-1
+> >  #define AUDIT_SID_UNSET ((unsigned int)-1)
+> > +#define AUDIT_CID_UNSET ((u64)-1)
+> >
+> >  /* audit_rule_data supports filter rules with both integer and string
+> >   * fields.  It corresponds with AUDIT_ADD_RULE, AUDIT_DEL_RULE and
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index 67498c5690bb..b5c702abeb42 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -244,6 +244,7 @@ int audit_alloc(struct task_struct *tsk)
+> >         }
+> >         info->loginuid = audit_get_loginuid(current);
+> >         info->sessionid = audit_get_sessionid(current);
+> > +       info->contid = audit_get_contid(current);
+> >         tsk->audit = info;
+> >
+> >         ret = audit_alloc_syscall(tsk);
+> > @@ -258,6 +259,7 @@ int audit_alloc(struct task_struct *tsk)
+> >  struct audit_task_info init_struct_audit = {
+> >         .loginuid = INVALID_UID,
+> >         .sessionid = AUDIT_SID_UNSET,
+> > +       .contid = AUDIT_CID_UNSET,
+> >  #ifdef CONFIG_AUDITSYSCALL
+> >         .ctx = NULL,
+> >  #endif
+> > @@ -2341,6 +2343,72 @@ int audit_set_loginuid(kuid_t loginuid)
+> >  }
+> >
+> >  /**
+> > + * audit_set_contid - set current task's audit contid
+> > + * @contid: contid value
+> > + *
+> > + * Returns 0 on success, -EPERM on permission failure.
+> > + *
+> > + * Called (set) from fs/proc/base.c::proc_contid_write().
+> > + */
+> > +int audit_set_contid(struct task_struct *task, u64 contid)
+> > +{
+> > +       u64 oldcontid;
+> > +       int rc = 0;
+> > +       struct audit_buffer *ab;
+> > +       uid_t uid;
+> > +       struct tty_struct *tty;
+> > +       char comm[sizeof(current->comm)];
+> > +
+> > +       task_lock(task);
+> > +       /* Can't set if audit disabled */
+> > +       if (!task->audit) {
+> > +               task_unlock(task);
+> > +               return -ENOPROTOOPT;
+> > +       }
+> > +       oldcontid = audit_get_contid(task);
+> > +       read_lock(&tasklist_lock);
+> > +       /* Don't allow the audit containerid to be unset */
+> > +       if (!audit_contid_valid(contid))
+> > +               rc = -EINVAL;
+> > +       /* if we don't have caps, reject */
+> > +       else if (!capable(CAP_AUDIT_CONTROL))
+> > +               rc = -EPERM;
+> > +       /* if task has children or is not single-threaded, deny */
+> > +       else if (!list_empty(&task->children))
+> > +               rc = -EBUSY;
+> > +       else if (!(thread_group_leader(task) && thread_group_empty(task)))
+> > +               rc = -EALREADY;
+> > +       read_unlock(&tasklist_lock);
+> > +       if (!rc)
+> > +               task->audit->contid = contid;
+> > +       task_unlock(task);
+> > +
+> > +       if (!audit_enabled)
+> > +               return rc;
+> > +
+> > +       ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_CONTAINER_OP);
+> > +       if (!ab)
+> > +               return rc;
+> > +
+> > +       uid = from_kuid(&init_user_ns, task_uid(current));
+> > +       tty = audit_get_tty();
+> > +       audit_log_format(ab, "op=set opid=%d old-contid=%llu contid=%llu pid=%d uid=%u auid=%u tty=%s ses=%u",
+> > +                        task_tgid_nr(task), oldcontid, contid,
+> > +                        task_tgid_nr(current), uid,
+> > +                        from_kuid(&init_user_ns, audit_get_loginuid(current)),
+> > +                        tty ? tty_name(tty) : "(none)",
+> > +                        audit_get_sessionid(current));
+> > +       audit_put_tty(tty);
+> > +       audit_log_task_context(ab);
+> > +       audit_log_format(ab, " comm=");
+> > +       audit_log_untrustedstring(ab, get_task_comm(comm, current));
+> > +       audit_log_d_path_exe(ab, current->mm);
+> > +       audit_log_format(ab, " res=%d", !rc);
+> > +       audit_log_end(ab);
+> > +       return rc;
+> > +}
+> > +
+> > +/**
+> >   * audit_log_end - end one audit record
+> >   * @ab: the audit_buffer
+> >   *
+> > --
+> > 1.8.3.1
+> >
+> 
+> --
+> Ondrej Mosnacek <omosnace at redhat dot com>
+> Software Engineer, Security Technologies
+> Red Hat, Inc.
 
-Actually, the migration throughput difference does not come from any kern=
-el
-changes, it is a pure comparison between migrate_pages(single 4KB page) a=
-nd
-migrate_pages(a list of 4KB pages). The point I wanted to make is that
-Yang=E2=80=99s approach, which migrates a list of pages at the end of shr=
-ink_page_list(),
-can achieve higher throughput than Keith=E2=80=99s approach, which migrat=
-es one page
-at a time in the while loop inside shrink_page_list().
-
-In addition to the above, migrating a single THP can get us even higher t=
-hroughput.
-Here is the throughput numbers comparing all three cases:
-                             |  migrate_page()  |    migrate_page_copy()
-migrating single 4KB page:   |  0.312GB/s       |   1.385GB/s
-migrating 512 4KB pages:     |  0.854GB/s       |   1.983GB/s
-migrating single 2MB THP:    |  2.387GB/s       |   2.481GB/s
-
-Obviously, we would like to migrate THPs as a whole instead of 512 4KB pa=
-ges
-individually. Of course, this assumes we have free space in PMEM for THPs=
- and
-all subpages in the THPs are cold.
-
-
-To batch the migration, I posted some code a while ago: https://lwn.net/A=
-rticles/714991/,
-which show good throughput improvement for microbenchmarking sys_migrate_=
-page().
-It also included using multi threads to copy a page, aggregate multiple m=
-igrate_page_copy(),
-and even using DMA instead of CPUs to copy data. We could revisit the cod=
-e if necessary.
-
-In terms of end-to-end results, I also have some results from my paper:
-http://www.cs.yale.edu/homes/abhishek/ziyan-asplos19.pdf (Figure 8 to Fig=
-ure 11 show the
-microbenchmark result and Figure 12 shows end-to-end results). I basicall=
-y called
-shrink_active/inactive_list() every 5 seconds to track page hotness and u=
-sed all my page
-migration optimizations above, which can get 40% application runtime spee=
-dup on average.
-The experiments were done in a two-socket NUMA machine where one node was=
- slowed down to
-have 1/2 BW and 2x access latency, compared to the other node. I can disc=
-uss about it
-more if you are interested.
-
+- RGB
 
 --
-Best Regards,
-Yan Zi
-
---=_MailMate_2BEEEC6C-1579-462B-8F1F-950E33DD9DA3_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAlyb3xoPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqK1UMP/1Pd0ozYIfrQ0JNoHBz4zGr3O71WjEcSr08P
-CUb/SsBmh03a2LXJKCy5hcR89ihFzdXKQ+/iqhwagUyGZic0ocOzABh/KikFqnKV
-nRtenfr3v62erGE955BWGZZxoKlzOeP3zkdL6qbKH8qXtB79cj835HTN+P9U+mUH
-d1+0eCB8i3F0xS/BMyVn5e44p2mKuNOYFIY+vSjO2XISVr9lLjYJa7LiGTvIHqgP
-R/QtPqP7wULvOS2xJ4HPAQ0TR3QDJs5obgekwJqjxHX+38B6FCLQ7bR5nsUrJyAT
-4UDNEAl9ano9aZtaVfDr9My9zuAaZQwlHvwfhfmYhos+e+Vf2vjx9XZy3Mubo0eE
-co0nrQUb9oKP88ACfaXI2Nqsa+/ctQQdkITiEHWxMQhtFvq5VcHwir5oBIG/Ylhv
-6WwwYmSBlQoYC5TibSHMcpqjr1XGZU1UHEBtobqngrPlcvFYyuQrqqScoPYgi8vf
-vFATQt1Goqwiky0+0vlazCmVzNIALxbZ4WqsmmDSY+SvoJ3QOtnaG26szOhgvGv+
-0knzMccufS2QNwXuxJyiWzoKmlGpGNklkNcVQkPsSmMMXvdrwImn2aVII9MFoZ8H
-kjDLEyYY29BzhwYLk28Yz0ijXb7zaNVD+DGS3WBf052aGMPwDTEbrETe+1Q9pzpW
-HFCg5iF5
-=lzxQ
------END PGP SIGNATURE-----
-
---=_MailMate_2BEEEC6C-1579-462B-8F1F-950E33DD9DA3_=--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
