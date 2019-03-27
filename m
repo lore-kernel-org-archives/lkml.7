@@ -2,51 +2,52 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDA6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658DFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84F9205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319F6205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712990;
-	bh=7EH4dVlSDuD7rrHSEaMh/smm3ISlrRpdbt8Mqn3fxRQ=;
+	s=default; t=1553713005;
+	bh=FTwbCBJiaRpsPfBWs77lcqZk5tChB9gfFKjvGDgbZd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCz/Kfe0ZioyRU2HTF8/zh04cZ/YVnrLH/ZaXzTywldPQ3YXtAZSRaWNrFT3MuhqI
-	 oso3sdpH5dgcduGPf1ZQrNk3GRttcuPsSWJZEx8pdoE2p6Si6CYEhY01RHBE+6HHMu
-	 8sV1jGxmoe1w2j1Ty7qAHOzVU3FsrhHEgGXsH+OM=
+	b=gmsvi6FeY7LFIwTZKk/OeWEP0KZBCYoGb/ZB57OZGLsjMYXmT/Wv90D+JLxEvqK5V
+	 eOTZxvzkV+nezLKFTDK5CpMwcD6vfEPbII38egbedOWKD+AXXpptCFvOrGhTN/PiRy
+	 9V6XsW4wLyGcvLnZKHqfCvUhyltL8zDZz3kzbWco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390540AbfC0S42 (ORCPT
+        id S2390134AbfC0S4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:56:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390040AbfC0SQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:25 -0400
+        id S2390014AbfC0SQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF9A72183E;
-        Wed, 27 Mar 2019 18:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 105FA2087C;
+        Wed, 27 Mar 2019 18:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710584;
-        bh=7EH4dVlSDuD7rrHSEaMh/smm3ISlrRpdbt8Mqn3fxRQ=;
+        s=default; t=1553710576;
+        bh=FTwbCBJiaRpsPfBWs77lcqZk5tChB9gfFKjvGDgbZd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUI0rk08FPh+u/2dGaA726xhld9XKAmT1TnKVAYeHHP3tvc4X6yioDG7HE7Ww+zdB
-         MmJkSI2QRlxPAADizVR7u8cMS2XLhF/WWCeSmzpP8QMU0XbI6eVaO7Z6uMgBrUwsyD
-         Vt2q/CtR/HrW9KvoqUTYCcSSKkL1cMJ+MjFknTns=
+        b=yazZxOfmI9fACOxFfWT15CH+NR1D2BhPetL9FhqzRchA6sowVfW7g9L28FHo+WPiR
+         N5YCPo/yg3bv/SsSMzREJq+cLup8nzY2IHzw0QzGQSk5rNKvi2eu9m/eX7iNXzrixE
+         IwlqjLGWpqZY1s6kxZEAR6A716aTpzlEgwbcUc8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 190/192] net: stmmac: Avoid one more sometimes uninitialized Clang warning
-Date:   Wed, 27 Mar 2019 14:10:22 -0400
-Message-Id: <20190327181025.13507-190-sashal@kernel.org>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 185/192] clk: rockchip: fix frac settings of GPLL clock for rk3328
+Date:   Wed, 27 Mar 2019 14:10:17 -0400
+Message-Id: <20190327181025.13507-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,51 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 1f5d861f7fefa971b2c6e766f77932c86419a319 ]
+[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
 
-When building with -Wsometimes-uninitialized, Clang warns:
+This patch fixes settings of GPLL frequency in fractional mode for
+rk3328. In this mode, FOUTVCO is calcurated by following formula:
+  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
-'ns' is used uninitialized whenever 'if' condition is false
-[-Werror,-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
-'ns' is used uninitialized whenever '&&' condition is false
-[-Werror,-Wsometimes-uninitialized]
+The problem is in FREF * FRAC >> 24 term. This result always lacks
+one from target value is specified by rate member. For example first
+itme of rk3328_pll_frac_rate originally has
+  - rate  : 1016064000
+  - refdiv: 3
+  - fbdiv : 127
+  - frac  : 134217
+  - FREF * FBDIV / REFDIV        = 1016000000
+  - (FREF * FRAC / REFDIV) >> 24 = 63999
+Thus calculated rate is 1016063999. It seems wrong.
 
-Clang is concerned with the use of stmmac_do_void_callback (which
-stmmac_get_systime wraps), as it may fail to initialize these values if
-the if condition was ever false (meaning the callback doesn't exist).
-It's not wrong because the callback is what initializes ns. While it's
-unlikely that the callback is going to disappear at some point and make
-that condition false, we can easily avoid this warning by zero
-initializing the variable.
+If frac has 134218 (it is increased 1 from original value), second
+term is 64000. All other items have same situation. So this patch
+adds 1 to frac member in all items of rk3328_pll_frac_rate.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/384
-Fixes: df103170854e ("net: stmmac: Avoid sometimes uninitialized Clang warnings")
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-index 2293e21f789f..cc60b3fb0892 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
-@@ -105,7 +105,7 @@ static int stmmac_get_time(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 	struct stmmac_priv *priv =
- 	    container_of(ptp, struct stmmac_priv, ptp_clock_ops);
- 	unsigned long flags;
--	u64 ns;
-+	u64 ns = 0;
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index 2c5426607790..e431661fe874 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
  
- 	spin_lock_irqsave(&priv->ptp_lock, flags);
- 	stmmac_get_systime(priv, priv->ptpaddr, &ns);
+ static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
+ 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
+-	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
++	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
+ 	/* vco = 1016064000 */
+-	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
++	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
++	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
++	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
+ 	/* vco = 860156000 */
+-	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
++	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
+ 	/* vco = 903168000 */
+-	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
++	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
+ 	/* vco = 819200000 */
+ 	{ /* sentinel */ },
+ };
 -- 
 2.19.1
 
