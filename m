@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BFCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A58C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1391D2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144F62075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbfC0IUO (ORCPT
+        id S1732452AbfC0IUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:20:14 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:51162 "EHLO honk.sigxcpu.org"
+        Wed, 27 Mar 2019 04:20:20 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:51177 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731571AbfC0IUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:20:11 -0400
+        id S1732245AbfC0IUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 04:20:16 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id AD51EFB02;
-        Wed, 27 Mar 2019 09:20:08 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 4850BFB07;
+        Wed, 27 Mar 2019 09:20:13 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5qRjwJHkDXJQ; Wed, 27 Mar 2019 09:20:05 +0100 (CET)
+        with ESMTP id b2BT1mtx-G88; Wed, 27 Mar 2019 09:20:07 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id EE04842B11; Wed, 27 Mar 2019 09:20:01 +0100 (CET)
+        id 08FA842B15; Wed, 27 Mar 2019 09:20:02 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -50,9 +50,9 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Robert Chiras <robert.chiras@nxp.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH RESEND v7 2/3] dt-bindings: phy: Add documentation for mixel dphy
-Date:   Wed, 27 Mar 2019 09:20:00 +0100
-Message-Id: <3319783f60fedd7f0029dd60a51c76a75003fe05.1553674604.git.agx@sigxcpu.org>
+Subject: [PATCH RESEND v7 3/3] phy: Add driver for mixel dphy found on imx8
+Date:   Wed, 27 Mar 2019 09:20:01 +0100
+Message-Id: <cd97dabc76ed61e33e205827edbaec8ebb436cf7.1553674604.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1553674604.git.agx@sigxcpu.org>
 References: <cover.1553674604.git.agx@sigxcpu.org>
@@ -64,50 +64,562 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the MIXEL DPHY IP as found in the NXP's i.MX8MQ.
+This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
+this is an IP core it will likely be found on others in the future. So
+instead of adding this to the nwl host driver make it a generic PHY
+driver.
 
+The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
+added once the necessary system controller bits are in via
+mixel_dphy_devdata.
+
+Co-authored-by: Robert Chiras <robert.chiras@nxp.com>
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+ drivers/phy/freescale/Kconfig                 |  11 +
+ drivers/phy/freescale/Makefile                |   1 +
+ .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 506 ++++++++++++++++++
+ 3 files changed, 518 insertions(+)
+ create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
 
-diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
+index 832670b4952b..a111b130f9d2 100644
+--- a/drivers/phy/freescale/Kconfig
++++ b/drivers/phy/freescale/Kconfig
+@@ -3,3 +3,14 @@ config PHY_FSL_IMX8MQ_USB
+ 	depends on OF && HAS_IOMEM
+ 	select GENERIC_PHY
+ 	default ARCH_MXC && ARM64
++
++config PHY_MIXEL_MIPI_DPHY
++	tristate "Mixel MIPI DSI PHY support"
++	depends on OF && HAS_IOMEM
++	select GENERIC_PHY
++	select GENERIC_PHY_MIPI_DPHY
++	select REGMAP_MMIO
++	default ARCH_MXC && ARM64
++	help
++	  Enable this to add support for the Mixel DSI PHY as found
++	  on NXP's i.MX8 family of SOCs.
+diff --git a/drivers/phy/freescale/Makefile b/drivers/phy/freescale/Makefile
+index dc2b3f1f2f80..07491c926a2c 100644
+--- a/drivers/phy/freescale/Makefile
++++ b/drivers/phy/freescale/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_PHY_FSL_IMX8MQ_USB)	+= phy-fsl-imx8mq-usb.o
++obj-$(CONFIG_PHY_MIXEL_MIPI_DPHY)	+= phy-fsl-imx8-mipi-dphy.o
+diff --git a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
 new file mode 100644
-index 000000000000..d3646580412a
+index 000000000000..fd487a9e5a35
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
-@@ -0,0 +1,29 @@
-+Mixel DSI PHY for i.MX8
++++ b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+@@ -0,0 +1,506 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright 2017,2018 NXP
++ * Copyright 2019 Purism SPC
++ */
 +
-+The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
-+MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
-+electrical signals for DSI.
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
 +
-+Required properties:
-+- compatible: Must be:
-+  - "mixel,imx8mq-mipi-dphy"
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must contain the following entries:
-+  - "phy_ref": phandle and specifier referring to the DPHY ref clock
-+- reg: the register range of the PHY controller
-+- #phy-cells: number of cells in PHY, as defined in
-+  Documentation/devicetree/bindings/phy/phy-bindings.txt
-+  this must be <0>
++/* DPHY registers */
++#define DPHY_PD_DPHY			0x00
++#define DPHY_M_PRG_HS_PREPARE		0x04
++#define DPHY_MC_PRG_HS_PREPARE		0x08
++#define DPHY_M_PRG_HS_ZERO		0x0c
++#define DPHY_MC_PRG_HS_ZERO		0x10
++#define DPHY_M_PRG_HS_TRAIL		0x14
++#define DPHY_MC_PRG_HS_TRAIL		0x18
++#define DPHY_PD_PLL			0x1c
++#define DPHY_TST			0x20
++#define DPHY_CN				0x24
++#define DPHY_CM				0x28
++#define DPHY_CO				0x2c
++#define DPHY_LOCK			0x30
++#define DPHY_LOCK_BYP			0x34
++#define DPHY_REG_BYPASS_PLL		0x4C
 +
-+Optional properties:
-+- power-domains: phandle to power domain
++#define MBPS(x) ((x) * 1000000)
 +
-+Example:
-+	mipi_dphy: mipi_dphy@30A0030 {
-+		compatible = "mixel,imx8mq-mipi-dphy";
-+		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
-+		clock-names = "phy_ref";
-+		reg = <0x30A00300 0x100>;
-+		power-domains = <&pd_mipi0>;
-+		#phy-cells = <0>;
-+        };
++#define DATA_RATE_MAX_SPEED MBPS(1500)
++#define DATA_RATE_MIN_SPEED MBPS(80)
++
++#define PLL_LOCK_SLEEP 10
++#define PLL_LOCK_TIMEOUT 1000
++
++#define CN_BUF	0xcb7a89c0
++#define CO_BUF	0x63
++#define CM(x)	(				\
++		((x) <	32)?0xe0|((x)-16) :	\
++		((x) <	64)?0xc0|((x)-32) :	\
++		((x) < 128)?0x80|((x)-64) :	\
++		((x) - 128))
++#define CN(x)	(((x) == 1)?0x1f : (((CN_BUF)>>((x)-1))&0x1f))
++#define CO(x)	((CO_BUF)>>(8-(x))&0x3)
++
++/* PHY power on is active low */
++#define PWR_ON	0
++#define PWR_OFF	1
++
++enum mixel_dphy_devtype {
++	MIXEL_IMX8MQ,
++};
++
++struct mixel_dphy_devdata {
++	u8 reg_tx_rcal;
++	u8 reg_auto_pd_en;
++	u8 reg_rxlprp;
++	u8 reg_rxcdrp;
++	u8 reg_rxhs_settle;
++};
++
++static const struct mixel_dphy_devdata mixel_dphy_devdata[] = {
++	[MIXEL_IMX8MQ] = {
++		.reg_tx_rcal = 0x38,
++		.reg_auto_pd_en = 0x3c,
++		.reg_rxlprp = 0x40,
++		.reg_rxcdrp = 0x44,
++		.reg_rxhs_settle = 0x48,
++	},
++};
++
++struct mixel_dphy_cfg {
++	/* DPHY PLL parameters */
++	u32 cm;
++	u32 cn;
++	u32 co;
++	/* DPHY register values */
++	u8 mc_prg_hs_prepare;
++	u8 m_prg_hs_prepare;
++	u8 mc_prg_hs_zero;
++	u8 m_prg_hs_zero;
++	u8 mc_prg_hs_trail;
++	u8 m_prg_hs_trail;
++	u8 rxhs_settle;
++};
++
++struct mixel_dphy_priv {
++	struct mixel_dphy_cfg cfg;
++	struct regmap *regs;
++	struct clk *phy_ref_clk;
++	const struct mixel_dphy_devdata *devdata;
++};
++
++static const struct regmap_config mixel_dphy_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.max_register = DPHY_REG_BYPASS_PLL,
++	.name = "mipi-dphy",
++};
++
++static int phy_write(struct phy *phy, u32 value, unsigned int reg)
++{
++	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = regmap_write(priv->regs, reg, value);
++	if (ret < 0)
++		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d", reg, ret);
++	return ret;
++}
++
++/*
++ * Find a ratio close to the desired one using continued fraction
++ * approximation ending either at exact match or maximum allowed
++ * nominator, denominator.
++ */
++static void get_best_ratio(u32 *pnum, u32 *pdenom, unsigned int max_n,
++			   unsigned int max_d)
++{
++	u32 a = *pnum;
++	u32 b = *pdenom;
++	u32 c;
++	u32 n[] = {0, 1};
++	u32 d[] = {1, 0};
++	u32 whole;
++	unsigned int i = 1;
++
++	while (b) {
++		i ^= 1;
++		whole = a / b;
++		n[i] += (n[i ^ 1] * whole);
++		d[i] += (d[i ^ 1] * whole);
++		if ((n[i] > max_n) || (d[i] > max_d)) {
++			i ^= 1;
++			break;
++		}
++		c = a - (b * whole);
++		a = b;
++		b = c;
++	}
++	*pnum = n[i];
++	*pdenom = d[i];
++}
++
++static int mixel_dphy_config_from_opts(struct phy *phy,
++	       struct phy_configure_opts_mipi_dphy *dphy_opts,
++	       struct mixel_dphy_cfg *cfg)
++{
++	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
++	unsigned long ref_clk = clk_get_rate(priv->phy_ref_clk);
++	u32 lp_t, numerator, denominator;
++	unsigned long long tmp;
++	u32 n;
++	int i;
++
++	if (dphy_opts->hs_clk_rate > DATA_RATE_MAX_SPEED ||
++	    dphy_opts->hs_clk_rate < DATA_RATE_MIN_SPEED)
++		return -EINVAL;
++
++	numerator = dphy_opts->hs_clk_rate;
++	denominator = ref_clk;
++	get_best_ratio(&numerator, &denominator, 255, 256);
++	if (!numerator || !denominator) {
++		dev_err(&phy->dev, "Invalid %d/%d for %ld/%ld\n",
++			numerator, denominator,
++			dphy_opts->hs_clk_rate, ref_clk);
++		return -EINVAL;
++	}
++
++	while ((numerator < 16) && (denominator <= 128)) {
++		numerator <<= 1;
++		denominator <<= 1;
++	}
++	/*
++	 * CM ranges between 16 and 255
++	 * CN ranges between 1 and 32
++	 * CO is power of 2: 1, 2, 4, 8
++	 */
++	i = __ffs(denominator);
++	if (i > 3)
++		i = 3;
++	cfg->cn = denominator >> i;
++	cfg->co = 1 << i;
++	cfg->cm = numerator;
++
++	if (cfg->cm < 16 || cfg->cm > 255 ||
++	    cfg->cn < 1 || cfg->cn > 32 ||
++	    cfg->co < 1 || cfg->co > 8) {
++		dev_err(&phy->dev, "Invalid CM/CN/CO values: %u/%u/%u\n",
++			cfg->cm, cfg->cn, cfg->co);
++		dev_err(&phy->dev, "for hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
++			dphy_opts->hs_clk_rate, ref_clk,
++			numerator, denominator);
++		return -EINVAL;
++	}
++
++	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ⩰ %d/%d\n",
++		dphy_opts->hs_clk_rate, ref_clk, numerator, denominator);
++
++	/* LP clock period */
++	tmp = 1000000000000LL;
++	do_div(tmp, dphy_opts->lp_clk_rate); /* ps */
++	if (tmp > ULONG_MAX)
++	  return -EINVAL;
++	else
++	  lp_t = tmp;
++	dev_dbg(&phy->dev, "LP clock %lu, period: %u ps\n",
++		dphy_opts->lp_clk_rate, lp_t);
++
++	/* hs_prepare: in lp clock periods */
++	if (2 * dphy_opts->hs_prepare > 5 * lp_t) {
++		dev_err(&phy->dev,
++			"hs_prepare (%u) > 2.5 * lp clock period (%u)",
++			dphy_opts->hs_prepare, lp_t);
++		return -EINVAL;
++	}
++	/* 00: lp_t, 01: 1.5 * lp_t, 10: 2 * lp_t, 11: 2.5 * lp_t */
++	if (dphy_opts->hs_prepare < lp_t) {
++		n = 0;
++	} else {
++		tmp = 2 * (dphy_opts->hs_prepare - lp_t);
++		do_div(tmp, lp_t);
++		n = tmp;
++	}
++	cfg->m_prg_hs_prepare = n;
++
++	/* clk_prepare: in lp clock periods */
++	if (2 * dphy_opts->clk_prepare > 3 * lp_t) {
++		dev_err(&phy->dev,
++			"clk_prepare (%u) > 1.5 * lp clock period (%u)",
++			dphy_opts->clk_prepare, lp_t);
++		return -EINVAL;
++	}
++	/* 00: lp_t, 01: 1.5 * lp_t */
++	cfg->mc_prg_hs_prepare = dphy_opts->clk_prepare > lp_t ? 1 : 0;
++
++	/* hs_zero: formula from NXP BSP */
++	n = (144 * (dphy_opts->hs_clk_rate / 1000000) - 47500) / 10000;
++	cfg->m_prg_hs_zero = n < 1 ? 1 : n;
++
++	/* clk_zero: formula from NXP BSP */
++	n = (34 * (dphy_opts->hs_clk_rate / 1000000) - 2500) / 1000;
++	cfg->mc_prg_hs_zero = n < 1 ? 1 : n;
++
++	/* clk_trail, hs_trail: formula from NXP BSP */
++	n = (103 * (dphy_opts->hs_clk_rate / 1000000) + 10000) / 10000;
++	if (n > 15)
++		n = 15;
++	if (n < 1)
++		n = 1;
++	cfg->m_prg_hs_trail = n;
++	cfg->mc_prg_hs_trail = n;
++
++	/* rxhs_settle: formula from NXP BSP */
++	if (dphy_opts->hs_clk_rate < MBPS(80))
++		cfg->rxhs_settle = 0x0d;
++	else if (dphy_opts->hs_clk_rate < MBPS(90))
++		cfg->rxhs_settle = 0x0c;
++	else if (dphy_opts->hs_clk_rate < MBPS(125))
++		cfg->rxhs_settle = 0x0b;
++	else if (dphy_opts->hs_clk_rate < MBPS(150))
++		cfg->rxhs_settle = 0x0a;
++	else if (dphy_opts->hs_clk_rate < MBPS(225))
++		cfg->rxhs_settle = 0x09;
++	else if (dphy_opts->hs_clk_rate < MBPS(500))
++		cfg->rxhs_settle = 0x08;
++	else
++		cfg->rxhs_settle = 0x07;
++
++	dev_dbg(&phy->dev, "hs_prepare: %u, clk_prepare: %u, "
++		"hs_prepare: %u, clk_prepare: %u, "
++		"hs_trail: %u, clk_trail: %u, "
++		"rxhs_settle: %u\n",
++		cfg->m_prg_hs_prepare, cfg->mc_prg_hs_prepare,
++		cfg->m_prg_hs_zero, cfg->mc_prg_hs_zero,
++		cfg->m_prg_hs_trail, cfg->mc_prg_hs_trail,
++		cfg->rxhs_settle);
++
++	return 0;
++}
++
++static void mixel_phy_set_hs_timings(struct phy *phy)
++{
++	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
++
++	phy_write(phy, priv->cfg.m_prg_hs_prepare, DPHY_M_PRG_HS_PREPARE);
++	phy_write(phy, priv->cfg.mc_prg_hs_prepare, DPHY_MC_PRG_HS_PREPARE);
++	phy_write(phy, priv->cfg.m_prg_hs_zero, DPHY_M_PRG_HS_ZERO);
++	phy_write(phy, priv->cfg.mc_prg_hs_zero, DPHY_MC_PRG_HS_ZERO);
++	phy_write(phy, priv->cfg.m_prg_hs_trail, DPHY_M_PRG_HS_TRAIL);
++	phy_write(phy, priv->cfg.mc_prg_hs_trail, DPHY_MC_PRG_HS_TRAIL);
++	phy_write(phy, priv->cfg.rxhs_settle, priv->devdata->reg_rxhs_settle);
++}
++
++static int mixel_dphy_set_pll_params(struct phy *phy)
++{
++	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
++
++	if (priv->cfg.cm < 16 || priv->cfg.cm > 255 ||
++	    priv->cfg.cn < 1 || priv->cfg.cn > 32 ||
++	    priv->cfg.co < 1 || priv->cfg.co > 8) {
++		dev_err(&phy->dev, "Invalid CM/CN/CO values! (%u/%u/%u)\n",
++			priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
++		return -EINVAL;
++	}
++	dev_dbg(&phy->dev, "Using CM:%u CN:%u CO:%u\n",
++		priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
++	phy_write(phy, CM(priv->cfg.cm), DPHY_CM);
++	phy_write(phy, CN(priv->cfg.cn), DPHY_CN);
++	phy_write(phy, CO(priv->cfg.co), DPHY_CO);
++	return 0;
++}
++
++static int mixel_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
++{
++	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
++	struct mixel_dphy_cfg cfg = { 0 };
++	int ret;
++
++	ret = mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
++	if (ret)
++		return ret;
++
++	/* Update the configuration */
++	memcpy(&priv->cfg, &cfg, sizeof(struct mixel_dphy_cfg));
++
++	phy_write(phy, 0x00, DPHY_LOCK_BYP);
++	phy_write(phy, 0x01, priv->devdata->reg_tx_rcal);
++	phy_write(phy, 0x00, priv->devdata->reg_auto_pd_en);
++	phy_write(phy, 0x02, priv->devdata->reg_rxlprp);
++	phy_write(phy, 0x02, priv->devdata->reg_rxcdrp);
++	phy_write(phy, 0x25, DPHY_TST);
++
++	mixel_phy_set_hs_timings(phy);
++	ret = mixel_dphy_set_pll_params(phy);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int mixel_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
++			       union phy_configure_opts *opts)
++{
++	struct mixel_dphy_cfg cfg = { 0 };
++
++	if (mode != PHY_MODE_MIPI_DPHY)
++		return -EINVAL;
++
++	return mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
++}
++
++
++static int mixel_dphy_init(struct phy *phy)
++{
++	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
++	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
++
++	return 0;
++}
++
++
++static int mixel_dphy_exit(struct phy *phy)
++{
++	phy_write(phy, 0, DPHY_CM);
++	phy_write(phy, 0, DPHY_CN);
++	phy_write(phy, 0, DPHY_CO);
++
++	return 0;
++}
++
++
++static int mixel_dphy_power_on(struct phy *phy)
++{
++	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
++	u32 locked;
++	int ret;
++
++	ret = clk_prepare_enable(priv->phy_ref_clk);
++	if (ret < 0)
++		return ret;
++
++	phy_write(phy, PWR_ON, DPHY_PD_PLL);
++	ret = regmap_read_poll_timeout(priv->regs, DPHY_LOCK, locked,
++				       locked, PLL_LOCK_SLEEP,
++				       PLL_LOCK_TIMEOUT);
++	if (ret < 0) {
++		dev_err(&phy->dev, "Could not get DPHY lock (%d)!\n", ret);
++		goto clock_disable;
++	}
++	phy_write(phy, PWR_ON, DPHY_PD_DPHY);
++
++	return 0;
++clock_disable:
++	clk_disable_unprepare(priv->phy_ref_clk);
++	return ret;
++}
++
++static int mixel_dphy_power_off(struct phy *phy)
++{
++	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
++
++	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
++	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
++
++	clk_disable_unprepare(priv->phy_ref_clk);
++
++	return 0;
++}
++
++
++static const struct phy_ops mixel_dphy_phy_ops = {
++	.init = mixel_dphy_init,
++	.exit = mixel_dphy_exit,
++	.power_on = mixel_dphy_power_on,
++	.power_off = mixel_dphy_power_off,
++	.configure = mixel_dphy_configure,
++	.validate = mixel_dphy_validate,
++	.owner = THIS_MODULE,
++};
++
++static const struct of_device_id mixel_dphy_of_match[] = {
++	{ .compatible = "mixel,imx8mq-mipi-dphy",
++	  .data = &mixel_dphy_devdata[MIXEL_IMX8MQ] },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, mixel_dphy_of_match);
++
++static int mixel_dphy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct phy_provider *phy_provider;
++	struct mixel_dphy_priv *priv;
++	struct resource *res;
++	struct phy *phy;
++	void __iomem *regs;
++
++	if (!np)
++		return -ENODEV;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->devdata = of_device_get_match_data(&pdev->dev);
++	if (!priv->devdata)
++		return -EINVAL;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(regs)) {
++		dev_err(dev, "Couldn't map the DPHY registers\n");
++		return PTR_ERR(regs);
++	}
++
++	priv->regs = devm_regmap_init_mmio(&pdev->dev, regs,
++					   &mixel_dphy_regmap_config);
++	if (IS_ERR(priv->regs)) {
++		dev_err(dev, "Couldn't create the DPHY regmap\n");
++		return PTR_ERR(priv->regs);
++	}
++
++	priv->phy_ref_clk = devm_clk_get(&pdev->dev, "phy_ref");
++	if (IS_ERR(priv->phy_ref_clk)) {
++		dev_err(dev, "No phy_ref clock found\n");
++		return PTR_ERR(priv->phy_ref_clk);
++	}
++	dev_dbg(dev, "phy_ref clock rate: %lu\n",
++		clk_get_rate(priv->phy_ref_clk));
++
++	dev_set_drvdata(dev, priv);
++
++	phy = devm_phy_create(dev, np, &mixel_dphy_phy_ops);
++	if (IS_ERR(phy)) {
++		dev_err(dev, "Failed to create phy %ld\n", PTR_ERR(phy));
++		return PTR_ERR(phy);
++	}
++	phy_set_drvdata(phy, priv);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static struct platform_driver mixel_dphy_driver = {
++	.probe	= mixel_dphy_probe,
++	.driver = {
++		.name = "mixel-mipi-dphy",
++		.of_match_table	= mixel_dphy_of_match,
++	}
++};
++module_platform_driver(mixel_dphy_driver);
++
++MODULE_AUTHOR("NXP Semiconductor");
++MODULE_DESCRIPTION("Mixel MIPI-DSI PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
