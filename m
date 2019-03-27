@@ -2,145 +2,126 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C482BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C43C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962A22075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF5E2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:08:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="nT56dxYr"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PV+r7LD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733103AbfC0KFh (ORCPT
+        id S1733029AbfC0KIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:05:37 -0400
-Received: from mail-eopbgr70049.outbound.protection.outlook.com ([40.107.7.49]:62848
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731664AbfC0KFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:05:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector1-itdev-co-uk;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4jRRI6wC9SiqhP5zS9zFObVPiKDeZKIE9aqGAA+i3dE=;
- b=nT56dxYrGQ1dfjG8sSZQapIOY+g4Go/8QhZcpAYTNpqf591XgRCJwNWQOttLAw/Cr3Wc/oBFbrGH2iTKi4DtslSEffk4ZTa4wCMZUFyd3DkZbo+tb9T5zmP/LbdjBcK2rgeex1Dv45ieUP5EO55Nx4q15mRYa05RU/Lr3aZ39wE=
-Received: from VI1PR08MB3168.eurprd08.prod.outlook.com (52.133.15.143) by
- VI1PR08MB4126.eurprd08.prod.outlook.com (20.178.204.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Wed, 27 Mar 2019 10:05:30 +0000
-Received: from VI1PR08MB3168.eurprd08.prod.outlook.com
- ([fe80::c129:d694:632f:6574]) by VI1PR08MB3168.eurprd08.prod.outlook.com
- ([fe80::c129:d694:632f:6574%4]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
- 10:05:30 +0000
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: [PATCH v3] e1000: remove extern declarations in .c file.
-Thread-Topic: [PATCH v3] e1000: remove extern declarations in .c file.
-Thread-Index: AQHU5IScXmpFVNQCBkqFzMSYAMfGpA==
-Date:   Wed, 27 Mar 2019 10:05:30 +0000
-Message-ID: <20190327100526.GA954@qd-ubuntu>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P194CA0029.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:209:90::42) To VI1PR08MB3168.eurprd08.prod.outlook.com
- (2603:10a6:803:47::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [89.21.227.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 285b2c9a-b32e-449f-ff72-08d6b29bbe63
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600127)(711020)(4605104)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7153060)(7193020);SRVR:VI1PR08MB4126;
-x-ms-traffictypediagnostic: VI1PR08MB4126:
-x-microsoft-antispam-prvs: <VI1PR08MB41269E6160D7AE8A5123482DB3580@VI1PR08MB4126.eurprd08.prod.outlook.com>
-x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(376002)(346002)(366004)(39830400003)(136003)(189003)(199004)(2906002)(25786009)(33716001)(6506007)(14454004)(386003)(102836004)(26005)(508600001)(110136005)(52116002)(99286004)(316002)(33656002)(486006)(44832011)(476003)(2501003)(14444005)(106356001)(1076003)(86362001)(105586002)(5660300002)(186003)(66066001)(6436002)(256004)(7736002)(6486002)(305945005)(81156014)(8676002)(74482002)(2201001)(9686003)(71190400001)(6512007)(53936002)(8936002)(3846002)(71200400001)(81166006)(97736004)(6116002)(68736007)(142923001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB4126;H:VI1PR08MB3168.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Cvm6YclhAPQuKsog0LsFyKsRh9lJq+64wArg3ccue5fdoVddsTvSQ+OSwF19OzY8FMQhzdYE2Qg8/4pTJoIVcUvJKaFGE7ko3qFiDf5t6Al8ftUBQ0KCY9tsRScjhxhWAd1FmeUTsWPDnZIX8OCVXFnExV27e3D6Gk4kXyM2tmiQzRY/Iu2qxKhkcxGxNhl8p9Q+L/wQBZCD8G4oT4lePsx6Tbm87JlOMPYoXexzY37yMJho1zPQhfAcQEWI71yOd5r9YuJVhEMiQGcZLiuJG4ieeShGEk/oaP7UIi14YH+992rwpT8gIxIijoIFJk1RjvYORIXEFfMuYNBVDAlxxW98Wz5cQd8OJ0jzg5nlfzJhiS0tQXiQ/i0Pdx8NtWqEHBN7xGUadQ4csvMYrPuXuVAAo2PiZ7UVJxF+C7EYv6A=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <450E91ECDF26C344BC5318305E418E3C@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Mar 2019 06:08:11 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11856 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731668AbfC0KIL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:08:11 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9b4b8d0000>; Wed, 27 Mar 2019 03:08:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 27 Mar 2019 03:08:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 27 Mar 2019 03:08:10 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 10:08:02 +0000
+Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
+To:     Vidya Sagar <vidyas@nvidia.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <kishon@ti.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
+        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
+        <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <96674380-a171-9c68-2030-564f15b88474@nvidia.com>
+Date:   Wed, 27 Mar 2019 10:07:59 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 285b2c9a-b32e-449f-ff72-08d6b29bbe63
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 10:05:30.5684
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4126
+In-Reply-To: <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553681293; bh=yVfPNrpHUuRP5h5BgHdsbFsV5TxeYP9iJmoMAxHKrJk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PV+r7LD1KZxBnS4SBMrNrWCNR/3KVp2pM0UxyMCdNMuY7H//CeNSfE2XJ0H26/CNa
+         Btk0EyxU1IZaSINhzSKtouoafZn7SybTYIQvTNL/fxC9b0igZ8JBmvxuYiRPN4rTpL
+         bdK8yGAJa4ARyToUWa3/l5E7a1Hfe9GJDIlz4NAqsHWAFglE9zG4pnYlVzaw7BHzSH
+         AINf/gnOIvWZifgz3FA2XOIYsl6YtKntlUy9EJmbwc9EPR1xouH36BxhI81n9Tl/OZ
+         H3HF4lATK2rWoSAeaMPmj+cc9q4Z8dCLpSqi8VJGTv8GQ7SgyDGGEKN5cCuBWSpDX2
+         DnnmAMnJazTnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following checkpatch.pl warning:
 
-WARNING: externs should be avoided in .c files
+On 26/03/2019 15:13, Vidya Sagar wrote:
+> Add support for Synopsys DesignWare core IP based PCIe host controller
+> present in Tegra194 SoC.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig         |   10 +
+>  drivers/pci/controller/dwc/Makefile        |    1 +
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 1862 ++++++++++++++++++++++++++++
+>  3 files changed, 1873 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-tegra194.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 6ea74b1c0d94..d80f2d77892a 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -213,4 +213,14 @@ config PCIE_UNIPHIER
+>  	  Say Y here if you want PCIe controller support on UniPhier SoCs.
+>  	  This driver supports LD20 and PXs3 SoCs.
+>  
+> +config PCIE_TEGRA194
+> +	bool "NVIDIA Tegra (T194) PCIe controller"
+> +	depends on TEGRA_BPMP && (ARCH_TEGRA || COMPILE_TEST)
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	select PHY_TEGRA194_PCIE_P2U
+> +	help
+> +	  Say Y here if you want support for DesignWare core based PCIe host
+> +	  controller found in NVIDIA Tegra T194 SoC.
+> +
 
-Some of the driver's function declared in e1000.h were declared a second
-time in e1000_main.c, triggering checkpatch.pl warnings.
+Don't we want tristate here? You have a removal function.
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
----
- v2: Fix mail subject.
- v3: Remove patch version details from patch.
----
- drivers/net/ethernet/intel/e1000/e1000_main.c | 11 -----------
- 1 file changed, 11 deletions(-)
+Cheers
+Jon
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/et=
-hernet/intel/e1000/e1000_main.c
-index 8fe9af0e2ab7..b3d5cd750dca 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -65,14 +65,6 @@ static const struct pci_device_id e1000_pci_tbl[] =3D {
-=20
- MODULE_DEVICE_TABLE(pci, e1000_pci_tbl);
-=20
--int e1000_up(struct e1000_adapter *adapter);
--void e1000_down(struct e1000_adapter *adapter);
--void e1000_reinit_locked(struct e1000_adapter *adapter);
--void e1000_reset(struct e1000_adapter *adapter);
--int e1000_setup_all_tx_resources(struct e1000_adapter *adapter);
--int e1000_setup_all_rx_resources(struct e1000_adapter *adapter);
--void e1000_free_all_tx_resources(struct e1000_adapter *adapter);
--void e1000_free_all_rx_resources(struct e1000_adapter *adapter);
- static int e1000_setup_tx_resources(struct e1000_adapter *adapter,
- 				    struct e1000_tx_ring *txdr);
- static int e1000_setup_rx_resources(struct e1000_adapter *adapter,
-@@ -81,7 +73,6 @@ static void e1000_free_tx_resources(struct e1000_adapter =
-*adapter,
- 				    struct e1000_tx_ring *tx_ring);
- static void e1000_free_rx_resources(struct e1000_adapter *adapter,
- 				    struct e1000_rx_ring *rx_ring);
--void e1000_update_stats(struct e1000_adapter *adapter);
-=20
- static int e1000_init_module(void);
- static void e1000_exit_module(void);
-@@ -89,8 +80,6 @@ static int e1000_probe(struct pci_dev *pdev, const struct=
- pci_device_id *ent);
- static void e1000_remove(struct pci_dev *pdev);
- static int e1000_alloc_queues(struct e1000_adapter *adapter);
- static int e1000_sw_init(struct e1000_adapter *adapter);
--int e1000_open(struct net_device *netdev);
--int e1000_close(struct net_device *netdev);
- static void e1000_configure_tx(struct e1000_adapter *adapter);
- static void e1000_configure_rx(struct e1000_adapter *adapter);
- static void e1000_setup_rctl(struct e1000_adapter *adapter);
---=20
-2.17.1
-
+-- 
+nvpublic
