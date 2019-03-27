@@ -2,109 +2,218 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DA8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7969CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5392082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npLyOjeO"
+	by mail.kernel.org (Postfix) with ESMTP id 414292063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553710762;
+	bh=1P05lgw3nwfgKDCbbNsCajN1K7ZgUaDU0RtR/HuuWJo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zxUfx8obujrtPhtYkbR+FHV4sQ2Y9IwVvQKhSwerR8f9U6CqhpiZv/ZjTECMvumZn
+	 bNcrpA6DWe7HQ2k/VMFdpaU86sjc72oS3G9g+FE3OqQwOvYAaG+rXWtB/VEv3Qn0N8
+	 OPXf/3s+jXkPGpKnTENlr8gG5J9NuNGssCdjBcO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390692AbfC0STQ (ORCPT
+        id S2390703AbfC0STV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:19:16 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36420 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390676AbfC0STM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p10so10096525pff.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=elq3lPVXVJpFQIKCv7kEN+Z8SrDMJCw2P5QlEAUjYmE=;
-        b=npLyOjeODYZMYwa3GB4kCwcHF6OLdI+lR12TIk26fb1bYAGCqz3RaUIjCqgaPxuC1W
-         5HIPLwR/4XJ726v/vcrYrZkss9WrJFip0B1NpB7gABFCw2aZdhyvO/wPOLO+7NXDMK/5
-         2sDAo6LqmgnrePHzB5lmW0V3jMXcEX99C0ttIsMu2kKm1T4mdu4iyeuiF6LfbNuptyGF
-         njLsfMnZhN/dDHOHCujVlPUnNMO2SRJgr2MaQSgvpCCTc5mk6rgn4efUbZLhoLd+YGPo
-         1PdtTGd3WOyFYDliVYCA17hUwpo+qrJFzAiaSlnXGR8JI7L2BvsJinGxdP7NvfyeAfQ1
-         blhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=elq3lPVXVJpFQIKCv7kEN+Z8SrDMJCw2P5QlEAUjYmE=;
-        b=e15NFyrNWiipULEDJANLGxq69NFJBoGxRkjelYjjLtCLy2ngLU/ziFECE9hT3zTSCx
-         WOIACZ4pLHxNhLUxiAShGOvE6+dd+5S8T2anuKQjLkn8C29FpCSaWu4lxuT/4rTb5U7X
-         ZZbYs/6NKkreyfIStHnfq1la4cAAFhuTuU0Lj1nkISju8XbpHxgyznCdtzmSFM4ll3zL
-         375Cr1DLs5dwtvYlN6Vg0+EUE5pb5rdBga4/oE8ZXt3mC7SUNYIIFRZccdMAGY05LZxf
-         2RLmWB/4rcH6nbgsy0fMaZa2n/x3ZCOT++fahjGK9KGgSweRgbprqTf8iehlFp0m09T1
-         HN2g==
-X-Gm-Message-State: APjAAAVvZxAIvf7snK+GEezV4GJAGAQYRPimmA84xqs8JZdHwu8HcVTF
-        WhjlgvMfS3XxTEoijtc7wB7aZCnlksc=
-X-Google-Smtp-Source: APXvYqx2UTp2ffxcXn9AJ9K4uNKWCJiJQd3mHU3bC7jGzj3AB9Kx7RLLJQ0D0MUjQONLdCsVHNTuLg==
-X-Received: by 2002:a63:481:: with SMTP id 123mr36300079pge.167.1553710751373;
-        Wed, 27 Mar 2019 11:19:11 -0700 (PDT)
-Received: from auvm ([106.51.27.254])
-        by smtp.gmail.com with ESMTPSA id l74sm25755366pfi.174.2019.03.27.11.19.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 11:19:10 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 23:49:07 +0530
-From:   Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
-To:     gregkh@linuxfoundation.org, hadess@hadess.net, hdegoede@redhat.com,
-        Larry.Finger@lwfinger.net, dan.carpenter@oracle.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: rtl8723bs: core: fix line over 80 characters
- warning
-Message-ID: <20190327181836.GA37876@auvm>
-References: <20190326182309.GA33380@auvm>
+        Wed, 27 Mar 2019 14:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390133AbfC0STT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1098420449;
+        Wed, 27 Mar 2019 18:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710757;
+        bh=1P05lgw3nwfgKDCbbNsCajN1K7ZgUaDU0RtR/HuuWJo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N5O9gY8xS1jd4tzXNbpcZ2s70urUkuWl5ecJeQGgeymYB/oHvSdFjia5Pm3wScHFO
+         NsOU2lgfTQaUIbfzc4aQbdOjM4uH8ShPTBBieeISCf7cnLLqDS2z12IQDIVYtGi8iW
+         r++JA3AUq3kIEzPudatCp7s/UCf/7YahsFRxmbY8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Alexander Graf <agraf@suse.de>, Borislav Petkov <bp@alien8.de>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 089/123] efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
+Date:   Wed, 27 Mar 2019 14:15:53 -0400
+Message-Id: <20190327181628.15899-89-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
+References: <20190327181628.15899-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326182309.GA33380@auvm>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checkpatch.pl complains that these lines are over 80 characters. Use the
-"psecuritypriv" pointer for consistency, remove unnecessary parantheses
-and fix the alignment.
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-This patch just cleans up a condition, it doesn't affect runtime.
+[ Upstream commit 4e46c2a956215482418d7b315749fb1b6c6bc224 ]
 
-Signed-off-by: Anirudh Rayabharam <anirudh.rayabharam@gmail.com>
+The UEFI spec revision 2.7 errata A section 8.4 has the following to
+say about the virtual memory runtime services:
+
+  "This section contains function definitions for the virtual memory
+  support that may be optionally used by an operating system at runtime.
+  If an operating system chooses to make EFI runtime service calls in a
+  virtual addressing mode instead of the flat physical mode, then the
+  operating system must use the services in this section to switch the
+  EFI runtime services from flat physical addressing to virtual
+  addressing."
+
+So it is pretty clear that calling SetVirtualAddressMap() is entirely
+optional, and so there is no point in doing so unless it achieves
+anything useful for us.
+
+This is not the case for 64-bit ARM. The identity mapping used by the
+firmware is arbitrarily converted into another permutation of userland
+addresses (i.e., bits [63:48] cleared), and the runtime code could easily
+deal with the original layout in exactly the same way as it deals with
+the converted layout. However, due to constraints related to page size
+differences if the OS is not running with 4k pages, and related to
+systems that may expose the individual sections of PE/COFF runtime
+modules as different memory regions, creating the virtual layout is a
+bit fiddly, and requires us to sort the memory map and reason about
+adjacent regions with identical memory types etc etc.
+
+So the obvious fix is to stop calling SetVirtualAddressMap() altogether
+on arm64 systems. However, to avoid surprises, which are notoriously
+hard to diagnose when it comes to OS<->firmware interactions, let's
+start by making it an opt-out feature, and implement support for the
+'efi=novamap' kernel command line parameter on ARM and arm64 systems.
+
+( Note that 32-bit ARM generally does require SetVirtualAddressMap() to be
+  used, given that the physical memory map and the kernel virtual address
+  map are not guaranteed to be non-overlapping like on arm64. However,
+  having support for efi=novamap,noruntime on 32-bit ARM, combined with
+  the recently proposed support for earlycon=efifb, is likely to be useful
+  to diagnose boot issues on such systems if they have no accessible serial
+  port. )
+
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190202094119.13230-8-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v2: Made the commit message clearer, removed unnecessary parantheses and fixed
-    the alignment as suggested by Dan Carpenter <dan.carpenter@oracle.com>
+ drivers/firmware/efi/libstub/arm-stub.c        |  5 +++++
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 10 ++++++++++
+ drivers/firmware/efi/libstub/efistub.h         |  1 +
+ drivers/firmware/efi/libstub/fdt.c             |  3 +++
+ 4 files changed, 19 insertions(+)
 
- drivers/staging/rtl8723bs/core/rtw_ap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index 18fabf5ff44b..8062b7f36de2 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -2336,8 +2336,8 @@ void rtw_ap_restore_network(struct adapter *padapter)
- 			Update_RA_Entry(padapter, psta);
- 			/* pairwise key */
- 			/* per sta pairwise key and settings */
--			if ((padapter->securitypriv.dot11PrivacyAlgrthm == _TKIP_) ||
--				(padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
-+			if (psecuritypriv->dot11PrivacyAlgrthm == _TKIP_ ||
-+			    psecuritypriv->dot11PrivacyAlgrthm == _AES_) {
- 				rtw_setstakey_cmd(padapter, psta, true, false);
- 			}
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+index 01a9d78ee415..3b1e1dc3fb46 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/arm-stub.c
+@@ -364,6 +364,11 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
+ 		paddr = in->phys_addr;
+ 		size = in->num_pages * EFI_PAGE_SIZE;
+ 
++		if (novamap()) {
++			in->virt_addr = in->phys_addr;
++			continue;
++		}
++
+ 		/*
+ 		 * Make the mapping compatible with 64k pages: this allows
+ 		 * a 4k page size kernel to kexec a 64k page size kernel and
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index 50a9cab5a834..39f87e6dac5c 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -34,6 +34,7 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
+ 
+ static int __section(.data) __nokaslr;
+ static int __section(.data) __quiet;
++static int __section(.data) __novamap;
+ 
+ int __pure nokaslr(void)
+ {
+@@ -43,6 +44,10 @@ int __pure is_quiet(void)
+ {
+ 	return __quiet;
+ }
++int __pure novamap(void)
++{
++	return __novamap;
++}
+ 
+ #define EFI_MMAP_NR_SLACK_SLOTS	8
+ 
+@@ -454,6 +459,11 @@ efi_status_t efi_parse_options(char const *cmdline)
+ 			__chunk_size = -1UL;
  		}
+ 
++		if (!strncmp(str, "novamap", 7)) {
++			str += strlen("novamap");
++			__novamap = 1;
++		}
++
+ 		/* Group words together, delimited by "," */
+ 		while (*str && *str != ' ' && *str != ',')
+ 			str++;
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index f59564b72ddc..2adde22b4a9f 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -27,6 +27,7 @@
+ 
+ extern int __pure nokaslr(void);
+ extern int __pure is_quiet(void);
++extern int __pure novamap(void);
+ 
+ #define pr_efi(sys_table, msg)		do {				\
+ 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index 0c0d2312f4a8..dba296a44f4e 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -327,6 +327,9 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
+ 	if (status == EFI_SUCCESS) {
+ 		efi_set_virtual_address_map_t *svam;
+ 
++		if (novamap())
++			return EFI_SUCCESS;
++
+ 		/* Install the new virtual address map */
+ 		svam = sys_table->runtime->set_virtual_address_map;
+ 		status = svam(runtime_entry_count * desc_size, desc_size,
 -- 
-2.17.1
+2.19.1
 
