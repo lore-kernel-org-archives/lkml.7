@@ -2,142 +2,192 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC549C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F022C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825B120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711586;
-	bh=89uSXVOIJ4pb7Qpjf4GyfOc5HOEtmenogYMnD6C+7L4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/mR0MGqpxz8teq3wIQGh3231mpsVSyT5XRDS3AjbgJ6vwA70f/Byyup78l+dhrgO
-	 YR+ZSL1Lglq1/gcVUOkssECGfz6UKI7pTndv0dmkAaAEM3Dr8vYkTR4Vi40tQV0AnD
-	 DIXKdtrNXP6lwC7+0pVsAJcIg/keLZc0LyNOaRvI=
+	by mail.kernel.org (Postfix) with ESMTP id 5AD6C204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391896AbfC0SdF (ORCPT
+        id S2391962AbfC0SdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404147AbfC0SZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:16 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DEB920651;
-        Wed, 27 Mar 2019 18:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711115;
-        bh=89uSXVOIJ4pb7Qpjf4GyfOc5HOEtmenogYMnD6C+7L4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KDFmto37opZQ2GWlzx9zTMyP5+P5k+4EfKZpr+dFjKimHnzxB1bIG2dbGx8F6PVE4
-         j5O9Ln0ytZPzNfSwPzb4T31NUe2XSRGdfEE0nHJudBlKaAtyi2QJrkAxXZrzpxdaAy
-         4dd6wocI0f7YO2dOmOKiRH5R956E2P+551fUtkSQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, dima@golovin.in, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 61/63] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Wed, 27 Mar 2019 14:23:21 -0400
-Message-Id: <20190327182323.18577-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
-References: <20190327182323.18577-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 14:33:19 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51484 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390945AbfC0SdQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:33:16 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h9DMO-0004Tc-RQ; Wed, 27 Mar 2019 19:33:13 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 4/4] powerpc: reshuffle TIF bits
+Date:   Wed, 27 Mar 2019 19:33:10 +0100
+Message-Id: <20190327183310.1015-4-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190327183310.1015-1-bigeasy@linutronix.de>
+References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
+ <20190327183310.1015-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael Ávila de Espíndola <rafael@espindo.la>
+Powerpc32/64 does not compile because TIF_SYSCALL_TRACE's bit is higher
+than 15 and the assembly instructions don't expect that.
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+Move TIF_RESTOREALL, TIF_NOERROR to the higher bits and keep
+TIF_NEED_RESCHED_LAZY in the lower range. As a result one split load is
+needed and otherwise we can use immediates.
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
-
-Section 3.10.8 of ld.bfd's documentation states:
-
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
-
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
-
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
-
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
-
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
-
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/thread_info.h | 13 ++++++++-----
+ arch/powerpc/kernel/entry_32.S         | 12 +++++++-----
+ arch/powerpc/kernel/entry_64.S         | 12 +++++++-----
+ 3 files changed, 22 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index a703842b54de..17e1e60b6b40 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -365,7 +365,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
+diff --git a/arch/powerpc/include/asm/thread_info.h b/arch/powerpc/include/asm/thread_info.h
+index 7e542e729f131..f9132398566d9 100644
+--- a/arch/powerpc/include/asm/thread_info.h
++++ b/arch/powerpc/include/asm/thread_info.h
+@@ -90,7 +90,7 @@ void arch_setup_new_exec(void);
+ /*
+  * thread information flag bit numbers
   */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+-#define TIF_NEED_RESCHED_LAZY	0	/* lazy rescheduling necessary */
++#define TIF_SYSCALL_TRACE	0	/* syscall trace active */
+ #define TIF_SIGPENDING		1	/* signal pending */
+ #define TIF_NEED_RESCHED	2	/* rescheduling necessary */
+ #define TIF_FSCHECK		3	/* Check FS is USER_DS on return */
+@@ -101,11 +101,12 @@ void arch_setup_new_exec(void);
+ #define TIF_SINGLESTEP		8	/* singlestepping active */
+ #define TIF_NOHZ		9	/* in adaptive nohz mode */
+ #define TIF_SECCOMP		10	/* secure computing */
+-#define TIF_RESTOREALL		11	/* Restore all regs (implies NOERROR) */
+-#define TIF_NOERROR		12	/* Force successful syscall return */
++
++#define TIF_NEED_RESCHED_LAZY	11	/* lazy rescheduling necessary */
++#define TIF_SYSCALL_TRACEPOINT	12	/* syscall tracepoint instrumentation */
++
+ #define TIF_NOTIFY_RESUME	13	/* callback before returning to user */
+ #define TIF_UPROBE		14	/* breakpointed or single-stepping */
+-#define TIF_SYSCALL_TRACEPOINT	15	/* syscall tracepoint instrumentation */
+ #define TIF_EMULATE_STACK_STORE	16	/* Is an instruction emulation
+ 						for stack store? */
+ #define TIF_MEMDIE		17	/* is terminating due to OOM killer */
+@@ -114,7 +115,9 @@ void arch_setup_new_exec(void);
+ #endif
+ #define TIF_POLLING_NRFLAG	19	/* true if poll_idle() is polling TIF_NEED_RESCHED */
+ #define TIF_32BIT		20	/* 32 bit binary */
+-#define TIF_SYSCALL_TRACE	21	/* syscall trace active */
++#define TIF_RESTOREALL		21	/* Restore all regs (implies NOERROR) */
++#define TIF_NOERROR		22	/* Force successful syscall return */
++
  
+ /* as above, but as bit values */
+ #define _TIF_SYSCALL_TRACE	(1<<TIF_SYSCALL_TRACE)
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 553e1ad981c30..1b6c95d49cd23 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -393,7 +393,9 @@ _GLOBAL(DoSyscall)
+ 	MTMSRD(r10)
+ 	lwz	r9,TI_FLAGS(r12)
+ 	li	r8,-MAX_ERRNO
+-	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)
++	lis	r0,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)@h
++	ori	r0,r0, (_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)@l
++	and.	r0,r9,r0
+ 	bne-	syscall_exit_work
+ 	cmplw	0,r3,r8
+ 	blt+	syscall_exit_cont
+@@ -511,13 +513,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	b	syscall_dotrace_cont
+ 
+ syscall_exit_work:
+-	andi.	r0,r9,_TIF_RESTOREALL
++	andis.	r0,r9,_TIF_RESTOREALL@h
+ 	beq+	0f
+ 	REST_NVGPRS(r1)
+ 	b	2f
+ 0:	cmplw	0,r3,r8
+ 	blt+	1f
+-	andi.	r0,r9,_TIF_NOERROR
++	andis.	r0,r9,_TIF_NOERROR@h
+ 	bne-	1f
+ 	lwz	r11,_CCR(r1)			/* Load CR */
+ 	neg	r3,r3
+@@ -526,12 +528,12 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 
+ 1:	stw	r6,RESULT(r1)	/* Save result */
+ 	stw	r3,GPR3(r1)	/* Update return value */
+-2:	andi.	r0,r9,(_TIF_PERSYSCALL_MASK)
++2:	andis.	r0,r9,(_TIF_PERSYSCALL_MASK)@h
+ 	beq	4f
+ 
+ 	/* Clear per-syscall TIF flags if any are set.  */
+ 
+-	li	r11,_TIF_PERSYSCALL_MASK
++	lis	r11,_TIF_PERSYSCALL_MASK@h
+ 	addi	r12,r12,TI_FLAGS
+ 3:	lwarx	r8,0,r12
+ 	andc	r8,r8,r11
+diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
+index fcf8fe69beb51..d857823e25b2f 100644
+--- a/arch/powerpc/kernel/entry_64.S
++++ b/arch/powerpc/kernel/entry_64.S
+@@ -253,7 +253,9 @@ system_call:			/* label this so stack traces look sane */
+ 
+ 	ld	r9,TI_FLAGS(r12)
+ 	li	r11,-MAX_ERRNO
+-	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)
++	lis	r0,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)@h
++	ori	r0,r0,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)@l
++	and.	r0,r9,r0
+ 	bne-	.Lsyscall_exit_work
+ 
+ 	andi.	r0,r8,MSR_FP
+@@ -370,25 +372,25 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
+ 	/* If TIF_RESTOREALL is set, don't scribble on either r3 or ccr.
+ 	 If TIF_NOERROR is set, just save r3 as it is. */
+ 
+-	andi.	r0,r9,_TIF_RESTOREALL
++	andis.	r0,r9,_TIF_RESTOREALL@h
+ 	beq+	0f
+ 	REST_NVGPRS(r1)
+ 	b	2f
+ 0:	cmpld	r3,r11		/* r11 is -MAX_ERRNO */
+ 	blt+	1f
+-	andi.	r0,r9,_TIF_NOERROR
++	andis.	r0,r9,_TIF_NOERROR@h
+ 	bne-	1f
+ 	ld	r5,_CCR(r1)
+ 	neg	r3,r3
+ 	oris	r5,r5,0x1000	/* Set SO bit in CR */
+ 	std	r5,_CCR(r1)
+ 1:	std	r3,GPR3(r1)
+-2:	andi.	r0,r9,(_TIF_PERSYSCALL_MASK)
++2:	andis.	r0,r9,(_TIF_PERSYSCALL_MASK)@h
+ 	beq	4f
+ 
+ 	/* Clear per-syscall TIF flags if any are set.  */
+ 
+-	li	r11,_TIF_PERSYSCALL_MASK
++	lis	r11,(_TIF_PERSYSCALL_MASK)@h
+ 	addi	r12,r12,TI_FLAGS
+ 3:	ldarx	r10,0,r12
+ 	andc	r10,r10,r11
 -- 
-2.19.1
+2.20.1
 
