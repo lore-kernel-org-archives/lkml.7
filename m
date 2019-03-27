@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC890C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF112146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AB32146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="crI7Waab";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oyAod51/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gf8aCqdA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LN/oBY2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbfC0N0p (ORCPT
+        id S1729585AbfC0N1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:26:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58974 "EHLO
+        Wed, 27 Mar 2019 09:27:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59962 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfC0N0o (ORCPT
+        with ESMTP id S1727488AbfC0N1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:26:44 -0400
+        Wed, 27 Mar 2019 09:27:49 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7296A61A10; Wed, 27 Mar 2019 13:26:43 +0000 (UTC)
+        id A3CF760364; Wed, 27 Mar 2019 13:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553693203;
-        bh=S5+4np9L/K2PvyIjNL087u2hE7CRP77Eg28qqrJol6I=;
+        s=default; t=1553693267;
+        bh=+TLQQ0u4IfciTDa2AH1cuWXrbQskbKNjeH47EHeFnio=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=crI7Waab9LOZHyldHTQpqzOBbGJUc7AKtYrjbNy7sMoIuD+HwcCG6zJkbVGi8Hjya
-         RtpiZ89kRfOxYfEzFORP0NH7ob1BA/4xRAy0HhhTSsdu6RGaNk5YR+NO34E6gVqjyE
-         KW9k+FzY3idABeqjkO12kdZlmUVCHQGZy4fWpI9Q=
+        b=gf8aCqdA+sa5VVftHhYao4bl4dJ7ZUomiqcImcMwUelprRw2vb0U+Cn0uR5FR1QEc
+         sNZZxjcXoLhDHXdR7s4nSfnmhoaTljnip7xiaReitr+FBAMcWD17+kqueyStz1Qe/z
+         ieQK4E9wbNHtHPeJAVAtPoyELIzd9kICeSW4eVeI=
 Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 99389619B1;
-        Wed, 27 Mar 2019 13:26:41 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTP id 6726260A44;
+        Wed, 27 Mar 2019 13:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553693202;
-        bh=S5+4np9L/K2PvyIjNL087u2hE7CRP77Eg28qqrJol6I=;
+        s=default; t=1553693265;
+        bh=+TLQQ0u4IfciTDa2AH1cuWXrbQskbKNjeH47EHeFnio=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oyAod51/XqYRod7+kJCmJv3qdwsEWPejWkTf2mRGyONK3TdN8Gsy4/iBoagQfZKDL
-         RA4UjWkzn6JwW0Nw0IbmtdCypirlfI1KdVkYr8+YQTXI8/eLJwZ2J7ej484bMe6JeU
-         j05AxCp5bcZ/dysC+WuJM6RfTPhU+vN+9osYuqqY=
+        b=LN/oBY2aCyEgPKXtsPw8CFV41/EwpfyrSm8w3K9+xuOJsSuoGp1+RTMJwoYK1d7lR
+         PJJz4TYdja8/gCoC/apNUNm8VSRuou3j2sms+IQutj7sJCk+pkkys3xZ7BNF4RwZ5W
+         4DspjmVDheNjeP/MRMR2MBtuw1qkZ+D8kg3p/Q1s=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 Mar 2019 18:56:41 +0530
+Date:   Wed, 27 Mar 2019 18:57:45 +0530
 From:   Sibi Sankar <sibis@codeaurora.org>
 To:     Rajendra Nayak <rnayak@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
         andy.gross@linaro.org, david.brown@linaro.org,
         mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] soc: qcom: rpmpd: fixup rpmpd set performance
- state
-In-Reply-To: <a224821a-6e28-cea5-9928-440f5e132460@codeaurora.org>
+        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v2 2/9] soc: qcom: rpmpd: Add support to set rpmpd state
+ to max
+In-Reply-To: <696866e5-740a-f7b0-5193-f79b5c1e908c@codeaurora.org>
 References: <20190324175007.29040-1-sibis@codeaurora.org>
- <20190324175007.29040-2-sibis@codeaurora.org>
- <a224821a-6e28-cea5-9928-440f5e132460@codeaurora.org>
-Message-ID: <a60f1fce6b5c9fad465b285e34e05673@codeaurora.org>
+ <20190324175007.29040-3-sibis@codeaurora.org>
+ <696866e5-740a-f7b0-5193-f79b5c1e908c@codeaurora.org>
+Message-ID: <8543face9c79a2b04d4234c41a84897a@codeaurora.org>
 X-Sender: sibis@codeaurora.org
 User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,38 +68,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-25 09:33, Rajendra Nayak wrote:
-> On 3/24/2019 11:19 PM, Sibi Sankar wrote:
->> Fixup rpmpd state to max if the required state is greater than all the
->> supported states.
+On 2019-03-25 09:36, Rajendra Nayak wrote:
+> On 3/24/2019 11:20 PM, Sibi Sankar wrote:
+>> Add support to set rpmpd state to max across SoCs.
 > 
-> This should also say why, 'so the clients which just want to vote on 
-> whatever
-> is the max state supported can do so by passing an INT_MAX'?
+> Changelog could be better, 'rpmpd max state varies across SoCs
+> and SoC families, add support in the driver to make it SoC/SoC
+> family specific'
 
-will add more detail in v3
+will use this in v3
 
 > 
->> 
->> Fixes: 075d3db8d10d ("Add support for the .set_performace_state() and
->> .opp_to_performance_state()")
 >> 
 >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 >> ---
->>   drivers/soc/qcom/rpmpd.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>   drivers/soc/qcom/rpmpd.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
 >> 
 >> diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
->> index 005326050c23..235d01870dd8 100644
+>> index 235d01870dd8..71fdfafad2ea 100644
 >> --- a/drivers/soc/qcom/rpmpd.c
 >> +++ b/drivers/soc/qcom/rpmpd.c
->> @@ -226,7 +226,7 @@ static int rpmpd_set_performance(struct 
+>> @@ -83,12 +83,14 @@ struct rpmpd {
+>>   	const int res_type;
+>>   	const int res_id;
+>>   	struct qcom_smd_rpm *rpm;
+>> +	unsigned int max_state;
+>>   	__le32 key;
+>>   };
+>>     struct rpmpd_desc {
+>>   	struct rpmpd **rpmpds;
+>>   	size_t num_pds;
+>> +	unsigned int max_state;
+>>   };
+>>     static DEFINE_MUTEX(rpmpd_lock);
+>> @@ -114,6 +116,7 @@ static struct rpmpd *msm8996_rpmpds[] = {
+>>   static const struct rpmpd_desc msm8996_desc = {
+>>   	.rpmpds = msm8996_rpmpds,
+>>   	.num_pds = ARRAY_SIZE(msm8996_rpmpds),
+>> +	.max_state = MAX_RPMPD_STATE,
+> 
+> Maybe this needs to be renamed to avoid confusion, 
+> MAX_8996_RPMPD_STATE?
+
+sure
+
+> 
+>>   };
+>>     static const struct of_device_id rpmpd_match_table[] = {
+>> @@ -225,8 +228,8 @@ static int rpmpd_set_performance(struct 
 >> generic_pm_domain *domain,
+>>   	int ret = 0;
 >>   	struct rpmpd *pd = domain_to_rpmpd(domain);
->>     	if (state > MAX_RPMPD_STATE)
->> -		goto out;
->> +		state = MAX_RPMPD_STATE;
+>>   -	if (state > MAX_RPMPD_STATE)
+>> -		state = MAX_RPMPD_STATE;
+>> +	if (state > pd->max_state)
+>> +		state = pd->max_state;
 >>     	mutex_lock(&rpmpd_lock);
+>>   @@ -287,6 +290,7 @@ static int rpmpd_probe(struct platform_device 
+>> *pdev)
+>>   		}
+>>     		rpmpds[i]->rpm = rpm;
+>> +		rpmpds[i]->max_state = desc->max_state;
+>>   		rpmpds[i]->pd.power_off = rpmpd_power_off;
+>>   		rpmpds[i]->pd.power_on = rpmpd_power_on;
+>>   		rpmpds[i]->pd.set_performance_state = rpmpd_set_performance;
 >> 
 
 -- 
