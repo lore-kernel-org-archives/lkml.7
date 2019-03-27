@@ -2,90 +2,135 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBB2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7F5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AC3204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71422087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfC0Mx6 (ORCPT
+        id S1729463AbfC0Myo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:53:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60416 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726312AbfC0Mx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:53:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86259AD63;
-        Wed, 27 Mar 2019 12:53:56 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 13:53:56 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/5] lib/vsprintf: Make use of fwnode API to obtain node
- names and separators
-Message-ID: <20190327125356.s7hockgf5yfyhx52@pathway.suse.cz>
-References: <20190322152930.16642-1-sakari.ailus@linux.intel.com>
- <20190322152930.16642-5-sakari.ailus@linux.intel.com>
+        Wed, 27 Mar 2019 08:54:44 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35867 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfC0Myn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:54:43 -0400
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 4CC6A20000A;
+        Wed, 27 Mar 2019 12:54:35 +0000 (UTC)
+Subject: Re: [PATCH v8 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        mpe@ellerman.id.au, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190327063626.18421-1-alex@ghiti.fr>
+ <20190327063626.18421-5-alex@ghiti.fr>
+ <f6e74ad8-acca-3b1e-27eb-a2881ac8437d@linux.ibm.com>
+ <fbae7220-2e6f-8516-cf93-fbe430452043@ghiti.fr>
+ <aabfc780-1681-c69a-9927-4645d6499984@linux.ibm.com>
+ <e7637427-5f17-b4f4-93a2-70cac9b3a264@ghiti.fr>
+ <87pnqcws2u.fsf@linux.ibm.com>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <95819dc9-7910-f273-681c-a241fee62dd2@ghiti.fr>
+Date:   Wed, 27 Mar 2019 13:54:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190322152930.16642-5-sakari.ailus@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <87pnqcws2u.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-03-22 17:29:29, Sakari Ailus wrote:
-> Instead of implementing our own means of discovering parent nodes, node
-> names or counting how many parents a node has, use the newly added
-> functions in the fwnode API to obtain that information.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  lib/vsprintf.c | 37 +++++++++++++++----------------------
->  1 file changed, 15 insertions(+), 22 deletions(-)
-> 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 5f60b8d41277..91f2a3e4892e 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -37,6 +37,7 @@
->  #include <net/addrconf.h>
->  #include <linux/siphash.h>
->  #include <linux/compiler.h>
-> +#include <linux/property.h>
->  #ifdef CONFIG_BLOCK
->  #include <linux/blkdev.h>
->  #endif
-> @@ -1720,32 +1721,23 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
->  	return format_flags(buf, end, flags, names);
->  }
->  
-> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
-> -{
-> -	for ( ; np && depth; depth--)
-> -		np = np->parent;
-> -
-> -	return kbasename(np->full_name);
-> -}
-> -
->  static noinline_for_stack
-> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-> +char *fwnode_gen_full_name(struct fwnode_handle *fwnode, char *buf, char *end)
+On 03/27/2019 11:05 AM, Aneesh Kumar K.V wrote:
+> Alexandre Ghiti <alex@ghiti.fr> writes:
+>
+>> On 03/27/2019 09:55 AM, Aneesh Kumar K.V wrote:
+>>> On 3/27/19 2:14 PM, Alexandre Ghiti wrote:
+>>>>
+>>>> On 03/27/2019 08:01 AM, Aneesh Kumar K.V wrote:
+>>>>> On 3/27/19 12:06 PM, Alexandre Ghiti wrote:
+> .....
+>
+>>> This is now
+>>> #define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+>>> static inline bool gigantic_page_runtime_supported(void)
+>>> {
+>>> if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+>>>          return false;
+>>>
+>>>      return true;
+>>> }
+>>>
+>>>
+>>> I am wondering whether it should be
+>>>
+>>> #define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+>>> static inline bool gigantic_page_runtime_supported(void)
+>>> {
+>>>
+>>>     if (!IS_ENABLED(CONFIG_CONTIG_ALLOC))
+>>>          return false;
+>> I don't think this test should happen here, CONFIG_CONTIG_ALLOC only allows
+>> to allocate gigantic pages, doing that check here would prevent powerpc
+>> to free boottime gigantic pages when not a guest. Note that this check
+>> is actually done in set_max_huge_pages.
+>>
+>>
+>>> if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+>>>          return false;
+>> Maybe I did not understand this check: I understood that, in the case
+>> the system
+>> is virtualized, we do not want it to hand back gigantic pages. Does this
+>> check
+>> test if the system is currently being virtualized ?
+>> If yes, I think the patch is correct: it prevents freeing gigantic pages
+>> when the system
+>> is virtualized but allows a 'normal' system to free gigantic pages.
+>>
+>>
+> Ok double checked the patch applying the the tree. I got confused by the
+> removal of that #ifdef. So we now disallow the runtime free by checking
+> for gigantic_page_runtime_supported() in  __nr_hugepages_store_common.
+> Now if we allow and if CONFIG_CONTIG_ALLOC is disabled, we still should
+> allow to free the boot time allocated pages back to buddy.
+>
+> The patch looks good. You can add for the series
+>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>
+> -aneesh
+>
 
-I first read this as fwnode_get_full_name(), see "get" vs. "gen".
-I guess that it was because there is used also fwnode_get_name().
+Thanks for your time Aneesh,
 
-Please, rename it to fwnode_full_name_string() or so ;-)
-
-Best Regards,
-Petr
+Alex
