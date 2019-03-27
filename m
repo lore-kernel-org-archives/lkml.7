@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A89C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2386AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719322075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2E92075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfC0VhA (ORCPT
+        id S1729917AbfC0Vg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:37:00 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58672 "EHLO ale.deltatee.com"
+        Wed, 27 Mar 2019 17:36:58 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58666 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728276AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 17:36:50 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE4-0006DN-EM; Wed, 27 Mar 2019 15:36:49 -0600
+        id 1h9GE4-0006DL-EI; Wed, 27 Mar 2019 15:36:49 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE2-0006Cq-Is; Wed, 27 Mar 2019 15:36:46 -0600
+        id 1h9GE2-0006Ck-Bm; Wed, 27 Mar 2019 15:36:46 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
@@ -34,22 +34,22 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
         Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Anup Patel <anup.patel@wdc.com>, Zong Li <zong@andestech.com>,
-        Guo Ren <ren_guo@c-sky.com>,
-        "Stefan O'Rear" <sorear2@gmail.com>
-Date:   Wed, 27 Mar 2019 15:36:43 -0600
-Message-Id: <20190327213643.23789-8-logang@deltatee.com>
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Zong Li <zong@andestech.com>, Guo Ren <ren_guo@c-sky.com>
+Date:   Wed, 27 Mar 2019 15:36:41 -0600
+Message-Id: <20190327213643.23789-6-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
 References: <20190327213643.23789-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, ldufour@linux.vnet.ibm.com, rppt@linux.vnet.ibm.com, anup.patel@wdc.com, zong@andestech.com, ren_guo@c-sky.com, sorear2@gmail.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, rppt@linux.vnet.ibm.com, anup.patel@wdc.com, atish.patra@wdc.com, palmer@sifive.com, paul.walmsley@sifive.com, zong@andestech.com, ren_guo@c-sky.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 7/7] RISC-V: Implement pte_devmap()
+Subject: [PATCH 5/7] RISC-V: Implement memory hotplug
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,93 +57,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the 2nd software bit in the PTE as the devmap bit and add the
-appropriate accessors.
+In order to define ARCH_ENABLE_MEMORY_HOTPLUG we need to implement
+arch_add_memory() and vmemmap_free().
 
-This also allows us to set ARCH_HAS_ZONE_DEVICE.
+arch_add_memory() is very similar to the x86 versions except we
+don't need to fuss with the mapping as we've already mapped the
+entire linear region in riscv.
+
+For now, vmemmap_free() is empty which is similar to other arches that
+don't implement hot remove.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Laurent Dufour <ldufour@linux.vnet.ibm.com>
 Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Cc: Anup Patel <anup.patel@wdc.com>
+Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
 Cc: Zong Li <zong@andestech.com>
 Cc: Guo Ren <ren_guo@c-sky.com>
-Cc: "Stefan O'Rear" <sorear2@gmail.com>
 ---
- arch/riscv/Kconfig                    |  1 +
- arch/riscv/include/asm/pgtable-bits.h |  8 ++++++--
- arch/riscv/include/asm/pgtable.h      | 10 ++++++++++
- 3 files changed, 17 insertions(+), 2 deletions(-)
+ arch/riscv/Kconfig   |  3 +++
+ arch/riscv/mm/init.c | 27 +++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 2cb39b4d6d6b..d365d7e17ed2 100644
+index d21e6a12e8b6..9477214a00e7 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -49,6 +49,7 @@ config RISCV
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select ARCH_HAS_PTE_SPECIAL
- 	select HAVE_EBPF_JIT if 64BIT
-+	select ARCH_HAS_ZONE_DEVICE
+@@ -83,6 +83,9 @@ config ARCH_SPARSEMEM_ENABLE
+ config ARCH_SELECT_MEMORY_MODEL
+ 	def_bool ARCH_SPARSEMEM_ENABLE
  
- config MMU
++config ARCH_ENABLE_MEMORY_HOTPLUG
++	def_bool y
++
+ config STACKTRACE_SUPPORT
  	def_bool y
-diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-index 470755cb7558..9555d419a46f 100644
---- a/arch/riscv/include/asm/pgtable-bits.h
-+++ b/arch/riscv/include/asm/pgtable-bits.h
-@@ -30,9 +30,11 @@
- #define _PAGE_GLOBAL    (1 << 5)    /* Global */
- #define _PAGE_ACCESSED  (1 << 6)    /* Set by hardware on any access */
- #define _PAGE_DIRTY     (1 << 7)    /* Set by hardware on any write */
--#define _PAGE_SOFT      (1 << 8)    /* Reserved for software */
-+#define _PAGE_SOFT1     (1 << 8)    /* Reserved for software */
-+#define _PAGE_SOFT2     (1 << 9)    /* Reserved for software */
  
--#define _PAGE_SPECIAL   _PAGE_SOFT
-+#define _PAGE_SPECIAL   _PAGE_SOFT1
-+#define _PAGE_DEVMAP	_PAGE_SOFT2
- #define _PAGE_TABLE     _PAGE_PRESENT
- 
- /*
-@@ -41,6 +43,8 @@
-  */
- #define _PAGE_PROT_NONE _PAGE_READ
- 
-+#define __HAVE_ARCH_PTE_DEVMAP
-+
- #define _PAGE_PFN_SHIFT 10
- 
- /* Set of bits to preserve across pte_modify() */
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index e071e2be3a6c..a0e6a5f8bbb5 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -248,6 +248,11 @@ static inline int pte_special(pte_t pte)
- 	return pte_val(pte) & _PAGE_SPECIAL;
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 315194557c3d..0a54c3adf0ac 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -238,3 +238,30 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 	return vmemmap_populate_basepages(start, end, node);
  }
- 
-+static inline int pte_devmap(pte_t pte)
+ #endif
++
++#ifdef CONFIG_MEMORY_HOTPLUG
++void vmemmap_free(unsigned long start, unsigned long end,
++		  struct vmem_altmap *altmap)
 +{
-+	return pte_val(pte) & _PAGE_DEVMAP;
 +}
 +
- /* static inline pte_t pte_rdprotect(pte_t pte) */
- 
- static inline pte_t pte_wrprotect(pte_t pte)
-@@ -289,6 +294,11 @@ static inline pte_t pte_mkspecial(pte_t pte)
- 	return __pte(pte_val(pte) | _PAGE_SPECIAL);
- }
- 
-+static inline pte_t pte_mkdevmap(pte_t pte)
++int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
++		    bool want_memblock)
 +{
-+	return __pte(pte_val(pte) | _PAGE_SPECIAL | _PAGE_DEVMAP);
++	unsigned long start_pfn = start >> PAGE_SHIFT;
++	unsigned long nr_pages = size >> PAGE_SHIFT;
++	int ret;
++
++	if ((start + size) > -va_pa_offset) {
++		pr_err("Cannot hotplug memory from %08llx to %08llx as it doesn't fall within the linear mapping\n",
++		       start, start + size);
++		return -EFAULT;
++	}
++
++	ret = __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
++	WARN_ON_ONCE(ret);
++
++	return ret;
 +}
 +
- /* Modify page protection bits */
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
- {
++#endif
 -- 
 2.20.1
 
