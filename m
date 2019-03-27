@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEEBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95697C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D891A205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A13205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712878;
-	bh=vZlZSwjI0j1qTEE66ehzHcxXT94pw+35NscVhJmlVwM=;
+	s=default; t=1553712883;
+	bh=mUEFH+d3CdeaqVJY27YOal7duMN9LbXFpzP6aGTJn7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7qm4n59LATgK4dffrMNOPweVImJksneALUzZhWMIygtB0K0Re4esy0PT3OzRFnDj
-	 niev8i18sCc3462m6R2MvtgtfZiVEmt9pS6UpxEtc+fXvljBDg7n36O/rYjqRumueo
-	 Rk9t3H2n+3kOhYoWe0ti7WRBZr0M/3pF+8sdhf+Q=
+	b=qKfn5srESj+lNp3J3j20GlyKKHAvZEhW7DSiFkzTduq2jreDI7QF51orwyKqPBSGb
+	 qmZ+OrzcMfg25mUg9juOF8e0w3U8bDvtzU65zzbB1YpFO3qyk8WUyNrU1JTP6zxqx6
+	 v2uLPbqhU2FXJfdvm4vnp3mcEXydQZW4t3nPcm6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbfC0Syg (ORCPT
+        id S2389363AbfC0SQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:54:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389866AbfC0SRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:00 -0400
+        id S2389854AbfC0SQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13F92082F;
-        Wed, 27 Mar 2019 18:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C0621738;
+        Wed, 27 Mar 2019 18:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710620;
-        bh=vZlZSwjI0j1qTEE66ehzHcxXT94pw+35NscVhJmlVwM=;
+        s=default; t=1553710611;
+        bh=mUEFH+d3CdeaqVJY27YOal7duMN9LbXFpzP6aGTJn7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUvQZIES8fuCF9Xm/nBZwSY3SNN4pqVIhmWtohyvMv+ji+BmA0J1EHKl9bm0ge8V/
-         ckUQb2U0KOxjhNcWueuV2AYceYiMQrkaApNXfTzVPgKrT7xa3VUfsblC1nh8C//a5u
-         YtIWnbUb5ssChU/5piR7grexKJ921bpx53r2QzTo=
+        b=Cgfn0wgSBDOJ/ZYJG4G+2zdJV98qDvLIOYkN3QmrwL5deyumHnHDWP27oor88F+JN
+         4K51AcMu5tzGKfX/FMyb/LcOn5s/JxE3SVjwAd5qQQHYPG/P7XK8q4LFJPDrTXUzzB
+         afbO72NziMddoi//3lHsXQZTBDSTzxk/kRaAIZ3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Yisheng Xie <xieyisheng1@huawei.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 017/123] mm, mempolicy: fix uninit memory access
-Date:   Wed, 27 Mar 2019 14:14:41 -0400
-Message-Id: <20190327181628.15899-17-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 014/123] perf c2c: Fix c2c report for empty numa node
+Date:   Wed, 27 Mar 2019 14:14:38 -0400
+Message-Id: <20190327181628.15899-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -67,95 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Jiri Olsa <jolsa@redhat.com>
 
-[ Upstream commit 2e25644e8da4ed3a27e7b8315aaae74660be72dc ]
+[ Upstream commit e34c940245437f36d2c492edd1f8237eff391064 ]
 
-Syzbot with KMSAN reports (excerpt):
+Ravi Bangoria reported that we fail with an empty NUMA node with the
+following message:
 
-==================================================================
-BUG: KMSAN: uninit-value in mpol_rebind_policy mm/mempolicy.c:353 [inline]
-BUG: KMSAN: uninit-value in mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-CPU: 1 PID: 17420 Comm: syz-executor4 Not tainted 4.20.0-rc7+ #15
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
-  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
-  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:295
-  mpol_rebind_policy mm/mempolicy.c:353 [inline]
-  mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
-  update_tasks_nodemask+0x608/0xca0 kernel/cgroup/cpuset.c:1120
-  update_nodemasks_hier kernel/cgroup/cpuset.c:1185 [inline]
-  update_nodemask kernel/cgroup/cpuset.c:1253 [inline]
-  cpuset_write_resmask+0x2a98/0x34b0 kernel/cgroup/cpuset.c:1728
+  $ lscpu
+  NUMA node0 CPU(s):
+  NUMA node1 CPU(s):   0-4
 
-...
+  $ sudo ./perf c2c report
+  node/cpu topology bugFailed setup nodes
 
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
-  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
-  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
-  kmem_cache_alloc+0x572/0xb90 mm/slub.c:2777
-  mpol_new mm/mempolicy.c:276 [inline]
-  do_mbind mm/mempolicy.c:1180 [inline]
-  kernel_mbind+0x8a7/0x31a0 mm/mempolicy.c:1347
-  __do_sys_mbind mm/mempolicy.c:1354 [inline]
+Fix this by detecting the empty node and keeping its CPU set empty.
 
-As it's difficult to report where exactly the uninit value resides in
-the mempolicy object, we have to guess a bit.  mm/mempolicy.c:353
-contains this part of mpol_rebind_policy():
-
-        if (!mpol_store_user_nodemask(pol) &&
-            nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
-
-"mpol_store_user_nodemask(pol)" is testing pol->flags, which I couldn't
-ever see being uninitialized after leaving mpol_new().  So I'll guess
-it's actually about accessing pol->w.cpuset_mems_allowed on line 354,
-but still part of statement starting on line 353.
-
-For w.cpuset_mems_allowed to be not initialized, and the nodes_equal()
-reachable for a mempolicy where mpol_set_nodemask() is called in
-do_mbind(), it seems the only possibility is a MPOL_PREFERRED policy
-with empty set of nodes, i.e.  MPOL_LOCAL equivalent, with MPOL_F_LOCAL
-flag.  Let's exclude such policies from the nodes_equal() check.  Note
-the uninit access should be benign anyway, as rebinding this kind of
-policy is always a no-op.  Therefore no actual need for stable
-inclusion.
-
-Link: http://lkml.kernel.org/r/a71997c3-e8ae-a787-d5ce-3db05768b27c@suse.cz
-Link: http://lkml.kernel.org/r/73da3e9c-cc84-509e-17d9-0c434bb9967d@suse.cz
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Yisheng Xie <xieyisheng1@huawei.com>
-Cc: zhong jiang <zhongjiang@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190305152536.21035-2-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mempolicy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-c2c.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 1331645a3794..b0e99ea0c3db 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -349,7 +349,7 @@ static void mpol_rebind_policy(struct mempolicy *pol, const nodemask_t *newmask)
- {
- 	if (!pol)
- 		return;
--	if (!mpol_store_user_nodemask(pol) &&
-+	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
- 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
- 		return;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index fb76423022e8..32e64a8a6443 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1935,6 +1935,12 @@ static int setup_nodes(struct perf_session *session)
+ 		if (!set)
+ 			return -ENOMEM;
  
++		nodes[node] = set;
++
++		/* empty node, skip */
++		if (cpu_map__empty(map))
++			continue;
++
+ 		for (cpu = 0; cpu < map->nr; cpu++) {
+ 			set_bit(map->map[cpu], set);
+ 
+@@ -1943,8 +1949,6 @@ static int setup_nodes(struct perf_session *session)
+ 
+ 			cpu2node[map->map[cpu]] = node;
+ 		}
+-
+-		nodes[node] = set;
+ 	}
+ 
+ 	setup_nodes_header();
 -- 
 2.19.1
 
