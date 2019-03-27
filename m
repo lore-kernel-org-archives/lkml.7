@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5B9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B95C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2222064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31252064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553663992;
-	bh=hpyexiZLP/wePw9kS7edw/hVM3zaz02llBiWj3V780U=;
+	s=default; t=1553663994;
+	bh=O7oFPq28VE0wJmphec9uSU7ztoy0WS3b8nWTwZuwz5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKfcVsdJl4rSTw3IY7pnDQYBXJZLnjSCGkjckBhXTSgaltxxxsS8rSTQTt35HDLWW
-	 iq1iaydy6fTiAdITv0PV+B2tt4+V2wVvdDeNPKrUSEjUPqKemZNSQge7KJ57si+lFa
-	 Ss4oPO4RNTWfmzQlS4NBDMgf2nzWqHWzoyqvodew=
+	b=G/ojPMOaYB30AOin51r3mRAZudf9QLzihzLp9Yhmt/g5RXWNSy+JVZdi4LnMlWNZb
+	 yVV0VtdcRuz6dmXzV3IQj0B8FWw1DcNutymfndBG5GZ1Hsr+33wvYZB9iQCf54GsnA
+	 8X9vELsyQZHuy/XoPLoCr6KXYjfexiX8OrAw8zSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfC0FTv (ORCPT
+        id S1731571AbfC0FTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:19:51 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:50689 "EHLO
+        Wed, 27 Mar 2019 01:19:53 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:35491 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733277AbfC0FTs (ORCPT
+        by vger.kernel.org with ESMTP id S1733302AbfC0FTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:19:48 -0400
+        Wed, 27 Mar 2019 01:19:51 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 45CED21F40;
-        Wed, 27 Mar 2019 01:19:47 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id DA27F22148;
+        Wed, 27 Mar 2019 01:19:50 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:19:47 -0400
+  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:19:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=4d+OaY4wGb3ez43s1Ih67ffl69AK+5hY5gV6ueidyAI=; b=gSmzRhyb
-        t/bYnlKXSjkllDRyJCDRlOx8KvJMIV1c0e1hGCu3z8gxMAxmTsjXIdhEPgsEmDW6
-        NqImnfgAAMHw/pFr4mhHt1U0fUAQPaDAmGOoBuiAEBZ7PiDA52cZ1aGk3XzWcr4H
-        x0kLbIzJdqDj6oXuGnKIzaLiQ4LFi1/Z90mCM2xzDR6BCfB3QJLAO32xykYXQEnM
-        +/4acX2C+wKjj119p53iJnLMr7qnV6XAEpPGZUlnEHJ2EESTvhQiXKdg3HiAQG2S
-        z5itd9IH9Vm06p/QPxibTrBl/y4Flhyg9Rv2HYQgGRtaKszrM5Bq3FgyQHldboas
-        j+EHaRC/gtTc6g==
-X-ME-Sender: <xms:8webXDSUoUEa2RkQAo2Wpc_CuaKjJT3vT-SAvZXW2dgYEdirPfAvGw>
+        fm2; bh=2mjDV76CgLZ1V8hWykdYzfL69yXn1pc7PVUZOH6s5ug=; b=f5ncpj2b
+        FA6DT1d+2VdiCqk2v6ePwwMrnmixsbDehNe7Wdj+G5j7ZIO22diYzfT1iikVrbay
+        jdFcw+0OtkKhyxSiCYY7IJ5343ypOE7GIABX2MCufqax5SqvPsrxpm49mpAeME+9
+        l9F57R1k+Dmx6MrYAffbfKk+QRkUX9AMtHwujyDzy+BjGgt3e7quBmlp/yKVBRks
+        QI1PJn1fant5nIZQgLkcDwWurXaN1iBcDFDp/KVDAHgIuL2h6Q/9e4KP16yZ8SYb
+        wgJlUDozX2Gi0jhWRNj3AK28gL5CuRk84+lj73u8eAL2V6bY6Eg0WutX9cDBtkEc
+        5z1tmSDSihr+QQ==
+X-ME-Sender: <xms:9gebXEhxvQ83TKgKYGqIAhYF0CgtVONgCh0AbFU-OXiOCEhJMhbvgw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -51,13 +51,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrudefledrudelvdenucfrrghrrghmpehmrghilhhfrhhomhepthho
     sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepudel
-X-ME-Proxy: <xmx:8webXKDb4eP4gnFGAVkzA2S4WRXXFAtbiSVh6pf4EjK5go4FnEfGJw>
-    <xmx:8webXKjijwIRAQUzQnXXgDy7bS84d8IpPe2rdhZocXwY26QJAcgsmw>
-    <xmx:8webXLNnDzS8fw9KYWzkaNCB24xjxytX3f3cXrlprXiFrTdPDnK4RQ>
-    <xmx:8webXBn9Y0iHHFkv-yeZaT3aeiJAshA4saGxfMaWedysf_LotpiCIA>
+X-ME-Proxy: <xmx:9gebXCT1ztRBITMlJTdE0XJJalsWAj0mmaih0SxzzodwUUp0kw_4PQ>
+    <xmx:9gebXNxXIJov4hpRFDMGXnPZQp7IW5CxDvjNpc6roenpjROtQ9pFcw>
+    <xmx:9gebXNcGzqkUyzImFX59vhpp5T6EEmjmmZPuEnxR1suG6F6NwMtiuQ>
+    <xmx:9gebXE0njIDfZoWaK_XP2b4CKxDg-ZRTfbPuup5j4CF2HaHc4_nhRw>
 Received: from eros.localdomain (124-169-139-192.dyn.iinet.net.au [124.169.139.192])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 847DDE415C;
-        Wed, 27 Mar 2019 01:19:43 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 70632E4210;
+        Wed, 27 Mar 2019 01:19:47 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/24] docs: filesystems: vfs: Use SPDX identifier
-Date:   Wed, 27 Mar 2019 16:17:13 +1100
-Message-Id: <20190327051717.23225-21-tobin@kernel.org>
+Subject: [PATCH v3 21/24] docs: filesystems: vfs: Fix pre-amble indentation
+Date:   Wed, 27 Mar 2019 16:17:14 +1100
+Message-Id: <20190327051717.23225-22-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190327051717.23225-1-tobin@kernel.org>
 References: <20190327051717.23225-1-tobin@kernel.org>
@@ -80,36 +80,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the licence is indicated via a custom string.  We have SPDX
-license identifiers now for this task.
-
-Use SPDX license identifier matching current license string.
+Currently file pre-amble contains custom indentation.  RST is not going
+to like this, lets left-align the text.  Put the copyright notices in a
+list in preparation for converting document to RST.
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/filesystems/vfs.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/filesystems/vfs.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 0bc45c3a33db..dcc1f66932e7 100644
+index dcc1f66932e7..e5c877e817c3 100644
 --- a/Documentation/filesystems/vfs.txt
 +++ b/Documentation/filesystems/vfs.txt
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
- =========================================
+@@ -4,12 +4,12 @@
  Overview of the Linux Virtual File System
  =========================================
-@@ -9,8 +11,6 @@ Overview of the Linux Virtual File System
-   Copyright (C) 1999 Richard Gooch
-   Copyright (C) 2005 Pekka Enberg
  
--  This file is released under the GPLv2.
--
+-	Original author: Richard Gooch <rgooch@atnf.csiro.au>
++Original author: Richard Gooch <rgooch@atnf.csiro.au>
+ 
+-		  Last updated on June 24, 2007.
++Last updated on June 24, 2007.
+ 
+-  Copyright (C) 1999 Richard Gooch
+-  Copyright (C) 2005 Pekka Enberg
++- Copyright (C) 1999 Richard Gooch
++- Copyright (C) 2005 Pekka Enberg
+ 
  
  Introduction
- ============
 -- 
 2.21.0
 
