@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B29C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56893C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE22C204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258DB20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711636;
-	bh=J5KM3Gz8B7BYdGn1fiYz+A1YR240YxFGAk4JGLcdUWU=;
+	s=default; t=1553711640;
+	bh=BPQSTLwE7D8ltdb+OIONQDFbDvzWvG6feym5H97yD7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1VsOtNNETwN/VhvRXmTm30FPJd3dqCFN0oDm21zqMTOct4v1hJgtnaleQr1fjRx0
-	 x5Z76yNPpucHuDxbb4gWiJW4etWOZXcX+kQXqSusjCDk06u13BPPkBDpPXd50Q/pPi
-	 T6njDIFnvS7XxB3Hrg/DgJ322iXcvIJ8K9dKmHCk=
+	b=YtVzPEcbe4ZN8lxUiGJJ01CsiywK1EnSPASTlXJnaI3sbDSzzUmuRg4WVJDwcC+sf
+	 SDlyiF5Xpl8W9cocmZwjwzllINvY20ZNh01ePy7P71pao5z5edcj+2BV5IPvcCP19H
+	 sM89wtgCz64uUYT7sKknie11ygacFpkefJyCiebg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404087AbfC0SZE (ORCPT
+        id S2391991AbfC0Sd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404071AbfC0SZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:00 -0400
+        id S2404081AbfC0SZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B862063F;
-        Wed, 27 Mar 2019 18:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CCBD2063F;
+        Wed, 27 Mar 2019 18:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711099;
-        bh=J5KM3Gz8B7BYdGn1fiYz+A1YR240YxFGAk4JGLcdUWU=;
+        s=default; t=1553711103;
+        bh=BPQSTLwE7D8ltdb+OIONQDFbDvzWvG6feym5H97yD7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpfiFuOQMMw3juGiaAY8oxcA0wN4iVXjhD1GuYK2CFJ/Vt6bKST2qLWunIL5LJbvD
-         74LB/fuBs2i7BgCFIRe5ALLcnPhuYlQbs1Ha87St0xRoaGoii7FtgiABADZwPHdgbH
-         xCmB2mWK0Zzc/xAfZ0OI7dXEU+0kRpXgrn6JIRRw=
+        b=qdAF0agxMmM+NIQ4ywdo9IEFTObhUE97zikySrNQQLBWRkk8ugDp8GzciMsQKubPy
+         WDkls3bohfEnIl4kl98Kw+2ucKp54Bd0qXJDTXfTd1oSbLRB/cnvLotfc9wTlbvhyq
+         +LZ2lUKhWPaC35muevw/T96bZjuUX+25jX67o1Hc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Tolnay <dtolnay@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 52/63] hwrng: virtio - Avoid repeated init of completion
-Date:   Wed, 27 Mar 2019 14:23:12 -0400
-Message-Id: <20190327182323.18577-52-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 54/63] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Wed, 27 Mar 2019 14:23:14 -0400
+Message-Id: <20190327182323.18577-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -58,57 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Tolnay <dtolnay@gmail.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
+[ Upstream commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 ]
 
-The virtio-rng driver uses a completion called have_data to wait for a
-virtio read to be fulfilled by the hypervisor. The completion is reset
-before placing a buffer on the virtio queue and completed by the virtio
-callback once data has been written into the buffer.
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-Prior to this commit, the driver called init_completion on this
-completion both during probe as well as when registering virtio buffers
-as part of a hwrng read operation. The second of these init_completion
-calls should instead be reinit_completion because the have_data
-completion has already been inited by probe. As described in
-Documentation/scheduler/completion.txt, "Calling init_completion() twice
-on the same completion object is most likely a bug".
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
 
-This bug was present in the initial implementation of virtio-rng in
-f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
-then the have_data completion was a single static completion rather than
-a member of one of potentially multiple virtrng_info structs as
-implemented later by 08e53fbdb85c ("virtio-rng: support multiple
-virtio-rng devices"). The original driver incorrectly used
-init_completion rather than INIT_COMPLETION to reset have_data during
-read.
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
 
-Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
-Chrome OS virtual machine monitor, and confirming that the virtio-rng
-driver successfully produces random bytes from the host.
-
-Signed-off-by: David Tolnay <dtolnay@gmail.com>
-Tested-by: David Tolnay <dtolnay@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/virtio-rng.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/l2cap_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 3fa2f8a009b3..1c5c4314c6b5 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index af68674690af..06e0ee24d12d 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3315,6 +3315,8 @@ static int l2cap_parse_conf_req(struct l2cap_chan *chan, void *data, size_t data
  
- 	if (!vi->busy) {
- 		vi->busy = true;
--		init_completion(&vi->have_data);
-+		reinit_completion(&vi->have_data);
- 		register_buffer(vi, buf, size);
- 	}
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
  
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3526,6 +3528,8 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3706,6 +3710,8 @@ static void l2cap_conf_rfc_get(struct l2cap_chan *chan, void *rsp, int len)
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 -- 
 2.19.1
 
