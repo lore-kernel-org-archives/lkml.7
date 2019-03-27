@@ -2,197 +2,590 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC88C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF77AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92DBC2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999862146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Ws1K7Nxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbfC0J4R (ORCPT
+        id S1732951AbfC0J4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:56:17 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23496 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725827AbfC0J4Q (ORCPT
+        Wed, 27 Mar 2019 05:56:22 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:33844 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731668AbfC0J4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:56:16 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R9tYaH018821;
-        Wed, 27 Mar 2019 10:56:07 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddhtfmq6-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 27 Mar 2019 10:56:07 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8B4F73F;
-        Wed, 27 Mar 2019 09:56:06 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 584B82D3A;
-        Wed, 27 Mar 2019 09:56:06 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 27 Mar
- 2019 10:56:06 +0100
-Received: from localhost (10.129.172.100) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 27 Mar 2019 10:56:05
- +0100
-From:   Mickael Guene <mickael.guene@st.com>
-To:     <linux-media@vger.kernel.org>
-CC:     <hugues.fruchet@st.com>, Mickael Guene <mickael.guene@st.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Mark Rutland" <mark.rutland@arm.com>
-Subject: [PATCH v4 1/2] dt-bindings: Document MIPID02 bindings
-Date:   Wed, 27 Mar 2019 10:55:43 +0100
-Message-ID: <1553680545-73278-2-git-send-email-mickael.guene@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553680545-73278-1-git-send-email-mickael.guene@st.com>
-References: <1552373045-134493-1-git-send-email-mickael.guene@st.com>
- <1553680545-73278-1-git-send-email-mickael.guene@st.com>
+        Wed, 27 Mar 2019 05:56:17 -0400
+X-IronPort-AV: E=Sophos;i="5.60,276,1549954800"; 
+   d="scan'208";a="30232314"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 27 Mar 2019 02:56:15 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Wed, 27 Mar 2019 02:56:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jWhDPnW+gZytmMR8PRWBN01pPGX/zR9512MgCUUOKOQ=;
+ b=Ws1K7NxndaGQFWaWvGaDPyRy9BMmXlpLpVu4rA5osKgdYNGQJQ6FzksAbu9jQcBTxMieNJUVMWcu/IepVIMdnKjMQE6HYvcMjtm6zk9qrC8RtAT2kn863S67ImMOjeTasLxpB28mPfF0zN0BWaz/ytRZzY6xjhp5DfLMcPV+1jg=
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com (10.255.162.219) by
+ BY5PR11MB4054.namprd11.prod.outlook.com (10.255.162.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.16; Wed, 27 Mar 2019 09:56:13 +0000
+Received: from BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9]) by BY5PR11MB4119.namprd11.prod.outlook.com
+ ([fe80::4454:7962:5f5a:72e9%2]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 09:56:13 +0000
+From:   <Kavyasree.Kotagiri@microchip.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Kavyasree.Kotagiri@microchip.com>, <quentin.schulz@bootlin.com>
+Subject: [PATCH v1 1/2] net: phy: mscc: add support for VSC8514 PHY
+Thread-Topic: [PATCH v1 1/2] net: phy: mscc: add support for VSC8514 PHY
+Thread-Index: AQHU5INPo2PGIqwfMkmt98wigzWfjg==
+Date:   Wed, 27 Mar 2019 09:56:13 +0000
+Message-ID: <20190327095553.6234-1-kavyasree.kotagiri@microchip.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0078.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::19) To BY5PR11MB4119.namprd11.prod.outlook.com
+ (2603:10b6:a03:18f::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Kavyasree.Kotagiri@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [182.72.246.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10d144e7-f8fb-40aa-936d-08d6b29a7223
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BY5PR11MB4054;
+x-ms-traffictypediagnostic: BY5PR11MB4054:
+x-microsoft-antispam-prvs: <BY5PR11MB4054A80557A7F49BD898073492580@BY5PR11MB4054.namprd11.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(376002)(346002)(366004)(199004)(43544003)(189003)(66066001)(26005)(6116002)(3846002)(97736004)(72206003)(6486002)(476003)(6506007)(53946003)(486006)(52116002)(386003)(78486014)(2616005)(6436002)(14454004)(55236004)(6512007)(102836004)(14444005)(256004)(305945005)(106356001)(2501003)(30864003)(68736007)(186003)(81156014)(316002)(105586002)(54906003)(81166006)(110136005)(71190400001)(5660300002)(50226002)(8676002)(71200400001)(25786009)(99286004)(2201001)(1076003)(86362001)(478600001)(36756003)(7736002)(8936002)(2906002)(4326008)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4054;H:BY5PR11MB4119.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6EYTJYu5Yu/Coi0B3SUxMKUZVn8h076mLnPNo6XiWuFFh6oK/4a+OhGOIn/WLmo1dybmbern2cTsGYcJILDcU29Fc5Nu92rROTznSGA4bxC5D219CU/ltg/BA1ycBgHtRnP0veZjd0pNl8PPICgj5CUc8f94SrfsYRsDvxEX0Hal1zx74s6LZgA4OVARQL/GCuGJXyEmaJGblOl5VVr7oS/4bOjLPPhyQ5V61ZhnCdGcJMl6BN34wsJT+20BWWASsYl0wKsh4VdGpLLI/0D3n6xqWS3kyUXD9eGAeH5UuHg/BE2xw91oc0V50DE7y4RewQSErnlGb6fdbLSrxWQU6GQpPmGPDkpf8NWn4V90Nitrl+fxJyqxNnpBEM2ScreWTEC79krTMRM3Evmd2tleUd8mB5OzewNBNu5jUF4ApFI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.129.172.100]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_06:,,
- signatures=0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10d144e7-f8fb-40aa-936d-08d6b29a7223
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 09:56:13.4169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4054
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds documentation of device tree for MIPID02 CSI-2 to PARALLEL
-bridge.
+From: Kavya Sree <kavyasree.kotagiri@microchip.com>
 
-Signed-off-by: Mickael Guene <mickael.guene@st.com>
+From: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+
+The VSC8514 PHY is a 4-ports PHY that is 10/100/1000BASE-T, 100BASE-FX,
+1000BASE-X, can communicate with the MAC via QSGMII.
+The MAC interface protocol for each port within QSGMII can
+be either 1000BASE-X or SGMII, if the QSGMII MAC that the VSC8514 is
+connecting to supports this functionality.
+VSC8514 also supports SGMII MAC-side autonegotiation on each individual
+port, downshifting, can set the blinking pattern of each of its 4 LEDs,
+SyncE, 1000BASE-T Ring Resiliency as well as HP Auto-MDIX detection.
+
+This adds support for 10BASE-T, 100BASE-TX, and 1000BASE-T,
+QSGMII link with the MAC, downshifting, HP Auto-MDIX detection
+and blinking pattern for its 4 LEDs.
+
+The GPIO register bank is a set of registers that are common to all PHYs
+in the package. So any modification in any register of this bank affects
+all PHYs of the package.
+
+If the PHYs haven't been reset before booting the Linux kernel and were
+configured to use interrupts for e.g. link status updates, it is
+required to clear the interrupts mask register of all PHYs before being
+able to use interrupts with any PHY. The first PHY of the package that
+will be init will take care of clearing all PHYs interrupts mask
+registers. Thus, we need to keep track of the init sequence in the
+package, if it's already been done or if it's to be done.
+
+Most of the init sequence of a PHY of the package is common to all PHYs
+in the package, thus we use the SMI broadcast feature which enables us
+to propagate a write in one register of one PHY to all PHYs in the same
+package.
+
+Signed-off-by: Kavya Sree Kotagiri <kavyasree.kotagiri@microchip.com>
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Co-developed-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
+ drivers/net/phy/Kconfig |   2 +-
+ drivers/net/phy/mscc.c  | 381 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 382 insertions(+), 1 deletion(-)
 
-Changes in v4:
-- Fix and clarify endpoints properties documentation
-
-Changes in v3: None
-Changes in v2:
-- Add precision about first CSI-2 port data rate
-- Document endpoints supported properties
-- Rename 'mipid02@14' into generic 'csi2rx@14' in example
-
- .../bindings/media/i2c/st,st-mipid02.txt           | 82 ++++++++++++++++++++++
- MAINTAINERS                                        |  7 ++
- 2 files changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-new file mode 100644
-index 0000000..754a175
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
-@@ -0,0 +1,82 @@
-+STMicroelectronics MIPID02 CSI-2 to PARALLEL bridge
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 3d187cd50eb0..17d022e5d8f6 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -382,7 +382,7 @@ config MICROCHIP_T1_PHY
+ config MICROSEMI_PHY
+ 	tristate "Microsemi PHYs"
+ 	---help---
+-	  Currently supports VSC8530, VSC8531, VSC8540 and VSC8541 PHYs
++	  Currently supports VSC8514, VSC8530, VSC8531, VSC8540 and VSC8541 PHYs
+=20
+ config NATIONAL_PHY
+ 	tristate "National Semiconductor PHYs"
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index db50efb30df5..43141e6833c1 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -85,12 +85,29 @@ enum rgmii_rx_clock_delay {
+ #define LED_MODE_SEL_MASK(x)		  (GENMASK(3, 0) << LED_MODE_SEL_POS(x))
+ #define LED_MODE_SEL(x, mode)		  (((mode) << LED_MODE_SEL_POS(x)) & LED_MO=
+DE_SEL_MASK(x))
+=20
++#define MSCC_EXT_PAGE_CSR_CNTL_17           17
++#define MSCC_EXT_PAGE_CSR_CNTL_18           18
 +
-+MIPID02 has two CSI-2 input ports, only one of those ports can be active at a
-+time. Active port input stream will be de-serialized and its content outputted
-+through PARALLEL output port.
-+CSI-2 first input port is a dual lane 800Mbps per lane whereas CSI-2 second
-+input port is a single lane 800Mbps. Both ports support clock and data lane
-+polarity swap. First port also supports data lane swap.
-+PARALLEL output port has a maximum width of 12 bits.
-+Supported formats are RAW6, RAW7, RAW8, RAW10, RAW12, RGB565, RGB888, RGB444,
-+YUV420 8-bit, YUV422 8-bit and YUV420 10-bit.
++#define MSCC_EXT_PAGE_CSR_CNTL_19           19
++#define MSCC_PHY_CSR_CNTL_19_REG_ADDR(x)    (x)
++#define MSCC_PHY_CSR_CNTL_19_TARGET(x)      ((x) << 12)
++#define MSCC_PHY_CSR_CNTL_19_READ           BIT(14)
++#define MSCC_PHY_CSR_CNTL_19_CMD            BIT(15)
 +
-+Required Properties:
-+- compatible: should be "st,st-mipid02"
-+- clocks: reference to the xclk input clock.
-+- clock-names: should be "xclk".
-+- VDDE-supply: sensor digital IO supply. Must be 1.8 volts.
-+- VDDIN-supply: sensor internal regulator supply. Must be 1.8 volts.
++#define MSCC_EXT_PAGE_CSR_CNTL_20           20
++#define MSCC_PHY_CSR_CNTL_20_TARGET(x)      (x)
 +
-+Optional Properties:
-+- reset-gpios: reference to the GPIO connected to the xsdn pin, if any.
-+	       This is an active low signal to the mipid02.
++#define PHY_MCB_TARGET                    0x07
++#define PHY_MCB_S6G_WRITE                 0x80000000
++#define PHY_MCB_S6G_READ                  0x40000000
 +
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+	   port, in accordance with the video interface bindings defined in
-+	   Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+	   port nodes are numbered as follows:
-+
-+	   Port Description
-+	   -----------------------------
-+	   0    CSI-2 first input port
-+	   1    CSI-2 second input port
-+	   2    PARALLEL output
-+
-+Endpoint node required property for CSI-2 connection is:
-+- data-lanes: Should be <1> for Port 1. for Port 0 dual-lane operation should be
-+<1 2> or <2 1>. For Port 0 single-lane operation should be <1> or <2>.
-+Endpoint node optional property for CSI-2 connection is:
-+- lane-polarities: any lane can be inverted or not.
-+
-+Endpoint node required property for PARALLEL connection is:
-+- bus-width: should be set to <6>, <7>, <8>, <10> or <12>.
-+Endpoint node optional properties for PARALLEL connection are:
-+- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-+LOW being the default.
-+- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-+LOW being the default.
-+
-+Example:
-+
-+mipid02: csi2rx@14 {
-+	compatible = "st,st-mipid02";
-+	reg = <0x14>;
-+	status = "okay";
-+	clocks = <&clk_ext_camera_12>;
-+	clock-names = "xclk";
-+	VDDE-supply = <&vdd>;
-+	VDDIN-supply = <&vdd>;
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+
-+			ep0: endpoint {
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&mipi_csi2_in>;
-+			};
-+		};
-+		port@2 {
-+			reg = <2>;
-+
-+			ep2: endpoint {
-+				bus-width = <8>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				remote-endpoint = <&parallel_out>;
-+			};
-+		};
+ #define MSCC_EXT_PAGE_ACCESS		  31
+ #define MSCC_PHY_PAGE_STANDARD		  0x0000 /* Standard registers */
+ #define MSCC_PHY_PAGE_EXTENDED		  0x0001 /* Extended registers */
+ #define MSCC_PHY_PAGE_EXTENDED_2	  0x0002 /* Extended reg - page 2 */
+ #define MSCC_PHY_PAGE_EXTENDED_3	  0x0003 /* Extended reg - page 3 */
+ #define MSCC_PHY_PAGE_EXTENDED_4	  0x0004 /* Extended reg - page 4 */
++#define MSCC_PHY_PAGE_CSR_CNTL		  MSCC_PHY_PAGE_EXTENDED_4
+ /* Extended reg - GPIO; this is a bank of registers that are shared for al=
+l PHYs
+  * in the same package.
+  */
+@@ -216,6 +233,7 @@ enum rgmii_rx_clock_delay {
+ #define MSCC_PHY_TR_MSB			  18
+=20
+ /* Microsemi PHY ID's */
++#define PHY_ID_VSC8514			  0x00070670
+ #define PHY_ID_VSC8530			  0x00070560
+ #define PHY_ID_VSC8531			  0x00070570
+ #define PHY_ID_VSC8540			  0x00070760
+@@ -1742,6 +1760,319 @@ static int vsc8584_did_interrupt(struct phy_device =
+*phydev)
+ 	return (rc < 0) ? 0 : rc & MII_VSC85XX_INT_MASK_MASK;
+ }
+=20
++static int vsc8514_config_pre_init(struct phy_device *phydev)
++{
++	unsigned int i;
++	u16 reg;
++	const struct reg_val pre_init1[] =3D {
++		{0x0f90, 0x00688980},
++		{0x0786, 0x00000003},
++		{0x07fa, 0x0050100f},
++		{0x0f82, 0x0012b002},
++		{0x1686, 0x00000004},
++		{0x168c, 0x00d2c46f},
++		{0x17a2, 0x00000620},
++		{0x16a0, 0x00eeffdd},
++		{0x16a6, 0x00071448},
++		{0x16a4, 0x0013132f},
++		{0x16a8, 0x00000000},
++		{0x0ffc, 0x00c0a028},
++		{0x0fe8, 0x0091b06c},
++		{0x0fea, 0x00041600},
++		{0x0f80, 0x00fffaff},
++		{0x0fec, 0x00901809},
++		{0x0ffe, 0x00b01007},
++		{0x16b0, 0x00eeff00},
++		{0x16b2, 0x00007000},
++		{0x16b4, 0x00000814},
 +	};
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e17ebf7..74da99d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14668,6 +14668,13 @@ S:	Maintained
- F:	drivers/iio/imu/st_lsm6dsx/
- F:	Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
- 
-+ST MIPID02 CSI-2 TO PARALLEL BRIDGE DRIVER
-+M:	Mickael Guene <mickael.guene@st.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/st,st-mipid02.txt
 +
- ST STM32 I2C/SMBUS DRIVER
- M:	Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
- L:	linux-i2c@vger.kernel.org
--- 
-2.7.4
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
++
++	/* all writes below are broadcasted to all PHYs in the same package */
++	reg =3D phy_base_read(phydev, MSCC_PHY_EXT_CNTL_STATUS);
++	reg |=3D SMI_BROADCAST_WR_EN;
++	phy_base_write(phydev, MSCC_PHY_EXT_CNTL_STATUS, reg);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
++
++	reg =3D phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
++	reg |=3D 0x8000;
++	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
++
++	for (i =3D 0; i < ARRAY_SIZE(pre_init1); i++)
++		vsc8584_csr_write(phydev, pre_init1[i].reg, pre_init1[i].val);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
++
++	reg =3D phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
++	reg &=3D ~0x8000;
++	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
++
++	reg =3D phy_base_read(phydev, MSCC_PHY_EXT_CNTL_STATUS);
++	reg &=3D ~SMI_BROADCAST_WR_EN;
++	phy_base_write(phydev, MSCC_PHY_EXT_CNTL_STATUS, reg);
++
++	return 0;
++}
++
++static u32 vsc85xx_csr_ctrl_phy_read(struct phy_device *phydev,
++				     u32 target, u32 reg)
++{
++	u32 val, val_l, val_h;
++	unsigned long deadline;
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_CSR_CNTL);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_20,
++		       MSCC_PHY_CSR_CNTL_20_TARGET(target >> 2));
++
++	if (target >> 2 =3D=3D 0x1)
++		/* non-MACsec access */
++		target &=3D 0x3;
++	else
++		target =3D 0;
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_19,
++		       MSCC_PHY_CSR_CNTL_19_CMD | MSCC_PHY_CSR_CNTL_19_READ |
++		       MSCC_PHY_CSR_CNTL_19_REG_ADDR(reg) |
++		       MSCC_PHY_CSR_CNTL_19_TARGET(target));
++
++	deadline =3D jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
++	do {
++		val =3D phy_base_read(phydev, MSCC_EXT_PAGE_CSR_CNTL_19);
++	} while (time_before(jiffies, deadline) &&
++		!(val & MSCC_PHY_CSR_CNTL_19_CMD));
++
++	val_l =3D phy_base_read(phydev, MSCC_EXT_PAGE_CSR_CNTL_17);
++	val_h =3D phy_base_read(phydev, MSCC_EXT_PAGE_CSR_CNTL_18);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
++		       MSCC_PHY_PAGE_STANDARD);
++
++	return (val_h << 16) | val_l;
++}
++
++static void vsc85xx_csr_ctrl_phy_write(struct phy_device *phydev,
++				       u32 target, u32 reg, u32 val)
++{
++	unsigned long deadline;
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_CSR_CNTL);
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_20,
++		       MSCC_PHY_CSR_CNTL_20_TARGET(target >> 2));
++
++	if ((target >> 2 =3D=3D 0x1) || (target >> 2 =3D=3D 0x3))
++		target &=3D 0x3;
++	else
++		/* MACsec access */
++		target =3D 0;
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_17, (u16)val);
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_18, (u16)(val >> 16));
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_CSR_CNTL_19,
++		       MSCC_PHY_CSR_CNTL_19_CMD |
++		       MSCC_PHY_CSR_CNTL_19_REG_ADDR(reg) |
++		       MSCC_PHY_CSR_CNTL_19_TARGET(target));
++
++	deadline =3D jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
++	do {
++		val =3D phy_base_read(phydev, MSCC_EXT_PAGE_CSR_CNTL_19);
++	} while (time_before(jiffies, deadline) &&
++		 !(val & MSCC_PHY_CSR_CNTL_19_CMD));
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
++		       MSCC_PHY_PAGE_STANDARD);
++}
++
++static int __phy_write_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb,
++			       u32 op)
++{
++	unsigned long deadline;
++	u32 val;
++
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET, reg, op |
++				   (1 << mcb));
++
++	deadline =3D jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
++	do {
++		val =3D vsc85xx_csr_ctrl_phy_read(phydev, PHY_MCB_TARGET, reg);
++	} while (time_before(jiffies, deadline) && (val & op));
++
++	if (val & op)
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++/* vtss_phy_mcb_rd_trig_private */
++static int phy_update_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb)
++{
++	return __phy_write_mcb_s6g(phydev, reg, mcb, PHY_MCB_S6G_READ);
++}
++
++/* vtss_phy_mcb_wr_trig_private */
++static int phy_commit_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb)
++{
++	return __phy_write_mcb_s6g(phydev, reg, mcb, PHY_MCB_S6G_WRITE);
++}
++
++static int vsc8514_config_init(struct phy_device *phydev)
++{
++	int ret, i;
++	u16 val, addr;
++	u32 reg;
++	unsigned long deadline;
++	struct vsc8531_private *vsc8531 =3D phydev->priv;
++
++	phydev->mdix_ctrl =3D ETH_TP_MDI_AUTO;
++
++	mutex_lock(&phydev->mdio.bus->mdio_lock);
++
++	__mdiobus_write(phydev->mdio.bus, phydev->mdio.addr,
++			MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_EXTENDED);
++	addr =3D __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
++			      MSCC_PHY_EXT_PHY_CNTL_4);
++	addr >>=3D PHY_CNTL_4_ADDR_POS;
++
++	val =3D __mdiobus_read(phydev->mdio.bus, phydev->mdio.addr,
++			     MSCC_PHY_ACTIPHY_CNTL);
++
++	if (val & PHY_ADDR_REVERSED)
++		vsc8531->base_addr =3D phydev->mdio.addr + addr;
++	else
++		vsc8531->base_addr =3D phydev->mdio.addr - addr;
++
++	/* Some parts of the init sequence are identical for every PHY in the
++	 * package. Some parts are modifying the GPIO register bank which is a
++	 * set of registers that are affecting all PHYs, a few resetting the
++	 * microprocessor common to all PHYs.
++	 * All PHYs' interrupts mask register has to be zeroed before enabling
++	 * any PHY's interrupt in this register.
++	 * For all these reasons, we need to do the init sequence once and only
++	 * once whatever is the first PHY in the package that is initialized and
++	 * do the correct init sequence for all PHYs that are package-critical
++	 * in this pre-init function.
++	 */
++	if (!vsc8584_is_pkg_init(phydev, val & PHY_ADDR_REVERSED ? 1 : 0)) {
++		if ((phydev->phy_id & phydev->drv->phy_id_mask) =3D=3D
++		    (PHY_ID_VSC8514 & phydev->drv->phy_id_mask))
++			ret =3D vsc8514_config_pre_init(phydev);
++		else
++			ret =3D -EINVAL;
++
++		if (ret)
++			goto err;
++	}
++
++	vsc8531->pkg_init =3D true;
++
++	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS,
++		       MSCC_PHY_PAGE_EXTENDED_GPIO);
++
++	val =3D phy_base_read(phydev, MSCC_PHY_MAC_CFG_FASTLINK);
++
++	val &=3D ~MAC_CFG_MASK;
++	val |=3D MAC_CFG_QSGMII;
++	ret =3D phy_base_write(phydev, MSCC_PHY_MAC_CFG_FASTLINK, val);
++
++	if (ret)
++		goto err;
++
++	ret =3D vsc8584_cmd(phydev,
++			  PROC_CMD_MCB_ACCESS_MAC_CONF |
++			  PROC_CMD_RST_CONF_PORT |
++			  PROC_CMD_READ_MOD_WRITE_PORT | PROC_CMD_QSGMII_MAC);
++	if (ret)
++		goto err;
++
++	usleep_range(10000, 20000);
++
++	/* 6g mcb */
++	phy_update_mcb_s6g(phydev, 0x3f, 0);
++	/* lcpll mcb */
++	phy_update_mcb_s6g(phydev, 0x11, 0);
++	/* pll5gcfg0 */
++	vsc85xx_csr_ctrl_phy_write(phydev,
++				   PHY_MCB_TARGET, 0x06, 0x7036f145);
++	phy_commit_mcb_s6g(phydev, 0x11, 0);
++	/* pllcfg */
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET,
++				   0x2b, (3 << 21) | (120 << 8) | (0 << 7));
++	/* commoncfg */
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET,
++				   0x2c, (0 << 31) | (0 << 18) | (0 << 8)
++				   | (0 << 6) | (3 << 4));
++	/* misccfg */
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET, 0x3b, 1);
++
++	/* gpcfg */
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET, 0x2e, 768);
++
++	phy_commit_mcb_s6g(phydev, 0x3e, 0);
++
++	deadline =3D jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
++	do {
++		phy_update_mcb_s6g(phydev, 0x3f, 0);
++		reg =3D vsc85xx_csr_ctrl_phy_read(phydev,
++						PHY_MCB_TARGET, 0x31);
++	} while (time_before(jiffies, deadline) && (reg & BIT(12)));
++	if (reg & BIT(12)) {
++		mutex_unlock(&phydev->mdio.bus->mdio_lock);
++		return -ETIMEDOUT;
++	}
++
++	/* misccfg */
++	vsc85xx_csr_ctrl_phy_write(phydev, PHY_MCB_TARGET, 0x3b, 0);
++
++	phy_commit_mcb_s6g(phydev, 0x3f, 0);
++
++	deadline =3D jiffies + msecs_to_jiffies(PROC_CMD_NCOMPLETED_TIMEOUT_MS);
++	do {
++		phy_update_mcb_s6g(phydev, 0x3f, 0);
++		reg =3D vsc85xx_csr_ctrl_phy_read(phydev,
++						PHY_MCB_TARGET, 0x2f);
++	} while (time_before(jiffies, deadline) && !(reg & BIT(8)));
++
++	if (!(reg & BIT(8))) {
++		mutex_unlock(&phydev->mdio.bus->mdio_lock);
++		return -ETIMEDOUT;
++	}
++
++	mutex_unlock(&phydev->mdio.bus->mdio_lock);
++
++	phy_write(phydev, MSCC_EXT_PAGE_ACCESS,
++		  MSCC_PHY_PAGE_STANDARD);
++
++	val =3D phy_read(phydev, MSCC_PHY_EXT_PHY_CNTL_1);
++	val &=3D ~MEDIA_OP_MODE_MASK;
++	val |=3D MEDIA_OP_MODE_COPPER;
++	ret =3D phy_write(phydev, MSCC_PHY_EXT_PHY_CNTL_1, val);
++
++	ret =3D genphy_soft_reset(phydev);
++
++	if (ret)
++		return ret;
++
++	for (i =3D 0; i < vsc8531->nleds; i++) {
++		ret =3D vsc85xx_led_cntl_set(phydev, i, vsc8531->leds_mode[i]);
++		if (ret)
++			return ret;
++	}
++
++	return genphy_config_init(phydev);
++
++err:
++	mutex_unlock(&phydev->mdio.bus->mdio_lock);
++	return ret;
++}
++
+ static int vsc85xx_ack_interrupt(struct phy_device *phydev)
+ {
+ 	int rc =3D 0;
+@@ -1791,6 +2122,30 @@ static int vsc85xx_read_status(struct phy_device *ph=
+ydev)
+ 	return genphy_read_status(phydev);
+ }
+=20
++static int vsc8514_probe(struct phy_device *phydev)
++{
++	struct vsc8531_private *vsc8531;
++	u32 default_mode[4] =3D {VSC8531_LINK_1000_ACTIVITY,
++	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
++	   VSC8531_DUPLEX_COLLISION};
++
++	vsc8531 =3D devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL)=
+;
++	if (!vsc8531)
++		return -ENOMEM;
++
++	phydev->priv =3D vsc8531;
++
++	vsc8531->nleds =3D 4;
++	vsc8531->supp_led_modes =3D VSC85XX_SUPP_LED_MODES;
++	vsc8531->hw_stats =3D vsc85xx_hw_stats;
++	vsc8531->nstats =3D ARRAY_SIZE(vsc85xx_hw_stats);
++	vsc8531->stats =3D devm_kmalloc_array(&phydev->mdio.dev, vsc8531->nstats,
++					    sizeof(u64), GFP_KERNEL);
++	if (!vsc8531->stats)
++		return -ENOMEM;
++	return vsc85xx_dt_led_modes_get(phydev, default_mode);
++}
++
+ static int vsc8574_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
+@@ -1878,6 +2233,31 @@ static int vsc85xx_probe(struct phy_device *phydev)
+=20
+ /* Microsemi VSC85xx PHYs */
+ static struct phy_driver vsc85xx_driver[] =3D {
++{
++	.phy_id		=3D PHY_ID_VSC8514,
++	.name		=3D "Microsemi GE VSC8514 SyncE",
++	.phy_id_mask	=3D 0xfffffff0,
++	.features	=3D PHY_GBIT_FEATURES,
++	.soft_reset	=3D &genphy_soft_reset,
++	.config_init    =3D &vsc8514_config_init,
++	.config_aneg    =3D &vsc85xx_config_aneg,
++	.aneg_done	=3D &genphy_aneg_done,
++	.read_status	=3D &vsc85xx_read_status,
++	.ack_interrupt  =3D &vsc85xx_ack_interrupt,
++	.config_intr    =3D &vsc85xx_config_intr,
++	.suspend	=3D &genphy_suspend,
++	.resume		=3D &genphy_resume,
++	.probe		=3D &vsc8514_probe,
++	.set_wol	=3D &vsc85xx_wol_set,
++	.get_wol	=3D &vsc85xx_wol_get,
++	.get_tunable	=3D &vsc85xx_get_tunable,
++	.set_tunable	=3D &vsc85xx_set_tunable,
++	.read_page      =3D &vsc85xx_phy_read_page,
++	.write_page     =3D &vsc85xx_phy_write_page,
++	.get_sset_count =3D &vsc85xx_get_sset_count,
++	.get_strings    =3D &vsc85xx_get_strings,
++	.get_stats      =3D &vsc85xx_get_stats,
++},
+ {
+ 	.phy_id		=3D PHY_ID_VSC8530,
+ 	.name		=3D "Microsemi FE VSC8530",
+@@ -2034,6 +2414,7 @@ static struct phy_driver vsc85xx_driver[] =3D {
+ module_phy_driver(vsc85xx_driver);
+=20
+ static struct mdio_device_id __maybe_unused vsc85xx_tbl[] =3D {
++	{ PHY_ID_VSC8514, 0xfffffff0, },
+ 	{ PHY_ID_VSC8530, 0xfffffff0, },
+ 	{ PHY_ID_VSC8531, 0xfffffff0, },
+ 	{ PHY_ID_VSC8540, 0xfffffff0, },
+--=20
+2.17.1
 
