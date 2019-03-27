@@ -2,152 +2,149 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5DFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1C5C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48ECD2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:51:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8i0UaMa"
+	by mail.kernel.org (Postfix) with ESMTP id B40BB2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbfC0Ivl (ORCPT
+        id S1732141AbfC0Iy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:51:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37930 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfC0Ivk (ORCPT
+        Wed, 27 Mar 2019 04:54:29 -0400
+Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:49152 "EHLO
+        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726810AbfC0Iy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:51:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id q14so13246810edr.5;
-        Wed, 27 Mar 2019 01:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K/XQxAuhgKLd5prKMJwqk8HEKiHyTEH02WMFD0lVrj8=;
-        b=o8i0UaMaXT5JkTOhMI7/imRX0rl9+IJbJPqrt4QhXXyaWw9eNT+y2x5z2vY38th2/D
-         oLyDFPGt9dKnPPlC/97euM4cTqSuQjkNd8+mHu/9nb70m7R+R3GOdx4D6yvlrn4CEQP1
-         /ERO9imJt9UAJZTk2BCl3hjkDH/qM2rq+LCJIyKCbIYYhbofsTc8OTmT+Pn/81ZcDdK5
-         p5Q7iEk0y5E7jDmtsoN/1n/sGk/u9Mf/Y3pAnZNtlVB9SoJC6X5NAN2aF6HH2WUW8FHI
-         8qGVK1d5QjBVu39VjeNgc6kRGYOW/jzfkTJMMLgITFJApmjadXrCOiUw9xxv3XNZvxwo
-         XXgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K/XQxAuhgKLd5prKMJwqk8HEKiHyTEH02WMFD0lVrj8=;
-        b=qyB3cuFj7VMUcWuIyyRFdWQcYDhGDvb55/IHj8nPhoajlfgC7Sg0rNG0Ejw2SbQLqX
-         aLXcTc1YUkKQ157/vNwgljIhWP60yPkzb6VlkVy778boIsKsp3xohO6n3ldd9+4DHeFR
-         R9URUzIe3Vhbu+2Vw1JxYNqLhismxB0wd89m4ks6Qmr1DsDryYBkD3hZqqf028Ph30S+
-         5rjJSTb+68GofTwYm3Mw9KdigXWcAZmCsUOpOw2ojGWDdvonHFKXDfn8EvHbXiY++kRf
-         URmm7pmj/4kJKA1lcc80zyyeWkFOo8gs89I7j563/FVgMwDw/C7tCcsTjSJ/Byt6mJY1
-         ggsw==
-X-Gm-Message-State: APjAAAVvXWWQJ1Zyryq2GfKI/VJJ+G6FfSAH7AmWl53EE2rafRkDuEJP
-        J9T/eciKVH12TTFdhpE85tNIEZosSvzm5+VtuoU=
-X-Google-Smtp-Source: APXvYqxY7xcWVwtavxvvgnYvYDMFHg2odjqBehYQGaPHFoK/ScEeF139z4Xo+H2i9tcDZpABVlBiOP99ySVhA9ZwkCA=
-X-Received: by 2002:a50:aa2e:: with SMTP id o43mr23090460edc.67.1553676698981;
- Wed, 27 Mar 2019 01:51:38 -0700 (PDT)
+        Wed, 27 Mar 2019 04:54:28 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 19A0F1C24DC
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 08:54:26 +0000 (GMT)
+Received: (qmail 16859 invoked from network); 27 Mar 2019 08:54:25 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Mar 2019 08:54:25 -0000
+Date:   Wed, 27 Mar 2019 08:54:24 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Qian Cai <cai@lca.pw>, linux-mm@kvack.org, vbabka@suse.cz,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Correct zone boundary handling when resetting pageblock skip
+ hints
+Message-ID: <20190327085424.GL3189@techsingularity.net>
 MIME-Version: 1.0
-References: <20190326094239.5910-1-daniel.baluta@nxp.com> <20190326094239.5910-3-daniel.baluta@nxp.com>
- <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 27 Mar 2019 10:51:22 +0200
-Message-ID: <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Teo Hall <teo.hall@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:31 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> > From: Daniel Baluta
-> > Sent: Tuesday, March 26, 2019 5:43 PM
-> >
-> > i.MX8QXP contains a total of 4 EDMA controllers of which two are primarily
-> > for audio components and the other two are for non-audio periperhals.
-> >
-> > This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
-> >
-> > EDMA0 contains channels for:
-> >       * ASRC0
-> >       * ESAI0
-> >       * SPDIF0
-> >       * SAI0, SAI1, SAI2, SAI3
-> >
-> > EDMA1 contains channels for:
-> >       * ASRC1
-> >       * SAI4, SAI5
-> >
-> > See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
-> >
-> > This patch is based on the dtsi file initially submitted by Teo Hall in i.MX NXP
-> > internal tree.
-> >
-> > [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
-> >
-> > Cc: Teo Hall <teo.hall@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
-> > ++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 0cb939861a60..9e959deb2499 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -182,6 +182,78 @@
-> >                       #clock-cells = <1>;
-> >               };
-> >
-> > +             edma0: dma-controller@591f0000 {
-> > +                     compatible = "fsl,imx8qm-edma";
+Mikhail Gavrilo reported the following bug being triggered in a Fedora
+kernel based on 5.1-rc1 but it is relevant to a vanilla kernel.
 
-Thanks for the comment Aisheng!
+ kernel: page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ kernel: ------------[ cut here ]------------
+ kernel: kernel BUG at include/linux/mm.h:1021!
+ kernel: invalid opcode: 0000 [#1] SMP NOPTI
+ kernel: CPU: 6 PID: 116 Comm: kswapd0 Tainted: G         C        5.1.0-0.rc1.git1.3.fc31.x86_64 #1
+ kernel: Hardware name: System manufacturer System Product Name/ROG STRIX X470-I GAMING, BIOS 1201 12/07/2018
+ kernel: RIP: 0010:__reset_isolation_pfn+0x244/0x2b0
+ kernel: Code: fe 06 e8 0f 8e fc ff 44 0f b6 4c 24 04 48 85 c0 0f 85 dc fe ff ff e9 68 fe ff ff 48 c7 c6 58 b7 2e 8c 4c 89 ff e8 0c 75 00 00 <0f> 0b 48 c7 c6 58 b7 2e 8c e8 fe 74 00 00 0f 0b 48 89 fa 41 b8 01
+ kernel: RSP: 0018:ffff9e2d03f0fde8 EFLAGS: 00010246
+ kernel: RAX: 0000000000000034 RBX: 000000000081f380 RCX: ffff8cffbddd6c20
+ kernel: RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8cffbddd6c20
+ kernel: RBP: 0000000000000001 R08: 0000009898b94613 R09: 0000000000000000
+ kernel: R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000100000
+ kernel: R13: 0000000000100000 R14: 0000000000000001 R15: ffffca7de07ce000
+ kernel: FS:  0000000000000000(0000) GS:ffff8cffbdc00000(0000) knlGS:0000000000000000
+ kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ kernel: CR2: 00007fc1670e9000 CR3: 00000007f5276000 CR4: 00000000003406e0
+ kernel: Call Trace:
+ kernel:  __reset_isolation_suitable+0x62/0x120
+ kernel:  reset_isolation_suitable+0x3b/0x40
+ kernel:  kswapd+0x147/0x540
+ kernel:  ? finish_wait+0x90/0x90
+ kernel:  kthread+0x108/0x140
+ kernel:  ? balance_pgdat+0x560/0x560
+ kernel:  ? kthread_park+0x90/0x90
+ kernel:  ret_from_fork+0x27/0x50
 
->
-> Should this be "fsl,imx8qxp-edma"?
+He bisected it down to commit e332f741a8dd ("mm, compaction: be selective
+about what pageblocks to clear skip hints"). The problem is that the patch
+in question was sloppy with respect to the handling of zone boundaries. In
+some instances, it was possible for PFNs outside of a zone to be examined
+and if those were not properly initialised or poisoned then it would
+trigger the VM_BUG_ON. This patch corrects the zone boundary issues when
+resetting pageblock skip hints and Mikhail reported that the bug did not
+trigger after 30 hours of testing.
 
-Yes, I think that's the more clear approach although in
-our internal tree the edma driver uses only the "fsl,imx8qm-edma
-compatible.
+Fixes: e332f741a8dd ("mm, compaction: be selective about what pageblocks to clear skip hints")
+Reported-and-tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ mm/compaction.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-I will go with your suggestion.
-
-
-> or
-> "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
-
-One thing that it is not clear for me is why there are places
-where we use two compatible strings?
-
-I understand the situation where are two distinct drivers, but is there
-any other reason to add multiple compatible strings for a node in dts?
-
-thanks,
-Daniel.
+diff --git a/mm/compaction.c b/mm/compaction.c
+index f171a83707ce..b4930bf93c8a 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -242,6 +242,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+ 							bool check_target)
+ {
+ 	struct page *page = pfn_to_online_page(pfn);
++	struct page *block_page;
+ 	struct page *end_page;
+ 	unsigned long block_pfn;
+ 
+@@ -267,20 +268,26 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+ 	    get_pageblock_migratetype(page) != MIGRATE_MOVABLE)
+ 		return false;
+ 
++	/* Ensure the start of the pageblock or zone is online and valid */
++	block_pfn = pageblock_start_pfn(pfn);
++	block_page = pfn_to_online_page(max(block_pfn, zone->zone_start_pfn));
++	if (block_page) {
++		page = block_page;
++		pfn = block_pfn;
++	}
++
++	/* Ensure the end of the pageblock or zone is online and valid */
++	block_pfn += pageblock_nr_pages;
++	block_pfn = min(block_pfn, zone_end_pfn(zone) - 1);
++	end_page = pfn_to_online_page(block_pfn);
++	if (!end_page)
++		return false;
++
+ 	/*
+ 	 * Only clear the hint if a sample indicates there is either a
+ 	 * free page or an LRU page in the block. One or other condition
+ 	 * is necessary for the block to be a migration source/target.
+ 	 */
+-	block_pfn = pageblock_start_pfn(pfn);
+-	pfn = max(block_pfn, zone->zone_start_pfn);
+-	page = pfn_to_page(pfn);
+-	if (zone != page_zone(page))
+-		return false;
+-	pfn = block_pfn + pageblock_nr_pages;
+-	pfn = min(pfn, zone_end_pfn(zone));
+-	end_page = pfn_to_page(pfn);
+-
+ 	do {
+ 		if (pfn_valid_within(pfn)) {
+ 			if (check_source && PageLRU(page)) {
+@@ -309,7 +316,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+ static void __reset_isolation_suitable(struct zone *zone)
+ {
+ 	unsigned long migrate_pfn = zone->zone_start_pfn;
+-	unsigned long free_pfn = zone_end_pfn(zone);
++	unsigned long free_pfn = zone_end_pfn(zone) - 1;
+ 	unsigned long reset_migrate = free_pfn;
+ 	unsigned long reset_free = migrate_pfn;
+ 	bool source_set = false;
