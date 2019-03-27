@@ -2,152 +2,214 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA11C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C68BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F30320700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149352075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="fa5sgELy";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="m1RGXT0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbfC0Jjx (ORCPT
+        id S1732333AbfC0JoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:39:53 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16765 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726241AbfC0Jjx (ORCPT
+        Wed, 27 Mar 2019 05:44:16 -0400
+Received: from mail128-16.atl41.mandrillapp.com ([198.2.128.16]:18894 "EHLO
+        mail128-16.atl41.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726241AbfC0JoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:39:53 -0400
-X-UUID: 00d0537f47d3407fbfdc41485273c9f7-20190327
-X-UUID: 00d0537f47d3407fbfdc41485273c9f7-20190327
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 692240441; Wed, 27 Mar 2019 17:39:48 +0800
-Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Mar 2019 17:39:47 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 27 Mar 2019 17:39:47 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 27 Mar 2019 17:39:47 +0800
-Message-ID: <1553679587.18612.7.camel@mtksdaap41>
-Subject: Re: [PATCH v2 02/25] dt-bindings: mediatek: add binding for mt8183
- display
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Wed, 27 Mar 2019 17:39:47 +0800
-In-Reply-To: <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 27 Mar 2019 05:44:16 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Mar 2019 05:44:14 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=M3W9EymIbtNlepIICFQEKnmSlW1q5GOiNtFo19F089s=;
+ b=fa5sgELyEmrI/UFTSFMBRqvvTjfJEzh2dZwqaHa6G/qPax08LcQc0PervWzyuhOqLzphy9uEOgkI
+   Lmey3YuN6cVmWkmtGbIhcGClzijJQ5HAwlJcqb6Q81rendFxU1mOhICrKd9O+8uAKZiR0pqIxWxe
+   ynZYp4ISRT75mSnWByk=
+Received: from pmta01.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail128-16.atl41.mandrillapp.com id hjd2us1mquk8 for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:15:18 +0000 (envelope-from <bounce-md_31050260.5c9b3f25.v1-14e2950b37d9463e8d0aef3eccad9188@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1553678117; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=M3W9EymIbtNlepIICFQEKnmSlW1q5GOiNtFo19F089s=; 
+ b=m1RGXT0+TNrP7c5JqBs+D0zMd4ykLDk+5wWwt64zg1gDlk7sRvZL34wtwoDPhp1Y3pD1TU
+ JxW2f3MTLocaUPPvwWfGIw5Jc7OfvOn+j1JTdoPOFAt3ekyB9969ql6fEcOOLh2sxo0iVZBf
+ W+KqyOE9hDqa4IXKL2YLooXfYawCo=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: [RESEND1, PATCH 1/2] fuse: convert printk -> pr_*
+Received: from [87.98.221.171] by mandrillapp.com id 14e2950b37d9463e8d0aef3eccad9188; Wed, 27 Mar 2019 09:15:17 +0000
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Cc:     Brian Foster <bfoster@redhat.com>,
+        Maxim Patlasov <mpatlasov@parallels.com>,
+        Anatol Pomozov <anatol.pomozov@gmail.com>,
+        Pavel Emelyanov <xemul@openvz.org>,
+        Andrew Gallagher <andrewjcg@fb.com>,
+        "Anand V . Avati" <avati@redhat.com>,
+        Alexey Kuznetsov <kuznet@virtuozzo.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Constantine Shulyupin <const@MakeLinux.com>,
+        Chad Austin <chadaustin@fb.com>,
+        Dan Schatzberg <dschatzberg@fb.com>,
+        <linux-fsdevel@vger.kernel.org>,
+        <fuse-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Smelkov <kirr@nexedi.com>
+Message-Id: <d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com>
+In-Reply-To: <cover.1553677194.git.kirr@nexedi.com>
+References: <cover.1553677194.git.kirr@nexedi.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.14e2950b37d9463e8d0aef3eccad9188
+X-Mandrill-User: md_31050260
+Date:   Wed, 27 Mar 2019 09:15:17 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+Functions, like pr_err, are a more modern variant of printing compared to
+printk. They could be used to denoise sources by using needed level in
+the print function name, and by automatically inserting per-driver /
+function / ... print prefix as defined by pr_fmt macro. pr_* are also
+said to be used in Documentation/process/coding-style.rst and more
+recent code - for example overlayfs - uses them instead of printk.
 
-On Wed, 2019-03-27 at 14:18 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> Update device tree binding documention for the display subsystem for
-> Mediatek MT8183 SOCs
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  .../bindings/display/mediatek/mediatek,disp.txt    | 37 ++++++++++++++--------
->  1 file changed, 23 insertions(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index 8469de5..5467470c 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -27,20 +27,23 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
->  
->  Required properties (all function blocks):
->  - compatible: "mediatek,<chip>-disp-<function>", one of
-> -	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
-> -	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
-> -	"mediatek,<chip>-disp-wdma"  - write DMA
-> -	"mediatek,<chip>-disp-color" - color processor
-> -	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
-> -	"mediatek,<chip>-disp-gamma" - gamma correction
-> -	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
-> -	"mediatek,<chip>-disp-split" - split stream to two encoders
-> -	"mediatek,<chip>-disp-ufoe"  - data compression engine
-> -	"mediatek,<chip>-dsi"        - DSI controller, see mediatek,dsi.txt
-> -	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
-> -	"mediatek,<chip>-disp-mutex" - display mutex
-> -	"mediatek,<chip>-disp-od"    - overdrive
-> -  the supported chips are mt2701, mt2712 and mt8173.
-> +	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
-> +	"mediatek,<chip>-disp-ovl-2l"   	- overlay (2 layers, blending, csc)
+Convert CUSE and FUSE to use the new pr_* functions.
 
-I prefer adding disp-ovl-2l to be an independent patch.
+CUSE output stays completely unchanged, while FUSE output is amended a
+bit for "trying to steal weird page" warning - the second line now comes
+also with "fuse:" prefix. I hope it is ok.
 
-> +	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
-> +	"mediatek,<chip>-disp-wdma"  		- write DMA
-> +	"mediatek,<chip>-disp-ccorr" 		- color correction
+Suggested-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+---
+ fs/fuse/cuse.c   | 13 +++++++------
+ fs/fuse/dev.c    |  4 ++--
+ fs/fuse/fuse_i.h |  4 ++++
+ fs/fuse/inode.c  |  6 +++---
+ 4 files changed, 16 insertions(+), 11 deletions(-)
 
-I prefer adding disp-ccorr to be an independent patch.
-
-> +	"mediatek,<chip>-disp-color" 		- color processor
-> +	"mediatek,<chip>-disp-dither" 		- dither
-
-I prefer adding disp-dither to be an independent patch.
-
-> +	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
-> +	"mediatek,<chip>-disp-gamma" 		- gamma correction
-> +	"mediatek,<chip>-disp-merge" 		- merge streams from two RDMA sources
-> +	"mediatek,<chip>-disp-split" 		- split stream to two encoders
-> +	"mediatek,<chip>-disp-ufoe"  		- data compression engine
-> +	"mediatek,<chip>-dsi"        		- DSI controller, see mediatek,dsi.txt
-> +	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
-> +	"mediatek,<chip>-disp-mutex" 		- display mutex
-> +	"mediatek,<chip>-disp-od"    		- overdrive
-> +  the supported chips are mt2701, mt2712, mt8173 and mt8183.
->  - reg: Physical base address and length of the function block register space
->  - interrupts: The interrupt signal from the function block (required, except for
->    merge and split function blocks).
-> @@ -71,6 +74,12 @@ mmsys: clock-controller@14000000 {
->  	#clock-cells = <1>;
->  };
->  
-> +display_components: dispsys@14000000 {
-> +		compatible = "mediatek,mt8183-display";
-
-"mediatek,mt8183-display" is undefined. I think this should be
-"mediatek,mt8183-mmsys" and you have met the same problem in [1]. You
-may depend on that series to develop your patches.
-
-[1]
-http://lists.infradead.org/pipermail/linux-mediatek/2018-November/015860.html
-
-Regards,
-CK
-
-> +		reg = <0 0x14000000 0 0x1000>;
-> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-> +};
-> +
->  ovl0: ovl@1400c000 {
->  	compatible = "mediatek,mt8173-disp-ovl";
->  	reg = <0 0x1400c000 0 0x1000>;
-
-
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index 55a26f351467..4b41df1d4642 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -33,6 +33,8 @@
+  * closed.
+  */
+ 
++#define pr_fmt(fmt) "CUSE: " fmt
++
+ #include <linux/fuse.h>
+ #include <linux/cdev.h>
+ #include <linux/device.h>
+@@ -225,7 +227,7 @@ static int cuse_parse_one(char **pp, char *end, char **keyp, char **valp)
+ 		return 0;
+ 
+ 	if (end[-1] != '\0') {
+-		printk(KERN_ERR "CUSE: info not properly terminated\n");
++		pr_err("info not properly terminated\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -242,7 +244,7 @@ static int cuse_parse_one(char **pp, char *end, char **keyp, char **valp)
+ 		key = strstrip(key);
+ 
+ 	if (!strlen(key)) {
+-		printk(KERN_ERR "CUSE: zero length info key specified\n");
++		pr_err("zero length info key specified\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -282,12 +284,11 @@ static int cuse_parse_devinfo(char *p, size_t len, struct cuse_devinfo *devinfo)
+ 		if (strcmp(key, "DEVNAME") == 0)
+ 			devinfo->name = val;
+ 		else
+-			printk(KERN_WARNING "CUSE: unknown device info \"%s\"\n",
+-			       key);
++			pr_warn("unknown device info \"%s\"\n", key);
+ 	}
+ 
+ 	if (!devinfo->name || !strlen(devinfo->name)) {
+-		printk(KERN_ERR "CUSE: DEVNAME unspecified\n");
++		pr_err("DEVNAME unspecified\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -341,7 +342,7 @@ static void cuse_process_init_reply(struct fuse_conn *fc, struct fuse_req *req)
+ 	else
+ 		rc = register_chrdev_region(devt, 1, devinfo.name);
+ 	if (rc) {
+-		printk(KERN_ERR "CUSE: failed to register chrdev region\n");
++		pr_err("failed to register chrdev region\n");
+ 		goto err;
+ 	}
+ 
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 8a63e52785e9..ccb4c3980829 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -906,8 +906,8 @@ static int fuse_check_page(struct page *page)
+ 	       1 << PG_lru |
+ 	       1 << PG_active |
+ 	       1 << PG_reclaim))) {
+-		printk(KERN_WARNING "fuse: trying to steal weird page\n");
+-		printk(KERN_WARNING "  page=%p index=%li flags=%08lx, count=%i, mapcount=%i, mapping=%p\n", page, page->index, page->flags, page_count(page), page_mapcount(page), page->mapping);
++		pr_warn("trying to steal weird page\n");
++		pr_warn("  page=%p index=%li flags=%08lx, count=%i, mapcount=%i, mapping=%p\n", page, page->index, page->flags, page_count(page), page_mapcount(page), page->mapping);
+ 		return 1;
+ 	}
+ 	return 0;
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 0920c0c032a0..e6195bc8f836 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -9,6 +9,10 @@
+ #ifndef _FS_FUSE_I_H
+ #define _FS_FUSE_I_H
+ 
++#ifndef pr_fmt
++# define pr_fmt(fmt) "fuse: " fmt
++#endif
++
+ #include <linux/fuse.h>
+ #include <linux/fs.h>
+ #include <linux/mount.h>
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 1b3f3b67d9f0..1bca5023bcc5 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -1397,8 +1397,8 @@ static int __init fuse_init(void)
+ {
+ 	int res;
+ 
+-	printk(KERN_INFO "fuse init (API version %i.%i)\n",
+-	       FUSE_KERNEL_VERSION, FUSE_KERNEL_MINOR_VERSION);
++	pr_info("init (API version %i.%i)\n",
++	        FUSE_KERNEL_VERSION, FUSE_KERNEL_MINOR_VERSION);
+ 
+ 	INIT_LIST_HEAD(&fuse_conn_list);
+ 	res = fuse_fs_init();
+@@ -1434,7 +1434,7 @@ static int __init fuse_init(void)
+ 
+ static void __exit fuse_exit(void)
+ {
+-	printk(KERN_DEBUG "fuse exit\n");
++	pr_debug("exit\n");
+ 
+ 	fuse_ctl_cleanup();
+ 	fuse_sysfs_cleanup();
+-- 
+2.21.0.392.gf8f6787159
