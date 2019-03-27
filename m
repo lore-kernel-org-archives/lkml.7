@@ -2,82 +2,95 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18785C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94559C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D041F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553692033;
-	bh=ehdrA8XSdTsuYLvjpIvD3FM2sG47CInE45L5IymLs8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hyF1uMKrG2ajTshyzSWI0jVhf/Ljs2dg6w5zHsK2uGy9+7sSpIh74ptvezx7EAxEg
-	 N7prK/OiemdNv3VUzMgiAm4Lx8kIlpM/IKUS4ZsNoNK2SxYVGs/roKp9Z+xrWa50Z7
-	 3e/TwmHhV75OFHOZho2hba6/J8JiGo+RZq8GRwrQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5D7D5206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:08:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XcDpHi8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfC0NHM (ORCPT
+        id S1730080AbfC0NID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:07:12 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54578 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfC0NHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:07:12 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 06:07:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,276,1549958400"; 
-   d="scan'208";a="331140619"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2019 06:07:10 -0700
-Date:   Wed, 27 Mar 2019 07:08:22 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "mhocko@suse.com" <mhocko@suse.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "riel@surriel.com" <riel@surriel.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
-Message-ID: <20190327130822.GD7389@localhost.localdomain>
-References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
- <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
- <20190324222040.GE31194@localhost.localdomain>
- <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
- <20190327003541.GE4328@localhost.localdomain>
- <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
+        Wed, 27 Mar 2019 09:08:03 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51219 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbfC0NIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:08:02 -0400
+Received: by mail-it1-f196.google.com with SMTP id e24so25327184itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 06:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zRPvbuZEmC01kLvG2YBZzieIw8Cti3aYh1nOKIsStdE=;
+        b=XcDpHi8y+dWn8+Y6tBwzVNF8ZXt5mgYAt+1C/F3GKariBbKrGlivgZygZnH8Urd1bZ
+         peXuePcx6UnmpIJRnC7AuazMQvlsaQ2FaPCLFhVvfnzfZhqdt28/Nat/kMihqzPwUXC9
+         tQZZsyoQicNsm8QT+FjR6mmFxQS2QklKCaczhX42xbFUWXqGsylVIJEDeV68CFo6+8tR
+         LmAk3RjR68PDOVBPjbRUXWp2rFjOyel+jz4iUE6c74I7Kh+8YSBsCXj2PVDeXHGdAFw0
+         RuybTl+0dzPnFoQGiC2b5C8EHrmHGhxCCWCo0BObjQ88H8RrgxV/B0HVtjEEg8q6roQf
+         0tQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zRPvbuZEmC01kLvG2YBZzieIw8Cti3aYh1nOKIsStdE=;
+        b=tzKNgIZiZNoRGWNBgvSMlHr/dKPS9E9Fs6YoZbbZJfXEH6QcqFJE82kds0hICm5Qm5
+         XgK4tiO5xG5wUmGFmi+jPvqUMJgw8tiv36XODz4n5830du9FFASn3B+dNgdMfYlkzONH
+         x2hTIf0YZ0tBUkhdTItuv4uGsOVRSN8bQi3nbOJL7xB53RnNW02rrpcGM+t62zQ4rY/8
+         TqNoUHEKDF++rpQ0SKq5MEtKbiWYaTSugbT58ab60Ctkz/QyaRUDvm2X0UyiB7G3W122
+         8HHdySbVFc+V2hwoW7krYFAnWZ1qmntiqftAnRfrHmbGuWYib3MAOVjZHGyJBvSR+Rpo
+         TxTg==
+X-Gm-Message-State: APjAAAV1b/eQR6evfelnyFFxjrt3L48MFzJBKLAdOsgYKCcMBg1EbRRE
+        fROzq23sXhZsA/C0sr59JStYWow7F3bqS0xNwUSfDg==
+X-Google-Smtp-Source: APXvYqzH9it436rVW1tu7eOG2Gv0nAjt2pTuGE/F9+s9y9hh6+r52spj18crUn5AQO73+GRQRd+hIJBxMSLmSpNd7EQ=
+X-Received: by 2002:a02:924d:: with SMTP id y13mr17508891jag.24.1553692081845;
+ Wed, 27 Mar 2019 06:08:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+References: <20190325135557.3423-1-axel.lin@ingics.com> <CAMRc=MfvguEhfqXBWa8o12WF6xbHM7yEiOZC+N01UDAQYQs7Zg@mail.gmail.com>
+ <CAFRkauAkN=QAdqF4Qrq=PRS29yifLegrjPTU2=ngZtrkLbY58w@mail.gmail.com>
+In-Reply-To: <CAFRkauAkN=QAdqF4Qrq=PRS29yifLegrjPTU2=ngZtrkLbY58w@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Mar 2019 14:07:51 +0100
+Message-ID: <CAMRc=MeN4W3iOc5+t+9b7knRJVx8vA+eb95bRHFBGZJvC0ffuQ@mail.gmail.com>
+Subject: Re: [PATCH] regulator: max77650: Convert MAX77651 SBB1 to pickable
+ linear range
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 08:41:15PM -0700, Yang Shi wrote:
-> On 3/26/19 5:35 PM, Keith Busch wrote:
-> > migration nodes have higher free capacity than source nodes. And since
-> > your attempting THP's without ever splitting them, that also requires
-> > lower fragmentation for a successful migration.
-> 
-> Yes, it is possible. However, migrate_pages() already has logic to 
-> handle such case. If the target node has not enough space for migrating 
-> THP in a whole, it would split THP then retry with base pages.
+=C5=9Br., 27 mar 2019 o 11:17 Axel Lin <axel.lin@ingics.com> napisa=C5=82(a=
+):
+>
+> > Hi,
+> >
+> > what tree is this patch based on, because it doesn't apply on top of v5=
+.1-rc2.
+> Hi Bart,
+> You can use linux-next or regulator tree.
+> However,  due to build dependency you need to manually apply max77650
+> mfd drvier manually  because it's not exist in these tree.
+>
+> Alternatively, you can check the difference of your tree with
+> linux-next regarding max77650-regulator.c changes.
+> Then pickup related patches first so you can cleanly apply this patch.
+>
+> Regards,
+> Axel
 
-Oh, you're right, my mistake on splitting. So you have a good best effort
-migrate, but I still think it can fail for legitimate reasons that should
-have a swap fallback.
+Can you push a branch you used somewhere public? It'll be faster that way.
+
+Bart
