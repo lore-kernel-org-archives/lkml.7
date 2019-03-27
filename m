@@ -2,95 +2,106 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30534C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD91C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00892075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553669449;
-	bh=u6Xyy14cXyCMnPtVwZQ17b0SeMUzittednYp8JmoM7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mqhnu4J9NibJxp398zmggpKGSI7y1KvbfS25836XnBvLUvOU2agN8zassw7dkPkEe
-	 F7zQ/AKYMe8Dq9f7KoNUNnFid04K9WsC7a3twO+olLsGPZyLS6jKhGFHStxhLWqg9Q
-	 wX7vE0k6B8saq9poT9LhUq7Q68HBRiD2+Su2Txys=
+	by mail.kernel.org (Postfix) with ESMTP id A9D9020811
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731998AbfC0Gur (ORCPT
+        id S1732056AbfC0Gyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:50:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:15182 "EHLO mga01.intel.com"
+        Wed, 27 Mar 2019 02:54:37 -0400
+Received: from shell.v3.sk ([90.176.6.54]:49630 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfC0Gur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:50:47 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 23:50:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,275,1549958400"; 
-   d="scan'208";a="126216665"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga007.jf.intel.com with ESMTP; 26 Mar 2019 23:50:45 -0700
-Date:   Wed, 27 Mar 2019 00:51:56 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "jianchao.wang" <jianchao.w.wang@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
-Message-ID: <20190327065156.GC7389@localhost.localdomain>
-References: <20190325134917.GA4328@localhost.localdomain>
- <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
- <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
- <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
- <20190326235726.GC4328@localhost.localdomain>
- <c0d65c3c-bf2e-ff84-caac-e64b30e4e79f@oracle.com>
- <20190327021521.GA7389@localhost.localdomain>
- <1bbe1b5c-3564-55e8-6824-f679b3c5dd3f@oracle.com>
- <20190327023354.GB7389@localhost.localdomain>
- <9f3a574d-d2ea-3fd0-472c-85ad0bae4daf@oracle.com>
+        id S1725795AbfC0Gyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:54:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id C887A103523;
+        Wed, 27 Mar 2019 07:54:32 +0100 (CET)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id dLeMTF1Dff8i; Wed, 27 Mar 2019 07:54:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 2665F103540;
+        Wed, 27 Mar 2019 07:54:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id g7T2WHuZJ3wc; Wed, 27 Mar 2019 07:54:29 +0100 (CET)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 6D0D5103523;
+        Wed, 27 Mar 2019 07:54:29 +0100 (CET)
+Message-ID: <93930d9c577a7cf83dc7c96ae411dec4d6d47610.camel@v3.sk>
+Subject: Re: [PATCH 2/3] *: convert stream-like files from nonseekable_open
+ -> stream_open
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Kirill Smelkov <kirr@nexedi.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 27 Mar 2019 07:54:28 +0100
+In-Reply-To: <8794193f3040b798010970228d978c05ad56ec52.1553637462.git.kirr@nexedi.com>
+References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com>
+         <8794193f3040b798010970228d978c05ad56ec52.1553637462.git.kirr@nexedi.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 (3.32.0-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f3a574d-d2ea-3fd0-472c-85ad0bae4daf@oracle.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 10:45:33AM +0800, jianchao.wang wrote:
-> 1. a hctx->fq.flush_rq of dead request_queue that shares the same tagset
->    The whole request_queue is cleaned up and freed, so the hctx->fq.flush is freed back to a slab
->
-> 2. a removed io scheduler's sched request
->    The io scheduled is detached and all of the structures are freed, including the pages where sched
->    requests locates.
+On Tue, 2019-03-26 at 23:23 +0000, Kirill Smelkov wrote:
+> Using scripts/coccinelle/api/stream_open.cocci added in the previous
+> patch, search and convert to stream_open all in-kernel nonseekable_open
+> users for which read and write actually do not depend on ppos and where
+> there is no other methods in file_operations which assume @offset
+> access.
 > 
-> So the pointers in tags->rqs[] may point to memory that is not used as a blk layer request.
+> I've verified each generated change manually - that it is correct to convert -
+> and each other nonseekable_open instance left - that it is either not correct
+> to convert there, or that it is not converted due to current stream_open.cocci
+> limitations. The script also does not convert files that should be valid to
+> convert, but that currently have .llseek = noop_llseek or generic_file_llseek
+> for unknown reason despite file being opened with nonseekable_open (e.g.
+> drivers/input/mousedev.c)
+> 
+> Among cases converted 14 were potentially vulnerable to read vs write deadlock
+> (see details in the previous patch):
 
-Oh, free as in kfree'd, not blk_mq_free_request. So it's a read-after-
-free that you're concerned about, not that anyone explicitly changed a
-request->state.
+...
 
-We at least can't free the flush_queue until the queue is frozen. If the
-queue is frozen, we've completed the special fq->flush_rq where its end_io
-replaces tags->rqs[tag] back to the fq->orig_rq from the static_rqs,
-so nvme's iterator couldn't see the fq->flush_rq address if it's invalid.
+> and the reset were just safe to convert to stream_open because their
+> read and write do not use ppos at all and corresponding file_operations
+> do not have methods that assume @offset file access:
 
-The sched_tags concern, though, appears theoretically possible.
+...
+
+> 	drivers/char/pcmcia/scr24x_cs.c:95:8-24: WARNING: scr24x_fops: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open.
+
+...
+
+> diff --git a/drivers/char/pcmcia/scr24x_cs.c b/drivers/char/pcmcia/scr24x_cs.c
+> index f6b43d9350f0..04b39c3596cc 100644
+> --- a/drivers/char/pcmcia/scr24x_cs.c
+> +++ b/drivers/char/pcmcia/scr24x_cs.c
+> @@ -92,7 +92,7 @@ static int scr24x_open(struct inode *inode, struct file *filp)
+>  	kref_get(&dev->refcnt);
+>  	filp->private_data = dev;
+>  
+> -	return nonseekable_open(inode, filp);
+> +	return stream_open(inode, filp);
+>  }
+>  
+>  static int scr24x_release(struct inode *inode, struct file *filp)
+
+Acked-by: Lubomir Rintel <lkundrak@v3.sk> [scr24x_cs]
+
+Thanks,
+Lubo
+
