@@ -2,137 +2,75 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8FC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FCAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBFA2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:13:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553703191;
-	bh=l41n9CsSLHz2kmm4qng7uxI3AEHkGlci+TdhUQ30cVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=calTjS6QcKQ7g6HnUdsOBW/2K/BdRsYo9A9OpVCw7Duf96h2j5RyJ58zGeROKKVVK
-	 +qbqZMdpF45oSxJ3KMlndDVKRlgmL0VP1yjIbX+zBTgDwl7FQUu4JuEl4TGVEaCUbm
-	 m1+D+HMABYVBMLeWyDorW2Li9y2okCaV7vve72YQ=
+	by mail.kernel.org (Postfix) with ESMTP id DB430206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfC0QNK (ORCPT
+        id S1727769AbfC0QP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:13:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45776 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726126AbfC0QNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:13:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56E54AE0E;
-        Wed, 27 Mar 2019 16:13:08 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 17:13:06 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
-Message-ID: <20190327161306.GM11927@dhcp22.suse.cz>
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190322180532.GM32418@dhcp22.suse.cz>
- <CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com>
- <20190325101945.GD9924@dhcp22.suse.cz>
- <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
- <20190326080408.GC28406@dhcp22.suse.cz>
- <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
+        Wed, 27 Mar 2019 12:15:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40930 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfC0QP0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 12:15:26 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h9BCy-0003Zv-Op; Wed, 27 Mar 2019 16:15:20 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: mdio-bcm-unimac: remove redundant !timeout check
+Date:   Wed, 27 Mar 2019 16:15:20 +0000
+Message-Id: <20190327161520.23064-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 26-03-19 17:20:41, Dan Williams wrote:
-> On Tue, Mar 26, 2019 at 1:04 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Mon 25-03-19 13:03:47, Dan Williams wrote:
-> > > On Mon, Mar 25, 2019 at 3:20 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > [...]
-> > > > > User-defined memory namespaces have this problem, but 2MB is the
-> > > > > default alignment and is sufficient for most uses.
-> > > >
-> > > > What does prevent users to go and use a larger alignment?
-> > >
-> > > Given that we are living with 64MB granularity on mainstream platforms
-> > > for the foreseeable future, the reason users can't rely on a larger
-> > > alignment to address the issue is that the physical alignment may
-> > > change from one boot to the next.
-> >
-> > I would love to learn more about this inter boot volatility. Could you
-> > expand on that some more? I though that the HW configuration presented
-> > to the OS would be more or less stable unless the underlying HW changes.
-> 
-> Even if the configuration is static there can be hardware failures
-> that prevent a DIMM, or a PCI device to be included in the memory map.
-> When that happens the BIOS needs to re-layout the map and the result
-> is not guaranteed to maintain the previous alignment.
-> 
-> > > No, you can't just wish hardware / platform firmware won't do this,
-> > > because there are not enough platform resources to give every hardware
-> > > device a guaranteed alignment.
-> >
-> > Guarantee is one part and I can see how nobody wants to give you
-> > something as strong but how often does that happen in the real life?
-> 
-> I expect a "rare" event to happen everyday in a data-center fleet.
-> Failure rates tend towards 100% daily occurrence at scale and in this
-> case the kernel has everything it needs to mitigate such an event.
-> 
-> Setting aside the success rate of a software-alignment mitigation, the
-> reason I am charging this hill again after a 2 year hiatus is the
-> realization that this problem is wider spread than the original
-> failing scenario. Back in 2017 the problem seemed limited to custom
-> memmap= configurations, and collisions between PMEM and System RAM.
-> Now it is clear that the collisions can happen between PMEM regions
-> and namespaces as well, and the problem spans platforms from multiple
-> vendors. Here is the most recent collision problem:
-> https://github.com/pmem/ndctl/issues/76, from a third-party platform.
-> 
-> The fix for that issue uncovered a bug in the padding implementation,
-> and a fix for that bug would result in even more hacks in the nvdimm
-> code for what is a core kernel deficiency. Code review of those
-> changes resulted in changing direction to go after the core
-> deficiency.
+From: Colin Ian King <colin.king@canonical.com>
 
-This kind of information along with real world examples is exactly what
-you should have added into the cover letter. A previous very vague
-claims were not really convincing or something that can be considered a
-proper justification. Please do realize that people who are not working
-with the affected HW are unlikely to have an idea how serious/relevant
-those problems really are.
+The check for zero timeout is always true at the end of the proceeding
+while loop; the only other exit path in the loop is if the unimac MDIO
+is not busy.  Remove the redundant zero timeout check and always
+return -ETIMEDOUT on this timeout return path.
 
-People are asking for a smaller memory hotplug granularity for other
-usecases (e.g. memory ballooning into VMs) which are quite dubious to
-be honest and not really worth all the code rework. If we are talking
-about something that can be worked around elsewhere then it is preferred
-because the code base is not in an excellent shape and putting more on
-top is just going to cause more headaches.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/phy/mdio-bcm-unimac.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-I will try to find some time to review this more deeply (no promises
-though because time is hectic and this is not a simple feature). For the
-future, please try harder to write up a proper justification and a
-highlevel design description which tells a bit about all important parts
-of the new scheme.
-
+diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
+index 3a592629dc7e..4a28fb29adaa 100644
+--- a/drivers/net/phy/mdio-bcm-unimac.c
++++ b/drivers/net/phy/mdio-bcm-unimac.c
+@@ -92,10 +92,7 @@ static int unimac_mdio_poll(void *wait_func_data)
+ 		usleep_range(1000, 2000);
+ 	} while (--timeout);
+ 
+-	if (!timeout)
+-		return -ETIMEDOUT;
+-
+-	return 0;
++	return -ETIMEDOUT;
+ }
+ 
+ static int unimac_mdio_read(struct mii_bus *bus, int phy_id, int reg)
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
