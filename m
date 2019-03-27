@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0ABC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55771C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF7C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DA4205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712754;
-	bh=X3DYLM0Eb7a3pvcdqcBx/kgEhQKrPuSjBmCxS9ehUzQ=;
+	s=default; t=1553712757;
+	bh=6iaHZM6vHTWBRGkR893yQudjWYqijjWUeE5PZlhlE1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pg8XrNx5geKl/zLufKoKTK1ipn6GhWaqe8x4E4lvJ+z4aIILKzhfbaIa6hFGO79zu
-	 IT55cFbAd0ujukUvopw85RGxnaNvtfBuZFMzVjpd2oxhfFZK536eyJzAi7AWonYJNq
-	 +07Bm5rUiLVmnI6m5iY1OrQGr8HLwRpR9OXRKfkQ=
+	b=0eKxnYWII5PoRxbTcYyXoCZmIJVJAweftZD3e9MbIPiI0BnOBKvV9/03oJyos4FbX
+	 DHBCT5k7Zwpil+CrCQtLN4NxkDhnWRkSlO5GOVxIWO51wAZjgZfMAxB8XaZI98mbeA
+	 m9oqmPijqm8hNHrjT7FX6a1Ye3HtxcSTV6hhUF5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390347AbfC0SRk (ORCPT
+        id S2390935AbfC0Swf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389996AbfC0SRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:37 -0400
+        id S2390352AbfC0SRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 707A52087C;
-        Wed, 27 Mar 2019 18:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 468C120449;
+        Wed, 27 Mar 2019 18:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710657;
-        bh=X3DYLM0Eb7a3pvcdqcBx/kgEhQKrPuSjBmCxS9ehUzQ=;
+        s=default; t=1553710661;
+        bh=6iaHZM6vHTWBRGkR893yQudjWYqijjWUeE5PZlhlE1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wr1GB1VVXDfGwm2wGgZf198gJ0e9Y+jc1xTPiBZXebN/kIy3RfV67p1X0BR0dvTeQ
-         calq1x8ubleXfS549sb6ziAE8T7YGQgXhIKXo0NWYwLQAegn5xGf1OHay+hBDNeyKO
-         LSeO4VBqNQAaloyimzKfgBilyCjMDCVfuFjk7XZM=
+        b=w5+5zvLpsBXiyAynpYgKNjTcHTMwKrL8QO4nPaMWA4bKwqaezF9Zyl6oI9eiJLlkz
+         GPluFqgkGNEGFqI4mfskyV2rVLwWtG0mshis72Q8zzVvB71R5IoCVaXOYixV9AsVF9
+         95jLDckbFknbeYdvBgxSAgDTgAo5K/lVaAgRALWQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 036/123] usb: chipidea: Grab the (legacy) USB PHY by phandle first
-Date:   Wed, 27 Mar 2019 14:15:00 -0400
-Message-Id: <20190327181628.15899-36-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 038/123] powerpc/xmon: Fix opcode being uninitialized in print_insn_powerpc
+Date:   Wed, 27 Mar 2019 14:15:02 -0400
+Message-Id: <20190327181628.15899-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -59,57 +57,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
+[ Upstream commit e7140639b1de65bba435a6bd772d134901141f86 ]
 
-According to the chipidea driver bindings, the USB PHY is specified via
-the "phys" phandle node. However, this only takes effect for USB PHYs
-that use the common PHY framework. For legacy USB PHYs, a simple lookup
-based on the USB PHY type is done instead.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-This does not play out well when more than one USB PHY is registered,
-since the first registered PHY matching the type will always be
-returned regardless of what the driver was bound to.
+  arch/powerpc/xmon/ppc-dis.c:157:7: warning: variable 'opcode' is used
+  uninitialized whenever 'if' condition is false
+  [-Wsometimes-uninitialized]
+    if (cpu_has_feature(CPU_FTRS_POWER9))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/powerpc/xmon/ppc-dis.c:167:7: note: uninitialized use occurs here
+    if (opcode == NULL)
+        ^~~~~~
+  arch/powerpc/xmon/ppc-dis.c:157:3: note: remove the 'if' if its
+  condition is always true
+    if (cpu_has_feature(CPU_FTRS_POWER9))
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/powerpc/xmon/ppc-dis.c:132:38: note: initialize the variable
+  'opcode' to silence this warning
+    const struct powerpc_opcode *opcode;
+                                       ^
+                                        = NULL
+  1 warning generated.
 
-Fix this by looking up the PHY based on the "phys" phandle node.
-Although generic PHYs are rather matched by their "phys-name" and not
-the "phys" phandle directly, there is no helper for similar lookup on
-legacy PHYs and it's probably not worth the effort to add it.
+This warning seems to make no sense on the surface because opcode is set
+to NULL right below this statement. However, there is a comma instead of
+semicolon to end the dialect assignment, meaning that the opcode
+assignment only happens in the if statement. Properly terminate that
+line so that Clang no longer warns.
 
-When no legacy USB PHY is found by phandle, fallback to grabbing any
-registered USB2 PHY. This ensures backward compatibility if some users
-were actually relying on this mechanism.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 5b102782c7f4 ("powerpc/xmon: Enable disassembly files (compilation changes)")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/xmon/ppc-dis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 43ea5fb87b9a..70306ae039c0 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -938,8 +938,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
-+		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
-+							  0);
- 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
-+
-+		/* Fallback to grabbing any registered USB2 PHY */
-+		if (IS_ERR(ci->usb_phy) &&
-+		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
-+			ci->usb_phy = devm_usb_get_phy(dev->parent,
-+						       USB_PHY_TYPE_USB2);
+diff --git a/arch/powerpc/xmon/ppc-dis.c b/arch/powerpc/xmon/ppc-dis.c
+index 31db8c072acd..006c7f864f65 100644
+--- a/arch/powerpc/xmon/ppc-dis.c
++++ b/arch/powerpc/xmon/ppc-dis.c
+@@ -162,7 +162,7 @@ int print_insn_powerpc (unsigned long insn, unsigned long memaddr)
+     dialect |= (PPC_OPCODE_POWER5 | PPC_OPCODE_POWER6 | PPC_OPCODE_POWER7
+ 		| PPC_OPCODE_POWER8 | PPC_OPCODE_POWER9 | PPC_OPCODE_HTM
+ 		| PPC_OPCODE_ALTIVEC | PPC_OPCODE_ALTIVEC2
+-		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3),
++		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3);
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+   /* Get the major opcode of the insn.  */
+   opcode = NULL;
 -- 
 2.19.1
 
