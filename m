@@ -4,56 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A3CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A393C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493542070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2312075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712129;
-	bh=840THv+UwAh/DMlXBEC9mMy5QzhoIUtVLdHZt6lu8Ug=;
+	s=default; t=1553712134;
+	bh=D8T0X0evmVkOPjk8PPbQlo3qzAHK2knJRFdlws3nCWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NoE5dDAzjJGb61AK8791ia9MR8AE6YdXPXlz072hM9BJSJ43xFREhubNEZUS56/Ag
-	 pWT/Zv2CfbWF78jOI5pqjxUyoBfcqJHW6KDlE1BBMnibvxWGJMJEMMKWBpSRIkj645
-	 prvV+gyGKq9jpy2ly8k+/l7b6ZA+3MhPxRq1njJA=
+	b=19hKL+uKrgT3U3q763rs8nXcEtifpfnhVECOO/8Qi4qkK7wkBU1L8424bKh2CVIrD
+	 V5nDv5FUiBi8tCkBfEAndypR+a1/jwptAp7SMAJvBrWkcvwg5MYKC00bW+RipUe6Cw
+	 IwcRfZwCo/X1jhqlhkVgcVtLRH8obCNVO+S42kmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391259AbfC0SWH (ORCPT
+        id S2391011AbfC0SWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40050 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403811AbfC0SWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:03 -0400
+        id S2403787AbfC0SWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420BD20643;
-        Wed, 27 Mar 2019 18:22:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1445620651;
+        Wed, 27 Mar 2019 18:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710922;
-        bh=840THv+UwAh/DMlXBEC9mMy5QzhoIUtVLdHZt6lu8Ug=;
+        s=default; t=1553710919;
+        bh=D8T0X0evmVkOPjk8PPbQlo3qzAHK2knJRFdlws3nCWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzvMTef8yhpm/6Fg2eVWDLO8tTwKE36onGHrT6kNgNdukhsEExLTVDGq+6akckae8
-         cmvCKGrLxuv4Wvu7GQvKnKtN2kG96z7LN22MSO91ni7LW9qcnRxGrDMd0Fyy62pSnQ
-         pPODTkKRWlh+s2xp5bzPdTsUQXjReF7gVXm7/89Q=
+        b=AhErrvwd3mxtUNR7uw5J/VsoVW/IVUhZxlfp6k6g955mrnNQ4ngZtrAvi0MFRGKxj
+         /8zXXjV2Jt9WKrrtnh9wcZnbRHy0cHY4I2b6IYI0TSrdAl+MrIl/4r6w3DiElilar1
+         8jJhp8vL20LMLXzClqexcpVvUozHot7o0KBGoUQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <righi.andrea@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 48/87] kprobes: Prohibit probing on bsearch()
-Date:   Wed, 27 Mar 2019 14:20:01 -0400
-Message-Id: <20190327182040.17444-48-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 47/87] ACPI / video: Refactor and fix dmi_is_desktop()
+Date:   Wed, 27 Mar 2019 14:20:00 -0400
+Message-Id: <20190327182040.17444-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -65,56 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <righi.andrea@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 02106f883cd745523f7766d90a739f983f19e650 ]
+[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
 
-Since kprobe breakpoing handler is using bsearch(), probing on this
-routine can cause recursive breakpoint problem.
+This commit refactors the chassis-type detection introduced by
+commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") (where desktop means anything without a builtin
+screen).
 
-int3
- ->do_int3()
-   ->ftrace_int3_handler()
-     ->ftrace_location()
-       ->ftrace_location_range()
-         ->bsearch() -> int3
+The DMI chassis_type is an unsigned integer, so rather then doing a
+whole bunch of string-compares on it, convert it to an int and feed
+the result to a switch case.
 
-Prohibit probing on bsearch().
+Note the switch case uses hex values, this is done because the spec
+uses hex values too. This changes the check for "Main Server Chassis"
+from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
+the original check for 11 decimal was wrong.
 
-Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998813406.31052.8791425358974650922.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ rjw: Drop redundant return statements ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/bsearch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/acpi_video.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/lib/bsearch.c b/lib/bsearch.c
-index e33c179089db..d50048446b77 100644
---- a/lib/bsearch.c
-+++ b/lib/bsearch.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/export.h>
- #include <linux/bsearch.h>
-+#include <linux/kprobes.h>
- 
- /*
-  * bsearch - binary search an array of elements
-@@ -51,3 +52,4 @@ void *bsearch(const void *key, const void *base, size_t num, size_t size,
- 	return NULL;
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 667dc5c86fef..d79e38abd6d9 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2069,21 +2069,28 @@ static int __init intel_opregion_present(void)
+ 	return opregion;
  }
- EXPORT_SYMBOL(bsearch);
-+NOKPROBE_SYMBOL(bsearch);
+ 
++/* Check if the chassis-type indicates there is no builtin LCD panel */
+ static bool dmi_is_desktop(void)
+ {
+ 	const char *chassis_type;
++	unsigned long type;
+ 
+ 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	if (!chassis_type)
+ 		return false;
+ 
+-	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
+-	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
+-	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
+-	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
+-	    !strcmp(chassis_type, "7") || /*  7: Tower */
+-	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
++	if (kstrtoul(chassis_type, 10, &type) != 0)
++		return false;
++
++	switch (type) {
++	case 0x03: /* Desktop */
++	case 0x04: /* Low Profile Desktop */
++	case 0x05: /* Pizza Box */
++	case 0x06: /* Mini Tower */
++	case 0x07: /* Tower */
++	case 0x11: /* Main Server Chassis */
+ 		return true;
++	}
+ 
+ 	return false;
+ }
 -- 
 2.19.1
 
