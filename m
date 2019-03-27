@@ -2,82 +2,97 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FBCC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C98C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612702146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D682087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DVMFSJBV";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cabff1F5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfC0MDx (ORCPT
+        id S1728357AbfC0MKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:03:53 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:49775 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfC0MDx (ORCPT
+        Wed, 27 Mar 2019 08:10:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34706 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728130AbfC0MKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:03:53 -0400
-Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2RC3a1g065233;
-        Wed, 27 Mar 2019 21:03:36 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp);
- Wed, 27 Mar 2019 21:03:36 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp)
-Received: from localhost.localdomain (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2RC3RgD065159
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 27 Mar 2019 21:03:35 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] arm64: dts: rockchip: fix IO domain voltage setting of APIO5
-Date:   Wed, 27 Mar 2019 21:03:17 +0900
-Message-Id: <20190327120317.15256-1-katsuhiro@katsuster.net>
-X-Mailer: git-send-email 2.20.1
+        Wed, 27 Mar 2019 08:10:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9271460A44; Wed, 27 Mar 2019 12:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553688605;
+        bh=vCgm2ltOG4VsipYUubYSD9mUgVSHzO+NevXUcGqvJl4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DVMFSJBVSZ4rNyitSFmF6K0dIwOPpAMR67UJdA/j7XX86MbSKLUEH6OiPbM19usIK
+         Fq0Q/0LX81P7IPQZm1GSE6g1mRllOtl5sxDQJNjbZPA9+z9qGm2Xcah+izufLJbOqp
+         nrlS0pTahe8tbU1GZooIwue46mgChp56+WCGWZA8=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8E12760A44;
+        Wed, 27 Mar 2019 12:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553688604;
+        bh=vCgm2ltOG4VsipYUubYSD9mUgVSHzO+NevXUcGqvJl4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cabff1F5ARImtfN7dV6ojIUU1hYpf81IFX+C80Ib5Zw6tACWalFJb7PnOhZRURupk
+         TlwbsUV1ZquSy8sHH9Ongo9Oq6OU7tlFfGz6VPc5wu5NTfDvi80T5ETWKoRNKl2BkX
+         eW9q5uMKX3ZvegRGiIWTmD/y0ryV1TvXqUU9ASRA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8E12760A44
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] sh:mach-dreamcast/irq.c : Remove duplicate header
+To:     jagdsh.linux@gmail.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, akpm@linux-foundation.org,
+        horms+renesas@verge.net.au, kuninori.morimoto.gx@renesas.com
+Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1553288536-14470-1-git-send-email-jagdsh.linux@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <91dc8844-f660-b3e6-a38e-94abc1a5b4db@codeaurora.org>
+Date:   Wed, 27 Mar 2019 17:39:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1553288536-14470-1-git-send-email-jagdsh.linux@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes IO domain voltage setting that is related to
-audio_gpio3d4a_ms (bit 1) of GRF_IO_VSEL.
 
-This is because RockPro64 schematics P.16 says that regulator
-supplies 3.0V power to APIO5_VDD. So audio_gpio3d4a_ms bit should
-be clear (means 3.0V). Power domain map is saying different thing
-(supplies 1.8V) but I believe P.16 is actual connectings.
+On 3/23/2019 2:32 AM, jagdsh.linux@gmail.com wrote:
+> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+>
+> Remove duplicate header which is included twice.
+>
+> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 791fb0ee9722..20ec7d1c25d7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -508,7 +508,7 @@
- 	status = "okay";
- 
- 	bt656-supply = <&vcc1v8_dvp>;
--	audio-supply = <&vcca1v8_codec>;
-+	audio-supply = <&vcc_3v0>;
- 	sdmmc-supply = <&vcc_sdio>;
- 	gpio1830-supply = <&vcc_3v0>;
- };
--- 
-2.20.1
 
+> ---
+>   arch/sh/boards/mach-dreamcast/irq.c | 1 -
+>   1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/sh/boards/mach-dreamcast/irq.c b/arch/sh/boards/mach-dreamcast/irq.c
+> index a929f76..cc06e4c 100644
+> --- a/arch/sh/boards/mach-dreamcast/irq.c
+> +++ b/arch/sh/boards/mach-dreamcast/irq.c
+> @@ -10,7 +10,6 @@
+>    */
+>   #include <linux/irq.h>
+>   #include <linux/io.h>
+> -#include <linux/irq.h>
+>   #include <linux/export.h>
+>   #include <linux/err.h>
+>   #include <mach/sysasic.h>
