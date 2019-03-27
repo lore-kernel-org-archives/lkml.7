@@ -6,50 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBC1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72BFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74D32063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B542063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710149;
-	bh=6Xj19h1s9oFB9RZZByv/kdbSzoXRJhZyJi2bYuMPyZQ=;
+	s=default; t=1553710153;
+	bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iF2uAvNkHiq2CxuFTV1q7rGxSrpe5n+rWSnvxLsDm2DCSuAIphrCa7kbArlw05MKH
-	 THLGef67rXIaxi60NzO5G3pcUs+GPmztQhBb+nr7sHt7iET7cfSTAU1We5lWb3tClL
-	 ljTBkCSywdVTsET+/KFsaLSXBczzefhZfp2FMaiE=
+	b=Dh9FFzI0wxSU6alfcDWlxaW4zKtk7JRbqkKiuywdhgO/yKDvz+q9EPDOwh5v4hWad
+	 P3wz4rUtxJsmzASqAtJIQEG9vAc0lZoi4Iah45VlvYPWPAsLfKq+KafbzKiOUBmPuG
+	 G3ZMgetpcwxbpY9qBRH9Uzi/tOt1i3QeVTCn4K2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbfC0SJI (ORCPT
+        id S2388513AbfC0SJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732800AbfC0SJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:03 -0400
+        id S2388500AbfC0SJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8243E21734;
-        Wed, 27 Mar 2019 18:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5AE32063F;
+        Wed, 27 Mar 2019 18:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710142;
-        bh=6Xj19h1s9oFB9RZZByv/kdbSzoXRJhZyJi2bYuMPyZQ=;
+        s=default; t=1553710147;
+        bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vAmkXOuR7LCpYzKZ91o7+wnOh4AhRKAVrESCsNhuNTTqaLp3wJfEvebTsRwQ2Wzum
-         jkjFxUU5Gmy0YYMbJ1bCb6l1m+yw8lCLNK0y9mgu7E/Ysp03U7KjCoPZAJ8SyaAZZE
-         HkSTHIBJd7/PbUEzdokCcs2UXIIn818pRtPBuh9o=
+        b=Up9N3n7yRFPtvA9VJqBicd0IuTJku7EQ05c8m2A8Yl2kDVCTcgMWsd23co1PGWoQd
+         Ln8hrS8mwcdxgEh+KmAJyBTf8GhkaPvs6N9w/YZDs1KEjtYf3BaUCyaz35jiQKbtjk
+         4Gvv4S9vM4JdtMbmgsEMrzW4wSEaCXr/rzTA0SdM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 215/262] media: mt9m111: set initial frame size other than 0x0
-Date:   Wed, 27 Mar 2019 14:01:10 -0400
-Message-Id: <20190327180158.10245-215-sashal@kernel.org>
+Cc:     Timo Alho <talho@nvidia.com>, Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 217/262] soc/tegra: fuse: Fix illegal free of IO base address
+Date:   Wed, 27 Mar 2019 14:01:12 -0400
+Message-Id: <20190327180158.10245-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -61,39 +56,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Timo Alho <talho@nvidia.com>
 
-[ Upstream commit 29856308137de1c21eda89411695f4fc6e9780ff ]
+[ Upstream commit 51294bf6b9e897d595466dcda5a3f2751906a200 ]
 
-This driver sets initial frame width and height to 0x0, which is invalid.
-So set it to selection rectangle bounds instead.
+On cases where device tree entries for fuse and clock provider are in
+different order, fuse driver needs to defer probing. This leads to
+freeing incorrect IO base address as the fuse->base variable gets
+overwritten once during first probe invocation. This leads to the
+following spew during boot:
 
-This is detected by v4l2-compliance detected.
+[    3.082285] Trying to vfree() nonexistent vm area (00000000cfe8fd94)
+[    3.082308] WARNING: CPU: 5 PID: 126 at /hdd/l4t/kernel/stable/mm/vmalloc.c:1511 __vunmap+0xcc/0xd8
+[    3.082318] Modules linked in:
+[    3.082330] CPU: 5 PID: 126 Comm: kworker/5:1 Tainted: G S                4.19.7-tegra-gce119d3 #1
+[    3.082340] Hardware name: quill (DT)
+[    3.082353] Workqueue: events deferred_probe_work_func
+[    3.082364] pstate: 40000005 (nZcv daif -PAN -UAO)
+[    3.082372] pc : __vunmap+0xcc/0xd8
+[    3.082379] lr : __vunmap+0xcc/0xd8
+[    3.082385] sp : ffff00000a1d3b60
+[    3.082391] x29: ffff00000a1d3b60 x28: 0000000000000000
+[    3.082402] x27: 0000000000000000 x26: ffff000008e8b610
+[    3.082413] x25: 0000000000000000 x24: 0000000000000009
+[    3.082423] x23: ffff000009221a90 x22: ffff000009f6d000
+[    3.082432] x21: 0000000000000000 x20: 0000000000000000
+[    3.082442] x19: ffff000009f6d000 x18: ffffffffffffffff
+[    3.082452] x17: 0000000000000000 x16: 0000000000000000
+[    3.082462] x15: ffff0000091396c8 x14: 0720072007200720
+[    3.082471] x13: 0720072007200720 x12: 0720072907340739
+[    3.082481] x11: 0764076607380765 x10: 0766076307300730
+[    3.082491] x9 : 0730073007300730 x8 : 0730073007280720
+[    3.082501] x7 : 0761076507720761 x6 : 0000000000000102
+[    3.082510] x5 : 0000000000000000 x4 : 0000000000000000
+[    3.082519] x3 : ffffffffffffffff x2 : ffff000009150ff8
+[    3.082528] x1 : 3d95b1429fff5200 x0 : 0000000000000000
+[    3.082538] Call trace:
+[    3.082545]  __vunmap+0xcc/0xd8
+[    3.082552]  vunmap+0x24/0x30
+[    3.082561]  __iounmap+0x2c/0x38
+[    3.082569]  tegra_fuse_probe+0xc8/0x118
+[    3.082577]  platform_drv_probe+0x50/0xa0
+[    3.082585]  really_probe+0x1b0/0x288
+[    3.082593]  driver_probe_device+0x58/0x100
+[    3.082601]  __device_attach_driver+0x98/0xf0
+[    3.082609]  bus_for_each_drv+0x64/0xc8
+[    3.082616]  __device_attach+0xd8/0x130
+[    3.082624]  device_initial_probe+0x10/0x18
+[    3.082631]  bus_probe_device+0x90/0x98
+[    3.082638]  deferred_probe_work_func+0x74/0xb0
+[    3.082649]  process_one_work+0x1e0/0x318
+[    3.082656]  worker_thread+0x228/0x450
+[    3.082664]  kthread+0x128/0x130
+[    3.082672]  ret_from_fork+0x10/0x18
+[    3.082678] ---[ end trace 0810fe6ba772c1c7 ]---
 
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fix this by retaining the value of fuse->base until driver has
+successfully probed.
+
+Signed-off-by: Timo Alho <talho@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soc/tegra/fuse/fuse-tegra.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index d639b9bcf64a..7a759b4b88cf 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -1273,6 +1273,8 @@ static int mt9m111_probe(struct i2c_client *client,
- 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
- 	mt9m111->rect.width	= MT9M111_MAX_WIDTH;
- 	mt9m111->rect.height	= MT9M111_MAX_HEIGHT;
-+	mt9m111->width		= mt9m111->rect.width;
-+	mt9m111->height		= mt9m111->rect.height;
- 	mt9m111->fmt		= &mt9m111_colour_fmts[0];
- 	mt9m111->lastpage	= -1;
- 	mutex_init(&mt9m111->power_lock);
+diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
+index a33ee8ef8b6b..51625703399e 100644
+--- a/drivers/soc/tegra/fuse/fuse-tegra.c
++++ b/drivers/soc/tegra/fuse/fuse-tegra.c
+@@ -137,13 +137,17 @@ static int tegra_fuse_probe(struct platform_device *pdev)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	fuse->phys = res->start;
+ 	fuse->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(fuse->base))
+-		return PTR_ERR(fuse->base);
++	if (IS_ERR(fuse->base)) {
++		err = PTR_ERR(fuse->base);
++		fuse->base = base;
++		return err;
++	}
+ 
+ 	fuse->clk = devm_clk_get(&pdev->dev, "fuse");
+ 	if (IS_ERR(fuse->clk)) {
+ 		dev_err(&pdev->dev, "failed to get FUSE clock: %ld",
+ 			PTR_ERR(fuse->clk));
++		fuse->base = base;
+ 		return PTR_ERR(fuse->clk);
+ 	}
+ 
+@@ -152,8 +156,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
+ 
+ 	if (fuse->soc->probe) {
+ 		err = fuse->soc->probe(fuse);
+-		if (err < 0)
++		if (err < 0) {
++			fuse->base = base;
+ 			return err;
++		}
+ 	}
+ 
+ 	if (tegra_fuse_create_sysfs(&pdev->dev, fuse->soc->info->size,
 -- 
 2.19.1
 
