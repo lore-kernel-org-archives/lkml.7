@@ -2,120 +2,121 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6956C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA36C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54C2206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E8C20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pYiORcp/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s3GcnMgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbfC0Rsm (ORCPT
+        id S1728760AbfC0Rth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:48:42 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47750 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbfC0Rsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:48:41 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26C101EC023E;
-        Wed, 27 Mar 2019 18:48:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553708920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=g2YdIQv/hQoChlCSzcNe/bLUtkhiY13PPEnV3MCGJeA=;
-        b=pYiORcp/pNttOn7hSNxJ8iglDuquP0pRijP2OkKdyYONVPoLV8xaZF4FVTLEHV9lyc3IXK
-        vsP3OWo7Pj/2SB5PESDpMpb301OMDvIFuIGzSxnVwmWH3bmIjNouiWyugtud8bQ7w4MCcI
-        kmqaoouzPitE/SJxLk94szUCiUyRC3k=
-Date:   Wed, 27 Mar 2019 18:48:41 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Wed, 27 Mar 2019 13:49:37 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55275 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbfC0Rth (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:49:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f3so899875wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OnWXHAD/NFAuMF2vCNye6GO2QmX0l3AyMwH90a2R2w8=;
+        b=s3GcnMgbwGumooIHwxpyhJu5FqfaOV5QM9XS5euz/d5up4nLZ0eYScZF/s6N+sWrxO
+         tuV2EKXYp+YsBXN6dKqyEoAEvhN5hAYq2QoTN/r7rt+XJeF/xRsyJrQio0hfetfrTuVR
+         jlN+1fZ4srKUyDJzKMLIJKkhE4n+K0NRxkBPiwnZnxwU/tPTjqng7FE/sq/8oVsCyWff
+         dzwraaFrURaiyVmtBgpkuwfD1XZWwSIDBMEQ8P+NaYwlKSVip64KzQhoIXVuDseDcCSL
+         LMSe8hfGlAkz3TKXiePMYQ9EarK83AcdMerzo3NRxISlE6KjHl9tSzG+rv8rJY2R3PVi
+         M64A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OnWXHAD/NFAuMF2vCNye6GO2QmX0l3AyMwH90a2R2w8=;
+        b=PDYrCPwCKUiXXI8rUsMN7KmmRpJ+zwonD07DyHS+D0p+HVEMmUXzmfeasJsHmW3k8K
+         PEigGtUVw2D/nWZ7rIjx3t9KSOkgJil8G3h26zTyGCaWaFccBamkCLXmRfL08eMwEorN
+         TweX21y+KRXdIvuoK9JjJK4o1b7GxkHCvGzAfpFkVglzIXB0/wNbGCBfYascjJunDg5y
+         gfgyn1M0EIoz+kVShG5Rz/hajPnPTLdmeZQu2xenJQgz0west1GdYQ8gB0Z+SShFKkwF
+         yonWpV0oCRZmYQ6mnoT1U6vQTDS52H1meUsmXP5eNQaaLRa6oGio28GC4MmH4N78U9Ga
+         2bFA==
+X-Gm-Message-State: APjAAAVMo4alFEUnZGUdl9YJTrbEXGKisMw5EEBhDavoJiPcHa7Z7ysI
+        Y6KS2p2zLmj7m7TTQOZX5B+JmQ==
+X-Google-Smtp-Source: APXvYqwaWaEWPjm5Ed6MTnrsVdMiFO2SB8w/6iiplLv79diYpKxMcw37jzqq2TzUn+lPCtuy/3Gyew==
+X-Received: by 2002:a1c:f61a:: with SMTP id w26mr20425532wmc.70.1553708974596;
+        Wed, 27 Mar 2019 10:49:34 -0700 (PDT)
+Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id y3sm907697wmi.27.2019.03.27.10.49.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 10:49:33 -0700 (PDT)
+Subject: Re: [PATCH v4 00/11] ARM: davinci: modernize the timer support
+To:     Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: WARNING in arch_install_hw_breakpoint
-Message-ID: <20190327174841.GI32571@zn.tnic>
-References: <000000000000639f6a0584d11b82@google.com>
- <20190327132805.GG32571@zn.tnic>
- <CACT4Y+bHd938t-w++LBO-yHMWP1cXpn+U=AVL+8mMfTBYk86=g@mail.gmail.com>
- <20190327151725.GH32571@zn.tnic>
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190318121100.28132-1-brgl@bgdev.pl>
+ <ee3034e0-7037-3055-749c-ca3897078e10@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <1148f076-09d4-18cb-b18c-abd5fc5216a6@linaro.org>
+Date:   Wed, 27 Mar 2019 18:49:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <ee3034e0-7037-3055-749c-ca3897078e10@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190327151725.GH32571@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 04:17:25PM +0100, Borislav Petkov wrote:
-> On Wed, Mar 27, 2019 at 02:45:24PM +0100, Dmitry Vyukov wrote:
-> > And run this program:
-> > https://syzkaller.appspot.com/text?tag=ReproC&x=15439f27200000
+Hi Sekhar,
+
+
+On 27/03/2019 16:36, Sekhar Nori wrote:
+> Hi Daniel, Thomas,
 > 
-> Yap, that worked in my guest, after segfaulting a lot first:
+> On 18/03/19 5:40 PM, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> This series removes the legacy timer code from mach-davinci in favor of
+>> a new clocksource driver it introduces.
+>>
+>> Patch 1 adds a new clocksource driver for davinci.
+>>
+>> Patch 2 enables the new driver for device-tree based systems.
+>>
+>> Patch 3 adds a WARN_ON() to the machine code of all davinci boards
+>> which is triggered if clk_get() for the timer clock fails. This is needed
+>> as the new driver expects the clock to be functional and doesn't check it.
+>>
+>> Patches 4-5 and 7-10 switch the board files to using the new
+>> clocksource driver while patch 6 moves some necessary defines to
+>> a different place since we'll be removing the file that contains them.
+>>
+>> Patch 11 removes legacy timer code.
 > 
-> [  101.600512][ T7333] Code: Bad RIP value.
-> [  101.606103][ T7337] repro[7337]: segfault at 155555585 ip 0000000155555585 sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
-> [  101.606248][ T7338] repro[7338]: segfault at 25555554e ip 000000025555554e sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
-> [  101.608498][ T7337] Code: Bad RIP value.
-> [  101.610442][ T7338] Code: Bad RIP value.
-> [  101.611417][ T7341] repro[7341]: segfault at 0 ip 0000000000000000 sp 00000000200002c8 error 14
-> [  101.613342][ T7341] Code: Bad RIP value.
-> [  101.613798][ T7345] repro[7345]: segfault at 0 ip 0000000000000000 sp 00000000200002c8 error 14
-> [  101.614292][ T7342] repro[7342]: segfault at 45555554e ip 000000045555554e sp 00007ffff7f98f10 error 14 in repro[555555554000+1000]
-> [  101.615809][ T7345] Code: Bad RIP value.
-> [  101.616777][ T7348] repro[7348]: segfault at 155555585 ip 0000000155555585 sp 00007ffff7fdaf10 error 14 in repro[555555554000+1000]
-> [  101.616802][ T7348] Code: Bad RIP value.
-> [  101.617733][ T7342] Code: Bad RIP value.
-> [  105.321676][T11024] ------------[ cut here ]------------
-> [  105.324183][T11024] Can't find any breakpoint slot
-> [  105.324229][T11024] WARNING: CPU: 0 PID: 11024 at arch/x86/kernel/hw_breakpoint.c:121 arch_install_hw_breakpoint+0x2d1/0x3a0
+> The series looks good to me. With your ack on 1/11, I would like to
+> merge the series through ARM SoC tree.
 
-Ok, after adding some debug output, it looks like this (newlines mine):
+ok, will do the review asap.
 
-[  200.921625][ T8029]    repro-8029    0d..4 200923254us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-
-[  200.922507][ T8029]    repro-8029    0d..4 200923257us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-[  200.923397][ T8029]    repro-8029    0d..4 200923259us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-
-[  200.924294][ T8029]    repro-8029    0d..4 200923262us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-[  200.925175][ T8029]    repro-8029    0d..4 200923264us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-[  200.926054][ T8029]    repro-8029    0d..4 200923266us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
-
-[  200.926933][ T8029]    repro-8029    0d..4 200923270us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-[  200.927816][ T8029]    repro-8029    0d..4 200923271us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-[  200.928695][ T8029]    repro-8029    0d..4 200923273us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
-[  200.929573][ T8029]    repro-8029    0d..4 200923275us : arch_install_hw_breakpoint: i: 3, slot: ffff88806991ed00
-
-which basically shows how this thread adds 4 breakpoints and hits the
-warn on on the 5th.
-
-Now, that code I've seen only once or twice so I don't have a very smart
-guess but it looks to me like arch_install_hw_breakpoint() or something
-scheduling the events above that, should check HBP_NUM and not schedule
-more than 4 hw breakpoints. Or..?
-
-Frederic, I know you know this code... :-)
+ -- Daniel
 
 -- 
-Regards/Gruss,
-    Boris.
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
