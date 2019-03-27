@@ -6,51 +6,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3561FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FF4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F392063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B3221734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710834;
-	bh=skjNL9xN1S3j3/04nZjFiqXe+kT4bME8Nf9fiGII61A=;
+	s=default; t=1553710844;
+	bh=vC0fB/HFUYPfeb7b1rkyR3rKH4Mw8wv9xD3VLxfByek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcDKO6hIiWcIzkT+LGLpqUsqZ8cMwb+ly7kOM2NkdJmkCKUKof8AXVCantrjBgDGM
-	 yqHnINLTOcgGqpu/U+S8H1BwKpp9NtCoA/iNF+km4tsBsy55OWPp3p3y4nzAb1I4EM
-	 YYeWjd6Tk/zV8Ct3nr7xI1bj9w7cwQJ6YxE1nwXA=
+	b=RTVMPqOv9Kc1q1woEdVF0KitT4NnyAH3xEYAmBnndb3ujb9oTObcvrkYtFkeDoi6r
+	 uI+ENBXyyK2g9FGUOcRfIQBdJvrzr0otkYqcmiPBzxGzDZNuWeZ7qHA1pZbMHGWTcX
+	 DEr51tp4LPkumbd4BYiZxL/9LPeMSY1rNW2L666I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390943AbfC0SUc (ORCPT
+        id S2390995AbfC0SUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390661AbfC0SUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:30 -0400
+        id S2390979AbfC0SUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FF52087C;
-        Wed, 27 Mar 2019 18:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0CF2177E;
+        Wed, 27 Mar 2019 18:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710829;
-        bh=skjNL9xN1S3j3/04nZjFiqXe+kT4bME8Nf9fiGII61A=;
+        s=default; t=1553710838;
+        bh=vC0fB/HFUYPfeb7b1rkyR3rKH4Mw8wv9xD3VLxfByek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOOCkIqAxWTd9gDLhaTrscHZxXSJSYRVMBTkn9jRNldqb0LNPCCYW5EP6mkMSXZar
-         KIcEketJd8X/mPDhXZg+xE9yIX1HHk9VLVrbl5WfMKgKGMe1xr2Qgw9MyRrsULFFiw
-         7kJPE8G99E9550GCuoQnzHt3A3eRUsg5ZwWx3kxI=
+        b=L+MXyZSOO6NFrNN9Hf5j5fqQTagZR4X+GRt4qx2dWmtNCo2ZkxR/DXPrZUgcyHNms
+         i+kJU/a9tYjJLS+rOzdWMAp5A5vcwiKURUpJgMnd+rSKIjNBWvkEnxWkSrCno87vRk
+         NEfXTIgBt/MA/DEp8vqCvVqngFdx8WYWRPjQxKQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Brian Vincent <brainn@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 117/123] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Wed, 27 Mar 2019 14:16:21 -0400
-Message-Id: <20190327181628.15899-117-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 122/123] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
+Date:   Wed, 27 Mar 2019 14:16:26 -0400
+Message-Id: <20190327181628.15899-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,59 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zumeng Chen <zumeng.chen@gmail.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+We aren't supposed to force a stop+start between every i2c msg
+when performing multi message transfers. This should eg. cause
+the DDC segment address to be reset back to 0 between writing
+the segment address and reading the actual EDID extension block.
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
+To quote the E-DDC spec:
+"... this standard requires that the segment pointer be
+ reset to 00h when a NO ACK or a STOP condition is received."
 
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Since we're going to touch this might as well consult the
+I2C_M_STOP flag to determine whether we want to force the stop
+or not.
+
+Cc: Brian Vincent <brainn@gmail.com>
+References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
+Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index c346c021b999..eb3a7971c1d3 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1058,8 +1058,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
- 
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
- 
- out:
- 	return ret;
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 2a4cf6837324..bb9a9852ec22 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3199,6 +3199,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
+ 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
+ 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
+ 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
++		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
+ 	}
+ 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
+ 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
 -- 
 2.19.1
 
