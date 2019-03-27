@@ -2,121 +2,116 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA69DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8213C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3F9206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713393;
-	bh=4m2YY3kKOHnRfOoNKZbWa4BUpwdbHMSSTVOkdf7tzZg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcELu8E6An41pvYaDBKEcqI7IDHe6MxpFuVysJr5FOXsEVCKj4jkpGbN76JfNgIIY
-	 kBJZc8C44VROMdkMt0ieJ1Z+gIEUlBJ5xYLUwQ1QDk2rdcWSzFq5GdGmtIxjy1x/Fi
-	 H1pNfc5vC6MUKZzZnGynSCZ0JF3Kvfz/HJnwrce4=
+	by mail.kernel.org (Postfix) with ESMTP id B80F020700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SCk/TkMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389964AbfC0TDM (ORCPT
+        id S2389578AbfC0TDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389137AbfC0SN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E9E2054F;
-        Wed, 27 Mar 2019 18:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710407;
-        bh=4m2YY3kKOHnRfOoNKZbWa4BUpwdbHMSSTVOkdf7tzZg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJX3DWaNUDTyblx68s3xTkkVLV6C146zjVpk+T3EbOZBT93muqrUDDwgPLv+Z5AJg
-         gDC9DFq+5XmsCtQQwL5smIcgskPX1JFECrVA+iYxz0wfadPjDVG8LIB7s/rTD+f9EY
-         EIWLlbIQTwlbbPAF/413WbAcBjg7PUILap6ysBFU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 105/192] kprobes: Prohibit probing on RCU debug routine
-Date:   Wed, 27 Mar 2019 14:08:57 -0400
-Message-Id: <20190327181025.13507-105-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 15:03:16 -0400
+Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:60614
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389975AbfC0TDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:03:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCI/4sEnePv5ExDC1Bdutko0i25ilx+Q9ZJ1Ez7gO3Y=;
+ b=SCk/TkMjIFyF35BSlTM9oRvUJLdHib21Tp9iAkw0/n5jWajBsK3KlcaaeuI8EHJrK7NetOLw7cgbnA+gBdKwOVWo3YtQOnKqXNN+b4Zw7qFJHb77gVH+HfJzsG+483XeuAtf0bwshtww3zzLoGsBrnLE4MXkqrJOJEC0uDfxttE=
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
+ VI1PR0402MB3646.eurprd04.prod.outlook.com (52.134.14.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.16; Wed, 27 Mar 2019 19:03:09 +0000
+Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::7cee:3159:6414:9cc5]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
+ ([fe80::7cee:3159:6414:9cc5%4]) with mapi id 15.20.1750.014; Wed, 27 Mar 2019
+ 19:03:09 +0000
+From:   Daniel Baluta <daniel.baluta@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v2 0/2] Add EDMA0/EDMA1 nodes on i.MX8QXP
+Thread-Topic: [PATCH v2 0/2] Add EDMA0/EDMA1 nodes on i.MX8QXP
+Thread-Index: AQHU5M+3E7S+p4MdcECMPTWeuLeSQg==
+Date:   Wed, 27 Mar 2019 19:03:09 +0000
+Message-ID: <20190327190244.9208-1-daniel.baluta@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0157.eurprd07.prod.outlook.com
+ (2603:10a6:802:16::44) To VI1PR0402MB3357.eurprd04.prod.outlook.com
+ (2603:10a6:803:2::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e33ea08a-e766-4c42-8ee6-08d6b2e6da08
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB3646;
+x-ms-traffictypediagnostic: VI1PR0402MB3646:
+x-microsoft-antispam-prvs: <VI1PR0402MB36467AFD447DDD88BE28FADEF9580@VI1PR0402MB3646.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(186003)(2616005)(476003)(5640700003)(6436002)(44832011)(486006)(4744005)(6512007)(8936002)(50226002)(478600001)(68736007)(6486002)(386003)(6506007)(105586002)(106356001)(25786009)(99286004)(4326008)(52116002)(1076003)(26005)(2351001)(256004)(305945005)(102836004)(71190400001)(5660300002)(14454004)(53936002)(66066001)(6116002)(6916009)(3846002)(2906002)(36756003)(7736002)(97736004)(316002)(8676002)(1730700003)(81156014)(81166006)(2501003)(86362001)(54906003)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3646;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: A/Nn/7dggTgNrzSSnC+Elgy0fO4HQKJmiKzoPyTp+jP7omodwW6SqWd4r80P31d81FCUTHzICRlvAgeRJAl4QWLPOWat6qBvETyiYJp5mbhiS4lJUFphrh++UKl2VghimVIvq+GW4L0iVganJns/5pgp6eFNelezQByealuF8ZKWYXmBsDwIv2uQ9QRMeipo3V8SrdFtsIhaew1ZdsblfvD4ZcSU6OSGig92EqkKMhi3bt/1D+MQ3UX/qeKcd89i/egFyhVuCvLN5asv70S5iHGsZjqPl5a0m89pJA51qtEyyDh/q5CRPTdBLkreb4s/HN4bUcSjIwjNDNDxlfxpEz63jJ9TBmQ4AMCpk+GFik07G7MDUwWGqHHFKt2pJ42gDHP0O884tkEYRTpy4XIMPnIgwYkBCqkTwPeRpgoL6ls=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e33ea08a-e766-4c42-8ee6-08d6b2e6da08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 19:03:09.4423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3646
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+First patch documents the fsl,imx8qxp-edma string while the second
+adds the two EDMA nodes used by Audio peripherals on i.MX8QXP
 
-[ Upstream commit a39f15b9644fac3f950f522c39e667c3af25c588 ]
+Changes since v1:
+	* use "fsl,imx8qxp-edma" compatbile instead of "fsl,imx8qm-edma"
+	because this patch adds support for imx8QXP. eDMA driver is similar
+        for 8QM/8QXP but it doesn't have yet support added for these boards
+	so just the compatible string closer to the actual hardware.
 
-Since kprobe itself depends on RCU, probing on RCU debug
-routine can cause recursive breakpoint bugs.
+Daniel Baluta (2):
+  bindings: fsl-edma: Document fsl,imx8qxp-edma compatbile string
+  arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
 
-Prohibit probing on RCU debug routines.
+ .../devicetree/bindings/dma/fsl-edma.txt      |  1 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi    | 72 +++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-int3
- ->do_int3()
-   ->ist_enter()
-     ->RCU_LOCKDEP_WARN()
-       ->debug_lockdep_rcu_enabled() -> int3
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998807741.31052.11229157537816341591.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/rcu/update.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 39cb23d22109..81688a133552 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -52,6 +52,7 @@
- #include <linux/tick.h>
- #include <linux/rcupdate_wait.h>
- #include <linux/sched/isolation.h>
-+#include <linux/kprobes.h>
- 
- #define CREATE_TRACE_POINTS
- 
-@@ -253,6 +254,7 @@ int notrace debug_lockdep_rcu_enabled(void)
- 	       current->lockdep_recursion == 0;
- }
- EXPORT_SYMBOL_GPL(debug_lockdep_rcu_enabled);
-+NOKPROBE_SYMBOL(debug_lockdep_rcu_enabled);
- 
- /**
-  * rcu_read_lock_held() - might we be in RCU read-side critical section?
--- 
-2.19.1
+--=20
+2.17.1
 
