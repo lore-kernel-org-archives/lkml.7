@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7C4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1552D2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27AF2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710185;
-	bh=0EvPsyrNauFBBGi4MV+gCnThKAevGLzPCtVz+KmzyNM=;
+	s=default; t=1553710188;
+	bh=vG6mr5HjJrOKWpnJsCXMlIkEuLUeJNVieoZsEXIZBts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ke1vNyAkklVQHt+mzvGDWMs41pnflDY2kDqYyEySCiDz9IJOQfvdKTeX3lrySfShy
-	 lKxn8LgWf38Q/oB5G+wuEyYTK90o9WMlh+tjCyII2iHpMZ4GRcutDnRA/X5MWgtOJa
-	 EjWyzB2A+JmPj2FOAorziFbhwQnPTVWiUGCdmbYs=
+	b=q879o0Nd0gJR81fRPUsPuwwOKod+MHmB18ZX0PX1jdPYxhPH9amxj1+zSfloS81Cc
+	 iYESEMKK6Z0kJTVA2E6ZasMBRFYziyt2nglDXRRQ7hDWDwCBj5WKpCd9jkR4h4ptK2
+	 it4qIp/ea9sO+667PfYzOtLvzH/4Tm4JXaXfpwfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388630AbfC0SJn (ORCPT
+        id S2388644AbfC0SJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51532 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbfC0SJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:41 -0400
+        id S2388631AbfC0SJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D312054F;
-        Wed, 27 Mar 2019 18:09:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A21A21741;
+        Wed, 27 Mar 2019 18:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710180;
-        bh=0EvPsyrNauFBBGi4MV+gCnThKAevGLzPCtVz+KmzyNM=;
+        s=default; t=1553710183;
+        bh=vG6mr5HjJrOKWpnJsCXMlIkEuLUeJNVieoZsEXIZBts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7JIS9J22+I8pzLkc3LxRtRfOPx0v3f6kItOtEXZldlDwxpcfTM/KGndAhcRHS1T2
-         AwTWu18y6HmT4V5laIApMvU44GNshKLCHoaVLoe04qr5ewWz9AfZzmAV/MaO4csdJS
-         gb5hQcOfhEHlBLtYluMwwz41H6+wZJL8f984NoSo=
+        b=iIr7oWo4A6/mcCnklTU1HnMJSmqlZ4oiG2QxAHxnBky8lx07Rb9jpnwHgIuzXNlC3
+         av9qV73Tu4j9NUXVcDDIsPcJwCL+xo3ZtrzsDyUwzXOxfomdHAyK2PmOfrkreplvNk
+         Ymfn+MG0qvOE5CZ2okHgrPnX5jyU9FFp4vokXIZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 237/262] PCI: pciehp: Assign ctrl->slot_ctrl before writing it to hardware
-Date:   Wed, 27 Mar 2019 14:01:32 -0400
-Message-Id: <20190327180158.10245-237-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 240/262] pinctrl: meson: meson8b: add the eth_rxd2 and eth_rxd3 pins
+Date:   Wed, 27 Mar 2019 14:01:35 -0400
+Message-Id: <20190327180158.10245-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,54 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 25bd879ec16ad3b83a5b1c3f16faa55e696bfccb ]
+[ Upstream commit 6daae00243e622dd3feec7965bfe421ad6dd317e ]
 
-Shameerali reported that running v4.20-rc1 as QEMU guest, the PCIe hotplug
-port times out during boot:
+Gigabit Ethernet requires the Ethernet TXD0..3 and RXD0..3 data lines.
+Add the missing eth_rxd2 and eth_rxd3 definitions so we don't have to
+rely on the bootloader to set them up correctly.
 
-  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x03f1 (issued 1016 msec ago)
-  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x03f1 (issued 1024 msec ago)
-  pciehp 0000:00:01.0:pcie004: Failed to check link status
-  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x02f1 (issued 2520 msec ago)
+The vendor u-boot sources for Odroid-C1 use the following Ethernet
+pinmux configuration:
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
+This translates to the following pin groups in the mainline kernel:
+- register 6 bit  0: eth_rxd1 (DIF_0_P)
+- register 6 bit  1: eth_rxd0 (DIF_0_N)
+- register 6 bit  2: eth_rx_dv (DIF_1_P)
+- register 6 bit  3: eth_rx_clk (DIF_1_N)
+- register 6 bit  6: eth_tx_en (DIF_3_P)
+- register 6 bit  8: eth_ref_clk (DIF_3_N)
+- register 6 bit  9: eth_mdc (DIF_4_P)
+- register 6 bit 10: eth_mdio_en (DIF_4_N)
+- register 6 bit 11: eth_tx_clk (GPIOH_9)
+- register 6 bit 12: eth_txd2 (GPIOH_8)
+- register 6 bit 13: eth_txd3 (GPIOH_7)
+- register 7 bit 20: eth_txd0_0 (GPIOH_6)
+- register 7 bit 21: eth_txd1_0 (GPIOH_5)
+- register 7 bit 22: eth_rxd3 (DIF_2_P)
+- register 7 bit 23: eth_rxd2 (DIF_2_N)
 
-The issue was bisected down to commit 720d6a671a6e ("PCI: pciehp: Do not
-handle events if interrupts are masked") and was further analyzed by the
-reporter to be caused by the fact that pciehp first updates the hardware
-and only then cache the ctrl->slot_ctrl in pcie_do_write_cmd().  If the
-interrupt happens before we cache the value, pciehp_isr() reads value 0 and
-decides that the interrupt was not meant for it causing the above timeout
-to trigger.
+All functions except eth_rxd2 and eth_rxd3 are already supported by the
+pinctrl-meson8b driver.
 
-Fix by moving ctrl->slot_ctrl assignment to happen before it is written to
-the hardware.
-
-Fixes: 720d6a671a6e ("PCI: pciehp: Do not handle events if interrupts are masked")
-Link: https://lore.kernel.org/linux-pci/5FC3163CFD30C246ABAA99954A238FA8387DD344@FRAEML521-MBX.china.huawei.com
-Reported-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson8b.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index c0fb64ace05a..8bfcb8cd0900 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -156,9 +156,9 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
- 	slot_ctrl |= (cmd & mask);
- 	ctrl->cmd_busy = 1;
- 	smp_mb();
-+	ctrl->slot_ctrl = slot_ctrl;
- 	pcie_capability_write_word(pdev, PCI_EXP_SLTCTL, slot_ctrl);
- 	ctrl->cmd_started = jiffies;
--	ctrl->slot_ctrl = slot_ctrl;
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index 0f140a802137..7f76000cc12e 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -346,6 +346,8 @@ static const unsigned int eth_rx_dv_pins[]	= { DIF_1_P };
+ static const unsigned int eth_rx_clk_pins[]	= { DIF_1_N };
+ static const unsigned int eth_txd0_1_pins[]	= { DIF_2_P };
+ static const unsigned int eth_txd1_1_pins[]	= { DIF_2_N };
++static const unsigned int eth_rxd3_pins[]	= { DIF_2_P };
++static const unsigned int eth_rxd2_pins[]	= { DIF_2_N };
+ static const unsigned int eth_tx_en_pins[]	= { DIF_3_P };
+ static const unsigned int eth_ref_clk_pins[]	= { DIF_3_N };
+ static const unsigned int eth_mdc_pins[]	= { DIF_4_P };
+@@ -599,6 +601,8 @@ static struct meson_pmx_group meson8b_cbus_groups[] = {
+ 	GROUP(eth_ref_clk,	6,	8),
+ 	GROUP(eth_mdc,		6,	9),
+ 	GROUP(eth_mdio_en,	6,	10),
++	GROUP(eth_rxd3,		7,	22),
++	GROUP(eth_rxd2,		7,	23),
+ };
  
- 	/*
- 	 * Controllers with the Intel CF118 and similar errata advertise
+ static struct meson_pmx_group meson8b_aobus_groups[] = {
+@@ -748,7 +752,7 @@ static const char * const ethernet_groups[] = {
+ 	"eth_tx_clk", "eth_tx_en", "eth_txd1_0", "eth_txd1_1",
+ 	"eth_txd0_0", "eth_txd0_1", "eth_rx_clk", "eth_rx_dv",
+ 	"eth_rxd1", "eth_rxd0", "eth_mdio_en", "eth_mdc", "eth_ref_clk",
+-	"eth_txd2", "eth_txd3"
++	"eth_txd2", "eth_txd3", "eth_rxd3", "eth_rxd2"
+ };
+ 
+ static const char * const i2c_a_groups[] = {
 -- 
 2.19.1
 
