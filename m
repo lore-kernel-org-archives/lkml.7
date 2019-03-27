@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939E1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5870C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F93206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87623206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713482;
-	bh=Ual9+Xy9K+wD2y+07e6wC63ZDP5T++hm7vqOMoXExi0=;
+	s=default; t=1553713496;
+	bh=wT2KgNkgRkR8Pg5/mM8FYKLSwldjrZsPupA+4aWS9x8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lUY2UkHnTqwmeyqxkOA4HgcizSJE1t54IFwUfle70PVXDhY1i1nITZIjo58u8FIX
-	 oI/0WlMNdqFwx7fpxg/9zatwfxJPTA4tV+OqJqEjLEI65ocMabwgKpqxN/EuRHyCrN
-	 ARzDEIbJU27EcLf7hRc4D8G4lHexIBNNolEaNTH8=
+	b=nJ7/Rux5Xk66FtoMYftetjNNIEZqpNDmSTkOY4cdvZow6hWKIYEzwF+bPc9rSwPRS
+	 tugmiKWwKFuX/O5zXplGzXwp776CohVSKKn9yTD+sYH9Ik7Zv6lGjKpywZaoKZuNTC
+	 IARKOQibIF4f3WtQ6zK4SCgpQ5QdP7661bEoj3U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388908AbfC0TEk (ORCPT
+        id S2389553AbfC0TEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55632 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388752AbfC0SNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:04 -0400
+        id S2387881AbfC0SNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:13:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA5F2147C;
-        Wed, 27 Mar 2019 18:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903A82184C;
+        Wed, 27 Mar 2019 18:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710383;
-        bh=Ual9+Xy9K+wD2y+07e6wC63ZDP5T++hm7vqOMoXExi0=;
+        s=default; t=1553710381;
+        bh=wT2KgNkgRkR8Pg5/mM8FYKLSwldjrZsPupA+4aWS9x8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rg9iBC3RsBOmqgttF+FXbLS51xaPGIXFyC5UBEKGm+nsVvJTenl/ZI5BxPR+i3A7m
-         /t2D09j63cBY8YrFpfNEIfTdn7I0tWK0IuSaR3orLk200Xu1uuaprxsH8wqhWTIPuB
-         YXFfBckOvghpzNPxPA2YFTK8NoxCA83ktXU/RW4c=
+        b=PbQrr1h1uO+L+y88l4ODfH96faHwn3DtM5soXtRdkUPVwxAOwtOX+kcZpNLRpqZki
+         CeYU5P0sSYUvv8hhWHuKW98eMIVAzHebMkPBMvQpx78qQfi1B7Su6qT6VweFS03fXm
+         nJGYKXl2LHPaMJZ6BMjrSTmPM+5YcIRpLzshEwvE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Cline <jcline@redhat.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 092/192] Bluetooth: hci_ldisc: Initialize hci_dev before open()
-Date:   Wed, 27 Mar 2019 14:08:44 -0400
-Message-Id: <20190327181025.13507-92-sashal@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 090/192] media: mtk-jpeg: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 14:08:42 -0400
+Message-Id: <20190327181025.13507-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,97 +58,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 ]
+[ Upstream commit 1b275e4e8b70dbff9850874b30831c1bd8d3c504 ]
 
-The hci_dev struct hdev is referenced in work queues and timers started
-by open() in some protocols. This creates a race between the
-initialization function and the work or timer which can result hdev
-being dereferenced while it is still null.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-The syzbot report contains a reliable reproducer which causes a null
-pointer dereference of hdev in hci_uart_write_work() by making the
-memory allocation for hdev fail.
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
-To fix this, ensure hdev is valid from before calling a protocol's
-open() until after calling a protocol's close().
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
 
-Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_ldisc.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 40 +++++++++----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
-index ea6238ed5c0e..8776906cafca 100644
---- a/drivers/bluetooth/hci_ldisc.c
-+++ b/drivers/bluetooth/hci_ldisc.c
-@@ -207,11 +207,11 @@ void hci_uart_init_work(struct work_struct *work)
- 	err = hci_register_dev(hu->hdev);
- 	if (err < 0) {
- 		BT_ERR("Can't register HCI device");
-+		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-+		hu->proto->close(hu);
- 		hdev = hu->hdev;
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
--		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		hu->proto->close(hu);
+diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+index 4f24da8afecc..11429633b2fb 100644
+--- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+@@ -702,7 +702,7 @@ static void mtk_jpeg_buf_queue(struct vb2_buffer *vb)
+ 	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, to_vb2_v4l2_buffer(vb));
+ }
+ 
+-static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
++static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
+ 				 enum v4l2_buf_type type)
+ {
+ 	if (V4L2_TYPE_IS_OUTPUT(type))
+@@ -714,7 +714,7 @@ static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
+ static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
+ {
+ 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	int ret = 0;
+ 
+ 	ret = pm_runtime_get_sync(ctx->jpeg->dev);
+@@ -724,14 +724,14 @@ static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
+ 	return 0;
+ err:
+ 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+-		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_QUEUED);
++		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
+ 	return ret;
+ }
+ 
+ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+ {
+ 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 
+ 	/*
+ 	 * STREAMOFF is an acknowledgment for source change event.
+@@ -743,7 +743,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+ 		struct mtk_jpeg_src_buf *src_buf;
+ 
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+-		src_buf = mtk_jpeg_vb2_to_srcbuf(vb);
++		src_buf = mtk_jpeg_vb2_to_srcbuf(&vb->vb2_buf);
+ 		mtk_jpeg_set_queue_data(ctx, &src_buf->dec_param);
+ 		ctx->state = MTK_JPEG_RUNNING;
+ 	} else if (V4L2_TYPE_IS_OUTPUT(q->type)) {
+@@ -751,7 +751,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+ 	}
+ 
+ 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
+-		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_ERROR);
++		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+ 
+ 	pm_runtime_put_sync(ctx->jpeg->dev);
+ }
+@@ -807,7 +807,7 @@ static void mtk_jpeg_device_run(void *priv)
+ {
+ 	struct mtk_jpeg_ctx *ctx = priv;
+ 	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+ 	unsigned long flags;
+ 	struct mtk_jpeg_src_buf *jpeg_src_buf;
+@@ -817,11 +817,11 @@ static void mtk_jpeg_device_run(void *priv)
+ 
+ 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
++	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+ 
+ 	if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
+-		for (i = 0; i < dst_buf->num_planes; i++)
+-			vb2_set_plane_payload(dst_buf, i, 0);
++		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
++			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
+ 		buf_state = VB2_BUF_STATE_DONE;
+ 		goto dec_end;
+ 	}
+@@ -833,8 +833,8 @@ static void mtk_jpeg_device_run(void *priv)
  		return;
  	}
  
-@@ -616,6 +616,7 @@ static void hci_uart_tty_receive(struct tty_struct *tty, const u8 *data,
- static int hci_uart_register_dev(struct hci_uart *hu)
+-	mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
+-	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
++	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
++	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
+ 		goto dec_end;
+ 
+ 	spin_lock_irqsave(&jpeg->hw_lock, flags);
+@@ -849,8 +849,8 @@ static void mtk_jpeg_device_run(void *priv)
+ dec_end:
+ 	v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+ 	v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
++	v4l2_m2m_buf_done(src_buf, buf_state);
++	v4l2_m2m_buf_done(dst_buf, buf_state);
+ 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+ }
+ 
+@@ -921,7 +921,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
  {
- 	struct hci_dev *hdev;
-+	int err;
+ 	struct mtk_jpeg_dev *jpeg = priv;
+ 	struct mtk_jpeg_ctx *ctx;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	struct mtk_jpeg_src_buf *jpeg_src_buf;
+ 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+ 	u32	dec_irq_ret;
+@@ -938,7 +938,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
  
- 	BT_DBG("");
+ 	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+ 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+-	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
++	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
  
-@@ -659,11 +660,22 @@ static int hci_uart_register_dev(struct hci_uart *hu)
- 	else
- 		hdev->dev_type = HCI_PRIMARY;
- 
-+	/* Only call open() for the protocol after hdev is fully initialized as
-+	 * open() (or a timer/workqueue it starts) may attempt to reference it.
-+	 */
-+	err = hu->proto->open(hu);
-+	if (err) {
-+		hu->hdev = NULL;
-+		hci_free_dev(hdev);
-+		return err;
-+	}
-+
- 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
- 		return 0;
- 
- 	if (hci_register_dev(hdev) < 0) {
- 		BT_ERR("Can't register HCI device");
-+		hu->proto->close(hu);
- 		hu->hdev = NULL;
- 		hci_free_dev(hdev);
- 		return -ENODEV;
-@@ -683,17 +695,12 @@ static int hci_uart_set_proto(struct hci_uart *hu, int id)
- 	if (!p)
- 		return -EPROTONOSUPPORT;
- 
--	err = p->open(hu);
--	if (err)
--		return err;
--
- 	hu->proto = p;
- 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
- 
- 	err = hci_uart_register_dev(hu);
- 	if (err) {
- 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--		p->close(hu);
- 		return err;
+ 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
+ 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
+@@ -948,15 +948,15 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+ 		goto dec_end;
  	}
  
+-	for (i = 0; i < dst_buf->num_planes; i++)
+-		vb2_set_plane_payload(dst_buf, i,
++	for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
++		vb2_set_plane_payload(&dst_buf->vb2_buf, i,
+ 				      jpeg_src_buf->dec_param.comp_size[i]);
+ 
+ 	buf_state = VB2_BUF_STATE_DONE;
+ 
+ dec_end:
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
++	v4l2_m2m_buf_done(src_buf, buf_state);
++	v4l2_m2m_buf_done(dst_buf, buf_state);
+ 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.19.1
 
