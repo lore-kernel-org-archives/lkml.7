@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1857EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C80C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB2A206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78545206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713557;
-	bh=pY3sqJTrXeIpvAdywDAVsE79ly4q8wvGhTNHP5E/1g8=;
+	s=default; t=1553713560;
+	bh=8jXx+DMSS28NwJB/EA7vnRh3P/WwrdHNPzJrJIhc5Ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8exnpNSFNiTJ8F/LhTp7Zjn/n9td34gctjJWlbeaZE/4/biDfg6cSzKsYCo0Tqk8
-	 D9dkHcoKIEqTMwOwNj5v5en6wvwRnE0Oa6joPZfv56QgsxKvY+saBgxfnn8GJYZa6g
-	 179kVZ6zthrPWti7L+3HKyDSKcD7mA5qbXDfnGH8=
+	b=g/S8s12P/lWuHUrfbKNdJ9GzxVd3keWxyVLdzn3q6M9SECQkQJXvY2CZMr72X0IhG
+	 HF37033q53iPdJSb9BhmWtDYof+WFD1CpSw+x6/oqOOk1OMGgZuGDw9BTaFuwJR5Up
+	 Xo+MdCeD1mt02a+JPTRVTCVbeDc4Hc+/P4xeT2X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389219AbfC0SMc (ORCPT
+        id S2389327AbfC0TF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389203AbfC0SM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:27 -0400
+        id S2388920AbfC0SMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33011217D9;
-        Wed, 27 Mar 2019 18:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB8F62054F;
+        Wed, 27 Mar 2019 18:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710345;
-        bh=pY3sqJTrXeIpvAdywDAVsE79ly4q8wvGhTNHP5E/1g8=;
+        s=default; t=1553710355;
+        bh=8jXx+DMSS28NwJB/EA7vnRh3P/WwrdHNPzJrJIhc5Ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DBi78RMZVCZh85wAnfVKgkU80AxMwRZa1VcQIHlJ0CDUiwQYZapJ9o5lV/ZSha3NL
-         MUP1JTvtZEJbqmMkS5XflR9phomFDcIdKvn8fxtPHxM+Pax1TFVBmBCx1otasK1lRt
-         ZvTITfHhZy8jv3gWEHLVTnrJeJruKAmCVmPO5CV8=
+        b=dCRzy7+MIjcHcvgJiEWDkmARjt8NtaV8+ZwXjE6801hWR/rZXl3OCsSIYBdD71mo3
+         FyhpLQHMwVSUocehAg4P7ufH+C2v9zPDIZXnC4QKR0AIKfwbrluWP2bg1k6FTtdze7
+         PHICQzd/SLfIy7wouuuKcKoVupZqRq0yY5myHPd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 070/192] clk: fractional-divider: check parent rate only if flag is set
-Date:   Wed, 27 Mar 2019 14:08:22 -0400
-Message-Id: <20190327181025.13507-70-sashal@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 077/192] scsi: megaraid_sas: return error when create DMA pool failed
+Date:   Wed, 27 Mar 2019 14:08:29 -0400
+Message-Id: <20190327181025.13507-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,104 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit d13501a2bedfbea0983cc868d3f1dc692627f60d ]
+[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
 
-Custom approximation of fractional-divider may not need parent clock
-rate checking. For example Rockchip SoCs work fine using grand parent
-clock rate even if target rate is greater than parent.
+when create DMA pool for cmd frames failed, we should return -ENOMEM,
+instead of 0.
+In some case in:
 
-This patch checks parent clock rate only if CLK_SET_RATE_PARENT flag
-is set.
+    megasas_init_adapter_fusion()
 
-For detailed example, clock tree of Rockchip I2S audio hardware.
-  - Clock rate of CPLL is 1.2GHz, GPLL is 491.52MHz.
-  - i2s1_div is integer divider can divide N (N is 1~128).
-    Input clock is CPLL or GPLL. Initial divider value is N = 1.
-    Ex) PLL = CPLL, N = 10, i2s1_div output rate is
-      CPLL / 10 = 1.2GHz / 10 = 120MHz
-  - i2s1_frac is fractional divider can divide input to x/y, x and
-    y are 16bit integer.
+    -->megasas_alloc_cmds()
+       -->megasas_create_frame_pool
+          create DMA pool failed,
+        --> megasas_free_cmds() [1]
 
-CPLL --> | selector | ---> i2s1_div -+--> | selector | --> I2S1 MCLK
-GPLL --> |          | ,--------------'    |          |
-                      `--> i2s1_frac ---> |          |
+    -->megasas_alloc_cmds_fusion()
+       failed, then goto fail_alloc_cmds.
+    -->megasas_free_cmds() [2]
 
-Clock mux system try to choose suitable one from i2s1_div and
-i2s1_frac for master clock (MCLK) of I2S1.
+we will call megasas_free_cmds twice, [1] will kfree cmd_list,
+[2] will use cmd_list.it will cause a problem:
 
-Bad scenario as follows:
-  - Try to set MCLK to 8.192MHz (32kHz audio replay)
-    Candidate setting is
-    - i2s1_div: GPLL / 60 = 8.192MHz
-    i2s1_div candidate is exactly same as target clock rate, so mux
-    choose this clock source. i2s1_div output rate is changed
-    491.52MHz -> 8.192MHz
+Unable to handle kernel NULL pointer dereference at virtual address
+00000000
+pgd = ffffffc000f70000
+[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
+*pmd=0000001fbf894003, *pte=006000006d000707
+Internal error: Oops: 96000005 [#1] SMP
+ Modules linked in:
+ CPU: 18 PID: 1 Comm: swapper/0 Not tainted
+ task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
+ PC is at megasas_free_cmds+0x30/0x70
+ LR is at megasas_free_cmds+0x24/0x70
+ ...
+ Call trace:
+ [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
+ [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
+ [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
+ [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
+ [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
+ [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
+ [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
+ [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
+ [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
+  [<ffffffc000539e88>] driver_attach+0x28/0x34
+ [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
+ [<ffffffc00053b234>] driver_register+0x6c/0x138
+ [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
+ [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
+ [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
+ [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
+ [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
 
-  - After that try to set to 11.2896MHz (44.1kHz audio replay)
-    Candidate settings are
-    - i2s1_div : CPLL / 107 = 11.214945MHz
-    - i2s1_frac: i2s1_div   = 8.192MHz
-      This is because clk_fd_round_rate() thinks target rate
-      (11.2896MHz) is higher than parent rate (i2s1_div = 8.192MHz)
-      and returns parent clock rate.
-
-Above is current upstreamed behavior. Clock mux system choose
-i2s1_div, but this clock rate is not acceptable for I2S driver, so
-users cannot replay audio.
-
-Expected behavior is:
-  - Try to set master clock to 11.2896MHz (44.1kHz audio replay)
-    Candidate settings are
-    - i2s1_div : CPLL / 107          = 11.214945MHz
-    - i2s1_frac: i2s1_div * 147/6400 = 11.2896MHz
-                 Change i2s1_div to GPLL / 1 = 491.52MHz at same
-                 time.
-
-If apply this commit, clk_fd_round_rate() calls custom approximate
-function of Rockchip even if target rate is higher than parent.
-Custom function changes both grand parent (i2s1_div) and parent
-(i2s_frac) settings at same time. Clock mux system can choose
-i2s1_frac and audio works fine.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-[sboyd@kernel.org: Make function into a macro instead]
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-fractional-divider.c | 2 +-
- include/linux/clk-provider.h         | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
-index fdf625fb10fa..083daa293280 100644
---- a/drivers/clk/clk-fractional-divider.c
-+++ b/drivers/clk/clk-fractional-divider.c
-@@ -77,7 +77,7 @@ static long clk_fd_round_rate(struct clk_hw *hw, unsigned long rate,
- 	unsigned long m, n;
- 	u64 ret;
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index f6de7526ded5..acb503ea8f0c 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4155,6 +4155,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
+ 	if (megasas_create_frame_pool(instance)) {
+ 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
+ 		megasas_free_cmds(instance);
++		return -ENOMEM;
+ 	}
  
--	if (!rate || rate >= *parent_rate)
-+	if (!rate || (!clk_hw_can_set_rate_parent(hw) && rate >= *parent_rate))
- 		return *parent_rate;
- 
- 	if (fd->approximation)
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 08b1aa70a38d..d1b6d2c3ada6 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -782,6 +782,9 @@ unsigned int __clk_get_enable_count(struct clk *clk);
- unsigned long clk_hw_get_rate(const struct clk_hw *hw);
- unsigned long __clk_get_flags(struct clk *clk);
- unsigned long clk_hw_get_flags(const struct clk_hw *hw);
-+#define clk_hw_can_set_rate_parent(hw) \
-+	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
-+
- bool clk_hw_is_prepared(const struct clk_hw *hw);
- bool clk_hw_rate_is_protected(const struct clk_hw *hw);
- bool clk_hw_is_enabled(const struct clk_hw *hw);
+ 	return 0;
 -- 
 2.19.1
 
