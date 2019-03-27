@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69327C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A18CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301C5206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD68E206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714579;
-	bh=3y6ZGrr09NCWKEneNnY47Kffxmq9WANmbRtWaEDcb8I=;
+	s=default; t=1553714581;
+	bh=PYJunr7DZonYf/OZbjaiM+S8S8YjIl8g6WUtZd3wjXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWQDEBu/0Jx6TvxCOqksO+P6QtglQaxp2UmiUsworpl2Jbb/nBhvWnOZuosQOmkyC
-	 YKwv7uC1NQV58brOlzmwUW3F+19kFZYQ3TUeMZlfYoIj8Uabxxsa4Q2wCFP95DMWGF
-	 a05XSYj9xsAWf6uMW5gTah9xA7miL55zQWnoVTZ4=
+	b=QfzIoeNKnMHewEGOOrHCchFt8p1x5vHOn0cCV0pFrgC9R87w1FRRp9Us3zeRpO6Dj
+	 eLsdKrIZcz9T4RWfZRI4UPWUnF5WvRLlH5flneig1v8SJ3vvkx8Rueo2yXowbN1/d4
+	 uqTK9V8kHAMjxywu0hkpiw0idNUQrL1Z7wMbfkG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387809AbfC0TW6 (ORCPT
+        id S1728301AbfC0TXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387875AbfC0SGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:10 -0400
+        id S2388086AbfC0SHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BAD2184E;
-        Wed, 27 Mar 2019 18:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B7F721850;
+        Wed, 27 Mar 2019 18:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709969;
-        bh=3y6ZGrr09NCWKEneNnY47Kffxmq9WANmbRtWaEDcb8I=;
+        s=default; t=1553710025;
+        bh=PYJunr7DZonYf/OZbjaiM+S8S8YjIl8g6WUtZd3wjXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIeXel4C6Rf2rOCJnPwKQ9ZmANArjZR2p9gokH0yT6ArkF5hVstg+BIpXRsDcX5Zc
-         heTsXE4Jm99MQogvbv6oPUqwESckfgJoRv4d7nczv2lJ12Kk5HuNlUthUtJN/w7i81
-         /H6nlfvkkYkc6jAwKBq/LqjKfroK/FQ9RCv4iXu4=
+        b=uBJfKnAEUdTUJVhUU9SSa6U2UqUSS9dETjBNpBW4SCCCUY6wo+mLxwHXKh9dcMTsw
+         o9bwc90cvsKX7hjGN3pM04eUG/7eW792mQc4xC5Podb8rN+ronIHJu0i96tpG9G3ch
+         2FrV7ovPmIKGG5Qn5LxmNV/BIiz/0NEqg1BKoiWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kazior <michal@plume.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 138/262] leds: lp55xx: fix null deref on firmware load failure
-Date:   Wed, 27 Mar 2019 13:59:53 -0400
-Message-Id: <20190327180158.10245-138-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 162/262] bcache: fix potential div-zero error of writeback_rate_i_term_inverse
+Date:   Wed, 27 Mar 2019 14:00:17 -0400
+Message-Id: <20190327180158.10245-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,58 +57,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kazior <michal@plume.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
+[ Upstream commit c3b75a2199cdbfc1c335155fe143d842604b1baa ]
 
-I've stumbled upon a kernel crash and the logs
-pointed me towards the lp5562 driver:
+dc->writeback_rate_i_term_inverse can be set via sysfs interface. It is
+in type unsigned int, and convert from input string by d_strtoul(). The
+problem is d_strtoul() does not check valid range of the input, if
+4294967296 is written into sysfs file writeback_rate_i_term_inverse,
+an overflow of unsigned integer will happen and value 0 is set to
+dc->writeback_rate_i_term_inverse.
 
-> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
-> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
-> ...
-> <3>[306073.924886] lp5562 0-0030: firmware request failed
-> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
-> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
-> ...
+In writeback.c:__update_writeback_rate(), there are following lines of
+code,
+      integral_scaled = div_s64(dc->writeback_rate_integral,
+                      dc->writeback_rate_i_term_inverse);
+If dc->writeback_rate_i_term_inverse is set to 0 via sysfs interface,
+a div-zero error might be triggered in the above code.
 
-After taking a look I noticed firmware_release()
-could be called with either NULL or a dangling
-pointer.
+Therefore we need to add a range limitation in the sysfs interface,
+this is what this patch does, use sysfs_stroul_clamp() to replace
+d_strtoul() and restrict the input range in [1, UINT_MAX].
 
-Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
-Signed-off-by: Michal Kazior <michal@plume.com>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lp55xx-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/bcache/sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 3d79a6380761..723f2f17497a 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index f98cda32065d..28e0d5a5e25b 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -287,7 +287,9 @@ STORE(__cached_dev)
+ 	sysfs_strtoul_clamp(writeback_rate_update_seconds,
+ 			    dc->writeback_rate_update_seconds,
+ 			    1, WRITEBACK_RATE_UPDATE_SECS_MAX);
+-	d_strtoul(writeback_rate_i_term_inverse);
++	sysfs_strtoul_clamp(writeback_rate_i_term_inverse,
++			    dc->writeback_rate_i_term_inverse,
++			    1, UINT_MAX);
+ 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
+ 	d_strtoul_nonzero(writeback_rate_minimum);
  
- 	if (!fw) {
- 		dev_err(dev, "firmware request failed\n");
--		goto out;
-+		return;
- 	}
- 
- 	/* handling firmware data is chip dependent */
-@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
- 
- 	mutex_unlock(&chip->lock);
- 
--out:
- 	/* firmware should be released for other channel use */
- 	release_firmware(chip->fw);
-+	chip->fw = NULL;
- }
- 
- static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
