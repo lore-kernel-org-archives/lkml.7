@@ -6,51 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B7EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F411C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9F12082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7862183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710562;
-	bh=O0wDP1jtDCbk/j3iImVCP0Rk1gOZStQWkpcI2ft03Io=;
+	s=default; t=1553710565;
+	bh=eWNi1/2LgvDUiHsHnel0TmTz8K9TZ+gzcNTjsTjv8Sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDddjglr7YkzO6krRpnWy/f29tmu9I7qY9CW7ZNLFR+t1d9wfha3cB7NZXchFazLc
-	 5XMyEdP6M4x8GIVKR5QRn/Db6bMdHIEUj5f8lx10PHWnuNq9+Y9pTMoeoYqE4a4iNk
-	 hdonhWe90S+C3poqoKtSkBkGdmZ5DZiKh2bAiGyU=
+	b=TQXwOu2mJn/5uUIOXwQzh5BS2E/VsKaSkvW5wyo4YYqsDNKGRl2JENU6uIzvOtkLT
+	 /wVVI7OQymGwXQ0Leot53FLXgruCQddLkmJv2QLDyFYONuV8tdPC5+WFyB4uwYh1DI
+	 vFjHVG1vq5530ZMvNAEDWSshT15joIPzqOsN2+a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389451AbfC0SQA (ORCPT
+        id S2389938AbfC0SQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389948AbfC0SPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:55 -0400
+        id S2389974AbfC0SP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15E92183E;
-        Wed, 27 Mar 2019 18:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB1F21738;
+        Wed, 27 Mar 2019 18:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710555;
-        bh=O0wDP1jtDCbk/j3iImVCP0Rk1gOZStQWkpcI2ft03Io=;
+        s=default; t=1553710558;
+        bh=eWNi1/2LgvDUiHsHnel0TmTz8K9TZ+gzcNTjsTjv8Sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRODjLOumFE5+ZQI6zKRaDKdP8bftY7+2B8wodYGsnMmmoL004V3EBboXIAKh+e38
-         Exjpx4v6QXIPnvqynL+NElxD89YBnC0VUGeaHOYoiCitclLcTScNXKe+PB/SYlV7j+
-         05ndctd+YP+h3ye88wLZSD0C606PfmmPNt+X32tY=
+        b=zYWf7EWXbWfCf6o98PWAb+luVgjC/LFX+r6T56GB8J/K5jq0ZUWsZNI8W71gkODdi
+         R1yO0dV4cbtmXqszWEMOLSqvQbqZCpgA9bgU0PpvTsjmLeYgo3El1Qbm2UKOsA51jJ
+         VNZR8fKH7hOepkuXR8rzAxZlb41K5g2MNOsz8VeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 176/192] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
-Date:   Wed, 27 Mar 2019 14:10:08 -0400
-Message-Id: <20190327181025.13507-176-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 177/192] drm/nouveau: Stop using drm_crtc_force_disable
+Date:   Wed, 27 Mar 2019 14:10:09 -0400
+Message-Id: <20190327181025.13507-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 890880ddfdbe256083170866e49c87618b706ac7 ]
+[ Upstream commit 934c5b32a5e43d8de2ab4f1566f91d7c3bf8cb64 ]
 
-When drivers pass non-empty lists of modifiers for initializing their
-planes, we can infer that they allow framebuffer modifiers and set the
-driver's allow_fb_modifiers mode config element.
+The correct way for legacy drivers to update properties that need to
+do a full modeset, is to do a full modeset.
 
-In case the allow_fb_modifiers element was not set (some drivers tend
-to set them after registering planes), the modifiers will still be
-registered but won't be available to userspace unless the flag is set
-later. However in that case, the IN_FORMATS blob won't be created.
+Note that we don't need to call the drm_mode_config_internal helper
+because we're not changing any of the refcounted paramters.
 
-In order to avoid this case and generally reduce the trouble associated
-with the flag, always set allow_fb_modifiers when a non-empty list of
-format modifiers is passed at plane init.
+v2: Fixup error handling (Ville). Since the old code didn't bother
+I decided to just delete it instead of adding even more code for just
+error handling.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190104085610.5829-1-paul.kocialkowski@bootlin.com
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com> (v1)
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181217194303.14397-2-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_plane.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-index 6153cbda239f..d36b1be632d9 100644
---- a/drivers/gpu/drm/drm_plane.c
-+++ b/drivers/gpu/drm/drm_plane.c
-@@ -211,6 +211,9 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 			format_modifier_count++;
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+index 6a4ca139cf5d..8fd8124d72ba 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+@@ -750,7 +750,9 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
+ 		/* Disable the crtc to ensure a full modeset is
+ 		 * performed whenever it's turned on again. */
+ 		if (crtc)
+-			drm_crtc_force_disable(crtc);
++			drm_crtc_helper_set_mode(crtc, &crtc->mode,
++						 crtc->x, crtc->y,
++						 crtc->primary->fb);
  	}
  
-+	if (format_modifier_count)
-+		config->allow_fb_modifiers = true;
-+
- 	plane->modifier_count = format_modifier_count;
- 	plane->modifiers = kmalloc_array(format_modifier_count,
- 					 sizeof(format_modifiers[0]),
+ 	return 0;
 -- 
 2.19.1
 
