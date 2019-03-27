@@ -2,303 +2,194 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64228C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F0C20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE1020811
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bFy3kYf+"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jrW97EI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbfC0AUz (ORCPT
+        id S1732056AbfC0AWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:20:55 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35671 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfC0AUy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 20:20:54 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m10so5664991otp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 17:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eCDRbjHYtEJvvlAmyOp05/8JDrrq4kzv2gYGz9OpRQw=;
-        b=bFy3kYf+daUAyNbC8HlizL0t8dce2CN+YUSWUvcobNkZ4U3RSLLFj85+VXO4M4QfET
-         ko3ZGKC1KJMA3LwUvbELvdGtC7xhwj2SOOoWPSgAD5XfquNro13VjArloShk8LU9QiVZ
-         hcD6+myPTLSC48hfMI+Ps1ZCCjLiSZuIu33RkDJHJ0+6VSQcUQ5jzEGjm2ICwyILLXM3
-         tmyh9TSoYu4ZRUDc15qqxKgth+vuLWj/lueJ1sdfVKpn0iRDSjlAW8NXeLJlZpDPP+Jl
-         I2DMLgRyKxHXh3BzdyJ8A2xdDGeLHU+biN7JK+7pZw/1uphJDF8NV0xUinK8hKTfc9GB
-         kIew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eCDRbjHYtEJvvlAmyOp05/8JDrrq4kzv2gYGz9OpRQw=;
-        b=dFV0zReT87BZZ+rp7k6W5SoV28jPS3YKYjCnUPiR6meJyoQ9E7ye52xaJL9/He1e4a
-         ZUQyHvA5IYUffYNt5zC2yjcEPqa3KxjxJhq4gYaF+rw7AoIo6goER5GvHIvkLo9ASf2i
-         bnqxbYbkL1wI2tEW2fsMLEipJgrZPjXdJ9qXMMJg85/W9poVwVv8n5hmMKgGOsU1xKk/
-         Od4/HBE5Mp/H6CqvYqoQHfRRig2TuV6ldWly6WxaeAcwnWjI+0/fFPs0vZL/qMVvQiSv
-         o31258CvJ6u5pmWIftRQF2WsoJRwuUgTfmzNCnFXvrLCduQLYAthwYld0a2H12rYfRvq
-         UBXw==
-X-Gm-Message-State: APjAAAVvu3nFUXs5O8CQx/tgeUJ1yP7ok1D+BVcgrXbLiVke41Z1Ua6z
-        WnttjVq5bRF8mvXwjAwBil42Yi/mSra/CY/fiePbcQ==
-X-Google-Smtp-Source: APXvYqxm3YUgKKYduofQNtKHSZD+41t9Fw8Fj4OHF3rs6ACWOGZaYb34ONbIu5Yuq64A1WLvINfldvYofa5dXTiJVlg=
-X-Received: by 2002:a9d:4d0b:: with SMTP id n11mr22721313otf.98.1553646053675;
- Tue, 26 Mar 2019 17:20:53 -0700 (PDT)
+        Tue, 26 Mar 2019 20:22:45 -0400
+Received: from mail-eopbgr1310112.outbound.protection.outlook.com ([40.107.131.112]:55319
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731752AbfC0AWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 20:22:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bvvkwMLFuYAmYbWIcRyXLlMDJPZOx0HHHklWXCr6Hx0=;
+ b=jrW97EI9by3Y/jqS1+Dvkzss5tvA6jqMpC5+MDWDo/HYs+mFGKO2Tsc2NENfKwWuRvXlWl/ySGkolcQ9Q9JSAX3sc5uUBZCIM+N09hgFalVsFJBXWTxnIHaELAUVcoBsRdV9MSIqnsQIJVahZsVGqRVxWbJcvZ5Wp4ZRYgwS24Q=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0108.APCP153.PROD.OUTLOOK.COM (10.170.188.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.4; Wed, 27 Mar 2019 00:22:34 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8073:4441:ad0d:75c0]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::8073:4441:ad0d:75c0%6]) with mapi id 15.20.1771.003; Wed, 27 Mar 2019
+ 00:22:34 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "driverdev-devel@linuxdriverproject.org" 
+        <driverdev-devel@linuxdriverproject.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "jackm@mellanox.com" <jackm@mellanox.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
+ pci_devices_present_work(), if necessary
+Thread-Topic: [PATCH 3/3] PCI: hv: Add pci_destroy_slot() in
+ pci_devices_present_work(), if necessary
+Thread-Index: AQHU5A25EJIP46QDrEis0DD/jJcNx6YebUig
+Date:   Wed, 27 Mar 2019 00:22:33 +0000
+Message-ID: <PU1P153MB0169256A5240C1EE6C0042C9BF580@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190304213357.16652-1-decui@microsoft.com>
+ <20190304213357.16652-4-decui@microsoft.com>
+ <20190326195429.GA15410@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190326195429.GA15410@e107981-ln.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-27T00:22:31.0117800Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9b2fcd4b-49f7-440b-b212-8ad60a19d754;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [2001:4898:80e8:f:48ac:9c3a:afc1:92ae]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 338421a1-e113-47ef-99c1-08d6b24a4f1d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0108;
+x-ms-traffictypediagnostic: PU1P153MB0108:
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB0108D8ED52203C2705EE4407BF580@PU1P153MB0108.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(396003)(366004)(346002)(376002)(199004)(189003)(54534003)(256004)(478600001)(14454004)(55016002)(6116002)(10290500003)(74316002)(7736002)(99286004)(14444005)(97736004)(7416002)(22452003)(54906003)(305945005)(68736007)(5660300002)(25786009)(33656002)(2906002)(52536014)(6916009)(8936002)(81166006)(316002)(10090500001)(106356001)(105586002)(7696005)(81156014)(446003)(102836004)(6506007)(86362001)(6436002)(76176011)(186003)(8676002)(8990500004)(486006)(476003)(86612001)(9686003)(6246003)(53936002)(229853002)(46003)(71200400001)(71190400001)(4326008)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0108;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dKebL9JKRoE4Y+LhkzSDDuCjWjPp+MAUGpfiazffbCCih45PVTkyMGai4h4TnV+cOZUu1mZnDcMwp7PZu64D1NxzVlPaNWihRXiQuMZLEFpp3/AIiAGhDaPJubRwwU6m/NkLyooE5qydGbqgo1w4HRqrccII7ozgH5ZURQ2jXTFxfEuiIfRRLNxIw7jNtIYUmC7CVu8GFugAAC0+Z0oWOnbRO6MZPQlQ6CmEAiil28BFvdoRiI44r/h7V/QZKqOppymHG1ffqFRHCpCxkm/pXIpnuoxRvhHf9EplwRLnsCTLFLL2HLs7jSjbMwQ71A7HI3zsgQ/ZMOOT8H+OEvMjY8jH2E85LJpqabrLj4w1++xcKFXtdXDZoT+0BU01T5F9q85h4dNcC++GBoTuCQJ2aFP4ZKO0AGbXXO7iNGmJBpE=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190322180532.GM32418@dhcp22.suse.cz> <CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com>
- <20190325101945.GD9924@dhcp22.suse.cz> <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
- <20190326080408.GC28406@dhcp22.suse.cz>
-In-Reply-To: <20190326080408.GC28406@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 26 Mar 2019 17:20:41 -0700
-Message-ID: <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
-Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 338421a1-e113-47ef-99c1-08d6b24a4f1d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 00:22:33.9400
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 1:04 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 25-03-19 13:03:47, Dan Williams wrote:
-> > On Mon, Mar 25, 2019 at 3:20 AM Michal Hocko <mhocko@kernel.org> wrote:
-> [...]
-> > > > User-defined memory namespaces have this problem, but 2MB is the
-> > > > default alignment and is sufficient for most uses.
-> > >
-> > > What does prevent users to go and use a larger alignment?
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Sent: Tuesday, March 26, 2019 12:55 PM
+> On Mon, Mar 04, 2019 at 09:34:49PM +0000, Dexuan Cui wrote:
+> > When we hot-remove a device, usually the host sends us a PCI_EJECT
+> message,
+> > and a PCI_BUS_RELATIONS message with bus_rel->device_count =3D=3D 0. Bu=
+t
+> when
+> > we do the quick hot-add/hot-remove test, the host may not send us the
+> > PCI_EJECT message, if the guest has not fully finished the initializati=
+on
+> > by sending the PCI_RESOURCES_ASSIGNED* message to the host, so it's
+> > potentially unsafe to only depend on the pci_destroy_slot() in
+> > hv_eject_device_work(), though create_root_hv_pci_bus() ->
+> > hv_pci_assign_slots() is not called in this case. Note: in this case, t=
+he
+> > host still sends the guest a PCI_BUS_RELATIONS message with
+> > bus_rel->device_count =3D=3D 0.
 > >
-> > Given that we are living with 64MB granularity on mainstream platforms
-> > for the foreseeable future, the reason users can't rely on a larger
-> > alignment to address the issue is that the physical alignment may
-> > change from one boot to the next.
->
-> I would love to learn more about this inter boot volatility. Could you
-> expand on that some more? I though that the HW configuration presented
-> to the OS would be more or less stable unless the underlying HW changes.
-
-Even if the configuration is static there can be hardware failures
-that prevent a DIMM, or a PCI device to be included in the memory map.
-When that happens the BIOS needs to re-layout the map and the result
-is not guaranteed to maintain the previous alignment.
-
-> > No, you can't just wish hardware / platform firmware won't do this,
-> > because there are not enough platform resources to give every hardware
-> > device a guaranteed alignment.
->
-> Guarantee is one part and I can see how nobody wants to give you
-> something as strong but how often does that happen in the real life?
-
-I expect a "rare" event to happen everyday in a data-center fleet.
-Failure rates tend towards 100% daily occurrence at scale and in this
-case the kernel has everything it needs to mitigate such an event.
-
-Setting aside the success rate of a software-alignment mitigation, the
-reason I am charging this hill again after a 2 year hiatus is the
-realization that this problem is wider spread than the original
-failing scenario. Back in 2017 the problem seemed limited to custom
-memmap= configurations, and collisions between PMEM and System RAM.
-Now it is clear that the collisions can happen between PMEM regions
-and namespaces as well, and the problem spans platforms from multiple
-vendors. Here is the most recent collision problem:
-https://github.com/pmem/ndctl/issues/76, from a third-party platform.
-
-The fix for that issue uncovered a bug in the padding implementation,
-and a fix for that bug would result in even more hacks in the nvdimm
-code for what is a core kernel deficiency. Code review of those
-changes resulted in changing direction to go after the core
-deficiency.
-
-> > The effect is that even if the driver deploys a software alignment
-> > mitigation when it first sees the persistent memory range, that
-> > alignment can be violated on a subsequent boot leading to data being
-> > unavailable. There is no facility to communicate to the administrator
-> > what went wrong in this scenario as several events can trigger a
-> > physical map layout change. Add / remove of hardware and hardware
-> > failure are the most likely causes.
->
-> This is indeed bad and unexpected! That is exactly something to have in
-> the chagelog!
-
-Apologies that was indeed included in the 2017 changelog (see: "a user
-could inadvertently lose access to nvdimm namespaces" note here:
-https://lwn.net/Articles/717383/), and I failed to carry it forward.
-
->
-> > An additional pain point for users is that EFI pre-boot environment
-> > has little chance to create a namespace that Linux might be able to
-> > use. The section size is an arbitrary Linux constraint and we should
-> > not encode something Linux specific that might change in the future
-> > into OS agnostic software.
->
-> This looks like a fair point but please keep in mind that there hotplug
-> restrictions are on other platforms as well (4MB on Windows IIRC) so
-> there will be some knowledge required all the time. Besides that there
-> are likely to be some restrictions depending on the implementation.
-
-Windows does not have an equivalent constraint, so it's only Linux
-that imposes an arbitrary alignment restriction on pmem to agents like
-EFI.
-
-> [...]
-> > > > Right, as stated in the cover letter, this does not remove all those
-> > > > assumptions, it only removes the ones that impact
-> > > > devm_memremap_pages(). Specifying that sub-section is only supported
-> > > > in the 'want_memblock=false' case to arch_add_memory().
-> > >
-> > > And this is exactly the problem. Having different assumptions depending
-> > > on whether there is a memblock interface or not is utterly wrong and a
-> > > maintainability mess.
+> > And, in the quick hot-add/hot-remove test, we can have such a race: bef=
+ore
+> > pci_devices_present_work() -> new_pcichild_device() adds the new device
+> > into hbus->children, we may have already received the PCI_EJECT message=
+,
+> > and hence the taklet handler hv_pci_onchannelcallback() may fail to fin=
+d
+> > the "hpdev" by get_pcichild_wslot(hbus, dev_message->wslot.slot), so
+> > hv_pci_eject_device() is NOT called; later create_root_hv_pci_bus() ->
+> > hv_pci_assign_slots() creates the slot, and the PCI_BUS_RELATIONS messa=
+ge
+> > with bus_rel->device_count =3D=3D 0 removes the device from hbus->child=
+ren,
+> and
+> > we end up being unable to remove the slot in hv_pci_remove() ->
+> > hv_pci_remove_slots().
 > >
-> > In this case I disagree with you. The hotplug code already has the
-> > want_memblock=false semantic in the implementation.
->
-> want_memblock was a hack to allow memory hotplug to not have user
-> visible sysfs interface. It was added to reduce the code duplication
-> IIRC. Besides that this hasn't changed the underlying assumptions about
-> hotplugable units or other invariants that were in place.
+> > The patch removes the slot in pci_devices_present_work() when the devic=
+e
+> > is removed. This can address the above race. Note 1:
+> > pci_devices_present_work() and hv_eject_device_work() run in the
+> > singled-threaded hbus->wq, so there is not a double-remove issue for th=
+e
+> > slot. Note 2: we can't offload hv_pci_eject_device() from
+> > hv_pci_onchannelcallback() to the workqueue, because we need
+> > hv_pci_onchannelcallback() synchronously call hv_pci_eject_device() to
+> > poll the channel's ringbuffer to work around the
+> > "hangs in hv_compose_msi_msg()" issue: see
+> > commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
+> hv_compose_msi_msg()")
+>=20
+> This commit log is unreadable, sorry. Indentation, punctuation and
+> formatting are just a mess, try to read it, you will notice by
+> yourself.
+>=20
+> I basically reformatted it completely and pushed the series to
+> pci/controller-fixes but that's the last time I do it since I am not an
+> editor, next time I won't merge it.
 
-Neither does this patch series for the typical memory hotplug case.
-For the device-memory use case I've gone through and fixed up the
-underlying assumptions.
+Hi Lorenzo,
+Thank you for helping improve my changelogs! I did learn a lot after
+carefully comparing the improved version with my original version. :-)
 
-> > The sub-section
-> > hotplug infrastructure is a strict superset of what is there already.
-> > Now, if it created parallel infrastructure that would indeed be a
-> > maintainability burden, but in this case there are no behavior changes
-> > for typical memory hotplug as it just hotplugs full sections at a time
-> > like always. The 'section' concept is not going away.
->
-> You are really neglecting many details here. E.g. memory section can be
-> shared between two different types of memory. We've had some bugs in the
-> hotplug code when one section can be shared between two different NUMA
-> nodes (e.g. 4aa9fc2a435a ("Revert "mm, memory_hotplug: initialize struct
-> pages for the full memory section""). We do not allow to hotremove such
-> sections because it would open another can of worms. I am not saying
-> your implementation is incorrect - still haven't time to look deeply -
-> but stating that this is a strict superset of want_memblock is simply
-> wrong.
+I'll try my best to write a good changelog for my future patches.
 
-Please have a look at the code and the handling of "early" sections.
-The assertion that I neglected to consider that detail is not true.
+> More importantly, these patches are marked for stable, given the series
+> of fixes that triggered this series please ensure it was tested
+> thoroughly because it is honestly complicate to understand and I do not
+> want to backport further fixes to stable kernels on top of this.
 
-My "superset" contention is from the arch_add_memory() api
-perspective. All typical memory hotplug use cases are a sub-case of
-the new support.
+I did the hot-add/hot-remove test in a loop for several thousand times,
+and the patchset worked as expected and didn't show any issue.
 
-> [...]
-> > > Why do we have to go a mile to tweak the kernel, especially something as
-> > > fragile as memory hotplug, just to support sub mem section ranges. This
-> > > is somthing that is not clearly explained in the cover letter. Sure you
-> > > are talking about hacks at the higher level to deal with this but I do
-> > > not see any fundamental reason to actually support that at all.
-> >
-> > Like it or not, 'struct page' mappings for arbitrary hardware-physical
-> > memory ranges is a facility that has grown from the pmem case, to hmm,
-> > and peer-to-peer DMA. Unless you want to do the work to eliminate the
-> > 'struct page' requirement across the kernel I think it is unreasonable
-> > to effectively archive the arch_add_memory() implementation and
-> > prevent it from reacting to growing demands.
->
-> I am definitely not blocking memory hotplug to be reused more! All I am
-> saying is that there is much more ground work to be done before you can
-> add features like that. There are some general assumptions in the code,
-> like it or not, and you should start by removing those to build on top.
+> Please have a look and report back.
+>=20
+> Thanks,
+> Lorenzo
 
-Let's talk about specifics please, because I don't think you've had a
-chance to consider the details in the patches. Your "start by removing
-those [assumptions] to build on top" request is indeed what the
-preparation patches in this series aim to achieve.
+Thanks again!
 
-The general assumptions of the current (pre-patch-series) implementation are:
-
-- Sections that describe boot memory (early sections) are never
-unplugged / removed.
-
-- pfn_valid(), in the CONFIG_SPARSEMEM_VMEMMAP=y, case devolves to a
-valid_section() check
-
-- __add_pages() and helper routines assume all operations occur in
-PAGES_PER_SECTION units.
-
-- the memblock sysfs interface only comprehends full sections
-
-Those assumptions are removed / handled with the following
-implementation details respectively:
-
-- Partially populated early sections can be extended with additional
-sub-sections, and those sub-sections can be removed with
-arch_remove_memory(). With this in place we no longer lose usable
-memory capacity to padding.
-
-- pfn_valid() goes beyond valid_section() to also check the
-active-sub-section mask. As stated before this indication is in the
-same cacheline as the valid_section() so the performance impact is
-expected to be negligible. So far the lkp robot has not reported any
-regressions.
-
-- Outside of the core vmemmap population routines which are replaced,
-other helper routines like shrink_{zone,pgdat}_span() are updated to
-handle the smaller granularity. Core memory hotplug routines that deal
-with online memory are not updated. That's a feature not a bug until
-we decide that sub-section hotplug makes sense for online / typical
-memory as well.
-
-- the existing memblock sysfs user api guarantees / assumptions are
-not touched since this capability is limited to !online
-!sysfs-accessible sections for now.
-
-> Pmem/nvidimm development is full of "we have to do it now and find a way
-> to graft it into the existing infrastructure" pattern that I really
-> hate. Clean up will come later, I have heard. Have a look at all
-> zone_device hacks that remained. Why is this any different?
-
-This is indeed different because unlike memmap_init_zone_device(),
-which is arguably a side-hack to move 'struct page' init outside the
-mem_hotplug_lock just for ZONE_DEVICE, this implementation is reused
-in the main memory hotplug path. It's not a "temporary implementation
-until something better comes along", it moves the implementation
-forward not sideways.
-
-> And just to make myself clear. There are places where section cannot go
-> away because that is the unit in which the memory model maintains struct
-> pages. But the hotplug code is fill of construct where we iterate mem
-> sections as one unit and operate on it as whole. Those have to go away
-> before you can consider subsection hotadd/remove.
->
-> > > I can feel your frustration. I am not entirely happy about the section
-> > > size limitation myself but you have to realize that this is simplicy vs.
-> > > feature set compromise.
-> >
-> > You have to realize that arch_add_memory() is no longer just a
-> > front-end for typical memory hotplug. The requirements have changed.
-> > Simplicity should be maintained for as long as it can get the job
-> > done, and the simplicity is currently failing.
->
-> I do agree. But you also have to realize that this require a lot of
-> work. As long as users of the api are not willing to do that work then
-> I am afraid but the facility will remain dumb. But putting hacks to make
-> a specific usecase (almost)work is not the right way.
-
-Please look at the patches. This isn't a half-step, it's a solution to
-a problem that has haunted the implementation for years. If there are
-opportunities for additional cleanups please point them out.
+Thanks,
+-- Dexuan
