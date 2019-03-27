@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E44C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78A2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312D7205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E60E2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712263;
-	bh=Do+97uAGXIRSfV9q24bcN96ipIpTYk9+VIffGp3ehxk=;
+	s=default; t=1553712270;
+	bh=WL1ye6weSf789Gn69V70fqgfnS05W55G6SFX1+W99Dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lz8JgSm17w+5+6VjD6nm+FvWgDkrACTkj92gEbfjBqcTiqqs+2+glsXw1Te32TV0q
-	 MlE1rAdVTh4pHcRZcpZFYS+op5Xxy3shLkwYfiZEa47TyL7Nxgdi4ly1i5ZjdbhdGk
-	 E3KYw/iCBUQCzAxYpEFL54qJrOJBAN1c1pWjLJiI=
+	b=OPoYWLii0mkcFs4/Gr4O+MYVb1K3sWZ7KNz2GRSU4oWx7IqGpT1YGshcfQYxdNtrr
+	 yo+0a/v9l6iY5k1q3gM20+/tOWwUNOl/INl9dsJknrW4YeWZhUz5doTVFmQAnsxTL6
+	 Nn1o4qiKKb6peHLIGjCjTnj3rC2qzRqH90xkxPDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391116AbfC0SVR (ORCPT
+        id S2391265AbfC0So3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391098AbfC0SVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:15 -0400
+        id S2391106AbfC0SVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDC6D217D9;
-        Wed, 27 Mar 2019 18:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8C532082F;
+        Wed, 27 Mar 2019 18:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710874;
-        bh=Do+97uAGXIRSfV9q24bcN96ipIpTYk9+VIffGp3ehxk=;
+        s=default; t=1553710876;
+        bh=WL1ye6weSf789Gn69V70fqgfnS05W55G6SFX1+W99Dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cmJ9jCJMc7q1ZZzLjKwRTkTVtBzNZiNQip6LVQ4kloyI6dr8ca83CgYjPknI8Lh0I
-         2PmOyv/Jostccair8wqmo5orB/dskV0wLKblM3620cu/Evo3yKTaIx+t7G0xFlBATD
-         oDsFCqLk8Rju8SrD1z7vf2BL3NW6Ud30LrwQtJL8=
+        b=0BbsJwwGw++ATsTSKmYWkhrvcNaYs+l2A9iXkQhU6vYDwQL+C6Njkxm6CtCNM3scP
+         9YwK06vVr5J0x6zK++gIPg6V2JNA+o9fbGjtlTtTxwdE06hDD4RbBxin1eEly0/MdL
+         D29dRhVFputV37qUuOrfZJo3jB13hAUfCvE3o+0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/87] cifs: Fix NULL pointer dereference of devname
-Date:   Wed, 27 Mar 2019 14:19:32 -0400
-Message-Id: <20190327182040.17444-19-sashal@kernel.org>
+Cc:     luojiajun <luojiajun3@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 21/87] jbd2: fix invalid descriptor block checksum
+Date:   Wed, 27 Mar 2019 14:19:34 -0400
+Message-Id: <20190327182040.17444-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,60 +56,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yao Liu <yotta.liu@ucloud.cn>
+From: luojiajun <luojiajun3@huawei.com>
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
 
-There is a NULL pointer dereference of devname in strspn()
+In jbd2_journal_commit_transaction(), if we are in abort mode,
+we may flush the buffer without setting descriptor block checksum
+by goto start_journal_io. Then fs is mounted,
+jbd2_descriptor_block_csum_verify() failed.
 
-The oops looks something like:
+[  271.379811] EXT4-fs (vdd): shut down requested (2)
+[  271.381827] Aborting journal on device vdd-8.
+[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
+[  271.598023] JBD2: recovery failed
+[  271.598484] EXT4-fs (vdd): error loading journal
 
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Fix this problem by keep setting descriptor block checksum if the
+descriptor buffer is not NULL.
 
-Fix this by adding a NULL check on devname in cifs_parse_devname()
+This checksum problem can be reproduced by xfstests generic/388.
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: luojiajun <luojiajun3@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/commit.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 33e65b71c49a..f291ed0c155d 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1201,6 +1201,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 31f8ca046639..10ec27676191 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -700,9 +700,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                            the last tag we set up. */
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
+ 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
+-
+-			jbd2_descriptor_block_csum_set(journal, descriptor);
+ start_journal_io:
++			if (descriptor)
++				jbd2_descriptor_block_csum_set(journal,
++							descriptor);
 +
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+ 			for (i = 0; i < bufs; i++) {
+ 				struct buffer_head *bh = wbuf[i];
+ 				/*
 -- 
 2.19.1
 
