@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755FEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFA6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48586204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3365204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713609;
-	bh=xsksBoADc80winDbW5xDWov7jv52uHFWN7sncZNcPJ4=;
+	s=default; t=1553713617;
+	bh=VcpHRazRJSgEU5qmQA/6rteBCJ3PsIuKz+LM64hrV6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwa4fT9CawKrR9HexN8gcxqnKocHtYAuaUYaJenAwoTmoZb8MtgQrb9xiJ5OnsVCd
-	 4U5bEEtptF56H7JT6qmObGEqL4eL+UUaPZCAnVQ30V483VXf/KLQgA4puxgFwd6ni5
-	 /BGfuV9Kp7SDl0gHJB1vLWi13bpfKXrtqy53bRJk=
+	b=hlOTtP4+OVDZP/gx+z2d8Uyx4TYXMe46M9470WhecgVRSU9tybB3hTW2OhskwTMBx
+	 h8c/LD4qBvU1eLiJLPwgs+lzT0Urf63Fjysaywn6UHMKb7vpmQdABOHR29J1n7WKBa
+	 7rX/ITU4pMuhnoK9zzgzBom51HvcEEbMmhLAXe+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389276AbfC0TGr (ORCPT
+        id S2389741AbfC0TG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389180AbfC0SMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:21 -0400
+        id S2389216AbfC0SMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D689217D9;
-        Wed, 27 Mar 2019 18:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4031E2183E;
+        Wed, 27 Mar 2019 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710340;
-        bh=xsksBoADc80winDbW5xDWov7jv52uHFWN7sncZNcPJ4=;
+        s=default; t=1553710352;
+        bh=VcpHRazRJSgEU5qmQA/6rteBCJ3PsIuKz+LM64hrV6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TvVtCUJHqY2CIiETrRqCOjcoRTMer4UABfOw5AmmOxd2mfQFtYo6VbgqO1rWBcWgt
-         YLXpoaTTIgrpUO790GAO8n763SE6284S/I3ZoUFK5F2bJWLep8sVUIS5ermAu0vQTr
-         elhm7u0713yg5fa23s/cI9lPAAyt5RqHbZUfFjbM=
+        b=M2SmX2fgs6ly4C0xPMdl67iZOO/wvUYK3XPDHQOIvtHsPo3jsahQ56Gt4TVwDrFOa
+         M1ifb6xEJehn3OV9Sx92s3HNgcUhsLTcHu/8Qq98nrqTUBFMiBRj11H2jMdwC4xtgK
+         wd7ZsCVE0fgaLK54nMcBKLjrRF1RY+nC8ACIWd0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 065/192] mlxsw: spectrum: Avoid -Wformat-truncation warnings
-Date:   Wed, 27 Mar 2019 14:08:17 -0400
-Message-Id: <20190327181025.13507-65-sashal@kernel.org>
+Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
+        Erwan Velu <e.velu@criteo.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 074/192] cpufreq: acpi-cpufreq: Report if CPU doesn't support boost technologies
+Date:   Wed, 27 Mar 2019 14:08:26 -0400
+Message-Id: <20190327181025.13507-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,70 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Erwan Velu <erwanaliasr1@gmail.com>
 
-[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
+[ Upstream commit 1222d527f314c86a3b59a522115d62facc5a7965 ]
 
-Give precision identifiers to the two snprintf() formatting the priority
-and TC strings to avoid producing these two warnings:
+There is some rare cases where CPB (and possibly IDA) are missing on
+processors.
 
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_prio_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
-directive output may be truncated writing between 1 and 3 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
-output between 3 and 36 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_prio_stats[i].str, prio);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_tc_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
-directive output may be truncated writing between 1 and 11 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
-output between 3 and 44 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_tc_stats[i].str, tc);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is the case fixed by commit f7f3dc00f612 ("x86/cpu/AMD: Fix
+erratum 1076 (CPB bit)") and following.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In such context, the boost status isn't reported by
+/sys/devices/system/cpu/cpufreq/boost.
+
+This commit is about printing a message to report that the CPU
+doesn't expose the boost capabilities.
+
+This message could help debugging platforms hit by this phenomena.
+
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+[ rjw: Change the message text somewhat ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpufreq/acpi-cpufreq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index a12b5710891e..f9bef030ee05 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1988,7 +1988,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
- 	int i;
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index b61f4ec43e06..aca30f45172e 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -911,8 +911,10 @@ static void __init acpi_cpufreq_boost_init(void)
+ {
+ 	int ret;
  
- 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
- 		*p += ETH_GSTRING_LEN;
- 	}
-@@ -1999,7 +1999,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
- 	int i;
+-	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA)))
++	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA))) {
++		pr_debug("Boost capabilities not present in the processor\n");
+ 		return;
++	}
  
- 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
- 		*p += ETH_GSTRING_LEN;
- 	}
+ 	acpi_cpufreq_driver.set_boost = set_boost;
+ 	acpi_cpufreq_driver.boost_enabled = boost_state(0);
 -- 
 2.19.1
 
