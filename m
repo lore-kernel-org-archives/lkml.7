@@ -2,140 +2,127 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12058C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FD2206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713318;
-	bh=LR1E7ls6GspKL+LS6IAuEa9IGXbCO373aLev2FG4McY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmCAMH4xh8Q7z9+NPtXyVAQV1yXpRcXG3DyLpCP313vEg6n59A8vXlDgvF5E3E101
-	 AUi3xZCimyLsdpNOGa6TISodJzexOsfrSJnj8sjwgVgYVQnXmla4VsthOq0g93kHn1
-	 iNBN1iF9+zdzK+u0sZBz4+7tPQ2UB8RFRukSxFZ8=
+	by mail.kernel.org (Postfix) with ESMTP id CD98D206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:02:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hNw9LW71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389882AbfC0TB4 (ORCPT
+        id S2389617AbfC0TCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389541AbfC0SOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:00 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E766B21850;
-        Wed, 27 Mar 2019 18:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710439;
-        bh=LR1E7ls6GspKL+LS6IAuEa9IGXbCO373aLev2FG4McY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJcXTLZ2eDidEaV0ToMrQy5ikW+w5VHWlXqaqGRQNKuKcndLEYUPvJKLuHmPbRS39
-         2JsgZxLPBsv1iHDws5xJ+9bzhoXY1tLujNxg1jJ1mhmK3OL/g9g03TmKTxJWv8/6mU
-         +CXzVD1+kXRJc9UKyzhDDRWaolHnH/9GGl2ukb5A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 120/192] net: phy: consider latched link-down status in polling mode
-Date:   Wed, 27 Mar 2019 14:09:12 -0400
-Message-Id: <20190327181025.13507-120-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 15:02:06 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37886 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389482AbfC0TCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:02:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so10140632pfr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 12:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kinH6oT2tmanQoCK0NPLwfaZCgBAmu6HtM8wXR5Y8ns=;
+        b=hNw9LW71dOCzep2hzY7zEBmxdHTXqbiKkwn3WB1wOdhyPlEYaCwxGeFgOpwXfToDCo
+         NZWpJpq23TrMlQTox+A2QkwiIQTeXAh/2lDkVTDZir3lHlrKgKURThi6jJ3ytwPRO/hF
+         /uhFh653Yj2bCB11pdoA2HFUnt6cQEIdERZOWaKlNamBUKtLC0l7XlV5s1dStzPhmidk
+         NQ1qSG/pK5w9R3YqnxMCNif+2CAlQ5LpVdydG6U1E+9O52zunFe5fF7NlcVBuPXVqu/k
+         hIl9ydJxKpAOjoC5H7jSSf1v8L7jOAKRex38t/9RwP1xnebGxTGXqF9Bs+Fk46x9V8td
+         p8sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kinH6oT2tmanQoCK0NPLwfaZCgBAmu6HtM8wXR5Y8ns=;
+        b=o2xjshth17e+5cI/OP9ZTvKYGbwniatVd0vvaxvHa8dCnOOucqMYS9JDNpvRmDJZ68
+         VZXZI+J6/9Jvz+XhCfk0Ogj3gd0QsPdKwCAE+JGLe9Vt0Dxjhlagb+pI4wpeoYjXYVfm
+         lXOVPfwS963PzHf1Stg6bZz0t1PiVNxsuVoVuN5BtFKJHbk9z/xbo9OIzVjteVp8vyli
+         09Wts0Ryu5mgOFb3EJTWDMs1XASMVypf7fWYXjz5YiWHfWMhAIOdrJ0XzSVnDz0w3M5a
+         28RUCsuLm/lX6k01awWXL+iY+r1lPrDtkZujnA5aF6Y5er+TqINz4KMp13dBrWpaL8ve
+         9h4Q==
+X-Gm-Message-State: APjAAAVPVEW5Vu62RmI3A+Q8HKTIYhbdCNbxmswuGM0UQBFNxQXYSftn
+        efSXN/99PKpMgQZQO0uhejBOHW/uns7YEgTXhgsNXw==
+X-Google-Smtp-Source: APXvYqzE/s90FIoJy5VaK+bf6rCPJCAy0yHRKjn36k6ejMeKbEPqEHswSqoy7jTMYBhfMUEVct3D4RnnowjXFFMhDdA=
+X-Received: by 2002:a63:e850:: with SMTP id a16mr35831994pgk.195.1553713321817;
+ Wed, 27 Mar 2019 12:02:01 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190312163101.155910-1-venture@google.com> <20190327164542.GC11712@kroah.com>
+ <CAO=notxFvvOmpjMyXvt5PyuWsB92eraN+=8mWk8_aY2w3sK-eQ@mail.gmail.com> <20190327185410.GA14828@kroah.com>
+In-Reply-To: <20190327185410.GA14828@kroah.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Wed, 27 Mar 2019 12:01:50 -0700
+Message-ID: <CAO=notzwnDtJ9jmEUDsy_tqVKH-+4rO9gd8rpVjKKvQqJsODTQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] drivers/misc: Add Aspeed P2A control driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+On Wed, Mar 27, 2019 at 11:54 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Mar 27, 2019 at 11:44:36AM -0700, Patrick Venture wrote:
+> > On Wed, Mar 27, 2019 at 11:28 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Mar 12, 2019 at 09:31:01AM -0700, Patrick Venture wrote:
+> > > > +     phys_addr_t mem_base;
+> > >
+> > > Is this really a 32bit value?
+> >
+> > It's going to be a 32-bit value if this is in the dts for one of the
+> > correspondingly supported aspeed models.
+> >
+> > >
+> > > Your ioctl thinks it is:
+> > >
+> > > > +struct aspeed_p2a_ctrl_mapping {
+> > > > +     __u32 addr;
+> > >
+> > > Does this driver not work on a 64bit kernel?
+> >
+> > This driver is aimed at only 32-bit hardware (ast2400/2500).  I
+> > modeled the approach after the aspeed-lpc-ctrl driver as it's
+> > providing similar functionality.
+> >
+> > >
+> > > > +     __u32 length;
+> > > > +     __u32 flags;
+> > > > +};
+> > >
+> > > addr really should be __u32 here so you don't have to mess with 32/64
+> > > bit user/kernel issues, right?
+> >
+> > Add is __u32 there.  Are you suggesting it shouldn't be?
+>
+> Ugh, yes, sorry, I meant to say "__u64".
+>
+> If you all insist that this is all that is ever going to be needed, ok,
+> but I reserve the right to complain in 4 years when this needs to be
+> changed :)
 
-[ Upstream commit 93c0970493c71f264e6c3c7caf1ff24a9e1de786 ]
+In the event the ast2600 comes out and is 64-bit -- I can't imagine
+that's likely to happen.  I can take solace that this won't be the
+only thing that needs retrofitting.  But it wouldn't kill me to just
+make the change.  I'll just have to tweak it to return failure in the
+event the address provided isn't found in any region...
 
-The link status value latches link-down events. To get the current
-status we read the register twice in genphy_update_link(). There's
-a potential risk that we miss a link-down event in polling mode.
-This may cause issues if the user e.g. connects his machine to a
-different network.
+Is that all that needs to change for 64-bit addressing support - given
+your read of the driver?
 
-On the other hand reading the latched value may cause issues in
-interrupt mode. Following scenario:
-
-- After boot link goes up
-- phy_start() is called triggering an aneg restart, hence link goes
-  down and link-down info is latched.
-- After aneg has finished link goes up and triggers an interrupt.
-  Interrupt handler reads link status, means it reads the latched
-  "link is down" info. But there won't be another interrupt as long
-  as link stays up, therefore phylib will never recognize that link
-  is up.
-
-Deal with both scenarios by reading the register twice in interrupt
-mode only.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/phy/phy-c45.c    | 10 ++++++++--
- drivers/net/phy/phy_device.c | 13 +++++++++----
- 2 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
-index e1225545362d..0ba3607585bd 100644
---- a/drivers/net/phy/phy-c45.c
-+++ b/drivers/net/phy/phy-c45.c
-@@ -147,9 +147,15 @@ int genphy_c45_read_link(struct phy_device *phydev, u32 mmd_mask)
- 		mmd_mask &= ~BIT(devad);
- 
- 		/* The link state is latched low so that momentary link
--		 * drops can be detected.  Do not double-read the status
--		 * register if the link is down.
-+		 * drops can be detected. Do not double-read the status
-+		 * in polling mode to detect such short link drops.
- 		 */
-+		if (!phy_polling_mode(phydev)) {
-+			val = phy_read_mmd(phydev, devad, MDIO_STAT1);
-+			if (val < 0)
-+				return val;
-+		}
-+
- 		val = phy_read_mmd(phydev, devad, MDIO_STAT1);
- 		if (val < 0)
- 			return val;
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 2c32c795f5dd..8a96d985a52f 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1503,10 +1503,15 @@ int genphy_update_link(struct phy_device *phydev)
- {
- 	int status;
- 
--	/* Do a fake read */
--	status = phy_read(phydev, MII_BMSR);
--	if (status < 0)
--		return status;
-+	/* The link state is latched low so that momentary link
-+	 * drops can be detected. Do not double-read the status
-+	 * in polling mode to detect such short link drops.
-+	 */
-+	if (!phy_polling_mode(phydev)) {
-+		status = phy_read(phydev, MII_BMSR);
-+		if (status < 0)
-+			return status;
-+	}
- 
- 	/* Read link and autonegotiation status */
- 	status = phy_read(phydev, MII_BMSR);
--- 
-2.19.1
-
+>
+> thanks,
+>
+> greg k-h
