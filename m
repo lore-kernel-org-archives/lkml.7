@@ -2,133 +2,117 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C36DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F724C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8DB206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t5d/gOKb"
+	by mail.kernel.org (Postfix) with ESMTP id 18F8A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfC0RBz (ORCPT
+        id S1727791AbfC0RFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:01:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38529 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbfC0RBz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:01:55 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so10000767pfo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1xJSt6Z6aWnfPGKUo9Ab/ADnYDzeywNJbfuZO23Q9f8=;
-        b=t5d/gOKb+NIa3dkh/n2QpbwIM7SIFSlw6SpeSoCu9qL6WAN3WvaCwZMisvHDt8wbV3
-         YkEHAf8HXbXM0g9jmE1n6uhhq1ZtYdj+mSxbFkLl/BP5mL9VE0iD0RKN1LdWFoJhbXuW
-         lLyHSqPn1bTLAt8FaayGyZHoovok+XrhSA2WyKIL9a5TPqQCLQz+e0+PQFZLO+IQaD/V
-         d1jS89Bw/T0F0vlq2pu0U8EiC07VVZ6lFfbjgGjpvVJUABpz8JY8GeNC8Gr3/QAsk1yJ
-         /Htb/B5iuPhvXS4rY6gBh/P9MOCMm6Ir8XMsueATyNSjhYaIQ59PZ4xhxQoy2Q4Si7xM
-         4qDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1xJSt6Z6aWnfPGKUo9Ab/ADnYDzeywNJbfuZO23Q9f8=;
-        b=j3FNMt+szDlwQJPjWzf0mbgDMkF77d3r30gEhoAlH7qPOVnZKW6zTkRCGeMc31TBF7
-         CkJPmK6cI2flXKP8mIaFXcYLdhEmhZcBnKF1MwGT/P0FaaiYpNw1M3ImUMUtT9LZ9t6F
-         2vHAoVG1ZvhzZC3ueFnehbFXdMI9anaIsy2XTUI1Nnvry9hwS5lNN1UFqhTcTUrL+ArN
-         YyXC3sOu17wYN3esHuXjAg3LIYBhDJ1PzHdfsUHZlF+8uOz14K3c3RJFC4LJEf98n8dI
-         zp+w8yMTpPWfD50xWNcKau67PpThDQyNjtDjtaJuCA5p72FwUeYdVM8K7cSVAyZWWCJ4
-         90aw==
-X-Gm-Message-State: APjAAAXnhucizGwu718xfpU1sbTJnVLJPi6No17tsL8R5WofzGMGRaLq
-        jkRdwgCtwzdOSWkpLorF1jCaZmCtF1HxwlFhuLVsAg==
-X-Google-Smtp-Source: APXvYqy6DZInMyNHgPBrajynzu/Pb1WI5vRe3Oj7p42iSEIse7uqNZ5O1wBKTPZWVbR7qcsFm9ZOrTGpPnn0sgh1LTA=
-X-Received: by 2002:a62:e80f:: with SMTP id c15mr36065060pfi.93.1553706113725;
- Wed, 27 Mar 2019 10:01:53 -0700 (PDT)
+        Wed, 27 Mar 2019 13:05:50 -0400
+Received: from mga03.intel.com ([134.134.136.65]:18319 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727357AbfC0RFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:05:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 10:05:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,277,1549958400"; 
+   d="scan'208";a="310891620"
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga005.jf.intel.com with ESMTP; 27 Mar 2019 10:05:48 -0700
+Subject: Re: [PATCH 06/10] mm: vmscan: demote anon DRAM pages to PMEM node
+To:     Zi Yan <ziy@nvidia.com>, Keith Busch <kbusch@kernel.org>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
+        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, "Busch, Keith" <keith.busch@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1553316275-21985-7-git-send-email-yang.shi@linux.alibaba.com>
+ <20190324222040.GE31194@localhost.localdomain>
+ <ceec5604-b1df-2e14-8966-933865245f1c@linux.alibaba.com>
+ <20190327003541.GE4328@localhost.localdomain>
+ <39d8fb56-df60-9382-9b47-59081d823c3c@linux.alibaba.com>
+ <20190327130822.GD7389@localhost.localdomain>
+ <2C32F713-2156-4B58-B5C1-789C1821EBB9@nvidia.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <de044f93-c4e8-8b8b-9372-e15ca74e7696@intel.com>
+Date:   Wed, 27 Mar 2019 10:05:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190320163315.12740-1-natechancellor@gmail.com> <20190326220444.10040-1-natechancellor@gmail.com>
-In-Reply-To: <20190326220444.10040-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 27 Mar 2019 10:01:42 -0700
-Message-ID: <CAKwvOdkLJaO3H25JU19qPtMe=LTJmxUicPvE=vWOKw7nqDC=-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] scsi: qla2xxx: Simplify conditional check again
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Joe Carnuccio <joe.carnuccio@cavium.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2C32F713-2156-4B58-B5C1-789C1821EBB9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:06 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns when it sees a logical not on the left side of a
-> conditional statement because it thinks the logical not should
-> be applied to the whole statement, not just the left side:
->
-> drivers/scsi/qla2xxx/qla_nx.c:3703:7: warning: logical not is only
-> applied to the left hand side of this comparison
-> [-Wlogical-not-parentheses]
->
-> This particular instance was already fixed by commit 0bfe7d3cae58 ("scsi:
-> qla2xxx: Simplify conditional check") upstream but it was reintroduced
-> by commit 3695310e37b4 ("scsi: qla2xxx: Update flash read/write
-> routine") in the 5.2/scsi-queue.
+On 3/27/19 10:00 AM, Zi Yan wrote:
+> I ask this because I observe that migrating a list of pages can
+> achieve higher throughput compared to migrating individual page.
+> For example, migrating 512 4KB pages can achieve ~750MB/s
+> throughput, whereas migrating one 4KB page might only achieve
+> ~40MB/s throughput. The experiments were done on a two-socket
+> machine with two Xeon E5-2650 v3 @ 2.30GHz across the QPI link.
 
-Nathan, thanks for following up and rewording the commit message to
-clearly state how we got here.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+What kind of migration?
 
->
-> Fixes: 3695310e37b4 ("scsi: qla2xxx: Update flash read/write routine")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/80
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->
-> v1 -> v2:
->
-> * Reword commit message so make it clear this is just a reapplication of
->   a commit that is already in mainline, as suggested by Nick.
->
-> * Include the authors who reintroduced this warning.
->
->  drivers/scsi/qla2xxx/qla_nx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/qla2xxx/qla_nx.c b/drivers/scsi/qla2xxx/qla_nx.c
-> index e0b4387fd6ba..359ebb634d96 100644
-> --- a/drivers/scsi/qla2xxx/qla_nx.c
-> +++ b/drivers/scsi/qla2xxx/qla_nx.c
-> @@ -3700,8 +3700,8 @@ qla82xx_chip_reset_cleanup(scsi_qla_host_t *vha)
->                 spin_unlock_irqrestore(&ha->hardware_lock, flags);
->
->                 /* Wait for pending cmds (physical and virtual) to complete */
-> -               if (!qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
-> -                   WAIT_HOST) == QLA_SUCCESS) {
-> +               if (qla2x00_eh_wait_for_pending_commands(vha, 0, 0,
-> +                   WAIT_HOST)) {
->                         ql_dbg(ql_dbg_init, vha, 0x00b3,
->                             "Done wait for "
->                             "pending commands.\n");
-> --
-> 2.21.0
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+If you're talking about doing sys_migrate_pages() one page at a time,
+that's a world away from doing something inside of the kernel one page
+at a time.
