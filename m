@@ -2,240 +2,417 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2635C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A24BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4C92075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90282075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:22:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i2AiOdRq"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jCB9Fe1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbfC0IWm (ORCPT
+        id S1732440AbfC0IW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:22:42 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:36459 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfC0IWm (ORCPT
+        Wed, 27 Mar 2019 04:22:57 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36499 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfC0IW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:22:42 -0400
-Received: by mail-it1-f195.google.com with SMTP id h9so24706322itl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:22:41 -0700 (PDT)
+        Wed, 27 Mar 2019 04:22:57 -0400
+Received: by mail-it1-f196.google.com with SMTP id h9so24707358itl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zjedTqzCU/khXFD8XYPaJrkvkl9uSUvKbec7Mxv8XZk=;
-        b=i2AiOdRqNLUHSEbYAt5Xkw0hJJSo3uivppLILkcVZaEtwrRs7y+BdxjcSve8qQg7uP
-         WWp1AoThuQWzoSjR3C3qnxx9BS2vEjS5iMIK1FA9UXdh8uZxSRsWFDEZxi0rh37ePauK
-         6F1eHxfBHBDvDo18QDcj6MQjQwffCMMnFZla62F8Tq/Vx9hLWWRsm2FteOzknOLWD9JE
-         IzrY5mU4d3oeEnjI/FmpCdkdPtXRucHo7Dz/N3FXnQle51BQ+rY6O/s0i5pH/1lI8ofA
-         iSgPwBxJtZ75ai53N6Hfd0SL8uGtl5giJNk5ziz5+6zNkI9B85VxlaFOGpSHwlZoeLWN
-         aqIw==
+        bh=3WpbU+RKj5aKG8Ik2bJq0Dxy3Vhtrc3f+GtBx9g1UV0=;
+        b=jCB9Fe1XuDMxaODuE0ACeSX/LzRTrozRMeLGHNG0SOJW6PeGCsA4S+VDj70j/zwUkq
+         FpjK24ulngmiAw5npfYUj+vmHZoOcCywpc1vqpwbzdCnNgLZ5E6HZCyMNWStMY/k/tLc
+         guejKvRi9eIY3FbG9IBYcyMWF1xPd2oZ1GWp0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zjedTqzCU/khXFD8XYPaJrkvkl9uSUvKbec7Mxv8XZk=;
-        b=H8bbsbJeuSmSUI4bu+koEZMjKPsrPHLIhgoe4yOAvIAptjVKY76K32A4SwYTjxOliB
-         kAmOD1/2mLBcyT4GP9ZI4jGVxqkZD5t/hZY4Ijh4zA6o2HU2nrk9uNC1nB6atyzwdYpM
-         7ri4vnNahVyUt40PN0H1aVtmdyQWTKdlkgYKd9G3n9McCNwM9ss9QmvNIhbofYIhsDgS
-         VfMfJ7IkZlyF2i72kvQSVDi6spd88/KSGTBR20rvpSGJ2ZCnKY9zbBdk+Rgg/mzPg/Y1
-         tRPDv7MuFFjfpzNqqMWktlJ29cFxgebupv7H0iq8L1owmsHRUxEuaHsbVO9d5K7+C/yc
-         vqsQ==
-X-Gm-Message-State: APjAAAXuJu+Uqkies6HFd4h9xAd8ZlZsAZzMtgtOc/fK1DAstqDjWC8F
-        p4pKuKdbAaeXi5zOs+8H4KCpRT1rEsmJVgckpPG0Tw==
-X-Google-Smtp-Source: APXvYqwIzlo6wKjk2OkGKHnNzI/KBiud4QIlTKjzOGf+tmV35PqMB/d2tRnghOy/s3kGReEX7ABgR7SOSJ50s6ArSLY=
-X-Received: by 2002:a02:84ab:: with SMTP id f40mr23840821jai.72.1553674960905;
- Wed, 27 Mar 2019 01:22:40 -0700 (PDT)
+        bh=3WpbU+RKj5aKG8Ik2bJq0Dxy3Vhtrc3f+GtBx9g1UV0=;
+        b=gsydCR4nIK89N4Ew6SfE02r5WXcijSE1Z2CH9/RotsFEJ4gYxbEUVmmcgd28xhTAZD
+         JzNAjjF5BTXpQG6VOgsFsXa+eCXd+lPJvncFAIEzWygBBBE9edkActPrWe1Uj8KTqPCY
+         jCZsIRbYHBBuD0MFEPdPQEBAAuYNfPK5bMduiHyZYdkTHC6C1xH5XQSTPV552jMh//Ss
+         imtTCdidRWJ2z4X8l1/DqreMlheYH9Ksm/vxgSMJvFIFVd/y+vlpa1TG80xmYK10Ldjx
+         oxQS3id3SLXgQgY9mH+ORfrzi3Ib0+VQgNnGzcUMA+yyby6uNLNE9dA2u3/SnbChhScc
+         64Ew==
+X-Gm-Message-State: APjAAAWpcXck2Ceofpinr9EkgyB1vQcwHGF4dfMgTDkJX4RvwN4baF9f
+        OjscJbg0gV4jcY4d4mPtwD3Y+dqd3RsQmAwDxAL831bw
+X-Google-Smtp-Source: APXvYqxlHXXzbvzTmxhAJ+cUOW/kpP42ZT+aW6hMxJwxPj3ln2VFF3S4UKkIvoj4k84eQRSSd5QULfGEVryMzOPYQvk=
+X-Received: by 2002:a24:9197:: with SMTP id i145mr2498713ite.117.1553674975844;
+ Wed, 27 Mar 2019 01:22:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000004cd71f05850f17c2@google.com>
-In-Reply-To: <0000000000004cd71f05850f17c2@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 27 Mar 2019 09:22:29 +0100
-Message-ID: <CACT4Y+Yt9vfk1OM1b3fsVJ_i+qZx7kz71ty6heDE3GwujGNevQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in __icmp_send
-To:     syzbot <syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+References: <20190319215401.6562-1-sonal.santan@xilinx.com>
+ <20190325202810.GG2665@phenom.ffwll.local> <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
+In-Reply-To: <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 27 Mar 2019 09:22:44 +0100
+Message-ID: <CAKMK7uHh5KNaTO+a4ZA+vPQcPKUBwODsx+pPCWNp3sxe9TFP0Q@mail.gmail.com>
+Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
+To:     Sonal Santan <sonals@xilinx.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Cyril Chemparathy <cyrilc@xilinx.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lizhi Hou <lizhih@xilinx.com>,
+        Michal Simek <michals@xilinx.com>,
+        "airlied@redhat.com" <airlied@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 9:19 AM syzbot
-<syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com> wrote:
+On Wed, Mar 27, 2019 at 12:30 AM Sonal Santan <sonals@xilinx.com> wrote:
 >
-> Hello,
 >
-> syzbot found the following crash on:
 >
-> HEAD commit:    1d965c4d Merge branch 'Refactor-flower-classifier-to-remov..
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14ff71df200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
-> dashboard link: https://syzkaller.appspot.com/bug?extid=aa9105f99c12b6abfe27
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > -----Original Message-----
+> > From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch] On Behalf Of Daniel Vetter
+> > Sent: Monday, March 25, 2019 1:28 PM
+> > To: Sonal Santan <sonals@xilinx.com>
+> > Cc: dri-devel@lists.freedesktop.org; gregkh@linuxfoundation.org; Cyril
+> > Chemparathy <cyrilc@xilinx.com>; linux-kernel@vger.kernel.org; Lizhi Hou
+> > <lizhih@xilinx.com>; Michal Simek <michals@xilinx.com>; airlied@redhat.com
+> > Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
+> >
+> > On Tue, Mar 19, 2019 at 02:53:55PM -0700, sonal.santan@xilinx.com wrote:
+> > > From: Sonal Santan <sonal.santan@xilinx.com>
+> > >
+> > > Hello,
+> > >
+> > > This patch series adds drivers for Xilinx Alveo PCIe accelerator cards.
+> > > These drivers are part of Xilinx Runtime (XRT) open source stack and
+> > > have been deployed by leading FaaS vendors and many enterprise
+> > customers.
+> >
+> > Cool, first fpga driver submitted to drm! And from a high level I think this
+> > makes a lot of sense.
+> >
+> > > PLATFORM ARCHITECTURE
+> > >
+> > > Alveo PCIe platforms have a static shell and a reconfigurable
+> > > (dynamic) region. The shell is automatically loaded from PROM when
+> > > host is booted and PCIe is enumerated by BIOS. Shell cannot be changed
+> > > till next cold reboot. The shell exposes two physical functions:
+> > > management physical function and user physical function.
+> > >
+> > > Users compile their high level design in C/C++/OpenCL or RTL into FPGA
+> > > image using SDx compiler. The FPGA image packaged as xclbin file can
+> > > be loaded onto reconfigurable region. The image may contain one or
+> > > more compute unit. Users can dynamically swap the full image running
+> > > on the reconfigurable region in order to switch between different
+> > workloads.
+> > >
+> > > XRT DRIVERS
+> > >
+> > > XRT Linux kernel driver xmgmt binds to mgmt pf. The driver is modular
+> > > and organized into several platform drivers which primarily handle the
+> > > following functionality:
+> > > 1.  ICAP programming (FPGA bitstream download with FPGA Mgr
+> > > integration) 2.  Clock scaling 3.  Loading firmware container also
+> > > called dsabin (embedded Microblaze
+> > >     firmware for ERT and XMC, optional clearing bitstream) 4.  In-band
+> > > sensors: temp, voltage, power, etc.
+> > > 5.  AXI Firewall management
+> > > 6.  Device reset and rescan
+> > > 7.  Hardware mailbox for communication between two physical functions
+> > >
+> > > XRT Linux kernel driver xocl binds to user pf. Like its peer, this
+> > > driver is also modular and organized into several platform drivers
+> > > which handle the following functionality:
+> > > 1.  Device memory topology discovery and memory management 2.  Buffer
+> > > object abstraction and management for client process 3.  XDMA MM PCIe
+> > > DMA engine programming 4.  Multi-process aware context management 5.
+> > > Compute unit execution management (optionally with help of ERT) for
+> > >     client processes
+> > > 6.  Hardware mailbox for communication between two physical functions
+> > >
+> > > The drivers export ioctls and sysfs nodes for various services. xocl
+> > > driver makes heavy use of DRM GEM features for device memory
+> > > management, reference counting, mmap support and export/import. xocl
+> > > also includes a simple scheduler called KDS which schedules compute
+> > > units and interacts with hardware scheduler running ERT firmware. The
+> > > scheduler understands custom opcodes packaged into command objects
+> > and
+> > > provides an asynchronous command done notification via POSIX poll.
+> > >
+> > > More details on architecture, software APIs, ioctl definitions,
+> > > execution model, etc. is available as Sphinx documentation--
+> > >
+> > > https://xilinx.github.io/XRT/2018.3/html/index.html
+> > >
+> > > The complete runtime software stack (XRT) which includes out of tree
+> > > kernel drivers, user space libraries, board utilities and firmware for
+> > > the hardware scheduler is open source and available at
+> > > https://github.com/Xilinx/XRT
+> >
+> > Before digging into the implementation side more I looked into the userspace
+> > here. I admit I got lost a bit, since there's lots of indirections and abstractions
+> > going on, but it seems like this is just a fancy ioctl wrapper/driver backend
+> > abstractions. Not really something applications would use.
+> Sonal Santan <sonals@xilinx.com>
 >
-> Unfortunately, I don't have any reproducer for this crash yet.
+> 4:20 PM (1 minute ago)
 >
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com
+> to me
+>
+>
+> > -----Original Message-----
+> > From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch] On Behalf Of Daniel Vetter
+> > Sent: Monday, March 25, 2019 1:28 PM
+> > To: Sonal Santan <sonals@xilinx.com>
+> > Cc: dri-devel@lists.freedesktop.org; gregkh@linuxfoundation.org; Cyril
+> > Chemparathy <cyrilc@xilinx.com>; linux-kernel@vger.kernel.org; Lizhi Hou
+> > <lizhih@xilinx.com>; Michal Simek <michals@xilinx.com>; airlied@redhat.com
+> > Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
+> >
+> > On Tue, Mar 19, 2019 at 02:53:55PM -0700, sonal.santan@xilinx.com wrote:
+> > > From: Sonal Santan <sonal.santan@xilinx.com>
+> > >
+> > > Hello,
+> > >
+> > > This patch series adds drivers for Xilinx Alveo PCIe accelerator cards.
+> > > These drivers are part of Xilinx Runtime (XRT) open source stack and
+> > > have been deployed by leading FaaS vendors and many enterprise
+> > customers.
+> >
+> > Cool, first fpga driver submitted to drm! And from a high level I think this
+> > makes a lot of sense.
+> >
+> > > PLATFORM ARCHITECTURE
+> > >
+> > > Alveo PCIe platforms have a static shell and a reconfigurable
+> > > (dynamic) region. The shell is automatically loaded from PROM when
+> > > host is booted and PCIe is enumerated by BIOS. Shell cannot be changed
+> > > till next cold reboot. The shell exposes two physical functions:
+> > > management physical function and user physical function.
+> > >
+> > > Users compile their high level design in C/C++/OpenCL or RTL into FPGA
+> > > image using SDx compiler. The FPGA image packaged as xclbin file can
+> > > be loaded onto reconfigurable region. The image may contain one or
+> > > more compute unit. Users can dynamically swap the full image running
+> > > on the reconfigurable region in order to switch between different
+> > workloads.
+> > >
+> > > XRT DRIVERS
+> > >
+> > > XRT Linux kernel driver xmgmt binds to mgmt pf. The driver is modular
+> > > and organized into several platform drivers which primarily handle the
+> > > following functionality:
+> > > 1.  ICAP programming (FPGA bitstream download with FPGA Mgr
+> > > integration) 2.  Clock scaling 3.  Loading firmware container also
+> > > called dsabin (embedded Microblaze
+> > >     firmware for ERT and XMC, optional clearing bitstream) 4.  In-band
+> > > sensors: temp, voltage, power, etc.
+> > > 5.  AXI Firewall management
+> > > 6.  Device reset and rescan
+> > > 7.  Hardware mailbox for communication between two physical functions
+> > >
+> > > XRT Linux kernel driver xocl binds to user pf. Like its peer, this
+> > > driver is also modular and organized into several platform drivers
+> > > which handle the following functionality:
+> > > 1.  Device memory topology discovery and memory management 2.  Buffer
+> > > object abstraction and management for client process 3.  XDMA MM PCIe
+> > > DMA engine programming 4.  Multi-process aware context management 5.
+> > > Compute unit execution management (optionally with help of ERT) for
+> > >     client processes
+> > > 6.  Hardware mailbox for communication between two physical functions
+> > >
+> > > The drivers export ioctls and sysfs nodes for various services. xocl
+> > > driver makes heavy use of DRM GEM features for device memory
+> > > management, reference counting, mmap support and export/import. xocl
+> > > also includes a simple scheduler called KDS which schedules compute
+> > > units and interacts with hardware scheduler running ERT firmware. The
+> > > scheduler understands custom opcodes packaged into command objects
+> > and
+> > > provides an asynchronous command done notification via POSIX poll.
+> > >
+> > > More details on architecture, software APIs, ioctl definitions,
+> > > execution model, etc. is available as Sphinx documentation--
+> > >
+> > > https://xilinx.github.io/XRT/2018.3/html/index.html
+> > >
+> > > The complete runtime software stack (XRT) which includes out of tree
+> > > kernel drivers, user space libraries, board utilities and firmware for
+> > > the hardware scheduler is open source and available at
+> > > https://github.com/Xilinx/XRT
+> >
+> > Before digging into the implementation side more I looked into the userspace
+> > here. I admit I got lost a bit, since there's lots of indirections and abstractions
+> > going on, but it seems like this is just a fancy ioctl wrapper/driver backend
+> > abstractions. Not really something applications would use.
+> >
+>
+> Appreciate your feedback.
+>
+> The userspace libraries define a common abstraction but have different implementations
+> for Zynq Ultrascale+ embedded platform, PCIe based Alveo (and Faas) and emulation
+> flows. The latter lets you run your application without physical hardware.
+>
+> >
+> > From the pretty picture on github it looks like there's some opencl/ml/other
+> > fancy stuff sitting on top that applications would use. Is that also available?
+>
+> The full OpenCL runtime is available in the same repository. Xilinx ML Suite is
+> also based on XRT and its source can be found at https://github.com/Xilinx/ml-suite.
 
-Eric, do you think this is also fixed by "tun: properly test for
-IFF_UP" as the bug in icmp6_send?
+Hm, I did a few git grep for the usual opencl entry points, but didn't
+find anything. Do I need to run some build scripts first (which
+downloads additional sourcecode)? Or is there some symbol mangling
+going on and that's why I don't find anything? Pointers very much
+appreciated.
 
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_read
-> include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: use-after-free in queued_spin_trylock
-> include/asm-generic/qspinlock.h:69 [inline]
-> BUG: KASAN: use-after-free in do_raw_spin_trylock+0x6a/0x180
-> kernel/locking/spinlock_debug.c:119
-> Read of size 4 at addr ffff88808a28ccd4 by task syz-executor.0/17585
+> Typically end users use OpenCL APIs which are part of XRT stack. One can write an
+> application to directly call XRT APIs defined at
+> https://xilinx.github.io/XRT/2018.3/html/xclhal2.main.html
+
+I have no clue about DNN/ML unfortunately, I think I'll try to look
+into the ocl side a bit more first.
+
+Thanks, Daniel
+
 >
-> CPU: 0 PID: 17585 Comm: syz-executor.0 Not tainted 5.0.0+ #105
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   <IRQ>
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->   print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
->   kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x123/0x190 mm/kasan/generic.c:191
->   kasan_check_read+0x11/0x20 mm/kasan/common.c:102
->   atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
->   queued_spin_trylock include/asm-generic/qspinlock.h:69 [inline]
->   do_raw_spin_trylock+0x6a/0x180 kernel/locking/spinlock_debug.c:119
->   __raw_spin_trylock include/linux/spinlock_api_smp.h:89 [inline]
->   _raw_spin_trylock+0x1c/0x80 kernel/locking/spinlock.c:128
->   spin_trylock include/linux/spinlock.h:339 [inline]
->   icmp_xmit_lock net/ipv4/icmp.c:219 [inline]
->   __icmp_send+0x553/0x1400 net/ipv4/icmp.c:666
->   icmp_send include/net/icmp.h:47 [inline]
->   ipv4_link_failure+0x31/0x210 net/ipv4/route.c:1190
->   dst_link_failure include/net/dst.h:416 [inline]
->   arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
->   neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
->   neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
->   call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
->   expire_timers kernel/time/timer.c:1362 [inline]
->   __run_timers kernel/time/timer.c:1681 [inline]
->   __run_timers kernel/time/timer.c:1649 [inline]
->   run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
->   __do_softirq+0x266/0x95a kernel/softirq.c:293
->   invoke_softirq kernel/softirq.c:374 [inline]
->   irq_exit+0x180/0x1d0 kernel/softirq.c:414
->   exiting_irq arch/x86/include/asm/apic.h:536 [inline]
->   smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
->   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
->   </IRQ>
-> RIP: 0010:filename_mountpoint+0x25d/0x3c0 fs/namei.c:2722
-> Code: 14 02 4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 1c 01 00 00
-> 45 8b 24 24 31 ff 44 89 e6 e8 58 ea ba ff 45 85 e4 74 62 <e8> ce e8 ba ff
-> e8 49 2a fe ff 4c 89 f7 e8 81 f2 ff ff e8 bc e8 ba
-> RSP: 0018:ffff8880a857fc30 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-> RAX: dffffc0000000000 RBX: 1ffff110150aff88 RCX: ffffffff81b57ad4
-> RDX: 1ffff1100bd8e54c RSI: ffffffff81b57ae2 RDI: ffff88805ec72a60
-> RBP: ffff8880a857fdc8 R08: ffff88805ec72300 R09: 0000000000000001
-> R10: 000000000000001c R11: ffff8880ae82de3b R12: 0000000000000000
-> R13: 0000000000000000 R14: ffff888097790e00 R15: ffff8880a857fe68
->   user_path_mountpoint_at+0x3a/0x50 fs/namei.c:2745
->   ksys_umount+0x167/0xf00 fs/namespace.c:1687
->   __do_sys_umount fs/namespace.c:1713 [inline]
->   __se_sys_umount fs/namespace.c:1711 [inline]
->   __x64_sys_umount+0x54/0x80 fs/namespace.c:1711
->   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x45ac57
-> Code: 44 00 00 b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8e fb ff c3
-> 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 2d 8e fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffe6359ff08 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045ac57
-> RDX: 0000000000402ea0 RSI: 0000000000000002 RDI: 00007ffe6359ffb0
-> RBP: 00000000000019e0 R08: 0000000000000000 R09: 000000000000000d
-> R10: 0000000000000006 R11: 0000000000000202 R12: 00007ffe635a1040
-> R13: 0000000000bfa940 R14: 0000000000000000 R15: 00007ffe635a1040
->
-> Allocated by task 12478:
->   save_stack+0x45/0xd0 mm/kasan/common.c:75
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_kmalloc mm/kasan/common.c:497 [inline]
->   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
->   kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
->   slab_post_alloc_hook mm/slab.h:436 [inline]
->   slab_alloc mm/slab.c:3392 [inline]
->   kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3554
->   getname_flags fs/namei.c:138 [inline]
->   getname_flags+0xd6/0x5b0 fs/namei.c:128
->   getname+0x1a/0x20 fs/namei.c:209
->   do_sys_open+0x2c9/0x5d0 fs/open.c:1057
->   __do_sys_open fs/open.c:1081 [inline]
->   __se_sys_open fs/open.c:1076 [inline]
->   __x64_sys_open+0x7e/0xc0 fs/open.c:1076
->   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> Freed by task 12478:
->   save_stack+0x45/0xd0 mm/kasan/common.c:75
->   set_track mm/kasan/common.c:87 [inline]
->   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
->   kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
->   __cache_free mm/slab.c:3498 [inline]
->   kmem_cache_free+0x86/0x260 mm/slab.c:3764
->   putname+0xef/0x130 fs/namei.c:259
->   do_sys_open+0x318/0x5d0 fs/open.c:1072
->   __do_sys_open fs/open.c:1081 [inline]
->   __se_sys_open fs/open.c:1076 [inline]
->   __x64_sys_open+0x7e/0xc0 fs/open.c:1076
->   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
-> The buggy address belongs to the object at ffff88808a28c780
->   which belongs to the cache names_cache of size 4096
-> The buggy address is located 1364 bytes inside of
->   4096-byte region [ffff88808a28c780, ffff88808a28d780)
-> The buggy address belongs to the page:
-> page:ffffea000228a300 count:1 mapcount:0 mapping:ffff88812c2d8dc0 index:0x0
-> compound_mapcount: 0
-> flags: 0x1fffc0000010200(slab|head)
-> raw: 01fffc0000010200 ffffea00025c8908 ffffea0001840a08 ffff88812c2d8dc0
-> raw: 0000000000000000 ffff88808a28c780 0000000100000001 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff88808a28cb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88808a28cc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ffff88808a28cc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                   ^
->   ffff88808a28cd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff88808a28cd80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000004cd71f05850f17c2%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+> Thanks,
+> -Sonal
+> >
+> > Thanks, Daniel
+> >
+> > >
+> > > Thanks,
+> > > -Sonal
+> > >
+> > > Sonal Santan (6):
+> > >   Add skeleton code: ioctl definitions and build hooks
+> > >   Global data structures shared between xocl and xmgmt drivers
+> > >   Add platform drivers for various IPs and frameworks
+> > >   Add core of XDMA driver
+> > >   Add management driver
+> > >   Add user physical function driver
+> > >
+> > >  drivers/gpu/drm/Kconfig                    |    2 +
+> > >  drivers/gpu/drm/Makefile                   |    1 +
+> > >  drivers/gpu/drm/xocl/Kconfig               |   22 +
+> > >  drivers/gpu/drm/xocl/Makefile              |    3 +
+> > >  drivers/gpu/drm/xocl/devices.h             |  954 +++++
+> > >  drivers/gpu/drm/xocl/ert.h                 |  385 ++
+> > >  drivers/gpu/drm/xocl/lib/Makefile.in       |   16 +
+> > >  drivers/gpu/drm/xocl/lib/cdev_sgdma.h      |   63 +
+> > >  drivers/gpu/drm/xocl/lib/libxdma.c         | 4368 ++++++++++++++++++++
+> > >  drivers/gpu/drm/xocl/lib/libxdma.h         |  596 +++
+> > >  drivers/gpu/drm/xocl/lib/libxdma_api.h     |  127 +
+> > >  drivers/gpu/drm/xocl/mgmtpf/Makefile       |   29 +
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-core.c    |  960 +++++
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-core.h    |  147 +
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-cw.c      |   30 +
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-ioctl.c   |  148 +
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-reg.h     |  244 ++
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-sysfs.c   |  318 ++
+> > >  drivers/gpu/drm/xocl/mgmtpf/mgmt-utils.c   |  399 ++
+> > >  drivers/gpu/drm/xocl/subdev/dna.c          |  356 ++
+> > >  drivers/gpu/drm/xocl/subdev/feature_rom.c  |  412 ++
+> > >  drivers/gpu/drm/xocl/subdev/firewall.c     |  389 ++
+> > >  drivers/gpu/drm/xocl/subdev/fmgr.c         |  198 +
+> > >  drivers/gpu/drm/xocl/subdev/icap.c         | 2859 +++++++++++++
+> > >  drivers/gpu/drm/xocl/subdev/mailbox.c      | 1868 +++++++++
+> > >  drivers/gpu/drm/xocl/subdev/mb_scheduler.c | 3059 ++++++++++++++
+> > >  drivers/gpu/drm/xocl/subdev/microblaze.c   |  722 ++++
+> > >  drivers/gpu/drm/xocl/subdev/mig.c          |  256 ++
+> > >  drivers/gpu/drm/xocl/subdev/sysmon.c       |  385 ++
+> > >  drivers/gpu/drm/xocl/subdev/xdma.c         |  510 +++
+> > >  drivers/gpu/drm/xocl/subdev/xmc.c          | 1480 +++++++
+> > >  drivers/gpu/drm/xocl/subdev/xvc.c          |  461 +++
+> > >  drivers/gpu/drm/xocl/userpf/Makefile       |   27 +
+> > >  drivers/gpu/drm/xocl/userpf/common.h       |  157 +
+> > >  drivers/gpu/drm/xocl/userpf/xocl_bo.c      | 1255 ++++++
+> > >  drivers/gpu/drm/xocl/userpf/xocl_bo.h      |  119 +
+> > >  drivers/gpu/drm/xocl/userpf/xocl_drm.c     |  640 +++
+> > >  drivers/gpu/drm/xocl/userpf/xocl_drv.c     |  743 ++++
+> > >  drivers/gpu/drm/xocl/userpf/xocl_ioctl.c   |  396 ++
+> > >  drivers/gpu/drm/xocl/userpf/xocl_sysfs.c   |  344 ++
+> > >  drivers/gpu/drm/xocl/version.h             |   22 +
+> > >  drivers/gpu/drm/xocl/xclbin.h              |  314 ++
+> > >  drivers/gpu/drm/xocl/xclfeatures.h         |  107 +
+> > >  drivers/gpu/drm/xocl/xocl_ctx.c            |  196 +
+> > >  drivers/gpu/drm/xocl/xocl_drm.h            |   91 +
+> > >  drivers/gpu/drm/xocl/xocl_drv.h            |  783 ++++
+> > >  drivers/gpu/drm/xocl/xocl_subdev.c         |  540 +++
+> > >  drivers/gpu/drm/xocl/xocl_thread.c         |   64 +
+> > >  include/uapi/drm/xmgmt_drm.h               |  204 +
+> > >  include/uapi/drm/xocl_drm.h                |  483 +++
+> > >  50 files changed, 28252 insertions(+)  create mode 100644
+> > > drivers/gpu/drm/xocl/Kconfig  create mode 100644
+> > > drivers/gpu/drm/xocl/Makefile  create mode 100644
+> > > drivers/gpu/drm/xocl/devices.h  create mode 100644
+> > > drivers/gpu/drm/xocl/ert.h  create mode 100644
+> > > drivers/gpu/drm/xocl/lib/Makefile.in
+> > >  create mode 100644 drivers/gpu/drm/xocl/lib/cdev_sgdma.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/lib/libxdma.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/lib/libxdma_api.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/Makefile
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-core.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-core.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-cw.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-ioctl.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-reg.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-sysfs.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/mgmtpf/mgmt-utils.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/dna.c  create mode
+> > > 100644 drivers/gpu/drm/xocl/subdev/feature_rom.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/firewall.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/fmgr.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/icap.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/mailbox.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/mb_scheduler.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/microblaze.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/mig.c  create mode
+> > > 100644 drivers/gpu/drm/xocl/subdev/sysmon.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/xdma.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/subdev/xmc.c  create mode
+> > > 100644 drivers/gpu/drm/xocl/subdev/xvc.c  create mode 100644
+> > > drivers/gpu/drm/xocl/userpf/Makefile
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/common.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_bo.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_bo.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_drm.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_drv.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_ioctl.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/userpf/xocl_sysfs.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/version.h  create mode 100644
+> > > drivers/gpu/drm/xocl/xclbin.h  create mode 100644
+> > > drivers/gpu/drm/xocl/xclfeatures.h
+> > >  create mode 100644 drivers/gpu/drm/xocl/xocl_ctx.c  create mode
+> > > 100644 drivers/gpu/drm/xocl/xocl_drm.h  create mode 100644
+> > > drivers/gpu/drm/xocl/xocl_drv.h  create mode 100644
+> > > drivers/gpu/drm/xocl/xocl_subdev.c
+> > >  create mode 100644 drivers/gpu/drm/xocl/xocl_thread.c
+> > >  create mode 100644 include/uapi/drm/xmgmt_drm.h  create mode 100644
+> > > include/uapi/drm/xocl_drm.h
+> > >
+> > > --
+> > > 2.17.0
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
