@@ -4,59 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFEDC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F7AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4332177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228D12177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711135;
-	bh=UdBjZ8FK8o9ttQtzfeuKa6sc1MsTVRfzZ9QH1B+By9M=;
+	s=default; t=1553711139;
+	bh=fd3j22JlHrqBgRWDtnyUXIIYyvao7buD88RjaNbnkqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fqlg/YHUj80Mvz1ERtNaY0YMEQeISIr7JU7d472vrmtzVLLtvI8Va5n6nA9bqmekh
-	 9RG5iWy3nc6i05B5Z/dTUv7/aKg2+/05b8ZVwAIxdb9UOxA1A5KTXzjIYDovB56q7v
-	 WhqnXfYxBxIZXnqpy5WA82gM6V3PupOGmBpriTkI=
+	b=ivr9NbpTmseFgZrngwrTsuqDCptwASwzkj/bdtgKNB8L0R0XiaU66wq5C2hO4Bjt9
+	 nvOckGJkOlTgIKDL1V2varE8+4VVrtPVSK49sDZ2RV7bNjXWIzrw7ozFEaHc73UPov
+	 fjpjW0s+28Nbf+irlfkRoqyLf4/YaFJWJgdwuJ/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404229AbfC0SZe (ORCPT
+        id S2391549AbfC0SZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44734 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404219AbfC0SZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:31 -0400
+        id S2389250AbfC0SZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63A1A21738;
-        Wed, 27 Mar 2019 18:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1542082F;
+        Wed, 27 Mar 2019 18:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711131;
-        bh=UdBjZ8FK8o9ttQtzfeuKa6sc1MsTVRfzZ9QH1B+By9M=;
+        s=default; t=1553711135;
+        bh=fd3j22JlHrqBgRWDtnyUXIIYyvao7buD88RjaNbnkqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NkTQ9ddm/vvjKKk7JDjYmExa2QY0h/Hbdhu4AjaxJ/qwTMP1qkyX858sQm8n9CTT2
-         1u2IlxoU3Dk6qIVdNXlmJN23NaYv4PoOwlmvA7vlJaeFsADFnTaUeA0Hzdy6KGYEdU
-         xvcga3GFMtf5TwcNqVsESXz9bXACYU2K0oI4M8oY=
+        b=heN+8nuGjLKoju4uqmxSph6ma22ZidSiCDSytVYmnSWZSaiTsLRF+DWW0TsIWi3sQ
+         pNKvLsAa5ARW5eakJy8WIUYUqeECVShUd5e9EdgCt4WRYEsjbthiGVYPB7cjS7iY+L
+         avP53u0U1FKHS2m2qTEUxY84y8Mdjh3SjBsg5CP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Ingo Molnar <mingo@elte.hu>,
-        Joel Fernandes <joelaf@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Cc:     Jia Guo <guojia12@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 3.18 05/41] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
-Date:   Wed, 27 Mar 2019 14:24:42 -0400
-Message-Id: <20190327182518.19394-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 07/41] ocfs2: fix a panic problem caused by o2cb_ctl
+Date:   Wed, 27 Mar 2019 14:24:44 -0400
+Message-Id: <20190327182518.19394-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -68,62 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+From: Jia Guo <guojia12@huawei.com>
 
-[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
+[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
 
-One of the vmalloc stress test case triggers the kernel BUG():
+In the process of creating a node, it will cause NULL pointer
+dereference in kernel if o2cb_ctl failed in the interval (mkdir,
+o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
 
-  <snip>
-  [60.562151] ------------[ cut here ]------------
-  [60.562154] kernel BUG at mm/vmalloc.c:512!
-  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
-  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
-  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
-  <snip>
+The node num is initialized to 0 in function o2nm_node_group_make_item,
+o2nm_node_group_drop_item will mistake the node number 0 for a valid
+node number when we delete the node before the node number is set
+correctly.  If the local node number of the current host happens to be
+0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
+o2hb_thread still running.  The panic stack is generated as follows:
 
-it can happen due to big align request resulting in overflowing of
-calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
+  o2hb_thread
+      \-o2hb_do_disk_heartbeat
+          \-o2hb_check_own_slot
+              |-slot = &reg->hr_slots[o2nm_this_node()];
+              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
 
-Fix it by checking if calculated address is within vstart/vend range.
+We need to check whether the node number is set when we delete the node.
 
-Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Thomas Garnier <thgarnie@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
+Signed-off-by: Jia Guo <guojia12@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Acked-by: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmalloc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 33920fc41d6b..fbb00e0d4c56 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -439,7 +439,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
+index 441c84e169e6..059414bb19dc 100644
+--- a/fs/ocfs2/cluster/nodemanager.c
++++ b/fs/ocfs2/cluster/nodemanager.c
+@@ -721,13 +721,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
+ 	struct o2nm_node *node = to_o2nm_node(item);
+ 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+ 
+-	o2net_disconnect_node(node);
++	if (cluster->cl_nodes[node->nd_num] == node) {
++		o2net_disconnect_node(node);
+ 
+-	if (cluster->cl_has_local &&
+-	    (cluster->cl_local_node == node->nd_num)) {
+-		cluster->cl_has_local = 0;
+-		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
+-		o2net_stop_listening(node);
++		if (cluster->cl_has_local &&
++		    (cluster->cl_local_node == node->nd_num)) {
++			cluster->cl_has_local = 0;
++			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
++			o2net_stop_listening(node);
++		}
  	}
  
- found:
--	if (addr + size > vend)
-+	/*
-+	 * Check also calculated address against the vstart,
-+	 * because it can be 0 because of big align request.
-+	 */
-+	if (addr + size > vend || addr < vstart)
- 		goto overflow;
- 
- 	va->va_start = addr;
+ 	/* XXX call into net to stop this node from trading messages */
 -- 
 2.19.1
 
