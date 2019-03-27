@@ -2,105 +2,204 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1AFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC99205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8E8205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712860;
-	bh=49j3u6W+B+wmtfk3MiDgPAHpTSsRmaAxd7k+TkSo0dE=;
+	s=default; t=1553712868;
+	bh=TE4JuFnVZu2VK7ygOrOsl0YzYGMMsv1/pqEL2aJyCbs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lMUhtLaDX7GjpfSK4Cbsxma174ncIjv3mEUPEgKmcUy+sdx9Oue9kM8WFr7R9QqaX
-	 AQnXzuFEDsq5rW0EIy37AwbGBEDTsajDI+wGpXL8Rna1qoir3dmf1R2g6MDroyjhuI
-	 WgC9kzPYpWwAEJJfgSjRVwMAbxMcQijaf1GQtIiY=
+	b=rV/B47kPQWaEKjyRc2fZG7zMA7GvNzugS0ynFS4YNcYC1fMuYos+S5LlTWLZTRGkK
+	 QfFJS5F08htlleD7e2YnLoHH5aTnN6y6dWvdY+2PzS0L+e/FLp1w7UbN3na4o7IW8E
+	 0W9jCGpWzeiu/x34QCj2lIknLaL7hh5ibL1aAiAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390386AbfC0SyS (ORCPT
+        id S2390353AbfC0Sy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfC0SyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:54:15 -0400
-Received: from localhost (unknown [88.128.80.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C906C205C9;
-        Wed, 27 Mar 2019 18:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553712854;
-        bh=49j3u6W+B+wmtfk3MiDgPAHpTSsRmaAxd7k+TkSo0dE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p5UleUFWmRJDTiksUP0ReTaUoTlG6a39uTLix+u2fuMmKl6C1/wETGHAEHSZb1CIY
-         fPvRNMD8n7nt3qNdehDNRtcSUMoSnEeMkpsJr++PGYWICyhvEyU4fPAJwpgT84PxZy
-         jr+GudYdtg/b71oW3SMJsOlS3IcF6PkLhd7CRvfw=
-Date:   Wed, 27 Mar 2019 19:54:10 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Patrick Venture <venture@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v7 2/2] drivers/misc: Add Aspeed P2A control driver
-Message-ID: <20190327185410.GA14828@kroah.com>
-References: <20190312163101.155910-1-venture@google.com>
- <20190327164542.GC11712@kroah.com>
- <CAO=notxFvvOmpjMyXvt5PyuWsB92eraN+=8mWk8_aY2w3sK-eQ@mail.gmail.com>
+        Wed, 27 Mar 2019 14:54:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390170AbfC0SRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9ED1AAD73;
+        Wed, 27 Mar 2019 18:17:02 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 19:17:00 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, cl@linux.com,
+        willy@infradead.org, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] kmemleak: survive in a low-memory situation
+Message-ID: <20190327181700.GO11927@dhcp22.suse.cz>
+References: <20190327005948.24263-1-cai@lca.pw>
+ <20190327084432.GA11927@dhcp22.suse.cz>
+ <20190327172955.GB17247@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO=notxFvvOmpjMyXvt5PyuWsB92eraN+=8mWk8_aY2w3sK-eQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190327172955.GB17247@arrakis.emea.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 11:44:36AM -0700, Patrick Venture wrote:
-> On Wed, Mar 27, 2019 at 11:28 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 12, 2019 at 09:31:01AM -0700, Patrick Venture wrote:
-> > > +     phys_addr_t mem_base;
-> >
-> > Is this really a 32bit value?
-> 
-> It's going to be a 32-bit value if this is in the dts for one of the
-> correspondingly supported aspeed models.
-> 
-> >
-> > Your ioctl thinks it is:
-> >
-> > > +struct aspeed_p2a_ctrl_mapping {
-> > > +     __u32 addr;
-> >
-> > Does this driver not work on a 64bit kernel?
-> 
-> This driver is aimed at only 32-bit hardware (ast2400/2500).  I
-> modeled the approach after the aspeed-lpc-ctrl driver as it's
-> providing similar functionality.
-> 
-> >
-> > > +     __u32 length;
-> > > +     __u32 flags;
-> > > +};
-> >
-> > addr really should be __u32 here so you don't have to mess with 32/64
-> > bit user/kernel issues, right?
-> 
-> Add is __u32 there.  Are you suggesting it shouldn't be?
+On Wed 27-03-19 17:29:57, Catalin Marinas wrote:
+[...]
+> Quick attempt below and it needs some more testing (pretty random pick
+> of the EMERGENCY_POOL_SIZE value). Also, with __GFP_NOFAIL removed, are
+> the other flags safe or we should trim them further?
 
-Ugh, yes, sorry, I meant to say "__u64".
+I would be still careful about __GFP_NORETRY. I pressume that the
+primary purpose is to prevent from the OOM killer but this makes the
+allocation failure much more likely. So if anything __GFP_RETRY_MAYFAIL
+would suite better for that purpose. But I am not really sure that this
+is worth bothering.
 
-If you all insist that this is all that is ever going to be needed, ok,
-but I reserve the right to complain in 4 years when this needs to be
-changed :)
+> ---------------8<-------------------------------
+> >From dc4194539f8191bb754901cea74c86e7960886f8 Mon Sep 17 00:00:00 2001
+> From: Catalin Marinas <catalin.marinas@arm.com>
+> Date: Wed, 27 Mar 2019 17:20:57 +0000
+> Subject: [PATCH] mm: kmemleak: Add an emergency allocation pool for kmemleak
+>  objects
+> 
+> This patch adds an emergency pool for struct kmemleak_object in case the
+> normal kmem_cache_alloc() fails under the gfp constraints passed by the
+> slab allocation caller. The patch also removes __GFP_NOFAIL which does
+> not play well with other gfp flags (introduced by commit d9570ee3bd1d,
+> "kmemleak: allow to coexist with fault injection").
 
-thanks,
+Thank you! This is definitely a step into the right direction. Maybe the
+pool allocation logic will need some tuning - e.g. does it make sense to
+allocate into the pool from sleepable allocations - or is it sufficient
+to refill on free. Something for the real workloads to tell, I guess.
 
-greg k-h
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  mm/kmemleak.c | 59 +++++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 57 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+> index 6c318f5ac234..366a680cff7c 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -127,7 +127,7 @@
+>  /* GFP bitmask for kmemleak internal allocations */
+>  #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
+>  				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
+> -				 __GFP_NOWARN | __GFP_NOFAIL)
+> +				 __GFP_NOWARN)
+>  
+>  /* scanning area inside a memory block */
+>  struct kmemleak_scan_area {
+> @@ -191,11 +191,16 @@ struct kmemleak_object {
+>  #define HEX_ASCII		1
+>  /* max number of lines to be printed */
+>  #define HEX_MAX_LINES		2
+> +/* minimum emergency pool size */
+> +#define EMERGENCY_POOL_SIZE	(NR_CPUS * 4)
+>  
+>  /* the list of all allocated objects */
+>  static LIST_HEAD(object_list);
+>  /* the list of gray-colored objects (see color_gray comment below) */
+>  static LIST_HEAD(gray_list);
+> +/* emergency pool allocation */
+> +static LIST_HEAD(emergency_list);
+> +static int emergency_pool_size;
+>  /* search tree for object boundaries */
+>  static struct rb_root object_tree_root = RB_ROOT;
+>  /* rw_lock protecting the access to object_list and object_tree_root */
+> @@ -467,6 +472,43 @@ static int get_object(struct kmemleak_object *object)
+>  	return atomic_inc_not_zero(&object->use_count);
+>  }
+>  
+> +/*
+> + * Emergency pool allocation and freeing. kmemleak_lock must not be held.
+> + */
+> +static struct kmemleak_object *emergency_alloc(void)
+> +{
+> +	unsigned long flags;
+> +	struct kmemleak_object *object;
+> +
+> +	write_lock_irqsave(&kmemleak_lock, flags);
+> +	object = list_first_entry_or_null(&emergency_list, typeof(*object), object_list);
+> +	if (object) {
+> +		list_del(&object->object_list);
+> +		emergency_pool_size--;
+> +	}
+> +	write_unlock_irqrestore(&kmemleak_lock, flags);
+> +
+> +	return object;
+> +}
+> +
+> +/*
+> + * Return true if object added to the emergency pool, false otherwise.
+> + */
+> +static bool emergency_free(struct kmemleak_object *object)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (emergency_pool_size >= EMERGENCY_POOL_SIZE)
+> +		return false;
+> +
+> +	write_lock_irqsave(&kmemleak_lock, flags);
+> +	list_add(&object->object_list, &emergency_list);
+> +	emergency_pool_size++;
+> +	write_unlock_irqrestore(&kmemleak_lock, flags);
+> +
+> +	return true;
+> +}
+> +
+>  /*
+>   * RCU callback to free a kmemleak_object.
+>   */
+> @@ -485,7 +527,8 @@ static void free_object_rcu(struct rcu_head *rcu)
+>  		hlist_del(&area->node);
+>  		kmem_cache_free(scan_area_cache, area);
+>  	}
+> -	kmem_cache_free(object_cache, object);
+> +	if (!emergency_free(object))
+> +		kmem_cache_free(object_cache, object);
+>  }
+>  
+>  /*
+> @@ -577,6 +620,8 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
+>  	unsigned long untagged_ptr;
+>  
+>  	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
+> +	if (!object)
+> +		object = emergency_alloc();
+>  	if (!object) {
+>  		pr_warn("Cannot allocate a kmemleak_object structure\n");
+>  		kmemleak_disable();
+> @@ -2127,6 +2172,16 @@ void __init kmemleak_init(void)
+>  			kmemleak_warning = 0;
+>  		}
+>  	}
+> +
+> +	/* populate the emergency allocation pool */
+> +	while (emergency_pool_size < EMERGENCY_POOL_SIZE) {
+> +		struct kmemleak_object *object;
+> +
+> +		object = kmem_cache_alloc(object_cache, GFP_KERNEL);
+> +		if (!object)
+> +			break;
+> +		emergency_free(object);
+> +	}
+>  }
+>  
+>  /*
+
+-- 
+Michal Hocko
+SUSE Labs
