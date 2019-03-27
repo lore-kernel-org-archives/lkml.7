@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EB6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA8EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7259206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8D5206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713432;
-	bh=v/McQ8zuyyWPuOFNT+nvSJuiC9XFfyIZCPFgJPbTjZs=;
+	s=default; t=1553713444;
+	bh=Ve3AJ4oJBbQPmvhNe61aB7yojfLhY8+qUDf2+HkRmvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n4pTnHvABaY6u2cibDJMFxx6r5QckIQxb0sNxHzeTzD0XbXeDTv6gWsYx1v+QHNif
-	 81A6taLLPQNWPjCdAqlL/V7Z8hrJlFtJcq8jZ8gaabuhOuo4vdIvxoF6uGTMVU6Uh8
-	 j03g922Hb5e15EEpvIDY3g/SHJmn0iTXqJN9tq44=
+	b=qMchMBb5Qed3jqWQvaVStj5eJYPj8nO+cwevZ9QjD/GqC7HN0Hpjm8/w0dyDyd/iW
+	 ornpsXPMGLhxH7/jF0E49OoH6uCs2rKR0XuDaTN8W5WWTNc5dOd+8egYHSBg6G1bHz
+	 5WikXQcRtwesO503CqB1dv0uGVa9b9UL70Tzpfkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbfC0TDv (ORCPT
+        id S2389376AbfC0SNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388870AbfC0SNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:20 -0400
+        id S2389362AbfC0SNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:13:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44BA2217D9;
-        Wed, 27 Mar 2019 18:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC48E2184C;
+        Wed, 27 Mar 2019 18:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710400;
-        bh=v/McQ8zuyyWPuOFNT+nvSJuiC9XFfyIZCPFgJPbTjZs=;
+        s=default; t=1553710390;
+        bh=Ve3AJ4oJBbQPmvhNe61aB7yojfLhY8+qUDf2+HkRmvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/6L22B4sUHrL6QlJkL9naXpWLy8whyzPQr8FKjSbdZH52wv0BLMHmb55r8tiuImY
-         FpDrYNckFk8XfavRQAAGK/g4zOHmXq3CI86OyHHAukFn+18pNHyBiqMsxmHuFh49Wq
-         +IrV80oYTKmUTLJZbF2xBoywRPICUlAPbu3jn8Lc=
+        b=OKt99bdPsO41JqfdzFzw1OfKEgwsvPiGe48xxT5PrWcaPJ4UC6FoIwEk0s8pnoWnd
+         XkyrmZkJQRC8FpzecwUFecx/rNGAVRQNQ3yosGa3XwehxhB3OF7yR20uIsN0tEAUw3
+         dEBNgK6UNrcQsqRad6XoHGsILM4aT6CpZmlhO/dI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 101/192] ACPI / video: Refactor and fix dmi_is_desktop()
-Date:   Wed, 27 Mar 2019 14:08:53 -0400
-Message-Id: <20190327181025.13507-101-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 097/192] jbd2: fix race when writing superblock
+Date:   Wed, 27 Mar 2019 14:08:49 -0400
+Message-Id: <20190327181025.13507-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,72 +57,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
+[ Upstream commit 538bcaa6261b77e71d37f5596c33127c1a3ec3f7 ]
 
-This commit refactors the chassis-type detection introduced by
-commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") (where desktop means anything without a builtin
-screen).
+The jbd2 superblock is lockless now, so there is probably a race
+condition between writing it so disk and modifing contents of it, which
+may lead to checksum error. The following race is the one case that we
+have captured.
 
-The DMI chassis_type is an unsigned integer, so rather then doing a
-whole bunch of string-compares on it, convert it to an int and feed
-the result to a switch case.
+jbd2                                fsstress
+jbd2_journal_commit_transaction
+ jbd2_journal_update_sb_log_tail
+  jbd2_write_superblock
+   jbd2_superblock_csum_set         jbd2_journal_revoke
+                                     jbd2_journal_set_features(revork)
+                                     modify superblock
+   submit_bh(checksum incorrect)
 
-Note the switch case uses hex values, this is done because the spec
-uses hex values too. This changes the check for "Main Server Chassis"
-from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
-the original check for 11 decimal was wrong.
+Fix this by locking the buffer head before modifing it.  We always
+write the jbd2 superblock after we modify it, so this just means
+calling the lock_buffer() a little earlier.
 
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-[ rjw: Drop redundant return statements ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This checksum corruption problem can be reproduced by xfstests
+generic/475.
+
+Reported-by: zhangyi (F) <yi.zhang@huawei.com>
+Suggested-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ fs/jbd2/journal.c | 52 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index f0b52266b3ac..1ab1460c4a4e 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2124,21 +2124,28 @@ static int __init intel_opregion_present(void)
- 	return opregion;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 8ef6b6daaa7a..88f2a49338a1 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1356,6 +1356,10 @@ static int journal_reset(journal_t *journal)
+ 	return jbd2_journal_start_thread(journal);
  }
  
-+/* Check if the chassis-type indicates there is no builtin LCD panel */
- static bool dmi_is_desktop(void)
++/*
++ * This function expects that the caller will have locked the journal
++ * buffer head, and will return with it unlocked
++ */
+ static int jbd2_write_superblock(journal_t *journal, int write_flags)
  {
- 	const char *chassis_type;
-+	unsigned long type;
+ 	struct buffer_head *bh = journal->j_sb_buffer;
+@@ -1365,7 +1369,6 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
+ 	trace_jbd2_write_superblock(journal, write_flags);
+ 	if (!(journal->j_flags & JBD2_BARRIER))
+ 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
+-	lock_buffer(bh);
+ 	if (buffer_write_io_error(bh)) {
+ 		/*
+ 		 * Oh, dear.  A previous attempt to write the journal
+@@ -1424,6 +1427,7 @@ int jbd2_journal_update_sb_log_tail(journal_t *journal, tid_t tail_tid,
+ 	jbd_debug(1, "JBD2: updating superblock (start %lu, seq %u)\n",
+ 		  tail_block, tail_tid);
  
- 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	if (!chassis_type)
- 		return false;
++	lock_buffer(journal->j_sb_buffer);
+ 	sb->s_sequence = cpu_to_be32(tail_tid);
+ 	sb->s_start    = cpu_to_be32(tail_block);
  
--	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
--	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
--	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
--	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
--	    !strcmp(chassis_type, "7") || /*  7: Tower */
--	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
-+	if (kstrtoul(chassis_type, 10, &type) != 0)
-+		return false;
+@@ -1454,18 +1458,17 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
+ 	journal_superblock_t *sb = journal->j_superblock;
+ 
+ 	BUG_ON(!mutex_is_locked(&journal->j_checkpoint_mutex));
+-	read_lock(&journal->j_state_lock);
+-	/* Is it already empty? */
+-	if (sb->s_start == 0) {
+-		read_unlock(&journal->j_state_lock);
++	lock_buffer(journal->j_sb_buffer);
++	if (sb->s_start == 0) {		/* Is it already empty? */
++		unlock_buffer(journal->j_sb_buffer);
+ 		return;
+ 	}
 +
-+	switch (type) {
-+	case 0x03: /* Desktop */
-+	case 0x04: /* Low Profile Desktop */
-+	case 0x05: /* Pizza Box */
-+	case 0x06: /* Mini Tower */
-+	case 0x07: /* Tower */
-+	case 0x11: /* Main Server Chassis */
- 		return true;
-+	}
+ 	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
+ 		  journal->j_tail_sequence);
  
- 	return false;
- }
+ 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
+ 	sb->s_start    = cpu_to_be32(0);
+-	read_unlock(&journal->j_state_lock);
+ 
+ 	jbd2_write_superblock(journal, write_op);
+ 
+@@ -1488,9 +1491,8 @@ void jbd2_journal_update_sb_errno(journal_t *journal)
+ 	journal_superblock_t *sb = journal->j_superblock;
+ 	int errcode;
+ 
+-	read_lock(&journal->j_state_lock);
++	lock_buffer(journal->j_sb_buffer);
+ 	errcode = journal->j_errno;
+-	read_unlock(&journal->j_state_lock);
+ 	if (errcode == -ESHUTDOWN)
+ 		errcode = 0;
+ 	jbd_debug(1, "JBD2: updating superblock error (errno %d)\n", errcode);
+@@ -1894,28 +1896,27 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
+ 
+ 	sb = journal->j_superblock;
+ 
++	/* Load the checksum driver if necessary */
++	if ((journal->j_chksum_driver == NULL) &&
++	    INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
++		journal->j_chksum_driver = crypto_alloc_shash("crc32c", 0, 0);
++		if (IS_ERR(journal->j_chksum_driver)) {
++			printk(KERN_ERR "JBD2: Cannot load crc32c driver.\n");
++			journal->j_chksum_driver = NULL;
++			return 0;
++		}
++		/* Precompute checksum seed for all metadata */
++		journal->j_csum_seed = jbd2_chksum(journal, ~0, sb->s_uuid,
++						   sizeof(sb->s_uuid));
++	}
++
++	lock_buffer(journal->j_sb_buffer);
++
+ 	/* If enabling v3 checksums, update superblock */
+ 	if (INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
+ 		sb->s_checksum_type = JBD2_CRC32C_CHKSUM;
+ 		sb->s_feature_compat &=
+ 			~cpu_to_be32(JBD2_FEATURE_COMPAT_CHECKSUM);
+-
+-		/* Load the checksum driver */
+-		if (journal->j_chksum_driver == NULL) {
+-			journal->j_chksum_driver = crypto_alloc_shash("crc32c",
+-								      0, 0);
+-			if (IS_ERR(journal->j_chksum_driver)) {
+-				printk(KERN_ERR "JBD2: Cannot load crc32c "
+-				       "driver.\n");
+-				journal->j_chksum_driver = NULL;
+-				return 0;
+-			}
+-
+-			/* Precompute checksum seed for all metadata */
+-			journal->j_csum_seed = jbd2_chksum(journal, ~0,
+-							   sb->s_uuid,
+-							   sizeof(sb->s_uuid));
+-		}
+ 	}
+ 
+ 	/* If enabling v1 checksums, downgrade superblock */
+@@ -1927,6 +1928,7 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
+ 	sb->s_feature_compat    |= cpu_to_be32(compat);
+ 	sb->s_feature_ro_compat |= cpu_to_be32(ro);
+ 	sb->s_feature_incompat  |= cpu_to_be32(incompat);
++	unlock_buffer(journal->j_sb_buffer);
+ 
+ 	return 1;
+ #undef COMPAT_FEATURE_ON
 -- 
 2.19.1
 
