@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEA1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA7EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889362075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5ED2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714835;
-	bh=lRgnAO9Wn/cfQlPB1Z8R+K+JZ1wMDmNfkcwnLvh+POg=;
+	s=default; t=1553714844;
+	bh=a/R98ag9Z/zJEGQ59q3ginxprmNPH1EFgKSJeldXw/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3PP/CP4a/JneoJ92ptvwAXe8Bx9vnVQCo4ZpYeeJEiOXATzjBeKHmHiL8R1Z6Bm3
-	 ZyUag0+7p4OpMnXBjqO/0DfkorOjjBCo8d4V0og1gDFKcW87AcxduV5g52otaTb9WO
-	 aXaSefQAzpv3tP5+1R/RlxEb58L2jyqHTtwBXUeY=
+	b=p/ssS4jDbaIgQNBJfzG6ZhGKQO9LtPVR/TTMC2TPA54EgC4adkS3W2DmLl25DOtUU
+	 t7nYvhm5IRsXMvWJjKNc3erfjSD3AGO1aQxOJ62iO/5lJEJzk6yZJDtDed5il+P6eL
+	 JmADe8Ln3hOsOETe6gWUM5nM7ONZYpls45BgKAp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387954AbfC0T1O (ORCPT
+        id S2387848AbfC0T1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45636 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387463AbfC0SEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:48 -0400
+        id S1731614AbfC0SEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17FB217D9;
-        Wed, 27 Mar 2019 18:04:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47222217F5;
+        Wed, 27 Mar 2019 18:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709887;
-        bh=lRgnAO9Wn/cfQlPB1Z8R+K+JZ1wMDmNfkcwnLvh+POg=;
+        s=default; t=1553709885;
+        bh=a/R98ag9Z/zJEGQ59q3ginxprmNPH1EFgKSJeldXw/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzBBRDBW+/kg2t54jUVRDwAoUdhLx00X4VpGcvVLUo/jxorTdxiAnJIyKlqqNnq1v
-         4lCjTzhvOJAEfjilrx91FwHfexLG/dd3xj0/oqel+Fp6cjUdrHnJwdJq6pzGucgFlo
-         chTy7vh2rITIj7gIeA6eq4Zs2SfgFnTc22Jy+F9Q=
+        b=xjd/wZGjiiGGS3/9Q4ysfdhQ+RdaPOvWp6xbYaoJ15A+ShkCbDM2zM3FVaBcjG/e7
+         PC2bEai0Ahw0xQeW3YELErRBKnjhJVsor9BCYMfDW+nTP4rGMLLxpxilGFLQP7pJL5
+         fJGwqeX6m3gu7fGluHa2yV2MwTe6EqBnUaeLd0Xk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 091/262] btrfs: don't enospc all tickets on flush failure
-Date:   Wed, 27 Mar 2019 13:59:06 -0400
-Message-Id: <20190327180158.10245-91-sashal@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 089/262] perf script: Handle missing fields with -F +..
+Date:   Wed, 27 Mar 2019 13:59:04 -0400
+Message-Id: <20190327180158.10245-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,159 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-[ Upstream commit f91587e4151e84f798f37839dddd3e4152fb4c76 ]
+[ Upstream commit 4b6ac811bce46c83811b83cdf87b41251596b9fc ]
 
-With the introduction of the per-inode block_rsv it became possible to
-have really really large reservation requests made because of data
-fragmentation.  Since the ticket stuff assumed that we'd always have
-relatively small reservation requests it just killed all tickets if we
-were unable to satisfy the current request.
+When using -F + syntax to add a field the existing defaults are
+currently all marked user_set. This can cause errors when some field is
+missing in the perf.data
 
-However, this is generally not the case anymore.  So fix this logic to
-instead see if we had a ticket that we were able to give some
-reservation to, and if we were continue the flushing loop again.
+This patch tracks the actually user set fields separately, so that we don't
+error out in this case.
 
-Likewise we make the tickets use the space_info_add_old_bytes() method
-of returning what reservation they did receive in hopes that it could
-satisfy reservations down the line.
+Before:
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+  % perf record true
+  % perf script -F +metric
+  Samples for 'cycles:ppp' event do not have CPU attribute set. Cannot print 'cpu' field.
+  %
+
+After:
+
+  5 perf record true
+  % perf script -F +metric
+              perf 28936 278636.237688:          1 cycles:ppp:  ffffffff8117da99 perf_event_exec+0x59 (/lib/modules/4.20.0-odilo/build/vmlinux)
+  ...
+  %
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190224153722.27020-2-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 45 +++++++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 20 deletions(-)
+ tools/perf/builtin-script.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index def48123eaa9..a4eef51e2942 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -4808,6 +4808,7 @@ static void shrink_delalloc(struct btrfs_fs_info *fs_info, u64 to_reclaim,
- }
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ac221f137ed2..cff4d10daf49 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -148,6 +148,7 @@ static struct {
+ 	unsigned int print_ip_opts;
+ 	u64 fields;
+ 	u64 invalid_fields;
++	u64 user_set_fields;
+ } output[OUTPUT_TYPE_MAX] = {
  
- struct reserve_ticket {
-+	u64 orig_bytes;
- 	u64 bytes;
- 	int error;
- 	struct list_head list;
-@@ -5030,7 +5031,7 @@ static inline int need_do_async_reclaim(struct btrfs_fs_info *fs_info,
- 		!test_bit(BTRFS_FS_STATE_REMOUNTING, &fs_info->fs_state));
- }
+ 	[PERF_TYPE_HARDWARE] = {
+@@ -344,7 +345,7 @@ static int perf_evsel__do_check_stype(struct perf_evsel *evsel,
+ 	if (attr->sample_type & sample_type)
+ 		return 0;
  
--static void wake_all_tickets(struct list_head *head)
-+static bool wake_all_tickets(struct list_head *head)
- {
- 	struct reserve_ticket *ticket;
- 
-@@ -5039,7 +5040,10 @@ static void wake_all_tickets(struct list_head *head)
- 		list_del_init(&ticket->list);
- 		ticket->error = -ENOSPC;
- 		wake_up(&ticket->wait);
-+		if (ticket->bytes != ticket->orig_bytes)
-+			return true;
- 	}
-+	return false;
- }
- 
- /*
-@@ -5094,8 +5098,12 @@ static void btrfs_async_reclaim_metadata_space(struct work_struct *work)
- 		if (flush_state > COMMIT_TRANS) {
- 			commit_cycles++;
- 			if (commit_cycles > 2) {
--				wake_all_tickets(&space_info->tickets);
--				space_info->flush = 0;
-+				if (wake_all_tickets(&space_info->tickets)) {
-+					flush_state = FLUSH_DELAYED_ITEMS_NR;
-+					commit_cycles--;
-+				} else {
-+					space_info->flush = 0;
-+				}
- 			} else {
- 				flush_state = FLUSH_DELAYED_ITEMS_NR;
- 			}
-@@ -5147,10 +5155,11 @@ static void priority_reclaim_metadata_space(struct btrfs_fs_info *fs_info,
- 
- static int wait_reserve_ticket(struct btrfs_fs_info *fs_info,
- 			       struct btrfs_space_info *space_info,
--			       struct reserve_ticket *ticket, u64 orig_bytes)
-+			       struct reserve_ticket *ticket)
- 
- {
- 	DEFINE_WAIT(wait);
-+	u64 reclaim_bytes = 0;
- 	int ret = 0;
- 
- 	spin_lock(&space_info->lock);
-@@ -5171,14 +5180,12 @@ static int wait_reserve_ticket(struct btrfs_fs_info *fs_info,
- 		ret = ticket->error;
- 	if (!list_empty(&ticket->list))
- 		list_del_init(&ticket->list);
--	if (ticket->bytes && ticket->bytes < orig_bytes) {
--		u64 num_bytes = orig_bytes - ticket->bytes;
--		update_bytes_may_use(space_info, -num_bytes);
--		trace_btrfs_space_reservation(fs_info, "space_info",
--					      space_info->flags, num_bytes, 0);
--	}
-+	if (ticket->bytes && ticket->bytes < ticket->orig_bytes)
-+		reclaim_bytes = ticket->orig_bytes - ticket->bytes;
- 	spin_unlock(&space_info->lock);
- 
-+	if (reclaim_bytes)
-+		space_info_add_old_bytes(fs_info, space_info, reclaim_bytes);
- 	return ret;
- }
- 
-@@ -5204,6 +5211,7 @@ static int __reserve_metadata_bytes(struct btrfs_fs_info *fs_info,
- {
- 	struct reserve_ticket ticket;
- 	u64 used;
-+	u64 reclaim_bytes = 0;
- 	int ret = 0;
- 
- 	ASSERT(orig_bytes);
-@@ -5239,6 +5247,7 @@ static int __reserve_metadata_bytes(struct btrfs_fs_info *fs_info,
- 	 * the list and we will do our own flushing further down.
- 	 */
- 	if (ret && flush != BTRFS_RESERVE_NO_FLUSH) {
-+		ticket.orig_bytes = orig_bytes;
- 		ticket.bytes = orig_bytes;
- 		ticket.error = 0;
- 		init_waitqueue_head(&ticket.wait);
-@@ -5279,25 +5288,21 @@ static int __reserve_metadata_bytes(struct btrfs_fs_info *fs_info,
- 		return ret;
- 
- 	if (flush == BTRFS_RESERVE_FLUSH_ALL)
--		return wait_reserve_ticket(fs_info, space_info, &ticket,
--					   orig_bytes);
-+		return wait_reserve_ticket(fs_info, space_info, &ticket);
- 
- 	ret = 0;
- 	priority_reclaim_metadata_space(fs_info, space_info, &ticket);
- 	spin_lock(&space_info->lock);
- 	if (ticket.bytes) {
--		if (ticket.bytes < orig_bytes) {
--			u64 num_bytes = orig_bytes - ticket.bytes;
--			update_bytes_may_use(space_info, -num_bytes);
--			trace_btrfs_space_reservation(fs_info, "space_info",
--						      space_info->flags,
--						      num_bytes, 0);
--
--		}
-+		if (ticket.bytes < orig_bytes)
-+			reclaim_bytes = orig_bytes - ticket.bytes;
- 		list_del_init(&ticket.list);
- 		ret = -ENOSPC;
- 	}
- 	spin_unlock(&space_info->lock);
-+
-+	if (reclaim_bytes)
-+		space_info_add_old_bytes(fs_info, space_info, reclaim_bytes);
- 	ASSERT(list_empty(&ticket.list));
- 	return ret;
- }
+-	if (output[type].user_set) {
++	if (output[type].user_set_fields & field) {
+ 		if (allow_user_set)
+ 			return 0;
+ 		evname = perf_evsel__name(evsel);
+@@ -2627,10 +2628,13 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
+ 					pr_warning("\'%s\' not valid for %s events. Ignoring.\n",
+ 						   all_output_options[i].str, event_type(j));
+ 				} else {
+-					if (change == REMOVE)
++					if (change == REMOVE) {
+ 						output[j].fields &= ~all_output_options[i].field;
+-					else
++						output[j].user_set_fields &= ~all_output_options[i].field;
++					} else {
+ 						output[j].fields |= all_output_options[i].field;
++						output[j].user_set_fields |= all_output_options[i].field;
++					}
+ 					output[j].user_set = true;
+ 					output[j].wildcard_set = true;
+ 				}
 -- 
 2.19.1
 
