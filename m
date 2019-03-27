@@ -6,45 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5ADC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB25AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C9B2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE502075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711977;
-	bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
+	s=default; t=1553711979;
+	bh=9YRjuhdtB1PxUyqwoabw9ijXRUckDqwaR+G7mVZR54A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+rj98rvTsuOnSSKqhBi197l3Er+qi+7qPMNIKhlWa+jgYMvWMgs4j81A8AFuNAqb
-	 qUNjgmgIntOQ8SkwFYF69Io6sl5j8Sp2+4aK1f6C9fI1GSk5GBK+dpOeVQcrcDOHxq
-	 KOhAY7M6wbT+/bfdkJBmLxftMIE36VVQRZNF59x8=
+	b=zFG6vyog9/k1TbpZ6toL+C0s61yD4Xz3mNVUWre0TtuuzvSkufs0Da9qbMACz9LMx
+	 tqghb8VEdApvZ1VL6F7DC8K1lyfbSJMu6avBU4Jp1QVA15zkVAc+mmZ7iI8TkwM+8h
+	 Ta/v4MVvAJEWNL6dT0AO2oIltwEBriSqbqqGj+lA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391535AbfC0Sjg (ORCPT
+        id S2392061AbfC0Sji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41358 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391394AbfC0SXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:06 -0400
+        id S2391233AbfC0SXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBD3F2184D;
-        Wed, 27 Mar 2019 18:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E69620449;
+        Wed, 27 Mar 2019 18:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710985;
-        bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
+        s=default; t=1553710983;
+        bh=9YRjuhdtB1PxUyqwoabw9ijXRUckDqwaR+G7mVZR54A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05ivzs+5Z+IHjEssMjvIo0/W1sU1SEAZNxkwQxvTW3tTt++ua5hvtrGZhHUFNCL+W
-         heiGTVHuKLdwlYWyUYXVhDBvbERqmECTPPJB7Zm/ZdND5HPSJVigZGXfAaaPqF5y5y
-         vccjsbskN3BYf5unRyNzO0Di1NmA+lw5qkAbmLLc=
+        b=UIm6ppeJxO9ZtSSGknoD/DiiFfbXpHFDYXkI89J0QiMp5QTB//SzQNrVET4d+a0aU
+         V2jqV1GYvkvYp7dJWDL1JZ7eISeHbQ9JCmy2+Hu5E0rBidBc86Nq3yJM+2ej9VG0Ck
+         ipMDynQudQNqzrmu0YgM7SCR5k38HvfY6lZv/Cl4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 79/87] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
-Date:   Wed, 27 Mar 2019 14:20:32 -0400
-Message-Id: <20190327182040.17444-79-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 77/87] netfilter: physdev: relax br_netfilter dependency
+Date:   Wed, 27 Mar 2019 14:20:30 -0400
+Message-Id: <20190327182040.17444-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -56,55 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
+[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
 
-The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
+Following command:
+  iptables -D FORWARD -m physdev ...
+causes connectivity loss in some setups.
 
-The problems in below entry:
-  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
+Reason is that iptables userspace will probe kernel for the module revision
+of the physdev patch, and physdev has an artificial dependency on
+br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
+is loaded).
 
-1. The off-by-one min_sel causes wrong volatage calculation.
-   The min_sel should be 192.
-2. According to the datasheet[1] Table 7. (on page 43):
-   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
+This causes the "phydev" module to be loaded, which in turn enables the
+"call-iptables" infrastructure.
 
-Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
+bridged packets might then get dropped by the iptables ruleset.
 
-[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+The better fix would be to change the "call-iptables" defaults to 0 and
+enforce explicit setting to 1, but that breaks backwards compatibility.
 
-Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This does the next best thing: add a request_module call to checkentry.
+This was a stray '-D ... -m physdev' won't activate br_netfilter
+anymore.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/act8865-regulator.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/net/netfilter/br_netfilter.h | 1 -
+ net/bridge/br_netfilter_hooks.c      | 5 -----
+ net/netfilter/xt_physdev.c           | 9 +++++++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 7652477e6a9d..39e8d60df060 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -131,7 +131,7 @@
-  * ACT8865 voltage number
-  */
- #define	ACT8865_VOLTAGE_NUM	64
--#define ACT8600_SUDCDC_VOLTAGE_NUM	255
-+#define ACT8600_SUDCDC_VOLTAGE_NUM	256
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index 0b0c35c37125..238d1b83a45a 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -48,7 +48,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
+ }
  
- struct act8865 {
- 	struct regmap *regmap;
-@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
- 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
- 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
--	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
-+	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
-+	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
+ struct net_device *setup_pre_routing(struct sk_buff *skb);
+-void br_netfilter_enable(void);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 7e42c0d1f55b..38865deab3ac 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -878,11 +878,6 @@ static const struct nf_br_ops br_ops = {
+ 	.br_dev_xmit_hook =	br_nf_dev_xmit,
  };
  
- static struct regulator_ops act8865_ops = {
+-void br_netfilter_enable(void)
+-{
+-}
+-EXPORT_SYMBOL_GPL(br_netfilter_enable);
+-
+ /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
+  * br_dev_queue_push_xmit is called afterwards */
+ static struct nf_hook_ops br_nf_ops[] __read_mostly = {
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index bb33598e4530..ec247d8370e8 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -96,8 +96,7 @@ physdev_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ {
+ 	const struct xt_physdev_info *info = par->matchinfo;
+-
+-	br_netfilter_enable();
++	static bool brnf_probed __read_mostly;
+ 
+ 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
+ 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
+@@ -113,6 +112,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+ 			return -EINVAL;
+ 	}
++
++	if (!brnf_probed) {
++		brnf_probed = true;
++		request_module("br_netfilter");
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
