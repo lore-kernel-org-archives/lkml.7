@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4017C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EBDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D9B20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAD020651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711796;
-	bh=NgvFUcz5LSukjqDzJajH0n4BVFW0v/zEcoEDnKzZJ5g=;
+	s=default; t=1553711803;
+	bh=0PKIPTCVqISIIrOtLiTvjz1mHOZAUYM5cFE3DLe2t9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZEmeR0DcH/b/E9WV8HZj33GuzQOEVASG0la7dg+4Vx7n9cDRIwiEn6qoGpQyDL1r
-	 Eb2pjpJQhP+U7R3xKPuLiT/trcDMxQWOQMlAnDg9J+aO8nXKLv1PaA9RvOVe5bsjOl
-	 hrP3VgAuTR2UpdKn59B4YMtSoPm1ukA+yQTelycw=
+	b=n04XcMZOipAd04LCXLsGBbuDeyWAfVc71PkyVPibE1mcyL9nqbtBUd5ntCTx3sIgY
+	 74sDNoyaoaKE0DdkN9kcVcBnhlA1x7WMqP0KMfVeCYXcCInJWosoItHJaW3rpsCTjk
+	 xNlZ2UNgE3NV/kkCwZfACxdw8vrq9grPrPU76+rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391613AbfC0Sgf (ORCPT
+        id S2403934AbfC0SXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42770 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391132AbfC0SX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:59 -0400
+        id S2391543AbfC0SXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D0A2082F;
-        Wed, 27 Mar 2019 18:23:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB01721738;
+        Wed, 27 Mar 2019 18:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711038;
-        bh=NgvFUcz5LSukjqDzJajH0n4BVFW0v/zEcoEDnKzZJ5g=;
+        s=default; t=1553711029;
+        bh=0PKIPTCVqISIIrOtLiTvjz1mHOZAUYM5cFE3DLe2t9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMVWpyyRtwEKxeR3ZRCXjToj64TCyf0NkUGn4VhMeiU9FXspV01x9tiQ1jM89SiQq
-         /yDRbTlPcRWAfxPVTq7Y6avwg2hf3Jsny3B67LMo19mHQc4/eNm7fiCsl4Wye1W2Om
-         52nrMwh+0wk2s/OzogkhSKwRgDUfMZ4PBA2mVvj8=
+        b=eVwmvHoSffWW8QbrkiPMmQnEKiEr6tJhlRG3LdSB3MO0rREM4DefnQBTAMHHRc3EB
+         Cw03TJ/zBImUog392ZOX6ZRtoi5wRci2yTTnYuBltp0kKkm1WvlvzLHND9wIQiR2e0
+         8JQ4/rwszkgKOgFhURS2pErNDFgPhz/dkkEBQFg8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/63] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 27 Mar 2019 14:22:41 -0400
-Message-Id: <20190327182323.18577-21-sashal@kernel.org>
+Cc:     Shuriyc Chu <sureeju@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 14/63] fs/file.c: initialize init_files.resize_wait
+Date:   Wed, 27 Mar 2019 14:22:34 -0400
+Message-Id: <20190327182323.18577-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -57,114 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Shuriyc Chu <sureeju@gmail.com>
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit 5704a06810682683355624923547b41540e2801a ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+(Taken from https://bugzilla.kernel.org/show_bug.cgi?id=200647)
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+'get_unused_fd_flags' in kthread cause kernel crash.  It works fine on
+4.1, but causes crash after get 64 fds.  It also cause crash on
+ubuntu1404/1604/1804, centos7.5, and the crash messages are almost the
+same.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+The crash message on centos7.5 shows below:
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
+  start fd 61
+  start fd 62
+  start fd 63
+  BUG: unable to handle kernel NULL pointer dereference at           (null)
+  IP: __wake_up_common+0x2e/0x90
+  PGD 0
+  Oops: 0000 [#1] SMP
+  Modules linked in: test(OE) xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter devlink sunrpc kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd sg ppdev pcspkr virtio_balloon parport_pc parport i2c_piix4 joydev ip_tables xfs libcrc32c sr_mod cdrom sd_mod crc_t10dif crct10dif_generic ata_generic pata_acpi virtio_scsi virtio_console virtio_net cirrus drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm crct10dif_pclmul crct10dif_common crc32c_intel drm ata_piix serio_raw libata virtio_pci virtio_ring i2c_core
+   virtio floppy dm_mirror dm_region_hash dm_log dm_mod
+  CPU: 2 PID: 1820 Comm: test_fd Kdump: loaded Tainted: G           OE  ------------   3.10.0-862.3.3.el7.x86_64 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
+  task: ffff8e92b9431fa0 ti: ffff8e94247a0000 task.ti: ffff8e94247a0000
+  RIP: 0010:__wake_up_common+0x2e/0x90
+  RSP: 0018:ffff8e94247a2d18  EFLAGS: 00010086
+  RAX: 0000000000000000 RBX: ffffffff9d09daa0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffff9d09daa0
+  RBP: ffff8e94247a2d50 R08: 0000000000000000 R09: ffff8e92b95dfda8
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff9d09daa8
+  R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000003
+  FS:  0000000000000000(0000) GS:ffff8e9434e80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 000000017c686000 CR4: 00000000000207e0
+  Call Trace:
+    __wake_up+0x39/0x50
+    expand_files+0x131/0x250
+    __alloc_fd+0x47/0x170
+    get_unused_fd_flags+0x30/0x40
+    test_fd+0x12a/0x1c0 [test]
+    kthread+0xd1/0xe0
+    ret_from_fork_nospec_begin+0x21/0x21
+  Code: 66 90 55 48 89 e5 41 57 41 89 f7 41 56 41 89 ce 41 55 41 54 49 89 fc 49 83 c4 08 53 48 83 ec 10 48 8b 47 08 89 55 cc 4c 89 45 d0 <48> 8b 08 49 39 c4 48 8d 78 e8 4c 8d 69 e8 75 08 eb 3b 4c 89 ef
+  RIP   __wake_up_common+0x2e/0x90
+   RSP <ffff8e94247a2d18>
+  CR2: 0000000000000000
 
-Here is the contexts for the three functions so far:
+This issue exists since CentOS 7.5 3.10.0-862 and CentOS 7.4
+(3.10.0-693.21.1 ) is ok.  Root cause: the item 'resize_wait' is not
+initialized before being used.
 
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Richard Zhang <zhang.zijian@h3c.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 850ddc5fac04..3e2288af56bc 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -217,7 +217,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	extern void scsi_requeue_run_queue(struct work_struct *work);
+diff --git a/fs/file.c b/fs/file.c
+index 39f8f15921da..7e9eb65a2912 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -474,6 +474,7 @@ struct files_struct init_files = {
+ 		.full_fds_bits	= init_files.full_fds_bits_init,
+ 	},
+ 	.file_lock	= __SPIN_LOCK_UNLOCKED(init_files.file_lock),
++	.resize_wait	= __WAIT_QUEUE_HEAD_INITIALIZER(init_files.resize_wait),
+ };
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
- 
-@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ static unsigned long find_next_fd(struct fdtable *fdt, unsigned long start)
 -- 
 2.19.1
 
