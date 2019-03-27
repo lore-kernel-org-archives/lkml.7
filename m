@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25334C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FD7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E794721738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D1F2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710121;
-	bh=J/++bZj6EMAxb1LPDclSEOFVVjmZFr85edmg43Bb2Ho=;
+	s=default; t=1553710132;
+	bh=BB4PbjXe50kzG7St37LEU3FBgzYqQQiYKuZ1AxfRPwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQ0toBMn1ww+exUjl28edIHN1o3KGcYVPWGTj1GC3y9/4agIp9wqYPZBAPfeA4R5W
-	 AQTXcdyBpYS80KdHzLIrwxDwMT519YzK3y9laSVFCf4aeXC6mvc+qk04RG/tBKO3lL
-	 a1q5LOYLIBDNa9hSYQ1+EGwQgPsNHKgtsJKLA2qQ=
+	b=Q9Rzp2J+drY6D0eYSA2zyWeCGhlezmID1VFCsFGeV5EgxGsqSK8pb/DPFW1rmAtv9
+	 kph0OAnSuzfRxjns8dlXy1vdE9FCyQQPpHMtNqEzKyO0q/BPXARhsPYhWi8gjHs7M/
+	 kqKE8ZR3fN8X4s3dnhSF2QQcabOvzpes4SuOgu84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbfC0SIi (ORCPT
+        id S2388423AbfC0SIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfC0SIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:30 -0400
+        id S2388367AbfC0SIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCED021738;
-        Wed, 27 Mar 2019 18:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D910E2070B;
+        Wed, 27 Mar 2019 18:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710109;
-        bh=J/++bZj6EMAxb1LPDclSEOFVVjmZFr85edmg43Bb2Ho=;
+        s=default; t=1553710116;
+        bh=BB4PbjXe50kzG7St37LEU3FBgzYqQQiYKuZ1AxfRPwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f545AhMQYS1XqY0wKTBtBkikWxYKcJL92oAN4ZELDPnpNh5+ihJhyi1jNqsBFPl6i
-         QtAGmHoWCedXqe0u6pYqggqXnsvwIycz+H8oOg/ilEzIk7UtcUd7ETUYl4nx9AXxWd
-         Z8GybNezfR71IqrfnE6ynqSxuE9jnNAWEzjys34g=
+        b=pCVPr5XPpsGbhRbsLstcvsWtWKjl/uGIRqNTuqBckUmDyfC+2+VJf2Aln3LYwC3+J
+         QmEpmuV8/j2x98eRSqU/JhJVSGTwy8x+Uzk/uC+KsUH5+tmEE6mN4WoAvTA+5AobgX
+         B2GWZLI5iGFaSN7awS8kAz7wnA3lJAmsZ2Iz/aFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 199/262] block, bfq: fix queue removal from weights tree
-Date:   Wed, 27 Mar 2019 14:00:54 -0400
-Message-Id: <20190327180158.10245-199-sashal@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 203/262] cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
+Date:   Wed, 27 Mar 2019 14:00:58 -0400
+Message-Id: <20190327180158.10245-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,119 +56,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 9dee8b3b057e1da26f85f1842f2aaf3bb200fb94 ]
+[ Upstream commit 51bee5abeab2058ea5813c5615d6197a23dbf041 ]
 
-bfq maintains an ordered list, through a red-black tree, of unique
-weights of active bfq_queues. This list is used to detect whether there
-are active queues with differentiated weights. The weight of a queue is
-removed from the list when both the following two conditions become
-true:
+The only user of cgroup_subsys->free() callback is pids_cgrp_subsys which
+needs pids_free() to uncharge the pid.
 
-(1) the bfq_queue is flagged as inactive
-(2) the has no in-flight request any longer;
+However, ->free() is called from __put_task_struct()->cgroup_free() and this
+is too late. Even the trivial program which does
 
-Unfortunately, in the rare cases where condition (2) becomes true before
-condition (1), the removal fails, because the function to remove the
-weight of the queue (bfq_weights_tree_remove) is rightly invoked in the
-path that deactivates the bfq_queue, but mistakenly invoked *before* the
-function that actually performs the deactivation (bfq_deactivate_bfqq).
+	for (;;) {
+		int pid = fork();
+		assert(pid >= 0);
+		if (pid)
+			wait(NULL);
+		else
+			exit(0);
+	}
 
-This commits moves the invocation of bfq_weights_tree_remove for
-condition (1) to after bfq_deactivate_bfqq. As a consequence of this
-move, it is necessary to add a further reference to the queue when the
-weight of a queue is added, because the queue might otherwise be freed
-before bfq_weights_tree_remove is invoked. This commit adds this
-reference and makes all related modifications.
+can run out of limits because release_task()->call_rcu(delayed_put_task_struct)
+implies an RCU gp after the task/pid goes away and before the final put().
 
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Test-case:
+
+	mkdir -p /tmp/CG
+	mount -t cgroup2 none /tmp/CG
+	echo '+pids' > /tmp/CG/cgroup.subtree_control
+
+	mkdir /tmp/CG/PID
+	echo 2 > /tmp/CG/PID/pids.max
+
+	perl -e 'while ($p = fork) { wait; } $p // die "fork failed: $!\n"' &
+	echo $! > /tmp/CG/PID/cgroup.procs
+
+Without this patch the forking process fails soon after migration.
+
+Rename cgroup_subsys->free() to cgroup_subsys->release() and move the callsite
+into the new helper, cgroup_release(), called by release_task() which actually
+frees the pid(s).
+
+Reported-by: Herton R. Krzesinski <hkrzesin@redhat.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 17 +++++++++++++----
- block/bfq-wf2q.c    |  6 +++---
- 2 files changed, 16 insertions(+), 7 deletions(-)
+ include/linux/cgroup-defs.h |  2 +-
+ include/linux/cgroup.h      |  2 ++
+ kernel/cgroup/cgroup.c      | 15 +++++++++------
+ kernel/cgroup/pids.c        |  4 ++--
+ kernel/exit.c               |  1 +
+ 5 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index f010810c095f..e5ed28629271 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -747,6 +747,7 @@ void bfq_weights_tree_add(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 8fcbae1b8db0..120d1d40704b 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -602,7 +602,7 @@ struct cgroup_subsys {
+ 	void (*cancel_fork)(struct task_struct *task);
+ 	void (*fork)(struct task_struct *task);
+ 	void (*exit)(struct task_struct *task);
+-	void (*free)(struct task_struct *task);
++	void (*release)(struct task_struct *task);
+ 	void (*bind)(struct cgroup_subsys_state *root_css);
  
- inc_counter:
- 	bfqq->weight_counter->num_active++;
-+	bfqq->ref++;
+ 	bool early_init:1;
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 9968332cceed..81f58b4a5418 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -121,6 +121,7 @@ extern int cgroup_can_fork(struct task_struct *p);
+ extern void cgroup_cancel_fork(struct task_struct *p);
+ extern void cgroup_post_fork(struct task_struct *p);
+ void cgroup_exit(struct task_struct *p);
++void cgroup_release(struct task_struct *p);
+ void cgroup_free(struct task_struct *p);
+ 
+ int cgroup_init_early(void);
+@@ -697,6 +698,7 @@ static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
+ static inline void cgroup_cancel_fork(struct task_struct *p) {}
+ static inline void cgroup_post_fork(struct task_struct *p) {}
+ static inline void cgroup_exit(struct task_struct *p) {}
++static inline void cgroup_release(struct task_struct *p) {}
+ static inline void cgroup_free(struct task_struct *p) {}
+ 
+ static inline int cgroup_init_early(void) { return 0; }
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 503bba3c4bae..f84bf28f36ba 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -197,7 +197,7 @@ static u64 css_serial_nr_next = 1;
+  */
+ static u16 have_fork_callback __read_mostly;
+ static u16 have_exit_callback __read_mostly;
+-static u16 have_free_callback __read_mostly;
++static u16 have_release_callback __read_mostly;
+ static u16 have_canfork_callback __read_mostly;
+ 
+ /* cgroup namespace for init task */
+@@ -5316,7 +5316,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
+ 
+ 	have_fork_callback |= (bool)ss->fork << ss->id;
+ 	have_exit_callback |= (bool)ss->exit << ss->id;
+-	have_free_callback |= (bool)ss->free << ss->id;
++	have_release_callback |= (bool)ss->release << ss->id;
+ 	have_canfork_callback |= (bool)ss->can_fork << ss->id;
+ 
+ 	/* At system boot, before all subsystems have been
+@@ -5752,16 +5752,19 @@ void cgroup_exit(struct task_struct *tsk)
+ 	} while_each_subsys_mask();
  }
  
- /*
-@@ -771,6 +772,7 @@ void __bfq_weights_tree_remove(struct bfq_data *bfqd,
- 
- reset_entity_pointer:
- 	bfqq->weight_counter = NULL;
-+	bfq_put_queue(bfqq);
- }
- 
- /*
-@@ -782,9 +784,6 @@ void bfq_weights_tree_remove(struct bfq_data *bfqd,
+-void cgroup_free(struct task_struct *task)
++void cgroup_release(struct task_struct *task)
  {
- 	struct bfq_entity *entity = bfqq->entity.parent;
+-	struct css_set *cset = task_css_set(task);
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
  
--	__bfq_weights_tree_remove(bfqd, bfqq,
--				  &bfqd->queue_weights_tree);
--
- 	for_each_entity(entity) {
- 		struct bfq_sched_data *sd = entity->my_sched_data;
+-	do_each_subsys_mask(ss, ssid, have_free_callback) {
+-		ss->free(task);
++	do_each_subsys_mask(ss, ssid, have_release_callback) {
++		ss->release(task);
+ 	} while_each_subsys_mask();
++}
  
-@@ -818,6 +817,15 @@ void bfq_weights_tree_remove(struct bfq_data *bfqd,
- 			bfqd->num_groups_with_pending_reqs--;
- 		}
++void cgroup_free(struct task_struct *task)
++{
++	struct css_set *cset = task_css_set(task);
+ 	put_css_set(cset);
+ }
+ 
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 9829c67ebc0a..c9960baaa14f 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -247,7 +247,7 @@ static void pids_cancel_fork(struct task_struct *task)
+ 	pids_uncharge(pids, 1);
+ }
+ 
+-static void pids_free(struct task_struct *task)
++static void pids_release(struct task_struct *task)
+ {
+ 	struct pids_cgroup *pids = css_pids(task_css(task, pids_cgrp_id));
+ 
+@@ -342,7 +342,7 @@ struct cgroup_subsys pids_cgrp_subsys = {
+ 	.cancel_attach 	= pids_cancel_attach,
+ 	.can_fork	= pids_can_fork,
+ 	.cancel_fork	= pids_cancel_fork,
+-	.free		= pids_free,
++	.release	= pids_release,
+ 	.legacy_cftypes	= pids_files,
+ 	.dfl_cftypes	= pids_files,
+ 	.threaded	= true,
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 2639a30a8aa5..2166c2d92ddc 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -219,6 +219,7 @@ void release_task(struct task_struct *p)
  	}
-+
-+	/*
-+	 * Next function is invoked last, because it causes bfqq to be
-+	 * freed if the following holds: bfqq is not in service and
-+	 * has no dispatched request. DO NOT use bfqq after the next
-+	 * function invocation.
-+	 */
-+	__bfq_weights_tree_remove(bfqd, bfqq,
-+				  &bfqd->queue_weights_tree);
- }
  
- /*
-@@ -1011,7 +1019,8 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
+ 	write_unlock_irq(&tasklist_lock);
++	cgroup_release(p);
+ 	release_thread(p);
+ 	call_rcu(&p->rcu, delayed_put_task_struct);
  
- static int bfqq_process_refs(struct bfq_queue *bfqq)
- {
--	return bfqq->ref - bfqq->allocated - bfqq->entity.on_st;
-+	return bfqq->ref - bfqq->allocated - bfqq->entity.on_st -
-+		(bfqq->weight_counter != NULL);
- }
- 
- /* Empty burst list and add just bfqq (see comments on bfq_handle_burst) */
-diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
-index 72adbbe975d5..4aab1a8191f0 100644
---- a/block/bfq-wf2q.c
-+++ b/block/bfq-wf2q.c
-@@ -1667,15 +1667,15 @@ void bfq_del_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq,
- 
- 	bfqd->busy_queues--;
- 
--	if (!bfqq->dispatched)
--		bfq_weights_tree_remove(bfqd, bfqq);
--
- 	if (bfqq->wr_coeff > 1)
- 		bfqd->wr_busy_queues--;
- 
- 	bfqg_stats_update_dequeue(bfqq_group(bfqq));
- 
- 	bfq_deactivate_bfqq(bfqd, bfqq, true, expiration);
-+
-+	if (!bfqq->dispatched)
-+		bfq_weights_tree_remove(bfqd, bfqq);
- }
- 
- /*
 -- 
 2.19.1
 
