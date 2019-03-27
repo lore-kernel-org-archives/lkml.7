@@ -6,49 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E50C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C8EC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF96205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AB1205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712542;
-	bh=hlb4RJM2mA5T/gf45vM7pKusJ3sU35u1KFWSV/LfT5M=;
+	s=default; t=1553712547;
+	bh=uhFaJ3qlKlzdnF0EkzC6DuyM/wN73xiRj88OWTg3Iwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRtBKq6pyvPX5r0fmDIqHiDoG04QxrRFQTMehZ2wmAdf/95PxtqtZ206nbQSIYxvV
-	 LBreoozJ9NoldVQtbzGXzxpZyFBnJ/TkismdtkIlkddjioPjYTmh+VErELX5ZLtLKc
-	 8MiDJVzmH9eZtwSZzd/e1yVYLR+46136/7j0DCpQ=
+	b=0cUWaqWj8iuk0xuMazXytVe4gqNxAD98oMwRaB9/330seb8PPMoH7CRZ/sh7Jit2b
+	 O9W8Z9cTDD9X1IBp0MELQL8caCjaC7FEPrvzP+VxvyiAWuoHnNlLhJUrULGTuIUTRO
+	 ICtZu0/801LCbURf1eB0YtgK/wD/GGAvbgHOvuz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391211AbfC0StB (ORCPT
+        id S2389761AbfC0SS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:49:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390628AbfC0SS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:58 -0400
+        id S2390585AbfC0SSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CC1121741;
-        Wed, 27 Mar 2019 18:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B02FA2177E;
+        Wed, 27 Mar 2019 18:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710738;
-        bh=hlb4RJM2mA5T/gf45vM7pKusJ3sU35u1KFWSV/LfT5M=;
+        s=default; t=1553710734;
+        bh=uhFaJ3qlKlzdnF0EkzC6DuyM/wN73xiRj88OWTg3Iwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cllGSXe3jCOmIziIi+FuTkh9iuF0JzRPw5PNTBPJReQ+BZlUOLUgHQzt92y+JmqEm
-         ca7DTmQnRh4yygEultBnYumU2J+0xx/vjyIYLuWpL0z6cFBasj6GJjh4YdfmMA/NAV
-         drrAsOgSFwUn38ZWOXysqa88nJ+ss9nE+tpOsKFc=
+        b=2YlAPhGrmN9HrGaJd82Kqo87K6zAw5oC3S5pwzcB7CcBZp1XH2pXU9PziGMAkYQ+q
+         gP+wCgQOoVJ/g0RRVJ7RRx/UOFLhFYSKdXtKAmAitqODldJuUsRs9jdrJeDofJreJY
+         6VGaYbZmpSc+C2EjLWcSAXfVCJR3AK3IG57p8bgs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 080/123] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Wed, 27 Mar 2019 14:15:44 -0400
-Message-Id: <20190327181628.15899-80-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Daniel Colascione <dancol@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 078/123] genirq: Avoid summation loops for /proc/stat
+Date:   Wed, 27 Mar 2019 14:15:42 -0400
+Message-Id: <20190327181628.15899-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -60,52 +65,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit 1136b0728969901a091f0471968b2b76ed14d9ad ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+Waiman reported that on large systems with a large amount of interrupts the
+readout of /proc/stat takes a long time to sum up the interrupt
+statistics. In principle this is not a problem. but for unknown reasons
+some enterprise quality software reads /proc/stat with a high frequency.
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+The reason for this is that interrupt statistics are accounted per cpu. So
+the /proc/stat logic has to sum up the interrupt stats for each interrupt.
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+This can be largely avoided for interrupts which are not marked as
+'PER_CPU' interrupts by simply adding a per interrupt summation counter
+which is incremented along with the per interrupt per cpu counter.
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+The PER_CPU interrupts need to avoid that and use only per cpu accounting
+because they share the interrupt number and the interrupt descriptor and
+concurrent updates would conflict or require unwanted synchronization.
+
+Reported-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Waiman Long <longman@redhat.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lkml.kernel.org/r/20190208135020.925487496@linutronix.de
+
+8<-------------
+
+v2: Undo the unintentional layout change of struct irq_desc.
+
+ include/linux/irqdesc.h |    1 +
+ kernel/irq/chip.c       |   12 ++++++++++--
+ kernel/irq/internals.h  |    8 +++++++-
+ kernel/irq/irqdesc.c    |    7 ++++++-
+ 4 files changed, 24 insertions(+), 4 deletions(-)
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/irqdesc.h |  1 +
+ kernel/irq/chip.c       | 12 ++++++++++--
+ kernel/irq/internals.h  |  8 +++++++-
+ kernel/irq/irqdesc.c    |  7 ++++++-
+ 4 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 302cce7185e3..83961a22bef1 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -427,6 +427,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
+diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
+index b6084898d330..234f0d1f8dca 100644
+--- a/include/linux/irqdesc.h
++++ b/include/linux/irqdesc.h
+@@ -65,6 +65,7 @@ struct irq_desc {
+ 	unsigned int		core_internal_state__do_not_mess_with_it;
+ 	unsigned int		depth;		/* nested irq disables */
+ 	unsigned int		wake_depth;	/* nested wake enables */
++	unsigned int		tot_count;
+ 	unsigned int		irq_count;	/* For detecting broken IRQs */
+ 	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
+ 	unsigned int		irqs_unhandled;
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 5a2ef92c2782..0fa7ef74303b 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -834,7 +834,11 @@ void handle_percpu_irq(struct irq_desc *desc)
  {
- 	unsigned int x;
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
+-	kstat_incr_irqs_this_cpu(desc);
++	/*
++	 * PER CPU interrupts are not serialized. Do not touch
++	 * desc->tot_count.
++	 */
++	__kstat_incr_irqs_this_cpu(desc);
+ 
+ 	if (chip->irq_ack)
+ 		chip->irq_ack(&desc->irq_data);
+@@ -863,7 +867,11 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+ 	unsigned int irq = irq_desc_get_irq(desc);
+ 	irqreturn_t res;
+ 
+-	kstat_incr_irqs_this_cpu(desc);
++	/*
++	 * PER CPU interrupts are not serialized. Do not touch
++	 * desc->tot_count.
++	 */
++	__kstat_incr_irqs_this_cpu(desc);
+ 
+ 	if (chip->irq_ack)
+ 		chip->irq_ack(&desc->irq_data);
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 44ed5f8c8759..4ef7f3b820ce 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -240,12 +240,18 @@ static inline void irq_state_set_masked(struct irq_desc *desc)
+ 
+ #undef __irqd_to_state
+ 
+-static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
++static inline void __kstat_incr_irqs_this_cpu(struct irq_desc *desc)
+ {
+ 	__this_cpu_inc(*desc->kstat_irqs);
+ 	__this_cpu_inc(kstat.irqs_sum);
+ }
+ 
++static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
++{
++	__kstat_incr_irqs_this_cpu(desc);
++	desc->tot_count++;
++}
 +
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
+ static inline int irq_desc_get_node(struct irq_desc *desc)
+ {
+ 	return irq_common_data_get_node(&desc->irq_common_data);
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index e97bbae947f0..c2bfb11a9d05 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -119,6 +119,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
+ 	desc->depth = 1;
+ 	desc->irq_count = 0;
+ 	desc->irqs_unhandled = 0;
++	desc->tot_count = 0;
+ 	desc->name = NULL;
+ 	desc->owner = owner;
+ 	for_each_possible_cpu(cpu)
+@@ -895,11 +896,15 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
+ unsigned int kstat_irqs(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+-	int cpu;
+ 	unsigned int sum = 0;
++	int cpu;
+ 
+ 	if (!desc || !desc->kstat_irqs)
+ 		return 0;
++	if (!irq_settings_is_per_cpu_devid(desc) &&
++	    !irq_settings_is_per_cpu(desc))
++	    return desc->tot_count;
++
+ 	for_each_possible_cpu(cpu)
+ 		sum += *per_cpu_ptr(desc->kstat_irqs, cpu);
+ 	return sum;
 -- 
 2.19.1
 
