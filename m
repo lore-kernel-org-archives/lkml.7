@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C80C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7915C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78545206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0D0206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713560;
-	bh=8jXx+DMSS28NwJB/EA7vnRh3P/WwrdHNPzJrJIhc5Ho=;
+	s=default; t=1553713564;
+	bh=O5LEgMVOmHt8QJYgkL4OQn28TaFUOK0sNvyHudogbus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g/S8s12P/lWuHUrfbKNdJ9GzxVd3keWxyVLdzn3q6M9SECQkQJXvY2CZMr72X0IhG
-	 HF37033q53iPdJSb9BhmWtDYof+WFD1CpSw+x6/oqOOk1OMGgZuGDw9BTaFuwJR5Up
-	 Xo+MdCeD1mt02a+JPTRVTCVbeDc4Hc+/P4xeT2X4=
+	b=Fvm7lcCDjwqkiK2pwjMzn1uJDIYwYqfi8v+yq3IhDR/QK1t3Dv2FNoECsN2Tz+fTV
+	 HQPC4dMmDwxB21GVruXVKhlHEzRsLeCBH9OUpqcaqEa/x/aQYZXZUwzjTGSi+88ApM
+	 Lld3NokXHCbBYZTWRzUPfil//FZH649j+9kCoJ9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389327AbfC0TF7 (ORCPT
+        id S2389629AbfC0TGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388920AbfC0SMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:36 -0400
+        id S2388997AbfC0SMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB8F62054F;
-        Wed, 27 Mar 2019 18:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F2E2184C;
+        Wed, 27 Mar 2019 18:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710355;
-        bh=8jXx+DMSS28NwJB/EA7vnRh3P/WwrdHNPzJrJIhc5Ho=;
+        s=default; t=1553710353;
+        bh=O5LEgMVOmHt8QJYgkL4OQn28TaFUOK0sNvyHudogbus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dCRzy7+MIjcHcvgJiEWDkmARjt8NtaV8+ZwXjE6801hWR/rZXl3OCsSIYBdD71mo3
-         FyhpLQHMwVSUocehAg4P7ufH+C2v9zPDIZXnC4QKR0AIKfwbrluWP2bg1k6FTtdze7
-         PHICQzd/SLfIy7wouuuKcKoVupZqRq0yY5myHPd4=
+        b=R1YdDyJPnUjD3U/xd7wBq9FzZqp68xr/yQOcTfH3y6IckIgJ++WItZhtuBH13FWTu
+         DkBJcJu4MDkTTKn9fczvaGIHA85JdWOPWloHv6Eg2B0GirR8t7YCid9gGq96LBKIRR
+         6C/7/Tkx5yA7n2T0NxYs1Q8y3SiPqVKT7sQDmChw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 077/192] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 27 Mar 2019 14:08:29 -0400
-Message-Id: <20190327181025.13507-77-sashal@kernel.org>
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 075/192] efi: cper: Fix possible out-of-bounds access
+Date:   Wed, 27 Mar 2019 14:08:27 -0400
+Message-Id: <20190327181025.13507-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,79 +57,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+[ Upstream commit 45b14a4ffcc1e0b5caa246638f942cbe7eaea7ad ]
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+When checking a generic status block, we iterate over all the generic
+data blocks. The loop condition only checks that the start of the
+generic data block is valid (within estatus->data_length) but not the
+whole block. Because the size of data blocks (excluding error data) may
+vary depending on the revision and the revision is contained within the
+data block, ensure that enough of the current data block is valid before
+dereferencing any members otherwise an out-of-bounds access may occur if
+estatus->data_length is invalid.
 
-    megasas_init_adapter_fusion()
+This relies on the fact that struct acpi_hest_generic_data_v300 is a
+superset of the earlier version.  Also rework the other checks to avoid
+potential underflow.
 
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
-
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
-
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tyler Baicar <baicar.tyler@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/firmware/efi/cper.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index f6de7526ded5..acb503ea8f0c 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4155,6 +4155,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
- 	}
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index a7902fccdcfa..6090d25dce85 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -546,19 +546,24 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
+ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+ {
+ 	struct acpi_hest_generic_data *gdata;
+-	unsigned int data_len, gedata_len;
++	unsigned int data_len, record_size;
+ 	int rc;
  
- 	return 0;
+ 	rc = cper_estatus_check_header(estatus);
+ 	if (rc)
+ 		return rc;
++
+ 	data_len = estatus->data_length;
+ 
+ 	apei_estatus_for_each_section(estatus, gdata) {
+-		gedata_len = acpi_hest_get_error_length(gdata);
+-		if (gedata_len > data_len - acpi_hest_get_size(gdata))
++		if (sizeof(struct acpi_hest_generic_data) > data_len)
++			return -EINVAL;
++
++		record_size = acpi_hest_get_record_size(gdata);
++		if (record_size > data_len)
+ 			return -EINVAL;
+-		data_len -= acpi_hest_get_record_size(gdata);
++
++		data_len -= record_size;
+ 	}
+ 	if (data_len)
+ 		return -EINVAL;
 -- 
 2.19.1
 
