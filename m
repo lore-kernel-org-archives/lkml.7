@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E739C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C299221734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E832075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfC0Vgy (ORCPT
+        id S1729524AbfC0Vg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:36:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58662 "EHLO ale.deltatee.com"
+        Wed, 27 Mar 2019 17:36:56 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58676 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728902AbfC0Vgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 17:36:50 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE3-0006DJ-81; Wed, 27 Mar 2019 15:36:49 -0600
+        id 1h9GE4-0006DM-EI; Wed, 27 Mar 2019 15:36:49 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE2-0006Ce-4j; Wed, 27 Mar 2019 15:36:46 -0600
+        id 1h9GE2-0006Cn-FL; Wed, 27 Mar 2019 15:36:46 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
@@ -34,20 +34,21 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Logan Gunthorpe <logang@deltatee.com>,
-        Antony Pavlov <antonynpavlov@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         "Stefan O'Rear" <sorear2@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>
-Date:   Wed, 27 Mar 2019 15:36:39 -0600
-Message-Id: <20190327213643.23789-4-logang@deltatee.com>
+        Anup Patel <anup.patel@wdc.com>, Zong Li <zong@andestech.com>,
+        Guo Ren <ren_guo@c-sky.com>
+Date:   Wed, 27 Mar 2019 15:36:42 -0600
+Message-Id: <20190327213643.23789-7-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
 References: <20190327213643.23789-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, antonynpavlov@gmail.com, sorear2@gmail.com, anup.patel@wdc.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, rppt@linux.ibm.com, sorear2@gmail.com, anup.patel@wdc.com, zong@andestech.com, ren_guo@c-sky.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 3/7] RISC-V: Rework kernel's virtual address space mapping
+Subject: [PATCH 6/7] RISC-V: Implement memory hot remove
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,132 +56,276 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The motivation for this is to support P2P transactions. P2P requires
-having struct pages for IO memory which means the linear mapping must
-be able to cover all of the IO regions. Unfortunately with Sv39 we are
-not able to cover all the IO regions available on existing hardware,
-but we can do better than what we currently do (which only cover's
-physical memory).
+Implementing arch_remove_memory() and filling in vmemap_free() allows
+us to declare ARCH_ENABLE_MEMORY_HOTREMOVE.
 
-To this end, we restructure the kernel's virtual address space region.
-We position the vmemmap at the beginning of the region (based on how
-many virtual address bits we have) and the VMALLOC region comes
-immediately after. The linear mapping then takes up the remaining space.
-PAGE_OFFSET will need to be within the linear mapping but may not be
-the start of the mapping seeing many machines don't have RAM at address
-zero and we may still want to access lower addresses through the
-linear mapping.
-
-With these changes, on a 64-bit system the virtual memory map (with
-sparsemem enabled) will be:
-
-32-bit:
-
-00000000 - 7fffffff   user space, different per mm (2G)
-80000000 - 81ffffff   virtual memory map (32MB)
-82000000 - bfffffff   vmalloc/ioremap space (1GB - 32MB)
-c0000000 - ffffffff   direct mapping of all phys. memory (1GB)
-
-64-bit, Sv39:
-
-0000000000000000 - 0000003fffffffff  user space, different per mm (256GB)
-hole caused by [38:63] sign extension
-ffffffc000000000 - ffffffc0ffffffff  virtual memory map (4GB)
-ffffffc100000000 - ffffffd0ffffffff  vmalloc/ioremap spac (64GB)
-ffffffd100000000 - ffffffffffffffff  linear mapping of phys. space (188GB)
-
-On the Sifive hardware this allows us to provide struct pages for
-the lower I/O TileLink address ranges, the 32-bit and 34-bit DRAM areas
-and 172GB of 240GB of the high I/O TileLink region. Once we progress to
-Sv48 we should be able to cover all the available memory regions..
-
-For the MAXPHYSMEM_2GB case, the physical memory must be in the highest
-2GB of address space, so we cannot cover the any of the I/O regions
-that are higher than it but we do cover the lower I/O TileLink range.
+arch_remove_memory() is very similar to x86 and we roughly copy the
+remove_pagetable() function from x86 but with a bunch of the unnecessary
+features stripped out.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Cc: Palmer Dabbelt <palmer@sifive.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Antony Pavlov <antonynpavlov@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
 Cc: "Stefan O'Rear" <sorear2@gmail.com>
 Cc: Anup Patel <anup.patel@wdc.com>
+Cc: Zong Li <zong@andestech.com>
+Cc: Guo Ren <ren_guo@c-sky.com>
 ---
- arch/riscv/Kconfig               |  2 +-
- arch/riscv/include/asm/page.h    |  2 --
- arch/riscv/include/asm/pgtable.h | 27 ++++++++++++++++++---------
- 3 files changed, 19 insertions(+), 12 deletions(-)
+ arch/riscv/Kconfig                  |   3 +
+ arch/riscv/include/asm/pgtable-64.h |   2 +
+ arch/riscv/include/asm/pgtable.h    |   5 +
+ arch/riscv/mm/init.c                | 186 ++++++++++++++++++++++++++++
+ 4 files changed, 196 insertions(+)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 76fc340ae38e..d21e6a12e8b6 100644
+index 9477214a00e7..2cb39b4d6d6b 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -71,7 +71,7 @@ config PAGE_OFFSET
- 	hex
- 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
- 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
--	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
-+	default 0xffffffd200000000 if 64BIT && MAXPHYSMEM_128GB
- 
- config ARCH_FLATMEM_ENABLE
+@@ -86,6 +86,9 @@ config ARCH_SELECT_MEMORY_MODEL
+ config ARCH_ENABLE_MEMORY_HOTPLUG
  	def_bool y
-diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-index 2a546a52f02a..fa0b8058a246 100644
---- a/arch/riscv/include/asm/page.h
-+++ b/arch/riscv/include/asm/page.h
-@@ -31,8 +31,6 @@
-  */
- #define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
  
--#define KERN_VIRT_SIZE (-PAGE_OFFSET)
--
- #ifndef __ASSEMBLY__
++config ARCH_ENABLE_MEMORY_HOTREMOVE
++	def_bool y
++
+ config STACKTRACE_SUPPORT
+ 	def_bool y
  
- #define PAGE_UP(addr)	(((addr)+((PAGE_SIZE)-1))&(~((PAGE_SIZE)-1)))
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index 7aa0ea9bd8bb..d369be5467cf 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -67,6 +67,8 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
+ }
+ 
+ #define pmd_index(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
++#define pud_index(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
++#define p4d_index(addr) (((addr) >> P4D_SHIFT) & (PTRS_PER_P4D - 1))
+ 
+ static inline pmd_t *pmd_offset(pud_t *pud, unsigned long addr)
+ {
 diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 5a9fea00ba09..2a5070540996 100644
+index 2a5070540996..e071e2be3a6c 100644
 --- a/arch/riscv/include/asm/pgtable.h
 +++ b/arch/riscv/include/asm/pgtable.h
-@@ -89,22 +89,31 @@ extern pgd_t swapper_pg_dir[];
- #define __S110	PAGE_SHARED_EXEC
- #define __S111	PAGE_SHARED_EXEC
+@@ -173,6 +173,11 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
+ 	return (unsigned long)pfn_to_virt(pmd_val(pmd) >> _PAGE_PFN_SHIFT);
+ }
  
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+#define KERN_SPACE_START	(-1UL << (CONFIG_VA_BITS - 1))
- 
- /*
-  * Roughly size the vmemmap space to be large enough to fit enough
-  * struct pages to map half the virtual address space. Then
-  * position vmemmap directly below the VMALLOC region.
-  */
--#define VMEMMAP_SHIFT \
--	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
--#define VMEMMAP_SIZE	(1UL << VMEMMAP_SHIFT)
--#define VMEMMAP_END	(VMALLOC_START - 1)
--#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
--
-+#ifdef CONFIG_SPARSEMEM
-+#define VMEMMAP_SIZE	(UL(1) << (CONFIG_VA_BITS - PAGE_SHIFT - 1 + \
-+				   STRUCT_PAGE_MAX_SHIFT))
-+#define VMEMMAP_START	(KERN_SPACE_START)
-+#define VMEMMAP_END	(VMEMMAP_START + VMEMMAP_SIZE - 1)
- #define vmemmap		((struct page *)VMEMMAP_START)
-+#else
-+#define VMEMMAP_END	KERN_SPACE_START
-+#endif
++static inline struct page *pud_page(pud_t pud)
++{
++	return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
++}
 +
-+#ifdef CONFIG_32BIT
-+#define VMALLOC_SIZE	((1UL << 30) - VMEMMAP_SIZE)
-+#else
-+#define VMALLOC_SIZE	(64UL << 30)
-+#endif
-+
-+#define VMALLOC_START	(VMEMMAP_END + 1)
-+#define VMALLOC_END	(VMALLOC_START + VMALLOC_SIZE - 1)
+ /* Yields the page frame number (PFN) of a page table entry */
+ static inline unsigned long pte_pfn(pte_t pte)
+ {
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 0a54c3adf0ac..fffe1238434e 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -240,9 +240,175 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ #endif
  
- /*
-  * ZERO_PAGE is a global shared page that is always zero,
+ #ifdef CONFIG_MEMORY_HOTPLUG
++static void __meminit free_pagetable(struct page *page, int order)
++{
++	unsigned long magic;
++	unsigned int nr_pages = 1 << order;
++
++	/* bootmem page has reserved flag */
++	if (PageReserved(page)) {
++		__ClearPageReserved(page);
++
++		magic = (unsigned long)page->freelist;
++		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
++			while (nr_pages--)
++				put_page_bootmem(page++);
++		} else {
++			while (nr_pages--)
++				free_reserved_page(page++);
++		}
++	} else {
++		free_pages((unsigned long)page_address(page), order);
++	}
++}
++
++static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd)
++{
++	pte_t *pte;
++	int i;
++
++	for (i = 0; i < PTRS_PER_PTE; i++) {
++		pte = pte_start + i;
++		if (!pte_none(*pte))
++			return;
++	}
++
++	/* free a pte table */
++	free_pagetable(pmd_page(*pmd), 0);
++	spin_lock(&init_mm.page_table_lock);
++	pmd_clear(pmd);
++	spin_unlock(&init_mm.page_table_lock);
++}
++
++static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud)
++{
++	pmd_t *pmd;
++	int i;
++
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		pmd = pmd_start + i;
++		if (!pmd_none(*pmd))
++			return;
++	}
++
++	/* free a pmd table */
++	free_pagetable(pud_page(*pud), 0);
++	spin_lock(&init_mm.page_table_lock);
++	pud_clear(pud);
++	spin_unlock(&init_mm.page_table_lock);
++}
++
++static void __meminit
++remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end)
++{
++	unsigned long next;
++	pte_t *pte;
++
++	pte = pte_start + pte_index(addr);
++	for (; addr < end; addr = next, pte++) {
++		next = (addr + PAGE_SIZE) & PAGE_MASK;
++		if (next > end)
++			next = end;
++
++		if (!pte_present(*pte))
++			continue;
++
++		free_pagetable(pte_page(*pte), 0);
++
++		spin_lock(&init_mm.page_table_lock);
++		pte_clear(&init_mm, addr, pte);
++		spin_unlock(&init_mm.page_table_lock);
++	}
++
++	flush_tlb_all();
++}
++
++static void __meminit
++remove_pmd_table(pmd_t *pmd_start, unsigned long addr, unsigned long end)
++{
++	unsigned long next;
++	pte_t *pte_base;
++	pmd_t *pmd;
++
++	pmd = pmd_start + pmd_index(addr);
++	for (; addr < end; addr = next, pmd++) {
++		next = pmd_addr_end(addr, end);
++
++		if (!pmd_present(*pmd))
++			continue;
++
++		pte_base = (pte_t *)pmd_page_vaddr(*pmd);
++		remove_pte_table(pte_base, addr, next);
++		free_pte_table(pte_base, pmd);
++	}
++}
++
++static void __meminit
++remove_pud_table(pud_t *pud_start, unsigned long addr, unsigned long end)
++{
++	unsigned long next;
++	pmd_t *pmd_base;
++	pud_t *pud;
++
++	pud = pud_start + pud_index(addr);
++	for (; addr < end; addr = next, pud++) {
++		next = pud_addr_end(addr, end);
++
++		if (!pud_present(*pud))
++			continue;
++
++		pmd_base = pmd_offset(pud, 0);
++		remove_pmd_table(pmd_base, addr, next);
++		free_pmd_table(pmd_base, pud);
++	}
++}
++
++static void __meminit
++remove_p4d_table(p4d_t *p4d_start, unsigned long addr, unsigned long end)
++{
++	unsigned long next;
++	pud_t *pud_base;
++	p4d_t *p4d;
++
++	p4d = p4d_start + p4d_index(addr);
++	for (; addr < end; addr = next, p4d++) {
++		next = p4d_addr_end(addr, end);
++
++		if (!p4d_present(*p4d))
++			continue;
++
++		pud_base = pud_offset(p4d, 0);
++		remove_pud_table(pud_base, addr, next);
++	}
++}
++
++/* start and end are both virtual address. */
++static void __meminit
++remove_pagetable(unsigned long start, unsigned long end)
++{
++	unsigned long next;
++	unsigned long addr;
++	pgd_t *pgd;
++	p4d_t *p4d;
++
++	for (addr = start; addr < end; addr = next) {
++		next = pgd_addr_end(addr, end);
++
++		pgd = pgd_offset_k(addr);
++		if (!pgd_present(*pgd))
++			continue;
++
++		p4d = p4d_offset(pgd, 0);
++		remove_p4d_table(p4d, addr, next);
++	}
++
++	flush_tlb_all();
++}
++
+ void vmemmap_free(unsigned long start, unsigned long end,
+ 		  struct vmem_altmap *altmap)
+ {
++	remove_pagetable(start, end);
+ }
+ 
+ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+@@ -264,4 +430,24 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_MEMORY_HOTREMOVE
++int __ref arch_remove_memory(int nid, u64 start, u64 size,
++			     struct vmem_altmap *altmap)
++{
++	unsigned long start_pfn = start >> PAGE_SHIFT;
++	unsigned long nr_pages = size >> PAGE_SHIFT;
++	struct page *page = pfn_to_page(start_pfn);
++	struct zone *zone;
++	int ret;
++
++	if (altmap)
++		page += vmem_altmap_offset(altmap);
++	zone = page_zone(page);
++	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
++	WARN_ON_ONCE(ret);
++
++	return ret;
++}
++
++#endif
+ #endif
 -- 
 2.20.1
 
