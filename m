@@ -2,126 +2,171 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3A0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10736C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9842087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4212087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfC0MVz convert rfc822-to-8bit (ORCPT
+        id S1728883AbfC0MWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:21:55 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:46466 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfC0MVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:21:55 -0400
-Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h97Yi-0003Ud-Bl; Wed, 27 Mar 2019 13:21:32 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v3 3/3] arm64: dts: rockchip: Disable DCMDs on RK3399's eMMC controller.
-Date:   Wed, 27 Mar 2019 13:21:31 +0100
-Message-ID: <1591627.dSi6EvuFCI@phil>
-In-Reply-To: <CAPDyKFpPh7TZqRfUX7x52aUeY69-i3NSo5XtuwTjN8yHqdAVDw@mail.gmail.com>
-References: <20190322113808.16858-1-christoph.muellner@theobroma-systems.com> <20190322113808.16858-3-christoph.muellner@theobroma-systems.com> <CAPDyKFpPh7TZqRfUX7x52aUeY69-i3NSo5XtuwTjN8yHqdAVDw@mail.gmail.com>
+        Wed, 27 Mar 2019 08:22:33 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5043 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726233AbfC0MWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:22:33 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2RC8XTr021122;
+        Wed, 27 Mar 2019 13:22:24 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rddhtga81-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 27 Mar 2019 13:22:24 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 447BA31;
+        Wed, 27 Mar 2019 12:22:23 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD3CD5363;
+        Wed, 27 Mar 2019 12:22:22 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 27 Mar
+ 2019 13:22:22 +0100
+Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 27 Mar 2019 13:22:22 +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>, <arnaud.pouliquen@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+Subject: [PATCH] dmaengine: stm32-dma: fix residue calculation in stm32-dma
+Date:   Wed, 27 Mar 2019 13:21:56 +0100
+Message-ID: <1553689316-6231-1-git-send-email-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.131]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 25. März 2019, 14:27:26 CET schrieb Ulf Hansson:
-> On Fri, 22 Mar 2019 at 12:39, Christoph Muellner
-> <christoph.muellner@theobroma-systems.com> wrote:
-> >
-> > When using direct commands (DCMDs) on an RK3399, we get spurious
-> > CQE completion interrupts for the DCMD transaction slot (#31):
-> >
-> > [  931.196520] ------------[ cut here ]------------
-> > [  931.201702] mmc1: cqhci: spurious TCN for tag 31
-> > [  931.206906] WARNING: CPU: 0 PID: 1433 at /usr/src/kernel/drivers/mmc/host/cqhci.c:725 cqhci_irq+0x2e4/0x490
-> > [  931.206909] Modules linked in:
-> > [  931.206918] CPU: 0 PID: 1433 Comm: irq/29-mmc1 Not tainted 4.19.8-rt6-funkadelic #1
-> > [  931.206920] Hardware name: Theobroma Systems RK3399-Q7 SoM (DT)
-> > [  931.206924] pstate: 40000005 (nZcv daif -PAN -UAO)
-> > [  931.206927] pc : cqhci_irq+0x2e4/0x490
-> > [  931.206931] lr : cqhci_irq+0x2e4/0x490
-> > [  931.206933] sp : ffff00000e54bc80
-> > [  931.206934] x29: ffff00000e54bc80 x28: 0000000000000000
-> > [  931.206939] x27: 0000000000000001 x26: ffff000008f217e8
-> > [  931.206944] x25: ffff8000f02ef030 x24: ffff0000091417b0
-> > [  931.206948] x23: ffff0000090aa000 x22: ffff8000f008b000
-> > [  931.206953] x21: 0000000000000002 x20: 000000000000001f
-> > [  931.206957] x19: ffff8000f02ef018 x18: ffffffffffffffff
-> > [  931.206961] x17: 0000000000000000 x16: 0000000000000000
-> > [  931.206966] x15: ffff0000090aa6c8 x14: 0720072007200720
-> > [  931.206970] x13: 0720072007200720 x12: 0720072007200720
-> > [  931.206975] x11: 0720072007200720 x10: 0720072007200720
-> > [  931.206980] x9 : 0720072007200720 x8 : 0720072007200720
-> > [  931.206984] x7 : 0720073107330720 x6 : 00000000000005a0
-> > [  931.206988] x5 : ffff00000860d4b0 x4 : 0000000000000000
-> > [  931.206993] x3 : 0000000000000001 x2 : 0000000000000001
-> > [  931.206997] x1 : 1bde3a91b0d4d900 x0 : 0000000000000000
-> > [  931.207001] Call trace:
-> > [  931.207005]  cqhci_irq+0x2e4/0x490
-> > [  931.207009]  sdhci_arasan_cqhci_irq+0x5c/0x90
-> > [  931.207013]  sdhci_irq+0x98/0x930
-> > [  931.207019]  irq_forced_thread_fn+0x2c/0xa0
-> > [  931.207023]  irq_thread+0x114/0x1c0
-> > [  931.207027]  kthread+0x128/0x130
-> > [  931.207032]  ret_from_fork+0x10/0x20
-> > [  931.207035] ---[ end trace 0000000000000002 ]---
-> >
-> > The driver shows this message only for the first spurious interrupt
-> > by using WARN_ONCE(). Changing this to WARN() shows, that this is
-> > happening quite frequently (up to once a second).
-> >
-> > Since the eMMC 5.1 specification, where CQE and CQHCI are specified,
-> > does not mention that spurious TCN interrupts for DCMDs can be simply
-> > ignored, we must assume that using this feature is not working reliably.
-> >
-> > The current implementation uses DCMD for REQ_OP_FLUSH only, and
-> > I could not see any performance/power impact when disabling
-> > this optional feature for RK3399.
-> >
-> > Therefore this patch disables DCMDs for RK3399.
-> >
-> > Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> > Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-> 
-> FYI, I leave this for arm-soc to pick up.
+During residue calculation. the DMA can switch to the next sg. When
+this race condition occurs, the residue returned value is not valid.
+Indeed the position in the sg returned by the hardware is the position
+of the next sg, not the current sg.
+Solution is to check the sg after the calculation to verify it.
+If a transition is detected we consider that the DMA has switched to
+the beginning of next sg.
 
-I've duplicated your fixes+stable tags and applied for 5.2
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+ drivers/dma/stm32-dma.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 57 insertions(+), 13 deletions(-)
 
-Thanks
-Heiko
-
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 4903a40..30309d2 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -1038,33 +1038,77 @@ static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
+ 	return ndtr << width;
+ }
+ 
++static bool stm32_dma_is_current_sg(struct stm32_dma_chan *chan)
++{
++	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
++	struct stm32_dma_sg_req *sg_req;
++	u32 dma_scr, dma_smar, id;
++
++	id = chan->id;
++	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
++
++	if (!(dma_scr & STM32_DMA_SCR_DBM))
++		return true;
++
++	sg_req = &chan->desc->sg_req[chan->next_sg];
++
++	if (dma_scr & STM32_DMA_SCR_CT) {
++		dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM0AR(id));
++		return (dma_smar == sg_req->chan_reg.dma_sm0ar);
++	}
++
++	dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM1AR(id));
++
++	return (dma_smar == sg_req->chan_reg.dma_sm1ar);
++}
++
+ static size_t stm32_dma_desc_residue(struct stm32_dma_chan *chan,
+ 				     struct stm32_dma_desc *desc,
+ 				     u32 next_sg)
+ {
+ 	u32 modulo, burst_size;
+-	u32 residue = 0;
++	u32 residue;
++	u32 n_sg = next_sg;
++	struct stm32_dma_sg_req *sg_req = &chan->desc->sg_req[chan->next_sg];
+ 	int i;
+ 
++	residue = stm32_dma_get_remaining_bytes(chan);
++
+ 	/*
+-	 * In cyclic mode, for the last period, residue = remaining bytes from
+-	 * NDTR
++	 * Calculate the residue means compute the descriptors
++	 * information:
++	 * - the sg currently transferred
++	 * - the remaining position in this sg (NDTR).
++	 *
++	 * The issue is that a race condition can occur if DMA is
++	 * running. DMA can have started to transfer the next sg before
++	 * the position in sg is read. In this case the remaing position
++	 * can correspond to the new sg position.
++	 * The strategy implemented in the stm32 driver is to check the
++	 * sg transition. If detected we can not trust the SxNDTR register
++	 * value, this register can not be up to date during the transition.
++	 * In this case we can assume that the dma is at the beginning of next
++	 * sg so we calculate the residue in consequence.
+ 	 */
+-	if (chan->desc->cyclic && next_sg == 0) {
+-		residue = stm32_dma_get_remaining_bytes(chan);
+-		goto end;
++
++	if (!stm32_dma_is_current_sg(chan)) {
++		n_sg++;
++		if (n_sg == chan->desc->num_sgs)
++			n_sg = 0;
++		residue = sg_req->len;
+ 	}
+ 
+ 	/*
+-	 * For all other periods in cyclic mode, and in sg mode,
+-	 * residue = remaining bytes from NDTR + remaining periods/sg to be
+-	 * transferred
++	 * In cyclic mode, for the last period, residue = remaining bytes
++	 * from NDTR,
++	 * else for all other periods in cyclic mode, and in sg mode,
++	 * residue = remaining bytes from NDTR + remaining
++	 * periods/sg to be transferred
+ 	 */
+-	for (i = next_sg; i < desc->num_sgs; i++)
+-		residue += desc->sg_req[i].len;
+-	residue += stm32_dma_get_remaining_bytes(chan);
++	if (!chan->desc->cyclic || n_sg != 0)
++		for (i = n_sg; i < desc->num_sgs; i++)
++			residue += desc->sg_req[i].len;
+ 
+-end:
+ 	if (!chan->mem_burst)
+ 		return residue;
+ 
+-- 
+2.7.4
 
