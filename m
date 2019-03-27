@@ -2,155 +2,72 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CED2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171B4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B85B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:53:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553680424;
-	bh=T//uHA5hkqtEWcnHai/yejvB8VFvtTa1/LR1juTMOGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uq0jDfgQ9F807xHf4EBwoiRlxzoQr4QI6p6k8km6Vo816Tw/MiZYuwGx0V8lW/vq6
-	 N69aMlyHXZTfn0vRq+MDyNKHOviHXtQnCEVfTvFJoTAixvVAya2EREXtg1g/8Y7yX1
-	 6ZrV3M7BRYpPXA4SogbQ9fci5EjPre0bzfZ37a9E=
+	by mail.kernel.org (Postfix) with ESMTP id C70632075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:54:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="mEHCst8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbfC0Jxn (ORCPT
+        id S1732887AbfC0Jy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37414 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 05:54:26 -0400
+Received: from m13-68.163.com ([220.181.13.68]:12076 "EHLO m13-68.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfC0Jxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:53:42 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A8E2075C;
-        Wed, 27 Mar 2019 09:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553680421;
-        bh=T//uHA5hkqtEWcnHai/yejvB8VFvtTa1/LR1juTMOGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LPU+LwwKmBwFxUw5rroNzSm+BVjxaVkdw71UdkxcyTFRStpgGv+m/yhIWVhUa8poi
-         DrWGoS1Y5GEVEAXtY43fxk+fDwNsrCnpprubku0tSMivipVxGtVmOqJx7zPx/UJXtm
-         lKv1TrxkWdr7MfeWYuLC1HR8OD0T/r6V3UIfEHk0=
-Date:   Wed, 27 Mar 2019 11:53:37 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
- announcement
-Message-ID: <20190327095337.GP22899@mtr-leonro.mtl.com>
-References: <20190327090905.5588-1-leon@kernel.org>
- <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
- <20190327093844.GO22899@mtr-leonro.mtl.com>
- <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
+        id S1725827AbfC0Jy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:54:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=7GSXx
+        uT0CRFKEw8oXRKRG77jQKPHPJO7Ld6zXEqcU8Y=; b=mEHCst8ToB6+3/tTynVSJ
+        qxPKZoMJ0EJd7WoTKQ4fPhLSsgk9win3Kgpp6zkABjW8jjotuzhm0gYVRBmgRaOe
+        gXtqqvP8wfcRrDMNvoI13BGPcq0hNGFNK8qjfYSBsCpaGv0Tu81JuwZ+oMhmynen
+        FydzXbth8EZHhXBFQZDqS8=
+Received: from luferry$163.com ( [42.120.75.132] ) by ajax-webmail-wmsvr68
+ (Coremail) ; Wed, 27 Mar 2019 17:53:49 +0800 (CST)
+X-Originating-IP: [42.120.75.132]
+Date:   Wed, 27 Mar 2019 17:53:49 +0800 (CST)
+From:   luferry <luferry@163.com>
+To:     "Dongli Zhang" <dongli.zhang@oracle.com>
+Cc:     "Christoph Hellwig" <hch@lst.de>, "Jens Axboe" <axboe@kernel.dk>,
+        "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] make blk_mq_map_queues more friendly for cpu
+ topology
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
+In-Reply-To: <8e02b730-b504-50a2-64e6-72817b07e93d@oracle.com>
+References: <20190325152640.48120-1-luferry@163.com>
+ <20190326073954.GD21617@lst.de>
+ <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
+ <20190327081619.GG20525@lst.de>
+ <764f3c.12445.169be70834b.Coremail.luferry@163.com>
+ <8e02b730-b504-50a2-64e6-72817b07e93d@oracle.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="iAzLNm1y1mIRgolD"
-Content-Disposition: inline
-In-Reply-To: <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Message-ID: <6acbcebd.13280.169be91f175.Coremail.luferry@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: RMGowABXCectSJtcosEiAA--.22088W
+X-CM-SenderInfo: poxiv2lu16il2tof0z/xtbBoQ+EWlQHEINdGAACs3
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---iAzLNm1y1mIRgolD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Mar 27, 2019 at 02:49:02AM -0700, Joe Perches wrote:
-> On Wed, 2019-03-27 at 11:38 +0200, Leon Romanovsky wrote:
-> > On Wed, Mar 27, 2019 at 02:17:40AM -0700, Joe Perches wrote:
-> > > On Wed, 2019-03-27 at 11:09 +0200, Leon Romanovsky wrote:
-> > > > Kernel is booted with less possible CPUs (possible_cpus kernel boot
-> > > > option) than available CPUs will have prints like this:
-> > > []
-> > > > diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> > > []
-> > > > @@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
-> > > >  	if (num_processors >= nr_cpu_ids) {
-> > > >  		int thiscpu = max + disabled_cpus;
-> > > >
-> > > > -		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
-> > > > -			   "reached. Processor %d/0x%x ignored.\n",
-> > > > -			   max, thiscpu, apicid);
-> > > > +		pr_debug(
-> > > > +			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> > > > +			max, thiscpu, apicid);
-> > >
-> > > 2 lines please
-> > >
-> > > 		pr_debug("APIC: etc...",
-> > > 			 max, thiscpu, ...);
-> >
-> > It was two lines before, but I changed for two reasons:
-> >  * It helped me to grep the source code to find the origin of dmesg warning.
-> >  * i got checkpatch warning about spitted string, can you please fix checkpatch do not complain?
->
-> Yes, use
->
-> 	pr_debug("APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> 		 max, thiscpu, apicid);
-
-Ahh, I see, I got such change from clang formatter.
-
->
-> or better
->
-> 	printk(KERN_DEBUG "APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> 	       max, thiscpu, apicid);
->
-> > > And this would probably be better as
-> > >
-> > > 		printk(KERN_DEBUG "APIC: etc...",
-> > > 		 ...)
-> > >
-> > > to avoid the need to compile with DEBUG or enable
-> > > with CONFIG_DYNAMIC_DEBUG
-> >
-> > You don't need anything like this, just provide dyndbg parameters
-> > through kernel command line.
->
-> That assumes CONFIG_DYNAMIC_DEBUG is always enabled,
-> and it is not enabled in many .config files.
-
-No problem.
-
-Thanks
-
->
->
-
---iAzLNm1y1mIRgolD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcm0ghAAoJEORje4g2clin2TkQAL5lsnCzSU+icL1QOf/R3agE
-/yqUK/BooXbO2coECOqeqBQi6zMHSopgd7cP1at5E2ejcMvSU/dyBcrKRVhlCY3H
-6NXDkxLwg/ApLUR1qfgE3mxSiMgvPPyQioaOSKJOmhnufsPfFI8agxtXGCvMXu7v
-NlGNZQDb77UhxLZ1srbP6ArAPZpViwfDKI8e0iB53drTGwX+eA2AOxo0l7xOY/Rz
-DMFvGzJ1V8pXt48idho6kMpPaBCn+6tqkPvs7ToGaeYoo8o1qRbprc83GfxvWGtT
-A6BEfzk1MqSEg7T/a4E6ZAa4qVgqKBaXbk1sCUbzQ9ZfZmB44Lz56xaJky5ck7qS
-0iiJULobEMHSqQLq7KiBUWRbkCooYulT0z1zXgZ/O/BmgURQjaT34+gArqsqIOsU
-92qzMlhnPGjOzmdJRaa5Mx7FzOSQYKz/pCbjSRpNwTD7tSzULF76McZ38hNb1/TG
-E2e6ggtSRkadV3mtFggBSTEuaPONS/Wytpj6g+9waPdRvBqcK39waTPusa0df4s7
-K+5KyVvKp32euBl+xpZ6uACQacuVkB5j6mBA6kGysLLeYLOGHFa7G4eJiXKi6fGr
-NAZ6793PrZzGmAyyZtnpZ9h1iK3eeDVolILUqxYZy3fX6K4vI5sVhEYsGreclifT
-aeQE8DMQjDTuzExzqlQ/
-=uaJK
------END PGP SIGNATURE-----
-
---iAzLNm1y1mIRgolD--
+Cj4KPlRoZXJlIGlzIGxhY2sgb2YgdmVjdG9yIGlzc3VlIHdoZW4gbnVtYmVyIG9mIHF1ZXVlcyBp
+cyBtb3JlIHRoYW4gbWF4Y3B1cyBhcyB3ZWxsLgo+Cj5odHRwczovL2xvcmUua2VybmVsLm9yZy9s
+a21sL2U0YWZlNGM1LTAyNjItNDUwMC1hZWVjLTYwZjMwNzM0YjRmY0BkZWZhdWx0Cj4KPkkgd2Fz
+IGdvaW5nIHRvIHNlbmQgb3V0IHBhdGNoIHRvIGZpeCB0aGF0IHNwZWNpZmljIGNhc2Ugb24gdmly
+dGlvIHNpZGUuCj4KPkJUVywgaXMgeW91ciBWTSdzIHZpcnRpbyBtbWlvIGJhc2VkIG9yIHBjaSBi
+YXNlZD8KPgo+QXMgbWVudGlvbmVkIGluIHByZXZpb3VzIGVtYWlsLCB3aGVuIEkgd2FzIHBsYXlp
+bmcgd2l0aCBmaXJlY3JhY2tlciBieSBhbWF6b24sCj50aGUgdmlydGlvLWJsayBpcyBtbWlvIGJh
+c2VkLiBOb3Qgc3VyZSBpZiB0aGF0IHdvdWxkIGxlYWQgdG8gdGhlIGxhY2sgb2YgdmVjdG9yCj5p
+c3N1ZS4KPgo+RG9uZ2xpIFpoYW5nCgpJdCdzIHBjaSBiYXNlZC4g
