@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBDDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0249EC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38542177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89FA2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710230;
-	bh=VNLS4HSPTQbL952KVVEZwFGocV4pd99IvjWdPWqZcE8=;
+	s=default; t=1553710232;
+	bh=y+r+WSPhQGq1DTBMkaV1vfls8cJVpyFP0hki2cfJYTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q448QD2YP0mv/LF4oRrcDU0dBbzn/CJqSqdG3f9BAl0ueiRHvOhLqmqJTlVbPoQPc
-	 eYxNoFprCxwZVCDZUSxQUWbKTqzghDxVqcD+p1YNgqalvISCKykI70iPgciWFoWMFA
-	 rCP122ev6KeyhYH7ls1s2NfrClPkG+D+YVwa4XI8=
+	b=qd4Ixh/TKxxjqsq0VRAOPf6qYWBcWG/5Ywh01vdKGLHHP0SGhLoELwwuO/W6vrDX7
+	 ueo7iJXErsys6MjjsGpYDhNiv4TyDb6OgpULuRRx6GsBFlkA0hR0+Ydt7tpDhPYohl
+	 PBms6jqXgSztNS15qsg/bUmuICpnOr5E/KRP81tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388816AbfC0SK2 (ORCPT
+        id S2388833AbfC0SKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388795AbfC0SKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:23 -0400
+        id S2388354AbfC0SK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC4F62177E;
-        Wed, 27 Mar 2019 18:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AB9721738;
+        Wed, 27 Mar 2019 18:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710222;
-        bh=VNLS4HSPTQbL952KVVEZwFGocV4pd99IvjWdPWqZcE8=;
+        s=default; t=1553710228;
+        bh=y+r+WSPhQGq1DTBMkaV1vfls8cJVpyFP0hki2cfJYTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wow2wc4pG0vXaOXNVZ9a0VPgxi3lyx1sEiJ8kqMxxKE510lqVkrq8iHdbuNgTYAJt
-         f0Z/hhjsoy+3UslOKZWTm41hQeFkRA9IHlf5RZHfjdsUA6/HlLIOMuNyyVCLtsY76X
-         nPAyAkVGbfYdEr3xoIFgdNoAmYbaT2NPcmru8bQA=
+        b=ifWm3mOR9FRINvcpnWjq4h2hk7PFXoXVjb8McrABq3Q/KAfRybakPQEO+ZNdYDsUr
+         tm87D853KcK/7Q04kbJDd4gmiOmLWfy6mvoZbSSvshV+RhxIKVniTH2ilwFAM3DVdp
+         Frk7H/0VSrcfRG1ok2/cs7C0M+tn3wTd/D/DBSRA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 261/262] ACPI / video: Extend chassis-type detection with a "Lunch Box" check
-Date:   Wed, 27 Mar 2019 14:01:56 -0400
-Message-Id: <20190327180158.10245-261-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 002/192] h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
+Date:   Wed, 27 Mar 2019 14:07:14 -0400
+Message-Id: <20190327181025.13507-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,47 +56,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit d693c008e3ca04db5916ff72e68ce661888a913b ]
+[ Upstream commit fc2b47b55f17fd996f7a01975ce1c33c2f2513f6 ]
 
-Commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") introduced chassis type detection, limiting the
-lcd_only check for the backlight to devices where the chassis-type
-indicates their is no builtin LCD panel.
+It believe it is a bad idea to hardcode a specific compiler prefix
+that may or may not be installed on a user's system. It is annoying
+when testing features that should not require compilers at all.
 
-The purpose of the lcd_only check is to avoid advertising a backlight
-interface on desktops, since skylake and newer machines seem to always
-have a backlight interface even if there is no LCD panel. The limiting
-of this check to desktops only was done to avoid breaking backlight
-support on some laptops which do not have the lcd flag set.
+For example, mrproper, headers_install, etc. should work without
+any compiler.
 
-The Fujitsu ESPRIMO Q910 which is a compact (NUC like) desktop machine
-has a chassis type of 0x10 aka "Lunch Box". Without the lcd_only check
-we end up falsely advertising backlight/brightness control on this
-device. This commit extend the dmi_is_desktop check to return true
-for type 0x10 to fix this.
+They look like follows on my machine.
 
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+$ make ARCH=h8300 mrproper
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+make: h8300-unknown-linux-gcc: Command not found
+  [ a bunch of the same error messages continue ]
+
+$ make ARCH=h8300 headers_install
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+  HOSTCC  scripts/basic/fixdep
+make: h8300-unknown-linux-gcc: Command not found
+  WRAP    arch/h8300/include/generated/uapi/asm/kvm_para.h
+  [ snip ]
+
+The solution is to delete this line, or to use cc-cross-prefix like
+some architectures do. I chose the latter as a moderate fixup.
+
+I added an alternative 'h8300-linux-' because it is available at:
+
+https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/h8300/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 1ab1460c4a4e..d73afb562ad9 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2143,6 +2143,7 @@ static bool dmi_is_desktop(void)
- 	case 0x05: /* Pizza Box */
- 	case 0x06: /* Mini Tower */
- 	case 0x07: /* Tower */
-+	case 0x10: /* Lunch Box */
- 	case 0x11: /* Main Server Chassis */
- 		return true;
- 	}
+diff --git a/arch/h8300/Makefile b/arch/h8300/Makefile
+index 58634e6bae92..55f251810129 100644
+--- a/arch/h8300/Makefile
++++ b/arch/h8300/Makefile
+@@ -27,7 +27,7 @@ KBUILD_LDFLAGS += $(ldflags-y)
+ CHECKFLAGS += -msize-long
+ 
+ ifeq ($(CROSS_COMPILE),)
+-CROSS_COMPILE := h8300-unknown-linux-
++CROSS_COMPILE := $(call cc-cross-prefix, h8300-unknown-linux- h8300-linux-)
+ endif
+ 
+ core-y	+= arch/$(ARCH)/kernel/ arch/$(ARCH)/mm/
 -- 
 2.19.1
 
