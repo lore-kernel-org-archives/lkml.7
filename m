@@ -6,47 +6,56 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC14AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796CEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B2221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE792087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710490;
-	bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
+	s=default; t=1553710495;
+	bh=FQp+WCGCxdm09v/ETEMPLisb/DUMG1kl/UVY6UDbgXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZJKriIIMGD9OeYnbHAZ0lXHVV1x4G8Hu+nZ3+Gounyc07qYZpWehJDloP9FQrKAr
-	 TU49pz9JJGZFuEOYo0lc4gEwN5Wz1uWJ1ccICXwbU9tai1s0sebx+buuNekebZPrmo
-	 Esl3Vibjcb/aLHBRmPPwCniPl6ENDVpHqJSwFP4A=
+	b=t6tuJRWudMjGL9pexPtpJ/jydlmAKDKJoX1IznQurSj7O9RbZC5zXq/Quc6J3D5Le
+	 WRq9Iemi43QLg4PWvGXPt5Bu3AAw5Fj133CvcP95sd/xdAA3lW0NT16wD9kwRZgQbl
+	 xsU09kpgQIA/UwXdQ3FPlgO8R51uYSzb7XtHKE80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388930AbfC0SOt (ORCPT
+        id S2389448AbfC0SOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58104 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:14:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389421AbfC0SOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:46 -0400
+        id S2389165AbfC0SOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA63C2177E;
-        Wed, 27 Mar 2019 18:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27DC20449;
+        Wed, 27 Mar 2019 18:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710485;
-        bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
+        s=default; t=1553710484;
+        bh=FQp+WCGCxdm09v/ETEMPLisb/DUMG1kl/UVY6UDbgXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zq9deDy1DQCATD0jCYImYu1yOqlL+B5QcBw0TYzPA9egb/5F61Z2m2x7WCQgK3HNn
-         yvAQpjs37iHC2ei2oktvNxAV3Mk+v9LMEnXOM5bd8ZCROTJ1lD79zclMXVRosFwnuz
-         nt7MpF3QIiinAo+1b4SacD5sDXIhafVBlYpAgUgU=
+        b=f3s7PZJiPUjrOEYS5qK1cwriigbVlH7qlnLxp5NMeO6GXUU2ojqKkC3jm/bMUD9l/
+         fW59SLwykTVtD0sMJ0J6KOqeprlplhbofloNH6noDeVz9ycZEchRWC7pg+Z9kjGiw6
+         f2NgK/JewA9H422UT5GAnET6r+08yVOt2zdDkYGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 141/192] soc: qcom: gsbi: Fix error handling in gsbi_probe()
-Date:   Wed, 27 Mar 2019 14:09:33 -0400
-Message-Id: <20190327181025.13507-141-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Alexander Graf <agraf@suse.de>, Borislav Petkov <bp@alien8.de>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 140/192] efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
+Date:   Wed, 27 Mar 2019 14:09:32 -0400
+Message-Id: <20190327181025.13507-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,48 +67,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
+[ Upstream commit 4e46c2a956215482418d7b315749fb1b6c6bc224 ]
 
-If of_platform_populate() fails in gsbi_probe(),
-gsbi->hclk is left undisabled.
+The UEFI spec revision 2.7 errata A section 8.4 has the following to
+say about the virtual memory runtime services:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+  "This section contains function definitions for the virtual memory
+  support that may be optionally used by an operating system at runtime.
+  If an operating system chooses to make EFI runtime service calls in a
+  virtual addressing mode instead of the flat physical mode, then the
+  operating system must use the services in this section to switch the
+  EFI runtime services from flat physical addressing to virtual
+  addressing."
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+So it is pretty clear that calling SetVirtualAddressMap() is entirely
+optional, and so there is no point in doing so unless it achieves
+anything useful for us.
+
+This is not the case for 64-bit ARM. The identity mapping used by the
+firmware is arbitrarily converted into another permutation of userland
+addresses (i.e., bits [63:48] cleared), and the runtime code could easily
+deal with the original layout in exactly the same way as it deals with
+the converted layout. However, due to constraints related to page size
+differences if the OS is not running with 4k pages, and related to
+systems that may expose the individual sections of PE/COFF runtime
+modules as different memory regions, creating the virtual layout is a
+bit fiddly, and requires us to sort the memory map and reason about
+adjacent regions with identical memory types etc etc.
+
+So the obvious fix is to stop calling SetVirtualAddressMap() altogether
+on arm64 systems. However, to avoid surprises, which are notoriously
+hard to diagnose when it comes to OS<->firmware interactions, let's
+start by making it an opt-out feature, and implement support for the
+'efi=novamap' kernel command line parameter on ARM and arm64 systems.
+
+( Note that 32-bit ARM generally does require SetVirtualAddressMap() to be
+  used, given that the physical memory map and the kernel virtual address
+  map are not guaranteed to be non-overlapping like on arm64. However,
+  having support for efi=novamap,noruntime on 32-bit ARM, combined with
+  the recently proposed support for earlycon=efifb, is likely to be useful
+  to diagnose boot issues on such systems if they have no accessible serial
+  port. )
+
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190202094119.13230-8-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/libstub/arm-stub.c        |  5 +++++
+ drivers/firmware/efi/libstub/efi-stub-helper.c | 10 ++++++++++
+ drivers/firmware/efi/libstub/efistub.h         |  1 +
+ drivers/firmware/efi/libstub/fdt.c             |  3 +++
+ 4 files changed, 19 insertions(+)
 
-diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
-index 09c669e70d63..038abc377fdb 100644
---- a/drivers/soc/qcom/qcom_gsbi.c
-+++ b/drivers/soc/qcom/qcom_gsbi.c
-@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *base;
- 	struct gsbi_info *gsbi;
--	int i;
-+	int i, ret;
- 	u32 mask, gsbi_num;
- 	const struct crci_config *config = NULL;
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+index 6920033de6d4..6c09644d620e 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/arm-stub.c
+@@ -340,6 +340,11 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
+ 		paddr = in->phys_addr;
+ 		size = in->num_pages * EFI_PAGE_SIZE;
  
-@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
++		if (novamap()) {
++			in->virt_addr = in->phys_addr;
++			continue;
++		}
++
+ 		/*
+ 		 * Make the mapping compatible with 64k pages: this allows
+ 		 * a 4k page size kernel to kexec a 64k page size kernel and
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index e94975f4655b..442f51c2a53d 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -34,6 +34,7 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
  
- 	platform_set_drvdata(pdev, gsbi);
+ static int __section(.data) __nokaslr;
+ static int __section(.data) __quiet;
++static int __section(.data) __novamap;
  
--	return of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	if (ret)
-+		clk_disable_unprepare(gsbi->hclk);
-+	return ret;
+ int __pure nokaslr(void)
+ {
+@@ -43,6 +44,10 @@ int __pure is_quiet(void)
+ {
+ 	return __quiet;
  }
++int __pure novamap(void)
++{
++	return __novamap;
++}
  
- static int gsbi_remove(struct platform_device *pdev)
+ #define EFI_MMAP_NR_SLACK_SLOTS	8
+ 
+@@ -482,6 +487,11 @@ efi_status_t efi_parse_options(char const *cmdline)
+ 			__chunk_size = -1UL;
+ 		}
+ 
++		if (!strncmp(str, "novamap", 7)) {
++			str += strlen("novamap");
++			__novamap = 1;
++		}
++
+ 		/* Group words together, delimited by "," */
+ 		while (*str && *str != ' ' && *str != ',')
+ 			str++;
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index 32799cf039ef..337b52c4702c 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -27,6 +27,7 @@
+ 
+ extern int __pure nokaslr(void);
+ extern int __pure is_quiet(void);
++extern int __pure novamap(void);
+ 
+ #define pr_efi(sys_table, msg)		do {				\
+ 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index 0c0d2312f4a8..dba296a44f4e 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -327,6 +327,9 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
+ 	if (status == EFI_SUCCESS) {
+ 		efi_set_virtual_address_map_t *svam;
+ 
++		if (novamap())
++			return EFI_SUCCESS;
++
+ 		/* Install the new virtual address map */
+ 		svam = sys_table->runtime->set_virtual_address_map;
+ 		status = svam(runtime_entry_count * desc_size, desc_size,
 -- 
 2.19.1
 
