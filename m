@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DE9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951FC21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FAB21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709833;
-	bh=7wUPbZkJITs8WNWaUZ2FE8UIAYfVCDgYIHQi6Mz7fTk=;
+	s=default; t=1553709838;
+	bh=Ffqck2aIWABNUq3ZwltuooVhhQ3A2FFCOQHwiHl4c8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HcDgNDp4MYuzXkLAYJarKnReA2B/+VIYcsoRTMmWDkuluF4m//nIJWKuxCYLY/5JI
-	 OjvWzVnOafOIC1YRHCXWiceJf2t+xZXDzuYdVqisu7mjK7VTv2U04OqGC6CrNwZlkK
-	 QFgOjgp6w0GsQKVnkOZZVHpbAHAZIe3d1thglYY8=
+	b=IVpuc/AWK2Yx4cDSEtva3peC02JuZoydSZ7TuelirDaXFaHsFL3Xr/9C+IEJf1/i2
+	 c6TkjTEKmdAufCWnE7/36F9Y14hpw7oq/A/IV3NSkyfKzPsQLphm9xxUloJKlQmTCH
+	 +MP+4e5PXWMeFAA1gGJJkSmHfgsbbtc1R/q/y7Qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfC0SDw (ORCPT
+        id S1733057AbfC0SD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44214 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732879AbfC0SDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:50 -0400
+        id S1732879AbfC0SDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B32E02082F;
-        Wed, 27 Mar 2019 18:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29310217D7;
+        Wed, 27 Mar 2019 18:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709829;
-        bh=7wUPbZkJITs8WNWaUZ2FE8UIAYfVCDgYIHQi6Mz7fTk=;
+        s=default; t=1553709832;
+        bh=Ffqck2aIWABNUq3ZwltuooVhhQ3A2FFCOQHwiHl4c8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fA7QzsmwKEPte3aF1varQjBXcoPkgU7297OMsbSC8RhHDGwNG/K6Y0BoTM8dVcopH
-         xoaM7xRxjaULNR1QBqv0AjrpW/+hxRT7ctKmFqRhlMIPO2fYzAmUbof7Wj3yWb4yrO
-         6LoXN3Gm4N43O5sT7is+ny/JwoksTu15M1D5p8WY=
+        b=Jy6Fl+hp/xthAo710DUyJhO5Rvu8qul/7hFcw5HeRxAGQJ7qWVbuFH1hv37pNYwCp
+         U9lc9rFbrK9DTNBFtZSsRGCte7SJuDOn05dCfwqip+VAIfaThrzo9CItLg+Oe6IMzx
+         oGTvfNVfxoooUHkUwDcJYXIYGvVySTzklodpnePA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 062/262] PCI/PME: Fix hotplug/sysfs remove deadlock in pcie_pme_remove()
-Date:   Wed, 27 Mar 2019 13:58:37 -0400
-Message-Id: <20190327180158.10245-62-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 064/262] mt76: fix a leaked reference by adding a missing of_node_put
+Date:   Wed, 27 Mar 2019 13:58:39 -0400
+Message-Id: <20190327180158.10245-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,143 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 95c80bc6952b6a5badc7b702d23e5bf14d251e7c ]
+[ Upstream commit 34e022d8b780a03902d82fb3997ba7c7b1f40c81 ]
 
-Dongdong reported a deadlock triggered by a hotplug event during a sysfs
-"remove" operation:
+The call to of_find_node_by_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-  pciehp 0000:00:0c.0:pcie004: Slot(0-1): Link Up
-  # echo 1 > 0000:00:0c.0/remove
+Detected by coccinelle with the following warnings:
+./drivers/net/wireless/mediatek/mt76/eeprom.c:58:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:61:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:67:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:70:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:72:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
 
-  PME and hotplug share an MSI/MSI-X vector.  The sysfs "remove" side is:
-
-    remove_store
-       pci_stop_and_remove_bus_device_locked
-	 pci_lock_rescan_remove
-	 pci_stop_and_remove_bus_device
-	   ...
-	   pcie_pme_remove
-	     pcie_pme_suspend
-	       synchronize_irq        # wait for hotplug IRQ handler
-	 pci_unlock_rescan_remove
-
-  The hotplug side is:
-
-    pciehp_ist
-       pciehp_handle_presence_or_link_change
-	 pciehp_configure_device
-	   pci_lock_rescan_remove     # wait for pci_unlock_rescan_remove()
-
-  INFO: task bash:10913 blocked for more than 120 seconds.
-
-  # ps -ax |grep D
-   PID TTY      STAT   TIME COMMAND
-  10913 ttyAMA0  Ds+    0:00 -bash
-  14022 ?        D      0:00 [irq/745-pciehp]
-
-  # cat /proc/14022/stack
-  __switch_to+0x94/0xd8
-  pci_lock_rescan_remove+0x20/0x28
-  pciehp_configure_device+0x30/0x140
-  pciehp_handle_presence_or_link_change+0x324/0x458
-  pciehp_ist+0x1dc/0x1e0
-
-  # cat /proc/10913/stack
-  __switch_to+0x94/0xd8
-  synchronize_irq+0x8c/0xc0
-  pcie_pme_suspend+0xa4/0x118
-  pcie_pme_remove+0x20/0x40
-  pcie_port_remove_service+0x3c/0x58
-  ...
-  pcie_port_device_remove+0x2c/0x48
-  pcie_portdrv_remove+0x68/0x78
-  pci_device_remove+0x48/0x120
-  ...
-  pci_stop_bus_device+0x84/0xc0
-  pci_stop_and_remove_bus_device_locked+0x24/0x40
-  remove_store+0xa4/0xb8
-  dev_attr_store+0x44/0x60
-  sysfs_kf_write+0x58/0x80
-
-It is incorrect to call pcie_pme_suspend() from pcie_pme_remove() for two
-reasons.
-
-First, pcie_pme_suspend() calls synchronize_irq(), which will wait for the
-native hotplug interrupt handler as well as for the PME one, because they
-share one IRQ (as per the spec).  That may deadlock if hotplug is signaled
-while pcie_pme_remove() is running and the latter calls
-pci_lock_rescan_remove() before the former.
-
-Second, if pcie_pme_suspend() figures out that wakeup needs to be enabled
-for the port, it will return without disabling the interrupt as expected by
-pcie_pme_remove() which was overlooked by commit c7b5a4e6e8fb ("PCI / PM:
-Fix native PME handling during system suspend/resume").
-
-To fix that, rework pcie_pme_remove() to disable the PME interrupt, clear
-its status and prevent the PME worker function from re-enabling it before
-calling free_irq() on it, which should be sufficient.
-
-Fixes: c7b5a4e6e8fb ("PCI / PM: Fix native PME handling during system suspend/resume")
-Link: https://lore.kernel.org/linux-pci/c7697e7c-e1af-13e4-8491-0a3996e6ab5d@huawei.com
-Reported-by: Dongdong Liu <liudongdong3@huawei.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-[bhelgaas: add URL and deadlock details from Dongdong]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/pme.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/net/wireless/mediatek/mt76/eeprom.c | 24 ++++++++++++++-------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 1a8b85051b1b..efa5b552914b 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -363,6 +363,16 @@ static bool pcie_pme_check_wakeup(struct pci_bus *bus)
- 	return false;
- }
+diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
+index 530e5593765c..a1529920d877 100644
+--- a/drivers/net/wireless/mediatek/mt76/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
+@@ -54,22 +54,30 @@ mt76_get_of_eeprom(struct mt76_dev *dev, int len)
+ 		part = np->name;
  
-+static void pcie_pme_disable_interrupt(struct pci_dev *port,
-+				       struct pcie_pme_service_data *data)
-+{
-+	spin_lock_irq(&data->lock);
-+	pcie_pme_interrupt_enable(port, false);
-+	pcie_clear_root_pme_status(port);
-+	data->noirq = true;
-+	spin_unlock_irq(&data->lock);
-+}
-+
- /**
-  * pcie_pme_suspend - Suspend PCIe PME service device.
-  * @srv: PCIe service device to suspend.
-@@ -387,11 +397,7 @@ static int pcie_pme_suspend(struct pcie_device *srv)
- 			return 0;
- 	}
+ 	mtd = get_mtd_device_nm(part);
+-	if (IS_ERR(mtd))
+-		return PTR_ERR(mtd);
++	if (IS_ERR(mtd)) {
++		ret =  PTR_ERR(mtd);
++		goto out_put_node;
++	}
  
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(port, false);
--	pcie_clear_root_pme_status(port);
--	data->noirq = true;
--	spin_unlock_irq(&data->lock);
-+	pcie_pme_disable_interrupt(port, data);
+-	if (size <= sizeof(*list))
+-		return -EINVAL;
++	if (size <= sizeof(*list)) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
  
- 	synchronize_irq(srv->irq);
+ 	offset = be32_to_cpup(list);
+ 	ret = mtd_read(mtd, offset, len, &retlen, dev->eeprom.data);
+ 	put_mtd_device(mtd);
+ 	if (ret)
+-		return ret;
++		goto out_put_node;
  
-@@ -427,9 +433,11 @@ static int pcie_pme_resume(struct pcie_device *srv)
-  */
- static void pcie_pme_remove(struct pcie_device *srv)
- {
--	pcie_pme_suspend(srv);
-+	struct pcie_pme_service_data *data = get_service_data(srv);
-+
-+	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
--	kfree(get_service_data(srv));
-+	kfree(data);
- }
+-	if (retlen < len)
+-		return -EINVAL;
++	if (retlen < len) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
  
- static struct pcie_port_service_driver pcie_pme_driver = {
+-	return 0;
++out_put_node:
++	of_node_put(np);
++	return ret;
+ #else
+ 	return -ENOENT;
+ #endif
 -- 
 2.19.1
 
