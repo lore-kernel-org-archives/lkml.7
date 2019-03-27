@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA886C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B98C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DEF2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553DE2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710978;
-	bh=2zVGAdUGAF3cF9Xgcx4tqoi5AVwnpa9JW0TDqsbYPR4=;
+	s=default; t=1553710984;
+	bh=GXd+FQv0I7gyn1dAW5umAnm2VA0c5bCFeh2R2DDhkws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TPXjqaawD+7ED0X1D22GrZzzguoZJeZxguyGGeHSFYwepALkv+H79jLd2uNAFRenE
-	 2z18H8HSoJFvwsQVpj7EEBQR5bUSh6CwOcQEu0qUBrY1zFccPk1t6ssWO5H15ulW5u
-	 31LWu4HbB6NPaDudEKzEoXESjCqqTIKWArIVw4ek=
+	b=TqxneZ3hpoOMxQZNlKTQeeGfhxAujXPjDMDPAY55NhTsYudWDJ/FdY6FwyqTYVjSQ
+	 50tiy7V9G2nZZZ+dnejI/bYd6Siu4KKHOc6E4NRBWKOwuLXXlMJRlqbqe/sg3Dk5x6
+	 RH1T2tXU3xw9nCg7BlPvJoTaJLERKCtY47pDR8fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391214AbfC0SW5 (ORCPT
+        id S2391397AbfC0SXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41054 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390363AbfC0SWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:50 -0400
+        id S2391375AbfC0SW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E413B2063F;
-        Wed, 27 Mar 2019 18:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A1720449;
+        Wed, 27 Mar 2019 18:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710970;
-        bh=2zVGAdUGAF3cF9Xgcx4tqoi5AVwnpa9JW0TDqsbYPR4=;
+        s=default; t=1553710977;
+        bh=GXd+FQv0I7gyn1dAW5umAnm2VA0c5bCFeh2R2DDhkws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcOqMgAfOYsj3V69GQpvg+2bjy2rUL1OIfynZHdlZWv9wYvtgjZ5F6zILYLKZeCKB
-         vfR9KnfITImlU8WzKRf10EbwIegMHIjCi5mQZ0YyL9QAM+OxSEPxOXiaIcGwIuUnRF
-         9alcjNPd0PNYVf4iRwmTIwozXUv0R6/HqAa9TX8M=
+        b=0bkh6MsHOeC/yG3OwQfYq4bJ66+lXMwQ5GIhPJA0QMYaATpA3KrhIhQLVepyZ5CdE
+         1PveP7oG11ZIFx/KEIATTyZvlgWiDwv9gvJItr9qOdxlnnDsM4tQPsa0TSdhZ69rzJ
+         KGLtb519NB3zWqv9D5ABCGKdUtHYRsgCsUY/zZio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 69/87] media: mt9m111: set initial frame size other than 0x0
-Date:   Wed, 27 Mar 2019 14:20:22 -0400
-Message-Id: <20190327182040.17444-69-sashal@kernel.org>
+Cc:     Song Hongyan <hongyan.song@intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 72/87] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
+Date:   Wed, 27 Mar 2019 14:20:25 -0400
+Message-Id: <20190327182040.17444-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -62,39 +57,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Song Hongyan <hongyan.song@intel.com>
 
-[ Upstream commit 29856308137de1c21eda89411695f4fc6e9780ff ]
+[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
 
-This driver sets initial frame width and height to 0x0, which is invalid.
-So set it to selection rectangle bounds instead.
+Host driver should handle interrupt mask register earlier than wake up ish FW
+else there will be conditions when FW interrupt comes, host PIMR register still
+not set ready, so move the interrupt mask setting before ish_wakeup.
 
-This is detected by v4l2-compliance detected.
+Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
+conditions host driver received a busy_clear interrupt (before the busy_clear
+mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
+the interrupt will never be cleared, causing the DEVICE not sending following
+IRQ.
 
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Since PISR clear should not be called for the CHV device we do this change.
+After the change, both ISH2HOST interrupt and busy_clear interrupt will be
+considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
+from IPC_IS_BUSY check.
+
+Signed-off-by: Song Hongyan <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index 72e71b762827..a6145877bd00 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -974,6 +974,8 @@ static int mt9m111_probe(struct i2c_client *client,
- 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
- 	mt9m111->rect.width	= MT9M111_MAX_WIDTH;
- 	mt9m111->rect.height	= MT9M111_MAX_HEIGHT;
-+	mt9m111->width		= mt9m111->rect.width;
-+	mt9m111->height		= mt9m111->rect.height;
- 	mt9m111->fmt		= &mt9m111_colour_fmts[0];
- 	mt9m111->lastpage	= -1;
- 	mutex_init(&mt9m111->power_lock);
+diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
+index 0c9ac4d5d850..41d44536aa15 100644
+--- a/drivers/hid/intel-ish-hid/ipc/ipc.c
++++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
+@@ -92,7 +92,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
+ 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
+ 	} else {
+ 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
+-		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
++		interrupt_generated = !!pisr_val;
++		/* only busy-clear bit is RW, others are RO */
++		if (pisr_val)
++			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
+ 	}
+ 
+ 	return interrupt_generated;
+@@ -795,11 +798,11 @@ int ish_hw_start(struct ishtp_device *dev)
+ {
+ 	ish_set_host_rdy(dev);
+ 
++	set_host_ready(dev);
++
+ 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
+ 	ish_wakeup(dev);
+ 
+-	set_host_ready(dev);
+-
+ 	/* wait for FW-initiated reset flow */
+ 	if (!dev->recvd_hw_ready)
+ 		wait_event_interruptible_timeout(dev->wait_hw_ready,
 -- 
 2.19.1
 
