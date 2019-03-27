@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E1FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D36C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAC1217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442742147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710695;
-	bh=OHA+uy2nrCWE74pWn7XAh3ATSHXusEDNrJ/mO0g3SGw=;
+	s=default; t=1553710698;
+	bh=EsrSXW6Kn8ch0tq1CT+6KN4/A8TPjyHah/2gYKPBNfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=10BQQCrJXTp+mcwfHfbX0I3RidbczcpyIawmLOJAwMYZWY+NzvoFuJLp1rFNG365+
-	 KQwTjNDeaW7VvTRuC7AsyBlW6NZJctrKQxOIwze1R3Heic4I01kj2bSE+hQjtM3KSn
-	 CSovMWtSBuy0jUNI8/ZxKQKg52uAPlN0T7ABPT3A=
+	b=jHxtJkhcPycSNJAkQJQ1ofJ3KHDwurmnsD6OLt2xJ+cUb9iKoZihIl5qwVdZ1nX0s
+	 OvfTfL/u7T7LyebEZAcH0GgIztmbN7Zk9W+26Wx3CO3Q7eWl3fl8Br3sVxxq2f2fV9
+	 Asut+AsVrkzyQcuFgq5uOVNjTABNhd+NaWCZCssk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390459AbfC0SSO (ORCPT
+        id S2389812AbfC0SSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34954 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390138AbfC0SSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:12 -0400
+        id S2390458AbfC0SSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5931220449;
-        Wed, 27 Mar 2019 18:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3D32147C;
+        Wed, 27 Mar 2019 18:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710691;
-        bh=OHA+uy2nrCWE74pWn7XAh3ATSHXusEDNrJ/mO0g3SGw=;
+        s=default; t=1553710693;
+        bh=EsrSXW6Kn8ch0tq1CT+6KN4/A8TPjyHah/2gYKPBNfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VpBiDkxHOpP7Ly2c12fO/Ax9fxWCwzq86z2APSaDN1V1XDvdB+a41yx7ysmjBAInf
-         uYcSOC7VDp/wQk6TPI92H328hBrpxzqKgzrUpXcPVF+weK+LTgh2wuPr5nkCPhsEVF
-         HpUh3CJC0MMOvMSw4409yeLr9Hi4ZY9X1cxNGWe8=
+        b=z8ZCflhRSfaSSywzy6irLBU/Ehqi5OhsX7zc2FcNisWQuYkhmK6E7rkeH+gqTLqFQ
+         iPJ/Hk0fGPwcXLMHGg1zIfauTAMoD4RkVJnKfd2GF/kB5voVpgIAhUcjLrLNLRAUqb
+         /4+1KHOgANgg4qkqRpW2jsini/gpSYqlNHStuZJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 056/123] media: sh_veu: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 14:15:20 -0400
-Message-Id: <20190327181628.15899-56-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 058/123] media: s5p-g2d: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 14:15:22 -0400
+Message-Id: <20190327181628.15899-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -60,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 43c145195c7fc3025ee7ecfc67112ac1c82af7c2 ]
+[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
 
 Fix the assigned type of mem2mem buffer handling API.
 Namely, these functions:
@@ -86,29 +87,35 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sh_veu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sh_veu.c b/drivers/media/platform/sh_veu.c
-index 15a562af13c7..a4f593220ef0 100644
---- a/drivers/media/platform/sh_veu.c
-+++ b/drivers/media/platform/sh_veu.c
-@@ -276,13 +276,13 @@ static void sh_veu_process(struct sh_veu_dev *veu,
- static void sh_veu_device_run(void *priv)
+diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
+index 66aa8cf1d048..770100d40372 100644
+--- a/drivers/media/platform/s5p-g2d/g2d.c
++++ b/drivers/media/platform/s5p-g2d/g2d.c
+@@ -498,7 +498,7 @@ static void device_run(void *prv)
  {
- 	struct sh_veu_dev *veu = priv;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	struct g2d_ctx *ctx = prv;
+ 	struct g2d_dev *dev = ctx->dev;
+-	struct vb2_buffer *src, *dst;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	unsigned long flags;
+ 	u32 cmd = 0;
  
- 	src_buf = v4l2_m2m_next_src_buf(veu->m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(veu->m2m_ctx);
+@@ -513,10 +513,10 @@ static void device_run(void *prv)
+ 	spin_lock_irqsave(&dev->ctrl_lock, flags);
  
- 	if (src_buf && dst_buf)
--		sh_veu_process(veu, src_buf, dst_buf);
-+		sh_veu_process(veu, &src_buf->vb2_buf, &dst_buf->vb2_buf);
- }
+ 	g2d_set_src_size(dev, &ctx->in);
+-	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
++	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
  
- 		/* ========== video ioctls ========== */
+ 	g2d_set_dst_size(dev, &ctx->out);
+-	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
++	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
+ 
+ 	g2d_set_rop4(dev, ctx->rop);
+ 	g2d_set_flip(dev, ctx->flip);
 -- 
 2.19.1
 
