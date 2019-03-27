@@ -3,49 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA781C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CFFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B534205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347C2205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712769;
-	bh=Y03JfpY8OwBwVj8v4fXIT+tLgot3EOD9Jy97Qx9oZgA=;
+	s=default; t=1553712780;
+	bh=yChwtWAW1xGyqZqsyQ5Exdv9dH+3dE1pv+0qtoBA+gA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLyeWwKtuq66DLo1v/XOwC67zMP6abWuC/+qboUeKvy4JWHT46KamWvkj9XXzYkFT
-	 Wa4L154v/v+lBqAnMIHsdFP45z/4yYLRr5pCIqdueudXtNmfMk/A8jjW2IgbL1yHL3
-	 EwhgQ8DB7Aj6qe/viKvLaqw+7gbECNQQxCoZ0HRQ=
+	b=uTiYRuDp7dT+MVi3BTOmLsB/NI9CKaZa4+tNOkFd2qXqx2Xl8xyhW8lLIU4C/KgJX
+	 cUc6N+wfxedCt7goNgo2wTbqO/cYQETNSTU23ysUgPiOwXzd4cy1BtP3fdcstp8vAW
+	 Q01O6fMrQGBmUo2Ue5bjficcI5jUbtxDk/a8C5c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390465AbfC0Sws (ORCPT
+        id S2390301AbfC0SR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34122 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390329AbfC0SRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:39 -0400
+        id S2390284AbfC0SRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A14A02147C;
-        Wed, 27 Mar 2019 18:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 866CA20449;
+        Wed, 27 Mar 2019 18:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710658;
-        bh=Y03JfpY8OwBwVj8v4fXIT+tLgot3EOD9Jy97Qx9oZgA=;
+        s=default; t=1553710644;
+        bh=yChwtWAW1xGyqZqsyQ5Exdv9dH+3dE1pv+0qtoBA+gA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KOBYP/zaVymhszAuuBa8C3FkQg3KtKV9cAW2RGtGB/jrMO9M8QqPDWijlOVgJ956D
-         Vjqynwj/5cmXzHiHcH1bFd4GcpqRFAKWCSE3WafFcM8q80nJzlr6WOy0yUpR2BM1fK
-         0SjIbiP3LdXuDq7V7v24PgpyUtaDCUCwG551TseY=
+        b=QQiWMfFT32U/nzixAsJNwSbyKTXzME/ocRHlCLIgFApel8zsfwSIHtKItesq6f+FF
+         c5isY6n0mHUf4AkjMp/Zui6D8M1i2JAVn2PGNpIdXOBQb3kLmVlPnCJakqkHV6DVHC
+         Bn5snNKUYSnLst4mP54YzikBu6aW8V4gmYEJZz1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/123] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 27 Mar 2019 14:15:01 -0400
-Message-Id: <20190327181628.15899-37-sashal@kernel.org>
+Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 030/123] fs: fix guard_bio_eod to check for real EOD errors
+Date:   Wed, 27 Mar 2019 14:14:54 -0400
+Message-Id: <20190327181628.15899-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,114 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Carlos Maiolino <cmaiolino@redhat.com>
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+guard_bio_eod() can truncate a segment in bio to allow it to do IO on
+odd last sectors of a device.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+It already checks if the IO starts past EOD, but it does not consider
+the possibility of an IO request starting within device boundaries can
+contain more than one segment past EOD.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
+underflow bvec->bv_len.
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
+Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
 
-Here is the contexts for the three functions so far:
+This situation has been found on filesystems such as isofs and vfat,
+which doesn't check the device size before mount, if the device is
+smaller than the filesystem itself, a readahead on such filesystem,
+which spans EOD, can trigger this situation, leading a call to
+zero_user() with a wrong size possibly corrupting memory.
 
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
+I didn't see any crash, or didn't let the system run long enough to
+check if memory corruption will be hit somewhere, but adding
+instrumentation to guard_bio_end() to check truncated_bytes size, was
+enough to see the error.
 
-    scsi_probe_and_add_lun()
-        ...
+The following script can trigger the error.
 
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
+MNT=/mnt
+IMG=./DISK.img
+DEV=/dev/loop0
 
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
+mkfs.vfat $IMG
+mount $IMG $MNT
+cp -R /etc $MNT &> /dev/null
+umount $MNT
 
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+losetup -D
+
+losetup --find --show --sizelimit 16247280 $IMG
+mount $DEV $MNT
+
+find $MNT -type f -exec cat {} + >/dev/null
+
+Kudos to Eric Sandeen for coming up with the reproducer above
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 40124648a07b..0b11405bfd7e 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 8086cc8ff0bc..bdca7b10e239 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3084,6 +3084,13 @@ void guard_bio_eod(int op, struct bio *bio)
+ 	/* Uhhuh. We've got a bio that straddles the device size! */
+ 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
- 
-@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
++	/*
++	 * The bio contains more than one segment which spans EOD, just return
++	 * and let IO layer turn it into an EIO
++	 */
++	if (truncated_bytes > bvec->bv_len)
++		return;
++
+ 	/* Truncate the bio.. */
+ 	bio->bi_iter.bi_size -= truncated_bytes;
+ 	bvec->bv_len -= truncated_bytes;
 -- 
 2.19.1
 
