@@ -2,226 +2,178 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D6AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED98C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED58021734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127A420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711183;
-	bh=Hr5fvW4qF6e3AsBePJxkA5K50WFrR1urH+x4VoQhlH4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=OcdAbpNJmWIQFsKcLvftPId5MPqwKFAdQCaoGIvUSYyHAfPw3ngQUeKWCb5RgZ1Xh
-	 ST/W0P8lgXXjsqFaRceNqH2FxqOQYywKum05l1dpYgiD6DDnMgKGohw0qxIylejl/i
-	 S+oC2GG4QbepniKA2lzt7CFVvRmNcN7pAfDfnVOU=
+	s=default; t=1553711186;
+	bh=qgwCA/b/DrYJF97yJbUxEdZVKZVUbZKxo6a2ecnyaYE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Mso9gEmSH7vc4HPK/8gotow6nTBCZXxyp9XnYowDf172LF3Sohl0rpqxFKlAuIOeT
+	 FXVVEaVBXTeWpHQdH4ZsPCoFpKeS6/G90TxeILSxBD2suD/ih3YDMXR/4h/TaaI3rr
+	 kgqYNu65pmPOeA4Qnmi6wFEDSh4D61QWM0zBz7hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404090AbfC0S0V (ORCPT
+        id S2403936AbfC0S0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391630AbfC0S0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:03 -0400
-Received: from localhost (unknown [88.128.80.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2391639AbfC0S0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196EB2063F;
-        Wed, 27 Mar 2019 18:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D0E2082F;
+        Wed, 27 Mar 2019 18:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711161;
-        bh=Hr5fvW4qF6e3AsBePJxkA5K50WFrR1urH+x4VoQhlH4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qt10nJ4nqTUJa29toLxr3H1pgQxTZIoVjNazLGF14rgM/2j3Z9E00/8QeG4/wnda6
-         XzEzdx/CKOKNoAQt5m7NS8GE7bZBV3/k1S6BYhbjMoGlkTdbt1A3VLI8O4md8fvJWy
-         0bQU5kAd6XFeYzNKyOGxPblIjZYReKPlx4tND7bg=
-Date:   Wed, 27 Mar 2019 23:57:05 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.9.166
-Message-ID: <20190327145705.GA7990@kroah.com>
+        s=default; t=1553711163;
+        bh=qgwCA/b/DrYJF97yJbUxEdZVKZVUbZKxo6a2ecnyaYE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hKNM9Bb91UyczkQv+gRlHlLB1uHZ4Nqr1I81Qso/qCMsYhO/y74XireRtM55+vTF3
+         bwlOa/Z+0UNLtguT3UyviveW7x6sdnGOpAkT+poG01WLuehJ3FU7GgAORN2KUEv93w
+         TmNrirOen4XeYhwf3HO9ALFAebe2R0uuaQHZLtvM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 22/41] ARM: 8833/1: Ensure that NEON code always compiles with Clang
+Date:   Wed, 27 Mar 2019 14:24:59 -0400
+Message-Id: <20190327182518.19394-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
+References: <20190327182518.19394-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nathan Chancellor <natechancellor@gmail.com>
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
 
-I'm announcing the release of the 4.9.166 kernel.
+While building arm32 allyesconfig, I ran into the following errors:
 
-All users of the 4.9 kernel series must upgrade.
+  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
+  '-mfloat-abi=softfp -mfpu=neon'
 
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.9.y
-and can be browsed at the normal kernel.org git web browser:
-	http://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+  In file included from lib/raid6/neon1.c:27:
+  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
+  error: "NEON support not enabled"
 
-thanks,
+Building V=1 showed NEON_FLAGS getting passed along to Clang but
+__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
+only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
+which is the '-march' value for allyesconfig.
 
-greg k-h
+>From lib/Basic/Targets/ARM.cpp in the Clang source:
 
-------------
+  // This only gets set when Neon instructions are actually available, unlike
+  // the VFP define, hence the soft float and arch check. This is subtly
+  // different from gcc, we follow the intent which was that it should be set
+  // when Neon instructions are actually available.
+  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
+    Builder.defineMacro("__ARM_NEON", "1");
+    Builder.defineMacro("__ARM_NEON__");
+    // current AArch32 NEON implementations do not support double-precision
+    // floating-point even when it is present in VFP.
+    Builder.defineMacro("__ARM_NEON_FP",
+                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
+  }
 
- Makefile                               |    2 -
- arch/arm64/kernel/traps.c              |    8 +++-
- arch/mips/include/asm/jump_label.h     |    8 ++--
- arch/mips/kernel/vmlinux.lds.S         |   12 ++++--
- arch/mips/loongson64/lemote-2f/irq.c   |    2 -
- drivers/gpu/drm/vmwgfx/vmwgfx_fb.c     |   12 +-----
- drivers/iommu/amd_iommu.c              |    7 +++-
- drivers/media/usb/uvc/uvc_ctrl.c       |    2 -
- drivers/media/v4l2-core/v4l2-ctrls.c   |    2 -
- drivers/mmc/host/pxamci.c              |    2 -
- drivers/net/wireless/ath/ath10k/wmi.c  |    2 -
- drivers/power/supply/charger-manager.c |    3 -
- drivers/rtc/rtc-lib.c                  |    6 +--
- drivers/scsi/ufs/ufshcd.c              |   14 ++++----
- drivers/tty/serial/sprd_serial.c       |    6 ++-
- drivers/usb/core/config.c              |    9 +++--
- drivers/video/backlight/pwm_bl.c       |    9 ++---
- fs/dcache.c                            |   10 ++---
- fs/ext4/ext4_jbd2.h                    |    2 -
- fs/ext4/file.c                         |    2 -
- fs/ext4/indirect.c                     |   12 ++++--
- fs/udf/truncate.c                      |    3 +
- include/linux/ceph/libceph.h           |    2 +
- include/net/inet_connection_sock.h     |    5 --
- kernel/futex.c                         |    4 ++
- kernel/locking/lockdep.c               |    3 +
- lib/int_sqrt.c                         |    3 +
- net/bluetooth/hci_sock.c               |    3 -
- net/ceph/ceph_common.c                 |   18 +++++++++-
- net/ceph/mon_client.c                  |    9 +++++
- net/dccp/ipv4.c                        |    8 ----
- net/dccp/ipv6.c                        |    2 -
- net/ipv4/tcp_input.c                   |    8 ----
- sound/pci/hda/hda_codec.c              |   57 +++++++++++++++++++++++++++++++--
- tools/objtool/check.c                  |    3 +
- 35 files changed, 174 insertions(+), 86 deletions(-)
+Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
+beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
+definined by Clang. This doesn't functionally change anything because
+that code will only run where NEON is supported, which is implicitly
+armv7.
 
-Al Viro (1):
-      Hang/soft lockup in d_invalidate with simultaneous calls
+Link: https://github.com/ClangBuiltLinux/linux/issues/287
 
-Andrey Konovalov (1):
-      USB: core: only clean up what we allocated
+Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/arm/kernel_mode_neon.txt | 4 ++--
+ arch/arm/lib/Makefile                  | 2 +-
+ arch/arm/lib/xor-neon.c                | 2 +-
+ lib/raid6/Makefile                     | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-Archer Yan (1):
-      MIPS: Fix kernel crash for R6 in jump label branch function
+diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
+index 525452726d31..b9e060c5b61e 100644
+--- a/Documentation/arm/kernel_mode_neon.txt
++++ b/Documentation/arm/kernel_mode_neon.txt
+@@ -6,7 +6,7 @@ TL;DR summary
+ * Use only NEON instructions, or VFP instructions that don't rely on support
+   code
+ * Isolate your NEON code in a separate compilation unit, and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp'
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
+ * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
+   NEON code
+ * Don't sleep in your NEON code, and be aware that it will be executed with
+@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
+ Therefore, the recommended and only supported way of using NEON/VFP in the
+ kernel is by adhering to the following rules:
+ * isolate the NEON code in a separate compilation unit and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp';
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
+ * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
+   into the unit containing the NEON code from a compilation unit which is *not*
+   built with the GCC flag '-mfpu=neon' set.
+diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+index 0573faab96ad..830b2ddcc346 100644
+--- a/arch/arm/lib/Makefile
++++ b/arch/arm/lib/Makefile
+@@ -46,7 +46,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
+ $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+ 
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+-  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
++  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
+   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
+ endif
+diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
+index 2c40aeab3eaa..c691b901092f 100644
+--- a/arch/arm/lib/xor-neon.c
++++ b/arch/arm/lib/xor-neon.c
+@@ -14,7 +14,7 @@
+ MODULE_LICENSE("GPL");
+ 
+ #ifndef __ARM_NEON__
+-#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
++#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
+ #endif
+ 
+ /*
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index c7dab0645554..1c3330dc5eab 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -23,7 +23,7 @@ endif
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+ NEON_FLAGS := -ffreestanding
+ ifeq ($(ARCH),arm)
+-NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
++NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+ endif
+ ifeq ($(ARCH),arm64)
+ CFLAGS_REMOVE_neon1.o += -mgeneral-regs-only
+-- 
+2.19.1
 
-Arnd Bergmann (2):
-      mmc: pxamci: fix enum type confusion
-      ath10k: avoid possible string overflow
-
-Baolin Wang (2):
-      rtc: Fix overflow when converting time64_t to rtc_time
-      power: supply: charger-manager: Fix incorrect return value
-
-Chen Jie (1):
-      futex: Ensure that futex address is aligned in handle_futex_death()
-
-Enric Balletbo i Serra (1):
-      pwm-backlight: Enable/disable the PWM before/after LCD enable toggle.
-
-Eric Dumazet (1):
-      tcp/dccp: drop SYN packets if accept queue is full
-
-Greg Kroah-Hartman (1):
-      Linux 4.9.166
-
-Hans Verkuil (1):
-      media: v4l2-ctrls.c/uvc: zero v4l2_event
-
-Hui Wang (1):
-      ALSA: hda - Enforces runtime_resume after S3 and S4 for each codec
-
-Ilya Dryomov (1):
-      libceph: wait for latest osdmap in ceph_monc_blacklist_add()
-
-Jan Kara (1):
-      udf: Fix crash on IO error during truncate
-
-Jiufei Xue (1):
-      ext4: fix NULL pointer dereference while journal is aborted
-
-Josh Poimboeuf (1):
-      objtool: Move objtool_file struct off the stack
-
-Lanqing Liu (1):
-      serial: sprd: clear timeout interrupt only rather than all interrupts
-
-Lukas Czerner (1):
-      ext4: fix data corruption caused by unaligned direct AIO
-
-Myungho Jung (1):
-      Bluetooth: Fix decrementing reference count twice in releasing socket
-
-Peter Zijlstra (1):
-      lib/int_sqrt: optimize small argument
-
-Qiao Zhou (1):
-      arm64: traps: disable irq in die()
-
-Stanislaw Gruszka (1):
-      iommu/amd: fix sg->dma_address for sg->offset bigger than PAGE_SIZE
-
-Takashi Iwai (1):
-      ALSA: hda - Record the current power state before suspend/resume calls
-
-Thomas Zimmermann (1):
-      drm/vmwgfx: Don't double-free the mode stored in par->set_mode
-
-Waiman Long (1):
-      locking/lockdep: Add debug_locks check in __lock_downgrade()
-
-Wei Qiao (1):
-      serial: sprd: adjust TIMEOUT to a big value
-
-Yasha Cherikovsky (1):
-      MIPS: Ensure ELF appended dtb is relocated
-
-Yifeng Li (1):
-      mips: loongson64: lemote-2f: Add IRQF_NO_SUSPEND to "cascade" irqaction.
-
-kehuanlin (1):
-      scsi: ufs: fix wrong command type of UTRD for UFSHCI v2.1
-
-zhangyi (F) (1):
-      ext4: brelse all indirect buffer in ext4_ind_remove_space()
-
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlybjz8ACgkQONu9yGCS
-aT7ccQ/9GkVwQqeYcisVDBVntteuDBJNfHEgddh76l1eHhRzcgVwxrB9lI3Ya7Ca
-c40+Xp3sxAXuzAe01RmWLr4r+Ms82qf7dU+drNjvzbL+Y3960u4rgKmSEJ6HSu7X
-EtIqnLe54cSWkF+aUIHSNc0VPQ4+gFSJukGPPHRfODe7d/QFnVNPWsLmQEqXazvu
-4Gu+qAJ9zbPrZnerQOAIKbKx7AdPJ7kSiq5rftZTcQTvBYKp9NbXXmBvCTC6CZ4J
-h+mFB2IL8WGO0EFbo6+NwJw6RF4ZEFCSbB1dQ9PtjxQ/yc8Kow1b62k/Acx9IMlZ
-4QU+9YwpbQ8b7/7fx7iEUQz+w1ChrsAE8k1yfdm0wu3CHAKqi2ZHnJ38YbSxZ1vn
-/9CRJOndB8XyORUypcu8lIC6Y409x/e1CR/8O6VNfNIvChPDVB8aLL0SnzVNkik9
-Fhp/UtdZtve/qLvVMS63wBQdkK6rWUhciUyWpvfV3lpY/Boi+mUvYUnxTtvs+phQ
-v+7jn7sseiKsanuQ5GdTI/FqXAjV7DvjsFYpLctlxE6B3v/9/WLfpyRAIboZDyMI
-5xHuvbZ3iUg7YeI2PbAuAQyJHi7jAE2rkQ9VtGyt/ckI3LmILbGBqE3BUNXRsyB4
-/JrkOYhQyzk5VoR0Z0w7nZX/Dxzs4S4ic0zBRamoneEQXCSOVB0=
-=qH8p
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
