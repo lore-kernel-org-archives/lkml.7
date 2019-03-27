@@ -2,101 +2,152 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BD6C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA11C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D0420700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3sCEy9rd"
+	by mail.kernel.org (Postfix) with ESMTP id 1F30320700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732949AbfC0Jjf (ORCPT
+        id S1732985AbfC0Jjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:39:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47050 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfC0Jje (ORCPT
+        Wed, 27 Mar 2019 05:39:53 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:16765 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726241AbfC0Jjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:39:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2R9TYA6013736;
-        Wed, 27 Mar 2019 09:39:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : cc : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=T6FxGEX8wZ0ucXVUO/6cQUUaT4yt29W6rySXrN49bns=;
- b=3sCEy9rdHI94R5ngXBhqLAX6GelYck557nol2RjoqSWNy7P+Op3poxrdF1r6IWfDGGp3
- MJjpvKYcAWownJJp8qyKXPZeSQn8NoXtLWjJ+DW2dPaJvmdFjQcbBCadM/CA75RR0QOR
- OhYZMNVsWwzMr1X1diKU9o8TFn9rvag3cKVhcm2d8sOTLeHsghLPkMfaLHEm3BiaDTim
- uCioLjqMrD1R16fVKballXL7/6ouXybsC7LLTTtFK+5GlVHgrkt32/KhSoZKf/EVwHR7
- 5vh11GHUT4o58bN2d5lSkrI7JuTCo1QQgoq0v04EBrDWdbThNMsjDKU0qNiUT2SYbQHg cw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2re6djfg74-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 09:39:23 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2R9dM35011189
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 09:39:22 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2R9dLUD006899;
-        Wed, 27 Mar 2019 09:39:21 GMT
-Received: from [192.168.2.8] (/106.39.150.192)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 Mar 2019 02:39:21 -0700
-Subject: Re: [PATCH] make blk_mq_map_queues more friendly for cpu topology
-To:     luferry <luferry@163.com>
-References: <20190325152640.48120-1-luferry@163.com>
- <20190326073954.GD21617@lst.de>
- <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
- <20190327081619.GG20525@lst.de>
- <764f3c.12445.169be70834b.Coremail.luferry@163.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <8e02b730-b504-50a2-64e6-72817b07e93d@oracle.com>
-Date:   Wed, 27 Mar 2019 17:39:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Wed, 27 Mar 2019 05:39:53 -0400
+X-UUID: 00d0537f47d3407fbfdc41485273c9f7-20190327
+X-UUID: 00d0537f47d3407fbfdc41485273c9f7-20190327
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 692240441; Wed, 27 Mar 2019 17:39:48 +0800
+Received: from MTKMBS01DR.mediatek.inc (172.21.101.111) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 27 Mar 2019 17:39:47 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01dr.mediatek.inc (172.21.101.111) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 27 Mar 2019 17:39:47 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 27 Mar 2019 17:39:47 +0800
+Message-ID: <1553679587.18612.7.camel@mtksdaap41>
+Subject: Re: [PATCH v2 02/25] dt-bindings: mediatek: add binding for mt8183
+ display
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
+        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
+        <yt.shen@mediatek.com>
+Date:   Wed, 27 Mar 2019 17:39:47 +0800
+In-Reply-To: <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
+References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1553667561-25447-3-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <764f3c.12445.169be70834b.Coremail.luferry@163.com>
-Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9207 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=675 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903270069
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Yongqiang:
 
-
-On 03/27/2019 05:17 PM, luferry wrote:
+On Wed, 2019-03-27 at 14:18 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
 > 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  .../bindings/display/mediatek/mediatek,disp.txt    | 37 ++++++++++++++--------
+>  1 file changed, 23 insertions(+), 14 deletions(-)
 > 
-> Actually,  I just bought one vm from public cloud provider and run into this problem.
-> after reading code and compare pci device info, I reproduce this scenario.
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 8469de5..5467470c 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -27,20 +27,23 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>  
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+> -	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
+> -	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
+> -	"mediatek,<chip>-disp-wdma"  - write DMA
+> -	"mediatek,<chip>-disp-color" - color processor
+> -	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
+> -	"mediatek,<chip>-disp-gamma" - gamma correction
+> -	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
+> -	"mediatek,<chip>-disp-split" - split stream to two encoders
+> -	"mediatek,<chip>-disp-ufoe"  - data compression engine
+> -	"mediatek,<chip>-dsi"        - DSI controller, see mediatek,dsi.txt
+> -	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+> -	"mediatek,<chip>-disp-mutex" - display mutex
+> -	"mediatek,<chip>-disp-od"    - overdrive
+> -  the supported chips are mt2701, mt2712 and mt8173.
+> +	"mediatek,<chip>-disp-ovl"   		- overlay (4 layers, blending, csc)
+> +	"mediatek,<chip>-disp-ovl-2l"   	- overlay (2 layers, blending, csc)
 
-There is lack of vector issue when number of queues is more than maxcpus as well.
+I prefer adding disp-ovl-2l to be an independent patch.
 
-https://lore.kernel.org/lkml/e4afe4c5-0262-4500-aeec-60f30734b4fc@default
+> +	"mediatek,<chip>-disp-rdma"  		- read DMA / line buffer
+> +	"mediatek,<chip>-disp-wdma"  		- write DMA
+> +	"mediatek,<chip>-disp-ccorr" 		- color correction
 
-I was going to send out patch to fix that specific case on virtio side.
+I prefer adding disp-ccorr to be an independent patch.
 
-BTW, is your VM's virtio mmio based or pci based?
+> +	"mediatek,<chip>-disp-color" 		- color processor
+> +	"mediatek,<chip>-disp-dither" 		- dither
 
-As mentioned in previous email, when I was playing with firecracker by amazon,
-the virtio-blk is mmio based. Not sure if that would lead to the lack of vector
-issue.
+I prefer adding disp-dither to be an independent patch.
 
-Dongli Zhang
+> +	"mediatek,<chip>-disp-aal"   		- adaptive ambient light controller
+> +	"mediatek,<chip>-disp-gamma" 		- gamma correction
+> +	"mediatek,<chip>-disp-merge" 		- merge streams from two RDMA sources
+> +	"mediatek,<chip>-disp-split" 		- split stream to two encoders
+> +	"mediatek,<chip>-disp-ufoe"  		- data compression engine
+> +	"mediatek,<chip>-dsi"        		- DSI controller, see mediatek,dsi.txt
+> +	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+> +	"mediatek,<chip>-disp-mutex" 		- display mutex
+> +	"mediatek,<chip>-disp-od"    		- overdrive
+> +  the supported chips are mt2701, mt2712, mt8173 and mt8183.
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> @@ -71,6 +74,12 @@ mmsys: clock-controller@14000000 {
+>  	#clock-cells = <1>;
+>  };
+>  
+> +display_components: dispsys@14000000 {
+> +		compatible = "mediatek,mt8183-display";
+
+"mediatek,mt8183-display" is undefined. I think this should be
+"mediatek,mt8183-mmsys" and you have met the same problem in [1]. You
+may depend on that series to develop your patches.
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2018-November/015860.html
+
+Regards,
+CK
+
+> +		reg = <0 0x14000000 0 0x1000>;
+> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +};
+> +
+>  ovl0: ovl@1400c000 {
+>  	compatible = "mediatek,mt8173-disp-ovl";
+>  	reg = <0 0x1400c000 0 0x1000>;
+
+
