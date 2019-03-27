@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3C5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FF4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85DC20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E991620811
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553663932;
-	bh=00obCVu+lf1h98x3XeRpV+l+TQkzpZyxI54dxH/XHzI=;
+	s=default; t=1553663936;
+	bh=vMaM1cF0JhIv9VYOQ0sWkkbVGKEVNZ+cYUuys5vv7J8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XE82ZyQUGkC4o3lf3uRSYWBzYPf77m1OPz07FtiMCuDhRqQXDwDQ+0IKEDoCZDN9w
-	 6OXaylYXZq3B6Nv6cQz32YKU28u8QvLwxHcOePupbJG0hkmGCFzN0QX/QU5N8/i3sZ
-	 UEnw1t3r6P7dlIJK10gnZlFQGPZnRTwRZGVs+Cfw=
+	b=hH5I5ThMszbnQ5GmuxHHgAK7LYg3HDktQlOC9oca+kAcJ8oo1lLXYtk0q+0cL2B8b
+	 95z/qcByW/MVSrYc0kQn98KrPMzfP71lJMXQ0HfRbGaAhtRJmjQA7PhRrs3TlV3F3W
+	 L+AICTv+LMbT55+4XjTWjKb6ImIu9l3rDaUnZcG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfC0FSv (ORCPT
+        id S1732931AbfC0FSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:18:51 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59071 "EHLO
+        Wed, 27 Mar 2019 01:18:54 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58289 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbfC0FSt (ORCPT
+        by vger.kernel.org with ESMTP id S1725768AbfC0FSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:18:49 -0400
+        Wed, 27 Mar 2019 01:18:53 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5537622125;
-        Wed, 27 Mar 2019 01:18:48 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id AE288221A6;
+        Wed, 27 Mar 2019 01:18:52 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:48 -0400
+  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Iz22Myouv8iQMYGK0rTnTeswOBYDThi/TC7bfTdyCxs=; b=PnF40OmR
-        fRI+VmRi6ki9Vgee37u/fxh8YzD1IbxyYEcFHl8hj0T1zTmerTGBoA8/qVsBgYWO
-        hrylaGz207Luw5WcjZJsMlRLN1848/yQ55cMQwb+pqh1tdfb/PhDAA2A0reWlGRu
-        ROlYhOW4mNRBTeEvbxIPSUkiq5Wt5LC5BNYc76YaqG2xbuCuqyQNah/2OlpeQilt
-        dJFI4XzONWhCZBrU0z2kesN9IBKKdllxAqgJ0g4ssCT0TjnYGQBS3YNuhCJoE6Rg
-        MjzT2O+jrZ1Ds2nulymO8+TssqI+OSXaNe3XF8/xYbZyckEKeQlViFkbp+raBBhk
-        GRinhcyCM5G+cg==
-X-ME-Sender: <xms:uAebXNfstZ_PaOeEwXnH7hARwK5kRdywCWVlYzlcPS4Vc6dguMxmNw>
+        fm2; bh=LkBxDEwxK//pbnzUp1eCPuq5rRkpN350XpuuORksqBQ=; b=l4jC4z7F
+        DpzUVRJKal7eiOgn/4LoHoWYUYE+EfKyrbx7OG0puXmTBoEc6NVwGhk0h68Fwk4m
+        94KcUwS7+wCEPhxDHK4L+TCS55inmGcaBz7NSSZLrpDU8JEaVhQr1r0JaMrdj4ql
+        e40ceB6uYUbW09DLEkVkeftaLdwQg3N1CDpOFs8IhqivIoDddy6BtfO19Op4PUQE
+        F97OmqNLkhots0YhRNqyZvRHedAb+E8nccPjPvydffothqFmwrVFWirEPOCSfyrA
+        JFdCKptvDbvCR5XHPNYPKcxGFAnOy335L4uta0oFp3gYTVS/ADmqm916yUqlMkME
+        vkyUDig0b5O2EQ==
+X-ME-Sender: <xms:vAebXEh1GaN-0sTsdDKWbE5j7m7EYO_YW_CaizoDbDG-jJ6Pgo-0_A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrudefledrudelvdenucfrrghrrghmpehmrghilhhfrhhomhepthho
-    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgephe
-X-ME-Proxy: <xmx:uAebXBOhBhQ9NfFFGzTTfmHevJwWWoDtYoOV_4H0ZigmHDqyRwhgcw>
-    <xmx:uAebXEKdVqfqPHrZp8uBL6lYqFJv8pE2Pz7u1K9JXnMII99fIbZk2w>
-    <xmx:uAebXCGK3G0X2OOi4J0MEZMrYVmAoAJYfQlzvAs8_hEqbdquXXgmgw>
-    <xmx:uAebXHIEOukPqv6E8rdKtzMMB2BQ1VWs_0wv728ANkSPhngaB2RCOg>
+    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepie
+X-ME-Proxy: <xmx:vAebXEBgxEJypLXXjdKu0CMH7jcbcmYuDZr-9Mggh4SBriLll_kbZA>
+    <xmx:vAebXBGJAIX1RcE2LFRdaouY0pX7ylIk1d91sHY3rHRiPTT7__sDJg>
+    <xmx:vAebXEKwKw9jW6rU4lrmWUBXisEpFYAuSy-nW62JO4YkBz5W8qaEPg>
+    <xmx:vAebXLArfwAW_1V_rfsoZcKOqqV9kgn8zkUQMi8r4t5LperaAnnWAw>
 Received: from eros.localdomain (124-169-139-192.dyn.iinet.net.au [124.169.139.192])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BA09EE40FF;
-        Wed, 27 Mar 2019 01:18:44 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2249DE4210;
+        Wed, 27 Mar 2019 01:18:48 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/24] fs: Update function docstring for simple_write_end()
-Date:   Wed, 27 Mar 2019 16:16:59 +1100
-Message-Id: <20190327051717.23225-7-tobin@kernel.org>
+Subject: [PATCH v3 07/24] fs: Fix function docstring for posix_acl_update_mode()
+Date:   Wed, 27 Mar 2019 16:17:00 +1100
+Message-Id: <20190327051717.23225-8-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190327051717.23225-1-tobin@kernel.org>
 References: <20190327051717.23225-1-tobin@kernel.org>
@@ -80,70 +80,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shinx emits a warning due to an extra function parameter in the current
-function docstring for simple_write_end().  While we are fixing this
-warning we might as well clean up the whole function docstring for this
-function.
+Sphinx emits a bunch of warnings due to undocumented function parameters
+for posix_acl_update_mode().  We should document all the parameters.
 
-The current member descriptions are readable in text and also ok in
-HTML.  When vfs.txt is converted to use RST format these member
-descriptions could be improved with a reference to struct
-address_space_operations docs in that file.
+Docstring is currently stale in places, it references a non-existent
+function, inode_change_ok().  As noted in the documentation file
+Documentation/filesystems/Porting this function is now called
+setattr_prepare().
 
-Update and cleanup docstring for simple_write_end()
+Currently docstring includes 'setgit bit', meaning is not totally
+clear (to me), setattr_prepare() uses term 'SGID bit', let's use this
+too.
+
+Fix function docstring for posix_acl_update_mode():
+
+ - Document function parameters.
+ - Reference setattr_prepare() instead of inode_change_ok().
+ - Use 'SGID bit' instead of 'setgit bit'.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- fs/libfs.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ fs/posix_acl.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 0fb590d79f30..36af25b9b2a3 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -448,9 +448,8 @@ int simple_write_begin(struct file *file, struct address_space *mapping,
- EXPORT_SYMBOL(simple_write_begin);
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index 2fd0fde16fe1..07394510c3d6 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -629,14 +629,18 @@ posix_acl_create(struct inode *dir, umode_t *mode,
+ EXPORT_SYMBOL_GPL(posix_acl_create);
  
  /**
-- * simple_write_end - .write_end helper for non-block-device FSes
-- * @available: See .write_end of address_space_operations
-- * @file: 		"
-+ * simple_write_end() - .write_end helper for non-block-device FSes
-+ * @file: See .write_end of &struct address_space_operations
-  * @mapping: 		"
-  * @pos: 		"
-  * @len: 		"
-@@ -458,17 +457,21 @@ EXPORT_SYMBOL(simple_write_begin);
-  * @page: 		"
-  * @fsdata: 		"
+- * posix_acl_update_mode  -  update mode in set_acl
++ * posix_acl_update_mode() - Update mode in set_acl.
++ * @inode: The inode we are working on.
++ * @mode_p: New mode to use when updating.
++ * @acl: ACL we are operating on.
   *
-- * simple_write_end does the minimum needed for updating a page after writing is
-- * done. It has the same API signature as the .write_end of
-- * address_space_operations vector. So it can just be set onto .write_end for
-- * FSes that don't need any other processing. i_mutex is assumed to be held.
-- * Block based filesystems should use generic_write_end().
-- * NOTE: Even though i_size might get updated by this function, mark_inode_dirty
-- * is not called, so a filesystem that actually does store data in .write_inode
-- * should extend on what's done here with a call to mark_inode_dirty() in the
-- * case that i_size has changed.
-+ * Does the minimum needed for updating a page after writing is done.
-+ * It has the same API signature as the .write_end member of &struct
-+ * address_space_operations vector.  So it can just be set onto
-+ * .write_end for FSes that don't need any other processing.  Block
-+ * based filesystems should use generic_write_end().
-+ *
-+ * NOTE: Even though i_size might get updated by this function,
-+ * mark_inode_dirty() is not called, so a filesystem that actually does
-+ * store data in .write_inode should extend on what's done here with a
-+ * call to mark_inode_dirty() in the case that i_size has changed.
+- * Update the file mode when setting an ACL: compute the new file permission
+- * bits based on the ACL.  In addition, if the ACL is equivalent to the new
+- * file mode, set *acl to NULL to indicate that no ACL should be set.
++ * Update the file mode when setting an ACL, compute the new file
++ * permission bits based on the ACL.  In addition, if the ACL is
++ * equivalent to the new file mode, set ``*acl`` to %NULL to indicate
++ * that no ACL should be set.
   *
-  * Use *ONLY* with simple_readpage()
-+ *
-+ * Context: Caller must hold i_mutex
-+ * Return: @copied argument unmodified.
+- * As with chmod, clear the setgit bit if the caller is not in the owning group
+- * or capable of CAP_FSETID (see inode_change_ok).
++ * As with chmod, clear the SGID bit if the caller is not in the owning
++ * group or capable of CAP_FSETID (see setattr_prepare()).
+  *
+  * Called from set_acl inode operations.
   */
- int simple_write_end(struct file *file, struct address_space *mapping,
- 			loff_t pos, unsigned len, unsigned copied,
 -- 
 2.21.0
 
