@@ -2,329 +2,386 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D7DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF846C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765122075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:36:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XmworPG1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BiogtWhX"
+	by mail.kernel.org (Postfix) with ESMTP id ADF302075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbfC0KgS (ORCPT
+        id S1733007AbfC0KhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:36:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34452 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbfC0KgR (ORCPT
+        Wed, 27 Mar 2019 06:37:16 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:35614 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727936AbfC0KhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:36:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4ED2F60F3D; Wed, 27 Mar 2019 10:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553682975;
-        bh=1kAu9FMdSZv3yup+qfNRLQoL6lZc00JcHMhXPNz/+j0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XmworPG1DSfEREe4MYzij0qqErN2qtMq3/BOUn5KLhBfR30VTQCE6cu5tacoL0JvX
-         71SQLKhLi5q7pofybJ+a2pUDt8n5L5++Qod3IImkbje85wldOLdmvbA4dSErare61z
-         q+HS9SW6pogybvssvgeW+eLbQoiQz8vc7PhmQrv0=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id E951B607C6;
-        Wed, 27 Mar 2019 10:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553682972;
-        bh=1kAu9FMdSZv3yup+qfNRLQoL6lZc00JcHMhXPNz/+j0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BiogtWhX+9dsojr/nEcu7JIS/2T8LUUGuFYlKefVee7+8XHEoAifF5M6hnVChedVw
-         9MjRFO/NA8q5rI1xIi8Qe/QoN/QgmogEKR0GE3rU+qG6CirKkxNlqOHRaGMomAeIvW
-         nifBy6Jv/KE0AJrBnnt8Mgpa9e12AyggSQuazYNM=
+        Wed, 27 Mar 2019 06:37:16 -0400
+Received: from [IPv6:2001:420:44c1:2579:7114:7fc0:ad5a:c367] ([IPv6:2001:420:44c1:2579:7114:7fc0:ad5a:c367])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 95vfhvu8giLOm95vihJhM0; Wed, 27 Mar 2019 11:37:12 +0100
+Subject: Re: [PATCH v12 1/5] media: Media Device Allocator API
+To:     Shuah Khan <shuah@kernel.org>, mchehab@kernel.org, perex@perex.cz,
+        tiwai@suse.com
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+References: <cover.1553634246.git.shuah@kernel.org>
+ <1e22c34b011c3c1fd793a623fb59c82081d46038.1553634246.git.shuah@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f2b75327-5e79-d316-9599-6420b99aa140@xs4all.nl>
+Date:   Wed, 27 Mar 2019 11:37:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1e22c34b011c3c1fd793a623fb59c82081d46038.1553634246.git.shuah@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 Mar 2019 16:06:11 +0530
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        devicetree@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v5 1/2] Bluetooth: hci_qca: Added support for WCN3998
-In-Reply-To: <20190326234403.GZ112750@google.com>
-References: <1553600756-8264-1-git-send-email-c-hbandi@codeaurora.org>
- <1553600756-8264-2-git-send-email-c-hbandi@codeaurora.org>
- <20190326234403.GZ112750@google.com>
-Message-ID: <0bc9e4191ecd2c33bf852bef9ad8ecf2@codeaurora.org>
-X-Sender: c-hbandi@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-CMAE-Envelope: MS4wfLio2KANMAakDwJQ2JECdmrPFDlwp7ZgKR1dWQij7HkPgBMF3ISy3KNGdfvSJrcvjr7QPp3D6o0lkty2Oc4UvGXIV7UkZGX93ML0JwNF4yDcO6JYp4PE
+ /ZM1OVgMsZ/iwITbhKgFT8fn/kxqxmLySY40TlBsnfrk4UNLo7nof6kO0TtFka/vttbo33nkBelZgME/445HkwG20d0oIswGdsaj4/oSzvqhNtIxzyUyaSBr
+ Z1YNJaoWsm7vAFIREcCelsNWO6g+xIA7/8wpBz5Iszd5ZM4e+xzS9uSRVCkh/sf0OUwxe53a8/yH2tHmkvbsubQkX1uC7NSehi3QznbHcvbduB7UpQKS8fnM
+ hg5+BJozdfZTcFZ3ti8ZFjxZpBIjYpiGSCrz+r0PVz7Dwddazn5Dk1dO7cGzwD+vGLlHUZcM8j+Iir5CrfRHMFkRTLe2R3BtxZmLCDl2ErL2w53Pm2Q0zGC2
+ qkuiIq5mvcWhIdZh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Hi Shuah,
 
-On 2019-03-27 05:14, Matthias Kaehlcke wrote:
-> On Tue, Mar 26, 2019 at 05:15:55PM +0530, Harish Bandi wrote:
->> Added new compatible for WCN3998 and corresponding voltage
->> and current values to WCN3998 compatible.
->> Changed driver code to support WCN3998
->> 
->> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
->> ---
->> Changes in V5:
->> - changed is_qca_soc_type_wcn399x_family to
->> - qca_is_wcn399x helper function
->> - moved the qca_is_wcn399x function to btqca.c
->> ---
->>  drivers/bluetooth/btqca.c   | 13 +++++++++++--
->>  drivers/bluetooth/btqca.h   |  8 +++++++-
->>  drivers/bluetooth/hci_qca.c | 40 
->> ++++++++++++++++++++++++++--------------
->>  3 files changed, 44 insertions(+), 17 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
->> index 6122685..383e99f 100644
->> --- a/drivers/bluetooth/btqca.c
->> +++ b/drivers/bluetooth/btqca.c
->> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
->> baudrate,
->> 
->>  	/* Download rampatch file */
->>  	config.type = TLV_TYPE_PATCH;
->> -	if (soc_type == QCA_WCN3990) {
->> +	if (qca_is_wcn399x(soc_type)) {
->>  		/* Firmware files to download are based on ROM version.
->>  		 * ROM version is derived from last two bytes of soc_ver.
->>  		 */
->> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
->> baudrate,
->> 
->>  	/* Download NVM configuration */
->>  	config.type = TLV_TYPE_NVM;
->> -	if (soc_type == QCA_WCN3990)
->> +	if (qca_is_wcn399x(soc_type))
->>  		snprintf(config.fwname, sizeof(config.fwname),
->>  			 "qca/crnv%02x.bin", rom_ver);
->>  	else
->> @@ -410,6 +410,15 @@ int qca_set_bdaddr(struct hci_dev *hdev, const 
->> bdaddr_t *bdaddr)
->>  }
->>  EXPORT_SYMBOL_GPL(qca_set_bdaddr);
->> 
->> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
->> +{
->> +	if ((soc_type == QCA_WCN3990) || (soc_type == QCA_WCN3998))
->> +		return true;
->> +
->> +	return false;
->> +}
->> +EXPORT_SYMBOL_GPL(qca_is_wcn399x);
->> +
->>  MODULE_AUTHOR("Ben Young Tae Kim <ytkim@qca.qualcomm.com>");
->>  MODULE_DESCRIPTION("Bluetooth support for Qualcomm Atheros family ver 
->> " VERSION);
->>  MODULE_VERSION(VERSION);
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index 6fdc25d..aca7b0d 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
->>  	QCA_INVALID = -1,
->>  	QCA_AR3002,
->>  	QCA_ROME,
->> -	QCA_WCN3990
->> +	QCA_WCN3990,
->> +	QCA_WCN3998,
->>  };
->> 
->>  #if IS_ENABLED(CONFIG_BT_QCA)
->> @@ -142,6 +143,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
->> baudrate,
->>  		   enum qca_btsoc_type soc_type, u32 soc_ver);
->>  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
->>  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->> +bool qca_is_wcn399x(enum qca_btsoc_type soc_type);
->>  #else
->> 
->>  static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const 
->> bdaddr_t *bdaddr)
->> @@ -165,4 +167,8 @@ static inline int qca_set_bdaddr(struct hci_dev 
->> *hdev, const bdaddr_t *bdaddr)
->>  	return -EOPNOTSUPP;
->>  }
->> 
->> +static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
->> +{
->> +	return -EOPNOTSUPP;
-> 
-> This function returns a bool, hence returning an error code is not
-> meaningful here. Just return false.
+Some comments at the end. I suspect you still have to do more work :-(
 
-[Harish] - ok will correct it new patch.
+On 3/27/19 3:24 AM, Shuah Khan wrote:
+> Media Device Allocator API to allows multiple drivers share a media device.
+> This API solves a very common use-case for media devices where one physical
+> device (an USB stick) provides both audio and video. When such media device
+> exposes a standard USB Audio class, a proprietary Video class, two or more
+> independent drivers will share a single physical USB bridge. In such cases,
+> it is necessary to coordinate access to the shared resource.
 > 
->> +}
->>  #endif
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 4ea995d..4af580a 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -521,7 +521,7 @@ static int qca_open(struct hci_uart *hu)
->>  	if (hu->serdev) {
->> 
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		if (qcadev->btsoc_type != QCA_WCN3990) {
->> +		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
->>  			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->>  		} else {
->>  			hu->init_speed = qcadev->init_speed;
->> @@ -627,7 +627,7 @@ static int qca_close(struct hci_uart *hu)
->> 
->>  	if (hu->serdev) {
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		if (qcadev->btsoc_type == QCA_WCN3990)
->> +		if (qca_is_wcn399x(qcadev->btsoc_type))
->>  			qca_power_shutdown(hu);
->>  		else
->>  			gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> @@ -1008,7 +1008,7 @@ static int qca_set_baudrate(struct hci_dev 
->> *hdev, uint8_t baudrate)
->>  		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
->> 
->>  	/* Give the controller time to process the request */
->> -	if (qca_soc_type(hu) == QCA_WCN3990)
->> +	if (qca_is_wcn399x(qca_soc_type(hu)))
->>  		msleep(10);
->>  	else
->>  		msleep(300);
->> @@ -1084,7 +1084,7 @@ static unsigned int qca_get_speed(struct 
->> hci_uart *hu,
->> 
->>  static int qca_check_speeds(struct hci_uart *hu)
->>  {
->> -	if (qca_soc_type(hu) == QCA_WCN3990) {
->> +	if (qca_is_wcn399x(qca_soc_type(hu))) {
->>  		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->>  		    !qca_get_speed(hu, QCA_OPER_SPEED))
->>  			return -EINVAL;
->> @@ -1116,7 +1116,7 @@ static int qca_set_speed(struct hci_uart *hu, 
->> enum qca_speed_type speed_type)
->>  		/* Disable flow control for wcn3990 to deassert RTS while
->>  		 * changing the baudrate of chip and host.
->>  		 */
->> -		if (soc_type == QCA_WCN3990)
->> +		if (qca_is_wcn399x(soc_type))
->>  			hci_uart_set_flow_control(hu, true);
->> 
->>  		qca_baudrate = qca_get_baudrate_value(speed);
->> @@ -1128,7 +1128,7 @@ static int qca_set_speed(struct hci_uart *hu, 
->> enum qca_speed_type speed_type)
->>  		host_set_baudrate(hu, speed);
->> 
->>  error:
->> -		if (soc_type == QCA_WCN3990)
->> +		if (qca_is_wcn399x(soc_type))
->>  			hci_uart_set_flow_control(hu, false);
->>  	}
->> 
->> @@ -1201,7 +1201,7 @@ static int qca_setup(struct hci_uart *hu)
->>  	/* Patch downloading has to be done without IBS mode */
->>  	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->> 
->> -	if (soc_type == QCA_WCN3990) {
->> +	if (qca_is_wcn399x(soc_type)) {
->>  		bt_dev_info(hdev, "setting up wcn3990");
->> 
->>  		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
->> @@ -1232,7 +1232,7 @@ static int qca_setup(struct hci_uart *hu)
->>  		qca_baudrate = qca_get_baudrate_value(speed);
->>  	}
->> 
->> -	if (soc_type != QCA_WCN3990) {
->> +	if (!qca_is_wcn399x(soc_type)) {
->>  		/* Get QCA version information */
->>  		ret = qca_read_soc_version(hdev, &soc_ver);
->>  		if (ret)
->> @@ -1257,7 +1257,7 @@ static int qca_setup(struct hci_uart *hu)
->>  	}
->> 
->>  	/* Setup bdaddr */
->> -	if (soc_type == QCA_WCN3990)
->> +	if (qca_is_wcn399x(soc_type))
->>  		hu->hdev->set_bdaddr = qca_set_bdaddr;
->>  	else
->>  		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
->> @@ -1280,7 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
->>  	.dequeue	= qca_dequeue,
->>  };
->> 
->> -static const struct qca_vreg_data qca_soc_data = {
->> +static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->>  	.soc_type = QCA_WCN3990,
->>  	.vregs = (struct qca_vreg []) {
->>  		{ "vddio",   1800000, 1900000,  15000  },
->> @@ -1291,6 +1291,17 @@ static int qca_setup(struct hci_uart *hu)
->>  	.num_vregs = 4,
->>  };
->> 
->> +static const struct qca_vreg_data qca_soc_data_wcn3998 = {
->> +	.soc_type = QCA_WCN3998,
->> +	.vregs = (struct qca_vreg []) {
->> +		{ "vddio",   1800000, 1900000,  10000  },
->> +		{ "vddxo",   1800000, 1900000,  80000  },
->> +		{ "vddrf",   1300000, 1352000,  300000 },
->> +		{ "vddch0",  3300000, 3300000,  450000 },
->> +	},
->> +	.num_vregs = 4,
->> +};
->> +
->>  static void qca_power_shutdown(struct hci_uart *hu)
->>  {
->>  	struct qca_data *qca = hu->priv;
->> @@ -1424,8 +1435,8 @@ static int qca_serdev_probe(struct serdev_device 
->> *serdev)
->>  	qcadev->serdev_hu.serdev = serdev;
->>  	data = of_device_get_match_data(&serdev->dev);
->>  	serdev_device_set_drvdata(serdev, qcadev);
->> -	if (data && data->soc_type == QCA_WCN3990) {
->> -		qcadev->btsoc_type = QCA_WCN3990;
->> +	if (data && qca_is_wcn399x(data->soc_type)) {
->> +		qcadev->btsoc_type = data->soc_type;
->>  		qcadev->bt_power = devm_kzalloc(&serdev->dev,
->>  						sizeof(struct qca_power),
->>  						GFP_KERNEL);
->> @@ -1489,7 +1500,7 @@ static void qca_serdev_remove(struct 
->> serdev_device *serdev)
->>  {
->>  	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
->> 
->> -	if (qcadev->btsoc_type == QCA_WCN3990)
->> +	if (qca_is_wcn399x(qcadev->btsoc_type))
->>  		qca_power_shutdown(&qcadev->serdev_hu);
->>  	else
->>  		clk_disable_unprepare(qcadev->susclk);
->> @@ -1499,7 +1510,8 @@ static void qca_serdev_remove(struct 
->> serdev_device *serdev)
->> 
->>  static const struct of_device_id qca_bluetooth_of_match[] = {
->>  	{ .compatible = "qcom,qca6174-bt" },
->> -	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
->> +	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
->> +	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
+> Using this API, drivers can allocate a media device with the shared struct
+> device as the key. Once the media device is allocated by a driver, other
+> drivers can get a reference to it. The media device is released when all
+> the references are released.
 > 
-> Besides the return value in the qca_is_wcn399x() stub:
+> Signed-off-by: Shuah Khan <shuah@kernel.org>
+> ---
+>  Documentation/media/kapi/mc-core.rst |  41 ++++++++
+>  drivers/media/Makefile               |   6 ++
+>  drivers/media/media-dev-allocator.c  | 142 +++++++++++++++++++++++++++
+>  include/media/media-dev-allocator.h  |  54 ++++++++++
+>  4 files changed, 243 insertions(+)
+>  create mode 100644 drivers/media/media-dev-allocator.c
+>  create mode 100644 include/media/media-dev-allocator.h
 > 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-[Harish] - Thanks for reviewing
+> diff --git a/Documentation/media/kapi/mc-core.rst b/Documentation/media/kapi/mc-core.rst
+> index f930725e0d6b..05bba0b61748 100644
+> --- a/Documentation/media/kapi/mc-core.rst
+> +++ b/Documentation/media/kapi/mc-core.rst
+> @@ -259,6 +259,45 @@ Subsystems should facilitate link validation by providing subsystem specific
+>  helper functions to provide easy access for commonly needed information, and
+>  in the end provide a way to use driver-specific callbacks.
+>  
+> +Media Controller Device Allocator API
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +
+> +When the media device belongs to more than one driver, the shared media
+> +device is allocated with the shared struct device as the key for look ups.
+> +
+> +The shared media device should stay in registered state until the last
+> +driver unregisters it. In addition, the media device should be released when
+> +all the references are released. Each driver gets a reference to the media
+> +device during probe, when it allocates the media device. If media device is
+> +already allocated, the allocate API bumps up the refcount and returns the
+> +existing media device. The driver puts the reference back in its disconnect
+> +routine when it calls :c:func:`media_device_delete()`.
+> +
+> +The media device is unregistered and cleaned up from the kref put handler to
+> +ensure that the media device stays in registered state until the last driver
+> +unregisters the media device.
+> +
+> +**Driver Usage**
+> +
+> +Drivers should use the appropriate media-core routines to manage the shared
+> +media device life-time handling the two states:
+> +1. allocate -> register -> delete
+> +2. get reference to already registered device -> delete
+> +
+> +call :c:func:`media_device_delete()` routine to make sure the shared media
+> +device delete is handled correctly.
+> +
+> +**driver probe:**
+> +Call :c:func:`media_device_usb_allocate()` to allocate or get a reference
+> +Call :c:func:`media_device_register()`, if media devnode isn't registered
+> +
+> +**driver disconnect:**
+> +Call :c:func:`media_device_delete()` to free the media_device. Freeing is
+> +handled by the kref put handler.
+> +
+> +API Definitions
+> +^^^^^^^^^^^^^^^
+> +
+>  .. kernel-doc:: include/media/media-device.h
+>  
+>  .. kernel-doc:: include/media/media-devnode.h
+> @@ -266,3 +305,5 @@ in the end provide a way to use driver-specific callbacks.
+>  .. kernel-doc:: include/media/media-entity.h
+>  
+>  .. kernel-doc:: include/media/media-request.h
+> +
+> +.. kernel-doc:: include/media/media-dev-allocator.h
+> diff --git a/drivers/media/Makefile b/drivers/media/Makefile
+> index 985d35ec6b29..20b488067ec2 100644
+> --- a/drivers/media/Makefile
+> +++ b/drivers/media/Makefile
+> @@ -6,6 +6,12 @@
+>  media-objs	:= media-device.o media-devnode.o media-entity.o \
+>  		   media-request.o
+>  
+> +ifeq ($(CONFIG_USB),y)
+> +	ifeq ($(CONFIG_MODULES),y)
+> +		media-objs += media-dev-allocator.o
+> +	endif
+> +endif
+> +
+>  #
+>  # I2C drivers should come before other drivers, otherwise they'll fail
+>  # when compiled as builtin drivers
+> diff --git a/drivers/media/media-dev-allocator.c b/drivers/media/media-dev-allocator.c
+> new file mode 100644
+> index 000000000000..a37515254009
+> --- /dev/null
+> +++ b/drivers/media/media-dev-allocator.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * media-dev-allocator.c - Media Controller Device Allocator API
+> + *
+> + * Copyright (c) 2018 Shuah Khan <shuah@kernel.org>
+> + *
+> + * Credits: Suggested by Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> + */
+> +
+> +/*
+> + * This file adds a global refcounted Media Controller Device Instance API.
+> + * A system wide global media device list is managed and each media device
+> + * includes a kref count. The last put on the media device releases the media
+> + * device instance.
+> + *
+> + */
+> +
+> +#include <linux/kref.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/usb.h>
+> +
+> +#include <media/media-device.h>
+> +
+> +static LIST_HEAD(media_device_list);
+> +static DEFINE_MUTEX(media_device_lock);
+> +
+> +struct media_device_instance {
+> +	struct media_device mdev;
+> +	struct module *owner;
+> +	struct list_head list;
+> +	struct kref refcount;
+> +};
+> +
+> +static inline struct media_device_instance *
+> +to_media_device_instance(struct media_device *mdev)
+> +{
+> +	return container_of(mdev, struct media_device_instance, mdev);
+> +}
+> +
+> +static void media_device_instance_release(struct kref *kref)
+> +{
+> +	struct media_device_instance *mdi =
+> +		container_of(kref, struct media_device_instance, refcount);
+> +
+> +	dev_dbg(mdi->mdev.dev, "%s: mdev=%p\n", __func__, &mdi->mdev);
+> +
+> +	mutex_lock(&media_device_lock);
+> +
+> +	media_device_unregister(&mdi->mdev);
+> +	media_device_cleanup(&mdi->mdev);
+> +
+> +	list_del(&mdi->list);
+> +	mutex_unlock(&media_device_lock);
+> +
+> +	kfree(mdi);
+> +}
+> +
+> +/* Callers should hold media_device_lock when calling this function */
+> +static struct media_device *__media_device_get(struct device *dev,
+> +						const char *module_name,
+> +						struct module *modp)
+> +{
+> +	struct media_device_instance *mdi;
+> +
+> +	list_for_each_entry(mdi, &media_device_list, list) {
+> +
+> +		if (mdi->mdev.dev != dev)
+> +			continue;
+> +
+> +		kref_get(&mdi->refcount);
+> +
+> +		/* get module reference for the media_device owner */
+> +		if (modp != mdi->owner && !try_module_get(mdi->owner))
+> +			dev_err(dev, "%s: try_module_get() error\n", __func__);
+> +		dev_dbg(dev, "%s: get mdev=%p module_name %s\n",
+> +			__func__, &mdi->mdev, module_name);
+> +		return &mdi->mdev;
+> +	}
+> +
+> +	mdi = kzalloc(sizeof(*mdi), GFP_KERNEL);
+> +	if (!mdi)
+> +		return NULL;
+> +
+> +	mdi->owner = modp;
+> +	kref_init(&mdi->refcount);
+> +	list_add_tail(&mdi->list, &media_device_list);
+> +
+> +	dev_dbg(dev, "%s: alloc mdev=%p module_name %s\n", __func__,
+> +		&mdi->mdev, module_name);
+> +	return &mdi->mdev;
+> +}
+> +
+> +struct media_device *media_device_usb_allocate(struct usb_device *udev,
+> +					       const char *module_name)
+> +{
+> +	struct media_device *mdev;
+> +	struct module *modptr;
+> +
+> +	mutex_lock(&module_mutex);
+> +	modptr = find_module(module_name);
+> +	mutex_unlock(&module_mutex);
+> +
+> +	mutex_lock(&media_device_lock);
+> +	mdev = __media_device_get(&udev->dev, module_name, modptr);
+> +	if (!mdev) {
+> +		mutex_unlock(&media_device_lock);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	/* check if media device is already initialized */
+> +	if (!mdev->dev)
+> +		__media_device_usb_init(mdev, udev, udev->product,
+> +					module_name);
+> +	mutex_unlock(&media_device_lock);
+> +	return mdev;
+> +}
+> +EXPORT_SYMBOL_GPL(media_device_usb_allocate);
+> +
+> +void media_device_delete(struct media_device *mdev, const char *module_name)
+> +{
+> +	struct media_device_instance *mdi = to_media_device_instance(mdev);
+> +	struct module *modptr;
+> +
+> +	dev_dbg(mdi->mdev.dev, "%s: mdev=%p module_name %s\n",
+> +		__func__, &mdi->mdev, module_name);
+> +
+> +	mutex_lock(&module_mutex);
+> +	modptr = find_module(module_name);
+> +	mutex_unlock(&module_mutex);
+> +
+> +	mutex_lock(&media_device_lock);
+> +	/* put module reference if media_device owner is not THIS_MODULE */
+> +	if (mdi->owner != modptr) {
+> +		module_put(mdi->owner);
+> +		dev_dbg(mdi->mdev.dev,
+> +			"%s decremented owner module reference\n", __func__);
+> +	}
+> +	mutex_unlock(&media_device_lock);
+> +	kref_put(&mdi->refcount, media_device_instance_release);
+> +}
+> +EXPORT_SYMBOL_GPL(media_device_delete);
+> diff --git a/include/media/media-dev-allocator.h b/include/media/media-dev-allocator.h
+> new file mode 100644
+> index 000000000000..69aee9a4b4c1
+> --- /dev/null
+> +++ b/include/media/media-dev-allocator.h
+> @@ -0,0 +1,54 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * media-dev-allocator.h - Media Controller Device Allocator API
+> + *
+> + * Copyright (c) 2018 Shuah Khan <shuah@kernel.org>
+> + *
+> + * Credits: Suggested by Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> + */
+> +
+> +/*
+> + * This file adds a global ref-counted Media Controller Device Instance API.
+> + * A system wide global media device list is managed and each media device
+> + * includes a kref count. The last put on the media device releases the media
+> + * device instance.
+> + */
+> +
+> +#ifndef _MEDIA_DEV_ALLOCTOR_H
+> +#define _MEDIA_DEV_ALLOCTOR_H
+> +
+> +struct usb_device;
+> +
+> +#if defined(CONFIG_MEDIA_CONTROLLER) && defined(CONFIG_USB) && \
+> +	defined(CONFIG_MODULES)
+> +/**
+> + * media_device_usb_allocate() - Allocate and return struct &media device
+> + *
+> + * @udev:		struct &usb_device pointer
+> + * @module_name:	should be filled with %KBUILD_MODNAME
+> + *
+> + * This interface should be called to allocate a Media Device when multiple
+> + * drivers share usb_device and the media device. This interface allocates
+> + * &media_device structure and calls media_device_usb_init() to initialize
+> + * it.
+> + *
+> + */
+> +struct media_device *media_device_usb_allocate(struct usb_device *udev,
+> +					       char *module_name);
+> +/**
+> + * media_device_delete() - Release media device. Calls kref_put().
+> + *
+> + * @mdev:		struct &media_device pointer
+> + * @module_name:	should be filled with %KBUILD_MODNAME
+> + *
+> + * This interface should be called to put Media Device Instance kref.
+> + */
+> +void media_device_delete(struct media_device *mdev, char *module_name);
+> +#else
+> +static inline struct media_device *media_device_usb_allocate(
+> +			struct usb_device *udev, char *module_name)
+> +			{ return NULL; }
+> +static inline void media_device_delete(
+> +			struct media_device *mdev, char *module_name) { }
+> +#endif /* CONFIG_MEDIA_CONTROLLER && CONFIG_USB && CONFIG_MODULES */
 
-Thanks,
-Harish
+I am still getting sparse warnings:
+
+drivers/media/media-dev-allocator.c /home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:94:21:  warning: symbol 'media_device_usb_allocate' was not declared. Should it be static?
+drivers/media/media-dev-allocator.c /home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:120:6:  warning: symbol 'media_device_delete' was not declared. Should it be static?
+drivers/media/media-dev-allocator.c:94:22: warning: no previous prototype for 'media_device_usb_allocate' [-Wmissing-prototypes]
+drivers/media/media-dev-allocator.c:120:6: warning: no previous prototype for 'media_device_delete' [-Wmissing-prototypes]
+
+This makes sense since if the #if above evaluates to 0, then the
+static inlines are used. But in media-dev-allocator.c these functions
+are still present without a corresponding prototype.
+
+You likely need a similar #if in media-dev-allocator.c.
+
+Have you tested this if CONFIG_MODULES is not set? Does au0828 still work
+w.r.t. sharing the shared resource? Has the driver been tested when MEDIA_CONTROLLER
+is not set? Should au0828 select MEDIA_CONTROLLER explicitly perhaps?
+
+My main concern is that it looks like au0828's probe() will now fail if MODULES is
+not set.
+
+Regards,
+
+	Hans
+
+> +#endif
+> 
+
