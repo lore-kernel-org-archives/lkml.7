@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA592177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9222087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710577;
-	bh=UIUXeW/Aut1a/NmMfCr9gK5WIqNPbrDcI5+ziZX0UsE=;
+	s=default; t=1553710580;
+	bh=7mCxjLYr52gKbQdXUbZ/4pYseNDNUZlPxQgeLhg+Q+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgrm4ZpivCyXTjeMl/8ilciOwaBPyJYrD5BqZpV2uXo5cAfNEf5l+e998pGjsjZem
-	 uKpyAxB0MbegsLe+wpvOaJpttz7m51aD925MqOzz6KxavazZ60BFPRfkK6XvvF1P57
-	 5KRR8bQPeGh6k9r+RxaE9JW/w2+i/OWk3ftel/E4=
+	b=eKPVA748DuOH4WRqzHdDIkUdE1TZgTb+MIgDqOgIK9FWS38FwAfWsjhXd643DWIxu
+	 fEGEryGQoTz5WiH2gWc4IvUms9/VmTPCLUDuXOUXYuwJHrdefusw0qMAapUC4r1AaK
+	 QArlz5IvwjwAACmi2WwFG9qLee4n0NPbOqKURaMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390012AbfC0SQQ (ORCPT
+        id S2390022AbfC0SQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388950AbfC0SQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:10 -0400
+        id S2389960AbfC0SQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03ADE2082F;
-        Wed, 27 Mar 2019 18:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 227202183E;
+        Wed, 27 Mar 2019 18:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710569;
-        bh=UIUXeW/Aut1a/NmMfCr9gK5WIqNPbrDcI5+ziZX0UsE=;
+        s=default; t=1553710567;
+        bh=7mCxjLYr52gKbQdXUbZ/4pYseNDNUZlPxQgeLhg+Q+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNONTYzsbN0+2wTsEMa+D2Ol4JBrL7I2wKT3KEOn8LPfkNv+3QVNAxIjn+G8VwgHa
-         BcdzzMOoy+VwgIP4PEVKDjlv6/sJDKGiTOfMxLpTomJtF3AfDQMq4Uj9L2Jdhggm8k
-         kSpvISbMh5fKGFKQ7poFPwi2tGJxblKk9FJBGmEk=
+        b=wKOEnEtwnhDZofkAvjzJk4M+R5hlPRU7H0xYL7+aH6zQ9pxKT+w03GmANzm5eEobL
+         Cbjt7xmJfeokghp0kQd1PeUQu08r7/OBfhGY4NUzIcAan7YSamIq9+xQsMZQttHCFO
+         0gdCk1WRL/z9nkLftP3NJxrasbkmn7tpVwyFuWPo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 181/192] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Wed, 27 Mar 2019 14:10:13 -0400
-Message-Id: <20190327181025.13507-181-sashal@kernel.org>
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 180/192] brcmfmac: Use firmware_request_nowarn for the clm_blob
+Date:   Wed, 27 Mar 2019 14:10:12 -0400
+Message-Id: <20190327181025.13507-180-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,59 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zumeng Chen <zumeng.chen@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit 4ad0be160544ffbdafb7cec39bb8e6dd0a97317a ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+The linux-firmware brcmfmac firmware files contain an embedded table with
+per country allowed channels and strength info.
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
+For recent hardware these versions of the firmware are specially build for
+linux-firmware, the firmware files directly available from Cypress rely on
+a separate clm_blob file for this info.
 
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+For some unknown reason Cypress refuses to provide the standard firmware
+files + clm_blob files it uses elsewhere for inclusion into linux-firmware,
+instead relying on these special builds with the clm_blob info embedded.
+This means that the linux-firmware firmware versions often lag behind,
+but I digress.
+
+The brcmfmac driver does support the separate clm_blob file and always
+tries to load this. Currently we use request_firmware for this. This means
+that on any standard install, using the standard combo of linux-kernel +
+linux-firmware, we will get a warning:
+"Direct firmware load for ... failed with error -2"
+
+On top of this, brcmfmac itself prints: "no clm_blob available (err=-2),
+device may have limited channels available".
+
+This commit switches to firmware_request_nowarn, fixing almost any brcmfmac
+device logging the warning (it leaves the brcmfmac info message in place).
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 19e3c5a0b715..2ca5658bbc2a 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1084,8 +1084,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index cd3651069d0c..27893af63ebc 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -149,7 +149,7 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
+ 		return err;
+ 	}
  
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
- 
- out:
- 	return ret;
+-	err = request_firmware(&clm, clm_name, bus->dev);
++	err = firmware_request_nowarn(&clm, clm_name, bus->dev);
+ 	if (err) {
+ 		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
+ 			   err);
 -- 
 2.19.1
 
