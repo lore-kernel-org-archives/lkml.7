@@ -4,47 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA92C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EE62147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB42217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710192;
-	bh=of2eTPTkMjpc3I0KMTDfwO1Bw8tBfv80avLTaHEo+lE=;
+	s=default; t=1553710199;
+	bh=RC1QrTZVyDohPLWE8WHfDddcQujpyQpNXq9433w0ay4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K5nBNpdmAuwrg0pSiPOTb/YDD55r/SChxzrjr3yc+iMC/ytOZjD840IlWy5YDROXH
-	 tkizW9UZQeB9NvKZ9Aq3i35fVTc73awek75Ajjy1FFOtK4jLoSHjh3Vgd8yYxGA+hp
-	 J27h6vzMC5xdGRoZRZoxR/nyW1slD0T9Dg4POUyg=
+	b=p6s4K0kkck7JBOUBa4kW+Rj9ir3eVq0t9jwFfqr6BAcxKeGBaBbxsMbFM+Ya/SgTK
+	 d5xAbCiLkMQW9aD+Ok1vTzP7cxUuPRyhoVbPKWK/P+DVx3uThk6ejbXVoNrJXJBgFS
+	 KiZ3q3CIVkPNDcEFTjrbcWISEjOylZYZQF97EGPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbfC0SJv (ORCPT
+        id S2388703AbfC0SJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388627AbfC0SJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:43 -0400
+        id S2388678AbfC0SJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0DC2177E;
-        Wed, 27 Mar 2019 18:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B652147C;
+        Wed, 27 Mar 2019 18:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710182;
-        bh=of2eTPTkMjpc3I0KMTDfwO1Bw8tBfv80avLTaHEo+lE=;
+        s=default; t=1553710196;
+        bh=RC1QrTZVyDohPLWE8WHfDddcQujpyQpNXq9433w0ay4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMl1koVLlPmuraHhZeQCyr27+I3Jbbk1ZWJNl/R/0fij289lr/xGbc4fjAEgdIxsH
-         kTZjNtZ0BQ7U5mzvpICL/+TByTuMYpGC5it+2CO8H9PTGIvWpDp46nUcAov5f5j4W3
-         mrUFlFHnKuwNqP9q5NR5oLYvVdKqnWl+z/X6L8Xw=
+        b=GMRs+7xSmwNXsVyZzU5+DAXEOIJEpHp5IMV8+PwfAd8Qnoen2IVSz+Fkc6/EVhyTu
+         jwKwKMMf2m779bbvFTvK//+Jzqsy2WcrHUyyeCf/SArr/s2M00NRkIFPEHP5He3c0p
+         LKs4owEbx3y24OnGeW23TgzW+PTRzGpS0x8lUWxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 239/262] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
-Date:   Wed, 27 Mar 2019 14:01:34 -0400
-Message-Id: <20190327180158.10245-239-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 245/262] brcmfmac: Use firmware_request_nowarn for the clm_blob
+Date:   Wed, 27 Mar 2019 14:01:40 -0400
+Message-Id: <20190327180158.10245-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -56,55 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
+[ Upstream commit 4ad0be160544ffbdafb7cec39bb8e6dd0a97317a ]
 
-The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
+The linux-firmware brcmfmac firmware files contain an embedded table with
+per country allowed channels and strength info.
 
-The problems in below entry:
-  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
+For recent hardware these versions of the firmware are specially build for
+linux-firmware, the firmware files directly available from Cypress rely on
+a separate clm_blob file for this info.
 
-1. The off-by-one min_sel causes wrong volatage calculation.
-   The min_sel should be 192.
-2. According to the datasheet[1] Table 7. (on page 43):
-   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
+For some unknown reason Cypress refuses to provide the standard firmware
+files + clm_blob files it uses elsewhere for inclusion into linux-firmware,
+instead relying on these special builds with the clm_blob info embedded.
+This means that the linux-firmware firmware versions often lag behind,
+but I digress.
 
-Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
+The brcmfmac driver does support the separate clm_blob file and always
+tries to load this. Currently we use request_firmware for this. This means
+that on any standard install, using the standard combo of linux-kernel +
+linux-firmware, we will get a warning:
+"Direct firmware load for ... failed with error -2"
 
-[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+On top of this, brcmfmac itself prints: "no clm_blob available (err=-2),
+device may have limited channels available".
 
-Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This commit switches to firmware_request_nowarn, fixing almost any brcmfmac
+device logging the warning (it leaves the brcmfmac info message in place).
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/act8865-regulator.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 21e20483bd91..e0239cf3f56d 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -131,7 +131,7 @@
-  * ACT8865 voltage number
-  */
- #define	ACT8865_VOLTAGE_NUM	64
--#define ACT8600_SUDCDC_VOLTAGE_NUM	255
-+#define ACT8600_SUDCDC_VOLTAGE_NUM	256
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index 1f1e95a15a17..0ce1d8174e6d 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -149,7 +149,7 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
+ 		return err;
+ 	}
  
- struct act8865 {
- 	struct regmap *regmap;
-@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
- 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
- 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
--	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
-+	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
-+	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
- };
- 
- static struct regulator_ops act8865_ops = {
+-	err = request_firmware(&clm, clm_name, bus->dev);
++	err = firmware_request_nowarn(&clm, clm_name, bus->dev);
+ 	if (err) {
+ 		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
+ 			   err);
 -- 
 2.19.1
 
