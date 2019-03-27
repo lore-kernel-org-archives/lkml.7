@@ -2,167 +2,124 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD09FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E0520700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666272147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjyBMzIS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3ZWQdiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfC0TiZ (ORCPT
+        id S1729180AbfC0Tkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:38:25 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34166 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727432AbfC0TiZ (ORCPT
+        Wed, 27 Mar 2019 15:40:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39967 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbfC0Tks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 15:38:25 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k2so20372754qtm.1;
-        Wed, 27 Mar 2019 12:38:24 -0700 (PDT)
+        Wed, 27 Mar 2019 15:40:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so4369996wre.7;
+        Wed, 27 Mar 2019 12:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hU8seMPTclLptQIikp0+dn1jNNCETGaudk6NUzaeh64=;
-        b=FjyBMzISDmLWNbZd7RD0XCuX0tpHxmEdSbhoByI1U4l6E089ffTc4bwIp01GXQMhEZ
-         Wf9Fh8Je9TezHDKRAu+Ugrn1PDU3kYBQeen3VoHy5d32LTyW/yyhRIOY5FZEuJ98TT6g
-         FjVZJR6FT00reFherzDo1bc+p4SdFhZPpc4fcvksh/ULL3nvPC7KLZhtF5mfyM4xW85v
-         6rcM+fIBK0H2fGYlM/5t+zJsYEiqcxyH/n6ZrTOuvrQmGc2varkycwho1RCsTHax8Y5u
-         QqEjywvx9L+STKBpempSv1JX7nqxwVlFnhrj4193nnKNHXUJrToE8Ud+I26Lfut9Q0+5
-         nElA==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aPbwpoClirOKHHehiHtBNS96jUBaR1AsrRBdZxVLaeM=;
+        b=O3ZWQdiLMnUV1MN+OfvTCFhC2/swODUA90toXZSOm/ma7gvbdgl5O2pgistdoFWYTC
+         y3IiI6QvCShilr5m0kDelrjJj4KcQIlUjKixM7aUOaIHgY2aVYj/aFc3WasQUEwYuZL2
+         pCZ8MNHrOOn70KljwmqLAJaYv38Oi9+VUYj5suJjiXQX69idxlVpbssWdPhCcsN7ELp3
+         aDudVhhTu4gmXj1b/yR7oDngs/3P6np3SmViLmiA7P6m4u0T40vKbK1gvMs1YmT6Ob56
+         RgxCgwxh+drnZctSWyDWEtE2uaYIqxH1FIoquqsu2X81RA1Pbwi2rcerJc5lIhQxgICi
+         HK8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hU8seMPTclLptQIikp0+dn1jNNCETGaudk6NUzaeh64=;
-        b=emdqSX65wABr7maYNk3fXcogRzGnm8eRj6E5dLNbS3bBRGZrDbVs2BT8WHfvCKNXyI
-         1sekd3kFbm7bl/VEORsh+h7ZwIQOA0T9JP82NX/aX9cY2pOejGZ/DCfBzT62PTZPjz5f
-         0YVRNLgcZipcsDrLCCpzGlPt5wKgb/FqzeIn7/2eAQPrR89m1Cy1rGApSGeWqJ29k2xm
-         lcCzroUUVqFc1Q0krqZ6r1JcEIZWSxFJ14YCTndl5DdG3d3dUR8ptlXJ7+eEkm93EO5i
-         QxrT3J5FSR/HtuVyf3Y/GIXXtjo3Dcusg/FHaSkNjQevVB6KKDnUXnZ5afqaTkF+oUXK
-         l/IQ==
-X-Gm-Message-State: APjAAAVRke+mxxBEiuydpY9JUFfDpbEgq/O9NxrjWKQnH34EZ1LTB3WT
-        MPH1IXKryHjI5RFW0X/WNwGpd6qklJAYru4YwN0=
-X-Google-Smtp-Source: APXvYqyzW8Jz5eqgG9/xYDxoFMZMrtGj9LtxEBWCVzpEWcEDuiqZSIZuNQYiipJ+CVC/LPhT7l81QeCBtj8nTTi0nqw=
-X-Received: by 2002:aed:358b:: with SMTP id c11mr32605651qte.70.1553715503682;
- Wed, 27 Mar 2019 12:38:23 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=aPbwpoClirOKHHehiHtBNS96jUBaR1AsrRBdZxVLaeM=;
+        b=PMsLERpgK+g2EZ1sEao8HsSLzKk24KvgDXGEf1mQ9hChbDSTxDArcFTgXI1jRVuRS6
+         rlxeFxLZ0F6cvK3xbl5Pl0UMwEK5J3NntST4eAT8HDrDAxzW/6VFbbP1e4oemeH9FOuW
+         i0uP5tzjgXd6Wk7oOuUkxQ1WjOiR1V9Ivliui6sNpBoXMY8k+gf8yWFqruqfoASlEZED
+         U40sbYhQCoAzu2ud1bgm4oesglf3eMAr4+U4lwOD7usYDZi3nHXjSaftKQ21cZl0rH6d
+         8QB+Vb+54hRndKoARcC2HQxuV+wZlJHnz6I7JDFeMXD/A2pkbjcZDaz6vxU3taoWZH7K
+         8E0Q==
+X-Gm-Message-State: APjAAAUxNCpN6br7VeCEGssveJmUQlHUUUWTBnLdus4WB3sFzq5jeuB4
+        YBP7IRCVli7Pa+F+7slyFnMlx7YU
+X-Google-Smtp-Source: APXvYqwEnvAjqc8r5XeLXJ2DztXDPhdOuq25Ihb3X99xU2GXk6+osWkMorn7QloCL5AtorYwI3ByGg==
+X-Received: by 2002:adf:e889:: with SMTP id d9mr514325wrm.162.1553715646631;
+        Wed, 27 Mar 2019 12:40:46 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id a9sm23514364wrt.29.2019.03.27.12.40.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 12:40:45 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id ABD891143615; Wed, 27 Mar 2019 20:40:44 +0100 (CET)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mathieu Malaterre <malat@debian.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] USB: hub: Remove returned value 'status' since never used
+Date:   Wed, 27 Mar 2019 20:40:34 +0100
+Message-Id: <20190327194035.15972-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190326201557.20388-1-malat@debian.org>
+References: <20190326201557.20388-1-malat@debian.org>
 MIME-Version: 1.0
-References: <20190327162147.23198-1-christian@brauner.io> <20190327162147.23198-3-christian@brauner.io>
-In-Reply-To: <20190327162147.23198-3-christian@brauner.io>
-From:   Jonathan Kowalski <bl0pbl33p@gmail.com>
-Date:   Wed, 27 Mar 2019 19:38:13 +0000
-Message-ID: <CAGLj2rG8xMMt8-+r-pauA_qi4aun2y_kBZMCZGkXWQsKJrb-Ww@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pid: add pidfd_open()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian,
+The returned value in status has never been used since
+commit 4296c70a5ec3 ("USB/xHCI: Enable USB 3.0 hub remote wakeup.")
+So remove 'status' completely.
 
-Giving this some thought, it looks fine to me, but I am not convinced
-this should take a pid argument. I much prefer if obtaining a pidfd
-goes in the translation stuff, that has very real usecases, and you
-would end up duplicating the same thing over in two places.
+Remove warning (W=1):
 
-If the /proc/<PID> dir fd of a pidfd is relative to its procrootfd, a
-pid's pidfd is also relative to its namespace. Currently, you change
-things which would mean I now have to setns and spawn a child that
-passes me back the pidfd for a pid in the said namespace.
+  drivers/usb/core/hub.c:3671:8: warning: variable 'status' set but not used [-Wunused-but-set-variable]
 
-I prefer Andy's version of
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+v2: change subject prefix from USB/xHCI: to USB: hub:
 
-  int procrootfd = open("/proc", O_DIRECTORY | O_RDONLY);
-  int procfd = pidfd_open(procrootfd, pidfd, PIDFD_TO_PROCFD); //name
-this procfd_open, maybe
+ drivers/usb/core/hub.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-This is just a nicer race free openat.
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 8d4631c81b9f..15a2934dc29d 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -3668,7 +3668,6 @@ static int hub_suspend(struct usb_interface *intf, pm_message_t msg)
+ 	struct usb_hub		*hub = usb_get_intfdata(intf);
+ 	struct usb_device	*hdev = hub->hdev;
+ 	unsigned		port1;
+-	int			status;
+ 
+ 	/*
+ 	 * Warn if children aren't already suspended.
+@@ -3702,12 +3701,12 @@ static int hub_suspend(struct usb_interface *intf, pm_message_t msg)
+ 	if (hub_is_superspeed(hdev) && hdev->do_remote_wakeup) {
+ 		/* Enable hub to send remote wakeup for all ports. */
+ 		for (port1 = 1; port1 <= hdev->maxchild; port1++) {
+-			status = set_port_feature(hdev,
+-					port1 |
+-					USB_PORT_FEAT_REMOTE_WAKE_CONNECT |
+-					USB_PORT_FEAT_REMOTE_WAKE_DISCONNECT |
+-					USB_PORT_FEAT_REMOTE_WAKE_OVER_CURRENT,
+-					USB_PORT_FEAT_REMOTE_WAKE_MASK);
++			set_port_feature(hdev,
++					 port1 |
++					 USB_PORT_FEAT_REMOTE_WAKE_CONNECT |
++					 USB_PORT_FEAT_REMOTE_WAKE_DISCONNECT |
++					 USB_PORT_FEAT_REMOTE_WAKE_OVER_CURRENT,
++					 USB_PORT_FEAT_REMOTE_WAKE_MASK);
+ 		}
+ 	}
+ 
+-- 
+2.20.1
 
-But, Joel and you agreed that it makes sense to split out the
-translation stuff out of pidfds.
-
-My suggestion would be to extend ioctl_ns(2) then. It already provides
-a (rather clumsy) mechanism to determine the relationship by comparing
-st_dev and st_ino, which userspace can do itself for two namespace
-descriptors. For translation, you can extend this namespace ioctl
-(there is one to get a owner UID, you could add one to get a relative
-PID).
-
-Then, your pidfd call will be:
-
-pidfd_open(pid_t pid, int ns, unsigned int flags);
-
-You would also be able to compile out anything procfs related (include
-the new API to procfs dir fd translation), otherwise, the way to open
-pidfds is in this call, and without CONFIG_PROC_FS=Y, this is as good
-as pidfd_open(pid_t pid) (of which a better version I propose above).
-The new API should be its own thing, and the procfs translation tuple
-its own thing, tied to the proc fs option. pidfds need not have any
-relation to /proc.
-
-For this procfd conversion system call, I would also lift any
-namespace related restrictions if you are planning to, given the
-constraint that I can only open a pidfd from an ancestor namespace
-with the new pidfd_open system call, or acquire it through a
-cooperative userspace process by fd passing otherwise, and I need the
-/proc root fd, having both only permits me to open the said process's
-/proc/<PID> dir fd subject to normal access restrictions. This means
-the simplified procfd_open can be used to do metadata access without
-even talking of PIDs at all, your process could live in its own world
-and, given it has the authority to open the /proc directory, be able
-to purely collect metadata based on the two file descriptors it is
-given.
-
-Once you have the restriction in the same call that allows you to open
-a pidfd for an addressable PID from the given namespace fd, you can
-finally remove the restriction to signal across namespaces once the
-siginfo stuff is sorted out, as that will only work when you
-explicitly push the fd into a sandbox, the process cannot get it out
-of thin air on its own (and you already mentioned it has nothing to do
-with security). What I do worry about is one can use NS_GET_PARENT
-ioctl to get the parent pidns if the owning userns is the same, and
-just passing that gives me back a pidfd for the task. **So, you might
-want to add the constraint that the PID is actually reachable by the
-current task as well, apart from being reachable in the passed in
-namespace.**
-
-Lastly, I also see no need of /proc/<PID> dir fd to pidfd conversion,
-I would even recommend getting rid of that, so we only have one type
-of pidfd, the anon inode one. What is the usecase behind that? It
-would only be needed if you did not have a way to be able to metadata
-access through a pidfd, which would be the case only prior to this
-patch.
-
-I think this would simplify a lot of things, and ioctl_ns(2) is
-probably already the place to do comparison operations and query
-operations on hierarichal namespaces, just adding the relative PID bit
-will make it gain feature parity with translate_pid.
