@@ -2,57 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D42C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA635C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6792063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C8220449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711072;
-	bh=840THv+UwAh/DMlXBEC9mMy5QzhoIUtVLdHZt6lu8Ug=;
+	s=default; t=1553711078;
+	bh=sIPxwB1y5y9cKiImCh6vK6yv6U5XwBbuDPLii28BFNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FKXPrC2HGXyY88Kv45L+jMEAYbps3i/YAgntjJZH529PpT4xLpStu/opH/rWJgVoW
-	 CIOn0yCx61bFwneIR78T5NKWsZeZqHMlRLxLv4d57uAg0933QU6DkNVqFaXBGHkNju
-	 CYcad9NsARF3kbyuXFWDg8fPvTivfd+LZSC+JxKk=
+	b=db1Eb84zZ0JXbFyBbpzec1UGUCVRDlEjpEdtpjLcNFMb63+sOUZ8y9PTtvFdsPlsk
+	 H92aYlnogN5zxQBqUrBhNmJCiGdcCbPhZ3sNtv4fVXUNKUXHsQb18MUpGlny8RAf7T
+	 Mt1llmORuPwZqkzr0GX6s0pHCANbAGiHxe82+y3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391585AbfC0SY3 (ORCPT
+        id S2404023AbfC0SYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43336 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390941AbfC0SY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:26 -0400
+        id S2390695AbfC0SYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328662177E;
-        Wed, 27 Mar 2019 18:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F230E2063F;
+        Wed, 27 Mar 2019 18:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711065;
-        bh=840THv+UwAh/DMlXBEC9mMy5QzhoIUtVLdHZt6lu8Ug=;
+        s=default; t=1553711073;
+        bh=sIPxwB1y5y9cKiImCh6vK6yv6U5XwBbuDPLii28BFNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s7jM6HadjQmK0x6VaeD0p/gq+q3/DfCe4cPoAPCM3dQOffM1Qww4oq+pT0lZrGSL5
-         FQ61ihRcgCsSNZK3ntYRSdLKMAdUkDhiYhuNhZFxTf86Zlsj152mzEWwZ9hvFwfFxo
-         emocSfeJJbgB2mQklp+5FnqSFG+pZSCWVjC9qvYc=
+        b=UWOtQygZ/Q9z/KsuvTAmtJTF/sMwwmBkPIr0IiVxtfHTiXJvV5bDuQWkJ/bXgvwOP
+         6ZIIPe+Mmc2210JpwF/e/lOhfbsi5SR7RB4kDQV9aF6wVJ/N/dPkOLvttA6fIXm1oS
+         n7C7EkiJRB0sKAulC71r42aoS3BVYlO0fOqwWjb0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <righi.andrea@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 36/63] kprobes: Prohibit probing on bsearch()
-Date:   Wed, 27 Mar 2019 14:22:56 -0400
-Message-Id: <20190327182323.18577-36-sashal@kernel.org>
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 38/63] ALSA: PCM: check if ops are defined before suspending PCM
+Date:   Wed, 27 Mar 2019 14:22:58 -0400
+Message-Id: <20190327182323.18577-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -64,56 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <righi.andrea@gmail.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit 02106f883cd745523f7766d90a739f983f19e650 ]
+[ Upstream commit d9c0b2afe820fa3b3f8258a659daee2cc71ca3ef ]
 
-Since kprobe breakpoing handler is using bsearch(), probing on this
-routine can cause recursive breakpoint problem.
+BE dai links only have internal PCM's and their substream ops may
+not be set. Suspending these PCM's will result in their
+ ops->trigger() being invoked and cause a kernel oops.
+So skip suspending PCM's if their ops are NULL.
 
-int3
- ->do_int3()
-   ->ftrace_int3_handler()
-     ->ftrace_location()
-       ->ftrace_location_range()
-         ->bsearch() -> int3
+[ NOTE: this change is required now for following the recent PCM core
+  change to get rid of snd_pcm_suspend() call.  Since DPCM BE takes
+  the runtime carried from FE while keeping NULL ops, it can hit this
+  bug.  See details at:
+     https://github.com/thesofproject/linux/pull/582
+  -- tiwai ]
 
-Prohibit probing on bsearch().
-
-Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998813406.31052.8791425358974650922.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/bsearch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/core/pcm_native.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/lib/bsearch.c b/lib/bsearch.c
-index e33c179089db..d50048446b77 100644
---- a/lib/bsearch.c
-+++ b/lib/bsearch.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/export.h>
- #include <linux/bsearch.h>
-+#include <linux/kprobes.h>
- 
- /*
-  * bsearch - binary search an array of elements
-@@ -51,3 +52,4 @@ void *bsearch(const void *key, const void *base, size_t num, size_t size,
- 	return NULL;
- }
- EXPORT_SYMBOL(bsearch);
-+NOKPROBE_SYMBOL(bsearch);
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 9b6dcdea4431..4eb0c2f48638 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1335,6 +1335,14 @@ int snd_pcm_suspend_all(struct snd_pcm *pcm)
+ 			/* FIXME: the open/close code should lock this as well */
+ 			if (substream->runtime == NULL)
+ 				continue;
++
++			/*
++			 * Skip BE dai link PCM's that are internal and may
++			 * not have their substream ops set.
++			 */
++			if (!substream->ops)
++				continue;
++
+ 			err = snd_pcm_suspend(substream);
+ 			if (err < 0 && err != -EBUSY)
+ 				return err;
 -- 
 2.19.1
 
