@@ -2,126 +2,85 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291F1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A12C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6240206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713705;
-	bh=bDttyNBx3VKxYzqp8l4XWQh7/+INkzKCiP1SmKlnwS8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxPINr6WRE1gSerpBHUNbDBvSmTOfmxarOf4O2QOJ8L2Fmt6YByaXdxp1qh1v3ntk
-	 ERJwpCeonQ0lFIEoH7B54MqaqkUtJ0zazsYY89ejW9XCHIOnFsmWsIRm2bwyfI0Bry
-	 CC/fQ/cFdFMuqT/XtQEIe1QeXbo4j/9KHqnkDbKA=
+	by mail.kernel.org (Postfix) with ESMTP id 9A9D1206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389170AbfC0TIY (ORCPT
+        id S2389354AbfC0TId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389094AbfC0SLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D952147C;
-        Wed, 27 Mar 2019 18:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710306;
-        bh=bDttyNBx3VKxYzqp8l4XWQh7/+INkzKCiP1SmKlnwS8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPCjfqjJfTxKwfsCuviXh+eav3cXDKrj/OcdyLjo7YZ0kQVv8p7TKxZF2ND7HSk73
-         MYKrN9WUPRngqFxxT1BbqQBAImmQcRbIduInYBwjHgmjQyFBEACvv6vJhRQ3PXiHH6
-         Bz+PAWIhXH4wZqhKLz0UMhu9sVUaovu8RC9TLDB4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 047/192] wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
-Date:   Wed, 27 Mar 2019 14:07:59 -0400
-Message-Id: <20190327181025.13507-47-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 15:08:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:51551 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727932AbfC0TIb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:08:31 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h9DuS-0006py-0s; Wed, 27 Mar 2019 20:08:24 +0100
+Date:   Wed, 27 Mar 2019 20:08:23 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andi Kleen <ak@linux.intel.com>
+cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
+ .text
+In-Reply-To: <20190327154522.GV18020@tassilo.jf.intel.com>
+Message-ID: <alpine.DEB.2.21.1903271958320.1789@nanos.tec.linutronix.de>
+References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-3-andi@firstfloor.org> <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de> <20190326213803.GN18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de>
+ <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org> <alpine.DEB.2.21.1903270820530.1789@nanos.tec.linutronix.de> <20190327145918.GU18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903271600050.1789@nanos.tec.linutronix.de>
+ <20190327154522.GV18020@tassilo.jf.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
+On Wed, 27 Mar 2019, Andi Kleen wrote:
+> > From the GCC manual:
+> > 
+> >  "This attribute, attached to a global variable or function, nullifies the
+> >   effect of the -fw hole-program command-line option, so the object remains
+> >   visible outside the current compilation unit."
+> > 
+> > Neither the variable nor the data generated are global anymore. This data
+> > is only used inside this compilation unit and I don't see why LTO needs a
+> > reference outside of it. If so, then I really want to understand WHY
+> > exactly.
+> 
+> The LTO code generation doesn't compile file by file, but reorders
+> all the functions and other top level statements into "partitions".
+> The partitions are ordered by call graph so that inlining and some
+> other optimizations work efficiently
+> 
+> Then it finally runs multiple copies of the gcc code generator that
+> generate code from these partitions, each generating an own assembler file.
+> 
+> The top level assembler is not part of the call graph that drives
+> the partitioning.
 
-[ Upstream commit de77a53c2d1e8fb3621e63e8e1f0f0c9a1a99ff7 ]
+There is no top level assembly anymore. It's static data in the .rodata
+section which is completely uninteresting for a call graph. That data is
+accessed by the C function.
 
-ies1 or ies2 might be null when code inside
-_wil_cfg80211_merge_extra_ies access them.
-Add explicit check for null and make sure ies1/ies2 are not
-accessed in such a case.
+It's static so it's scope is within the file and whatever GCC does with
+that C function it has to respect that it accesses static data. If that's
+not true then this really needs to be fixed at the compiler side and not in
+the kernel.
 
-spos might be null and be accessed inside
-_wil_cfg80211_merge_extra_ies.
-Add explicit check for null in the while condition statement
-and make sure spos is not accessed in such a case.
+Thanks,
 
-Signed-off-by: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/wil6210/cfg80211.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
-index f79c337105cb..2daf33342b23 100644
---- a/drivers/net/wireless/ath/wil6210/cfg80211.c
-+++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
-@@ -1420,6 +1420,12 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	u8 *buf, *dpos;
- 	const u8 *spos;
- 
-+	if (!ies1)
-+		ies1_len = 0;
-+
-+	if (!ies2)
-+		ies2_len = 0;
-+
- 	if (ies1_len == 0 && ies2_len == 0) {
- 		*merged_ies = NULL;
- 		*merged_len = 0;
-@@ -1429,17 +1435,19 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	buf = kmalloc(ies1_len + ies2_len, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
--	memcpy(buf, ies1, ies1_len);
-+	if (ies1)
-+		memcpy(buf, ies1, ies1_len);
- 	dpos = buf + ies1_len;
- 	spos = ies2;
--	while (spos + 1 < ies2 + ies2_len) {
-+	while (spos && (spos + 1 < ies2 + ies2_len)) {
- 		/* IE tag at offset 0, length at offset 1 */
- 		u16 ielen = 2 + spos[1];
- 
- 		if (spos + ielen > ies2 + ies2_len)
- 			break;
- 		if (spos[0] == WLAN_EID_VENDOR_SPECIFIC &&
--		    !_wil_cfg80211_find_ie(ies1, ies1_len, spos, ielen)) {
-+		    (!ies1 || !_wil_cfg80211_find_ie(ies1, ies1_len,
-+						     spos, ielen))) {
- 			memcpy(dpos, spos, ielen);
- 			dpos += ielen;
- 		}
--- 
-2.19.1
-
+	tglx
