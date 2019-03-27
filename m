@@ -2,283 +2,208 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09241C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FAEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C472075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:41:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="zKh+qjvj"
+	by mail.kernel.org (Postfix) with ESMTP id 5858C2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfC0IlI (ORCPT
+        id S1732044AbfC0Imo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:41:08 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32987 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfC0IlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:41:07 -0400
-Received: by mail-io1-f67.google.com with SMTP id b6so13334698iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8yr20mcDrJ1OwLMyCdOxBeIierIiTMt4qXHt0vrJxnE=;
-        b=zKh+qjvjaOsY3t1d72qGFHHiVC+c8U2fpS7r+K92YdF8hkh6ycP+lKmJ7YlR7XgRrr
-         M/ozBZTMib+esSrmqR+mSb9nAqiZKRMxI8p9Y4cvbq39RikzLG2fNU0cOQOVHmgbEHv0
-         GIv1+uUeyGnUsF6aqhZ+xbWWVqqjwEZBRwn/qBEcQPV6Qlj0VOugN3IHBQy8fB6F1oQV
-         cpnu8skUogTOPUCs6oItyjFrxNt7QrGp8xPoKu67EZQ0gK+UEVx75iLmcGtaRhCSp0he
-         sOzVBiSkGg8z6g/RyBOQ4sSe5/SWwBiyOYDUOsGCUfqrQTXymP0m4CXUJvbbfMDmMi85
-         VKoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8yr20mcDrJ1OwLMyCdOxBeIierIiTMt4qXHt0vrJxnE=;
-        b=KwoFSnTdtsP/iWBC/wayXW99AazysSCKgmRm+vVZqAOEqENPFEZyWQpqusK8Onkb+R
-         8sGRsUA84Sm3aIshBEZA6l6lZCXk8wfKXExGhRSEtmdDiB2tk7ZeYDZ3Nt0XjKSCUBPC
-         c1wSRbpSgre/DUUA4nIX0MKobIwhkcQX8qNi9rcd7oxawxoKoA3CHoWJFcD9T3moKDzf
-         qmHGKnXIQA9Mgc8yaetPGzAtcobYg0rJt6BV+v/gVvvPE6p9wgAe15Djqmv7sS0M1kke
-         ZhAKcAM0LmBlVKM/siAr0acJHWqIJgX1cRPnSic+y8Ibjpm6e+MQvYb0iOIDcu5haAsu
-         KdUg==
-X-Gm-Message-State: APjAAAWTrJUjIXB5C6Tw8vxSE1aOQTaXifEg7NDb+gebO+zHq5dq8rt3
-        6bkqMQOrg0diGBpfILctZGZqTNrirRFb2wz+ANEHzA==
-X-Google-Smtp-Source: APXvYqzMWaBL2+qEra7vsvzwVJAyeNXdOV2GXBdVfJDKNjcrRaNzQ6Ln16GDCr+9hoPvneFO3cEZaG4QOiiLCQs9C3U=
-X-Received: by 2002:a6b:ca87:: with SMTP id a129mr11949637iog.187.1553676066529;
- Wed, 27 Mar 2019 01:41:06 -0700 (PDT)
+        Wed, 27 Mar 2019 04:42:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:44922 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbfC0Imo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 04:42:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 01:42:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,276,1549958400"; 
+   d="scan'208";a="126242976"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga007.jf.intel.com with ESMTP; 27 Mar 2019 01:42:42 -0700
+Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 27 Mar 2019 01:42:41 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 27 Mar 2019 01:42:40 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.163]) with mapi id 14.03.0415.000;
+ Wed, 27 Mar 2019 16:42:38 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+Thread-Topic: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+Thread-Index: AQHU3n+esUAe9/isNUydLtMfe2TJLqYUYO3wgAAAWwCAAvOvgIAE1eUAgAGyJzD//7LrAIABn1bQ
+Date:   Wed, 27 Mar 2019 08:42:38 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C257439E4E815@SHSMSX104.ccr.corp.intel.com>
+References: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
+        <1552378703-11202-2-git-send-email-yi.l.liu@intel.com>
+        <20190319121416.27495651@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E48CA9@SHSMSX104.ccr.corp.intel.com>
+        <20190320132202.6279a190@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E4BBF2@SHSMSX104.ccr.corp.intel.com>
+        <20190325121720.53935577@x1.home>
+        <A2975661238FB949B60364EF0F2C257439E4DB32@SHSMSX104.ccr.corp.intel.com>
+ <20190326093520.24c211ab@x1.home>
+In-Reply-To: <20190326093520.24c211ab@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjk0OTIyOTYtZTZlOS00Y2IyLThjNDEtMTE1NTcwZDYzOTJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVHBtaHpqWVFCRTdjK0REZ2c2RDZqRVB5cWtaTVc4Mk91cFB5SkZOeStIK3J0QzVIaXdvU29jRGFyYUxZN3JFaCJ9
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190326044954.18671-1-andrew@aj.id.au> <CAMpxmJWvL2q9+yExAwv7jZ+g9psv5-_p8B89gk_pzvHbHMdO+w@mail.gmail.com>
-In-Reply-To: <CAMpxmJWvL2q9+yExAwv7jZ+g9psv5-_p8B89gk_pzvHbHMdO+w@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Mar 2019 09:40:55 +0100
-Message-ID: <CAMRc=Mep9GNhOsO8jyxS4vHuPi3jgRbg_88Zqi1vRnw5hEXUCQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "gpio: use new gpio_set_config() helper in more places"
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 26 mar 2019 o 19:06 Bartosz Golaszewski
-<bgolaszewski@baylibre.com> napisa=C5=82(a):
->
-> wt., 26 mar 2019 o 05:50 Andrew Jeffery <andrew@aj.id.au> napisa=C5=82(a)=
-:
-> >
-> > gpio-aspeed implements support for PIN_CONFIG_INPUT_DEBOUNCE. As of
-> > v5.1-rc1 we're seeing the following when booting a Romulus BMC kernel:
-> >
-> > > [   21.373137] ------------[ cut here ]------------
-> > > [   21.374545] WARNING: CPU: 0 PID: 1 at drivers/gpio/gpio-aspeed.c:8=
-34 unregister_allocated_timer+0x38/0x94
-> > > [   21.376181] No timer allocated to offset 74
-> > > [   21.377672] CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-rc1-dirt=
-y #6
-> > > [   21.378800] Hardware name: Generic DT based system
-> > > [   21.379965] Backtrace:
-> > > [   21.381024] [<80107d44>] (dump_backtrace) from [<80107f78>] (show_=
-stack+0x20/0x24)
-> > > [   21.382713]  r7:8038b720 r6:00000009 r5:00000000 r4:87897c64
-> > > [   21.383815] [<80107f58>] (show_stack) from [<80656398>] (dump_stac=
-k+0x20/0x28)
-> > > [   21.385042] [<80656378>] (dump_stack) from [<80115f1c>] (__warn.pa=
-rt.3+0xb4/0xdc)
-> > > [   21.386253] [<80115e68>] (__warn.part.3) from [<80115fb0>] (warn_s=
-lowpath_fmt+0x6c/0x90)
-> > > [   21.387471]  r6:00000342 r5:807f8758 r4:80a07008
-> > > [   21.388278] [<80115f48>] (warn_slowpath_fmt) from [<8038b720>] (un=
-register_allocated_timer+0x38/0x94)
-> > > [   21.389809]  r3:0000004a r2:807f8774
-> > > [   21.390526]  r7:00000000 r6:0000000a r5:60000153 r4:0000004a
-> > > [   21.391601] [<8038b6e8>] (unregister_allocated_timer) from [<8038b=
-aac>] (aspeed_gpio_set_config+0x330/0x48c)
-> > > [   21.393248] [<8038b77c>] (aspeed_gpio_set_config) from [<803840b0>=
-] (gpiod_set_debounce+0xe8/0x114)
-> > > [   21.394745]  r10:82ee2248 r9:00000000 r8:87b63a00 r7:00001388 r6:8=
-7947320 r5:80729310
-> > > [   21.396030]  r4:879f64a0
-> > > [   21.396499] [<80383fc8>] (gpiod_set_debounce) from [<804b4350>] (g=
-pio_keys_probe+0x69c/0x8e0)
-> > > [   21.397715]  r7:845d94b8 r6:00000001 r5:00000000 r4:87b63a1c
-> > > [   21.398618] [<804b3cb4>] (gpio_keys_probe) from [<8040eeec>] (plat=
-form_dev_probe+0x44/0x80)
-> > > [   21.399834]  r10:00000003 r9:80a3a8b0 r8:00000000 r7:00000000 r6:8=
-0a7f9dc r5:80a3a8b0
-> > > [   21.401163]  r4:8796bc10
-> > > [   21.401634] [<8040eea8>] (platform_drv_probe) from [<8040d0d4>] (r=
-eally_probe+0x208/0x3dc)
-> > > [   21.402786]  r5:80a7f8d0 r4:8796bc10
-> > > [   21.403547] [<8040cecc>] (really_probe) from [<8040d7a4>] (driver_=
-probe_device+0x130/0x170)
-> > > [   21.404744]  r10:0000007b r9:8093683c r8:00000000 r7:80a07008 r6:8=
-0a3a8b0 r5:8796bc10
-> > > [   21.405854]  r4:80a3a8b0
-> > > [   21.406324] [<8040d674>] (driver_probe_device) from [<8040da8c>] (=
-device_driver_attach+0x68/0x70)
-> > > [   21.407568]  r9:8093683c r8:00000000 r7:80a07008 r6:80a3a8b0 r5:00=
-000000 r4:8796bc10
-> > > [   21.408877] [<8040da24>] (device_driver_attach) from [<8040db14>] =
-(__driver_attach+0x80/0x150)
-> > > [   21.410327]  r7:80a07008 r6:8796bc10 r5:00000001 r4:80a3a8b0
-> > > [   21.411294] [<8040da94>] (__driver_attach) from [<8040b20c>] (bus_=
-for_each_dev+0x80/0xc4)
-> > > [   21.412641]  r7:80a07008 r6:8040da94 r5:80a3a8b0 r4:87966f30
-> > > [   21.413580] [<8040b18c>] (bus_for_each_dev) from [<8040dc0c>] (dri=
-ver_attach+0x28/0x30)
-> > > [   21.414943]  r7:00000000 r6:87b411e0 r5:80a33fc8 r4:80a3a8b0
-> > > [   21.415927] [<8040dbe4>] (driver_attach) from [<8040bbf0>] (bus_ad=
-d_driver+0x14c/0x200)
-> > > [   21.417289] [<8040baa4>] (bus_add_driver) from [<8040e2b4>] (drive=
-r_register+0x84/0x118)
-> > > [   21.418652]  r7:80a60ae0 r6:809226b8 r5:80a07008 r4:80a3a8b0
-> > > [   21.419652] [<8040e230>] (driver_register) from [<8040fc28>] (__pl=
-atform_driver_register+0x3c/0x50)
-> > > [   21.421193]  r5:80a07008 r4:809525f8
-> > > [   21.421990] [<8040fbec>] (__platform_driver_register) from [<80922=
-6d8>] (gpio_keys_init+0x20/0x28)
-> > > [   21.423447] [<809226b8>] (gpio_keys_init) from [<8090128c>] (do_on=
-e_initcall+0x80/0x180)
-> > > [   21.424886] [<8090120c>] (do_one_initcall) from [<80901538>] (kern=
-el_init_freeable+0x1ac/0x26c)
-> > > [   21.426354]  r8:80a60ae0 r7:80a60ae0 r6:8093685c r5:00000008 r4:80=
-9525f8
-> > > [   21.427579] [<8090138c>] (kernel_init_freeable) from [<8066d9a0>] =
-(kernel_init+0x18/0x11c)
-> > > [   21.428819]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:0=
-0000000 r5:8066d988
-> > > [   21.429947]  r4:00000000
-> > > [   21.430415] [<8066d988>] (kernel_init) from [<801010e8>] (ret_from=
-_fork+0x14/0x2c)
-> > > [   21.431666] Exception stack(0x87897fb0 to 0x87897ff8)
-> > > [   21.432877] 7fa0:                                     00000000 000=
-00000 00000000 00000000
-> > > [   21.434446] 7fc0: 00000000 00000000 00000000 00000000 00000000 000=
-00000 00000000 00000000
-> > > [   21.436052] 7fe0: 00000000 00000000 00000000 00000000 00000013 000=
-00000
-> > > [   21.437308]  r5:8066d988 r4:00000000
-> > > [   21.438102] ---[ end trace d7d7ac3a80567d0e ]---
-> >
-> > We only hit unregister_allocated_timer() if the argument to
-> > aspeed_gpio_set_config() is 0, but we can't be calling through
-> > gpiod_set_debounce() from gpio_keys_probe() unless the gpio-keys button=
- has a
-> > non-zero debounce interval.
-> >
-> > Commit 6581eaf0e890 ("gpio: use new gpio_set_config() helper in more pl=
-aces")
-> > spreads the use of gpio_set_config() to the debounce and transitory
-> > state configuration paths. The implementation of gpio_set_config() is:
-> >
-> > > static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
-> > >                          enum pin_config_param mode)
-> > > {
-> > >       unsigned long config =3D { PIN_CONF_PACKED(mode, 0) };
+> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> Sent: Tuesday, March 26, 2019 11:35 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
+> 
+> On Tue, 26 Mar 2019 12:37:37 +0000
+> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> 
+> > > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > > Sent: Tuesday, March 26, 2019 2:17 AM
+> > > To: Liu, Yi L <yi.l.liu@intel.com>
+> > > Subject: Re: [RFC v2 1/2] vfio/pci: export common symbols in vfio-pci
 > > >
-> > >       return gc->set_config ? gc->set_config(gc, offset, config) : -E=
-NOTSUPP;
-> > > }
+> > > On Sat, 23 Mar 2019 11:06:44 +0000
+> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > > > Hi Alex,
 > >
-> > Here it packs its own config value with a fixed argument of 0; this is
-> > incorrect behaviour for implementing the debounce and transitory functi=
-ons, and
-> > the debounce and transitory gpio_set_config() call-sites now have an un=
-detected
-> > type mismatch as they both already pack their own config parameter (i.e=
-. what
-> > gets passed is not an `enum pin_config_param`). Indeed this can be seen=
- in the
-> > small diff for 6581eaf0e890:
+> > [...]
 > >
-> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > index de595fa31a1a..1f239aac43df 100644
-> > > --- a/drivers/gpio/gpiolib.c
-> > > +++ b/drivers/gpio/gpiolib.c
-> > > @@ -2725,7 +2725,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, =
-unsigned debounce)
-> > >         }
+> > > >
+> > > > I tried to get a common file which includes the definitions of the module
+> > > > options and the common interfaces and get it linked separately with each
+> > > > module. It works well when linked separately by config the
+> > > > CONFIG_VFIO_PCI=m and CONFIG_VFIO_PCI_MDEV=m in kernel
+> > > > configuration file. CONFIG_VFIO_PCI_MDEV is a new Kconfig macro
+> > > > for the mdev wrapped version driver. However, if building the vfio-pci
+> > > > and the mdev wrapped version into kernel image (config the
+> > > > CONFIG_VFIO_PCI=y and CONFIG_VFIO_PCI_MDEV=y), then the symbols
+> > > > defined in the common file will be shared thus doesn't allow dissimilar
+> > > > user settings.
+> > > >
+> > > > Per my understanding, I think we expect to allow simultaneous usage of
+> > > > the two drivers. So I think the way above doesn't meet our expectation.
 > > >
-> > >         config =3D pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE=
-, debounce);
-> > > -       return chip->set_config(chip, gpio_chip_hwgpio(desc), config)=
-;
-> > > +       return gpio_set_config(chip, gpio_chip_hwgpio(desc), config);
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+> > > I agree.  They should be related in implementation only, from a user
+> > > perspective they should be entirely separate.
 > > >
-> > > @@ -2762,7 +2762,7 @@ int gpiod_set_transitory(struct gpio_desc *desc=
-, bool transitory)
-> > >         packed =3D pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
-> > >                                           !transitory);
-> > >         gpio =3D gpio_chip_hwgpio(desc);
-> > > -       rc =3D chip->set_config(chip, gpio, packed);
-> > > +       rc =3D gpio_set_config(chip, gpio, packed);
-> > >         if (rc =3D=3D -ENOTSUPP) {
-> > >                 dev_dbg(&desc->gdev->dev, "Persistence not supported =
-for GPIO %d\n",
-> > >                                 gpio);
+> > > > I considered a possible proposal as below. May listen to your opinion
+> > > > on it before heading to cook. Also, better idea is welcomed. :-)
+> > > >
+> > > > - get a common file includes interfaces which are common and have
+> > > >   input parameters to differentiate the calling from vfio-pci and the
+> > > >   wrapped version. e.g. vfio_pci_rw(). may call it as vfio_pci_common.c.
+> > > >
+> > > > - get another common file includes the definitions of the module options,
+> > > >   and the functions which referred the options. Define all of them as static.
+> > > >   may call it as common.c
+> > > >
+> > > > - get vfio_pci.c which includes the module_init/exit interfaces and driver
+> > > >   registration operations of vfio-pci.ko. This file should include the
+> common.c
+> > > >   above to have same module options with the mdev wrapped version.
+> > > >
+> > > > - get vfio_pci_mdev.c which includes the module_init/exit interfaces and
+> > > >   driver registration operations of vfio-pci-mdev.ko. It should also include
+> > > >   the common.c above to have same module options with vfio-pci.ko.
+> > > >
+> > > > - Makefile:
+> > > > vfio-pci-y := vfio_pci.o vfio_pci_common.o vfio_pci_intrs.o
+> vfio_pci_rdwr.o
+> > > vfio_pci_config.o
+> > > > vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> > > > vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> > > >
+> > > > vfio-pci-mdev-y := vfio_pci_mdev.o vfio_pci_common.o vfio_pci_intrs.o
+> > > vfio_pci_rdwr.o vfio_pci_config.o
+> > > > vfio-pci-mdev-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+> > > > vfio-pci-mdev-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> > > >
+> > > > obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> > > > obj-$(CONFIG_VFIO_PCI_MDEV) += vfio-pci-mdev.o
+> > >
+> > > Each module needs it's own module_init/exit and will register its own
+> > > struct pci_driver, which gives us separate control of the probe and
 > >
-> > Revert commit 6581eaf0e890 ("gpio: use new gpio_set_config() helper in
-> > more places") to restore correct behaviour for gpiod_set_debounce() and
-> > gpiod_set_transitory().
+> > Agreed.
 > >
-> > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  drivers/gpio/gpiolib.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > remove callbacks.  I think we want the drivers to have the same module
+> > > parameters initially, but we don't necessarily want to require it for
+> > > any future options, so we can duplicate the parameter declarations.
+> > > Then to support the shared code, I think we can easily push nointxmask,
+> > > disable_vga, and disable_idle_d3 into bools on the struct
+> > > vfio_pci_device, which would be allocated and set by each module's
+> > > probe function before calling the shared probe function.
 > >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index 144af0733581..0495bf1d480a 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -2776,7 +2776,7 @@ int gpiod_set_debounce(struct gpio_desc *desc, un=
-signed debounce)
-> >         }
+> > sounds good to me.
 > >
-> >         config =3D pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, =
-debounce);
-> > -       return gpio_set_config(chip, gpio_chip_hwgpio(desc), config);
-> > +       return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
-> >  }
-> >  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+> > > vfio_fill_ids() could take a pointer to the array to keep them separate
+> > > between modules.
 > >
-> > @@ -2813,7 +2813,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, =
-bool transitory)
-> >         packed =3D pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
-> >                                           !transitory);
-> >         gpio =3D gpio_chip_hwgpio(desc);
-> > -       rc =3D gpio_set_config(chip, gpio, packed);
-> > +       rc =3D chip->set_config(chip, gpio, packed);
-> >         if (rc =3D=3D -ENOTSUPP) {
-> >                 dev_dbg(&desc->gdev->dev, "Persistence not supported fo=
-r GPIO %d\n",
-> >                                 gpio);
-> > --
-> > 2.19.1
+> > Agreed.
 > >
->
-> Thanks for the detailed explanation of the problem. Can we check for
-> special cases in gpiod_set_config() and possibly pass the config
-> unchanged to the underlying driver in case of debounce and transitory
-> options?
->
-> Bart
+> > > I think that just leaves the config permission bits,
+> > > vfio_pci_{un}init_perm_bits(). Could we use a simple atomic reference
+> > > counter on those to potentially share them so they get initialized by
+> > > the first caller and freed by the last user, at least in the case of
+> > > both drivers being compiled statically into the kernel?  Thanks,
+> >
+> > Sure, I can add it. The two modules will still share the cap_perms and
+> > ecap_perms config bits when built statically in kernel. However, I think
+> > such share is reasonable. I'll check if any other similar bits in other files.
+> >
+> > > Alex
+> >
+> > Thanks for the suggestions, Alex. Let me prepare another RFC.
+> 
+> Thank Yi, I appreciate your work on this.  Also, I wonder if we might
+> want to reconsider placing this driver in samples, the Makefile might
+> be a little bit ugly with paths back to drivers/vfio/pci, but I don't
+> think we run into the same barriers as you did with previous
+> approaches.  Placing it in samples would at least alleviate any
+> confusion that this isn't a vfio-pci replacement, but more of an mdev
+> wrapper proof of concept.  Thanks,
 
-After giving it a second thought and seeing that Thomas is ok with
-reverting it, I applied the patch for fixes.
+Hi Alex,
 
-Bart
+My pleasure. Honestly, placing this driver in samples is also my first
+choice at the beginning. I didn't go ahead with it due to the fear of
+huge code duplication with drivers/vfio/pci. I can make the changes
+based on the discussions in this thread and place the wrapped driver
+under samples with its Makefile path back to drivers/vfio/pci. I believe
+letting Makefile paths back to drivers/vfio/pci is fine as there is existing
+case of such manner in kernel. Pls feel free to let me know your latest
+idea or anything I missed. Thanks.
+
+Regards,
+Yi Liu
