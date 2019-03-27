@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FD4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A47C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C572B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F1E2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713747;
-	bh=iOZgLr+nb6CmVu2UGadVm7ah3frMC3QGOGzSORezROs=;
+	s=default; t=1553713751;
+	bh=NVOOyDrRR7x58Sypz4mU3rSYFhN3DNeXeZTMEslRPTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uE/zcw2oAz7c80/WUoYiO4Ack4yW00qxuxOipEiE2BCO85kEvVLtapkd3/IlPz/KB
-	 YZozt4jnIXd3DJgBqpWQp1m5XPQU/Zd4Cj21L3J28wpcUR45PoDQoCMhMODUiFmK+b
-	 hzSfAHF8L/S4Ae4+VarX89qPqviO8GbOGDXXKfAU=
+	b=fRLF2+1c6OVxwhyQhtlae4JI7iEArNYPAmOuq2ASxms1ymTMIvI3v7f6ayjEY46ic
+	 cAxGhPVfrOEhUpVbmeFIFcEysOcAOji3bzLn8b2zq1pcTQV3X92bHWt1/Vhsm4Lh23
+	 xuiH9EmFR61hfpq8fnZEgwtQRQyoA7ji0L+eCxUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388776AbfC0SLi (ORCPT
+        id S2389414AbfC0TJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389022AbfC0SLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:32 -0400
+        id S2389047AbfC0SLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED6B21738;
-        Wed, 27 Mar 2019 18:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A64B21738;
+        Wed, 27 Mar 2019 18:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710290;
-        bh=iOZgLr+nb6CmVu2UGadVm7ah3frMC3QGOGzSORezROs=;
+        s=default; t=1553710296;
+        bh=NVOOyDrRR7x58Sypz4mU3rSYFhN3DNeXeZTMEslRPTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WwWCinaznQB6mrqcIRE7NP61QKZK/7R2Pz3qLYVCI+8fFusR6sjCk6cQIUYybhDBe
-         Upjq80df2st3GYYMs76ndoB9b2+J0KqZL6bds716pLu6hiMQvt0YCGMICCbOjLppaT
-         p4qb30i1tD5zbe300Nw0lZFb2zNxA4Q5CQBOyJ3s=
+        b=uyfHDVKh9GBFltW4npHziLmftddSDM0q54llrdSD7hytBulvLlfKr3PfDPc5sbNuz
+         DHcHQmXSr0WV0geNZUW8zYvb4FpAyc0WpgEDq1KsGk1PJgq1Orwoq2fouDSv9oawLN
+         VsAXIfmE8YmA+BbHtkkq3Jd1NFxFsKAUNSt3NqCk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>,
-        Jason Cai <jason.cai@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 036/192] dm thin: add sanity checks to thin-pool and external snapshot creation
-Date:   Wed, 27 Mar 2019 14:07:48 -0400
-Message-Id: <20190327181025.13507-36-sashal@kernel.org>
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Zhang Yu <zhangyu31@baidu.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 041/192] netfilter: nf_tables: check the result of dereferencing base_chain->stats
+Date:   Wed, 27 Mar 2019 14:07:53 -0400
+Message-Id: <20190327181025.13507-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,110 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
+[ Upstream commit a9f5e78c403d2d62ade4f4c85040efc85f4049b8 ]
 
-Invoking dm_get_device() twice on the same device path with different
-modes is dangerous.  Because in that case, upgrade_mode() will alloc a
-new 'dm_dev' and free the old one, which may be referenced by a previous
-caller.  Dereferencing the dangling pointer will trigger kernel NULL
-pointer dereference.
+Check the result of dereferencing base_chain->stats, instead of result
+of this_cpu_ptr with NULL.
 
-The following two cases can reproduce this issue.  Actually, they are
-invalid setups that must be disallowed, e.g.:
+base_chain->stats maybe be changed to NULL when a chain is updated and a
+new NULL counter can be attached.
 
-1. Creating a thin-pool with read_only mode, and the same device as
-both metadata and data.
+And we do not need to check returning of this_cpu_ptr since
+base_chain->stats is from percpu allocator if it is non-NULL,
+this_cpu_ptr returns a valid value.
 
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+And fix two sparse error by replacing rcu_access_pointer and
+rcu_dereference with READ_ONCE under rcu_read_lock.
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
-...
-Call Trace:
- new_read+0xfb/0x110 [dm_bufio]
- dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
- ? kmem_cache_alloc_trace+0x15c/0x1e0
- __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
- dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
- pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
- ? realloc_argv+0x50/0x70 [dm_mod]
- dm_table_add_target+0x14e/0x330 [dm_mod]
- table_load+0x122/0x2e0 [dm_mod]
- ? dev_status+0x40/0x40 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ? handle_mm_fault+0xda/0x200
- ? __do_page_fault+0x26c/0x4f0
- ksys_ioctl+0x60/0x90
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Thanks for Eric's help to finish this patch.
 
-2. Creating a external snapshot using the same thin-pool device.
-
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
-dmsetup message /dev/mapper/thinp 0 "create_thin 0"
-dmsetup create snap --table \
-            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
-
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-...
-Call Trace:
-? __alloc_pages_nodemask+0x13c/0x2e0
-retrieve_status+0xa5/0x1f0 [dm_mod]
-? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
- table_status+0x61/0xa0 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ksys_ioctl+0x60/0x90
- ? ksys_write+0x4f/0xb0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 009240940e84c1 ("netfilter: nf_tables: don't assume chain stats are set when jumplabel is set")
+Signed-off-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ net/netfilter/nf_tables_core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index cd4220ee7004..435a2ee4a392 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -3283,6 +3283,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	as.argc = argc;
- 	as.argv = argv;
+diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
+index 60f258f2c707..a3850414dba2 100644
+--- a/net/netfilter/nf_tables_core.c
++++ b/net/netfilter/nf_tables_core.c
+@@ -98,21 +98,23 @@ static noinline void nft_update_chain_stats(const struct nft_chain *chain,
+ 					    const struct nft_pktinfo *pkt)
+ {
+ 	struct nft_base_chain *base_chain;
++	struct nft_stats __percpu *pstats;
+ 	struct nft_stats *stats;
  
-+	/* make sure metadata and data are different devices */
-+	if (!strcmp(argv[0], argv[1])) {
-+		ti->error = "Error setting metadata or data device";
-+		r = -EINVAL;
-+		goto out_unlock;
-+	}
-+
- 	/*
- 	 * Set default pool features.
- 	 */
-@@ -4167,6 +4174,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	tc->sort_bio_list = RB_ROOT;
+ 	base_chain = nft_base_chain(chain);
+-	if (!rcu_access_pointer(base_chain->stats))
+-		return;
  
- 	if (argc == 3) {
-+		if (!strcmp(argv[0], argv[2])) {
-+			ti->error = "Error setting origin device";
-+			r = -EINVAL;
-+			goto bad_origin_dev;
-+		}
-+
- 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
- 		if (r) {
- 			ti->error = "Error opening origin device";
+-	local_bh_disable();
+-	stats = this_cpu_ptr(rcu_dereference(base_chain->stats));
+-	if (stats) {
++	rcu_read_lock();
++	pstats = READ_ONCE(base_chain->stats);
++	if (pstats) {
++		local_bh_disable();
++		stats = this_cpu_ptr(pstats);
+ 		u64_stats_update_begin(&stats->syncp);
+ 		stats->pkts++;
+ 		stats->bytes += pkt->skb->len;
+ 		u64_stats_update_end(&stats->syncp);
++		local_bh_enable();
+ 	}
+-	local_bh_enable();
++	rcu_read_unlock();
+ }
+ 
+ struct nft_jumpstack {
 -- 
 2.19.1
 
