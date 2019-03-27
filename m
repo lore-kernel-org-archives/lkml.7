@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03090C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF1BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC882183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9572063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710075;
-	bh=KmERyaP2SScHkgC+FfJ/EX4B148TZzpTex/i/vYfU+o=;
+	s=default; t=1553710082;
+	bh=PB82dimxUV0AIAOicB9oJW7kARm/9ChLH+QTTPwdbCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fq1vtL51Qz3NzbdRav/aJOC+MfPLUdfiKOA+2lw1UM77gMh5E/WDltD6fFTHnnWBt
-	 6ngw6N7KoWrR/92x1gDTb7xpGGdu9NlTEUW0l3+4BBM174k9dUPdHQVug9UFc9DqQi
-	 jOntAMKgIVgjqUzBfscJ8hzg7MZlytswe1mksauA=
+	b=N2+brwu9o6LlLGvt6AdyaEgWbHj+7toaKpDNVmKNjioBYlvya99TdEQwy8U/+driG
+	 kXz15/TIStYdrTDHwtB8EJoFQm+l9ZdmxdnotSpDNFSmz5XFP5XIeOZTl8gQ4OobMr
+	 LxY7HxWsQwAqtgnpZUy+WuE+4vLv1HbaucpSVKTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387401AbfC0SHy (ORCPT
+        id S2388287AbfC0SIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388247AbfC0SHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:49 -0400
+        id S1733293AbfC0SHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A308A2063F;
-        Wed, 27 Mar 2019 18:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D232063F;
+        Wed, 27 Mar 2019 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710068;
-        bh=KmERyaP2SScHkgC+FfJ/EX4B148TZzpTex/i/vYfU+o=;
+        s=default; t=1553710071;
+        bh=PB82dimxUV0AIAOicB9oJW7kARm/9ChLH+QTTPwdbCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gFUzrEP3MZx8/WaK27N2zs46MDMbLggk3yrXRwnqp3icrTOCjFdbmEa7rFj8BR7Ub
-         98eODEraGHUZ9kMxae5wtM52lAvU5njqX/uZ4/a9vfIWNBMLR6WxF9gIA8PyQC3uNL
-         NIVGVsJk5fGUIRpFMW+aQ7kjJ8rinnqMTc+/eWps=
+        b=dQJJDdoHeUYPvNLDdj/W0LF9lGl5ZxZlSK4soUN1Q1awVVKbWMT+3Z2c/QqwG5q9F
+         yLdowINZX9DEzMQBd4IHhDiLpRpMd+dL40n6Jfj3YaX1dUU4u9idJEc7mPFDnXVmaI
+         oiD6FojjJy+6u0e4/q1Zd52AvEFRVQm74LoQArBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 182/262] iwlwifi: mvm: fix RFH config command with >=10 CPUs
-Date:   Wed, 27 Mar 2019 14:00:37 -0400
-Message-Id: <20190327180158.10245-182-sashal@kernel.org>
+Cc:     Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 184/262] sched/debug: Initialize sd_sysctl_cpus if !CONFIG_CPUMASK_OFFSTACK
+Date:   Wed, 27 Mar 2019 14:00:39 -0400
+Message-Id: <20190327180158.10245-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,68 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 
-[ Upstream commit dbf592f3d14fb7d532cb7c820b1065cf33e02aaa ]
+[ Upstream commit 1ca4fa3ab604734e38e2a3000c9abf788512ffa7 ]
 
-If we have >=10 (logical) CPUs, our command size exceeds the
-internal buffer size and the command fails; fix that by using
-IWL_HCMD_DFL_NOCOPY for the command that's allocated anyway.
+register_sched_domain_sysctl() copies the cpu_possible_mask into
+sd_sysctl_cpus, but only if sd_sysctl_cpus hasn't already been
+allocated (ie, CONFIG_CPUMASK_OFFSTACK is set).  However, when
+CONFIG_CPUMASK_OFFSTACK is not set, sd_sysctl_cpus is left
+uninitialized (all zeroes) and the kernel may fail to initialize
+sched_domain sysctl entries for all possible CPUs.
 
-While at it, also fix the leak of cmd, and use struct_size()
-to calculate its size.
+This is visible to the user if the kernel is booted with maxcpus=n, or
+if ACPI tables have been modified to leave CPUs offline, and then
+checking for missing /proc/sys/kernel/sched_domain/cpu* entries.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: 8edbfaa19835 ("iwlwifi: mvm: configure multi RX queue")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fix this by separating the allocation and initialization, and adding a
+flag to initialize the possible CPU entries while system booting only.
+
+Tested-by: Syuuichirou Ishii <ishii.shuuichir@jp.fujitsu.com>
+Tested-by: Tarumizu, Kohei <tarumizu.kohei@jp.fujitsu.com>
+Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190129151245.5073-1-msys.mizuma@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ kernel/sched/debug.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 0d6c313b6669..19ec55cef802 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -127,13 +127,17 @@ static int iwl_send_rss_cfg_cmd(struct iwl_mvm *mvm)
- 
- static int iwl_configure_rxq(struct iwl_mvm *mvm)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index de3de997e245..8039d62ae36e 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -315,6 +315,7 @@ void register_sched_domain_sysctl(void)
  {
--	int i, num_queues, size;
-+	int i, num_queues, size, ret;
- 	struct iwl_rfh_queue_config *cmd;
-+	struct iwl_host_cmd hcmd = {
-+		.id = WIDE_ID(DATA_PATH_GROUP, RFH_QUEUE_CONFIG_CMD),
-+		.dataflags[0] = IWL_HCMD_DFL_NOCOPY,
-+	};
+ 	static struct ctl_table *cpu_entries;
+ 	static struct ctl_table **cpu_idx;
++	static bool init_done = false;
+ 	char buf[32];
+ 	int i;
  
- 	/* Do not configure default queue, it is configured via context info */
- 	num_queues = mvm->trans->num_rx_queues - 1;
+@@ -344,7 +345,10 @@ void register_sched_domain_sysctl(void)
+ 	if (!cpumask_available(sd_sysctl_cpus)) {
+ 		if (!alloc_cpumask_var(&sd_sysctl_cpus, GFP_KERNEL))
+ 			return;
++	}
  
--	size = sizeof(*cmd) + num_queues * sizeof(struct iwl_rfh_queue_data);
-+	size = struct_size(cmd, data, num_queues);
- 
- 	cmd = kzalloc(size, GFP_KERNEL);
- 	if (!cmd)
-@@ -154,10 +158,14 @@ static int iwl_configure_rxq(struct iwl_mvm *mvm)
- 		cmd->data[i].fr_bd_wid = cpu_to_le32(data.fr_bd_wid);
++	if (!init_done) {
++		init_done = true;
+ 		/* init to possible to not have holes in @cpu_entries */
+ 		cpumask_copy(sd_sysctl_cpus, cpu_possible_mask);
  	}
- 
--	return iwl_mvm_send_cmd_pdu(mvm,
--				    WIDE_ID(DATA_PATH_GROUP,
--					    RFH_QUEUE_CONFIG_CMD),
--				    0, size, cmd);
-+	hcmd.data[0] = cmd;
-+	hcmd.len[0] = size;
-+
-+	ret = iwl_mvm_send_cmd(mvm, &hcmd);
-+
-+	kfree(cmd);
-+
-+	return ret;
- }
- 
- static int iwl_mvm_send_dqa_cmd(struct iwl_mvm *mvm)
 -- 
 2.19.1
 
