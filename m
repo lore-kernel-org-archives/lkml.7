@@ -2,83 +2,84 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 945BAC10F05
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F690C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6380A20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553653966;
-	bh=38CsVGEYGwjTvocJDUQvOsZSVyRYDE4Ydm1/Ydy5uaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x4Tgpmb2sNOt/qyxISVEUcbxBSiO9DlAzfeqigmdbJMz+0Rj6ElM96p1qvsAQgCLU
-	 2DysiOM3g1NIEmf2VNqKs9pqVvhTJir/0OzJB7QKlfuybfWswT8KL++5q7lMlp5own
-	 MukkooD+tJgtzPJ/bEA33TG+ZMniaGCYEzAGSvJY=
+	by mail.kernel.org (Postfix) with ESMTP id 0CCDB2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dPeAcA1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732559AbfC0Ccp (ORCPT
+        id S1732862AbfC0Cdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 22:32:45 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2191 "EHLO mga04.intel.com"
+        Tue, 26 Mar 2019 22:33:52 -0400
+Received: from vps.xff.cz ([195.181.215.36]:55120 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbfC0Cco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 22:32:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 19:32:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,274,1549958400"; 
-   d="scan'208";a="135096858"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Mar 2019 19:32:43 -0700
-Date:   Tue, 26 Mar 2019 20:33:54 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "jianchao.wang" <jianchao.w.wang@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
-Message-ID: <20190327023354.GB7389@localhost.localdomain>
-References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
- <1553492318-1810-8-git-send-email-jianchao.w.wang@oracle.com>
- <20190325134917.GA4328@localhost.localdomain>
- <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
- <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
- <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
- <20190326235726.GC4328@localhost.localdomain>
- <c0d65c3c-bf2e-ff84-caac-e64b30e4e79f@oracle.com>
- <20190327021521.GA7389@localhost.localdomain>
- <1bbe1b5c-3564-55e8-6824-f679b3c5dd3f@oracle.com>
+        id S1732617AbfC0Cdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 22:33:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1553654028; bh=S1jLp574hnK0CY+FYoqQJqxFPycojWM2CD1ibwebjmA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dPeAcA1qatRKERktzEeiXuxUhqQGkumIC1xIbULGNwQbnDLqBiCyEAxhDpr0hEPG1
+         vR7iFC86CXNOrnolFSv2K0C28lYH/yZ96DpUnqY9QsoSw/jNYBlB7R95GuKJI/zpTp
+         YkPwifAESPBmS5QNXqBfFXvjqWkn1fnLlA/KvFsw=
+From:   megous@megous.com
+To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        mark.rutland@arm.com
+Cc:     Ziping Chen <techping.chan@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-input@vger.kernel.org,
+        hdegoede@redhat.com
+Subject: [PATCH RESEND v4 2/4] dt-bindings: input: Add R_LRADC support for A83T
+Date:   Wed, 27 Mar 2019 03:33:37 +0100
+Message-Id: <20190327023339.25975-3-megous@megous.com>
+In-Reply-To: <20190327023339.25975-1-megous@megous.com>
+References: <20190327023339.25975-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1bbe1b5c-3564-55e8-6824-f679b3c5dd3f@oracle.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 10:27:57AM +0800, jianchao.wang wrote:
-> As the comment above, the stable request maybe something that has been freed due to following case,
-> 1. a hctx->fq.flush_rq of dead request_queue that shares the same tagset
-> 2. a removed io scheduler's sched request
-> and this freed request could be allocated by others which may change the field of request->state.
+From: Ziping Chen <techping.chan@gmail.com>
 
-You're not explaing how that request->state is changed. I understand the
-request can be reallocated, but what is changing its state?
+Allwinner A83T SoC has a low res ADC like the one in Allwinner A10 SoC.
+
+Add binding for it.
+
+Signed-off-by: Ziping Chen <techping.chan@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/input/sun4i-lradc-keys.txt          | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 1458c3179a63..496125c6bfb7 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+ ------------------------------------------------
+ 
+ Required properties:
+- - compatible: "allwinner,sun4i-a10-lradc-keys"
++ - compatible: should be one of the following string:
++		"allwinner,sun4i-a10-lradc-keys"
++		"allwinner,sun8i-a83t-r-lradc"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
+ 
+-Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
++Each key is represented as a sub-node of the compatible mentioned above:
+ 
+ Required subnode-properties:
+ 	- label: Descriptive name of the key.
+-- 
+2.21.0
+
