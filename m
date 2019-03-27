@@ -6,53 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0FDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018B2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1804B20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A6D2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711762;
-	bh=wrGjXK8FBl5deI4OIVazWHNEx2Vp9ElyHnJdDRuAHq0=;
+	s=default; t=1553711772;
+	bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kbn34BHLO43NLpjKa7JM3MmdmDLpXcrSe8AGYbrVgdXQaHsQ2Ed8V1Dm1fPJ9/IJ4
-	 sQvrzbiyTlJhItKrWAg51npLnVo7l7JsrrcNmLhQisDCkujUbjY9RcPkzwH1eaQYWY
-	 RCQXBJeledeyp+hroYOBcBFeTKuPMzhNVgnjm47U=
+	b=MF9FHrGrZr8vx8ilEOU6Ygqm0rUHoGDl/qlfYfQBxQUgLJJWsIVeRUdmfocgy2OVM
+	 Mq63u+KQHD/CpCICtpIxAVrlpAbgGY0aSwu3syXQ8A8KB5jVhmAMDNOTcmOsriTwpP
+	 cAm7oilqEtMQGB1Tlvi9k9jmK9ztkdEu8rmef/qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404199AbfC0SgB (ORCPT
+        id S2404213AbfC0SgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403980AbfC0SYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:12 -0400
+        id S2391550AbfC0SYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF5720449;
-        Wed, 27 Mar 2019 18:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4695A21738;
+        Wed, 27 Mar 2019 18:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711051;
-        bh=wrGjXK8FBl5deI4OIVazWHNEx2Vp9ElyHnJdDRuAHq0=;
+        s=default; t=1553711047;
+        bh=7gPGMqwf5wZtKk/WecHdXqu62CrGFL/zrtfTytC5XaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vKXg1wlOgDt8sWxNfCtSEqzwY/4JD/Mh8OZTCcLnmmU31EMpsVcL3RM8rp9wgpDRA
-         IJnE52Axlop06f+vb9mCFQ3b7Bzwe31YQQHFLhWctu0a+L7vsmTBTQYmXEZ7dLRqD+
-         K+FELuoh6FfcfBVko/Sqh0wzPTQ8trZ91iT+oFHw=
+        b=OXydE70gpOIx1HVKCNCQyIB2f52UuWRuAGP9JU4dGi26VLlhQg+TNqqoc7hcdvpu2
+         eT/Es7aEbUS7gJumqemL+wgFAjMHx0jjSaItnnScau/2UVwp1SD1KIlmuno7y/oUKR
+         SfdQ5fTLYcNfCmX3XkdimhBIuz4fTCQ3DjaOeBpM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 29/63] perf test: Fix failure of 'evsel-tp-sched' test on s390
-Date:   Wed, 27 Mar 2019 14:22:49 -0400
-Message-Id: <20190327182323.18577-29-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 26/63] IB/mlx4: Increase the timeout for CM cache
+Date:   Wed, 27 Mar 2019 14:22:46 -0400
+Message-Id: <20190327182323.18577-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,120 +58,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-causes test case 14 "Parse sched tracepoints fields" to fail on s390.
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-This test succeeds on x86.
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-In fact this test now fails on all architectures with type char treated
-as type unsigned char.
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-The root cause is the signed-ness of character arrays in the tracepoints
-sched_switch for structure members prev_comm and next_comm.
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-On s390 the output of:
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
- [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:0;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:0;
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
 
-reveals the character arrays prev_comm and next_comm are per
-default unsigned char and have values in the range of 0..255.
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
 
-On x86 both fields are signed as this output shows:
- [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:1;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:1;
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
 
-and the character arrays prev_comm and next_comm are per default signed
-char and have values in the range of -1..127.  The implementation of
-type char is architecture specific.
+Note that the active/passive side is equally distributed between the
+two nodes.
 
-Since the character arrays in both tracepoints sched_switch and
-sched_wakeup should contain ascii characters, simply omit the check for
-signedness in the test case.
+Enabling pr_debug in cm.c gives tons of:
 
-Output before:
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
 
-  [root@m35lp76 perf]# ./perf test -F 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
-  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
-  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
-  ---- end ----
-  14: Parse sched tracepoints fields                        : FAILED!
-  [root@m35lp76 perf]#
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
 
-Output after:
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
 
-  [root@m35lp76 perf]# ./perf test -Fv 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  ---- end ----
-  Parse sched tracepoints fields: Ok
-  [root@m35lp76 perf]#
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
 
-Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+Adjustment of the CMA timeout is not part of this commit.
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/evsel-tp-sched.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index da474d743b6a..1b832e54c04b 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -42,7 +42,7 @@ int test__perf_evsel__tp_sched_test(void)
- 		return -1;
- 	}
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index 39a488889fc7..5dc920fe1326 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
--	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
- 		ret = -1;
+ #include "mlx4_ib.h"
  
- 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
-@@ -54,7 +54,7 @@ int test__perf_evsel__tp_sched_test(void)
- 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
- 		ret = -1;
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
  
--	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
-@@ -72,7 +72,7 @@ int test__perf_evsel__tp_sched_test(void)
- 		return -1;
- 	}
- 
--	if (perf_evsel__test_field(evsel, "comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "pid", 4, true))
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
