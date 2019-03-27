@@ -2,126 +2,142 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8683CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD00C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565022075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417802075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vOk/WjWu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oQnfOhJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbfC0CqC (ORCPT
+        id S1732733AbfC0CrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 22:46:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43318 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfC0CqC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 22:46:02 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2R2iBLY092349;
-        Wed, 27 Mar 2019 02:45:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=+junFJwtqieA797H5VH1I4JCqr8sIe0gItaAsCFMj74=;
- b=vOk/WjWuT0aq0lrtMH57udnClyPhaqcYzcZnw5PpGXfvipjtg9BVJJdHY5BoM9h4GqGD
- 9o0KcKRaWyhigD+Dkcg6ZdTBHnoFE3cc8Pn4jKgJsb+PUOmeQ1SbRuVNGRS8QIyuLF+E
- h2o8IzzERGZP6qNpTieAhZL7ZVdsuqKz0qK3ZuJtWFigzqLDLY/OMN77/tEv+TJgyzzG
- M3Prv3e55n8d6eDXEo5qS0u4oW/KnDIra4YaqxohYH2GhFGEwZp1q3VuJ+nyvkmQBVGp
- oHKUze5AsaYAOsRwXNlHKjSFAovoYaO307PKnQKAIXYwQdsPXF04vTgk2Lymx9QbsPj0 Rg== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by userp2120.oracle.com with ESMTP id 2re6dje00g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 02:45:37 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2R2jaJK012298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 02:45:36 GMT
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2R2jX7Q013948;
-        Wed, 27 Mar 2019 02:45:34 GMT
-Received: from [10.182.71.8] (/10.182.71.8)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 Mar 2019 19:45:33 -0700
-Subject: Re: [PATCH V2 7/8] nvme: use blk_mq_queue_tag_inflight_iter
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        James Smart <jsmart2021@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <tom.leiming@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-References: <1553492318-1810-1-git-send-email-jianchao.w.wang@oracle.com>
- <1553492318-1810-8-git-send-email-jianchao.w.wang@oracle.com>
- <20190325134917.GA4328@localhost.localdomain>
- <70e14e12-2ffc-37db-dd8f-229bc580546e@oracle.com>
- <CACVXFVMw9G6n44-knV6oa3FxJ6YzN05ZRajkgUnhLJupnkadOQ@mail.gmail.com>
- <d749592c-42c8-19a8-0885-5048a2101e5a@oracle.com>
- <20190326235726.GC4328@localhost.localdomain>
- <c0d65c3c-bf2e-ff84-caac-e64b30e4e79f@oracle.com>
- <20190327021521.GA7389@localhost.localdomain>
- <1bbe1b5c-3564-55e8-6824-f679b3c5dd3f@oracle.com>
- <20190327023354.GB7389@localhost.localdomain>
-From:   "jianchao.wang" <jianchao.w.wang@oracle.com>
-Message-ID: <9f3a574d-d2ea-3fd0-472c-85ad0bae4daf@oracle.com>
-Date:   Wed, 27 Mar 2019 10:45:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190327023354.GB7389@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
+        Tue, 26 Mar 2019 22:47:11 -0400
+Received: from mail-eopbgr140075.outbound.protection.outlook.com ([40.107.14.75]:52704
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727532AbfC0CrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 22:47:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hbg3foC/yowp2bJcbBIMVtNzDRCCuchdl3PJzaeZjEk=;
+ b=oQnfOhJ/4WRiVSMdpv4aH1B+7m6AJK/hM83vKJLvQvJI6ngdJCJcKAJBHW5ryzFQHxPKJcSpEIHRW9oX66AtMxnwk3ddeVoBcLiX053aN9zMVk2tvbKYhGV1CJMeBOfXr6AzJhq6Bw3qnZ0/m3lXfCq2p1fpOMKRTRbiiT19TEU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3643.eurprd04.prod.outlook.com (52.134.66.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Wed, 27 Mar 2019 02:47:06 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 02:47:06 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] input: keyboard: snvs: make sure irq is handled correctly
+Thread-Topic: [PATCH] input: keyboard: snvs: make sure irq is handled
+ correctly
+Thread-Index: AQHU5Edd/2+nSp1pAUqjt9pZVWLgMA==
+Date:   Wed, 27 Mar 2019 02:47:06 +0000
+Message-ID: <1553654517-7810-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9207 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903270018
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0P153CA0002.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:18::14) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6d2af989-8dfa-430e-0dfb-08d6b25e8015
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3643;
+x-ms-traffictypediagnostic: DB3PR0402MB3643:
+x-microsoft-antispam-prvs: <DB3PR0402MB3643263966DD1CB8F612AA0CF5580@DB3PR0402MB3643.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(366004)(189003)(199004)(99286004)(8676002)(6506007)(6436002)(81156014)(14454004)(102836004)(186003)(478600001)(386003)(5660300002)(305945005)(26005)(2616005)(316002)(81166006)(486006)(97736004)(2501003)(4326008)(71200400001)(71190400001)(52116002)(106356001)(36756003)(7736002)(14444005)(476003)(6512007)(25786009)(2906002)(256004)(3846002)(86362001)(8936002)(6116002)(53936002)(110136005)(50226002)(2201001)(68736007)(66066001)(6486002)(105586002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3643;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xuwgKWVenKsVeB2VGUjda7+JndVKiPycHhvXDNV7KZEpUfovSPuG6DApFm0fveTd+NfMKebr4yfxrWcot6ofnpNw4AYfn5R7BUssMaMxgopOf4/1bRulyrmjuJ+w+NCxztjoy+tJQ5V8yJyZjLStFpVaMTS2pyRvUoG2+saJSFsUpR9IdBc+qM/cV4jAFL0EcKwAuOTEwMrLmtu7kzhqJFlS1do7v5vhSImxaPoMAaEG3Tfng5qGSxQ7j0xbRWtn9Yircr7bo3grBw/VgUuvVKRZciaWYHOvuRHvgprgnFnX6i1do7slMAdf5ApD4CAjzM8PS6ipS0CoJXqepqBQ1RPKAdX8f3eridueMZa+JGhrry1VyIs01rCQ0fe4OYu7nG/J2tk3K5uRgw50e55CQB8N0puu5937390gO3FqWtc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d2af989-8dfa-430e-0dfb-08d6b25e8015
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 02:47:06.8769
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Keith
+SNVS IRQ is requested before necessary driver data initialized,
+if there is a pending IRQ during driver probe phase, kernel
+NULL pointer panic will occur in IRQ handler. To avoid such
+scenario, need to move the IRQ request to after driver data
+initialization done. This patch is inspired by NXP's internal
+kernel tree.
 
-On 3/27/19 10:33 AM, Keith Busch wrote:
-> On Wed, Mar 27, 2019 at 10:27:57AM +0800, jianchao.wang wrote:
->> As the comment above, the stable request maybe something that has been freed due to following case,
->> 1. a hctx->fq.flush_rq of dead request_queue that shares the same tagset
->> 2. a removed io scheduler's sched request
->> and this freed request could be allocated by others which may change the field of request->state.
-> 
-> You're not explaing how that request->state is changed. I understand the
-> request can be reallocated, but what is changing its state?
-> 
+Fixes: d3dc6e232215 ("input: keyboard: imx: add snvs power key driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/input/keyboard/snvs_pwrkey.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-Sorry for my bad description, and lead to the misunderstand.
-The _free_ below means,
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/=
+snvs_pwrkey.c
+index effb632..6ff41fd 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -148,15 +148,6 @@ static int imx_snvs_pwrkey_probe(struct platform_devic=
+e *pdev)
+ 		return error;
+ 	}
+=20
+-	error =3D devm_request_irq(&pdev->dev, pdata->irq,
+-			       imx_snvs_pwrkey_interrupt,
+-			       0, pdev->name, pdev);
+-
+-	if (error) {
+-		dev_err(&pdev->dev, "interrupt not available.\n");
+-		return error;
+-	}
+-
+ 	error =3D input_register_device(input);
+ 	if (error < 0) {
+ 		dev_err(&pdev->dev, "failed to register input device\n");
+@@ -166,6 +157,14 @@ static int imx_snvs_pwrkey_probe(struct platform_devic=
+e *pdev)
+ 	pdata->input =3D input;
+ 	platform_set_drvdata(pdev, pdata);
+=20
++	error =3D devm_request_irq(&pdev->dev, pdata->irq,
++				 imx_snvs_pwrkey_interrupt,
++				 0, pdev->name, pdev);
++	if (error) {
++		dev_err(&pdev->dev, "interrupt not available.\n");
++		return error;
++	}
++
+ 	device_init_wakeup(&pdev->dev, pdata->wakeup);
+=20
+ 	return 0;
+--=20
+2.7.4
 
-1. a hctx->fq.flush_rq of dead request_queue that shares the same tagset
-   The whole request_queue is cleaned up and freed, so the hctx->fq.flush is freed back to a slab
-
-2. a removed io scheduler's sched request
-   The io scheduled is detached and all of the structures are freed, including the pages where sched
-   requests locates.
-
-So the pointers in tags->rqs[] may point to memory that is not used as a blk layer request.
-
-
-Thanks
-Jianchao
-
-  
