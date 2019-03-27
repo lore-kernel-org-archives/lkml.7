@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F30C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE93C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09549204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE0E206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713589;
-	bh=g5ArAhgRGHk/oY9osD+uFBy0N+3cAzjoJE/yxecXbBs=;
+	s=default; t=1553713596;
+	bh=2CBvICdekNgi1+u9+4+/geoNZckF5aADKkW0VbqtMa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfR4JWbjOvxyA7uz9+sapjC/q5hu2mAS6h8q88J2Zl2IaqF7JZe0y8aa8sZJJQJ68
-	 4MdlCdpwQLozbULZvYg9qiPIV/9ley9BGyegRjUwTEaFzFFBqSUwr98IhHbNtJ7EWr
-	 RtV0/6S9PQmc3GqKdopCyMGAWxFx8VTxzSLsDwq0=
+	b=acbua+2pqFQV7EN473VH7U9GJgfeC1nzJ6334KKNgztuYvUuG8uyqnPloMjobD9/M
+	 XV0fwSNVLajDDHL9A3NmyPaW8wXP7rwIJrzy6xuNWDmPnX17AQViY3v/Ms0nSk9Koh
+	 Xkn/iXrwHNjx4aHlA+Ay1YcYFk1A2757QTaIJupw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389491AbfC0TG1 (ORCPT
+        id S2389659AbfC0TGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54902 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388933AbfC0SM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:29 -0400
+        id S2389191AbfC0SMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8297B21738;
-        Wed, 27 Mar 2019 18:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7DE21738;
+        Wed, 27 Mar 2019 18:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710348;
-        bh=g5ArAhgRGHk/oY9osD+uFBy0N+3cAzjoJE/yxecXbBs=;
+        s=default; t=1553710341;
+        bh=2CBvICdekNgi1+u9+4+/geoNZckF5aADKkW0VbqtMa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGmmeSawJBbiDEWi9z2saPzg8BF0V3g3deRQcUHRUtwuS7mUkQF/ci7KRNxb0igyX
-         fDYx/y/pUaB0JJrNRevxReFwjLq0a7iSmN6BCDS+HgwIzVX6ZyZilQuUvQ7NcoRm61
-         yfemPzo4ko/sR0REBSYXUUFgC+PlAAuMzpdpzuOM=
+        b=R9Ohfr/hJ3BExc0xJl3G5MGv9ajYLXKDcFVaTje8WZYO2mdaLB5glNgWj4ViR18GN
+         pnVuRIAHDaE2Hi6meNX7xiqriRpvTfDZv/cRxycZxA387KEj+yqj+VtwS5ruEXzZqQ
+         eYmIev9mGm+jjunZc2TTW9TKzQdwsL2xc18gWkPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Li <liwei391@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 071/192] perf annotate: Fix getting source line failure
-Date:   Wed, 27 Mar 2019 14:08:23 -0400
-Message-Id: <20190327181025.13507-71-sashal@kernel.org>
+Cc:     Yang Fan <nullptr.cpp@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/192] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
+Date:   Wed, 27 Mar 2019 14:08:18 -0400
+Message-Id: <20190327181025.13507-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -62,176 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Yang Fan <nullptr.cpp@gmail.com>
 
-[ Upstream commit 11db1ad4513d6205d2519e1a30ff4cef746e3243 ]
+[ Upstream commit 4d9b2864a415fec39150bc13efc730c7eb88711e ]
 
-The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
-("perf annotate: No need to calculate notes->start twice") removed notes->start
-assignment in symbol__calc_lines(). It will get failed in
-find_address_in_section() from symbol__tty_annotate() subroutine as the
-a2l->addr is wrong. So the annotate summary doesn't report the line number of
-source code correctly.
+Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER
+R720-15IKBN to no_hw_rfkill_list") added
+    DMI_MATCH(DMI_BOARD_NAME, "80WW")
+for Lenovo RESCUER R720-15IKBN.
 
-Before fix:
+But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN,
+thus cause Wireless LAN still be hard blocked.
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
-  void hotspot_1(void)
-  {
-	volatile int i;
+On Lenovo RESCUER R720-15IKBN:
+    ~$ cat /sys/class/dmi/id/sys_vendor
+    LENOVO
+    ~$ cat /sys/class/dmi/id/board_name
+    Provence-5R3
+    ~$ cat /sys/class/dmi/id/product_name
+    80WW
+    ~$ cat /sys/class/dmi/id/product_version
+    Lenovo R720-15IKBN
 
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-  }
+So on Lenovo RESCUER R720-15IKBN:
+    DMI_SYS_VENDOR should match "LENOVO",
+    DMI_BOARD_NAME should match "Provence-5R3",
+    DMI_PRODUCT_NAME should match "80WW",
+    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
 
-  int main(void)
-  {
-	hotspot_1();
+Fix it, and in according with other entries in no_hw_rfkill_list,
+use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
 
-	return 0;
-  }
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   19.30 common_while_1[32]
-   19.03 common_while_1[4e]
-   19.01 common_while_1[16]
-    5.04 common_while_1[13]
-    4.99 common_while_1[4b]
-    4.78 common_while_1[2c]
-    4.77 common_while_1[10]
-    4.66 common_while_1[2f]
-    4.59 common_while_1[51]
-    4.59 common_while_1[35]
-    4.52 common_while_1[19]
-    4.20 common_while_1[56]
-    0.51 common_while_1[48]
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
-   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
-      0.00 :   618:   jle    607 <hotspot_1+0xd>
-           :                 for (i = 0; i < 0x10000000; i++);
-  ...
-
-After fix:
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   33.34 common_while_1.c:5
-   33.34 common_while_1.c:6
-   33.32 common_while_1.c:7
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
-    4.89 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
-    0.00 :   618:   jle    607 <hotspot_1+0xd>
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
-    0.00 :   621:   jmp    62c <hotspot_1+0x32>
-    0.00 :   623:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
-    4.73 :   629:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
-  ...
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
-Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER R720-15IKBN to no_hw_rfkill_list")
+Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 28cd6a17491b..dfee110b3a58 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1862,6 +1862,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct annotation_options *options,
- 		     struct arch **parch)
- {
-+	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.evsel		= evsel,
-@@ -1892,6 +1893,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 
- 	args.ms.map = map;
- 	args.ms.sym = sym;
-+	notes->start = map__rip_2objdump(map, sym->start);
- 
- 	return symbol__disassemble(sym, &args);
- }
-@@ -2746,8 +2748,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
- 
- 	symbol__calc_percent(sym, evsel);
- 
--	notes->start = map__rip_2objdump(map, sym->start);
--
- 	annotation__set_offsets(notes, size);
- 	annotation__mark_jump_targets(notes, sym);
- 	annotation__compute_ipc(notes, size);
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d4f1259ff5a2..62d4b94e2531 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		.ident = "Lenovo RESCUER R720-15IKBN",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+ 		},
+ 	},
+ 	{
 -- 
 2.19.1
 
