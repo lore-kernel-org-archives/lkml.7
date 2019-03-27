@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFA6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF548C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3365204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98679204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713617;
-	bh=VcpHRazRJSgEU5qmQA/6rteBCJ3PsIuKz+LM64hrV6Q=;
+	s=default; t=1553713629;
+	bh=2OCLNz6pAJicctvws5sen0XorFDKpUsrUOAIW3CZusQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hlOTtP4+OVDZP/gx+z2d8Uyx4TYXMe46M9470WhecgVRSU9tybB3hTW2OhskwTMBx
-	 h8c/LD4qBvU1eLiJLPwgs+lzT0Urf63Fjysaywn6UHMKb7vpmQdABOHR29J1n7WKBa
-	 7rX/ITU4pMuhnoK9zzgzBom51HvcEEbMmhLAXe+E=
+	b=oldcff8BYYBPPML63+pMXtWnfcKkopWwMQnGOew5RSQYoWBUra6dJd1F3fstw7wtm
+	 1AGfFinCAWwgLqZShoyAO7JP9CPQfq2JGZpLpbh9at3ioPQGOEPmT9mlCzWlS732Fa
+	 oM+8Rqa8NC+D0rwcpLsL3kGGuKf1N1SwjcAHp9fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389741AbfC0TG4 (ORCPT
+        id S2389444AbfC0THI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389216AbfC0SMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:32 -0400
+        id S1733183AbfC0SMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4031E2183E;
-        Wed, 27 Mar 2019 18:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E4E02177E;
+        Wed, 27 Mar 2019 18:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710352;
-        bh=VcpHRazRJSgEU5qmQA/6rteBCJ3PsIuKz+LM64hrV6Q=;
+        s=default; t=1553710336;
+        bh=2OCLNz6pAJicctvws5sen0XorFDKpUsrUOAIW3CZusQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2SmX2fgs6ly4C0xPMdl67iZOO/wvUYK3XPDHQOIvtHsPo3jsahQ56Gt4TVwDrFOa
-         M1ifb6xEJehn3OV9Sx92s3HNgcUhsLTcHu/8Qq98nrqTUBFMiBRj11H2jMdwC4xtgK
-         wd7ZsCVE0fgaLK54nMcBKLjrRF1RY+nC8ACIWd0o=
+        b=MFbfcGeLJFS1KSW5fd+dhGEeaEsfjNr0n5nLQNK4/4lb4bRQAbgX7fjZroXBViHP6
+         wAN8LC6wd2D9WIaJ8axt3grfC+EbyZ/vbl7MaX+BK/ZKzXT8YJLxXBvg1mJmj4vPaI
+         I8EA0hitG82idvDjlHFiM14+GxKFLgqMWd27mv8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
-        Erwan Velu <e.velu@criteo.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 074/192] cpufreq: acpi-cpufreq: Report if CPU doesn't support boost technologies
-Date:   Wed, 27 Mar 2019 14:08:26 -0400
-Message-Id: <20190327181025.13507-74-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 062/192] mmc: omap: fix the maximum timeout setting
+Date:   Wed, 27 Mar 2019 14:08:14 -0400
+Message-Id: <20190327181025.13507-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,48 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Velu <erwanaliasr1@gmail.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-[ Upstream commit 1222d527f314c86a3b59a522115d62facc5a7965 ]
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-There is some rare cases where CPB (and possibly IDA) are missing on
-processors.
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-This is the case fixed by commit f7f3dc00f612 ("x86/cpu/AMD: Fix
-erratum 1076 (CPB bit)") and following.
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
 
-In such context, the boost status isn't reported by
-/sys/devices/system/cpu/cpufreq/boost.
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
 
-This commit is about printing a message to report that the CPU
-doesn't expose the boost capabilities.
+Fix by using 0xfd as the maximum timeout.
 
-This message could help debugging platforms hit by this phenomena.
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
-[ rjw: Change the message text somewhat ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/acpi-cpufreq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index b61f4ec43e06..aca30f45172e 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -911,8 +911,10 @@ static void __init acpi_cpufreq_boost_init(void)
- {
- 	int ret;
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index c60a7625b1fa..b2873a2432b6 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
+ }
  
--	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA)))
-+	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA))) {
-+		pr_debug("Boost capabilities not present in the processor\n");
- 		return;
-+	}
- 
- 	acpi_cpufreq_driver.set_boost = set_boost;
- 	acpi_cpufreq_driver.boost_enabled = boost_state(0);
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 -- 
 2.19.1
 
