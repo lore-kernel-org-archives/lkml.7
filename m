@@ -6,52 +6,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213EBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FB82184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F1D2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709752;
-	bh=GB/tzb7UrmxmQDwStdqyaUgKDv2/kefDkBPjoOdWj90=;
+	s=default; t=1553709757;
+	bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjZLyTUm3sRJHf08Sl8jZX0e432LYlmn1Pj1DblWE0J8yXMf1l+gd2uKrJTl7sAVO
-	 KXomJgXdl4J2QH90qWH8DYbt3+2mW6NPjzlfxc5wMQV8zoLAoxJDrKqZhE+Iufvnkb
-	 ziMUmEgrKRn5J/vYDSPvwfNNEqO+IBU/auoSLNAw=
+	b=b0OL5R79V0zA9/vAiXUfrWRfc/QnQCKYkfSIRijSutR4S86i+jJ1e2t1CPQkvYvL1
+	 l3PjMouAe4tr5qlllXrnAi5ZYj761M4HD5rO3cihyU2CGI+09vsYdbF2sEbz0HCOvm
+	 9LT4vuDq5efg+22QFr30l8Kb6G2WrIhCWbfXpLu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbfC0SCa (ORCPT
+        id S1730966AbfC0SCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42338 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfC0SC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:02:27 -0400
+        id S1730845AbfC0SCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:02:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA6E72147C;
-        Wed, 27 Mar 2019 18:02:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CCB221738;
+        Wed, 27 Mar 2019 18:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709746;
-        bh=GB/tzb7UrmxmQDwStdqyaUgKDv2/kefDkBPjoOdWj90=;
+        s=default; t=1553709752;
+        bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujTB8Heyiikv2PloWo9nS0lDUNTyqEPOXUnc10QXpTPDLCO0q8MGyYTJowkkBo6ko
-         pFYkBFh7s5WWjNZPK7iLdqENfg837DGUk57OFjNlSyIygpLQJk0+0kUYPbiIwkPJvB
-         lo7hA9Ua0cRED6KGW2JW+h85Uu1cvIUPeJqdh3RA=
+        b=0+qhOEuKxe42Yc70i0H6Br06Hu6JvHrxBxNhIALsMRVW6o+vU8HHPrYjsbqWGS44L
+         Uv5y2jHOCxbZ2TMuXL3mFf3edcBAVFcj/YWekianrYEflx8v6AxY4MWG5h+5gRNKsy
+         vhc7DqIo9dL3yfG0e3bTJ7rPQu+E2rBeoe2axUs4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 016/262] xsk: fix to reject invalid flags in xsk_bind
-Date:   Wed, 27 Mar 2019 13:57:51 -0400
-Message-Id: <20190327180158.10245-16-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Jens Axboe <axboe@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 019/262] include/linux/relay.h: fix percpu annotation in struct rchan
+Date:   Wed, 27 Mar 2019 13:57:54 -0400
+Message-Id: <20190327180158.10245-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,50 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit f54ba391d88f5a5d032175b4c308c176e34b80b7 ]
+[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
 
-Passing a non-existing flag in the sxdp_flags member of struct
-sockaddr_xdp was, incorrectly, silently ignored. This patch addresses
-that behavior, and rejects any non-existing flags.
+The percpu member of this structure is declared as:
+	struct ... ** __percpu member;
+So its type is:
+	__percpu pointer to pointer to struct ...
 
-We have examined existing user space code, and to our best knowledge,
-no one is relying on the current incorrect behavior. AF_XDP is still
-in its infancy, so from our perspective, the risk of breakage is very
-low, and addressing this problem now is important.
+But looking at how it's used, its type should be:
+	pointer to __percpu pointer to struct ...
+and it should thus be declared as:
+	struct ... * __percpu *member;
 
-Fixes: 965a99098443 ("xsk: add support for bind for Rx")
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+So fix the placement of '__percpu' in the definition of this
+structures.
+
+This silents a few Sparse's warnings like:
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
+
+Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
+Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Jens Axboe <axboe@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/relay.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 85e4fe4f18cc..f3031c8907d9 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -407,6 +407,10 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 	if (sxdp->sxdp_family != AF_XDP)
- 		return -EINVAL;
- 
-+	flags = sxdp->sxdp_flags;
-+	if (flags & ~(XDP_SHARED_UMEM | XDP_COPY | XDP_ZEROCOPY))
-+		return -EINVAL;
-+
- 	mutex_lock(&xs->mutex);
- 	if (xs->dev) {
- 		err = -EBUSY;
-@@ -425,7 +429,6 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 	}
- 
- 	qid = sxdp->sxdp_queue_id;
--	flags = sxdp->sxdp_flags;
- 
- 	if (flags & XDP_SHARED_UMEM) {
- 		struct xdp_sock *umem_xs;
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index e1bdf01a86e2..c759f96e39c1 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -66,7 +66,7 @@ struct rchan
+ 	struct kref kref;		/* channel refcount */
+ 	void *private_data;		/* for user-defined data */
+ 	size_t last_toobig;		/* tried to log event > subbuf size */
+-	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
++	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
+ 	int is_global;			/* One global buffer ? */
+ 	struct list_head list;		/* for channel list */
+ 	struct dentry *parent;		/* parent dentry passed to open */
 -- 
 2.19.1
 
