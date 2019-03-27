@@ -2,63 +2,75 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ECAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52686C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE6D2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EBFD20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbfC0O2I (ORCPT
+        id S1728313AbfC0O3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 10:28:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48556 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726810AbfC0O2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 10:28:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 57295ADC8;
-        Wed, 27 Mar 2019 14:28:07 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id F3CB9E1404; Wed, 27 Mar 2019 15:28:06 +0100 (CET)
-Date:   Wed, 27 Mar 2019 15:28:06 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 00/22] ethtool netlink interface, part 1
-Message-ID: <20190327142806.GT26076@unicorn.suse.cz>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <20190327130928.GC14297@nanopsycho>
+        Wed, 27 Mar 2019 10:29:50 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50849 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfC0O3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 10:29:50 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h99YK-0003y8-Lc; Wed, 27 Mar 2019 15:29:16 +0100
+Date:   Wed, 27 Mar 2019 15:29:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+cc:     Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
+In-Reply-To: <20190327012606.GA16532@altlinux.org>
+Message-ID: <alpine.DEB.2.21.1903271527110.1789@nanos.tec.linutronix.de>
+References: <20190228192746.GA13021@embeddedor> <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de> <20190326151244.GC16837@redhat.com> <20190327012606.GA16532@altlinux.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327130928.GC14297@nanopsycho>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 02:09:28PM +0100, Jiri Pirko wrote:
-> Could you please perhaps split the patchset so it contains max ~15 patches?
+On Wed, 27 Mar 2019, Dmitry V. Levin wrote:
 
-Would 1-17 still be acceptable? The thing is that patch 16 is the first
-where some "normal" notification (i.e. not EVENT one) is sent and
-patch 17 is the first implementation of a request modifying data.
-I believe having at least one example of both querying and setting data
-would help the review discussion.
+> On Tue, Mar 26, 2019 at 04:12:45PM +0100, Oleg Nesterov wrote:
+> > On 03/23, Thomas Gleixner wrote:
+> [...]
+> > >  2) syscall_set_arguments() has been introduced in 2008 and we still have
+> > >     no caller. Instead of polishing it, can it be removed completely or are
+> > >     there plans to actually use it?
+> > 
+> > I think it can die.
+> 
+> When PTRACE_GET_SYSCALL_INFO is finally squeezed into the kernel,
+> we could discuss adding PTRACE_SET_SYSCALL_INFO as well, and it
+> will need syscall_set_arguments().
 
-Or perhaps I could leave GET_INFO related patches (at least second and
-third) for later.
+So if that ever happens, then adding the code back isn't rocket
+science. But if not, then there is no point in carrying the dead horse
+around another 11 years.
 
-Michal
+Thanks,
+
+	tglx
