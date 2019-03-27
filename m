@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED3DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF44C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C302147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF972054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710366;
-	bh=p/og8pn/YFx5Lg7fsIAArDOb7J0jx4Uo21Wa/X2cxnc=;
+	s=default; t=1553710369;
+	bh=c80z3gNG3M1BowWhAEYg2Y3VdXlEI905S2AFjE8wJDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tBIVrnIwHFz6VHrl4wBph7TPePtepcPneYkzxUEtHgJI+gMwpXiqW7AKxYNlWKXE9
-	 lnlVXqSCqKbYGcyu8WmfZieMzPWAz8gmu2UA8YgDXKkc8aUl9BSElatQV0RqqAHqt9
-	 l87S5Y7NvcuFxrM31V+NXhe5rIf5pBCYf3jIeAwA=
+	b=L2/3WAIyCM7vrN0Mnm71SUcBcRqnTztStYXTUy/Vu7Qltr7Z3Ha0GsORSmOD2Auka
+	 j1Q+RpCx5LOm+9Bv9N817EqqkWJdCnLpQJXrmtnntVOimx5tldFqC4XyTuIplZg9E8
+	 PNzHjsh8v024ttBJXoK8IB3Na3xgWXrI+JafFH5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389255AbfC0SMo (ORCPT
+        id S2389269AbfC0SMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55098 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389246AbfC0SMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:40 -0400
+        id S2389017AbfC0SMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 283002054F;
-        Wed, 27 Mar 2019 18:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1D321738;
+        Wed, 27 Mar 2019 18:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710359;
-        bh=p/og8pn/YFx5Lg7fsIAArDOb7J0jx4Uo21Wa/X2cxnc=;
+        s=default; t=1553710363;
+        bh=c80z3gNG3M1BowWhAEYg2Y3VdXlEI905S2AFjE8wJDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCgMrCUGGjq9aRkyYf2f2LnufVtF/QcvvweW/bmb01TZ+8LPJKi1sysmubiyd9i9D
-         VaknyVUgGW1DWVaLmTVwVX+kbEVg3BBg+OZ1qypbCFaKbHkd9dN0jZjuXUcIH+K0Yo
-         tj+gPL2mSxc30hGxKveJurA6M2xAWvasjd0D+m/M=
+        b=1u6PRgBV/QHlXriwuTCg+9nkuTxzEFUP2wajX1sq2kyFP7JqELLtyAQXpUNF3RvnE
+         JHq6HfN6TUabarFZIln8Zpt/d198hz4glowZATmEU0IIpjGBauxGAJCXXiAEvW9dJH
+         ROzlhf3jyKuFmkgR+tH+0I9PURZgN5kc/A/SUM8c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 079/192] drm/amd/display: Clear stream->mode_changed after commit
-Date:   Wed, 27 Mar 2019 14:08:31 -0400
-Message-Id: <20190327181025.13507-79-sashal@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 081/192] mwifiex: don't advertise IBSS features without FW support
+Date:   Wed, 27 Mar 2019 14:08:33 -0400
+Message-Id: <20190327181025.13507-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,53 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit d8d2f174bcc2c26c3485c70e0c6fe22b27bce739 ]
+[ Upstream commit 6f21ab30469d670de620f758330aca9f3433f693 ]
 
-[Why]
-The stream->mode_changed flag can persist in the following sequence
-of atomic commits:
+As it is, doing something like
 
-Commit 1:
-Enable CRTC0 (mode_changed = true), Enable CRTC1 (mode_changed = true)
+  # iw phy phy0 interface add foobar type ibss
 
-Commit 2:
-Disable CRTC1 (mode_changed = false)
+on a firmware that doesn't have ad-hoc support just yields failures of
+HostCmd_CMD_SET_BSS_MODE, which happened to return a '-1' error code
+(-EPERM? not really right...) and sometimes may even crash the firmware
+along the way.
 
-In this sequence we want to keep the exiting CRTC0 but it's not in the
-atomic state for the commit since it hasn't been modified. In this case
-the stream->mode_changed flag persists as true and we don't re-program
-the planes for the existing stream.
+Let's parse the firmware capability flag while registering the wiphy, so
+we don't allow attempting IBSS at all, and we get a proper -EOPNOTSUPP
+from nl80211 instead.
 
-[How]
-The flag needs to be cleared and it makes the most sense to do it within
-DC after the state has been committed. Nothing following dc_commit_state
-should think that the stream's mode has changed.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Leo Li <sunpeng.li@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: e267e71e68ae ("mwifiex: Disable adhoc feature based on firmware capability")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 9045e6fa0780..bb0cda727605 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -958,6 +958,9 @@ static enum dc_status dc_commit_state_no_check(struct dc *dc, struct dc_state *c
- 	/* pplib is notified if disp_num changed */
- 	dc->hwss.set_bandwidth(dc, context, true);
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index adc88433faa8..2d87ebbfa4da 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -4282,11 +4282,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->mgmt_stypes = mwifiex_mgmt_stypes;
+ 	wiphy->max_remain_on_channel_duration = 5000;
+ 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+-				 BIT(NL80211_IFTYPE_ADHOC) |
+ 				 BIT(NL80211_IFTYPE_P2P_CLIENT) |
+ 				 BIT(NL80211_IFTYPE_P2P_GO) |
+ 				 BIT(NL80211_IFTYPE_AP);
  
-+	for (i = 0; i < context->stream_count; i++)
-+		context->streams[i]->mode_changed = false;
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
 +
- 	dc_release_state(dc->current_state);
+ 	wiphy->bands[NL80211_BAND_2GHZ] = &mwifiex_band_2ghz;
+ 	if (adapter->config_bands & BAND_A)
+ 		wiphy->bands[NL80211_BAND_5GHZ] = &mwifiex_band_5ghz;
+@@ -4346,11 +4348,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->available_antennas_tx = BIT(adapter->number_of_antenna) - 1;
+ 	wiphy->available_antennas_rx = BIT(adapter->number_of_antenna) - 1;
  
- 	dc->current_state = context;
+-	wiphy->features |= NL80211_FEATURE_HT_IBSS |
+-			   NL80211_FEATURE_INACTIVITY_TIMER |
++	wiphy->features |= NL80211_FEATURE_INACTIVITY_TIMER |
+ 			   NL80211_FEATURE_LOW_PRIORITY_SCAN |
+ 			   NL80211_FEATURE_NEED_OBSS_SCAN;
+ 
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->features |= NL80211_FEATURE_HT_IBSS;
++
+ 	if (ISSUPP_RANDOM_MAC(adapter->fw_cap_info))
+ 		wiphy->features |= NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR |
+ 				   NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR |
 -- 
 2.19.1
 
