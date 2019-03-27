@@ -7,61 +7,63 @@ X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C204BC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE58C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6D72087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0AD2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553648144;
-	bh=xsu+7kyLnsfIt3ITLEGlN44Gl1OxJ2irPSKwEbDO2jE=;
+	s=default; t=1553648172;
+	bh=SxQEP5LpnnFU1PHlC3JV7DL+8k591IhoUg3PDewelkw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YW/94w26GsdJE3mIXuGoLjQ304badrEl0jo1n8njqSX1E5V+zNEQkZoAudjKamybn
-	 qSxPRkuhE18RS5NTrol3yPd+zLDzQMbZ9SNtsMV+mL0VvGPQFUnZA2ZfvUK1Z7G+DS
-	 8Ya0fM8vDsF+fnCifosdQT7aq/7TIWFE3IvQA5tg=
+	b=vYP6HyzuZW0GKA/fEEybqSj1hHRsSy1kN6ISfuTBW9WSktl7pw2Aao6GyQMNlDbhQ
+	 iKrR8SZ+9QHtw46FfgzT1CXxPk4f6b0M3/TGO7A8AulPpcEYCpkcItpucG60XYFsHO
+	 NTfujxSqVEb4uZSlykyClogEkl2JDV34eKWbVXns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732084AbfC0Azn (ORCPT
+        id S1732224AbfC0A4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
+        Tue, 26 Mar 2019 20:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfC0Azn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 20:55:43 -0400
+        id S1726377AbfC0A4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 20:56:11 -0400
 Received: from localhost (mobile-166-137-177-030.mycingular.net [166.137.177.30])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F282082F;
-        Wed, 27 Mar 2019 00:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62B792082F;
+        Wed, 27 Mar 2019 00:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553648142;
-        bh=xsu+7kyLnsfIt3ITLEGlN44Gl1OxJ2irPSKwEbDO2jE=;
+        s=default; t=1553648170;
+        bh=SxQEP5LpnnFU1PHlC3JV7DL+8k591IhoUg3PDewelkw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p0PFuvPxU5PaD79+tcT54ZvZVwKEOcBCybg3nN3riz4tprssv0jQ2ZaCvDFYRcBAZ
-         mlYQ9JYWNopu+AhxXEJDGtUMlZQnGRjDb/MBJAqCA9X/Tgl7uYuA7topDmSKCYuixF
-         ldWkGNiJWzJPIHafoEwuCtsOlAw4Ps9X+6okM6c0=
-Date:   Wed, 27 Mar 2019 09:55:37 +0900
+        b=0REF2E20S6qfp0bBI0oZBaiKu+Rfgy2kA4J6wFom82QGSPq7pytCVX1OEEiu5SnFC
+         n+RRjazN2XVNs+n4K8hN/Vt76vYHRrX++3Ou9QBft00j0O43TUUL99eqwRZrpfs6pk
+         dUSpj7d+qnY9afC8mtd5PPGhKpMorrMHa0b2ztFo=
+Date:   Wed, 27 Mar 2019 09:56:05 +0900
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
         patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
 Subject: Re: [PATCH 5.0 00/52] 5.0.5-stable review
-Message-ID: <20190327005537.GA29485@kroah.com>
+Message-ID: <20190327005605.GB29485@kroah.com>
 References: <20190326042700.963224437@linuxfoundation.org>
- <846b9bed-9db0-2e9b-1f26-71ee418492b1@kernel.org>
+ <c72ed127-da73-27d5-dd84-259897a3181c@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <846b9bed-9db0-2e9b-1f26-71ee418492b1@kernel.org>
+In-Reply-To: <c72ed127-da73-27d5-dd84-259897a3181c@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:18:04PM -0600, shuah wrote:
-> On 3/26/19 12:29 AM, Greg Kroah-Hartman wrote:
+On Tue, Mar 26, 2019 at 03:20:22PM +0000, Jon Hunter wrote:
+> 
+> On 26/03/2019 06:29, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.0.5 release.
 > > There are 52 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -79,10 +81,20 @@ On Tue, Mar 26, 2019 at 05:18:04PM -0600, shuah wrote:
 > > thanks,
 > > 
 > > greg k-h
-> > 
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.0:
+>     11 builds:	11 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     28 tests:	28 pass, 0 fail
+> 
+> Linux version:	5.0.5-rc1-gebcb1bb
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
-Thanks for testing all of these and letting me know.
+Wonderful, thanks for testing all of these and letting me know.
 
 greg k-h
