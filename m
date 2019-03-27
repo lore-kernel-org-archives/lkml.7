@@ -4,47 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D975FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD62D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DCE204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713692;
-	bh=HsYyoFIPy0JTyw1gC/LQ/DP5R9J5hYacmOCuux4BoAM=;
+	s=default; t=1553713694;
+	bh=Ffqck2aIWABNUq3ZwltuooVhhQ3A2FFCOQHwiHl4c8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nVh/zW1DFoceu0XwomrEBRFXmTIwMyfC31CkNrtu4KZ1FC5Va9TH07ZzWSSnkK7T6
-	 nK6T2vwLpD+Fam+QDlAsvtDjxIsZ8wGq3kT0+xdHUuxpplXF1JUARhVo30FwvEXoUL
-	 Y7wzFbQb3vvY0zmwzLg0P/0gd011aKAg/XDIPPNg=
+	b=R7KQiLiCFIUH6yeIJSIo9HDNaX6Ym+oKTm3QVpGm0uQdSUMdLxmyJTb8b6ViEkYGs
+	 e8bMRcac9UN3ofBnNu2OxSSx61ERlE3ibOIKmckqNOQOC10wf6vPzAIC5rflrETISV
+	 3XRSc+AwP/rDncC5IUWae0tcRmFOekFuM1lEsTYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389103AbfC0SLt (ORCPT
+        id S2389259AbfC0TIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389022AbfC0SLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:39 -0400
+        id S2388796AbfC0SLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 790CF217F9;
-        Wed, 27 Mar 2019 18:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E41EA2177E;
+        Wed, 27 Mar 2019 18:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710299;
-        bh=HsYyoFIPy0JTyw1gC/LQ/DP5R9J5hYacmOCuux4BoAM=;
+        s=default; t=1553710308;
+        bh=Ffqck2aIWABNUq3ZwltuooVhhQ3A2FFCOQHwiHl4c8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQyhpJLI4p2/AI/POYeXMs1Nz0HzXryxvk3IMRZ8TP4GXofd+LnByfphASJdsLY44
-         Pi0twh9WMqb4yuElxATHwYrXRtkStIfRcmd6aEBPHEdg1RsMLnJrILG9znziUOD1B/
-         OFLDj/lIx9m72wp9rVj/5VZ/FI+JMLHULgzkPv0Q=
+        b=KVhfWhqCW8f3FKDkeUQuA4Zbl+Yt0R7yKgy3284K/YXPxPoM2s4CBGXK8LRnPXsD0
+         RdvaOPoNiRQkm31NDQkWx5Du7bBw+bQ1fB/3brN9xDVPzC264UdnhoJJP6h0NofNFe
+         R8t26v3L7PoJMen2yvYNuZeunJH/5hk7Ob5xWEcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     luojiajun <luojiajun3@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 043/192] jbd2: fix invalid descriptor block checksum
-Date:   Wed, 27 Mar 2019 14:07:55 -0400
-Message-Id: <20190327181025.13507-43-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>, Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 048/192] mt76: fix a leaked reference by adding a missing of_node_put
+Date:   Wed, 27 Mar 2019 14:08:00 -0400
+Message-Id: <20190327181025.13507-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -56,52 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: luojiajun <luojiajun3@huawei.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
+[ Upstream commit 34e022d8b780a03902d82fb3997ba7c7b1f40c81 ]
 
-In jbd2_journal_commit_transaction(), if we are in abort mode,
-we may flush the buffer without setting descriptor block checksum
-by goto start_journal_io. Then fs is mounted,
-jbd2_descriptor_block_csum_verify() failed.
+The call to of_find_node_by_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-[  271.379811] EXT4-fs (vdd): shut down requested (2)
-[  271.381827] Aborting journal on device vdd-8.
-[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
-[  271.598023] JBD2: recovery failed
-[  271.598484] EXT4-fs (vdd): error loading journal
+Detected by coccinelle with the following warnings:
+./drivers/net/wireless/mediatek/mt76/eeprom.c:58:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:61:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:67:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:70:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:72:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
 
-Fix this problem by keep setting descriptor block checksum if the
-descriptor buffer is not NULL.
-
-This checksum problem can be reproduced by xfstests generic/388.
-
-Signed-off-by: luojiajun <luojiajun3@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/eeprom.c | 24 ++++++++++++++-------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 150cc030b4d7..65ea0355a4f6 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -691,9 +691,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
-                            the last tag we set up. */
+diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
+index 530e5593765c..a1529920d877 100644
+--- a/drivers/net/wireless/mediatek/mt76/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
+@@ -54,22 +54,30 @@ mt76_get_of_eeprom(struct mt76_dev *dev, int len)
+ 		part = np->name;
  
- 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
--
--			jbd2_descriptor_block_csum_set(journal, descriptor);
- start_journal_io:
-+			if (descriptor)
-+				jbd2_descriptor_block_csum_set(journal,
-+							descriptor);
-+
- 			for (i = 0; i < bufs; i++) {
- 				struct buffer_head *bh = wbuf[i];
- 				/*
+ 	mtd = get_mtd_device_nm(part);
+-	if (IS_ERR(mtd))
+-		return PTR_ERR(mtd);
++	if (IS_ERR(mtd)) {
++		ret =  PTR_ERR(mtd);
++		goto out_put_node;
++	}
+ 
+-	if (size <= sizeof(*list))
+-		return -EINVAL;
++	if (size <= sizeof(*list)) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
+ 
+ 	offset = be32_to_cpup(list);
+ 	ret = mtd_read(mtd, offset, len, &retlen, dev->eeprom.data);
+ 	put_mtd_device(mtd);
+ 	if (ret)
+-		return ret;
++		goto out_put_node;
+ 
+-	if (retlen < len)
+-		return -EINVAL;
++	if (retlen < len) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
+ 
+-	return 0;
++out_put_node:
++	of_node_put(np);
++	return ret;
+ #else
+ 	return -ENOENT;
+ #endif
 -- 
 2.19.1
 
