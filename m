@@ -2,70 +2,112 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941CDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A54C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4D32146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FFD2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iPYqVWRQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BYQnByIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfC0Mre convert rfc822-to-8bit (ORCPT
+        id S1729533AbfC0Mrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:47:34 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:46822 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbfC0Mre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:47:34 -0400
-Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h97xF-0003ds-2Y; Wed, 27 Mar 2019 13:46:53 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 3/4] arm64: dts: rockchip: Define drive-impedance-ohm for RK3399's emmc-phy.
-Date:   Wed, 27 Mar 2019 13:46:52 +0100
-Message-ID: <3316794.yJZ3nBLoSG@phil>
-In-Reply-To: <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
-References: <20190322113456.16324-1-christoph.muellner@theobroma-systems.com> <20190322113456.16324-3-christoph.muellner@theobroma-systems.com>
+        Wed, 27 Mar 2019 08:47:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39440 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbfC0Mrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:47:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7FE5B60DB3; Wed, 27 Mar 2019 12:47:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553690868;
+        bh=4shmZlQkM2sPYWE/3Rr4bcasNWwXcXVIkYeo4nbIMdo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iPYqVWRQZhr6FBydaY16irFHiqCzxcacDXNVpCtQgcFyCdZ0goXueejACFFDCq369
+         z0oDpeT/aQ0b4xXV74iCT06yYHnkj/Dko4dlqDVMhUaJXkolQPYtPcQRZrJUgZtchk
+         d1QcRhrqkmgfBu0g+8sC325mMXCAlTSm/Ea0Aiic=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E42C60DB3;
+        Wed, 27 Mar 2019 12:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553690863;
+        bh=4shmZlQkM2sPYWE/3Rr4bcasNWwXcXVIkYeo4nbIMdo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BYQnByINi6Cex/q4oO5kUaiJO05dc7i71bVbYlMQHOMiyhcNocsbIRGqn19OLQzC4
+         YYrHXldOErS6GfaIXLKhxTk5dP4Gyr3wJP1hR36C/AeKi4r+3uRY0sv767tX6AjEfm
+         GSxGsPpL9uBVgQ6fB1xV+SAxwVv24P8lyOIwW/ik=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E42C60DB3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] scsi: sun_esp: : Fix object reference leaks in
+ esp_sbus_probe
+To:     Huang Zijiang <huang.zijiang@zte.com.cn>, jejb@linux.ibm.com
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn
+References: <1553644557-35817-1-git-send-email-huang.zijiang@zte.com.cn>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <8560b226-1f0b-e9c6-6a18-800e10111f65@codeaurora.org>
+Date:   Wed, 27 Mar 2019 18:17:34 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <1553644557-35817-1-git-send-email-huang.zijiang@zte.com.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 22. März 2019, 12:34:52 CET schrieb Christoph Muellner:
-> A previous patch introduced the property 'drive-impedance-ohm'
-> for the RK3399's emmc phy node. This patch sets this value
-> explicitly to the default value of 50 Ohm.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
 
-applied patches 3+4 for 5.2
+Sorry for the spam whosoever has got the last mail, as the last did not 
+get to
+the mailing list, and it bounced, so sending it again.
 
-Thanks
-Heiko
+On 3/27/2019 5:25 AM, Huang Zijiang wrote:
+> The of_find_device_by_node() takes a reference to the underlying device
+> structure, we should release that reference whatever of_find_device_by_node
+> reutrns.
+s/reutrns/returns
+>
+> Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
 
 
+
+Take mine review tag once you make above change.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+
+
+> ---
+>   drivers/scsi/sun_esp.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/scsi/sun_esp.c b/drivers/scsi/sun_esp.c
+> index a11efbc..a74605a 100644
+> --- a/drivers/scsi/sun_esp.c
+> +++ b/drivers/scsi/sun_esp.c
+> @@ -543,9 +543,8 @@ static int esp_sbus_probe(struct platform_device *op)
+>   		return -ENODEV;
+>   
+>   	ret = esp_sbus_probe_one(op, dma_of, hme);
+> -	if (ret)
+> -		put_device(&dma_of->dev);
+>   
+> +	put_device(&dma_of->dev);
+>   	return ret;
+>   }
+>   
