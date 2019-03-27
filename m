@@ -2,56 +2,208 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AA1C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63032C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E522082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBE42075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfC0IQ3 (ORCPT
+        id S1731509AbfC0ITG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:16:29 -0400
-Received: from verein.lst.de ([213.95.11.211]:40421 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfC0IQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:16:29 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 48B1568B05; Wed, 27 Mar 2019 09:16:19 +0100 (CET)
-Date:   Wed, 27 Mar 2019 09:16:19 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     luferry <luferry@163.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] make blk_mq_map_queues more friendly for cpu topology
-Message-ID: <20190327081619.GG20525@lst.de>
-References: <20190325152640.48120-1-luferry@163.com> <20190326073954.GD21617@lst.de> <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
+        Wed, 27 Mar 2019 04:19:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:35680 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfC0ITG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 04:19:06 -0400
+Received: by mail-io1-f72.google.com with SMTP id k2so12511330ioj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:19:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=tgaKyr/0HQSbrx56T2shgixgxtBXFhn+p6DV7UkmnT4=;
+        b=YQhGWNrnsP6FN3uRAore3OxLMl2Kz1JGObH7rrIgNObqDp6aEXZ7gXDzOgIjUGd+5D
+         txQnJnKwbmSvMbkm2AjT/IU67qjQ1E/7wNbaAaI6yrztmK3ByzZQeOKy78VNurWfSc9S
+         ZCNykBSNmz9D63HVvat6IjgeMsWenSaxd0ooLeQTao/eDhp8RMA+EiikpvezuxAk8vWJ
+         BMWDp+Aq4BVvNXV8xJpF5Z8EjS89SuLSMS+9nwVhX56aLbGJBKx3g+u5l2tpXEOEBy0F
+         sauBTJtASI0D/CNf1i+nj+q3zkq7iQpjkiOIew1erLSa1Rd8CQR7jKritUkemYFxhOaC
+         1p8w==
+X-Gm-Message-State: APjAAAXQO6rA7cd6xYH3IIPOAoCH7DC/iwcj1inp951Odzi8hLJia3Yg
+        pLVsTeyyaOLcvDSKzx2EUeBug7OwBtwjrAMYBKSbcYw5YYO+
+X-Google-Smtp-Source: APXvYqwPJyV9iLkvnsHoDWdzCF5zgpWzNtFsa8osUZ/pLDCLMiHZzPtyAne4z0h/QNU1bT9YGAibYRsXTkQygmrW1aE/94y9ShhL
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a5d:9914:: with SMTP id x20mr22468015iol.257.1553674745465;
+ Wed, 27 Mar 2019 01:19:05 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 01:19:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004cd71f05850f17c2@google.com>
+Subject: KASAN: use-after-free Read in __icmp_send
+From:   syzbot <syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 03:55:10PM +0800, luferry wrote:
-> 
-> 
-> 
-> At 2019-03-26 15:39:54, "Christoph Hellwig" <hch@lst.de> wrote:
-> >Why isn't this using the automatic PCI-level affinity assignment to
-> >start with?
-> 
-> When enable virtio-blk with multi queues but with only 2 msix-vector.
-> vp_dev->per_vq_vectors will be false, vp_get_vq_affintity will return NULL directly
-> so blk_mq_virtio_map_queues will fallback to blk_mq_map_queues.
+Hello,
 
-What is the point of the multiqueue mode if you don't have enough
-(virtual) MSI-X vectors?
+syzbot found the following crash on:
+
+HEAD commit:    1d965c4d Merge branch 'Refactor-flower-classifier-to-remov..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ff71df200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f05902bca21d8935
+dashboard link: https://syzkaller.appspot.com/bug?extid=aa9105f99c12b6abfe27
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+aa9105f99c12b6abfe27@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in atomic_read  
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in queued_spin_trylock  
+include/asm-generic/qspinlock.h:69 [inline]
+BUG: KASAN: use-after-free in do_raw_spin_trylock+0x6a/0x180  
+kernel/locking/spinlock_debug.c:119
+Read of size 4 at addr ffff88808a28ccd4 by task syz-executor.0/17585
+
+CPU: 0 PID: 17585 Comm: syz-executor.0 Not tainted 5.0.0+ #105
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+  kasan_check_read+0x11/0x20 mm/kasan/common.c:102
+  atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+  queued_spin_trylock include/asm-generic/qspinlock.h:69 [inline]
+  do_raw_spin_trylock+0x6a/0x180 kernel/locking/spinlock_debug.c:119
+  __raw_spin_trylock include/linux/spinlock_api_smp.h:89 [inline]
+  _raw_spin_trylock+0x1c/0x80 kernel/locking/spinlock.c:128
+  spin_trylock include/linux/spinlock.h:339 [inline]
+  icmp_xmit_lock net/ipv4/icmp.c:219 [inline]
+  __icmp_send+0x553/0x1400 net/ipv4/icmp.c:666
+  icmp_send include/net/icmp.h:47 [inline]
+  ipv4_link_failure+0x31/0x210 net/ipv4/route.c:1190
+  dst_link_failure include/net/dst.h:416 [inline]
+  arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
+  neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
+  neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
+  call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+  expire_timers kernel/time/timer.c:1362 [inline]
+  __run_timers kernel/time/timer.c:1681 [inline]
+  __run_timers kernel/time/timer.c:1649 [inline]
+  run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+  __do_softirq+0x266/0x95a kernel/softirq.c:293
+  invoke_softirq kernel/softirq.c:374 [inline]
+  irq_exit+0x180/0x1d0 kernel/softirq.c:414
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+  </IRQ>
+RIP: 0010:filename_mountpoint+0x25d/0x3c0 fs/namei.c:2722
+Code: 14 02 4c 89 e0 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 1c 01 00 00  
+45 8b 24 24 31 ff 44 89 e6 e8 58 ea ba ff 45 85 e4 74 62 <e8> ce e8 ba ff  
+e8 49 2a fe ff 4c 89 f7 e8 81 f2 ff ff e8 bc e8 ba
+RSP: 0018:ffff8880a857fc30 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: dffffc0000000000 RBX: 1ffff110150aff88 RCX: ffffffff81b57ad4
+RDX: 1ffff1100bd8e54c RSI: ffffffff81b57ae2 RDI: ffff88805ec72a60
+RBP: ffff8880a857fdc8 R08: ffff88805ec72300 R09: 0000000000000001
+R10: 000000000000001c R11: ffff8880ae82de3b R12: 0000000000000000
+R13: 0000000000000000 R14: ffff888097790e00 R15: ffff8880a857fe68
+  user_path_mountpoint_at+0x3a/0x50 fs/namei.c:2745
+  ksys_umount+0x167/0xf00 fs/namespace.c:1687
+  __do_sys_umount fs/namespace.c:1713 [inline]
+  __se_sys_umount fs/namespace.c:1711 [inline]
+  __x64_sys_umount+0x54/0x80 fs/namespace.c:1711
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45ac57
+Code: 44 00 00 b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 4d 8e fb ff c3  
+66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 2d 8e fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe6359ff08 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045ac57
+RDX: 0000000000402ea0 RSI: 0000000000000002 RDI: 00007ffe6359ffb0
+RBP: 00000000000019e0 R08: 0000000000000000 R09: 000000000000000d
+R10: 0000000000000006 R11: 0000000000000202 R12: 00007ffe635a1040
+R13: 0000000000bfa940 R14: 0000000000000000 R15: 00007ffe635a1040
+
+Allocated by task 12478:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
+  slab_post_alloc_hook mm/slab.h:436 [inline]
+  slab_alloc mm/slab.c:3392 [inline]
+  kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3554
+  getname_flags fs/namei.c:138 [inline]
+  getname_flags+0xd6/0x5b0 fs/namei.c:128
+  getname+0x1a/0x20 fs/namei.c:209
+  do_sys_open+0x2c9/0x5d0 fs/open.c:1057
+  __do_sys_open fs/open.c:1081 [inline]
+  __se_sys_open fs/open.c:1076 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1076
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 12478:
+  save_stack+0x45/0xd0 mm/kasan/common.c:75
+  set_track mm/kasan/common.c:87 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+  __cache_free mm/slab.c:3498 [inline]
+  kmem_cache_free+0x86/0x260 mm/slab.c:3764
+  putname+0xef/0x130 fs/namei.c:259
+  do_sys_open+0x318/0x5d0 fs/open.c:1072
+  __do_sys_open fs/open.c:1081 [inline]
+  __se_sys_open fs/open.c:1076 [inline]
+  __x64_sys_open+0x7e/0xc0 fs/open.c:1076
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff88808a28c780
+  which belongs to the cache names_cache of size 4096
+The buggy address is located 1364 bytes inside of
+  4096-byte region [ffff88808a28c780, ffff88808a28d780)
+The buggy address belongs to the page:
+page:ffffea000228a300 count:1 mapcount:0 mapping:ffff88812c2d8dc0 index:0x0  
+compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00025c8908 ffffea0001840a08 ffff88812c2d8dc0
+raw: 0000000000000000 ffff88808a28c780 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88808a28cb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808a28cc00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff88808a28cc80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                  ^
+  ffff88808a28cd00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff88808a28cd80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
