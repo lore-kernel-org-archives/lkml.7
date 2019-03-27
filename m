@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27CFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9EEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68DD2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF112147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710317;
-	bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
+	s=default; t=1553710323;
+	bh=12rsSA6qYPeZIEqANx+LbuSpBa6N+6DLyRpbn0/g5u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltbztbSdDJULGFxO1amePZ6AzSupvBA0Y4se3iOvATs5b+FCG/5Q6XHkG3ftlUm8j
-	 REo1kvBuf+1hZf7eBxs3uAs3SWM8gfGRjJPc1cOChscQgfEkm0wQumhKtmq1TtqRSl
-	 ER6Bk7ib6j38KTaDBZue6JU10QHS52um6JnX8t5Y=
+	b=HuC4wtR8pR3iozFRjUW1pw+Vf6+vStTXGqHN/Xbotpq3jScI1YA5w2K8xiWJ7WLFT
+	 EtX3IqhS11Nr3HQpVWUiCKsGIZ9XRBOM0imYSqfJbUl7NA6F0AI3EMIDTb3TKA5xhM
+	 4ejLkJAEqEPfAbRwAdBYLh/bCd76dhem92l4YRpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389121AbfC0SL4 (ORCPT
+        id S2389127AbfC0SMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54224 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389109AbfC0SLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:51 -0400
+        id S2389115AbfC0SLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D51E82054F;
-        Wed, 27 Mar 2019 18:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F6BC21738;
+        Wed, 27 Mar 2019 18:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710310;
-        bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
+        s=default; t=1553710314;
+        bh=12rsSA6qYPeZIEqANx+LbuSpBa6N+6DLyRpbn0/g5u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPuI8WCUmHY6ZbHIXRmpChF47+TqQa2zRJysf7mpP8451T0y16d2SE7VH9BrDn+Ax
-         GheLEGs3Nl5jBYeyhhB4IJvI1Cj0gKKXjdiR7NSlhm1+mwtzSoMpTN+bHU9624tOAc
-         TzFnmkFr1TJL2wd++JwGIMCANW2sY7XvG61cV0Gk=
+        b=xp54kunlmrgynJLtQPrXQurFzlkBBlOdY2AREIahlr2v0HAZN8JEpfNYmWPfSZssU
+         LnpuQKHIHhGLH21izm6W/suzrZIqW7HcynUJxS1NL9qElwtF99Gw+1KQtK9dg8xrO1
+         IycojXhLR/mfTGSTxFB/7JofPQt0qO1uFkj3Lirk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 049/192] crypto: crypto4xx - add missing of_node_put after of_device_is_available
-Date:   Wed, 27 Mar 2019 14:08:01 -0400
-Message-Id: <20190327181025.13507-49-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/192] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Wed, 27 Mar 2019 14:08:03 -0400
+Message-Id: <20190327181025.13507-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,62 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-Add an of_node_put when a tested device node is not available.
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
-The semantic patch that fixes this problem is as follows
-(http://coccinelle.lip6.fr):
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-// <smpl>
-@@
-identifier f;
-local idexpression e;
-expression x;
-@@
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
 
-e = f(...);
-... when != of_node_put(e)
-    when != x = e
-    when != e = x
-    when any
-if (<+...of_device_is_available(e)...+>) {
-  ... when != of_node_put(e)
-(
-  return e;
-|
-+ of_node_put(e);
-  return ...;
-)
-}
-// </smpl>
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
 
-Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 5e63742b0d22..53ab1f140a26 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 85fc6db48e44..159b897c5e80 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -935,8 +935,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
++
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
  
- 	/* Find the TRNG device node and map it */
- 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
--	if (!trng || !of_device_is_available(trng))
-+	if (!trng || !of_device_is_available(trng)) {
-+		of_node_put(trng);
- 		return;
-+	}
- 
- 	dev->trng_base = of_iomap(trng, 0);
- 	of_node_put(trng);
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
