@@ -2,165 +2,125 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B339C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1ADC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61102075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553681500;
-	bh=lb8kyi9UgtzW+n/NXE7ZRR8RfEqPmCtZuRkpLsoDdXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZhwRTZAxQCE1WlK0w9DnC81+rRKgS+Pxupl/ODFpkuax0g3eg33m1f1bUj/AtTwwD
-	 lAvRJRkaLCHBZNRaIrgj/wUgRAr8km8/XWDMftz3NX6zDZcu480vHBlrCkp002J6Bn
-	 +345MC4hNRn10Xn7/yB7i08MootzNrNEco9oIHxs=
+	by mail.kernel.org (Postfix) with ESMTP id 7DDDD2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QZnKuQ42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733149AbfC0KLi (ORCPT
+        id S1733086AbfC0KM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfC0KLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:11:38 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 781862070B;
-        Wed, 27 Mar 2019 10:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553681497;
-        bh=lb8kyi9UgtzW+n/NXE7ZRR8RfEqPmCtZuRkpLsoDdXw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qKUKRJrRnFG++TI2shZDtwUlrmOphuOfmiK1WQ5fbgFs/AaqvVmLU/xF95le1v15T
-         yk5SBJstfmeA/uXur9azIiLmOxHkK/DEcJnL8cU5FOvj3egrcIi+3ZEPPYlRgkpQQG
-         V5CDdYimk5Oyh8SHZProSp09Tg/fzXyZLiD78q7o=
-Date:   Wed, 27 Mar 2019 12:11:33 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86 <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
- announcement
-Message-ID: <20190327101133.GQ22899@mtr-leonro.mtl.com>
-References: <20190327090905.5588-1-leon@kernel.org>
- <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
- <20190327093844.GO22899@mtr-leonro.mtl.com>
- <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
- <20190327095337.GP22899@mtr-leonro.mtl.com>
+        Wed, 27 Mar 2019 06:12:58 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3627 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfC0KM5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:12:57 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9b4ca30002>; Wed, 27 Mar 2019 03:12:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 27 Mar 2019 03:12:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 27 Mar 2019 03:12:56 -0700
+Received: from [10.24.47.154] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 10:12:44 +0000
+Subject: Re: [PATCH 10/10] arm64: Add Tegra194 PCIe driver to defconfig
+To:     Jon Hunter <jonathanh@nvidia.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <kishon@ti.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
+        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
+        <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-11-git-send-email-vidyas@nvidia.com>
+ <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
+Date:   Wed, 27 Mar 2019 15:42:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xtx0sNU5lZ46KfgK"
-Content-Disposition: inline
-In-Reply-To: <20190327095337.GP22899@mtr-leonro.mtl.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553681571; bh=q0w7xv5B3iVJwel4fEU0DFth5diQoA+o7LlUSyXGUm0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=QZnKuQ42UtuDY/QhJ1LHkU0uCevVUcMXXMWsy6cdDuYdSfjKw0X58fZLfAs1/VsSC
+         MPwW+mnexCjeUonrkyGoZuRBViojlu9DEzM4eA6XeKxdmaWVbaQDifUojeSxd8zzdU
+         WtfL9ld1+/SNP5dSYAkgKLjbAbc1fCtyQI/bUcxI8JLfAzscCfNb9cT40jGNdyBnTS
+         2bid1mkwh7mpSYNbw+K5PGKOyvz1pPki45TlIxGOW1eZg21JeZPffsvPidcc1M6PW2
+         DufOU/rIRuAdYHSWGD/gGJJ30Xs5iiOcvAc6XmNeQRy8eiNCX760NzCV4aFaII8+bd
+         PvOFXMgcjxT9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/27/2019 3:38 PM, Jon Hunter wrote:
+> 
+> On 26/03/2019 15:13, Vidya Sagar wrote:
+>> Add PCIe host controller driver for DesignWare core based
+>> PCIe controller IP present in Tegra194.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   arch/arm64/configs/defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 2d9c39033c1a..2ddea5c4e87d 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=y
+>>   CONFIG_PCIE_ARMADA_8K=y
+>>   CONFIG_PCIE_KIRIN=y
+>>   CONFIG_PCIE_HISI_STB=y
+>> +CONFIG_PCIE_TEGRA194=y
+>>   CONFIG_ARM64_VA_BITS_48=y
+>>   CONFIG_SCHED_MC=y
+>>   CONFIG_NUMA=y
+> 
+> Maybe building as a module is more appropriate here as I am not sure
+> that anyone else will want this built-in and it is not critical to
+> booting AFAIK.
+Since the DesignWare core framework doesn't yet have support for making this
+as a module, I added it as a built-in driver. I'll switch it to a module
+once support is available.
 
---xtx0sNU5lZ46KfgK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> Cheers
+> Jon
+> 
 
-On Wed, Mar 27, 2019 at 11:53:37AM +0200, Leon Romanovsky wrote:
-> On Wed, Mar 27, 2019 at 02:49:02AM -0700, Joe Perches wrote:
-> > On Wed, 2019-03-27 at 11:38 +0200, Leon Romanovsky wrote:
-> > > On Wed, Mar 27, 2019 at 02:17:40AM -0700, Joe Perches wrote:
-> > > > On Wed, 2019-03-27 at 11:09 +0200, Leon Romanovsky wrote:
-> > > > > Kernel is booted with less possible CPUs (possible_cpus kernel boot
-> > > > > option) than available CPUs will have prints like this:
-> > > > []
-> > > > > diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> > > > []
-> > > > > @@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
-> > > > >  	if (num_processors >= nr_cpu_ids) {
-> > > > >  		int thiscpu = max + disabled_cpus;
-> > > > >
-> > > > > -		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
-> > > > > -			   "reached. Processor %d/0x%x ignored.\n",
-> > > > > -			   max, thiscpu, apicid);
-> > > > > +		pr_debug(
-> > > > > +			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> > > > > +			max, thiscpu, apicid);
-> > > >
-> > > > 2 lines please
-> > > >
-> > > > 		pr_debug("APIC: etc...",
-> > > > 			 max, thiscpu, ...);
-> > >
-> > > It was two lines before, but I changed for two reasons:
-> > >  * It helped me to grep the source code to find the origin of dmesg warning.
-> > >  * i got checkpatch warning about spitted string, can you please fix checkpatch do not complain?
-> >
-> > Yes, use
-> >
-> > 	pr_debug("APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> > 		 max, thiscpu, apicid);
->
-> Ahh, I see, I got such change from clang formatter.
->
-> >
-> > or better
-> >
-> > 	printk(KERN_DEBUG "APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
-> > 	       max, thiscpu, apicid);
-> >
-> > > > And this would probably be better as
-> > > >
-> > > > 		printk(KERN_DEBUG "APIC: etc...",
-> > > > 		 ...)
-> > > >
-> > > > to avoid the need to compile with DEBUG or enable
-> > > > with CONFIG_DYNAMIC_DEBUG
-> > >
-> > > You don't need anything like this, just provide dyndbg parameters
-> > > through kernel command line.
-> >
-> > That assumes CONFIG_DYNAMIC_DEBUG is always enabled,
-> > and it is not enabled in many .config files.
->
-> No problem.
-
-ok, I tested your variant and it still prints a t least on my systems,
-so it won't solve my problem. I'll keep this patch as is.
-
-Thanks for the review.
-
->
-> Thanks
->
-> >
-> >
-
-
-
---xtx0sNU5lZ46KfgK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcm0xVAAoJEORje4g2clinwAkP/AqMkyPfgg3jJorgJEFjlDgG
-yAU3UZD1CbLSjkGi1/QN3KxJDUsowtHNGL8S+a5Yx79AxGgBfj30uNahrr0SiXPq
-8pk2ScTQZY9Bbp4UATALpnpml/OH7pePpKjKMY4c78Web/W6jPOesmpyxQ2CRGcs
-f8SgmcFHZM80Rdn2oc3pAH1Gtmo3RK4BmUv5osi4QLogfJ/nKW2ztZPSqVuRlZxq
-HIFzoTuZZd/grzHCVFicSjh1ahXF94wOlLnEBeeEtye0Ua5DsuurMV9tEEsuXW1S
-3bcBbTAsN/UuBYehjk2oKS4qy2fhqajBHcbf7m5pxuT+dJXozY0+noRgh938OYgR
-FP/9fHpjZTQWe671tngjBr4XihSyPBXKBgDallb6ztFJyJS3yRIDRAGeMVNlq5Jr
-IbaU+m7SeIq0D8R/WTnnKLYTyii5uHvWQPqohimDRdExuLt5D3Cr1jzyVGc7wED2
-tdfiEjzZyv1Nwy/PMWiJFXr+bI8+IvoWB7DHetSt9JGtDWqvcqs0/iCnfyaaw5xd
-23AKveeVmJLbLdBZu7a0dSoZ0Q8hxeHctMVB9uS9eY5NGhH5xtlgIoGeD0wTT+zY
-COVEOyP1eAHrHsvomdmWTwdPexuY+yBzVMxRvNxQ7YZH1Dx62cHp8eWMnZMlTd58
-yzXVZG5Pkm1rDiwSSmuG
-=cPX/
------END PGP SIGNATURE-----
-
---xtx0sNU5lZ46KfgK--
