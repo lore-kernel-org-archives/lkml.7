@@ -2,49 +2,56 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10A6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAC6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DF821734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE072054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710135;
-	bh=sHG9RJgV9laOErhdvwyunCcd9PEQTeWp9jbxFEPDUrY=;
+	s=default; t=1553710140;
+	bh=w+Vvd2y1B8Z3wlfT+W1UuXQPgU+xZDZrvTfZvP//Md4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yZjCdBxHWMo4CH/V9a9gGaZ5kSzaz6XMWj43sRgVvBmAF0nwcrZj0cN+hmWMxc5lq
-	 /Ckz6DB531cto06Hlp/f3deWsbktMlBHNX5NStoO+wsyK+HdiPWv+GlMVvZFnDZBtv
-	 E8XEZWHN+Zc8RQXwjboFCtxSyphvc6JYJndczS5s=
+	b=N5SF4WJXCSHwNPmGPG1hzwkyGtNGgBFr3A4aXKSs3Rlo9Croj7jUiQ2W+zLQgT33c
+	 FYsqRGGG6MwqASimecCNDKMmFTXMv4/5icflp2FIHdoAyq63yOgpu2BgpRWioI5nan
+	 cAs8wf1s1GrWDGAgKcEu7K77611WSSWgDC5Hm4r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388444AbfC0SIy (ORCPT
+        id S2388477AbfC0SI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387999AbfC0SIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:51 -0400
+        id S2387999AbfC0SIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDC62177E;
-        Wed, 27 Mar 2019 18:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47F52070B;
+        Wed, 27 Mar 2019 18:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710131;
-        bh=sHG9RJgV9laOErhdvwyunCcd9PEQTeWp9jbxFEPDUrY=;
+        s=default; t=1553710134;
+        bh=w+Vvd2y1B8Z3wlfT+W1UuXQPgU+xZDZrvTfZvP//Md4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxDPH0bswQYMsiMP7ryNN7ldBLXg6dDThKVzOTK4AhvEUD0qhb9nQTvzde/9IeSil
-         ZH0Pvl85XaOCVJ5A0lNYTJI+8dw/3QaVQhWWNRiCRQkEP1jAL7Dbbapz3h6ug3h/K1
-         gEbD5/AeaxCIAY7rwckxSHqPBR7WlQmY/CRbWfd4=
+        b=iXxGSOiyNq4KaoWArVawHPQ+K2fOKYYgxrfOGj9tFJkiL84P/bWayXTkQxyPKUIN4
+         e833596Q0PLen+4u4twZkEZtsEdFJ6rzSiGx6XGghGaHHlfUFtmaLmhQTP6ITCJj+5
+         GeTc6AtyzyvPQ34k/VrpoVfBNBwPNtssukAsHpAY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 209/262] regulator: mcp16502: Include linux/gpio/consumer.h to fix build error
-Date:   Wed, 27 Mar 2019 14:01:04 -0400
-Message-Id: <20190327180158.10245-209-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 212/262] perf trace: Fixup etcsnoop example
+Date:   Wed, 27 Mar 2019 14:01:07 -0400
+Message-Id: <20190327180158.10245-212-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,46 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit f3c6a1a194317f3a31ee2b2067bb0a41de64bc8b ]
+[ Upstream commit 1d59cb1bbd4cbe5a8f8032242cdacea5658129cf ]
 
-Fix below build error:
-drivers/regulator/mcp16502.c: In function ‘mcp16502_gpio_set_mode’:
-drivers/regulator/mcp16502.c:135:3: error: implicit declaration of function ‘gpiod_set_value’; did you mean ‘gpio_set_value’? [-Werror=implicit-function-declaration]
-   gpiod_set_value(mcp->lpm, 0);
-   ^~~~~~~~~~~~~~~
-   gpio_set_value
-drivers/regulator/mcp16502.c: In function ‘mcp16502_probe’:
-drivers/regulator/mcp16502.c:486:13: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_gpio_free’? [-Werror=implicit-function-declaration]
-  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
-             ^~~~~~~~~~~~~~
-             devm_gpio_free
-drivers/regulator/mcp16502.c:486:40: error: ‘GPIOD_OUT_LOW’ undeclared (first use in this function); did you mean ‘GPIOF_INIT_LOW’?
-  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
-                                        ^~~~~~~~~~~~~
-                                        GPIOF_INIT_LOW
+Where we don't have "raw_syscalls:sys_enter", so we need to look for a
+"*syscalls:sys_enter*" to initialize the offsets for the
+__augmented_syscalls__ evsel, which is the case with etcsnoop, that was
+segfaulting, fixed:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  # trace -e /home/acme/git/perf/tools/perf/examples/bpf/etcsnoop.c
+     0.000 (         ): gnome-shell/2105 openat(dfd: CWD, filename: "/etc/localtime")                       ...
+   631.834 (         ): cat/6521 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) ...
+   632.637 (         ): bash/6521 openat(dfd: CWD, filename: "/etc/passwd")                          ...
+  ^C#
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: b9b6a2ea2baf ("perf trace: Do not hardcode the size of the tracepoint common_ fields")
+Link: https://lkml.kernel.org/n/tip-0tjwcit8qitsmh4nyvf2b0jo@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/mcp16502.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 3479ae009b0b..0fc4963bd5b0 100644
---- a/drivers/regulator/mcp16502.c
-+++ b/drivers/regulator/mcp16502.c
-@@ -17,6 +17,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/driver.h>
- #include <linux/suspend.h>
-+#include <linux/gpio/consumer.h>
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 2776ff8c3e81..91cdbf504535 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3868,7 +3868,8 @@ int cmd_trace(int argc, const char **argv)
+ 				goto init_augmented_syscall_tp;
+ 			}
  
- #define VDD_LOW_SEL 0x0D
- #define VDD_HIGH_SEL 0x3F
+-			if (strcmp(perf_evsel__name(evsel), "raw_syscalls:sys_enter") == 0) {
++			if (trace.syscalls.events.augmented->priv == NULL &&
++			    strstr(perf_evsel__name(evsel), "syscalls:sys_enter")) {
+ 				struct perf_evsel *augmented = trace.syscalls.events.augmented;
+ 				if (perf_evsel__init_augmented_syscall_tp(augmented, evsel) ||
+ 				    perf_evsel__init_augmented_syscall_tp_args(augmented))
 -- 
 2.19.1
 
