@@ -2,283 +2,222 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA35C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6171EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D172087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AC12147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SExylMA0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Sfc16pQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfC0Okb (ORCPT
+        id S1729164AbfC0Oky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 10:40:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33662 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbfC0Okb (ORCPT
+        Wed, 27 Mar 2019 10:40:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52460 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbfC0Oky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 10:40:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so14655178ljc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 07:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Do62RarFZKiaJHchChMBUqt67JhmdRrqCmB3BM4qNsk=;
-        b=SExylMA02q7PZ48R903XNHtcZaHznnBFU3GYNrYfefHUzLtJm5Lqun6991Y5jjWezc
-         yRlM+36xvPbS5+hyrrtknzYodp/kGeczP6BqnfB3lMXC2QVRIUIg0jIYGQZ9atQ438Cu
-         BNHaF/atI4/VMxQ+V3lO2Aw0EjVO4VjZjUh+24y0cxt/6tWgZV9wtIKqjBCfCarctrXb
-         HGVRYsdUoaIe+7uyVSQ+04qkz/348Uj6Mk/35cXSqOhF9kMAvgrgTR8T4j5BRITKzdOM
-         rlWknBBoa+jwwdnaiDMCqiIwOMGe4YVMHi4i4fuIPRX0xRMqGUMrfBeo8Ca4PGJLZy2h
-         Yv6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Do62RarFZKiaJHchChMBUqt67JhmdRrqCmB3BM4qNsk=;
-        b=MqWjMtyU4ZOlp3DjRdv4Qj3+pCcJx8O1o1C2vfl72MX0GN7oKf2MJd19JgGbVOP/5T
-         t8XTRGrm4/AGTW1YJlpxzKO13S+HkGPPA8WkXhBald4bMrHwoxhJyxm7K+XVzjmF+QPi
-         kjpYdrcLJ4cath5iHp1d+/5XtiDSUawWib640cMy1cU99IWKXY2akogpbwGi50tQkBbv
-         6xKvxeysBlfQrPfnzm8tUOWUAcXZ+aSjmVgZhGN2rqzGOwmrvdmOjR86klxVMc75RVCy
-         fS16atZj7hzoNJFhVZHr/LoqShH7dr3skOHtJLkjcKjbHvc3yIN4N5xn/zeVnxjuHjgY
-         FZ4g==
-X-Gm-Message-State: APjAAAXDoG0cvNoSn+xTmIZTJGceenKVW+tZf08eILbir3VKfLoTazQa
-        rduLcQbWw6U2TifHVOTN71JeQw==
-X-Google-Smtp-Source: APXvYqzjdwuDI5vxyAhyj7gxalpzOXpSx3KUDHUetkufjXTlih/+CyBnThwqhfzHkK5w4ELgH0oc1g==
-X-Received: by 2002:a2e:9655:: with SMTP id z21mr3023901ljh.60.1553697627798;
-        Wed, 27 Mar 2019 07:40:27 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id f19sm4604376lfk.69.2019.03.27.07.40.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 07:40:26 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v13 2/4] PM / Domains: Add support for CPU devices to genpd
-Date:   Wed, 27 Mar 2019 15:40:23 +0100
-Message-Id: <20190327144023.25383-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Mar 2019 10:40:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2REcqxA078600;
+        Wed, 27 Mar 2019 14:40:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=MMJmD4gN/frPdeUf7hnKvmHHeKbJ50Hyxlf7Lp1kR+c=;
+ b=Sfc16pQTR0euR0VMDrw6DP6nbVcp06hLZFB/p2JGrgRYEAj77oG47UMSsesJmRpeQo/s
+ cBGMdMu8oF3+3QIm9SBYm58l904XKtuT0csIyIk+7AuaELpUv8G2RsFp6swQ2+Jyr/P/
+ FwEOg2fDnZJw374TRyXjzYYcIFMp22dDKYDVd+cSaOTNmt5Z+Ae4+TbYVVWeadLugoFK
+ AK8CiEqD4QZuRZr/4jWUw24gpqtGovA25r5pTLoAnt5fG/qTsYGG0QqCgzDspI8WrGpe
+ sqFnQObiPOo2D0RnOnzq4T/DAS/J5i110WPXBpM8ivikSGjnfyq5XRHvKg0d/Fmv7r59 Iw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2130.oracle.com with ESMTP id 2re6g18xu5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 14:40:30 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2REeSRI017541
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 14:40:28 GMT
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2REeRLc024662;
+        Wed, 27 Mar 2019 14:40:27 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 27 Mar 2019 07:40:26 -0700
+Subject: Re: [PATCH] x86/xen: Add "xen_timer_slop" command line option
+To:     Ryan Thibodeaux <thibodux@gmail.com>
+Cc:     Dario Faggioli <dfaggioli@suse.com>,
+        luca abeni <luca.abeni@santannapisa.it>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        oleksandr_andrushchenko@epam.com, tglx@linutronix.de,
+        jgross@suse.com, ryan.thibodeaux@starlab.io
+References: <1553279397-130201-1-git-send-email-ryan.thibodeaux@starlab.io>
+ <abf65a68-9463-0f0e-1f51-6eefd3cacc88@oracle.com>
+ <52bfeae7c256faec444b69efe58d363ad60c3fc5.camel@suse.com>
+ <20190323114151.5cebf31b@sweethome> <20190325130530.56603806@luca64>
+ <69e40698-f7ae-11c3-e4b7-dda4f1fadcf6@oracle.com>
+ <a32c8b1d7866ee3b074b1d674b40e03e51dbd54a.camel@suse.com>
+ <907547fa-a7e8-8dca-dabf-dd063705f196@oracle.com>
+ <20190327100014.GA9663@centos-dev.localdomain>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <04ee9e67-5720-72df-9e2e-2ba42febf90f@oracle.com>
+Date:   Wed, 27 Mar 2019 10:46:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190327100014.GA9663@centos-dev.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9207 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903270103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable a device belonging to a CPU to be attached to a PM domain managed
-by genpd, let's do a few changes to it, as to make it convenient to manage
-the specifics around CPUs.
+On 3/27/19 6:00 AM, Ryan Thibodeaux wrote:
+> On Tue, Mar 26, 2019 at 07:21:31PM -0400, Boris Ostrovsky wrote:
+>> On 3/26/19 5:13 AM, Dario Faggioli wrote:
+>>> On Mon, 2019-03-25 at 09:43 -0400, Boris Ostrovsky wrote:
+>>>> On 3/25/19 8:05 AM, luca abeni wrote:
+>>>>> The picture shows the latencies measured with an unpatched guest
+>>>>> kernel
+>>>>> and with a guest kernel having TIMER_SLOP set to 1000 (arbitrary
+>>>>> small
+>>>>> value :).
+>>>>> All the experiments have been performed booting the hypervisor with
+>>>>> a
+>>>>> small timer_slop (the hypervisor's one) value. So, they show that
+>>>>> decreasing the hypervisor's timer_slop is not enough to measure low
+>>>>> latencies with cyclictest.
+>>>> I have a couple of questions:
+>>>> * Does it make sense to make this a tunable for other clockevent
+>>>> devices
+>>>> as well?
+>>>>
+>>> So, AFAIUI, the thing is as follows. In clockevents_program_event(), we
+>>> keep the delta between now and the next timer event within
+>>> dev->max_delta_ns and dev->min_delta_ns:
+>>>
+>>>   delta = min(delta, (int64_t) dev->max_delta_ns);
+>>>   delta = max(delta, (int64_t) dev->min_delta_ns);
+>>>
+>>> For Xen (well, for the Xen clock) we have:
+>>>
+>>>   .max_delta_ns = 0xffffffff,
+>>>   .min_delta_ns = TIMER_SLOP,
+>>>
+>>> which means a guest can't ask for a timer to fire earlier than 100us
+>>> ahead, which is a bit too coarse, especially on contemporary hardware.
+>>>
+>>> For "lapic_deadline" (which was what was in use in KVM guests, in our
+>>> experiments) we have:
+>>>
+>>>   lapic_clockevent.max_delta_ns = clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
+>>>   lapic_clockevent.min_delta_ns = clockevent_delta2ns(0xF, &lapic_clockevent);
+>>>
+>>> Which means max is 0x7FFFFF device ticks, and min is 0xF.
+>>> clockevent_delta2ns() does the conversion from ticks to ns, basing on
+>>> the results of the APIC calibration process. It calls cev_delta2ns()
+>>> which does some scaling, shifting, divs, etc, and, at the very end,
+>>> this:
+>>>
+>>>   /* Deltas less than 1usec are pointless noise */
+>>>   return clc > 1000 ? clc : 1000;
+>>>
+>>> So, as Ryan is also saying, the actual minimum, in this case, depends
+>>> on hardware, with a sanity check of "never below 1us" (which is quite
+>>> smaller than 100us!)
+>>>
+>>> Of course, the actual granularity depends on hardware in the Xen case
+>>> as well, but that is handled in Xen itself. And we have mechanisms in
+>>> place in there to avoid timer interrupt storms (like, ahem, the Xen's
+>>> 'timer_slop' boot parameter... :-P)
+>>>
+>>> And this is basically why I was also thinking we can/should lower the
+>>> default value of TIMER_SLOP, here in the Xen clock implementation in
+>>> Linux.
+>> What do you think would be a sane value? 10us? Should we then still keep
+>> this patch?
+>>
+>> My concern would be that if we change the current value and it turns out
+>> to be very wrong we'd then have no recourse.
+>>
+>>
+>> -boris
+>>
+> Speaking out of turn but as a participant in this thread, I would not
+> assume to change the default value for all cases without significant
+> testing by the community, touching a variety of configurations.
+>
+> It feels like changing the default has a non-trivial amount of 
+> unknowns that would need to be addressed.
+>
+> Not surprisingly, I am biased to the approach of my patch which
+> does not change the default but offers flexibility to all.
 
-To be able to quickly find out what CPUs that are attached to a genpd,
-which typically becomes useful from a genpd governor as following changes
-is about to show, let's add a cpumask to the struct generic_pm_domain. At
-the point when a CPU device gets attached to a genpd, let's update the
-genpd's cpumask. Moreover, let's also propagate changes to the cpumask
-upwards in the topology to the master PM domains. In this way, the cpumask
-for a genpd hierarchically reflects all CPUs attached to the topology below
-it.
 
-Finally, let's make this an opt-in feature, to avoid having to manage CPUs
-and the cpumask for a genpd that doesn't need it. For that reason, let's
-add a new genpd configuration bit, GENPD_FLAG_CPU_DOMAIN.
+If we are to change the default it would be good to at least collect
+some data on distribution of delta values in
+clockevents_program_event(). But as I said, I'd keep the patch.
 
-Cc: Lina Iyer <ilina@codeaurora.org>
-Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
+Also, as far as the comment describing TIMER_SLOP, I agree that it is
+rather misleading.
 
-Changes in v13:
-	- None (re-based).
+I can replace it with /* Minimum amount of time until next clock event
+fires */, I  can do it while committing so no need to resend.
 
----
- drivers/base/power/domain.c | 65 ++++++++++++++++++++++++++++++++++++-
- include/linux/pm_domain.h   | 13 ++++++++
- 2 files changed, 77 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index ff6f992f7a1d..ecac03dcc9b2 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -22,6 +22,7 @@
- #include <linux/sched.h>
- #include <linux/suspend.h>
- #include <linux/export.h>
-+#include <linux/cpu.h>
- 
- #include "power.h"
- 
-@@ -128,6 +129,7 @@ static const struct genpd_lock_ops genpd_spin_ops = {
- #define genpd_is_irq_safe(genpd)	(genpd->flags & GENPD_FLAG_IRQ_SAFE)
- #define genpd_is_always_on(genpd)	(genpd->flags & GENPD_FLAG_ALWAYS_ON)
- #define genpd_is_active_wakeup(genpd)	(genpd->flags & GENPD_FLAG_ACTIVE_WAKEUP)
-+#define genpd_is_cpu_domain(genpd)	(genpd->flags & GENPD_FLAG_CPU_DOMAIN)
- 
- static inline bool irq_safe_dev_in_no_sleep_domain(struct device *dev,
- 		const struct generic_pm_domain *genpd)
-@@ -1454,6 +1456,56 @@ static void genpd_free_dev_data(struct device *dev,
- 	dev_pm_put_subsys_data(dev);
- }
- 
-+static void __genpd_update_cpumask(struct generic_pm_domain *genpd,
-+				   int cpu, bool set, unsigned int depth)
-+{
-+	struct gpd_link *link;
-+
-+	if (!genpd_is_cpu_domain(genpd))
-+		return;
-+
-+	list_for_each_entry(link, &genpd->slave_links, slave_node) {
-+		struct generic_pm_domain *master = link->master;
-+
-+		genpd_lock_nested(master, depth + 1);
-+		__genpd_update_cpumask(master, cpu, set, depth + 1);
-+		genpd_unlock(master);
-+	}
-+
-+	if (set)
-+		cpumask_set_cpu(cpu, genpd->cpus);
-+	else
-+		cpumask_clear_cpu(cpu, genpd->cpus);
-+}
-+
-+static void genpd_update_cpumask(struct generic_pm_domain *genpd,
-+				 struct device *dev, bool set)
-+{
-+	int cpu;
-+
-+	if (!genpd_is_cpu_domain(genpd))
-+		return;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (get_cpu_device(cpu) == dev) {
-+			__genpd_update_cpumask(genpd, cpu, set, 0);
-+			return;
-+		}
-+	}
-+}
-+
-+static void genpd_set_cpumask(struct generic_pm_domain *genpd,
-+			      struct device *dev)
-+{
-+	genpd_update_cpumask(genpd, dev, true);
-+}
-+
-+static void genpd_clear_cpumask(struct generic_pm_domain *genpd,
-+				struct device *dev)
-+{
-+	genpd_update_cpumask(genpd, dev, false);
-+}
-+
- static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 			    struct gpd_timing_data *td)
- {
-@@ -1475,6 +1527,7 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
- 
- 	genpd_lock(genpd);
- 
-+	genpd_set_cpumask(genpd, dev);
- 	dev_pm_domain_set(dev, &genpd->domain);
- 
- 	genpd->device_count++;
-@@ -1532,6 +1585,7 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
- 	genpd->device_count--;
- 	genpd->max_off_time_changed = true;
- 
-+	genpd_clear_cpumask(genpd, dev);
- 	dev_pm_domain_set(dev, NULL);
- 
- 	list_del_init(&pdd->list_node);
-@@ -1768,11 +1822,18 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
- 	if (genpd_is_always_on(genpd) && !genpd_status_on(genpd))
- 		return -EINVAL;
- 
-+	if (genpd_is_cpu_domain(genpd) &&
-+	    !zalloc_cpumask_var(&genpd->cpus, GFP_KERNEL))
-+		return -ENOMEM;
-+
- 	/* Use only one "off" state if there were no states declared */
- 	if (genpd->state_count == 0) {
- 		ret = genpd_set_default_power_state(genpd);
--		if (ret)
-+		if (ret) {
-+			if (genpd_is_cpu_domain(genpd))
-+				free_cpumask_var(genpd->cpus);
- 			return ret;
-+		}
- 	} else if (!gov && genpd->state_count > 1) {
- 		pr_warn("%s: no governor for states\n", genpd->name);
- 	}
-@@ -1818,6 +1879,8 @@ static int genpd_remove(struct generic_pm_domain *genpd)
- 	list_del(&genpd->gpd_list_node);
- 	genpd_unlock(genpd);
- 	cancel_work_sync(&genpd->power_off_work);
-+	if (genpd_is_cpu_domain(genpd))
-+		free_cpumask_var(genpd->cpus);
- 	if (genpd->free_states)
- 		genpd->free_states(genpd->states, genpd->state_count);
- 
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index 8e1399231753..a6e251fe9deb 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -16,6 +16,7 @@
- #include <linux/of.h>
- #include <linux/notifier.h>
- #include <linux/spinlock.h>
-+#include <linux/cpumask.h>
- 
- /*
-  * Flags to control the behaviour of a genpd.
-@@ -42,11 +43,22 @@
-  * GENPD_FLAG_ACTIVE_WAKEUP:	Instructs genpd to keep the PM domain powered
-  *				on, in case any of its attached devices is used
-  *				in the wakeup path to serve system wakeups.
-+ *
-+ * GENPD_FLAG_CPU_DOMAIN:	Instructs genpd that it should expect to get
-+ *				devices attached, which may belong to CPUs or
-+ *				possibly have subdomains with CPUs attached.
-+ *				This flag enables the genpd backend driver to
-+ *				deploy idle power management support for CPUs
-+ *				and groups of CPUs. Note that, the backend
-+ *				driver must then comply with the so called,
-+ *				last-man-standing algorithm, for the CPUs in the
-+ *				PM domain.
-  */
- #define GENPD_FLAG_PM_CLK	 (1U << 0)
- #define GENPD_FLAG_IRQ_SAFE	 (1U << 1)
- #define GENPD_FLAG_ALWAYS_ON	 (1U << 2)
- #define GENPD_FLAG_ACTIVE_WAKEUP (1U << 3)
-+#define GENPD_FLAG_CPU_DOMAIN	 (1U << 4)
- 
- enum gpd_status {
- 	GPD_STATE_ACTIVE = 0,	/* PM domain is active */
-@@ -94,6 +106,7 @@ struct generic_pm_domain {
- 	unsigned int suspended_count;	/* System suspend device counter */
- 	unsigned int prepared_count;	/* Suspend counter of prepared devices */
- 	unsigned int performance_state;	/* Aggregated max performance state */
-+	cpumask_var_t cpus;		/* A cpumask of the attached CPUs */
- 	int (*power_off)(struct generic_pm_domain *domain);
- 	int (*power_on)(struct generic_pm_domain *domain);
- 	struct opp_table *opp_table;	/* OPP table of the genpd */
--- 
-2.17.1
-
+-boris
