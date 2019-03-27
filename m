@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D180DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4888EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A340820651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1CA2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710933;
-	bh=92yBxjLmuh/HkrdmI+xC+OA+RV60COqu1/W5/9LCIzw=;
+	s=default; t=1553710937;
+	bh=QVFDIudWL+X+ctM+jjBIbGacnjvdIZPNuX4KiuNA4sM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LPGafw0Llj/SS/CslRrUXbKu47thX1EuiFbnBG4j+XkjJowvRo34d+4ChUGgeoDb3
-	 YA2xvzIa6WJvsdCJiqnQU8t8RT4zVRMDH8nus7a5tx2ZzFd9Vj220KWfApzAUmGua0
-	 ibj+gEVi05OFZJG7ycDS1JWDxNvCnxM3QhrJP458=
+	b=S9MqxPEAreW2Gto5HJevuzr5zaeIM3Wdd06Z1ErnKqtit5ATYiUeYqrVFugnJ58q9
+	 oU6PqmKhXJiyL2hibgpSlKJ2pyssFOU2FzcVOzJIEgRZH72PaU3SJoKqU4N7m2cbKa
+	 QCOfa0BHgym4SfNOKjkgVp60RC3dua+espkfCqf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfC0SWL (ORCPT
+        id S2403827AbfC0SWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403811AbfC0SWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:08 -0400
+        id S2391023AbfC0SWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C9420449;
-        Wed, 27 Mar 2019 18:22:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D8320651;
+        Wed, 27 Mar 2019 18:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710928;
-        bh=92yBxjLmuh/HkrdmI+xC+OA+RV60COqu1/W5/9LCIzw=;
+        s=default; t=1553710930;
+        bh=QVFDIudWL+X+ctM+jjBIbGacnjvdIZPNuX4KiuNA4sM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukes0Cm8AWR55Od6CGOcIROqwiSWrV2pz7MLPX0sOzmlf7Pp6jokcO2bbAGc532wt
-         1ExOzj5CoUA6flEXXq0xhqUXh/kDBPY1U/bBZUvw/8ABgA2fe6VpcyUgX1tQ04L536
-         1jDySd64mLWdhrWT1NI3NsDv19DQfBv3NGmCXEhc=
+        b=cwXxeDB9i8l1t3pac159skOv3L0nyFkQSsTW6nfd6AwZLTJoL9sIDwtGFtHFEQ72s
+         gjhhgsqmQzAyxxNtsXbC7F3ZIkohsmi/8XnQYvqLUY4xygrskj7w+5Ux7lA1rjn/VD
+         klmUWHPaK0zqE7ofB9js8xPxlSBgzTWBFsLSHrRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 49/87] ARM: 8833/1: Ensure that NEON code always compiles with Clang
-Date:   Wed, 27 Mar 2019 14:20:02 -0400
-Message-Id: <20190327182040.17444-49-sashal@kernel.org>
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 50/87] ALSA: PCM: check if ops are defined before suspending PCM
+Date:   Wed, 27 Mar 2019 14:20:03 -0400
+Message-Id: <20190327182040.17444-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,122 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
+[ Upstream commit d9c0b2afe820fa3b3f8258a659daee2cc71ca3ef ]
 
-While building arm32 allyesconfig, I ran into the following errors:
+BE dai links only have internal PCM's and their substream ops may
+not be set. Suspending these PCM's will result in their
+ ops->trigger() being invoked and cause a kernel oops.
+So skip suspending PCM's if their ops are NULL.
 
-  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
-  '-mfloat-abi=softfp -mfpu=neon'
+[ NOTE: this change is required now for following the recent PCM core
+  change to get rid of snd_pcm_suspend() call.  Since DPCM BE takes
+  the runtime carried from FE while keeping NULL ops, it can hit this
+  bug.  See details at:
+     https://github.com/thesofproject/linux/pull/582
+  -- tiwai ]
 
-  In file included from lib/raid6/neon1.c:27:
-  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
-  error: "NEON support not enabled"
-
-Building V=1 showed NEON_FLAGS getting passed along to Clang but
-__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
-only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
-which is the '-march' value for allyesconfig.
-
->From lib/Basic/Targets/ARM.cpp in the Clang source:
-
-  // This only gets set when Neon instructions are actually available, unlike
-  // the VFP define, hence the soft float and arch check. This is subtly
-  // different from gcc, we follow the intent which was that it should be set
-  // when Neon instructions are actually available.
-  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
-    Builder.defineMacro("__ARM_NEON", "1");
-    Builder.defineMacro("__ARM_NEON__");
-    // current AArch32 NEON implementations do not support double-precision
-    // floating-point even when it is present in VFP.
-    Builder.defineMacro("__ARM_NEON_FP",
-                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
-  }
-
-Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
-beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
-definined by Clang. This doesn't functionally change anything because
-that code will only run where NEON is supported, which is implicitly
-armv7.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/287
-
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm/kernel_mode_neon.txt | 4 ++--
- arch/arm/lib/Makefile                  | 2 +-
- arch/arm/lib/xor-neon.c                | 2 +-
- lib/raid6/Makefile                     | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ sound/core/pcm_native.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
-index 525452726d31..b9e060c5b61e 100644
---- a/Documentation/arm/kernel_mode_neon.txt
-+++ b/Documentation/arm/kernel_mode_neon.txt
-@@ -6,7 +6,7 @@ TL;DR summary
- * Use only NEON instructions, or VFP instructions that don't rely on support
-   code
- * Isolate your NEON code in a separate compilation unit, and compile it with
--  '-mfpu=neon -mfloat-abi=softfp'
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
- * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
-   NEON code
- * Don't sleep in your NEON code, and be aware that it will be executed with
-@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
- Therefore, the recommended and only supported way of using NEON/VFP in the
- kernel is by adhering to the following rules:
- * isolate the NEON code in a separate compilation unit and compile it with
--  '-mfpu=neon -mfloat-abi=softfp';
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
- * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
-   into the unit containing the NEON code from a compilation unit which is *not*
-   built with the GCC flag '-mfpu=neon' set.
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index 27f4d96258a2..b3ecffb76c3f 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -38,7 +38,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
- $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
- 
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
--  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
-+  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
-   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
- endif
-diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-index 2c40aeab3eaa..c691b901092f 100644
---- a/arch/arm/lib/xor-neon.c
-+++ b/arch/arm/lib/xor-neon.c
-@@ -14,7 +14,7 @@
- MODULE_LICENSE("GPL");
- 
- #ifndef __ARM_NEON__
--#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-+#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
- #endif
- 
- /*
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 3057011f5599..10ca69475611 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -24,7 +24,7 @@ endif
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
- NEON_FLAGS := -ffreestanding
- ifeq ($(ARCH),arm)
--NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
-+NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
- endif
- ifeq ($(ARCH),arm64)
- CFLAGS_REMOVE_neon1.o += -mgeneral-regs-only
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 3586ab41dec4..4719f7f42aa8 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1339,6 +1339,14 @@ int snd_pcm_suspend_all(struct snd_pcm *pcm)
+ 			/* FIXME: the open/close code should lock this as well */
+ 			if (substream->runtime == NULL)
+ 				continue;
++
++			/*
++			 * Skip BE dai link PCM's that are internal and may
++			 * not have their substream ops set.
++			 */
++			if (!substream->ops)
++				continue;
++
+ 			err = snd_pcm_suspend(substream);
+ 			if (err < 0 && err != -EBUSY)
+ 				return err;
 -- 
 2.19.1
 
