@@ -4,844 +4,252 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DF6C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440E820651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A66D20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbfC0Xpr (ORCPT
+        id S2387602AbfC0Xpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:45:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53794 "EHLO mx1.redhat.com"
+        Wed, 27 Mar 2019 19:45:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47698 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbfC0Xpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:45:45 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1727210AbfC0Xpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 19:45:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C71F5308FC20;
-        Wed, 27 Mar 2019 23:45:44 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 280EE30BC66C;
+        Wed, 27 Mar 2019 23:45:52 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E5165D9C4;
-        Wed, 27 Mar 2019 23:45:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8D4260589;
+        Wed, 27 Mar 2019 23:45:50 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 41/68] vfs: Convert ramfs, shmem, tmpfs, devtmpfs,
- rootfs to use the new mount API
+Subject: [RFC PATCH 42/68] vfs: Create fs_context-aware mount_bdev()
+ replacement
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
-Cc:     Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dhowells@redhat.com
-Date:   Wed, 27 Mar 2019 23:45:42 +0000
-Message-ID: <155373034262.7602.5546279678313283723.stgit@warthog.procyon.org.uk>
+Date:   Wed, 27 Mar 2019 23:45:50 +0000
+Message-ID: <155373035000.7602.11167468155734013967.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
 References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 27 Mar 2019 23:45:44 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 27 Mar 2019 23:45:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the ramfs, shmem, tmpfs, devtmpfs and rootfs filesystems to the new
-internal mount API as the old one will be obsoleted and removed.  This
-allows greater flexibility in communication of mount parameters between
-userspace, the VFS and the filesystem.
-
-See Documentation/filesystems/mount_api.txt for more information.
-
-Note that tmpfs is slightly tricky as it can contain embedded commas, so it
-can't be trivially split up using strsep() to break on commas in
-generic_parse_monolithic().  Instead, tmpfs has to supply its own generic
-parser.
-
-However, if tmpfs changes, then devtmpfs and rootfs, which are wrappers
-around tmpfs or ramfs, must change too - and thus so must ramfs, so these
-had to be converted also.
+Create a function, vfs_get_block_super(), that is fs_context-aware and a
+replacement for mount_bdev().  It caches the block device pointer and file
+open mode in the fs_context struct so that this information can be passed
+into sget_fc()'s test and set functions.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Hugh Dickins <hughd@google.com>
-cc: linux-mm@kvack.org
+cc: Jens Axboe <axboe@kernel.dk>
+cc: linux-block@vger.kernel.org
 ---
 
- drivers/base/devtmpfs.c  |   16 +-
- fs/ramfs/inode.c         |  104 +++++++-----
- include/linux/ramfs.h    |    6 -
- include/linux/shmem_fs.h |    4 
- init/do_mounts.c         |   12 +
- mm/shmem.c               |  396 ++++++++++++++++++++++++++++++----------------
- 6 files changed, 341 insertions(+), 197 deletions(-)
+ fs/fs_context.c            |    2 +
+ fs/super.c                 |  111 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs_context.h |    9 ++++
+ 3 files changed, 121 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index 0dbc43068eeb..1f50c844c2ab 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -56,19 +56,15 @@ static int __init mount_param(char *str)
- }
- __setup("devtmpfs.mount=", mount_param);
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 87e3546b9a52..fc8fda4b9fe9 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -425,6 +425,8 @@ void put_fs_context(struct fs_context *fc)
  
--static struct dentry *dev_mount(struct file_system_type *fs_type, int flags,
--		      const char *dev_name, void *data)
--{
-+static struct file_system_type dev_fs_type = {
-+	.name = "devtmpfs",
- #ifdef CONFIG_TMPFS
--	return mount_single(fs_type, flags, data, shmem_fill_super);
-+	.init_fs_context = shmem_init_fs_context,
-+	.parameters	= &shmem_fs_parameters,
- #else
--	return mount_single(fs_type, flags, data, ramfs_fill_super);
-+	.init_fs_context = ramfs_init_fs_context,
-+	.parameters	= &ramfs_fs_parameters,
- #endif
--}
--
--static struct file_system_type dev_fs_type = {
--	.name = "devtmpfs",
--	.mount = dev_mount,
- 	.kill_sb = kill_litter_super,
- };
+ 	if (fc->need_free && fc->ops && fc->ops->free)
+ 		fc->ops->free(fc);
++	if (fc->dev_destructor)
++		fc->dev_destructor(fc);
  
-diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
-index 11201b2d06b9..01170dd6c95f 100644
---- a/fs/ramfs/inode.c
-+++ b/fs/ramfs/inode.c
-@@ -36,6 +36,8 @@
- #include <linux/magic.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include "internal.h"
+ 	security_free_mnt_opts(&fc->security);
+ 	put_net(fc->net_ns);
+diff --git a/fs/super.c b/fs/super.c
+index f27ee08fb26f..e9e678d2c37c 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1211,6 +1211,110 @@ int vfs_get_super(struct fs_context *fc,
+ EXPORT_SYMBOL(vfs_get_super);
  
- struct ramfs_mount_opts {
-@@ -175,62 +177,52 @@ static const struct super_operations ramfs_ops = {
- 	.show_options	= ramfs_show_options,
- };
- 
--enum {
-+enum ramfs_param {
- 	Opt_mode,
--	Opt_err
- };
- 
--static const match_table_t tokens = {
--	{Opt_mode, "mode=%o"},
--	{Opt_err, NULL}
-+static const struct fs_parameter_spec ramfs_param_specs[] = {
-+	fsparam_u32oct("mode",	Opt_mode),
-+	{}
- };
- 
--static int ramfs_parse_options(char *data, struct ramfs_mount_opts *opts)
-+const struct fs_parameter_description ramfs_fs_parameters = {
-+	.name		= "ramfs",
-+	.specs		= ramfs_param_specs,
-+};
-+
-+static int ramfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
--	substring_t args[MAX_OPT_ARGS];
--	int option;
--	int token;
--	char *p;
--
--	opts->mode = RAMFS_DEFAULT_MODE;
--
--	while ((p = strsep(&data, ",")) != NULL) {
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		switch (token) {
--		case Opt_mode:
--			if (match_octal(&args[0], &option))
--				return -EINVAL;
--			opts->mode = option & S_IALLUGO;
--			break;
-+	struct fs_parse_result result;
-+	struct ramfs_fs_info *fsi = fc->s_fs_info;
-+	int opt;
-+
-+	opt = fs_parse(fc, &ramfs_fs_parameters, param, &result);
-+	if (opt < 0) {
- 		/*
- 		 * We might like to report bad mount options here;
- 		 * but traditionally ramfs has ignored all mount options,
- 		 * and as it is used as a !CONFIG_SHMEM simple substitute
- 		 * for tmpfs, better continue to ignore other mount options.
- 		 */
--		}
-+		if (opt == -ENOPARAM)
-+			opt = 0;
-+		return opt;
+ #ifdef CONFIG_BLOCK
++static void fc_bdev_destructor(struct fs_context *fc)
++{
++	if (fc->bdev) {
++		blkdev_put(fc->bdev, fc->bdev_mode);
++		fc->bdev = NULL;
 +	}
-+
-+	switch (opt) {
-+	case Opt_mode:
-+		fsi->mount_opts.mode = result.uint_32 & S_IALLUGO;
-+		break;
- 	}
- 
- 	return 0;
- }
- 
--int ramfs_fill_super(struct super_block *sb, void *data, int silent)
-+static int ramfs_fill_super(struct super_block *sb, struct fs_context *fc)
- {
--	struct ramfs_fs_info *fsi;
-+	struct ramfs_fs_info *fsi = sb->s_fs_info;
- 	struct inode *inode;
--	int err;
--
--	fsi = kzalloc(sizeof(struct ramfs_fs_info), GFP_KERNEL);
--	sb->s_fs_info = fsi;
--	if (!fsi)
--		return -ENOMEM;
--
--	err = ramfs_parse_options(data, &fsi->mount_opts);
--	if (err)
--		return err;
- 
- 	sb->s_maxbytes		= MAX_LFS_FILESIZE;
- 	sb->s_blocksize		= PAGE_SIZE;
-@@ -247,10 +239,39 @@ int ramfs_fill_super(struct super_block *sb, void *data, int silent)
- 	return 0;
- }
- 
--struct dentry *ramfs_mount(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data)
-+static int ramfs_get_tree(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, data, ramfs_fill_super);
-+	enum vfs_get_super_keying keying = vfs_get_independent_super;
-+
-+	if (strcmp(fc->fs_type->name, "devtmpfs") == 0)
-+		keying = vfs_get_single_super;
-+
-+	return vfs_get_super(fc, keying, ramfs_fill_super);
 +}
 +
-+static void ramfs_free_fc(struct fs_context *fc)
++static int set_bdev_super_fc(struct super_block *s, struct fs_context *fc)
 +{
-+	kfree(fc->s_fs_info);
-+}
-+
-+static const struct fs_context_operations ramfs_context_ops = {
-+	.free		= ramfs_free_fc,
-+	.parse_param	= ramfs_parse_param,
-+	.get_tree	= ramfs_get_tree,
-+};
-+
-+int ramfs_init_fs_context(struct fs_context *fc)
-+{
-+	struct ramfs_fs_info *fsi;
-+
-+	fsi = kzalloc(sizeof(*fsi), GFP_KERNEL);
-+	if (!fsi)
-+		return -ENOMEM;
-+
-+	fsi->mount_opts.mode = RAMFS_DEFAULT_MODE;
-+	fc->s_fs_info = fsi;
-+	fc->ops = &ramfs_context_ops;
++	s->s_mode = fc->bdev_mode;
++	s->s_bdev = fc->bdev;
++	s->s_dev = s->s_bdev->bd_dev;
++	s->s_bdi = bdi_get(s->s_bdev->bd_bdi);
++	fc->bdev = NULL;
 +	return 0;
- }
- 
- static void ramfs_kill_sb(struct super_block *sb)
-@@ -261,7 +282,8 @@ static void ramfs_kill_sb(struct super_block *sb)
- 
- static struct file_system_type ramfs_fs_type = {
- 	.name		= "ramfs",
--	.mount		= ramfs_mount,
-+	.init_fs_context = ramfs_init_fs_context,
-+	.parameters	= &ramfs_fs_parameters,
- 	.kill_sb	= ramfs_kill_sb,
- 	.fs_flags	= FS_USERNS_MOUNT,
- };
-diff --git a/include/linux/ramfs.h b/include/linux/ramfs.h
-index 5ef7d54caac2..94b407424cb7 100644
---- a/include/linux/ramfs.h
-+++ b/include/linux/ramfs.h
-@@ -4,8 +4,7 @@
- 
- struct inode *ramfs_get_inode(struct super_block *sb, const struct inode *dir,
- 	 umode_t mode, dev_t dev);
--extern struct dentry *ramfs_mount(struct file_system_type *fs_type,
--	 int flags, const char *dev_name, void *data);
-+extern int ramfs_init_fs_context(struct fs_context *fc);
- 
- #ifdef CONFIG_MMU
- static inline int
-@@ -17,10 +16,9 @@ ramfs_nommu_expand_for_mapping(struct inode *inode, size_t newsize)
- extern int ramfs_nommu_expand_for_mapping(struct inode *inode, size_t newsize);
- #endif
- 
-+extern const struct fs_parameter_description ramfs_fs_parameters;
- extern const struct file_operations ramfs_file_operations;
- extern const struct vm_operations_struct generic_file_vm_ops;
- extern int __init init_ramfs_fs(void);
- 
--int ramfs_fill_super(struct super_block *sb, void *data, int silent);
--
- #endif
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index f3fb1edb3526..3f73c00081e8 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -48,8 +48,10 @@ static inline struct shmem_inode_info *SHMEM_I(struct inode *inode)
- /*
-  * Functions in mm/shmem.c called directly from elsewhere:
-  */
-+extern const struct fs_parameter_description shmem_fs_parameters;
-+
- extern int shmem_init(void);
--extern int shmem_fill_super(struct super_block *sb, void *data, int silent);
-+extern int shmem_init_fs_context(struct fs_context *fc);
- extern struct file *shmem_file_setup(const char *name,
- 					loff_t size, unsigned long flags);
- extern struct file *shmem_kernel_file_setup(const char *name, loff_t size,
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index f8c230c77035..8242abd47e3f 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -626,24 +626,22 @@ void __init prepare_namespace(void)
- }
- 
- static bool is_tmpfs;
--static struct dentry *rootfs_mount(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data)
-+static int rootfs_init_fs_context(struct fs_context *fc)
- {
- 	static unsigned long once;
--	void *fill = ramfs_fill_super;
- 
- 	if (test_and_set_bit(0, &once))
--		return ERR_PTR(-ENODEV);
-+		return -ENODEV;
- 
- 	if (IS_ENABLED(CONFIG_TMPFS) && is_tmpfs)
--		fill = shmem_fill_super;
-+		return shmem_init_fs_context(fc);
- 
--	return mount_nodev(fs_type, flags, data, fill);
-+	return ramfs_init_fs_context(fc);
- }
- 
- static struct file_system_type rootfs_fs_type = {
- 	.name		= "rootfs",
--	.mount		= rootfs_mount,
-+	.init_fs_context = rootfs_init_fs_context,
- 	.kill_sb	= kill_litter_super,
- };
- 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index b3db3779a30a..5f45a710ee04 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -37,6 +37,8 @@
- #include <linux/khugepaged.h>
- #include <linux/hugetlb.h>
- #include <linux/frontswap.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- 
- #include <asm/tlbflush.h> /* for arch/microblaze update_mmu_cache() */
- 
-@@ -85,6 +87,17 @@ static struct vfsmount *shm_mnt;
- 
- #include "internal.h"
- 
-+struct shmem_fs_context {
-+	unsigned long	changes;
-+	unsigned long	max_blocks;	/* How many blocks are allowed */
-+	unsigned long	max_inodes;	/* How many inodes are allowed */
-+	kuid_t		uid;
-+	kgid_t		gid;
-+	int		huge;
-+	umode_t		mode;
-+	struct mempolicy *mpol;		/* default memory policy for mappings */
-+};
-+
- #define BLOCKS_PER_PAGE  (PAGE_SIZE/512)
- #define VM_ACCT(size)    (PAGE_ALIGN(size) >> PAGE_SHIFT)
- 
-@@ -3351,16 +3364,13 @@ static const struct export_operations shmem_export_ops = {
- 	.fh_to_dentry	= shmem_fh_to_dentry,
- };
- 
--static int shmem_parse_options(char *options, struct shmem_sb_info *sbinfo,
--			       bool remount)
-+static int shmem_parse_monolithic(struct fs_context *fc, void *data)
- {
--	char *this_char, *value, *rest;
--	struct mempolicy *mpol = NULL;
--	uid_t uid;
--	gid_t gid;
-+	char *options = data, *key;
-+	int ret = 0;
- 
- 	while (options != NULL) {
--		this_char = options;
-+		key = options;
- 		for (;;) {
- 			/*
- 			 * NUL-terminate this option: unfortunately,
-@@ -3376,139 +3386,219 @@ static int shmem_parse_options(char *options, struct shmem_sb_info *sbinfo,
- 				break;
- 			}
- 		}
--		if (!*this_char)
--			continue;
--		if ((value = strchr(this_char,'=')) != NULL) {
--			*value++ = 0;
--		} else {
--			pr_err("tmpfs: No value for mount option '%s'\n",
--			       this_char);
--			goto error;
--		}
- 
--		if (!strcmp(this_char,"size")) {
--			unsigned long long size;
--			size = memparse(value,&rest);
--			if (*rest == '%') {
--				size <<= PAGE_SHIFT;
--				size *= totalram_pages();
--				do_div(size, 100);
--				rest++;
-+		if (*key) {
-+			size_t v_len = 0;
-+			char *value = strchr(key, '=');
-+
-+			if (value) {
-+				if (value == key)
-+					continue;
-+				*value++ = 0;
-+				v_len = strlen(value);
- 			}
--			if (*rest)
--				goto bad_val;
--			sbinfo->max_blocks =
--				DIV_ROUND_UP(size, PAGE_SIZE);
--		} else if (!strcmp(this_char,"nr_blocks")) {
--			sbinfo->max_blocks = memparse(value, &rest);
--			if (*rest)
--				goto bad_val;
--		} else if (!strcmp(this_char,"nr_inodes")) {
--			sbinfo->max_inodes = memparse(value, &rest);
--			if (*rest)
--				goto bad_val;
--		} else if (!strcmp(this_char,"mode")) {
--			if (remount)
--				continue;
--			sbinfo->mode = simple_strtoul(value, &rest, 8) & 07777;
--			if (*rest)
--				goto bad_val;
--		} else if (!strcmp(this_char,"uid")) {
--			if (remount)
--				continue;
--			uid = simple_strtoul(value, &rest, 0);
--			if (*rest)
--				goto bad_val;
--			sbinfo->uid = make_kuid(current_user_ns(), uid);
--			if (!uid_valid(sbinfo->uid))
--				goto bad_val;
--		} else if (!strcmp(this_char,"gid")) {
--			if (remount)
--				continue;
--			gid = simple_strtoul(value, &rest, 0);
--			if (*rest)
--				goto bad_val;
--			sbinfo->gid = make_kgid(current_user_ns(), gid);
--			if (!gid_valid(sbinfo->gid))
--				goto bad_val;
-+			ret = vfs_parse_fs_string(fc, key, value, v_len);
-+			if (ret < 0)
-+				break;
-+		}
-+	}
-+
-+	return ret;
 +}
 +
-+enum shmem_param {
-+	Opt_gid,
-+	Opt_huge,
-+	Opt_mode,
-+	Opt_mpol,
-+	Opt_nr_blocks,
-+	Opt_nr_inodes,
-+	Opt_size,
-+	Opt_uid,
-+};
-+
-+static const struct fs_parameter_spec shmem_param_specs[] = {
-+	fsparam_u32   ("gid",		Opt_gid),
-+	fsparam_enum  ("huge",		Opt_huge),
-+	fsparam_u32oct("mode",		Opt_mode),
-+	fsparam_string("mpol",		Opt_mpol),
-+	fsparam_string("nr_blocks",	Opt_nr_blocks),
-+	fsparam_string("nr_inodes",	Opt_nr_inodes),
-+	fsparam_string("size",		Opt_size),
-+	fsparam_u32   ("uid",		Opt_uid),
-+	{}
-+};
-+
-+static const struct fs_parameter_enum shmem_param_enums[] = {
-+	{ Opt_huge,	"never",	SHMEM_HUGE_NEVER },
-+	{ Opt_huge,	"always",	SHMEM_HUGE_ALWAYS },
-+	{ Opt_huge,	"within_size",	SHMEM_HUGE_WITHIN_SIZE },
-+	{ Opt_huge,	"advise",	SHMEM_HUGE_ADVISE },
-+	{ Opt_huge,	"deny",		SHMEM_HUGE_DENY },
-+	{ Opt_huge,	"force",	SHMEM_HUGE_FORCE },
-+	{}
-+};
-+
-+const struct fs_parameter_description shmem_fs_parameters = {
-+	.name		= "shmem",
-+	.specs		= shmem_param_specs,
-+	.enums		= shmem_param_enums,
-+};
-+
-+static void shmem_apply_options(struct shmem_sb_info *sbinfo,
-+				struct fs_context *fc,
-+				unsigned long inodes_in_use)
++static int test_bdev_super_fc(struct super_block *s, struct fs_context *fc)
 +{
-+	struct shmem_fs_context *ctx = fc->fs_private;
-+	struct mempolicy *old = NULL;
-+
-+	if (test_bit(Opt_nr_blocks, &ctx->changes))
-+		sbinfo->max_blocks = ctx->max_blocks;
-+	if (test_bit(Opt_nr_inodes, &ctx->changes)) {
-+		sbinfo->max_inodes = ctx->max_inodes;
-+		sbinfo->free_inodes = ctx->max_inodes - inodes_in_use;
-+	}
-+	if (test_bit(Opt_huge, &ctx->changes))
-+		sbinfo->huge = ctx->huge;
-+	if (test_bit(Opt_mpol, &ctx->changes)) {
-+		old = sbinfo->mpol;
-+		sbinfo->mpol = ctx->mpol;
-+	}
-+
-+	if (fc->purpose != FS_CONTEXT_FOR_RECONFIGURE) {
-+		if (test_bit(Opt_uid, &ctx->changes))
-+			sbinfo->uid = ctx->uid;
-+		if (test_bit(Opt_gid, &ctx->changes))
-+			sbinfo->gid = ctx->gid;
-+		if (test_bit(Opt_mode, &ctx->changes))
-+			sbinfo->mode = ctx->mode;
-+	}
-+
-+	mpol_put(old);
++	return s->s_bdev == fc->bdev;
 +}
 +
-+static int shmem_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct shmem_fs_context *ctx = fc->fs_private;
-+	struct fs_parse_result result;
-+	unsigned long long size;
-+	struct mempolicy *mpol;
-+	char *rest;
-+	int opt;
-+
-+	opt = fs_parse(fc, &shmem_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case Opt_size:
-+		rest = param->string;
-+		size = memparse(param->string, &rest);
-+		if (*rest == '%') {
-+			size <<= PAGE_SHIFT;
-+			size *= totalram_pages();
-+			do_div(size, 100);
-+			rest++;
-+		}
-+		if (*rest)
-+			return invalf(fc, "shmem: Invalid size");
-+		ctx->max_blocks = DIV_ROUND_UP(size, PAGE_SIZE);
-+		break;
-+
-+	case Opt_nr_blocks:
-+		rest = param->string;
-+		ctx->max_blocks = memparse(param->string, &rest);
-+		if (*rest)
-+			return invalf(fc, "shmem: Invalid nr_blocks");
-+		break;
-+	case Opt_nr_inodes:
-+		rest = param->string;
-+		ctx->max_inodes = memparse(param->string, &rest);
-+		if (*rest)
-+			return invalf(fc, "shmem: Invalid nr_inodes");
-+		break;
-+	case Opt_mode:
-+		ctx->mode = result.uint_32 & 07777;
-+		break;
-+	case Opt_uid:
-+		ctx->uid = make_kuid(current_user_ns(), result.uint_32);
-+		if (!uid_valid(ctx->uid))
-+			return invalf(fc, "shmem: Invalid uid");
-+		break;
-+
-+	case Opt_gid:
-+		ctx->gid = make_kgid(current_user_ns(), result.uint_32);
-+		if (!gid_valid(ctx->gid))
-+			return invalf(fc, "shmem: Invalid gid");
-+		break;
-+
-+	case Opt_huge:
- #ifdef CONFIG_TRANSPARENT_HUGE_PAGECACHE
--		} else if (!strcmp(this_char, "huge")) {
--			int huge;
--			huge = shmem_parse_huge(value);
--			if (huge < 0)
--				goto bad_val;
--			if (!has_transparent_hugepage() &&
--					huge != SHMEM_HUGE_NEVER)
--				goto bad_val;
--			sbinfo->huge = huge;
-+		if (!has_transparent_hugepage() &&
-+		    result.uint_32 != SHMEM_HUGE_NEVER)
-+			return invalf(fc, "shmem: Huge pages disabled");
-+
-+		ctx->huge = result.uint_32;
-+		break;
-+#else
-+		return invalf(fc, "shmem: huge= option disabled");
- #endif
-+
-+	case Opt_mpol:
- #ifdef CONFIG_NUMA
--		} else if (!strcmp(this_char,"mpol")) {
--			mpol_put(mpol);
--			mpol = NULL;
--			if (mpol_parse_str(value, &mpol))
--				goto bad_val;
-+		if (mpol_parse_str(param->string, &mpol))
-+			return invalf(fc, "shmem: Invalid mpol=");
-+		mpol_put(ctx->mpol);
-+		ctx->mpol = mpol;
- #endif
--		} else {
--			pr_err("tmpfs: Bad mount option %s\n", this_char);
--			goto error;
--		}
-+		break;
- 	}
--	sbinfo->mpol = mpol;
--	return 0;
--
--bad_val:
--	pr_err("tmpfs: Bad value '%s' for mount option '%s'\n",
--	       value, this_char);
--error:
--	mpol_put(mpol);
--	return 1;
- 
-+	__set_bit(opt, &ctx->changes);
-+	return 0;
- }
- 
--static int shmem_remount_fs(struct super_block *sb, int *flags, char *data)
-+/*
-+ * Reconfigure a shmem filesystem.
-+ *
-+ * Note that we disallow change from limited->unlimited blocks/inodes while any
-+ * are in use; but we must separately disallow unlimited->limited, because in
-+ * that case we have no record of how much is already in use.
++/**
++ * vfs_get_block_super - Get a superblock based on a single block device
++ * @fc: The filesystem context holding the parameters
++ * @keying: How to distinguish superblocks
++ * @fill_super: Helper to initialise a new superblock
 + */
-+static int shmem_reconfigure(struct fs_context *fc)
++int vfs_get_block_super(struct fs_context *fc,
++			int (*fill_super)(struct super_block *,
++					  struct fs_context *))
++{
++	struct block_device *bdev;
++	struct super_block *s;
++	int error = 0;
++
++	fc->bdev_mode = FMODE_READ | FMODE_EXCL;
++	if (!(fc->sb_flags & SB_RDONLY))
++		fc->bdev_mode |= FMODE_WRITE;
++
++	if (!fc->source)
++		return invalf(fc, "No source specified");
++
++	bdev = blkdev_get_by_path(fc->source, fc->bdev_mode, fc->fs_type);
++	if (IS_ERR(bdev)) {
++		errorf(fc, "%s: Can't open blockdev", fc->source);
++		return PTR_ERR(bdev);
++	}
++
++	fc->dev_destructor = fc_bdev_destructor;
++	fc->bdev = bdev;
++
++	/* Once the superblock is inserted into the list by sget_fc(), s_umount
++	 * will protect the lockfs code from trying to start a snapshot while
++	 * we are mounting
++	 */
++	mutex_lock(&bdev->bd_fsfreeze_mutex);
++	if (bdev->bd_fsfreeze_count > 0) {
++		mutex_unlock(&bdev->bd_fsfreeze_mutex);
++		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
++		return -EBUSY;
++	}
++
++	fc->sb_flags |= SB_NOSEC;
++	s = sget_fc(fc, test_bdev_super_fc, set_bdev_super_fc);
++	mutex_unlock(&bdev->bd_fsfreeze_mutex);
++	if (IS_ERR(s))
++		return PTR_ERR(s);
++
++	if (s->s_root) {
++		/* Don't summarily change the RO/RW state. */
++		if ((fc->sb_flags ^ s->s_flags) & SB_RDONLY) {
++			warnf(fc, "%pg: Can't mount, would change RO state", bdev);
++			error = -EBUSY;
++			goto error_sb;
++		}
++
++		/* Leave fc->bdev to fc_bdev_destructor() to clean up to avoid
++		 * locking conflicts.
++		 */
++	} else {
++		snprintf(s->s_id, sizeof(s->s_id), "%pg", bdev);
++		sb_set_blocksize(s, block_size(bdev));
++		error = fill_super(s, fc);
++		if (error)
++			goto error_sb;
++
++		s->s_flags |= SB_ACTIVE;
++		bdev->bd_super = s;
++	}
++
++	BUG_ON(fc->root);
++	fc->root = dget(s->s_root);
++	return 0;
++
++error_sb:
++	deactivate_locked_super(s);
++	/* Leave fc->bdev to fc_bdev_destructor() to clean up */
++	return error;
++}
++EXPORT_SYMBOL(vfs_get_block_super);
++
++
+ static int set_bdev_super(struct super_block *s, void *data)
  {
-+	struct shmem_fs_context *ctx = fc->fs_private;
-+	struct super_block *sb = fc->root->d_sb;
- 	struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
--	struct shmem_sb_info config = *sbinfo;
--	unsigned long inodes;
--	int error = -EINVAL;
--
--	config.mpol = NULL;
--	if (shmem_parse_options(data, &config, true))
--		return error;
-+	unsigned long inodes_in_use;
- 
- 	spin_lock(&sbinfo->stat_lock);
--	inodes = sbinfo->max_inodes - sbinfo->free_inodes;
--	if (percpu_counter_compare(&sbinfo->used_blocks, config.max_blocks) > 0)
--		goto out;
--	if (config.max_inodes < inodes)
--		goto out;
--	/*
--	 * Those tests disallow limited->unlimited while any are in use;
--	 * but we must separately disallow unlimited->limited, because
--	 * in that case we have no record of how much is already in use.
--	 */
--	if (config.max_blocks && !sbinfo->max_blocks)
--		goto out;
--	if (config.max_inodes && !sbinfo->max_inodes)
--		goto out;
--
--	error = 0;
--	sbinfo->huge = config.huge;
--	sbinfo->max_blocks  = config.max_blocks;
--	sbinfo->max_inodes  = config.max_inodes;
--	sbinfo->free_inodes = config.max_inodes - inodes;
-+	if (test_bit(Opt_nr_blocks, &ctx->changes)) {
-+		if (ctx->max_blocks && !sbinfo->max_blocks) {
-+			spin_unlock(&sbinfo->stat_lock);
-+			return invalf(fc, "shmem: Can't retroactively limit nr_blocks");
+ 	s->s_bdev = data;
+@@ -1415,8 +1519,13 @@ int vfs_get_tree(struct fs_context *fc)
+ 	 * on the superblock.
+ 	 */
+ 	error = fc->ops->get_tree(fc);
+-	if (error < 0)
++	if (error < 0) {
++		if (fc->dev_destructor) {
++			fc->dev_destructor(fc);
++			fc->dev_destructor = NULL;
 +		}
-+		if (percpu_counter_compare(&sbinfo->used_blocks, ctx->max_blocks) > 0) {
-+			spin_unlock(&sbinfo->stat_lock);
-+			return invalf(fc, "shmem: Too few blocks for current use");
-+		}
+ 		return error;
 +	}
  
--	/*
--	 * Preserve previous mempolicy unless mpol remount option was specified.
--	 */
--	if (config.mpol) {
--		mpol_put(sbinfo->mpol);
--		sbinfo->mpol = config.mpol;	/* transfers initial ref */
-+	inodes_in_use = sbinfo->max_inodes - sbinfo->free_inodes;
-+	if (test_bit(Opt_nr_inodes, &ctx->changes)) {
-+		if (ctx->max_inodes && !sbinfo->max_inodes) {
-+			spin_unlock(&sbinfo->stat_lock);
-+			return invalf(fc, "shmem: Can't retroactively limit nr_inodes");
-+		}
-+		if (ctx->max_inodes < inodes_in_use) {
-+			spin_unlock(&sbinfo->stat_lock);
-+			return invalf(fc, "shmem: Too few inodes for current use");
-+		}
- 	}
--out:
-+
-+	shmem_apply_options(sbinfo, fc, inodes_in_use);
- 	spin_unlock(&sbinfo->stat_lock);
--	return error;
-+	return 0;
- }
- 
- static int shmem_show_options(struct seq_file *seq, struct dentry *root)
-@@ -3549,7 +3639,7 @@ static void shmem_put_super(struct super_block *sb)
- 	sb->s_fs_info = NULL;
- }
- 
--int shmem_fill_super(struct super_block *sb, void *data, int silent)
-+static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	struct inode *inode;
- 	struct shmem_sb_info *sbinfo;
-@@ -3575,10 +3665,7 @@ int shmem_fill_super(struct super_block *sb, void *data, int silent)
- 	if (!(sb->s_flags & SB_KERNMOUNT)) {
- 		sbinfo->max_blocks = shmem_default_max_blocks();
- 		sbinfo->max_inodes = shmem_default_max_inodes();
--		if (shmem_parse_options(data, sbinfo, false)) {
--			err = -EINVAL;
--			goto failed;
--		}
-+		shmem_apply_options(sbinfo, fc, 0);
- 	} else {
- 		sb->s_flags |= SB_NOUSER;
- 	}
-@@ -3624,6 +3711,36 @@ int shmem_fill_super(struct super_block *sb, void *data, int silent)
- 	return err;
- }
- 
-+static int shmem_get_tree(struct fs_context *fc)
-+{
-+	enum vfs_get_super_keying keying = vfs_get_independent_super;
-+
-+	if (strcmp(fc->fs_type->name, "devtmpfs") == 0)
-+		keying = vfs_get_single_super;
-+
-+	return vfs_get_super(fc, keying, shmem_fill_super);
-+}
-+
-+static void shmem_free_fc(struct fs_context *fc)
-+{
-+	struct shmem_fs_context *ctx = fc->fs_private;
-+
-+	if (ctx) {
-+		mpol_put(ctx->mpol);
-+		kfree(ctx);
-+	}
-+}
-+
-+static const struct fs_context_operations shmem_fs_context_ops = {
-+	.free			= shmem_free_fc,
-+	.get_tree		= shmem_get_tree,
-+#ifdef CONFIG_TMPFS
-+	.parse_monolithic	= shmem_parse_monolithic,
-+	.parse_param		= shmem_parse_param,
-+	.reconfigure		= shmem_reconfigure,
-+#endif
-+};
-+
- static struct kmem_cache *shmem_inode_cachep;
- 
- static struct inode *shmem_alloc_inode(struct super_block *sb)
-@@ -3741,7 +3858,6 @@ static const struct super_operations shmem_ops = {
- 	.destroy_inode	= shmem_destroy_inode,
- #ifdef CONFIG_TMPFS
- 	.statfs		= shmem_statfs,
--	.remount_fs	= shmem_remount_fs,
- 	.show_options	= shmem_show_options,
- #endif
- 	.evict_inode	= shmem_evict_inode,
-@@ -3762,16 +3878,26 @@ static const struct vm_operations_struct shmem_vm_ops = {
- #endif
+ 	if (!fc->root) {
+ 		pr_err("Filesystem %s get_tree() didn't set fc->root\n",
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index a779022d06f5..9af788a3ef8e 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -76,6 +76,9 @@ struct fs_context {
+ 	const struct fs_context_operations *ops;
+ 	struct file_system_type	*fs_type;
+ 	void			*fs_private;	/* The filesystem's context */
++	union {
++		struct block_device *bdev;	/* The backing blockdev (if applicable) */
++	};
+ 	struct dentry		*root;		/* The root and superblock */
+ 	struct user_namespace	*user_ns;	/* The user namespace for this mount */
+ 	struct net		*net_ns;	/* The network namespace for this mount */
+@@ -84,6 +87,7 @@ struct fs_context {
+ 	const char		*subtype;	/* The subtype to set on the superblock */
+ 	void			*security;	/* Linux S&M options */
+ 	void			*s_fs_info;	/* Proposed s_fs_info */
++	fmode_t			bdev_mode;	/* File open mode for bdev */
+ 	unsigned int		sb_flags;	/* Proposed superblock flags (SB_*) */
+ 	unsigned int		sb_flags_mask;	/* Superblock flags that were changed */
+ 	unsigned int		s_iflags;	/* OR'd with sb->s_iflags */
+@@ -91,6 +95,7 @@ struct fs_context {
+ 	enum fs_context_purpose	purpose:8;
+ 	bool			need_free:1;	/* Need to call ops->free() */
+ 	bool			global:1;	/* Goes into &init_user_ns */
++	void (*dev_destructor)(struct fs_context *fc); /* For block or mtd */
  };
  
--static struct dentry *shmem_mount(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data)
-+int shmem_init_fs_context(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, data, shmem_fill_super);
-+	struct shmem_fs_context *ctx;
-+
-+	ctx = kzalloc(sizeof(struct shmem_fs_context), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &shmem_fs_context_ops;
-+	return 0;
- }
+ struct fs_context_operations {
+@@ -141,6 +146,10 @@ extern int vfs_get_super(struct fs_context *fc,
+ 			 int (*fill_super)(struct super_block *sb,
+ 					   struct fs_context *fc));
  
- static struct file_system_type shmem_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "tmpfs",
--	.mount		= shmem_mount,
-+	.init_fs_context = shmem_init_fs_context,
-+#ifdef CONFIG_TMPFS
-+	.parameters	= &shmem_fs_parameters,
-+#endif
- 	.kill_sb	= kill_litter_super,
- 	.fs_flags	= FS_USERNS_MOUNT,
- };
-@@ -3916,7 +4042,8 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
- 
- static struct file_system_type shmem_fs_type = {
- 	.name		= "tmpfs",
--	.mount		= ramfs_mount,
-+	.init_fs_context = ramfs_init_fs_context,
-+	.parameters	= &ramfs_fs_parameters,
- 	.kill_sb	= kill_litter_super,
- 	.fs_flags	= FS_USERNS_MOUNT,
- };
-@@ -4117,3 +4244,4 @@ struct page *shmem_read_mapping_page_gfp(struct address_space *mapping,
- #endif
- }
- EXPORT_SYMBOL_GPL(shmem_read_mapping_page_gfp);
++extern int vfs_get_block_super(struct fs_context *fc,
++			       int (*fill_super)(struct super_block *sb,
++						 struct fs_context *fc));
 +
+ extern const struct file_operations fscontext_fops;
+ 
+ #ifdef CONFIG_PRINTK
 
