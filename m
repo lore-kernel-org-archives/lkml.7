@@ -2,147 +2,94 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415E7C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19DBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DA12075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9124821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712331;
-	bh=6HoH24Lvr7B8D+QzW9PUQDxGfTcmVK01tBbGaVFDf5g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTXuMCjpZSEIp8O/M5uNZxpDeLvFxcKFQJibTCWBUnmFgfX0BZSN4L36+YxelhTwQ
-	 OJNpgLPiP/rIJepkHlGXBlthdQ8vDFZByDgW9H59jAiYPTCVX/dXTD9QXiR4vagxPZ
-	 /PNXsch6jghpTmLiFgW5crOUwbdimumT3TN6wXWA=
+	s=default; t=1553712335;
+	bh=lWA8wpE896V8916829QxZnsLpATu31sertHYovoMxt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OCoaQC+RBQ3DnJdAw1EaNzbyNywN/bjx6w/mhICHQfwz/pAqUfeq8Uq4YtrSuGISv
+	 sHrP6j6V3OXVH1j4qqU3LJlmZ9si8CJpP8rmTEOJPB09ky6cj6d82OV+yQvkfWScGj
+	 cLAuZFhDA33L2MxJX+G5Fqj+T2Eb/KhXECRn47Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390101AbfC0SU6 (ORCPT
+        id S2391976AbfC0Spd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390349AbfC0SUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:49 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2391389AbfC0Spa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:45:30 -0400
+Received: from localhost (unknown [88.128.80.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1E5220651;
-        Wed, 27 Mar 2019 18:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A4C7205C9;
+        Wed, 27 Mar 2019 18:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710848;
-        bh=6HoH24Lvr7B8D+QzW9PUQDxGfTcmVK01tBbGaVFDf5g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FH47WM+BXBsZWJgK9jinshjT+c6L/lOfqSnXEBlN484RMIu3Ff+zEa3P3Ap3HmhTi
-         GV6B3T2Vyecudd1YGhJnEFgFhG65/+5cYPHkpXVcp0jop1ZZES9hAEbTJygEP83Kn4
-         If40XP2B8MW3TtmRo2h1xlWI3jgrwWBVgoldc05c=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/87] gpio: gpio-omap: fix level interrupt idling
-Date:   Wed, 27 Mar 2019 14:19:18 -0400
-Message-Id: <20190327182040.17444-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
-References: <20190327182040.17444-1-sashal@kernel.org>
+        s=default; t=1553712329;
+        bh=lWA8wpE896V8916829QxZnsLpATu31sertHYovoMxt4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nb2vd2/35gS9bepcLAMK2SZhDyRviVJXsRfZREhdtq1pGOv1JOWFvWq1Lwb5aFXJw
+         KWBLKX5SUoMVshDMqQT8bzDTUmRrS5acuO0IgZUA21DizPWl6QOG6tDGx2PSxcm/0I
+         Sfzq8R1znIk638VLi6zY7VzvIs+ouwnizMOYrvGY=
+Date:   Wed, 27 Mar 2019 19:45:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] Input: add Apple SPI keyboard and trackpad driver.
+Message-ID: <20190327184526.GA11095@kroah.com>
+References: <20190327014807.7472-1-ronald@innovation.ch>
+ <20190327014807.7472-5-ronald@innovation.ch>
+ <20190327093530.GH9224@smile.fi.intel.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190327093530.GH9224@smile.fi.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+On Wed, Mar 27, 2019 at 11:35:30AM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 26, 2019 at 06:48:07PM -0700, Ronald Tschalär wrote:
+> > The keyboard and trackpad on recent MacBook's (since 8,1) and
+> > MacBookPro's (13,* and 14,*) are attached to an SPI controller instead
+> > of USB, as previously. The higher level protocol is not publicly
+> > documented and hence has been reverse engineered. As a consequence there
+> > are still a number of unknown fields and commands. However, the known
+> > parts have been working well and received extensive testing and use.
+> > 
+> > In order for this driver to work, the proper SPI drivers need to be
+> > loaded too; for MB8,1 these are spi_pxa2xx_platform and spi_pxa2xx_pci;
+> > for all others they are spi_pxa2xx_platform and intel_lpss_pci. For this
+> > reason enabling this driver in the config implies enabling the above
+> > drivers.
+> 
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> According to last changes this should be GPL-2.0-only
 
-[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
+What "last changes"?  "GPL-2.0" is a totally valid SPDX identifier for
+the kernel.  Don't buy into the "-only" prefix crud that the newer SPDX
+version adopted for crazy reasons.  The in-kernel documentation lists
+the valid identifiers and the version of SPDX we are currently using.
 
-Tony notes that the GPIO module does not idle when level interrupts are
-in use, as the wakeup appears to get stuck.
+thanks,
 
-After extensive investigation, it appears that the wakeup will only be
-cleared if the interrupt status register is cleared while the interrupt
-is enabled. However, we are currently clearing it with the interrupt
-disabled for level-based interrupts.
-
-It is acknowledged that this observed behaviour conflicts with a
-statement in the TRM:
-
-CAUTION
-  After servicing the interrupt, the status bit in the interrupt status
-  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
-  reset and the interrupt line released (by setting the corresponding
-  bit of the interrupt status register to 1) before enabling an
-  interrupt for the GPIO channel in the interrupt-enable register
-  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
-  the occurrence of unexpected interrupts when enabling an interrupt
-  for the GPIO channel.
-
-However, this does not appear to be a practical problem.
-
-Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
-the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
-Fix the sequence to clear the IRQ status" saying:
-
- if the status is cleared after disabling the IRQ then sWAKEUP will not
- be cleared and gates the module transition
-
-When we unmask the level interrupt after the interrupt has been handled,
-enable the interrupt and only then clear the interrupt. If the interrupt
-is still pending, the hardware will re-assert the interrupt status.
-
-Should the caution note in the TRM prove to be a problem, we could
-use a clear-enable-clear sequence instead.
-
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-[tony@atomide.com: updated comments based on an earlier TI patch]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpio-omap.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 6f9c9ac6ee70..75f30a0c418a 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -837,14 +837,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	if (trigger)
- 		omap_set_gpio_triggering(bank, offset, trigger);
- 
--	/* For level-triggered GPIOs, the clearing must be done after
--	 * the HW source is cleared, thus after the handler has run */
--	if (bank->level_mask & BIT(offset)) {
--		omap_set_gpio_irqenable(bank, offset, 0);
-+	omap_set_gpio_irqenable(bank, offset, 1);
-+
-+	/*
-+	 * For level-triggered GPIOs, clearing must be done after the source
-+	 * is cleared, thus after the handler has run. OMAP4 needs this done
-+	 * after enabing the interrupt to clear the wakeup status.
-+	 */
-+	if (bank->level_mask & BIT(offset))
- 		omap_clear_gpio_irqstatus(bank, offset);
--	}
- 
--	omap_set_gpio_irqenable(bank, offset, 1);
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
- }
- 
--- 
-2.19.1
-
+greg k-h
