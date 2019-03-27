@@ -2,129 +2,114 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D76C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5368FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8507720645
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IcIvG2zV"
+	by mail.kernel.org (Postfix) with ESMTP id 2912E20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfC0RWM (ORCPT
+        id S1728732AbfC0RW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:22:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34264 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728150AbfC0RWM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:22:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so3632045plt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u0z/uiUA7cpRFpRLBb1uuNgQeFvoMDPLjRhLKGzcxak=;
-        b=IcIvG2zVIQx27PcCq1h0HgkIusIy1Ky/Iisz6yp+vU6feXfjzLP5xDk3kiw0ec40tY
-         CSXAaDfZUjCxItHMmrRrl5I4eYWxSuwH7jsRz6m/U6pGO4AvXw/CjAB8Pj2YCoUKFPxi
-         AayE+lmBIrlg7yIrNwrk5afR7xIl3OjvmMolU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u0z/uiUA7cpRFpRLBb1uuNgQeFvoMDPLjRhLKGzcxak=;
-        b=L2u7JXP0zQhIUsTMBWlJJUJvnvFRMliU7fYm8JUz0hRnp8nSdMhRuYuKAvFlUyZHyZ
-         IM/ZMEr2tAZH5ViZYThXtjVL3/xC3d2dZWHLWaqUg2op7w2kO8fY9J2oY/abzqcanAte
-         YmaEDLhp0RhpbjlGGrnADC9QTIaiEyozGVArffX7xi7PcaKQIwWkCCz7/KVDScaJem8b
-         xtfpW2GgYeUzJ4ymXSP3vrqxNoHGft9DXMF5Pxl98Gkq6qlTrJd22PL+ZWDJs7+N1kK2
-         xGBkDGnHwYlTFqGp3+NFYDljDN4/cjyIdh58rGRyach/E6D0HmEGOg3BnUW8iQrwUFuC
-         ZmYQ==
-X-Gm-Message-State: APjAAAXsqZQggSukIESywt0TGdu8Qt6CGTvYWeaoXA6r8yqkPZvr6d/m
-        bo42MsjpaRVFqy1jeWbJPdoDvA==
-X-Google-Smtp-Source: APXvYqxQFRuIvvWPTBAvxwG5ZvKO++4Z1pnQqNOH8BMAzC2+OPZCsA2B/1BIXlojg5H5BIDA9p1PHA==
-X-Received: by 2002:a17:902:e3:: with SMTP id a90mr37096520pla.45.1553707331568;
-        Wed, 27 Mar 2019 10:22:11 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id v20sm13537173pfn.116.2019.03.27.10.22.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 10:22:10 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 10:22:10 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harish Bandi <c-hbandi@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip wcn3998
-Message-ID: <20190327172210.GD112750@google.com>
-References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
- <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
- <20190312165928.GD200579@google.com>
- <88a923e02073461abb5f3a7674150615@codeaurora.org>
- <20190314185637.GB112750@google.com>
- <8432d8b9743e2b4b6a7195329c808af3@codeaurora.org>
- <20190326235458.GA112750@google.com>
- <6a57b6cfd92f982c5e00fc1db30e778e@codeaurora.org>
+        Wed, 27 Mar 2019 13:22:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57760 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727234AbfC0RW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:22:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CA5BBAD2F;
+        Wed, 27 Mar 2019 17:22:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 39F671E1589; Wed, 27 Mar 2019 18:22:54 +0100 (CET)
+Date:   Wed, 27 Mar 2019 18:22:54 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Jan Kara <jack@suse.cz>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Joel Becker <jlbec@evilplan.org>, Mark Fasheh <mark@fasheh.com>
+Subject: Re: KASAN: use-after-free Read in path_lookupat
+Message-ID: <20190327172254.GC6742@quack2.suse.cz>
+References: <0000000000006946d2057bbd0eef@google.com>
+ <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
+ <20190325045744.GK2217@ZenIV.linux.org.uk>
+ <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
+ <20190325194332.GO2217@ZenIV.linux.org.uk>
+ <20190325224823.GF26298@dastard>
+ <20190325230211.GR2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6a57b6cfd92f982c5e00fc1db30e778e@codeaurora.org>
+In-Reply-To: <20190325230211.GR2217@ZenIV.linux.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 03:53:58PM +0530, Harish Bandi wrote:
-> Hi Matthias,
+On Mon 25-03-19 23:02:11, Al Viro wrote:
+> On Tue, Mar 26, 2019 at 09:48:23AM +1100, Dave Chinner wrote:
 > 
-> > > > > > You mentioned in an earlier version of the series that there are
-> > > > > > multiple WCN3998 variants with different requirements for
-> > > > > > voltage/current. This seems to suggests that multiple compatible
-> > > > > > strings are needed to distinguish between them.
-> > > > > >
-> > > > > [Harish] -- for now we want to add WCN3998 support only, What i mean
-> > > > > to say
-> > > > > in my earlier
-> > > > > explanation that. WCN3990 is base variant and on top of that we have
-> > > > > variants like WCN3990,
-> > > > > WCN3998 and WCN3998-0,WCN3998-1 like that..
-> > > > > So I think wcn399x would make sense for this series.
-> > > >
-> > > > If the variants have relevant differences between them (like different
-> > > > regulator requirements) I think you want unique names, rather than
-> > > > 'wcn399x' (I was referring to comments/documentation with this
-> > > > string).
-> > > >
-> > > > If there are variants wouldn't your first 'wcn3998' already be a
-> > > > 'wcn3998-n'? If 'wcn3998' without suffix is used I think it needs to
-> > > > be valid for all 'wcn3998-n' variants (it might be less
-> > > > power-efficient though than using the variant specific compatible
-> > > > string), otherwise things get confusing (a 'wcn3998-2' isn't a
-> > > > 'wcn3998'?)
-> > > >
-> > > 
-> > > 
-> > >  [Harish] -- for now WCN3990 and WCN3998 only, also wcn3998-2 and
-> > > wcn3998
-> > > are same.
-> > > So for now we are going to have only WCN3990 and WCN3998 for DT.
+> > And when it comes to VFS inode reclaim, XFS does not implement
+> > ->evict_inode because there is nothing at the VFS level to do.
+> > And ->destroy_inode ends up doing cleanup work (e.g. freeing on-disk
+> > inodes) which is non-trivial, blocking work, but then still requires
+> > the struct xfs_inode to be written back to disk before it can bei
+> > freed. So it just gets marked "reclaimable" and background reclaim
+> > then takes care of it from there so we avoid synchronous IO in inode
+> > reclaim...
 > > 
-> > Since you brought up the different power requirements initially:
+> > This works because don't track dirty inode metadata in the VFS
+> > writeback code (it's tracked with much more precision in the XFS log
+> > infrastructure) and we don't write back inodes from the VFS
+> > infrastructure, either. It's all done based on internal state
+> > outside the VFS.
 > > 
-> > are your reasonably sure that future wcn3998-3, wcn3998-4, ... can
-> > operate with the generic wcn3998 power settings?
+> > And, because of this, the VFS cannot assume that it can free
+> > the struct inode after calling ->destroy_inode or even use
+> > call_rcu() to run a filesystem destructor because the filesystem
+> > may need to do work that needs to block and that's not allowed in an
+> > RCU callback...
 > 
-> [Harish] - yes with power settings of wcn3998, wcn3998-3 and wcn3998-4 ...
-> also will work.
+> In Linus' patch that's what you get with non-NULL ->destroy_inode
+> + NULL ->destroy_inode_rcu, so XFS won't be screwed by that.
+> Said that, yes, XFS adds another fun twist there (AFAICS, it's
+> the only in-tree filesystem that pulls that off).
+> 
+> I would really like some comments from f2fs and ocfs2 folks, as well
+> as Jan - he's had much more recent contact with writeback code than
+> I have...  Could somebody explain what's going on in f2fs and ocfs2
+> ->drop_inode()?  It _should_ be just a predicate; looks like both
+> are playing very odd games to work around writeback problems and
+> I wonder if there's a cleaner solution for that.  I can try and dig
+> through maillist(s) archives, but I would really appreciate it
+> if somebody could give a braindump on the issues dealt with in there...
 
-Thanks for the confirmation, in that case just using 'wcn3998' for now
-sounds good to me.
+OCFS2 is discussed elsewhere and should be relatively easy to deal with.
+F2FS seems harder. The problem is that AFAICS they get inode references
+from their garbage collection code which can get called during page
+writeback. And then they need to drop these references and they can be the
+last ones to hold the inode reference for an unlinked inode forcing flush
+worker into inode cleanup. Which generally causes problems and was the
+reason why writeback code does not take inode references but relies on
+I_SYNC to protect it from inode reclaim instead (see commit 169ebd90131b
+"writeback: Avoid iput() from flusher thread"). And they noticed the
+problem as well and hacked around it... Now I don't know enough about F2FS
+and its garbage collection to tell how they can avoid dropping inode
+references from flush worker context. But that's the right solution for
+avoiding deadlocks.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
