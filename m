@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94102C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F82C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6597220449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32A1217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710504;
-	bh=Nlyv/P3XnIj8QnVwrFCdC9+n/KBHVGk/KMUPek5gJZs=;
+	s=default; t=1553710506;
+	bh=6709uOp69RMOUkuyrJ3Y7ObzWXNAD4dFwy6QQibu5kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wH5+dkeWyz6nreE5iRklY4LHJGWIcp63he4xGS9jn1h2uoqmEELIFRM/ARpIfBfCM
-	 8IjrhLNZCON96Yu2796GTUIMUYhEwqew/e2n4MjxMT7PYy7dG5EdGma2PkRw5rQQ1a
-	 cwPCqSVowiYZQ8iqYp25uN491MQZGW1JxhC0Oq0Y=
+	b=ZwRbWJSWH0e1mw1gd7qVZa7qg+vZi/+S7V+V8AoR/+ceo2sQYG4xENtASElxIXGzr
+	 LwZzGJpVAzVwm4V5gpiYX7oOtEWVmzTS/lsh5LfFdtU6yAJGzOcHIiWe7QVHuKqiWS
+	 H9YrO9nFc1Jh3PVHzRrrE7PSEt3NAq92HcP1Hvlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbfC0SPD (ORCPT
+        id S2389104AbfC0SPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58356 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389710AbfC0SPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:00 -0400
+        id S2389735AbfC0SPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA162184D;
-        Wed, 27 Mar 2019 18:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B392087C;
+        Wed, 27 Mar 2019 18:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710498;
-        bh=Nlyv/P3XnIj8QnVwrFCdC9+n/KBHVGk/KMUPek5gJZs=;
+        s=default; t=1553710501;
+        bh=6709uOp69RMOUkuyrJ3Y7ObzWXNAD4dFwy6QQibu5kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvGebIwmofA7AMqyF7SsI7vcWQbRK5SC85J40eTnZpNo4Tx5BgSzSr+08BQ0AlcK9
-         PjLBzeuuJUIby0N2yFtb86BS5CaTg0C+xZK+TlmjG+gWuq5zSE9pASqjtFk02rlho6
-         tVJKcbF+7LViREL6z2B8vNyu3s6F1xG8T3lxUjqo=
+        b=v7y29M3xga+XrnRi7F72MG9UsIAfgGLFJgQOqKvrz36oWiqYZaLheg7anJmR28lIt
+         URc0ETbNIRqMUbuv5BpcmxVNGvfmYNyXH3fbi1OxtobFmz67HdYnT2znZIi1xacdEk
+         V40laqeNdw5J34NRG5iRBKGCgSi3D3+tfVOybrx8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 145/192] block, bfq: fix in-service-queue check for queue merging
-Date:   Wed, 27 Mar 2019 14:09:37 -0400
-Message-Id: <20190327181025.13507-145-sashal@kernel.org>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 147/192] selftests/bpf: skip verifier tests for unsupported program types
+Date:   Wed, 27 Mar 2019 14:09:39 -0400
+Message-Id: <20190327181025.13507-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,79 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Stanislav Fomichev <sdf@google.com>
 
-[ Upstream commit 058fdecc6de7cdecbf4c59b851e80eb2d6c5295f ]
+[ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
 
-When a new I/O request arrives for a bfq_queue, say Q, bfq checks
-whether that request is close to
-(a) the head request of some other queue waiting to be served, or
-(b) the last request dispatched for the in-service queue (in case Q
-itself is not the in-service queue)
+Use recently introduced bpf_probe_prog_type() to skip tests in the
+test_verifier() if bpf_verify_program() fails. The skipped test is
+indicated in the output.
 
-If a queue, say Q2, is found for which the above condition holds, then
-bfq merges Q and Q2, to hopefully get a more sequential I/O in the
-resulting merged queue, and thus a possibly higher throughput.
+Example:
 
-Case (b) is checked by comparing the new request for Q with the last
-request dispatched, assuming that the latter necessarily belonged to the
-in-service queue. Unfortunately, this assumption is no longer always
-correct, since commit d0edc2473be9 ("block, bfq: inject other-queue I/O
-into seeky idle queues on NCQ flash").
+...
+679/p bpf_get_stack return R0 within range SKIP (unsupported program
+type 5)
+680/p ld_abs: invalid op 1 OK
+...
+Summary: 863 PASSED, 165 SKIPPED, 3 FAILED
 
-When the assumption does not hold, queues that must not be merged may be
-merged, causing unexpected loss of control on per-queue service
-guarantees.
-
-This commit solves this problem by adding an extra field, which stores
-the actual last request dispatched for the in-service queue, and by
-using this new field to correctly check case (b).
-
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 5 ++++-
- block/bfq-iosched.h | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_verifier.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 653100fb719e..c5e2c5a01182 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2215,7 +2215,8 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index 9db5a7378f40..294fc18aba2a 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -32,6 +32,7 @@
+ #include <linux/if_ether.h>
  
- 	if (in_service_bfqq && in_service_bfqq != bfqq &&
- 	    likely(in_service_bfqq != &bfqd->oom_bfqq) &&
--	    bfq_rq_close_to_sector(io_struct, request, bfqd->last_position) &&
-+	    bfq_rq_close_to_sector(io_struct, request,
-+				   bfqd->in_serv_last_pos) &&
- 	    bfqq->entity.parent == in_service_bfqq->entity.parent &&
- 	    bfq_may_be_close_cooperator(bfqq, in_service_bfqq)) {
- 		new_bfqq = bfq_setup_merge(bfqq, in_service_bfqq);
-@@ -2755,6 +2756,8 @@ static void bfq_update_peak_rate(struct bfq_data *bfqd, struct request *rq)
- 	bfq_update_rate_reset(bfqd, rq);
- update_last_values:
- 	bfqd->last_position = blk_rq_pos(rq) + blk_rq_sectors(rq);
-+	if (RQ_BFQQ(rq) == bfqd->in_service_queue)
-+		bfqd->in_serv_last_pos = bfqd->last_position;
- 	bfqd->last_dispatch = now_ns;
- }
+ #include <bpf/bpf.h>
++#include <bpf/libbpf.h>
  
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index a8a2e5aca4d4..d5e9e60cb1a5 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -469,6 +469,9 @@ struct bfq_data {
- 	/* on-disk position of the last served request */
- 	sector_t last_position;
+ #ifdef HAVE_GENHDR
+ # include "autoconf.h"
+@@ -56,6 +57,7 @@
  
-+	/* position of the last served request for the in-service queue */
-+	sector_t in_serv_last_pos;
-+
- 	/* time of last request completion (ns) */
- 	u64 last_completion;
+ #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
+ static bool unpriv_disabled = false;
++static int skips;
  
+ struct bpf_test {
+ 	const char *descr;
+@@ -12770,6 +12772,11 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
+ 	fd_prog = bpf_verify_program(prog_type ? : BPF_PROG_TYPE_SOCKET_FILTER,
+ 				     prog, prog_len, test->flags & F_LOAD_WITH_STRICT_ALIGNMENT,
+ 				     "GPL", 0, bpf_vlog, sizeof(bpf_vlog), 1);
++	if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
++		printf("SKIP (unsupported program type %d)\n", prog_type);
++		skips++;
++		goto close_fds;
++	}
+ 
+ 	expected_ret = unpriv && test->result_unpriv != UNDEF ?
+ 		       test->result_unpriv : test->result;
+@@ -12905,7 +12912,7 @@ static void get_unpriv_disabled()
+ 
+ static int do_test(bool unpriv, unsigned int from, unsigned int to)
+ {
+-	int i, passes = 0, errors = 0, skips = 0;
++	int i, passes = 0, errors = 0;
+ 
+ 	for (i = from; i < to; i++) {
+ 		struct bpf_test *test = &tests[i];
 -- 
 2.19.1
 
