@@ -2,142 +2,124 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE52C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B563C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CB7206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE19B206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WkgaWEGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfC0PPW convert rfc822-to-8bit (ORCPT
+        id S1729442AbfC0PPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 11:15:22 -0400
-Received: from prv1-mh.provo.novell.com ([137.65.248.33]:42282 "EHLO
-        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbfC0PPV (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
-        Wed, 27 Mar 2019 11:15:21 -0400
-Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
-        with Novell_GroupWise; Wed, 27 Mar 2019 09:15:21 -0600
-Message-Id: <5C9B93870200007800222289@prv1-mh.provo.novell.com>
-X-Mailer: Novell GroupWise Internet Agent 18.1.0 
-Date:   Wed, 27 Mar 2019 09:15:19 -0600
-From:   "Jan Beulich" <JBeulich@suse.com>
-To:     <mingo@elte.hu>, <tglx@linutronix.de>, <hpa@zytor.com>
-Cc:     "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        "Juergen Gross" <jgross@suse.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 RESEND] x86: modernize sync_bitops.h
-References: <5B30C2C302000078001CD6D1@prv1-mh.provo.novell.com>
- <5B30C2C302000000000FA99B@prv1-mh.provo.novell.com>
- <5B30C2C302000078001FE5A0@prv1-mh.provo.novell.com>
- <5BF52F4D02000000001006ED@prv1-mh.provo.novell.com>
- <5BF52F4D020000780022227E@prv1-mh.provo.novell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+        Wed, 27 Mar 2019 11:15:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43964 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfC0PPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 11:15:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k17so11081049wrx.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 08:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hw4fnc4vtVAqbuNp/HPbYPz4Z7KAuxlltbSrQaJ0fJ8=;
+        b=WkgaWEGf6a2ktMdnDEJfczmlgtYtT12CTh9Rugf1gavb06+8FuRy8KOciGPelHGNu7
+         aVLX076xX9ZPBjkOpI36QcYMiIWdimYB2m+/UfNQImKFkJIgj6ryDIDHcOraPBg3NIiu
+         oN3u8y1RXVdeUUoop8YNJzpI1+V+H3EtlB4QE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hw4fnc4vtVAqbuNp/HPbYPz4Z7KAuxlltbSrQaJ0fJ8=;
+        b=WgDESEQkEE7tF9QJ9QrmoWBelckGOq5twECf/lj27xqOqf1Vf+6xwoRIwZQljRK+5L
+         CE3pfBNS5cDIYnTEh/2v74djwrlwi3QM1MRqcfejF5SVkdqXmwFAu0DmPZKfoHstW4hW
+         F1z+TX0T5l8Kt0AtVFNp/mksgCXoMRxTo2Y4rqWDPNaegxmjNDAdmgOdDtPtW8CIF014
+         G1LwE2oaQOiW12BQlbXE131AWLv8q6k7cFFj3iwDt+/DUguTOaroNgWNP3rW+zQsxy+a
+         RqoYzRwq1H6JVr61xi2uNxAFI3HebrIDofG3wrZ1S5t6UJY+jtaz2KOW2wXxe2AdJArD
+         dBdA==
+X-Gm-Message-State: APjAAAXCiBM4pQRgD4w7Ard5RH3o51AGbEPc55HMwR020pxVXERoKdhJ
+        T9cZmB6SEwt1TAR6N2vBowKh8sdWUaGo6znHDZahoA==
+X-Google-Smtp-Source: APXvYqzDloGTcppDsG4aqOFuy1CCSMtXMvGC98sX7Orh6pFr3cnr+yWp4y478hYQcV8++1WmHZqSNInbSq+52pPpv0s=
+X-Received: by 2002:a5d:494c:: with SMTP id r12mr12831982wrs.250.1553699732001;
+ Wed, 27 Mar 2019 08:15:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
+ <CABe79T5M3FJQed018aGfRhS7eLBbtmoO33mFP=K+xHgavto64Q@mail.gmail.com> <20190327123114.GA9636@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190327123114.GA9636@e107981-ln.cambridge.arm.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Wed, 27 Mar 2019 20:45:19 +0530
+Message-ID: <CABe79T4pQQOVPDKSHcf7D1LMBzXUVD3_0NPdH+MORRZYMxtoFQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Add IPROC PCIe new features
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing insn suffixes and use rmwcc.h just like was (more or less)
-recently done for bitops.h as well.
+Hi Lorenzo,
 
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
----
-v2: Re-base over rmwcc.h changes.
----
- arch/x86/include/asm/sync_bitops.h |   31 +++++++++----------------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+Thanks for feedback, I will talk to our HW engineer.
 
---- a/arch/x86/include/asm/sync_bitops.h
-+++ b/arch/x86/include/asm/sync_bitops.h
-@@ -14,6 +14,8 @@
-  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-  */
- 
-+#include <asm/rmwcc.h>
-+
- #define ADDR (*(volatile long *)addr)
- 
- /**
-@@ -29,7 +31,7 @@
-  */
- static inline void sync_set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; bts %1,%0"
-+	asm volatile("lock; " __ASM_SIZE(bts) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -47,7 +49,7 @@ static inline void sync_set_bit(long nr,
-  */
- static inline void sync_clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; btr %1,%0"
-+	asm volatile("lock; " __ASM_SIZE(btr) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -64,7 +66,7 @@ static inline void sync_clear_bit(long n
-  */
- static inline void sync_change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; btc %1,%0"
-+	asm volatile("lock; " __ASM_SIZE(btc) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -78,14 +80,9 @@ static inline void sync_change_bit(long
-  * This operation is atomic and cannot be reordered.
-  * It also implies a memory barrier.
-  */
--static inline int sync_test_and_set_bit(long nr, volatile unsigned long *addr)
-+static inline bool sync_test_and_set_bit(long nr, volatile unsigned long *addr)
- {
--	unsigned char oldbit;
--
--	asm volatile("lock; bts %2,%1\n\tsetc %0"
--		     : "=qm" (oldbit), "+m" (ADDR)
--		     : "Ir" (nr) : "memory");
--	return oldbit;
-+	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(bts), *addr, c, "Ir", nr);
- }
- 
- /**
-@@ -98,12 +95,7 @@ static inline int sync_test_and_set_bit(
-  */
- static inline int sync_test_and_clear_bit(long nr, volatile unsigned long *addr)
- {
--	unsigned char oldbit;
--
--	asm volatile("lock; btr %2,%1\n\tsetc %0"
--		     : "=qm" (oldbit), "+m" (ADDR)
--		     : "Ir" (nr) : "memory");
--	return oldbit;
-+	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btr), *addr, c, "Ir", nr);
- }
- 
- /**
-@@ -116,12 +108,7 @@ static inline int sync_test_and_clear_bi
-  */
- static inline int sync_test_and_change_bit(long nr, volatile unsigned long *addr)
- {
--	unsigned char oldbit;
--
--	asm volatile("lock; btc %2,%1\n\tsetc %0"
--		     : "=qm" (oldbit), "+m" (ADDR)
--		     : "Ir" (nr) : "memory");
--	return oldbit;
-+	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
- #define sync_test_bit(nr, addr) test_bit(nr, addr)
+Regards,
+Srinath.
 
-
-
-
+On Wed, Mar 27, 2019 at 6:01 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Wed, Mar 27, 2019 at 02:08:46PM +0530, Srinath Mannam wrote:
+> > Hi Lorenzo/Bjorn,
+> >
+> > Could you please help to review this patch series when you have time?
+> > I believe I have addressed all your review comments.
+>
+> I will shortly keeping in mind that you should really ask HW designers
+> to get to grips with a proper design because there are ways too many HW
+> quirks this driver has to fix-up, it has become an unmanageable
+> collection of work arounds.
+>
+> Lorenzo
+>
+> > Thanks,
+> > Srinath.
+> >
+> > On Fri, Mar 1, 2019 at 10:22 AM Srinath Mannam
+> > <srinath.mannam@broadcom.com> wrote:
+> > >
+> > > This patch set extends support of new IPROC PCIe host controller features
+> > >  - Add CRS check using controller register status flags
+> > >  - Add outbound window mapping configuration for 32-bit I/O region
+> > >
+> > > This patch set is based on Linux-5.0-rc2.
+> > >
+> > > Changes from v3:
+> > >   - Addressed Lorenzo Pieralisi comments.
+> > >
+> > > Changes from v2:
+> > >   - Based on Lorenzo Pieralisi comments, commit logs are expanded.
+> > >
+> > > Changes from v1:
+> > >   - Addressed Bjorn Helgaas comments.
+> > >   - Removed set order mode patch from patchset.
+> > >
+> > > Srinath Mannam (2):
+> > >   PCI: iproc: Add CRS check in config read
+> > >   PCI: iproc: Add outbound configuration for 32-bit I/O region
+> > >
+> > >  drivers/pci/controller/pcie-iproc.c | 44 +++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 40 insertions(+), 4 deletions(-)
+> > >
+> > > --
+> > > 2.7.4
+> > >
