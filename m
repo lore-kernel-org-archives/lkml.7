@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2C2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A338C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA0220449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D15320449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710700;
-	bh=PYlgkv+PZ2IqAmEaIJZDf6Y8ca5FzAsmVm95hujz8XQ=;
+	s=default; t=1553710704;
+	bh=78TY9B7FO/efAFYSES5+blzMCIUbyaF7m4c+UxDdAQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gT9yO53xYyEGhlSCJ2tn0DVVXuaBhU+29W3S8VTURy7YgLUeByS/2Hlk3NjAzZncO
-	 9pdoeWz2+Q1dJM7oIazkAJVSe4YstgR+MPrD7fwsaIegzpAmXkl3vkM0GNS+cg76Rj
-	 ImVaigcnRwjHav+13TIvYePZDQH5QIqWT9ADL0TY=
+	b=Gm1F3hYrzifuTNXetGjWke7hrLOgQT1a7e975lbY6Jteg07Khs96EdEzB3pEcog6W
+	 esZCV7B6PGxmS692p9tkMrPYEwpLZoVAF+HiMG7Hc0Uv770GFjqJ56ET85yfWaTJS8
+	 gQXNUIP7W+xSDs/JGvFxuKNKN7gkDuhUsBzcKPn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390483AbfC0SST (ORCPT
+        id S2390496AbfC0SSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390470AbfC0SSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:16 -0400
+        id S2390479AbfC0SSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6722320449;
-        Wed, 27 Mar 2019 18:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C968D217F5;
+        Wed, 27 Mar 2019 18:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710696;
-        bh=PYlgkv+PZ2IqAmEaIJZDf6Y8ca5FzAsmVm95hujz8XQ=;
+        s=default; t=1553710698;
+        bh=78TY9B7FO/efAFYSES5+blzMCIUbyaF7m4c+UxDdAQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+X7Byt3fZmkTqs19JHMWhLuL3KvGC9VHD5lWtmbhmCdHedg48G4qIR+L2Xmxl9GI
-         bevu309JIF+Z5m0T4100QWyOf+FiHf9xBosTbiHAbvy/+GpZi6YMeglGT0A7SAAAAQ
-         0GYxs9f6m5ZKSaiBAvziVFzUKvk4pmdctlqCVNdQ=
+        b=rMLjTU0tUTbQcJZkTUnWy2CEfYqYZpyVDOS3vO9CYKbyAfHO54998zvCvpdAxqBAI
+         v+si0IycCpIKuvTQazq5GAAQS+Ae2qdZY+ndeHnJa+VuSWTCc6Bxe9iTIlCn9z7HSd
+         l4oc0hyfxBoU+Az9yN2gSxRSA2IU4wYGBsHeNlko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 059/123] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 14:15:23 -0400
-Message-Id: <20190327181628.15899-59-sashal@kernel.org>
+Cc:     Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 061/123] Bluetooth: hci_ldisc: Initialize hci_dev before open()
+Date:   Wed, 27 Mar 2019 14:15:25 -0400
+Message-Id: <20190327181628.15899-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,61 +58,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
+[ Upstream commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+The hci_dev struct hdev is referenced in work queues and timers started
+by open() in some protocols. This creates a race between the
+initialization function and the work or timer which can result hdev
+being dereferenced while it is still null.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+The syzbot report contains a reliable reproducer which causes a null
+pointer dereference of hdev in hci_uart_write_work() by making the
+memory allocation for hdev fail.
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+To fix this, ensure hdev is valid from before calling a protocol's
+open() until after calling a protocol's close().
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mx2_emmaprp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_ldisc.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index 4a2b1afa19c4..951f2fd415b0 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -288,7 +288,7 @@ static void emmaprp_device_run(void *priv)
- {
- 	struct emmaprp_ctx *ctx = priv;
- 	struct emmaprp_q_data *s_q_data, *d_q_data;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct emmaprp_dev *pcdev = ctx->dev;
- 	unsigned int s_width, s_height;
- 	unsigned int d_width, d_height;
-@@ -308,8 +308,8 @@ static void emmaprp_device_run(void *priv)
- 	d_height = d_q_data->height;
- 	d_size = d_width * d_height;
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index 30bbe19b4b85..6a3a3011b38e 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -207,11 +207,11 @@ static void hci_uart_init_work(struct work_struct *work)
+ 	err = hci_register_dev(hu->hdev);
+ 	if (err < 0) {
+ 		BT_ERR("Can't register HCI device");
++		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
++		hu->proto->close(hu);
+ 		hdev = hu->hdev;
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		hu->proto->close(hu);
+ 		return;
+ 	}
  
--	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 	if (!p_in || !p_out) {
- 		v4l2_err(&pcdev->v4l2_dev,
- 			 "Acquiring kernel pointers to buffers failed\n");
+@@ -612,6 +612,7 @@ static void hci_uart_tty_receive(struct tty_struct *tty, const u8 *data,
+ static int hci_uart_register_dev(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev;
++	int err;
+ 
+ 	BT_DBG("");
+ 
+@@ -655,11 +656,22 @@ static int hci_uart_register_dev(struct hci_uart *hu)
+ 	else
+ 		hdev->dev_type = HCI_PRIMARY;
+ 
++	/* Only call open() for the protocol after hdev is fully initialized as
++	 * open() (or a timer/workqueue it starts) may attempt to reference it.
++	 */
++	err = hu->proto->open(hu);
++	if (err) {
++		hu->hdev = NULL;
++		hci_free_dev(hdev);
++		return err;
++	}
++
+ 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+ 		return 0;
+ 
+ 	if (hci_register_dev(hdev) < 0) {
+ 		BT_ERR("Can't register HCI device");
++		hu->proto->close(hu);
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+ 		return -ENODEV;
+@@ -679,17 +691,12 @@ static int hci_uart_set_proto(struct hci_uart *hu, int id)
+ 	if (!p)
+ 		return -EPROTONOSUPPORT;
+ 
+-	err = p->open(hu);
+-	if (err)
+-		return err;
+-
+ 	hu->proto = p;
+ 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
+ 
+ 	err = hci_uart_register_dev(hu);
+ 	if (err) {
+ 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		p->close(hu);
+ 		return err;
+ 	}
+ 
 -- 
 2.19.1
 
