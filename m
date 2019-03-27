@@ -2,137 +2,65 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C705C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518F8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1B92087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:27:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gHCvm+Du"
+	by mail.kernel.org (Postfix) with ESMTP id 2A6CF2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfC0M07 (ORCPT
+        id S1728778AbfC0M17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:26:59 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1670 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728184AbfC0M07 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:26:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9b6c150000>; Wed, 27 Mar 2019 05:27:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 27 Mar 2019 05:26:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 27 Mar 2019 05:26:58 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 12:26:51 +0000
-Subject: Re: [PATCH 10/10] arm64: Add Tegra194 PCIe driver to defconfig
-To:     Vidya Sagar <vidyas@nvidia.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <kishon@ti.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
-        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
-        <horms+renesas@verge.net.au>, <olof@lixom.net>,
-        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
-        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
-        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
-        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
-        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
-        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
-        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-11-git-send-email-vidyas@nvidia.com>
- <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
- <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c5ca34fe-4290-d9b7-cda3-23b4a11ec5d8@nvidia.com>
-Date:   Wed, 27 Mar 2019 12:26:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553689621; bh=5qtjykd+Yy2wGhSpgzMIji4/i7wjv6QL+hQjLrgf6K0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gHCvm+Du6RzTKZnrekGcsOZP7e5IJt5sRvYFTLqdtliVM7hYzCEDfZqEZs0PtSUkw
-         9kExzTe5b5XFXY+6mbH5RdDB/VQDY2XhWzJjHXZBvVnkhmp0HVfrXj2PDHhEHn5Eek
-         YveunIKKF1RdHkMzBl0poWPsEL03Y2dcQfNIuK8Ve5QcWii+A4jk88zrJqvO6dULvi
-         rCK6wvy9/SQKQ144wmWLNS2VADcRYaOt9isCbNLcWE1a+bVMgP6WI7avYekgUnDL2x
-         Ois3vUu+HzYNfL2o8gC9mODFqRsFd5i6ln4zh/nzkJQOQ+ZRFhzM+WBaN7EqrRp7kG
-         2LNrEvx5UBwog==
+        Wed, 27 Mar 2019 08:27:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53812 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbfC0M17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:27:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA5C6374;
+        Wed, 27 Mar 2019 05:27:58 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5FD3C3F557;
+        Wed, 27 Mar 2019 05:27:56 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, hannes@cmpxchg.org, david@redhat.com,
+        vbabka@suse.cz, mhocko@suse.com, willy@infradead.org,
+        akpm@linux-foundation.org
+Subject: [PATCH] mm/page-flags: Check enforce parameter in PF_ONLY_HEAD()
+Date:   Wed, 27 Mar 2019 17:57:52 +0530
+Message-Id: <1553689672-28343-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Just check for enforce parameter in PF_ONLY_HEAD() wrapper before calling
+VM_BUG_ON_PGFLAGS() for tail pages.
 
-On 27/03/2019 10:12, Vidya Sagar wrote:
-> On 3/27/2019 3:38 PM, Jon Hunter wrote:
->>
->> On 26/03/2019 15:13, Vidya Sagar wrote:
->>> Add PCIe host controller driver for DesignWare core based
->>> PCIe controller IP present in Tegra194.
->>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>> =C2=A0 arch/arm64/configs/defconfig | 1 +
->>> =C2=A0 1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
-g
->>> index 2d9c39033c1a..2ddea5c4e87d 100644
->>> --- a/arch/arm64/configs/defconfig
->>> +++ b/arch/arm64/configs/defconfig
->>> @@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=3Dy
->>> =C2=A0 CONFIG_PCIE_ARMADA_8K=3Dy
->>> =C2=A0 CONFIG_PCIE_KIRIN=3Dy
->>> =C2=A0 CONFIG_PCIE_HISI_STB=3Dy
->>> +CONFIG_PCIE_TEGRA194=3Dy
->>> =C2=A0 CONFIG_ARM64_VA_BITS_48=3Dy
->>> =C2=A0 CONFIG_SCHED_MC=3Dy
->>> =C2=A0 CONFIG_NUMA=3Dy
->>
->> Maybe building as a module is more appropriate here as I am not sure
->> that anyone else will want this built-in and it is not critical to
->> booting AFAIK.
-> Since the DesignWare core framework doesn't yet have support for making
-> this
-> as a module, I added it as a built-in driver. I'll switch it to a module
-> once support is available.
+Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ include/linux/page-flags.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ah I see. We often get reports/patches if a driver has a removal
-function but is defined in the Kconfig to only support being built-in.
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 9f8712a4b1a5..82539e287bc6 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -229,7 +229,7 @@ static inline void page_init_poison(struct page *page, size_t size)
+ #define PF_ANY(page, enforce)	PF_POISONED_CHECK(page)
+ #define PF_HEAD(page, enforce)	PF_POISONED_CHECK(compound_head(page))
+ #define PF_ONLY_HEAD(page, enforce) ({					\
+-		VM_BUG_ON_PGFLAGS(PageTail(page), page);		\
++		VM_BUG_ON_PGFLAGS(enforce && PageTail(page), page);	\
+ 		PF_POISONED_CHECK(page); })
+ #define PF_NO_TAIL(page, enforce) ({					\
+ 		VM_BUG_ON_PGFLAGS(enforce && PageTail(page), page);	\
+-- 
+2.20.1
 
-Does the designware core just need to export some symbols to support it
-being a module? If so it maybe worth adding these as part of the series
-to see if it is acceptable, otherwise it might not get done and there is
-no point us supporting it as a module.
-
-Cheers
-Jon
-
---=20
-nvpublic
