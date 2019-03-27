@@ -2,64 +2,102 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2772FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171E2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21FD2146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tronnes.org header.i=@tronnes.org header.b="RiTCACs4"
+	by mail.kernel.org (Postfix) with ESMTP id D6A662075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfC0Ntd (ORCPT
+        id S1728685AbfC0Nus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:49:33 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:32865 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfC0Ntd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:49:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org; s=ds201810;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=OmX1htSYBUy55uXduZ5Mvl8ULBFn1JobaY7emZVDWy4=;
-        b=RiTCACs47kVnZNDoUjEfMRvLMcnzgLqay3PJDcPPSqLUmfUFPQ2XI+HAk6uyKeon+Hyy4+C0ynWK3Vjo5856B83ArgA4LloD0SpN+F7qLzBKbkwR3h942jx6oP1Qh0ZPuucOcP7j3kYt3pVIPbxP+vyBt71+eXwovv1yO+asVlD3WsEiTAf1rlI6P0EzXPDjRmwNAlJmDN05EGpqq70psjymxcB1pC4OxgSK+vk4Qq5IPyvKqajRm74SO1Qe9n6Sb+nOtRoI563Gv9NUHxIZ9numKuttApeuCNftUDnx5jFOLrdRUfYyRimt8JlbKPi6KdxUOE/kDj5muU9mdq3mXw==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:53321 helo=[192.168.10.179])
-        by smtp.domeneshop.no with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <noralf@tronnes.org>)
-        id 1h98vq-0005js-KS; Wed, 27 Mar 2019 14:49:30 +0100
-Subject: Re: [PATCH] drm/virtio: add virtio-gpu-features debugfs file.
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-References: <20190320083612.32067-1-kraxel@redhat.com>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <da55d18d-d14b-cc8c-685f-f61f4509d82e@tronnes.org>
-Date:   Wed, 27 Mar 2019 14:49:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 27 Mar 2019 09:50:48 -0400
+Received: from sauhun.de ([88.99.104.3]:36232 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbfC0Nus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:50:48 -0400
+Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
+        by pokefinder.org (Postfix) with ESMTPSA id 344762E35A2;
+        Wed, 27 Mar 2019 14:50:46 +0100 (CET)
+Date:   Wed, 27 Mar 2019 14:50:45 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Phil Reid <preid@electromag.com.au>,
+        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [RFC PATCH v2 5/7] i2c: busses: omap: Add the
+ master_xfer_irqless hook
+Message-ID: <20190327135045.GE5345@kunai>
+References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+ <20190302134735.4393-6-wsa+renesas@sang-engineering.com>
+ <20190315124717.x3do5evok5syipo7@verge.net.au>
+ <20190315131435.GE9224@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190320083612.32067-1-kraxel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tMbDGjvJuJijemkf"
+Content-Disposition: inline
+In-Reply-To: <20190315131435.GE9224@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--tMbDGjvJuJijemkf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Den 20.03.2019 09.36, skrev Gerd Hoffmann:
-> This file prints which features the virtio-gpu device has.
-> 
-> Also add "virtio-gpu-" prefix to the existing fence file,
-> to make clear this is a driver-specific debugfs file.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
 
-Acked-by: Noralf Trønnes <noralf@tronnes.org>
+> > > +		if (!ret)
+> > > +			timeout =3D 1;
+> > > +		else
+> > > +			timeout =3D 0;
+> >=20
+> >=20
+> > nit: the following might be cleaner
+> >=20
+> > 		ret =3D !!timeout;
+> >=20
+>=20
+> Other way around, perhaps,
+>=20
+>       timeout =3D !ret;
+
+I saw that but didn't want to modify this patch. But yes, this is easy
+enough and looks a lot better.
+
+
+--tMbDGjvJuJijemkf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlybf7UACgkQFA3kzBSg
+KbYUGA/7BMcz1G20aqZ92ejVHHeFnpHcGGpc1H8Ltdv07p4tnjcbDQDeXjfplXZl
+RmBhHZegpLh2+G7DrDvMQGkL5ShRDwAQ75OO2ZRAdMYOPAKjcS+unsKf9iJVI1eB
+GbOlPIzS9hbVoxtT+Rkk+4g3mkN7OPFynEza4JKxC/lGgTnosNZwAaimboVCiwRs
+l00n20ZXYY5wGoGd33rlhr47A4kZ/j9RIr8wmsZ5MSOl+GP6G9gB+IryYb7jux7m
+nLjElLwtQHyWcu3lz6YgOEwRsBoTdhOpaSDGze0TGGhuaRQTmQqvkiGPaqBaru1G
+pTQePBso6cBfAXgZ3kXx1h3hbyan4Vn3L56kL9FcmHqmGQo/VM1g6J+OhtWLOi3y
+5mEPZZefUMzUiHgB3IpTNeWfXMC5905HJKaQ1XbM9/qGW9jDCJ3sFmqEC0VVkkBZ
+04n0zVMQJL0xuEzhiNYLGcvyJaFWX7b0sZNH1BGOeOOkQ1upEOaAzWMM/EGG+EGJ
+nCh8/QLxhWvKvvuNSfPaX5EGGLd/6qYDFjBtJ206hdKnGVe/0OogEYMH5fcr8Ein
+GeEhnpQ7wbkn/62ugZYtkakTw2PrK3Uvm+lRZgxagfddWi/Oa6cTo8ZtsC4sUGnf
+m1DTK5M6iNQw2iRo0VzgTvvqqGr4w22fayvvEauu7Pp5aqZi8N0=
+=BBzs
+-----END PGP SIGNATURE-----
+
+--tMbDGjvJuJijemkf--
