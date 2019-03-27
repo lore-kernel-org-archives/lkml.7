@@ -2,158 +2,80 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E525DC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C943C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6712087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CD420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfC0WsF (ORCPT
+        id S1728203AbfC0Wt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:48:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbfC0WsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:48:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81EB1307B497;
-        Wed, 27 Mar 2019 22:48:04 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4605619C5A;
-        Wed, 27 Mar 2019 22:48:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix StoreData op marshalling
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Jonathan Billings <jsbillin@umich.edu>,
-        Jonathan Billings <jsbillin@umich.edu>, dhowells@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 27 Mar 2019 22:48:02 +0000
-Message-ID: <155372688242.22064.8917089714151191215.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 27 Mar 2019 18:49:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727723AbfC0Wt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:49:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 81AB7ACCD;
+        Wed, 27 Mar 2019 22:49:53 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 82603DA8D8; Wed, 27 Mar 2019 23:51:03 +0100 (CET)
+Date:   Wed, 27 Mar 2019 23:51:03 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     syzbot <syzbot+1145ec2e23165570c3ac@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, clm@fb.com, dan.carpenter@oracle.com,
+        dave@stgolabs.net, dhowells@redhat.com, dsterba@suse.com,
+        dvyukov@google.com, ebiederm@xmission.com, jbacik@fb.com,
+        ktkhai@virtuozzo.com, ktsanaktsidis@zendesk.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, manfred@colorfullife.com, mhocko@suse.com,
+        nborisov@suse.com, penguin-kernel@I-love.SAKURA.ne.jp,
+        rppt@linux.vnet.ibm.com, sfr@canb.auug.org.au, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+Subject: Re: general protection fault in put_pid
+Message-ID: <20190327225102.GB29086@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        syzbot <syzbot+1145ec2e23165570c3ac@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, clm@fb.com, dan.carpenter@oracle.com,
+        dave@stgolabs.net, dhowells@redhat.com, dsterba@suse.com,
+        dvyukov@google.com, ebiederm@xmission.com, jbacik@fb.com,
+        ktkhai@virtuozzo.com, ktsanaktsidis@zendesk.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, manfred@colorfullife.com, mhocko@suse.com,
+        nborisov@suse.com, penguin-kernel@I-love.SAKURA.ne.jp,
+        rppt@linux.vnet.ibm.com, sfr@canb.auug.org.au, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+References: <00000000000051ee78057cc4d98f@google.com>
+ <000000000000c58fcf058519059e@google.com>
+ <20190327202712.GT10344@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 27 Mar 2019 22:48:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327202712.GT10344@bombadil.infradead.org>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The marshalling of AFS.StoreData, AFS.StoreData64 and YFS.StoreData64 calls
-generated by ->setattr() ops for the purpose of expanding a file is
-incorrect due to older documentation incorrectly describing the way the RPC
-'FileLength' parameter is meant to work.
+On Wed, Mar 27, 2019 at 01:27:12PM -0700, Matthew Wilcox wrote:
+> On Wed, Mar 27, 2019 at 01:10:01PM -0700, syzbot wrote:
+> > syzbot has bisected this bug to:
+> > 
+> > commit b9b8a41adeff5666b402996020b698504c927353
+> > Author: Dan Carpenter <dan.carpenter@oracle.com>
+> > Date:   Mon Aug 20 08:25:33 2018 +0000
+> > 
+> >     btrfs: use after free in btrfs_quota_enable
+> 
+> Not plausible.  Try again.
 
-The older documentation says that this is the length the file is meant to
-end up at the end of the operation; however, it was never implemented this
-way in any of the servers, but rather the file is truncated down to this
-before the write operation is effected, and never expanded to it (and,
-indeed, it was renamed to 'TruncPos' in 2014).
-
-Fix this by setting the position parameter to the new file length and doing
-a zero-lengh write there.
-
-The bug causes Xwayland to SIGBUS due to unexpected non-expansion of a file
-it then mmaps.  This can be tested by giving the following test program a
-filename in an AFS directory:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-	#include <fcntl.h>
-	#include <sys/mman.h>
-	int main(int argc, char *argv[])
-	{
-		char *p;
-		int fd;
-		if (argc != 2) {
-			fprintf(stderr,
-				"Format: test-trunc-mmap <file>\n");
-			exit(2);
-		}
-		fd = open(argv[1], O_RDWR | O_CREAT | O_TRUNC);
-		if (fd < 0) {
-			perror(argv[1]);
-			exit(1);
-		}
-		if (ftruncate(fd, 0x140008) == -1) {
-			perror("ftruncate");
-			exit(1);
-		}
-		p = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
-			 MAP_SHARED, fd, 0);
-		if (p == MAP_FAILED) {
-			perror("mmap");
-			exit(1);
-		}
-		p[0] = 'a';
-		if (munmap(p, 4096) < 0) {
-			perror("munmap");
-			exit(1);
-		}
-		if (close(fd) < 0) {
-			perror("close");
-			exit(1);
-		}
-		exit(0);
-	}
-
-Fixes: 31143d5d515e ("AFS: implement basic file write support")
-Reported-by: Jonathan Billings <jsbillin@umich.edu>
-Tested-by: Jonathan Billings <jsbillin@umich.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/fsclient.c  |    6 +++---
- fs/afs/yfsclient.c |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
-index ca08c83168f5..0b37867b5c20 100644
---- a/fs/afs/fsclient.c
-+++ b/fs/afs/fsclient.c
-@@ -1515,8 +1515,8 @@ static int afs_fs_setattr_size64(struct afs_fs_cursor *fc, struct iattr *attr)
- 
- 	xdr_encode_AFS_StoreStatus(&bp, attr);
- 
--	*bp++ = 0;				/* position of start of write */
--	*bp++ = 0;
-+	*bp++ = htonl(attr->ia_size >> 32);	/* position of start of write */
-+	*bp++ = htonl((u32) attr->ia_size);
- 	*bp++ = 0;				/* size of write */
- 	*bp++ = 0;
- 	*bp++ = htonl(attr->ia_size >> 32);	/* new file length */
-@@ -1564,7 +1564,7 @@ static int afs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
- 
- 	xdr_encode_AFS_StoreStatus(&bp, attr);
- 
--	*bp++ = 0;				/* position of start of write */
-+	*bp++ = htonl(attr->ia_size);		/* position of start of write */
- 	*bp++ = 0;				/* size of write */
- 	*bp++ = htonl(attr->ia_size);		/* new file length */
- 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 5aa57929e8c2..6e97a42d24d1 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -1514,7 +1514,7 @@ static int yfs_fs_setattr_size(struct afs_fs_cursor *fc, struct iattr *attr)
- 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
- 	bp = xdr_encode_YFSFid(bp, &vnode->fid);
- 	bp = xdr_encode_YFS_StoreStatus(bp, attr);
--	bp = xdr_encode_u64(bp, 0);		/* position of start of write */
-+	bp = xdr_encode_u64(bp, attr->ia_size);	/* position of start of write */
- 	bp = xdr_encode_u64(bp, 0);		/* size of write */
- 	bp = xdr_encode_u64(bp, attr->ia_size);	/* new file length */
- 	yfs_check_req(call, bp);
-
+Agreed, grep for 'btrfs' in the console log does not show anything, ie.
+no messages, slab caches nor functions on the stack.
