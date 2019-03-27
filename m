@@ -2,150 +2,178 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EA2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC19C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2F62082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8CA205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gA1Vo8EU"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="AN1RBBTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfC0QVg (ORCPT
+        id S1728064AbfC0QWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:21:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35848 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbfC0QVf (ORCPT
+        Wed, 27 Mar 2019 12:22:12 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39240 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfC0QWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:21:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h18so733653wml.1;
-        Wed, 27 Mar 2019 09:21:33 -0700 (PDT)
+        Wed, 27 Mar 2019 12:22:12 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p20so14082100eds.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:22:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=fzU5auTccU5PwKa7tj270YAaaEZPigGaLDrCmjoL81o=;
-        b=gA1Vo8EUPWIFOTv7uSf6beeW90S4avQL64/mC57JNnz0FEsDweK0DWXMMUb++zUg29
-         ZplakFcnTAqHw9/A6RkTQVrxaZAZ5B4F1ZZluJeqV+hC3Y/kyRe1gj1tr4uZOBB298B+
-         U/wMtnVAAjZEXeUHMjSEftkoEcm/R0wP6TP/EOlTlGD+9wAqXv8j4qU/Iu74aSvzDhET
-         oDC3v//De2oEuPL5Olzj3mK5t0CCC517OFf0/+fYS0gkXlXzo+j0OFDagmZttcilI0OE
-         kRGAoPD+1eadF4VEEJmkCzfkKDuMNDjW9rSc2xR3H0aZ8H1/+vbES3EHuh3RRSNIpuNK
-         FqeQ==
+        bh=83Wn0sH27O7mcWR0zRAJvW0omrII8qfrhcZSUsOTN34=;
+        b=AN1RBBTxEKLcRY9FBAhuzzyHw+i6FOiuS4OIqfSvSbbWF7giwAFmB2QBxzELOoOynP
+         +UUBeotjyk71NkjAekzoufLcJBCxAa/rF6tV5ycJ/D7xeXZSSYrHSfaQvACv1A0AgAj5
+         94fjCznTeHzDasUg3lWHyPYzsq5DYG5ShSHCcvZx96fG2K5M0gpPRZUalytnnOfvP9AM
+         c6+A9XpWjQR0S6xXu8GrBoIEDZeHDHl2XOMLAXLdRxciCBKmLHK89le2YOBvXuGqpr1T
+         rcpZwDhaV1gJWVRha46F00UGc3v9ydtx3lQYRWnQUWI8PxOOA/tREDn/s2Rf39R97sGV
+         jgAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fzU5auTccU5PwKa7tj270YAaaEZPigGaLDrCmjoL81o=;
-        b=uORhQxhGJH/6xqbfBr8zt8Dvr7p32slLduA2f9ECUUQEslhs5boQFI2Mj2Ahxh+k1C
-         ajvrPlcGgsxP2TF7/lWnMmn/PV6qKU1HMiAVVYi7AKavQA+KPssv/0PbL2LT9uY4Cm9/
-         d10vrKdVo8l/podqZ3GvTTumdETSkXfjFeGSLt8s0OgtiYpZVgo4/iVNSkSLQhTUDvJu
-         96OJcEndvaIRx0y9+5HkllP0NVRHjRMqVH0vPSyv6qXUMyAPAnlpz3EOem75wbwUGHQC
-         KzSIa7wxOg9C3KcVqjhFjPKKdwyBVeSyx2aK93sFGpNNFy1bvRlMRLQRWeNyXP8cmwz4
-         8fhw==
-X-Gm-Message-State: APjAAAWbA6iiqcHtpX8gv7ew/ov6Fqw7tpbiYq1ieXFpVLYmP7fF5Huu
-        bExmh/btSGAvwASsgI+mhs6xpNdP
-X-Google-Smtp-Source: APXvYqxJelIjTt2itPoNmy+JM8CnUQW35SOWQ+w/ft2dtMdAqB8ZDHRbftvF0PkoY+ibnbaQGz7ieA==
-X-Received: by 2002:a1c:81cc:: with SMTP id c195mr5646253wmd.61.1553703692702;
-        Wed, 27 Mar 2019 09:21:32 -0700 (PDT)
-Received: from [10.67.50.115] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id a22sm218765wmj.44.2019.03.27.09.21.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=83Wn0sH27O7mcWR0zRAJvW0omrII8qfrhcZSUsOTN34=;
+        b=cmmNzKexnuTvL4XzOt/qvNJiBG90RPS2ihgXnzxmG4FBAZDIWW3SN2C8v1xkPnk1EC
+         iFJSqq7hvwK7pKWTrpV2Ia6TG+KSCl+t/y82dORYiGb/Td35S1MrS8PaO3bVVy39paa9
+         NQPv5HYbvZXDxYqU1sjgDDKpBgePILaX+uXbaGA2+fpgdmZdcqzIZMfKji9aL8SEac1F
+         jGSuHuKwaOLLHAmHTDXEojcjX08OBAYGwZ0MS3To2CCqXdAumWiyndjHLskgoq4KyQ/f
+         rGKhsl5jfinblziRX702fpmdItUlDlOVAsWTI8wGqR1UYAHSF8zZpdYOMzNj69/2CWGM
+         J2xQ==
+X-Gm-Message-State: APjAAAUhfZNjHkoi1hAuYQszUfNB+tYwlGXvzAHOMYZ+zcy0BzWOae0S
+        oPfuc2MFhKi1fIk6OHqd6IkKSA==
+X-Google-Smtp-Source: APXvYqx/FQe/fQ76g3q7lP9SPHdDT0I1Y0UpZsncdZ15lwojDOmWArwzkdbShtJ5tUsANu3AFO5sCg==
+X-Received: by 2002:a17:906:896:: with SMTP id n22mr21365005eje.117.1553703730106;
+        Wed, 27 Mar 2019 09:22:10 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id m4sm4786276ejl.49.2019.03.27.09.22.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 09:21:31 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: mdio-bcm-unimac: remove redundant !timeout
- check
-To:     Colin King <colin.king@canonical.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190327161520.23064-1-colin.king@canonical.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <f0cc34fe-c692-d414-dc1e-9d03c8da8dc2@gmail.com>
-Date:   Wed, 27 Mar 2019 09:21:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 27 Mar 2019 09:22:09 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH 0/4] pidfd_open()
+Date:   Wed, 27 Mar 2019 17:21:43 +0100
+Message-Id: <20190327162147.23198-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190327161520.23064-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/19 9:15 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The check for zero timeout is always true at the end of the proceeding
-> while loop; the only other exit path in the loop is if the unimac MDIO
-> is not busy.  Remove the redundant zero timeout check and always
-> return -ETIMEDOUT on this timeout return path.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Hey,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+After the discussion over the last days, this is a fresh approach to
+getting pidfds independent of the translate_pid() patchset.
+
+pidfd_open() allows to retrieve pidfds for processes and removes the
+dependency of pidfd on procfs.
+These pidfds are allocated using anon_inode_getfd(), are O_CLOEXEC by
+default and can be used with the pidfd_send_signal() syscall. They are not
+dirfds and as such have the advantage that we can make them pollable or
+readable in the future if we see a need to do so. Currently they do not
+support any advanced operations. The pidfds are not associated with a
+specific pid namespaces but rather only reference struct pid of a given
+process in their private_data member.
+
+One of the oustanding issues has been how to get information about a given
+process if pidfds are regular file descriptors and do not provide access to
+the process /proc/<pid> directory.
+Various solutions have been proposed. The one that most people prefer is to
+be able to retrieve a file descriptor to /proc/<pid> based on a pidfd (and
+the other way around).
+IF PROCFD_TO_PIDFD is passed as a flag together with a file descriptor to a
+/proc mount in a given pid namespace and a pidfd pidfd_open() will return a
+file descriptor to the corresponding /proc/<pid> directory in procfs
+mounts' pid namespace. pidfd_open() is very careful to verify that the pid
+hasn't been recycled in between.
+IF PIDFD_TO_PROCFD is passed as a flag together with a file descriptor
+referencing a /proc/<pid> directory a pidfd referencing the struct pid
+stashed in /proc/<pid> of the process will be returned.
+The pidfd_open() syscalls in that manner resembles openat() as it uses a
+flag argument to modify what type of file descriptor will be returned.
+
+The pidfd_open() implementation together with the flags argument strikes me
+as an elegant compromise between splitting this into multiple syscalls and
+avoiding ioctls().
+
+Note that this patchset also includes Al's and David's commit to make anon
+inodes unconditional. The original intention is to make it possible to use
+anon inodes in core vfs functions. pidctl() has the same requirement so
+David suggested I sent this in alongside this patch. Both are informed of
+this.
+
+The syscall comes with appropriate basic testing.
+
+/* Examples */
+// Retrieve pidfd
+int pidfd = pidfd_open(1234, -1, -1, 0);
+
+// Retrieve /proc/<pid> handle for pidfd
+int procfd = open("/proc", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+int procpidfd = pidfd_open(-1, procfd, pidfd, PIDFD_TO_PROCFD);
+
+// Retrieve pidfd for /proc/<pid>
+int procpidfd = open("/proc/1234", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+int pidfd = pidfd_open(-1, procpidfd, -1, PROCFD_TO_PIDFD);
+
+Thanks!
+Christian
+
+Christian Brauner (3):
+  pid: add pidfd_open()
+  signal: support pidfd_open() with pidfd_send_signal()
+  tests: add pidfd_open() tests
+
+David Howells (1):
+  Make anon_inodes unconditional
+
+ arch/arm/kvm/Kconfig                          |   1 -
+ arch/arm64/kvm/Kconfig                        |   1 -
+ arch/mips/kvm/Kconfig                         |   1 -
+ arch/powerpc/kvm/Kconfig                      |   1 -
+ arch/s390/kvm/Kconfig                         |   1 -
+ arch/x86/Kconfig                              |   1 -
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/x86/kvm/Kconfig                          |   1 -
+ drivers/base/Kconfig                          |   1 -
+ drivers/char/tpm/Kconfig                      |   1 -
+ drivers/dma-buf/Kconfig                       |   1 -
+ drivers/gpio/Kconfig                          |   1 -
+ drivers/iio/Kconfig                           |   1 -
+ drivers/infiniband/Kconfig                    |   1 -
+ drivers/vfio/Kconfig                          |   1 -
+ fs/Makefile                                   |   2 +-
+ fs/notify/fanotify/Kconfig                    |   1 -
+ fs/notify/inotify/Kconfig                     |   1 -
+ include/linux/pid.h                           |   2 +
+ include/linux/syscalls.h                      |   2 +
+ include/uapi/linux/wait.h                     |   3 +
+ init/Kconfig                                  |  10 -
+ kernel/pid.c                                  | 247 ++++++++++++++++++
+ kernel/signal.c                               |  14 +-
+ kernel/sys_ni.c                               |   3 -
+ tools/testing/selftests/pidfd/Makefile        |   2 +-
+ .../testing/selftests/pidfd/pidfd_open_test.c | 201 ++++++++++++++
+ 28 files changed, 469 insertions(+), 35 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_open_test.c
+
 -- 
-Florian
+2.21.0
+
