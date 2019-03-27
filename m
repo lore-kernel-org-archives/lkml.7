@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B01C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02F1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB442075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835022054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfC0Uf5 (ORCPT
+        id S1729095AbfC0Ufz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 16:35:57 -0400
-Received: from emh06.mail.saunalahti.fi ([62.142.5.116]:55302 "EHLO
+        Wed, 27 Mar 2019 16:35:55 -0400
+Received: from emh06.mail.saunalahti.fi ([62.142.5.116]:55282 "EHLO
         emh06.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbfC0Ufy (ORCPT
+        with ESMTP id S1727834AbfC0Ufx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 16:35:54 -0400
+        Wed, 27 Mar 2019 16:35:53 -0400
 Received: from localhost.localdomain (85-76-9-223-nat.elisa-mobile.fi [85.76.9.223])
-        by emh06.mail.saunalahti.fi (Postfix) with ESMTP id A81223009D;
-        Wed, 27 Mar 2019 22:35:51 +0200 (EET)
+        by emh06.mail.saunalahti.fi (Postfix) with ESMTP id AA78C30096;
+        Wed, 27 Mar 2019 22:35:50 +0200 (EET)
 From:   Aaro Koskinen <aaro.koskinen@iki.fi>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jose Abreu <joabreu@synopsys.com>,
@@ -31,9 +31,9 @@ To:     "David S. Miller" <davem@davemloft.net>,
         netdev@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         Aaro Koskinen <aaro.koskinen@nokia.com>
-Subject: [PATCH 6/6] net: stmmac: don't log oversized frames
-Date:   Wed, 27 Mar 2019 22:35:40 +0200
-Message-Id: <20190327203540.1884-7-aaro.koskinen@iki.fi>
+Subject: [PATCH 3/6] net: stmmac: don't stop NAPI processing when dropping a packet
+Date:   Wed, 27 Mar 2019 22:35:37 +0200
+Message-Id: <20190327203540.1884-4-aaro.koskinen@iki.fi>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190327203540.1884-1-aaro.koskinen@iki.fi>
 References: <20190327203540.1884-1-aaro.koskinen@iki.fi>
@@ -44,27 +44,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-This is log is harmful as it can trigger multiple times per packet. Delete
-it.
+Currently, if we drop a packet, we exit from NAPI loop before the budget
+is consumed. In some situations this will make the RX processing stall
+e.g. when flood pinging the system with oversized packets, as the
+errorneous packets are not dropped efficiently.
+
+If we drop a packet, we should just continue to the next one as long as
+the budget allows.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index c55a9815b394..b7dd4e3c760d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -91,8 +91,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 		return dma_own;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 392d94cede17..a26e36dbb5df 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3354,9 +3354,8 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ {
+ 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+ 	struct stmmac_channel *ch = &priv->channel[queue];
+-	unsigned int entry = rx_q->cur_rx;
++	unsigned int next_entry = rx_q->cur_rx;
+ 	int coe = priv->hw->rx_csum;
+-	unsigned int next_entry;
+ 	unsigned int count = 0;
+ 	bool xmac;
  
- 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
--		pr_warn("%s: Oversized frame spanned multiple buffers\n",
--			__func__);
- 		stats->rx_length_errors++;
- 		return discard_frame;
+@@ -3374,10 +3373,12 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 		stmmac_display_ring(priv, rx_head, DMA_RX_SIZE, true);
  	}
+ 	while (count < limit) {
+-		int status;
++		int entry, status;
+ 		struct dma_desc *p;
+ 		struct dma_desc *np;
+ 
++		entry = next_entry;
++
+ 		if (priv->extend_desc)
+ 			p = (struct dma_desc *)(rx_q->dma_erx + entry);
+ 		else
+@@ -3438,7 +3439,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 						   "len %d larger than size (%d)\n",
+ 						   frame_len, priv->dma_buf_sz);
+ 				priv->dev->stats.rx_length_errors++;
+-				break;
++				continue;
+ 			}
+ 
+ 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
+@@ -3473,7 +3474,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 						dev_warn(priv->device,
+ 							 "packet dropped\n");
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
+ 
+ 				dma_sync_single_for_cpu(priv->device,
+@@ -3498,7 +3499,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 							   "%s: Inconsistent Rx chain\n",
+ 							   priv->dev->name);
+ 					priv->dev->stats.rx_dropped++;
+-					break;
++					continue;
+ 				}
+ 				prefetch(skb->data - NET_IP_ALIGN);
+ 				rx_q->rx_skbuff[entry] = NULL;
+@@ -3533,7 +3534,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			priv->dev->stats.rx_packets++;
+ 			priv->dev->stats.rx_bytes += frame_len;
+ 		}
+-		entry = next_entry;
+ 	}
+ 
+ 	stmmac_rx_refill(priv, queue);
 -- 
 2.17.0
 
