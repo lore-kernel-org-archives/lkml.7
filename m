@@ -2,51 +2,52 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E8DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D314C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A234A2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2851621850
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710016;
-	bh=m+TZHy1Cw48MI6gtIUEncOsWXcR9p79EoXWkU72wJ4I=;
+	s=default; t=1553710023;
+	bh=hYwPbMhv4w8FEs0HKB1wEqsF+gEKZRKNcFtSFt6VcJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJwIpWJg1oXSkv7KqjCZo16f87FbnUJwpyaBQIk6rHvH8T7Bl1HHImSCXi++EnN+o
-	 RKhaOwYGhU2QTDdz/4iXxgfqbnGhTnLPB3+msudVF+uU/QObRx/qsDBV9Sz0p8XXWN
-	 nE/t65fIFkbxVe6w1CdTCaHxmxkLi9lfvep5gbmo=
+	b=xhOg2c7LBhzPQ58HF2qcEzHQJBWYUdMw5YRdqDF/4jhNgty1oQROpbnAVlm1m/YXR
+	 k/BWD0PSEWnTRVkq4UigFt9nqcSyjFyatcjPBLDP0jbb20KVW6w4GtnszTRUIuGGdP
+	 To7w5B2b9laExZU2R9DlPETk0sGNrAv5fepZFBgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388047AbfC0SGz (ORCPT
+        id S1729100AbfC0SHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387438AbfC0SGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:52 -0400
+        id S2388048AbfC0SG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30C3E21738;
-        Wed, 27 Mar 2019 18:06:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAFA021850;
+        Wed, 27 Mar 2019 18:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710010;
-        bh=m+TZHy1Cw48MI6gtIUEncOsWXcR9p79EoXWkU72wJ4I=;
+        s=default; t=1553710015;
+        bh=hYwPbMhv4w8FEs0HKB1wEqsF+gEKZRKNcFtSFt6VcJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcFeFn8n3zNPRxqvMcDclCaPyBoBE+KVzwhIuMSNm5c35vd9K9dqL38DFcZdepe2J
-         cCvkEo31dWuGfy8ZVKP3+gnbuu9ZMukYRJ3Dx6Na6bi8mZwq249XzpLYWWIljafbC4
-         Vbd7n7UrFNRPoiIBXlzuhv3/yAWpP7zvCD80uGew=
+        b=LtGAljHkQkOO94mp41tB+P+kI7wm05gp8iE8q28fH2GFB5CLQSxJEHW0A2jx6Dw3Z
+         KBaifmcvLl1jFkTNzUvOF67KwtSneIHf6ZXHgH562XazWkZOXUqU6VIS1BfSyNj7Q6
+         zqBza3OanwPyoYj72PB7OuX7yTZOyKzDsDe0u8FI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 154/262] ARM: 8833/1: Ensure that NEON code always compiles with Clang
-Date:   Wed, 27 Mar 2019 14:00:09 -0400
-Message-Id: <20190327180158.10245-154-sashal@kernel.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 157/262] ath10k: fix shadow register implementation for WCN3990
+Date:   Wed, 27 Mar 2019 14:00:12 -0400
+Message-Id: <20190327180158.10245-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,122 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
+[ Upstream commit 1863008369ae0407508033b4b00f98b985adeb15 ]
 
-While building arm32 allyesconfig, I ran into the following errors:
+WCN3990 supports shadow registers write operation support
+for copy engine for regular operation in powersave mode.
 
-  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
-  '-mfloat-abi=softfp -mfpu=neon'
+Since WCN3990 is a 64-bit target, the shadow register
+implementation needs to be done in the copy engine handlers
+for 64-bit target. Currently the shadow register implementation
+is present in the 32-bit target handlers of copy engine.
 
-  In file included from lib/raid6/neon1.c:27:
-  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
-  error: "NEON support not enabled"
+Fix the shadow register copy engine write operation
+implementation for 64-bit target(WCN3990).
 
-Building V=1 showed NEON_FLAGS getting passed along to Clang but
-__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
-only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
-which is the '-march' value for allyesconfig.
+Tested HW: WCN3990
+Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
 
->From lib/Basic/Targets/ARM.cpp in the Clang source:
-
-  // This only gets set when Neon instructions are actually available, unlike
-  // the VFP define, hence the soft float and arch check. This is subtly
-  // different from gcc, we follow the intent which was that it should be set
-  // when Neon instructions are actually available.
-  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
-    Builder.defineMacro("__ARM_NEON", "1");
-    Builder.defineMacro("__ARM_NEON__");
-    // current AArch32 NEON implementations do not support double-precision
-    // floating-point even when it is present in VFP.
-    Builder.defineMacro("__ARM_NEON_FP",
-                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
-  }
-
-Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
-beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
-definined by Clang. This doesn't functionally change anything because
-that code will only run where NEON is supported, which is implicitly
-armv7.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/287
-
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: b7ba83f7c414 ("ath10k: add support for shadow register for WNC3990")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm/kernel_mode_neon.txt | 4 ++--
- arch/arm/lib/Makefile                  | 2 +-
- arch/arm/lib/xor-neon.c                | 2 +-
- lib/raid6/Makefile                     | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/ath10k/ce.c | 26 +++++++++++++-------------
+ drivers/net/wireless/ath/ath10k/ce.h |  2 +-
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
-index 525452726d31..b9e060c5b61e 100644
---- a/Documentation/arm/kernel_mode_neon.txt
-+++ b/Documentation/arm/kernel_mode_neon.txt
-@@ -6,7 +6,7 @@ TL;DR summary
- * Use only NEON instructions, or VFP instructions that don't rely on support
-   code
- * Isolate your NEON code in a separate compilation unit, and compile it with
--  '-mfpu=neon -mfloat-abi=softfp'
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
- * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
-   NEON code
- * Don't sleep in your NEON code, and be aware that it will be executed with
-@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
- Therefore, the recommended and only supported way of using NEON/VFP in the
- kernel is by adhering to the following rules:
- * isolate the NEON code in a separate compilation unit and compile it with
--  '-mfpu=neon -mfloat-abi=softfp';
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
- * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
-   into the unit containing the NEON code from a compilation unit which is *not*
-   built with the GCC flag '-mfpu=neon' set.
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index ad25fd1872c7..0bff0176db2c 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -39,7 +39,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
- $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index 2a5668b4f6bc..1a1ea4bbf8a0 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -500,14 +500,8 @@ static int _ath10k_ce_send_nolock(struct ath10k_ce_pipe *ce_state,
+ 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
  
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
--  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
-+  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
-   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
- endif
-diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-index 2c40aeab3eaa..c691b901092f 100644
---- a/arch/arm/lib/xor-neon.c
-+++ b/arch/arm/lib/xor-neon.c
-@@ -14,7 +14,7 @@
- MODULE_LICENSE("GPL");
+ 	/* WORKAROUND */
+-	if (!(flags & CE_SEND_FLAG_GATHER)) {
+-		if (ar->hw_params.shadow_reg_support)
+-			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
+-								  write_index);
+-		else
+-			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
+-							   write_index);
+-	}
++	if (!(flags & CE_SEND_FLAG_GATHER))
++		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
  
- #ifndef __ARM_NEON__
--#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-+#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
- #endif
+ 	src_ring->write_index = write_index;
+ exit:
+@@ -581,8 +575,14 @@ static int _ath10k_ce_send_nolock_64(struct ath10k_ce_pipe *ce_state,
+ 	/* Update Source Ring Write Index */
+ 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
  
- /*
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 4e90d443d1b0..e723eacf7868 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -39,7 +39,7 @@ endif
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
- NEON_FLAGS := -ffreestanding
- ifeq ($(ARCH),arm)
--NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
-+NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
- endif
- CFLAGS_recov_neon_inner.o += $(NEON_FLAGS)
- ifeq ($(ARCH),arm64)
+-	if (!(flags & CE_SEND_FLAG_GATHER))
+-		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
++	if (!(flags & CE_SEND_FLAG_GATHER)) {
++		if (ar->hw_params.shadow_reg_support)
++			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
++								  write_index);
++		else
++			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
++							   write_index);
++	}
+ 
+ 	src_ring->write_index = write_index;
+ exit:
+@@ -1404,12 +1404,12 @@ static int ath10k_ce_alloc_shadow_base(struct ath10k *ar,
+ 				       u32 nentries)
+ {
+ 	src_ring->shadow_base_unaligned = kcalloc(nentries,
+-						  sizeof(struct ce_desc),
++						  sizeof(struct ce_desc_64),
+ 						  GFP_KERNEL);
+ 	if (!src_ring->shadow_base_unaligned)
+ 		return -ENOMEM;
+ 
+-	src_ring->shadow_base = (struct ce_desc *)
++	src_ring->shadow_base = (struct ce_desc_64 *)
+ 			PTR_ALIGN(src_ring->shadow_base_unaligned,
+ 				  CE_DESC_RING_ALIGN);
+ 	return 0;
+@@ -1461,7 +1461,7 @@ ath10k_ce_alloc_src_ring(struct ath10k *ar, unsigned int ce_id,
+ 		ret = ath10k_ce_alloc_shadow_base(ar, src_ring, nentries);
+ 		if (ret) {
+ 			dma_free_coherent(ar->dev,
+-					  (nentries * sizeof(struct ce_desc) +
++					  (nentries * sizeof(struct ce_desc_64) +
+ 					   CE_DESC_RING_ALIGN),
+ 					  src_ring->base_addr_owner_space_unaligned,
+ 					  base_addr);
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index ead9987c3259..463e2fc8b501 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -118,7 +118,7 @@ struct ath10k_ce_ring {
+ 	u32 base_addr_ce_space;
+ 
+ 	char *shadow_base_unaligned;
+-	struct ce_desc *shadow_base;
++	struct ce_desc_64 *shadow_base;
+ 
+ 	/* keep last */
+ 	void *per_transfer_context[0];
 -- 
 2.19.1
 
