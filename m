@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9449EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE90C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6449B2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782052075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712516;
-	bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
+	s=default; t=1553712526;
+	bh=/SN4psYJCM2Qvm1WDSJuHA6QWrwu2nlaHi9+3ChjUZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IWwiGjxqa4g1e3a4eZCLXqGnkTriywufHXSc9zPqyfOhgm/zpnTrWvnpMEVt2fRXx
-	 tjWf0NqGKPefht5kb/hrFY1hEIvO+VY0T2igQjYzLZzaGibn5e+7pQ9R2K/+liuZNz
-	 hnUN0aP8WBJBCA+67V7BECUDb9yCDN9xqBNx+eBI=
+	b=Gw9d8jnBDHS+5wc/IRTaV0lmEzVEu7OjVz+6IKJ4/NEdQbJ3NteBGMucdp/pqhMrj
+	 F8z1VvmRRKorC+aZTqbfCt8n4iqrigmaQtSOhlni+X18CRqoQ03ZsS6PQDPcOx6Id6
+	 y/EkoEBjwe/KNUbU33RJBhd0oBiH7AWAtLpBjUes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391112AbfC0Sse (ORCPT
+        id S2390521AbfC0Sso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36442 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390365AbfC0STK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:10 -0400
+        id S2389555AbfC0STF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84432087C;
-        Wed, 27 Mar 2019 18:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC9822063F;
+        Wed, 27 Mar 2019 18:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710748;
-        bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
+        s=default; t=1553710744;
+        bh=/SN4psYJCM2Qvm1WDSJuHA6QWrwu2nlaHi9+3ChjUZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aK/oEj+GILhFvRfPBcP/bhUY1rLNLYXsEC5GaPH6W047tK7PqxzUZK5WGSY5qSp2X
-         YIA1yWRsfZqffyLYp82pPjYFJX062f5oxo08F9RnVriG34bXmejGOJbIBNq8yoQcfd
-         se21tHYyGKkx0+R7WFvhempqR7K9JT4LnNiit0GY=
+        b=jPhxnBVQVfIAgh7eBfNUdeHquOe4QSs9cC1lcAh4oH6OZYB25LRI3MoGtzr5y2W0T
+         gpXiOlclPi/cOFvGKnVQwhtbIHVPFO4BJUfK0/AJfSZHpjVdyd+FdwaXXBckZb3Lgj
+         o5AV3EiKEILXJT1xFB3TaBeL+vKX4atu01L1a8PU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
+Cc:     Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 087/123] efi/memattr: Don't bail on zero VA if it equals the region's PA
-Date:   Wed, 27 Mar 2019 14:15:51 -0400
-Message-Id: <20190327181628.15899-87-sashal@kernel.org>
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 085/123] sched/debug: Initialize sd_sysctl_cpus if !CONFIG_CPUMASK_OFFSTACK
+Date:   Wed, 27 Mar 2019 14:15:49 -0400
+Message-Id: <20190327181628.15899-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -70,68 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 
-[ Upstream commit 5de0fef0230f3c8d75cff450a71740a7bf2db866 ]
+[ Upstream commit 1ca4fa3ab604734e38e2a3000c9abf788512ffa7 ]
 
-The EFI memory attributes code cross-references the EFI memory map with
-the more granular EFI memory attributes table to ensure that they are in
-sync before applying the strict permissions to the regions it describes.
+register_sched_domain_sysctl() copies the cpu_possible_mask into
+sd_sysctl_cpus, but only if sd_sysctl_cpus hasn't already been
+allocated (ie, CONFIG_CPUMASK_OFFSTACK is set).  However, when
+CONFIG_CPUMASK_OFFSTACK is not set, sd_sysctl_cpus is left
+uninitialized (all zeroes) and the kernel may fail to initialize
+sched_domain sysctl entries for all possible CPUs.
 
-Since we always install virtual mappings for the EFI runtime regions to
-which these strict permissions apply, we currently perform a sanity check
-on the EFI memory descriptor, and ensure that the EFI_MEMORY_RUNTIME bit
-is set, and that the virtual address has been assigned.
+This is visible to the user if the kernel is booted with maxcpus=n, or
+if ACPI tables have been modified to leave CPUs offline, and then
+checking for missing /proc/sys/kernel/sched_domain/cpu* entries.
 
-However, in cases where a runtime region exists at physical address 0x0,
-and the virtual mapping equals the physical mapping, e.g., when running
-in mixed mode on x86, we encounter a memory descriptor with the runtime
-attribute and virtual address 0x0, and incorrectly draw the conclusion
-that a runtime region exists for which no virtual mapping was installed,
-and give up altogether. The consequence of this is that firmware mappings
-retain their read-write-execute permissions, making the system more
-vulnerable to attacks.
+Fix this by separating the allocation and initialization, and adding a
+flag to initialize the possible CPU entries while system booting only.
 
-So let's only bail if the virtual address of 0x0 has been assigned to a
-physical region that does not reside at address 0x0.
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Tested-by: Syuuichirou Ishii <ishii.shuuichir@jp.fujitsu.com>
+Tested-by: Tarumizu, Kohei <tarumizu.kohei@jp.fujitsu.com>
+Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
+Cc: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc: Mike Galbraith <efault@gmx.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 10f0d2f577053 ("efi: Implement generic support for the Memory ...")
-Link: http://lkml.kernel.org/r/20190202094119.13230-4-ard.biesheuvel@linaro.org
+Link: https://lkml.kernel.org/r/20190129151245.5073-1-msys.mizuma@gmail.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/debug.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index 8986757eafaf..aac972b056d9 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -94,7 +94,7 @@ static bool entry_is_valid(const efi_memory_desc_t *in, efi_memory_desc_t *out)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 2f93e4a2d9f6..187c04a34ba1 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -339,6 +339,7 @@ void register_sched_domain_sysctl(void)
+ {
+ 	static struct ctl_table *cpu_entries;
+ 	static struct ctl_table **cpu_idx;
++	static bool init_done = false;
+ 	char buf[32];
+ 	int i;
  
- 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
- 			continue;
--		if (md->virt_addr == 0) {
-+		if (md->virt_addr == 0 && md->phys_addr != 0) {
- 			/* no virtual mapping has been installed by the stub */
- 			break;
- 		}
+@@ -368,7 +369,10 @@ void register_sched_domain_sysctl(void)
+ 	if (!cpumask_available(sd_sysctl_cpus)) {
+ 		if (!alloc_cpumask_var(&sd_sysctl_cpus, GFP_KERNEL))
+ 			return;
++	}
+ 
++	if (!init_done) {
++		init_done = true;
+ 		/* init to possible to not have holes in @cpu_entries */
+ 		cpumask_copy(sd_sysctl_cpus, cpu_possible_mask);
+ 	}
 -- 
 2.19.1
 
