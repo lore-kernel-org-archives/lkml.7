@@ -3,216 +3,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E700CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A75206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y0cb2IgC"
+	by mail.kernel.org (Postfix) with ESMTP id B2CE8206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553713425;
+	bh=Y4rT8gAFjxr5By5aPaUjpOZnCnpawLfWHz5cz7ca4Tc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zOMYA9fStHKrTFxbBXI3WX5mFOMkpSoF3FZt6mBLe3V8e9KpzkiXZ8hPlu6AryrFH
+	 YmxE8ZA+UunBWdXmOtltqKVcocM5I/QKFL7YAZQWgBw0OPah2X9xvujUPDEODpSFHs
+	 rRWeLPTrwQ8xvg7kmx/eex4h86heYXeDhXHiigOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389580AbfC0TDY (ORCPT
+        id S2389791AbfC0TDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:03:24 -0400
-Received: from mail-eopbgr60054.outbound.protection.outlook.com ([40.107.6.54]:53635
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389975AbfC0TDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 15:03:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fUV4AcIG1al9y1jgTDNk8JGXXDoetIP5TLsb7t/9d60=;
- b=Y0cb2IgCJGOokUAOSJDODB0qPG/FKQ95Pjyqxx2jf+29/Qmyjhj30DjLzG++Pv7w1f91QUwtCxvnvjyQFfYlH1NDgsmSDQtTipZc9/TnBxRuxf79VyupAJcpMwjFbl10KXNhW7Cl31BZn1aVSElEzBizK+uPqtZ3zL9H4D1SFj4=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB3646.eurprd04.prod.outlook.com (52.134.14.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.16; Wed, 27 Mar 2019 19:03:15 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::7cee:3159:6414:9cc5]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::7cee:3159:6414:9cc5%4]) with mapi id 15.20.1750.014; Wed, 27 Mar 2019
- 19:03:15 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Teo Hall <teo.hall@nxp.com>
-Subject: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Thread-Topic: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-Thread-Index: AQHU5M+7954B9gl89UeTOv8b+X9Xvw==
-Date:   Wed, 27 Mar 2019 19:03:15 +0000
-Message-ID: <20190327190244.9208-3-daniel.baluta@nxp.com>
-References: <20190327190244.9208-1-daniel.baluta@nxp.com>
-In-Reply-To: <20190327190244.9208-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0157.eurprd07.prod.outlook.com
- (2603:10a6:802:16::44) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d3002f1-cd86-4a99-8331-08d6b2e6dba6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB3646;
-x-ms-traffictypediagnostic: VI1PR0402MB3646:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR0402MB364631F89E1E6D579FAFB90FF9580@VI1PR0402MB3646.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(186003)(2616005)(966005)(476003)(11346002)(5640700003)(6436002)(446003)(44832011)(486006)(6512007)(6306002)(8936002)(50226002)(478600001)(68736007)(6486002)(386003)(6506007)(105586002)(106356001)(25786009)(99286004)(4326008)(52116002)(76176011)(1076003)(26005)(2351001)(256004)(305945005)(102836004)(71190400001)(5660300002)(14454004)(53936002)(66066001)(6116002)(6916009)(3846002)(2906002)(36756003)(7736002)(97736004)(316002)(8676002)(1730700003)(81156014)(81166006)(2501003)(86362001)(54906003)(71200400001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3646;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MmNFguaox4sRum65F+/JiIVqZs2TnTW+/aiyZotRF5N6rjH4y6iGrZkiBxebboR9RugCjncHRI2RXP41rK9G1HksOggEZhrOPKcGyrgcjgAz7a/1rVKSL5gDft8rM3Pv0I3DZ/8ESUcOPjqAcAKQkLDUTLsXnKa34LeJ9rZw4prqIk8wPMGBRirPgQ8OJrdGEEaaMXzWpB7El5+OJCFO6gqs8Fxo7Gzu74xp1zIdkgjx8R0plbMBrQeHSG3zkqTcxew8hj/5X1Nbh0b5sggmdIgFW20fWKL9j0cBKtmp9i5r2YnGu75H8ixQxDYakxhlcrj8BKZuE7MQi2XHwyNYQRh8Ju+x6kGftgrf2nhLL2bV1nJqzWag6ZTn1hMxbR1C4PHEIK2s5uyHCNApdwLGROJYyPYriMPyCFQjZhsXUbc=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Mar 2019 15:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389405AbfC0SNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:13:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 592952147C;
+        Wed, 27 Mar 2019 18:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710401;
+        bh=Y4rT8gAFjxr5By5aPaUjpOZnCnpawLfWHz5cz7ca4Tc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RJwc9wAEVYTx/dogI85W6AWbV/gBnB4Wl76EFexdc6svAkRqYA9MoqKBUfIzLkE7w
+         mUSJTxwyw0pSPBe4Dw0HA8WGHB3J+wOxNsXtNxq70t/MUznIOGwXmqlO2kgD+NjsWr
+         CW4bh4P5qKPti3HApitpTOM8qFkvEcfgUkdKzj74=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Emil Velikov <emil.velikov@collabora.com>,
+        intel-gfx@lists.freedesktop.org, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 102/192] drm: allow render capable master with DRM_AUTH ioctls
+Date:   Wed, 27 Mar 2019 14:08:54 -0400
+Message-Id: <20190327181025.13507-102-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d3002f1-cd86-4a99-8331-08d6b2e6dba6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 19:03:15.1383
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3646
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8QXP contains a total of 4 EDMA controllers of which
-two are primarily for audio components and the other two
-are for non-audio periperhals.
+From: Emil Velikov <emil.velikov@collabora.com>
 
-This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+[ Upstream commit 8059add0478e29cb641936011a8fcc9ce9fd80be ]
 
-EDMA0 contains channels for:
-	* ASRC0
-	* ESAI0
-	* SPDIF0
-	* SAI0, SAI1, SAI2, SAI3
+There are cases (in mesa and applications) where one would open the
+primary node without properly authenticating the client.
 
-EDMA1 contains channels for:
-	* ASRC1
-	* SAI4, SAI5
+Sometimes we don't check if the authentication succeeds, but there's
+also cases we simply forget to do it.
 
-See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
+The former was a case for Mesa where it did not not check the return
+value of drmGetMagic() [1]. That was fixed recently although, there's
+the question of older drivers or other apps that exbibit this behaviour.
 
-This patch is based on the dtsi file initially submitted by
-Teo Hall in i.MX NXP internal tree.
+While omitting the call results in issues as seen in [2] and [3].
 
-[1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+In the libva case, libva itself doesn't authenticate the DRM client and
+the vaGetDisplayDRM documentation doesn't mention if the app should
+either.
 
-Cc: Teo Hall <teo.hall@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+As of today, the official vainfo utility doesn't authenticate.
+
+To workaround issues like these, some users resort to running their apps
+under sudo. Which admittedly isn't always a good idea.
+
+Since any DRIVER_RENDER driver has sufficient isolation between clients,
+we can use that, for unauthenticated [primary node] ioctls that require
+DRM_AUTH. But only if the respective ioctl is tagged as DRM_RENDER_ALLOW.
+
+v2:
+- Rework/simplify if check (Daniel V)
+- Add examples to commit messages, elaborate. (Daniel V)
+
+v3:
+- Use single unlikely (Daniel V)
+
+[1] https://gitlab.freedesktop.org/mesa/mesa/blob/2bc1f5c2e70fe3b4d41f060af9859bc2a94c5b62/src/egl/drivers/dri2/platform_wayland.c#L1136
+[2] https://lists.freedesktop.org/archives/libva/2016-July/004185.html
+[3] https://gitlab.freedesktop.org/mesa/kmscube/issues/1
+Testcase: igt/core_unauth_vs_render
+Cc: intel-gfx@lists.freedesktop.org
+Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190114085408.15933-2-emil.l.velikov@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/gpu/drm/drm_ioctl.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 0cb939861a60..84c7c3eca1a1 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -182,6 +182,78 @@
- 			#clock-cells =3D <1>;
- 		};
-=20
-+		edma0: dma-controller@591f0000 {
-+			compatible =3D "fsl,imx8qxp-edma";
-+			reg =3D <0x59200000 0x10000>,   /* asrc0 pair A input req */
-+				<0x59210000 0x10000>, /* asrc0 pair B input req */
-+				<0x59220000 0x10000>, /* asrc0 pair C input req */
-+				<0x59230000 0x10000>, /* asrc0 pair A output req */
-+				<0x59240000 0x10000>, /* asrc0 pair B output req */
-+				<0x59250000 0x10000>, /* asrc0 pair C output req */
-+				<0x59260000 0x10000>, /* esai0 rx */
-+				<0x59270000 0x10000>, /* esai0 tx */
-+				<0x59280000 0x10000>, /* spdif0 rx */
-+				<0x59290000 0x10000>, /* spdif0 tx */
-+				<0x592c0000 0x10000>, /* sai0 rx */
-+				<0x592d0000 0x10000>, /* sai0 tx */
-+				<0x592e0000 0x10000>, /* sai1 rx */
-+				<0x592f0000 0x10000>, /* sai1 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <14>;
-+			interrupts =3D <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,    /* asrc 0 */
-+					<GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>, /* esai0 */
-+					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
-+					<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
-+					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
-+					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-names =3D "edma0-chan0-rx", "edma0-chan1-rx", /* asrc0 */
-+					"edma0-chan2-rx", "edma0-chan3-tx",
-+					"edma0-chan4-tx", "edma0-chan5-tx",
-+					"edma0-chan6-rx", "edma0-chan7-tx",   /* esai0 */
-+					"edma0-chan8-rx", "edma0-chan9-tx",   /* spdif0 */
-+					"edma0-chan12-rx", "edma0-chan13-tx", /* sai0 */
-+					"edma0-chan14-rx", "edma0-chan15-tx", /* sai1 */
-+		};
+diff --git a/drivers/gpu/drm/drm_ioctl.c b/drivers/gpu/drm/drm_ioctl.c
+index ba129b64b61f..f8d333f658a4 100644
+--- a/drivers/gpu/drm/drm_ioctl.c
++++ b/drivers/gpu/drm/drm_ioctl.c
+@@ -502,6 +502,13 @@ int drm_version(struct drm_device *dev, void *data,
+ 	return err;
+ }
+ 
++static inline bool
++drm_render_driver_and_ioctl(const struct drm_device *dev, u32 flags)
++{
++	return drm_core_check_feature(dev, DRIVER_RENDER) &&
++		(flags & DRM_RENDER_ALLOW);
++}
 +
-+		edma1: dma-controller@599F0000 {
-+			compatible =3D "fsl,imx8qxp-edma";
-+			reg =3D <0x0 0x59A00000 0x0 0x10000>, /* asrc1 */
-+				<0x0 0x59A10000 0x0 0x10000>,
-+				<0x0 0x59A20000 0x0 0x10000>,
-+				<0x0 0x59A30000 0x0 0x10000>,
-+				<0x0 0x59A40000 0x0 0x10000>,
-+				<0x0 0x59A50000 0x0 0x10000>,
-+				<0x0 0x59A80000 0x0 0x10000>, /* sai4 rx */
-+				<0x0 0x59A90000 0x0 0x10000>, /* sai4 tx */
-+				<0x0 0x59AA0000 0x0 0x10000>; /* sai5 tx */
-+			#dma-cells =3D <3>;
-+			shared-interrupt;
-+			dma-channels =3D <9>;
-+			interrupts =3D <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>, /* asrc 1 */
-+					<GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 387 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>, /* sai4 */
-+					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>; /* sai5 */
-+			interrupt-names =3D "edma1-chan0-rx", "edma1-chan1-rx", /* asrc1 */
-+					"edma1-chan2-rx", "edma1-chan3-tx",
-+					"edma1-chan4-tx", "edma1-chan5-tx",
-+					"edma1-chan8-rx", "edma1-chan9-tx", /* sai4 */
-+					"edma1-chan10-tx"; /* sai5 */
-+		};
+ /**
+  * drm_ioctl_permit - Check ioctl permissions against caller
+  *
+@@ -516,14 +523,19 @@ int drm_version(struct drm_device *dev, void *data,
+  */
+ int drm_ioctl_permit(u32 flags, struct drm_file *file_priv)
+ {
++	const struct drm_device *dev = file_priv->minor->dev;
 +
- 		adma_lpuart0: serial@5a060000 {
- 			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
- 			reg =3D <0x5a060000 0x1000>;
---=20
-2.17.1
+ 	/* ROOT_ONLY is only for CAP_SYS_ADMIN */
+ 	if (unlikely((flags & DRM_ROOT_ONLY) && !capable(CAP_SYS_ADMIN)))
+ 		return -EACCES;
+ 
+-	/* AUTH is only for authenticated or render client */
+-	if (unlikely((flags & DRM_AUTH) && !drm_is_render_client(file_priv) &&
+-		     !file_priv->authenticated))
+-		return -EACCES;
++	/* AUTH is only for master ... */
++	if (unlikely((flags & DRM_AUTH) && drm_is_primary_client(file_priv))) {
++		/* authenticated ones, or render capable on DRM_RENDER_ALLOW. */
++		if (!file_priv->authenticated &&
++		    !drm_render_driver_and_ioctl(dev, flags))
++			return -EACCES;
++	}
+ 
+ 	/* MASTER is only for master or control clients */
+ 	if (unlikely((flags & DRM_MASTER) &&
+-- 
+2.19.1
 
