@@ -2,127 +2,159 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA00C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA515C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F0520811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:31:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553661077;
-	bh=IQffYDPnde+Eh2G6P9uQ5Q9qKXTu+AggMJa55y70DX0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=E0lR0eg0C0W2K9VkyV/dCxfDMycVdg8/CXxlGNJJC8jxQIwN0ARFiiVCq1SxieYRQ
-	 o0MdSzmFQAV8bIMm23r2VorKrD4EHUfnDAYcWc/2RVFS+xjPm8R7wxzqevNU5G8X4w
-	 bqTrB7xER1qN+DNw3EIK1Ufmw14BhKs1akGMhBHQ=
+	by mail.kernel.org (Postfix) with ESMTP id B07BF2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmmSqETE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbfC0EbP (ORCPT
+        id S1726149AbfC0Ee1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 00:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfC0EbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 00:31:15 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D11692173C
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 04:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553661074;
-        bh=IQffYDPnde+Eh2G6P9uQ5Q9qKXTu+AggMJa55y70DX0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QSoLLF/E0JlsD5wR04lImeidBbZUu7jI4slY6TDyLdExkc+vjlCASt5oxYtzCbIlg
-         Si5RVp+0XLDEEgZR9TGqIlYEi5UqtVsscD51zRVprxRfDypNKPy7mICZSq2rir+nlC
-         V/tEu3MM0T35bmIaatn2A3afHJkzsD17WcdCFvtA=
-Received: by mail-wr1-f53.google.com with SMTP id r4so9156796wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 21:31:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAWPh1DopnNl4zHutfI4u25UwBs74itKdzd3OOeMxx96h+72ayCa
-        9KTlNJyLkbYwNNUYsAAcmyjXdPO1XXMLabrk7SU/Mw==
-X-Google-Smtp-Source: APXvYqyHDglPQyFxSIxu8cP0ad5WAv8ksHHsN3v3hQ1CNXGuhkHpH5LkGsFa3XE+8DcJu6jI4BUK+LT1YKeNUXV734o=
-X-Received: by 2002:adf:f344:: with SMTP id e4mr20835294wrp.77.1553661072327;
- Tue, 26 Mar 2019 21:31:12 -0700 (PDT)
+        Wed, 27 Mar 2019 00:34:27 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36631 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfC0Ee1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 00:34:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r124so9326566pgr.3;
+        Tue, 26 Mar 2019 21:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=toSWhE00Xr0/wIvSa3qttgpNCiF6Z0j0KVMIBMwT5OM=;
+        b=QmmSqETEMHbM1JREaB4QowN34jTM5i4400FzbiZibHEZ704PiR2FzBIi5Wh5kozJlz
+         giiSqhJM8jOvirRHciIep9K4VkevQsof1ooNHySH417IIeXqmie3nUVhD5v6ZFKRMarS
+         YlE93gBG4pVjlxU65e31fJB8Ewg9AMpa6QCxrP/62KjFe74nUCeImdCw2jVjHf3dHXEx
+         7++STjH+T7nY/fnmhNWeOKUZk7wWAAW675ZQGbPP4qTx86TxiMdgow69z6jKc2V20DmJ
+         /XBc8oEc3An0JLr+OltT7n8yKsIO0b6acsuIuYeggqSqS5iDPgk4Rw184nISGnGVD1E9
+         G8sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=toSWhE00Xr0/wIvSa3qttgpNCiF6Z0j0KVMIBMwT5OM=;
+        b=rbI+2ng7SQPm7ZTY7HcTaJEKa/OGvD3rfHQqTCs5rJ2dUy+hlF/600A9tvNBii2H6L
+         4Ndhp8wW5+Ws7+u+7mLv69tTMVwsnUJNRSDG3PlTzPwpqt2rh1NqqIYmnXmUxo5yc4FK
+         moopqtlelLD4saM23HNWRhhJK5TiuavLlRS1XkLPaO0UweJbEeoZQEkiLHhquX8rb/pY
+         CTe/TfDY/MswKxf+g+apLePYNywOlfHCcftPvSzuSsP/KX0Bi/E+aNkIk451OPJL+NgY
+         webL15avAqDWfK3+aUTMrfaCNr+XAnYzZFIf7xid8KnqaQ7/k9Uhhz1eFa9eRda4G/+B
+         gdQQ==
+X-Gm-Message-State: APjAAAXxbZy+hp3QwBZwkBblAVXcH/pVlvLJ0W86xeXHbW+RLMnYV36P
+        TBxCyp+KCaUv6HtvS9YDpTk=
+X-Google-Smtp-Source: APXvYqyAMPE97OtFW/ft1FNU++reN6FcVpz3BEu11fB11JfgrNP1a3ayiy7Fw2ExpQ4yTMXmfAYa5A==
+X-Received: by 2002:aa7:8092:: with SMTP id v18mr17884011pff.35.1553661266355;
+        Tue, 26 Mar 2019 21:34:26 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id e14sm30698119pga.61.2019.03.26.21.34.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 21:34:25 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 21:34:23 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     KT Liao <kt.liao@emc.com.tw>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        ulrik.debie-os@e2big.org, Roger.Whittaker@suse.com
+Subject: Re: [PATCH] Input: elan_i2c - Add i2c_reset in sysfs for ELAN
+ touchpad recovery
+Message-ID: <20190327043423.GD40550@dtor-ws>
+References: <1549094096-4082-1-git-send-email-kt.liao@emc.com.tw>
 MIME-Version: 1.0
-References: <20190318094128.1488-1-elena.reshetova@intel.com>
- <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
- <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
-In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 26 Mar 2019 21:31:01 -0700
-X-Gmail-Original-Message-ID: <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
-Message-ID: <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1549094096-4082-1-git-send-email-kt.liao@emc.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 3:35 AM Reshetova, Elena
-<elena.reshetova@intel.com> wrote:
->
-> > On Mon, Mar 18, 2019 at 1:16 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > > On Mon, Mar 18, 2019 at 2:41 AM Elena Reshetova
-> > > <elena.reshetova@intel.com> wrote:
-> > > > Performance:
-> > > >
-> > > > 1) lmbench: ./lat_syscall -N 1000000 null
-> > > >     base:                     Simple syscall: 0.1774 microseconds
-> > > >     random_offset (rdtsc):     Simple syscall: 0.1803 microseconds
-> > > >     random_offset (rdrand): Simple syscall: 0.3702 microseconds
-> > > >
-> > > > 2)  Andy's tests, misc-tests: ./timing_test_64 10M sys_enosys
-> > > >     base:                     10000000 loops in 1.62224s = 162.22 nsec / loop
-> > > >     random_offset (rdtsc):     10000000 loops in 1.64660s = 164.66 nsec / loop
-> > > >     random_offset (rdrand): 10000000 loops in 3.51315s = 351.32 nsec / loop
-> > > >
-> > >
-> > > Egads!  RDTSC is nice and fast but probably fairly easy to defeat.
-> > > RDRAND is awful.  I had hoped for better.
-> >
-> > RDRAND can also fail.
-> >
-> > > So perhaps we need a little percpu buffer that collects 64 bits of
-> > > randomness at a time, shifts out the needed bits, and refills the
-> > > buffer when we run out.
-> >
-> > I'd like to avoid saving the _exact_ details of where the next offset
-> > will be, but if nothing else works, this should be okay. We can use 8
-> > bits at a time and call prandom_u32() every 4th call. Something like
-> > prandom_bytes(), but where it doesn't throw away the unused bytes.
->
-> Actually I think this would make the end result even worse security-wise
-> than simply using rdtsc() on every syscall. Saving the randomness in percpu
-> buffer, which is probably easily accessible and can be probed if needed,
-> would supply attacker with much more knowledge about the next 3-4
-> random offsets that what he would get if we use "weak" rdtsc. Given
-> that for a successful exploit, an attacker would need to have stack aligned
-> once only, having a knowledge of 3-4 next offsets sounds like a present to an
-> exploit writer...  Additionally it creates complexity around the code that I
-> have issues justifying with "security" argument because of above...
->
-> I have the patch now with alloca() and rdtsc() working, I can post it
-> (albeit it is very simple), but I am really hesitating on adding the percpu
-> buffer randomness storage to it...
->
+Hi KT,
 
-Hmm.  I guess it depends on what types of attack you care about.  I
-bet that, if you do a bunch of iterations of mfence;rdtsc;syscall,
-you'll discover that the offset between the user rdtsc and the
-syscall's rdtsc has several values that occur with high probability.
+On Sat, Feb 02, 2019 at 03:54:56PM +0800, KT Liao wrote:
+> Roger from SUSE reported the touchpad on Lenovo yoga2 crush sometimes.
+> He found that rmmod/modprobe elan_i2c will recover the issue.
+> He add the workaround on SUSE and solve the problem.
+> Recently, the workaround fails in kernel 4.20 becasue IRQ mismatch.
+> genirq: Flags mismatch irq 0. 00002002 (ELAN0600:00) vs. 00015a00 (timer)
+> I can't reproduce the issue in SUSE with the same kernel.
+> And it's a 5 years old laptop, ELAN can't find the module for testing.
+> Instead of IRQ debugging IRQ, I tried another approach.
+> I added i2c_reset in sysfs to avoid IRQ requesting in probe.
 
---Andy
+How will users discover this flag? I do not think this is the best
+approach. Can we detect that the touchpad firmware crashed from the
+kernel and reset automatically?
+
+Thanks.
+
+> 
+> Signed-off-by: KT Liao <kt.liao@emc.com.tw>
+> Acked-by: Roger Whittaker <Roger.Whittaker@suse.com>
+> ---
+>  drivers/input/mouse/elan_i2c_core.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index 2690a4b..388b1f0 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -670,6 +670,29 @@ static ssize_t calibrate_store(struct device *dev,
+>  	return retval ?: count;
+>  }
+>  
+> +static ssize_t i2c_reset_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct elan_tp_data *data = i2c_get_clientdata(client);
+> +	int retval;
+> +
+> +	retval = mutex_lock_interruptible(&data->sysfs_mutex);
+> +	if (retval)
+> +		return retval;
+> +
+> +	disable_irq(client->irq);
+> +
+> +	retval = elan_initialize(data);
+> +	if (retval)
+> +		dev_err(dev, "failed to re-initialize touchpad: %d\n", retval);
+> +
+> +	enable_irq(client->irq);
+> +	mutex_unlock(&data->sysfs_mutex);
+> +	return retval ?: count;
+> +}
+> +
+>  static ssize_t elan_sysfs_read_mode(struct device *dev,
+>  				    struct device_attribute *attr,
+>  				    char *buf)
+> @@ -702,6 +725,7 @@ static DEVICE_ATTR(mode, S_IRUGO, elan_sysfs_read_mode, NULL);
+>  static DEVICE_ATTR(update_fw, S_IWUSR, NULL, elan_sysfs_update_fw);
+>  
+>  static DEVICE_ATTR_WO(calibrate);
+> +static DEVICE_ATTR_WO(i2c_reset);
+>  
+>  static struct attribute *elan_sysfs_entries[] = {
+>  	&dev_attr_product_id.attr,
+> @@ -710,6 +734,7 @@ static struct attribute *elan_sysfs_entries[] = {
+>  	&dev_attr_iap_version.attr,
+>  	&dev_attr_fw_checksum.attr,
+>  	&dev_attr_calibrate.attr,
+> +	&dev_attr_i2c_reset.attr,
+>  	&dev_attr_mode.attr,
+>  	&dev_attr_update_fw.attr,
+>  	NULL,
+> -- 
+> 2.7.4
+> 
+
+-- 
+Dmitry
