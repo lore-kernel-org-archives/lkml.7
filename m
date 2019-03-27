@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FFEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB26C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD09121855
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4173F217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709865;
-	bh=AqdzoIJJu9cpZJrqevo1aBmtgqV79O2mnfJMJkW4fZA=;
+	s=default; t=1553709870;
+	bh=KpgmBbIc4h+H3ttXp4nQcrGjHvD3LHFfn6DErsCoCWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IPULiXPoy3M+rc2lt3bYLLqX9dr4w0rY6kXaLs8f5jWr/VboDWExyXxgVgEyb64jQ
-	 nggXPl9U7wuB7iycpq3i2ZLJcHLhEW5m5UQHWY1aNlBCQm/TVKe2oCcpV/UwSb+Z5b
-	 fYTMHwYxIqyo8Rxu4R3Z+0fW5mBVy6jDnJXz80d8=
+	b=fwNJe7Ll1/BXeGbHqtyRg2gT78b66WkCQTwL3D8v9gRxLEbQNTbUmrnJmN5l1j6ue
+	 Opa5gxYDTzJId8mt8cNliSGqwZp6Sk3l48hDJqhvqRwp2H1SamhyjZmxfzvID1Fguj
+	 cgesziVdWAgIqQzow2pno1dRxxt7ERgnLAxw3scg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733257AbfC0SEX (ORCPT
+        id S1733269AbfC0SE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733210AbfC0SEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:16 -0400
+        id S1733210AbfC0SE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B7D92184C;
-        Wed, 27 Mar 2019 18:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE6121734;
+        Wed, 27 Mar 2019 18:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709855;
-        bh=AqdzoIJJu9cpZJrqevo1aBmtgqV79O2mnfJMJkW4fZA=;
+        s=default; t=1553709865;
+        bh=KpgmBbIc4h+H3ttXp4nQcrGjHvD3LHFfn6DErsCoCWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qdj1lkK0DsjFIgE1TyMKRQiXOhgrEkdTTAU0OBtHpdhoTNVKfpaf1ZLoncOTMcBnu
-         ZiPcBYpoL04miJDB2M9tzKHsHAKri8PBsmr7x6QzObkWUjyC0cvyWJxfX+WZAxYPGc
-         /qXKRjtT1u1DUlumTn/73YV7M/QLCZn6zUoO66Zk=
+        b=b+JnvTurwGuGm8nlTcRbC5V4rCk5aFLuJHl6LZCcbGvXf8DrcDb5ItB2JWVbuAerj
+         wEVbsn1D2plPV3U45e26fHOTKHsvyfn0xhzU+luOf3g642GMgoUc2Q1mP4L1k7CvGo
+         HH7+LQc/QPC5XOxf4tM34a5TUha9t/yw+ThxlsL8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 075/262] kbuild: make -r/-R effective in top Makefile for old Make versions
-Date:   Wed, 27 Mar 2019 13:58:50 -0400
-Message-Id: <20190327180158.10245-75-sashal@kernel.org>
+Cc:     =?UTF-8?q?Mathias=20Fr=C3=B6hlich?= <Mathias.Froehlich@web.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 078/262] drm/amd/display: Fix reference counting for struct dc_sink.
+Date:   Wed, 27 Mar 2019 13:58:53 -0400
+Message-Id: <20190327180158.10245-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,149 +60,258 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Mathias Fröhlich <Mathias.Froehlich@web.de>
 
-[ Upstream commit 3812b8c5c5d527239ac015f1f2c7654da7fcfbba ]
+[ Upstream commit dcd5fb82ffb484124203aa339733663ac0b059f3 ]
 
-Adding -rR to MAKEFLAGS is important because we do not want to
-be bothered by built-in implicit rules or variables.
+Reference counting in amdgpu_dm_connector for amdgpu_dm_connector::dc_sink
+and amdgpu_dm_connector::dc_em_sink as well as in dc_link::local_sink seems
+to be out of shape. Thus make reference counting consistent for these
+members and just plain increment the reference count when the variable
+gets assigned and decrement when the pointer is set to zero or replaced.
+Also simplify reference counting in selected function sopes to be sure the
+reference is released in any case. In some cases add NULL pointer check
+before dereferencing.
+At a hand full of places a comment is placed to stat that the reference
+increment happened already somewhere else.
 
-One problem that used to exist in older GNU Make versions is
+This actually fixes the following kernel bug on my system when enabling
+display core in amdgpu. There are some more similar bug reports around,
+so it probably helps at more places.
 
-  MAKEFLAGS += -rR
+   kernel BUG at mm/slub.c:294!
+   invalid opcode: 0000 [#1] SMP PTI
+   CPU: 9 PID: 1180 Comm: Xorg Not tainted 5.0.0-rc1+ #2
+   Hardware name: Supermicro X10DAi/X10DAI, BIOS 3.0a 02/05/2018
+   RIP: 0010:__slab_free+0x1e2/0x3d0
+   Code: 8b 54 24 30 48 89 4c 24 28 e8 da fb ff ff 4c 8b 54 24 28 85 c0 0f 85 67 fe ff ff 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 <0f> 0b 49 3b 5c 24 28 75 ab 48 8b 44 24 30 49 89 4c 24 28 49 89 44
+   RSP: 0018:ffffb0978589fa90 EFLAGS: 00010246
+   RAX: ffff92f12806c400 RBX: 0000000080200019 RCX: ffff92f12806c400
+   RDX: ffff92f12806c400 RSI: ffffdd6421a01a00 RDI: ffff92ed2f406e80
+   RBP: ffffb0978589fb40 R08: 0000000000000001 R09: ffffffffc0ee4748
+   R10: ffff92f12806c400 R11: 0000000000000001 R12: ffffdd6421a01a00
+   R13: ffff92f12806c400 R14: ffff92ed2f406e80 R15: ffffdd6421a01a20
+   FS:  00007f4170be0ac0(0000) GS:ffff92ed2fb40000(0000) knlGS:0000000000000000
+   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+   CR2: 0000562818aaa000 CR3: 000000045745a002 CR4: 00000000003606e0
+   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+   Call Trace:
+    ? drm_dbg+0x87/0x90 [drm]
+    dc_stream_release+0x28/0x50 [amdgpu]
+    amdgpu_dm_connector_mode_valid+0xb4/0x1f0 [amdgpu]
+    drm_helper_probe_single_connector_modes+0x492/0x6b0 [drm_kms_helper]
+    drm_mode_getconnector+0x457/0x490 [drm]
+    ? drm_connector_property_set_ioctl+0x60/0x60 [drm]
+    drm_ioctl_kernel+0xa9/0xf0 [drm]
+    drm_ioctl+0x201/0x3a0 [drm]
+    ? drm_connector_property_set_ioctl+0x60/0x60 [drm]
+    amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+    do_vfs_ioctl+0xa4/0x630
+    ? __sys_recvmsg+0x83/0xa0
+    ksys_ioctl+0x60/0x90
+    __x64_sys_ioctl+0x16/0x20
+    do_syscall_64+0x5b/0x160
+    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+   RIP: 0033:0x7f417110809b
+   Code: 0f 1e fa 48 8b 05 ed bd 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d bd bd 0c 00 f7 d8 64 89 01 48
+   RSP: 002b:00007ffdd8d1c268 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+   RAX: ffffffffffffffda RBX: 0000562818a8ebc0 RCX: 00007f417110809b
+   RDX: 00007ffdd8d1c2a0 RSI: 00000000c05064a7 RDI: 0000000000000012
+   RBP: 00007ffdd8d1c2a0 R08: 0000562819012280 R09: 0000000000000007
+   R10: 0000000000000000 R11: 0000000000000246 R12: 00000000c05064a7
+   R13: 0000000000000012 R14: 0000000000000012 R15: 00007ffdd8d1c2a0
+   Modules linked in: nfsv4 dns_resolver nfs lockd grace fscache fuse vfat fat amdgpu intel_rapl sb_edac x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul chash gpu_sched crc32_pclmul snd_hda_codec_realtek ghash_clmulni_intel amd_iommu_v2 iTCO_wdt iTCO_vendor_support ttm snd_hda_codec_generic snd_hda_codec_hdmi ledtrig_audio snd_hda_intel drm_kms_helper snd_hda_codec intel_cstate snd_hda_core drm snd_hwdep snd_seq snd_seq_device intel_uncore snd_pcm intel_rapl_perf snd_timer snd soundcore ioatdma pcspkr intel_wmi_thunderbolt mxm_wmi i2c_i801 lpc_ich pcc_cpufreq auth_rpcgss sunrpc igb crc32c_intel i2c_algo_bit dca wmi hid_cherry analog gameport joydev
 
-... does not become effective in the current Makefile. When you are
-building with O= option, it becomes effective in the top Makefile
-since it recurses via 'sub-make' target. Otherwise, the top Makefile
-tries implicit rules. That is why we explicitly add empty rules for
-Makefiles, but we often miss to do that.
+This patch is based on agd5f/drm-next-5.1-wip. This patch does not require
+all of that, but agd5f/drm-next-5.1-wip contains at least one more dc_sink
+counting fix that I could spot.
 
-In fact, adding -d option to older GNU Make versions shows it is
-trying a bunch of implicit pattern rules.
-
- Considering target file `scripts/Makefile.kcov'.
-  Looking for an implicit rule for `scripts/Makefile.kcov'.
-  Trying pattern rule with stem `Makefile.kcov'.
-  Trying implicit prerequisite `scripts/Makefile.kcov.o'.
-  Trying pattern rule with stem `Makefile.kcov'.
-  Trying implicit prerequisite `scripts/Makefile.kcov.c'.
-  Trying pattern rule with stem `Makefile.kcov'.
-  Trying implicit prerequisite `scripts/Makefile.kcov.cc'.
-  Trying pattern rule with stem `Makefile.kcov'.
-  Trying implicit prerequisite `scripts/Makefile.kcov.C'.
-  ...
-
-This issue was fixed by GNU Make commit 58dae243526b ("[Savannah #20501]
-Handle adding -r/-R to MAKEFLAGS in the makefile"). So, it is no longer
-a problem if you use GNU Make 4.0 or later. However, older versions are
-still widely used.
-
-So, I decided to patch the kernel Makefile to invoke sub-make regardless
-of O= option. This will allow further cleanups.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Mathias Fröhlich <Mathias.Froehlich@web.de>
+Reviewed-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 48 ++++++++++++++++++++++++++----------------------
- 1 file changed, 26 insertions(+), 22 deletions(-)
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 43 +++++++++++++++----
+ .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  1 +
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c |  1 +
+ 3 files changed, 37 insertions(+), 8 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 89af52ca0ba5..efec82635ac5 100644
---- a/Makefile
-+++ b/Makefile
-@@ -15,19 +15,6 @@ NAME = Shy Crocodile
- PHONY := _all
- _all:
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 636d14a60952..6d77fd966dbd 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -886,6 +886,7 @@ static void emulated_link_detect(struct dc_link *link)
+ 		return;
+ 	}
  
--# Do not use make's built-in rules and variables
--# (this increases performance and avoids hard-to-debug behaviour)
--MAKEFLAGS += -rR
--
--# Avoid funny character set dependencies
--unexport LC_ALL
--LC_COLLATE=C
--LC_NUMERIC=C
--export LC_COLLATE LC_NUMERIC
--
--# Avoid interference with shell env settings
--unexport GREP_OPTIONS
--
- # We are using a recursive build, so we need to do a little thinking
- # to get the ordering right.
- #
-@@ -44,6 +31,21 @@ unexport GREP_OPTIONS
- # descending is started. They are now explicitly listed as the
- # prepare rule.
++	/* dc_sink_create returns a new reference */
+ 	link->local_sink = sink;
  
-+ifneq ($(sub-make-done),1)
+ 	edid_status = dm_helpers_read_local_edid(
+@@ -952,6 +953,8 @@ static int dm_resume(void *handle)
+ 		if (aconnector->fake_enable && aconnector->dc_link->local_sink)
+ 			aconnector->fake_enable = false;
+ 
++		if (aconnector->dc_sink)
++			dc_sink_release(aconnector->dc_sink);
+ 		aconnector->dc_sink = NULL;
+ 		amdgpu_dm_update_connector_after_detect(aconnector);
+ 		mutex_unlock(&aconnector->hpd_lock);
+@@ -1061,6 +1064,8 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 
+ 
+ 	sink = aconnector->dc_link->local_sink;
++	if (sink)
++		dc_sink_retain(sink);
+ 
+ 	/*
+ 	 * Edid mgmt connector gets first update only in mode_valid hook and then
+@@ -1085,21 +1090,24 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 				 * to it anymore after disconnect, so on next crtc to connector
+ 				 * reshuffle by UMD we will get into unwanted dc_sink release
+ 				 */
+-				if (aconnector->dc_sink != aconnector->dc_em_sink)
+-					dc_sink_release(aconnector->dc_sink);
++				dc_sink_release(aconnector->dc_sink);
+ 			}
+ 			aconnector->dc_sink = sink;
++			dc_sink_retain(aconnector->dc_sink);
+ 			amdgpu_dm_update_freesync_caps(connector,
+ 					aconnector->edid);
+ 		} else {
+ 			amdgpu_dm_update_freesync_caps(connector, NULL);
+-			if (!aconnector->dc_sink)
++			if (!aconnector->dc_sink) {
+ 				aconnector->dc_sink = aconnector->dc_em_sink;
+-			else if (aconnector->dc_sink != aconnector->dc_em_sink)
+ 				dc_sink_retain(aconnector->dc_sink);
++			}
+ 		}
+ 
+ 		mutex_unlock(&dev->mode_config.mutex);
 +
-+# Do not use make's built-in rules and variables
-+# (this increases performance and avoids hard-to-debug behaviour)
-+MAKEFLAGS += -rR
++		if (sink)
++			dc_sink_release(sink);
+ 		return;
+ 	}
+ 
+@@ -1107,8 +1115,10 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 	 * TODO: temporary guard to look for proper fix
+ 	 * if this sink is MST sink, we should not do anything
+ 	 */
+-	if (sink && sink->sink_signal == SIGNAL_TYPE_DISPLAY_PORT_MST)
++	if (sink && sink->sink_signal == SIGNAL_TYPE_DISPLAY_PORT_MST) {
++		dc_sink_release(sink);
+ 		return;
++	}
+ 
+ 	if (aconnector->dc_sink == sink) {
+ 		/*
+@@ -1117,6 +1127,8 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 		 */
+ 		DRM_DEBUG_DRIVER("DCHPD: connector_id=%d: dc_sink didn't change.\n",
+ 				aconnector->connector_id);
++		if (sink)
++			dc_sink_release(sink);
+ 		return;
+ 	}
+ 
+@@ -1138,6 +1150,7 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 			amdgpu_dm_update_freesync_caps(connector, NULL);
+ 
+ 		aconnector->dc_sink = sink;
++		dc_sink_retain(aconnector->dc_sink);
+ 		if (sink->dc_edid.length == 0) {
+ 			aconnector->edid = NULL;
+ 			drm_dp_cec_unset_edid(&aconnector->dm_dp_aux.aux);
+@@ -1158,11 +1171,15 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 		amdgpu_dm_update_freesync_caps(connector, NULL);
+ 		drm_connector_update_edid_property(connector, NULL);
+ 		aconnector->num_modes = 0;
++		dc_sink_release(aconnector->dc_sink);
+ 		aconnector->dc_sink = NULL;
+ 		aconnector->edid = NULL;
+ 	}
+ 
+ 	mutex_unlock(&dev->mode_config.mutex);
 +
-+# Avoid funny character set dependencies
-+unexport LC_ALL
-+LC_COLLATE=C
-+LC_NUMERIC=C
-+export LC_COLLATE LC_NUMERIC
++	if (sink)
++		dc_sink_release(sink);
+ }
+ 
+ static void handle_hpd_irq(void *param)
+@@ -2908,6 +2925,7 @@ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 		}
+ 	} else {
+ 		sink = aconnector->dc_sink;
++		dc_sink_retain(sink);
+ 	}
+ 
+ 	stream = dc_create_stream_for_sink(sink);
+@@ -2974,8 +2992,7 @@ create_stream_for_sink(struct amdgpu_dm_connector *aconnector,
+ 		stream->ignore_msa_timing_param = true;
+ 
+ finish:
+-	if (sink && sink->sink_signal == SIGNAL_TYPE_VIRTUAL && aconnector->base.force != DRM_FORCE_ON)
+-		dc_sink_release(sink);
++	dc_sink_release(sink);
+ 
+ 	return stream;
+ }
+@@ -3233,6 +3250,14 @@ static void amdgpu_dm_connector_destroy(struct drm_connector *connector)
+ 		dm->backlight_dev = NULL;
+ 	}
+ #endif
 +
-+# Avoid interference with shell env settings
-+unexport GREP_OPTIONS
++	if (aconnector->dc_em_sink)
++		dc_sink_release(aconnector->dc_em_sink);
++	aconnector->dc_em_sink = NULL;
++	if (aconnector->dc_sink)
++		dc_sink_release(aconnector->dc_sink);
++	aconnector->dc_sink = NULL;
 +
- # Beautify output
- # ---------------------------------------------------------------------------
- #
-@@ -112,7 +114,6 @@ export quiet Q KBUILD_VERBOSE
+ 	drm_dp_cec_unregister_connector(&aconnector->dm_dp_aux.aux);
+ 	drm_connector_unregister(connector);
+ 	drm_connector_cleanup(connector);
+@@ -3330,10 +3355,12 @@ static void create_eml_sink(struct amdgpu_dm_connector *aconnector)
+ 		(edid->extensions + 1) * EDID_LENGTH,
+ 		&init_params);
  
- # KBUILD_SRC is not intended to be used by the regular user (for now),
- # it is set on invocation of make with KBUILD_OUTPUT or O= specified.
--ifeq ($(KBUILD_SRC),)
+-	if (aconnector->base.force == DRM_FORCE_ON)
++	if (aconnector->base.force == DRM_FORCE_ON) {
+ 		aconnector->dc_sink = aconnector->dc_link->local_sink ?
+ 		aconnector->dc_link->local_sink :
+ 		aconnector->dc_em_sink;
++		dc_sink_retain(aconnector->dc_sink);
++	}
+ }
  
- # OK, Make called in directory where kernel src resides
- # Do we want to locate output files in a separate directory?
-@@ -142,6 +143,13 @@ $(if $(KBUILD_OUTPUT),, \
- # 'sub-make' below.
- MAKEFLAGS += --include-dir=$(CURDIR)
+ static void handle_edid_mgmt(struct amdgpu_dm_connector *aconnector)
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 1b0d209d8367..3b95a637b508 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -239,6 +239,7 @@ static int dm_dp_mst_get_modes(struct drm_connector *connector)
+ 			&init_params);
  
-+else
-+
-+# Do not print "Entering directory ..." at all for in-tree build.
-+MAKEFLAGS += --no-print-directory
-+
-+endif # ifneq ($(KBUILD_OUTPUT),)
-+
- PHONY += $(MAKECMDGOALS) sub-make
+ 		dc_sink->priv = aconnector;
++		/* dc_link_add_remote_sink returns a new reference */
+ 		aconnector->dc_sink = dc_sink;
  
- $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
-@@ -149,16 +157,12 @@ $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
+ 		if (aconnector->dc_sink)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index b0265dbebd4c..583eb367850f 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -792,6 +792,7 @@ bool dc_link_detect(struct dc_link *link, enum dc_detect_reason reason)
+ 		sink->dongle_max_pix_clk = sink_caps.max_hdmi_pixel_clock;
+ 		sink->converter_disable_audio = converter_disable_audio;
  
- # Invoke a second make in the output directory, passing relevant variables
- sub-make:
--	$(Q)$(MAKE) -C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR) \
-+	$(Q)$(MAKE) sub-make-done=1 \
-+	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
- 	-f $(CURDIR)/Makefile $(filter-out _all sub-make,$(MAKECMDGOALS))
++		/* dc_sink_create returns a new reference */
+ 		link->local_sink = sink;
  
--# Leave processing to above invocation of make
--skip-makefile := 1
--endif # ifneq ($(KBUILD_OUTPUT),)
--endif # ifeq ($(KBUILD_SRC),)
--
-+else # sub-make-done
- # We process the rest of the Makefile if this is the final invocation of make
--ifeq ($(skip-makefile),)
- 
- # Do not print "Entering directory ...",
- # but we want to display it when entering to the output directory
-@@ -1757,7 +1761,7 @@ $(cmd_files): ;	# Do not try to update included dependency files
- 
- endif   # ifeq ($(config-targets),1)
- endif   # ifeq ($(mixed-targets),1)
--endif	# skip-makefile
-+endif   # sub-make-done
- 
- PHONY += FORCE
- FORCE:
+ 		edid_status = dm_helpers_read_local_edid(
 -- 
 2.19.1
 
