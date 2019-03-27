@@ -2,72 +2,162 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D34EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54030C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55403204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2455D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553711627;
+	bh=lG4HWOjVuqW9zY/C40tG4l8nnD/w0TfjzyEQoCLZuJk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WT9feT9d3rEzI86n36RiZ9T5dZXrgtHgDsxMoEbub2KbNdOdGSwalrCLAbmevW3Sf
+	 +PbW7C/Le+Bh6jG1VbJaG2oXWYa0+z+pmnWmBFFFy5XYk0xaaecIMhf2M/q0CMerY+
+	 Qy5fyJU0N2Ql5bnLYx4Om2yo7siHJb2kYWurIOZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391984AbfC0Sdf (ORCPT
+        id S2404101AbfC0SZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:33:35 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51485 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391481AbfC0SdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:33:17 -0400
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1h9DMN-0004Tc-Dk; Wed, 27 Mar 2019 19:33:11 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 2/4] powerpc/stackprotector: work around stack-guard init from atomic
-Date:   Wed, 27 Mar 2019 19:33:08 +0100
-Message-Id: <20190327183310.1015-2-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327183310.1015-1-bigeasy@linutronix.de>
-References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
- <20190327183310.1015-1-bigeasy@linutronix.de>
+        Wed, 27 Mar 2019 14:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403801AbfC0SZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:03 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43DED20651;
+        Wed, 27 Mar 2019 18:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553711102;
+        bh=lG4HWOjVuqW9zY/C40tG4l8nnD/w0TfjzyEQoCLZuJk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBhNAb6Gd0LX98AUJQtC0hW0wrjV0ZdrDYKhXFxJnAgBU4/jAjDnlhCDhmwLnAEIa
+         j6KLDA2TpnwbRgiaDuTcUP3zxAi0MkaMJA3h/TC3+8+hzsxJhKF8WCnVpf4bHgZ9cd
+         sGYbvrZ++3V4Hy7yqGlgfPLJlrZy8mWHAuHLNSFQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Timo Alho <talho@nvidia.com>, Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 53/63] soc/tegra: fuse: Fix illegal free of IO base address
+Date:   Wed, 27 Mar 2019 14:23:13 -0400
+Message-Id: <20190327182323.18577-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
+References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is invoked from the secondary CPU in atomic context. On x86 we use
-tsc instead. On Power we XOR it against mftb() so lets use stack address
-as the initial value.
+From: Timo Alho <talho@nvidia.com>
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+[ Upstream commit 51294bf6b9e897d595466dcda5a3f2751906a200 ]
+
+On cases where device tree entries for fuse and clock provider are in
+different order, fuse driver needs to defer probing. This leads to
+freeing incorrect IO base address as the fuse->base variable gets
+overwritten once during first probe invocation. This leads to the
+following spew during boot:
+
+[    3.082285] Trying to vfree() nonexistent vm area (00000000cfe8fd94)
+[    3.082308] WARNING: CPU: 5 PID: 126 at /hdd/l4t/kernel/stable/mm/vmalloc.c:1511 __vunmap+0xcc/0xd8
+[    3.082318] Modules linked in:
+[    3.082330] CPU: 5 PID: 126 Comm: kworker/5:1 Tainted: G S                4.19.7-tegra-gce119d3 #1
+[    3.082340] Hardware name: quill (DT)
+[    3.082353] Workqueue: events deferred_probe_work_func
+[    3.082364] pstate: 40000005 (nZcv daif -PAN -UAO)
+[    3.082372] pc : __vunmap+0xcc/0xd8
+[    3.082379] lr : __vunmap+0xcc/0xd8
+[    3.082385] sp : ffff00000a1d3b60
+[    3.082391] x29: ffff00000a1d3b60 x28: 0000000000000000
+[    3.082402] x27: 0000000000000000 x26: ffff000008e8b610
+[    3.082413] x25: 0000000000000000 x24: 0000000000000009
+[    3.082423] x23: ffff000009221a90 x22: ffff000009f6d000
+[    3.082432] x21: 0000000000000000 x20: 0000000000000000
+[    3.082442] x19: ffff000009f6d000 x18: ffffffffffffffff
+[    3.082452] x17: 0000000000000000 x16: 0000000000000000
+[    3.082462] x15: ffff0000091396c8 x14: 0720072007200720
+[    3.082471] x13: 0720072007200720 x12: 0720072907340739
+[    3.082481] x11: 0764076607380765 x10: 0766076307300730
+[    3.082491] x9 : 0730073007300730 x8 : 0730073007280720
+[    3.082501] x7 : 0761076507720761 x6 : 0000000000000102
+[    3.082510] x5 : 0000000000000000 x4 : 0000000000000000
+[    3.082519] x3 : ffffffffffffffff x2 : ffff000009150ff8
+[    3.082528] x1 : 3d95b1429fff5200 x0 : 0000000000000000
+[    3.082538] Call trace:
+[    3.082545]  __vunmap+0xcc/0xd8
+[    3.082552]  vunmap+0x24/0x30
+[    3.082561]  __iounmap+0x2c/0x38
+[    3.082569]  tegra_fuse_probe+0xc8/0x118
+[    3.082577]  platform_drv_probe+0x50/0xa0
+[    3.082585]  really_probe+0x1b0/0x288
+[    3.082593]  driver_probe_device+0x58/0x100
+[    3.082601]  __device_attach_driver+0x98/0xf0
+[    3.082609]  bus_for_each_drv+0x64/0xc8
+[    3.082616]  __device_attach+0xd8/0x130
+[    3.082624]  device_initial_probe+0x10/0x18
+[    3.082631]  bus_probe_device+0x90/0x98
+[    3.082638]  deferred_probe_work_func+0x74/0xb0
+[    3.082649]  process_one_work+0x1e0/0x318
+[    3.082656]  worker_thread+0x228/0x450
+[    3.082664]  kthread+0x128/0x130
+[    3.082672]  ret_from_fork+0x10/0x18
+[    3.082678] ---[ end trace 0810fe6ba772c1c7 ]---
+
+Fix this by retaining the value of fuse->base until driver has
+successfully probed.
+
+Signed-off-by: Timo Alho <talho@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/stackprotector.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/soc/tegra/fuse/fuse-tegra.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/stackprotector.h b/arch/powerpc/include/asm/stackprotector.h
-index 1c8460e235838..e764eb4b6c284 100644
---- a/arch/powerpc/include/asm/stackprotector.h
-+++ b/arch/powerpc/include/asm/stackprotector.h
-@@ -24,7 +24,11 @@ static __always_inline void boot_init_stack_canary(void)
- 	unsigned long canary;
+diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
+index de2c1bfe28b5..c4f5e5bbb8dc 100644
+--- a/drivers/soc/tegra/fuse/fuse-tegra.c
++++ b/drivers/soc/tegra/fuse/fuse-tegra.c
+@@ -131,13 +131,17 @@ static int tegra_fuse_probe(struct platform_device *pdev)
+ 	/* take over the memory region from the early initialization */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	fuse->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(fuse->base))
+-		return PTR_ERR(fuse->base);
++	if (IS_ERR(fuse->base)) {
++		err = PTR_ERR(fuse->base);
++		fuse->base = base;
++		return err;
++	}
  
- 	/* Try to get a semi random initial value. */
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+	canary = (unsigned long)&canary;
-+#else
- 	canary = get_random_canary();
-+#endif
- 	canary ^= mftb();
- 	canary ^= LINUX_VERSION_CODE;
- 	canary &= CANARY_MASK;
+ 	fuse->clk = devm_clk_get(&pdev->dev, "fuse");
+ 	if (IS_ERR(fuse->clk)) {
+ 		dev_err(&pdev->dev, "failed to get FUSE clock: %ld",
+ 			PTR_ERR(fuse->clk));
++		fuse->base = base;
+ 		return PTR_ERR(fuse->clk);
+ 	}
+ 
+@@ -146,8 +150,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
+ 
+ 	if (fuse->soc->probe) {
+ 		err = fuse->soc->probe(fuse);
+-		if (err < 0)
++		if (err < 0) {
++			fuse->base = base;
+ 			return err;
++		}
+ 	}
+ 
+ 	if (tegra_fuse_create_sysfs(&pdev->dev, fuse->soc->info->size,
 -- 
-2.20.1
+2.19.1
 
