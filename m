@@ -2,266 +2,167 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6FEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98236C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C4E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 654C4206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVpIwPgu"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="tlT7X/7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732972AbfC0GRa (ORCPT
+        id S1733007AbfC0GSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:17:30 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44106 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732806AbfC0GR3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:17:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y13so3107349pfm.11;
-        Tue, 26 Mar 2019 23:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=axc9xNpyTRBrX7LQvA1WbHYImqcINzH7Eycv8MVMF/4=;
-        b=PVpIwPgukE0ulDL4eMxd0AVT7NxyKepWyR5/kfGAyuxYrIyneZKWAyqs2MXg7Kuocz
-         ZV1yM6vvG9TyDlTB/lYl+sgBPNnTQeCWixRc0WARv67XPxtciy871zgJ+StOHaN9n66t
-         SAzVwBcXnl8IZHMXVoWPZ1ezgWNJzVFycz4E4AV5isbLSiI78kN58oW1fVaBhvc/ATxO
-         k5j+O/+0wHM7ZVIuZml0uq28OJvDMy024uHQ4ZtDucjynD01t2kOdC+qdQvYdzCYOdt9
-         ARTY5HQL3ivBSA4aQuha0SX8o04W34yrb6OSflCuRyDokO3r/x7p/1UHFIFleI9hKQEh
-         KLlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=axc9xNpyTRBrX7LQvA1WbHYImqcINzH7Eycv8MVMF/4=;
-        b=kwZSIKkNtZPcFzb1msMSeSN5zoOuz850xiwYmEelLaycAZarQb8vrSbR//jWqutQVv
-         eEUj+VgW9EMuvEu5fkVtigJbIFUVX2NxQ6nKUGPk9Rj/UkOdlI3U8zoiDqwteyeZQT3S
-         ugjRGnUyCDRQgB6kUnaSH17L4IgoJbrIGp0TJ4KoZm6F9Ec/ZW3clGgrk0qy5QCWxlCT
-         loO2oPknG45y1p1l5M57iXzr/zQGgDy70JNzJOGaIqq0KLRFxR3x6k6GJWAXZB5oUEbu
-         f/fPFq+bLY6VYkzI6lPI7AhX/dAdvlV1h0MwPk/CZKGjk/rjukiz4rgihljNWCPUr5Dv
-         vQNA==
-X-Gm-Message-State: APjAAAX+D/uJETPh3iMQRUYgIXHc+qaaSiaAE62T4cUhO9SrCk1coX+2
-        r8HDMs9gPrpNI/sHtzPDZo8=
-X-Google-Smtp-Source: APXvYqyaM2rwJz7R/xglj9vUJq7GnjXoEg8UYqDL3bywMLrAs+rHV2dBjJBeEOEfOQQkAtWHMBlbOA==
-X-Received: by 2002:a62:2046:: with SMTP id g67mr28278282pfg.121.1553667448718;
-        Tue, 26 Mar 2019 23:17:28 -0700 (PDT)
-Received: from localhost (14-202-58-188.tpgi.com.au. [14.202.58.188])
-        by smtp.gmail.com with ESMTPSA id d75sm48701697pga.66.2019.03.26.23.17.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 23:17:27 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 16:17:21 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount
- findstring
-To:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190325160438.8982-1-joe.lawrence@redhat.com>
-        <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
-        <20190326173308.GA26546@redhat.com>
-In-Reply-To: <20190326173308.GA26546@redhat.com>
-MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1553667417.opxakvn5r6.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
+        Wed, 27 Mar 2019 02:18:25 -0400
+Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:38375
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732747AbfC0GSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:18:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j3B/9ZeH+jmINYwbHiWMEpxHFpdzNqXzsF9dOSOHi5k=;
+ b=tlT7X/7uktZqr55t5mZ0VndD8vOC4xxor4DgE1wxXGwYG9VSgk68BUboXdaIuj1j1OqpSaBpb1JHncHVTWeNKaVDSveLJ5QNKV7lCVthtmu5CeijFnNCDamiuU04JCSu3XlL/fOv1PBUAgCJ7nE5TG1L3Hbg7sWuRuIXt19KVUA=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3708.eurprd04.prod.outlook.com (52.134.70.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 06:18:21 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 06:18:21 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] rtc: snvs: use dev_pm_set_wake_irq() to simplify code
+Thread-Topic: [PATCH] rtc: snvs: use dev_pm_set_wake_irq() to simplify code
+Thread-Index: AQHU5GTgLxQ0a0WHkkmkrqXTE18V/g==
+Date:   Wed, 27 Mar 2019 06:18:20 +0000
+Message-ID: <1553667192-16665-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR06CA0022.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::34) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: de0dac7a-1703-443c-ed4f-08d6b27c0278
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3708;
+x-ms-traffictypediagnostic: DB3PR0402MB3708:
+x-microsoft-antispam-prvs: <DB3PR0402MB37082F87978E3E07EDE5A865F5580@DB3PR0402MB3708.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(366004)(376002)(346002)(136003)(199004)(189003)(105586002)(106356001)(81166006)(81156014)(8676002)(14454004)(478600001)(71190400001)(71200400001)(386003)(97736004)(6506007)(6436002)(6486002)(2201001)(2501003)(86362001)(4326008)(110136005)(53936002)(256004)(68736007)(14444005)(102836004)(5660300002)(50226002)(186003)(26005)(8936002)(6512007)(52116002)(486006)(36756003)(7736002)(305945005)(2616005)(476003)(2906002)(99286004)(316002)(25786009)(66066001)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3708;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OobH46l2Ra+PaqTay9kJvOTHUAVbISB/f3ayBVsgmCkQcfx+pR2ZlacJqcGQxY9NsgokWTDILysWjqRRNRodLA8N7/ZyAZwTpeLat5ezNOmTEPWaCqpSyb/rDb6SsE3kQbRxBcot4hrSmDlEK04n86JxOCTTTftJdjBcK1nTMoYWTTyAUQ07kA3ePQ1/+uNPQZAMK1OZyWrj4uRZ/ghmVEMRGvKQWVba25HMKUhDs9gnPlrmMtUneTOV7igyBqtRdzjHj3IO6dYdUFRdXhIk7T113E8nTqDtyGCexAqJjP7SlYhf0BIb7vdQRpsyzNSlVGdC0EW2oCfxU+5l6ZO6eokqI82V9VnqUFlCi5EEob2ecwPlVseUul8vDrsQD5EXNDoVLCltQaZPAUtfEgTNwBVxw2zsptyKawb3atpGnM4=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de0dac7a-1703-443c-ed4f-08d6b27c0278
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 06:18:20.9694
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3708
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Lawrence's on March 27, 2019 3:33 am:
-> On Tue, Mar 26, 2019 at 02:29:47PM +0900, Masahiro Yamada wrote:
->> On Tue, Mar 26, 2019 at 1:05 AM Joe Lawrence <joe.lawrence@redhat.com> w=
-rote:
->> >
->> > CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
->> > findstring.
->> >
->> > For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
->> > GCC 4.9 and newer") introduced a change such that on my ppc64le box,
->> > CC_FLAGS_FTRACE=3D"-pg -mprofile-kernel ".  (Note the trailing space.)
->> > When cmd_record_mcount is now invoked, findstring fails as the ftrace
->> > flags were found at very end of _c_flags, without the trailing space.
->> >
->> >   _c_flags=3D" ... -pg -mprofile-kernel"
->> >   CC_FLAGS_FTRACE=3D"-pg -mprofile-kernel "
->> >                                        ^
->> >     findstring is looking for this extra space
->> >
->> > Remove the redundant whitespaces from CC_FLAGS_FTRACE in
->> > cmd_record_mcount to avoid this problem.
->> >
->> > Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and =
-newer").
->> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
->> > ---
->> >
->> > Standard disclaimer: I'm not a kbuild expert, but this works around th=
-e
->> > problem I reported where ftrace and livepatch self-tests were failing =
-as
->> > specified object files were not run through the recordmcount.pl script=
-:
->> >
->> > ppc64le: ftrace self-tests and $(CC_FLAGS_FTRACE) broken?
->> > https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-March/187298.html
->> >
->> >  scripts/Makefile.build | 8 ++++----
->> >  1 file changed, 4 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
->> > index 2554a15ecf2b..74d402b5aa3c 100644
->> > --- a/scripts/Makefile.build
->> > +++ b/scripts/Makefile.build
->> > @@ -199,10 +199,10 @@ sub_cmd_record_mcount =3D perl $(srctree)/script=
-s/recordmcount.pl "$(ARCH)" \
->> >         "$(if $(part-of-module),1,0)" "$(@)";
->> >  recordmcount_source :=3D $(srctree)/scripts/recordmcount.pl
->> >  endif # BUILD_C_RECORDMCOUNT
->> > -cmd_record_mcount =3D                                            \
->> > -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =3D   \
->> > -            "$(CC_FLAGS_FTRACE)" ]; then                       \
->> > -               $(sub_cmd_record_mcount)                        \
->> > +cmd_record_mcount =3D                                                =
-    \
->> > +       if [ "$(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags))" =
-=3D  \
->> > +            "$(strip $(CC_FLAGS_FTRACE))" ]; then                    =
-  \
->> > +               $(sub_cmd_record_mcount)                              =
-  \
->> >         fi
->> >  endif # CC_USING_RECORD_MCOUNT
->> >  endif # CONFIG_FTRACE_MCOUNT_RECORD
->> > --
->> > 2.20.1
->> >
->>=20
->>=20
->>=20
->> I do not see a point in using the shell command here
->> in the first place.
->>=20
->> Instead of adding crappy workarounds,
->> I guess the following simple code should work:
->>=20
->>=20
->> index 2554a15..5f13021 100644
->> --- a/scripts/Makefile.build
->> +++ b/scripts/Makefile.build
->> @@ -199,11 +199,8 @@ sub_cmd_record_mcount =3D perl
->> $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
->>         "$(if $(part-of-module),1,0)" "$(@)";
->>  recordmcount_source :=3D $(srctree)/scripts/recordmcount.pl
->>  endif # BUILD_C_RECORDMCOUNT
->> -cmd_record_mcount =3D                                            \
->> -       if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =3D   \
->> -            "$(CC_FLAGS_FTRACE)" ]; then                       \
->> -               $(sub_cmd_record_mcount)                        \
->> -       fi
->> +cmd_record_mcount =3D $(if $(findstring $(CC_FLAGS_FTRACE),$(_c_flags))=
-,\
->> +                 $(sub_cmd_record_mcount))
->>  endif # CC_USING_RECORD_MCOUNT
->>  endif # CONFIG_FTRACE_MCOUNT_RECORD
->>=20
->=20
-> Hi Masahiro,
->=20
-> Agreed on the shell command ugliness, however I still think we need to
-> strip the search pattern here.  With your suggestion:
->=20
-> % rm -f kernel/trace/trace_selftest_dynamic.o=20
-> % make kernel/trace/trace_selftest_dynamic.o
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   CC      kernel/trace/trace_selftest_dynamic.o
->=20
-> % eu-readelf --sections kernel/trace/trace_selftest_dynamic.o | grep mcou=
-nt
-> (nothing)
->=20
-> Adding it back as, as below, restores those sections and the self tests
-> work again.
+With calling dev_pm_set_wake_irq() to set SNVS RTC as wakeup
+source for suspend, generic wake irq mechanism will automatically
+enable it as wakeup source when suspend, then the suspend/resume
+callback which are ONLY for enabling/disabling irq wake can be
+removed, it simplifies the code.
 
-Thanks for finding and fixing this, nice work!
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/rtc/rtc-snvs.c | 25 ++++---------------------
+ 1 file changed, 4 insertions(+), 21 deletions(-)
 
-Thanks,
-Nick
+diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+index 0b9eff1..ce73eab 100644
+--- a/drivers/rtc/rtc-snvs.c
++++ b/drivers/rtc/rtc-snvs.c
+@@ -9,6 +9,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
+ #include <linux/rtc.h>
+ #include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+@@ -332,6 +333,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 	}
+=20
+ 	device_init_wakeup(&pdev->dev, true);
++	ret =3D dev_pm_set_wake_irq(&pdev->dev, data->irq);
++	if (ret)
++		dev_err(&pdev->dev, "failed to enable irq wake\n");
+=20
+ 	ret =3D devm_request_irq(&pdev->dev, data->irq, snvs_rtc_irq_handler,
+ 			       IRQF_SHARED, "rtc alarm", &pdev->dev);
+@@ -359,15 +363,6 @@ static int snvs_rtc_probe(struct platform_device *pdev=
+)
+ }
+=20
+ #ifdef CONFIG_PM_SLEEP
+-static int snvs_rtc_suspend(struct device *dev)
+-{
+-	struct snvs_rtc_data *data =3D dev_get_drvdata(dev);
+-
+-	if (device_may_wakeup(dev))
+-		return enable_irq_wake(data->irq);
+-
+-	return 0;
+-}
+=20
+ static int snvs_rtc_suspend_noirq(struct device *dev)
+ {
+@@ -379,16 +374,6 @@ static int snvs_rtc_suspend_noirq(struct device *dev)
+ 	return 0;
+ }
+=20
+-static int snvs_rtc_resume(struct device *dev)
+-{
+-	struct snvs_rtc_data *data =3D dev_get_drvdata(dev);
+-
+-	if (device_may_wakeup(dev))
+-		return disable_irq_wake(data->irq);
+-
+-	return 0;
+-}
+-
+ static int snvs_rtc_resume_noirq(struct device *dev)
+ {
+ 	struct snvs_rtc_data *data =3D dev_get_drvdata(dev);
+@@ -400,9 +385,7 @@ static int snvs_rtc_resume_noirq(struct device *dev)
+ }
+=20
+ static const struct dev_pm_ops snvs_rtc_pm_ops =3D {
+-	.suspend =3D snvs_rtc_suspend,
+ 	.suspend_noirq =3D snvs_rtc_suspend_noirq,
+-	.resume =3D snvs_rtc_resume,
+ 	.resume_noirq =3D snvs_rtc_resume_noirq,
+ };
+=20
+--=20
+2.7.4
 
->=20
-> Regards,
->=20
-> -- Joe
->=20
-> -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
->=20
-> From 6a85e8ecf4179b3e80601a327ec43d8d49f0e3cd Mon Sep 17 00:00:00 2001
-> From: Joe Lawrence <joe.lawrence@redhat.com>
-> Date: Tue, 26 Mar 2019 10:50:28 -0400
-> Subject: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount findstr=
-ing
->=20
-> CC_FLAGS_FTRACE may contain trailing whitespace that interferes with
-> findstring.
->=20
-> For example, commit 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on
-> GCC 4.9 and newer") introduced a change such that on my ppc64le box,
-> CC_FLAGS_FTRACE=3D"-pg -mprofile-kernel ".  (Note the trailing space.)
-> When cmd_record_mcount is now invoked, findstring fails as the ftrace
-> flags were found at very end of _c_flags, without the trailing space.
->=20
->   _c_flags=3D" ... -pg -mprofile-kernel"
->   CC_FLAGS_FTRACE=3D"-pg -mprofile-kernel "
->                                        ^
->     findstring is looking for this extra space
->=20
-> Remove the redundant whitespaces from CC_FLAGS_FTRACE in
-> cmd_record_mcount to avoid this problem.
->=20
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com> (refactorin=
-g)
-> Fixes: 6977f95e63b9 ("powerpc: avoid -mno-sched-epilog on GCC 4.9 and new=
-er").
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> ---
->  scripts/Makefile.build | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 2554a15ecf2b..76ca30cc4791 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -199,11 +199,8 @@ sub_cmd_record_mcount =3D perl $(srctree)/scripts/re=
-cordmcount.pl "$(ARCH)" \
->  	"$(if $(part-of-module),1,0)" "$(@)";
->  recordmcount_source :=3D $(srctree)/scripts/recordmcount.pl
->  endif # BUILD_C_RECORDMCOUNT
-> -cmd_record_mcount =3D						\
-> -	if [ "$(findstring $(CC_FLAGS_FTRACE),$(_c_flags))" =3D	\
-> -	     "$(CC_FLAGS_FTRACE)" ]; then			\
-> -		$(sub_cmd_record_mcount)			\
-> -	fi
-> +cmd_record_mcount =3D $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c=
-_flags)),	\
-> +	$(sub_cmd_record_mcount))
->  endif # CC_USING_RECORD_MCOUNT
->  endif # CONFIG_FTRACE_MCOUNT_RECORD
-> =20
-> --=20
-> 2.20.1
->=20
->=20
-=
