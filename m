@@ -2,52 +2,60 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0684EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECA4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E2B21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFA621738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709986;
-	bh=ati3eEQZRrTC3pHzhPBOHZ1wcfKmcvxdzBHma0NJIq0=;
+	s=default; t=1553709990;
+	bh=Gr6e/xjr0caRRyeCWTvVNJ7ytqaZutQAjbozfeYf2JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yx9nX4tEhyBZsOSbX7nKyfCKNdWuQH/pTxb6wjCbuwRaqhLKdoHPCbY7rcZZE8MIG
-	 3e0pf73Gc1cAt23K3NdmrqF+NfDx8uDAea3E8XT0CeW50xpocAzSEyxlIyUxw7FwsM
-	 jequJkMqz5G0VtEhe3iUoPka6ofJV6evEaiwd+ts=
+	b=isy+RB4cCXPlPYODzjUvjNHuhzkUj0Qk54qTWrMaTd5VbNf81C2lc825DgFVrlv8w
+	 6N62WivdGaTn9HyhBd7fVy4qVwVl57WPuerNHtqDvFI7NmE5nHMem77naRILl+G93M
+	 PiYh6WCqHiwSdXxzl9BXkevuY5Auyzf7Qf4SbY3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfC0SGZ (ORCPT
+        id S2387951AbfC0SG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387912AbfC0SGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:23 -0400
+        id S1733208AbfC0SG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F26B921734;
-        Wed, 27 Mar 2019 18:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6928921734;
+        Wed, 27 Mar 2019 18:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709982;
-        bh=ati3eEQZRrTC3pHzhPBOHZ1wcfKmcvxdzBHma0NJIq0=;
+        s=default; t=1553709986;
+        bh=Gr6e/xjr0caRRyeCWTvVNJ7ytqaZutQAjbozfeYf2JM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0DT0s8DaF2gQ4jpQIx55FUJU+5xrNDmn2mj5qYaCR59S0VQiFn6mRB+Xp7F+IavUA
-         E2z6c682pIqf9WhuFha2Sm8xxXNr9TIYcTVFAtHRwrIYk0bBoMzZKp7PlDGSNURpi4
-         hMvgkQPo7xHhnIFbYeAIgYSxZXvIWhns06AZK8M0=
+        b=g9BK0Q6TpUXS1pzKqL7PdTIGdXD0KYAAI4r2cYNDFwlMbWw46zWVMCxOjOMIO6me6
+         ljrZ5+V2XUmTKsU10oc0kM4bprOXIi7XiEeZUUA9XB61MSqkoKb2jxhRlqhuWigTrb
+         1+DDlHhd0AjezN9DCet1M+pPqlO+HZge99SbocEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 143/262] perf report: Add s390 diagnosic sampling descriptor size
-Date:   Wed, 27 Mar 2019 13:59:58 -0400
-Message-Id: <20190327180158.10245-143-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 144/262] perf coresight: Do not test for libopencsd by default
+Date:   Wed, 27 Mar 2019 13:59:59 -0400
+Message-Id: <20190327180158.10245-144-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,63 +67,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 2187d87eacd46f6214ce3dc9cfd7a558375a4153 ]
+[ Upstream commit 1c3b28fd7ae80c8f6bf1a09e1848e20a953c9ce4 ]
 
-On IBM z13 machine types 2964 and 2965 the descriptor
-sizes for sampling and diagnostic sampling entries
-might be missing in the trailer entry and are set to zero.
+Since it is not yet that generally available, avoid testing for the
+presence of libcoresight in the fast path test-all.bin feature test.
 
-This leads to a perf report failure when processing diagnostic
-sampling entries.
+  # dnf search opencsd
+  No matches found.
+  # dnf search OpenCSD
+  No matches found.
+  # cat /etc/fedora-release
+  Fedora release 29 (Twenty Nine)
+  #
 
-This patch adds missing descriptor sizes when the trailer entry
-contains zero for these fields.
+I.e. right now, in my system test-all.bin is failing all the time since
+Fedora29 doesn't have libopencsd available:
 
-Output before:
-  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
-  0xabbf0 [0x8]: failed to process type: 68
-  Error:
-  failed to process sample
-  [root@s38lp82 perf]#
+  $ cat /tmp/build/perf/feature/test-all.make.output
+  In file included from test-all.c:174:
+  test-libopencsd.c:2:10: fatal error: opencsd/c_api/opencsd_c_api.h: No such file or directory
+   #include <opencsd/c_api/opencsd_c_api.h>
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  compilation terminated.
 
-Output after:
-  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
-  # Total Lost Samples: 0
-  # Samples: 3K of event 'SF_CYCLES_BASIC_DIAG'
-  # Samples: 162  of event 'CF_DIAG'
-  [root@s38lp82 perf]#
+See:
 
-Fixes: 2b1444f2e28b ("perf report: Add raw report support for s390 auxiliary trace")
+  6ab2b762befd ("perf build: Disable libbabeltrace check by default")
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190211100627.85714-1-tmricht@linux.ibm.com
+For the rationale, as soon as libopencsd becomes more generally packaged
+and available, we do the same thing we did with babeltrace, enabling it
+by default, as done in:
+
+  24787afbcd01 ("perf tools: Enable LIBBABELTRACE by default")
+
+For now, to explicitely ask for opencsd, make sure you have it installed
+and use:
+
+   make -C tools/perf CORESIGHT=1
+
+The feature test output will be there as an empty file:
+
+  $ ls -la /tmp/build/perf/feature/test-libopencsd.make.output
+
+Because the binary used for the feature check was successfully built:
+
+  $ ls -la /tmp/build/perf/feature/test-libopencsd.bin
+  -rwxrwxr-x. 1 acme acme 18336 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.bin
+  $ ldd /tmp/build/perf/feature/test-libopencsd.bin
+	linux-vdso.so.1 (0x00007fffe18cc000)
+	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fb8e67f6000)
+	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fb8e676f000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fb8e65a9000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fb8e6411000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fb8e628d000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fb8e6272000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fb8e6828000)
+  $
+
+And the resulting perf binary will be linked with it:
+
+  -rw-rw-r--. 1 acme acme 0 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.make.output
+  $ ldd ~/bin/perf | grep opencsd
+	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fd43097f000)
+	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fd4308f8000)
+  $
+
+To make sure this gets built before pushing things upstream I have a
+ubuntu:19.04-x-arm64 container that has:
+
+  [root@quaco x-arm64]# grep CORESIGHT Dockerfile
+  ENV EXTRA_MAKE_ARGS=CORESIGHT=1
+  [root@quaco x-arm64]#
+
+So that I always build with libopencsd before pushing things upstream.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Link: https://lkml.kernel.org/n/tip-20vyy39jw9jgrijesi30fgox@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/s390-cpumsf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/build/Makefile.feature   | 2 +-
+ tools/build/feature/test-all.c | 5 -----
+ tools/perf/Makefile.config     | 3 ++-
+ tools/perf/Makefile.perf       | 2 +-
+ 4 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index 68b2570304ec..08073a4d59a4 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -301,6 +301,11 @@ static bool s390_cpumsf_validate(int machine_type,
- 			*dsdes = 85;
- 			*bsdes = 32;
- 			break;
-+		case 2964:
-+		case 2965:
-+			*dsdes = 112;
-+			*bsdes = 32;
-+			break;
- 		default:
- 			/* Illegal trailer entry */
- 			return false;
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 5467c6bf9ceb..bb9dca65eb5f 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -70,7 +70,6 @@ FEATURE_TESTS_BASIC :=                  \
+         sched_getcpu			\
+         sdt				\
+         setns				\
+-        libopencsd			\
+         libaio
+ 
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+@@ -84,6 +83,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libbabeltrace                  \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
++         libopencsd                     \
+          libunwind-debug-frame          \
+          libunwind-debug-frame-arm      \
+          libunwind-debug-frame-aarch64  \
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 93f485098161..e903b86b742f 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -170,10 +170,6 @@
+ # include "test-setns.c"
+ #undef main
+ 
+-#define main main_test_libopencsd
+-# include "test-libopencsd.c"
+-#undef main
+-
+ #define main main_test_libaio
+ # include "test-libaio.c"
+ #undef main
+@@ -221,7 +217,6 @@ int main(int argc, char *argv[])
+ 	main_test_sched_getcpu();
+ 	main_test_sdt();
+ 	main_test_setns();
+-	main_test_libopencsd();
+ 	main_test_libaio();
+ 	main_test_reallocarray();
+ 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e6360d47e73a..cf4a8329c4c0 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -388,7 +388,8 @@ ifeq ($(feature-setns), 1)
+   $(call detected,CONFIG_SETNS)
+ endif
+ 
+-ifndef NO_CORESIGHT
++ifdef CORESIGHT
++  $(call feature_check,libopencsd)
+   ifeq ($(feature-libopencsd), 1)
+     CFLAGS += -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
+     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 0ee6795d82cc..77f8f069f1e7 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -102,7 +102,7 @@ include ../scripts/utilities.mak
+ # When selected, pass LLVM_CONFIG=/path/to/llvm-config to `make' if
+ # llvm-config is not in $PATH.
+ #
+-# Define NO_CORESIGHT if you do not want support for CoreSight trace decoding.
++# Define CORESIGHT if you DO WANT support for CoreSight trace decoding.
+ #
+ # Define NO_AIO if you do not want support of Posix AIO based trace
+ # streaming for record mode. Currently Posix AIO trace streaming is
 -- 
 2.19.1
 
