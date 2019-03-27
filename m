@@ -2,94 +2,181 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC12C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A9EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9686B2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44872070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Zc5F0Y8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfC0WRf (ORCPT
+        id S1728033AbfC0WTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:17:35 -0400
-Received: from sauhun.de ([88.99.104.3]:39446 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfC0WRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:17:34 -0400
-Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
-        by pokefinder.org (Postfix) with ESMTPSA id 132EB2E35A2;
-        Wed, 27 Mar 2019 23:17:33 +0100 (CET)
-Date:   Wed, 27 Mar 2019 23:17:32 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Shreesha Rajashekar <shreesha@broadcom.com>
-Subject: Re: [PATCH v5 1/8] i2c: iproc: Extend I2C read up to 255 bytes
-Message-ID: <20190327221732.GB15396@kunai>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-2-ray.jui@broadcom.com>
+        Wed, 27 Mar 2019 18:19:42 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44835 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfC0WTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:19:41 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x10so15431256edh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 15:19:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xRBROKR+pVCNaBYX52vAyYKcC+NvmczenCUt71H18mU=;
+        b=Zc5F0Y8Jis1TLyQMO2adYooMtHvmmPpQViPdhYNQh8hhRF8K4U8u9qJ5k3qNP/XCxA
+         0JtlA8MForWAyaVH2JGVU5hdJP+Ep0h41PCNOVV+Q1AqIVBfkK98prIOXsSJqrgj99Tz
+         lsAA82K9j1yb3q35zFZ5r16kPdqniI6tAnboRLE4lU2dQTfQhE9Avn10K+AmdboAKsgZ
+         fVFfVQu/pCLxfp7JclQUigrFpe7nUrbZhyxpQaZq5+VG7Gx+kwZrou0IM5vbcZOn3kZH
+         hQJGtpPce7NUV2isR0fSNv9SeAjgac5hizs4VTS6dTik9uyXt0sKP2h5FZmiN8SpdQ1b
+         KGNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xRBROKR+pVCNaBYX52vAyYKcC+NvmczenCUt71H18mU=;
+        b=tOA45MAedvp2ETDwil0T993E22U9vI/xe3v+W5HWzJNOnjVG5V+oDzmbk4ROnPpO3G
+         T50nlCIL9zsZradn46WPwuw8Ca9dqXG1szssu8J1p8a1G6Q+jvKSI6cx3dCSBIEWmDSV
+         SM//QouJB0vuwxYNgnB9al5rvWbkbm40pTRvY+0k8dLc64WfGO1V83VPkGZoyVkyaqSa
+         A1n69iEu8NsArvhCk0s4LIMQ7LH9ql3meSsHuqzuyahoMAsomSSqAwugg7gpI+++jd2c
+         ZCyIljc/8QlzfLSYUJT1VHEdju3n6tAUDOZiBI7gNGkvCkwcfrWkuN8GfEJFgVhFHGVF
+         4olw==
+X-Gm-Message-State: APjAAAUTpEsjSGwawR06VRMbNzarj05blW5sG4YZRBPxu0rMpD0cD7Er
+        SuGTLrcKPvD+9xZj8yavaxA9mQ==
+X-Google-Smtp-Source: APXvYqxQCj+7HWoz6bP0m4KpNxHvQOO9XzJm4nsS7MxsA4HHZgvU5eqeZivYfL+C4ouG9KQUzk7B0w==
+X-Received: by 2002:aa7:c598:: with SMTP id g24mr16350982edq.293.1553725179417;
+        Wed, 27 Mar 2019 15:19:39 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
+        by smtp.gmail.com with ESMTPSA id l20sm1878067ejb.30.2019.03.27.15.19.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 15:19:38 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
+        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
+        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
+        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
+        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
+        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
+        Christian Brauner <christian@brauner.io>
+Subject: [PATCH v1 0/4] pidfd_open()
+Date:   Wed, 27 Mar 2019 23:19:06 +0100
+Message-Id: <20190327221910.5897-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
-Content-Disposition: inline
-In-Reply-To: <20190214175725.60462-2-ray.jui@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey,
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is v1 of this patchset. No major changes. Just fixing nits that
+Jann detected.
 
+After the discussion over the last days, this is a fresh approach to
+getting pidfds independent of the translate_pid() patchset.
 
-> +		if (!((readl(iproc_i2c->base +
-> +		M_FIFO_CTRL_OFFSET) >>
-> +		M_FIFO_RX_CNT_SHIFT) &
-> +		M_FIFO_RX_CNT_MASK))
+pidfd_open() allows to retrieve pidfds for processes and removes the
+dependency of pidfd on procfs.
+These pidfds are allocated using anon_inode_getfd(), are O_CLOEXEC by
+default and can be used with the pidfd_send_signal() syscall. They are not
+dirfds and as such have the advantage that we can make them pollable or
+readable in the future if we see a need to do so. Currently they do not
+support any advanced operations. The pidfds are not associated with a
+specific pid namespaces but rather only reference struct pid of a given
+process in their private_data member.
 
-Don't be too strict with the 80 char limit. I think the above is hardly
-readable...
+One of the oustanding issues has been how to get information about a given
+process if pidfds are regular file descriptors and do not provide access to
+the process /proc/<pid> directory.
+Various solutions have been proposed. The one that most people prefer is to
+be able to retrieve a file descriptor to /proc/<pid> based on a pidfd (and
+the other way around).
+IF PROCFD_TO_PIDFD is passed as a flag together with a file descriptor to a
+/proc mount in a given pid namespace and a pidfd pidfd_open() will return a
+file descriptor to the corresponding /proc/<pid> directory in procfs
+mounts' pid namespace. pidfd_open() is very careful to verify that the pid
+hasn't been recycled in between.
+IF PIDFD_TO_PROCFD is passed as a flag together with a file descriptor
+referencing a /proc/<pid> directory a pidfd referencing the struct pid
+stashed in /proc/<pid> of the process will be returned.
+The pidfd_open() syscalls in that manner resembles openat() as it uses a
+flag argument to modify what type of file descriptor will be returned.
 
-> +			break;
-> +
-> +		msg->buf[iproc_i2c->rx_bytes] =
-> +			(readl(iproc_i2c->base + M_RX_OFFSET) >>
-> +			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+The pidfd_open() implementation together with the flags argument strikes me
+as an elegant compromise between splitting this into multiple syscalls and
+avoiding ioctls().
 
-... this here is MUCH better.
+Note that this patchset also includes Al's and David's commit to make anon
+inodes unconditional. The original intention is to make it possible to use
+anon inodes in core vfs functions. pidctl() has the same requirement so
+David suggested I sent this in alongside this patch. Both are informed of
+this.
 
-Rest looks good.
+The syscall comes with appropriate basic testing.
 
+/* Examples */
+// Retrieve pidfd
+int pidfd = pidfd_open(1234, -1, -1, 0);
 
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
+// Retrieve /proc/<pid> handle for pidfd
+int procfd = open("/proc", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+int procpidfd = pidfd_open(-1, procfd, pidfd, PIDFD_TO_PROCFD);
 
------BEGIN PGP SIGNATURE-----
+// Retrieve pidfd for /proc/<pid>
+int procpidfd = open("/proc/1234", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+int pidfd = pidfd_open(-1, procpidfd, -1, PROCFD_TO_PIDFD);
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyb9nwACgkQFA3kzBSg
-KbYzdg//TqhPqqJ8jsf33y2YrdjFG4eYNsHy58/R6LsqUp47WsYfxCSK+pIqGFds
-w7Tr35HB0oOQCqxAMnsV0hJV1bdITMR3N5KpW2LPL4YHBOIfsdtwJShPjo/n7vJE
-XLCEWto8fyIxjFYu/VfIPpeFyMK0djtvnAr1aT0Hu7iJbNuqPtgK0Htu5YqJUAHF
-+KqsZtyIue8+16veAvEJ7jzQl7XcXkejpak1oOBrm69i3tvi5P0HK0wRTAninCZn
-v1GgOWnoP0iltCJpSDiZIRtEWcstGvx9vuHCu1DI9b/f7bk9F1Qh4V6Vwuot2JiF
-oG+J6UptJjoK90ZSBY4Z2yiDRU+qVYAwjskY2PLeG2AgMYP47LhZ7RDzfcNtJmiE
-fA+cwS3GhqIiFZbo0FPP1nKMvaJHr4xm0RDgPoTvmqxAUt5BwIMM2V8/ZnI8rlvW
-GVPoX9W2V4z5W8BF6/QXaaYk1QY6WLnTEgi31fofCbnYyxSre0MwvvtUzfiVdCr9
-IKQKV4N1s4MDYk6nOQ6x+rGa0tmJrw2wP8UJBGD4vl/TtSrCHmd8IJAE9xF/A85v
-7L0NpRIomYRXpeJRtm7mYsr8Nl/HY5nXGgK+eKScXanv7kV81P88dF+KrFDh2Ymg
-+tB0iOV1QGcCKxNEx0h73cs1nhTfQLL2lCZpz3d0XntkA1q2Ysg=
-=5U3k
------END PGP SIGNATURE-----
+Thanks!
+Christian
 
---v9Ux+11Zm5mwPlX6--
+Christian Brauner (3):
+  pid: add pidfd_open()
+  signal: support pidfd_open() with pidfd_send_signal()
+  tests: add pidfd_open() tests
+
+David Howells (1):
+  Make anon_inodes unconditional
+
+ arch/arm/kvm/Kconfig                          |   1 -
+ arch/arm64/kvm/Kconfig                        |   1 -
+ arch/mips/kvm/Kconfig                         |   1 -
+ arch/powerpc/kvm/Kconfig                      |   1 -
+ arch/s390/kvm/Kconfig                         |   1 -
+ arch/x86/Kconfig                              |   1 -
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/x86/kvm/Kconfig                          |   1 -
+ drivers/base/Kconfig                          |   1 -
+ drivers/char/tpm/Kconfig                      |   1 -
+ drivers/dma-buf/Kconfig                       |   1 -
+ drivers/gpio/Kconfig                          |   1 -
+ drivers/iio/Kconfig                           |   1 -
+ drivers/infiniband/Kconfig                    |   1 -
+ drivers/vfio/Kconfig                          |   1 -
+ fs/Makefile                                   |   2 +-
+ fs/notify/fanotify/Kconfig                    |   1 -
+ fs/notify/inotify/Kconfig                     |   1 -
+ include/linux/pid.h                           |   2 +
+ include/linux/syscalls.h                      |   2 +
+ include/uapi/linux/wait.h                     |   3 +
+ init/Kconfig                                  |  10 -
+ kernel/pid.c                                  | 242 ++++++++++++++++++
+ kernel/signal.c                               |  14 +-
+ kernel/sys_ni.c                               |   3 -
+ tools/testing/selftests/pidfd/Makefile        |   2 +-
+ .../testing/selftests/pidfd/pidfd_open_test.c | 201 +++++++++++++++
+ 28 files changed, 464 insertions(+), 35 deletions(-)
+ create mode 100644 tools/testing/selftests/pidfd/pidfd_open_test.c
+
+-- 
+2.21.0
+
