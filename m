@@ -2,61 +2,61 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D1DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208C4C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9C420811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4F320811
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:36:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7Rl59MK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQp8f+SY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbfC0Cgm (ORCPT
+        id S1732912AbfC0Cgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 22:36:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42089 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfC0Cgm (ORCPT
+        Tue, 26 Mar 2019 22:36:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39785 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfC0Cgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 22:36:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r15so8966765pfn.9;
-        Tue, 26 Mar 2019 19:36:41 -0700 (PDT)
+        Tue, 26 Mar 2019 22:36:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i17so8989543pfo.6;
+        Tue, 26 Mar 2019 19:36:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X0UK7IMY+fKrNHEXyKUJuWSpX2yu0Xm8hqOSc6fCa70=;
-        b=i7Rl59MKT8NEKxydGoJ7QgZjNbfoToaZuLAmZ3HDPrsSKmG7r3+achMhkZ39vMSBrB
-         PIoWx3rkOXnxxFW0vzjI/tP+OfrswP8Df/2+sCjW12M4+5z2pmQXjhfG+9WDOpXD/rDk
-         BCKnOEX6EWMPZW8RaabxJmHDzChNi7cKrTxhaKT5977t5mpSbqPN1irfxpYlAU4iBJrr
-         bKoUPcHT9hCDko+PMWXxbW9uYJFa2s+sebgaP2xN+4e+xaU44fxXpNCqL8wMmiNtzSa9
-         ESfpyDusePgG5VfLjalM1YJq4vWoWkAykQCqOBIrhGjC401aEMa0xFnVB/doLQMkyCYw
-         MPUg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X1MF+fPsJmPqErUZZ9XwNFj2m+wN3ms1vTS6SHX1ZLA=;
+        b=VQp8f+SYUHuDYteVl6ZuWYSGobbxZmiN9GapWzQ9PgYjN/7epxCunwqV4/fUmSTWrA
+         AiwaCbmiVXcMlFwnRB6Xz34UfmYg+ecihQkGP0UGDlP30N1xfjEJr9diYbuv5ZHLQvcv
+         m0lWksy4AxvlaJIOIXYjUwkwE8DnwSw33ZANKNPDtXkjWOrQx8CZVFqgsj0uLaaowdM7
+         YpdtuXKAZCgJvGLaIIHGiIUKpZYREv/2rN9PKB2nMmPKWScO29A0Azyn9Sgt1pwjpEr0
+         9JUUezb7OxWdV/2fLMQagsZhxbrd2wS7FQfq6WR76FQR8RZbnxtaId+EI3SyiQiCv3LP
+         XDmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X0UK7IMY+fKrNHEXyKUJuWSpX2yu0Xm8hqOSc6fCa70=;
-        b=BifMv5PbvCXGMQAo/ARzNSVpC91/aLZTbUsGWv28uadgSa5VJL/ik8MlVz0qXWPpd8
-         0KqXT7w3lVSU89mEEZk07tYzXTWggCl8hZz/cioQzM8xU3Z7TQYiOn+MgBENGK1fzrMg
-         cD3Hr+PKwpwIQMR+5M4BXFDYw4hPCNoQVKH4ZA9jYoR7+LgdmngiiTFTMb7Qo3JWyFT5
-         duuDsqXMZT5YFfBhSMWqY5hEvfc//w7KBr7rs0XzD3r/hMxJ5h3WbsYE9Pbu/Rc2CPWM
-         +cUrpE0T0GjOVWvhQgk4sLmVMtN0/z8x75ABDMSEZRy2GveWwkgJJywehY9M6HTBePmW
-         51rQ==
-X-Gm-Message-State: APjAAAWVg0RTEAjcrATiYljzR06N1+79nLXsM6H+/WiDQea6nXIuVXW3
-        hzZJDYxXMk4ZGGV+fvBZhcc=
-X-Google-Smtp-Source: APXvYqyNuYelRuUbkyp2CKCiRibfaivQV+6/l5I8jeFFf0iW/CWE81fsHExoYbUhkJDZgmsWMB9kpg==
-X-Received: by 2002:a62:5206:: with SMTP id g6mr17504756pfb.227.1553654200932;
-        Tue, 26 Mar 2019 19:36:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X1MF+fPsJmPqErUZZ9XwNFj2m+wN3ms1vTS6SHX1ZLA=;
+        b=JZJ4pw7DVYCDMB3BhpXlNCUIlf8WnpAlZBcDNB9DvPa+jbwAkAkP2P2mSMZnS8a6Tt
+         waghqfvDHIzY0nkI0c5Q6n7izbPBP792c4wKv5mVljWqz23Z5HlrZa3w/dAuzg6jeMjn
+         jGPw0M6Y/TO33erpXFS06mqKDocKo1iF2+IlVnPQVaOSLiMz0WCX3a8KFXynmf4K/9+S
+         D8niZZ+488uIVu5zcwkBlZOy4q1Ta1D64Gy5jVb+g/IYCPXEGP19cLdX4ED4y+t6/Dwm
+         pppOo7UzQTKAAizMmC1huYc9JBMya0+Gy8Gsi9uLGEnCwSWBEw4r6HGmPcie6htGPSD0
+         N1Hw==
+X-Gm-Message-State: APjAAAW3gfu0QA0TfX7T3WbQCoB8sW5Wy2xy1XDaTe2fv669Yu7YdV4d
+        1eewLiRMXdUsQW7cGiaS9tI=
+X-Google-Smtp-Source: APXvYqxZybZP8OzTpsO3Z6S59alyghvonbEJzkshhq5HKhVESRVSKNauPPSepdx+LIGrZ9cWG3ZM/A==
+X-Received: by 2002:a62:29c5:: with SMTP id p188mr32043468pfp.203.1553654202598;
+        Tue, 26 Mar 2019 19:36:42 -0700 (PDT)
 Received: from blueforge.nvidia.com (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id 71sm10764147pfs.36.2019.03.26.19.36.38
+        by smtp.gmail.com with ESMTPSA id 71sm10764147pfs.36.2019.03.26.19.36.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 19:36:39 -0700 (PDT)
+        Tue, 26 Mar 2019 19:36:41 -0700 (PDT)
 From:   john.hubbard@gmail.com
 X-Google-Original-From: jhubbard@nvidia.com
 To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
@@ -80,10 +80,12 @@ Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Tom Talpey <tom@talpey.com>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v5 0/1] mm: introduce put_user_page*(), placeholder versions
-Date:   Tue, 26 Mar 2019 19:36:31 -0700
-Message-Id: <20190327023632.13307-1-jhubbard@nvidia.com>
+Subject: [PATCH v5 1/1] mm: introduce put_user_page*(), placeholder versions
+Date:   Tue, 26 Mar 2019 19:36:32 -0700
+Message-Id: <20190327023632.13307-2-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190327023632.13307-1-jhubbard@nvidia.com>
+References: <20190327023632.13307-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-NVConfidentiality: public
@@ -95,90 +97,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: John Hubbard <jhubbard@nvidia.com>
 
-Hi Andrew and all,
+Introduces put_user_page(), which simply calls put_page().
+This provides a way to update all get_user_pages*() callers,
+so that they call put_user_page(), instead of put_page().
 
-Can we please apply this for Linux 5.2?
+Also introduces put_user_pages(), and a few dirty/locked variations,
+as a replacement for release_pages(), and also as a replacement
+for open-coded loops that release multiple pages.
+These may be used for subsequent performance improvements,
+via batching of pages to be released.
 
-I'm adding a Reviewed-by from Christopher Lameter (thanks!), and an updated
-comment about a race condition (from Kirill's review feedback), and can now
-make the following statement more confidently:
+This is the first step of fixing a problem (also described in [1] and
+[2]) with interactions between get_user_pages ("gup") and filesystems.
 
-We seem to have pretty solid consensus on the concept and details of the
-put_user_pages() approach.
-
-Therefore, here is the first patch--only. This allows us to begin
-converting the get_user_pages() call sites to use put_user_page(), instead
-of put_page(). This is in order to implement tracking of get_user_page()
-pages.
-
-Normally I'd include a user of this code, but in this case, I think we have
-examples of how it will work in the RFC and related discussions [1]. What
-matters more at this point is unblocking the ability to start fixing up
-various subsystems, through git trees other than linux-mm. For example, the
-Infiniband example conversion now needs to pick up some prerequisite
-patches via the RDMA tree. It seems likely that other call sites may need
-similar attention, and so having put_user_pages() available would really
-make this go more quickly.
-
-Previous cover letter follows:
-==============================
-
-A discussion of the overall problem is below.
-
-As mentioned in patch 0001, the steps are to fix the problem are:
-
-1) Provide put_user_page*() routines, intended to be used
-   for releasing pages that were pinned via get_user_pages*().
-
-2) Convert all of the call sites for get_user_pages*(), to
-   invoke put_user_page*(), instead of put_page(). This involves dozens of
-   call sites, and will take some time.
-
-3) After (2) is complete, use get_user_pages*() and put_user_page*() to
-   implement tracking of these pages. This tracking will be separate from
-   the existing struct page refcounting.
-
-4) Use the tracking and identification of these pages, to implement
-   special handling (especially in writeback paths) when the pages are
-   backed by a filesystem.
-
-Overview
-========
-
-Some kernel components (file systems, device drivers) need to access
-memory that is specified via process virtual address. For a long time, the
-API to achieve that was get_user_pages ("GUP") and its variations. However,
-GUP has critical limitations that have been overlooked; in particular, GUP
-does not interact correctly with filesystems in all situations. That means
-that file-backed memory + GUP is a recipe for potential problems, some of
-which have already occurred in the field.
-
-GUP was first introduced for Direct IO (O_DIRECT), allowing filesystem code
-to get the struct page behind a virtual address and to let storage hardware
-perform a direct copy to or from that page. This is a short-lived access
-pattern, and as such, the window for a concurrent writeback of GUP'd page
-was small enough that there were not (we think) any reported problems.
-Also, userspace was expected to understand and accept that Direct IO was
-not synchronized with memory-mapped access to that data, nor with any
-process address space changes such as munmap(), mremap(), etc.
-
-Over the years, more GUP uses have appeared (virtualization, device
-drivers, RDMA) that can keep the pages they get via GUP for a long period
-of time (seconds, minutes, hours, days, ...). This long-term pinning makes
-an underlying design problem more obvious.
-
-In fact, there are a number of key problems inherent to GUP:
-
-Interactions with file systems
-==============================
-
-File systems expect to be able to write back data, both to reclaim pages,
-and for data integrity. Allowing other hardware (NICs, GPUs, etc) to gain
-write access to the file memory pages means that such hardware can dirty
-the pages, without the filesystem being aware. This can, in some cases
-(depending on filesystem, filesystem options, block device, block device
-options, and other variables), lead to data corruption, and also to kernel
-bugs of the form:
+Problem description: let's start with a bug report. Below, is what happens
+sometimes, under memory pressure, when a driver pins some pages via gup,
+and then marks those pages dirty, and releases them. Note that the gup
+documentation actually recommends that pattern. The problem is that the
+filesystem may do a writeback while the pages were gup-pinned, and then the
+filesystem believes that the pages are clean. So, when the driver later
+marks the pages as dirty, that conflicts with the filesystem's page
+tracking and results in a BUG(), like this one that I experienced:
 
     kernel BUG at /build/linux-fQ94TU/linux-4.4.0/fs/ext4/inode.c:1899!
     backtrace:
@@ -219,130 +158,203 @@ get_user_pages() being called on their pages, and letting hardware write
 directly to those pages--even though that pattern has been going on since
 about 2005 or so.
 
+The steps are to fix it are:
 
-Long term GUP
-=============
+1) (This patch): provide put_user_page*() routines, intended to be used
+   for releasing pages that were pinned via get_user_pages*().
 
-Long term GUP is an issue when FOLL_WRITE is specified to GUP (so, a
-writeable mapping is created), and the pages are file-backed. That can lead
-to filesystem corruption. What happens is that when a file-backed page is
-being written back, it is first mapped read-only in all of the CPU page
-tables; the file system then assumes that nobody can write to the page, and
-that the page content is therefore stable. Unfortunately, the GUP callers
-generally do not monitor changes to the CPU pages tables; they instead
-assume that the following pattern is safe (it's not):
+2) Convert all of the call sites for get_user_pages*(), to
+   invoke put_user_page*(), instead of put_page(). This involves dozens of
+   call sites, and will take some time.
 
-    get_user_pages()
+3) After (2) is complete, use get_user_pages*() and put_user_page*() to
+   implement tracking of these pages. This tracking will be separate from
+   the existing struct page refcounting.
 
-    Hardware can keep a reference to those pages for a very long time,
-    and write to it at any time. Because "hardware" here means "devices
-    that are not a CPU", this activity occurs without any interaction
-    with the kernel's file system code.
+4) Use the tracking and identification of these pages, to implement
+   special handling (especially in writeback paths) when the pages are
+   backed by a filesystem.
 
-    for each page
-        set_page_dirty
-        put_page()
+[1] https://lwn.net/Articles/774411/ : "DMA and get_user_pages()"
+[2] https://lwn.net/Articles/753027/ : "The Trouble with get_user_pages()"
 
-In fact, the GUP documentation even recommends that pattern.
-
-Anyway, the file system assumes that the page is stable (nothing is writing
-to the page), and that is a problem: stable page content is necessary for
-many filesystem actions during writeback, such as checksum, encryption,
-RAID striping, etc. Furthermore, filesystem features like COW (copy on
-write) or snapshot also rely on being able to use a new page for as memory
-for that memory range inside the file.
-
-Corruption during write back is clearly possible here. To solve that, one
-idea is to identify pages that have active GUP, so that we can use a bounce
-page to write stable data to the filesystem. The filesystem would work
-on the bounce page, while any of the active GUP might write to the
-original page. This would avoid the stable page violation problem, but note
-that it is only part of the overall solution, because other problems
-remain.
-
-Other filesystem features that need to replace the page with a new one can
-be inhibited for pages that are GUP-pinned. This will, however, alter and
-limit some of those filesystem features. The only fix for that would be to
-require GUP users to monitor and respond to CPU page table updates.
-Subsystems such as ODP and HMM do this, for example. This aspect of the
-problem is still under discussion.
-
-Direct IO
-=========
-
-Direct IO can cause corruption, if userspace does Direct-IO that writes to
-a range of virtual addresses that are mmap'd to a file.  The pages written
-to are file-backed pages that can be under write back, while the Direct IO
-is taking place.  Here, Direct IO races with a write back: it calls
-GUP before page_mkclean() has replaced the CPU pte with a read-only entry.
-The race window is pretty small, which is probably why years have gone by
-before we noticed this problem: Direct IO is generally very quick, and
-tends to finish up before the filesystem gets around to do anything with
-the page contents.  However, it's still a real problem.  The solution is
-to never let GUP return pages that are under write back, but instead,
-force GUP to take a write fault on those pages.  That way, GUP will
-properly synchronize with the active write back.  This does not change the
-required GUP behavior, it just avoids that race.
-
-Changes since v4:
- * Picked up Christopher Lameter's Reviewed-by tag.
-
- * Added comment documentation about a race condition (which is OK),
-   involving a PageDirty() check, from review feedback from Kirill A.
-   Shutemov.
-
-Changes since v3:
-
- * Moved put_user_page*() implementation from swap.c to gup.c, as per
-   Jerome's review recommendation.
-
- * Updated wording in patch #1 (and in this cover letter) to refer to real
-   filesystems with a backing store, as per Christopher Lameter's feedback.
-
- * Rebased to latest linux.git: commit 3601fe43e816 ("Merge tag
-   'gpio-v5.1-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio")
-
-Changes since v2:
-
- * Reduced down to just one patch, in order to avoid dependencies between
-   subsystem git repos.
-
- * Rebased to latest linux.git: commit afe6fe7036c6 ("Merge tag
-   'armsoc-late' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc")
-
- * Added Ira's review tag, based on
-   https://lore.kernel.org/lkml/20190215002312.GC7512@iweiny-DESK2.sc.intel.com/
-
-
-[1] https://lore.kernel.org/r/20190208075649.3025-3-jhubbard@nvidia.com
-    (RFC v2: mm: gup/dma tracking)
-
-Cc: Christian Benvenuti <benve@cisco.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Cc: Christoph Hellwig <hch@infradead.org>
 Cc: Christopher Lameter <cl@linux.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Dave Chinner <david@fromorbit.com>
-Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc: Doug Ledford <dledford@redhat.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
 Cc: Jan Kara <jack@suse.cz>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Jerome Glisse <jglisse@redhat.com>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Michal Hocko <mhocko@kernel.org>
 Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
 Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Tom Talpey <tom@talpey.com>
 
-
-John Hubbard (1):
-  mm: introduce put_user_page*(), placeholder versions
-
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>    # docs
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+Reviewed-by: Christoph Lameter <cl@linux.com>
+Tested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
  include/linux/mm.h |  24 +++++++++++
  mm/gup.c           | 105 +++++++++++++++++++++++++++++++++++++++++++++
  2 files changed, 129 insertions(+)
 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 76769749b5a5..a216c738d2f2 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -994,6 +994,30 @@ static inline void put_page(struct page *page)
+ 		__put_page(page);
+ }
+ 
++/**
++ * put_user_page() - release a gup-pinned page
++ * @page:            pointer to page to be released
++ *
++ * Pages that were pinned via get_user_pages*() must be released via
++ * either put_user_page(), or one of the put_user_pages*() routines
++ * below. This is so that eventually, pages that are pinned via
++ * get_user_pages*() can be separately tracked and uniquely handled. In
++ * particular, interactions with RDMA and filesystems need special
++ * handling.
++ *
++ * put_user_page() and put_page() are not interchangeable, despite this early
++ * implementation that makes them look the same. put_user_page() calls must
++ * be perfectly matched up with get_user_page() calls.
++ */
++static inline void put_user_page(struct page *page)
++{
++	put_page(page);
++}
++
++void put_user_pages_dirty(struct page **pages, unsigned long npages);
++void put_user_pages_dirty_lock(struct page **pages, unsigned long npages);
++void put_user_pages(struct page **pages, unsigned long npages);
++
+ #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+ #define SECTION_IN_PAGE_FLAGS
+ #endif
+diff --git a/mm/gup.c b/mm/gup.c
+index f84e22685aaa..d3e4510fe3f8 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -28,6 +28,111 @@ struct follow_page_context {
+ 	unsigned int page_mask;
+ };
+ 
++typedef int (*set_dirty_func_t)(struct page *page);
++
++static void __put_user_pages_dirty(struct page **pages,
++				   unsigned long npages,
++				   set_dirty_func_t sdf)
++{
++	unsigned long index;
++
++	for (index = 0; index < npages; index++) {
++		struct page *page = compound_head(pages[index]);
++
++		/*
++		 * Checking PageDirty at this point may race with
++		 * clear_page_dirty_for_io(), but that's OK. Two key cases:
++		 *
++		 * 1) This code sees the page as already dirty, so it skips
++		 * the call to sdf(). That could happen because
++		 * clear_page_dirty_for_io() called page_mkclean(),
++		 * followed by set_page_dirty(). However, now the page is
++		 * going to get written back, which meets the original
++		 * intention of setting it dirty, so all is well:
++		 * clear_page_dirty_for_io() goes on to call
++		 * TestClearPageDirty(), and write the page back.
++		 *
++		 * 2) This code sees the page as clean, so it calls sdf().
++		 * The page stays dirty, despite being written back, so it
++		 * gets written back again in the next writeback cycle.
++		 * This is harmless.
++		 */
++		if (!PageDirty(page))
++			sdf(page);
++
++		put_user_page(page);
++	}
++}
++
++/**
++ * put_user_pages_dirty() - release and dirty an array of gup-pinned pages
++ * @pages:  array of pages to be marked dirty and released.
++ * @npages: number of pages in the @pages array.
++ *
++ * "gup-pinned page" refers to a page that has had one of the get_user_pages()
++ * variants called on that page.
++ *
++ * For each page in the @pages array, make that page (or its head page, if a
++ * compound page) dirty, if it was previously listed as clean. Then, release
++ * the page using put_user_page().
++ *
++ * Please see the put_user_page() documentation for details.
++ *
++ * set_page_dirty(), which does not lock the page, is used here.
++ * Therefore, it is the caller's responsibility to ensure that this is
++ * safe. If not, then put_user_pages_dirty_lock() should be called instead.
++ *
++ */
++void put_user_pages_dirty(struct page **pages, unsigned long npages)
++{
++	__put_user_pages_dirty(pages, npages, set_page_dirty);
++}
++EXPORT_SYMBOL(put_user_pages_dirty);
++
++/**
++ * put_user_pages_dirty_lock() - release and dirty an array of gup-pinned pages
++ * @pages:  array of pages to be marked dirty and released.
++ * @npages: number of pages in the @pages array.
++ *
++ * For each page in the @pages array, make that page (or its head page, if a
++ * compound page) dirty, if it was previously listed as clean. Then, release
++ * the page using put_user_page().
++ *
++ * Please see the put_user_page() documentation for details.
++ *
++ * This is just like put_user_pages_dirty(), except that it invokes
++ * set_page_dirty_lock(), instead of set_page_dirty().
++ *
++ */
++void put_user_pages_dirty_lock(struct page **pages, unsigned long npages)
++{
++	__put_user_pages_dirty(pages, npages, set_page_dirty_lock);
++}
++EXPORT_SYMBOL(put_user_pages_dirty_lock);
++
++/**
++ * put_user_pages() - release an array of gup-pinned pages.
++ * @pages:  array of pages to be marked dirty and released.
++ * @npages: number of pages in the @pages array.
++ *
++ * For each page in the @pages array, release the page using put_user_page().
++ *
++ * Please see the put_user_page() documentation for details.
++ */
++void put_user_pages(struct page **pages, unsigned long npages)
++{
++	unsigned long index;
++
++	/*
++	 * TODO: this can be optimized for huge pages: if a series of pages is
++	 * physically contiguous and part of the same compound page, then a
++	 * single operation to the head page should suffice.
++	 */
++	for (index = 0; index < npages; index++)
++		put_user_page(pages[index]);
++}
++EXPORT_SYMBOL(put_user_pages);
++
+ static struct page *no_page_table(struct vm_area_struct *vma,
+ 		unsigned int flags)
+ {
 -- 
 2.21.0
 
