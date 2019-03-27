@@ -2,116 +2,162 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98A9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA76C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD9A2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRX1l50g"
+	by mail.kernel.org (Postfix) with ESMTP id 40CEA2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733177AbfC0GfG (ORCPT
+        id S1733280AbfC0Gfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:35:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36012 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733057AbfC0GfF (ORCPT
+        Wed, 27 Mar 2019 02:35:48 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:47506 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733222AbfC0Gfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:35:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id p10so9259894pff.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 23:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8peri8YrjObG6mnV61AuNYFEhPQ7twqVoziYh+diY6w=;
-        b=jRX1l50gpnDO44z1/f2GOK8+1xw0+LwdOOCXBhHbSdQMYjXk9QGVaIqhFaxu2XQohT
-         NJ8dzSAZq+8WuM9Kbzd2b3tDpeEWnltnUsnJEYSnROVluk6Qopy63AYe5A0IRec8Vfbm
-         ke01ZUBF4AsdXSFvjfO5oMei8kFPAN8YufWe1P/B5fCTMDRYRZaBU3Qomw3uMHayj/hb
-         pc/+noZBun3L7zP6ow99qmN1DPh///LilRzuJ5wPGOzQDwtavishSr2flEoZdGeelPX5
-         TI32cPlV8ZJsGDBsyPDg5YbBBCAe7I6O5tFMN9twKrpYwgb+KYIcCXamdXDoBl9hzYQE
-         rkYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8peri8YrjObG6mnV61AuNYFEhPQ7twqVoziYh+diY6w=;
-        b=WihUvj581tPmovSYgwohVKk0N72ltSgm+YLEpxP0V9ZF7vadcCbtFIWzdef820qvWj
-         4ceX1o+7gKkyA1txD+dokr7vcj4SrAd9fO9CB9FEYBWkn644g6Va4MkvKG/euNe5Yd9t
-         uqxFwkiHoGrzNqGmgvMqGi49sirOdXHqg2vp48wqRGPPKtAuY9h+uHbLS0O04TVFThkg
-         7YtTom7rywwDw7XHrvQqppo27z42Oohii66Xzd/ubPJp/GFL5y0CT1DmSk+lcvnjiRS7
-         2pp/qZcDtcga/46Jcvrzx9lqA+PP2yz7Bf+ZVBkmVZTD40ypBCKck9i0X2WUe4AYEdYz
-         WdSw==
-X-Gm-Message-State: APjAAAUlpx/qdA4ilLHqMGafTHRYtjTx7drU61UFochgqmYwOOgkXG75
-        1xjBVTMKfq7x4EsXdE5q/ltXyCJB
-X-Google-Smtp-Source: APXvYqyQPZqriXYwvMYuesQUEu6Ora8blYjEhoXUBw1AST2Hn3uM16LQeO86E6eF5Dag4ArWEq3HNQ==
-X-Received: by 2002:a63:f310:: with SMTP id l16mr32299019pgh.72.1553668504783;
-        Tue, 26 Mar 2019 23:35:04 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k1sm19950258pfo.121.2019.03.26.23.35.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 23:35:03 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ipg" clock to SDMA
-Date:   Tue, 26 Mar 2019 23:34:50 -0700
-Message-Id: <20190327063451.25629-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327063451.25629-1-andrew.smirnov@gmail.com>
-References: <20190327063451.25629-1-andrew.smirnov@gmail.com>
+        Wed, 27 Mar 2019 02:35:48 -0400
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=chariottest7)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.91)
+        (envelope-from <luca@coelho.fi>)
+        id 1h929z-0003TG-IH; Wed, 27 Mar 2019 08:35:40 +0200
+Message-ID: <5f9c8beda0e925b079aa9342ce1c9523659837a4.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org
+Date:   Wed, 27 Mar 2019 08:35:37 +0200
+In-Reply-To: <20190327015346.GA17979@kroah.com>
+References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
+         <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
+         <20190327012600.GA3649@kroah.com>
+         <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
+         <20190327015346.GA17979@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
+ debugfs_create functions
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6SX_CLK_SDMA result in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA functionality. Fix the code
-to specify IMX6SX_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
-incorrect clock ratio.
+On Wed, 2019-03-27 at 10:53 +0900, Greg Kroah-Hartman wrote:
+> On Tue, Mar 26, 2019 at 06:47:33PM -0700, Laura Abbott wrote:
+> > On 3/26/19 6:26 PM, Greg Kroah-Hartman wrote:
+> > > On Tue, Mar 26, 2019 at 04:55:54PM -0700, Laura Abbott wrote:
+> > > > On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
+> > > > > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > > index 33b0af24a537..c52cdc538678 100644
+> > > > > --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+> > > > > @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
+> > > > >    #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
+> > > > >    	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
+> > > > >    #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
+> > > > > -		if (!debugfs_create_file(#name, mode, parent, vif,	\
+> > > > > -					 &iwl_dbgfs_##name##_ops))	\
+> > > > > -			goto err;					\
+> > > > > +		debugfs_create_file(#name, mode, parent, vif,		\
+> > > > > +				    &iwl_dbgfs_##name##_ops);		\
+> > > > >    	} while (0)
+> > > > >    MVM_DEBUGFS_READ_FILE_OPS(mac_params);
+> > > > > @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+> > > > >    	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
+> > > > > -	if (!mvmvif->dbgfs_dir) {
+> > > > > -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
+> > > > > -			dbgfs_dir);
+> > > > > -		return;
+> > > > > -	}
+> > > > > -
+> > > > >    	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
+> > > > >    	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
+> > > > >    	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
+> > > > > @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
+> > > > >    	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
+> > > > >    						     mvm->debugfs_dir, buf);
+> > > > > -	if (!mvmvif->dbgfs_slink)
+> > > > > -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
+> > > > > -			dbgfs_dir);
+> > > > > -	return;
+> > > > > -err:
+> > > > > -	IWL_ERR(mvm, "Can't create debugfs entity\n");
+> > > > >    }
+> > > > 
+> > > > Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
+> > > > of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
+> > > > ("debugfs: return error values, not NULL") because the error checking is
+> > > > no longer correct in this driver.
+> > > > 
+> > > > Based on https://patchwork.kernel.org/patch/10865839/, it looks like
+> > > > this is supposed to go in for 5.2 but this needs to go in now as
+> > > > the error checking is currently broken without it. Can this get queued
+> > > > for Linus so we can get it in 5.0 stable?
+> > > 
+> > > That's odd, I can't see how the error checking is wrong here.  If the
+> > > directory is not created, an error will be returned, which should be
+> > > able to be handled by debugfs_create_file().
+> > > 
+> > > So with this patch does the error go away?
+> > > 
+> > 
+> > The full patch didn't apply cleanly and I didn't try to backport it
+> > for the reporter to test. I was going off of the theory that if the
+> > patch was there it would fix the problem.
+> > 
+> > What I _think_ is going wrong is dbgfs_dir is actually an errno value:
+> > 
+> > 
+> >         struct dentry *dbgfs_dir = vif->debugfs_dir;
+> >         struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+> >         char buf[100];
+> > 
+> >         /*
+> >          * Check if debugfs directory already exist before creating it.
+> >          * This may happen when, for example, resetting hw or suspend-resume
+> >          */
+> >         if (!dbgfs_dir || mvmvif->dbgfs_dir)
+> >                 return;
+> > 
+> > 
+> > so this blows up in the snprintf
+> > 
+> >         snprintf(buf, 100, "../../../%pd3/%pd",
+> >                  dbgfs_dir,
+> >                  mvmvif->dbgfs_dir);
+> 
+> Ah, yeah, that's horrible.  They had the name before, why pull it out of
+> the dentry again?  That will blow up hard, but maybe printk should check
+> to see if the pointer really is a pointer first.
 
-Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I agree this is ugly.  But do you mean we could use
+("../../../%pd3/%s", dbgfs_dir, "iwlmvm")? Or how did we have the name?
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index df0c59519886..b16a123990a2 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -820,7 +820,7 @@
- 				compatible = "fsl,imx6sx-sdma", "fsl,imx6q-sdma";
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX6SX_CLK_SDMA>,
-+				clocks = <&clks IMX6SX_CLK_IPG>,
- 					 <&clks IMX6SX_CLK_SDMA>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
--- 
-2.20.1
+Also, this would solve the sprintf() problem, but still wouldn't solve
+the real issue, which is not check for ERR in dbgfs_dir.
+
+
+> > Unless I misunderstood what the debugfs error change did. I think this
+> > also means the if check needs to look for IS_ERR and not just !dbgfs_dir.
+> 
+> Yes, that is correct.
+
+Yeah, we can do that.  So this patch doesn't need to be sent for
+v5.1-rc* and v5.0, right? At least I don't see how it would fix the
+issue.  What we need is a new patch with the IS_ERR check.
+
+--
+Cheers,
+Luca.
 
