@@ -6,47 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B19FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410FCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFA02177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086E92177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710098;
-	bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
+	s=default; t=1553710101;
+	bh=NRuaSr8n8fZnBHbG/H+fVSxuNyWN6hyEjm7+spBBsIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcXUx8P6r0Ut3+VlZmZSmFyhpc/EV/jtKiho2DyKvkJVcN6SnpYv+ktMiVRiDI3E1
-	 z/yGuh1dWm8tSJRa/ylLkyYRzYqFjBGWg+ObRwvvZX9vFncwga0n7cAV3pGUv85MUA
-	 Z9CNuJhWMJj6VlOrCzuGoRYFbgTWN4nd0L4VZzX0=
+	b=yWQsuLd4PaVGE4AGfzctyNgsn9h4diLKJ3vyv2URPdwiv86Gon3fiuFPkSabLWEFf
+	 dY0fSmwIbaD3z8PBVj73k5LBUP+eKaiPIt2TQtbFnfMDM0gxBAoxtl0Z8G84i4p9Hv
+	 HuX6PdJpkiiaHqhaairT4E2moGrISA0RuXNwYTwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbfC0SIQ (ORCPT
+        id S2388331AbfC0SIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387844AbfC0SIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:11 -0400
+        id S1731929AbfC0SIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D672183F;
-        Wed, 27 Mar 2019 18:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C84217D9;
+        Wed, 27 Mar 2019 18:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710090;
-        bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
+        s=default; t=1553710095;
+        bh=NRuaSr8n8fZnBHbG/H+fVSxuNyWN6hyEjm7+spBBsIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VT1pKcaoxv4boeyty3L5n4KwjQyUaIFyxOEowhUWumh6UvttPRpTHvmwpqu7tFFkQ
-         lGyjDh586GNfWe+5XpYNaaFnqkP75yyhboRURAa8vJFBrbrMjMcq3y20Eo2nRqMtUQ
-         mINjcVaEo1vJMfnIZjMPmGsKlKnuqS74axo6rDC4=
+        b=ew2t6BXd1TIp4OBek0/p63c62sHlS2spH4Tm6RN1xfMOwZc8EFuj+eJqwNcjocFeT
+         LQWd8jMhJiIhJUSWuImEDT1kJuRI+1JPyGtMDfZldwwWPJWEStTm/TQUfV9QKb5fXe
+         lj46m0yF6L5mY6JpMg3lPzFs3PUK3RVSyhwpidOY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 193/262] soc: qcom: gsbi: Fix error handling in gsbi_probe()
-Date:   Wed, 27 Mar 2019 14:00:48 -0400
-Message-Id: <20190327180158.10245-193-sashal@kernel.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 194/262] drm/msm/dpu: Convert to a chained irq chip
+Date:   Wed, 27 Mar 2019 14:00:49 -0400
+Message-Id: <20190327180158.10245-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,48 +62,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
+[ Upstream commit 070e64dc1bbc879b7e0e9fffccd9dd139baf89f0 ]
 
-If of_platform_populate() fails in gsbi_probe(),
-gsbi->hclk is left undisabled.
+Devices that make up DPU, i.e. graphics card, request their interrupts
+from this "virtual" interrupt chip. The interrupt chip builds upon a GIC
+SPI interrupt that raises high when any of the interrupts in the DPU's
+irq status register are triggered. From the kernel's perspective this is
+a chained irq chip, so requesting a flow handler for the GIC SPI and
+then calling generic IRQ handling code from that irq handler is not
+completely proper. It's better to convert this to a chained irq so that
+the GIC SPI irq doesn't appear in /proc/interrupts, can't have CPU
+affinity changed, and won't be accounted for with irq stats. Doing this
+also silences a recursive lockdep warning because we can specify a
+different lock class for the chained interrupts, silencing a warning
+that is easy to see with 'threadirqs' on the kernel commandline.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+ WARNING: inconsistent lock state
+ 4.19.10 #76 Tainted: G        W
+ --------------------------------
+ inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+ irq/40-dpu_mdss/203 [HC0[0]:SC0[2]:HE1:SE0] takes:
+ 0000000053ea9021 (&irq_desc_lock_class){?.-.}, at: handle_level_irq+0x34/0x26c
+ {IN-HARDIRQ-W} state was registered at:
+   lock_acquire+0x244/0x360
+   _raw_spin_lock+0x64/0xa0
+   handle_fasteoi_irq+0x54/0x2ec
+   generic_handle_irq+0x44/0x5c
+   __handle_domain_irq+0x9c/0x11c
+   gic_handle_irq+0x208/0x260
+   el1_irq+0xb4/0x130
+   arch_cpu_idle+0x178/0x3cc
+   default_idle_call+0x3c/0x54
+   do_idle+0x1a8/0x3dc
+   cpu_startup_entry+0x24/0x28
+   rest_init+0x240/0x270
+   start_kernel+0x5a8/0x6bc
+ irq event stamp: 18
+ hardirqs last  enabled at (17): [<ffffff9042385e80>] _raw_spin_unlock_irq+0x40/0xc0
+ hardirqs last disabled at (16): [<ffffff904237a1f4>] __schedule+0x20c/0x1bbc
+ softirqs last  enabled at (0): [<ffffff9040f318d0>] copy_process+0xb50/0x3964
+ softirqs last disabled at (18): [<ffffff9041036364>] local_bh_disable+0x8/0x20
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   <Interrupt>
+     lock(&irq_desc_lock_class);
+
+  *** DEADLOCK ***
+
+ no locks held by irq/40-dpu_mdss/203.
+
+ stack backtrace:
+ CPU: 0 PID: 203 Comm: irq/40-dpu_mdss Tainted: G        W         4.19.10 #76
+ Call trace:
+  dump_backtrace+0x0/0x2f8
+  show_stack+0x20/0x2c
+  __dump_stack+0x20/0x28
+  dump_stack+0xcc/0x10c
+  mark_lock+0xbe0/0xe24
+  __lock_acquire+0x4cc/0x2708
+  lock_acquire+0x244/0x360
+  _raw_spin_lock+0x64/0xa0
+  handle_level_irq+0x34/0x26c
+  generic_handle_irq+0x44/0x5c
+  dpu_mdss_irq+0x64/0xec
+  irq_forced_thread_fn+0x58/0x9c
+  irq_thread+0x120/0x1dc
+  kthread+0x248/0x260
+  ret_from_fork+0x10/0x18
+ ------------[ cut here ]------------
+ irq 169 handler irq_default_primary_handler+0x0/0x18 enabled interrupts
+
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>
+Cc: Rajesh Yadav <ryadav@codeaurora.org>
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 36 ++++++++++++++----------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
-index 09c669e70d63..038abc377fdb 100644
---- a/drivers/soc/qcom/qcom_gsbi.c
-+++ b/drivers/soc/qcom/qcom_gsbi.c
-@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *base;
- 	struct gsbi_info *gsbi;
--	int i;
-+	int i, ret;
- 	u32 mask, gsbi_num;
- 	const struct crci_config *config = NULL;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+index cb307a2abf06..7316b4ab1b85 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+@@ -23,11 +23,14 @@ struct dpu_mdss {
+ 	struct dpu_irq_controller irq_controller;
+ };
  
-@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
+-static irqreturn_t dpu_mdss_irq(int irq, void *arg)
++static void dpu_mdss_irq(struct irq_desc *desc)
+ {
+-	struct dpu_mdss *dpu_mdss = arg;
++	struct dpu_mdss *dpu_mdss = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	u32 interrupts;
  
- 	platform_set_drvdata(pdev, gsbi);
++	chained_irq_enter(chip, desc);
++
+ 	interrupts = readl_relaxed(dpu_mdss->mmio + HW_INTR_STATUS);
  
--	return of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	if (ret)
-+		clk_disable_unprepare(gsbi->hclk);
-+	return ret;
+ 	while (interrupts) {
+@@ -39,20 +42,20 @@ static irqreturn_t dpu_mdss_irq(int irq, void *arg)
+ 					   hwirq);
+ 		if (mapping == 0) {
+ 			DRM_ERROR("couldn't find irq mapping for %lu\n", hwirq);
+-			return IRQ_NONE;
++			break;
+ 		}
+ 
+ 		rc = generic_handle_irq(mapping);
+ 		if (rc < 0) {
+ 			DRM_ERROR("handle irq fail: irq=%lu mapping=%u rc=%d\n",
+ 				  hwirq, mapping, rc);
+-			return IRQ_NONE;
++			break;
+ 		}
+ 
+ 		interrupts &= ~(1 << hwirq);
+ 	}
+ 
+-	return IRQ_HANDLED;
++	chained_irq_exit(chip, desc);
  }
  
- static int gsbi_remove(struct platform_device *pdev)
+ static void dpu_mdss_irq_mask(struct irq_data *irqd)
+@@ -83,16 +86,16 @@ static struct irq_chip dpu_mdss_irq_chip = {
+ 	.irq_unmask = dpu_mdss_irq_unmask,
+ };
+ 
++static struct lock_class_key dpu_mdss_lock_key, dpu_mdss_request_key;
++
+ static int dpu_mdss_irqdomain_map(struct irq_domain *domain,
+ 		unsigned int irq, irq_hw_number_t hwirq)
+ {
+ 	struct dpu_mdss *dpu_mdss = domain->host_data;
+-	int ret;
+ 
++	irq_set_lockdep_class(irq, &dpu_mdss_lock_key, &dpu_mdss_request_key);
+ 	irq_set_chip_and_handler(irq, &dpu_mdss_irq_chip, handle_level_irq);
+-	ret = irq_set_chip_data(irq, dpu_mdss);
+-
+-	return ret;
++	return irq_set_chip_data(irq, dpu_mdss);
+ }
+ 
+ static const struct irq_domain_ops dpu_mdss_irqdomain_ops = {
+@@ -159,11 +162,13 @@ static void dpu_mdss_destroy(struct drm_device *dev)
+ 	struct msm_drm_private *priv = dev->dev_private;
+ 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
+ 	struct dss_module_power *mp = &dpu_mdss->mp;
++	int irq;
+ 
+ 	pm_runtime_suspend(dev->dev);
+ 	pm_runtime_disable(dev->dev);
+ 	_dpu_mdss_irq_domain_fini(dpu_mdss);
+-	free_irq(platform_get_irq(pdev, 0), dpu_mdss);
++	irq = platform_get_irq(pdev, 0);
++	irq_set_chained_handler_and_data(irq, NULL, NULL);
+ 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+ 	devm_kfree(&pdev->dev, mp->clk_config);
+ 
+@@ -187,6 +192,7 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	struct dpu_mdss *dpu_mdss;
+ 	struct dss_module_power *mp;
+ 	int ret = 0;
++	int irq;
+ 
+ 	dpu_mdss = devm_kzalloc(dev->dev, sizeof(*dpu_mdss), GFP_KERNEL);
+ 	if (!dpu_mdss)
+@@ -219,12 +225,12 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	if (ret)
+ 		goto irq_domain_error;
+ 
+-	ret = request_irq(platform_get_irq(pdev, 0),
+-			dpu_mdss_irq, 0, "dpu_mdss_isr", dpu_mdss);
+-	if (ret) {
+-		DPU_ERROR("failed to init irq: %d\n", ret);
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
+ 		goto irq_error;
+-	}
++
++	irq_set_chained_handler_and_data(irq, dpu_mdss_irq,
++					 dpu_mdss);
+ 
+ 	pm_runtime_enable(dev->dev);
+ 
 -- 
 2.19.1
 
