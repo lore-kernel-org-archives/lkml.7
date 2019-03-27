@@ -2,105 +2,171 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D5C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5AAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE0B206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262D22075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 04:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhmR+IB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfC0Ey7 (ORCPT
+        id S1726344AbfC0E5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 00:54:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21271 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfC0Ey6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 00:54:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2019 21:54:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,275,1549958400"; 
-   d="scan'208";a="158735882"
-Received: from yannluen-mobl.ccr.corp.intel.com (HELO localhost) ([10.249.254.205])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Mar 2019 21:54:52 -0700
-Date:   Wed, 27 Mar 2019 06:54:50 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <jejb@linux.ibm.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, Mimi Zohar <zohar@us.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Denis Kenzior <denkenz@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        James Morris <james.morris@microsoft.com>
-Subject: Re: Bad file pattern in MAINTAINERS section 'KEYS-TRUSTED'
-Message-ID: <20190327045450.GC15397@linux.intel.com>
-References: <7cd8d12f59bcacd18a78f599b46dac555f7f16c0.camel@perches.com>
- <20190325212705.26837-1-joe@perches.com>
- <20190326113725.GA10898@linux.intel.com>
- <1553602220.3960.29.camel@linux.ibm.com>
- <1553610317.2900.2.camel@linux.ibm.com>
+        Wed, 27 Mar 2019 00:57:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41842 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfC0E5c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 00:57:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f6so5220096pgs.8;
+        Tue, 26 Mar 2019 21:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDg494jtgErGqiuDA2DRjeEz9+0QgIkJR2NqCdRXVXs=;
+        b=jhmR+IB4bJEDLObmykQh0VEJGwfRIVC3QWWLrTFYqZSk4BA+9XE2FeeeFBYR2ws0sL
+         bz8BLa7NFKibWHi3CV72P3YeKhBnQ8gx8USwQ+njX8rPk7CpFta8B8ymRRNBwhQ4zL/7
+         8YyW80I9atodaeq3BFqOazE6xFFiJ1s2fiD9rJVFtIZnc5Dkw4u4DYtq3IrVHrDX8d7j
+         3Oz5Zrgq9h9lOxt4MztS/gaviNXXtpoB8Jm/6Wj/Su9rsQBGC9vzLw+3DGhZI23HyI8m
+         Hi0vLvAfXuBYmtHJzvQX7uVTmv+EGF33wdYStCoXd5RMEIoLTh2oXMa/57n/oni4oQWc
+         EIaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDg494jtgErGqiuDA2DRjeEz9+0QgIkJR2NqCdRXVXs=;
+        b=oxdzRFYWB2Xv+pzZyTvqPdk5U0v5MmtyzEIoP4w8QaA4+dFFzFgiHaG0ppB1jkvGq8
+         S3/s+Oi5v4+mX6WluuoRDizUCHm2BzYvd7JwvSMHFB+peufnC+UwfKW096/sywm8quBW
+         tM7cBoL7h/OfTRyCP3/cZ2uOBY1XSZSiFrao9UbFHTEfSBAh+6PvXZhEuLkzIP/wgk9z
+         dWsZlsk4u1kwtoGfqiiA7M22j34L3QfQILI0O/TqlglCBJVHVK26+NdXz6L5I13bQRir
+         vJE/z1JkiYqzIRAulGfD0W1VDhTrhM+2oW72yOWGY3DcX8Aofn8IuK9QgOezU8NHNzQf
+         sorg==
+X-Gm-Message-State: APjAAAXuat3tS+0kl75uC5ukc/m312DXhjGxOhS7UvpEbHBr/SH2vB5X
+        sGUvK5TxRtbAnbmKOoVOP1Q=
+X-Google-Smtp-Source: APXvYqxE2tf4lUtg4StdijZm2lopmjoepVgVdckkNo4w96q0iYq0OpIyWBgaJxwrQCgVWVDC0Y7GRw==
+X-Received: by 2002:a63:ef05:: with SMTP id u5mr32644220pgh.177.1553662651013;
+        Tue, 26 Mar 2019 21:57:31 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c0a5:6014:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id z6sm61151922pgo.31.2019.03.26.21.57.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 21:57:30 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        geert@linux-m68k.org, preid@electromag.com.au,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v13 00/11] Introduce the for_each_set_clump8 macro
+Date:   Wed, 27 Mar 2019 13:57:55 +0900
+Message-Id: <cover.1553661964.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553610317.2900.2.camel@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 07:25:17AM -0700, James Bottomley wrote:
-> On Tue, 2019-03-26 at 08:10 -0400, Mimi Zohar wrote:
-> > Hi Jarrko,
-> > 
-> > On Tue, 2019-03-26 at 13:37 +0200, Jarkko Sakkinen wrote:
-> > > Mimi,
-> > > 
-> > > Can you fix this and I can ack and send PR through my tree?
-> > 
-> > Making the "trusted.h" include file public was part of David's "KEYS:
-> > Support TPM-wrapped key and crypto ops" patch set.  I wasn't involved
-> > in reviewing or upstreaming this patch set.  As I recall, it was
-> > upstreamed rather quickly without much review.  As it is TPM related,
-> > it should have at least been posted on the linux-integrity mailing
-> > list.  I have no idea if "trusted.h" should have been made public.
-> > 
-> > I'm not sure just "fixing" the MAINTAINERS file is the right
-> > solution.  I was hoping to look at it later this week.  Perhaps you
-> > and James could take a look?
-> 
-> Looking at the contents of linux/keys/trusted.h, it looks like the
-> wrong decision to move it.  The contents are way too improperly named
-> and duplicative to be in a standard header.  It's mostly actually TPM
-> code including a redefinition of the tpm_buf structure, so it doesn't
-> even seem to be necessary for trusted keys.
-> 
-> If you want to fix this as a bug, I'd move it back again, but long term
-> I think it should simply be combined with trusted.c because nothing
-> else can include it sanely anyway.
+Changes in v13:
+  - Reimplement find_next_clump8 to leverage find_next_bit
+  - Restrict bitmap_get_value8/bitmap_set_value8 start argument to
+    values that are multiples of 8; this prevents cases where a clump
+    lands between word boundaries
+  - Trim const qualifiers from bitmap_get_value8, bitmap_set_value8, and
+    find_next_clump8; this should help improve readability of the code
+  - Redefine parameter list for bitmap_get_value8, bitmap_set_value8,
+    and find_next_clump8 to use unsigned long in order to match the
+    find_next_bit data types and naming conventions
 
-<offtopic>
-Fully agree with the long term plan.
+While adding GPIO get_multiple/set_multiple callback support for various
+drivers, I noticed a pattern of looping manifesting that would be useful
+standardized as a macro.
 
-I think it would be better to take the TPM2 trusted keys code from the
-driver to the keyring subsystem once TPM1 trusted keys code has been
-converted to use tpm_buf.
+This patchset introduces the for_each_set_clump8 macro and utilizes it
+in several GPIO drivers. The for_each_set_clump macro8 facilitates a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-I don't also know any good reason for the core TPM driver to be compiled
-as a module. It is just makes the kernel build configuration more
-awkward. Would be nice to get the TPM callable from any subsystem
-without fuzz. There is no a production use case for "TPM as an LKM"
-(obviously drivers for different types of TPM hardware must and will
-be compilable as LKM's).
-</offtopic>
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-/Jarkko
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
+
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
+
+The for_each_set_clump8 macro has four parameters:
+
+    * start: set to the bit offset of the current clump
+    * clump: set to the current clump value
+    * bits: bitmap to search within
+    * size: bitmap size in number of bits
+
+In this version of the patchset, the for_each_set_clump macro has been
+reimplemented and simplified based on the suggestions provided by Rasmus
+Villemoes and Andy Shevchenko in the version 4 submission.
+
+In particular, the function of the for_each_set_clump macro has been
+restricted to handle only 8-bit clumps; the drivers that use the
+for_each_set_clump macro only handle 8-bit ports so a generic
+for_each_set_clump implementation is not necessary. Thus, a solution for
+large clumps (i.e. those larger than the width of a bitmap word) can be
+postponed until a driver appears that actually requires such a generic
+for_each_set_clump implementation.
+
+For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
+smaller than the width of a bitmap word) can be implemented by simply
+replacing the hardcoded '8' and '0xFF' instances with respective
+variables. I have not yet had a need for such an implementation, and
+since it falls short of a true generic for_each_set_clump function, I
+have decided to forgo such an implementation for now.
+
+In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
+introduced to get and set 8-bit values respectively. Their use is based
+on the behavior suggested in the patchset version 4 review.
+
+William Breathitt Gray (11):
+  bitops: Introduce the for_each_set_clump8 macro
+  lib/test_bitmap.c: Add for_each_set_clump8 test cases
+  gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+  gpio: 104-idi-48: Utilize for_each_set_clump8 macro
+  gpio: gpio-mm: Utilize for_each_set_clump8 macro
+  gpio: ws16c48: Utilize for_each_set_clump8 macro
+  gpio: pci-idio-16: Utilize for_each_set_clump8 macro
+  gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+  gpio: uniphier: Utilize for_each_set_clump8 macro
+  gpio: 74x164: Utilize the for_each_set_clump8 macro
+  thermal: intel: intel_soc_dts_iosf: Utilize for_each_set_clump8 macro
+
+ drivers/gpio/gpio-104-dio-48e.c            |  73 ++++----------
+ drivers/gpio/gpio-104-idi-48.c             |  36 ++-----
+ drivers/gpio/gpio-74x164.c                 |  19 ++--
+ drivers/gpio/gpio-gpio-mm.c                |  73 ++++----------
+ drivers/gpio/gpio-pci-idio-16.c            |  75 +++++---------
+ drivers/gpio/gpio-pcie-idio-24.c           | 109 ++++++++-------------
+ drivers/gpio/gpio-uniphier.c               |  16 ++-
+ drivers/gpio/gpio-ws16c48.c                |  73 ++++----------
+ drivers/thermal/intel/intel_soc_dts_iosf.c |  29 +++---
+ drivers/thermal/intel/intel_soc_dts_iosf.h |   2 -
+ include/asm-generic/bitops/find.h          |  11 +++
+ include/linux/bitops.h                     |   5 +
+ lib/find_bit.c                             |  58 +++++++++++
+ lib/test_bitmap.c                          |  65 ++++++++++++
+ 14 files changed, 307 insertions(+), 337 deletions(-)
+
+-- 
+2.21.0
+
