@@ -2,229 +2,131 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B1AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE662C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D982120700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B549D20700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 12:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfC0MRH (ORCPT
+        id S1729104AbfC0MRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 08:17:07 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51805 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728250AbfC0MRH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 08:17:07 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2RCGJEf2849234
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Mar 2019 05:16:19 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2RCGH9f2849230;
-        Wed, 27 Mar 2019 05:16:17 -0700
-Date:   Wed, 27 Mar 2019 05:16:17 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Yazen Ghannam <tipbot@zytor.com>
-Message-ID: <tip-006c077041dc73b9490fffc4c6af5befe0687110@git.kernel.org>
-Cc:     mingo@redhat.com, yazen.ghannam@amd.com, vishal.l.verma@intel.com,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        bp@suse.de, puwen@hygon.cn, x86@kernel.org, tony.luck@intel.com,
-        linux-edac@vger.kernel.org, hpa@zytor.com
-Reply-To: tony.luck@intel.com, x86@kernel.org, linux-edac@vger.kernel.org,
-          tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com, bp@suse.de,
-          yazen.ghannam@amd.com, vishal.l.verma@intel.com,
-          mingo@kernel.org, linux-kernel@vger.kernel.org, puwen@hygon.cn
-In-Reply-To: <20180727214009.78289-1-Yazen.Ghannam@amd.com>
-References: <20180727214009.78289-1-Yazen.Ghannam@amd.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:ras/core] x86/mce: Handle varying MCA bank counts
-Git-Commit-ID: 006c077041dc73b9490fffc4c6af5befe0687110
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 27 Mar 2019 08:17:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53634 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728250AbfC0MRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 08:17:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57E14374;
+        Wed, 27 Mar 2019 05:17:10 -0700 (PDT)
+Received: from [10.162.40.146] (p8cg001049571a15.blr.arm.com [10.162.40.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DDA23F557;
+        Wed, 27 Mar 2019 05:17:07 -0700 (PDT)
+Subject: Re: [PATCH] Correct zone boundary handling when resetting pageblock
+ skip hints
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Qian Cai <cai@lca.pw>, linux-mm@kvack.org, vbabka@suse.cz,
+        linux-kernel@vger.kernel.org
+References: <20190327085424.GL3189@techsingularity.net>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <084b92cd-94e9-f8e5-cce1-862d984c8eac@arm.com>
+Date:   Wed, 27 Mar 2019 17:47:06 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190327085424.GL3189@techsingularity.net>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  006c077041dc73b9490fffc4c6af5befe0687110
-Gitweb:     https://git.kernel.org/tip/006c077041dc73b9490fffc4c6af5befe0687110
-Author:     Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate: Fri, 27 Jul 2018 16:40:09 -0500
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 27 Mar 2019 13:12:49 +0100
 
-x86/mce: Handle varying MCA bank counts
 
-Linux reads MCG_CAP[Count] to find the number of MCA banks visible to a
-CPU. Currently, this number is the same for all CPUs and a warning is
-shown if there is a difference. The number of banks is overwritten with
-the MCG_CAP[Count] value of each following CPU that boots.
+On 03/27/2019 02:24 PM, Mel Gorman wrote:
+> Mikhail Gavrilo reported the following bug being triggered in a Fedora
+> kernel based on 5.1-rc1 but it is relevant to a vanilla kernel.
+> 
+>  kernel: page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+>  kernel: ------------[ cut here ]------------
+>  kernel: kernel BUG at include/linux/mm.h:1021!
+>  kernel: invalid opcode: 0000 [#1] SMP NOPTI
+>  kernel: CPU: 6 PID: 116 Comm: kswapd0 Tainted: G         C        5.1.0-0.rc1.git1.3.fc31.x86_64 #1
+>  kernel: Hardware name: System manufacturer System Product Name/ROG STRIX X470-I GAMING, BIOS 1201 12/07/2018
+>  kernel: RIP: 0010:__reset_isolation_pfn+0x244/0x2b0
+>  kernel: Code: fe 06 e8 0f 8e fc ff 44 0f b6 4c 24 04 48 85 c0 0f 85 dc fe ff ff e9 68 fe ff ff 48 c7 c6 58 b7 2e 8c 4c 89 ff e8 0c 75 00 00 <0f> 0b 48 c7 c6 58 b7 2e 8c e8 fe 74 00 00 0f 0b 48 89 fa 41 b8 01
+>  kernel: RSP: 0018:ffff9e2d03f0fde8 EFLAGS: 00010246
+>  kernel: RAX: 0000000000000034 RBX: 000000000081f380 RCX: ffff8cffbddd6c20
+>  kernel: RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8cffbddd6c20
+>  kernel: RBP: 0000000000000001 R08: 0000009898b94613 R09: 0000000000000000
+>  kernel: R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000100000
+>  kernel: R13: 0000000000100000 R14: 0000000000000001 R15: ffffca7de07ce000
+>  kernel: FS:  0000000000000000(0000) GS:ffff8cffbdc00000(0000) knlGS:0000000000000000
+>  kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  kernel: CR2: 00007fc1670e9000 CR3: 00000007f5276000 CR4: 00000000003406e0
+>  kernel: Call Trace:
+>  kernel:  __reset_isolation_suitable+0x62/0x120
+>  kernel:  reset_isolation_suitable+0x3b/0x40
+>  kernel:  kswapd+0x147/0x540
+>  kernel:  ? finish_wait+0x90/0x90
+>  kernel:  kthread+0x108/0x140
+>  kernel:  ? balance_pgdat+0x560/0x560
+>  kernel:  ? kthread_park+0x90/0x90
+>  kernel:  ret_from_fork+0x27/0x50
+> 
+> He bisected it down to commit e332f741a8dd ("mm, compaction: be selective
+> about what pageblocks to clear skip hints"). The problem is that the patch
+> in question was sloppy with respect to the handling of zone boundaries. In
+> some instances, it was possible for PFNs outside of a zone to be examined
+> and if those were not properly initialised or poisoned then it would
+> trigger the VM_BUG_ON. This patch corrects the zone boundary issues when
+> resetting pageblock skip hints and Mikhail reported that the bug did not
+> trigger after 30 hours of testing.
+> 
+> Fixes: e332f741a8dd ("mm, compaction: be selective about what pageblocks to clear skip hints")
+> Reported-and-tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  mm/compaction.c | 27 +++++++++++++++++----------
+>  1 file changed, 17 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index f171a83707ce..b4930bf93c8a 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -242,6 +242,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+>  							bool check_target)
+>  {
+>  	struct page *page = pfn_to_online_page(pfn);
+> +	struct page *block_page;
+>  	struct page *end_page;
+>  	unsigned long block_pfn;
+>  
+> @@ -267,20 +268,26 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
+>  	    get_pageblock_migratetype(page) != MIGRATE_MOVABLE)
+>  		return false;
+>  
+> +	/* Ensure the start of the pageblock or zone is online and valid */
+> +	block_pfn = pageblock_start_pfn(pfn);
+> +	block_page = pfn_to_online_page(max(block_pfn, zone->zone_start_pfn));
+> +	if (block_page) {
+> +		page = block_page;
+> +		pfn = block_pfn;
+> +	}
+> +
+> +	/* Ensure the end of the pageblock or zone is online and valid */
+> +	block_pfn += pageblock_nr_pages;
+> +	block_pfn = min(block_pfn, zone_end_pfn(zone) - 1);
+> +	end_page = pfn_to_online_page(block_pfn);
+> +	if (!end_page)
+> +		return false;
 
-According to the Intel SDM and AMD APM, the MCG_CAP[Count] value gives
-the number of banks that are available to a "processor implementation".
-The AMD BKDGs/PPRs further clarify that this value is per core. This
-value has historically been the same for every core in the system, but
-that is not an architectural requirement.
-
-Future AMD systems may have different MCG_CAP[Count] values per core,
-so the assumption that all CPUs will have the same MCG_CAP[Count] value
-will no longer be valid.
-
-Also, the first CPU to boot will allocate the struct mce_banks[] array
-using the number of banks based on its MCG_CAP[Count] value. The machine
-check handler and other functions use the global number of banks to
-iterate and index into the mce_banks[] array. So it's possible to use an
-out-of-bounds index on an asymmetric system where a following CPU sees a
-MCG_CAP[Count] value greater than its predecessors.
-
-Thus, allocate the mce_banks[] array to the maximum number of banks.
-This will avoid the potential out-of-bounds index since the value of
-mca_cfg.banks is capped to MAX_NR_BANKS.
-
-Set the value of mca_cfg.banks equal to the max of the previous value
-and the value for the current CPU. This way mca_cfg.banks will always
-represent the max number of banks detected on any CPU in the system.
-
-This will ensure that all CPUs will access all the banks that are
-visible to them. A CPU that can access fewer than the max number of
-banks will find the registers of the extra banks to be read-as-zero.
-
-Furthermore, print the resulting number of MCA banks in use. Do this in
-mcheck_late_init() so that the final value is printed after all CPUs
-have been initialized.
-
-Finally, get bank count from target CPU when doing injection with mce-inject
-module.
-
- [ bp: Remove out-of-bounds example, passify and cleanup commit message. ]
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20180727214009.78289-1-Yazen.Ghannam@amd.com
----
- arch/x86/kernel/cpu/mce/core.c   | 22 +++++++---------------
- arch/x86/kernel/cpu/mce/inject.c | 14 +++++++-------
- 2 files changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index e558ca77cfe8..c3498732ba28 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1481,13 +1481,12 @@ EXPORT_SYMBOL_GPL(mce_notify_irq);
- static int __mcheck_cpu_mce_banks_init(void)
- {
- 	int i;
--	u8 num_banks = mca_cfg.banks;
- 
--	mce_banks = kcalloc(num_banks, sizeof(struct mce_bank), GFP_KERNEL);
-+	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
- 	if (!mce_banks)
- 		return -ENOMEM;
- 
--	for (i = 0; i < num_banks; i++) {
-+	for (i = 0; i < MAX_NR_BANKS; i++) {
- 		struct mce_bank *b = &mce_banks[i];
- 
- 		b->ctl = -1ULL;
-@@ -1501,28 +1500,19 @@ static int __mcheck_cpu_mce_banks_init(void)
-  */
- static int __mcheck_cpu_cap_init(void)
- {
--	unsigned b;
- 	u64 cap;
-+	u8 b;
- 
- 	rdmsrl(MSR_IA32_MCG_CAP, cap);
- 
- 	b = cap & MCG_BANKCNT_MASK;
--	if (!mca_cfg.banks)
--		pr_info("CPU supports %d MCE banks\n", b);
--
--	if (b > MAX_NR_BANKS) {
--		pr_warn("Using only %u machine check banks out of %u\n",
--			MAX_NR_BANKS, b);
-+	if (WARN_ON_ONCE(b > MAX_NR_BANKS))
- 		b = MAX_NR_BANKS;
--	}
- 
--	/* Don't support asymmetric configurations today */
--	WARN_ON(mca_cfg.banks != 0 && b != mca_cfg.banks);
--	mca_cfg.banks = b;
-+	mca_cfg.banks = max(mca_cfg.banks, b);
- 
- 	if (!mce_banks) {
- 		int err = __mcheck_cpu_mce_banks_init();
--
- 		if (err)
- 			return err;
- 	}
-@@ -2481,6 +2471,8 @@ EXPORT_SYMBOL_GPL(mcsafe_key);
- 
- static int __init mcheck_late_init(void)
- {
-+	pr_info("Using %d MCE banks\n", mca_cfg.banks);
-+
- 	if (mca_cfg.recovery)
- 		static_branch_inc(&mcsafe_key);
- 
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index 8492ef7d9015..3f82afd0f46f 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -46,8 +46,6 @@
- static struct mce i_mce;
- static struct dentry *dfs_inj;
- 
--static u8 n_banks;
--
- #define MAX_FLAG_OPT_SIZE	4
- #define NBCFG			0x44
- 
-@@ -570,9 +568,15 @@ err:
- static int inj_bank_set(void *data, u64 val)
- {
- 	struct mce *m = (struct mce *)data;
-+	u8 n_banks;
-+	u64 cap;
-+
-+	/* Get bank count on target CPU so we can handle non-uniform values. */
-+	rdmsrl_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
-+	n_banks = cap & MCG_BANKCNT_MASK;
- 
- 	if (val >= n_banks) {
--		pr_err("Non-existent MCE bank: %llu\n", val);
-+		pr_err("MCA bank %llu non-existent on CPU%d\n", val, m->extcpu);
- 		return -EINVAL;
- 	}
- 
-@@ -665,10 +669,6 @@ static struct dfs_node {
- static int __init debugfs_init(void)
- {
- 	unsigned int i;
--	u64 cap;
--
--	rdmsrl(MSR_IA32_MCG_CAP, cap);
--	n_banks = cap & MCG_BANKCNT_MASK;
- 
- 	dfs_inj = debugfs_create_dir("mce-inject", NULL);
- 	if (!dfs_inj)
+Should not we check zone against page_zone() from both start and end page here.
