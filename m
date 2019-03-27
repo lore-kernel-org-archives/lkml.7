@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDFEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B3020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1D220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711716;
-	bh=qUpKSpkOlmi2VkEic6poulyBp84gUtWWBEjZQBMPOlk=;
+	s=default; t=1553711726;
+	bh=2XKyr4/lr1f1ZymUApGsdWfFphGfv7gMe2COxmPa2Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jaQGN/kHV45RoPM/ukOy8N9IyqCTC2CdlohnxtI9o3BZbiCjvK13dpA/HTeIrr0j4
-	 Pkb3KfuxxLQNSFELl3DMRWc+MHo+7H42CT7GggN0OV9rUH4mzmGwTzGb+52Xu6dRlx
-	 oC+y++vCC542CF6X+Fz1Q9DyacNJkOtNLVU1WH8s=
+	b=Rc80P/NOC+yz8Uz6G4TEnpZZ1qRlXNbDujhKNf0Atl6D8R54fA4hRg3b4pjJ+Wmnq
+	 p1LYaMdwEViuenrOBJtoIAvfWo7NN8DcAqcqYPJ19Y3opuibwrpVCbZN+z6ROZkZul
+	 isGmHsbgolR/o+VxenIHDl+1t9zm0bPjh0KcvXNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404171AbfC0SfO (ORCPT
+        id S2404191AbfC0SfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404007AbfC0SYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:36 -0400
+        id S2391570AbfC0SYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4D020449;
-        Wed, 27 Mar 2019 18:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7F22070B;
+        Wed, 27 Mar 2019 18:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711075;
-        bh=qUpKSpkOlmi2VkEic6poulyBp84gUtWWBEjZQBMPOlk=;
+        s=default; t=1553711062;
+        bh=2XKyr4/lr1f1ZymUApGsdWfFphGfv7gMe2COxmPa2Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCh2ADmGlACEQNyMGkkYfLpLHw2Xc+xALpuixZwvTcaweIWYOXb6bVF+Om6nXIZZ4
-         z3lkRfqZECWBJLGFjEOUaT7HFYSh7STf/5MZKKGI61vwzB3nzNOPD5r+5glk+KJDfW
-         rOgZX17i9iLO0nfipkDX0CS0xXIir4HQWtjbEhrg=
+        b=giwa0hhnkdhKuNdpRsOWJxB/G8T4fe1JytJFh517vrQd4A48o6nmLC3GxgZ9gMUOe
+         lq+LfvSOPkeh0CiAiqm0jrhfcaQs25Z1jwnIEgySRXUvUDxcPGNEmSC8nQEuMC2AR+
+         DNHz+w5i34VT4Xccrjd+OtCqgIWKaJd2bA6mBm+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 40/63] bcache: fix input overflow to sequential_cutoff
-Date:   Wed, 27 Mar 2019 14:23:00 -0400
-Message-Id: <20190327182323.18577-40-sashal@kernel.org>
+Cc:     Michal Kazior <michal@plume.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 35/63] leds: lp55xx: fix null deref on firmware load failure
+Date:   Wed, 27 Mar 2019 14:22:55 -0400
+Message-Id: <20190327182323.18577-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -56,42 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Michal Kazior <michal@plume.com>
 
-[ Upstream commit 8c27a3953e92eb0b22dbb03d599f543a05f9574e ]
+[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
 
-People may set sequential_cutoff of a cached device via sysfs file,
-but current code does not check input value overflow. E.g. if value
-4294967295 (UINT_MAX) is written to file sequential_cutoff, its value
-is 4GB, but if 4294967296 (UINT_MAX + 1) is written into, its value
-will be 0. This is an unexpected behavior.
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
-This patch replaces d_strtoi_h() by sysfs_strtoul_clamp() to convert
-input string to unsigned integer value, and limit its range in
-[0, UINT_MAX]. Then the input overflow can be fixed.
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
+
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 87daccbbc61b..463ce6757338 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -215,7 +215,9 @@ STORE(__cached_dev)
- 	d_strtoul(writeback_rate_d_term);
- 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 59b76833f0d3..fd077c176a62 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -200,7 +200,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
  
--	d_strtoi_h(sequential_cutoff);
-+	sysfs_strtoul_clamp(sequential_cutoff,
-+			    dc->sequential_cutoff,
-+			    0, UINT_MAX);
- 	d_strtoi_h(readahead);
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
  
- 	if (attr == &sysfs_clear_stats)
+ 	/* handling firmware data is chip dependent */
+@@ -213,9 +213,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
+ }
+ 
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
