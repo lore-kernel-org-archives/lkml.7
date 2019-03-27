@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4630C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC56C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811E52064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3602064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714161;
-	bh=XDU3pDaFS7FxDL2zKOud1zsUh802XoB4iGdwjkrHUHQ=;
+	s=default; t=1553714167;
+	bh=OdiFIfLi8e5mOiWl5Vjzu/P2pPQjYFvI1PcfPlielXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Th4ZNgI/rsM3ZzPZrpFlOEMiWIUTytH3nFd0lOFIMoT3fZ9UVtAJIF/fnRzskfmoa
-	 TI8cSMeJKi9kBEUgGbLgxruh3FQjeHoYwdGqGnUlVwSuv6QScVum5JCIYZkt9G8XJM
-	 XMUh9dSQBO6cuysUuW3VIfSZ9ZxBk1xh6UHqb7qQ=
+	b=IfCdFmDB3i8TKvLjHU2zVsaV3D6eGwe4BJNx9qABQ90UoqSa/1gQj9aoULlwYIcDX
+	 7G0JN286EwNc9M6K2tBGRgnrlnMH/pkZ/aMHZMtKHJqx/ruIyhTu2k/wBhqfCwO4vF
+	 5KmJbQqOubVCer+auaqKNCDmaGIxmYew/KpJGbjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbfC0SJQ (ORCPT
+        id S2388214AbfC0TQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51006 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727657AbfC0SJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:11 -0400
+        id S1729844AbfC0SJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4190F21741;
-        Wed, 27 Mar 2019 18:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D90B217D9;
+        Wed, 27 Mar 2019 18:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710151;
-        bh=XDU3pDaFS7FxDL2zKOud1zsUh802XoB4iGdwjkrHUHQ=;
+        s=default; t=1553710153;
+        bh=OdiFIfLi8e5mOiWl5Vjzu/P2pPQjYFvI1PcfPlielXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJyiQIZ3eloqnBDSb4npB9OYNmoyh235kW89y/HXSMa1QOMP89jXWZd8RyWhcFBsH
-         gcFPDAwhlQCjF1kGy+uXedXDi0LVKmcji+iS+xl1H9Apa7uMatjli5n3SfH1dpbg9N
-         YkpY5wuREhp4i7Q6W8q4cDFY8281iYbsWMmWlHoA=
+        b=QEKZLxdliHO8hY3heSiWBZ8HXYYvNoZmo4yVwOj7ol4BvmdM4Uc6w32XfEpxJBSAQ
+         zpwf9VAnl0dPm1YkDOaHriOwly8PRkd+goEsqj2FN3pQT2Y5QLtIboXtHP63Q7tvK3
+         hcKcw4yhTBURlqijVGSERavrZ30IjoMzQbKpfHJQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Song Hongyan <hongyan.song@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 219/262] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
-Date:   Wed, 27 Mar 2019 14:01:14 -0400
-Message-Id: <20190327180158.10245-219-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 221/262] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Wed, 27 Mar 2019 14:01:16 -0400
+Message-Id: <20190327180158.10245-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,63 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hongyan <hongyan.song@intel.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
+[ Upstream commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 ]
 
-Host driver should handle interrupt mask register earlier than wake up ish FW
-else there will be conditions when FW interrupt comes, host PIMR register still
-not set ready, so move the interrupt mask setting before ish_wakeup.
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
-conditions host driver received a busy_clear interrupt (before the busy_clear
-mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
-the interrupt will never be cleared, causing the DEVICE not sending following
-IRQ.
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
 
-Since PISR clear should not be called for the CHV device we do this change.
-After the change, both ISH2HOST interrupt and busy_clear interrupt will be
-considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
-from IPC_IS_BUSY check.
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
 
-Signed-off-by: Song Hongyan <hongyan.song@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/bluetooth/l2cap_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
-index 742191bb24c6..45e33c7ba9a6 100644
---- a/drivers/hid/intel-ish-hid/ipc/ipc.c
-+++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
-@@ -91,7 +91,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
- 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
- 	} else {
- 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
--		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
-+		interrupt_generated = !!pisr_val;
-+		/* only busy-clear bit is RW, others are RO */
-+		if (pisr_val)
-+			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
- 	}
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 2a7fb517d460..f8b3d2a81a44 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3337,6 +3337,8 @@ static int l2cap_parse_conf_req(struct l2cap_chan *chan, void *data, size_t data
  
- 	return interrupt_generated;
-@@ -839,11 +842,11 @@ int ish_hw_start(struct ishtp_device *dev)
- {
- 	ish_set_host_rdy(dev);
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
  
-+	set_host_ready(dev);
-+
- 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
- 	ish_wakeup(dev);
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3548,6 +3550,8 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
  
--	set_host_ready(dev);
--
- 	/* wait for FW-initiated reset flow */
- 	if (!dev->recvd_hw_ready)
- 		wait_event_interruptible_timeout(dev->wait_hw_ready,
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3728,6 +3732,8 @@ static void l2cap_conf_rfc_get(struct l2cap_chan *chan, void *rsp, int len)
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 -- 
 2.19.1
 
