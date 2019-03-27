@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BF9C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8621C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE7920643
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815952070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710818;
-	bh=Ca/rvb3yJ4CpVWB4KDZBBTrJBFoDN4btwzhxYyajGYc=;
+	s=default; t=1553710824;
+	bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5jln8U5Cc8kp6tFot3bEkXeAMkP/oB8fFlvHeXaQPCzVNDCG/Bm9hD5FUskuRQPx
-	 Bx3THdQtBxO+9B5P24pjp/XCOTZPoLbsGY4ge/ntf7tE+l3urdpPtC/LagZ6Al8FnP
-	 Py2ql8qhHGvt8QVvXZcdWNOf7RuSeR3zm7WY+77s=
+	b=tSfjVb0ByoEDolSNdTr3+rCroqwhgh8l1niD544NJHzDCOOJpooDos8Z/OvSDdZP7
+	 k4cSItLFnH4VshKEpBRMo2gBTHct5i9lnpqW97xNXp0uxYnKq3qZ0HoMcf+qB48RkX
+	 AuzEHiI3MUwq2zS188i3+obhsOxzSmP9k/t6OCt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390890AbfC0SUR (ORCPT
+        id S2390901AbfC0SUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37580 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389853AbfC0SUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:10 -0400
+        id S2390886AbfC0SUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A14F2184D;
-        Wed, 27 Mar 2019 18:20:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A18D20643;
+        Wed, 27 Mar 2019 18:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710805;
-        bh=Ca/rvb3yJ4CpVWB4KDZBBTrJBFoDN4btwzhxYyajGYc=;
+        s=default; t=1553710817;
+        bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n17/BvrntdmWoZx44YZKMomqz9e6VqaysC7HiqsgCCVPGCDwxv1GLY0zW7V5k5G1o
-         aI93feFRRWBGc/g7x/gZkBxI+s+WfbRZJFh161HeOotwh7p3+26KkLvq4ebrmI0lBI
-         dNXyV2fbv3fDbH5+3BzIKLEZdyQ4+OUr62nU2sO4=
+        b=ZPEBuJp8+VjKOvTxZDocPryrPvEQu09lHnVQx41O+mHrlECsDaXiC4cW3cKNZcxN6
+         95bXSCxKmmwvMpoksxVkuzN0WoqejFYZg6jpIspxAHTa9Qsrr4HGc8ea1N0dwtxOvT
+         gJmRSD59FM1QE5R7mrRL7xEgOM9Fk/skwM1R3uwQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 109/123] dmaengine: qcom_hidma: initialize tx flags in hidma_prep_dma_*
-Date:   Wed, 27 Mar 2019 14:16:13 -0400
-Message-Id: <20190327181628.15899-109-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 112/123] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
+Date:   Wed, 27 Mar 2019 14:16:16 -0400
+Message-Id: <20190327181628.15899-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -59,55 +57,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 875aac8a46424e5b73a9ff7f40b83311b609e407 ]
+[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
 
-In async_tx_test_ack(), it uses flags in struct dma_async_tx_descriptor
-to check the ACK status. As hidma reuses the descriptor in a free list
-when hidma_prep_dma_*(memcpy/memset) is called, the flag will keep ACKed
-if the descriptor has been used before. This will cause a BUG_ON in
-async_tx_quiesce().
+The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
 
-  kernel BUG at crypto/async_tx/async_tx.c:282!
-  Internal error: Oops - BUG: 0 1 SMP
-  ...
-  task: ffff8017dd3ec000 task.stack: ffff8017dd3e8000
-  PC is at async_tx_quiesce+0x54/0x78 [async_tx]
-  LR is at async_trigger_callback+0x98/0x110 [async_tx]
+The problems in below entry:
+  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
 
-This patch initializes flags in dma_async_tx_descriptor by the flags
-passed from the caller when hidma_prep_dma_*(memcpy/memset) is called.
+1. The off-by-one min_sel causes wrong volatage calculation.
+   The min_sel should be 192.
+2. According to the datasheet[1] Table 7. (on page 43):
+   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
 
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
+
+[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+
+Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/act8865-regulator.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index 177d7a24dd39..dd15a829e792 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -411,6 +411,7 @@ hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dest, dma_addr_t src,
- 	if (!mdesc)
- 		return NULL;
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 7652477e6a9d..39e8d60df060 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -131,7 +131,7 @@
+  * ACT8865 voltage number
+  */
+ #define	ACT8865_VOLTAGE_NUM	64
+-#define ACT8600_SUDCDC_VOLTAGE_NUM	255
++#define ACT8600_SUDCDC_VOLTAGE_NUM	256
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     src, dest, len, flags,
- 				     HIDMA_TRE_MEMCPY);
-@@ -443,6 +444,7 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
- 	if (!mdesc)
- 		return NULL;
+ struct act8865 {
+ 	struct regmap *regmap;
+@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
+ 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
+ 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
+-	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
++	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
++	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
+ };
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     value, dest, len, flags,
- 				     HIDMA_TRE_MEMSET);
+ static struct regulator_ops act8865_ops = {
 -- 
 2.19.1
 
