@@ -6,52 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDE5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD1AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D2D206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3871206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713243;
-	bh=f4oZ0TGLycpFXCJ0TWPvfjCCGCNxWk1juifR0am6S9s=;
+	s=default; t=1553713249;
+	bh=U4NHXb93jqyGD6hD1dvHa9IoKEXCqHTvPeHgMnsKG/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iOLvCaiMSIlxzOaaGl62d8IgSyarn7Cnsmbm+l4x62cWBIuP+w/ifvyd5FvB+rLCJ
-	 5PB8wSzrFfQlARJeG5nlJ0duCzDN5s5I55W/kTHy3E5HYKxUW2dIbVsB+BPrEYgbSz
-	 xJxfOmF/zedqaeVbyVNt5VreYiNwQv79UQIAdSYo=
+	b=IU5w2BioiYz+KV1OWzxODuKcXJFarl7l/5hDouC5EHAJ8E1ptHQlSwWBC7JhyCiag
+	 nuPkg7Ukun4+bY+JuZFMnLN0qNJuf/FPG2iNiPMT7YdWWFq6rbMFzXbbfOYfTqg0qP
+	 vWPpU6fPBIwt9Wy2dVAJFGtonpLHNKP5ToZLnDaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389914AbfC0TAl (ORCPT
+        id S2389982AbfC0TAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388839AbfC0SOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:36 -0400
+        id S2389651AbfC0SOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41232177E;
-        Wed, 27 Mar 2019 18:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04A3C20449;
+        Wed, 27 Mar 2019 18:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710475;
-        bh=f4oZ0TGLycpFXCJ0TWPvfjCCGCNxWk1juifR0am6S9s=;
+        s=default; t=1553710471;
+        bh=U4NHXb93jqyGD6hD1dvHa9IoKEXCqHTvPeHgMnsKG/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ez9eUg80eN6Rq3ecokbOhEH2vMuSmy5QG4cO1Cn4n+ATuf3mAEOHhgeiNfFuyD7Ky
-         9HN4c3orpYdPMlYICq0BfEvqKxd19o5/jllzALLPU4BkEt24k6gH0dbtd0yPp2xB6x
-         jReEfXAWQjxti2V71ctXa2Pue41jvMsnwBo7eOMs=
+        b=ez9bH8y5N1d82aGhs9T1pNvhOKvDUdsUIpVe29b11NSB99iVhZd32BDhDoTz1RUnK
+         mFChciB6DiT2UYBI6ndrkppv2yTIEdLpeocOCT0L3Qql10JW8o3Meezv33x1jT5Fa3
+         2PQTIOQdAAFN5Mu8/E4n4QqzJCNPn6J0CpQ4/g14=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+Cc:     Waiman Long <longman@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Will Deacon <will.deacon@arm.com>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 137/192] sched/core: Use READ_ONCE()/WRITE_ONCE() in move_queued_task()/task_rq_lock()
-Date:   Wed, 27 Mar 2019 14:09:29 -0400
-Message-Id: <20190327181025.13507-137-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 135/192] locking/lockdep: Add debug_locks check in __lock_downgrade()
+Date:   Wed, 27 Mar 2019 14:09:27 -0400
+Message-Id: <20190327181025.13507-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -63,114 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit c546951d9c9300065bad253ecdf1ac59ce9d06c8 ]
+[ Upstream commit 71492580571467fb7177aade19c18ce7486267f5 ]
 
-move_queued_task() synchronizes with task_rq_lock() as follows:
+Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+warning right after a previous lockdep warning. It is likely that the
+previous warning turned off lock debugging causing the lockdep to have
+inconsistency states leading to the lock downgrade warning.
 
-	move_queued_task()		task_rq_lock()
+Fix that by add a check for debug_locks at the beginning of
+__lock_downgrade().
 
-	[S] ->on_rq = MIGRATING		[L] rq = task_rq()
-	WMB (__set_task_cpu())		ACQUIRE (rq->lock);
-	[S] ->cpu = new_cpu		[L] ->on_rq
-
-where "[L] rq = task_rq()" is ordered before "ACQUIRE (rq->lock)" by an
-address dependency and, in turn, "ACQUIRE (rq->lock)" is ordered before
-"[L] ->on_rq" by the ACQUIRE itself.
-
-Use READ_ONCE() to load ->cpu in task_rq() (c.f., task_cpu()) to honor
-this address dependency.  Also, mark the accesses to ->cpu and ->on_rq
-with READ_ONCE()/WRITE_ONCE() to comply with the LKMM.
-
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190121155240.27173-1-andrea.parri@amarulasolutions.com
+Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched.h | 4 ++--
- kernel/sched/core.c   | 9 +++++----
- kernel/sched/sched.h  | 6 +++---
- 3 files changed, 10 insertions(+), 9 deletions(-)
+ kernel/locking/lockdep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4abb5bd74b04..5dc024e28397 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1737,9 +1737,9 @@ static __always_inline bool need_resched(void)
- static inline unsigned int task_cpu(const struct task_struct *p)
- {
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	return p->cpu;
-+	return READ_ONCE(p->cpu);
- #else
--	return task_thread_info(p)->cpu;
-+	return READ_ONCE(task_thread_info(p)->cpu);
- #endif
- }
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 26b57e24476f..0cbdbbb0729f 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3567,6 +3567,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	unsigned int depth;
+ 	int i;
  
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 152a0b0c91bb..9a4f57d7e931 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -107,11 +107,12 @@ struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
- 		 *					[L] ->on_rq
- 		 *	RELEASE (rq->lock)
- 		 *
--		 * If we observe the old CPU in task_rq_lock, the acquire of
-+		 * If we observe the old CPU in task_rq_lock(), the acquire of
- 		 * the old rq->lock will fully serialize against the stores.
- 		 *
--		 * If we observe the new CPU in task_rq_lock, the acquire will
--		 * pair with the WMB to ensure we must then also see migrating.
-+		 * If we observe the new CPU in task_rq_lock(), the address
-+		 * dependency headed by '[L] rq = task_rq()' and the acquire
-+		 * will pair with the WMB to ensure we then also see migrating.
- 		 */
- 		if (likely(rq == task_rq(p) && !task_on_rq_migrating(p))) {
- 			rq_pin_lock(rq, rf);
-@@ -910,7 +911,7 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
- {
- 	lockdep_assert_held(&rq->lock);
- 
--	p->on_rq = TASK_ON_RQ_MIGRATING;
-+	WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
- 	dequeue_task(rq, p, DEQUEUE_NOCLOCK);
- 	set_task_cpu(p, new_cpu);
- 	rq_unlock(rq, rf);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b63172288f7b..4c7a837d7c14 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1331,9 +1331,9 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
- 	 */
- 	smp_wmb();
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	p->cpu = cpu;
-+	WRITE_ONCE(p->cpu, cpu);
- #else
--	task_thread_info(p)->cpu = cpu;
-+	WRITE_ONCE(task_thread_info(p)->cpu, cpu);
- #endif
- 	p->wake_cpu = cpu;
- #endif
-@@ -1434,7 +1434,7 @@ static inline int task_on_rq_queued(struct task_struct *p)
- 
- static inline int task_on_rq_migrating(struct task_struct *p)
- {
--	return p->on_rq == TASK_ON_RQ_MIGRATING;
-+	return READ_ONCE(p->on_rq) == TASK_ON_RQ_MIGRATING;
- }
- 
- /*
++	if (unlikely(!debug_locks))
++		return 0;
++
+ 	depth = curr->lockdep_depth;
+ 	/*
+ 	 * This function is about (re)setting the class of a held lock,
 -- 
 2.19.1
 
