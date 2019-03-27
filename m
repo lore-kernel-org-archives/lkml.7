@@ -2,53 +2,47 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6922C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB91C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965492075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638372075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbfC0VhO (ORCPT
+        id S1730385AbfC0VhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:37:14 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:58656 "EHLO ale.deltatee.com"
+        Wed, 27 Mar 2019 17:37:20 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:58638 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfC0Vgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726059AbfC0Vgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 17:36:49 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE3-0006DH-Ms; Wed, 27 Mar 2019 15:36:48 -0600
+        id 1h9GE3-0006DG-1s; Wed, 27 Mar 2019 15:36:47 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1h9GE1-0006CY-Th; Wed, 27 Mar 2019 15:36:45 -0600
+        id 1h9GE1-0006CW-Pm; Wed, 27 Mar 2019 15:36:45 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Stephen Bates <sbates@raithlin.com>,
         Palmer Dabbelt <palmer@sifive.com>,
         Christoph Hellwig <hch@lst.de>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Clark <michaeljclark@mac.com>,
-        Rob Herring <robh@kernel.org>, Zong Li <zong@andestech.com>
-Date:   Wed, 27 Mar 2019 15:36:37 -0600
-Message-Id: <20190327213643.23789-2-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Wed, 27 Mar 2019 15:36:36 -0600
+Message-Id: <20190327213643.23789-1-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
-References: <20190327213643.23789-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com, palmer@sifive.com, andrew@sifive.com, olof@lixom.net, michaeljclark@mac.com, robh@kernel.org, zong@andestech.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, sbates@raithlin.com, palmer@sifive.com, hch@lst.de, aou@eecs.berkeley.edu, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH 1/7] RISC-V: Implement sparsemem
+Subject: [PATCH 0/7] RISC-V: Sparsmem, Memory Hotplug and pte_devmap for P2P
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,167 +50,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements sparsemem support for risc-v which helps pave the
-way for memory hotplug and eventually P2P support.
+Hi,
 
-We introduce Kconfig options for virtual and physical address bits which
-are used to calculate the size of the vmemmap and set the
-MAX_PHYSMEM_BITS.
+This patchset enables P2P on the RISC-V architecture. To do this on the
+current kernel, we only need to be able to back IO memory with struct
+pages using devm_memremap_pages(). This requires ARCH_HAS_ZONE_DEVICE,
+ARCH_ENABLE_MEMORY_HOTPLUG, and ARCH_ENABLE_MEMORY_HOTREMOVE; which in
+turn requires ARCH_SPARSEMEM_ENABLE. We also need to ensure that the
+IO memory regions in hardware can be covered by the linear region
+so that there is a linear relation ship between the virtual address and
+the struct page address in the vmemmap region.
 
-The vmemmap is located directly before the VMALLOC region and sized
-such that we can allocate enough pages to populate all the virtual
-address space in the system (similar to the way it's done in arm64).
+While our reason to do this work is for P2P, these features are all
+useful, more generally, and also enable other kernel features.
 
-During initialization, call memblocks_present() and sparse_init(),
-and provide a stub for vmemmap_populate() (all of which is similar to
-arm64).
+The first patch in the series implements sparse mem. It was already
+submitted and reviewed last cycle, only forgotten. It has been rebased
+onto v5.1-rc2.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Andrew Waterman <andrew@sifive.com>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Michael Clark <michaeljclark@mac.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Zong Li <zong@andestech.com>
----
- arch/riscv/Kconfig                 | 23 +++++++++++++++++++++++
- arch/riscv/include/asm/pgtable.h   | 21 +++++++++++++++++----
- arch/riscv/include/asm/sparsemem.h | 11 +++++++++++
- arch/riscv/mm/init.c               | 11 +++++++++++
- 4 files changed, 62 insertions(+), 4 deletions(-)
+Patches 2 through 4 rework the architecture's virtual address space
+mapping trying to get as much of the IO regions covered by the linear
+mapping. With Sv39, we do not have enough address space to cover all the
+typical hardware regions but we can get the majority of it.
+
+Patch 5 and 6 implement memory hotplug and remove. These are relatively
+straight forward additions similar to other arches.
+
+Patch 7 implements pte_devmap which allows us to set
+ARCH_HAS_ZONE_DEVICE.
+
+The patchset was tested in QEMU and on a HiFive Unleashed board.
+However, we were unable to actually test P2P transactions with this
+exact set because we have been unable to get PCI working with v5.1-rc2.
+We were able to get it running on a 4.19 era kernel (with a bunch of
+out-of-tree patches for PCI on a Microsemi PolarFire board).
+
+This series is based on v5.1-rc2 and a git tree is available here:
+
+https://github.com/sbates130272/linux-p2pmem riscv-p2p-v1
+
+Thanks,
+
+Logan
+
+--
+
+Logan Gunthorpe (7):
+  RISC-V: Implement sparsemem
+  RISC-V: doc: Add file describing the virtual memory map
+  RISC-V: Rework kernel's virtual address space mapping
+  RISC-V: Update page tables to cover the whole linear mapping
+  RISC-V: Implement memory hotplug
+  RISC-V: Implement memory hot remove
+  RISC-V: Implement pte_devmap()
+
+ Documentation/riscv/mm.txt            |  24 +++
+ arch/riscv/Kconfig                    |  32 +++-
+ arch/riscv/include/asm/page.h         |   2 -
+ arch/riscv/include/asm/pgtable-64.h   |   2 +
+ arch/riscv/include/asm/pgtable-bits.h |   8 +-
+ arch/riscv/include/asm/pgtable.h      |  45 ++++-
+ arch/riscv/include/asm/sparsemem.h    |  11 ++
+ arch/riscv/kernel/setup.c             |   1 -
+ arch/riscv/mm/init.c                  | 251 ++++++++++++++++++++++++--
+ 9 files changed, 354 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/riscv/mm.txt
  create mode 100644 arch/riscv/include/asm/sparsemem.h
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb56c82d8aa1..76fc340ae38e 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -57,12 +57,32 @@ config ZONE_DMA32
- 	bool
- 	default y if 64BIT
- 
-+config VA_BITS
-+	int
-+	default 32 if 32BIT
-+	default 39 if 64BIT
-+
-+config PA_BITS
-+	int
-+	default 34 if 32BIT
-+	default 56 if 64BIT
-+
- config PAGE_OFFSET
- 	hex
- 	default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
- 	default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
- 	default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
- 
-+config ARCH_FLATMEM_ENABLE
-+	def_bool y
-+
-+config ARCH_SPARSEMEM_ENABLE
-+	def_bool y
-+	select SPARSEMEM_VMEMMAP_ENABLE
-+
-+config ARCH_SELECT_MEMORY_MODEL
-+	def_bool ARCH_SPARSEMEM_ENABLE
-+
- config STACKTRACE_SUPPORT
- 	def_bool y
- 
-@@ -97,6 +117,9 @@ config PGTABLE_LEVELS
- 	default 3 if 64BIT
- 	default 2
- 
-+config HAVE_ARCH_PFN_VALID
-+	def_bool y
-+
- menu "Platform type"
- 
- choice
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 1141364d990e..5a9fea00ba09 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -89,6 +89,23 @@ extern pgd_t swapper_pg_dir[];
- #define __S110	PAGE_SHARED_EXEC
- #define __S111	PAGE_SHARED_EXEC
- 
-+#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-+#define VMALLOC_END      (PAGE_OFFSET - 1)
-+#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+
-+/*
-+ * Roughly size the vmemmap space to be large enough to fit enough
-+ * struct pages to map half the virtual address space. Then
-+ * position vmemmap directly below the VMALLOC region.
-+ */
-+#define VMEMMAP_SHIFT \
-+	(CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-+#define VMEMMAP_SIZE	(1UL << VMEMMAP_SHIFT)
-+#define VMEMMAP_END	(VMALLOC_START - 1)
-+#define VMEMMAP_START	(VMALLOC_START - VMEMMAP_SIZE)
-+
-+#define vmemmap		((struct page *)VMEMMAP_START)
-+
- /*
-  * ZERO_PAGE is a global shared page that is always zero,
-  * used for zero-mapped memory areas, etc.
-@@ -412,10 +429,6 @@ static inline void pgtable_cache_init(void)
- 	/* No page table caches to initialize */
- }
- 
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--
- /*
-  * Task size is 0x40000000000 for RV64 or 0xb800000 for RV32.
-  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-diff --git a/arch/riscv/include/asm/sparsemem.h b/arch/riscv/include/asm/sparsemem.h
-new file mode 100644
-index 000000000000..b58ba2d9ed6e
---- /dev/null
-+++ b/arch/riscv/include/asm/sparsemem.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_SPARSEMEM_H
-+#define __ASM_SPARSEMEM_H
-+
-+#ifdef CONFIG_SPARSEMEM
-+#define MAX_PHYSMEM_BITS	CONFIG_PA_BITS
-+#define SECTION_SIZE_BITS	27
-+#endif /* CONFIG_SPARSEMEM */
-+
-+#endif /* __ASM_SPARSEMEM_H */
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index b379a75ac6a6..b9d50031e78f 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -141,6 +141,9 @@ void __init setup_bootmem(void)
- 				  PFN_PHYS(end_pfn - start_pfn),
- 				  &memblock.memory, 0);
- 	}
-+
-+	memblocks_present();
-+	sparse_init();
- }
- 
- pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
-@@ -224,3 +227,11 @@ asmlinkage void __init setup_vm(void)
- 				__pgprot(_PAGE_TABLE));
- #endif
- }
-+
-+#ifdef CONFIG_SPARSEMEM
-+int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-+			       struct vmem_altmap *altmap)
-+{
-+	return vmemmap_populate_basepages(start, end, node);
-+}
-+#endif
--- 
+--
 2.20.1
-
