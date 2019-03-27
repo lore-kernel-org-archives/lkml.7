@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23FFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9264DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAD02082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622932082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711108;
-	bh=HonvZVPJnqHaQyKibA/CamzJGvARH3/4Ilq4kLt+UZA=;
+	s=default; t=1553711114;
+	bh=Q5VuFx8ChnjXZzrp1+G3zQ1fBA3ppzlC66ysuEtKtZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B/yCS1LfC9J0gdnoy74zxWsAjCkISO9UkVC6qrZx5i8yux3b6kmNiVBnZLaB25KCL
-	 A+e2aUxUUReDDJJz4hj8Pm1NnIHFfiNF8hzid5HX7+KWSsNaqKIM8XLXXEIzPXWuPD
-	 2AJk3k1zrNYqWrxNJRRZIw/ol10bao0sNV6LRNvk=
+	b=geI+rCLWq3FHySXSPCwuAirXBMxpdLaObCxqVjmN/Wk8RMTF98QUIO6e8P/6evTXd
+	 h0sZhokdBy+2+jaqQ4SBrUokxhl6hhNpGUevPtb9+HBubOqvSl0T2kGkm5Leutiyc1
+	 BOoatZL+K9R+zQkjKKir5F6L2SHmgqflEythwxTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391024AbfC0SZH (ORCPT
+        id S2404129AbfC0SZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404088AbfC0SZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:04 -0400
+        id S2404109AbfC0SZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A20E20651;
-        Wed, 27 Mar 2019 18:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42902063F;
+        Wed, 27 Mar 2019 18:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711104;
-        bh=HonvZVPJnqHaQyKibA/CamzJGvARH3/4Ilq4kLt+UZA=;
+        s=default; t=1553711106;
+        bh=Q5VuFx8ChnjXZzrp1+G3zQ1fBA3ppzlC66ysuEtKtZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZrHLTgTH3/TjBAXGhWjCHFQfHxtvGJ6FO9BSoLDhnVqBRS7ZAJPjd0/wk1ddzxYni
-         EeKCTPzwbSrlNRxy2kKXr7UR8jFPodUfaSXw4hDNcFEjWnufTgbN77CyN2kOM42+le
-         jnAAs7ZzQsdIlqzgyPTxYwDXt8V+e61qcG80hrEg=
+        b=xHPe/Uq1BnQXCbpmCLKTggqSI7DnIFq4BaEW+8v/mu+Iz4WJUv93CaX49c9PX0mUq
+         eWaWvyWAA+sAtHQTh4iFuffTR3xyrVPd/jSI9UFI/fGMq7OD3OArxgrP0QwR0ZzKn0
+         NO9t0vkyft9VbEmW5IcfPS84hGk13DBWIGvg1Mxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Buland Singh <bsingh@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 55/63] hpet: Fix missing '=' character in the __setup() code of hpet_mmap_enable
-Date:   Wed, 27 Mar 2019 14:23:15 -0400
-Message-Id: <20190327182323.18577-55-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 57/63] netfilter: physdev: relax br_netfilter dependency
+Date:   Wed, 27 Mar 2019 14:23:17 -0400
+Message-Id: <20190327182323.18577-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -57,58 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Buland Singh <bsingh@redhat.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
+[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+Following command:
+  iptables -D FORWARD -m physdev ...
+causes connectivity loss in some setups.
 
-Before this patch:
+Reason is that iptables userspace will probe kernel for the module revision
+of the physdev patch, and physdev has an artificial dependency on
+br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
+is loaded).
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+This causes the "phydev" module to be loaded, which in turn enables the
+"call-iptables" infrastructure.
 
-[    0.204152] HPET mmap disabled
+bridged packets might then get dropped by the iptables ruleset.
 
-dmesg output with the kernel command line parameter hpet_mmap=0
+The better fix would be to change the "call-iptables" defaults to 0 and
+enforce explicit setting to 1, but that breaks backwards compatibility.
 
-[    0.204192] HPET mmap disabled
+This does the next best thing: add a request_module call to checkentry.
+This was a stray '-D ... -m physdev' won't activate br_netfilter
+anymore.
 
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/netfilter/br_netfilter.h | 1 -
+ net/bridge/br_netfilter_hooks.c      | 5 -----
+ net/netfilter/xt_physdev.c           | 9 +++++++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 240b6cf1d97c..72e073895ed9 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -376,7 +376,7 @@ static __init int hpet_mmap_enable(char *str)
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index e8d1448425a7..b1d0d46344e2 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -42,7 +42,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
  }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
  
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
+ struct net_device *setup_pre_routing(struct sk_buff *skb);
+-void br_netfilter_enable(void);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 6def85d75b1d..93b5525bcccf 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -873,11 +873,6 @@ static const struct nf_br_ops br_ops = {
+ 	.br_dev_xmit_hook =	br_nf_dev_xmit,
+ };
+ 
+-void br_netfilter_enable(void)
+-{
+-}
+-EXPORT_SYMBOL_GPL(br_netfilter_enable);
+-
+ /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
+  * br_dev_queue_push_xmit is called afterwards */
+ static struct nf_hook_ops br_nf_ops[] __read_mostly = {
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index 1caaccbc306c..7e4063621960 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -96,8 +96,7 @@ physdev_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ static int physdev_mt_check(const struct xt_mtchk_param *par)
  {
+ 	const struct xt_physdev_info *info = par->matchinfo;
+-
+-	br_netfilter_enable();
++	static bool brnf_probed __read_mostly;
+ 
+ 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
+ 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
+@@ -113,6 +112,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+ 			return -EINVAL;
+ 	}
++
++	if (!brnf_probed) {
++		brnf_probed = true;
++		request_module("br_netfilter");
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
