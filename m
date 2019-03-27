@@ -2,108 +2,102 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3165BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E23AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1AB2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB812075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OgcHDHOP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VgcX+Pgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfC0Nrz (ORCPT
+        id S1729294AbfC0NtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:47:55 -0400
-Received: from sauhun.de ([88.99.104.3]:36172 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbfC0Nry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:47:54 -0400
-Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
-        by pokefinder.org (Postfix) with ESMTPSA id DBEDC2E35A2;
-        Wed, 27 Mar 2019 14:47:51 +0100 (CET)
-Date:   Wed, 27 Mar 2019 14:47:51 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Simon Horman <horms@verge.net.au>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-renesas-soc@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Peter Rosin <peda@axentia.se>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v2 3/7] i2c: core: introduce callbacks for atomic
- transfers
-Message-ID: <20190327134751.GD5345@kunai>
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
- <20190302134735.4393-4-wsa+renesas@sang-engineering.com>
- <20190315122320.34yibpfhv2b6ptwl@verge.net.au>
+        Wed, 27 Mar 2019 09:49:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52450 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfC0NtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:49:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5BB63611FD; Wed, 27 Mar 2019 13:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694553;
+        bh=wAuJ3LPdzgl6/dp3KcjfKJdKTj8TuLJ+3k4QrBM30H4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OgcHDHOPU4S4KOL2DkJmcX7SKJLYDyNTr4l0O7VZ5/LDLiUIe/yZOsEj6ZxglmCgG
+         aiI7mXJQo7wRttPcDPC1ZaydVaN1+y8ZMu11uLZG9rWLezEOljJlli3jMbWgyHaE44
+         ckJhg80QULBcgCAYs0PW3duwOWDvrM/GWbuMJT1Y=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 777B560A44;
+        Wed, 27 Mar 2019 13:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694552;
+        bh=wAuJ3LPdzgl6/dp3KcjfKJdKTj8TuLJ+3k4QrBM30H4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VgcX+Pglgtaq1R/bzPeg8VM3K2actKfX3BuS3MiF5eG+TomOCqAOOsf4u3jo+mVr4
+         EBdiAzA+NMcUFWMDSZhGGVtVXMdkAQ+CmiJVCqsLgnvYJ/OueVW0ilSEXpHtE8Ejah
+         lIIFUunDvLaZbYugQ89iasq6JzPqoufSDEt5pxVs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 777B560A44
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] MAINTAINERS: fix the file path of uniphier-mdmac.c
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+References: <1553566409-23873-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <e815db05-96ce-74d3-414d-f4e817c2f7b1@codeaurora.org>
+Date:   Wed, 27 Mar 2019 19:19:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eheScQNz3K90DVRs"
-Content-Disposition: inline
-In-Reply-To: <20190315122320.34yibpfhv2b6ptwl@verge.net.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553566409-23873-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---eheScQNz3K90DVRs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Simon,
-
-please delete unrelated text. I nearly missed the typo fix later.
-
-> > -	if (in_atomic() || irqs_disabled())
-> > +	if (in_atomic() || irqs_disabled()) {
-> > +		WARN(!adap->algo->master_xfer_atomic && !adap->algo->smbus_xfer_atom=
-ic,
-> > +		     "No atomic I2C transfer handler for '%s'\n", dev_name(&adap->de=
-v));
->=20
-> 		Is WARN_ONCE more appropriate here?
-
-Why? It could be multiple adapters or clients causing this?
-
-> > + * The return codes from the @master_xfer{_atomic} field should indica=
-te the
->=20
-> I think "field" should be "fields" in the new text.
-
-Fixed, thanks!
-
-Regards,
-
-   Wolfram
+On 3/26/2019 7:43 AM, Masahiro Yamada wrote:
+> The pattern drivers/dmaengine/uniphier-mdmac.c has no match in the
+> source tree.
+>
+> The correct path is drivers/dma/uniphier-mdmac.c
+>
+> Reported-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
 
---eheScQNz3K90DVRs
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
------BEGIN PGP SIGNATURE-----
+-Mukesh
 
-iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlybfwMACgkQFA3kzBSg
-Kbbsbg/4y3tgFpT1GwWWe4sp9B/CF2VqdLI5kdtk1IvoIFLvlbaEZQ2xJBiLRVxN
-yYoNi490tWqKZWKWxzGPNpqbDc4NKozLFCayPFYrHQJRweT8V0TV0ucuUsT09Xd+
-QldzPU3QGmBSzTJnnkC8frDW74DqL5ohx7zXMpDhaJvh/ZdWf9Pn3bVfSuZ6mXGG
-aK7ayUnbeaIZU9sVoyzn19+UvORDgJtS4lyqGaQiQ0kVDHE8B7MsrlOYs9xoSktJ
-mz65br2NbKwX24EKC+K7Zq2fQtRUOrPIADHs4Z5nonK7K1XE+us2hYg/v4RdG5jv
-7qnhZ3ExyBjE3kDLqQX1/iWSI/oXyGmSm31tG6TOSjCMI1f6Su17T8+9cXRc6b6+
-T7WMnmQA7pQCUHHhBdZiyxwoJHiYLTPC8sf5HTiWYSo0s5x5FxMxmBHC+E2KnUUW
-CU/Dq7WNpNzyCbpqxQqG8lbkCQ9swpunpgmCcVpYheOGqKCId5wIwPsLdQQsQrHx
-7NlrhBvobACx2AR2D2JCjkv/yVLKznPCsgcN0+oSjbdX9PIvL/l6c9Ms9y7x1YOl
-0nDc1fv4M0w5XytcMPLQwHkNawVPXJ8O/uOtpe/2lMCHgUHK1bffuACNzwU0/k9r
-ztbvtZ5HQ40UBXvOuuexJNLnNivuCGKFhUTYvohyoNcwAD56mQ==
-=gB5/
------END PGP SIGNATURE-----
-
---eheScQNz3K90DVRs--
+> ---
+>
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3e5a5d2..bfb1557 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2356,7 +2356,7 @@ F:	arch/arm/mm/cache-uniphier.c
+>   F:	arch/arm64/boot/dts/socionext/uniphier*
+>   F:	drivers/bus/uniphier-system-bus.c
+>   F:	drivers/clk/uniphier/
+> -F:	drivers/dmaengine/uniphier-mdmac.c
+> +F:	drivers/dma/uniphier-mdmac.c
+>   F:	drivers/gpio/gpio-uniphier.c
+>   F:	drivers/i2c/busses/i2c-uniphier*
+>   F:	drivers/irqchip/irq-uniphier-aidet.c
