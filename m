@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC70C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F1C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063772147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710303;
-	bh=3aEmegxhVPlawdNHaE1hyCPpRXS7ekX/HPti5nZE5qA=;
+	s=default; t=1553710308;
+	bh=N9El1QgCwlZJSAn/fSdrSfe9N/eU0DMi/j8oTseZafs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/1Rep7dlydTqK9HID418yfggaRgpm8Wmb2pEv03ouQVfnAtASjsGJGSf962VTuuD
-	 u/fmDgkb7NDdtkwE/rO3oCOhAez6ZU0yKdDc7e73xQ9yP5QwVGNPbFkdS9qUD0ZQsm
-	 IjLxPeg5+MaR9OgVP8gN5dnoSn+KoRVlNyKsYzoY=
+	b=bWwibPNr/aop5CrGY670+8IatS498it/80XQwXs+jog0HDZhO5xO3paMbFdj+03eQ
+	 ff9qe+JOApn13ZM2YlaDIY9dpunPIJpDLXPlxm12PC9Ze7n2jTrE2k0JVzdZ3rKQha
+	 KAN8zMrY8M00PT+yal0F3rI2DXH8y3z8u5ilMx2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389073AbfC0SLm (ORCPT
+        id S2389093AbfC0SLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53902 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389032AbfC0SLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:33 -0400
+        id S2389051AbfC0SLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CA4217D9;
-        Wed, 27 Mar 2019 18:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1963F217F5;
+        Wed, 27 Mar 2019 18:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710292;
-        bh=3aEmegxhVPlawdNHaE1hyCPpRXS7ekX/HPti5nZE5qA=;
+        s=default; t=1553710298;
+        bh=N9El1QgCwlZJSAn/fSdrSfe9N/eU0DMi/j8oTseZafs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUk6mEPsisgiMIVMCTeyPQ0ueq6vdSion779k2aOyvdqC2VkggoaSXZxrw/8U2N4Z
-         YaN7Lx7C2O/NC+ou4FycOaIVUqmfLwIKI6WMDPVURHSdXkKB0j11iZKHMfkyGW53RD
-         jGXTW2uRHG1hO2phA6EEMryvJXl+f9HFwVqD661E=
+        b=uua3uykCMdzhcFhhuXRjrXjghGOlx8YjpmDAxF6EK7bHJcA/s40z+btn7m2fvSZK7
+         Y1NsvblE24N08CesiGm8SlcrUHauv9s7HBCgDtB2vi4ffjtElY/JWwMEWNMf5NX2Gg
+         nuSeQz+5C+tj9P0Dbcd+NplBLY2dDLkln0TSd5Q4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 037/192] f2fs: fix to check inline_xattr_size boundary correctly
-Date:   Wed, 27 Mar 2019 14:07:49 -0400
-Message-Id: <20190327181025.13507-37-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 042/192] netfilter: conntrack: tcp: only close if RST matches exact sequence
+Date:   Wed, 27 Mar 2019 14:07:54 -0400
+Message-Id: <20190327181025.13507-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,111 +60,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 500e0b28ecd3c5aade98f3c3a339d18dcb166bb6 ]
+[ Upstream commit be0502a3f2e94211a8809a09ecbc3a017189b8fb ]
 
-We use below condition to check inline_xattr_size boundary:
+TCP resets cause instant transition from established to closed state
+provided the reset is in-window.  Endpoints that implement RFC 5961
+require resets to match the next expected sequence number.
+RST segments that are in-window (but that do not match RCV.NXT) are
+ignored, and a "challenge ACK" is sent back.
 
-	if (!F2FS_OPTION(sbi).inline_xattr_size ||
-		F2FS_OPTION(sbi).inline_xattr_size >=
-				DEF_ADDRS_PER_INODE -
-				F2FS_TOTAL_EXTRA_ATTR_SIZE -
-				DEF_INLINE_RESERVED_SIZE -
-				DEF_MIN_INLINE_SIZE)
+Main problem for conntrack is that its a middlebox, i.e.  whereas an end
+host might have ACK'd SEQ (and would thus accept an RST with this
+sequence number), conntrack might not have seen this ACK (yet).
 
-There is there problems in that check:
-- we should allow inline_xattr_size equaling to min size of inline
-{data,dentry} area.
-- F2FS_TOTAL_EXTRA_ATTR_SIZE and inline_xattr_size are based on
-different size unit, previous one is 4 bytes, latter one is 1 bytes.
-- DEF_MIN_INLINE_SIZE only indicate min size of inline data area,
-however, we need to consider min size of inline dentry area as well,
-minimal inline dentry should at least contain two entries: '.' and
-'..', so that min inline_dentry size is 40 bytes.
+Therefore we can't simply flag RSTs with non-exact match as invalid.
 
-.bitmap		1 * 1 = 1
-.reserved	1 * 1 = 1
-.dentry		11 * 2 = 22
-.filename	8 * 2 = 16
-total		40
+This updates RST processing as follows:
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+1. If the connection is in a state other than ESTABLISHED, nothing is
+   changed, RST is subject to normal in-window check.
+
+2. If the RSTs sequence number either matches exactly RCV.NXT,
+   connection state moves to CLOSE.
+
+3. The same applies if the RST sequence number aligns with a previous
+   packet in the same direction.
+
+In all other cases, the connection remains in ESTABLISHED state.
+If the normal-in-window check passes, the timeout will be lowered
+to that of CLOSE.
+
+If the peer sends a challenge ack, connection timeout will be reset.
+
+If the challenge ACK triggers another RST (RST was valid after all),
+this 2nd RST will match expected sequence and conntrack state changes to
+CLOSE.
+
+If no challenge ACK is received, the connection will time out after
+CLOSE seconds (10 seconds by default), just like without this patch.
+
+Packetdrill test case:
+
+0.000 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+0.000 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+0.000 bind(3, ..., ...) = 0
+0.000 listen(3, 1) = 0
+
+0.100 < S 0:0(0) win 32792 <mss 1460,sackOK,nop,nop,nop,wscale 7>
+0.100 > S. 0:0(0) ack 1 win 64240 <mss 1460,nop,nop,sackOK,nop,wscale 7>
+0.200 < . 1:1(0) ack 1 win 257
+0.200 accept(3, ..., ...) = 4
+
+// Receive a segment.
+0.210 < P. 1:1001(1000) ack 1 win 46
+0.210 > . 1:1(0) ack 1001
+
+// Application writes 1000 bytes.
+0.250 write(4, ..., 1000) = 1000
+0.250 > P. 1:1001(1000) ack 1001
+
+// First reset, old sequence. Conntrack (correctly) considers this
+// invalid due to failed window validation (regardless of this patch).
+0.260 < R  2:2(0) ack 1001 win 260
+
+// 2nd reset, but too far ahead sequence.  Same: correctly handled
+// as invalid.
+0.270 < R 99990001:99990001(0) ack 1001 win 260
+
+// in-window, but not exact sequence.
+// Current Linux kernels might reply with a challenge ack, and do not
+// remove connection.
+// Without this patch, conntrack state moves to CLOSE.
+// With patch, timeout is lowered like CLOSE, but connection stays
+// in ESTABLISHED state.
+0.280 < R 1010:1010(0) ack 1001 win 260
+
+// Expect challenge ACK
+0.281 > . 1001:1001(0) ack 1001 win 501
+
+// With or without this patch, RST will cause connection
+// to move to CLOSE (sequence number matches)
+// 0.282 < R 1001:1001(0) ack 1001 win 260
+
+// ACK
+0.300 < . 1001:1001(0) ack 1001 win 257
+
+// more data could be exchanged here, connection
+// is still established
+
+// Client closes the connection.
+0.610 < F. 1001:1001(0) ack 1001 win 260
+0.650 > . 1001:1001(0) ack 1002
+
+// Close the connection without reading outstanding data
+0.700 close(4) = 0
+
+// so one more reset.  Will be deemed acceptable with patch as well:
+// connection is already closing.
+0.701 > R. 1001:1001(0) ack 1002 win 501
+// End packetdrill test case.
+
+With patch, this generates following conntrack events:
+   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [UNREPLIED]
+[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80
+[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 120 FIN_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 60 CLOSE_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+
+Without patch, first RST moves connection to close, whereas socket state
+does not change until FIN is received.
+   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [UNREPLIED]
+[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80
+[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
+[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
+
+Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h          |  1 -
- fs/f2fs/super.c         | 13 +++++++------
- include/linux/f2fs_fs.h | 13 +++++++------
- 3 files changed, 14 insertions(+), 13 deletions(-)
+ net/netfilter/nf_conntrack_proto_tcp.c | 50 ++++++++++++++++++++------
+ 1 file changed, 40 insertions(+), 10 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 42aef5c94927..a3ba20e5946f 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -450,7 +450,6 @@ struct f2fs_flush_device {
+diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
+index 247b89784a6f..842f3f86fb2e 100644
+--- a/net/netfilter/nf_conntrack_proto_tcp.c
++++ b/net/netfilter/nf_conntrack_proto_tcp.c
+@@ -769,6 +769,12 @@ static int tcp_error(struct net *net, struct nf_conn *tmpl,
+ 	return NF_ACCEPT;
+ }
  
- /* for inline stuff */
- #define DEF_INLINE_RESERVED_SIZE	1
--#define DEF_MIN_INLINE_SIZE		1
- static inline int get_extra_isize(struct inode *inode);
- static inline int get_inline_xattr_addrs(struct inode *inode);
- #define MAX_INLINE_DATA(inode)	(sizeof(__le32) *			\
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 7c9de4a7b794..d9b0e183fa50 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -822,12 +822,13 @@ static int parse_options(struct super_block *sb, char *options)
- 					"set with inline_xattr option");
- 			return -EINVAL;
++static bool nf_conntrack_tcp_established(const struct nf_conn *ct)
++{
++	return ct->proto.tcp.state == TCP_CONNTRACK_ESTABLISHED &&
++	       test_bit(IPS_ASSURED_BIT, &ct->status);
++}
++
+ /* Returns verdict for packet, or -1 for invalid. */
+ static int tcp_packet(struct nf_conn *ct,
+ 		      const struct sk_buff *skb,
+@@ -963,16 +969,38 @@ static int tcp_packet(struct nf_conn *ct,
+ 			new_state = TCP_CONNTRACK_ESTABLISHED;
+ 		break;
+ 	case TCP_CONNTRACK_CLOSE:
+-		if (index == TCP_RST_SET
+-		    && (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET)
+-		    && before(ntohl(th->seq), ct->proto.tcp.seen[!dir].td_maxack)) {
+-			/* Invalid RST  */
+-			spin_unlock_bh(&ct->lock);
+-			nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
+-			return -NF_ACCEPT;
++		if (index != TCP_RST_SET)
++			break;
++
++		if (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET) {
++			u32 seq = ntohl(th->seq);
++
++			if (before(seq, ct->proto.tcp.seen[!dir].td_maxack)) {
++				/* Invalid RST  */
++				spin_unlock_bh(&ct->lock);
++				nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
++				return -NF_ACCEPT;
++			}
++
++			if (!nf_conntrack_tcp_established(ct) ||
++			    seq == ct->proto.tcp.seen[!dir].td_maxack)
++				break;
++
++			/* Check if rst is part of train, such as
++			 *   foo:80 > bar:4379: P, 235946583:235946602(19) ack 42
++			 *   foo:80 > bar:4379: R, 235946602:235946602(0)  ack 42
++			 */
++			if (ct->proto.tcp.last_index == TCP_ACK_SET &&
++			    ct->proto.tcp.last_dir == dir &&
++			    seq == ct->proto.tcp.last_end)
++				break;
++
++			/* ... RST sequence number doesn't match exactly, keep
++			 * established state to allow a possible challenge ACK.
++			 */
++			new_state = old_state;
  		}
--		if (!F2FS_OPTION(sbi).inline_xattr_size ||
--			F2FS_OPTION(sbi).inline_xattr_size >=
--					DEF_ADDRS_PER_INODE -
--					F2FS_TOTAL_EXTRA_ATTR_SIZE -
--					DEF_INLINE_RESERVED_SIZE -
--					DEF_MIN_INLINE_SIZE) {
-+		if (F2FS_OPTION(sbi).inline_xattr_size <
-+			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
-+			F2FS_OPTION(sbi).inline_xattr_size >
-+			DEF_ADDRS_PER_INODE -
-+			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
-+			DEF_INLINE_RESERVED_SIZE -
-+			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
- 			f2fs_msg(sb, KERN_ERR,
- 					"inline xattr size is out of range");
- 			return -EINVAL;
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index f70f8ac9c4f4..40fec5f94949 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -489,12 +489,12 @@ typedef __le32	f2fs_hash_t;
- 
- /*
-  * space utilization of regular dentry and inline dentry (w/o extra reservation)
-- *		regular dentry			inline dentry
-- * bitmap	1 * 27 = 27			1 * 23 = 23
-- * reserved	1 * 3 = 3			1 * 7 = 7
-- * dentry	11 * 214 = 2354			11 * 182 = 2002
-- * filename	8 * 214 = 1712			8 * 182 = 1456
-- * total	4096				3488
-+ *		regular dentry		inline dentry (def)	inline dentry (min)
-+ * bitmap	1 * 27 = 27		1 * 23 = 23		1 * 1 = 1
-+ * reserved	1 * 3 = 3		1 * 7 = 7		1 * 1 = 1
-+ * dentry	11 * 214 = 2354		11 * 182 = 2002		11 * 2 = 22
-+ * filename	8 * 214 = 1712		8 * 182 = 1456		8 * 2 = 16
-+ * total	4096			3488			40
-  *
-  * Note: there are more reserved space in inline dentry than in regular
-  * dentry, when converting inline dentry we should handle this carefully.
-@@ -506,6 +506,7 @@ typedef __le32	f2fs_hash_t;
- #define SIZE_OF_RESERVED	(PAGE_SIZE - ((SIZE_OF_DIR_ENTRY + \
- 				F2FS_SLOT_LEN) * \
- 				NR_DENTRY_IN_BLOCK + SIZE_OF_DENTRY_BITMAP))
-+#define MIN_INLINE_DENTRY_SIZE		40	/* just include '.' and '..' entries */
- 
- /* One directory entry slot representing F2FS_SLOT_LEN-sized file name */
- struct f2fs_dir_entry {
+-		if (index == TCP_RST_SET
+-		    && ((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
++		if (((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
+ 			 && ct->proto.tcp.last_index == TCP_SYN_SET)
+ 			|| (!test_bit(IPS_ASSURED_BIT, &ct->status)
+ 			    && ct->proto.tcp.last_index == TCP_ACK_SET))
+@@ -988,7 +1016,7 @@ static int tcp_packet(struct nf_conn *ct,
+ 			 * segments we ignored. */
+ 			goto in_window;
+ 		}
+-		/* Just fall through */
++		break;
+ 	default:
+ 		/* Keep compilers happy. */
+ 		break;
+@@ -1023,6 +1051,8 @@ static int tcp_packet(struct nf_conn *ct,
+ 	if (ct->proto.tcp.retrans >= tn->tcp_max_retrans &&
+ 	    timeouts[new_state] > timeouts[TCP_CONNTRACK_RETRANS])
+ 		timeout = timeouts[TCP_CONNTRACK_RETRANS];
++	else if (unlikely(index == TCP_RST_SET))
++		timeout = timeouts[TCP_CONNTRACK_CLOSE];
+ 	else if ((ct->proto.tcp.seen[0].flags | ct->proto.tcp.seen[1].flags) &
+ 		 IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED &&
+ 		 timeouts[new_state] > timeouts[TCP_CONNTRACK_UNACK])
 -- 
 2.19.1
 
