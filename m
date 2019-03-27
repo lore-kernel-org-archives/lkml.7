@@ -2,129 +2,113 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A94BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD61C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0EFC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C882082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:31:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="NGkFsgZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfC0Va6 (ORCPT
+        id S1728674AbfC0VbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:30:58 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34165 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfC0Va6 (ORCPT
+        Wed, 27 Mar 2019 17:31:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46500 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfC0VbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:30:58 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v10so9773218oib.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:30:58 -0700 (PDT)
+        Wed, 27 Mar 2019 17:31:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d1so15393273edd.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=42BMOtzCvR79SSHddTfYvJZntWsVfLBjpBOf8g0s5ek=;
+        b=NGkFsgZ2ILFu9CV78l/uPPbCMm6/VpQUnmGm6MBaML9zSNnLKGVb4YdwkdMgjiQUep
+         V1M2Vl36G5WvMrHArMChxWuto8zsvFkOov6ai8VEtYtv5iyxqh4F0OGpBYnAettejDoD
+         ahmp4fDgRcLp48OzdInLQv7igst2r1ORRDBqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JCxnMapnujBLhv3W4a2O/ybJVO1nPLBLzENy+BoBkzI=;
-        b=CYqhl0kcfwmo/KKVY0YZp4mo3ggX1YGJ7rMFZ7Oxd2HAUtlOQy05VfO2Qvd1XzQ6yr
-         Td98CXnrD1Iu1fjDbquG+HzArq4GmYe+ifuht2E6w/zVN72EXmWTX8JXr4N5QPfDrjPI
-         jrZc22dUQZESaXI2TvBcTWH30CjZzjx5pLE8TanRVegqLIqux4HXenTiJFM3B6+cNJVJ
-         uxNC151vxKOI5g1HGa+PH24GPGf3a+6YervItd8U1BT4npqmGmtSzFb95FpoF2ehJfxM
-         X1h30JwmP8MZvDFh6wZvufLYEDWqUpdN2thspRh4Ul6EknC9Ehsao5UO8OZH+5ZlLtiD
-         abcQ==
-X-Gm-Message-State: APjAAAUWaiQ3UNgifCnghPQv+zIoqhXBZU4nbzO94hXyGfTbWKYM82GY
-        MI1yyUNdZTPI8FyaeUqOi76qwqStsgajjjlHOoSLcA==
-X-Google-Smtp-Source: APXvYqzpOsg5/ddMOVD6tkFIZoG8HsMUEk6pRb/r/uF6W8zIIVx6JNflvK9lq1O5TOVwuTtQRCo+bN1aBWuoR+W7Pa8=
-X-Received: by 2002:aca:5747:: with SMTP id l68mr21554750oib.103.1553722257766;
- Wed, 27 Mar 2019 14:30:57 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=42BMOtzCvR79SSHddTfYvJZntWsVfLBjpBOf8g0s5ek=;
+        b=U0hitO9SjiI10eLAlrRD4BHQvjkgj+XonPlIZLJ3xDLYxxsRcH4cktxCc2BQCBgbEl
+         jP7wlylkAhJ9KABk2dCx3oTbb5eSPoO5Jvs+uTb+xKRslr2+1GVv9FQ7FwlRLn1avQnF
+         aXwYYt9zAWR0oP+tIgsuRsx19pzJckDsaeojk5XhuLycKrtzeeAiBcSB6L2aMieye3uI
+         bCid7hUnfd/sMU7MOcAmo/2OVdxAZ983DwH76Yw+dIkpq2XzrlcfJErMfxJ4BxHHwYeu
+         at43lJPgkKCn/oIU4eAc+owqM6VEkDacVMWB1k2JyWc3ZilqKpS56MpPr0UJ/rOxEFMR
+         3DYw==
+X-Gm-Message-State: APjAAAV7nPbVPYn0c17XqyJpoACAw/Lr8QyeKrd5EFll/ec3KVjoi4u0
+        Ob9aEEiTG3jJV5CGJgjnavbUTw==
+X-Google-Smtp-Source: APXvYqxDr4ZCQQFV16WEiWGgg2h0dnNX2JBT7L3fR//kW+XT2+Lqz8qKcpHdlMCSUpX2OAzgOpb8vw==
+X-Received: by 2002:a50:c251:: with SMTP id t17mr26052727edf.179.1553722282940;
+        Wed, 27 Mar 2019 14:31:22 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
+        by smtp.gmail.com with ESMTPSA id cg22sm2943039ejb.2.2019.03.27.14.31.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 14:31:22 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] leds: netdev trigger: use memcpy in
+ device_name_store
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-2-linux@rasmusvillemoes.dk>
+ <987c3e60-edb3-44f0-be28-434c70bb8659@gmail.com>
+ <d1fccd75-c48b-d585-1170-1c1b76e1e098@rasmusvillemoes.dk>
+ <21193aab-7880-d116-64e8-dd08afe5a47f@gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <5871d2bd-1a9d-9cf0-e8bd-6d691ea94415@rasmusvillemoes.dk>
+Date:   Wed, 27 Mar 2019 22:31:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <cover.1552665316.git.rgb@redhat.com> <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
-In-Reply-To: <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Wed, 27 Mar 2019 22:30:46 +0100
-Message-ID: <CAFqZXNu2NRJg-cy_b=ig4o7v6+3dV1kGp8QtKRcVbtBxrapDMQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V5 07/10] audit: add containerid support for user records
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Simo Sorce <simo@redhat.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <21193aab-7880-d116-64e8-dd08afe5a47f@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> Add audit container identifier auxiliary record to user event standalone
-> records.
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+On 27/03/2019 22.20, Jacek Anaszewski wrote:
 
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
+> Thanks for the heads-up. I must admit I'm hitting into that for the
+> first time. After "git am" it was all OK, but it got screwed up after
+> "git rebase -i". And having "commit.cleanup = scissors" set globally all
+> the time is annoying if one extensively uses interactive rebase for
+> rewording commit messages. It entails the need for manual removal of
+> the whole stuff that appears then after actual commit message prepended
+> with "#" comment characters.
 
-> ---
->  kernel/audit.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index cfa659b3f6c4..cf448599ef34 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -1142,12 +1142,6 @@ static void audit_log_common_recv_msg(struct audit_context *context,
->         audit_log_task_context(*ab);
->  }
->
-> -static inline void audit_log_user_recv_msg(struct audit_buffer **ab,
-> -                                          u16 msg_type)
-> -{
-> -       audit_log_common_recv_msg(NULL, ab, msg_type);
-> -}
-> -
->  int is_audit_feature_set(int i)
->  {
->         return af.features & AUDIT_FEATURE_TO_MASK(i);
-> @@ -1409,13 +1403,16 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->
->                 err = audit_filter(msg_type, AUDIT_FILTER_USER);
->                 if (err == 1) { /* match or error */
-> +                       struct audit_context *context;
-> +
->                         err = 0;
->                         if (msg_type == AUDIT_USER_TTY) {
->                                 err = tty_audit_push();
->                                 if (err)
->                                         break;
->                         }
-> -                       audit_log_user_recv_msg(&ab, msg_type);
-> +                       context = audit_alloc_local(GFP_KERNEL);
-> +                       audit_log_common_recv_msg(context, &ab, msg_type);
->                         if (msg_type != AUDIT_USER_TTY)
->                                 audit_log_format(ab, " msg='%.*s'",
->                                                  AUDIT_MESSAGE_TEXT_MAX,
-> @@ -1431,6 +1428,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->                                 audit_log_n_untrustedstring(ab, data, size);
->                         }
->                         audit_log_end(ab);
-> +                       audit_log_contid(context, audit_get_contid(current));
-> +                       audit_free_context(context);
->                 }
->                 break;
->         case AUDIT_ADD_RULE:
-> --
-> 1.8.3.1
->
+Eh, no? At least, whenever I do commit or rebase -i, git automatically
+inserts a trailer starting with the magic scissor line
 
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
 
--- 
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Maybe there's some other config option to get that, or it depends on git
+version. But I certainly don't do anything at all other than write or
+modify the commit message.
+
+Never had a problem myself since I set commit.cleanup = scissors, but I
+have had lots of my commit messages mangled, which is why I'm reacting.
+
+> This is probably the reason why people use often other characters
+> for command prompt (see the other fix for ledtrig-netdev).
+
+Command prompt char is not the only problem; C snippets with #include or
+other preprocessor directives also regularly gets mangled, as does shell
+snippets with a bit of commentary.
+
+Rasmus
