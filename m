@@ -1,138 +1,211 @@
 Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A4DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63360C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EA52075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E3B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JXIPsV2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfC0RzP (ORCPT
+        id S1728298AbfC0SAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:55:15 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59949 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfC0RzP (ORCPT
+        Wed, 27 Mar 2019 14:00:05 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40686 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfC0SAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:55:15 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1h9ClV-0002s6-MI; Wed, 27 Mar 2019 18:55:05 +0100
-Message-ID: <1553709304.2561.44.camel@pengutronix.de>
-Subject: Re: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI
- wakeup
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Marc Zyngier <marc.zyngier@arm.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Date:   Wed, 27 Mar 2019 18:55:04 +0100
-In-Reply-To: <85c91392-9cbf-a5fc-b037-3d58f2b0ac9c@arm.com>
-References: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
-         <1553701479.2561.38.camel@pengutronix.de>
-         <564216aa-1144-71de-e887-00c58f466bf5@arm.com>
-         <1553702767.2561.40.camel@pengutronix.de>
-         <85c91392-9cbf-a5fc-b037-3d58f2b0ac9c@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 27 Mar 2019 14:00:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b11so3665904plr.7;
+        Wed, 27 Mar 2019 11:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TU0W09h/7m7ftvEgIfADq5dLO08GU6CTDfqTFxZ91jk=;
+        b=JXIPsV2V4UzfGXpSETLamwBuoTET/F93d1iUB5qRPsNUwb4n6zwOtkjbKto0OcffnV
+         1sTP4a0NWqjYQeiNSWcGNg7EqS+GE1IyuYuHhdjLYyw0PEgeB3YwKYHK0L1VsvnN6roB
+         52y43AgoQdClxKXe8kS4WpB17LlR1zyKgQTtiijQ3Dk7P7j1Vf8YZhIRKQ95mJnOkNoF
+         qPjsuClrJzSqKN89eWLLRtbmTH16Zqw1OzhGDbpCmF3/lgtbwEfN4sikWTX8UEgKzb6f
+         C4Dw6uBsIMhT8iWmyD7smVuW/cavoqlNtTF5W1xDu1tPKBcHwCgPa6hXO3BzrRhPpUW+
+         caMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TU0W09h/7m7ftvEgIfADq5dLO08GU6CTDfqTFxZ91jk=;
+        b=JOlJib9sn86nRtk0Pggea/lWEflOpIua+ny8LG4NGpUzcdwqk+glkEvnJPVHlvpZcV
+         tUN/5B/hg322+JXfndL/uOsWuuuvRJ3Q70vBmt2YXClftqS1B/Dv4fi4IidD9wJYYrU8
+         gI+amvBGNTgWkRkUl2s5E7flaV7qmKZzPr8ffeuqto5GEoK1onBntve3PxDy4guOxfkt
+         Lw9OtKhTw5yxNu+OyaHn7+X8MHcdkI23Q/KpmIxv/5m2K8iAjWL66pODqKky0N50ueOj
+         wLTtjVULYb9onv6RCiro0VqcW/Mi7EZ9uo/q28FoStsYsXZjHnHwwDwHpYbAC5gvN17e
+         eYQA==
+X-Gm-Message-State: APjAAAUK3D5PwawPDIw2TIozuKGGvQg+O5oWT5/Na9xVtiD3Eyq9jb0r
+        ohlIvwObWww61zf9jChFyKY=
+X-Google-Smtp-Source: APXvYqwGjdLEMGO2axeeoSTCBlKYOUpMMnz3XT58fu/dQbQ2rtMMHr+QMxffwtAXa/28ZeRcIJ7PrQ==
+X-Received: by 2002:a17:902:6b08:: with SMTP id o8mr38564865plk.105.1553709602889;
+        Wed, 27 Mar 2019 11:00:02 -0700 (PDT)
+Received: from gmail.com ([2620:0:1008:fd00:ed8e:8493:d2b7:8f54])
+        by smtp.gmail.com with ESMTPSA id g67sm34103689pfg.94.2019.03.27.11.00.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 11:00:02 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 11:00:00 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dmitry Safonov <dima@arista.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andy Tucker <agtucker@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 16/32] x86/vdso: Generate vdso{,32}-timens.lds
+Message-ID: <20190327175957.GA9309@gmail.com>
+References: <20190206001107.16488-1-dima@arista.com>
+ <20190206001107.16488-17-dima@arista.com>
+ <a2bbe610-7553-0ba6-b58b-1013e034b8f6@rasmusvillemoes.dk>
+ <alpine.DEB.2.21.1902081051410.1645@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1902081051410.1645@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, den 27.03.2019, 17:45 +0000 schrieb Marc Zyngier:
-> On 27/03/2019 16:06, Lucas Stach wrote:
-> > Hi Marc,
-> > 
-> > Am Mittwoch, den 27.03.2019, 15:57 +0000 schrieb Marc Zyngier:
-> > > On 27/03/2019 15:44, Lucas Stach wrote:
-> > > > Hi Abel,
-> > > > 
-> > > > Am Mittwoch, den 27.03.2019, 13:21 +0000 schrieb Abel Vesa:
-> > > > > This work is a workaround I'm looking into (more as a background task)
-> > > > > in order to add support for cpuidle on i.MX8MQ based platforms.
-> > > > > 
-> > > > > The main idea here is getting around the missing GIC wake_request signal
-> > > > > (due to integration design issue) by waking up a each individual core through
-> > > > > some dedicated SW power-up bits inside the power controller (GPC) right before
-> > > > > every IPI is requested for that each individual core.
-> > > > 
-> > > > Just a general comment, without going into the details of this series:
-> > > > this issue is not only affecting IPIs, but also MSIs terminated at the
-> > > > GIC. Currently MSIs are terminated at the PCIe core, but terminating
-> > > > them at the GIC is clearly preferable, as this allows assigning CPU
-> > > > affinity to individual MSIs and lowers IRQ service overhead.
-> > > > 
-> > > > I'm not sure what the consequences are for upstream Linux support yet,
-> > > > but we should keep in mind that having a workaround for IPIs is only
-> > > > solving part of the issue.
-> > > 
-> > > If this erratum is affecting more than just IPIs, then indeed I don't
-> > > see how this patch series solves anything.
-> > > 
-> > > But the erratum documentation seems to imply that only SGIs are
-> > > affected, and goes as far as suggesting to use an external interrupt
-> > > would solve it. How comes this is not the case? Or is it that anything
-> > > directly routed to a redistributor is also affected? This would break
-> > > LPIs (and thus MSIs) and PPIs (the CPU timer, among others).
-> > > 
-> > > What is the *exact* status of this thing? I have the ugly feeling that
-> > > the true workaround is just to disable cpuidle.
-> > 
-> > As far as I understand the erratum, the basic issue is that the GIC
-> > wake_request signals are not connected to the GPC (the CPU/peripheral
-> > power sequencer). The SPIs are routed through the GPC and thus are
-> > visible as wakeup sources, which is why the workaround of using an
-> > external SPI as wakeup trigger for the IPI works.
-> 
-> Are all SPIs connected to the GPC?
+While the generic vdso patchset is in development, we decided to think
+about what other ways of generating two vdso libraries. In this
+patchset, we use a linker script, but it looks too complicated, so we
+decided to look at other options. Another obvious approach is the code
+patching technique. The main idea was to reduce the amount of
+arch-dependent code and Dmitry brought with the idea of three labels.
+Let’s look at this pseudo-code:
 
-AFAICS yes.
+Int vdso_clock_gettime(clockid_t clk, struct timespec *ts)
+{
+...
+l_call:
+               clk_to_ns(clk, ts)
+l_return:
+               return 0;
+               annotate_reachable();
+l_out:
+               nop();
+               return 0;
+}
 
-> > Anything that isn't visible to the GPC and requires the GIC
-> > wake_request signal to behave as specified is broken by this erratum.
-> 
-> I really wonder how a timer interrupt (a PPI, hence not routed through
-> the GPC) can wake up the CPU in this case. It really feels like
-> something like "program CNTV_CVAL_EL0 to expire at some later point;
-> WFI" could result in the CPU going to a deep sleep state, and not
-> wake-up at all.
+Here we can see three labels. Without patching this code, the function
+will apply vdso offsets. But if we copy the code between the last two
+labels to the first label, we will get a version which skips vdso
+offsets. The patch which implements this idea will be in replies to this
+email. It was tested on x86_64 and with gcc as a compiler, but we
+suspect that there might be some issues on other architectures or with
+other compilers. So we would like to ask the help of the community to
+understand what we have to do to be sure that this code works always
+correctly.
 
-I guess it's broken in the same way. The downstream DT claims
-"local-timer-stop" for the CPU sleep state and "arm,no-tick-in-suspend" 
-for the armv8-timer, which I guess is not the timer actually stopping
-in suspend, but the CPU being unable to wake up due to the timer IRQ.
+The second patch implements static_branch for the vdso code.
+Here are only a few lines of arch-dependent code:
 
-> This would indicate that not only cpuidle is broken with this, but
-> absolutely every interrupt that is not routed through the GPC.
++static __always_inline bool timens_static_branch(void)
++{
++       asm_volatile_goto("1:\n\t"
++               ".byte " __stringify(STATIC_KEY_INIT_NOP) "\n\t"
++                ".pushsection __retcall_table,  \"aw\"\n\t"
++                "2: .word 1b - 2b, %l[l_yes] - 2b\n\t"
++                ".popsection\n\t"
++                : :  :  : l_yes);
++
++       return false;
++l_yes:
++       return true;
++}
 
-That's my understanding as well. Note that I have no NXP internal
-information and can only infer from the published reference manual,
-errata notice and downstream kernel.
+This is a slightly modified version of the arch_static_branch()
+function. The timens code in vdso looks like this:
 
-Regards,
-Lucas
+           if (timens_static_branch()) {
+                   clk_to_ns(clk, ts);
+           }
+
+The version of vdso which is compiled from sources will never execute
+clk_to_ns(). And then we can patch the 'no-op' in the straight-line
+codepath with a 'jump' instruction to the out-of-line true branch and
+get the timens version of the vdso library.
+
+Now we can compare these three versions. Our opinion is that the version
+with three labels looks cleaner and if it will work with all compilers
+on all architectures, we probably have to choose it. Otherwise, we would
+prefer the version with static_branches, because it is simpler than the
+version with the linker script.
+
+Thanks,
+Andrei
+
+On Fri, Feb 08, 2019 at 10:57:57AM +0100, Thomas Gleixner wrote:
+> On Thu, 7 Feb 2019, Rasmus Villemoes wrote:
+>
+> Cc: + Vincenzo, Will
+>
+> > On 06/02/2019 01.10, Dmitry Safonov wrote:
+> > > As it has been discussed on timens RFC, adding a new conditional branch
+> > > `if (inside_time_ns)` on VDSO for all processes is undesirable.
+> > > It will add a penalty for everybody as branch predictor may mispredict
+> > > the jump. Also there are instruction cache lines wasted on cmp/jmp.
+> > >
+> > > Those effects of introducing time namespace are very much unwanted
+> > > having in mind how much work have been spent on micro-optimisation
+> > > vdso code.
+> > >
+> > > Addressing those problems, there are two versions of VDSO's .so:
+> > > for host tasks (without any penalty) and for processes inside of time
+> > > namespace with clk_to_ns() that subtracts offsets from host's time.
+> > >
+> > > Unfortunately, to allow changing VDSO VMA on a running process,
+> > > the entry points to VDSO should have the same offsets (addresses).
+> > > That's needed as i.e. application that calls setns() may have already
+> > > resolved VDSO symbols in GOT/PLT.
+> >
+> > These (14-19, if I'm reading them right) seems to add quite a lot of
+> > complexity and fragility to the build, and other architectures would
+> > probably have to add something similar to their vdso builds.
+>
+> Yes and we really want to avoid that. The VDSO implementations are
+> pointlessly different accross the architectures and there is effort on the
+> way to consolidate them:
+>
+>   https://lkml.kernel.org/r/20190115135539.24762-1-vincenzo.frascino@arm.com
+>
+> I talked to Vincenzo earlier this week and he's working on a new version of
+> that. The timens stuff wants to go on top of the consolidation otherwise we
+> end up with another set of pointlessly different and differently broken
+> VDSO variants.
+>
+> Thanks,
+>
+> 	tglx
