@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1372DC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE930C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A6A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8194421734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709859;
-	bh=+W6VUCVrIpcmWFqKcp0pIpX60Gkp26gcNaowHqC7Gtk=;
+	s=default; t=1553709863;
+	bh=jP3DAWteqrZWVLGoDQ1J1sgOBI1kizCw3nn9obA3X8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hwE0iRb16mLC8UF/NLbGxxlgt8GicolgtHe7wp6a97clYa+KiV9coM299dVWVvANU
-	 mi6lePapa6/0qTGAftlg93XdNbS8GwyDYpna+pGlt6koSoudUMR6oy+3zBR6hH+JRY
-	 1GKMLTKXtkkw8i/B6eWy42KtBV13+9qBruT5b0Xg=
+	b=1t/+xGun+rZienniSrcILBnjssnd7SKg0MvvyM+HqDToTW+1lzTPXFZAGUWkx258y
+	 3UGxzVwx5tds7njTmf2Aokh6cKZiQFo+BAGMWVUZvPXj1ysN/bjLxVtqoJpVsb8Lst
+	 JV8i/1DadIqmJ8YkId/4S+3mJQfoCCzqnegMQyso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfC0SES (ORCPT
+        id S1733243AbfC0SEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733195AbfC0SEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:14 -0400
+        id S1733187AbfC0SEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAA0F21738;
-        Wed, 27 Mar 2019 18:04:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A792063F;
+        Wed, 27 Mar 2019 18:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709853;
-        bh=+W6VUCVrIpcmWFqKcp0pIpX60Gkp26gcNaowHqC7Gtk=;
+        s=default; t=1553709852;
+        bh=jP3DAWteqrZWVLGoDQ1J1sgOBI1kizCw3nn9obA3X8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgJITxEpB+k+54l9hmH+5eA6ZNWvWx5O+JJ5lcvsoQ6IrksK8n1mL9dJcJejSsaLc
-         LqzTu9nqfRQ7+sUunP2iFfTJON6FgwGJMjBOAJcCksn5TKEbeIHdKTJLplfl+J71iu
-         z8j2mD1GLJ537F6QSb8SJbF0YzXQNjKw9z0Xp0N8=
+        b=zKpQsigSHU6Z3+U0kDMAckoiAEiU0FgwsL2e8Pp68f3n8jSaxTcw+PH2qF9yLVImG
+         lT2YHjZyCX9pbuR5IzSa1sIeDiVXcXyyAaGHOqWuQaBO84fU26EgiKU4TgmqbpfKLU
+         W3K4Pls9uF92g54PCFE9hjauIYtoF0U0uBT8rRys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 073/262] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 27 Mar 2019 13:58:48 -0400
-Message-Id: <20190327180158.10245-73-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 072/262] powerpc/powernv/ioda: Fix locked_vm counting for memory used by IOMMU tables
+Date:   Wed, 27 Mar 2019 13:58:47 -0400
+Message-Id: <20190327180158.10245-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,114 +57,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit 11f5acce2fa43b015a8120fa7620fa4efd0a2952 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+We store 2 multilevel tables in iommu_table - one for the hardware and
+one with the corresponding userspace addresses. Before allocating
+the tables, the iommu_table_group_ops::get_table_size() hook returns
+the combined size of the two and VFIO SPAPR TCE IOMMU driver adjusts
+the locked_vm counter correctly. When the table is actually allocated,
+the amount of allocated memory is stored in iommu_table::it_allocated_size
+and used to decrement the locked_vm counter when we release the memory
+used by the table; .get_table_size() and .create_table() calculate it
+independently but the result is expected to be the same.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+However the allocator does not add the userspace table size to
+.it_allocated_size so when we destroy the table because of VFIO PCI
+unplug (i.e. VFIO container is gone but the userspace keeps running),
+we decrement locked_vm by just a half of size of memory we are
+releasing.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+To make things worse, since we enabled on-demand allocation of
+indirect levels, it_allocated_size contains only the amount of memory
+actually allocated at the table creation time which can just be a
+fraction. It is not a problem with incrementing locked_vm (as
+get_table_size() value is used) but it is with decrementing.
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
+As the result, we leak locked_vm and may not be able to allocate more
+IOMMU tables after few iterations of hotplug/unplug.
 
-Here is the contexts for the three functions so far:
+This sets it_allocated_size in the pnv_pci_ioda2_ops::create_table()
+hook to what pnv_pci_ioda2_get_table_size() returns so from now on we
+have a single place which calculates the maximum memory a table can
+occupy. The original meaning of it_allocated_size is somewhat lost now
+though.
 
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
+We do not ditch it_allocated_size whatsoever here and we do not call
+get_table_size() from vfio_iommu_spapr_tce.c when decrementing
+locked_vm as we may have multiple IOMMU groups per container and even
+though they all are supposed to have the same get_table_size()
+implementation, there is a small chance for failure or confusion.
 
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 090bad39b237 ("powerpc/powernv: Add indirect levels to it_userspace")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/powernv/pci-ioda-tce.c | 1 -
+ arch/powerpc/platforms/powernv/pci-ioda.c     | 7 ++++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index dd0d516f65e2..53380e07b40e 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+index 697449afb3f7..e28f03e1eb5e 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
+@@ -313,7 +313,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
+ 			page_shift);
+ 	tbl->it_level_size = 1ULL << (level_shift - 3);
+ 	tbl->it_indirect_levels = levels - 1;
+-	tbl->it_allocated_size = total_allocated;
+ 	tbl->it_userspace = uas;
+ 	tbl->it_nid = nid;
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
+diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+index 145373f0e5dc..2d62c58f9a4c 100644
+--- a/arch/powerpc/platforms/powernv/pci-ioda.c
++++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+@@ -2594,8 +2594,13 @@ static long pnv_pci_ioda2_create_table_userspace(
+ 		int num, __u32 page_shift, __u64 window_size, __u32 levels,
+ 		struct iommu_table **ptbl)
+ {
+-	return pnv_pci_ioda2_create_table(table_group,
++	long ret = pnv_pci_ioda2_create_table(table_group,
+ 			num, page_shift, window_size, levels, true, ptbl);
++
++	if (!ret)
++		(*ptbl)->it_allocated_size = pnv_pci_ioda2_get_table_size(
++				page_shift, window_size, levels);
++	return ret;
+ }
  
-@@ -788,7 +788,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1079,7 +1079,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ static void pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
 -- 
 2.19.1
 
