@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F6CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A336C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAA4205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BB7205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712457;
-	bh=cT2WRBECPsHvsNNeoVIDWb07xf+29mo4gV366PwFG94=;
+	s=default; t=1553712462;
+	bh=z49brsPFgwylA3azQBtZ/qBl3u50Q+P8cQncW8EKeGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=INK+Eh1ZOamRUTXxzo2ullPZFjA81mizwiBvRdY/HIeTpW+/cOHsqUWBXgwye+JvL
-	 wvt+Tkqj7fomLNTg9pTviBX10yMzAJhFIRK9dK+K6yJMgCjJs7/nbCa5gXxlEpfrdn
-	 2PqK2HVUkZFuAjN9GvF9UwWF2DkMMTnP4d0XzUpc=
+	b=vbk7RvWu74SqhRX0kolo4SiWKIkDGjKMEE2pbxrxi1tjpDzNHQ2p4JsI76QDqBcld
+	 dVfCEr1JqvTbfTivWNbfAIlEk8bEY5jTvoltcaPtr8wk+FM0gvrWz878AClMgGBE2H
+	 8IHMPEN8/eGId0taiRRubPE3RmCNF7EZ57g9cmQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390777AbfC0STu (ORCPT
+        id S2390763AbfC0STs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:19:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390741AbfC0STi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:19:38 -0400
+        id S2390737AbfC0STh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DDBC20449;
-        Wed, 27 Mar 2019 18:19:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D242063F;
+        Wed, 27 Mar 2019 18:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710777;
-        bh=cT2WRBECPsHvsNNeoVIDWb07xf+29mo4gV366PwFG94=;
+        s=default; t=1553710776;
+        bh=z49brsPFgwylA3azQBtZ/qBl3u50Q+P8cQncW8EKeGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=st8+CBurBcBsjUB5aRoPhWbQUE5Ii6mWDgYrpryCbd2g5RazEq0eF/Fr6HAGYCoCU
-         Zvh55ur/FTF3fjJgezzO5UIoR+ubWG17vS2aAvuKNlz9Jy2M9RVJt9B+NSSd9SIask
-         V+Q2PZ/XXAMvxHpswJtvsBo07FyGyW4VfZYvNx1o=
+        b=hH7vBRVnYYJszucEv6v1CH2fKgva/DxaGUw9ueUaEpgwXbKZNp4CsqqiCSamaRLhw
+         6K3PiiH7Fo9jWWvi4O+8U5MM0gDsZJuo+aA4gtWRozJkxrHcPMtwu2xpCAhS1fpiCk
+         iCXO/j1uvlj9RuOtyZPKCRdlWPEYPTkzEJBUv+5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 096/123] backlight: pwm_bl: Use gpiod_get_value_cansleep() to get initial state
-Date:   Wed, 27 Mar 2019 14:16:00 -0400
-Message-Id: <20190327181628.15899-96-sashal@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 095/123] cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
+Date:   Wed, 27 Mar 2019 14:15:59 -0400
+Message-Id: <20190327181628.15899-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,66 +56,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit cec2b18832e26bc866bef2be22eff4e25bbc4034 ]
+[ Upstream commit 51bee5abeab2058ea5813c5615d6197a23dbf041 ]
 
-gpiod_get_value() gives out a warning if access to the underlying gpiochip
-requires sleeping, which is common for I2C based chips:
+The only user of cgroup_subsys->free() callback is pids_cgrp_subsys which
+needs pids_free() to uncharge the pid.
 
-    WARNING: CPU: 0 PID: 77 at drivers/gpio/gpiolib.c:2500 gpiod_get_value+0xd0/0x100
-    Modules linked in:
-    CPU: 0 PID: 77 Comm: kworker/0:2 Not tainted 4.14.0-rc3-00589-gf32897915d48-dirty #90
-    Hardware name: Allwinner sun4i/sun5i Families
-    Workqueue: events deferred_probe_work_func
-    [<c010ec50>] (unwind_backtrace) from [<c010b784>] (show_stack+0x10/0x14)
-    [<c010b784>] (show_stack) from [<c0797224>] (dump_stack+0x88/0x9c)
-    [<c0797224>] (dump_stack) from [<c0125b08>] (__warn+0xe8/0x100)
-    [<c0125b08>] (__warn) from [<c0125bd0>] (warn_slowpath_null+0x20/0x28)
-    [<c0125bd0>] (warn_slowpath_null) from [<c037069c>] (gpiod_get_value+0xd0/0x100)
-    [<c037069c>] (gpiod_get_value) from [<c03778d0>] (pwm_backlight_probe+0x238/0x508)
-    [<c03778d0>] (pwm_backlight_probe) from [<c0411a2c>] (platform_drv_probe+0x50/0xac)
-    [<c0411a2c>] (platform_drv_probe) from [<c0410224>] (driver_probe_device+0x238/0x2e8)
-    [<c0410224>] (driver_probe_device) from [<c040e820>] (bus_for_each_drv+0x44/0x94)
-    [<c040e820>] (bus_for_each_drv) from [<c040ff0c>] (__device_attach+0xb0/0x114)
-    [<c040ff0c>] (__device_attach) from [<c040f4f8>] (bus_probe_device+0x84/0x8c)
-    [<c040f4f8>] (bus_probe_device) from [<c040f944>] (deferred_probe_work_func+0x50/0x14c)
-    [<c040f944>] (deferred_probe_work_func) from [<c013be84>] (process_one_work+0x1ec/0x414)
-    [<c013be84>] (process_one_work) from [<c013ce5c>] (worker_thread+0x2b0/0x5a0)
-    [<c013ce5c>] (worker_thread) from [<c0141908>] (kthread+0x14c/0x154)
-    [<c0141908>] (kthread) from [<c0107ab0>] (ret_from_fork+0x14/0x24)
+However, ->free() is called from __put_task_struct()->cgroup_free() and this
+is too late. Even the trivial program which does
 
-This was missed in commit 0c9501f823a4 ("backlight: pwm_bl: Handle gpio
-that can sleep"). The code was then moved to a separate function in
-commit 7613c922315e ("backlight: pwm_bl: Move the checks for initial power
-state to a separate function").
+	for (;;) {
+		int pid = fork();
+		assert(pid >= 0);
+		if (pid)
+			wait(NULL);
+		else
+			exit(0);
+	}
 
-The only usage of gpiod_get_value() is during the probe stage, which is
-safe to sleep in. Switch to gpiod_get_value_cansleep().
+can run out of limits because release_task()->call_rcu(delayed_put_task_struct)
+implies an RCU gp after the task/pid goes away and before the final put().
 
-Fixes: 0c9501f823a4 ("backlight: pwm_bl: Handle gpio that can sleep")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Test-case:
+
+	mkdir -p /tmp/CG
+	mount -t cgroup2 none /tmp/CG
+	echo '+pids' > /tmp/CG/cgroup.subtree_control
+
+	mkdir /tmp/CG/PID
+	echo 2 > /tmp/CG/PID/pids.max
+
+	perl -e 'while ($p = fork) { wait; } $p // die "fork failed: $!\n"' &
+	echo $! > /tmp/CG/PID/cgroup.procs
+
+Without this patch the forking process fails soon after migration.
+
+Rename cgroup_subsys->free() to cgroup_subsys->release() and move the callsite
+into the new helper, cgroup_release(), called by release_task() which actually
+frees the pid(s).
+
+Reported-by: Herton R. Krzesinski <hkrzesin@redhat.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/pwm_bl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/cgroup-defs.h |  2 +-
+ include/linux/cgroup.h      |  2 ++
+ kernel/cgroup/cgroup.c      | 15 +++++++++------
+ kernel/cgroup/pids.c        |  4 ++--
+ kernel/exit.c               |  1 +
+ 5 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 0fa7d2bd0e48..aef3c1c29564 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -211,7 +211,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- 	 */
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index e7905d9353e8..93a2469a9130 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -523,7 +523,7 @@ struct cgroup_subsys {
+ 	void (*cancel_fork)(struct task_struct *task);
+ 	void (*fork)(struct task_struct *task);
+ 	void (*exit)(struct task_struct *task);
+-	void (*free)(struct task_struct *task);
++	void (*release)(struct task_struct *task);
+ 	void (*bind)(struct cgroup_subsys_state *root_css);
  
- 	/* if the enable GPIO is disabled, do not enable the backlight */
--	if (pb->enable_gpio && gpiod_get_value(pb->enable_gpio) == 0)
-+	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
- 		return FB_BLANK_POWERDOWN;
+ 	bool early_init:1;
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index dddbc29e2009..8e83c9055ccb 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -118,6 +118,7 @@ extern int cgroup_can_fork(struct task_struct *p);
+ extern void cgroup_cancel_fork(struct task_struct *p);
+ extern void cgroup_post_fork(struct task_struct *p);
+ void cgroup_exit(struct task_struct *p);
++void cgroup_release(struct task_struct *p);
+ void cgroup_free(struct task_struct *p);
  
- 	/* The regulator is disabled, do not enable the backlight */
+ int cgroup_init_early(void);
+@@ -668,6 +669,7 @@ static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
+ static inline void cgroup_cancel_fork(struct task_struct *p) {}
+ static inline void cgroup_post_fork(struct task_struct *p) {}
+ static inline void cgroup_exit(struct task_struct *p) {}
++static inline void cgroup_release(struct task_struct *p) {}
+ static inline void cgroup_free(struct task_struct *p) {}
+ 
+ static inline int cgroup_init_early(void) { return 0; }
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 7e79358b4473..694b1cc8d144 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -187,7 +187,7 @@ static u64 css_serial_nr_next = 1;
+  */
+ static u16 have_fork_callback __read_mostly;
+ static u16 have_exit_callback __read_mostly;
+-static u16 have_free_callback __read_mostly;
++static u16 have_release_callback __read_mostly;
+ static u16 have_canfork_callback __read_mostly;
+ 
+ /* cgroup namespace for init task */
+@@ -5112,7 +5112,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
+ 
+ 	have_fork_callback |= (bool)ss->fork << ss->id;
+ 	have_exit_callback |= (bool)ss->exit << ss->id;
+-	have_free_callback |= (bool)ss->free << ss->id;
++	have_release_callback |= (bool)ss->release << ss->id;
+ 	have_canfork_callback |= (bool)ss->can_fork << ss->id;
+ 
+ 	/* At system boot, before all subsystems have been
+@@ -5546,16 +5546,19 @@ void cgroup_exit(struct task_struct *tsk)
+ 	} while_each_subsys_mask();
+ }
+ 
+-void cgroup_free(struct task_struct *task)
++void cgroup_release(struct task_struct *task)
+ {
+-	struct css_set *cset = task_css_set(task);
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+-	do_each_subsys_mask(ss, ssid, have_free_callback) {
+-		ss->free(task);
++	do_each_subsys_mask(ss, ssid, have_release_callback) {
++		ss->release(task);
+ 	} while_each_subsys_mask();
++}
+ 
++void cgroup_free(struct task_struct *task)
++{
++	struct css_set *cset = task_css_set(task);
+ 	put_css_set(cset);
+ }
+ 
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 9829c67ebc0a..c9960baaa14f 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -247,7 +247,7 @@ static void pids_cancel_fork(struct task_struct *task)
+ 	pids_uncharge(pids, 1);
+ }
+ 
+-static void pids_free(struct task_struct *task)
++static void pids_release(struct task_struct *task)
+ {
+ 	struct pids_cgroup *pids = css_pids(task_css(task, pids_cgrp_id));
+ 
+@@ -342,7 +342,7 @@ struct cgroup_subsys pids_cgrp_subsys = {
+ 	.cancel_attach 	= pids_cancel_attach,
+ 	.can_fork	= pids_can_fork,
+ 	.cancel_fork	= pids_cancel_fork,
+-	.free		= pids_free,
++	.release	= pids_release,
+ 	.legacy_cftypes	= pids_files,
+ 	.dfl_cftypes	= pids_files,
+ 	.threaded	= true,
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 5523fb0c20c8..95ce231ff5e2 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -218,6 +218,7 @@ void release_task(struct task_struct *p)
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
++	cgroup_release(p);
+ 	release_thread(p);
+ 	call_rcu(&p->rcu, delayed_put_task_struct);
+ 
 -- 
 2.19.1
 
