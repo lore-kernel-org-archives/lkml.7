@@ -6,45 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0509C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ABAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822B4206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48838206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713299;
-	bh=+XmkzLVJ8InXwc5CkV8ofCiTn/x4mis+83XQOgTEGs4=;
+	s=default; t=1553713307;
+	bh=muq2VKf6O7YsjH3w9qb7tTBtwzD1JKs9NHjP5995QJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CgDsAfnNUJ44PihhW72/hTak90YA21SnHp6rcZRTf1TcQWykwK4t3mRNUjCtEZ+h2
-	 M1E4qfDdoY4q5kTRVfXOu/euOMusxhSdpWb9R729Iuf2ql+zkJon44mnKpq4LHa8PO
-	 PUvv9io3BpGpN3w0nVqmIflLFW3wnTIuW9L6s9Ko=
+	b=r/giR2CDXAxgTHjEZ+eC4sFRpO3w/7OCc0cKeX8TKLHAqAFTiLWQiif0wvQahSkwT
+	 ij3uNElLcJVaLpDzJuhCmpTE3qaiW480SfqaIpwj+EVvgyyERGEklM+pcZMh6tIQUg
+	 YLE3XhM4QtYQlp0000UTep5nunM5Jkspn48/dXYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389252AbfC0SOI (ORCPT
+        id S2389830AbfC0TBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389234AbfC0SOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:04 -0400
+        id S2389273AbfC0SOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAA1D2082F;
-        Wed, 27 Mar 2019 18:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B522147C;
+        Wed, 27 Mar 2019 18:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710443;
-        bh=+XmkzLVJ8InXwc5CkV8ofCiTn/x4mis+83XQOgTEGs4=;
+        s=default; t=1553710444;
+        bh=muq2VKf6O7YsjH3w9qb7tTBtwzD1JKs9NHjP5995QJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jYr0R4dwlEgYA8Z4MoRa0BkR4jbIDTgfinxUfWQ25tYphtwMu1RoL4qgFM5VzqMdU
-         TBJGXPc6wkYfNCSVzTrfLljP+Ypt3Ja4UzpJBfm0mIEkvOlsir8TihwAoICJbwOtn0
-         eT8y/kCqiiBpoP+eZSQAv8ENagTx4LPvTpxkijDE=
+        b=kXbOPpFG+oIMxfsGDCcXga6V6+EpiN4IuKAVK0uKGEHLVAy7lY0ncqWcZT4Q6HcOg
+         oYe6zLPxw2cSihgdzsF0rloipQolOQlx3NJgmuiAoqVlj3dKUo/uqXEKfFLF3GLrcu
+         4ReQihyu832/sfnqzf3+yhVAo1nFVLA3w0q9Dveg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 122/192] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Wed, 27 Mar 2019 14:09:14 -0400
-Message-Id: <20190327181025.13507-122-sashal@kernel.org>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 123/192] drm: rcar-du: add missing of_node_put
+Date:   Wed, 27 Mar 2019 14:09:15 -0400
+Message-Id: <20190327181025.13507-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -56,99 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Julia Lawall <julia.lawall@lip6.fr>
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+[ Upstream commit 4c6d8fc20b09f9684743afd72e4dbc3f15524479 ]
 
-The following traceback is sometimes seen when booting an image in qemu:
+Add an of_node_put when the result of of_graph_get_remote_port_parent is
+not available.
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
+Add a second of_node_put if no encoder is selected (encoder remains NULL).
 
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
+The semantic match that finds the first problem is as follows
+(http://coccinelle.lip6.fr):
 
-Use a static atomic to ensure that the function is executed exactly once.
+// <smpl>
+@r exists@
+local idexpression e;
+expression x;
+@@
+e = of_graph_get_remote_port_parent(...);
+... when != x = e
+    when != true e == NULL
+    when != of_node_put(e)
+    when != of_fwnode_handle(e)
+(
+return e;
+|
+*return ...;
+)
+// </smpl>
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 10802d1fc554..27a82a559ab9 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+index fb46df56f0c4..0386b454e221 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+@@ -300,6 +300,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
+ 		dev_dbg(rcdu->dev,
+ 			"connected entity %pOF is disabled, skipping\n",
+ 			entity);
++		of_node_put(entity);
+ 		return -ENODEV;
+ 	}
  
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3693,9 +3694,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
+@@ -335,6 +336,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
+ 		dev_warn(rcdu->dev,
+ 			 "no encoder found for endpoint %pOF, skipping\n",
+ 			 ep->local_node);
++		of_node_put(entity);
+ 		return -ENODEV;
+ 	}
  
- static void cdrom_sysctl_register(void)
- {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3706,8 +3707,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
--
--	initialized = 1;
- }
- 
- static void cdrom_sysctl_unregister(void)
 -- 
 2.19.1
 
