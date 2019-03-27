@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E032BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F5FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9383B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65D52075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nv7RO/x6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdBZtwpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732429AbfC0IFn (ORCPT
+        id S1732498AbfC0IFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:05:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60376 "EHLO
+        Wed, 27 Mar 2019 04:05:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60766 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732179AbfC0IFl (ORCPT
+        with ESMTP id S1732179AbfC0IFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:05:41 -0400
+        Wed, 27 Mar 2019 04:05:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OiOivPxInHu2cmv55CsmXygD2Ii7qGImwyEF7Hxnabw=; b=Nv7RO/x683DIPnd1DtezIEWC49
-        emqTiFzY54JrLZIfJI2dRlNLJejwBWjTZNo4Wt8TBNzX9umS6IA9DUfkqHUkafKfV/+J+XwZq1Dbq
-        WaDsCrz0fVkJm/3OyPdtSWMHfucVTKbkfnR6x9xW/4NB94xfKor/2nLH1u9U+xINbtc5HqJ7yifjy
-        jT0v7wvZsRi+YRlABkvSy/2MlAomaMk2fXJ4LnMAeGS62O/HTbmNUYMeWx44J2DH/3E+WdbaHsghc
-        h89b8fprJ6BQznTqu3FBYiwPwY+qsCIGe5g5nnnfhGsguvKzKRqBe0VeI4Jskmygj8OOHC0YsV4Gq
-        JFXbnZOg==;
+        bh=6GC+yBLfBaQWhOa/Bgemo6INqrofP5PzasrWOcl4tMU=; b=qdBZtwpRKRyhSBo9ChzlpV5mO6
+        6eUDrchuxYu7NtcDlU2Y4+3NjS/R64O0YvexYqfag8xWLBwPgi38str9q0IyldNYJVRppSllCBvx0
+        gHFmR2j5bBJikBFdmijssdboBuC1acuqTYU663TeHBYViUUUhKnncVCZ9DC+uMjnCJogD6OXWejat
+        Swi8i0Wt5X9eWRTjq9OPufMWmsgmpg33B89UKUUzqsXMOqDGlW4XzCp9K2DpWNsWxPWlRyF1uRzGL
+        XFnSpr9hdqnwUNiXrAhlmDMVMpmaGHkGVpqdC3B8K2ysSgUPpx35xI3/RuCXydcaBHTik3bu3Orct
+        OoTh/v5A==;
 Received: from 213-225-14-48.nat.highway.a1.net ([213.225.14.48] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h93Yz-0006NY-M5; Wed, 27 Mar 2019 08:05:34 +0000
+        id 1h93Z3-0006S5-DN; Wed, 27 Mar 2019 08:05:37 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Joerg Roedel <joro@8bytes.org>,
@@ -46,9 +46,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/21] dma-iommu: refactor iommu_dma_mmap
-Date:   Wed, 27 Mar 2019 09:04:35 +0100
-Message-Id: <20190327080448.5500-9-hch@lst.de>
+Subject: [PATCH 09/21] dma-iommu: refactor iommu_dma_get_sgtable
+Date:   Wed, 27 Mar 2019 09:04:36 +0100
+Message-Id: <20190327080448.5500-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327080448.5500-1-hch@lst.de>
 References: <20190327080448.5500-1-hch@lst.de>
@@ -60,111 +60,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the vm_area handling into __iommu_dma_mmap, which is renamed
-to iommu_dma_mmap_remap.
+Move the vm_area handling into a new iommu_dma_get_sgtable_remap helper.
 
-Inline __iommu_dma_mmap_pfn into the main function to simplify the code
-flow a bit.
+Inline __iommu_dma_get_sgtable_page into the main function to simplify
+the code flow a bit.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/iommu/dma-iommu.c | 50 ++++++++++++++-------------------------
- 1 file changed, 18 insertions(+), 32 deletions(-)
+ drivers/iommu/dma-iommu.c | 54 +++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index d14fe9f8c692..43bd3c7e0f6b 100644
+index 43bd3c7e0f6b..57f2d8621112 100644
 --- a/drivers/iommu/dma-iommu.c
 +++ b/drivers/iommu/dma-iommu.c
-@@ -597,23 +597,27 @@ static struct page **__iommu_dma_alloc(struct device *dev, size_t size,
+@@ -625,6 +625,18 @@ static int iommu_dma_mmap_remap(void *cpu_addr, size_t size,
+ 	return ret;
  }
  
- /**
-- * __iommu_dma_mmap - Map a buffer into provided user VMA
-- * @pages: Array representing buffer from __iommu_dma_alloc()
-+ * iommu_dma_mmap_remap - Map a remapped page array into provided user VMA
-+ * @cpu_addr: virtual address of the memory to be remapped
-  * @size: Size of buffer in bytes
-  * @vma: VMA describing requested userspace mapping
-  *
-- * Maps the pages of the buffer in @pages into @vma. The caller is responsible
-+ * Maps the pages pointed to by @cpu_addr into @vma. The caller is responsible
-  * for verifying the correct size and protection of @vma beforehand.
-  */
--static int __iommu_dma_mmap(struct page **pages, size_t size,
-+static int iommu_dma_mmap_remap(void *cpu_addr, size_t size,
- 		struct vm_area_struct *vma)
- {
++static int iommu_dma_get_sgtable_remap(struct sg_table *sgt, void *cpu_addr,
++		size_t size)
++{
++	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
 +	struct vm_struct *area = find_vm_area(cpu_addr);
- 	unsigned long uaddr = vma->vm_start;
- 	unsigned int i, count = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	int ret = -ENXIO;
- 
++
 +	if (WARN_ON(!area || !area->pages))
 +		return -ENXIO;
++	return sg_alloc_table_from_pages(sgt, area->pages, count, 0, size,
++			GFP_KERNEL);
++}
 +
- 	for (i = vma->vm_pgoff; i < count && uaddr < vma->vm_end; i++) {
--		ret = vm_insert_page(vma, uaddr, pages[i]);
-+		ret = vm_insert_page(vma, uaddr, area->pages[i]);
- 		if (ret)
- 			break;
- 		uaddr += PAGE_SIZE;
-@@ -1052,21 +1056,13 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
- 	}
+ static void iommu_dma_sync_single_for_cpu(struct device *dev,
+ 		dma_addr_t dma_handle, size_t size, enum dma_data_direction dir)
+ {
+@@ -1084,42 +1096,24 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+ 			vma_pages(vma) << PAGE_SHIFT, vma->vm_page_prot);
  }
  
--static int __iommu_dma_mmap_pfn(struct vm_area_struct *vma,
--			      unsigned long pfn, size_t size)
+-static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
+-		size_t size)
 -{
--	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
--			       vma->vm_end - vma->vm_start,
--			       vma->vm_page_prot);
+-	int ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+-
+-	if (!ret)
+-		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
+-	return ret;
 -}
 -
- static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
  		void *cpu_addr, dma_addr_t dma_addr, size_t size,
  		unsigned long attrs)
  {
- 	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
- 	unsigned long off = vma->vm_pgoff;
--	struct vm_struct *area;
-+	unsigned long pfn;
- 	int ret;
- 
- 	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
-@@ -1077,25 +1073,15 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
- 	if (off >= nr_pages || vma_pages(vma) > nr_pages - off)
- 		return -ENXIO;
- 
+-	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+-	struct vm_struct *area = find_vm_area(cpu_addr);
+-
 -	if (!is_vmalloc_addr(cpu_addr)) {
--		unsigned long pfn = page_to_pfn(virt_to_page(cpu_addr));
--		return __iommu_dma_mmap_pfn(vma, pfn, size);
+-		struct page *page = virt_to_page(cpu_addr);
+-		return __iommu_dma_get_sgtable_page(sgt, page, size);
 -	}
-+	if (is_vmalloc_addr(cpu_addr)) {
-+		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
-+			return iommu_dma_mmap_remap(cpu_addr, size, vma);
-+		pfn = vmalloc_to_pfn(cpu_addr);
-+	} else
-+		pfn = page_to_pfn(virt_to_page(cpu_addr));
- 
+-
 -	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
 -		/*
 -		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
 -		 * hence in the vmalloc space.
 -		 */
--		unsigned long pfn = vmalloc_to_pfn(cpu_addr);
--		return __iommu_dma_mmap_pfn(vma, pfn, size);
+-		struct page *page = vmalloc_to_page(cpu_addr);
+-		return __iommu_dma_get_sgtable_page(sgt, page, size);
 -	}
--
--	area = find_vm_area(cpu_addr);
++	struct page *page;
++	int ret;
+ 
 -	if (WARN_ON(!area || !area->pages))
 -		return -ENXIO;
--
--	return __iommu_dma_mmap(area->pages, size, vma);
-+	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
-+			vma_pages(vma) << PAGE_SHIFT, vma->vm_page_prot);
++	if (is_vmalloc_addr(cpu_addr)) {
++		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
++			return iommu_dma_get_sgtable_remap(sgt, cpu_addr, size);
++		page = vmalloc_to_page(cpu_addr);
++	} else
++		page = virt_to_page(cpu_addr);
+ 
+-	return sg_alloc_table_from_pages(sgt, area->pages, count, 0, size,
+-					 GFP_KERNEL);
++	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
++	if (!ret)
++		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
++	return ret;
  }
  
- static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
+ static const struct dma_map_ops iommu_dma_ops = {
 -- 
 2.20.1
 
