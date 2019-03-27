@@ -2,155 +2,57 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4F7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 07:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EAEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 07:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FBE2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 07:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4CB2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 07:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732434AbfC0HZg (ORCPT
+        id S1732224AbfC0H3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 03:25:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:4440 "EHLO mga09.intel.com"
+        Wed, 27 Mar 2019 03:29:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5823 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfC0HZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 03:25:35 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1725795AbfC0H3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 03:29:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 00:25:34 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 00:29:44 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,276,1549958400"; 
-   d="scan'208";a="332407505"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Mar 2019 00:25:30 -0700
-Date:   Wed, 27 Mar 2019 15:10:06 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
-Message-ID: <20190327071006.GA18685@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-4-git-send-email-hao.wu@intel.com>
- <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
- <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
- <20190327051040.GB20968@hao-dev>
- <fd78636fb37cfcb725b22bb6a5f7576fa61a00a7.camel@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd78636fb37cfcb725b22bb6a5f7576fa61a00a7.camel@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+   d="scan'208";a="144234327"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Mar 2019 00:29:43 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] perf scripts python: exported-sql-viewer.py: Fix python3 support
+Date:   Wed, 27 Mar 2019 09:28:24 +0200
+Message-Id: <20190327072826.19168-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 01:19:29AM -0500, Scott Wood wrote:
-> On Wed, 2019-03-27 at 13:10 +0800, Wu Hao wrote:
-> > On Mon, Mar 25, 2019 at 05:58:36PM -0500, Scott Wood wrote:
-> > > On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
-> > > > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
-> > > > > In early partial reconfiguration private feature, it only
-> > > > > supports 32bit data width when writing data to hardware for
-> > > > > PR. 512bit data width PR support is an important optimization
-> > > > > for some specific solutions (e.g. XEON with FPGA integrated),
-> > > > > it allows driver to use AVX512 instruction to improve the
-> > > > > performance of partial reconfiguration. e.g. programming one
-> > > > > 100MB bitstream image via this 512bit data width PR hardware
-> > > > > only takes ~300ms, but 32bit revision requires ~3s per test
-> > > > > result.
-> > > > > 
-> > > > > Please note now this optimization is only done on revision 2
-> > > > > of this PR private feature which is only used in integrated
-> > > > > solution that AVX512 is always supported.
-> > > > > 
-> > > > > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > > ---
-> > > > >  drivers/fpga/dfl-fme-main.c |  3 ++
-> > > > >  drivers/fpga/dfl-fme-mgr.c  | 75
-> > > > > +++++++++++++++++++++++++++++++++++++-
-> > > > > --
-> > > > > -----
-> > > > >  drivers/fpga/dfl-fme-pr.c   | 45 ++++++++++++++++-----------
-> > > > >  drivers/fpga/dfl-fme.h      |  2 ++
-> > > > >  drivers/fpga/dfl.h          |  5 +++
-> > > > >  5 files changed, 99 insertions(+), 31 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-
-> > > > > main.c
-> > > > > index 086ad24..076d74f 100644
-> > > > > --- a/drivers/fpga/dfl-fme-main.c
-> > > > > +++ b/drivers/fpga/dfl-fme-main.c
-> > > > > @@ -21,6 +21,8 @@
-> > > > >  #include "dfl.h"
-> > > > >  #include "dfl-fme.h"
-> > > > >  
-> > > > > +#define DRV_VERSION	"0.8"
-> > > > 
-> > > > What is this going to be used for?  Under what circumstances will the
-> > > > driver version be bumped?  What does it have to do with 512-bit
-> > > > writes?
-> > 
-> > This patchset adds more features to this driver, so i would like to add
-> > a DRV_VERSION there as an initial one. In the future, if some new features
-> > or extensions for existing features (e.g. new revision of a private
-> > feature)
-> > are added we need to bump this version.
-> 
-> This doesn't seem like a good way of advertising API availability... Besides
-> being awkward to query, what happens if a distro kernel has backported some
-> features but not others that came before?  What does it advertise?
+Hi
 
-DRV_VERSION here is not used for API availablity. :)
+Here are a couple for fixes.
 
-> I'd suggest some sort of feature flag mechanism that can be queried via
-> ioctl (e.g. along the lines of KVM capabilities), if "try the API and fall
-> back if it fails" is unsatisfactory.
-> 
-> Plus, if it's about new APIs being exposed, this doesn't seem like the right
-> patch for it to be in...
 
-Actually this patch doesn't introduce new APIs, I am trying to make this
-transparent to endusers. That means users don't need to know it's a 32bit
-PR or a faster 512bit one, they still use the same IOCTL interface for PR.
+Adrian Hunter (2):
+      perf scripts python: exported-sql-viewer.py: Fix never-ending loop
+      perf scripts python: exported-sql-viewer.py: Fix python3 support
 
-the API_VERSION and CHECK_EXTENSION ioctls have been defined, but I think
-at least we don't need to bump them for this change. How do you think?
+ tools/perf/scripts/python/exported-sql-viewer.py | 77 +++++++++++++++++++-----
+ 1 file changed, 63 insertions(+), 14 deletions(-)
 
-> 
-> > > Sorry, I missed the comment about revision 2 only being on integrated
-> > > devices -- but will that always be the case?  Seems worthwhile to check
-> > > for
-> > > AVX512 support anyway.  And there's still the possibility of being built
-> > > with an old binutils such that CONFIG_AS_AVX512 is not set, or running
-> > > on a
-> > > kernel where avx512 was disabled via a boot option.
-> > > 
-> > > What about future revisions >= 2?  Currently the driver will treat them
-> > > as
-> > > if they were revision < 2.  Is that intended?
-> > 
-> > Yes, it's intended. Currently we don't have any hardware with revisions >
-> > 2,
-> > and support new revisions may need new code. :)  e.g. currently revision
-> > is
-> > used to tell 32bit vs 512bit PR, but in future revisions, it may have new
-> > capability registers for this purpose.
-> 
-> The driver should refuse to bind to unrecognized revisions, if they're not
-> expected to be compatible.
 
-Yes, agree.
-
-Thanks
-Hao
+Regards
+Adrian
