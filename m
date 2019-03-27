@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E90AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E2FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCE721734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7381C21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709801;
-	bh=aXhc8/8dQcGfgrzvjDxHfcfZhubmELaV7gE+FER6Ig4=;
+	s=default; t=1553709805;
+	bh=/OrhX40uoCv//Taquhv0DUoCnp3Ps4eZLZUMj9J5PKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TIGsREP8hibZKnQm3KCbHEh3i8fiKlXXu0lJja2un6N/I1tLh5w2OJhO0tkEs1vBg
-	 VTq/J7ixf3bflsgJcwzGUbIiHyRZhraCIUoJtFBpfAuCzCVcp4M/cy0gilW4HN8Z0E
-	 ysxx6DbYHSeaWMeAkDD61gtuaw7qd0S1i4/e9Aw4=
+	b=b0jGvIAImYMYT0tdEF+EgZQAoaPKuDbcNHiY+zr799Gfn+zzW25LRDFocbSMy7Cr9
+	 xtuKBEV2Ar25e9szbT0KA3NOOldOVfxpTISFtCIMSZWbGpsdoazHbN7BC9Nxzgjnq2
+	 YM+ZquU0WSdZui3wdLUcvOzQjaMuOiDRBCagRXBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732279AbfC0SDT (ORCPT
+        id S1732351AbfC0SDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43418 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732189AbfC0SDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:16 -0400
+        id S1732242AbfC0SDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801742075C;
-        Wed, 27 Mar 2019 18:03:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8BBC2183E;
+        Wed, 27 Mar 2019 18:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709795;
-        bh=aXhc8/8dQcGfgrzvjDxHfcfZhubmELaV7gE+FER6Ig4=;
+        s=default; t=1553709797;
+        bh=/OrhX40uoCv//Taquhv0DUoCnp3Ps4eZLZUMj9J5PKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IzvxpoeT3ofJsx4NaSb/9DjPU84B9xqCrNIW/1H1vlim16eixyeOxS1XsLQEjOLA3
-         EtdZIrF8n0MzU4tE8k4EIfF1q6mVw1G/zP3h+urqcVQNv3DDcuL2IrZmIcW70DLEQ0
-         +V3f66OmO0nPpo2bGQhNDgWfoNMeHNkcji1hVaW4=
+        b=ckFSKj7Efvr0Y/dMQiVQG9H4pN/brD7uqiPzHTfI0nCqsdZbT3QG6rVW4X51HwKtg
+         tUvsR56vycVtugknMHoQPvQTkIAh/O7e258/y9LgdgCOKo7PYDSP/ZiAuIiJEq5A5o
+         ImzMlsgZ3itxWr4xMSWy1OVfrOyXuWUZePrsYt1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.0 041/262] f2fs: do not use mutex lock in atomic context
-Date:   Wed, 27 Mar 2019 13:58:16 -0400
-Message-Id: <20190327180158.10245-41-sashal@kernel.org>
+Cc:     Shuriyc Chu <sureeju@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 043/262] fs/file.c: initialize init_files.resize_wait
+Date:   Wed, 27 Mar 2019 13:58:18 -0400
+Message-Id: <20190327180158.10245-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,107 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: Shuriyc Chu <sureeju@gmail.com>
 
-[ Upstream commit 9083977dabf3833298ddcd40dee28687f1e6b483 ]
+[ Upstream commit 5704a06810682683355624923547b41540e2801a ]
 
-Fix below warning coming because of using mutex lock in atomic context.
+(Taken from https://bugzilla.kernel.org/show_bug.cgi?id=200647)
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:98
-in_atomic(): 1, irqs_disabled(): 0, pid: 585, name: sh
-Preemption disabled at: __radix_tree_preload+0x28/0x130
-Call trace:
- dump_backtrace+0x0/0x2b4
- show_stack+0x20/0x28
- dump_stack+0xa8/0xe0
- ___might_sleep+0x144/0x194
- __might_sleep+0x58/0x8c
- mutex_lock+0x2c/0x48
- f2fs_trace_pid+0x88/0x14c
- f2fs_set_node_page_dirty+0xd0/0x184
+'get_unused_fd_flags' in kthread cause kernel crash.  It works fine on
+4.1, but causes crash after get 64 fds.  It also cause crash on
+ubuntu1404/1604/1804, centos7.5, and the crash messages are almost the
+same.
 
-Do not use f2fs_radix_tree_insert() to avoid doing cond_resched() with
-spin_lock() acquired.
+The crash message on centos7.5 shows below:
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+  start fd 61
+  start fd 62
+  start fd 63
+  BUG: unable to handle kernel NULL pointer dereference at           (null)
+  IP: __wake_up_common+0x2e/0x90
+  PGD 0
+  Oops: 0000 [#1] SMP
+  Modules linked in: test(OE) xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter devlink sunrpc kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd sg ppdev pcspkr virtio_balloon parport_pc parport i2c_piix4 joydev ip_tables xfs libcrc32c sr_mod cdrom sd_mod crc_t10dif crct10dif_generic ata_generic pata_acpi virtio_scsi virtio_console virtio_net cirrus drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm crct10dif_pclmul crct10dif_common crc32c_intel drm ata_piix serio_raw libata virtio_pci virtio_ring i2c_core
+   virtio floppy dm_mirror dm_region_hash dm_log dm_mod
+  CPU: 2 PID: 1820 Comm: test_fd Kdump: loaded Tainted: G           OE  ------------   3.10.0-862.3.3.el7.x86_64 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
+  task: ffff8e92b9431fa0 ti: ffff8e94247a0000 task.ti: ffff8e94247a0000
+  RIP: 0010:__wake_up_common+0x2e/0x90
+  RSP: 0018:ffff8e94247a2d18  EFLAGS: 00010086
+  RAX: 0000000000000000 RBX: ffffffff9d09daa0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffff9d09daa0
+  RBP: ffff8e94247a2d50 R08: 0000000000000000 R09: ffff8e92b95dfda8
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff9d09daa8
+  R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000003
+  FS:  0000000000000000(0000) GS:ffff8e9434e80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 000000017c686000 CR4: 00000000000207e0
+  Call Trace:
+    __wake_up+0x39/0x50
+    expand_files+0x131/0x250
+    __alloc_fd+0x47/0x170
+    get_unused_fd_flags+0x30/0x40
+    test_fd+0x12a/0x1c0 [test]
+    kthread+0xd1/0xe0
+    ret_from_fork_nospec_begin+0x21/0x21
+  Code: 66 90 55 48 89 e5 41 57 41 89 f7 41 56 41 89 ce 41 55 41 54 49 89 fc 49 83 c4 08 53 48 83 ec 10 48 8b 47 08 89 55 cc 4c 89 45 d0 <48> 8b 08 49 39 c4 48 8d 78 e8 4c 8d 69 e8 75 08 eb 3b 4c 89 ef
+  RIP   __wake_up_common+0x2e/0x90
+   RSP <ffff8e94247a2d18>
+  CR2: 0000000000000000
+
+This issue exists since CentOS 7.5 3.10.0-862 and CentOS 7.4
+(3.10.0-693.21.1 ) is ok.  Root cause: the item 'resize_wait' is not
+initialized before being used.
+
+Reported-by: Richard Zhang <zhang.zijian@h3c.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/trace.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ fs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/trace.c b/fs/f2fs/trace.c
-index ce2a5eb210b6..d0ab533a9ce8 100644
---- a/fs/f2fs/trace.c
-+++ b/fs/f2fs/trace.c
-@@ -14,7 +14,7 @@
- #include "trace.h"
+diff --git a/fs/file.c b/fs/file.c
+index 3209ee271c41..a10487aa0a84 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -457,6 +457,7 @@ struct files_struct init_files = {
+ 		.full_fds_bits	= init_files.full_fds_bits_init,
+ 	},
+ 	.file_lock	= __SPIN_LOCK_UNLOCKED(init_files.file_lock),
++	.resize_wait	= __WAIT_QUEUE_HEAD_INITIALIZER(init_files.resize_wait),
+ };
  
- static RADIX_TREE(pids, GFP_ATOMIC);
--static struct mutex pids_lock;
-+static spinlock_t pids_lock;
- static struct last_io_info last_io;
- 
- static inline void __print_last_io(void)
-@@ -58,23 +58,29 @@ void f2fs_trace_pid(struct page *page)
- 
- 	set_page_private(page, (unsigned long)pid);
- 
-+retry:
- 	if (radix_tree_preload(GFP_NOFS))
- 		return;
- 
--	mutex_lock(&pids_lock);
-+	spin_lock(&pids_lock);
- 	p = radix_tree_lookup(&pids, pid);
- 	if (p == current)
- 		goto out;
- 	if (p)
- 		radix_tree_delete(&pids, pid);
- 
--	f2fs_radix_tree_insert(&pids, pid, current);
-+	if (radix_tree_insert(&pids, pid, current)) {
-+		spin_unlock(&pids_lock);
-+		radix_tree_preload_end();
-+		cond_resched();
-+		goto retry;
-+	}
- 
- 	trace_printk("%3x:%3x %4x %-16s\n",
- 			MAJOR(inode->i_sb->s_dev), MINOR(inode->i_sb->s_dev),
- 			pid, current->comm);
- out:
--	mutex_unlock(&pids_lock);
-+	spin_unlock(&pids_lock);
- 	radix_tree_preload_end();
- }
- 
-@@ -119,7 +125,7 @@ void f2fs_trace_ios(struct f2fs_io_info *fio, int flush)
- 
- void f2fs_build_trace_ios(void)
- {
--	mutex_init(&pids_lock);
-+	spin_lock_init(&pids_lock);
- }
- 
- #define PIDVEC_SIZE	128
-@@ -147,7 +153,7 @@ void f2fs_destroy_trace_ios(void)
- 	pid_t next_pid = 0;
- 	unsigned int found;
- 
--	mutex_lock(&pids_lock);
-+	spin_lock(&pids_lock);
- 	while ((found = gang_lookup_pids(pid, next_pid, PIDVEC_SIZE))) {
- 		unsigned idx;
- 
-@@ -155,5 +161,5 @@ void f2fs_destroy_trace_ios(void)
- 		for (idx = 0; idx < found; idx++)
- 			radix_tree_delete(&pids, pid[idx]);
- 	}
--	mutex_unlock(&pids_lock);
-+	spin_unlock(&pids_lock);
- }
+ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
 -- 
 2.19.1
 
