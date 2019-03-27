@@ -4,60 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E73C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB02DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BE3218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C77F217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710376;
-	bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
+	s=default; t=1553710379;
+	bh=uZX2f7PJwn5YpLpG3IYUmtDdOY89VpbLiidtA1GJjps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mcKSZ59asbD/d8JbjYrDvzbRduPA8mD/JzEI1ofhM2650Qf7DQzcmkimIZnEyTJ5f
-	 3L7/yLU4PYc3OzdM2HSgwlM3D8nmeUxVmKR7bNkHSWGydrZ6jJVOuqfdRAFjHAsqXz
-	 Aay0UdkPw04RAEmHOoIfEW8YGOR/Hhi+Is/sgUvo=
+	b=I+ytrBXruor+cNd41tJxYroGDvXxrUxb7EsXaTfeixz38/DbWedTQJGrkg+VDg7o/
+	 H8VsOWUKRV4wDNlVVh2SibQBIYfJwsjNMDWio0tR5SQtu/dz+y9jFa8H/HIGT7+Xut
+	 9Re1g7PBL2vbkD+8NHSKNnQffZTGx1DBOcBZCziI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388865AbfC0SMy (ORCPT
+        id S2389302AbfC0SM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55280 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389278AbfC0SMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:50 -0400
+        id S2387881AbfC0SMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBBDB2147C;
-        Wed, 27 Mar 2019 18:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D332054F;
+        Wed, 27 Mar 2019 18:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710369;
-        bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
+        s=default; t=1553710371;
+        bh=uZX2f7PJwn5YpLpG3IYUmtDdOY89VpbLiidtA1GJjps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/mnKS7RL5Wv7hKQ0p7ZBo5/e43Jcw6JfRgzkpSNS4sKvQ/sVSM7JqtCljMvfjEI9
-         XK6zZL2p9FnjKbpdYJI+cfGsqf4RwrjX/9kmWJnQoymhxIYyPv6jvI+rZ9lq+Ear/c
-         2d/3EI5N/NIIiMoHOfcFP3J1FyVw5N/C6ZNKRU4I=
+        b=m4up72BkyVI9Ze+vFdTRXaBmw1pmN57fO2Z0fKZM2P/+LH9kitkFB8SuKZdCHWz9S
+         HoboF0/mzyDkGj97KGC1HQzJ/VtQ1svmQYdYwD+MUMWxD0waQJWLEuztu4+wZXUybl
+         NIGPWM4DS1Irgbh8qdqoHzpYfEb4PEmupxkRzptE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 083/192] SoC: imx-sgtl5000: add missing put_device()
-Date:   Wed, 27 Mar 2019 14:08:35 -0400
-Message-Id: <20190327181025.13507-83-sashal@kernel.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Wenyou Yang <wenyou.yang@microchip.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 084/192] media: ov7740: fix runtime pm initialization
+Date:   Wed, 27 Mar 2019 14:08:36 -0400
+Message-Id: <20190327181025.13507-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -69,56 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Akinobu Mita <akinobu.mita@gmail.com>
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit 12aceee1f412c3ddc7750155fec06c906f14ab51 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+The runtime PM of this device is enabled after v4l2_ctrl_handler_setup(),
+and this makes this device's runtime PM usage count a negative value.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+The ov7740_set_ctrl() tries to do something only if the device's runtime
+PM usage counter is nonzero.
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+ov7740_set_ctrl()
+{
+	if (!pm_runtime_get_if_in_use(&client->dev))
+		return 0;
+
+	<do something>;
+
+	pm_runtime_put(&client->dev);
+
+	return ret;
+}
+
+However, the ov7740_set_ctrl() is called by v4l2_ctrl_handler_setup()
+while the runtime PM of this device is not yet enabled.  In this case,
+the pm_runtime_get_if_in_use() returns -EINVAL (!= 0).
+
+Therefore we can't bail out of this function and the usage count is
+decreased by pm_runtime_put() without increment.
+
+This fixes this problem by enabling the runtime PM of this device before
+v4l2_ctrl_handler_setup() so that the ov7740_set_ctrl() is always called
+when the runtime PM is enabled.
+
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Tested-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/i2c/ov7740.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index c29200cf755a..9b9a7ec52905 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -108,6 +108,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
- 	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index 605f3e25ad82..f5a1ee90a6c5 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -1101,6 +1101,9 @@ static int ov7740_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
+ 
++	pm_runtime_set_active(&client->dev);
++	pm_runtime_enable(&client->dev);
++
+ 	ret = ov7740_detect(ov7740);
+ 	if (ret)
+ 		goto error_detect;
+@@ -1123,8 +1126,6 @@ static int ov7740_probe(struct i2c_client *client,
+ 	if (ret)
+ 		goto error_async_register;
+ 
+-	pm_runtime_set_active(&client->dev);
+-	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+ 	return 0;
+@@ -1134,6 +1135,8 @@ static int ov7740_probe(struct i2c_client *client,
+ error_init_controls:
+ 	ov7740_free_controls(ov7740);
+ error_detect:
++	pm_runtime_disable(&client->dev);
++	pm_runtime_set_suspended(&client->dev);
+ 	ov7740_set_power(ov7740, 0);
+ 	media_entity_cleanup(&ov7740->subdev.entity);
+ 
 -- 
 2.19.1
 
