@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F88CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3C5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0DD20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85DC20811
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553663927;
-	bh=i01FY9ejvuzDdNjuKXf+u5oXhMi3pjbUfQbWi6fQEfk=;
+	s=default; t=1553663932;
+	bh=00obCVu+lf1h98x3XeRpV+l+TQkzpZyxI54dxH/XHzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdRqvJ6K33joJV5jadel69BOp/FPCVD2j7uG2savFu2EXQOVxkzHkZAIKhlijLA6M
-	 PZUSF7WLCPY3X5Mu5Ycdk/34pnnI3C3sHs+wQQE9IIe0lSMo66EzaziQUvB1eJKh3E
-	 ZwjjA9KvbiS7YCSos3KLXrrGR6eo54NpuUxrmRjo=
+	b=XE82ZyQUGkC4o3lf3uRSYWBzYPf77m1OPz07FtiMCuDhRqQXDwDQ+0IKEDoCZDN9w
+	 6OXaylYXZq3B6Nv6cQz32YKU28u8QvLwxHcOePupbJG0hkmGCFzN0QX/QU5N8/i3sZ
+	 UEnw1t3r6P7dlIJK10gnZlFQGPZnRTwRZGVs+Cfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbfC0FSq (ORCPT
+        id S1732883AbfC0FSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:18:46 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:50913 "EHLO
+        Wed, 27 Mar 2019 01:18:51 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59071 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725805AbfC0FSp (ORCPT
+        by vger.kernel.org with ESMTP id S1725768AbfC0FSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:18:45 -0400
+        Wed, 27 Mar 2019 01:18:49 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E6135220A4;
-        Wed, 27 Mar 2019 01:18:43 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5537622125;
+        Wed, 27 Mar 2019 01:18:48 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:43 -0400
+  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=MkHDjnuhQa7s6Nb5SWdLKYFJ84x4dIRVbvit8loBXBQ=; b=08M1pU/1
-        4POsaDnoDOopBtt408XVAK8R0nfhzbOqHfhuvHOvRXH+VWZy79GuVtSR+41yQVi9
-        bLrGLFS95qZ35OL3q0x8kaXEJ5KxG1IYtNZiEqDshmmbR0eoXa3YV9bnZhKCrPfB
-        nS3d3z+WZ+Ew7qa9iqIuIxTg7knq0cVKA+vTLhvnsWYkc3EV0IrKUNPYRov8yq64
-        LpjoKVqKNHLOtNaSxcvlgM6uq09NOZo86BFEQmLofp4OvfPNdyyHvyF6rE+6KETV
-        NYgHxpMtFJ/3q5Z7WSkkbOQSvsor/dceUSUdm42I4QO1GM5wjtpKiegh6eGCY42m
-        a45p/XYaBRp/XQ==
-X-ME-Sender: <xms:swebXE38PRvKEnhj6LoXB9h0TifKspBA17WRkLi9mQIXAXVzd3jwAQ>
+        fm2; bh=Iz22Myouv8iQMYGK0rTnTeswOBYDThi/TC7bfTdyCxs=; b=PnF40OmR
+        fRI+VmRi6ki9Vgee37u/fxh8YzD1IbxyYEcFHl8hj0T1zTmerTGBoA8/qVsBgYWO
+        hrylaGz207Luw5WcjZJsMlRLN1848/yQ55cMQwb+pqh1tdfb/PhDAA2A0reWlGRu
+        ROlYhOW4mNRBTeEvbxIPSUkiq5Wt5LC5BNYc76YaqG2xbuCuqyQNah/2OlpeQilt
+        dJFI4XzONWhCZBrU0z2kesN9IBKKdllxAqgJ0g4ssCT0TjnYGQBS3YNuhCJoE6Rg
+        MjzT2O+jrZ1Ds2nulymO8+TssqI+OSXaNe3XF8/xYbZyckEKeQlViFkbp+raBBhk
+        GRinhcyCM5G+cg==
+X-ME-Sender: <xms:uAebXNfstZ_PaOeEwXnH7hARwK5kRdywCWVlYzlcPS4Vc6dguMxmNw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrudefledrudelvdenucfrrghrrghmpehmrghilhhfrhhomhepthho
-    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepfe
-X-ME-Proxy: <xmx:swebXOKVdjW75WbHRiHvaqYOQNAXj4T3_3aA9dSLCWFuJPs2dIJ9tw>
-    <xmx:swebXDGbCwouEJnz_US7BvPf50yI29gCcX8OtshtMhkkae5Kr-IfAQ>
-    <xmx:swebXKU3dLiZOaEIC7CFn4qFvEjFa9ayJm4zkhvwK7V9yaolrdlj8g>
-    <xmx:swebXEXEGD8oAT9I64PEogbcTnRsHX73gu_Ru3cLjgLgoCn-WGMm8g>
+    sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgephe
+X-ME-Proxy: <xmx:uAebXBOhBhQ9NfFFGzTTfmHevJwWWoDtYoOV_4H0ZigmHDqyRwhgcw>
+    <xmx:uAebXEKdVqfqPHrZp8uBL6lYqFJv8pE2Pz7u1K9JXnMII99fIbZk2w>
+    <xmx:uAebXCGK3G0X2OOi4J0MEZMrYVmAoAJYfQlzvAs8_hEqbdquXXgmgw>
+    <xmx:uAebXHIEOukPqv6E8rdKtzMMB2BQ1VWs_0wv728ANkSPhngaB2RCOg>
 Received: from eros.localdomain (124-169-139-192.dyn.iinet.net.au [124.169.139.192])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 82D07E40FF;
-        Wed, 27 Mar 2019 01:18:40 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BA09EE40FF;
+        Wed, 27 Mar 2019 01:18:44 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/24] fs: Guard unusual text with backticks
-Date:   Wed, 27 Mar 2019 16:16:58 +1100
-Message-Id: <20190327051717.23225-6-tobin@kernel.org>
+Subject: [PATCH v3 06/24] fs: Update function docstring for simple_write_end()
+Date:   Wed, 27 Mar 2019 16:16:59 +1100
+Message-Id: <20190327051717.23225-7-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190327051717.23225-1-tobin@kernel.org>
 References: <20190327051717.23225-1-tobin@kernel.org>
@@ -80,35 +80,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we have unusual text which in context is clear
+Shinx emits a warning due to an extra function parameter in the current
+function docstring for simple_write_end().  While we are fixing this
+warning we might as well clean up the whole function docstring for this
+function.
 
-	@flags: O_... flags with which the new file will be opened
+The current member descriptions are readable in text and also ok in
+HTML.  When vfs.txt is converted to use RST format these member
+descriptions could be improved with a reference to struct
+address_space_operations docs in that file.
 
-Currently this docstring is _not_ included in any documentation file but
-if it is in future this will cause Sphinx to emit a warning (as
-discovered while documenting alloc_file_pseudo()).  Let's fix it now to
-save our future selves the hassle.
-
-Guard unusual text with backticks.
+Update and cleanup docstring for simple_write_end()
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- fs/file_table.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/libfs.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index e3c6966c2d53..89875f1a1195 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -180,7 +180,7 @@ struct file *alloc_empty_file_noaccount(int flags, const struct cred *cred)
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 0fb590d79f30..36af25b9b2a3 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -448,9 +448,8 @@ int simple_write_begin(struct file *file, struct address_space *mapping,
+ EXPORT_SYMBOL(simple_write_begin);
+ 
  /**
-  * alloc_file() - Allocate and initialize a &struct file.
-  * @path: the (dentry, vfsmount) pair for the new file
-- * @flags: O_... flags with which the new file will be opened
-+ * @flags: ``O_...`` flags with which the new file will be opened
-  * @fop: the 'struct file_operations' for the new file
+- * simple_write_end - .write_end helper for non-block-device FSes
+- * @available: See .write_end of address_space_operations
+- * @file: 		"
++ * simple_write_end() - .write_end helper for non-block-device FSes
++ * @file: See .write_end of &struct address_space_operations
+  * @mapping: 		"
+  * @pos: 		"
+  * @len: 		"
+@@ -458,17 +457,21 @@ EXPORT_SYMBOL(simple_write_begin);
+  * @page: 		"
+  * @fsdata: 		"
+  *
+- * simple_write_end does the minimum needed for updating a page after writing is
+- * done. It has the same API signature as the .write_end of
+- * address_space_operations vector. So it can just be set onto .write_end for
+- * FSes that don't need any other processing. i_mutex is assumed to be held.
+- * Block based filesystems should use generic_write_end().
+- * NOTE: Even though i_size might get updated by this function, mark_inode_dirty
+- * is not called, so a filesystem that actually does store data in .write_inode
+- * should extend on what's done here with a call to mark_inode_dirty() in the
+- * case that i_size has changed.
++ * Does the minimum needed for updating a page after writing is done.
++ * It has the same API signature as the .write_end member of &struct
++ * address_space_operations vector.  So it can just be set onto
++ * .write_end for FSes that don't need any other processing.  Block
++ * based filesystems should use generic_write_end().
++ *
++ * NOTE: Even though i_size might get updated by this function,
++ * mark_inode_dirty() is not called, so a filesystem that actually does
++ * store data in .write_inode should extend on what's done here with a
++ * call to mark_inode_dirty() in the case that i_size has changed.
+  *
+  * Use *ONLY* with simple_readpage()
++ *
++ * Context: Caller must hold i_mutex
++ * Return: @copied argument unmodified.
   */
- static struct file *alloc_file(const struct path *path, int flags,
+ int simple_write_end(struct file *file, struct address_space *mapping,
+ 			loff_t pos, unsigned len, unsigned copied,
 -- 
 2.21.0
 
