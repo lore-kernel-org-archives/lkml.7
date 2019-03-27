@@ -2,51 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF9AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FFF204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156F1204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711536;
-	bh=oGfBqm4PgRCmOe6ABcSjieL10QFSatn/cKZ5hsB1MFM=;
+	s=default; t=1553711542;
+	bh=2djZLjhxwjQjQLMdbIH/XcOtnnDPggClbc/yRZWnTY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13//THGGvhlhnFmVUwolYBa4WJdFyIe9adD6wqtTfVmf8RAG++wPzY3o4Q+ADrC/G
-	 DiBMTjm2F0zf5sBIeaEKBo4halvZo8CfnrwLTd8mEsb3Pbsyso8cB1yA74CwLoE+w7
-	 WELiO7v6rtawuGeBZnkRbHsWqBHZ8BWlCRozvkrU=
+	b=DlqDXIHqwSkyj/LqKC/5n3VsmMtPRsAKN4je1dPBZGKZIxPxzZsTqSLvqFgcZEKKT
+	 26lcR7BuP6u/7xPrkI+ZKiqJEvc3wQdH7QcSMNAnCqpwzxtvy/hIhyb9vBMEDh4Rmt
+	 uiqBuzeR9+dtxdzAXl3AeigqCH1VuDFyXmzYbx+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391935AbfC0ScP (ORCPT
+        id S2403969AbfC0ScV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391162AbfC0SZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:38 -0400
+        id S2388996AbfC0SZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C0922147C;
-        Wed, 27 Mar 2019 18:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42A672177E;
+        Wed, 27 Mar 2019 18:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711138;
-        bh=oGfBqm4PgRCmOe6ABcSjieL10QFSatn/cKZ5hsB1MFM=;
+        s=default; t=1553711137;
+        bh=2djZLjhxwjQjQLMdbIH/XcOtnnDPggClbc/yRZWnTY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMWUbjNB6nmbBlFMBS6m+yFkFWxK+CSb+uRpjaT73AuRqui3kf7q1stV+5dVREJli
-         LOwbAnjf/wptVsMKfbOvI90yHfPLIQc4eYHQCJq5SbN5kV44gbcH+3xCbqpOAaRSpj
-         1K4tWXGQ/cvcI7tDPVb4ruawKLcH5R4M4OuRSU9s=
+        b=ZHEP20m2OFt/v9/Z4iVsFKJ5caiUFqPw+b68JsYJ2pYFmU/YlT24KfldONC+BRd7d
+         LxFGf7E1tnDxWNbue2R2soakFJ+PJtBDsuZNgWcnHh4+dwSLVMkyNysW40+OYHln4J
+         qAQnoZY4iFz8dWJ3TjSowoCo4u7f0Bm3q5S4eMUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>,
-        Jason Cai <jason.cai@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 09/41] dm thin: add sanity checks to thin-pool and external snapshot creation
-Date:   Wed, 27 Mar 2019 14:24:46 -0400
-Message-Id: <20190327182518.19394-9-sashal@kernel.org>
+Cc:     Louis Taylor <louis@kragniz.eu>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 08/41] cifs: use correct format characters
+Date:   Wed, 27 Mar 2019 14:24:45 -0400
+Message-Id: <20190327182518.19394-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -58,110 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>
+From: Louis Taylor <louis@kragniz.eu>
 
-[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
+[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
 
-Invoking dm_get_device() twice on the same device path with different
-modes is dangerous.  Because in that case, upgrade_mode() will alloc a
-new 'dm_dev' and free the old one, which may be referenced by a previous
-caller.  Dereferencing the dangling pointer will trigger kernel NULL
-pointer dereference.
+When compiling with -Wformat, clang emits the following warnings:
 
-The following two cases can reproduce this issue.  Actually, they are
-invalid setups that must be disallowed, e.g.:
+fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
+short' but the argument has type 'unsigned int' [-Wformat]
+                         tgt_total_cnt, total_in_tgt);
+                                        ^~~~~~~~~~~~
 
-1. Creating a thin-pool with read_only mode, and the same device as
-both metadata and data.
+fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                 ^~~~~~~~~~
 
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                             ^~~~~~~~~~~~~~~~
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
-...
-Call Trace:
- new_read+0xfb/0x110 [dm_bufio]
- dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
- ? kmem_cache_alloc_trace+0x15c/0x1e0
- __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
- dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
- pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
- ? realloc_argv+0x50/0x70 [dm_mod]
- dm_table_add_target+0x14e/0x330 [dm_mod]
- table_load+0x122/0x2e0 [dm_mod]
- ? dev_status+0x40/0x40 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ? handle_mm_fault+0xda/0x200
- ? __do_page_fault+0x26c/0x4f0
- ksys_ioctl+0x60/0x90
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                 ^~~~~~~~~~~~~
 
-2. Creating a external snapshot using the same thin-pool device.
+fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                                ^~~~~~~~~~~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for ints and unsigned
+ints.
 
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
-dmsetup message /dev/mapper/thinp 0 "create_thin 0"
-dmsetup create snap --table \
-            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-...
-Call Trace:
-? __alloc_pages_nodemask+0x13c/0x2e0
-retrieve_status+0xa5/0x1f0 [dm_mod]
-? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
- table_status+0x61/0xa0 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ksys_ioctl+0x60/0x90
- ? ksys_write+0x4f/0xb0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/cifs/cifs_dfs_ref.c | 4 ++--
+ fs/cifs/smb1ops.c      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 936c57b57539..c50f144bdbcf 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -2560,6 +2560,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	as.argc = argc;
- 	as.argv = argv;
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index b8602f199815..71263ea90810 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -265,9 +265,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
+ {
+ 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+ 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+-	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
++	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+ 		 ref->flags, ref->server_type);
+-	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
++	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+ 		 ref->ref_flag, ref->path_consumed);
+ }
  
-+	/* make sure metadata and data are different devices */
-+	if (!strcmp(argv[0], argv[1])) {
-+		ti->error = "Error setting metadata or data device";
-+		r = -EINVAL;
-+		goto out_unlock;
-+	}
-+
- 	/*
- 	 * Set default pool features.
- 	 */
-@@ -3386,6 +3393,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	tc->sort_bio_list = RB_ROOT;
+diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
+index b0f973b2b189..2a43aa6d8e87 100644
+--- a/fs/cifs/smb1ops.c
++++ b/fs/cifs/smb1ops.c
+@@ -305,7 +305,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
+ 	remaining = tgt_total_cnt - total_in_tgt;
  
- 	if (argc == 3) {
-+		if (!strcmp(argv[0], argv[2])) {
-+			ti->error = "Error setting origin device";
-+			r = -EINVAL;
-+			goto bad_origin_dev;
-+		}
-+
- 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
- 		if (r) {
- 			ti->error = "Error opening origin device";
+ 	if (remaining < 0) {
+-		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
++		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
+ 			 tgt_total_cnt, total_in_tgt);
+ 		return -EPROTO;
+ 	}
 -- 
 2.19.1
 
