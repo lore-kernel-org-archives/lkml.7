@@ -6,55 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A1C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B359C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6EE92064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427FD206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714025;
-	bh=H83m7k6HEq1j/R9JVvwoogyGOHWzdbitz2Xwp1up8y4=;
+	s=default; t=1553714031;
+	bh=01VqPdlFPIK6RNZX2Ff987mTB+xR27JBA6daZlddGLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qlez/HQXvPFj5Xg0bUHzzKhU4OUE0vNJUbokWxix911tpHJzCQF6Yk5Y9YOy+VCAp
-	 jsJ2KC6E14f9zg3PHf9+0BbN0QNm7M99KFbqvfV6xboCtTxN4V520pajGTr9RmeISh
-	 mJ0qYd52nlzlnO89rJ8JsUg7nER6KI51rAY+K7yk=
+	b=VgTbQiSWpss+jimA+0GcvLN4PIb+WfGCh1eLm9N9H+0Rsv4GR7i4cIeoiIZef5DQ/
+	 mm+4jeSjlJLwmtJEM7pmrsHc9n8t8QdbFm6Hyk204es3DduTtWPvFGrOMNgHZYMJ7q
+	 EL46f63MLOpdVntMSL+L0KavWOS0Dwz4+awtjEic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfC0SKF (ORCPT
+        id S2388871AbfC0TNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387842AbfC0SKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:03 -0400
+        id S1731047AbfC0SKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38B1C217F5;
-        Wed, 27 Mar 2019 18:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F32B2184C;
+        Wed, 27 Mar 2019 18:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710202;
-        bh=H83m7k6HEq1j/R9JVvwoogyGOHWzdbitz2Xwp1up8y4=;
+        s=default; t=1553710203;
+        bh=01VqPdlFPIK6RNZX2Ff987mTB+xR27JBA6daZlddGLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgBVAw7C+UqLlmyqeKJpj4eZ54chOdLSrGeZKj4ZhA2mpGY3u0menpGoasqEBs1hj
-         MaHSQvkmv3dDBQPgEAeqReZdyC92DuVaSKNr4QaXYRSudhj5ROIMeBJkjWHn7U4QN7
-         d0DE6f4MV9RXRxTAbs3Nh35UaUjjeEQqTBw6U1zo=
+        b=OZWpmB1D0u9jThXdFuZtEKrWZb5ZAnlEjD7gkaM7yOz47VpNq4taxePQQjGKm++O1
+         aFcEq9eYA25k0SkUeJhLn0CWqdiqQX3BRHBZRmu15oDPqz1lMjlI2+0LfssXNSZ/J2
+         VB05hi9cPY52Q4iSjlls4BPVzoMVW2jsbC1CjH1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, dima@golovin.in, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 247/262] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Wed, 27 Mar 2019 14:01:42 -0400
-Message-Id: <20190327180158.10245-247-sashal@kernel.org>
+Cc:     Peter Wu <peter@lekensteyn.nl>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 248/262] drm/fb-helper: fix leaks in error path of drm_fb_helper_fbdev_setup
+Date:   Wed, 27 Mar 2019 14:01:43 -0400
+Message-Id: <20190327180158.10245-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -67,76 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael Ávila de Espíndola <rafael@espindo.la>
+From: Peter Wu <peter@lekensteyn.nl>
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit 00eb5b0da8d27b3c944bfc959c3344d665caae26 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+After drm_fb_helper_fbdev_setup calls drm_fb_helper_init,
+"dev->fb_helper" will be initialized (and thus drm_fb_helper_fini will
+have some effect). After that, drm_fb_helper_initial_config is called
+which may call the "fb_probe" driver callback.
 
-Section 3.10.8 of ld.bfd's documentation states:
+This driver callback may call drm_fb_helper_defio_init (as is done by
+drm_fb_helper_generic_probe) or set a framebuffer (as is done by bochs)
+as documented. These are normally cleaned up on exit by
+drm_fb_helper_fbdev_teardown which also calls drm_fb_helper_fini.
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
+If an error occurs after "fb_probe", but before setup is complete, then
+calling just drm_fb_helper_fini will leak resources. This was triggered
+by df2052cc922 ("bochs: convert to drm_fb_helper_fbdev_setup/teardown"):
 
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
+    [   50.008030] bochsdrmfb: enable CONFIG_FB_LITTLE_ENDIAN to support this framebuffer
+    [   50.009436] bochs-drm 0000:00:02.0: [drm:drm_fb_helper_fbdev_setup] *ERROR* fbdev: Failed to set configuration (ret=-38)
+    [   50.011456] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 2
+    [   50.013604] WARNING: CPU: 1 PID: 1 at drivers/gpu/drm/drm_mode_config.c:477 drm_mode_config_cleanup+0x280/0x2a0
+    [   50.016175] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 4.20.0-rc7 #1
+    [   50.017732] EIP: drm_mode_config_cleanup+0x280/0x2a0
+    ...
+    [   50.023155] Call Trace:
+    [   50.023155]  ? bochs_kms_fini+0x1e/0x30
+    [   50.023155]  ? bochs_unload+0x18/0x40
 
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
+This can be reproduced with QEMU and CONFIG_FB_LITTLE_ENDIAN=n.
 
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
-
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
-
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Link: https://lkml.kernel.org/r/20181221083226.GI23332@shao2-debian
+Link: https://lkml.kernel.org/r/20181223004315.GA11455@al
+Fixes: 8741216396b2 ("drm/fb-helper: Add drm_fb_helper_fbdev_setup/teardown()")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Cc: Noralf Trønnes <noralf@tronnes.org>
+Signed-off-by: Peter Wu <peter@lekensteyn.nl>
+Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181223005507.28328-1-peter@lekensteyn.nl
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
+ drivers/gpu/drm/drm_fb_helper.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0d618ee634ac..ee3b5c7d662e 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -401,7 +401,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index 70fc8e356b18..edd8cb497f3b 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -2891,7 +2891,7 @@ int drm_fb_helper_fbdev_setup(struct drm_device *dev,
+ 	return 0;
  
+ err_drm_fb_helper_fini:
+-	drm_fb_helper_fini(fb_helper);
++	drm_fb_helper_fbdev_teardown(dev);
+ 
+ 	return ret;
+ }
 -- 
 2.19.1
 
