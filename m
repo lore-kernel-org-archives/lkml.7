@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09964C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C325DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9002063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0FF20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710964;
-	bh=IfGi5a1bfW8q+dwRUTd8UYjTUarqP0TfJCRecDYAyIM=;
+	s=default; t=1553710969;
+	bh=VxLRPoFUaxmkasMBWYgpKIBw+K7EIdjUkpuXT0x37mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrPybVOTEM/wYgYUY8hZ8pLrWweXzQ8am+yDRM7oKqrZZGKm7uePApljNaez4+CUd
-	 MjZg0tFuEdgf8LMdId7QuBShrX/y+H4hsafDt6mPNXdpRzNPu+aWDBbChLDlg1Zb/N
-	 dWhpM0WlU33v5bRZv3ixve4s+6CMbaLUra36BYOw=
+	b=Pbu3pfxrOZ6Mz1O1tOqma2U6zw0Ipi5bBewjE1b7oyG1T5dY5eNpcmLAIZ3OGZD1D
+	 iZj5dgCkGwvpzcYQqvfBZVRLv+rHV9zC550a3yhsf7qVgp7hHoWTBr5tdT0eKbMk1u
+	 WJ/ktdp1GGRAvJOH46hQndDifpXtZHq7IAvihYPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391345AbfC0SWn (ORCPT
+        id S2391352AbfC0SWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390982AbfC0SWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:35 -0400
+        id S2391341AbfC0SWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D658B21734;
-        Wed, 27 Mar 2019 18:22:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76B62063F;
+        Wed, 27 Mar 2019 18:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710953;
-        bh=IfGi5a1bfW8q+dwRUTd8UYjTUarqP0TfJCRecDYAyIM=;
+        s=default; t=1553710962;
+        bh=VxLRPoFUaxmkasMBWYgpKIBw+K7EIdjUkpuXT0x37mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mL/NsjeyJrXGYGSBBlkhA8Q2q8i9qwso+aLO4hXmqiaQDbzSZzHegUQYBBe9eFn8M
-         KVZIVwgorA5ftfg+f14R6kF2UExiM3yKYGeLZV1DRpH3S/T417HchBcKZHThPVvN4t
-         h7Uw7OwRmM+UvGHqMStqmmN5l2wSg178jj86tgok=
+        b=dOqKTPieHOht7uZlwogLtSmPUrO+1FgSlodpNuK2aaG0JSDHaDeZt2XuZnCdJEmk5
+         CKT80RtdaDvZhsOOjakDIO6KM+lkET0mNtbUYW5cRw63KfO/2miMTWke2dtD7r+tW+
+         B0Rbto9hT8GujiBMjHUPI/ZdFCHzfS97zSqr5VO8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 63/87] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date:   Wed, 27 Mar 2019 14:20:16 -0400
-Message-Id: <20190327182040.17444-63-sashal@kernel.org>
+Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 67/87] tty: increase the default flip buffer limit to 2*640K
+Date:   Wed, 27 Mar 2019 14:20:20 -0400
+Message-Id: <20190327182040.17444-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,132 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Malaterre <malat@debian.org>
+From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
 
-[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
+[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix
-the following dtc warnings:
+We increase the default limit for buffer memory allocation by a factor of
+10 to 640K to prevent data loss when using fast serial interfaces.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+For example when using RS485 without flow-control at speeds of 1Mbit/s
+an upwards we've run into problems such as applications being too slow
+to read out this buffer (on embedded devices based on imx53 or imx6).
 
-and
+If you want to write transmitted data to a slow SD card and thus have
+realtime requirements, this limit can become a problem.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+That shouldn't be the case and 640K buffers fix such problems for us.
 
-Converted using the following command:
+This value is a maximum limit for allocation only. It has no effect
+on systems that currently run fine. When transmission is slow enough
+applications and hardware can keep up and increasing this limit
+doesn't change anything.
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+It only _allows_ to allocate more than 2*64K in cases we currently fail to
+allocate memory despite having some.
 
-For simplicity, two sed expressions were used to solve each warnings
-separately.
-
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before
-the opening curly brace:
-
-https://elinux.org/Device_Tree_Linux#Linux_conventions
-
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-[vzapolskiy: fixed commit message to pass checkpatch.pl test]
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/tty/tty_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index b5841fab51c1..0d20aadc78bb 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -230,7 +230,7 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index 41b9a7ccce08..ca9c82ee6c35 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -25,7 +25,7 @@
+  * Byte threshold to limit memory consumption for flip buffers.
+  * The actual memory limit is > 2x this amount.
+  */
+-#define TTYB_DEFAULT_MEM_LIMIT	65536
++#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
  
--			i2s1: i2s@2009C000 {
-+			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009C000 0x1000>;
- 			};
-@@ -273,7 +273,7 @@
- 				status = "disabled";
- 			};
- 
--			i2c1: i2c@400A0000 {
-+			i2c1: i2c@400a0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -284,7 +284,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C1>;
- 			};
- 
--			i2c2: i2c@400A8000 {
-+			i2c2: i2c@400a8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -295,7 +295,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C2>;
- 			};
- 
--			mpwm: mpwm@400E8000 {
-+			mpwm: mpwm@400e8000 {
- 				compatible = "nxp,lpc3220-motor-pwm";
- 				reg = <0x400E8000 0x78>;
- 				status = "disabled";
-@@ -394,7 +394,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
- 			};
- 
--			timer4: timer@4002C000 {
-+			timer4: timer@4002c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-@@ -412,7 +412,7 @@
- 				status = "disabled";
- 			};
- 
--			watchdog: watchdog@4003C000 {
-+			watchdog: watchdog@4003c000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_WDOG>;
-@@ -451,7 +451,7 @@
- 				status = "disabled";
- 			};
- 
--			timer1: timer@4004C000 {
-+			timer1: timer@4004c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,14 +475,14 @@
- 				status = "disabled";
- 			};
- 
--			pwm1: pwm@4005C000 {
-+			pwm1: pwm@4005c000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
- 				status = "disabled";
- 			};
- 
--			pwm2: pwm@4005C004 {
-+			pwm2: pwm@4005c004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
+ /*
+  * We default to dicing tty buffer allocations to this many characters
 -- 
 2.19.1
 
