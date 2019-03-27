@@ -2,43 +2,45 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BDEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2586DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841DE20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D5C2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="gvYeeqJg"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="Y78l0rRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732803AbfC0Cdv (ORCPT
+        id S1732951AbfC0CeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 22:33:51 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55078 "EHLO vps.xff.cz"
+        Tue, 26 Mar 2019 22:34:00 -0400
+Received: from vps.xff.cz ([195.181.215.36]:55100 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732470AbfC0Cdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 22:33:50 -0400
+        id S1732572AbfC0Cdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 22:33:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1553654027; bh=mcXDctExLUC9k+kDWH1pLaGbCHshnclxdA/sUDMkajY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gvYeeqJge1xXE/aK1yWtYwYCYZhnGsYkweVrVQbKHUux288rwCynUhRu47AbPWg7K
-         v3OIKqPogIwdQex/e7PLG2mihx+g2JBmYpbW1kpPBd9Clw2ygIgsOgkyzaIKfhCU+t
-         ubVCQHoLNVjD5qeCEOuYHYxTHbmBNnpcw1SI+e8U=
+        t=1553654027; bh=XeJO4BlnuiJHnl+F5QEbu+5ZsF1rCA6R8IPqgTmgSPs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y78l0rRBylLUYnCIGS1U3oz8t+yzhPwb0O6E1pyhj0uREg8DU3Tm/JVvXLrsMzYgG
+         GqlpI/PCaJozyrboqlOoS2HtrGMt7EYBrZ0cRlp/us1lLFz8oGWsfXf2gqhZ2XXK9K
+         Fy8GgvmYHAQ7vsuSzkXw7ZCqOYgqHC61fxDcsp+8=
 From:   megous@megous.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         mark.rutland@arm.com
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Ziping Chen <techping.chan@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-input@vger.kernel.org, hdegoede@redhat.com
-Subject: [PATCH RESEND v4 0/4] Add support for lradc on A83T
-Date:   Wed, 27 Mar 2019 03:33:35 +0100
-Message-Id: <20190327023339.25975-1-megous@megous.com>
+Cc:     Ziping Chen <techping.chan@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, linux-input@vger.kernel.org,
+        hdegoede@redhat.com
+Subject: [PATCH RESEND v4 1/4] input: sun4i-a10-lradc-keys: Add support for A83T
+Date:   Wed, 27 Mar 2019 03:33:36 +0100
+Message-Id: <20190327023339.25975-2-megous@megous.com>
+In-Reply-To: <20190327023339.25975-1-megous@megous.com>
+References: <20190327023339.25975-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,61 +48,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Ziping Chen <techping.chan@gmail.com>
 
-(This is a re-send, with input subsystem maintainer added. Sorry,
-for the extra noise, I did only send the v4 to the previous recipients
-of v3, and didn't notice input subsystem was missing back then too.
-Thank you wens for pointing it out.)
+Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC,
+however, the A10 SoC's vref of lradc internally is divided by 2/3 and
+the A83T SoC's vref of lradc internally is divided by 3/4, thus add
+a hardware variant for it to be compatible with various devices.
 
-This series implements r_lradc (low res ADC) support for A83T.
+Signed-off-by: Ziping Chen <techping.chan@gmail.com>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/input/keyboard/sun4i-lradc-keys.c | 38 ++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
-This is a continuation of v3 patch series from 2017 by Ziping Chen. I've
-rebased it on top of linux-next and changed the compatibe string as
-requested back then.[1]
-
-There was some talk of iio based lradc driver back then[2], but noone
-stepped forward to make it. Let's finish this series, so that it's
-at least possible to add support for tablet keys on various A83T tablets
-as that's the main use of lradc module.
-
-[1] https://lkml.org/lkml/2017/6/26/558
-
-[2] https://lkml.org/lkml/2017/6/27/877
-
-Please take a look, and apply the patches if you have no objections.
-
-regards,
-  Ondrej Jirman
-
-
-Changes for v4:
-- changed comaptible string to allwinner,sun8i-a83t-r-lradc
-  (drop -keys suffix)
-- dropped 0 prefix in the r_lradc DT node
-- added sample A83T lradc user (TBS A711 tablet)
-
-Changes for v3:
-- Fix some issuses raised by Maxime.
-- Added Rob's ACK.
-
-Changes for v2:
-- Add an A83T specific compatible.
-
-Ondrej Jirman (1):
-  ARM: dts: sun8i: tbs-a711: Add support for volume keys input
-
-Ziping Chen (3):
-  input: sun4i-a10-lradc-keys: Add support for A83T
-  dt-bindings: input: Add R_LRADC support for A83T
-  ARM: dts: sunxi: Add R_LRADC support for A83T
-
- .../bindings/input/sun4i-lradc-keys.txt       |  6 ++-
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts     | 20 ++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi             |  7 ++++
- drivers/input/keyboard/sun4i-lradc-keys.c     | 38 +++++++++++++++++--
- 4 files changed, 65 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/input/keyboard/sun4i-lradc-keys.c b/drivers/input/keyboard/sun4i-lradc-keys.c
+index 57272df34cd5..df3eec72a9b2 100644
+--- a/drivers/input/keyboard/sun4i-lradc-keys.c
++++ b/drivers/input/keyboard/sun4i-lradc-keys.c
+@@ -46,6 +46,7 @@
+ #define CONTINUE_TIME_SEL(x)	((x) << 16) /* 4 bits */
+ #define KEY_MODE_SEL(x)		((x) << 12) /* 2 bits */
+ #define LEVELA_B_CNT(x)		((x) << 8)  /* 4 bits */
++#define HOLD_KEY_EN(x)		((x) << 7)
+ #define HOLD_EN(x)		((x) << 6)
+ #define LEVELB_VOL(x)		((x) << 4)  /* 2 bits */
+ #define SAMPLE_RATE(x)		((x) << 2)  /* 2 bits */
+@@ -63,6 +64,25 @@
+ #define	CHAN0_KEYDOWN_IRQ	BIT(1)
+ #define CHAN0_DATA_IRQ		BIT(0)
+ 
++/* struct lradc_variant - Describe sun4i-a10-lradc-keys hardware variant
++ * @divisor_numerator:		The numerator of lradc Vref internally divisor
++ * @divisor_denominator:	The denominator of lradc Vref internally divisor
++ */
++struct lradc_variant {
++	u8 divisor_numerator;
++	u8 divisor_denominator;
++};
++
++static const struct lradc_variant lradc_variant_a10 = {
++	.divisor_numerator = 2,
++	.divisor_denominator = 3
++};
++
++static const struct lradc_variant r_lradc_variant_a83t = {
++	.divisor_numerator = 3,
++	.divisor_denominator = 4
++};
++
+ struct sun4i_lradc_keymap {
+ 	u32 voltage;
+ 	u32 keycode;
+@@ -74,6 +94,7 @@ struct sun4i_lradc_data {
+ 	void __iomem *base;
+ 	struct regulator *vref_supply;
+ 	struct sun4i_lradc_keymap *chan0_map;
++	const struct lradc_variant *variant;
+ 	u32 chan0_map_count;
+ 	u32 chan0_keycode;
+ 	u32 vref;
+@@ -128,9 +149,9 @@ static int sun4i_lradc_open(struct input_dev *dev)
+ 	if (error)
+ 		return error;
+ 
+-	/* lradc Vref internally is divided by 2/3 */
+-	lradc->vref = regulator_get_voltage(lradc->vref_supply) * 2 / 3;
+-
++	lradc->vref = regulator_get_voltage(lradc->vref_supply) *
++		      lradc->variant->divisor_numerator /
++		      lradc->variant->divisor_denominator;
+ 	/*
+ 	 * Set sample time to 4 ms / 250 Hz. Wait 2 * 4 ms for key to
+ 	 * stabilize on press, wait (1 + 1) * 4 ms for key release
+@@ -222,6 +243,12 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
+ 	if (error)
+ 		return error;
+ 
++	lradc->variant = of_device_get_match_data(&pdev->dev);
++	if (!lradc->variant) {
++		dev_err(&pdev->dev, "Missing sun4i-a10-lradc-keys variant\n");
++		return -EINVAL;
++	}
++
+ 	lradc->vref_supply = devm_regulator_get(dev, "vref");
+ 	if (IS_ERR(lradc->vref_supply))
+ 		return PTR_ERR(lradc->vref_supply);
+@@ -265,7 +292,10 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id sun4i_lradc_of_match[] = {
+-	{ .compatible = "allwinner,sun4i-a10-lradc-keys", },
++	{ .compatible = "allwinner,sun4i-a10-lradc-keys",
++		.data = &lradc_variant_a10 },
++	{ .compatible = "allwinner,sun8i-a83t-r-lradc",
++		.data = &r_lradc_variant_a83t },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun4i_lradc_of_match);
 -- 
 2.21.0
 
