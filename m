@@ -2,108 +2,96 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF79C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9391C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A742075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4A220700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfC0VF5 (ORCPT
+        id S1727604AbfC0VNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:05:57 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60531 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726176AbfC0VF5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:05:57 -0400
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x2RL5gnA061482;
-        Thu, 28 Mar 2019 06:05:42 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp);
- Thu, 28 Mar 2019 06:05:42 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav109.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126072090247.bbtec.net [126.72.90.247])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x2RL5gjL061479
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 28 Mar 2019 06:05:42 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: Linux 5.1-rc2
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
- <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
- <alpine.LRH.2.21.1903260607500.13529@namei.org>
- <8811b2e4-28e1-2f01-024b-fb7d0196483f@i-love.sakura.ne.jp>
- <CAGXu5jJZ1H1RFMFBxPsoBW+T17ya+50-d7-31Gr9ciRgpCOaDA@mail.gmail.com>
- <98289cd2-095a-f0cd-e405-887ecbba0030@i-love.sakura.ne.jp>
- <CAGXu5jKWECKxksJWPpCkBKG+wB26DhYK=nYBpuuoS+Pv9AsNwQ@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e1f6f5a6-9fce-2e95-4593-79f1e836bac5@i-love.sakura.ne.jp>
-Date:   Thu, 28 Mar 2019 06:05:42 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 27 Mar 2019 17:13:22 -0400
+Received: from sauhun.de ([88.99.104.3]:38958 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfC0VNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 17:13:21 -0400
+Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
+        by pokefinder.org (Postfix) with ESMTPSA id E72342E35A2;
+        Wed, 27 Mar 2019 22:13:18 +0100 (CET)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH] i2c: remove use of in_atomic()
+Date:   Wed, 27 Mar 2019 22:12:56 +0100
+Message-Id: <20190327211256.17232-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5jKWECKxksJWPpCkBKG+wB26DhYK=nYBpuuoS+Pv9AsNwQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/28 5:45, Kees Cook wrote:
-> On Wed, Mar 27, 2019 at 1:30 PM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> On 2019/03/28 4:16, Kees Cook wrote:
->>> The part I don't understand is what you've said about TOMOYO being
->>> primary and not wanting the others stackable? That kind of goes
->>> against the point, but I'm happy to do that if you want it that way.
->>
->> Automatically enabling multiple legacy major LSMs might result in a confusion like
->> Jakub encountered.
-> 
-> The confusion wasn't multiple enabled: it was a change of what was
-> enabled (due to ignoring the old config). (My very first suggested
-> patch fixed this...)
+Commit cea443a81c9c ("i2c: Support i2c_transfer in atomic contexts")
+added in_atomic() to the I2C core. However, the use of in_atomic()
+outside of core kernel code is discouraged and was already[1] when this
+code was added in early 2008. The above commit was a preparation for
+b7a3670131c7 ("i2c-pxa: Add polling transfer"). Its commit message says
+explicitly it was added "for cases where I2C transactions have to occur
+at times interrups are disabled". So, the intention was 'disabled
+interrupts'. This matches the use cases for atomic I2C transfers I have
+seen so far: very late communication (mostly to a PMIC) to powerdown or
+reboot the system. For those cases, interrupts are disabled then. It
+doesn't seem that in_atomic() adds value.
 
-Someone else might get confused when TOMOYO is automatically enabled
-despite they did not specify TOMOYO in lsm= or security= or CONFIG_LSM.
+Note that only ~10 out of ~120 bus master drivers support atomic
+transfers, mostly by polling always when no irq is supplied. A generic
+I2C client driver cannot assume support for atomic transfers. This is
+currently a platform-dependent corner case.
 
-> 
->> For a few releases from 5.1 (about one year or so?), since
->> CONFIG_DEFAULT_SECURITY_* will be ignored after CONFIG_LSM is once defined in
->> their kernel configs, I guess that it is better not to enable TOMOYO automatically
->> until most people complete migrating from CONFIG_DEFAULT_SECURITY_* to CONFIG_LSM
->> and get used to use lsm= kernel command line option rather than security= kernel
->> command line option.
-> 
-> It sounds like you want TOMOYO to stay an exclusive LSM? Should we
-> revert a5e2fe7ede12 ("TOMOYO: Update LSM flags to no longer be
-> exclusive") instead? (I'm against this idea, but defer to you. I think
-> it should stay stackable since the goal is to entirely remove the
-> concept of exclusive LSMs.)
+The I2C core will soon gain an extra callback into bus drivers
+especially for atomic transfers to make them more generic. The code
+deciding which transfer to use (atomic/non-atomic) should mimic the
+behaviour which locking to use (trylock/lock). Because I don't want to
+add more in_atomic() to the I2C core, this patch simply removes it.
 
-I never want to revert a5e2fe7ede12. For transition period, I just don't
-want to automatically enable TOMOYO when people did not specify TOMOYO.
+[1] https://lwn.net/Articles/274695/
 
-> 
-> I don't see problems for an exclusive LSM user (AA, SELinux, Smack)
-> also initializing TOMOYO, though. It should be a no-op. Is there some
-> situation where this is not true?
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
-There should be no problem except some TOMOYO messages are printed.
+So, I had to dive into this in_atomic() topic and this is what I
+concluded. I don't see any reasonable constellation where this could
+cause a regression, but I am all open for missing something and being
+pointed to it. This is why the patch is RFC. I'd really welcome
+comments. Thanks!
+
+
+ drivers/i2c/i2c-core-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 38af18645133..943bebeec3ed 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1946,7 +1946,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+ 	 *    one (discarding status on the second message) or errno
+ 	 *    (discarding status on the first one).
+ 	 */
+-	if (in_atomic() || irqs_disabled()) {
++	if (irqs_disabled()) {
+ 		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
+ 		if (!ret)
+ 			/* I2C activity is ongoing. */
+-- 
+2.19.1
 
