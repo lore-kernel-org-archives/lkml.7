@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FAAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B635C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2461D205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A822205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712903;
-	bh=qh6sBJvXLgu3izPpHs//k8F69YCuhHw+TPnCZXSMTkQ=;
+	s=default; t=1553712911;
+	bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzRlOOKZDTtDIwXtEAulkvATALUUI98mCw1d99WoQLtZKDqpx/EmdCpDLO+njqXRH
-	 KQ6vThbRpdOHV+KHm3lWP32riQIlOr/ixu+KVPvtzhh3QapQilK7ioU4zgftZ7Ofvd
-	 oxY8BwuUsxWFvaBB864kAe0UVQU7zbMoRgmUB9bI=
+	b=NKqKkgBxetUXGMvBkx2ezl3553uhXfZIt2F+RQO+omX8RWf29YwOoTLu8ynhfPq3X
+	 r/OM1joEp3Tf0miJ1uM8GEjL5lA1BGtHiPNhUeWdeBtxOnynXaVBwBraKCxhVR0X7U
+	 U0+5xTFLfaLJ341cSYKJg71n5d8uLLbXscCFGBgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390470AbfC0SzC (ORCPT
+        id S2390590AbfC0SzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:55:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32862 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbfC0SQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:46 -0400
+        id S2389048AbfC0SQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F6D2087C;
-        Wed, 27 Mar 2019 18:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0CCC2082F;
+        Wed, 27 Mar 2019 18:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710605;
-        bh=qh6sBJvXLgu3izPpHs//k8F69YCuhHw+TPnCZXSMTkQ=;
+        s=default; t=1553710603;
+        bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x83hH+H1XFwocgci1TNgKIxfduz/J+ejGokvgeOuipHlb4FLwvKyb10bCoFsHihQ7
-         qeYvgvlT3TVmEDVGA8Rr/eNKTO+MsgnkdqcViSocJ12U9L9xy53L9ZZPR0Kob4MjCf
-         OHZl+DQmONJamQ3YXY1Vh9m9O/e3lP8lKhLGxpVE=
+        b=ibD+bQ+PDrcRkm+jvanrdqpjVMqRpLi+JxzFsK36YsJBi4kaU+bYERPanIAmeIuLb
+         C6uKSK0UIizeg0NQ0Fh/hvec8P+U3RIDnbE2jvN9noCkt+wjHjuQ+rz0MJ1mnuC6BO
+         uBIgI6DedHIUZk/dh410tGIYi2R04f10yBOFSRGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Brauner <christian@brauner.io>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Jens Axboe <axboe@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 010/123] sysctl: handle overflow for file-max
-Date:   Wed, 27 Mar 2019 14:14:34 -0400
-Message-Id: <20190327181628.15899-10-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 009/123] include/linux/relay.h: fix percpu annotation in struct rchan
+Date:   Wed, 27 Mar 2019 14:14:33 -0400
+Message-Id: <20190327181628.15899-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -66,70 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian@brauner.io>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
+[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
 
-Currently, when writing
+The percpu member of this structure is declared as:
+	struct ... ** __percpu member;
+So its type is:
+	__percpu pointer to pointer to struct ...
 
-  echo 18446744073709551616 > /proc/sys/fs/file-max
+But looking at how it's used, its type should be:
+	pointer to __percpu pointer to struct ...
+and it should thus be declared as:
+	struct ... * __percpu *member;
 
-/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
-crashes the system.
+So fix the placement of '__percpu' in the definition of this
+structures.
 
-This commit sets the max and min value for file-max.  The max value is
-set to long int.  Any higher value cannot currently be used as the
-percpu counters are long ints and not unsigned integers.
+This silents a few Sparse's warnings like:
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
 
-Note that the file-max value is ultimately parsed via
-__do_proc_doulongvec_minmax().  This function does not report error when
-min or max are exceeded.  Which means if a value largen that long int is
-written userspace will not receive an error instead the old value will be
-kept.  There is an argument to be made that this should be changed and
-__do_proc_doulongvec_minmax() should return an error when a dedicated min
-or max value are exceeded.  However this has the potential to break
-userspace so let's defer this to an RFC patch.
-
-Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-[christian@brauner.io: v4]
-  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
+Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
+Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Jens Axboe <axboe@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/relay.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index a7acb058b776..34a3b8a262a9 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -125,6 +125,7 @@ static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
- static unsigned long one_ul = 1;
-+static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
- static int one_thousand = 1000;
- #ifdef CONFIG_PRINTK
-@@ -1681,6 +1682,8 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &long_max,
- 	},
- 	{
- 		.procname	= "nr_open",
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index e1bdf01a86e2..c759f96e39c1 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -66,7 +66,7 @@ struct rchan
+ 	struct kref kref;		/* channel refcount */
+ 	void *private_data;		/* for user-defined data */
+ 	size_t last_toobig;		/* tried to log event > subbuf size */
+-	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
++	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
+ 	int is_global;			/* One global buffer ? */
+ 	struct list_head list;		/* for channel list */
+ 	struct dentry *parent;		/* parent dentry passed to open */
 -- 
 2.19.1
 
