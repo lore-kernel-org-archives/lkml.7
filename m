@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A12C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8CDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE7D21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C2A2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710448;
-	bh=c9z4legDlW3S0kghbra6mR8ISKpXKSvwdknEj6kTAMs=;
+	s=default; t=1553710454;
+	bh=50IVLKrAKNAswo9wRXBCcbOU1+WCy+mhqwxFTeLvgis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgCAGuFR2+JDTLtM7yMJL4vvUWV1PymLm50xFDvlHyIsDkofPssX/zzubVN5AwuNV
-	 sn9Sm2VUH3gmgiYU+9/XQ8Mi836rnszQ4AnxXVWFtnmZpUm7y9IdToDhBCY6npKkIH
-	 IWZypflbNE01w4pNO9XUpZiW0DfaTEFIKSL5Qxxg=
+	b=AwyL5rUo1z6JhIomqr42DeEjnZhILclumbapEz+EXCSrgb+I2wa+PEvMgslOsJXQ1
+	 jVYtw9uu3JiWb2xQ3D8A6cJGziDoLhJMQ5EFRsDVWDTKk4OZp7B2Kx212LQkr5adaZ
+	 FIjAB+Evk7cKY2Vv5IM4/6Kf8fVmM3kypHdXh76c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389574AbfC0SOG (ORCPT
+        id S2389602AbfC0SON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56918 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388755AbfC0SOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:03 -0400
+        id S2389588AbfC0SOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F66F20449;
-        Wed, 27 Mar 2019 18:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B787620449;
+        Wed, 27 Mar 2019 18:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710442;
-        bh=c9z4legDlW3S0kghbra6mR8ISKpXKSvwdknEj6kTAMs=;
+        s=default; t=1553710450;
+        bh=50IVLKrAKNAswo9wRXBCcbOU1+WCy+mhqwxFTeLvgis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R76DnkReTS5qhR/q/yLQ/yNl7o2wrIIwjsJCYwka5rT72L6GoJGQls7M8mpQ753PB
-         Kg1cfWB9NxbYgkT/Uew95EyEg0q+zE7YVXY64appBIgGd8H44wXlvVFnWki4z2X8dc
-         Z0D5OfKA4ylkUyn2j3sOY5JM3VkUMxRpXzLe+2Uc=
+        b=xjvIgayhhHhnZZChPdd+l07tChZi63g6/JUepmajbnaqirdcZ26ZhVi7fHfsxPvOq
+         AR3ggX5egRShJlwgVz6QFcJH1TlarT/1U16ZMUGvAiof98ws/+EImpAucXGlnYip6O
+         TuTMlKTa0yWNUqorLfm71QRd1xTTdqlvrFPJd7ag=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 121/192] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Wed, 27 Mar 2019 14:09:13 -0400
-Message-Id: <20190327181025.13507-121-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 125/192] drm/amd/display: Disconnect mpcc when changing tg
+Date:   Wed, 27 Mar 2019 14:09:17 -0400
+Message-Id: <20190327181025.13507-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -60,52 +58,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit 77476360f173c127c191bfe8ca8113130ef283b8 ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+[Why]
+This fixes an mpc programming error for the following sequence of
+atomic commits when pipe split is enabled:
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+Commit 1: CRTC0 (plane 4, plane 3)
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+Pipe 0: old_plane_state = A0, new_plane_state = A1,   new_tg = T0
+Pipe 1: old_plane_state = B0, new_plane_state = B1,   new_tg = T0
+Pipe 2: old_plane_state = A0, new_plane_state = A1,   new_tg = T0
+Pipe 3: old_plane_state = B0, new_plane_state = B1,   new_tg = T0
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Commit 2: CRTC0 (plane 3), CRTC1 (plane 2)
+
+Pipe 0: old_plane_state = A1, new_plane_state = A2,   new_tg = T0
+Pipe 1: old_plane_state = B1, new_plane_state = B2,   new_tg = T1
+Pipe 2: old_plane_state = A1, new_plane_state = NULL, new_tg = NULL
+Pipe 3: old_plane_state = B1, new_plane_state = NULL, new_tg = NULL
+
+In the second commit the assertion for mpcc in use is hit because
+mpcc disconnect never occurs for pipe 1. This is because the stream
+changes for pipe 1 and the opp_list is empty.
+
+This sequence occurs when running the
+"igt@kms_plane_multiple@atomic-pipe-A-tiling-none" test with two
+displays connected.
+
+[How]
+Expand the reset condition to include:
+
+"old_pipe_ctx->stream_res.tg != new_pipe_ctx->stream_res.tg"
+
+...but only when the plane state is non-NULL for both old and new.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 77cee99fc36c..c48f083d522a 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -427,6 +427,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 4058b59d9bea..a0355709abd1 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2336,9 +2336,10 @@ static void dcn10_apply_ctx_for_surface(
+ 			}
+ 		}
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
-+
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
+-		if (!pipe_ctx->plane_state &&
+-			old_pipe_ctx->plane_state &&
+-			old_pipe_ctx->stream_res.tg == tg) {
++		if ((!pipe_ctx->plane_state ||
++		     pipe_ctx->stream_res.tg != old_pipe_ctx->stream_res.tg) &&
++		    old_pipe_ctx->plane_state &&
++		    old_pipe_ctx->stream_res.tg == tg) {
+ 
+ 			dc->hwss.plane_atomic_disconnect(dc, old_pipe_ctx);
+ 			removed_pipe[i] = true;
 -- 
 2.19.1
 
