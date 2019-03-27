@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE930C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FFEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8194421734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD09121855
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709863;
-	bh=jP3DAWteqrZWVLGoDQ1J1sgOBI1kizCw3nn9obA3X8Y=;
+	s=default; t=1553709865;
+	bh=AqdzoIJJu9cpZJrqevo1aBmtgqV79O2mnfJMJkW4fZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1t/+xGun+rZienniSrcILBnjssnd7SKg0MvvyM+HqDToTW+1lzTPXFZAGUWkx258y
-	 3UGxzVwx5tds7njTmf2Aokh6cKZiQFo+BAGMWVUZvPXj1ysN/bjLxVtqoJpVsb8Lst
-	 JV8i/1DadIqmJ8YkId/4S+3mJQfoCCzqnegMQyso=
+	b=IPULiXPoy3M+rc2lt3bYLLqX9dr4w0rY6kXaLs8f5jWr/VboDWExyXxgVgEyb64jQ
+	 nggXPl9U7wuB7iycpq3i2ZLJcHLhEW5m5UQHWY1aNlBCQm/TVKe2oCcpV/UwSb+Z5b
+	 fYTMHwYxIqyo8Rxu4R3Z+0fW5mBVy6jDnJXz80d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733243AbfC0SEV (ORCPT
+        id S1733257AbfC0SEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733187AbfC0SEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:13 -0400
+        id S1733210AbfC0SEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A792063F;
-        Wed, 27 Mar 2019 18:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7D92184C;
+        Wed, 27 Mar 2019 18:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709852;
-        bh=jP3DAWteqrZWVLGoDQ1J1sgOBI1kizCw3nn9obA3X8Y=;
+        s=default; t=1553709855;
+        bh=AqdzoIJJu9cpZJrqevo1aBmtgqV79O2mnfJMJkW4fZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zKpQsigSHU6Z3+U0kDMAckoiAEiU0FgwsL2e8Pp68f3n8jSaxTcw+PH2qF9yLVImG
-         lT2YHjZyCX9pbuR5IzSa1sIeDiVXcXyyAaGHOqWuQaBO84fU26EgiKU4TgmqbpfKLU
-         W3K4Pls9uF92g54PCFE9hjauIYtoF0U0uBT8rRys=
+        b=Qdj1lkK0DsjFIgE1TyMKRQiXOhgrEkdTTAU0OBtHpdhoTNVKfpaf1ZLoncOTMcBnu
+         ZiPcBYpoL04miJDB2M9tzKHsHAKri8PBsmr7x6QzObkWUjyC0cvyWJxfX+WZAxYPGc
+         /qXKRjtT1u1DUlumTn/73YV7M/QLCZn6zUoO66Zk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.0 072/262] powerpc/powernv/ioda: Fix locked_vm counting for memory used by IOMMU tables
-Date:   Wed, 27 Mar 2019 13:58:47 -0400
-Message-Id: <20190327180158.10245-72-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 075/262] kbuild: make -r/-R effective in top Makefile for old Make versions
+Date:   Wed, 27 Mar 2019 13:58:50 -0400
+Message-Id: <20190327180158.10245-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,88 +57,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 11f5acce2fa43b015a8120fa7620fa4efd0a2952 ]
+[ Upstream commit 3812b8c5c5d527239ac015f1f2c7654da7fcfbba ]
 
-We store 2 multilevel tables in iommu_table - one for the hardware and
-one with the corresponding userspace addresses. Before allocating
-the tables, the iommu_table_group_ops::get_table_size() hook returns
-the combined size of the two and VFIO SPAPR TCE IOMMU driver adjusts
-the locked_vm counter correctly. When the table is actually allocated,
-the amount of allocated memory is stored in iommu_table::it_allocated_size
-and used to decrement the locked_vm counter when we release the memory
-used by the table; .get_table_size() and .create_table() calculate it
-independently but the result is expected to be the same.
+Adding -rR to MAKEFLAGS is important because we do not want to
+be bothered by built-in implicit rules or variables.
 
-However the allocator does not add the userspace table size to
-.it_allocated_size so when we destroy the table because of VFIO PCI
-unplug (i.e. VFIO container is gone but the userspace keeps running),
-we decrement locked_vm by just a half of size of memory we are
-releasing.
+One problem that used to exist in older GNU Make versions is
 
-To make things worse, since we enabled on-demand allocation of
-indirect levels, it_allocated_size contains only the amount of memory
-actually allocated at the table creation time which can just be a
-fraction. It is not a problem with incrementing locked_vm (as
-get_table_size() value is used) but it is with decrementing.
+  MAKEFLAGS += -rR
 
-As the result, we leak locked_vm and may not be able to allocate more
-IOMMU tables after few iterations of hotplug/unplug.
+... does not become effective in the current Makefile. When you are
+building with O= option, it becomes effective in the top Makefile
+since it recurses via 'sub-make' target. Otherwise, the top Makefile
+tries implicit rules. That is why we explicitly add empty rules for
+Makefiles, but we often miss to do that.
 
-This sets it_allocated_size in the pnv_pci_ioda2_ops::create_table()
-hook to what pnv_pci_ioda2_get_table_size() returns so from now on we
-have a single place which calculates the maximum memory a table can
-occupy. The original meaning of it_allocated_size is somewhat lost now
-though.
+In fact, adding -d option to older GNU Make versions shows it is
+trying a bunch of implicit pattern rules.
 
-We do not ditch it_allocated_size whatsoever here and we do not call
-get_table_size() from vfio_iommu_spapr_tce.c when decrementing
-locked_vm as we may have multiple IOMMU groups per container and even
-though they all are supposed to have the same get_table_size()
-implementation, there is a small chance for failure or confusion.
+ Considering target file `scripts/Makefile.kcov'.
+  Looking for an implicit rule for `scripts/Makefile.kcov'.
+  Trying pattern rule with stem `Makefile.kcov'.
+  Trying implicit prerequisite `scripts/Makefile.kcov.o'.
+  Trying pattern rule with stem `Makefile.kcov'.
+  Trying implicit prerequisite `scripts/Makefile.kcov.c'.
+  Trying pattern rule with stem `Makefile.kcov'.
+  Trying implicit prerequisite `scripts/Makefile.kcov.cc'.
+  Trying pattern rule with stem `Makefile.kcov'.
+  Trying implicit prerequisite `scripts/Makefile.kcov.C'.
+  ...
 
-Fixes: 090bad39b237 ("powerpc/powernv: Add indirect levels to it_userspace")
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This issue was fixed by GNU Make commit 58dae243526b ("[Savannah #20501]
+Handle adding -r/-R to MAKEFLAGS in the makefile"). So, it is no longer
+a problem if you use GNU Make 4.0 or later. However, older versions are
+still widely used.
+
+So, I decided to patch the kernel Makefile to invoke sub-make regardless
+of O= option. This will allow further cleanups.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci-ioda-tce.c | 1 -
- arch/powerpc/platforms/powernv/pci-ioda.c     | 7 ++++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ Makefile | 48 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda-tce.c b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-index 697449afb3f7..e28f03e1eb5e 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda-tce.c
-@@ -313,7 +313,6 @@ long pnv_pci_ioda2_table_alloc_pages(int nid, __u64 bus_offset,
- 			page_shift);
- 	tbl->it_level_size = 1ULL << (level_shift - 3);
- 	tbl->it_indirect_levels = levels - 1;
--	tbl->it_allocated_size = total_allocated;
- 	tbl->it_userspace = uas;
- 	tbl->it_nid = nid;
+diff --git a/Makefile b/Makefile
+index 89af52ca0ba5..efec82635ac5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -15,19 +15,6 @@ NAME = Shy Crocodile
+ PHONY := _all
+ _all:
  
-diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-index 145373f0e5dc..2d62c58f9a4c 100644
---- a/arch/powerpc/platforms/powernv/pci-ioda.c
-+++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-@@ -2594,8 +2594,13 @@ static long pnv_pci_ioda2_create_table_userspace(
- 		int num, __u32 page_shift, __u64 window_size, __u32 levels,
- 		struct iommu_table **ptbl)
- {
--	return pnv_pci_ioda2_create_table(table_group,
-+	long ret = pnv_pci_ioda2_create_table(table_group,
- 			num, page_shift, window_size, levels, true, ptbl);
+-# Do not use make's built-in rules and variables
+-# (this increases performance and avoids hard-to-debug behaviour)
+-MAKEFLAGS += -rR
+-
+-# Avoid funny character set dependencies
+-unexport LC_ALL
+-LC_COLLATE=C
+-LC_NUMERIC=C
+-export LC_COLLATE LC_NUMERIC
+-
+-# Avoid interference with shell env settings
+-unexport GREP_OPTIONS
+-
+ # We are using a recursive build, so we need to do a little thinking
+ # to get the ordering right.
+ #
+@@ -44,6 +31,21 @@ unexport GREP_OPTIONS
+ # descending is started. They are now explicitly listed as the
+ # prepare rule.
+ 
++ifneq ($(sub-make-done),1)
 +
-+	if (!ret)
-+		(*ptbl)->it_allocated_size = pnv_pci_ioda2_get_table_size(
-+				page_shift, window_size, levels);
-+	return ret;
- }
++# Do not use make's built-in rules and variables
++# (this increases performance and avoids hard-to-debug behaviour)
++MAKEFLAGS += -rR
++
++# Avoid funny character set dependencies
++unexport LC_ALL
++LC_COLLATE=C
++LC_NUMERIC=C
++export LC_COLLATE LC_NUMERIC
++
++# Avoid interference with shell env settings
++unexport GREP_OPTIONS
++
+ # Beautify output
+ # ---------------------------------------------------------------------------
+ #
+@@ -112,7 +114,6 @@ export quiet Q KBUILD_VERBOSE
  
- static void pnv_ioda2_take_ownership(struct iommu_table_group *table_group)
+ # KBUILD_SRC is not intended to be used by the regular user (for now),
+ # it is set on invocation of make with KBUILD_OUTPUT or O= specified.
+-ifeq ($(KBUILD_SRC),)
+ 
+ # OK, Make called in directory where kernel src resides
+ # Do we want to locate output files in a separate directory?
+@@ -142,6 +143,13 @@ $(if $(KBUILD_OUTPUT),, \
+ # 'sub-make' below.
+ MAKEFLAGS += --include-dir=$(CURDIR)
+ 
++else
++
++# Do not print "Entering directory ..." at all for in-tree build.
++MAKEFLAGS += --no-print-directory
++
++endif # ifneq ($(KBUILD_OUTPUT),)
++
+ PHONY += $(MAKECMDGOALS) sub-make
+ 
+ $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
+@@ -149,16 +157,12 @@ $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
+ 
+ # Invoke a second make in the output directory, passing relevant variables
+ sub-make:
+-	$(Q)$(MAKE) -C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR) \
++	$(Q)$(MAKE) sub-make-done=1 \
++	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
+ 	-f $(CURDIR)/Makefile $(filter-out _all sub-make,$(MAKECMDGOALS))
+ 
+-# Leave processing to above invocation of make
+-skip-makefile := 1
+-endif # ifneq ($(KBUILD_OUTPUT),)
+-endif # ifeq ($(KBUILD_SRC),)
+-
++else # sub-make-done
+ # We process the rest of the Makefile if this is the final invocation of make
+-ifeq ($(skip-makefile),)
+ 
+ # Do not print "Entering directory ...",
+ # but we want to display it when entering to the output directory
+@@ -1757,7 +1761,7 @@ $(cmd_files): ;	# Do not try to update included dependency files
+ 
+ endif   # ifeq ($(config-targets),1)
+ endif   # ifeq ($(mixed-targets),1)
+-endif	# skip-makefile
++endif   # sub-make-done
+ 
+ PHONY += FORCE
+ FORCE:
 -- 
 2.19.1
 
