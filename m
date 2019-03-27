@@ -2,109 +2,99 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218A5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E49EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5A22087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B212075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSXG/By2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y23wxd61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732271AbfC0B42 (ORCPT
+        id S1732026AbfC0CAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 21:56:28 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38245 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfC0B42 (ORCPT
+        Tue, 26 Mar 2019 22:00:08 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32880 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbfC0CAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 21:56:28 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g37so2514685plb.5;
-        Tue, 26 Mar 2019 18:56:27 -0700 (PDT)
+        Tue, 26 Mar 2019 22:00:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e5so54469oii.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 19:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=76ANpdFQuY8fTjk/hR1fIF1endcrr/sSbGGgwVZWLIM=;
-        b=vSXG/By26jRQPZGiv6iaoU9w8fWhkHp0PARzOp1QnqatmTD69OQ/1J9fuOJLD9R1jW
-         dyq/m7m2tlI+eMH7hReYmImubI5sBdqwg9oOkROvExtX4pCwVu4ZVckUsM4OF3dUpIV1
-         +/DpBCsIFtgwjRW2/eLmXjA6plHtb5XyCetrUIENHt1UFegx4itHhmF2q69nvMHMAlKB
-         gbL/4cypdJ2u+5BEe9fwMnJg2Ti0flM95afmlSa8z5qNYHczN5gMTZQR7r1ThKQy6tas
-         0iIP+BwoKLhZtF+Qfvjq6FK0g6azOZu48ogdAiFk7TOPDQdzzlPu5XClMUgWcnix0kst
-         b/cg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6CBphYoVQQckqyA3coFhANhcw1xtzWp8xlOjouDnk9w=;
+        b=y23wxd612d/6g1e8ZWCwS6lrfT03ATXQVNPs0A+TmOGjJDhiajndFHrtfOxHrUhdnf
+         k4bHfo3arwbIZEkktQ9vv2Fn5y7owDUCB4zlWEjg8M1i0zyRTjdLGAf98JyMK8bk1yag
+         okXOfbZoolYIGTU/vFS5oZUu0jp/VA/XIYIY/9XOY1Nc7IbG9EjlHXWd+7Wshm8ZNGk/
+         lYCZh+Z2Epzrs0XdJJLJzp4kFNIBopYhJg8zjueqbpCZN34+0fAGAyHclFaRoC6HHXxG
+         R74B/0/JZKsH9XHGdkmcnNkxFG9qp1FGYHKaDlFgS9wpMJTgIilcbpGz0ZYQ9NgKftP3
+         DJPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=76ANpdFQuY8fTjk/hR1fIF1endcrr/sSbGGgwVZWLIM=;
-        b=mXCRRVGHKYx5FtNcH3Vvl03stxDoxbDLE5KsTHJ2eI/ZeKcrRuGZl1cCFty1oE+/xz
-         59NjEt0N8uwGg1rC/c/WvO30mqm2MUu5gL5vKkejUU23Xv56qBgO3EdhS3f8XvM8Lo+J
-         vDlUfQ9OqZPnoMQcSNmIwtXlSrCGKlcfQQATPJDMblXh9n11hG7fcN+YYirJqv69zZiF
-         WhCoCG2Qc21gzpAXEhoKZz3qcv5pTfC/0zCwto2LaSabavaXNm6wIsl0XftMrhNUJbOt
-         kpMMVoDai8EWXNrzKSW10J5IZu1yXqcShp+tdOuFzqiWuIgAWE5HHlbdCzTSaGrJ359N
-         1LoQ==
-X-Gm-Message-State: APjAAAXSRmvovG75dY8h8KmGLSR/R/aLkqVHqohiPNkAnhEFqDmV5N94
-        BjyXlf+YqAGOK8J33nwMvPg=
-X-Google-Smtp-Source: APXvYqwpruaC9ExQVtgEOH/znNUi6+tPF16FnbULu328hEGkVr4Z/SaLCizzf8offMnAb3BsW4OpIg==
-X-Received: by 2002:a17:902:28e6:: with SMTP id f93mr34428552plb.264.1553651787286;
-        Tue, 26 Mar 2019 18:56:27 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:200::1:f1fc])
-        by smtp.gmail.com with ESMTPSA id 139sm25424498pfw.98.2019.03.26.18.56.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 18:56:26 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 18:56:25 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luca Boccassi <bluca@debian.org>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
-Message-ID: <20190327015623.ur46t5gdmraagi2q@ast-mbp>
-References: <20190327091437.68ec6903@canb.auug.org.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6CBphYoVQQckqyA3coFhANhcw1xtzWp8xlOjouDnk9w=;
+        b=qKhk3vWOPYZGgNFQfmsp8dsJXfY2uDr4vmb1/NGPLY0tdGQt1onN/vzZrm9/ef/2d6
+         iLb+/smAW+JcB3TagarXvpaq2H/NvzjxwK9ywmO+DmXy7MKTdKO+VFvYxGSI5KW4LA8b
+         AkyvmzODc/DjM41V4FD6Q29dEeLJkJ2R+xguVJC6ueWOmMlVd0MCoPAZ1AJ3vIWGAZVd
+         qRfWtZkTR7pK0sT7bONKds9EAqBphuF4UEGi9LxZCLQ9aM9IzKrEk3fmHGRvdsS5Ebgt
+         a2PIvPsw0SulNw6xzuCIWYIY8rjsVZ2l6kpiNK2KnkUS0BzMqI4Y6xIcE2+R3UnMsZZB
+         cIfg==
+X-Gm-Message-State: APjAAAWQgZ3YWv98TbQ9mOa5jmb6QiGSgouuLAAfR00m3PzfD8m6fDsA
+        ArQNuxi5liCjeNETew8OTFwXgl/wb/YeQHHeZWH8TA==
+X-Google-Smtp-Source: APXvYqxY+ZnDXzbsB14nGtEl0oF5Mld8wRsY3lpGQu3LPkmu7x/dPmjqeNqR5byf8UHnnSbEK6GER/HRCbklzz75IqE=
+X-Received: by 2002:aca:4a4a:: with SMTP id x71mr17716538oia.27.1553652007074;
+ Tue, 26 Mar 2019 19:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327091437.68ec6903@canb.auug.org.au>
-User-Agent: NeoMutt/20180223
+References: <cover.1551689518.git.baolin.wang@linaro.org> <CAMz4kuJitF7Q76T0Hoj1-UTAjQnepEs9aQHhy=r_Acdq+RiwGw@mail.gmail.com>
+ <20190327005944.GA20301@kroah.com>
+In-Reply-To: <20190327005944.GA20301@kroah.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 27 Mar 2019 09:59:56 +0800
+Message-ID: <CAMz4ku+00Bt0viM0JfKdy0n51EF9Hc37auKa6GPCHp8o=J6L8g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Add new features for the Spreadtrum serial controller
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, lanqing.liu@unisoc.com,
+        linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 09:14:37AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the bpf-next tree got a conflict in:
-> 
->   tools/lib/bpf/Makefile
-> 
-> between commit:
-> 
->   1d382264d911 ("bpf, libbpf: fix version info and add it to shared object")
-> 
-> from the net tree and commit:
-> 
->   60e4786e229d ("tools/bpf: generate pkg-config file for libbpf")
-> 
-> from the bpf-next tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+On Wed, 27 Mar 2019 at 08:59, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 26, 2019 at 06:41:31PM +0800, Baolin Wang wrote:
+> > Hi Greg,
+> >
+> > On Mon, 4 Mar 2019 at 16:59, Baolin Wang <baolin.wang@linaro.org> wrote:
+> > >
+> > > This patch set fixes the baud rate calculation formula issue, as well as
+> > > adding power management support and DMA mode support for the Spreadtrum
+> > > serial controller.
+> > >
+> > > Changes from v1:
+> > >  - The patch 1 of V1 was applied, so remove the baud rate fix from this patch set.
+> > >  - Add reviewed tag from Rob for patch 1.
+> > >  - Fix the incorrect names' order in patch 3.
+> >
+> > Could you apply this patch set if no objection from you? Thanks.
+>
+> It's in my to-review queue, sorry, will get to it soon...
 
-argh. that's a heavy conflict.
-Since that patch was at the top of the bpf-next I removed it for now
-and will re-apply when bpf-next gets merged cleanly into net-next and
-we bring back net changes into bpf-next. Sorry Luca.
+Thanks :)
 
+--
+Baolin Wang
+Best Regards
