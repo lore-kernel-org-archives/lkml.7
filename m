@@ -6,51 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7930C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4BCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0E02075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0871F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714855;
-	bh=5nUfx0bnsuzCLf6bLSSZYIMw8WIO/ltzMmL0xXxuUGI=;
+	s=default; t=1553714870;
+	bh=7Hc6eC1JfvLyibrm9PSNkKrIva2ev4UJQuojWJQPLLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bpAy5LGZYFbeiqga68Nur4hNHtf6PXdOSfh1KLQucpItwiXpiuIkY+Abi4GZDHn90
-	 DPG53HX2TLK/hyHZP1ck+1k895F5Ik0Tnmbf2vH3ypnApzfsh8YSgOLO1Q7F5O5ApF
-	 bqTrMohj1Yr1htqDSxji2XAy4YSUE5C5kaGUAwts=
+	b=gy3JzPySNtkkkDFvs9aG/DXV+BCyF7PyoC0JOPnqt7oXsmq+g937BxU0r+xxHMTeL
+	 UyjnTABSKROx35QmIw7aZyF8Bjbsjyi7okTLPNLWlgJLvyKzsYUVBmsQWK6uNJ9kbp
+	 lv9C48Cud0h8AJetA8/QLs/65T7JrCzH08FkTdo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387865AbfC0T1d (ORCPT
+        id S2387741AbfC0T1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387428AbfC0SEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:43 -0400
+        id S1733312AbfC0SEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0923521734;
-        Wed, 27 Mar 2019 18:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91192075C;
+        Wed, 27 Mar 2019 18:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709882;
-        bh=5nUfx0bnsuzCLf6bLSSZYIMw8WIO/ltzMmL0xXxuUGI=;
+        s=default; t=1553709878;
+        bh=7Hc6eC1JfvLyibrm9PSNkKrIva2ev4UJQuojWJQPLLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nWt/pVY5ECXeobDzvShfw5UUsRW9199CIdlvxloKyI7Ddw9VEjI42cmAKuppFsByc
-         fQV7UXaBiA8Xvul3t6MlCHWkVSxdSR8suKveLQF422N5ehdbo0QP4O2nbEFjOg+Bod
-         PjhSrkvgbEX3uYNnmfjn9QBrI9Qqo0MK5Q6Mr91s=
+        b=UCnjMhORuWtWPs+Fke9EnsUvZ9x45pbT6NNrqF0YWs82FRZg0QuXna5sjJTtQGc7K
+         QECKLqZ9D7tiTCXz3/CBzRHStu/z50Zx6/SvPX5W8e7DDrjoIZC3CUzPDBOVFI25JN
+         HoyC1PVRxeNoec+pFwdBe2kNDRA7LvHAK6PVG2dw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 087/262] net: dsa: mv88e6xxx: Default CMODE to 1000BaseX only on 6390X
-Date:   Wed, 27 Mar 2019 13:59:02 -0400
-Message-Id: <20190327180158.10245-87-sashal@kernel.org>
+Cc:     Stefan Agner <stefan@agner.ch>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 084/262] ARM: 8845/1: use unified assembler in c files
+Date:   Wed, 27 Mar 2019 13:58:59 -0400
+Message-Id: <20190327180158.10245-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,43 +57,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit 65b034cf5c1766492aa107958149b440889480be ]
+[ Upstream commit b7e8c9397cd4efe6567d2728f091f1b728025533 ]
 
-Commit 787799a9d555 sets the SERDES interfaces of 6390 and 6390X to
-1000BaseX, but this is only needed on 6390X, since there are SERDES
-interfaces which can be used on lower ports on 6390.
+Use unified assembler syntax (UAL) in inline assembler. Divided
+syntax is considered deprecated. This will also allow to build
+the kernel using LLVM's integrated assembler.
 
-This commit fixes this by returning to previous behaviour on 6390.
-(Previous behaviour means that CMODE is not set at all if requested mode
-is NA).
+When compiling non-Thumb2 GCC always emits a ".syntax divided"
+at the beginning of the inline assembly which makes the
+assembler fail. Since GCC 5 there is the -masm-syntax-unified
+GCC option which make GCC assume unified syntax asm and hence
+emits ".syntax unified" even in ARM mode. However, the option
+is broken since GCC version 6 (see GCC PR88648 [1]). Work
+around by adding ".syntax unified" as part of the inline
+assembly.
 
-This is needed on Turris MOX, where the 88e6190 is connected to CPU in
-2500BaseX mode.
+[0] https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html#index-masm-syntax-unified
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88648
 
-Fixes: 787799a9d555 ("net: dsa: mv88e6xxx: Default ports 9/10 6390X CMODE to 1000BaseX")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/port.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mm/copypage-v4mc.c | 3 ++-
+ arch/arm/mm/copypage-v4wb.c | 3 ++-
+ arch/arm/mm/copypage-v4wt.c | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/port.c b/drivers/net/dsa/mv88e6xxx/port.c
-index 5e921bb6c214..dce84a2a65c7 100644
---- a/drivers/net/dsa/mv88e6xxx/port.c
-+++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -472,6 +472,8 @@ int mv88e6390_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
- 			     phy_interface_t mode)
- {
- 	switch (mode) {
-+	case PHY_INTERFACE_MODE_NA:
-+		return 0;
- 	case PHY_INTERFACE_MODE_XGMII:
- 	case PHY_INTERFACE_MODE_XAUI:
- 	case PHY_INTERFACE_MODE_RXAUI:
+diff --git a/arch/arm/mm/copypage-v4mc.c b/arch/arm/mm/copypage-v4mc.c
+index b03202cddddb..f74cdce6d4da 100644
+--- a/arch/arm/mm/copypage-v4mc.c
++++ b/arch/arm/mm/copypage-v4mc.c
+@@ -45,6 +45,7 @@ static void mc_copy_user_page(void *from, void *to)
+ 	int tmp;
+ 
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 1:	mcr	p15, 0, %1, c7, c6, 1		@ 1   invalidate D line\n\
+ 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
+@@ -56,7 +57,7 @@ static void mc_copy_user_page(void *from, void *to)
+ 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
+-	ldmneia	%0!, {r2, r3, ip, lr}		@ 4\n\
++	ldmiane	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 	bne	1b				@ "
+ 	: "+&r" (from), "+&r" (to), "=&r" (tmp)
+ 	: "2" (PAGE_SIZE / 64)
+diff --git a/arch/arm/mm/copypage-v4wb.c b/arch/arm/mm/copypage-v4wb.c
+index cd3e165afeed..6d336740aae4 100644
+--- a/arch/arm/mm/copypage-v4wb.c
++++ b/arch/arm/mm/copypage-v4wb.c
+@@ -27,6 +27,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
+ 	int tmp;
+ 
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 1:	mcr	p15, 0, %0, c7, c6, 1		@ 1   invalidate D line\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+@@ -38,7 +39,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+-	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
++	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	bne	1b				@ 1\n\
+ 	mcr	p15, 0, %1, c7, c10, 4		@ 1   drain WB"
+ 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
+diff --git a/arch/arm/mm/copypage-v4wt.c b/arch/arm/mm/copypage-v4wt.c
+index 8614572e1296..3851bb396442 100644
+--- a/arch/arm/mm/copypage-v4wt.c
++++ b/arch/arm/mm/copypage-v4wt.c
+@@ -25,6 +25,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
+ 	int tmp;
+ 
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 1:	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4+1\n\
+@@ -34,7 +35,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+-	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
++	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	bne	1b				@ 1\n\
+ 	mcr	p15, 0, %2, c7, c7, 0		@ flush ID cache"
+ 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
 -- 
 2.19.1
 
