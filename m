@@ -2,61 +2,129 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6289C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A94BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC24C206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0EFC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfC0V1v (ORCPT
+        id S1728209AbfC0Va6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:27:51 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37408 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfC0V1v (ORCPT
+        Wed, 27 Mar 2019 17:30:58 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34165 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfC0Va6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:27:51 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6F50914D03A42;
-        Wed, 27 Mar 2019 14:27:50 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 14:27:50 -0700 (PDT)
-Message-Id: <20190327.142750.390720588003321523.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: mdio-bcm-unimac: remove redundant !timeout
- check
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190327161520.23064-1-colin.king@canonical.com>
-References: <20190327161520.23064-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 27 Mar 2019 14:27:50 -0700 (PDT)
+        Wed, 27 Mar 2019 17:30:58 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v10so9773218oib.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:30:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JCxnMapnujBLhv3W4a2O/ybJVO1nPLBLzENy+BoBkzI=;
+        b=CYqhl0kcfwmo/KKVY0YZp4mo3ggX1YGJ7rMFZ7Oxd2HAUtlOQy05VfO2Qvd1XzQ6yr
+         Td98CXnrD1Iu1fjDbquG+HzArq4GmYe+ifuht2E6w/zVN72EXmWTX8JXr4N5QPfDrjPI
+         jrZc22dUQZESaXI2TvBcTWH30CjZzjx5pLE8TanRVegqLIqux4HXenTiJFM3B6+cNJVJ
+         uxNC151vxKOI5g1HGa+PH24GPGf3a+6YervItd8U1BT4npqmGmtSzFb95FpoF2ehJfxM
+         X1h30JwmP8MZvDFh6wZvufLYEDWqUpdN2thspRh4Ul6EknC9Ehsao5UO8OZH+5ZlLtiD
+         abcQ==
+X-Gm-Message-State: APjAAAUWaiQ3UNgifCnghPQv+zIoqhXBZU4nbzO94hXyGfTbWKYM82GY
+        MI1yyUNdZTPI8FyaeUqOi76qwqStsgajjjlHOoSLcA==
+X-Google-Smtp-Source: APXvYqzpOsg5/ddMOVD6tkFIZoG8HsMUEk6pRb/r/uF6W8zIIVx6JNflvK9lq1O5TOVwuTtQRCo+bN1aBWuoR+W7Pa8=
+X-Received: by 2002:aca:5747:: with SMTP id l68mr21554750oib.103.1553722257766;
+ Wed, 27 Mar 2019 14:30:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1552665316.git.rgb@redhat.com> <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
+In-Reply-To: <e724de2037db0fd72fef7154c83615a742417d31.1552665316.git.rgb@redhat.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Wed, 27 Mar 2019 22:30:46 +0100
+Message-ID: <CAFqZXNu2NRJg-cy_b=ig4o7v6+3dV1kGp8QtKRcVbtBxrapDMQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V5 07/10] audit: add containerid support for user records
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Wed, 27 Mar 2019 16:15:20 +0000
+On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> Add audit container identifier auxiliary record to user event standalone
+> records.
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The check for zero timeout is always true at the end of the proceeding
-> while loop; the only other exit path in the loop is if the unimac MDIO
-> is not busy.  Remove the redundant zero timeout check and always
-> return -ETIMEDOUT on this timeout return path.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-Applied to net-next.
+> ---
+>  kernel/audit.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index cfa659b3f6c4..cf448599ef34 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -1142,12 +1142,6 @@ static void audit_log_common_recv_msg(struct audit_context *context,
+>         audit_log_task_context(*ab);
+>  }
+>
+> -static inline void audit_log_user_recv_msg(struct audit_buffer **ab,
+> -                                          u16 msg_type)
+> -{
+> -       audit_log_common_recv_msg(NULL, ab, msg_type);
+> -}
+> -
+>  int is_audit_feature_set(int i)
+>  {
+>         return af.features & AUDIT_FEATURE_TO_MASK(i);
+> @@ -1409,13 +1403,16 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>
+>                 err = audit_filter(msg_type, AUDIT_FILTER_USER);
+>                 if (err == 1) { /* match or error */
+> +                       struct audit_context *context;
+> +
+>                         err = 0;
+>                         if (msg_type == AUDIT_USER_TTY) {
+>                                 err = tty_audit_push();
+>                                 if (err)
+>                                         break;
+>                         }
+> -                       audit_log_user_recv_msg(&ab, msg_type);
+> +                       context = audit_alloc_local(GFP_KERNEL);
+> +                       audit_log_common_recv_msg(context, &ab, msg_type);
+>                         if (msg_type != AUDIT_USER_TTY)
+>                                 audit_log_format(ab, " msg='%.*s'",
+>                                                  AUDIT_MESSAGE_TEXT_MAX,
+> @@ -1431,6 +1428,8 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>                                 audit_log_n_untrustedstring(ab, data, size);
+>                         }
+>                         audit_log_end(ab);
+> +                       audit_log_contid(context, audit_get_contid(current));
+> +                       audit_free_context(context);
+>                 }
+>                 break;
+>         case AUDIT_ADD_RULE:
+> --
+> 1.8.3.1
+>
+
+
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
