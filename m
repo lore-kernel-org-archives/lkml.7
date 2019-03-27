@@ -2,168 +2,127 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D1FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E710C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3700D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13DA92087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="lPCj6RHH"
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="GGVpJgr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbfC0AtT (ORCPT
+        id S1731847AbfC0AzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:49:19 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53990 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbfC0AtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 20:49:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1553647756; bh=ouivOhArKwMC5dYfyXxes1cTnKWBXl47Y15kvFkY6uE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lPCj6RHHTfWpdANZhf3cEuq/HPAbUMzT8C5trqcGcCB4KS4oAaJ4NiI1S25u4Hav8
-         LzoiXhCXvKoI0ss0iOPr+LcmO7uL2NLWXe8w1w7y8yqqe5+JlMYPFqqfYgTHuc67C2
-         4KOTrPYffX0ZOQ1I60AJ4BBtgy4rsWBJ0c+r6pKA=
-From:   megous@megous.com
-To:     linux-sunxi@googlegroups.com
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
-        sunXi SoC support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: dts: sun8i: a83t: Add missing cooling device properties for CPUs
-Date:   Wed, 27 Mar 2019 01:48:37 +0100
-Message-Id: <20190327004837.10384-1-megous@megous.com>
+        Tue, 26 Mar 2019 20:55:25 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:45888 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfC0AzZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 20:55:25 -0400
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id 36EAA86722; Wed, 27 Mar 2019 01:55:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1553648124;
+        bh=e5KTUYAp/zWOdfgp9o/FUJmC+V6y9zjimUGfc1ouzGs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GGVpJgr6a7plxRghA2xh6VgWjMz51maf3WgfvSd1K8B6UAqmcbDcuQLHP/1/Hulzh
+         DcArYoY3ks5YutwvlDIv//IjDFSSQRHAqjmc2NiS+KalSSnpUmwJUQt8gZEpmx+ceV
+         2z+jCCY2+uERKi91jiwcCSPk1rGxcpCMPT+1piuQ=
+Date:   Tue, 26 Mar 2019 17:55:24 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>, Andi Kleen <andi@firstfloor.org>,
+        x86@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
+ .text
+Message-ID: <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org>
+References: <20190321220009.29334-1-andi@firstfloor.org>
+ <20190321220009.29334-3-andi@firstfloor.org>
+ <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de>
+ <20190326213803.GN18020@tassilo.jf.intel.com>
+ <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+> Well, we better should know the real reason for this wreckage. I mean, the
+> default section for text is suprisingly .text. I don't see a reason why
+> this would be any different for an assembly function implemented in a C
+> file.
 
-This is inspired by the similar patch for H3. Original description
-applies, and is copied below:
+What happens is that when the function before the asm changes
+the section, gcc only changes it back for the next function/variable
+with a different section. But it doesn't change it back for the asm.
 
-The cooling device properties, like "#cooling-cells" and
-"dynamic-power-coefficient", should either be present for all the CPUs
-of a cluster or none. If these are present only for a subset of CPUs of
-a cluster then things will start falling apart as soon as the CPUs are
-brought online in a different order. For example, this will happen
-because the operating system looks for such properties in the CPU node
-it is trying to bring up, so that it can register a cooling device.
 
-Add such missing properties.
+e.g. here
 
-Fix other missing properties (clocks, clock-names) as well to make it all
-work.
+__attribute__((section("foo"))) void func(void)
+{
+}
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+asm("foo:\n");
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index fcb7ef5ce2df..1b0b025b9250 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -69,33 +69,43 @@
- 			cci-control-port = <&cci_control0>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <0>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@1 {
-+			clocks = <&ccu CLK_C0CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
- 			cci-control-port = <&cci_control0>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <1>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@2 {
-+			clocks = <&ccu CLK_C0CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
- 			cci-control-port = <&cci_control0>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@3 {
-+			clocks = <&ccu CLK_C0CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu0_opp_table>;
- 			cci-control-port = <&cci_control0>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <3>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu100: cpu@100 {
-@@ -107,33 +117,43 @@
- 			cci-control-port = <&cci_control1>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <0x100>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@101 {
-+			clocks = <&ccu CLK_C1CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
- 			cci-control-port = <&cci_control1>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <0x101>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@102 {
-+			clocks = <&ccu CLK_C1CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
- 			cci-control-port = <&cci_control1>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <0x102>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu@103 {
-+			clocks = <&ccu CLK_C1CPUX>;
-+			clock-names = "cpu";
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			operating-points-v2 = <&cpu1_opp_table>;
- 			cci-control-port = <&cci_control1>;
- 			enable-method = "allwinner,sun8i-a83t-smp";
- 			reg = <0x103>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
--- 
-2.21.0
+gives with gcc -S (might be different with optimization):
+
+ .section foo,"ax",@progbits <----------------- sets the section
+ .globl func
+ .type func, @function
+func:
+.LFB0:
+ .cfi_startproc
+ pushq %rbp
+ .cfi_def_cfa_offset 16
+ .cfi_offset 6, -16
+ movq %rsp, %rbp
+ .cfi_def_cfa_register 6
+ nop
+ popq %rbp
+ .cfi_def_cfa 7, 8
+ ret
+ .cfi_endproc
+.LFE0:
+ .size func, .-func
+<--------------------------- no section reset before the asm
+#APP
+ foo:
+
+ .ident "GCC: (GNU) 8.3.1 20190223 (Red Hat 8.3.1-2)"
+ .section .note.GNU-stack,"",@progbits
+
+
+> So the question is whether GCC does something silly in general which gets
+> 'repaired' silentely by the linker or whether it's just an LTO issue.
+
+The linker has no idea about the boundaries between functions and toplevel
+asms. So if gcc doesn't reset the section they stay in the same.
+
+My LTO build was just unlucky I think because it ended up with
+asm next to initcall function, which is likely not common.
+
+But gcc reorders functions even without LTO inside files,
+so it could eventually happen.
+
+> 
+> If it's the former, then we must backport those fixes.
+> 
+> Could you please verify with the GCC people as you seem to have a
+> reproducer of some sort.
+
+Okay. I filed https://gcc.gnu.org/bugzilla/show_bug.cgi?id=89839
+
+I thought I had already done that, but it seems I didn't.
+
+-Andi
 
