@@ -2,105 +2,116 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CA9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F65C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D80205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3B92075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="wKry3Si5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GJPRaMxM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwmXc8RF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbfC0G1V (ORCPT
+        id S1733118AbfC0GfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:27:21 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:38523 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732949AbfC0G1V (ORCPT
+        Wed, 27 Mar 2019 02:35:05 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36611 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfC0GfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:27:21 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 612AD22616;
-        Wed, 27 Mar 2019 02:27:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Wed, 27 Mar 2019 02:27:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=CbvWzpi+9CjGLTTGIZgcHtbiK3b
-        6cUV2KwJocRoXwgw=; b=wKry3Si5PVeZeQmyGff463AXTFg4gtfNCj2YJPU+Wjr
-        B+QL/RKVieD9v3CpvK8BLnlmwl2zXKXj+xfM8r0+bDPReg7/iLLEfkvOUSftHI76
-        grvCjjyajP0Rx41sgnTnmYmUm9n1K1V4mo0B9xelRcZTUg8KvfZ+6qqjJChVGW/B
-        2nuGivKAEBg8sFC5hoQu9EdVP/Mry22n0dSv9ysj4O5oQWlravmtePpVQglhPqNt
-        cKVMYizDnSJiqDsiXCOV2FQ0gENylZmMYlCpOq+PpiX+1meXQwrsOZSkmJy6IeyC
-        1aG+jB4PrGCUfaoXYvUDgHci4t8ig581Or6bGQcOv2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CbvWzp
-        i+9CjGLTTGIZgcHtbiK3b6cUV2KwJocRoXwgw=; b=GJPRaMxMn53GCZkldRbGZI
-        quL6b+iMOvWcRTz+cQN1vbqcWCkCdPeMEiyid5A+37PGhRgAQJ4MRmj5IMAF+kxG
-        J/bGvdtYeekkhoDJF73DbCTqdKEH11WG7Tr4hY8KilIA6HA9s/E9DcjoUrR+3zdm
-        j/+kuWe0ez1U9xBUzxAmy76oKMgqs6NcfsNXOjEb54MDj/Z8aqEUCQ0zwBCKn0J/
-        lIESaMSbXsg8g8/fHc+TkOjT0dGpLN3jhNeBX3bTUaau+HdVt0hVlBHjwLOOYqU+
-        dwnCTi5WhuV07UREp4FKxTouQJU5zPeoBhEfYKV5r4Au9HbFY5hJ4PmTvMranwwg
-        ==
-X-ME-Sender: <xms:xxebXBSF-XEZV7vuSctM1YzkPaJDkk27SiawG0XnG_n3y1jo0ZGRaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdelgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudeiledrudefledrudelvdenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xxebXKVf1YjGkX7TBNE2og9RaxNGUP_7Lsy0Q20XlKhQD2dfsHpYiw>
-    <xmx:xxebXK6Yl5ZYHGbfc31-AkMfE-g1UmKfl84yuWvqjmLHYr22dbyhDw>
-    <xmx:xxebXIzlkqkxDHKkPft36nSz-DQm-F5jFtNGlwFzjyE7cLz9e8LgSQ>
-    <xmx:yBebXP2_XyJ7bKkqGEXGMOPx2sUT6Wt_xLi0GpsNzGPAZSWIjl1Heg>
-Received: from localhost (124-169-139-192.dyn.iinet.net.au [124.169.139.192])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 01717E49DC;
-        Wed, 27 Mar 2019 02:27:18 -0400 (EDT)
-Date:   Wed, 27 Mar 2019 17:26:52 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
-Message-ID: <20190327062652.GA26545@eros.localdomain>
-References: <20190327051717.23225-1-tobin@kernel.org>
- <ba0732a4dda60e263049f3deec08d90d8bde5064.camel@perches.com>
+        Wed, 27 Mar 2019 02:35:04 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r124so9470462pgr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 23:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=isVyGu4L9+2S0FNKN5ZEi8kzQawHlgpIIQ13w9ZrByI=;
+        b=OwmXc8RFOwbR84z8LBgKF6An2yApZn709Q/xuBqmcNZ7255Qpe/8TfCPhSgrJriFTc
+         tG7GLoIlhKqqnUbArDhIQ62O79gk3mJ8Oo8dPnsR39VCg6oEeBgp8S1ZKU8z3bsw+hYe
+         DJOlBFU7MVlFrLfzcaQz0xaFxf6dRRH1TgTBAJ5CNmwMIxM3N1lA15mSfNmPRcTIBde+
+         YqXgDSIxe+lwIfNc86Yp1xNwBIGbnDMywc2QbRwcRYohZutf/Cr3FT8sk7niduppUeB6
+         OU33gHtykQ1aI6KE3YJrtCns4hCrsOnWoTYKFVek3PLJ0qKlzja6gxM2SSGO4nM16aUi
+         RROA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=isVyGu4L9+2S0FNKN5ZEi8kzQawHlgpIIQ13w9ZrByI=;
+        b=ni0gnv8omXkhAC9fU8c80bwpn4JM8CIFZQgx/pECuBC807t9B98AZHdUQr9c+4qzHX
+         i/t+aOnEbHW+15D2mklvD6oa391bSw3PRrYBthjKnvLP/MPbKVRXKhzgdH2cwf/sY/J+
+         51794ONoYlNIsmx1LGqE1juc69tb34l4UjeZJXNWptMLhRSwdLOfg2huX3MZ9Su7QFKO
+         KOe6AAsXuVBQW/IC+83jzwzUShQGibujdEcQPuHaV5Fdw7n97IBd42qEGgOpPzyki+LW
+         NENjAAHY7nP3nsAxA369hxR6tlueiUYSLY3ppzwzHPJpyICy/5a/RotLR6h/md/Y5Iu1
+         s8cQ==
+X-Gm-Message-State: APjAAAW4pqiwGr5kgXinG1K2q/Pzlon9sulVb5FNcxjZuRF9gNV/2BQH
+        YhnuZaf6RpzDlYUrAM7eXGpMRXbG
+X-Google-Smtp-Source: APXvYqzfvcGTW5dPqnlN/meZmb4Nyb1yCdbzoFpAnIh6kvUqFcFU9vRop5tEc3fXpb1ZOO07QLHQ1A==
+X-Received: by 2002:a63:cd47:: with SMTP id a7mr2969266pgj.434.1553668503628;
+        Tue, 26 Mar 2019 23:35:03 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id k1sm19950258pfo.121.2019.03.26.23.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 23:35:02 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Angus Ainslie <angus@akkea.ca>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] ARM: dts: imx6qdl: Specify IMX6QDL_CLK_IPG as "ipg" clock to SDMA
+Date:   Tue, 26 Mar 2019 23:34:49 -0700
+Message-Id: <20190327063451.25629-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba0732a4dda60e263049f3deec08d90d8bde5064.camel@perches.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:24:37PM -0700, Joe Perches wrote:
-> On Wed, 2019-03-27 at 16:16 +1100, Tobin C. Harding wrote:
-> > Hi Al,
-> > 
-> > This series converts the VFS file Documentation/filesystems/vfs.txt to
-> > reStructuredText format.
-> 
-> Perhaps add a MAINTAINERS entry too.
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX6QDL_CLK_SDMA result in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA functionality(this at least
+breaks RAVE SP serdev driver on RDU2). Fix the code to specify
+IMX6QDL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting incorrect
+clock ratio.
 
-Checkpatch suggested that to me, I didn't think it was polite to put
-Al's name on it without him first seeing it :)  I can certainly add it
-to MAINTAINERS for the next version if you want me to Al.
+Fixes: 25aaa75df1e6 ("dmaengine: imx-sdma: add clock ratio 1:1 check")
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
-Tobin.
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 9f9aa6e7ed0e..354feba077b2 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -949,7 +949,7 @@
+ 				compatible = "fsl,imx6q-sdma", "fsl,imx35-sdma";
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clks IMX6QDL_CLK_SDMA>,
++				clocks = <&clks IMX6QDL_CLK_IPG>,
+ 					 <&clks IMX6QDL_CLK_SDMA>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+-- 
+2.20.1
+
