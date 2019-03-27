@@ -6,50 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C759EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8908CC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878762082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8EB21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714734;
-	bh=cS9zwov681l3z4RAw7vLOtqhYLJ435FnUbhWs8oJbCQ=;
+	s=default; t=1553714736;
+	bh=O5LEgMVOmHt8QJYgkL4OQn28TaFUOK0sNvyHudogbus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPSbek/p8jemtm801nTv0psHRlUGIre6Cwg0SFgc6zgSKyh+FPPDYVu6NYMAa0BWA
-	 Mqkkjf82S8XWJJIBQCvSWQq+0LT0d0PeeD7BzyAP9ptFSC6Gz8Fs7YH7rvONEfx121
-	 owuuXbpmsTEnp9Vn3u/A+q3nUcwDNMYDyHrYUX44=
+	b=P6eUDOSwbn3Pu++WlFpkUr1mnMhLBe5c1FbklTJbcXDgHOsARtrWGX8m/wzQAMPIb
+	 omWw+TTTL+k7dRoL6npBygLjU/+/Fv/nGMmSfue1BqN21xvnvgFcDYuvKDnCb/9yqD
+	 G2Uz7sw606oebg/7BzT2Rr+wSH4uVBAX/QEjXvy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387636AbfC0SFP (ORCPT
+        id S2388025AbfC0TZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46194 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbfC0SFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:10 -0400
+        id S2387634AbfC0SFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FBB2063F;
-        Wed, 27 Mar 2019 18:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2332063F;
+        Wed, 27 Mar 2019 18:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709909;
-        bh=cS9zwov681l3z4RAw7vLOtqhYLJ435FnUbhWs8oJbCQ=;
+        s=default; t=1553709915;
+        bh=O5LEgMVOmHt8QJYgkL4OQn28TaFUOK0sNvyHudogbus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LiFreGs4OrxIIj5+g9/P8D7nle0LAvaLMR6iGyUDCLsETg0jRd15BnKOSlQNpY2Hk
-         D6BqFHpzvCRG6gLmiQG2fkm8pKmiBTSP629ePh5CSbo7UoQfQBxdj4qPcLAKS6dhTk
-         9upweivp9eGqHg4hXDTN5cQxFnfHiZE6Ss6IFmfg=
+        b=NGs1YBcwbTNtHBbPSv48sA9luaJCyyN+pMloTxVLmzDthLuE3wAvAGeSKFrrgEtf4
+         1k7lfjZh0Ts/Foncl4wwmHGzXYt8vFFWMBaTzbrLCjdK6gvmCqk2qFJyINO/qZMb+O
+         N58VntTkqx8aRKPuCiQNxTU89Yt0JokM1nIaCrpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Li <liwei391@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 105/262] perf annotate: Fix getting source line failure
-Date:   Wed, 27 Mar 2019 13:59:20 -0400
-Message-Id: <20190327180158.10245-105-sashal@kernel.org>
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 110/262] efi: cper: Fix possible out-of-bounds access
+Date:   Wed, 27 Mar 2019 13:59:25 -0400
+Message-Id: <20190327180158.10245-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -61,176 +57,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit 11db1ad4513d6205d2519e1a30ff4cef746e3243 ]
+[ Upstream commit 45b14a4ffcc1e0b5caa246638f942cbe7eaea7ad ]
 
-The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
-("perf annotate: No need to calculate notes->start twice") removed notes->start
-assignment in symbol__calc_lines(). It will get failed in
-find_address_in_section() from symbol__tty_annotate() subroutine as the
-a2l->addr is wrong. So the annotate summary doesn't report the line number of
-source code correctly.
+When checking a generic status block, we iterate over all the generic
+data blocks. The loop condition only checks that the start of the
+generic data block is valid (within estatus->data_length) but not the
+whole block. Because the size of data blocks (excluding error data) may
+vary depending on the revision and the revision is contained within the
+data block, ensure that enough of the current data block is valid before
+dereferencing any members otherwise an out-of-bounds access may occur if
+estatus->data_length is invalid.
 
-Before fix:
+This relies on the fact that struct acpi_hest_generic_data_v300 is a
+superset of the earlier version.  Also rework the other checks to avoid
+potential underflow.
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
-  void hotspot_1(void)
-  {
-	volatile int i;
-
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-  }
-
-  int main(void)
-  {
-	hotspot_1();
-
-	return 0;
-  }
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   19.30 common_while_1[32]
-   19.03 common_while_1[4e]
-   19.01 common_while_1[16]
-    5.04 common_while_1[13]
-    4.99 common_while_1[4b]
-    4.78 common_while_1[2c]
-    4.77 common_while_1[10]
-    4.66 common_while_1[2f]
-    4.59 common_while_1[51]
-    4.59 common_while_1[35]
-    4.52 common_while_1[19]
-    4.20 common_while_1[56]
-    0.51 common_while_1[48]
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
-   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
-      0.00 :   618:   jle    607 <hotspot_1+0xd>
-           :                 for (i = 0; i < 0x10000000; i++);
-  ...
-
-After fix:
-
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
-
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
-
-   33.34 common_while_1.c:5
-   33.34 common_while_1.c:6
-   33.32 common_while_1.c:7
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
-    4.89 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
-    0.00 :   618:   jle    607 <hotspot_1+0xd>
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
-    0.00 :   621:   jmp    62c <hotspot_1+0x32>
-    0.00 :   623:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
-    4.73 :   629:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
-  ...
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
-Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tyler Baicar <baicar.tyler@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/cper.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 70de8f6b3aee..9142fd294e76 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1889,6 +1889,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct annotation_options *options,
- 		     struct arch **parch)
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index a7902fccdcfa..6090d25dce85 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -546,19 +546,24 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
+ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
  {
-+	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.evsel		= evsel,
-@@ -1919,6 +1920,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 	struct acpi_hest_generic_data *gdata;
+-	unsigned int data_len, gedata_len;
++	unsigned int data_len, record_size;
+ 	int rc;
  
- 	args.ms.map = map;
- 	args.ms.sym = sym;
-+	notes->start = map__rip_2objdump(map, sym->start);
+ 	rc = cper_estatus_check_header(estatus);
+ 	if (rc)
+ 		return rc;
++
+ 	data_len = estatus->data_length;
  
- 	return symbol__disassemble(sym, &args);
- }
-@@ -2794,8 +2796,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
- 
- 	symbol__calc_percent(sym, evsel);
- 
--	notes->start = map__rip_2objdump(map, sym->start);
--
- 	annotation__set_offsets(notes, size);
- 	annotation__mark_jump_targets(notes, sym);
- 	annotation__compute_ipc(notes, size);
+ 	apei_estatus_for_each_section(estatus, gdata) {
+-		gedata_len = acpi_hest_get_error_length(gdata);
+-		if (gedata_len > data_len - acpi_hest_get_size(gdata))
++		if (sizeof(struct acpi_hest_generic_data) > data_len)
++			return -EINVAL;
++
++		record_size = acpi_hest_get_record_size(gdata);
++		if (record_size > data_len)
+ 			return -EINVAL;
+-		data_len -= acpi_hest_get_record_size(gdata);
++
++		data_len -= record_size;
+ 	}
+ 	if (data_len)
+ 		return -EINVAL;
 -- 
 2.19.1
 
