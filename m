@@ -2,84 +2,107 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FBEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470B3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09DF21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3C42146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfC0NPx (ORCPT
+        id S1729872AbfC0NQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:15:53 -0400
-Received: from sauhun.de ([88.99.104.3]:35920 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbfC0NPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:15:53 -0400
-Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
-        by pokefinder.org (Postfix) with ESMTPSA id 742DF2E35A2;
-        Wed, 27 Mar 2019 14:15:50 +0100 (CET)
-Date:   Wed, 27 Mar 2019 14:15:50 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Phil Reid <preid@electromag.com.au>,
-        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/7] i2c: apply coding style for struct i2c_adapter
-Message-ID: <20190327131549.GB5345@kunai>
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
- <20190302134735.4393-2-wsa+renesas@sang-engineering.com>
+        Wed, 27 Mar 2019 09:16:44 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:44547 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbfC0NQo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:16:44 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2RDG7f42869101
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 27 Mar 2019 06:16:07 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2RDG6I22869098;
+        Wed, 27 Mar 2019 06:16:06 -0700
+Date:   Wed, 27 Mar 2019 06:16:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Baoquan He <tipbot@zytor.com>
+Message-ID: <tip-0f02daed4e089c7a380a0ffdc9d93a5989043cf4@git.kernel.org>
+Cc:     x86@kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        thomas.lendacky@amd.com, jgross@suse.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@suse.de,
+        mingo@kernel.org, fanc.fnst@cn.fujitsu.com, bhe@redhat.com,
+        kirill.shutemov@linux.intel.com
+Reply-To: thomas.lendacky@amd.com, jgross@suse.com,
+          kirill.shutemov@linux.intel.com, mingo@kernel.org,
+          mingo@redhat.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          tglx@linutronix.de, x86@kernel.org, bhe@redhat.com,
+          fanc.fnst@cn.fujitsu.com, bp@suse.de
+In-Reply-To: <20190304055546.18566-1-bhe@redhat.com>
+References: <20190304055546.18566-1-bhe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/boot: Fix incorrect ifdeffery scope
+Git-Commit-ID: 0f02daed4e089c7a380a0ffdc9d93a5989043cf4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190302134735.4393-2-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  0f02daed4e089c7a380a0ffdc9d93a5989043cf4
+Gitweb:     https://git.kernel.org/tip/0f02daed4e089c7a380a0ffdc9d93a5989043cf4
+Author:     Baoquan He <bhe@redhat.com>
+AuthorDate: Mon, 4 Mar 2019 13:55:46 +0800
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 27 Mar 2019 14:00:51 +0100
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+x86/boot: Fix incorrect ifdeffery scope
 
-On Sat, Mar 02, 2019 at 02:47:29PM +0100, Wolfram Sang wrote:
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+The declarations related to immovable memory handling are out of the
+BOOT_COMPRESSED_MISC_H #ifdef scope, wrap them inside.
 
-I think this preparational patch can be applied right away.
-Applied to for-next, thanks!
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190304055546.18566-1-bhe@redhat.com
+---
+ arch/x86/boot/compressed/misc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlybd4UACgkQFA3kzBSg
-KbYWnRAAmUadlsRF622cbFRUumndjog2TVn07dP+XHyCKVxZ/ml29ePh2aAIhQsj
-8L4pjKIyXy4bLNoyKQuywMucLdk2SToh4q7Hv4wFhIYyD4LTQgPvuCj/AD0TFRGn
-pt7vcLTBerBse52UaMNE99sQnNzxTUrtebildwD/5/GrpN4RCdqo/w8URLaPgMbi
-R/Ui9lZWV7pylB/rhWSyYZuPggUFhaXXd8EA3v8w9lDGfOVFnaFv8SmR4RfGlUqM
-yGO0CjDTiMQ9KbWXSrwq2z8+jsdhl37WdY4G/kiw6oHy+AvYV3rYubY1oaKfAUW4
-Xlzm29ULJfUPOj56aKMSZ1m2dMOJW73uydObveTmIQC0aK3UnntZI1HRHzc4mKhA
-M4HGL6wPYKJX7zUf9A5hJcEutHlFunhogfXdG1wEwKS6m8MDFEk5j1H+I0hm8/zB
-deyXXyIr+oUv8quAkSz8Y8Y1aa25dMV4jSDpKT+A+G4amONjVb1pybdpqbvDhjtp
-5lgw9YqAuMM4w+gu93j4Iyyxxwd0OKmpJbxCgtB81bex0YTab0pbelr/X8l4Wm+D
-2XNOvuqgxpzYgLxtn0vFS04BkElncQ4hC0SBzZ/ID4LVFHAOlrkAzpIZ3XfOg6Ov
-YE1wcB53UHtO4+H++bwAykSQAZ9DQCofLXOB7Ut0dmq7yhxmQ2w=
-=mmPj
------END PGP SIGNATURE-----
-
---H+4ONPRPur6+Ovig--
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index fd13655e0f9b..d2f184165934 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -120,8 +120,6 @@ static inline void console_init(void)
+ 
+ void set_sev_encryption_mask(void);
+ 
+-#endif
+-
+ /* acpi.c */
+ #ifdef CONFIG_ACPI
+ acpi_physical_address get_rsdp_addr(void);
+@@ -135,3 +133,5 @@ int count_immovable_mem_regions(void);
+ #else
+ static inline int count_immovable_mem_regions(void) { return 0; }
+ #endif
++
++#endif /* BOOT_COMPRESSED_MISC_H */
