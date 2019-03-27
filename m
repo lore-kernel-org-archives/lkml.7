@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55771C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA781C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DA4205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B534205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712757;
-	bh=6iaHZM6vHTWBRGkR893yQudjWYqijjWUeE5PZlhlE1o=;
+	s=default; t=1553712769;
+	bh=Y03JfpY8OwBwVj8v4fXIT+tLgot3EOD9Jy97Qx9oZgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eKxnYWII5PoRxbTcYyXoCZmIJVJAweftZD3e9MbIPiI0BnOBKvV9/03oJyos4FbX
-	 DHBCT5k7Zwpil+CrCQtLN4NxkDhnWRkSlO5GOVxIWO51wAZjgZfMAxB8XaZI98mbeA
-	 m9oqmPijqm8hNHrjT7FX6a1Ye3HtxcSTV6hhUF5k=
+	b=HLyeWwKtuq66DLo1v/XOwC67zMP6abWuC/+qboUeKvy4JWHT46KamWvkj9XXzYkFT
+	 Wa4L154v/v+lBqAnMIHsdFP45z/4yYLRr5pCIqdueudXtNmfMk/A8jjW2IgbL1yHL3
+	 EwhgQ8DB7Aj6qe/viKvLaqw+7gbECNQQxCoZ0HRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390935AbfC0Swf (ORCPT
+        id S2390465AbfC0Sws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390352AbfC0SRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:41 -0400
+        id S2390329AbfC0SRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 468C120449;
-        Wed, 27 Mar 2019 18:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A14A02147C;
+        Wed, 27 Mar 2019 18:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710661;
-        bh=6iaHZM6vHTWBRGkR893yQudjWYqijjWUeE5PZlhlE1o=;
+        s=default; t=1553710658;
+        bh=Y03JfpY8OwBwVj8v4fXIT+tLgot3EOD9Jy97Qx9oZgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5+5zvLpsBXiyAynpYgKNjTcHTMwKrL8QO4nPaMWA4bKwqaezF9Zyl6oI9eiJLlkz
-         GPluFqgkGNEGFqI4mfskyV2rVLwWtG0mshis72Q8zzVvB71R5IoCVaXOYixV9AsVF9
-         95jLDckbFknbeYdvBgxSAgDTgAo5K/lVaAgRALWQ=
+        b=KOBYP/zaVymhszAuuBa8C3FkQg3KtKV9cAW2RGtGB/jrMO9M8QqPDWijlOVgJ956D
+         Vjqynwj/5cmXzHiHcH1bFd4GcpqRFAKWCSE3WafFcM8q80nJzlr6WOy0yUpR2BM1fK
+         0SjIbiP3LdXuDq7V7v24PgpyUtaDCUCwG551TseY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 038/123] powerpc/xmon: Fix opcode being uninitialized in print_insn_powerpc
-Date:   Wed, 27 Mar 2019 14:15:02 -0400
-Message-Id: <20190327181628.15899-38-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 037/123] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 27 Mar 2019 14:15:01 -0400
+Message-Id: <20190327181628.15899-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,59 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit e7140639b1de65bba435a6bd772d134901141f86 ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-When building with -Wsometimes-uninitialized, Clang warns:
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-  arch/powerpc/xmon/ppc-dis.c:157:7: warning: variable 'opcode' is used
-  uninitialized whenever 'if' condition is false
-  [-Wsometimes-uninitialized]
-    if (cpu_has_feature(CPU_FTRS_POWER9))
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  arch/powerpc/xmon/ppc-dis.c:167:7: note: uninitialized use occurs here
-    if (opcode == NULL)
-        ^~~~~~
-  arch/powerpc/xmon/ppc-dis.c:157:3: note: remove the 'if' if its
-  condition is always true
-    if (cpu_has_feature(CPU_FTRS_POWER9))
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  arch/powerpc/xmon/ppc-dis.c:132:38: note: initialize the variable
-  'opcode' to silence this warning
-    const struct powerpc_opcode *opcode;
-                                       ^
-                                        = NULL
-  1 warning generated.
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-This warning seems to make no sense on the surface because opcode is set
-to NULL right below this statement. However, there is a comma instead of
-semicolon to end the dialect assignment, meaning that the opcode
-assignment only happens in the if statement. Properly terminate that
-line so that Clang no longer warns.
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-Fixes: 5b102782c7f4 ("powerpc/xmon: Enable disassembly files (compilation changes)")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
+
+Here is the contexts for the three functions so far:
+
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
+
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/ppc-dis.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/xmon/ppc-dis.c b/arch/powerpc/xmon/ppc-dis.c
-index 31db8c072acd..006c7f864f65 100644
---- a/arch/powerpc/xmon/ppc-dis.c
-+++ b/arch/powerpc/xmon/ppc-dis.c
-@@ -162,7 +162,7 @@ int print_insn_powerpc (unsigned long insn, unsigned long memaddr)
-     dialect |= (PPC_OPCODE_POWER5 | PPC_OPCODE_POWER6 | PPC_OPCODE_POWER7
- 		| PPC_OPCODE_POWER8 | PPC_OPCODE_POWER9 | PPC_OPCODE_HTM
- 		| PPC_OPCODE_ALTIVEC | PPC_OPCODE_ALTIVEC2
--		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3),
-+		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3);
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 40124648a07b..0b11405bfd7e 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
  
-   /* Get the major opcode of the insn.  */
-   opcode = NULL;
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
+ 
+@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
+ 
+@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
+ 
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
