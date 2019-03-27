@@ -2,103 +2,115 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA26C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1637C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F1620651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B102147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553711875;
+	bh=9dgVZuCPRGTCL3jKF6dV4Qqyz28SQ/WpfxLMbofxLvA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RdjvjcAklCee6z9EomcFSLbGUy+ZmGlI9QLIm8uEcT32CdzEjPuidNlvjBgsWpADs
+	 uT9qPqkfBXidxDeRK1cjw3HZjnKCe9Hwky3fGznpW0D6RKNZ9IjfjFZhK2zx65gXcF
+	 dX4dxpvfC73I+zlYKBCxZ9dZgLLZzz+ofM44M4DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391860AbfC0Shp (ORCPT
+        id S2391508AbfC0SXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:37:45 -0400
-Received: from muru.com ([72.249.23.125]:43004 "EHLO muru.com"
+        Wed, 27 Mar 2019 14:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391388AbfC0Shn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:37:43 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id BA5F680BB;
-        Wed, 27 Mar 2019 18:37:55 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 11:37:38 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 09/14] bus: ti-sysc: Move rstctrl reset to happen later
-Message-ID: <20190327183738.GE49658@atomide.com>
-References: <20190325215849.13182-1-tony@atomide.com>
- <20190325215849.13182-10-tony@atomide.com>
- <20190326231306.GC49658@atomide.com>
- <b6bd2b04-00b4-6730-4401-6ac95e75322a@ti.com>
- <20190326234022.GD49658@atomide.com>
- <cd0bce74-4af7-bcde-2552-e12c8d1c9da4@ti.com>
+        id S2390998AbfC0SX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E4F2147C;
+        Wed, 27 Mar 2019 18:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553711006;
+        bh=9dgVZuCPRGTCL3jKF6dV4Qqyz28SQ/WpfxLMbofxLvA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bo1TfxISN9jLq/KELURr/rp3vECwgS/vQNBnHtwxij9Fot0qivF98/ua3KnKYGtY5
+         88mEpKz0C8k6rYWo6X5dm5moe+Qdng2wyYZ3W5osF0GWAZQEZn9ZsdhJbFG1I9J/Ma
+         CXrtY8hhLvF5dVOGvRdXkleolsEZwZZ+2Mp2VqMU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/63] h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
+Date:   Wed, 27 Mar 2019 14:22:22 -0400
+Message-Id: <20190327182323.18577-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
+References: <20190327182323.18577-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd0bce74-4af7-bcde-2552-e12c8d1c9da4@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [190327 16:27]:
-> On 3/26/19 6:40 PM, Tony Lindgren wrote:
-> > That's for rstctrl. I just did a quick test with my earlier
-> > reset-simple patch and I noticed sgx on am33xx produces a
-> > clock error unless we deassert it's rstrctrl before enabling
-> > clocks first:
-> > 
-> > gfx-l3-clkctrl:0004:0: failed to enable
-> 
-> Yeah, and I see a similar one across the other modules controlled by
-> RSTCTRL bits for me as well - MMUs, PRUSS etc. This is because you can
-> only check the module ready status in _omap4_clkctrl_clk_enable() only
-> both after the clocks are turned on and resets are deasserted. That
-> check will always fail with rstctrl asserted. The omap_hwmod code does
-> use the reset status checks for bailing out, but that stuff is not
-> present in clkctrl code and can only be achieved by adding a
-> CLKF_NO_IDLEST (somewhat misnamed) to the corresponding clkctrl atm.
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Sounds like on ti-sysc init we should just deassert the rstctrl if
-asserted, then enable clocks, and then read the revision.
+[ Upstream commit fc2b47b55f17fd996f7a01975ce1c33c2f2513f6 ]
 
-Then if we actually need to toggle rstctrl reset, that can be added
-with later patches. But with reset driver, the device IP handling
-device driver(s) should probably manage the rstctrl bits directly.
+It believe it is a bad idea to hardcode a specific compiler prefix
+that may or may not be installed on a user's system. It is annoying
+when testing features that should not require compilers at all.
 
-> See [1] for AM33xx SGX. I will be posting some of these once I check the
-> behavior.
+For example, mrproper, headers_install, etc. should work without
+any compiler.
 
-Yeah OK sounds like we can avoid those issues by deasserting the
-module related rstctrl bit before enabling the clocks. Then
-deal with resets later if needed.
+They look like follows on my machine.
 
-> > Note that you probably also want to leave out the struct
-> > omap_hwmod data from omap_hwmod_*_data.c files with rstctrl
-> > entries.
-> 
-> You mean no hwmod entries at all, or hwmod entries with no rstctrl data?
+$ make ARCH=h8300 mrproper
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+make: h8300-unknown-linux-gcc: Command not found
+  [ a bunch of the same error messages continue ]
 
-Except for the lack of rstctrl reset driver, struct hwmod_data
-entries should only be needed for the few cases where we're not
-yet handling some oh->flags quirks. I think most of the remaining
-unhandled quirks are for omap2 and 3.
+$ make ARCH=h8300 headers_install
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+  HOSTCC  scripts/basic/fixdep
+make: h8300-unknown-linux-gcc: Command not found
+  WRAP    arch/h8300/include/generated/uapi/asm/kvm_para.h
+  [ snip ]
 
-Regards,
+The solution is to delete this line, or to use cc-cross-prefix like
+some architectures do. I chose the latter as a moderate fixup.
 
-Tony
+I added an alternative 'h8300-linux-' because it is available at:
 
+https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
 
-> [1]
-> http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=commitdiff;h=536d660714e98bdb7f96e5990a095283e52e4d8a
-> 
-> 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/h8300/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/h8300/Makefile b/arch/h8300/Makefile
+index e1c02ca230cb..073bba6f9f60 100644
+--- a/arch/h8300/Makefile
++++ b/arch/h8300/Makefile
+@@ -23,7 +23,7 @@ KBUILD_AFLAGS += $(aflags-y)
+ LDFLAGS += $(ldflags-y)
+ 
+ ifeq ($(CROSS_COMPILE),)
+-CROSS_COMPILE := h8300-unknown-linux-
++CROSS_COMPILE := $(call cc-cross-prefix, h8300-unknown-linux- h8300-linux-)
+ endif
+ 
+ core-y	+= arch/$(ARCH)/kernel/ arch/$(ARCH)/mm/
+-- 
+2.19.1
+
