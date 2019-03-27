@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155BEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA21C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D947420449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3B12147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710986;
-	bh=pF7cRpKupTgJir7JwcqQ1gcxxdEG2FsTFsJXmzOPQh8=;
+	s=default; t=1553710989;
+	bh=eZsqNRtN7AcSby9VLPWL4CoNCTpAnqwEXDqEMG50gLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XhVwoxgkpxQvRdxOXKm0MTDyN3hW7Vw9SmOZ8CMuiiv3x4GOsHKqnisfDLa66riFl
-	 9Dibbcx6FZhF6ZNWBVsQ6KAPr63Ds1FFO93SIyLoBineJmnfqKp7KHSEOZAKB8OgIR
-	 qKJEoLxZIODtozLaVcM58cwoLh7uZozNn6CG9L2E=
+	b=lsFi9Q8NO0PcmKLMwqgwO6Rxwo0umYJnCKPbz5k70b/oROiCXM1i8j02luLZQOnMY
+	 1aX8iHjyBP1VrNM7ihNZMjIkiimxrw38PpL7gaT7V0FQ7nrkOudPHsc5wxcZEXrl1T
+	 8yawfuJ15V6IWASukE23oylSrruW3UBc/qRqQM88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390923AbfC0SXF (ORCPT
+        id S2391424AbfC0SXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41270 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391394AbfC0SXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:03 -0400
+        id S2391407AbfC0SXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01D2D20651;
-        Wed, 27 Mar 2019 18:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8072147C;
+        Wed, 27 Mar 2019 18:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710982;
-        bh=pF7cRpKupTgJir7JwcqQ1gcxxdEG2FsTFsJXmzOPQh8=;
+        s=default; t=1553710984;
+        bh=eZsqNRtN7AcSby9VLPWL4CoNCTpAnqwEXDqEMG50gLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=inUFkwuzkpT1TGndjm8mEBtwqac8PYed0YgbNFOPjperuAw+WqoT7R0dMsXMJeMQk
-         Zc6cn6HbSU9PMOuUmXevBWTpk7xhquctxow8iFJE2Q3T5dHQ8yqUUtBWRaUA8l0ahr
-         +0YKaWfwaKQvoYywnsDjv9k63pSuqRN+W+BIMxhU=
+        b=orfspIClEptIN4qQvx78xLCX1ss07gokJlj5ojPxcWnODemwzARFfuz1D6+RIf8EV
+         gs2u1ZthJu0RelugC2Ixmjgs6YfjEIih1v4p/7l7sftZjCgpixx56GPRVQGMplfFZp
+         9jOaqNRUhwVIn4TZd2TbvKJgd8BJgxzLOrStDfZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 76/87] dmaengine: qcom_hidma: assign channel cookie correctly
-Date:   Wed, 27 Mar 2019 14:20:29 -0400
-Message-Id: <20190327182040.17444-76-sashal@kernel.org>
+Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 78/87] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Wed, 27 Mar 2019 14:20:31 -0400
+Message-Id: <20190327182040.17444-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -59,86 +58,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
-[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-When dma_cookie_complete() is called in hidma_process_completed(),
-dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
-hidma_txn_is_success() will be called to use channel cookie
-mchan->last_success to do additional DMA status check. Current code
-assigns mchan->last_success after dma_cookie_complete(). This causes
-a race condition of dma_cookie_status() returns DMA_COMPLETE before
-mchan->last_success is assigned correctly. The race will cause
-hidma_tx_status() return DMA_ERROR but the transaction is actually a
-success. Moreover, in async_tx case, it will cause a timeout panic
-in async_tx_quiesce().
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
- Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
- transaction
- ...
- Call trace:
- [<ffff000008089994>] dump_backtrace+0x0/0x1f4
- [<ffff000008089bac>] show_stack+0x24/0x2c
- [<ffff00000891e198>] dump_stack+0x84/0xa8
- [<ffff0000080da544>] panic+0x12c/0x29c
- [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
- [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
- [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
- [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
- [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
- [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
- [<ffff000008736538>] md_thread+0x108/0x168
- [<ffff0000080fb1cc>] kthread+0x10c/0x138
- [<ffff000008084d34>] ret_from_fork+0x10/0x18
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Tested on s5pv210-galaxys (Samsung i9000 phone).
+
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
+
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index e244e10a94b5..5444f39bf939 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -131,24 +131,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
- 		desc = &mdesc->desc;
- 		last_cookie = desc->cookie;
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 06e2b72d07ca..c89922fb42ce 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1264,13 +1264,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
+ }
  
-+		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
-+
- 		spin_lock_irqsave(&mchan->lock, irqflags);
-+		if (llstat == DMA_COMPLETE) {
-+			mchan->last_success = last_cookie;
-+			result.result = DMA_TRANS_NOERROR;
-+		} else {
-+			result.result = DMA_TRANS_ABORTED;
-+		}
-+
- 		dma_cookie_complete(desc);
- 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
  
--		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
- 		dmaengine_desc_get_callback(desc, &cb);
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1297,11 +1300,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
  
- 		dma_run_dependencies(desc);
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
  
- 		spin_lock_irqsave(&mchan->lock, irqflags);
- 		list_move(&mdesc->node, &mchan->free);
--
--		if (llstat == DMA_COMPLETE) {
--			mchan->last_success = last_cookie;
--			result.result = DMA_TRANS_NOERROR;
--		} else
--			result.result = DMA_TRANS_ABORTED;
--
- 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
  
- 		dmaengine_desc_callback_invoke(&cb, &result);
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1310,11 +1313,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
