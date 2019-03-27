@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB51C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED8CC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3EC2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8062F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712194;
-	bh=TWb3FiZY2lcX+OVO/8orZQpe9P8p5eQYRP+FMmiza24=;
+	s=default; t=1553712199;
+	bh=G/+DMr02VI8AhEGqoHUj/zm3muQzTzc9wDXbs38iUps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIVqgehK/5aajpGywff5uBciPon1C/mQcUTxv+gWo6PMrIZ3nxV0R0rspBipI24zC
-	 7ltg6PM05R9QIsE26elPbAuM1dQl+l+EkyZUNIdLYiGaKNCgzmIyR9av6k/n8LogwB
-	 8PyYmW1zmnq1f3FzsU7bcoQlQJ5sv0tCHqO2d/m8=
+	b=OwUf4kdbPX0FKiI1gzfSJvfpZ8zkIz1wburAenq0C2y9e49TgMqUHEEvDUR6RtBLI
+	 ouC4FL2V7zLh4gT/UhahU4ucAQ5Bq0OEQOZAwEvmlB5lw7iWUVbbdQ29do3M/yBLEz
+	 dFBEyD7zeaUaAPhWq+VqVvdK+9pzHWxpwchk+QbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391879AbfC0SnM (ORCPT
+        id S2391218AbfC0SVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:43:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390309AbfC0SVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:40 -0400
+        id S2390309AbfC0SVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B0621738;
-        Wed, 27 Mar 2019 18:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB4A820651;
+        Wed, 27 Mar 2019 18:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710899;
-        bh=TWb3FiZY2lcX+OVO/8orZQpe9P8p5eQYRP+FMmiza24=;
+        s=default; t=1553710894;
+        bh=G/+DMr02VI8AhEGqoHUj/zm3muQzTzc9wDXbs38iUps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIy2y11uxcYk16F5pvb3o3t1o3oFqclbbY7/MgTWO8uFhBGNdMqRclVLeSC+avsgO
-         f9SRfmnepTuahUjymyqOPoqqkk1AzjlhvVYoKWySIKCQaO/MlENxD8L+ra5yupny55
-         +IEtbXhxgEm2wvMjnh2mUB+N5PxXX/TEcIyyT1mA=
+        b=Fon10k/8jWknEliLsX1EZqgVSKqQK6hZT0iw51KBt7P/c6nNfkOW1v7WePVon0Yi6
+         UNd2fLIkHDpbYbixllmlZaXLWSJXgHw0lBPW9LXL9GoRmUcqhacjIHXmf/5mYdo7XF
+         37xfVwq6i5+bmjLgdOvHMCvD24CHcfPLMSHvSseY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 36/87] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 27 Mar 2019 14:19:49 -0400
-Message-Id: <20190327182040.17444-36-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 32/87] e1000e: Fix -Wformat-truncation warnings
+Date:   Wed, 27 Mar 2019 14:19:45 -0400
+Message-Id: <20190327182040.17444-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,79 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+[ Upstream commit 135e7245479addc6b1f5d031e3d7e2ddb3d2b109 ]
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+Provide precision hints to snprintf() since we know the destination
+buffer size of the RX/TX ring names are IFNAMSIZ + 5 - 1. This fixes the
+following warnings:
 
-    megasas_init_adapter_fusion()
+drivers/net/ethernet/intel/e1000e/netdev.c: In function
+'e1000_request_msix':
+drivers/net/ethernet/intel/e1000e/netdev.c:2109:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-rx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2107:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->rx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->rx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-rx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/intel/e1000e/netdev.c:2125:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-tx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2123:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->tx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->tx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-tx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
-
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
-
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 5de024a50e15..5b1c37e3913c 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3956,6 +3956,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
- 	}
- 
- 	return 0;
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 6855b3380a83..f56f8b6e2378 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -2121,7 +2121,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->rx_ring->name,
+ 			 sizeof(adapter->rx_ring->name) - 1,
+-			 "%s-rx-0", netdev->name);
++			 "%.14s-rx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->rx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
+@@ -2137,7 +2137,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->tx_ring->name,
+ 			 sizeof(adapter->tx_ring->name) - 1,
+-			 "%s-tx-0", netdev->name);
++			 "%.14s-tx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->tx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
 -- 
 2.19.1
 
