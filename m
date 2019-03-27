@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42FFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC14AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764CA2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B2221741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710483;
-	bh=57quHqxux8raZNLicUVQIDyeoOL19nEQULhKsBWRfVk=;
+	s=default; t=1553710490;
+	bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zEtvkEHgL1DBj2bRgwkQpLbkQmtKXEb5sQFZNn6PoTp+/bHDsxWY3ZY5Ri2y8shru
-	 iKKMb9syEodv7zqzSKtP3AVlHzfz590xdxH/71r0XYfaGCnIXR6XdstTG+ldyUeYSM
-	 4PoPK62w08ApLuSY81uxj1doD2Le09zE0sAsVC2s=
+	b=jZJKriIIMGD9OeYnbHAZ0lXHVV1x4G8Hu+nZ3+Gounyc07qYZpWehJDloP9FQrKAr
+	 TU49pz9JJGZFuEOYo0lc4gEwN5Wz1uWJ1ccICXwbU9tai1s0sebx+buuNekebZPrmo
+	 Esl3Vibjcb/aLHBRmPPwCniPl6ENDVpHqJSwFP4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389675AbfC0SOm (ORCPT
+        id S2388930AbfC0SOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:14:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389664AbfC0SOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:38 -0400
+        id S2389421AbfC0SOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B51CE21855;
-        Wed, 27 Mar 2019 18:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA63C2177E;
+        Wed, 27 Mar 2019 18:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710477;
-        bh=57quHqxux8raZNLicUVQIDyeoOL19nEQULhKsBWRfVk=;
+        s=default; t=1553710485;
+        bh=d3T5jnxGDrJ1sLpQMQthl0IVFJCcODFk9WKpcP39bmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdHW7yNNV2BLV19wSakhzcq41N7cAjgl51zPYIBTE/7reT/T99YVLcPlTo5uDXX+8
-         v5kD/nAqV9VYrUR/f6uk4VrW208tlGXFoBQK27rCDVQ4t0vN4M/Kd7y1uACX2HbQhh
-         bn+C3PrExQXWUWJLRV2+vIAIhecpZEFQQh6T5wsk=
+        b=Zq9deDy1DQCATD0jCYImYu1yOqlL+B5QcBw0TYzPA9egb/5F61Z2m2x7WCQgK3HNn
+         yvAQpjs37iHC2ei2oktvNxAV3Mk+v9LMEnXOM5bd8ZCROTJ1lD79zclMXVRosFwnuz
+         nt7MpF3QIiinAo+1b4SacD5sDXIhafVBlYpAgUgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 139/192] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date:   Wed, 27 Mar 2019 14:09:31 -0400
-Message-Id: <20190327181025.13507-139-sashal@kernel.org>
+Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 141/192] soc: qcom: gsbi: Fix error handling in gsbi_probe()
+Date:   Wed, 27 Mar 2019 14:09:33 -0400
+Message-Id: <20190327181025.13507-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,133 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Malaterre <malat@debian.org>
+From: Alexey Khoroshilov <khoroshilov@ispras.ru>
 
-[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
+[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix
-the following dtc warnings:
+If of_platform_populate() fails in gsbi_probe(),
+gsbi->hclk is left undisabled.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+Found by Linux Driver Verification project (linuxtesting.org).
 
-and
-
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-
-Converted using the following command:
-
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
-
-For simplicity, two sed expressions were used to solve each warnings
-separately.
-
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before
-the opening curly brace:
-
-https://elinux.org/Device_Tree_Linux#Linux_conventions
-
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-[vzapolskiy: fixed commit message to pass checkpatch.pl test]
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index abff7ef7c9cd..4981741377f3 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -230,7 +230,7 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
+index 09c669e70d63..038abc377fdb 100644
+--- a/drivers/soc/qcom/qcom_gsbi.c
++++ b/drivers/soc/qcom/qcom_gsbi.c
+@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	struct gsbi_info *gsbi;
+-	int i;
++	int i, ret;
+ 	u32 mask, gsbi_num;
+ 	const struct crci_config *config = NULL;
  
--			i2s1: i2s@2009C000 {
-+			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009C000 0x1000>;
- 			};
-@@ -273,7 +273,7 @@
- 				status = "disabled";
- 			};
+@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
  
--			i2c1: i2c@400A0000 {
-+			i2c1: i2c@400a0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -284,7 +284,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C1>;
- 			};
+ 	platform_set_drvdata(pdev, gsbi);
  
--			i2c2: i2c@400A8000 {
-+			i2c2: i2c@400a8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -295,7 +295,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C2>;
- 			};
+-	return of_platform_populate(node, NULL, NULL, &pdev->dev);
++	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
++	if (ret)
++		clk_disable_unprepare(gsbi->hclk);
++	return ret;
+ }
  
--			mpwm: mpwm@400E8000 {
-+			mpwm: mpwm@400e8000 {
- 				compatible = "nxp,lpc3220-motor-pwm";
- 				reg = <0x400E8000 0x78>;
- 				status = "disabled";
-@@ -394,7 +394,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
- 			};
- 
--			timer4: timer@4002C000 {
-+			timer4: timer@4002c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-@@ -412,7 +412,7 @@
- 				status = "disabled";
- 			};
- 
--			watchdog: watchdog@4003C000 {
-+			watchdog: watchdog@4003c000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_WDOG>;
-@@ -451,7 +451,7 @@
- 				status = "disabled";
- 			};
- 
--			timer1: timer@4004C000 {
-+			timer1: timer@4004c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,7 +475,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm1: pwm@4005C000 {
-+			pwm1: pwm@4005c000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
-@@ -484,7 +484,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm2: pwm@4005C004 {
-+			pwm2: pwm@4005c004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
+ static int gsbi_remove(struct platform_device *pdev)
 -- 
 2.19.1
 
