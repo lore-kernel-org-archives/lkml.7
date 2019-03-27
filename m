@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA685C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F0A2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401802075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709946;
-	bh=MpydZQhZGiUeA+gEcjSa7yVW8upX/+n7cgb4XYRmbjE=;
+	s=default; t=1553709950;
+	bh=rEeIU3O2MmD4cJ+H6PgyiC7UbtR4wImXCiT1Gxl3xik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ka8kQMQhWbM+ZjCJoO24sTqRRX2q8BkN4xa2gm0wTcYTOHaTZtS2QhVuzglD55sNC
-	 gLwjGDifDc6kv0NxYE+oPX454vRRmx7PdeTP9fe15jKmJnYdPS4v2Uu9iO365NEnNb
-	 ydeachCNnF9gsANu5WX9MwwQuvNenuo7/ys+eJkc=
+	b=ToGGgG/844c7vSXytua6+w8kQe2AYA1OK5OZ7FiEfAAmpk/nlPnuXKBGszwcdezpP
+	 qTFvci3Tro3i2Yj6o8tFtDmre2ONtt6Qa/D8yXWDPSvUZixTJgAz5Pg/Xl9cf8O1XS
+	 xCxxPl5+HxtIRVtm+FBnxQSt5kWVYLvHFVO3AP1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbfC0SFp (ORCPT
+        id S2387782AbfC0SFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbfC0SFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:42 -0400
+        id S1732806AbfC0SFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC7E2217F5;
-        Wed, 27 Mar 2019 18:05:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27FE02063F;
+        Wed, 27 Mar 2019 18:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709941;
-        bh=MpydZQhZGiUeA+gEcjSa7yVW8upX/+n7cgb4XYRmbjE=;
+        s=default; t=1553709939;
+        bh=rEeIU3O2MmD4cJ+H6PgyiC7UbtR4wImXCiT1Gxl3xik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVyhYy7RjedFfbZu34n9BgtzQwq6ohfsrrKP+pGXsjoET2dgE6WaV/dqTpaVme670
-         mGeoWy0wsCwc3s3Meq72pZ3WMs/M3I4ww9GNa1WGZ5DLyeQ7ykTx+nNqkWmooKUS4M
-         +xR3SKkIfR1I/aJa571cA2Un99Wp5n9vgRWR38xQ=
+        b=AXWFvlubbQBDID5+o4iDg6Gqjc7PecSBLXMJY7TjxDmFd2iEHnDnAZSYtsalnThmW
+         Q229Bi+lYqSSofH3WeJJSzjD79xgeYDszWDFZu4Hd4EnRBAnFT3apV3o50YGK5LokL
+         c6REdJER73mPH8+0MxN0eRwWiBaR+m/tgpKu63z4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 124/262] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 13:59:39 -0400
-Message-Id: <20190327180158.10245-124-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 123/262] media: s5p-g2d: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 13:59:38 -0400
+Message-Id: <20190327180158.10245-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -60,7 +61,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
+[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
 
 Fix the assigned type of mem2mem buffer handling API.
 Namely, these functions:
@@ -86,33 +87,35 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mx2_emmaprp.c | 6 +++---
+ drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index 27b078cf98e3..f60f499c596b 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -274,7 +274,7 @@ static void emmaprp_device_run(void *priv)
+diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
+index 57ab1d1085d1..971c47165010 100644
+--- a/drivers/media/platform/s5p-g2d/g2d.c
++++ b/drivers/media/platform/s5p-g2d/g2d.c
+@@ -513,7 +513,7 @@ static void device_run(void *prv)
  {
- 	struct emmaprp_ctx *ctx = priv;
- 	struct emmaprp_q_data *s_q_data, *d_q_data;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct emmaprp_dev *pcdev = ctx->dev;
- 	unsigned int s_width, s_height;
- 	unsigned int d_width, d_height;
-@@ -294,8 +294,8 @@ static void emmaprp_device_run(void *priv)
- 	d_height = d_q_data->height;
- 	d_size = d_width * d_height;
+ 	struct g2d_ctx *ctx = prv;
+ 	struct g2d_dev *dev = ctx->dev;
+-	struct vb2_buffer *src, *dst;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	unsigned long flags;
+ 	u32 cmd = 0;
  
--	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 	if (!p_in || !p_out) {
- 		v4l2_err(&pcdev->v4l2_dev,
- 			 "Acquiring kernel pointers to buffers failed\n");
+@@ -528,10 +528,10 @@ static void device_run(void *prv)
+ 	spin_lock_irqsave(&dev->ctrl_lock, flags);
+ 
+ 	g2d_set_src_size(dev, &ctx->in);
+-	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
++	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
+ 
+ 	g2d_set_dst_size(dev, &ctx->out);
+-	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
++	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
+ 
+ 	g2d_set_rop4(dev, ctx->rop);
+ 	g2d_set_flip(dev, ctx->flip);
 -- 
 2.19.1
 
