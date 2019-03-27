@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7C4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27AF2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EE62147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710188;
-	bh=vG6mr5HjJrOKWpnJsCXMlIkEuLUeJNVieoZsEXIZBts=;
+	s=default; t=1553710192;
+	bh=of2eTPTkMjpc3I0KMTDfwO1Bw8tBfv80avLTaHEo+lE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q879o0Nd0gJR81fRPUsPuwwOKod+MHmB18ZX0PX1jdPYxhPH9amxj1+zSfloS81Cc
-	 iYESEMKK6Z0kJTVA2E6ZasMBRFYziyt2nglDXRRQ7hDWDwCBj5WKpCd9jkR4h4ptK2
-	 it4qIp/ea9sO+667PfYzOtLvzH/4Tm4JXaXfpwfo=
+	b=K5nBNpdmAuwrg0pSiPOTb/YDD55r/SChxzrjr3yc+iMC/ytOZjD840IlWy5YDROXH
+	 tkizW9UZQeB9NvKZ9Aq3i35fVTc73awek75Ajjy1FFOtK4jLoSHjh3Vgd8yYxGA+hp
+	 J27h6vzMC5xdGRoZRZoxR/nyW1slD0T9Dg4POUyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388644AbfC0SJr (ORCPT
+        id S2388662AbfC0SJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388631AbfC0SJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:45 -0400
+        id S2388627AbfC0SJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A21A21741;
-        Wed, 27 Mar 2019 18:09:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A0DC2177E;
+        Wed, 27 Mar 2019 18:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710183;
-        bh=vG6mr5HjJrOKWpnJsCXMlIkEuLUeJNVieoZsEXIZBts=;
+        s=default; t=1553710182;
+        bh=of2eTPTkMjpc3I0KMTDfwO1Bw8tBfv80avLTaHEo+lE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIr7oWo4A6/mcCnklTU1HnMJSmqlZ4oiG2QxAHxnBky8lx07Rb9jpnwHgIuzXNlC3
-         av9qV73Tu4j9NUXVcDDIsPcJwCL+xo3ZtrzsDyUwzXOxfomdHAyK2PmOfrkreplvNk
-         Ymfn+MG0qvOE5CZ2okHgrPnX5jyU9FFp4vokXIZQ=
+        b=hMl1koVLlPmuraHhZeQCyr27+I3Jbbk1ZWJNl/R/0fij289lr/xGbc4fjAEgdIxsH
+         kTZjNtZ0BQ7U5mzvpICL/+TByTuMYpGC5it+2CO8H9PTGIvWpDp46nUcAov5f5j4W3
+         mrUFlFHnKuwNqP9q5NR5oLYvVdKqnWl+z/X6L8Xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 240/262] pinctrl: meson: meson8b: add the eth_rxd2 and eth_rxd3 pins
-Date:   Wed, 27 Mar 2019 14:01:35 -0400
-Message-Id: <20190327180158.10245-240-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 239/262] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
+Date:   Wed, 27 Mar 2019 14:01:34 -0400
+Message-Id: <20190327180158.10245-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,80 +56,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 6daae00243e622dd3feec7965bfe421ad6dd317e ]
+[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
 
-Gigabit Ethernet requires the Ethernet TXD0..3 and RXD0..3 data lines.
-Add the missing eth_rxd2 and eth_rxd3 definitions so we don't have to
-rely on the bootloader to set them up correctly.
+The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
 
-The vendor u-boot sources for Odroid-C1 use the following Ethernet
-pinmux configuration:
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
-This translates to the following pin groups in the mainline kernel:
-- register 6 bit  0: eth_rxd1 (DIF_0_P)
-- register 6 bit  1: eth_rxd0 (DIF_0_N)
-- register 6 bit  2: eth_rx_dv (DIF_1_P)
-- register 6 bit  3: eth_rx_clk (DIF_1_N)
-- register 6 bit  6: eth_tx_en (DIF_3_P)
-- register 6 bit  8: eth_ref_clk (DIF_3_N)
-- register 6 bit  9: eth_mdc (DIF_4_P)
-- register 6 bit 10: eth_mdio_en (DIF_4_N)
-- register 6 bit 11: eth_tx_clk (GPIOH_9)
-- register 6 bit 12: eth_txd2 (GPIOH_8)
-- register 6 bit 13: eth_txd3 (GPIOH_7)
-- register 7 bit 20: eth_txd0_0 (GPIOH_6)
-- register 7 bit 21: eth_txd1_0 (GPIOH_5)
-- register 7 bit 22: eth_rxd3 (DIF_2_P)
-- register 7 bit 23: eth_rxd2 (DIF_2_N)
+The problems in below entry:
+  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
 
-All functions except eth_rxd2 and eth_rxd3 are already supported by the
-pinctrl-meson8b driver.
+1. The off-by-one min_sel causes wrong volatage calculation.
+   The min_sel should be 192.
+2. According to the datasheet[1] Table 7. (on page 43):
+   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
 
-Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
+
+[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+
+Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson8b.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/regulator/act8865-regulator.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
-index 0f140a802137..7f76000cc12e 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8b.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
-@@ -346,6 +346,8 @@ static const unsigned int eth_rx_dv_pins[]	= { DIF_1_P };
- static const unsigned int eth_rx_clk_pins[]	= { DIF_1_N };
- static const unsigned int eth_txd0_1_pins[]	= { DIF_2_P };
- static const unsigned int eth_txd1_1_pins[]	= { DIF_2_N };
-+static const unsigned int eth_rxd3_pins[]	= { DIF_2_P };
-+static const unsigned int eth_rxd2_pins[]	= { DIF_2_N };
- static const unsigned int eth_tx_en_pins[]	= { DIF_3_P };
- static const unsigned int eth_ref_clk_pins[]	= { DIF_3_N };
- static const unsigned int eth_mdc_pins[]	= { DIF_4_P };
-@@ -599,6 +601,8 @@ static struct meson_pmx_group meson8b_cbus_groups[] = {
- 	GROUP(eth_ref_clk,	6,	8),
- 	GROUP(eth_mdc,		6,	9),
- 	GROUP(eth_mdio_en,	6,	10),
-+	GROUP(eth_rxd3,		7,	22),
-+	GROUP(eth_rxd2,		7,	23),
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 21e20483bd91..e0239cf3f56d 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -131,7 +131,7 @@
+  * ACT8865 voltage number
+  */
+ #define	ACT8865_VOLTAGE_NUM	64
+-#define ACT8600_SUDCDC_VOLTAGE_NUM	255
++#define ACT8600_SUDCDC_VOLTAGE_NUM	256
+ 
+ struct act8865 {
+ 	struct regmap *regmap;
+@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
+ 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
+ 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
+-	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
++	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
++	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
  };
  
- static struct meson_pmx_group meson8b_aobus_groups[] = {
-@@ -748,7 +752,7 @@ static const char * const ethernet_groups[] = {
- 	"eth_tx_clk", "eth_tx_en", "eth_txd1_0", "eth_txd1_1",
- 	"eth_txd0_0", "eth_txd0_1", "eth_rx_clk", "eth_rx_dv",
- 	"eth_rxd1", "eth_rxd0", "eth_mdio_en", "eth_mdc", "eth_ref_clk",
--	"eth_txd2", "eth_txd3"
-+	"eth_txd2", "eth_txd3", "eth_rxd3", "eth_rxd2"
- };
- 
- static const char * const i2c_a_groups[] = {
+ static struct regulator_ops act8865_ops = {
 -- 
 2.19.1
 
