@@ -2,300 +2,137 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A373CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FC1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3082082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9EC2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBlbl/HI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfC0Vlh (ORCPT
+        id S1727806AbfC0Vnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:41:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44217 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfC0Vlg (ORCPT
+        Wed, 27 Mar 2019 17:43:55 -0400
+Received: from mail-ua1-f46.google.com ([209.85.222.46]:36705 "EHLO
+        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbfC0Vnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:41:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so1854100otl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:41:35 -0700 (PDT)
+        Wed, 27 Mar 2019 17:43:55 -0400
+Received: by mail-ua1-f46.google.com with SMTP id e15so6166620uam.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2H9efyYuxSZyrKK5zpfZ+IOK9WqTnb1AoQmbDeHmHqM=;
+        b=dBlbl/HIhfeZzoow57UlUGikPWwoKN6NxQ3pNVIIqU5DThO1MNGYVbrn3M3+dhuCQq
+         6ZVZMJzPTWT8a3/EittrmyL5Zd4mrInyCGen2fMY+Q9Znvre8z7pim8aUBS3/LhRaAS9
+         ZSPF8MTs1FYoun7ZAQZCLTa3mjw9yiSUZP2cA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y/F6kpTQxcauCZJ/GV/KgxwT97bVGvHcSySU/+kYTlA=;
-        b=rTOY0QEWubPuj7GNc7rs1hN/agY+8usPA8piW9kQsWmyN8hSCVTertE4nXUNPkt2zo
-         GDXGh43FcMydyXig3uXwdhmM+lxVoEDDpw/FpseDZov7scyEtdKW4tU1vhwItrWBozVv
-         G02GB0bN2/ZvpHFTr7kCz2xPtcw5YCQJwS/4hQXdrKj2pVV+GH0Or0TyH8SjHOdfzEf1
-         0M2Yes8T7ntz3weFZnuHMUdg1bO00Rrk+OrPbnY6H60Y+Y/iqM87JMyfMZ3xyYjaK9P3
-         psPlevGBdNV743xvLI7BqlikdmPnY+A9lTZrlzUwfxSm7DoQJJjM8N83rjMbPtjJ0dF0
-         Bgow==
-X-Gm-Message-State: APjAAAWivvLsU7m8uT2iSKjlvuzM/4nUmphUt7F4TnM5tMiSVdiMvnfN
-        J1FYdVOCccaRvotga6O8Al3xAtsAyzlN8kAzGoAUhw==
-X-Google-Smtp-Source: APXvYqx+vADnbi1yTnetwB6G9Lis7erb2X7r1aZ+buO2iZW18o7zqfs1tMRUyoXK1UIFPT0rsM6RYEbrJWhxVxR82Eg=
-X-Received: by 2002:a9d:3289:: with SMTP id u9mr17903349otb.52.1553722895386;
- Wed, 27 Mar 2019 14:41:35 -0700 (PDT)
+        bh=2H9efyYuxSZyrKK5zpfZ+IOK9WqTnb1AoQmbDeHmHqM=;
+        b=aXtWAdDaFonG7Q0L8aHj+ELbvzHUcEMOjfy0SpNSgto1ieXClwXogT9PmUEvTMKMGe
+         u/Q9JzMKiYe4fh4OlKq6BUfXuIg7Z7+wbwRKkJtkeE2llFCToJn0hNIJVQ/BxbrPXxY6
+         tPEX30+a9S/MKJlPiw2q2MHYx7jh9VnXH/nHBHrnNCfjXQysKIfRfGDmnZFvZX54pOXW
+         tHAcDTx3yCAfSl1542Q+GFWleCIqQGRq9aYHahTg3Zwwr8M9Oc993S9n6ZWJmqaPuJvi
+         80oWpXgTSDh2OEjewWYMG+3TFVtCfiQPuxMa+Tm1S+/nZgaqvq6uuS/oq/9Gx8dJolma
+         IUXw==
+X-Gm-Message-State: APjAAAXI4ce5R+a8Ata0Lj7AADsdU2BJWEmODswGfDNxdUZhr1Gmf40G
+        sGBA8sReRzJz9RZ4B+qhj1CnW4952lM=
+X-Google-Smtp-Source: APXvYqzyfQFaKHSqdrj1DHkc5D7bK1tcGERD8lLUfRDqZu23KQptipNFcMfx+93ZegqQ0d59Y9s6eg==
+X-Received: by 2002:ab0:7358:: with SMTP id k24mr22897437uap.104.1553723033354;
+        Wed, 27 Mar 2019 14:43:53 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id c204sm1427826vkd.14.2019.03.27.14.43.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 14:43:52 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id j184so10890924vsd.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:43:51 -0700 (PDT)
+X-Received: by 2002:a67:fa94:: with SMTP id f20mr23597542vsq.172.1553723031625;
+ Wed, 27 Mar 2019 14:43:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1552665316.git.rgb@redhat.com> <3f02f7b56d2fba2918ff6fe90fcfa3ae558faff8.1552665316.git.rgb@redhat.com>
- <CAFqZXNt0O8b54isxuXv1fbtv+UKRw0Lnyut2n0FGFEMme-SdkQ@mail.gmail.com> <20190318234716.4moownrpylloiu3g@madcap2.tricolour.ca>
-In-Reply-To: <20190318234716.4moownrpylloiu3g@madcap2.tricolour.ca>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Wed, 27 Mar 2019 22:41:24 +0100
-Message-ID: <CAFqZXNu7d28D=2G0jjAmrYAyKzYgkeGGLwRB1ekvteUbA9G_tw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V5 08/10] audit: add containerid filtering
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Simo Sorce <simo@redhat.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
+ <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org> <alpine.LRH.2.21.1903260607500.13529@namei.org>
+ <8811b2e4-28e1-2f01-024b-fb7d0196483f@i-love.sakura.ne.jp>
+ <CAGXu5jJZ1H1RFMFBxPsoBW+T17ya+50-d7-31Gr9ciRgpCOaDA@mail.gmail.com>
+ <98289cd2-095a-f0cd-e405-887ecbba0030@i-love.sakura.ne.jp>
+ <CAGXu5jKWECKxksJWPpCkBKG+wB26DhYK=nYBpuuoS+Pv9AsNwQ@mail.gmail.com> <e1f6f5a6-9fce-2e95-4593-79f1e836bac5@i-love.sakura.ne.jp>
+In-Reply-To: <e1f6f5a6-9fce-2e95-4593-79f1e836bac5@i-love.sakura.ne.jp>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 27 Mar 2019 14:43:40 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jL0YzgQR_p9otyOX4+00a0i7Tfv9aLqauZFZs4-Kfjakg@mail.gmail.com>
+Message-ID: <CAGXu5jL0YzgQR_p9otyOX4+00a0i7Tfv9aLqauZFZs4-Kfjakg@mail.gmail.com>
+Subject: Re: Linux 5.1-rc2
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     James Morris <jmorris@namei.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 12:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2019-03-18 21:02, Ondrej Mosnacek wrote:
-> > On Fri, Mar 15, 2019 at 7:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > >
-> > > Implement audit container identifier filtering using the AUDIT_CONTID
-> > > field name to send an 8-character string representing a u64 since the
-> > > value field is only u32.
-> > >
-> > > Sending it as two u32 was considered, but gathering and comparing two
-> > > fields was more complex.
-> > >
-> > > The feature indicator is AUDIT_FEATURE_BITMAP_CONTAINERID.
-> > >
-> > > See: https://github.com/linux-audit/audit-kernel/issues/91
-> > > See: https://github.com/linux-audit/audit-userspace/issues/40
-> > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > Acked-by: Serge Hallyn <serge@hallyn.com>
-> > > ---
-> > >  include/linux/audit.h      |  1 +
-> > >  include/uapi/linux/audit.h |  5 ++++-
-> > >  kernel/audit.h             |  1 +
-> > >  kernel/auditfilter.c       | 47 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >  kernel/auditsc.c           |  3 +++
-> > >  5 files changed, 56 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > > index 6db5aba7cc01..fa19fa408931 100644
-> > > --- a/include/linux/audit.h
-> > > +++ b/include/linux/audit.h
-> > > @@ -77,6 +77,7 @@ struct audit_field {
-> > >         u32                             type;
-> > >         union {
-> > >                 u32                     val;
-> > > +               u64                     val64;
-> > >                 kuid_t                  uid;
-> > >                 kgid_t                  gid;
-> > >                 struct {
-> > > diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-> > > index a6383e28b2c8..741ab6f38294 100644
-> > > --- a/include/uapi/linux/audit.h
-> > > +++ b/include/uapi/linux/audit.h
-> > > @@ -265,6 +265,7 @@
-> > >  #define AUDIT_LOGINUID_SET     24
-> > >  #define AUDIT_SESSIONID        25      /* Session ID */
-> > >  #define AUDIT_FSTYPE   26      /* FileSystem Type */
-> > > +#define AUDIT_CONTID   27      /* Container ID */
-> > >
-> > >                                 /* These are ONLY useful when checking
-> > >                                  * at syscall exit time (AUDIT_AT_EXIT). */
-> > > @@ -345,6 +346,7 @@ enum {
-> > >  #define AUDIT_FEATURE_BITMAP_SESSIONID_FILTER  0x00000010
-> > >  #define AUDIT_FEATURE_BITMAP_LOST_RESET                0x00000020
-> > >  #define AUDIT_FEATURE_BITMAP_FILTER_FS         0x00000040
-> > > +#define AUDIT_FEATURE_BITMAP_CONTAINERID       0x00000080
-> > >
-> > >  #define AUDIT_FEATURE_BITMAP_ALL (AUDIT_FEATURE_BITMAP_BACKLOG_LIMIT | \
-> > >                                   AUDIT_FEATURE_BITMAP_BACKLOG_WAIT_TIME | \
-> > > @@ -352,7 +354,8 @@ enum {
-> > >                                   AUDIT_FEATURE_BITMAP_EXCLUDE_EXTEND | \
-> > >                                   AUDIT_FEATURE_BITMAP_SESSIONID_FILTER | \
-> > >                                   AUDIT_FEATURE_BITMAP_LOST_RESET | \
-> > > -                                 AUDIT_FEATURE_BITMAP_FILTER_FS)
-> > > +                                 AUDIT_FEATURE_BITMAP_FILTER_FS | \
-> > > +                                 AUDIT_FEATURE_BITMAP_CONTAINERID)
-> > >
-> > >  /* deprecated: AUDIT_VERSION_* */
-> > >  #define AUDIT_VERSION_LATEST           AUDIT_FEATURE_BITMAP_ALL
-> > > diff --git a/kernel/audit.h b/kernel/audit.h
-> > > index 2a1a8b8a8019..3a40b608bf8d 100644
-> > > --- a/kernel/audit.h
-> > > +++ b/kernel/audit.h
-> > > @@ -230,6 +230,7 @@ static inline int audit_hash_ino(u32 ino)
-> > >
-> > >  extern int audit_match_class(int class, unsigned syscall);
-> > >  extern int audit_comparator(const u32 left, const u32 op, const u32 right);
-> > > +extern int audit_comparator64(const u64 left, const u32 op, const u64 right);
-> > >  extern int audit_uid_comparator(kuid_t left, u32 op, kuid_t right);
-> > >  extern int audit_gid_comparator(kgid_t left, u32 op, kgid_t right);
-> > >  extern int parent_len(const char *path);
-> > > diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
-> > > index add360b46b38..516b8e58959e 100644
-> > > --- a/kernel/auditfilter.c
-> > > +++ b/kernel/auditfilter.c
-> > > @@ -410,6 +410,7 @@ static int audit_field_valid(struct audit_entry *entry, struct audit_field *f)
-> > >         /* FALL THROUGH */
-> > >         case AUDIT_ARCH:
-> > >         case AUDIT_FSTYPE:
-> > > +       case AUDIT_CONTID:
-> > >                 if (f->op != Audit_not_equal && f->op != Audit_equal)
-> > >                         return -EINVAL;
-> > >                 break;
-> > > @@ -582,6 +583,14 @@ static struct audit_entry *audit_data_to_entry(struct audit_rule_data *data,
-> > >                         }
-> > >                         entry->rule.exe = audit_mark;
-> > >                         break;
-> > > +               case AUDIT_CONTID:
-> > > +                       if (f->val != sizeof(u64))
-> > > +                               goto exit_free;
-> > > +                       str = audit_unpack_string(&bufp, &remain, f->val);
-> > > +                       if (IS_ERR(str))
-> > > +                               goto exit_free;
-> > > +                       f->val64 = ((u64 *)str)[0];
-> > > +                       break;
-> > >                 }
-> > >         }
-> > >
-> > > @@ -664,6 +673,11 @@ static struct audit_rule_data *audit_krule_to_data(struct audit_krule *krule)
-> > >                         data->buflen += data->values[i] =
-> > >                                 audit_pack_string(&bufp, audit_mark_path(krule->exe));
-> > >                         break;
-> > > +               case AUDIT_CONTID:
-> > > +                       data->buflen += data->values[i] = sizeof(u64);
-> > > +                       for (i = 0; i < sizeof(u64); i++)
-> > > +                               ((char *)bufp)[i] = ((char *)&f->val64)[i];
+On Wed, Mar 27, 2019 at 2:05 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/03/28 5:45, Kees Cook wrote:
+> > On Wed, Mar 27, 2019 at 1:30 PM Tetsuo Handa
+> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> >>
+> >> On 2019/03/28 4:16, Kees Cook wrote:
+> >>> The part I don't understand is what you've said about TOMOYO being
+> >>> primary and not wanting the others stackable? That kind of goes
+> >>> against the point, but I'm happy to do that if you want it that way.
+> >>
+> >> Automatically enabling multiple legacy major LSMs might result in a confusion like
+> >> Jakub encountered.
 > >
-> > How about just:
+> > The confusion wasn't multiple enabled: it was a change of what was
+> > enabled (due to ignoring the old config). (My very first suggested
+> > patch fixed this...)
+>
+> Someone else might get confused when TOMOYO is automatically enabled
+> despite they did not specify TOMOYO in lsm= or security= or CONFIG_LSM.
+>
 > >
-> > memcpy(bufp, &f->val64, sizeof(u64));
+> >> For a few releases from 5.1 (about one year or so?), since
+> >> CONFIG_DEFAULT_SECURITY_* will be ignored after CONFIG_LSM is once defined in
+> >> their kernel configs, I guess that it is better not to enable TOMOYO automatically
+> >> until most people complete migrating from CONFIG_DEFAULT_SECURITY_* to CONFIG_LSM
+> >> and get used to use lsm= kernel command line option rather than security= kernel
+> >> command line option.
 > >
-> > instead of the awkward for loop? It is simpler and also more in line
-> > with the code in audit_pack_string().
+> > It sounds like you want TOMOYO to stay an exclusive LSM? Should we
+> > revert a5e2fe7ede12 ("TOMOYO: Update LSM flags to no longer be
+> > exclusive") instead? (I'm against this idea, but defer to you. I think
+> > it should stay stackable since the goal is to entirely remove the
+> > concept of exclusive LSMs.)
 >
-> I'll grant you that.  I'll use that instead.
-
-Assuming the above tweak will be done, you can add:
-
-Reviewed-by: Ondrej Mosnacek <omosnace@redhat.com>
-
+> I never want to revert a5e2fe7ede12. For transition period, I just don't
+> want to automatically enable TOMOYO when people did not specify TOMOYO.
 >
-> > Also, doesn't this loop interfere with the outer loop that also uses
-> > 'i' as the control variable?
->
-> Yes, it does.  Thank you for catching that.  Doing a auditctl -l reveals
-> this.
->
-> > > +                       break;
-> > >                 case AUDIT_LOGINUID_SET:
-> > >                         if (krule->pflags & AUDIT_LOGINUID_LEGACY && !f->val) {
-> > >                                 data->fields[i] = AUDIT_LOGINUID;
-> > > @@ -750,6 +764,10 @@ static int audit_compare_rule(struct audit_krule *a, struct audit_krule *b)
-> > >                         if (!gid_eq(a->fields[i].gid, b->fields[i].gid))
-> > >                                 return 1;
-> > >                         break;
-> > > +               case AUDIT_CONTID:
-> > > +                       if (a->fields[i].val64 != b->fields[i].val64)
-> > > +                               return 1;
-> > > +                       break;
-> > >                 default:
-> > >                         if (a->fields[i].val != b->fields[i].val)
-> > >                                 return 1;
-> > > @@ -1206,6 +1224,31 @@ int audit_comparator(u32 left, u32 op, u32 right)
-> > >         }
-> > >  }
-> > >
-> > > +int audit_comparator64(u64 left, u32 op, u64 right)
-> > > +{
-> > > +       switch (op) {
-> > > +       case Audit_equal:
-> > > +               return (left == right);
-> > > +       case Audit_not_equal:
-> > > +               return (left != right);
-> > > +       case Audit_lt:
-> > > +               return (left < right);
-> > > +       case Audit_le:
-> > > +               return (left <= right);
-> > > +       case Audit_gt:
-> > > +               return (left > right);
-> > > +       case Audit_ge:
-> > > +               return (left >= right);
-> > > +       case Audit_bitmask:
-> > > +               return (left & right);
-> > > +       case Audit_bittest:
-> > > +               return ((left & right) == right);
-> > > +       default:
-> > > +               BUG();
-> > > +               return 0;
-> > > +       }
-> > > +}
-> > > +
-> > >  int audit_uid_comparator(kuid_t left, u32 op, kuid_t right)
-> > >  {
-> > >         switch (op) {
-> > > @@ -1344,6 +1387,10 @@ int audit_filter(int msgtype, unsigned int listtype)
-> > >                                 result = audit_comparator(audit_loginuid_set(current),
-> > >                                                           f->op, f->val);
-> > >                                 break;
-> > > +                       case AUDIT_CONTID:
-> > > +                               result = audit_comparator64(audit_get_contid(current),
-> > > +                                                             f->op, f->val64);
-> > > +                               break;
-> > >                         case AUDIT_MSGTYPE:
-> > >                                 result = audit_comparator(msgtype, f->op, f->val);
-> > >                                 break;
-> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > > index aa5d13b4fbbb..2d74238e9638 100644
-> > > --- a/kernel/auditsc.c
-> > > +++ b/kernel/auditsc.c
-> > > @@ -616,6 +616,9 @@ static int audit_filter_rules(struct task_struct *tsk,
-> > >                 case AUDIT_LOGINUID_SET:
-> > >                         result = audit_comparator(audit_loginuid_set(tsk), f->op, f->val);
-> > >                         break;
-> > > +               case AUDIT_CONTID:
-> > > +                       result = audit_comparator64(audit_get_contid(tsk), f->op, f->val64);
-> > > +                       break;
-> > >                 case AUDIT_SUBJ_USER:
-> > >                 case AUDIT_SUBJ_ROLE:
-> > >                 case AUDIT_SUBJ_TYPE:
-> > > --
-> > > 1.8.3.1
-> > >
 > >
-> >
-> > --
-> > Ondrej Mosnacek <omosnace at redhat dot com>
-> > Associate Software Engineer, Security Technologies
-> > Red Hat, Inc.
+> > I don't see problems for an exclusive LSM user (AA, SELinux, Smack)
+> > also initializing TOMOYO, though. It should be a no-op. Is there some
+> > situation where this is not true?
 >
-> - RGB
->
-> --
-> Richard Guy Briggs <rgb@redhat.com>
-> Sr. S/W Engineer, Kernel Security, Base Operating Systems
-> Remote, Ottawa, Red Hat Canada
-> IRC: rgb, SunRaycer
-> Voice: +1.647.777.2635, Internal: (81) 32635
+> There should be no problem except some TOMOYO messages are printed.
 
-
+Okay, so I should send my latest version of the patch to James? Or do
+you explicitly want TOMOYO removed from all the CONFIG_LSM default
+lines except when selected by CONFIG_DEFAULT_SECURITY_TOMOYO? (I worry
+the latter will lead to less testing of the stacking.)
 
 -- 
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Kees Cook
