@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988A2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED742C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AA0205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F57205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712792;
-	bh=YFGDJeDT/9ISdfpuQ1J/FTsmV9BUwYce9LFuQn6S5TI=;
+	s=default; t=1553712801;
+	bh=ENGGkLnw5GVaSR7EIYtfjeUxg4Lghbutkjbs0eKKzPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EINogq0haD2XoKvjCRGIK6W0yCPIe3CwJIJLDmF2Zi7Dw5NygPDbeTQib0qAntPUB
-	 p/sNMin85j+3L2Xd8mBz7RfrRnVOrmKAeGkkicSHP9bne9SmW6NCyDNQsNf5w5oGNH
-	 5Ki7eJMDuwIMGDMBtbAn+/5MBlzaLHsw8VJnsknA=
+	b=U95weoXvX/7fcCX9hXptOt/hgRihL7a17sgfPm2sCijjB8opPcEbQX5s7LBw7bJK0
+	 Shv00MxZf0TV9XSnv3d7+UEgwdwMx/va8nS5vV0QQlniOyYg7IXyFnVbU64DIEVRzw
+	 Tvv2E+u8z8n3XI7A8TB6Y+iS8VgChn10600nciqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390558AbfC0SxK (ORCPT
+        id S2390580AbfC0SxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33792 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:53:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390266AbfC0SRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:23 -0400
+        id S2390189AbfC0SRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BDC42177E;
-        Wed, 27 Mar 2019 18:17:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C56121741;
+        Wed, 27 Mar 2019 18:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710643;
-        bh=YFGDJeDT/9ISdfpuQ1J/FTsmV9BUwYce9LFuQn6S5TI=;
+        s=default; t=1553710639;
+        bh=ENGGkLnw5GVaSR7EIYtfjeUxg4Lghbutkjbs0eKKzPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xKhHvB5HmkFk39TNt+3vMU5Si1nbtXY03BKTr3ijnh/wRWGzb7ORJ8BegaKh2oxG
-         uSB33bRuzq1542CFBEntSEeJs8jwpJ9mDdJMMQdTmOPgXiQtPSwBf1z1B4n5XIW3U9
-         uCwI3QCaBrxD4CFkSjljJ//f1vBY2a8Cv61s3tEw=
+        b=nZu+sdgmPbKSH9ajmZuwOWp9SJXkJ/h2YluJxEz0QPBcN/yqhJRi1jrqTqv0lJDV/
+         6SWGfHWluySG2hGT5ekbS56Xe9KM+f+RZ7F/3MzzXz/QL1aydzW9Qmqf4vpnK7Dskz
+         19/pgxggU0rIu5VqKXszJAUpoRGaZmfNcpDQqdI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     luojiajun <luojiajun3@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 029/123] jbd2: fix invalid descriptor block checksum
-Date:   Wed, 27 Mar 2019 14:14:53 -0400
-Message-Id: <20190327181628.15899-29-sashal@kernel.org>
+Cc:     "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>,
+        Jason Cai <jason.cai@linux.alibaba.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 026/123] dm thin: add sanity checks to thin-pool and external snapshot creation
+Date:   Wed, 27 Mar 2019 14:14:50 -0400
+Message-Id: <20190327181628.15899-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -56,52 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: luojiajun <luojiajun3@huawei.com>
+From: "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>
 
-[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
+[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
 
-In jbd2_journal_commit_transaction(), if we are in abort mode,
-we may flush the buffer without setting descriptor block checksum
-by goto start_journal_io. Then fs is mounted,
-jbd2_descriptor_block_csum_verify() failed.
+Invoking dm_get_device() twice on the same device path with different
+modes is dangerous.  Because in that case, upgrade_mode() will alloc a
+new 'dm_dev' and free the old one, which may be referenced by a previous
+caller.  Dereferencing the dangling pointer will trigger kernel NULL
+pointer dereference.
 
-[  271.379811] EXT4-fs (vdd): shut down requested (2)
-[  271.381827] Aborting journal on device vdd-8.
-[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
-[  271.598023] JBD2: recovery failed
-[  271.598484] EXT4-fs (vdd): error loading journal
+The following two cases can reproduce this issue.  Actually, they are
+invalid setups that must be disallowed, e.g.:
 
-Fix this problem by keep setting descriptor block checksum if the
-descriptor buffer is not NULL.
+1. Creating a thin-pool with read_only mode, and the same device as
+both metadata and data.
 
-This checksum problem can be reproduced by xfstests generic/388.
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
 
-Signed-off-by: luojiajun <luojiajun3@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
+...
+Call Trace:
+ new_read+0xfb/0x110 [dm_bufio]
+ dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
+ ? kmem_cache_alloc_trace+0x15c/0x1e0
+ __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
+ dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
+ pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
+ ? realloc_argv+0x50/0x70 [dm_mod]
+ dm_table_add_target+0x14e/0x330 [dm_mod]
+ table_load+0x122/0x2e0 [dm_mod]
+ ? dev_status+0x40/0x40 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ? handle_mm_fault+0xda/0x200
+ ? __do_page_fault+0x26c/0x4f0
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+2. Creating a external snapshot using the same thin-pool device.
+
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
+dmsetup message /dev/mapper/thinp 0 "create_thin 0"
+dmsetup create snap --table \
+            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+...
+Call Trace:
+? __alloc_pages_nodemask+0x13c/0x2e0
+retrieve_status+0xa5/0x1f0 [dm_mod]
+? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
+ table_status+0x61/0xa0 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ksys_ioctl+0x60/0x90
+ ? ksys_write+0x4f/0xb0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/dm-thin.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 3c1c31321d9b..d11401afd52f 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -693,9 +693,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
-                            the last tag we set up. */
+diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+index 18d6a8a10d5d..aa7795990989 100644
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -3292,6 +3292,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	as.argc = argc;
+ 	as.argv = argv;
  
- 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
--
--			jbd2_descriptor_block_csum_set(journal, descriptor);
- start_journal_io:
-+			if (descriptor)
-+				jbd2_descriptor_block_csum_set(journal,
-+							descriptor);
++	/* make sure metadata and data are different devices */
++	if (!strcmp(argv[0], argv[1])) {
++		ti->error = "Error setting metadata or data device";
++		r = -EINVAL;
++		goto out_unlock;
++	}
 +
- 			for (i = 0; i < bufs; i++) {
- 				struct buffer_head *bh = wbuf[i];
- 				/*
+ 	/*
+ 	 * Set default pool features.
+ 	 */
+@@ -4173,6 +4180,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	tc->sort_bio_list = RB_ROOT;
+ 
+ 	if (argc == 3) {
++		if (!strcmp(argv[0], argv[2])) {
++			ti->error = "Error setting origin device";
++			r = -EINVAL;
++			goto bad_origin_dev;
++		}
++
+ 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
+ 		if (r) {
+ 			ti->error = "Error opening origin device";
 -- 
 2.19.1
 
