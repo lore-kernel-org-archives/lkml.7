@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB33C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4899205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68E5205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712813;
-	bh=4LbCgJpuY1jTG3D6aNuuzjh3gcZf7TkIu+2WNuflVnM=;
+	s=default; t=1553712821;
+	bh=VOOaVhvQV8UZAZgHs8B779ToG49weiAhovjtHSlocDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oh+TT1X4e/buNpm73QnPsWhBMyWuQiHdKzBeLY3uylwXWGPxvn33/2ZKQRLLixD6t
-	 AwPsOVbS443Ky+zQsgOBDdTRRFt1XEzP+MCrCeuCIia/1oSJlQQuH1r+JvpqgsAt5a
-	 uT8t7iTQqKGzDnRSg4UaANXRnHLK8JFG+3uTBbGY=
+	b=xpGVPiDOIQ5UCJcgzQbzFk6TWrrT8bwl60uBqhI6qvOdYi1rSt7B8MOHjqAaNpu7S
+	 msK3Gi8jydBfUQhzScn9KD0gY7ZsQ4Q21REUvmONQgAz0UreA6lHsEEgDtH2O4Z0Hx
+	 kfr3yBlf+tIfaDF364v2tklwpEjrA2LY6FR8GMzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390232AbfC0SRP (ORCPT
+        id S2390520AbfC0Sxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389932AbfC0SRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:07 -0400
+        id S2390220AbfC0SRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D21E921741;
-        Wed, 27 Mar 2019 18:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3922183E;
+        Wed, 27 Mar 2019 18:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710626;
-        bh=4LbCgJpuY1jTG3D6aNuuzjh3gcZf7TkIu+2WNuflVnM=;
+        s=default; t=1553710632;
+        bh=VOOaVhvQV8UZAZgHs8B779ToG49weiAhovjtHSlocDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GS3NQYjPZ9JMHjBFNtRPjLWU6rPHeDuQTynqAtOmV7WgrEKIfFiOtG29QEZt9fQOj
-         jXiWIRWMfTuMBsCA9XWXk7aC7+5+hsTUo2xjt6SEXaFxiw2hcz7LJoScePNcyPIUGp
-         JObpju42kQOlIBPZT7SMhGuFMsC3BsG2I5LiD/2k=
+        b=L+o0ZeAKwv4Gw5Ey7QRMmyABEQszeoR7ak6Cq44X466gOhWd5o2VyUF44RJ3jTiIk
+         i7gBMN8gxE98aMbIsqqDrbvFp6BCdHNc0CReRCJVtmYAsA8T2d+Lh/PHmw58PboCuf
+         ksR9/tF7RJZJ1eaGMMOQdahW5AiA09vzrDdIblmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Cc:     Shuriyc Chu <sureeju@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 019/123] mm/slab.c: kmemleak no scan alien caches
-Date:   Wed, 27 Mar 2019 14:14:43 -0400
-Message-Id: <20190327181628.15899-19-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 023/123] fs/file.c: initialize init_files.resize_wait
+Date:   Wed, 27 Mar 2019 14:14:47 -0400
+Message-Id: <20190327181628.15899-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -63,151 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Shuriyc Chu <sureeju@gmail.com>
 
-[ Upstream commit 92d1d07daad65c300c7d0b68bbef8867e9895d54 ]
+[ Upstream commit 5704a06810682683355624923547b41540e2801a ]
 
-Kmemleak throws endless warnings during boot due to in
-__alloc_alien_cache(),
+(Taken from https://bugzilla.kernel.org/show_bug.cgi?id=200647)
 
-    alc = kmalloc_node(memsize, gfp, node);
-    init_arraycache(&alc->ac, entries, batch);
-    kmemleak_no_scan(ac);
+'get_unused_fd_flags' in kthread cause kernel crash.  It works fine on
+4.1, but causes crash after get 64 fds.  It also cause crash on
+ubuntu1404/1604/1804, centos7.5, and the crash messages are almost the
+same.
 
-Kmemleak does not track the array cache (alc->ac) but the alien cache
-(alc) instead, so let it track the latter by lifting kmemleak_no_scan()
-out of init_arraycache().
+The crash message on centos7.5 shows below:
 
-There is another place that calls init_arraycache(), but
-alloc_kmem_cache_cpus() uses the percpu allocation where will never be
-considered as a leak.
+  start fd 61
+  start fd 62
+  start fd 63
+  BUG: unable to handle kernel NULL pointer dereference at           (null)
+  IP: __wake_up_common+0x2e/0x90
+  PGD 0
+  Oops: 0000 [#1] SMP
+  Modules linked in: test(OE) xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter devlink sunrpc kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd sg ppdev pcspkr virtio_balloon parport_pc parport i2c_piix4 joydev ip_tables xfs libcrc32c sr_mod cdrom sd_mod crc_t10dif crct10dif_generic ata_generic pata_acpi virtio_scsi virtio_console virtio_net cirrus drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm crct10dif_pclmul crct10dif_common crc32c_intel drm ata_piix serio_raw libata virtio_pci virtio_ring i2c_core
+   virtio floppy dm_mirror dm_region_hash dm_log dm_mod
+  CPU: 2 PID: 1820 Comm: test_fd Kdump: loaded Tainted: G           OE  ------------   3.10.0-862.3.3.el7.x86_64 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
+  task: ffff8e92b9431fa0 ti: ffff8e94247a0000 task.ti: ffff8e94247a0000
+  RIP: 0010:__wake_up_common+0x2e/0x90
+  RSP: 0018:ffff8e94247a2d18  EFLAGS: 00010086
+  RAX: 0000000000000000 RBX: ffffffff9d09daa0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffff9d09daa0
+  RBP: ffff8e94247a2d50 R08: 0000000000000000 R09: ffff8e92b95dfda8
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff9d09daa8
+  R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000003
+  FS:  0000000000000000(0000) GS:ffff8e9434e80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 000000017c686000 CR4: 00000000000207e0
+  Call Trace:
+    __wake_up+0x39/0x50
+    expand_files+0x131/0x250
+    __alloc_fd+0x47/0x170
+    get_unused_fd_flags+0x30/0x40
+    test_fd+0x12a/0x1c0 [test]
+    kthread+0xd1/0xe0
+    ret_from_fork_nospec_begin+0x21/0x21
+  Code: 66 90 55 48 89 e5 41 57 41 89 f7 41 56 41 89 ce 41 55 41 54 49 89 fc 49 83 c4 08 53 48 83 ec 10 48 8b 47 08 89 55 cc 4c 89 45 d0 <48> 8b 08 49 39 c4 48 8d 78 e8 4c 8d 69 e8 75 08 eb 3b 4c 89 ef
+  RIP   __wake_up_common+0x2e/0x90
+   RSP <ffff8e94247a2d18>
+  CR2: 0000000000000000
 
-  kmemleak: Found object by alias at 0xffff8007b9aa7e38
-  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
-  Call trace:
-   dump_backtrace+0x0/0x168
-   show_stack+0x24/0x30
-   dump_stack+0x88/0xb0
-   lookup_object+0x84/0xac
-   find_and_get_object+0x84/0xe4
-   kmemleak_no_scan+0x74/0xf4
-   setup_kmem_cache_node+0x2b4/0x35c
-   __do_tune_cpucache+0x250/0x2d4
-   do_tune_cpucache+0x4c/0xe4
-   enable_cpucache+0xc8/0x110
-   setup_cpu_cache+0x40/0x1b8
-   __kmem_cache_create+0x240/0x358
-   create_cache+0xc0/0x198
-   kmem_cache_create_usercopy+0x158/0x20c
-   kmem_cache_create+0x50/0x64
-   fsnotify_init+0x58/0x6c
-   do_one_initcall+0x194/0x388
-   kernel_init_freeable+0x668/0x688
-   kernel_init+0x18/0x124
-   ret_from_fork+0x10/0x18
-  kmemleak: Object 0xffff8007b9aa7e00 (size 256):
-  kmemleak:   comm "swapper/0", pid 1, jiffies 4294697137
-  kmemleak:   min_count = 1
-  kmemleak:   count = 0
-  kmemleak:   flags = 0x1
-  kmemleak:   checksum = 0
-  kmemleak:   backtrace:
-       kmemleak_alloc+0x84/0xb8
-       kmem_cache_alloc_node_trace+0x31c/0x3a0
-       __kmalloc_node+0x58/0x78
-       setup_kmem_cache_node+0x26c/0x35c
-       __do_tune_cpucache+0x250/0x2d4
-       do_tune_cpucache+0x4c/0xe4
-       enable_cpucache+0xc8/0x110
-       setup_cpu_cache+0x40/0x1b8
-       __kmem_cache_create+0x240/0x358
-       create_cache+0xc0/0x198
-       kmem_cache_create_usercopy+0x158/0x20c
-       kmem_cache_create+0x50/0x64
-       fsnotify_init+0x58/0x6c
-       do_one_initcall+0x194/0x388
-       kernel_init_freeable+0x668/0x688
-       kernel_init+0x18/0x124
-  kmemleak: Not scanning unknown object at 0xffff8007b9aa7e38
-  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
-  Call trace:
-   dump_backtrace+0x0/0x168
-   show_stack+0x24/0x30
-   dump_stack+0x88/0xb0
-   kmemleak_no_scan+0x90/0xf4
-   setup_kmem_cache_node+0x2b4/0x35c
-   __do_tune_cpucache+0x250/0x2d4
-   do_tune_cpucache+0x4c/0xe4
-   enable_cpucache+0xc8/0x110
-   setup_cpu_cache+0x40/0x1b8
-   __kmem_cache_create+0x240/0x358
-   create_cache+0xc0/0x198
-   kmem_cache_create_usercopy+0x158/0x20c
-   kmem_cache_create+0x50/0x64
-   fsnotify_init+0x58/0x6c
-   do_one_initcall+0x194/0x388
-   kernel_init_freeable+0x668/0x688
-   kernel_init+0x18/0x124
-   ret_from_fork+0x10/0x18
+This issue exists since CentOS 7.5 3.10.0-862 and CentOS 7.4
+(3.10.0-693.21.1 ) is ok.  Root cause: the item 'resize_wait' is not
+initialized before being used.
 
-Link: http://lkml.kernel.org/r/20190129184518.39808-1-cai@lca.pw
-Fixes: 1fe00d50a9e8 ("slab: factor out initialization of array cache")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Reported-by: Richard Zhang <zhang.zijian@h3c.com>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ fs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 09df506ae830..f4658468b23e 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -563,14 +563,6 @@ static void start_cpu_timer(int cpu)
+diff --git a/fs/file.c b/fs/file.c
+index 4eecbf4244a5..0c25b980affe 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -462,6 +462,7 @@ struct files_struct init_files = {
+ 		.full_fds_bits	= init_files.full_fds_bits_init,
+ 	},
+ 	.file_lock	= __SPIN_LOCK_UNLOCKED(init_files.file_lock),
++	.resize_wait	= __WAIT_QUEUE_HEAD_INITIALIZER(init_files.resize_wait),
+ };
  
- static void init_arraycache(struct array_cache *ac, int limit, int batch)
- {
--	/*
--	 * The array_cache structures contain pointers to free object.
--	 * However, when such objects are allocated or transferred to another
--	 * cache the pointers are not cleared and they could be counted as
--	 * valid references during a kmemleak scan. Therefore, kmemleak must
--	 * not scan such objects.
--	 */
--	kmemleak_no_scan(ac);
- 	if (ac) {
- 		ac->avail = 0;
- 		ac->limit = limit;
-@@ -586,6 +578,14 @@ static struct array_cache *alloc_arraycache(int node, int entries,
- 	struct array_cache *ac = NULL;
- 
- 	ac = kmalloc_node(memsize, gfp, node);
-+	/*
-+	 * The array_cache structures contain pointers to free object.
-+	 * However, when such objects are allocated or transferred to another
-+	 * cache the pointers are not cleared and they could be counted as
-+	 * valid references during a kmemleak scan. Therefore, kmemleak must
-+	 * not scan such objects.
-+	 */
-+	kmemleak_no_scan(ac);
- 	init_arraycache(ac, entries, batchcount);
- 	return ac;
- }
-@@ -680,6 +680,7 @@ static struct alien_cache *__alloc_alien_cache(int node, int entries,
- 
- 	alc = kmalloc_node(memsize, gfp, node);
- 	if (alc) {
-+		kmemleak_no_scan(alc);
- 		init_arraycache(&alc->ac, entries, batch);
- 		spin_lock_init(&alc->lock);
- 	}
+ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
 -- 
 2.19.1
 
