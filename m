@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A6BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EA6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B644C205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF8A2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Um9bYxTj"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="DUPDODfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbfC0QWR (ORCPT
+        id S1728849AbfC0QWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:22:17 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46617 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726621AbfC0QWO (ORCPT
+        Wed, 27 Mar 2019 12:22:31 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40351 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfC0QWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:22:14 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d1so14549708edd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:22:12 -0700 (PDT)
+        Wed, 27 Mar 2019 12:22:16 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h22so14558891edw.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brauner.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=12cZWUdzwG623jsKIC74st+CmRQm9yizirpU53zblfY=;
-        b=Um9bYxTj5MXu+BGWy0y1Zce3pxvhfbMAXb2btQpB5K6hoqmQB+cTr6eYGa5zz53T3c
-         S0UNFy0vQ7lBGqvji+Kb+UCWvnW7udClFFfaIkQalIQFolxtL6qadRlGcfkeBgUwqOaJ
-         5iDAkgCb73/gAYQoaBDE1N7aFH+PFQ3yLkXzJKCSQeshsAUXk+SdHdQNFYgfMSdSYbc7
-         j7iRswALTtYAQl7V7DrNZiP/Z0i1KUJI0P135g5jNUWa/ilFLZwNYLs+EcpjzoN+nr0h
-         fFhiCZeCu7EY3IBs21Bm9ZgRU7Fo19zBY/1RG5ySTYlM/+QntY8tSEd7RmROBjVn5pqc
-         i/yA==
+        bh=NLtjwEAo6dHd3Q0YdwPoEYvw8wxE9iWpDqCggNGnMXo=;
+        b=DUPDODflowlbmOivqcd1GgQmgOMNMVSSGyxbYH+T7FGcHcEbS52Pwradw2Db/8wI+a
+         Nzxfi2IJTQocAnb7Kt7eGU3cAQWus82sbDQS9cE/XjNH8BolCGSdSOgy9yhWsM/I/5h4
+         iRtLiAy1LDHsBR+8TnelB3mm/SvdM/kao5zVLfZCqH/O6+UahV0VF5A/ISA3CaTRTKTE
+         BxuhHdjb7UY2+5C/fBCLyaJVxfBbsRajpNNJ3vFaAMJB9x2MiaoWqVcR+sfd0DAYiilI
+         WPwF9pDKmc/YAj4HZzkoiroLYtCX5y9yyFLt+fTgob6Uu9TeshRCdo3S1Tpoxg+VFCKe
+         CDvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=12cZWUdzwG623jsKIC74st+CmRQm9yizirpU53zblfY=;
-        b=rOEgVqq0vyyr8ZudCyUEi6qSXoNYrFarP4Z8hNqjRf1e/OecaySU7t2bqk3TUSuhlq
-         JmM4Q/GHdOZT8rlupOYhJ6wYH5oF57zme1SSVJkU9V4/dm6g9BlkSwMRW/Lt/focMvoK
-         i3wpKiLL8+zl4dtNh2Mn5msX+IBkRb9K8nwOMIcRDTIpdnhcS+pZK3Jk0R6pswzt79IN
-         Lym5+rrQycHphcdz8Q62N66XGRkDFMTl+V2UikAykZzUFkeh/w1vEYdM2Wr70fnwhhMr
-         640Ysqbe5PItOPHHgxka9I/3R8bZSct08F49iR+Q842mRuqj16qhXKq6bmwuk0cCe5UZ
-         +MYg==
-X-Gm-Message-State: APjAAAVALM87XdqDKDzuNxG7vTVV7FC9gQpYBMcrSZlwKoxR9CDGF7qw
-        0DOH/k/OCg+raLPxx6WXgW4h7w==
-X-Google-Smtp-Source: APXvYqx1Y/VXRx398jyDF3zZyXVwcaZoqvuvMcGMjdbR5H8k4L6m0te5bs/GRLrfwPobRzapJCvbqw==
-X-Received: by 2002:a17:906:32d3:: with SMTP id k19mr6500930ejk.132.1553703731808;
-        Wed, 27 Mar 2019 09:22:11 -0700 (PDT)
+        bh=NLtjwEAo6dHd3Q0YdwPoEYvw8wxE9iWpDqCggNGnMXo=;
+        b=rnxxj8loSQnO6BMrMgT7tXSypuiUYFJhd+mZYvCPC0OoTC2VjlXgaImjYI5RFAwWXZ
+         XDIHRHGMOfy/yTD0sw9SdfLLVwfI72q18Q5OzvzaZXQUsRwb8s71VtRQqQEx/x1ugzSb
+         7zu3wowowCqju+gISCvcNXFEyq6v39Ca5MaSmfV7D+UhICfGLqLc5jb+NWh5AT25gyiI
+         PbWQdlfLSwD8IxWw3ac09EzZq7UpelJbsgPECq5H/QW0y1KOaEcXxli7PzZwJ3KEqxdi
+         8HV1PN14WGWw1jszeEkXLKqSTm95MdGs75e+SR66J/ydWqOW9s5kIwCmahkxOeGKkqbG
+         naQQ==
+X-Gm-Message-State: APjAAAWUffl+7wJCuphWJQhizh9rgLJ3sYSykd/2YUWbemxoQ5p+IXUb
+        fWpqD1vs9uvT99JMH9tiCsUgOg==
+X-Google-Smtp-Source: APXvYqzXxdcA0Qvu/xtCrPmVyXT7C2311d0uHj9jplAK0rpZdIe8G0hieVt9gAU+6aAb9yasoPMa9Q==
+X-Received: by 2002:aa7:dd0e:: with SMTP id i14mr25395080edv.172.1553703734811;
+        Wed, 27 Mar 2019 09:22:14 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id m4sm4786276ejl.49.2019.03.27.09.22.10
+        by smtp.gmail.com with ESMTPSA id m4sm4786276ejl.49.2019.03.27.09.22.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 09:22:11 -0700 (PDT)
+        Wed, 27 Mar 2019 09:22:14 -0700 (PDT)
 From:   Christian Brauner <christian@brauner.io>
 To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
         dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
@@ -66,9 +66,9 @@ Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
         nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
         viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
         Christian Brauner <christian@brauner.io>
-Subject: [PATCH 1/4] Make anon_inodes unconditional
-Date:   Wed, 27 Mar 2019 17:21:44 +0100
-Message-Id: <20190327162147.23198-2-christian@brauner.io>
+Subject: [PATCH 3/4] signal: support pidfd_open() with pidfd_send_signal()
+Date:   Wed, 27 Mar 2019 17:21:46 +0100
+Message-Id: <20190327162147.23198-4-christian@brauner.io>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190327162147.23198-1-christian@brauner.io>
 References: <20190327162147.23198-1-christian@brauner.io>
@@ -79,309 +79,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Let pidfd_send_signal() use pidfds retrieved via pidfd_open(). With this
+patch pidfd_send_signal() becomes independent of procfs. This fullfils the
+request made when we merged the pidfd_send_signal() patchset. The
+pidfd_send_signal() syscall is now always available allowing for it to be
+used by users without procfs mounted or even users without procfs support
+compiled into the kernel.
 
-Make the anon_inodes facility unconditional so that it can be used by core
-VFS code and the pidfd_open() syscall.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-[christian@brauner.io: adapt commit message to mention pidfd_open()]
 Signed-off-by: Christian Brauner <christian@brauner.io>
+Reviewed-by: David Howells <dhowells@redhat.com>
+Acked-by: Serge Hallyn <serge@hallyn.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com
+Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
+Cc: "Dmitry V. Levin" <ldv@altlinux.org>
+Cc: Andy Lutomirsky <luto@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 ---
- arch/arm/kvm/Kconfig       |  1 -
- arch/arm64/kvm/Kconfig     |  1 -
- arch/mips/kvm/Kconfig      |  1 -
- arch/powerpc/kvm/Kconfig   |  1 -
- arch/s390/kvm/Kconfig      |  1 -
- arch/x86/Kconfig           |  1 -
- arch/x86/kvm/Kconfig       |  1 -
- drivers/base/Kconfig       |  1 -
- drivers/char/tpm/Kconfig   |  1 -
- drivers/dma-buf/Kconfig    |  1 -
- drivers/gpio/Kconfig       |  1 -
- drivers/iio/Kconfig        |  1 -
- drivers/infiniband/Kconfig |  1 -
- drivers/vfio/Kconfig       |  1 -
- fs/Makefile                |  2 +-
- fs/notify/fanotify/Kconfig |  1 -
- fs/notify/inotify/Kconfig  |  1 -
- init/Kconfig               | 10 ----------
- 18 files changed, 1 insertion(+), 27 deletions(-)
+ kernel/signal.c | 14 ++++++++++----
+ kernel/sys_ni.c |  3 ---
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/kvm/Kconfig b/arch/arm/kvm/Kconfig
-index 3f5320f46de2..f591026347a5 100644
---- a/arch/arm/kvm/Kconfig
-+++ b/arch/arm/kvm/Kconfig
-@@ -22,7 +22,6 @@ config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on MMU && OF
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select ARM_GIC
- 	select ARM_GIC_V3
- 	select ARM_GIC_V3_ITS
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index a3f85624313e..a67121d419a2 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -23,7 +23,6 @@ config KVM
- 	depends on OF
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
- 	select KVM_MMIO
-diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
-index 4528bc9c3cb1..eac25aef21e0 100644
---- a/arch/mips/kvm/Kconfig
-+++ b/arch/mips/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	depends on MIPS_FP_SUPPORT
- 	select EXPORT_UASM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select KVM_MMIO
-diff --git a/arch/powerpc/kvm/Kconfig b/arch/powerpc/kvm/Kconfig
-index bfdde04e4905..f53997a8ca62 100644
---- a/arch/powerpc/kvm/Kconfig
-+++ b/arch/powerpc/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
- config KVM
- 	bool
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_EVENTFD
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select SRCU
-diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-index 767453faacfc..1816ee48eadd 100644
---- a/arch/s390/kvm/Kconfig
-+++ b/arch/s390/kvm/Kconfig
-@@ -21,7 +21,6 @@ config KVM
- 	prompt "Kernel-based Virtual Machine (KVM) support"
- 	depends on HAVE_KVM
- 	select PREEMPT_NOTIFIERS
--	select ANON_INODES
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select HAVE_KVM_EVENTFD
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c1f9b3cf437c..18f2c954464e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -44,7 +44,6 @@ config X86
- 	#
- 	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
- 	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
--	select ANON_INODES
- 	select ARCH_32BIT_OFF_T			if X86_32
- 	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_CLOCKSOURCE_INIT
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 72fa955f4a15..fc042419e670 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -27,7 +27,6 @@ config KVM
- 	depends on X86_LOCAL_APIC
- 	select PREEMPT_NOTIFIERS
- 	select MMU_NOTIFIER
--	select ANON_INODES
- 	select HAVE_KVM_IRQCHIP
- 	select HAVE_KVM_IRQFD
- 	select IRQ_BYPASS_MANAGER
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 059700ea3521..03f067da12ee 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -174,7 +174,6 @@ source "drivers/base/regmap/Kconfig"
- config DMA_SHARED_BUFFER
- 	bool
- 	default n
--	select ANON_INODES
- 	select IRQ_WORK
- 	help
- 	  This option enables the framework for buffer-sharing between
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 536e55d3919f..f3e4bc490cf0 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -157,7 +157,6 @@ config TCG_CRB
- config TCG_VTPM_PROXY
- 	tristate "VTPM Proxy Interface"
- 	depends on TCG_TPM
--	select ANON_INODES
- 	---help---
- 	  This driver proxies for an emulated TPM (vTPM) running in userspace.
- 	  A device /dev/vtpmx is provided that creates a device pair
-diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-index 2e5a0faa2cb1..3fc9c2efc583 100644
---- a/drivers/dma-buf/Kconfig
-+++ b/drivers/dma-buf/Kconfig
-@@ -3,7 +3,6 @@ menu "DMABUF options"
- config SYNC_FILE
- 	bool "Explicit Synchronization Framework"
- 	default n
--	select ANON_INODES
- 	select DMA_SHARED_BUFFER
- 	---help---
- 	  The Sync File Framework adds explicit syncronization via
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..0f91600c27ae 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -12,7 +12,6 @@ config ARCH_HAVE_CUSTOM_GPIO_H
+diff --git a/kernel/signal.c b/kernel/signal.c
+index b7953934aa99..eb97d0cc6ef7 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3513,7 +3513,6 @@ SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
+ 	return kill_something_info(sig, &info, pid);
+ }
  
- menuconfig GPIOLIB
- 	bool "GPIO Support"
--	select ANON_INODES
- 	help
- 	  This enables GPIO support through the generic GPIO library.
- 	  You only need to enable this, if you also want to enable
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index d08aeb41cd07..1dec0fecb6ef 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -4,7 +4,6 @@
+-#ifdef CONFIG_PROC_FS
+ /*
+  * Verify that the signaler and signalee either are in the same pid namespace
+  * or that the signaler's pid namespace is an ancestor of the signalee's pid
+@@ -3550,6 +3549,14 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
+ 	return copy_siginfo_from_user(kinfo, info);
+ }
  
- menuconfig IIO
- 	tristate "Industrial I/O support"
--	select ANON_INODES
- 	help
- 	  The industrial I/O subsystem provides a unified framework for
- 	  drivers for many different types of embedded sensors using a
-diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
-index a1fb840de45d..d318bab25860 100644
---- a/drivers/infiniband/Kconfig
-+++ b/drivers/infiniband/Kconfig
-@@ -25,7 +25,6 @@ config INFINIBAND_USER_MAD
++static struct pid *pidfd_to_pid(const struct file *file)
++{
++	if (file->f_op == &pidfd_fops)
++		return file->private_data;
++
++	return tgid_pidfd_to_pid(file);
++}
++
+ /**
+  * sys_pidfd_send_signal - send a signal to a process through a task file
+  *                          descriptor
+@@ -3581,12 +3588,12 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	if (flags)
+ 		return -EINVAL;
  
- config INFINIBAND_USER_ACCESS
- 	tristate "InfiniBand userspace access (verbs and CM)"
--	select ANON_INODES
- 	depends on MMU
- 	---help---
- 	  Userspace InfiniBand access support.  This enables the
-diff --git a/drivers/vfio/Kconfig b/drivers/vfio/Kconfig
-index 9de5ed38da83..3798d77d131c 100644
---- a/drivers/vfio/Kconfig
-+++ b/drivers/vfio/Kconfig
-@@ -22,7 +22,6 @@ menuconfig VFIO
- 	tristate "VFIO Non-Privileged userspace driver framework"
- 	depends on IOMMU_API
- 	select VFIO_IOMMU_TYPE1 if (X86 || S390 || ARM || ARM64)
--	select ANON_INODES
- 	help
- 	  VFIO provides a framework for secure userspace device drivers.
- 	  See Documentation/vfio.txt for more details.
-diff --git a/fs/Makefile b/fs/Makefile
-index 427fec226fae..35945f8139e6 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -25,7 +25,7 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
+-	f = fdget_raw(pidfd);
++	f = fdget(pidfd);
+ 	if (!f.file)
+ 		return -EBADF;
  
- obj-y				+= notify/
- obj-$(CONFIG_EPOLL)		+= eventpoll.o
--obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
-+obj-y				+= anon_inodes.o
- obj-$(CONFIG_SIGNALFD)		+= signalfd.o
- obj-$(CONFIG_TIMERFD)		+= timerfd.o
- obj-$(CONFIG_EVENTFD)		+= eventfd.o
-diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
-index 735bfb2e9190..521dc91d2cb5 100644
---- a/fs/notify/fanotify/Kconfig
-+++ b/fs/notify/fanotify/Kconfig
-@@ -1,7 +1,6 @@
- config FANOTIFY
- 	bool "Filesystem wide access notification"
- 	select FSNOTIFY
--	select ANON_INODES
- 	select EXPORTFS
- 	default n
- 	---help---
-diff --git a/fs/notify/inotify/Kconfig b/fs/notify/inotify/Kconfig
-index b981fc0c8379..0161c74e76e2 100644
---- a/fs/notify/inotify/Kconfig
-+++ b/fs/notify/inotify/Kconfig
-@@ -1,6 +1,5 @@
- config INOTIFY_USER
- 	bool "Inotify support for userspace"
--	select ANON_INODES
- 	select FSNOTIFY
- 	default y
- 	---help---
-diff --git a/init/Kconfig b/init/Kconfig
-index 4592bf7997c0..be8f97e37a76 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1171,9 +1171,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
- config SYSCTL
- 	bool
+ 	/* Is this a pidfd? */
+-	pid = tgid_pidfd_to_pid(f.file);
++	pid = pidfd_to_pid(f.file);
+ 	if (IS_ERR(pid)) {
+ 		ret = PTR_ERR(pid);
+ 		goto err;
+@@ -3625,7 +3632,6 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 	fdput(f);
+ 	return ret;
+ }
+-#endif /* CONFIG_PROC_FS */
  
--config ANON_INODES
--	bool
+ static int
+ do_send_specific(pid_t tgid, pid_t pid, int sig, struct kernel_siginfo *info)
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index d21f4befaea4..4d9ae5ea6caf 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -167,9 +167,6 @@ COND_SYSCALL(syslog);
+ 
+ /* kernel/sched/core.c */
+ 
+-/* kernel/signal.c */
+-COND_SYSCALL(pidfd_send_signal);
 -
- config HAVE_UID16
- 	bool
- 
-@@ -1378,14 +1375,12 @@ config HAVE_FUTEX_CMPXCHG
- config EPOLL
- 	bool "Enable eventpoll support" if EXPERT
- 	default y
--	select ANON_INODES
- 	help
- 	  Disabling this option will cause the kernel to be built without
- 	  support for epoll family of system calls.
- 
- config SIGNALFD
- 	bool "Enable signalfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the signalfd() system call that allows to receive signals
-@@ -1395,7 +1390,6 @@ config SIGNALFD
- 
- config TIMERFD
- 	bool "Enable timerfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the timerfd() system call that allows to receive timer
-@@ -1405,7 +1399,6 @@ config TIMERFD
- 
- config EVENTFD
- 	bool "Enable eventfd() system call" if EXPERT
--	select ANON_INODES
- 	default y
- 	help
- 	  Enable the eventfd() system call that allows to receive both
-@@ -1516,7 +1509,6 @@ config KALLSYMS_BASE_RELATIVE
- # syscall, maps, verifier
- config BPF_SYSCALL
- 	bool "Enable bpf() system call"
--	select ANON_INODES
- 	select BPF
- 	select IRQ_WORK
- 	default n
-@@ -1533,7 +1525,6 @@ config BPF_JIT_ALWAYS_ON
- 
- config USERFAULTFD
- 	bool "Enable userfaultfd() system call"
--	select ANON_INODES
- 	depends on MMU
- 	help
- 	  Enable the userfaultfd() system call that allows to intercept and
-@@ -1600,7 +1591,6 @@ config PERF_EVENTS
- 	bool "Kernel performance events and counters"
- 	default y if PROFILING
- 	depends on HAVE_PERF_EVENTS
--	select ANON_INODES
- 	select IRQ_WORK
- 	select SRCU
- 	help
+ /* kernel/sys.c */
+ COND_SYSCALL(setregid);
+ COND_SYSCALL(setgid);
 -- 
 2.21.0
 
