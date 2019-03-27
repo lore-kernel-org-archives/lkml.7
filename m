@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C61C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE084C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0E2205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D44205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713071;
-	bh=+pt+jysDc9BWgzBbynweO7JYhpU2QoR8sSZYeNqVIUc=;
+	s=default; t=1553713081;
+	bh=TU11IEFQmzAcat+wyr6E/gYvnDZhZQZoN/16brW+tII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLszCHwp8byPxtC7/yCQJG+MswHVRMVa0D6dbxIAS26h3/5Cs6syLY41ogR/oZIq3
-	 MpMN9ThcaEhFV5qWDQHWhW+mC1GzTxHsFeW2+atvZZAiiRDH5NSwPYw2i2KPIGRr8F
-	 GaKoCsThphu92Jyaa164eMEfWJZR30PthmP5AMUw=
+	b=E+ITQlYPCuNZBclhbo6//7XkmbPs/+9PBCzISMpbDUT5S5WNlp9NB1xNcQS4sxMRm
+	 KaXToZ6iculU17iXLf75gOmbqWXegVJGT2G/x6iksqPFfTWI8dHT7a8jx2GfjUYF0a
+	 r9PnJQShneQ6x5CEiwAMu9VCbs72TqCeWdp7q5Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389769AbfC0S5t (ORCPT
+        id S2390050AbfC0S6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:57:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389896AbfC0SPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:50 -0400
+        id S2389885AbfC0SPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA90F21741;
-        Wed, 27 Mar 2019 18:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D903321738;
+        Wed, 27 Mar 2019 18:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710549;
-        bh=+pt+jysDc9BWgzBbynweO7JYhpU2QoR8sSZYeNqVIUc=;
+        s=default; t=1553710546;
+        bh=TU11IEFQmzAcat+wyr6E/gYvnDZhZQZoN/16brW+tII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjdIYzxexL1scG3PU/vCPFAYgtBZqW21V0HREjFcQB2mATp3pHQ82sMsESMgpCAxg
-         vV2qPQdjmoNU81lEWdOc6RoZcoN6mzdHXRx0vFa3AQPEa7c7U4IlwXUcd2V9cg876R
-         NA9C91ZB+PVImlusrBN/SSaAPpRcM9wqmRRoCsPM=
+        b=wcfFPG5tJThnYffwXijXGYv/bqFTw7ODwKOx+aWQKr9wLhlliC8J5yBZ6fbJFbY4N
+         NHRD5d6B03SLnnwprogXDBsrFqibzayvNFWmnH4nyWNM8VoepOY5G+jjQnRik35SIJ
+         vQg97b6M+obJcB4UtqPjhu4IHHTq2H+eEf7JOjxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 171/192] netfilter: physdev: relax br_netfilter dependency
-Date:   Wed, 27 Mar 2019 14:10:03 -0400
-Message-Id: <20190327181025.13507-171-sashal@kernel.org>
+Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
+        Joey Zheng <yu.zheng@hxt-semitech.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 169/192] dmaengine: qcom_hidma: assign channel cookie correctly
+Date:   Wed, 27 Mar 2019 14:10:01 -0400
+Message-Id: <20190327181025.13507-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -60,95 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
 
-[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
+[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
 
-Following command:
-  iptables -D FORWARD -m physdev ...
-causes connectivity loss in some setups.
+When dma_cookie_complete() is called in hidma_process_completed(),
+dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
+hidma_txn_is_success() will be called to use channel cookie
+mchan->last_success to do additional DMA status check. Current code
+assigns mchan->last_success after dma_cookie_complete(). This causes
+a race condition of dma_cookie_status() returns DMA_COMPLETE before
+mchan->last_success is assigned correctly. The race will cause
+hidma_tx_status() return DMA_ERROR but the transaction is actually a
+success. Moreover, in async_tx case, it will cause a timeout panic
+in async_tx_quiesce().
 
-Reason is that iptables userspace will probe kernel for the module revision
-of the physdev patch, and physdev has an artificial dependency on
-br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
-is loaded).
+ Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
+ transaction
+ ...
+ Call trace:
+ [<ffff000008089994>] dump_backtrace+0x0/0x1f4
+ [<ffff000008089bac>] show_stack+0x24/0x2c
+ [<ffff00000891e198>] dump_stack+0x84/0xa8
+ [<ffff0000080da544>] panic+0x12c/0x29c
+ [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
+ [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
+ [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
+ [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
+ [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
+ [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
+ [<ffff000008736538>] md_thread+0x108/0x168
+ [<ffff0000080fb1cc>] kthread+0x10c/0x138
+ [<ffff000008084d34>] ret_from_fork+0x10/0x18
 
-This causes the "phydev" module to be loaded, which in turn enables the
-"call-iptables" infrastructure.
-
-bridged packets might then get dropped by the iptables ruleset.
-
-The better fix would be to change the "call-iptables" defaults to 0 and
-enforce explicit setting to 1, but that breaks backwards compatibility.
-
-This does the next best thing: add a request_module call to checkentry.
-This was a stray '-D ... -m physdev' won't activate br_netfilter
-anymore.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/br_netfilter.h | 1 -
- net/bridge/br_netfilter_hooks.c      | 5 -----
- net/netfilter/xt_physdev.c           | 9 +++++++--
- 3 files changed, 7 insertions(+), 8 deletions(-)
+ drivers/dma/qcom/hidma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
-index 74af19c3a8f7..a4ba601b5d04 100644
---- a/include/net/netfilter/br_netfilter.h
-+++ b/include/net/netfilter/br_netfilter.h
-@@ -49,7 +49,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
- }
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 43d4b00b8138..ea219bca116d 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -138,24 +138,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
+ 		desc = &mdesc->desc;
+ 		last_cookie = desc->cookie;
  
- struct net_device *setup_pre_routing(struct sk_buff *skb);
--void br_netfilter_enable(void);
- 
- #if IS_ENABLED(CONFIG_IPV6)
- int br_validate_ipv6(struct net *net, struct sk_buff *skb);
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index e07a7e62c705..3b0a03b92080 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -884,11 +884,6 @@ static const struct nf_br_ops br_ops = {
- 	.br_dev_xmit_hook =	br_nf_dev_xmit,
- };
- 
--void br_netfilter_enable(void)
--{
--}
--EXPORT_SYMBOL_GPL(br_netfilter_enable);
--
- /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
-  * br_dev_queue_push_xmit is called afterwards */
- static const struct nf_hook_ops br_nf_ops[] = {
-diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
-index 9d6d67b953ac..05f00fb20b04 100644
---- a/net/netfilter/xt_physdev.c
-+++ b/net/netfilter/xt_physdev.c
-@@ -96,8 +96,7 @@ physdev_mt(const struct sk_buff *skb, struct xt_action_param *par)
- static int physdev_mt_check(const struct xt_mtchk_param *par)
- {
- 	const struct xt_physdev_info *info = par->matchinfo;
--
--	br_netfilter_enable();
-+	static bool brnf_probed __read_mostly;
- 
- 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
- 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
-@@ -111,6 +110,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
- 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
- 			return -EINVAL;
- 	}
++		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
 +
-+	if (!brnf_probed) {
-+		brnf_probed = true;
-+		request_module("br_netfilter");
-+	}
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
++		if (llstat == DMA_COMPLETE) {
++			mchan->last_success = last_cookie;
++			result.result = DMA_TRANS_NOERROR;
++		} else {
++			result.result = DMA_TRANS_ABORTED;
++		}
 +
- 	return 0;
- }
+ 		dma_cookie_complete(desc);
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
  
+-		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
+ 		dmaengine_desc_get_callback(desc, &cb);
+ 
+ 		dma_run_dependencies(desc);
+ 
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
+ 		list_move(&mdesc->node, &mchan->free);
+-
+-		if (llstat == DMA_COMPLETE) {
+-			mchan->last_success = last_cookie;
+-			result.result = DMA_TRANS_NOERROR;
+-		} else
+-			result.result = DMA_TRANS_ABORTED;
+-
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+ 		dmaengine_desc_callback_invoke(&cb, &result);
 -- 
 2.19.1
 
