@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0469C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B752064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9546B2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713890;
-	bh=RE6O71OLZB+86K9AakC8QOF3EyP1hvnBeySdVfvZH+M=;
+	s=default; t=1553713893;
+	bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLf4cKXuHLQ8CNgWIvrkMPVAtT11pUXVs8sx5wt7AEujqJ30JYidcn2cN4XY8L4Hf
-	 kLTGbefDhnIbZiLhGV11rTWnDGK1OpFO1AZ/OoTrM9dAFmxj9ofspbvqJz6QElJaW6
-	 tZq+tGBAOsriCx22cPmOe9HMfQ0R15/r2mUsogh4=
+	b=eza7sWk8sgBaBwjoHiOBT5S4KIF1eMmGCpAoJnubecS1oc1FXUNpX2MkFwB9KHP70
+	 WPBEFLAxOyT2bumcGI0RRojfMhI2aw+VFPyyqtULRQ7DYjkaChzFgbHvt8i2nxDabB
+	 GAGVRie+QI6l7dLyoSg8tR9pCsIHVdOJqblsHjlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388892AbfC0SKn (ORCPT
+        id S2389154AbfC0TLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52696 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388854AbfC0SKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:37 -0400
+        id S2388887AbfC0SKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A73EF2183E;
-        Wed, 27 Mar 2019 18:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4E682177E;
+        Wed, 27 Mar 2019 18:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710236;
-        bh=RE6O71OLZB+86K9AakC8QOF3EyP1hvnBeySdVfvZH+M=;
+        s=default; t=1553710242;
+        bh=cHJOiQebblPNrctsB3rNVnuc4hMWpXEqbAdB8RDvLQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TUgRHk1WK4QRUUeF8GY+rlWVi4VmPO4ZatAD+lxHU3TVEgRVAC+9HrMVXc0p2X9/H
-         7OWWIq9/QZ02taf3+BDFlRJ1eXMZCPq0bBEPI25WstxE8QRc+Qz7KmrsP86IMogjzo
-         5Ap2rE6edxDC4AqoU6eo9YuvPLCbgs5mCQWmYxRY=
+        b=2vhToeuYYhvzYXY1+JRV0wxDPTRM8mmnGTTIRmzd4o3nC//cszIm5uGeoArDd+XU+
+         rS80oqrZNBqzPvhJsmCTGn9UtiI53ArTaOMd0zjFnw0mXxbH0skjCp6QN2gm1D5uKp
+         qXo+COZ1/RA1OlBqmHTxo7kZp9R44pA42Tp8zMLI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Mohamad Haj Yahia <mohamad@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 008/192] net/mlx5: Avoid panic when setting vport rate
-Date:   Wed, 27 Mar 2019 14:07:20 -0400
-Message-Id: <20190327181025.13507-8-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Jens Axboe <axboe@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 011/192] include/linux/relay.h: fix percpu annotation in struct rchan
+Date:   Wed, 27 Mar 2019 14:07:23 -0400
+Message-Id: <20190327181025.13507-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,81 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
+[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
 
-If we try to set VFs rate on a VF (not PF) net device, the kernel
-will be crash. The commands are show as below:
+The percpu member of this structure is declared as:
+	struct ... ** __percpu member;
+So its type is:
+	__percpu pointer to pointer to struct ...
 
-$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
-$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
+But looking at how it's used, its type should be:
+	pointer to __percpu pointer to struct ...
+and it should thus be declared as:
+	struct ... * __percpu *member;
 
-If not applied the first patch ("net/mlx5: Avoid panic when setting
-vport mac, getting vport config"), the command:
+So fix the placement of '__percpu' in the definition of this
+structures.
 
-$ ip link set $MLX_VF0 vf 0 rate 100
+This silents a few Sparse's warnings like:
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
 
-can also crash the kernel.
-
-[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
-[ 1650.007092]  do_setlink+0x982/0xd20
-[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
-[ 1650.007374]  rtnl_newlink+0x43/0x60
-[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
-[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
-[ 1650.007519]  netlink_unicast+0x17f/0x230
-[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
-[ 1650.007592]  sock_sendmsg+0x36/0x50
-[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
-[ 1650.007963]  __sys_sendmsg+0x58/0xa0
-[ 1650.007998]  do_syscall_64+0x5b/0x180
-[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
-Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Acked-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
+Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Jens Axboe <axboe@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ include/linux/relay.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index d6706475a3ba..886a4a77c47f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2044,19 +2044,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
- int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
- 				u32 max_rate, u32 min_rate)
- {
--	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
--	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
--					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
--	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
- 	struct mlx5_vport *evport;
-+	u32 fw_max_bw_share;
- 	u32 previous_min_rate;
- 	u32 divider;
-+	bool min_rate_supported;
-+	bool max_rate_supported;
- 	int err = 0;
- 
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport))
- 		return -EINVAL;
-+
-+	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
-+	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
-+				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
-+	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
-+
- 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
- 		return -EOPNOTSUPP;
- 
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index e1bdf01a86e2..c759f96e39c1 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -66,7 +66,7 @@ struct rchan
+ 	struct kref kref;		/* channel refcount */
+ 	void *private_data;		/* for user-defined data */
+ 	size_t last_toobig;		/* tried to log event > subbuf size */
+-	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
++	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
+ 	int is_global;			/* One global buffer ? */
+ 	struct list_head list;		/* for channel list */
+ 	struct dentry *parent;		/* parent dentry passed to open */
 -- 
 2.19.1
 
