@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F690C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA49C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CCDB2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1649F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dPeAcA1q"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="fEVAeK3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbfC0Cdw (ORCPT
+        id S1732911AbfC0Cdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 26 Mar 2019 22:33:52 -0400
-Received: from vps.xff.cz ([195.181.215.36]:55120 "EHLO vps.xff.cz"
+Received: from vps.xff.cz ([195.181.215.36]:55138 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732617AbfC0Cdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732637AbfC0Cdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 22:33:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1553654028; bh=S1jLp574hnK0CY+FYoqQJqxFPycojWM2CD1ibwebjmA=;
+        t=1553654028; bh=BvNeqUs9hKJFrBRXRuyMj6CRS9tzzF8nDPi9WShJ2lE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPeAcA1qatRKERktzEeiXuxUhqQGkumIC1xIbULGNwQbnDLqBiCyEAxhDpr0hEPG1
-         vR7iFC86CXNOrnolFSv2K0C28lYH/yZ96DpUnqY9QsoSw/jNYBlB7R95GuKJI/zpTp
-         YkPwifAESPBmS5QNXqBfFXvjqWkn1fnLlA/KvFsw=
+        b=fEVAeK3yxNGUa2A4U9epeSgWfQNkBvHMi1qp5U5WmjIy98FwiNLubtwA4UgDEc5/5
+         dTsdYX6gXfZGBkSjIHfc0l39/J20YtwtRy6+6zpEuf/N5ng4mRUnW7zjdNQ6rCkhTf
+         2hiWUkFtc3IjZ4eLHMT7a3TiQoHoF+agR7U/EcUI=
 From:   megous@megous.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -35,9 +35,9 @@ Cc:     Ziping Chen <techping.chan@gmail.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, linux-input@vger.kernel.org,
         hdegoede@redhat.com
-Subject: [PATCH RESEND v4 2/4] dt-bindings: input: Add R_LRADC support for A83T
-Date:   Wed, 27 Mar 2019 03:33:37 +0100
-Message-Id: <20190327023339.25975-3-megous@megous.com>
+Subject: [PATCH RESEND v4 3/4] ARM: dts: sunxi: Add R_LRADC support for A83T
+Date:   Wed, 27 Mar 2019 03:33:38 +0100
+Message-Id: <20190327023339.25975-4-megous@megous.com>
 In-Reply-To: <20190327023339.25975-1-megous@megous.com>
 References: <20190327023339.25975-1-megous@megous.com>
 MIME-Version: 1.0
@@ -49,37 +49,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ziping Chen <techping.chan@gmail.com>
 
-Allwinner A83T SoC has a low res ADC like the one in Allwinner A10 SoC.
+Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC.
+Now the driver has been modified to support it.
 
-Add binding for it.
+Add support for it.
 
 Signed-off-by: Ziping Chen <techping.chan@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/input/sun4i-lradc-keys.txt          | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-index 1458c3179a63..496125c6bfb7 100644
---- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-+++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
- ------------------------------------------------
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index fcb7ef5ce2df..de1b77e49f06 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -1024,6 +1024,13 @@
+ 			status = "disabled";
+ 		};
  
- Required properties:
-- - compatible: "allwinner,sun4i-a10-lradc-keys"
-+ - compatible: should be one of the following string:
-+		"allwinner,sun4i-a10-lradc-keys"
-+		"allwinner,sun8i-a83t-r-lradc"
-  - reg: mmio address range of the chip
-  - interrupts: interrupt to which the chip is connected
-  - vref-supply: powersupply for the lradc reference voltage
- 
--Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
-+Each key is represented as a sub-node of the compatible mentioned above:
- 
- Required subnode-properties:
- 	- label: Descriptive name of the key.
++		r_lradc: lradc@1f03c00 {
++			compatible = "allwinner,sun8i-a83t-r-lradc";
++			reg = <0x01f03c00 0x100>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		r_pio: pinctrl@1f02c00 {
+ 			compatible = "allwinner,sun8i-a83t-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
 -- 
 2.21.0
 
