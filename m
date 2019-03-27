@@ -2,93 +2,115 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B508C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EFBC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9D6206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642CD206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoRGZRmW"
+	dkim=pass (1024-bit key) header.d=cern.onmicrosoft.com header.i=@cern.onmicrosoft.com header.b="VHAfts1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfC0RQC (ORCPT
+        id S1728489AbfC0RRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:16:02 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36187 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfC0RQC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:16:02 -0400
-Received: by mail-it1-f193.google.com with SMTP id h9so1409982itl.1;
-        Wed, 27 Mar 2019 10:16:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HENEyDmJZGOh65ItVsa8GK+oMLDtRRD6rVwzbFATzko=;
-        b=ZoRGZRmWyn0OMiisZgFMcK7u0lWc9fOj4z/8TTaiiz8SozvzBG2e8EueF0w5MmnP/y
-         mG58L6FnRi75hrECtPHTlDlO7SY2gbOh5mGJeb9PA2fkwTGqOZtXrUHOSCx9eL+Bg6AP
-         angbFGsXcP8RaifF09upcJ6cxPM6Y6cs/pLW1kI7c5J2NV5uYTSUz+tr/Baz/TYx7x2E
-         F6NCF3dIxfNN6IALvuprTV4P+OyTkeWD+uXxBK+POjOIukZiAxyI+tHuEeRhnLLJg7p1
-         e9VFYO+fTLXxN0+0EnUyUdM3UbX2IX2w3VKgFZsz+coaJWhoYq9QfV1Q9bi53Pmup2pS
-         C2FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HENEyDmJZGOh65ItVsa8GK+oMLDtRRD6rVwzbFATzko=;
-        b=CPmm0iMgcu94Z2PMU7ZAJIFe1UE5e4s51tHemWH/uygoyj478P4GBDSzmg13809ipf
-         VL3gRAu14eJa5SOh4gT55qQjtE+zSqDBm6fGrGgmOm38zqx0Wypmu2K39XAc0rK9evyd
-         EjEOENaWI4ftv3/HJEH7BSu4j3VX4RY/3omQFGIiWLtRwO3bFtOShGWQFRRAtTEwFDHU
-         jbMMEXM8p4ys18dzVt0V/rUPHOPfOW8xD0YUeg1ISXG1pgdOWiILobqsC9lMN2RdVuIM
-         grPZgDreXsot09J6gHedDRVLRIsrbUXRSNXusvmHk4nfXQ4Ia8dWg5JyuO2rI3W7e9ZH
-         bUJg==
-X-Gm-Message-State: APjAAAXMwl6PhT4K7jLeRAh7h5PnEsKg0ZOM1VO0ccgK+oRNqK+U210k
-        tuRPj0s3BKz9v6tc76bCRm6yLcXAjiuROnMmVmg=
-X-Google-Smtp-Source: APXvYqyakiXPGUqoHl2Gn45TNzKO7wPZBQTv0gaRsMmtEc3WTtFkpgS8Xgj0ftK396Bx6ksLfEFdWA/yU5I1QrkQ9P4=
-X-Received: by 2002:a02:6d12:: with SMTP id m18mr28569551jac.54.1553706961262;
- Wed, 27 Mar 2019 10:16:01 -0700 (PDT)
+        Wed, 27 Mar 2019 13:17:43 -0400
+Received: from mail-eopbgr90053.outbound.protection.outlook.com ([40.107.9.53]:61520
+        "EHLO FRA01-MR2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727454AbfC0RRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:17:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
+ s=selector1-cern-ch;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ggt2jDzPGUhcGamveXfCVTIM88RdqMc6+zSW/PuE51I=;
+ b=VHAfts1MyKiYc5V5HdQfVhVzmwsyh5s7mznWA+ZHtvJIskO9rOqEcWqJ6Sedut4frBxf/L+xqy/GPdPWwP/C/qTrJo2cTnBi9JKePMX4czX5jk6sH571cRdhr7KNwJybu6Mgk9TpJU7MGWzBEvl1vaXCmupP6RgSCvVO7OSV3oU=
+Received: from DB8PR06CA0021.eurprd06.prod.outlook.com (2603:10a6:10:100::34)
+ by PR1PR06MB4907.eurprd06.prod.outlook.com (2603:10a6:102:8::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1730.19; Wed, 27 Mar
+ 2019 17:17:39 +0000
+Received: from HE1EUR02FT056.eop-EUR02.prod.protection.outlook.com
+ (2a01:111:f400:7e05::203) by DB8PR06CA0021.outlook.office365.com
+ (2603:10a6:10:100::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1750.15 via Frontend
+ Transport; Wed, 27 Mar 2019 17:17:38 +0000
+Authentication-Results: spf=pass (sender IP is 188.184.36.46)
+ smtp.mailfrom=cern.ch; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 188.184.36.46 as permitted sender) receiver=protection.outlook.com;
+ client-ip=188.184.36.46; helo=cernmxgwlb4.cern.ch;
+Received: from cernmxgwlb4.cern.ch (188.184.36.46) by
+ HE1EUR02FT056.mail.protection.outlook.com (10.152.11.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1730.9 via Frontend Transport; Wed, 27 Mar 2019 17:17:38 +0000
+Received: from cernfe06.cern.ch (188.184.36.49) by cernmxgwlb4.cern.ch
+ (188.184.36.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 27 Mar
+ 2019 18:17:18 +0100
+Received: from pcbe13614.localnet (2001:1458:202:121::100:40) by smtp.cern.ch
+ (2001:1458:201:66::100:14) with Microsoft SMTP Server (TLS) id 14.3.439.0;
+ Wed, 27 Mar 2019 18:17:20 +0100
+From:   Federico Vaga <federico.vaga@cern.ch>
+To:     <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-x86_64@vger.kernel.org>
+Reply-To: <federico.vaga@cern.ch>
+Subject: Device Description for FPGA Components on x86 system
+Date:   Wed, 27 Mar 2019 18:17:18 +0100
+Message-ID: <1629227.alSmCsHHUc@pcbe13614>
 MIME-Version: 1.0
-References: <20190326121158.13499-1-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20190326121158.13499-1-jarkko.sakkinen@linux.intel.com>
-From:   Dan Williams <dan.j.williams@gmail.com>
-Date:   Wed, 27 Mar 2019 10:15:50 -0700
-Message-ID: <CAA9_cmfFpkBLz6TU0sLSV1JYE43sDtfi29Xw4R5Xt-RaWm8ZLA@mail.gmail.com>
-Subject: Re: [PATCH v3] KEYS: trusted: allow trusted.ko to initialize w/o a TPM
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linuxibm.com>,
-        David Howells <dhowells@redhat.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [2001:1458:202:121::100:40]
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:188.184.36.46;IPV:NLI;CTRY:CH;EFV:NLI;SFV:NSPM;SFS:(10001)(10009020)(459900002);DIR:OUT;SFP:1101;SCL:1;SRVR:PR1PR06MB4907;H:cernmxgwlb4.cern.ch;FPR:;SPF:None;LANG:en;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f09cc0d6-d779-4533-ba8c-08d6b2d81ced
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4709054)(5565046)(2017052603328)(7153060)(7193020);SRVR:PR1PR06MB4907;
+X-MS-TrafficTypeDiagnostic: PR1PR06MB4907:
+X-Microsoft-Antispam-PRVS: <PR1PR06MB490713623AD87F472BDA1770EF580@PR1PR06MB4907.eurprd06.prod.outlook.com>
+X-Forefront-PRVS: 0989A7979C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: nWo+B0PgKMZ3aPvTxL6G9E3tbxQHP2AgNk21pDgSD1AUHDkjsNPRdASpipLl7tynDFnhVEaUyGW2gQJc0dGF/eeb2iRafhgsgtMwSid04Z7FS8eoShhWKrvmrJJXC0ig/aFjw70ytPJr3Wz/2VWnXedxE4359kdV1Bjd5vV4ps0JhfJ3iWydUQHoMpAtE8UJR5MnpF+SZhOiQuDnJz7OCj7tAYMXGh1zBTy+Fb/kSz5nuxUFL72x/uciafZozwhOze5ecgSzs5OdXhzTSdZOYskP8KDn1I/nkCAxosStEA8U/gFyT8zF508s2j6ZV0OkjwITpAI+F2cbNKwQ1/HrnjHb3b+YycaB8e7g0CqADoB09nqbRnJmhsQgnjX6B11KBaO7c4cKoffv8umB+dG2ntm1KyhuOmbj0wVZmOBPc4WmqcgnMJuqkqVvuyMNTdTsEXqRsBu8PJEJgjQ4/a3XtbfoAl9AbUubfeBqNRNr73otMTVI4R11Av/eBz43bDmy5D/nb57EbVsVaeNbWq6SKNKtKDpoTfL40JSiAAwlP24=
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2019 17:17:38.4603
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f09cc0d6-d779-4533-ba8c-08d6b2d81ced
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.46];Helo=[cernmxgwlb4.cern.ch]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR1PR06MB4907
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 5:13 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> Allow trusted.ko to initialize w/o a TPM. This commit adds checks to the
-> key type callbacks and exported functions to fail when a TPM is not
-> available.
->
-> Cc: James Morris <jmorris@namei.org>
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
-> Tested-by: Dan Williams <dan.j.williams@intel.com>
-> Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
-> v3:
-> - remove unnecessary check for chip in init_trusted()
+Hello,
 
-v3 also tests ok here.
+I'm looking for guidance
+
+What I have:
+* Intel x86_64 computer
+* PCIe card with FPGA on it
+
+What I want to achieve:
+* load an FPGA bitstream on the card
+* load a device-tree like description for the FPGA devices contained in the 
+bitstream
+
+This is achievable on ARM with DeviceTree, overlay-dt, fpga-mgr; but I'm 
+puzzled about the x86_64 use-case. I'm not able to find recent and clear 
+information.
+
+Does anyone know if this is doable? Perhaps with ACPI SSDTs overlay? Or with 
+the DT?
+
+thanks 
+
+
+
+
