@@ -2,161 +2,109 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4494C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218A5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8762087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553651634;
-	bh=qFm6xqS6aWDk2U471Dmq7ANR4B9/ETmWfaeKFXjErLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kxzl/zbNcMrAL10nLprGumS3D5De6bT8T139RzKVu9Vr3b181IxNKC637KNqcVDB4
-	 ngUX+DbBfuYYZz5uUyvRqrZ4zvOcRGQPeW32/GNI9FAYQCqw6Lu38OdRS1ExKZGrwP
-	 +3PGbW++hoLupJqA74hIhatIkoTV6yodtIAfurn4=
+	by mail.kernel.org (Postfix) with ESMTP id DE5A22087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:56:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSXG/By2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732371AbfC0Bxx (ORCPT
+        id S1732271AbfC0B42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 21:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731483AbfC0Bxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 21:53:53 -0400
-Received: from localhost (mobile-166-137-177-030.mycingular.net [166.137.177.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29012087E;
-        Wed, 27 Mar 2019 01:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553651631;
-        bh=qFm6xqS6aWDk2U471Dmq7ANR4B9/ETmWfaeKFXjErLM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GhGFyFeoQCZx1mdqu2dREI0FLdmBZw/HBykquxpPwZwCSbUqUVeknUJ/SRu+n6kjD
-         GNi1tdRDPL+NK1xn5OdTYSK7GWzcXxiEUdOrjtzp4l0gzWL7hUVaEgcQYWdGSo6wUi
-         /O51rEDSEPxeFE9fZJlKLU7N/SKejMnqDvwOlTEM=
-Date:   Wed, 27 Mar 2019 10:53:46 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
- debugfs_create functions
-Message-ID: <20190327015346.GA17979@kroah.com>
-References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
- <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
- <20190327012600.GA3649@kroah.com>
- <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
+        Tue, 26 Mar 2019 21:56:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38245 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfC0B42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 21:56:28 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g37so2514685plb.5;
+        Tue, 26 Mar 2019 18:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=76ANpdFQuY8fTjk/hR1fIF1endcrr/sSbGGgwVZWLIM=;
+        b=vSXG/By26jRQPZGiv6iaoU9w8fWhkHp0PARzOp1QnqatmTD69OQ/1J9fuOJLD9R1jW
+         dyq/m7m2tlI+eMH7hReYmImubI5sBdqwg9oOkROvExtX4pCwVu4ZVckUsM4OF3dUpIV1
+         +/DpBCsIFtgwjRW2/eLmXjA6plHtb5XyCetrUIENHt1UFegx4itHhmF2q69nvMHMAlKB
+         gbL/4cypdJ2u+5BEe9fwMnJg2Ti0flM95afmlSa8z5qNYHczN5gMTZQR7r1ThKQy6tas
+         0iIP+BwoKLhZtF+Qfvjq6FK0g6azOZu48ogdAiFk7TOPDQdzzlPu5XClMUgWcnix0kst
+         b/cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=76ANpdFQuY8fTjk/hR1fIF1endcrr/sSbGGgwVZWLIM=;
+        b=mXCRRVGHKYx5FtNcH3Vvl03stxDoxbDLE5KsTHJ2eI/ZeKcrRuGZl1cCFty1oE+/xz
+         59NjEt0N8uwGg1rC/c/WvO30mqm2MUu5gL5vKkejUU23Xv56qBgO3EdhS3f8XvM8Lo+J
+         vDlUfQ9OqZPnoMQcSNmIwtXlSrCGKlcfQQATPJDMblXh9n11hG7fcN+YYirJqv69zZiF
+         WhCoCG2Qc21gzpAXEhoKZz3qcv5pTfC/0zCwto2LaSabavaXNm6wIsl0XftMrhNUJbOt
+         kpMMVoDai8EWXNrzKSW10J5IZu1yXqcShp+tdOuFzqiWuIgAWE5HHlbdCzTSaGrJ359N
+         1LoQ==
+X-Gm-Message-State: APjAAAXSRmvovG75dY8h8KmGLSR/R/aLkqVHqohiPNkAnhEFqDmV5N94
+        BjyXlf+YqAGOK8J33nwMvPg=
+X-Google-Smtp-Source: APXvYqwpruaC9ExQVtgEOH/znNUi6+tPF16FnbULu328hEGkVr4Z/SaLCizzf8offMnAb3BsW4OpIg==
+X-Received: by 2002:a17:902:28e6:: with SMTP id f93mr34428552plb.264.1553651787286;
+        Tue, 26 Mar 2019 18:56:27 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:200::1:f1fc])
+        by smtp.gmail.com with ESMTPSA id 139sm25424498pfw.98.2019.03.26.18.56.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 18:56:26 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 18:56:25 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Boccassi <bluca@debian.org>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the net tree
+Message-ID: <20190327015623.ur46t5gdmraagi2q@ast-mbp>
+References: <20190327091437.68ec6903@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190327091437.68ec6903@canb.auug.org.au>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 06:47:33PM -0700, Laura Abbott wrote:
-> On 3/26/19 6:26 PM, Greg Kroah-Hartman wrote:
-> > On Tue, Mar 26, 2019 at 04:55:54PM -0700, Laura Abbott wrote:
-> > > On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
-> > > > diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > index 33b0af24a537..c52cdc538678 100644
-> > > > --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
-> > > > @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
-> > > >    #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
-> > > >    	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
-> > > >    #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
-> > > > -		if (!debugfs_create_file(#name, mode, parent, vif,	\
-> > > > -					 &iwl_dbgfs_##name##_ops))	\
-> > > > -			goto err;					\
-> > > > +		debugfs_create_file(#name, mode, parent, vif,		\
-> > > > +				    &iwl_dbgfs_##name##_ops);		\
-> > > >    	} while (0)
-> > > >    MVM_DEBUGFS_READ_FILE_OPS(mac_params);
-> > > > @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
-> > > >    	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
-> > > > -	if (!mvmvif->dbgfs_dir) {
-> > > > -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
-> > > > -			dbgfs_dir);
-> > > > -		return;
-> > > > -	}
-> > > > -
-> > > >    	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
-> > > >    	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
-> > > >    	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
-> > > > @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
-> > > >    	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
-> > > >    						     mvm->debugfs_dir, buf);
-> > > > -	if (!mvmvif->dbgfs_slink)
-> > > > -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
-> > > > -			dbgfs_dir);
-> > > > -	return;
-> > > > -err:
-> > > > -	IWL_ERR(mvm, "Can't create debugfs entity\n");
-> > > >    }
-> > > 
-> > > Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
-> > > of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
-> > > ("debugfs: return error values, not NULL") because the error checking is
-> > > no longer correct in this driver.
-> > > 
-> > > Based on https://patchwork.kernel.org/patch/10865839/, it looks like
-> > > this is supposed to go in for 5.2 but this needs to go in now as
-> > > the error checking is currently broken without it. Can this get queued
-> > > for Linus so we can get it in 5.0 stable?
-> > 
-> > That's odd, I can't see how the error checking is wrong here.  If the
-> > directory is not created, an error will be returned, which should be
-> > able to be handled by debugfs_create_file().
-> > 
-> > So with this patch does the error go away?
-> > 
+On Wed, Mar 27, 2019 at 09:14:37AM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> The full patch didn't apply cleanly and I didn't try to backport it
-> for the reporter to test. I was going off of the theory that if the
-> patch was there it would fix the problem.
+> Today's linux-next merge of the bpf-next tree got a conflict in:
 > 
-> What I _think_ is going wrong is dbgfs_dir is actually an errno value:
+>   tools/lib/bpf/Makefile
 > 
+> between commit:
 > 
->         struct dentry *dbgfs_dir = vif->debugfs_dir;
->         struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
->         char buf[100];
+>   1d382264d911 ("bpf, libbpf: fix version info and add it to shared object")
 > 
->         /*
->          * Check if debugfs directory already exist before creating it.
->          * This may happen when, for example, resetting hw or suspend-resume
->          */
->         if (!dbgfs_dir || mvmvif->dbgfs_dir)
->                 return;
+> from the net tree and commit:
 > 
+>   60e4786e229d ("tools/bpf: generate pkg-config file for libbpf")
 > 
-> so this blows up in the snprintf
+> from the bpf-next tree.
 > 
->         snprintf(buf, 100, "../../../%pd3/%pd",
->                  dbgfs_dir,
->                  mvmvif->dbgfs_dir);
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Ah, yeah, that's horrible.  They had the name before, why pull it out of
-the dentry again?  That will blow up hard, but maybe printk should check
-to see if the pointer really is a pointer first.
+argh. that's a heavy conflict.
+Since that patch was at the top of the bpf-next I removed it for now
+and will re-apply when bpf-next gets merged cleanly into net-next and
+we bring back net changes into bpf-next. Sorry Luca.
 
-> Unless I misunderstood what the debugfs error change did. I think this
-> also means the if check needs to look for IS_ERR and not just !dbgfs_dir.
-
-Yes, that is correct.
-
-thanks,
-
-greg k-h
