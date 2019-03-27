@@ -2,42 +2,45 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692D1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3262920693
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E5320693
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mQNFKuSW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="axejtihW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387584AbfC0F7N (ORCPT
+        id S1732800AbfC0F5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:59:13 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6222 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732984AbfC0F5R (ORCPT
+        Wed, 27 Mar 2019 01:57:09 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:6978 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfC0F5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:57:17 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9b10bb0000>; Tue, 26 Mar 2019 22:57:15 -0700
+        Wed, 27 Mar 2019 01:57:08 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9b10ac0004>; Tue, 26 Mar 2019 22:57:00 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 26 Mar 2019 22:57:16 -0700
+  Tue, 26 Mar 2019 22:57:05 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 26 Mar 2019 22:57:16 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 05:57:16 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 27 Mar 2019 05:57:16 +0000
+        by hqpgpgate102.nvidia.com on Tue, 26 Mar 2019 22:57:05 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 05:57:05 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 05:57:05 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 27 Mar 2019 05:57:05 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.161.83]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c9b10ba0003>; Tue, 26 Mar 2019 22:57:15 -0700
+        id <B5c9b10af0000>; Tue, 26 Mar 2019 22:57:04 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <talho@nvidia.com>, <skomatineni@nvidia.com>, <broonie@kernel.org>,
@@ -46,9 +49,9 @@ To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
 CC:     <ldewangan@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V1 09/26] spi: tegra114: dump SPI registers during timeout
-Date:   Tue, 26 Mar 2019 22:56:30 -0700
-Message-ID: <1553666207-11414-9-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V1 03/26] spi: tegra114: fix for unpacked mode transfers
+Date:   Tue, 26 Mar 2019 22:56:24 -0700
+Message-ID: <1553666207-11414-3-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
 References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
@@ -56,86 +59,171 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553666235; bh=s3KHjtXt1zgMVIUGUGMHh6JDkD3XIJDHG16DAqm1T5E=;
+        t=1553666221; bh=BbVb8qftn7ikNLmb5ZIGDeTbmYh2XNlqSyxXW/Zu/c0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=mQNFKuSWUt7o8ySMVu83+C+6TThCIQ+08xb1KF5FDL4ECUs+ok4epFohew92dasaU
-         gAIGVk8TK8dUGXCYEz5M4gEoL4xlhHu0x9/LIRE0bhhGQoQ7oPxhdFsInCcYwpgjT4
-         WXM3y2FjxSOwm79zfY2wlKwtvbw35FFXEx6dhcfoulWWo76jc8JGIU4EiuxgpsgvuX
-         /rgwq6hI0VmVj/0aYzMRoNjVfCgn0InF9P2+uGlSqQZV+oLFTvo0RUNtfiHYWVDqgm
-         TuFPvKJLexhDNfEDACcm1d1O8doIpwhBFfrOl4GeTgnCrhJSm/xqn1OqjiB08f3e9K
-         mXndgojDE+jkA==
+        b=axejtihWJbqmbiQ0LGd5Rtd7ZeSjDXpSfmJnajsJBjF4ZWNL/hqBRQcd6uS6MUiwF
+         TCeQIVZfc/ve4VLXSSZiwBAfRN5Gu7zwgSEJsuyvC938rjhpI1f2jDTpmUUgdjXkxS
+         HkULBVveETpJMV3easuid77NEPhN6Qfadw19/Pb2RVterxOP2KHDH0o1sb0Zo0R8lX
+         15FYc0ZGg+wl1wY2WoboSgeSpCKRrYUkr9xDCUoTU9uV66lCriGeuVu1lId4jyzckR
+         pzeQENAkzfrOkxa3S/AHi934W5YugGrtlO9nItX63rq4XuKXNiOWJE3I1/PPrvMA8f
+         cpeCw37Pzln/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch dumps SPI registers on DMA or transfer timeout for debug
-purpose.
+Fixes: computation of actual bytes to fill/receive in/from FIFO in unpacked
+mode when transfer length is not a multiple of requested bits per word.
+
+unpacked mode transfers fails when the transfer includes partial bytes in
+the last word.
+
+Total words to be written/read to/from FIFO is computed based on transfer
+length and bits per word. Unpacked mode includes 0 padding bytes for partial
+words to align with bits per word and these extra bytes are also accounted
+for calculating bytes left to transfer in the current driver.
+
+This causes extra bytes access of tx/rx buffers along with buffer index
+position crossing actual length where remain_len becomes negative and due to
+unsigned type, negative value is a 32 bit representation of signed value
+and transferred bytes never meets the actual transfer length resulting in
+transfer timeout and a hang.
+
+This patch fixes this with proper computation of the actual bytes to fill in
+FIFO during transmit and the actual bytes to read from FIFO during receive
+ignoring 0 padded bytes.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/spi/spi-tegra114.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/spi/spi-tegra114.c | 43 ++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 36 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index b7e71676a506..268a790a663e 100644
+index 82431115b7c0..fdba302eb3b6 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -858,6 +858,20 @@ static void tegra_spi_transfer_delay(int delay)
- 	udelay(delay % 1000);
+@@ -307,10 +307,16 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
+ 		}
++
++		tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
+ 	} else {
++		unsigned int write_bytes;
+ 		max_n_32bit = min(tspi->curr_dma_words,  tx_empty_count);
+ 		written_words = max_n_32bit;
+ 		nbytes = written_words * tspi->bytes_per_word;
++		if (nbytes > t->len - tspi->cur_pos)
++			nbytes = t->len - tspi->cur_pos;
++		write_bytes = nbytes;
+ 		for (count = 0; count < max_n_32bit; count++) {
+ 			u32 x = 0;
+ 
+@@ -319,8 +325,10 @@ static unsigned tegra_spi_fill_tx_fifo_from_client_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tegra_spi_writel(tspi, x, SPI_TX_FIFO);
+ 		}
++
++		tspi->cur_tx_pos += write_bytes;
+ 	}
+-	tspi->cur_tx_pos += written_words * tspi->bytes_per_word;
++
+ 	return written_words;
  }
  
-+static void tegra_spi_dump_regs(struct tegra_spi_data *tspi)
-+{
-+	dev_dbg(tspi->dev, "============ SPI REGISTER DUMP ============\n");
-+	dev_dbg(tspi->dev, "Command1:    0x%08x | Command2:    0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_COMMAND1),
-+		tegra_spi_readl(tspi, SPI_COMMAND2));
-+	dev_dbg(tspi->dev, "DMA_CTL:     0x%08x | DMA_BLK:     0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_DMA_CTL),
-+		tegra_spi_readl(tspi, SPI_DMA_BLK));
-+	dev_dbg(tspi->dev, "TRANS_STAT:  0x%08x | FIFO_STATUS: 0x%08x\n",
-+		tegra_spi_readl(tspi, SPI_TRANS_STATUS),
-+		tegra_spi_readl(tspi, SPI_FIFO_STATUS));
-+}
-+
- static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			struct spi_message *msg)
- {
-@@ -904,6 +918,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			    (tspi->cur_direction & DATA_DIR_RX))
- 				dmaengine_terminate_all(tspi->rx_dma_chan);
- 			ret = -EIO;
-+			tegra_spi_dump_regs(tspi);
- 			tegra_spi_flush_fifos(tspi);
- 			reset_control_assert(tspi->rst);
- 			udelay(2);
-@@ -913,6 +928,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 
- 		if (tspi->tx_status ||  tspi->rx_status) {
- 			dev_err(tspi->dev, "Error in Transfer\n");
-+			tegra_spi_dump_regs(tspi);
- 			ret = -EIO;
- 			goto complete_xfer;
+@@ -344,20 +352,27 @@ static unsigned int tegra_spi_read_rx_fifo_to_client_rxbuf(
+ 			for (i = 0; len && (i < 4); i++, len--)
+ 				*rx_buf++ = (x >> i*8) & 0xFF;
  		}
-@@ -958,6 +974,7 @@ static irqreturn_t handle_cpu_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "CpuXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_dump_regs(tspi);
- 		tegra_spi_flush_fifos(tspi);
- 		reset_control_assert(tspi->rst);
- 		udelay(2);
-@@ -1031,6 +1048,7 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "DmaXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_dump_regs(tspi);
- 		tegra_spi_flush_fifos(tspi);
- 		reset_control_assert(tspi->rst);
- 		udelay(2);
+-		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 		read_words += tspi->curr_dma_words;
++		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
++		u8 bytes_per_word = tspi->bytes_per_word;
++		unsigned int read_bytes;
+ 
++		len = rx_full_count * bytes_per_word;
++		if (len > t->len - tspi->cur_pos)
++			len = t->len - tspi->cur_pos;
++		read_bytes = len;
+ 		for (count = 0; count < rx_full_count; count++) {
+ 			u32 x = tegra_spi_readl(tspi, SPI_RX_FIFO) & rx_mask;
+ 
+-			for (i = 0; (i < tspi->bytes_per_word); i++)
++			for (i = 0; len && (i < bytes_per_word); i++, len--)
+ 				*rx_buf++ = (x >> (i*8)) & 0xFF;
+ 		}
+-		tspi->cur_rx_pos += rx_full_count * tspi->bytes_per_word;
+ 		read_words += rx_full_count;
++		tspi->cur_rx_pos += read_bytes;
+ 	}
++
+ 	return read_words;
+ }
+ 
+@@ -372,12 +387,17 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
+ 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 		memcpy(tspi->tx_dma_buf, t->tx_buf + tspi->cur_pos, len);
++		tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		unsigned int i;
+ 		unsigned int count;
+ 		u8 *tx_buf = (u8 *)t->tx_buf + tspi->cur_tx_pos;
+ 		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
++		unsigned int write_bytes;
+ 
++		if (consume > t->len - tspi->cur_pos)
++			consume = t->len - tspi->cur_pos;
++		write_bytes = consume;
+ 		for (count = 0; count < tspi->curr_dma_words; count++) {
+ 			u32 x = 0;
+ 
+@@ -386,8 +406,9 @@ static void tegra_spi_copy_client_txbuf_to_spi_txbuf(
+ 				x |= (u32)(*tx_buf++) << (i * 8);
+ 			tspi->tx_dma_buf[count] = x;
+ 		}
++
++		tspi->cur_tx_pos += write_bytes;
+ 	}
+-	tspi->cur_tx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 	/* Make the dma buffer to read by dma */
+ 	dma_sync_single_for_device(tspi->dev, tspi->tx_dma_phys,
+@@ -405,20 +426,28 @@ static void tegra_spi_copy_spi_rxbuf_to_client_rxbuf(
+ 		unsigned len = tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 		memcpy(t->rx_buf + tspi->cur_rx_pos, tspi->rx_dma_buf, len);
++		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 	} else {
+ 		unsigned int i;
+ 		unsigned int count;
+ 		unsigned char *rx_buf = t->rx_buf + tspi->cur_rx_pos;
+ 		u32 rx_mask = ((u32)1 << t->bits_per_word) - 1;
++		unsigned consume = tspi->curr_dma_words * tspi->bytes_per_word;
++		unsigned int read_bytes;
+ 
++		if (consume > t->len - tspi->cur_pos)
++			consume = t->len - tspi->cur_pos;
++		read_bytes = consume;
+ 		for (count = 0; count < tspi->curr_dma_words; count++) {
+ 			u32 x = tspi->rx_dma_buf[count] & rx_mask;
+ 
+-			for (i = 0; (i < tspi->bytes_per_word); i++)
++			for (i = 0; consume && (i < tspi->bytes_per_word);
++							i++, consume--)
+ 				*rx_buf++ = (x >> (i*8)) & 0xFF;
+ 		}
++
++		tspi->cur_rx_pos += read_bytes;
+ 	}
+-	tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+ 
+ 	/* Make the dma buffer to read by dma */
+ 	dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
 -- 
 2.7.4
 
