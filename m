@@ -2,83 +2,152 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E23C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6C2C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECDF8213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553648391;
-	bh=VlXHwIt0W8ZdU1lUVZ+pbNWPd6ZDD3Bm8/y77PS/pZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tKF4J8BXh25ePQqEeQFhQUxiz/bydk38fYyDlGEaFDIUDG8xOLDTD/0hhrkooaQUa
-	 SgfRQ67QUC9g9a8K9apUrHex/NVF7PgACTwMcRCiV12vG8AjfGzkWfkbMkyf++2Ulz
-	 44fKWyNuowKbaCTn/B31UxNJqe096RVl8i/v1Iuc=
+	by mail.kernel.org (Postfix) with ESMTP id B80B5208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="U7dj3Cr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732193AbfC0A7t (ORCPT
+        id S1732328AbfC0BAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfC0A7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 20:59:49 -0400
-Received: from localhost (mobile-166-137-177-030.mycingular.net [166.137.177.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 382FD2075D;
-        Wed, 27 Mar 2019 00:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553648388;
-        bh=VlXHwIt0W8ZdU1lUVZ+pbNWPd6ZDD3Bm8/y77PS/pZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UzW6elez9ymQZWwWZbaext18hLSt+/jXtSxRvWNzAtlXLMqbSjAivWrURg3iTHkSS
-         9WaOpl7dxPOKa3JIyFYAVeMx9tXxqkstyjoenimc5h9I25F4A3n96aIRuBeG9rV+Bf
-         NqyJ2p4v6IgrRIqk9W++E6Tx2l5OdzoK3+RfZUxE=
-Date:   Wed, 27 Mar 2019 09:59:44 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     jslaby@suse.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Mark Brown <broonie@kernel.org>, lanqing.liu@unisoc.com,
-        linux-serial@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] Add new features for the Spreadtrum serial
- controller
-Message-ID: <20190327005944.GA20301@kroah.com>
-References: <cover.1551689518.git.baolin.wang@linaro.org>
- <CAMz4kuJitF7Q76T0Hoj1-UTAjQnepEs9aQHhy=r_Acdq+RiwGw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuJitF7Q76T0Hoj1-UTAjQnepEs9aQHhy=r_Acdq+RiwGw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 26 Mar 2019 21:00:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33283 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732225AbfC0BAP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 21:00:15 -0400
+Received: by mail-qt1-f194.google.com with SMTP id k14so17013806qtb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 18:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pZxffqpv2AkoRy7l1MYn8mOEK0pZUkSkYNUnR2f18Ts=;
+        b=U7dj3Cr53elo9aF+87clxge+HccjN2L7G7EmN+YbZQJEzwn1rZLsOecFkFfmh32iIS
+         3OolISTsTDjaeGqpIGfYIeTQhUzj2zax/UQ5TfLl8LfYCASUnTnUjxH9AOcHm9t76B5j
+         vfp1SzSqKeAL5zv4eQkDoS1PMTo+KArXgtJFxzQ0OYbQVDaKt364XEJRT44ACDiUMSbS
+         1kYHA4gEp6RyrERzBVsyG3cBsm4LYQefYZsQldtyjDg0ose1Nm9IlAXLRhGWL1UF8kOk
+         ICcHl8yyGZE+wdygbNGyNee3OEJaE+4g8djjqMl5LXKK4uMp6cA/dNqmwbEgjYvoTsIa
+         DyAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pZxffqpv2AkoRy7l1MYn8mOEK0pZUkSkYNUnR2f18Ts=;
+        b=qJoBGf/xpF8k2n0aS/cFKv0Of/Mqo1OajI1++TcmLRMoGvtdwnGqgMqpgRq3UO4dIf
+         41cA6krtEXI3ORzHrJE3KkGSjgOgeJ9zWBtbHv0MxG9DZgdu0uUufB9z0spG30KLhe9E
+         TT2nUqno7gKZwcSmGI86EtXkcJ1sPUMRf1tZzCZv6v+jVJiJWwu2wBVrnSnVpCDfX/Wh
+         /7OAjhRUZk1Xtz4DlQ5QaT57ajjRGeL80uFjFAnNCXJmiTG1owazGaY3SJw0Fy8NS5TH
+         qpGAGIRbBrEzedh3yicIkg2vz6UBc+xuJVbpimddytZvOn7BO4QNn8rc0rbJX7yrq/Kk
+         v+lg==
+X-Gm-Message-State: APjAAAX2ZszymfyR1RGn4rxJtFOO7/fsMspQOT8hGnJW720WuUNva7nM
+        x76FXP4qrSiSgUZ2oSZBR/p4/Q==
+X-Google-Smtp-Source: APXvYqwl4TaXQkcnOk0vHKSITH5fSKz32SoS1GojFCbNObWe52QerscJNR7oDPb0LKa+63PVnFPuJA==
+X-Received: by 2002:ac8:29e8:: with SMTP id 37mr29212714qtt.153.1553648414651;
+        Tue, 26 Mar 2019 18:00:14 -0700 (PDT)
+Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id b3sm10821266qti.33.2019.03.26.18.00.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 Mar 2019 18:00:14 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     catalin.marinas@arm.com, cl@linux.com, mhocko@kernel.org,
+        willy@infradead.org, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH v4] kmemleak: survive in a low-memory situation
+Date:   Tue, 26 Mar 2019 20:59:48 -0400
+Message-Id: <20190327005948.24263-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 06:41:31PM +0800, Baolin Wang wrote:
-> Hi Greg,
-> 
-> On Mon, 4 Mar 2019 at 16:59, Baolin Wang <baolin.wang@linaro.org> wrote:
-> >
-> > This patch set fixes the baud rate calculation formula issue, as well as
-> > adding power management support and DMA mode support for the Spreadtrum
-> > serial controller.
-> >
-> > Changes from v1:
-> >  - The patch 1 of V1 was applied, so remove the baud rate fix from this patch set.
-> >  - Add reviewed tag from Rob for patch 1.
-> >  - Fix the incorrect names' order in patch 3.
-> 
-> Could you apply this patch set if no objection from you? Thanks.
+Kmemleak could quickly fail to allocate an object structure and then
+disable itself below in a low-memory situation. For example, running a
+mmap() workload triggering swapping and OOM. This is especially
+problematic for running things like LTP testsuite where one OOM test
+case would disable the whole kmemleak and render the rest of test cases
+without kmemleak watching for leaking.
 
-It's in my to-review queue, sorry, will get to it soon...
+Kmemleak allocation could fail even though the tracked memory is
+succeeded. Hence, it could still try to start a direct reclaim if it is
+not executed in an atomic context (spinlock, irq-handler etc), or a
+high-priority allocation in an atomic context as a last-ditch effort.
+Since kmemleak is a debug feature, it is unlikely to be used in
+production that memory resources is scarce where direct reclaim or
+high-priority atomic allocations should not be granted lightly.
 
-greg k-h
+Unless there is a brave soul to reimplement the kmemleak to embed it's
+metadata into the tracked memory itself in a foreseeable future, this
+provides a good balance between enabling kmemleak in a low-memory
+situation and not introducing too much hackiness into the existing
+code for now. Another approach is to fail back the original allocation
+once kmemleak_alloc() failed, but there are too many call sites to
+deal with which makes it error-prone.
+
+kmemleak: Cannot allocate a kmemleak_object structure
+kmemleak: Kernel memory leak detector disabled
+kmemleak: Automatic memory scanning thread ended
+RIP: 0010:__alloc_pages_nodemask+0x242a/0x2ab0
+Call Trace:
+ allocate_slab+0x4d9/0x930
+ new_slab+0x46/0x70
+ ___slab_alloc+0x5d3/0x9c0
+ __slab_alloc+0x12/0x20
+ kmem_cache_alloc+0x30a/0x360
+ create_object+0x96/0x9a0
+ kmemleak_alloc+0x71/0xa0
+ kmem_cache_alloc+0x254/0x360
+ mempool_alloc_slab+0x3f/0x60
+ mempool_alloc+0x120/0x329
+ bio_alloc_bioset+0x1a8/0x510
+ get_swap_bio+0x107/0x470
+ __swap_writepage+0xab4/0x1650
+ swap_writepage+0x86/0xe0
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v4: Update the commit log.
+    Fix a typo in comments per Christ.
+    Consolidate the allocation.
+v3: Update the commit log.
+    Simplify the code inspired by graph_trace_open() from ftrace.
+v2: Remove the needless checking for NULL objects in slab_post_alloc_hook()
+    per Catalin.
+
+ mm/kmemleak.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index a2d894d3de07..7f4545ab1f84 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -580,7 +580,16 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
+ 	struct rb_node **link, *rb_parent;
+ 	unsigned long untagged_ptr;
+ 
+-	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
++	/*
++	 * The tracked memory was allocated successful, if the kmemleak object
++	 * failed to allocate for some reasons, it ends up with the whole
++	 * kmemleak disabled, so try it harder.
++	 */
++	gfp = (in_atomic() || irqs_disabled()) ?
++	       gfp_kmemleak_mask(gfp) | GFP_ATOMIC :
++	       gfp_kmemleak_mask(gfp) | __GFP_DIRECT_RECLAIM;
++
++	object = kmem_cache_alloc(object_cache, gfp);
+ 	if (!object) {
+ 		pr_warn("Cannot allocate a kmemleak_object structure\n");
+ 		kmemleak_disable();
+-- 
+2.17.2 (Apple Git-113)
+
