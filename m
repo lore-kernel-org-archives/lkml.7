@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC86C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F70C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781CD2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20ED217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709877;
-	bh=iMmcy8l6fQyXQugGMiuXU/pVATVpFRkESNIuDS8i0og=;
+	s=default; t=1553709881;
+	bh=XX8Hn9a9Oah4IHGno6eDUs0zRW/pen3d/J+I3YWdfkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XeJibKl3seW279+rCs+JpF6eAj+522XZmNQNZHhVPPNFaSJqrxAVQMNnX5eFZTGQb
-	 TAEnCJoAeHwhfoqMq6TbXmft9rZthO25dtwJ0cIGpe/fXL2Shgp4jg5NSpqmu57zKr
-	 XK7J0mLbPVc5BCjE/4dOKly4PsuoAaNQ/HccsrzA=
+	b=PgcwGuduoZI9p85vGGWz2Is1WwSXo3TRsT6uYON19LPlQQfAM0DviIxrKJ0E++mYP
+	 +Z0t44ltE2nClUSFx74ZF9Cx+i4KBs/KUoa9e1/o9lslxSVHwjTCgLZPr5I/zI3Cr8
+	 omTojLrobXTRE58x0geJOAdu3knthLglqJrG9cjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbfC0SEf (ORCPT
+        id S2387410AbfC0SEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfC0SEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:04:32 -0400
+        id S1733298AbfC0SEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:04:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D5F5217F5;
-        Wed, 27 Mar 2019 18:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F00B21734;
+        Wed, 27 Mar 2019 18:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709872;
-        bh=iMmcy8l6fQyXQugGMiuXU/pVATVpFRkESNIuDS8i0og=;
+        s=default; t=1553709874;
+        bh=XX8Hn9a9Oah4IHGno6eDUs0zRW/pen3d/J+I3YWdfkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPAPntfikYuETmOemYhZp2NvkrF6hQFlGEGcHfgvCkZ3nTfvcs4rjIcBaIc/uHD1c
-         OFyI+WPVA4OBDzlOt+ker3B7g4z2DkLg+tQQWGrj38oGRnjHAwFl74xc2ZiJPl8/ux
-         TePhnPt3EQKqdFYTuNNDAldZDTRwedQEe7egy27w=
+        b=i8plpgoayYUAsIkja3fxooZ2T0W2nSUGmbtir49wIuyIgIT/7QRx+pUI89frNeGjX
+         M3L4ZJHZob0pKgjSxULaXVO8bpUYr3/TeOyblX7V+5tivuL4SOhKbSaYcHQyEBey57
+         MraWp0OfpGTGWho06aq27LaDK91haC1EiS9RunDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 082/262] serial: 8250_pxa: honor the port number from devicetree
-Date:   Wed, 27 Mar 2019 13:58:57 -0400
-Message-Id: <20190327180158.10245-82-sashal@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 083/262] ARM: 8840/1: use a raw_spinlock_t in unwind
+Date:   Wed, 27 Mar 2019 13:58:58 -0400
+Message-Id: <20190327180158.10245-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,43 +57,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
+[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
 
-Like the other OF-enabled drivers, use the port number from the firmware if
-the devicetree specifies an alias:
+Mostly unwind is done with irqs enabled however SLUB may call it with
+irqs disabled while creating a new SLUB cache.
 
-  aliases {
-      ...
-      serial2 = &uart2; /* Should be ttyS2 */
-  }
+I had system freeze while loading a module which called
+kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
+interrupts and then
 
-This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
-messes up the numbering.
+->new_slab_objects()
+ ->new_slab()
+  ->setup_object()
+   ->setup_object_debug()
+    ->init_tracking()
+     ->set_track()
+      ->save_stack_trace()
+       ->save_stack_trace_tsk()
+        ->walk_stackframe()
+         ->unwind_frame()
+          ->unwind_find_idx()
+           =>spin_lock_irqsave(&unwind_lock);
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_pxa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/kernel/unwind.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
-index b9bcbe20a2be..c47188860e32 100644
---- a/drivers/tty/serial/8250/8250_pxa.c
-+++ b/drivers/tty/serial/8250/8250_pxa.c
-@@ -113,6 +113,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 0bee233fef9a..314cfb232a63 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
+ static const struct unwind_idx *__origin_unwind_idx;
+ extern const struct unwind_idx __stop_unwind_idx[];
  
-+	ret = of_alias_get_id(pdev->dev.of_node, "serial");
-+	if (ret >= 0)
-+		uart.port.line = ret;
-+
- 	uart.port.type = PORT_XSCALE;
- 	uart.port.iotype = UPIO_MEM32;
- 	uart.port.mapbase = mmres->start;
+-static DEFINE_SPINLOCK(unwind_lock);
++static DEFINE_RAW_SPINLOCK(unwind_lock);
+ static LIST_HEAD(unwind_tables);
+ 
+ /* Convert a prel31 symbol to an absolute address */
+@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 		/* module unwind tables */
+ 		struct unwind_table *table;
+ 
+-		spin_lock_irqsave(&unwind_lock, flags);
++		raw_spin_lock_irqsave(&unwind_lock, flags);
+ 		list_for_each_entry(table, &unwind_tables, list) {
+ 			if (addr >= table->begin_addr &&
+ 			    addr < table->end_addr) {
+@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 				break;
+ 			}
+ 		}
+-		spin_unlock_irqrestore(&unwind_lock, flags);
++		raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 	}
+ 
+ 	pr_debug("%s: idx = %p\n", __func__, idx);
+@@ -529,9 +529,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
+ 	tab->begin_addr = text_addr;
+ 	tab->end_addr = text_addr + text_size;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_add_tail(&tab->list, &unwind_tables);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	return tab;
+ }
+@@ -543,9 +543,9 @@ void unwind_table_del(struct unwind_table *tab)
+ 	if (!tab)
+ 		return;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_del(&tab->list);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	kfree(tab);
+ }
 -- 
 2.19.1
 
