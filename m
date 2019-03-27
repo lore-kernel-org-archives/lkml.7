@@ -2,106 +2,95 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD91C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00919C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D9020811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C226F2075D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbfC0Gyh (ORCPT
+        id S1732245AbfC0G43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:54:37 -0400
-Received: from shell.v3.sk ([90.176.6.54]:49630 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfC0Gyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:54:36 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C887A103523;
-        Wed, 27 Mar 2019 07:54:32 +0100 (CET)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id dLeMTF1Dff8i; Wed, 27 Mar 2019 07:54:30 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 2665F103540;
-        Wed, 27 Mar 2019 07:54:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id g7T2WHuZJ3wc; Wed, 27 Mar 2019 07:54:29 +0100 (CET)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 6D0D5103523;
-        Wed, 27 Mar 2019 07:54:29 +0100 (CET)
-Message-ID: <93930d9c577a7cf83dc7c96ae411dec4d6d47610.camel@v3.sk>
-Subject: Re: [PATCH 2/3] *: convert stream-like files from nonseekable_open
- -> stream_open
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Kirill Smelkov <kirr@nexedi.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 27 Mar 2019 07:54:28 +0100
-In-Reply-To: <8794193f3040b798010970228d978c05ad56ec52.1553637462.git.kirr@nexedi.com>
-References: <c44fcf87d4c9d417b6cdced787091300fd45a3e4.1553637461.git.kirr@nexedi.com>
-         <8794193f3040b798010970228d978c05ad56ec52.1553637462.git.kirr@nexedi.com>
+        Wed, 27 Mar 2019 02:56:29 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:11401 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731583AbfC0G43 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:56:29 -0400
+X-UUID: 1f02f4ece1374a00959cf2311857a537-20190327
+X-UUID: 1f02f4ece1374a00959cf2311857a537-20190327
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1029117115; Wed, 27 Mar 2019 14:56:22 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N2.mediatek.inc
+ (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Mar
+ 2019 14:56:19 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 27 Mar 2019 14:56:19 +0800
+Message-ID: <1553669779.10179.172.camel@mhfsdcap03>
+Subject: Re: [PATCH] usb: mtu3: fix EXTCON dependency
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 27 Mar 2019 14:56:19 +0800
+In-Reply-To: <20190325135440.2166315-1-arnd@arndb.de>
+References: <20190325135440.2166315-1-arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 (3.32.0-1.fc30) 
-MIME-Version: 1.0
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 651F7988FCF2C72B0EB449E36F2D4F2E03D516550D08353FFCD6E2834597AC0C2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-26 at 23:23 +0000, Kirill Smelkov wrote:
-> Using scripts/coccinelle/api/stream_open.cocci added in the previous
-> patch, search and convert to stream_open all in-kernel nonseekable_open
-> users for which read and write actually do not depend on ppos and where
-> there is no other methods in file_operations which assume @offset
-> access.
+Hi Arnd,
+
+On Mon, 2019-03-25 at 14:54 +0100, Arnd Bergmann wrote:
+> When EXTCON is a loadable module, mtu3 fails to link as built-in:
 > 
-> I've verified each generated change manually - that it is correct to convert -
-> and each other nonseekable_open instance left - that it is either not correct
-> to convert there, or that it is not converted due to current stream_open.cocci
-> limitations. The script also does not convert files that should be valid to
-> convert, but that currently have .llseek = noop_llseek or generic_file_llseek
-> for unknown reason despite file being opened with nonseekable_open (e.g.
-> drivers/input/mousedev.c)
+> drivers/usb/mtu3/mtu3_plat.o: In function `mtu3_probe':
+> mtu3_plat.c:(.text+0x690): undefined reference to `extcon_get_edev_by_phandle'
 > 
-> Among cases converted 14 were potentially vulnerable to read vs write deadlock
-> (see details in the previous patch):
+> Add a Kconfig dependency to force mtu3 also to be a loadable module
+> if extconn is, but still allow it to be built without extcon.
+     ^^ extcon
 
-...
+> 
+> Fixes: d0ed062a8b75 ("usb: mtu3: dual-role mode support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/usb/mtu3/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/mtu3/Kconfig b/drivers/usb/mtu3/Kconfig
+> index bcc23486c4ed..928c2cd6fc00 100644
+> --- a/drivers/usb/mtu3/Kconfig
+> +++ b/drivers/usb/mtu3/Kconfig
+> @@ -6,6 +6,7 @@ config USB_MTU3
+>  	tristate "MediaTek USB3 Dual Role controller"
+>  	depends on USB || USB_GADGET
+>  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> +	depends on EXTCON || !EXTCON
+>  	select USB_XHCI_MTK if USB_SUPPORT && USB_XHCI_HCD
+>  	help
+>  	  Say Y or M here if your system runs on MediaTek SoCs with
 
-> and the reset were just safe to convert to stream_open because their
-> read and write do not use ppos at all and corresponding file_operations
-> do not have methods that assume @offset file access:
+Tested-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 
-...
+Thank you!
 
-> 	drivers/char/pcmcia/scr24x_cs.c:95:8-24: WARNING: scr24x_fops: .read() and .write() have stream semantic; safe to change nonseekable_open -> stream_open.
 
-...
-
-> diff --git a/drivers/char/pcmcia/scr24x_cs.c b/drivers/char/pcmcia/scr24x_cs.c
-> index f6b43d9350f0..04b39c3596cc 100644
-> --- a/drivers/char/pcmcia/scr24x_cs.c
-> +++ b/drivers/char/pcmcia/scr24x_cs.c
-> @@ -92,7 +92,7 @@ static int scr24x_open(struct inode *inode, struct file *filp)
->  	kref_get(&dev->refcnt);
->  	filp->private_data = dev;
->  
-> -	return nonseekable_open(inode, filp);
-> +	return stream_open(inode, filp);
->  }
->  
->  static int scr24x_release(struct inode *inode, struct file *filp)
-
-Acked-by: Lubomir Rintel <lkundrak@v3.sk> [scr24x_cs]
-
-Thanks,
-Lubo
 
