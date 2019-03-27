@@ -6,66 +6,68 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D5CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10142C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882232087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A112087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gwf9H2HA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GNWfaxUs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pg47Pfne";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IO2AZz6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfC0Op4 (ORCPT
+        id S1728863AbfC0Orn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 10:45:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47482 "EHLO
+        Wed, 27 Mar 2019 10:47:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48544 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfC0Opx (ORCPT
+        with ESMTP id S1726469AbfC0Orm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 10:45:53 -0400
+        Wed, 27 Mar 2019 10:47:42 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C5F8960A60; Wed, 27 Mar 2019 14:45:52 +0000 (UTC)
+        id D53B761112; Wed, 27 Mar 2019 14:47:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553697952;
-        bh=duLL1CPWxrVpesOV7NaJDQiBU+y0GBOY+Chd5dVRZjM=;
+        s=default; t=1553698061;
+        bh=fhtb43R3oc+3c8T5J+o3P7q35SsRMxhavQBMvJmNqxM=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Gwf9H2HA4GMaRgujZu2nVAsY5AzH5wNXXtNenItHGd1eqzcVpmkQuBzRNBD/ZjlC6
-         mURvAeghJM9CcSMpErJV7asXeFHTNeIgRjbG/FpYEk0oeKk5C+5y9WLwqLdpIyE1gv
-         9unnsmjLU72gtMj/tT1yU42Mc3r48yUP9TTN2uxg=
+        b=Pg47PfneHLXWjcTQx++ruQGTCn9v1QImT9o+0HNU3eLLQa9qgoYccQ4/KAtaP4H89
+         GNqiMuhAhzgxmLtw0S0yDyLU4vfnmiPJNmV0AW9gIH9n54N24kaOSm7u+R8kmPO+El
+         24cMwFFhYH/NheDb69+a23MasLi0sZjWK8rOlZEY=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA87360A50;
-        Wed, 27 Mar 2019 14:45:44 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B3B6960DB2;
+        Wed, 27 Mar 2019 14:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553697951;
-        bh=duLL1CPWxrVpesOV7NaJDQiBU+y0GBOY+Chd5dVRZjM=;
+        s=default; t=1553698060;
+        bh=fhtb43R3oc+3c8T5J+o3P7q35SsRMxhavQBMvJmNqxM=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GNWfaxUsZ6xxrO8O+iit0zT09BeGf9GXT8md8zqp9sOImwHuWfhIuXkURYmkuKVwh
-         5tpp2eu1MMGdvOHgjOeUWn1Xcl/10659gvnVocXD1odQGiCPfJq0lKeqJd5DxyANwv
-         wN4ySLe3hyzVIYQHueZBYexDEaxYRtQT6xmeZRMY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA87360A50
+        b=IO2AZz6gHc+96JUmyZQ9GAo4lSo1D5nv4iEkeU80lZg9JVTBf3DUeUCbzx+awC5vw
+         GXPDjvd0mbRFKdINHvew48oeaq4X4K5SBdUjXmwWIV+bQfPBIMpBMzACnGW35S7hEw
+         UPyrVVRVPqst2wAUXOQT3Zdgli1GoknrcSBi0yrE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B3B6960DB2
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] thunderbolt: property: fix a buffer overflow and a
- missing check
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <20190324224916.1389-1-kjlu@umn.edu>
+Subject: Re: [PATCH v2 -next] drm/virtio: remove set but not used variable
+ 'vgdev'
+To:     YueHaibing <yuehaibing@huawei.com>,
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20190320020308.12745-1-yuehaibing@huawei.com>
+ <20190325092631.152060-1-yuehaibing@huawei.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <9a518b6f-0036-2425-a40e-68d1f5f8d5c4@codeaurora.org>
-Date:   Wed, 27 Mar 2019 20:15:39 +0530
+Message-ID: <17e9a0c2-63dd-ac97-49c6-aa70b5c8d221@codeaurora.org>
+Date:   Wed, 27 Mar 2019 20:17:29 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190324224916.1389-1-kjlu@umn.edu>
+In-Reply-To: <20190325092631.152060-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -73,46 +75,58 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/25/2019 4:19 AM, Kangjie Lu wrote:
-> First, no memory is allocated for "property->value.text"; the
-> following strcpy will lead to a buffer overflow.
-
-Fix the commit text as there is no  overflow.
-
-only the check and resource cleanp is the fix.
-
+On 3/25/2019 2:56 PM, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 >
-> Second, no check is enforced for the return value of kzalloc,
-> which may lead to NULL-pointer dereference.
+> drivers/gpu/drm/virtio/virtgpu_ttm.c: In function 'virtio_gpu_init_mem_type':
+> drivers/gpu/drm/virtio/virtgpu_ttm.c:117:28: warning:
+>   variable 'vgdev' set but not used [-Wunused-but-set-variable]
 >
-> The patch fixes the two issues.
+> drivers/gpu/drm/virtio/virtgpu_ttm.c: In function 'virtio_gpu_bo_swap_notify':
+> drivers/gpu/drm/virtio/virtgpu_ttm.c:300:28: warning:
+>   variable 'vgdev' set but not used [-Wunused-but-set-variable]
 >
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu
-Otherwise looks good.
+> It is never used since introduction in dc5698e80cf7 ("Add virtio gpu driver.")
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
 
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
 -Mukesh
 
 > ---
->   drivers/thunderbolt/property.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
+> v2: fix patch prefix
+> ---
+>   drivers/gpu/drm/virtio/virtgpu_ttm.c | 6 ------
+>   1 file changed, 6 deletions(-)
 >
-> diff --git a/drivers/thunderbolt/property.c b/drivers/thunderbolt/property.c
-> index 841314deb446..d5b0cdb8f0b1 100644
-> --- a/drivers/thunderbolt/property.c
-> +++ b/drivers/thunderbolt/property.c
-> @@ -587,7 +587,12 @@ int tb_property_add_text(struct tb_property_dir *parent, const char *key,
->   		return -ENOMEM;
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_ttm.c b/drivers/gpu/drm/virtio/virtgpu_ttm.c
+> index d6225ba20b30..eb007c2569d8 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_ttm.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_ttm.c
+> @@ -114,10 +114,6 @@ static const struct ttm_mem_type_manager_func virtio_gpu_bo_manager_func = {
+>   static int virtio_gpu_init_mem_type(struct ttm_bo_device *bdev, uint32_t type,
+>   				    struct ttm_mem_type_manager *man)
+>   {
+> -	struct virtio_gpu_device *vgdev;
+> -
+> -	vgdev = virtio_gpu_get_vgdev(bdev);
+> -
+>   	switch (type) {
+>   	case TTM_PL_SYSTEM:
+>   		/* System memory */
+> @@ -297,10 +293,8 @@ static void virtio_gpu_bo_move_notify(struct ttm_buffer_object *tbo,
+>   static void virtio_gpu_bo_swap_notify(struct ttm_buffer_object *tbo)
+>   {
+>   	struct virtio_gpu_object *bo;
+> -	struct virtio_gpu_device *vgdev;
 >   
->   	property->length = size / 4;
-> -	property->value.data = kzalloc(size, GFP_KERNEL);
-> +	property->value.text = kzalloc(size, GFP_KERNEL);
-> +	if (!property->value.text) {
-> +		kfree(property);
-> +		return -ENOMEM;
-> +	}
-> +
->   	strcpy(property->value.text, text);
+>   	bo = container_of(tbo, struct virtio_gpu_object, tbo);
+> -	vgdev = (struct virtio_gpu_device *)bo->gem_base.dev->dev_private;
 >   
->   	list_add_tail(&property->list, &parent->properties);
+>   	if (bo->pages)
+>   		virtio_gpu_object_free_sg_table(bo);
+>
+>
+>
