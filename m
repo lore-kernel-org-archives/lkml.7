@@ -2,140 +2,67 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F3CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39A5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B442075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:53:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WfWNfV+d";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GiipJnaL"
+	by mail.kernel.org (Postfix) with ESMTP id CAD782075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfC0NxU (ORCPT
+        id S1728438AbfC0Nyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:53:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58440 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfC0NxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:53:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6A900619B3; Wed, 27 Mar 2019 13:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553694799;
-        bh=JmUbfQxsHOj5SXBkCsYMoFaxqHxlEGh95LyB0+AhJwQ=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=WfWNfV+dw476+pknIKEXgTRG8fRae1Ii7kQ5GmU0RQFbGcmcjJfgW2Cjr/PMAvWED
-         Gm2wUcii+7JvMUuzMXjXBIj2I5SPK4UkfqP5+MoaQkPpHioyAFHANAsFjx+srUuefO
-         V6s0pYLeFwXNLvfzyoDbc2RXH2EwWaSz2BeAUm0U=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4807461A25;
-        Wed, 27 Mar 2019 13:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553694797;
-        bh=JmUbfQxsHOj5SXBkCsYMoFaxqHxlEGh95LyB0+AhJwQ=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=GiipJnaLqXZAXxB/yqF/KOtYicyHlKQkPn29iHemSZ3Ue9fbREZmcKMoSy+kxbUAS
-         q6YIOWyIjYZJmqp0p16qqBufZ1RrTpMrQjFoynxM3LFcDPJc3ORiTCcRdOLh4/UA0j
-         kMxB6/XPBZqR5HeWPkkTn+MCwcvngvBAooxyl928=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4807461A25
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] fs: fix warning about Using plain integer as NULL pointer
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <20190322221021.GA24814@hari-Inspiron-1545>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <ac5a9f95-e04a-54bc-e7cb-4103555a79b4@codeaurora.org>
-Date:   Wed, 27 Mar 2019 19:23:10 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 27 Mar 2019 09:54:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27040 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfC0Nyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:54:40 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 06:54:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,277,1549958400"; 
+   d="scan'208";a="145679114"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga002.jf.intel.com with ESMTP; 27 Mar 2019 06:54:39 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5C93E301327; Wed, 27 Mar 2019 06:54:39 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 06:54:39 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf, tools: Implement duration_time as a proper
+ event
+Message-ID: <20190327135439.GS18020@tassilo.jf.intel.com>
+References: <20190326221823.11518-1-andi@firstfloor.org>
+ <20190326221823.11518-3-andi@firstfloor.org>
+ <20190327085813.GB24156@krava>
 MIME-Version: 1.0
-In-Reply-To: <20190322221021.GA24814@hari-Inspiron-1545>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327085813.GB24156@krava>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> 
+> so now that we have time in a separate event, we could
+> get rid of the isolated update_stats(&walltime_nsecs_stats) calls
+> and move them to perf_stat__update_shadow_stats?
 
-On 3/23/2019 3:40 AM, Hariprasad Kelam wrote:
-> Sparse warning below:
->
-> sudo make C=2 CF=-D__CHECK_ENDIAN__ M=fs
->
-> CHECK   fs/f2fs/data.c
-> fs/f2fs/data.c:426:47: warning: Using plain integer as NULL pointer
-> CHECK   fs/notify/fdinfo.c
-> fs/notify/fdinfo.c:53:87: warning: Using plain integer as NULL pointer
->   CHECK   fs/ubifs/xattr.c
-> fs/ubifs/xattr.c:615:58: warning: Using plain integer as NULL pointer
->
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+In theory yes, but it would require perf stat always setting up
+the duration_time event implicitely and then special handling.
 
+For stat it would need to be hidden to keep the same output.
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+It's probably simpler to keep the old way for that.
 
--Mukesh
+-Andi
 
-> ---
->   fs/f2fs/data.c     | 2 +-
->   fs/notify/fdinfo.c | 2 +-
->   fs/ubifs/xattr.c   | 2 +-
->   3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 97279441..15a2381 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -423,7 +423,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
->   
->   void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type)
->   {
-> -	__submit_merged_write_cond(sbi, NULL, 0, 0, type, true);
-> +	__submit_merged_write_cond(sbi, NULL, NULL, 0, type, true);
->   }
->   
->   void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
-> diff --git a/fs/notify/fdinfo.c b/fs/notify/fdinfo.c
-> index 1e2bfd2..ef83f40 100644
-> --- a/fs/notify/fdinfo.c
-> +++ b/fs/notify/fdinfo.c
-> @@ -50,7 +50,7 @@ static void show_mark_fhandle(struct seq_file *m, struct inode *inode)
->   	f.handle.handle_bytes = sizeof(f.pad);
->   	size = f.handle.handle_bytes >> 2;
->   
-> -	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle, &size, 0);
-> +	ret = exportfs_encode_inode_fh(inode, (struct fid *)f.handle.f_handle, &size, NULL);
->   	if ((ret == FILEID_INVALID) || (ret < 0)) {
->   		WARN_ONCE(1, "Can't encode file handler for inotify: %d\n", ret);
->   		return;
-> diff --git a/fs/ubifs/xattr.c b/fs/ubifs/xattr.c
-> index f5ad1ed..066a566 100644
-> --- a/fs/ubifs/xattr.c
-> +++ b/fs/ubifs/xattr.c
-> @@ -612,7 +612,7 @@ int ubifs_init_security(struct inode *dentry, struct inode *inode,
->   	int err;
->   
->   	err = security_inode_init_security(inode, dentry, qstr,
-> -					   &init_xattrs, 0);
-> +					   &init_xattrs, NULL);
->   	if (err) {
->   		struct ubifs_info *c = dentry->i_sb->s_fs_info;
->   		ubifs_err(c, "cannot initialize security for inode %lu, error %d",
