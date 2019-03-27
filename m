@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432E6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F2FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086402075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34662075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715022;
-	bh=Ii7mdWLM0X85/ZxY9kH/FvQqPRcWFcHxIESPoDg5v24=;
+	s=default; t=1553715028;
+	bh=VmseP4cW3fe9niHuW0Is9N0JXM0IwEDP0nn1p6xWHdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcYCGaxgEDfKTse/BVJ2qX9ilpsdjFeVN17xIh4FtL0Q7dMMTen0iDTivERkL8UhI
-	 yDawAlHhSw3LY/XuERNOFSzbIw6MJ1HmENjQgxUN79gqB1eXJOJ2Ko6cLUnL0L3AFj
-	 TztA5e8W2+Otl2F+yfw1w/qtnpsXE54oxBS53VT0=
+	b=qIcZ/wKlhpmHnE37Xt+pi52x0tC4Ft3etDbs0F2hO7ZnPYQIJQ2puT4KAvRg0wykE
+	 9gEqYZHyrbJu9s88x6l2ULZ1lO3lh+gC+72HUSUHQTmB1zs283YUKUbUdD3AFKwigt
+	 uC3xr4GTMSZy/0dUMk45pdMeJlwmxWfty1DTjSVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbfC0SDe (ORCPT
+        id S2387684AbfC0Ta0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43784 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732498AbfC0SD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:29 -0400
+        id S1732562AbfC0SDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0603E2075C;
-        Wed, 27 Mar 2019 18:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81222184E;
+        Wed, 27 Mar 2019 18:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709808;
-        bh=Ii7mdWLM0X85/ZxY9kH/FvQqPRcWFcHxIESPoDg5v24=;
+        s=default; t=1553709813;
+        bh=VmseP4cW3fe9niHuW0Is9N0JXM0IwEDP0nn1p6xWHdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oN7iWcaO8+SviWcrISm9Memxy8Qn/T4xjZPgIA3UzfQcGWvFl4Y8BRrOlER2k6LFU
-         cEUAqyxBmmlVGJ/hubJO2jYNhFsxUWPLR3/cshVsLn94I1A/aJoUqXtH5nZtLZaI+2
-         FHDZM8Cto4YfcOPgvy/7yb3M31qSQxAcFlkt6hlU=
+        b=CpPSkokY9Ukofq3AalGXgtr739MToPWjtjfFblyD1l0DN4bb8QFWb6Qwq5e4JPBGw
+         VO43NlNqmWevUFsD30H4Z5aGji+SleYgtkHxpPncPTxteWrb670y1tp3l+Si+4sAqP
+         jY6vWz28XcF13rXcdDDh+h0FvgZKQj9cMLmAv5MU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 050/262] cifs: Fix NULL pointer dereference of devname
-Date:   Wed, 27 Mar 2019 13:58:25 -0400
-Message-Id: <20190327180158.10245-50-sashal@kernel.org>
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Zhang Yu <zhangyu31@baidu.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 053/262] netfilter: nf_tables: check the result of dereferencing base_chain->stats
+Date:   Wed, 27 Mar 2019 13:58:28 -0400
+Message-Id: <20190327180158.10245-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,60 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yao Liu <yotta.liu@ucloud.cn>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+[ Upstream commit a9f5e78c403d2d62ade4f4c85040efc85f4049b8 ]
 
-There is a NULL pointer dereference of devname in strspn()
+Check the result of dereferencing base_chain->stats, instead of result
+of this_cpu_ptr with NULL.
 
-The oops looks something like:
+base_chain->stats maybe be changed to NULL when a chain is updated and a
+new NULL counter can be attached.
 
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+And we do not need to check returning of this_cpu_ptr since
+base_chain->stats is from percpu allocator if it is non-NULL,
+this_cpu_ptr returns a valid value.
 
-Fix this by adding a NULL check on devname in cifs_parse_devname()
+And fix two sparse error by replacing rcu_access_pointer and
+rcu_dereference with READ_ONCE under rcu_read_lock.
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Thanks for Eric's help to finish this patch.
+
+Fixes: 009240940e84c1 ("netfilter: nf_tables: don't assume chain stats are set when jumplabel is set")
+Signed-off-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/netfilter/nf_tables_core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index e61cd2938c9e..9d4e60123db4 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1487,6 +1487,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
+index a50500232b0a..7e8dae82ca52 100644
+--- a/net/netfilter/nf_tables_core.c
++++ b/net/netfilter/nf_tables_core.c
+@@ -98,21 +98,23 @@ static noinline void nft_update_chain_stats(const struct nft_chain *chain,
+ 					    const struct nft_pktinfo *pkt)
+ {
+ 	struct nft_base_chain *base_chain;
++	struct nft_stats __percpu *pstats;
+ 	struct nft_stats *stats;
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
-+
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+ 	base_chain = nft_base_chain(chain);
+-	if (!rcu_access_pointer(base_chain->stats))
+-		return;
+ 
+-	local_bh_disable();
+-	stats = this_cpu_ptr(rcu_dereference(base_chain->stats));
+-	if (stats) {
++	rcu_read_lock();
++	pstats = READ_ONCE(base_chain->stats);
++	if (pstats) {
++		local_bh_disable();
++		stats = this_cpu_ptr(pstats);
+ 		u64_stats_update_begin(&stats->syncp);
+ 		stats->pkts++;
+ 		stats->bytes += pkt->skb->len;
+ 		u64_stats_update_end(&stats->syncp);
++		local_bh_enable();
+ 	}
+-	local_bh_enable();
++	rcu_read_unlock();
+ }
+ 
+ struct nft_jumpstack {
 -- 
 2.19.1
 
