@@ -2,119 +2,106 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AB7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041582063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710144;
-	bh=g4LIPHHqvn7S6g33XK7Gxc4cLtQ4LoESKGrGQ+bYvdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zT2m5Rpo5zwWNBYY5qab4ksoRf/VqgFRzZP2GTPXuIagYopqwE2Ag1/I6ycaO9TXk
-	 zvvo5gzcJBwkCzboO4xHwGoejf+GDkP7Tpw6xcDXR2ctcV42CfGyAbe0sFXkPVfa0X
-	 Do038lvbU5LCkWSlUg5AeSxRENPveZmXK0ENGy2A=
+	by mail.kernel.org (Postfix) with ESMTP id C44A721741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jbkrirWU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbfC0SJC (ORCPT
+        id S1732789AbfC0SJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731344AbfC0SI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:58 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5590321734;
-        Wed, 27 Mar 2019 18:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710137;
-        bh=g4LIPHHqvn7S6g33XK7Gxc4cLtQ4LoESKGrGQ+bYvdg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpEB5x3++/QM/ijKCZ05ftmIN8yYv0bWraT43rS2Bl4o8w3YgauJqIAWKcIJhhD9w
-         +CzfkBjhK/M75PKXYkg3bL+shuVFJi32zs0gmQUaSmQXo+qs5qTpqNIQHys7GRGXu/
-         9FzYgmGjTDrYdxhvr1HYybH7ig1ucJDOxDAvzhkU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Jones <tonyj@suse.de>,
-        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 213/262] perf script python: Use PyBytes for attr in trace-event-python
-Date:   Wed, 27 Mar 2019 14:01:08 -0400
-Message-Id: <20190327180158.10245-213-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 14:09:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36640 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388465AbfC0SI7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so14205650ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Npju4SxUJ0U47mgz38YlqnxeUTW5KvOkHejF21m5IVY=;
+        b=jbkrirWUy7gUKHB/nLOWdxyCTyJdtE65evx3Fea+5F7BPDzM+pLlNzRTTidrlkDkyo
+         3wbkddSyt+sJ74dQkDCVC9bmMeFRsetnq+S5IOoKRU4Pb7EjN5ED+4fT4dHx65q3xOUX
+         hQVmTy4mAip0bqlUmfGy8g+0iV5jwUD2bmhMo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Npju4SxUJ0U47mgz38YlqnxeUTW5KvOkHejF21m5IVY=;
+        b=P2iqSsmyozeUs0lWfPIsog7oLVnTOPpj/f+WGSshPDnxD2FnrOF5ePRyYDEInrJUuQ
+         s6sONhNkSmjmQ81soalVyy+MJ5QFbdZ59rzgr4a+iZpSyzhQSELZdNDaEXCceVDnTuDJ
+         qrXjGIO1Ph37e93xjb7VOqGWFOigh6vewZfBwdIiAlMHm3SjqJVo30YQuYbY/k/+fvfz
+         AlTz0RfmS5qMbmaulQu/d+VErgSYLY0c5AykqvSW/2AigambWWZI3rickP+sVnRZf9li
+         0omlHqCvHVcuhffzNM1j4n3B+oJ7p+HYXRyZV3hGFfLfpbCCWkuIj0my50X0ldqCz1+Y
+         4TJw==
+X-Gm-Message-State: APjAAAWLJo4iQGfB32D6oYEcfAWfFk/WceWfAeLi4+eEU8Yqk5EZA+md
+        wBaeGV9Z8rEgKiavhe3kmsi5wDAiTsw=
+X-Google-Smtp-Source: APXvYqyPylKNLSFcwACCumDS5cxlZPEp5z4ASw9Xz0SYCGjBEytsL6fFULJdNlTchbCJnjR759IcXA==
+X-Received: by 2002:a2e:9457:: with SMTP id o23mr18937526ljh.71.1553710136582;
+        Wed, 27 Mar 2019 11:08:56 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id f25sm2162303lfc.46.2019.03.27.11.08.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 11:08:55 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id a6so12078991lfl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 11:08:55 -0700 (PDT)
+X-Received: by 2002:ac2:569b:: with SMTP id 27mr20621267lfr.24.1553710135430;
+ Wed, 27 Mar 2019 11:08:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190327180158.10245-1-sashal@kernel.org> <20190327180158.10245-116-sashal@kernel.org>
+In-Reply-To: <20190327180158.10245-116-sashal@kernel.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Wed, 27 Mar 2019 11:08:43 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXM751is4yQvH=2Ti=YJH7Za6SzswZQ5k7bEV4PnqQQmqQ@mail.gmail.com>
+Message-ID: <CA+ASDXM751is4yQvH=2Ti=YJH7Za6SzswZQ5k7bEV4PnqQQmqQ@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.0 116/262] mwifiex: don't advertise IBSS
+ features without FW support
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+On Wed, Mar 27, 2019 at 11:05 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Brian Norris <briannorris@chromium.org>
+>
+> [ Upstream commit 6f21ab30469d670de620f758330aca9f3433f693 ]
+>
+> As it is, doing something like
+>
+>   # iw phy phy0 interface add foobar type ibss
+>
+> on a firmware that doesn't have ad-hoc support just yields failures of
+> HostCmd_CMD_SET_BSS_MODE, which happened to return a '-1' error code
+> (-EPERM? not really right...) and sometimes may even crash the firmware
+> along the way.
+>
+> Let's parse the firmware capability flag while registering the wiphy, so
+> we don't allow attempting IBSS at all, and we get a proper -EOPNOTSUPP
+> from nl80211 instead.
+>
+> Fixes: e267e71e68ae ("mwifiex: Disable adhoc feature based on firmware capability")
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit 72e0b15cb24a497d7d0d4707cf51ff40c185ae8c ]
+The backport seems valid and useful:
 
-With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
-return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
-
-Below is the observed behavior without the fix.  Note it is first necessary
-to apply the prior fix (Add trace_context extension module to sys,modules):
-
-  # ldd /usr/bin/perf | grep -i python
-          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
-
-  # perf record -e raw_syscalls:sys_enter /bin/false
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
-
-  # perf script -g python | cat
-  generated Python script: perf-script.py
-
-  # perf script -s ./perf-script.py
-  in trace_begin
-  Segmentation fault (core dumped)
-
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jaroslav Škarvada <jskarvad@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 87ef16a1b17e..2fe3cc43526f 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 		Py_FatalError("couldn't create Python dictionary");
- 
- 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
--	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
--			(const char *)&evsel->attr, sizeof(evsel->attr)));
-+	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
- 
- 	pydict_set_item_string_decref(dict_sample, "pid",
- 			_PyLong_FromLong(sample->pid));
--- 
-2.19.1
-
+Reviewed-by: Brian Norris <briannorris@chromium.org>
