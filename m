@@ -7,46 +7,56 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17262C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BB9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD18D2184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC240217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710631;
-	bh=nfxfrFS3OI9LFKtIK0YEsK11tyLuyUhwb0LxDZjNg+U=;
+	s=default; t=1553710634;
+	bh=TNUjCTpnpukH81AkiRMAYJj5+/rsne7FaSX8E7sYNXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWlAOGr7xh9wmHi/uqLzG8VK83/qZ1jQT6Q/LgYW5J/3LmfZ4MDymcN2rIAVIXewi
-	 5Z3Yvki3FyN6OU5dmrZDO9fBFpc1dP1dfaRE7hdCKSVhHZQhrJjSf7NA5TesOzaNl3
-	 H1XbFQGdvK6568SumdW9Wsrv3joIZymdUbcDKZEw=
+	b=VwrkzbYo4nRh3CUc9Gblqh3UvzFyWVF3JjM5QiflGxp6l6dW3OWxChLgAFfk5cnjx
+	 wdDpPSuMXH440Twpc/fDjH2QeFR6qquzovGfBicTscMCwCUeEEQZhI8KUk+ddEehmi
+	 IJfcAMu+xayQB0CJOFx7R1IiB/qZSOI/SANwVB9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390215AbfC0SRK (ORCPT
+        id S2390221AbfC0SRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389349AbfC0SQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:57 -0400
+        id S2390173AbfC0SRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 071B22082F;
-        Wed, 27 Mar 2019 18:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE81D2087C;
+        Wed, 27 Mar 2019 18:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710616;
-        bh=nfxfrFS3OI9LFKtIK0YEsK11tyLuyUhwb0LxDZjNg+U=;
+        s=default; t=1553710624;
+        bh=TNUjCTpnpukH81AkiRMAYJj5+/rsne7FaSX8E7sYNXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=riqpW//h5E2zCEbVlg2AWPSc5mDFj7aoamUlKObjDxsmVs20Me0vu/wPC48xijKY7
-         tUWT9ZRxAKRgUaGwcI47t1EJ4cHBLPvXzMjXMSRb/lO2mnZIQKofLeNEb0/0lJusvK
-         nqy5cxxjwQBO6yIhHGJ1i7ydrfFV1+GUtBFNrpss=
+        b=aWYbfshXVJKN127ra7VIBcXSo6Ns9u9BUnrspqHQCUNUPr/DyZsHyghVGCkeOlQNk
+         kHonFIeH/Kbh7cbLm7XWVUjYnuO/0HW3iyFTMo8yS0amkNWkaM42V6I5Ybm1Ze/b5e
+         Oa48Dw1/aeAfp9ZRy7c3wzOY8pZBasi5vV7H+6kM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Ingo Molnar <mingo@elte.hu>,
+        Joel Fernandes <joelaf@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 016/123] mm/page_ext.c: fix an imbalance with kmemleak
-Date:   Wed, 27 Mar 2019 14:14:40 -0400
-Message-Id: <20190327181628.15899-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 018/123] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
+Date:   Wed, 27 Mar 2019 14:14:42 -0400
+Message-Id: <20190327181628.15899-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,82 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-[ Upstream commit 0c81585499601acd1d0e1cbf424cabfaee60628c ]
+[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
 
-After offlining a memory block, kmemleak scan will trigger a crash, as
-it encounters a page ext address that has already been freed during
-memory offlining.  At the beginning in alloc_page_ext(), it calls
-kmemleak_alloc(), but it does not call kmemleak_free() in
-free_page_ext().
+One of the vmalloc stress test case triggers the kernel BUG():
 
-    BUG: unable to handle kernel paging request at ffff888453d00000
-    PGD 128a01067 P4D 128a01067 PUD 128a04067 PMD 47e09e067 PTE 800ffffbac2ff060
-    Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-    CPU: 1 PID: 1594 Comm: bash Not tainted 5.0.0-rc8+ #15
-    Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20 10/25/2017
-    RIP: 0010:scan_block+0xb5/0x290
-    Code: 85 6e 01 00 00 48 b8 00 00 30 f5 81 88 ff ff 48 39 c3 0f 84 5b 01 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 0f 85 87 01 00 00 <4c> 8b 3b e8 f3 0c fa ff 4c 39 3d 0c 6b 4c 01 0f 87 08 01 00 00 4c
-    RSP: 0018:ffff8881ec57f8e0 EFLAGS: 00010082
-    RAX: 0000000000000000 RBX: ffff888453d00000 RCX: ffffffffa61e5a54
-    RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888453d00000
-    RBP: ffff8881ec57f920 R08: fffffbfff4ed588d R09: fffffbfff4ed588c
-    R10: fffffbfff4ed588c R11: ffffffffa76ac463 R12: dffffc0000000000
-    R13: ffff888453d00ff9 R14: ffff8881f80cef48 R15: ffff8881f80cef48
-    FS:  00007f6c0e3f8740(0000) GS:ffff8881f7680000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff888453d00000 CR3: 00000001c4244003 CR4: 00000000001606a0
-    Call Trace:
-     scan_gray_list+0x269/0x430
-     kmemleak_scan+0x5a8/0x10f0
-     kmemleak_write+0x541/0x6ca
-     full_proxy_write+0xf8/0x190
-     __vfs_write+0xeb/0x980
-     vfs_write+0x15a/0x4f0
-     ksys_write+0xd2/0x1b0
-     __x64_sys_write+0x73/0xb0
-     do_syscall_64+0xeb/0xaaa
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    RIP: 0033:0x7f6c0dad73b8
-    Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 65 63 2d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
-    RSP: 002b:00007ffd5b863cb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-    RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f6c0dad73b8
-    RDX: 0000000000000005 RSI: 000055a9216e1710 RDI: 0000000000000001
-    RBP: 000055a9216e1710 R08: 000000000000000a R09: 00007ffd5b863840
-    R10: 000000000000000a R11: 0000000000000246 R12: 00007f6c0dda9780
-    R13: 0000000000000005 R14: 00007f6c0dda4740 R15: 0000000000000005
-    Modules linked in: nls_iso8859_1 nls_cp437 vfat fat kvm_intel kvm irqbypass efivars ip_tables x_tables xfs sd_mod ahci libahci igb i2c_algo_bit libata i2c_core dm_mirror dm_region_hash dm_log dm_mod efivarfs
-    CR2: ffff888453d00000
-    ---[ end trace ccf646c7456717c5 ]---
-    Kernel panic - not syncing: Fatal exception
-    Shutting down cpus with NMI
-    Kernel Offset: 0x24c00000 from 0xffffffff81000000 (relocation range:
-    0xffffffff80000000-0xffffffffbfffffff)
-    ---[ end Kernel panic - not syncing: Fatal exception ]---
+  <snip>
+  [60.562151] ------------[ cut here ]------------
+  [60.562154] kernel BUG at mm/vmalloc.c:512!
+  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
+  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
+  <snip>
 
-Link: http://lkml.kernel.org/r/20190227173147.75650-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+it can happen due to big align request resulting in overflowing of
+calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
+
+Fix it by checking if calculated address is within vstart/vend range.
+
+Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/vmalloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 2c44f5b78435..dece2bdf86fe 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -271,6 +271,7 @@ static void free_page_ext(void *addr)
- 		table_size = get_entry_size() * PAGES_PER_SECTION;
- 
- 		BUG_ON(PageReserved(page));
-+		kmemleak_free(addr);
- 		free_pages_exact(addr, table_size);
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 8d9f636d0c98..6c906f6f16cc 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -498,7 +498,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
  	}
- }
+ 
+ found:
+-	if (addr + size > vend)
++	/*
++	 * Check also calculated address against the vstart,
++	 * because it can be 0 because of big align request.
++	 */
++	if (addr + size > vend || addr < vstart)
+ 		goto overflow;
+ 
+ 	va->va_start = addr;
 -- 
 2.19.1
 
