@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E00FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77876C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4102F21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C872063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710895;
-	bh=slLbllFuVhZcN5ojRIQlFSAirIPkdKoRiETWE52JJ00=;
+	s=default; t=1553710904;
+	bh=hA1EA4E8n/ipPxwcO4eDjpYs9zDg611IJg7EcKT+weQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xj69TF95vDoYAAbX0eVOjZHGBHBDftgEOOjT9aFWYL9in+n+et5k9178UpD9PEyo2
-	 N+lu4duET7pxqsVvbjpGmX9f/vvH5fvFLfvHlJcejpr5ihFEgdraFVzPdtt3iJCh2+
-	 nMefbcGOq++euRK3X7Zjw0UpGgKdx8hwO0JavKuA=
+	b=d53NIrjPHDbxU+w5h2K34S2tV6NZQhWAbvEe5r+WJjyPasotzXKFO3LcKJo2mexHo
+	 wdYuM8lej9Fg6StxWSbElHbn4VxDdJlf+4s3AWNh2+2Bxx3vMcZezaIOl0TK7M8vpP
+	 WbFh6bCbbvqM9rLewxg0Dfbf4rEBJSwJiOJAtlbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391200AbfC0SVe (ORCPT
+        id S2403780AbfC0SVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390309AbfC0SV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:27 -0400
+        id S2391212AbfC0SVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83C112087C;
-        Wed, 27 Mar 2019 18:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 129B92087C;
+        Wed, 27 Mar 2019 18:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710886;
-        bh=slLbllFuVhZcN5ojRIQlFSAirIPkdKoRiETWE52JJ00=;
+        s=default; t=1553710897;
+        bh=hA1EA4E8n/ipPxwcO4eDjpYs9zDg611IJg7EcKT+weQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUzHQ0IlAYg+uDsxW9kO0Cot+acJDCOdRu7mpRAvYkPmiAVoJYnqzbQkGzyJEWtq/
-         7tHfv/jMYfgRGFNlMsAKuO31zTxWQpxS/12LuuBJVDytJ7oHvP9hVlZ52GaAKdV0S4
-         SuA9eibuC6LZyTBxb+L2z5W3Jtw/jaGkYUVea1lk=
+        b=OKpyHpcpWqP5tBeUiaAQp9QfqFH/CShhUc2WU71ItjPVxZNsQWwTl34gryRz0JiyA
+         n6iuvyCRzdJ8uVCIgeub8ujQaFCB0kg6tvHAQ6IW3dNVoTtCjYYNavqow1scNQO1TX
+         eMvgU9leuKs8LSPDNrNIi9UgkCdCQwgmn62/k0aU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 27/87] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 27 Mar 2019 14:19:40 -0400
-Message-Id: <20190327182040.17444-27-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 35/87] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
+Date:   Wed, 27 Mar 2019 14:19:48 -0400
+Message-Id: <20190327182040.17444-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,114 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+The apq8016 driver leaves the of-node refcount at aborting from the
+loop of for_each_child_of_node() in the error path.  Not only the
+iterator node of for_each_child_of_node(), the children nodes referred
+from it for codec and cpu have to be properly unreferenced.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
-
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
-
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
+Cc: Patrick Lai <plai@codeaurora.org>
+Cc: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 27a6d3c6cb7c..67f6f134abc4 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -219,7 +219,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
+index 07f91e918b23..754742018515 100644
+--- a/sound/soc/qcom/apq8016_sbc.c
++++ b/sound/soc/qcom/apq8016_sbc.c
+@@ -114,13 +114,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
+ 		if (!cpu || !codec) {
+ 			dev_err(dev, "Can't find cpu/codec DT node\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
  
-@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
+ 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
+ 		if (!link->cpu_of_node) {
+ 			dev_err(card->dev, "error getting cpu phandle\n");
+-			return ERR_PTR(-EINVAL);
++			ret = -EINVAL;
++			goto error;
+ 		}
  
-@@ -1095,7 +1095,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
+ 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
+@@ -132,28 +134,37 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+ 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting cpu dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
  
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->platform_of_node = link->cpu_of_node;
+ 		ret = of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+ 			dev_err(card->dev, "error getting codec dai_link name\n");
+-			return ERR_PTR(ret);
++			goto error;
+ 		}
+ 
+ 		link->stream_name = link->name;
+ 		link->init = apq8016_sbc_dai_init;
+ 		link++;
++
++		of_node_put(cpu);
++		of_node_put(codec);
+ 	}
+ 
+ 	return data;
++
++ error:
++	of_node_put(np);
++	of_node_put(cpu);
++	of_node_put(codec);
++	return ERR_PTR(ret);
+ }
+ 
+ static const struct snd_soc_dapm_widget apq8016_sbc_dapm_widgets[] = {
 -- 
 2.19.1
 
