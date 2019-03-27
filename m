@@ -6,59 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8250CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42FFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5149E20449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764CA2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710479;
-	bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
+	s=default; t=1553710483;
+	bh=57quHqxux8raZNLicUVQIDyeoOL19nEQULhKsBWRfVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lljKUaffR52r73IJPHR/htaf45uZEE4G8mz4IPNWj9IBRh6LXn8Uyy6pWJ2WdKWfB
-	 IjJGAQTYKKh/d+lthHuz7CDJyudemjPwklmBxhnMRuSTbSWAsKW0EBBtuRF0uvE4vg
-	 8lXF1FOAE4CRvWrUPn8HAdgTSnAGqR3tIAy83/xI=
+	b=zEtvkEHgL1DBj2bRgwkQpLbkQmtKXEb5sQFZNn6PoTp+/bHDsxWY3ZY5Ri2y8shru
+	 iKKMb9syEodv7zqzSKtP3AVlHzfz590xdxH/71r0XYfaGCnIXR6XdstTG+ldyUeYSM
+	 4PoPK62w08ApLuSY81uxj1doD2Le09zE0sAsVC2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389666AbfC0SOh (ORCPT
+        id S2389675AbfC0SOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388467AbfC0SOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:34 -0400
+        id S2389664AbfC0SOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7BA2087C;
-        Wed, 27 Mar 2019 18:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B51CE21855;
+        Wed, 27 Mar 2019 18:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710473;
-        bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
+        s=default; t=1553710477;
+        bh=57quHqxux8raZNLicUVQIDyeoOL19nEQULhKsBWRfVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krEXYG9SoEzfcOZA8NYn+Y8tP2d0j2p3xFAFXEAQTpGP0ltWurOcuRPe34bKw2fnT
-         iKYNTafMOnuOOIj82ax3gdybHuPw5sZA/5QvoD6/xE658hGXe1vDvybO2Lt68mM10j
-         GzZb2uez05C9VRMXkwV2vuWEemvAPQKe89Kv1vgM=
+        b=LdHW7yNNV2BLV19wSakhzcq41N7cAjgl51zPYIBTE/7reT/T99YVLcPlTo5uDXX+8
+         v5kD/nAqV9VYrUR/f6uk4VrW208tlGXFoBQK27rCDVQ4t0vN4M/Kd7y1uACX2HbQhh
+         bn+C3PrExQXWUWJLRV2+vIAIhecpZEFQQh6T5wsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 136/192] efi/memattr: Don't bail on zero VA if it equals the region's PA
-Date:   Wed, 27 Mar 2019 14:09:28 -0400
-Message-Id: <20190327181025.13507-136-sashal@kernel.org>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 139/192] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date:   Wed, 27 Mar 2019 14:09:31 -0400
+Message-Id: <20190327181025.13507-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -70,68 +57,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Mathieu Malaterre <malat@debian.org>
 
-[ Upstream commit 5de0fef0230f3c8d75cff450a71740a7bf2db866 ]
+[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
 
-The EFI memory attributes code cross-references the EFI memory map with
-the more granular EFI memory attributes table to ensure that they are in
-sync before applying the strict permissions to the regions it describes.
+Improve the DTS files by removing all the leading "0x" and zeros to fix
+the following dtc warnings:
 
-Since we always install virtual mappings for the EFI runtime regions to
-which these strict permissions apply, we currently perform a sanity check
-on the EFI memory descriptor, and ensure that the EFI_MEMORY_RUNTIME bit
-is set, and that the virtual address has been assigned.
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
-However, in cases where a runtime region exists at physical address 0x0,
-and the virtual mapping equals the physical mapping, e.g., when running
-in mixed mode on x86, we encounter a memory descriptor with the runtime
-attribute and virtual address 0x0, and incorrectly draw the conclusion
-that a runtime region exists for which no virtual mapping was installed,
-and give up altogether. The consequence of this is that firmware mappings
-retain their read-write-execute permissions, making the system more
-vulnerable to attacks.
+and
 
-So let's only bail if the virtual address of 0x0 has been assigned to a
-physical region that does not reside at address 0x0.
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 10f0d2f577053 ("efi: Implement generic support for the Memory ...")
-Link: http://lkml.kernel.org/r/20190202094119.13230-4-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Converted using the following command:
+
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+
+For simplicity, two sed expressions were used to solve each warnings
+separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+[vzapolskiy: fixed commit message to pass checkpatch.pl test]
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index 8986757eafaf..aac972b056d9 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -94,7 +94,7 @@ static bool entry_is_valid(const efi_memory_desc_t *in, efi_memory_desc_t *out)
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index abff7ef7c9cd..4981741377f3 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -230,7 +230,7 @@
+ 				status = "disabled";
+ 			};
  
- 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
- 			continue;
--		if (md->virt_addr == 0) {
-+		if (md->virt_addr == 0 && md->phys_addr != 0) {
- 			/* no virtual mapping has been installed by the stub */
- 			break;
- 		}
+-			i2s1: i2s@2009C000 {
++			i2s1: i2s@2009c000 {
+ 				compatible = "nxp,lpc3220-i2s";
+ 				reg = <0x2009C000 0x1000>;
+ 			};
+@@ -273,7 +273,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			i2c1: i2c@400A0000 {
++			i2c1: i2c@400a0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -284,7 +284,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C1>;
+ 			};
+ 
+-			i2c2: i2c@400A8000 {
++			i2c2: i2c@400a8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -295,7 +295,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C2>;
+ 			};
+ 
+-			mpwm: mpwm@400E8000 {
++			mpwm: mpwm@400e8000 {
+ 				compatible = "nxp,lpc3220-motor-pwm";
+ 				reg = <0x400E8000 0x78>;
+ 				status = "disabled";
+@@ -394,7 +394,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
+ 
+-			timer4: timer@4002C000 {
++			timer4: timer@4002c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4002C000 0x1000>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -412,7 +412,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			watchdog: watchdog@4003C000 {
++			watchdog: watchdog@4003c000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 				clocks = <&clk LPC32XX_CLK_WDOG>;
+@@ -451,7 +451,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			timer1: timer@4004C000 {
++			timer1: timer@4004c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4004C000 0x1000>;
+ 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+@@ -475,7 +475,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@4005C000 {
++			pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
+@@ -484,7 +484,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@4005C004 {
++			pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
 -- 
 2.19.1
 
