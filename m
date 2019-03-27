@@ -2,228 +2,152 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25265C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735D3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F1B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A7620700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:20:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gp7f50xN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfC0VRZ (ORCPT
+        id S1727928AbfC0VUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:17:25 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40293 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbfC0VRZ (ORCPT
+        Wed, 27 Mar 2019 17:20:18 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33424 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfC0VUR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:17:25 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t8so11030081otp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:17:24 -0700 (PDT)
+        Wed, 27 Mar 2019 17:20:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f23so15762983ljc.0;
+        Wed, 27 Mar 2019 14:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dgBgvHD4VaNUc6w7Qklt9Uw5siX01DXVAa2M0l9n95s=;
+        b=Gp7f50xNLzqzsxK3+ruWUvOJU/1ysiIp2d5TUcl8qYUBGG5SygIDE+OHtQJsvrU1aF
+         D1UU9wxXIziuYFDc7/KN9HzEiFlURYBdXUvgf54iBkyRtVf9Xur2dHm4bqmBGI3o6bXu
+         c/43/5nqOWmo0pL1k981UYEkINi5GBhlgaXBB9vnvK1I0zAG9CSppXOvAY8y9mwf0HDA
+         Y7z5n2OZlqU3/yNaJELCGb5N5na1Pi5V8lcyZ96nb3078OKnMgg5wt+p35erDC/5NixA
+         2edyRZrPYf+SmgaRpJUgGFvdSXxntjx2fAwepv0RvmUxaCGRacNjrweL/gGC9Z88GK0h
+         a1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BBdzqCeQMHcoqYr9jcZnmkytQeItgBZTai/slYi5Ggo=;
-        b=aRXrHPd3Jeim2ZnfY1qdhTssq0ZRJgc6iq51GlqQ/wzte1AsDLgEp9IBWaFfGarLEr
-         vWjsn7KOt8EOS/hvpa6eD3Ix8mDxwzNV6SDnnvq1H0JPUPNFhbP/HWjyWNqtMU4WuOc3
-         /sizSO81CEEiYGNzme4T0ejHuKlslhlh5W7O6XXNBSKm9XNIWilVUmA4rUkW9O6NbVqD
-         2yzW2IQXyqQckzgK4buO+HZY18RZ8qItWg1LWP2IxyKNXaoaM9GYheTIACCV2V4ZMuKJ
-         hzwdmJK1qwByVL4pyJOibJB/avuOS7G8Z0eRPjs/NJB+5hWw0J+uHeq242LlD+wcsvgO
-         p43A==
-X-Gm-Message-State: APjAAAUn4v7nBlsbGXew+2cxkA+0Y9OIV3dXjTyYBAckRMxpk+zmnEki
-        J2YgFfJXNdps9mt3+K0fWuC0rgk4mlS3nbIKwXqVnA==
-X-Google-Smtp-Source: APXvYqxH+fh3Qdeqpl93FpTbEiYOcb/qwPkDG3ZAgBVvK28We2rhKiqhTEj7ULdHWqanYb5h6V9bWc8rLG9z2Xx7uBU=
-X-Received: by 2002:a9d:1b2f:: with SMTP id l44mr9765053otl.217.1553721444358;
- Wed, 27 Mar 2019 14:17:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dgBgvHD4VaNUc6w7Qklt9Uw5siX01DXVAa2M0l9n95s=;
+        b=fCmnnVjH/A3j9nW8gQw3QxDz5mIM0sW6vyum3y/gDVa5wZluzZnTS0iEiBewx4udtd
+         27FbHquFv1ACSulspuoV0sl+67dx2HXhw2YvD3dJmjLcS/CI+7JtBZWHfKCnTduDOKB2
+         hHt0siBXqELtYaje4Vcic9RkVu075stR7Ne75DJwsfUToDcEVfkEg7C//chl5QlIB4ik
+         zNbU53Yb6nChTAFNFu4J0oaZ4emifpstbEXG70hmVjK9l6P606kkKlxP5GI3dNyqz/yN
+         FtLUJwl0A8ZGfgEuxTaoowBbfX09iqzY2K4FRJzRq9L7oy/ISPd3Qm/bIV0nFx7GYBya
+         x00Q==
+X-Gm-Message-State: APjAAAUI0oL6F2d7RJX2sYDdi7HNtc8VK5cRV43MD4+a9Z7ybURMROYn
+        /tOgV5ZFWcWvvIOBFofo0+mCrIqN
+X-Google-Smtp-Source: APXvYqz4NNBSw5900iNSFzrSFQ7fbGMuyBbTUKyidgM03marLE3iRMbslYFBkpvRvfjEIFDNqCByYA==
+X-Received: by 2002:a2e:968c:: with SMTP id q12mr20720293lji.36.1553721614616;
+        Wed, 27 Mar 2019 14:20:14 -0700 (PDT)
+Received: from [192.168.1.19] (ckh73.neoplus.adsl.tpnet.pl. [83.31.83.73])
+        by smtp.gmail.com with ESMTPSA id s64sm4969361lje.49.2019.03.27.14.20.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 14:20:13 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] leds: netdev trigger: use memcpy in
+ device_name_store
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org
+References: <20190313202615.22883-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-1-linux@rasmusvillemoes.dk>
+ <20190314140619.3309-2-linux@rasmusvillemoes.dk>
+ <987c3e60-edb3-44f0-be28-434c70bb8659@gmail.com>
+ <d1fccd75-c48b-d585-1170-1c1b76e1e098@rasmusvillemoes.dk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <21193aab-7880-d116-64e8-dd08afe5a47f@gmail.com>
+Date:   Wed, 27 Mar 2019 22:20:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <cover.1552665316.git.rgb@redhat.com> <a5a612bff629574cf4b678e7c7a9315e0e60a27c.1552665316.git.rgb@redhat.com>
-In-Reply-To: <a5a612bff629574cf4b678e7c7a9315e0e60a27c.1552665316.git.rgb@redhat.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Wed, 27 Mar 2019 22:17:13 +0100
-Message-ID: <CAFqZXNuMjvds9OKoj--zgn5j8CGuW55ZGhTPHtKGb+ZOR6B2-A@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V5 05/10] audit: add containerid support for ptrace
- and signals
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Simo Sorce <simo@redhat.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d1fccd75-c48b-d585-1170-1c1b76e1e098@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> Add audit container identifier support to ptrace and signals.  In
-> particular, the "ref" field provides a way to label the auxiliary record
-> to which it is associated.
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h |  1 +
->  kernel/audit.c        |  2 ++
->  kernel/audit.h        |  2 ++
->  kernel/auditsc.c      | 23 +++++++++++++++++------
->  4 files changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index 43438192ca2a..ebd6625ca80e 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -35,6 +35,7 @@ struct audit_sig_info {
->         uid_t           uid;
->         pid_t           pid;
->         char            ctx[0];
-> +       u64             cid;
->  };
+On 3/27/19 4:26 PM, Rasmus Villemoes wrote:
+> On 26/03/2019 20.53, Jacek Anaszewski wrote:
+>> Hi Rasmus,
+>>
+>> Thank you for the patch.
+>>
+>> On 3/14/19 3:06 PM, Rasmus Villemoes wrote:
+>>> If userspace doesn't end the input with a newline (which can easily
+>>> happen if the write happens from a C program that does write(fd,
+>>> iface, strlen(iface))), we may end up including garbage from a
+>>> previous, longer value in the device_name. For example
+>>>
+>>> # cat device_name
+>>>
+>>> # printf 'eth12' > device_name
+>>> # cat device_name
+>>> eth12
+>>> # printf 'eth3' > device_name
+>>> # cat device_name
+>>> eth32
+>>>
+>>
+>> Added tag:
+>>
+>> Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+>>
+>> and applied to the fixes-for-5.1-rc3 branch.
+>>
+> 
+> You're stripping lines beginning with #. This is the commit in -next:
+> 
+> 
+> commit 09466021a80c926aa7de68e5162bdfea2a117483
+> Author: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Date:   Thu Mar 14 15:06:14 2019 +0100
+> 
+>      leds: netdev trigger: use memcpy in device_name_store
+> 
+>      If userspace doesn't end the input with a newline (which can easily
+>      happen if the write happens from a C program that does write(fd,
+>      iface, strlen(iface))), we may end up including garbage from a
+>      previous, longer value in the device_name. For example
+> 
+>      eth12
+>      eth32
+> 
+> which is entirely useless and confusing. Please fix this before it
+> actually hits mainline. And you may want to look into "git commit
+> --cleanup" and/or "git config commit.cleanup" (scissors is much better
+> than the default strip).
 
-It seems like this structure implicitly defines the format of some
-message that is sent to userspace... If so, how will userspace detect
-that a new format (including the cid) is being used? Even assuming the
-fixed order as pointed out by Neil, the message still seems to be
-variable-sized so userspace cannot even use the length to infer that.
-Am I missing something here? (I hope I am :)
+Thanks for the heads-up. I must admit I'm hitting into that for the
+first time. After "git am" it was all OK, but it got screwed up after
+"git rebase -i". And having "commit.cleanup = scissors" set globally all
+the time is annoying if one extensively uses interactive rebase for
+rewording commit messages. It entails the need for manual removal of
+the whole stuff that appears then after actual commit message prepended
+with "#" comment characters.
 
->
->  struct audit_buffer;
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 8cc0e88d7f2a..cfa659b3f6c4 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -138,6 +138,7 @@ struct audit_net {
->  kuid_t         audit_sig_uid = INVALID_UID;
->  pid_t          audit_sig_pid = -1;
->  u32            audit_sig_sid = 0;
-> +u64            audit_sig_cid = AUDIT_CID_UNSET;
->
->  /* Records can be lost in several ways:
->     0) [suppressed in audit_alloc]
-> @@ -1515,6 +1516,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
->                         memcpy(sig_data->ctx, ctx, len);
->                         security_release_secctx(ctx, len);
->                 }
-> +               sig_data->cid = audit_sig_cid;
->                 audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
->                                  sig_data, sizeof(*sig_data) + len);
->                 kfree(sig_data);
-> diff --git a/kernel/audit.h b/kernel/audit.h
-> index c00e2ee3c6b3..c5ac6436317e 100644
-> --- a/kernel/audit.h
-> +++ b/kernel/audit.h
-> @@ -148,6 +148,7 @@ struct audit_context {
->         kuid_t              target_uid;
->         unsigned int        target_sessionid;
->         u32                 target_sid;
-> +       u64                 target_cid;
->         char                target_comm[TASK_COMM_LEN];
->
->         struct audit_tree_refs *trees, *first_trees;
-> @@ -344,6 +345,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
->  extern pid_t audit_sig_pid;
->  extern kuid_t audit_sig_uid;
->  extern u32 audit_sig_sid;
-> +extern u64 audit_sig_cid;
->
->  extern int audit_filter(int msgtype, unsigned int listtype);
->
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index a8c8b44b954d..f04e115df5dc 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -113,6 +113,7 @@ struct audit_aux_data_pids {
->         kuid_t                  target_uid[AUDIT_AUX_PIDS];
->         unsigned int            target_sessionid[AUDIT_AUX_PIDS];
->         u32                     target_sid[AUDIT_AUX_PIDS];
-> +       u64                     target_cid[AUDIT_AUX_PIDS];
->         char                    target_comm[AUDIT_AUX_PIDS][TASK_COMM_LEN];
->         int                     pid_count;
->  };
-> @@ -1514,7 +1515,7 @@ static void audit_log_exit(void)
->         for (aux = context->aux_pids; aux; aux = aux->next) {
->                 struct audit_aux_data_pids *axs = (void *)aux;
->
-> -               for (i = 0; i < axs->pid_count; i++)
-> +               for (i = 0; i < axs->pid_count; i++) {
->                         if (audit_log_pid_context(context, axs->target_pid[i],
->                                                   axs->target_auid[i],
->                                                   axs->target_uid[i],
-> @@ -1522,14 +1523,20 @@ static void audit_log_exit(void)
->                                                   axs->target_sid[i],
->                                                   axs->target_comm[i]))
->                                 call_panic = 1;
-> +                       audit_log_contid(context, axs->target_cid[i]);
-> +               }
->         }
->
-> -       if (context->target_pid &&
-> -           audit_log_pid_context(context, context->target_pid,
-> -                                 context->target_auid, context->target_uid,
-> -                                 context->target_sessionid,
-> -                                 context->target_sid, context->target_comm))
-> +       if (context->target_pid) {
-> +               if (audit_log_pid_context(context, context->target_pid,
-> +                                         context->target_auid,
-> +                                         context->target_uid,
-> +                                         context->target_sessionid,
-> +                                         context->target_sid,
-> +                                         context->target_comm))
->                         call_panic = 1;
-> +               audit_log_contid(context, context->target_cid);
-> +       }
->
->         if (context->pwd.dentry && context->pwd.mnt) {
->                 ab = audit_log_start(context, GFP_KERNEL, AUDIT_CWD);
-> @@ -2360,6 +2367,7 @@ void __audit_ptrace(struct task_struct *t)
->         context->target_uid = task_uid(t);
->         context->target_sessionid = audit_get_sessionid(t);
->         security_task_getsecid(t, &context->target_sid);
-> +       context->target_cid = audit_get_contid(t);
->         memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
->  }
->
-> @@ -2387,6 +2395,7 @@ int audit_signal_info(int sig, struct task_struct *t)
->                 else
->                         audit_sig_uid = uid;
->                 security_task_getsecid(current, &audit_sig_sid);
-> +               audit_sig_cid = audit_get_contid(current);
->         }
->
->         if (!audit_signals || audit_dummy_context())
-> @@ -2400,6 +2409,7 @@ int audit_signal_info(int sig, struct task_struct *t)
->                 ctx->target_uid = t_uid;
->                 ctx->target_sessionid = audit_get_sessionid(t);
->                 security_task_getsecid(t, &ctx->target_sid);
-> +               ctx->target_cid = audit_get_contid(t);
->                 memcpy(ctx->target_comm, t->comm, TASK_COMM_LEN);
->                 return 0;
->         }
-> @@ -2421,6 +2431,7 @@ int audit_signal_info(int sig, struct task_struct *t)
->         axp->target_uid[axp->pid_count] = t_uid;
->         axp->target_sessionid[axp->pid_count] = audit_get_sessionid(t);
->         security_task_getsecid(t, &axp->target_sid[axp->pid_count]);
-> +       axp->target_cid[axp->pid_count] = audit_get_contid(t);
->         memcpy(axp->target_comm[axp->pid_count], t->comm, TASK_COMM_LEN);
->         axp->pid_count++;
->
-> --
-> 1.8.3.1
->
-
+This is probably the reason why people use often other characters
+for command prompt (see the other fix for ledtrig-netdev). Note that, 
+while it is of no so great importance for mainline, when people cherry
+pick such patch to their out-of-tree repositories and then rebase, they
+hit into the same issue.
 
 -- 
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Best regards,
+Jacek Anaszewski
