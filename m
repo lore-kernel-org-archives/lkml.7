@@ -2,250 +2,125 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09072C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A5CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1406206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74742146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 17:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="nmXRMbxj"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="SdOOU2ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfC0RaQ (ORCPT
+        id S1729513AbfC0RbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 13:30:16 -0400
-Received: from mta-01.yadro.com ([89.207.88.251]:39078 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbfC0RaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 13:30:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 77C0841A37;
-        Wed, 27 Mar 2019 17:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:content-language:content-type
-        :content-type:in-reply-to:mime-version:user-agent:date:date
-        :message-id:from:from:references:subject:subject:received
-        :received:received; s=mta-01; t=1553707811; x=1555522212; bh=kSU
-        9y6ZjfbrVlQ76vYI3yO++tQkgaT4bSitwn0LjxrM=; b=nmXRMbxjyp48gljeIhY
-        Ad/PzGHGPucERBhyZYdM/GAEvz0aPESvN3Yva7c9lkYui3YAJ6Y6JHZYZM2bnE4N
-        cAg2p3s70trOc2LK7g95TO2zLiZchU5dutAx19Ge7Rp9r3/fw5ueSGdJSOZ2vQF0
-        XwtJmKWxh2Vl+Rr3e6qD8/uw=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Stzs9-EdUjOG; Wed, 27 Mar 2019 20:30:11 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id CA55F41A0C;
-        Wed, 27 Mar 2019 20:30:10 +0300 (MSK)
-Received: from [172.17.15.60] (172.17.15.60) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 27
- Mar 2019 20:30:10 +0300
-Subject: Re: [PATCH RFC v4 08/21] nvme-pci: Handle movable BARs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux@yadro.com>, Keith Busch <keith.busch@intel.com>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20190311133122.11417-1-s.miroshnichenko@yadro.com>
- <20190311133122.11417-9-s.miroshnichenko@yadro.com>
- <20190326202055.GP24180@google.com>
-From:   Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=s.miroshnichenko@yadro.com; prefer-encrypt=mutual; keydata=
- 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
- lHi50np+KDDPzZS51tw=
-Message-ID: <63989325-c1f8-9579-8405-56dc83751a3b@yadro.com>
-Date:   Wed, 27 Mar 2019 20:30:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 27 Mar 2019 13:31:07 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33664 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfC0RbH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 13:31:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i19so1392793pfd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wze83KFIvJTV8YI9HnSthl69lDUr/t9qneSOCvDPwuo=;
+        b=SdOOU2hawDlo5SMbEn9D2CIF+57XHG+Np+8/YOU8jfYrzQb9EtsEViDRR6QVjuczdq
+         vwD1JMvisVX+L2XBmIrDJid9FKifEg/6SxMp3r9GC0seMybpj53JzUliGn+EiaFYb1mp
+         40b/KVkkbOV9eLTG1ErMds04ybgFDOSahHxNY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wze83KFIvJTV8YI9HnSthl69lDUr/t9qneSOCvDPwuo=;
+        b=TEGmW+PQyDhuaJ3IIWgfP+1e89kR1ZAU5VjNpwLdRW5MjhlQbWibSSmvNigjV0eJ49
+         AQUCr3Mmi0vdF5jY/6sWdFm/0872n2LXxCcTqVTCZOX92QWQQHpkDfjfpBxnmpyuo3/i
+         4DavtcFBUE/zmsWZEKtwu9VAcq1TX7MDCugvaum204N07vAkyKeEBbjCNvDaFGAXQp8K
+         yaNUble/DhillBaSkKEWoYJFFG9/6QGsoP5Lx8QquaVqsLTDQfZPGoxcFlO4YDVaZO9V
+         8cX5V7N9PcoDPgTZ2MilwtXcxG3/wJs0amSmruf3Am8vd06AafQLdYG07/wYJckm8y6u
+         5TQA==
+X-Gm-Message-State: APjAAAWBrhLz5tXHODRYlqqb5B862yp3LsfEnigHn7fQ/zoyeXw0E6WZ
+        UbYALyM75rNDvHq76TDaIzaUyA==
+X-Google-Smtp-Source: APXvYqxfzd5JrLje0ulUoGoeoWa0jegNU5VZnyBKdl4S9CJ1ugHkq+sCNO41wLB6Z/a+lVS1qV2Xpg==
+X-Received: by 2002:a62:14d7:: with SMTP id 206mr8302102pfu.162.1553707866476;
+        Wed, 27 Mar 2019 10:31:06 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d69sm28438011pfg.26.2019.03.27.10.31.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 10:31:04 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 13:31:03 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>,
+        karim.yaghmour@opersys.com, Kees Cook <keescook@chromium.org>,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        rdunlap@infradead.org
+Subject: Re: [PATCH v2 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190327173103.GA205980@google.com>
+References: <20190211143600.15021-1-joel@joelfernandes.org>
+ <20190215031926.ljzluy2cfxp64u6o@ast-mbp>
+ <20190325134947.GA187133@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190326202055.GP24180@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.17.15.60]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190325134947.GA187133@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 11:20 PM, Bjorn Helgaas wrote:
-> [+cc Keith, Jens, Christoph, Sagi, linux-nvme, LKML]
+On Mon, Mar 25, 2019 at 09:49:47AM -0400, Joel Fernandes wrote:
+> On Thu, Feb 14, 2019 at 07:19:29PM -0800, Alexei Starovoitov wrote:
+> > On Mon, Feb 11, 2019 at 09:35:59AM -0500, Joel Fernandes (Google) wrote:
+> > > Introduce in-kernel headers and other artifacts which are made available
+> > > as an archive through proc (/proc/kheaders.txz file). This archive makes
+> > > it possible to build kernel modules, run eBPF programs, and other
+> > > tracing programs that need to extend the kernel for tracing purposes
+> > > without any dependency on the file system having headers and build
+> > > artifacts.
+> > > 
+> > > On Android and embedded systems, it is common to switch kernels but not
+> > > have kernel headers available on the file system. Raw kernel headers
+> > > also cannot be copied into the filesystem like they can be on other
+> > > distros, due to licensing and other issues. There's no linux-headers
+> > > package on Android. Further once a different kernel is booted, any
+> > > headers stored on the file system will no longer be useful. By storing
+> > > the headers as a compressed archive within the kernel, we can avoid these
+> > > issues that have been a hindrance for a long time.
+> > 
+> > The set looks good to me and since the main use case is building bpf progs
+> > I can route it via bpf-next tree if there are no objections.
+> > Masahiro, could you please ack it?
 > 
-> On Mon, Mar 11, 2019 at 04:31:09PM +0300, Sergey Miroshnichenko wrote:
->> Hotplugged devices can affect the existing ones by moving their BARs.
->> PCI subsystem will inform the NVME driver about this by invoking
->> reset_prepare()+reset_done(), then iounmap()+ioremap() must be called.
+> FYI, Masahiro's comments were all address by v5:
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=387311
 > 
-> Do you mean the PCI core will invoke ->rescan_prepare() and
-> ->rescan_done() (as opposed to *reset*)?
-> 
+> I believe aren't more outstanding concerns. Could we consider it for v5.2?
 
-Yes, of course, sorry for the confusion!
+Just to highlight the problem, today I booted v5.0 on an emulated Android
+device for some testing, that didn't have a set of prebuilt headers that we
+have been packaging on well known kernels, to get around this issue. This
+caused great pain and issues with what I was doing. I know me and many others
+really want this. With this I can boot an emulated Android device with
+IKCONFIG_PROC=y and run BCC with that that. Also I want to do the BCC side of
+the development, but first want to know if we can merge this upstream.
 
-These are new callbacks, so drivers can explicitly show their support of movable BARs, and
-the PCI core can detect if they don't and note that the corresponding BARs can't be moved
-for now.
+Masahiro, I believe due diligence has been done in solidifying it as posted
+in the v5.  Anything else we need to do here? Are you with the patches?
 
->> Signed-off-by: Sergey Miroshnichenko <s.miroshnichenko@yadro.com>
->> ---
->>  drivers/nvme/host/pci.c | 29 +++++++++++++++++++++++++++--
->>  1 file changed, 27 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
->> index 92bad1c810ac..ccea3033a67a 100644
->> --- a/drivers/nvme/host/pci.c
->> +++ b/drivers/nvme/host/pci.c
->> @@ -106,6 +106,7 @@ struct nvme_dev {
->>  	unsigned int num_vecs;
->>  	int q_depth;
->>  	u32 db_stride;
->> +	resource_size_t current_phys_bar;
->>  	void __iomem *bar;
->>  	unsigned long bar_mapped_size;
->>  	struct work_struct remove_work;
->> @@ -1672,13 +1673,16 @@ static int nvme_remap_bar(struct nvme_dev *dev, unsigned long size)
->>  {
->>  	struct pci_dev *pdev = to_pci_dev(dev->dev);
->>  
->> -	if (size <= dev->bar_mapped_size)
->> +	if (dev->bar &&
->> +	    dev->current_phys_bar == pci_resource_start(pdev, 0) &&
->> +	    size <= dev->bar_mapped_size)
->>  		return 0;
->>  	if (size > pci_resource_len(pdev, 0))
->>  		return -ENOMEM;
->>  	if (dev->bar)
->>  		iounmap(dev->bar);
->> -	dev->bar = ioremap(pci_resource_start(pdev, 0), size);
->> +	dev->current_phys_bar = pci_resource_start(pdev, 0);
->> +	dev->bar = ioremap(dev->current_phys_bar, size);
-> 
-> dev->current_phys_bar is different from pci_resource_start() in the
-> case where the PCI core has moved the nvme BAR, but nvme has not yet
-> remapped it.
-> 
-> I'm not sure it's worth keeping track of current_phys_bar, as opposed
-> to always unmapping and remapping.  Is this a performance path?  I
-> think there are advantages to always exercising the same code path,
-> regardless of whether the BAR happened to be moved, e.g., if there's a
-> bug in the "BAR moved" path, it may be a heisenbug because whether we
-> exercise that path depends on the current configuration.
-> 
-> If you do need to cache current_phys_bar, maybe this, so it's a little
-> easier to see that you're not changing the ioremap() itself:
-> 
->   dev->bar = ioremap(pci_resource_start(pdev, 0), size);
->   dev->current_phys_bar = pci_resource_start(pdev, 0);
-> 
+thanks!
 
-Oh, I see now. Rescan is rather a rare event, and unconditional remapping is simpler, so a
-bit more resistant to bugs.
+ - Joel
 
->>  	if (!dev->bar) {
->>  		dev->bar_mapped_size = 0;
->>  		return -ENOMEM;
->> @@ -2504,6 +2508,8 @@ static void nvme_reset_work(struct work_struct *work)
->>  	if (WARN_ON(dev->ctrl.state != NVME_CTRL_RESETTING))
->>  		goto out;
->>  
->> +	nvme_remap_bar(dev, db_bar_size(dev, 0));
-> 
-> How is this change connected to rescan?  This looks reset-related.
-> 
-
-Thanks for catching that! This has also slipped form early stage of this pathset, when
-reset_done() (which is rescan_done() now) just initiated an NVME reset.
-
-Best regards,
-Serge
-
->>  	/*
->>  	 * If we're called to reset a live controller first shut it down before
->>  	 * moving on.
->> @@ -2910,6 +2916,23 @@ static void nvme_error_resume(struct pci_dev *pdev)
->>  	flush_work(&dev->ctrl.reset_work);
->>  }
->>  
->> +void nvme_rescan_prepare(struct pci_dev *pdev)
->> +{
->> +	struct nvme_dev *dev = pci_get_drvdata(pdev);
->> +
->> +	nvme_dev_disable(dev, false);
->> +	nvme_dev_unmap(dev);
->> +	dev->bar = NULL;
->> +}
->> +
->> +void nvme_rescan_done(struct pci_dev *pdev)
->> +{
->> +	struct nvme_dev *dev = pci_get_drvdata(pdev);
->> +
->> +	nvme_dev_map(dev);
->> +	nvme_reset_ctrl_sync(&dev->ctrl);
->> +}
->> +
->>  static const struct pci_error_handlers nvme_err_handler = {
->>  	.error_detected	= nvme_error_detected,
->>  	.slot_reset	= nvme_slot_reset,
->> @@ -2974,6 +2997,8 @@ static struct pci_driver nvme_driver = {
->>  	},
->>  	.sriov_configure = pci_sriov_configure_simple,
->>  	.err_handler	= &nvme_err_handler,
->> +	.rescan_prepare	= nvme_rescan_prepare,
->> +	.rescan_done	= nvme_rescan_done,
->>  };
->>  
->>  static int __init nvme_init(void)
->> -- 
->> 2.20.1
->>
