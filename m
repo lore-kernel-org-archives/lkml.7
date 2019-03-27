@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A393C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A94C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2312075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3292075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712134;
-	bh=D8T0X0evmVkOPjk8PPbQlo3qzAHK2knJRFdlws3nCWQ=;
+	s=default; t=1553712138;
+	bh=ks2YUMp0EyQpEs3Ow1PHCEffpB9rW8iO8XuspyGU/Jw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19hKL+uKrgT3U3q763rs8nXcEtifpfnhVECOO/8Qi4qkK7wkBU1L8424bKh2CVIrD
-	 V5nDv5FUiBi8tCkBfEAndypR+a1/jwptAp7SMAJvBrWkcvwg5MYKC00bW+RipUe6Cw
-	 IwcRfZwCo/X1jhqlhkVgcVtLRH8obCNVO+S42kmE=
+	b=d9PnggNP1WHJWn0LBVQ+IgkYSy1+u16rdzWpYo0ExEV+BVZ6jSNx477EFc6KC/FsW
+	 88Lc0al4z8zvRs8k4PfbhHgeMDuLHlwXragW+g6qthr78PgrSBrPxB35jq2/O5hRGq
+	 ihgwC29Teat2RRGrZscZ2JW7LUqGWx4iF+ihQ96E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391011AbfC0SWG (ORCPT
+        id S2403810AbfC0SWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403787AbfC0SWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:00 -0400
+        id S2403782AbfC0SV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1445620651;
-        Wed, 27 Mar 2019 18:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6CF620643;
+        Wed, 27 Mar 2019 18:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710919;
-        bh=D8T0X0evmVkOPjk8PPbQlo3qzAHK2knJRFdlws3nCWQ=;
+        s=default; t=1553710918;
+        bh=ks2YUMp0EyQpEs3Ow1PHCEffpB9rW8iO8XuspyGU/Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AhErrvwd3mxtUNR7uw5J/VsoVW/IVUhZxlfp6k6g955mrnNQ4ngZtrAvi0MFRGKxj
-         /8zXXjV2Jt9WKrrtnh9wcZnbRHy0cHY4I2b6IYI0TSrdAl+MrIl/4r6w3DiElilar1
-         8jJhp8vL20LMLXzClqexcpVvUozHot7o0KBGoUQY=
+        b=inkKAhDrh/9Q5iJlc1STDmdW47o7SPKprgTAJnouqOTRMibk3qU1QPg/UvXuTcrFH
+         rAvqyXvmac0JxlTWwMmpA7ju8tCFPKZdiqLH2DWRAyOABcCmcHYx7WD69rSrps9FVg
+         u9ssViHJZhb1tNN7oigzcjQC5uHiyGqXRm+Mw7SI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 47/87] ACPI / video: Refactor and fix dmi_is_desktop()
-Date:   Wed, 27 Mar 2019 14:20:00 -0400
-Message-Id: <20190327182040.17444-47-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 46/87] iwlwifi: pcie: fix emergency path
+Date:   Wed, 27 Mar 2019 14:19:59 -0400
+Message-Id: <20190327182040.17444-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,72 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
+[ Upstream commit c6ac9f9fb98851f47b978a9476594fc3c477a34d ]
 
-This commit refactors the chassis-type detection introduced by
-commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") (where desktop means anything without a builtin
-screen).
+Allocator swaps the pending requests with 0 when it starts
+working. This means that relying on it n RX path to decide if
+to move to emergency is not always a good idea, since it may
+be zero, but there are still a lot of unallocated RBs in the
+system. Change allocator to decrement the pending requests on
+real time. It is more expensive since it accesses the atomic
+variable more times, but it gives the RX path a better idea
+of the system's status.
 
-The DMI chassis_type is an unsigned integer, so rather then doing a
-whole bunch of string-compares on it, convert it to an int and feed
-the result to a switch case.
-
-Note the switch case uses hex values, this is done because the spec
-uses hex values too. This changes the check for "Main Server Chassis"
-from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
-the original check for 11 decimal was wrong.
-
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-[ rjw: Drop redundant return statements ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 868a1e863f95 ("iwlwifi: pcie: avoid empty free RB queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 667dc5c86fef..d79e38abd6d9 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2069,21 +2069,28 @@ static int __init intel_opregion_present(void)
- 	return opregion;
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index e58a50d31d96..c21f8bd32d08 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -475,7 +475,7 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_rb_allocator *rba = &trans_pcie->rba;
+ 	struct list_head local_empty;
+-	int pending = atomic_xchg(&rba->req_pending, 0);
++	int pending = atomic_read(&rba->req_pending);
  
-+/* Check if the chassis-type indicates there is no builtin LCD panel */
- static bool dmi_is_desktop(void)
- {
- 	const char *chassis_type;
-+	unsigned long type;
+ 	IWL_DEBUG_RX(trans, "Pending allocation requests = %d\n", pending);
  
- 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	if (!chassis_type)
- 		return false;
+@@ -530,11 +530,13 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 			i++;
+ 		}
  
--	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
--	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
--	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
--	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
--	    !strcmp(chassis_type, "7") || /*  7: Tower */
--	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
-+	if (kstrtoul(chassis_type, 10, &type) != 0)
-+		return false;
++		atomic_dec(&rba->req_pending);
+ 		pending--;
 +
-+	switch (type) {
-+	case 0x03: /* Desktop */
-+	case 0x04: /* Low Profile Desktop */
-+	case 0x05: /* Pizza Box */
-+	case 0x06: /* Mini Tower */
-+	case 0x07: /* Tower */
-+	case 0x11: /* Main Server Chassis */
- 		return true;
-+	}
+ 		if (!pending) {
+-			pending = atomic_xchg(&rba->req_pending, 0);
++			pending = atomic_read(&rba->req_pending);
+ 			IWL_DEBUG_RX(trans,
+-				     "Pending allocation requests = %d\n",
++				     "Got more pending allocation requests = %d\n",
+ 				     pending);
+ 		}
  
- 	return false;
+@@ -546,12 +548,15 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 		spin_unlock(&rba->lock);
+ 
+ 		atomic_inc(&rba->req_ready);
++
+ 	}
+ 
+ 	spin_lock(&rba->lock);
+ 	/* return unused rbds to the allocator empty list */
+ 	list_splice_tail(&local_empty, &rba->rbd_empty);
+ 	spin_unlock(&rba->lock);
++
++	IWL_DEBUG_RX(trans, "%s, exit.\n", __func__);
  }
+ 
+ /*
 -- 
 2.19.1
 
