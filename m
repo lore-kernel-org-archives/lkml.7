@@ -2,115 +2,71 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99D2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018C2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829C720651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711816;
-	bh=eCmMXVtfrL4nsIPB8BcBUsvBQsKXhU14lG/zkMn72Zc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RglJltMnYVK4HZBNeDrNN3Y62O0MDnKqu1YizFd3nG1BLZDO4hm3cRtulToXKFTo5
-	 uwdHuVhDp+SACatSjyks5+J842ZUHoJEQD2m+AHXj56Z8ga6g+Yor+daxrFGog7nor
-	 R7OC1d5KLMISWf93H/W7opP9cESzH7gOSBuX5/ik=
+	by mail.kernel.org (Postfix) with ESMTP id D1CF920651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404242AbfC0Sgz (ORCPT
+        id S2404256AbfC0Sg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:36:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403912AbfC0SXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:53 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A082183F;
-        Wed, 27 Mar 2019 18:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711033;
-        bh=eCmMXVtfrL4nsIPB8BcBUsvBQsKXhU14lG/zkMn72Zc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCryZHoRv1ojdheFs4qT/5NaI321oof/KteJtRc4NFwkG2uL2nijJdi19AsWdkl6J
-         jVM/J9KI6r3hr42Y4wl2T4+rL8VJ+qs53l2CoA8feE50fZGzCRtRtlmPfzmWVwHkdp
-         /Poy/N0VFeLU8fS3MQjNvq8FZLDI+eJAAEv/vBcc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 17/63] cifs: Fix NULL pointer dereference of devname
-Date:   Wed, 27 Mar 2019 14:22:37 -0400
-Message-Id: <20190327182323.18577-17-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
-References: <20190327182323.18577-1-sashal@kernel.org>
+        Wed, 27 Mar 2019 14:36:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44012 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391717AbfC0Sft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:35:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h9DOr-0005c7-Hz; Wed, 27 Mar 2019 18:35:45 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cfg80211: remove redundant zero check on variable 'changed'
+Date:   Wed, 27 Mar 2019 18:35:45 +0000
+Message-Id: <20190327183545.20631-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yao Liu <yotta.liu@ucloud.cn>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+The zero check on variable changed is redundant as it must be
+between 1 and 3 at the end of the proceeding if statement block.
+Remove the redundant check.
 
-There is a NULL pointer dereference of devname in strspn()
-
-The oops looks something like:
-
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix this by adding a NULL check on devname in cifs_parse_devname()
-
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/wireless/wext-compat.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index eacf57c24ca9..9cb72fd40eff 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1255,6 +1255,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/net/wireless/wext-compat.c b/net/wireless/wext-compat.c
+index d522787c7354..46e4d69db845 100644
+--- a/net/wireless/wext-compat.c
++++ b/net/wireless/wext-compat.c
+@@ -353,9 +353,6 @@ static int cfg80211_wext_siwretry(struct net_device *dev,
+ 		changed |= WIPHY_PARAM_RETRY_SHORT;
+ 	}
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
-+
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+-	if (!changed)
+-		return 0;
+-
+ 	err = rdev_set_wiphy_params(rdev, changed);
+ 	if (err) {
+ 		wdev->wiphy->retry_short = oshort;
 -- 
-2.19.1
+2.20.1
 
