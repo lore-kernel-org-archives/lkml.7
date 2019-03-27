@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3A9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6910820449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C6220449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711214;
-	bh=VpMy5Bjr30Obf/2X6Riy77zuBN1BKEofdhM296+Fn2M=;
+	s=default; t=1553711215;
+	bh=ifyBJmvU5x3CJzsNRKEbjYFDX0xTqN86y560fUi/TJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPRzgXMMpmkrI9gplpqi0fyFI4j2eMRhdTY6uVDn4Yojrj3qJgAMHqOH4veB5mIc0
-	 kuc7p3fa1tYEPXBPksQ6npa4sUtJV0nCc/8TtD300nYpoBvtI1bXo1ooyHl6VI2add
-	 TkcrpWAjb6zm/ozVJ2nMXKHj9dNKr3o4FAUXD5PY=
+	b=tG5sl8mGlfwcLcKtqtGWxyhG2Yb0Ft7TWkJ5shV1grl7FVGyWbA//hOjkbaruxonw
+	 ufWLb5i6uvjwIZPoFkV1sAiMFoFiXOsYROG6ZKb1Yx1QAsKa2i/1T3uNqEybV1wf+y
+	 SrPfzhA7SacrtUwoOssyKagzdEYVlxH+n0jV2suo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404303AbfC0SZz (ORCPT
+        id S2391781AbfC0S0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45260 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404271AbfC0SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:52 -0400
+        id S2391721AbfC0S0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40BE206BA;
-        Wed, 27 Mar 2019 18:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37DDC206BA;
+        Wed, 27 Mar 2019 18:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711150;
-        bh=VpMy5Bjr30Obf/2X6Riy77zuBN1BKEofdhM296+Fn2M=;
+        s=default; t=1553711194;
+        bh=ifyBJmvU5x3CJzsNRKEbjYFDX0xTqN86y560fUi/TJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Of+8Qk1AxfBs6nAF56nALQHB3buJMs39yn8jJxfOQqWVEjy4fAR4JE1u7W2XqaXef
-         7OZD+n2RQtWnmWlrwVb2mlN2E7jkX8feQvVxMFO3mZMyloKPYJUyW3WUR+GVvxe89Y
-         jnOyCthHoEVAf2qKErdAKVulYek31vvogE3/PVHI=
+        b=THqHK20KNxvFuLZxe450QrpyTBMFjOo1Wyh5OnvpwmwTexSF1ba5BYEZBk1vZYbUg
+         VfZUCPR49WPEfVrzW6dRIB1LrsBGCA01Uz3yugKWdwAqNcVAJKHWZ+xCrSPBaUOIZN
+         B9MIgBTLCLRaGrvEs3RNUcVMxQ9b6Np/p+7Fmk7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 17/41] IB/mlx4: Increase the timeout for CM cache
-Date:   Wed, 27 Mar 2019 14:24:54 -0400
-Message-Id: <20190327182518.19394-17-sashal@kernel.org>
+Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Brian Vincent <brainn@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 3.18 41/41] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
+Date:   Wed, 27 Mar 2019 14:25:18 -0400
+Message-Id: <20190327182518.19394-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -58,103 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
+[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+We aren't supposed to force a stop+start between every i2c msg
+when performing multi message transfers. This should eg. cause
+the DDC segment address to be reset back to 0 between writing
+the segment address and reading the actual EDID extension block.
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
-in a cache.
+To quote the E-DDC spec:
+"... this standard requires that the segment pointer be
+ reset to 00h when a NO ACK or a STOP condition is received."
 
-Following the RDMA Connection Manager (CM) protocol, it is clear when
-an entry has to evicted form the cache. But life is not perfect,
-remote peers may die or be rebooted. Hence, it's a timeout to wipe out
-a cache entry, when the PF driver assumes the remote peer has gone.
+Since we're going to touch this might as well consult the
+I2C_M_STOP flag to determine whether we want to force the stop
+or not.
 
-During workloads where a high number of QPs are destroyed concurrently,
-excessive amount of CM DREQ retries has been observed
-
-The problem can be demonstrated in a bare-metal environment, where two
-nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
-have 16 vPorts per physical server.
-
-64 processes are associated with each vPort and creates and destroys
-one QP for each of the remote 64 processes. That is, 1024 QPs per
-vPort, all in all 16K QPs. The QPs are created/destroyed using the
-CM.
-
-When tearing down these 16K QPs, excessive CM DREQ retries (and
-duplicates) are observed. With some cat/paste/awk wizardry on the
-infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
-nodes:
-
-cm_rx_duplicates:
-      dreq  2102
-cm_rx_msgs:
-      drep  1989
-      dreq  6195
-       rep  3968
-       req  4224
-       rtu  4224
-cm_tx_msgs:
-      drep  4093
-      dreq 27568
-       rep  4224
-       req  3968
-       rtu  3968
-cm_tx_retries:
-      dreq 23469
-
-Note that the active/passive side is equally distributed between the
-two nodes.
-
-Enabling pr_debug in cm.c gives tons of:
-
-[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
-1,sl_cm_id: 0xd393089f} is NULL!
-
-By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
-tear-down phase of the application is reduced from approximately 90 to
-50 seconds. Retries/duplicates are also significantly reduced:
-
-cm_rx_duplicates:
-      dreq  2460
-[]
-cm_tx_retries:
-      dreq  3010
-       req    47
-
-Increasing the timeout further didn't help, as these duplicates and
-retries stems from a too short CMA timeout, which was 20 (~4 seconds)
-on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
-numbers fell down to about 10 for both of them.
-
-Adjustment of the CMA timeout is not part of this commit.
-
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Brian Vincent <brainn@gmail.com>
+References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
+Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/cm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
-index 56a593e0ae5d..2aedbd18ffbc 100644
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -39,7 +39,7 @@
- 
- #include "mlx4_ib.h"
- 
--#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
-+#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
- 
- struct id_map_entry {
- 	struct rb_node node;
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 7113c95f5ad0..e4c8c594ea15 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2816,6 +2816,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
+ 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
+ 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
+ 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
++		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
+ 	}
+ 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
+ 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
 -- 
 2.19.1
 
