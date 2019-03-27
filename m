@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FD7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10A6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D1F2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DF821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710132;
-	bh=BB4PbjXe50kzG7St37LEU3FBgzYqQQiYKuZ1AxfRPwk=;
+	s=default; t=1553710135;
+	bh=sHG9RJgV9laOErhdvwyunCcd9PEQTeWp9jbxFEPDUrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9Rzp2J+drY6D0eYSA2zyWeCGhlezmID1VFCsFGeV5EgxGsqSK8pb/DPFW1rmAtv9
-	 kph0OAnSuzfRxjns8dlXy1vdE9FCyQQPpHMtNqEzKyO0q/BPXARhsPYhWi8gjHs7M/
-	 kqKE8ZR3fN8X4s3dnhSF2QQcabOvzpes4SuOgu84=
+	b=yZjCdBxHWMo4CH/V9a9gGaZ5kSzaz6XMWj43sRgVvBmAF0nwcrZj0cN+hmWMxc5lq
+	 /Ckz6DB531cto06Hlp/f3deWsbktMlBHNX5NStoO+wsyK+HdiPWv+GlMVvZFnDZBtv
+	 E8XEZWHN+Zc8RQXwjboFCtxSyphvc6JYJndczS5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388423AbfC0SIu (ORCPT
+        id S2388444AbfC0SIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388367AbfC0SIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:38 -0400
+        id S2387999AbfC0SIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D910E2070B;
-        Wed, 27 Mar 2019 18:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FDC62177E;
+        Wed, 27 Mar 2019 18:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710116;
-        bh=BB4PbjXe50kzG7St37LEU3FBgzYqQQiYKuZ1AxfRPwk=;
+        s=default; t=1553710131;
+        bh=sHG9RJgV9laOErhdvwyunCcd9PEQTeWp9jbxFEPDUrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pCVPr5XPpsGbhRbsLstcvsWtWKjl/uGIRqNTuqBckUmDyfC+2+VJf2Aln3LYwC3+J
-         QmEpmuV8/j2x98eRSqU/JhJVSGTwy8x+Uzk/uC+KsUH5+tmEE6mN4WoAvTA+5AobgX
-         B2GWZLI5iGFaSN7awS8kAz7wnA3lJAmsZ2Iz/aFM=
+        b=qxDPH0bswQYMsiMP7ryNN7ldBLXg6dDThKVzOTK4AhvEUD0qhb9nQTvzde/9IeSil
+         ZH0Pvl85XaOCVJ5A0lNYTJI+8dw/3QaVQhWWNRiCRQkEP1jAL7Dbbapz3h6ug3h/K1
+         gEbD5/AeaxCIAY7rwckxSHqPBR7WlQmY/CRbWfd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 203/262] cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
-Date:   Wed, 27 Mar 2019 14:00:58 -0400
-Message-Id: <20190327180158.10245-203-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 209/262] regulator: mcp16502: Include linux/gpio/consumer.h to fix build error
+Date:   Wed, 27 Mar 2019 14:01:04 -0400
+Message-Id: <20190327180158.10245-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,172 +57,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 51bee5abeab2058ea5813c5615d6197a23dbf041 ]
+[ Upstream commit f3c6a1a194317f3a31ee2b2067bb0a41de64bc8b ]
 
-The only user of cgroup_subsys->free() callback is pids_cgrp_subsys which
-needs pids_free() to uncharge the pid.
+Fix below build error:
+drivers/regulator/mcp16502.c: In function ‘mcp16502_gpio_set_mode’:
+drivers/regulator/mcp16502.c:135:3: error: implicit declaration of function ‘gpiod_set_value’; did you mean ‘gpio_set_value’? [-Werror=implicit-function-declaration]
+   gpiod_set_value(mcp->lpm, 0);
+   ^~~~~~~~~~~~~~~
+   gpio_set_value
+drivers/regulator/mcp16502.c: In function ‘mcp16502_probe’:
+drivers/regulator/mcp16502.c:486:13: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_gpio_free’? [-Werror=implicit-function-declaration]
+  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
+             ^~~~~~~~~~~~~~
+             devm_gpio_free
+drivers/regulator/mcp16502.c:486:40: error: ‘GPIOD_OUT_LOW’ undeclared (first use in this function); did you mean ‘GPIOF_INIT_LOW’?
+  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
+                                        ^~~~~~~~~~~~~
+                                        GPIOF_INIT_LOW
 
-However, ->free() is called from __put_task_struct()->cgroup_free() and this
-is too late. Even the trivial program which does
-
-	for (;;) {
-		int pid = fork();
-		assert(pid >= 0);
-		if (pid)
-			wait(NULL);
-		else
-			exit(0);
-	}
-
-can run out of limits because release_task()->call_rcu(delayed_put_task_struct)
-implies an RCU gp after the task/pid goes away and before the final put().
-
-Test-case:
-
-	mkdir -p /tmp/CG
-	mount -t cgroup2 none /tmp/CG
-	echo '+pids' > /tmp/CG/cgroup.subtree_control
-
-	mkdir /tmp/CG/PID
-	echo 2 > /tmp/CG/PID/pids.max
-
-	perl -e 'while ($p = fork) { wait; } $p // die "fork failed: $!\n"' &
-	echo $! > /tmp/CG/PID/cgroup.procs
-
-Without this patch the forking process fails soon after migration.
-
-Rename cgroup_subsys->free() to cgroup_subsys->release() and move the callsite
-into the new helper, cgroup_release(), called by release_task() which actually
-frees the pid(s).
-
-Reported-by: Herton R. Krzesinski <hkrzesin@redhat.com>
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cgroup-defs.h |  2 +-
- include/linux/cgroup.h      |  2 ++
- kernel/cgroup/cgroup.c      | 15 +++++++++------
- kernel/cgroup/pids.c        |  4 ++--
- kernel/exit.c               |  1 +
- 5 files changed, 15 insertions(+), 9 deletions(-)
+ drivers/regulator/mcp16502.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 8fcbae1b8db0..120d1d40704b 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -602,7 +602,7 @@ struct cgroup_subsys {
- 	void (*cancel_fork)(struct task_struct *task);
- 	void (*fork)(struct task_struct *task);
- 	void (*exit)(struct task_struct *task);
--	void (*free)(struct task_struct *task);
-+	void (*release)(struct task_struct *task);
- 	void (*bind)(struct cgroup_subsys_state *root_css);
+diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
+index 3479ae009b0b..0fc4963bd5b0 100644
+--- a/drivers/regulator/mcp16502.c
++++ b/drivers/regulator/mcp16502.c
+@@ -17,6 +17,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/suspend.h>
++#include <linux/gpio/consumer.h>
  
- 	bool early_init:1;
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index 9968332cceed..81f58b4a5418 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -121,6 +121,7 @@ extern int cgroup_can_fork(struct task_struct *p);
- extern void cgroup_cancel_fork(struct task_struct *p);
- extern void cgroup_post_fork(struct task_struct *p);
- void cgroup_exit(struct task_struct *p);
-+void cgroup_release(struct task_struct *p);
- void cgroup_free(struct task_struct *p);
- 
- int cgroup_init_early(void);
-@@ -697,6 +698,7 @@ static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
- static inline void cgroup_cancel_fork(struct task_struct *p) {}
- static inline void cgroup_post_fork(struct task_struct *p) {}
- static inline void cgroup_exit(struct task_struct *p) {}
-+static inline void cgroup_release(struct task_struct *p) {}
- static inline void cgroup_free(struct task_struct *p) {}
- 
- static inline int cgroup_init_early(void) { return 0; }
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 503bba3c4bae..f84bf28f36ba 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -197,7 +197,7 @@ static u64 css_serial_nr_next = 1;
-  */
- static u16 have_fork_callback __read_mostly;
- static u16 have_exit_callback __read_mostly;
--static u16 have_free_callback __read_mostly;
-+static u16 have_release_callback __read_mostly;
- static u16 have_canfork_callback __read_mostly;
- 
- /* cgroup namespace for init task */
-@@ -5316,7 +5316,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
- 
- 	have_fork_callback |= (bool)ss->fork << ss->id;
- 	have_exit_callback |= (bool)ss->exit << ss->id;
--	have_free_callback |= (bool)ss->free << ss->id;
-+	have_release_callback |= (bool)ss->release << ss->id;
- 	have_canfork_callback |= (bool)ss->can_fork << ss->id;
- 
- 	/* At system boot, before all subsystems have been
-@@ -5752,16 +5752,19 @@ void cgroup_exit(struct task_struct *tsk)
- 	} while_each_subsys_mask();
- }
- 
--void cgroup_free(struct task_struct *task)
-+void cgroup_release(struct task_struct *task)
- {
--	struct css_set *cset = task_css_set(task);
- 	struct cgroup_subsys *ss;
- 	int ssid;
- 
--	do_each_subsys_mask(ss, ssid, have_free_callback) {
--		ss->free(task);
-+	do_each_subsys_mask(ss, ssid, have_release_callback) {
-+		ss->release(task);
- 	} while_each_subsys_mask();
-+}
- 
-+void cgroup_free(struct task_struct *task)
-+{
-+	struct css_set *cset = task_css_set(task);
- 	put_css_set(cset);
- }
- 
-diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
-index 9829c67ebc0a..c9960baaa14f 100644
---- a/kernel/cgroup/pids.c
-+++ b/kernel/cgroup/pids.c
-@@ -247,7 +247,7 @@ static void pids_cancel_fork(struct task_struct *task)
- 	pids_uncharge(pids, 1);
- }
- 
--static void pids_free(struct task_struct *task)
-+static void pids_release(struct task_struct *task)
- {
- 	struct pids_cgroup *pids = css_pids(task_css(task, pids_cgrp_id));
- 
-@@ -342,7 +342,7 @@ struct cgroup_subsys pids_cgrp_subsys = {
- 	.cancel_attach 	= pids_cancel_attach,
- 	.can_fork	= pids_can_fork,
- 	.cancel_fork	= pids_cancel_fork,
--	.free		= pids_free,
-+	.release	= pids_release,
- 	.legacy_cftypes	= pids_files,
- 	.dfl_cftypes	= pids_files,
- 	.threaded	= true,
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2639a30a8aa5..2166c2d92ddc 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -219,6 +219,7 @@ void release_task(struct task_struct *p)
- 	}
- 
- 	write_unlock_irq(&tasklist_lock);
-+	cgroup_release(p);
- 	release_thread(p);
- 	call_rcu(&p->rcu, delayed_put_task_struct);
- 
+ #define VDD_LOW_SEL 0x0D
+ #define VDD_HIGH_SEL 0x3F
 -- 
 2.19.1
 
