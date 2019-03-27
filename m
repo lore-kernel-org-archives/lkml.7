@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3465C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8882C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55C42082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD2B21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709824;
-	bh=hVPfTA1SzKeA4IWVriWiwUs1b+vTqgjQ0p9tgEmDNKw=;
+	s=default; t=1553709827;
+	bh=WNfYZh7y12hNPXAUXG9FRgRujFq8M7ZP7RIoYcnNdHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qhxVmnaZFglqMZHDudk7DjIJvHNw5KN1/MCS8754UknqGegOaVO6vgO6Q5aPj7ZMd
-	 1IDQQx+sw+9Y10ZWHl2aBxNgutEaraT+wDaQpyNMGwwaRTCMW0zRAZXlkOH6DMzwCQ
-	 l7k4LSp2Wd5VZEDg6CWhqbbFRQsAKAbVjb13nUsY=
+	b=Qnc96gC2QfE/m4ZQFt4OyUMDWad1pB2oe6FwcdAQ3N2e/P9pgfPvM6vd+SGQQiSel
+	 FMjA//ifl6K+p5VOBo2MZoVTEfbzB3rSKp+F7P2J+Kc1zBwz2wPYHoNe95JfUd2vNS
+	 RIcACu5rb60xUM+cVibyZgK//nr+HejwBlDWLO+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732784AbfC0SDn (ORCPT
+        id S1732819AbfC0SDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732685AbfC0SDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:40 -0400
+        id S1732685AbfC0SDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1630B217F5;
-        Wed, 27 Mar 2019 18:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C4ED2075C;
+        Wed, 27 Mar 2019 18:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709819;
-        bh=hVPfTA1SzKeA4IWVriWiwUs1b+vTqgjQ0p9tgEmDNKw=;
+        s=default; t=1553709823;
+        bh=WNfYZh7y12hNPXAUXG9FRgRujFq8M7ZP7RIoYcnNdHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5PdoVnMAnr2WSmrzu9m73zScjw17+N9mV5DxM18POobAPAa88K6+5lqLU7W1mNlT
-         WPHA+l4Jp0XCmSyc/dTElpKNiS/l8wjbOYhZqJF9X93ZjXtkgRZr7iCv4FV7g5Jalw
-         G2YB672aZfAH5RYO1pQ6c112/orODmlIpyR3oWhM=
+        b=0vfCJMmWaAx6dlu2AKG55IjHSot7hjqqYGE1l8IkgsBl63DXKLtI9KvwGMRyXxv1W
+         KUE8NIoSpwr3k8dgzfZDqLxLQiWK11PD2JxGAA/KQPeueyDApGlJZ3XMNBF2r12oSw
+         Mg34aXNwN2iSbKkKRZjAoHTD1utWZqeaNgsx4MgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Whitney <enwlinux@gmail.com>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 058/262] ext4: fix bigalloc cluster freeing when hole punching under load
-Date:   Wed, 27 Mar 2019 13:58:33 -0400
-Message-Id: <20190327180158.10245-58-sashal@kernel.org>
+Cc:     Tony Jones <tonyj@suse.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 060/262] tools lib traceevent: Fix buffer overflow in arg_eval
+Date:   Wed, 27 Mar 2019 13:58:35 -0400
+Message-Id: <20190327180158.10245-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -56,65 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Whitney <enwlinux@gmail.com>
+From: Tony Jones <tonyj@suse.de>
 
-[ Upstream commit 7bd75230b43727b258a4f7a59d62114cffe1b6c8 ]
+[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
 
-Ext4 may not free clusters correctly when punching holes in bigalloc
-file systems under high load conditions.  If it's not possible to
-extend and restart the journal in ext4_ext_rm_leaf() when preparing to
-remove blocks from a punched region, a retry of the entire punch
-operation is triggered in ext4_ext_remove_space().  This causes a
-partial cluster to be set to the first cluster in the extent found to
-the right of the punched region.  However, if the punch operation
-prior to the retry had made enough progress to delete one or more
-extents and a partial cluster candidate for freeing had already been
-recorded, the retry would overwrite the partial cluster.  The loss of
-this information makes it impossible to correctly free the original
-partial cluster in all cases.
+Fix buffer overflow observed when running perf test.
 
-This bug can cause generic/476 to fail when run as part of
-xfstests-bld's bigalloc and bigalloc_1k test cases.  The failure is
-reported when e2fsck detects bad iblocks counts greater than expected
-in units of whole clusters and also detects a number of negative block
-bitmap differences equal to the iblocks discrepancy in cluster units.
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-Signed-off-by: Eric Whitney <enwlinux@gmail.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
+
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 240b6dea5441..252bbbb5a2f4 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -2956,14 +2956,17 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 			if (err < 0)
- 				goto out;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index abd4fa5d3088..87494c7c619d 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2457,7 +2457,7 @@ static int arg_num_eval(struct tep_print_arg *arg, long long *val)
+ static char *arg_eval (struct tep_print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
--		} else if (sbi->s_cluster_ratio > 1 && end >= ex_end) {
-+		} else if (sbi->s_cluster_ratio > 1 && end >= ex_end &&
-+			   partial.state == initial) {
- 			/*
--			 * If there's an extent to the right its first cluster
--			 * contains the immediate right boundary of the
--			 * truncated/punched region.  Set partial_cluster to
--			 * its negative value so it won't be freed if shared
--			 * with the current extent.  The end < ee_block case
--			 * is handled in ext4_ext_rm_leaf().
-+			 * If we're punching, there's an extent to the right.
-+			 * If the partial cluster hasn't been set, set it to
-+			 * that extent's first cluster and its state to nofree
-+			 * so it won't be freed should it contain blocks to be
-+			 * removed. If it's already set (tofree/nofree), we're
-+			 * retrying and keep the original partial cluster info
-+			 * so a cluster marked tofree as a result of earlier
-+			 * extent removal is not lost.
- 			 */
- 			lblk = ex_end + 1;
- 			err = ext4_ext_search_right(inode, path, &lblk, &pblk,
+ 	switch (arg->type) {
+ 	case TEP_PRINT_ATOM:
 -- 
 2.19.1
 
