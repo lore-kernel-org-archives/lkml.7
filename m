@@ -2,55 +2,59 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE5CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED641C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDAC2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7DA217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709811;
-	bh=UEz3lvbYUxpdvrxqd8zeSyKgEUiMr+ER7xpjWR3iuT0=;
+	s=default; t=1553709816;
+	bh=8Hux6TbSRnoEgQ9f+YXXsBoJwgZklORkaD1SDS0Dcbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q4Yj8jVep5g7fzgnyEBzfxmzzpfXJqPklagXKWJAXWGMktyn/bajAID9DjYYF3Fbx
-	 fZ8Idk/dityvk52dI6TNCR5vhax3DKYevgOl3HmWQ/lRKW1ANKWkT5bunWhX19eloo
-	 tHjnjvH6OrAaflz/aETQi4y7ZAE47u8dDgZPNgNk=
+	b=2pIa0abvOQQ/oPXjHjL0Ye9WxW5sC+gNPPwVsv4Z1tFKLLPZTRDungyu6jl+RtMua
+	 3UBWnab1JNvrw41pjPWd89aAqf2uItLrwR8w0uRL/ueTXLmnJ35S28rwLutapp6ad6
+	 XC9y+PJP297ARmZDGJa6gCLs/BjAVVYUvoCu+0tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbfC0SDa (ORCPT
+        id S1732609AbfC0SDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732417AbfC0SD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:26 -0400
+        id S1732545AbfC0SDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF75E2147C;
-        Wed, 27 Mar 2019 18:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6070321734;
+        Wed, 27 Mar 2019 18:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709805;
-        bh=UEz3lvbYUxpdvrxqd8zeSyKgEUiMr+ER7xpjWR3iuT0=;
+        s=default; t=1553709812;
+        bh=8Hux6TbSRnoEgQ9f+YXXsBoJwgZklORkaD1SDS0Dcbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1aXMYMyZYRTZlrfcL03HmuTvVHFFRNf/JZk6wqJmt6fMhsia0iSjuNoaALwp8TiGy
-         UWREhXdviPFBbFQfNDIk9BBy9Y4BNP6EiFl40DU0OtQkakx5pDZx90kY4C1aKOFmLQ
-         5cvTlr1C/rbaPYTr/0pnbQ9FfrSOu2jWhFkrmk8w=
+        b=WcjcU8E0P8OQwCCuWuw4ZpzQnthLOjVSBJt5DkyYtTMh6/Yq/EEnL6ISg2wUwV22L
+         jrjNARKuTWYsLj+cDDl1btQ7ifTMG7/ONHOOZeobHRiTZj7lAQ/Crh2oZ04pBU23Bj
+         dJWVXz/lpYdAKJB0FTOmZUHqZm11RLyOsLP/+cxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>,
-        Jason Cai <jason.cai@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 047/262] dm thin: add sanity checks to thin-pool and external snapshot creation
-Date:   Wed, 27 Mar 2019 13:58:22 -0400
-Message-Id: <20190327180158.10245-47-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 052/262] perf beauty msg_flags: Add missing %s lost when adding prefix suppression logic
+Date:   Wed, 27 Mar 2019 13:58:27 -0400
+Message-Id: <20190327180158.10245-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,110 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
+[ Upstream commit c3b81a500f35241a4c16febe0a015e572cf2c492 ]
 
-Invoking dm_get_device() twice on the same device path with different
-modes is dangerous.  Because in that case, upgrade_mode() will alloc a
-new 'dm_dev' and free the old one, which may be referenced by a previous
-caller.  Dereferencing the dangling pointer will trigger kernel NULL
-pointer dereference.
+When the prefix suppresion/enabling logic was added, I forgot to add an
+extra %, which ended up chopping off the strings:
 
-The following two cases can reproduce this issue.  Actually, they are
-invalid setups that must be disallowed, e.g.:
+Before:
 
-1. Creating a thin-pool with read_only mode, and the same device as
-both metadata and data.
+  # perf trace -e *mmsg --map-dump syscalls
+  [299] = 1,
+  [307] = 1,
+  DNS Res~ver #3/14587 sendmmsg(106<socket:[3462393]>, 0x7f252b0fcaf0, 2, MSG_) = 2
+  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_, NULL) = 1
+  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
+  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
+  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
+  DNS Res~ver #3/14587 sendmmsg(148<socket:[3460636]>, 0x7f252b0fcaf0, 2, MSG_) = 2
+  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
+  ^C#
 
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+After:
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
-...
-Call Trace:
- new_read+0xfb/0x110 [dm_bufio]
- dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
- ? kmem_cache_alloc_trace+0x15c/0x1e0
- __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
- dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
- pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
- ? realloc_argv+0x50/0x70 [dm_mod]
- dm_table_add_target+0x14e/0x330 [dm_mod]
- table_load+0x122/0x2e0 [dm_mod]
- ? dev_status+0x40/0x40 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ? handle_mm_fault+0xda/0x200
- ? __do_page_fault+0x26c/0x4f0
- ksys_ioctl+0x60/0x90
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  # perf trace -e *mmsg --map-dump syscalls
+  [299] = 1,
+  [307] = 1,
+  NetworkManager/17467 sendmmsg(22<socket:[3466493]>, 0x7f28927f9bb0, 2, MSG_NOSIGNAL) = 2
+  pool/17478 sendmmsg(10<socket:[3466523]>, 0x7f2769f95e90, 2, MSG_NOSIGNAL) = 2
+  DNS Res~ver #3/14587 sendmmsg(121<socket:[3466132]>, 0x7f252b0fcaf0, 2, MSG_NOSIGNAL) = 2
+  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_DONTWAIT, NULL) = 1
+  Socket Thread/17433 sendmmsg(121<socket:[3460903]>, 0x7f252668baf0, 2, MSG_NOSIGNAL) = 2
+  ^C#
 
-2. Creating a external snapshot using the same thin-pool device.
-
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
-dmsetup message /dev/mapper/thinp 0 "create_thin 0"
-dmsetup create snap --table \
-            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
-
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-...
-Call Trace:
-? __alloc_pages_nodemask+0x13c/0x2e0
-retrieve_status+0xa5/0x1f0 [dm_mod]
-? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
- table_status+0x61/0xa0 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ksys_ioctl+0x60/0x90
- ? ksys_write+0x4f/0xb0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: c65c83ffe904 ("perf trace: Allow asking for not suppressing common string prefixes")
+Link: https://lkml.kernel.org/n/tip-t2eu1rqx710k6jr4814mlzg7@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/perf/trace/beauty/msg_flags.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index e83b63608262..254c26eb963a 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -3283,6 +3283,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	as.argc = argc;
- 	as.argv = argv;
+diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
+index d66c66315987..ea68db08b8e7 100644
+--- a/tools/perf/trace/beauty/msg_flags.c
++++ b/tools/perf/trace/beauty/msg_flags.c
+@@ -29,7 +29,7 @@ static size_t syscall_arg__scnprintf_msg_flags(char *bf, size_t size,
+ 		return scnprintf(bf, size, "NONE");
+ #define	P_MSG_FLAG(n) \
+ 	if (flags & MSG_##n) { \
+-		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
++		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+ 		flags &= ~MSG_##n; \
+ 	}
  
-+	/* make sure metadata and data are different devices */
-+	if (!strcmp(argv[0], argv[1])) {
-+		ti->error = "Error setting metadata or data device";
-+		r = -EINVAL;
-+		goto out_unlock;
-+	}
-+
- 	/*
- 	 * Set default pool features.
- 	 */
-@@ -4167,6 +4174,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	tc->sort_bio_list = RB_ROOT;
- 
- 	if (argc == 3) {
-+		if (!strcmp(argv[0], argv[2])) {
-+			ti->error = "Error setting origin device";
-+			r = -EINVAL;
-+			goto bad_origin_dev;
-+		}
-+
- 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
- 		if (r) {
- 			ti->error = "Error opening origin device";
 -- 
 2.19.1
 
