@@ -6,50 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B176BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21418C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C802082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0352070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711030;
-	bh=z2bgDMYsfSSOtTV9lNCXx2RL7qLIoqbqdo+WiUe2WGQ=;
+	s=default; t=1553711034;
+	bh=72TxuSK9cuYvqS0StwPF7SfIcRubNSUa0h3ed0FKF+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vk9BTk07oPRXail5z+LiJhoXOq5YdVniYS9bGyYAuj31M9MXEKzJPqLG69W4CcrTj
-	 Mlp1GfUlssTnN20cbutf/ylhY4JO/IERnU0/+KyRVQM2irYOyHPxyspjDq91nqRLK4
-	 MeP3iHPq9nCi7bpsQBejSe7KFzZcUje02g8phBQA=
+	b=fiYSKUoUxPJq4vF1q6flY6Dj1VqEeaimfhuXoVtQPWazkKirpQQMSK+Fdw9a9S/Oc
+	 DxVx4j7cvVk+o/+ZRy2Ym2yaH4A2d1tfGOM1wCrfisxAGrrKWiZ8IHyYT+z3+QmMwP
+	 T1zamI4lo9yQZGgCdoXFqKQS+lbtgoiiRsHHkjso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391542AbfC0SXt (ORCPT
+        id S2403923AbfC0SXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403866AbfC0SXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:48 -0400
+        id S2391058AbfC0SXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D69720651;
-        Wed, 27 Mar 2019 18:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40B720643;
+        Wed, 27 Mar 2019 18:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711027;
-        bh=z2bgDMYsfSSOtTV9lNCXx2RL7qLIoqbqdo+WiUe2WGQ=;
+        s=default; t=1553711028;
+        bh=72TxuSK9cuYvqS0StwPF7SfIcRubNSUa0h3ed0FKF+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SCqJZTEwl/xsJEoYk6MUlTnmsWjv3zD9v89tQrsVYmuJ2oZZ7pxv+gbQNrVbQ+Cre
-         lOnTKZoXg+e9QaUI0amuLNh0eG4s8BOIYmVHHLLMuuJt9y8AwXH44EjhnsQw24saYT
-         J20eQniMd5w10dX0nK1T9q81Rcgz3XsETCis+ahc=
+        b=ZwKFyPRRg2SVmvN1y02MdGUS87g5YVwDcsq2Q5HAJSdIcZngSUhpuMHflKJ8JNjYt
+         yzmP88i++2C6iYUrPzno2mTU3I2Y13CIeqGEQeSyaHzWMYCzrTxzqyqnP5hAQ+1P/6
+         bw0L0th3JXOmzolwM85dLm1MCYw+ykJ12T0acdnU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia Guo <guojia12@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/63] ocfs2: fix a panic problem caused by o2cb_ctl
-Date:   Wed, 27 Mar 2019 14:22:32 -0400
-Message-Id: <20190327182323.18577-12-sashal@kernel.org>
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.4 13/63] f2fs: do not use mutex lock in atomic context
+Date:   Wed, 27 Mar 2019 14:22:33 -0400
+Message-Id: <20190327182323.18577-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -61,70 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia Guo <guojia12@huawei.com>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
+[ Upstream commit 9083977dabf3833298ddcd40dee28687f1e6b483 ]
 
-In the process of creating a node, it will cause NULL pointer
-dereference in kernel if o2cb_ctl failed in the interval (mkdir,
-o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
+Fix below warning coming because of using mutex lock in atomic context.
 
-The node num is initialized to 0 in function o2nm_node_group_make_item,
-o2nm_node_group_drop_item will mistake the node number 0 for a valid
-node number when we delete the node before the node number is set
-correctly.  If the local node number of the current host happens to be
-0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
-o2hb_thread still running.  The panic stack is generated as follows:
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:98
+in_atomic(): 1, irqs_disabled(): 0, pid: 585, name: sh
+Preemption disabled at: __radix_tree_preload+0x28/0x130
+Call trace:
+ dump_backtrace+0x0/0x2b4
+ show_stack+0x20/0x28
+ dump_stack+0xa8/0xe0
+ ___might_sleep+0x144/0x194
+ __might_sleep+0x58/0x8c
+ mutex_lock+0x2c/0x48
+ f2fs_trace_pid+0x88/0x14c
+ f2fs_set_node_page_dirty+0xd0/0x184
 
-  o2hb_thread
-      \-o2hb_do_disk_heartbeat
-          \-o2hb_check_own_slot
-              |-slot = &reg->hr_slots[o2nm_this_node()];
-              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
+Do not use f2fs_radix_tree_insert() to avoid doing cond_resched() with
+spin_lock() acquired.
 
-We need to check whether the node number is set when we delete the node.
-
-Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Acked-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ fs/f2fs/trace.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
-index 3c45a9301a09..a87a08e1bfab 100644
---- a/fs/ocfs2/cluster/nodemanager.c
-+++ b/fs/ocfs2/cluster/nodemanager.c
-@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
- 	struct o2nm_node *node = to_o2nm_node(item);
- 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+diff --git a/fs/f2fs/trace.c b/fs/f2fs/trace.c
+index 145fb659ad44..8f327fa7ae47 100644
+--- a/fs/f2fs/trace.c
++++ b/fs/f2fs/trace.c
+@@ -60,6 +60,7 @@ void f2fs_trace_pid(struct page *page)
  
--	o2net_disconnect_node(node);
-+	if (cluster->cl_nodes[node->nd_num] == node) {
-+		o2net_disconnect_node(node);
+ 	page->private = pid;
  
--	if (cluster->cl_has_local &&
--	    (cluster->cl_local_node == node->nd_num)) {
--		cluster->cl_has_local = 0;
--		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
--		o2net_stop_listening(node);
-+		if (cluster->cl_has_local &&
-+		    (cluster->cl_local_node == node->nd_num)) {
-+			cluster->cl_has_local = 0;
-+			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
-+			o2net_stop_listening(node);
-+		}
- 	}
++retry:
+ 	if (radix_tree_preload(GFP_NOFS))
+ 		return;
  
- 	/* XXX call into net to stop this node from trading messages */
+@@ -70,7 +71,12 @@ void f2fs_trace_pid(struct page *page)
+ 	if (p)
+ 		radix_tree_delete(&pids, pid);
+ 
+-	f2fs_radix_tree_insert(&pids, pid, current);
++	if (radix_tree_insert(&pids, pid, current)) {
++		spin_unlock(&pids_lock);
++		radix_tree_preload_end();
++		cond_resched();
++		goto retry;
++	}
+ 
+ 	trace_printk("%3x:%3x %4x %-16s\n",
+ 			MAJOR(inode->i_sb->s_dev), MINOR(inode->i_sb->s_dev),
 -- 
 2.19.1
 
