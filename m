@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC7FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F557C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906EC21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C7B217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lQHbIAXL"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="F0FPr0vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfC0NVl (ORCPT
+        id S1730572AbfC0NVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:21:41 -0400
-Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:27108
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Wed, 27 Mar 2019 09:21:48 -0400
+Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:29764
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729924AbfC0NVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:21:19 -0400
+        id S1725829AbfC0NVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:21:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6F10FU/nMBELMll6buxzdkIXlVxK85wRW3zUgJupC9Y=;
- b=lQHbIAXLjwEsMbk898r0shYoxQxw/1LaXT08YGpOonMAk2yb0yjmuS/q/zRE5GtlmTkjfRiJzXvM9bq2j/kOuHBgUd0nog7NZbkFsIXY+Yx4x8tpjQtkE2lGa/0GQqJXAHmTzy0pbpM4Plqam0EmOILTQddnX1dM75kgtkUyKnA=
+ bh=mJoxWhmCyb3/U5EQiMFlg+3tnG1hrEoxJr+Q2jp8qb4=;
+ b=F0FPr0vgVEoD406wyJs3lSN4FABwuOgxpn2IacEjm5eAAfLdvGLQQ6dTZs9mSppKTbFjP7ZIi3rYb+CXJhxCFkKX7LCcLx6UTzCS58ldIbwI5NFheKK3XOT2I9voyEFLxXw70diiVj6kcPRezU6YQu0jbKJay92Dsca/BIlzLFE=
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB5907.eurprd04.prod.outlook.com (20.178.202.32) with Microsoft SMTP
+ AM0PR04MB6051.eurprd04.prod.outlook.com (20.179.35.15) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Wed, 27 Mar 2019 13:21:13 +0000
+ 15.20.1750.15; Wed, 27 Mar 2019 13:21:10 +0000
 Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::9579:32ab:898e:6769]) by AM0PR04MB5779.eurprd04.prod.outlook.com
  ([fe80::9579:32ab:898e:6769%2]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
- 13:21:13 +0000
+ 13:21:09 +0000
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Sudeep Holla <sudeep.holla@arm.com>,
         Marc Zyngier <marc.zyngier@arm.com>,
@@ -55,11 +55,11 @@ CC:     dl-linux-imx <linux-imx@nxp.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
         Abel Vesa <abel.vesa@nxp.com>
-Subject: [RFC 4/7] psci: Add cpu_poke ops to support core poking
-Thread-Topic: [RFC 4/7] psci: Add cpu_poke ops to support core poking
-Thread-Index: AQHU5J/zprrbGAWi1k63FnonWZEQSg==
-Date:   Wed, 27 Mar 2019 13:21:13 +0000
-Message-ID: <1553692845-20983-5-git-send-email-abel.vesa@nxp.com>
+Subject: [RFC 2/7] cpuidle: Add cpu poke support
+Thread-Topic: [RFC 2/7] cpuidle: Add cpu poke support
+Thread-Index: AQHU5J/xpRRIW2AJek+3mcOjLL/sJg==
+Date:   Wed, 27 Mar 2019 13:21:09 +0000
+Message-ID: <1553692845-20983-3-git-send-email-abel.vesa@nxp.com>
 References: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
 In-Reply-To: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
 Accept-Language: en-US
@@ -70,128 +70,134 @@ x-clientproxiedby: VI1PR0701CA0038.eurprd07.prod.outlook.com
  (2603:10a6:800:90::24) To AM0PR04MB5779.eurprd04.prod.outlook.com
  (2603:10a6:208:131::23)
 x-originating-ip: [212.146.100.6]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.7.4
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd29c57d-4a49-40a1-b67c-08d6b2b71594
+x-ms-office365-filtering-correlation-id: 3ab53a77-04b0-4d0c-da77-08d6b2b7138d
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5907;
-x-ms-traffictypediagnostic: AM0PR04MB5907:
-x-microsoft-antispam-prvs: <AM0PR04MB5907B0E85A750833ED56B860F6580@AM0PR04MB5907.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB6051;
+x-ms-traffictypediagnostic: AM0PR04MB6051:
+x-microsoft-antispam-prvs: <AM0PR04MB6051D251911006D51B670105F6580@AM0PR04MB6051.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(39860400002)(396003)(199004)(189003)(25786009)(2906002)(26005)(386003)(54906003)(8676002)(68736007)(102836004)(6512007)(71200400001)(7416002)(71190400001)(446003)(5660300002)(8936002)(50226002)(4326008)(81166006)(2616005)(476003)(81156014)(44832011)(97736004)(11346002)(6116002)(3846002)(36756003)(105586002)(86362001)(106356001)(2501003)(6486002)(76176011)(6636002)(14454004)(478600001)(6506007)(316002)(52116002)(7736002)(186003)(53936002)(110136005)(6346003)(66066001)(99286004)(14444005)(256004)(486006)(6436002)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5907;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(25786009)(14444005)(68736007)(4326008)(6436002)(5660300002)(6116002)(71200400001)(71190400001)(3846002)(256004)(8936002)(8676002)(6636002)(2501003)(66066001)(305945005)(2906002)(53936002)(81156014)(6512007)(7736002)(81166006)(7416002)(97736004)(6486002)(36756003)(54906003)(44832011)(50226002)(486006)(106356001)(6506007)(386003)(186003)(110136005)(102836004)(446003)(14454004)(476003)(86362001)(99286004)(11346002)(52116002)(478600001)(316002)(2616005)(26005)(105586002)(76176011)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6051;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gh5VASb52UD4ucQoargW+Pj/M13yvK8y5tsNhjebMg1lP3FXxSLA8rfN3zoOV7LXV4d36KwR0oOSI3g2G5BsZwkouZ/+mIN/m6FzTaFJrLEMvzL79r9lFRAzwiP9ytO2lMqf6SntFsgsbBK4CWJXGIktpoOrQVigR2xm/i2AlM7An1z/1HRU91zG6t9aEoRB6lpW7lb6JkD3EE35xYuqtNUDldyh1y0/ABa/x7qhwJSDiV77QUNgS3X1+0/SzGsZeCtacqFy90YDXBWvBLt3PsJiIpHdUSMrAerqvMPjy3ZoczCsnnAS00MLV858kMP15IwpEMtM4GPtZWIJAyvv5sHzv9dkC6etHDPSMpxOuniHFpmvkMjpAIgvqwnldGBVfflkbmv9JOwprS2iPghzjOxIV2ohG2VVv8KcBlgPk0k=
+x-microsoft-antispam-message-info: TWH2+42YzTL6r44EZTcRdorG9+5Np9ttK6YSpIXGF/hrUeQvdfNgtu7oZUyCeQWDbW7dWBaqqOChfu+Hq0Klo9+F5IaA9IyoPzS/8eRFdmwo0QrjFSLcC8MynB7byLhB4w5gk2L4WMzw0mw8w+QCQ+O1f3utBRcRocvv0F6QQ5S3scocSOrvk/mEWuDxolBgfsLMRA5iI5LE4bug1qU3FgC6LTTkmDaZlX/cuIcTIvtGBoKDDX4bhzd8SIYBil/lTrpW7Sr+q8dH+fAG548PXvli26DFVu5vwTJaim6lnrgH6+sKwgyeN/tGFtYDIsXfkGDxZjhF9sI+0hYQPXtahAFb175eXZLSGX0YVuSt/rAZW4OA53rtfnffJwj8U0PHyJP4216wsMYLrZR/p7AFLWnNEGvXsyUhgEFXDkTphZ4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd29c57d-4a49-40a1-b67c-08d6b2b71594
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 13:21:13.2882
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ab53a77-04b0-4d0c-da77-08d6b2b7138d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 13:21:09.9348
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5907
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There can be platforms that need a dedicated work to be done
-in TF-A before the specified core can be woken up through an IPI.
-Allow those platforms to call into the TF-A to do that work
-by making use of the cpu_poke operation.
+Having a poke operation per state, allows each cpuidle driver to
+implement, for each state, different ways of waking up (poking) cores.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/arm64/include/asm/cpu_ops.h | 1 +
- arch/arm64/kernel/psci.c         | 1 +
- drivers/firmware/psci.c          | 6 ++++++
- include/linux/psci.h             | 1 +
- include/uapi/linux/psci.h        | 2 ++
- 5 files changed, 11 insertions(+)
+ drivers/cpuidle/cpuidle.c | 34 ++++++++++++++++++++++++++++++++++
+ include/linux/cpuidle.h   |  6 ++++++
+ 2 files changed, 40 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_=
-ops.h
-index 8f03446..913afef 100644
---- a/arch/arm64/include/asm/cpu_ops.h
-+++ b/arch/arm64/include/asm/cpu_ops.h
-@@ -60,6 +60,7 @@ struct cpu_operations {
- #ifdef CONFIG_CPU_IDLE
- 	int		(*cpu_init_idle)(unsigned int);
- 	int		(*cpu_suspend)(unsigned long);
-+	int		(*cpu_poke)(unsigned int);
- #endif
- };
-=20
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 8cdaf25..53227eb 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -115,6 +115,7 @@ const struct cpu_operations cpu_psci_ops =3D {
- #ifdef CONFIG_CPU_IDLE
- 	.cpu_init_idle	=3D psci_cpu_init_idle,
- 	.cpu_suspend	=3D psci_cpu_suspend_enter,
-+	.cpu_poke	=3D psci_cpu_suspend_exit,
- #endif
- 	.cpu_init	=3D cpu_psci_cpu_init,
- 	.cpu_prepare	=3D cpu_psci_cpu_prepare,
-diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-index c80ec1d..282bc47 100644
---- a/drivers/firmware/psci.c
-+++ b/drivers/firmware/psci.c
-@@ -73,6 +73,7 @@ enum psci_function {
- 	PSCI_FN_CPU_ON,
- 	PSCI_FN_CPU_OFF,
- 	PSCI_FN_MIGRATE,
-+	PSCI_FN_CPU_POKE,
- 	PSCI_FN_MAX,
- };
-=20
-@@ -424,6 +425,11 @@ int psci_cpu_suspend_enter(unsigned long index)
- 	return ret;
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 7f10830..fca5313 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -297,6 +297,29 @@ int cpuidle_enter_state(struct cpuidle_device *dev, st=
+ruct cpuidle_driver *drv,
  }
 =20
-+int psci_cpu_suspend_exit(unsigned int index)
+ /**
++ * cpuidle_poke_single - poke the specified cpu to wake up from
++ *		         current idle state
++ *
++ * @dev: cpuidle device for this cpu
++ * @drv: cpuidle driver for this cpu
++ * @cpu: the index of the cpu
++ */
++int cpuidle_poke_single(struct cpuidle_driver *drv, struct cpuidle_device =
+*dev,
++			int cpu)
 +{
-+	return invoke_psci_fn(PSCI_0_2_FN_CPU_POKE, index, 0, 0);
++	struct cpuidle_state *state;
++
++	if (cpuidle_disabled())
++		return 0;
++
++	state =3D sched_idle_get_state(cpu);
++	if (state && state->poke)
++		return state->poke(dev, drv, cpu);
++
++	return 0;
 +}
 +
- /* ARM specific CPU idle operations */
- #ifdef CONFIG_ARM
- static const struct cpuidle_ops psci_cpuidle_ops __initconst =3D {
-diff --git a/include/linux/psci.h b/include/linux/psci.h
-index 8b1b3b5..d863733 100644
---- a/include/linux/psci.h
-+++ b/include/linux/psci.h
-@@ -24,6 +24,7 @@ bool psci_tos_resident_on(int cpu);
++/**
+  * cpuidle_select - ask the cpuidle framework to choose an idle state
+  *
+  * @drv: the cpuidle driver
+@@ -414,6 +437,17 @@ void cpuidle_resume(void)
+ 	mutex_unlock(&cpuidle_lock);
+ }
 =20
- int psci_cpu_init_idle(unsigned int cpu);
- int psci_cpu_suspend_enter(unsigned long index);
-+int psci_cpu_suspend_exit(unsigned int index);
++void cpuidle_poke(const struct cpumask *mask)
++{
++	struct cpuidle_device *dev =3D cpuidle_get_device();
++	struct cpuidle_driver *drv =3D cpuidle_get_cpu_driver(dev);
++	int cpu;
++
++	for_each_cpu(cpu, mask) {
++		WARN_ON(cpuidle_poke_single(drv, dev, cpu));
++	}
++}
++
+ /**
+  * cpuidle_enable_device - enables idle PM for a CPU
+  * @dev: the CPU
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index 88a9119..0270771 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -55,6 +55,10 @@ struct cpuidle_state {
+ 			struct cpuidle_driver *drv,
+ 			int index);
 =20
- enum psci_conduit {
- 	PSCI_CONDUIT_NONE,
-diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
-index b3bcabe..19e7481 100644
---- a/include/uapi/linux/psci.h
-+++ b/include/uapi/linux/psci.h
-@@ -40,8 +40,10 @@
- #define PSCI_0_2_FN_MIGRATE_INFO_UP_CPU		PSCI_0_2_FN(7)
- #define PSCI_0_2_FN_SYSTEM_OFF			PSCI_0_2_FN(8)
- #define PSCI_0_2_FN_SYSTEM_RESET		PSCI_0_2_FN(9)
-+#define PSCI_0_2_FN_CPU_POKE			PSCI_0_2_FN(11)
++	int (*poke)	(struct cpuidle_device *dev,
++			struct cpuidle_driver *drv,
++			int cpu);
++
+ 	int (*enter_dead) (struct cpuidle_device *dev, int index);
 =20
- #define PSCI_0_2_FN64_CPU_SUSPEND		PSCI_0_2_FN64(1)
-+#define PSCI_0_2_FN64_CPU_POKE			PSCI_0_2_FN64(11)
- #define PSCI_0_2_FN64_CPU_ON			PSCI_0_2_FN64(3)
- #define PSCI_0_2_FN64_AFFINITY_INFO		PSCI_0_2_FN64(4)
- #define PSCI_0_2_FN64_MIGRATE			PSCI_0_2_FN64(5)
+ 	/*
+@@ -145,6 +149,7 @@ extern void cpuidle_unregister(struct cpuidle_driver *d=
+rv);
+ extern void cpuidle_pause_and_lock(void);
+ extern void cpuidle_resume_and_unlock(void);
+ extern void cpuidle_pause(void);
++extern void cpuidle_poke(const struct cpumask *mask);
+ extern void cpuidle_resume(void);
+ extern int cpuidle_enable_device(struct cpuidle_device *dev);
+ extern void cpuidle_disable_device(struct cpuidle_device *dev);
+@@ -181,6 +186,7 @@ static inline void cpuidle_unregister(struct cpuidle_dr=
+iver *drv) { }
+ static inline void cpuidle_pause_and_lock(void) { }
+ static inline void cpuidle_resume_and_unlock(void) { }
+ static inline void cpuidle_pause(void) { }
++static inline void cpuidle_poke(const struct cpumask *mask) { }
+ static inline void cpuidle_resume(void) { }
+ static inline int cpuidle_enable_device(struct cpuidle_device *dev)
+ {return -ENODEV; }
 --=20
 2.7.4
 
