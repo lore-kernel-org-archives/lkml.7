@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25285C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DF0C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC16D2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9EE218CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710585;
-	bh=UZYtGBwLlAtlVhpWS6zCDUYUv2qfEbVZk7YavJ5pYPE=;
+	s=default; t=1553710588;
+	bh=t5OcFEJmb3O340PYBoPODVhQ/tSNNZfHmVmF6vC93oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glrlEtMwtbiWw7UiA464aIBKpgI6kazwsm18JRF7b9Mp7ReMvZVDKwk5hhIQx3B4U
-	 I2rWChfDG7shoElStvsFO5kVZbIOTl6hHGULZDwVwXOjdCq67pPdn1UaNmF0izjWs1
-	 llHIcRMem91q98lwyeXvy96wOaNeOiZlFIzp8AF8=
+	b=W3z2t803ITrdXOu5CZCO5knNALVGGCR4o8EGhRBpK7d7yORCNKSrh6l9oDTsfmCCx
+	 tpxLRpmwHLDQpep2/3ToG8XxL89lRez3LVNfHlbjCQAoFMpMrP3ZPuhhtCi1gzeUVt
+	 Dr1YgjjzA9LhgcPJbf4TAXns7+qU64Rrd20POLZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390035AbfC0SQX (ORCPT
+        id S2390058AbfC0SQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60348 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389485AbfC0SQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:18 -0400
+        id S2389751AbfC0SQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CC5A2082F;
-        Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7872184C;
+        Wed, 27 Mar 2019 18:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710578;
-        bh=UZYtGBwLlAtlVhpWS6zCDUYUv2qfEbVZk7YavJ5pYPE=;
+        s=default; t=1553710582;
+        bh=t5OcFEJmb3O340PYBoPODVhQ/tSNNZfHmVmF6vC93oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4zAihwK80Zx/DM4+HpjgmN+G+MFgokmvBnZxpxHWK1ODX4cRLrzEbXxsnpoXnuYr
-         lVqpNmKLz3dFP3lKoBTcoMrSt20hYYm8V0j3GcD7P3mcpIql7cdXM3O75qyeGpQAPI
-         7BIPck7cM0jpzfkH/EyFWKkm3/ySRcXmWFLjW59o=
+        b=MQm9hRj4D/Yj4/honX4gOeBgL6XUvRkROliU3BFh1n/QrJ5HWKztfshRdorcZU++p
+         nW8srUtfwR1lgnzGgd14ZZstBv0rw3QF3f6xdPwZRqeayVriybRqylhi7xJpym419k
+         0KzN6YLyRYnVmnV//hDbfB7sanIjQwbN4rCuu2tw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 186/192] dmaengine: tegra: avoid overflow of byte tracking
-Date:   Wed, 27 Mar 2019 14:10:18 -0400
-Message-Id: <20190327181025.13507-186-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 188/192] drm: Reorder set_property_atomic to avoid returning with an active ww_ctx
+Date:   Wed, 27 Mar 2019 14:10:20 -0400
+Message-Id: <20190327181025.13507-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,55 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
+[ Upstream commit 227ad6d957898a88b1746e30234ece64d305f066 ]
 
-The dma_desc->bytes_transferred counter tracks the number of bytes
-moved by the DMA channel. This is then used to calculate the information
-passed back in the in the tegra_dma_tx_status callback, which is usually
-fine.
+Delay the drm_modeset_acquire_init() until after we check for an
+allocation failure so that we can return immediately upon error without
+having to unwind.
 
-When the DMA channel is configured as continous, then the bytes_transferred
-counter will increase over time and eventually overflow to become negative
-so the residue count will become invalid and the ALSA sound-dma code will
-report invalid hardware pointer values to the application. This results in
-some users becoming confused about the playout position and putting audio
-data in the wrong place.
+WARNING: lock held when returning to user space!
+4.20.0+ #174 Not tainted
+------------------------------------------------
+syz-executor556/8153 is leaving the kernel with locks still held!
+1 lock held by syz-executor556/8153:
+  #0: 000000005100c85c (crtc_ww_class_acquire){+.+.}, at:
+set_property_atomic+0xb3/0x330 drivers/gpu/drm/drm_mode_object.c:462
 
-To fix this issue, always ensure the bytes_transferred field is modulo the
-size of the request. We only do this for the case of the cyclic transfer
-done ISR as anyone attempting to move 2GiB of DMA data in one transfer
-is unlikely.
+Reported-by: syzbot+6ea337c427f5083ebdf2@syzkaller.appspotmail.com
+Fixes: 144a7999d633 ("drm: Handle properties in the core for atomic drivers")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: <stable@vger.kernel.org> # v4.14+
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181230122842.21917-1-chris@chris-wilson.co.uk
 
-Note, we don't fix the issue that we should /never/ transfer a negative
-number of bytes so we could make those fields unsigned.
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_mode_object.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 9a558e30c461..8219ab88a507 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -636,7 +636,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
- 
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
- 	dma_desc = sgreq->dma_desc;
--	dma_desc->bytes_transferred += sgreq->req_len;
-+	/* if we dma for long enough the transfer count will wrap */
-+	dma_desc->bytes_transferred =
-+		(dma_desc->bytes_transferred + sgreq->req_len) %
-+		dma_desc->bytes_requested;
- 
- 	/* Callback need to be call */
- 	if (!dma_desc->cb_count)
+diff --git a/drivers/gpu/drm/drm_mode_object.c b/drivers/gpu/drm/drm_mode_object.c
+index fcb0ab0abb75..4ba59455c9e6 100644
+--- a/drivers/gpu/drm/drm_mode_object.c
++++ b/drivers/gpu/drm/drm_mode_object.c
+@@ -464,6 +464,7 @@ static int set_property_atomic(struct drm_mode_object *obj,
+ 	if (!state)
+ 		return -ENOMEM;
+ 	state->acquire_ctx = &ctx;
++
+ retry:
+ 	if (prop == state->dev->mode_config.dpms_property) {
+ 		if (obj->type != DRM_MODE_OBJECT_CONNECTOR) {
 -- 
 2.19.1
 
