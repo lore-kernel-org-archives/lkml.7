@@ -2,82 +2,278 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38D4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA254C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B50E206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7284C2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553713829;
+	bh=+Xhq8faoi2KKC9uViiyoXBt3QVYHmA+7GhL1XAq+kkA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LoTrJydIyNp60AEEn9tkkHvhmG6Jbkbldz2OO2VXa8s6I+EwuZlzrC7eItoWr+fds
+	 rlp+pFeTfKc3rBRCYrlNgYqPMsajqDAuXaVnO+oJbCtQ5tvwMTpIXF44FsE2wW2pCJ
+	 jJ4b6PBxwu43wN5toSMqjH643WnI7HYCIOm8+Jp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389800AbfC0TKW (ORCPT
+        id S2389843AbfC0TK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:10:22 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51566 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388289AbfC0TKS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 15:10:18 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h9DwC-0006zR-UV; Wed, 27 Mar 2019 20:10:13 +0100
-Date:   Wed, 27 Mar 2019 20:10:12 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Oleg Nesterov <oleg@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Don Zickus <dzickus@redhat.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>
-Subject: Re: [PATCH] watchdog: Respect watchdog cpumask on CPU hotplug
-In-Reply-To: <20190327151653.GA23811@redhat.com>
-Message-ID: <alpine.DEB.2.21.1903272009000.1789@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1903262245490.1789@nanos.tec.linutronix.de> <20190327151653.GA23811@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 27 Mar 2019 15:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388970AbfC0SLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:07 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1205121741;
+        Wed, 27 Mar 2019 18:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553710266;
+        bh=+Xhq8faoi2KKC9uViiyoXBt3QVYHmA+7GhL1XAq+kkA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=emQSV/Lr6+a37qOiQiyaGjmxEPiEJT3irT0/1XdxQ3EXXIoW0+lbGW3v939vVl7kV
+         9kar51wzF91cK9QJeqzRKs/4l/tUswaSCOs9po+msEj+rQZuPDzgBeXmCYWqjTjFEc
+         Hfr/rN0z+396qQO5qwR/zkv/UEGggrMpuLdoJt94=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Shaohua Li <shli@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 024/192] mm, swap: bounds check swap_info array accesses to avoid NULL derefs
+Date:   Wed, 27 Mar 2019 14:07:36 -0400
+Message-Id: <20190327181025.13507-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019, Oleg Nesterov wrote:
-> On 03/26, Thomas Gleixner wrote:
-> >
-> > The rework of the watchdog core to use cpu_stop_work broke the watchdog
-> > cpumask on CPU hotplug.
-> >
-> > The watchdog_enable/disable() functions are now called unconditionally from
-> > the hotplug callback, i.e. even on CPUs which are not in the watchdog
-> > cpumask.
-> >
-> > Only invoke them when the plugged CPU is in the watchdog cpumask.
-> 
-> IIUC without this fix an NMI watchdog can too be enabled at boot time even
-> if the initial watchdog_cpumask = housekeeping_cpumask(HK_FLAG_TIMER) doesn't
-> include the plugged CPU.
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-Yes.
+[ Upstream commit c10d38cc8d3e43f946b6c2bf4602c86791587f30 ]
 
-> And after that writing 0 to /proc/sys/kernel/nmi_watchdog clears
-> NMI_WATCHDOG_ENABLED but this can't disable NMI watchdog's outside of
-> watchdog_allowed_mask.
+Dan Carpenter reports a potential NULL dereference in
+get_swap_page_of_type:
 
-Correct
+  Smatch complains that the NULL checks on "si" aren't consistent.  This
+  seems like a real bug because we have not ensured that the type is
+  valid and so "si" can be NULL.
 
-> So may be this can explain the problem reported by Maxime ?
-> See https://lore.kernel.org/lkml/b99c5a25-a5fe-18dd-2f1d-bdd6834f03e5@redhat.com/
+Add the missing check for NULL, taking care to use a read barrier to
+ensure CPU1 observes CPU0's updates in the correct order:
 
-That looks so.
+     CPU0                           CPU1
+     alloc_swap_info()              if (type >= nr_swapfiles)
+       swap_info[type] = p              /* handle invalid entry */
+       smp_wmb()                    smp_rmb()
+       ++nr_swapfiles               p = swap_info[type]
 
-Thanks,
+Without smp_rmb, CPU1 might observe CPU0's write to nr_swapfiles before
+CPU0's write to swap_info[type] and read NULL from swap_info[type].
 
-	tglx
+Ying Huang noticed other places in swapfile.c don't order these reads
+properly.  Introduce swap_type_to_swap_info to encourage correct usage.
+
+Use READ_ONCE and WRITE_ONCE to follow the Linux Kernel Memory Model
+(see tools/memory-model/Documentation/explanation.txt).
+
+This ordering need not be enforced in places where swap_lock is held
+(e.g.  si_swapinfo) because swap_lock serializes updates to nr_swapfiles
+and the swap_info array.
+
+Link: http://lkml.kernel.org/r/20190131024410.29859-1-daniel.m.jordan@oracle.com
+Fixes: ec8acf20afb8 ("swap: add per-partition lock for swapfile")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Paul McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Shaohua Li <shli@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ mm/swapfile.c | 51 +++++++++++++++++++++++++++++----------------------
+ 1 file changed, 29 insertions(+), 22 deletions(-)
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 340ef3177686..0047dcaf9369 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -98,6 +98,15 @@ static atomic_t proc_poll_event = ATOMIC_INIT(0);
+ 
+ atomic_t nr_rotate_swap = ATOMIC_INIT(0);
+ 
++static struct swap_info_struct *swap_type_to_swap_info(int type)
++{
++	if (type >= READ_ONCE(nr_swapfiles))
++		return NULL;
++
++	smp_rmb();	/* Pairs with smp_wmb in alloc_swap_info. */
++	return READ_ONCE(swap_info[type]);
++}
++
+ static inline unsigned char swap_count(unsigned char ent)
+ {
+ 	return ent & ~SWAP_HAS_CACHE;	/* may include COUNT_CONTINUED flag */
+@@ -1030,12 +1039,14 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+ /* The only caller of this function is now suspend routine */
+ swp_entry_t get_swap_page_of_type(int type)
+ {
+-	struct swap_info_struct *si;
++	struct swap_info_struct *si = swap_type_to_swap_info(type);
+ 	pgoff_t offset;
+ 
+-	si = swap_info[type];
++	if (!si)
++		goto fail;
++
+ 	spin_lock(&si->lock);
+-	if (si && (si->flags & SWP_WRITEOK)) {
++	if (si->flags & SWP_WRITEOK) {
+ 		atomic_long_dec(&nr_swap_pages);
+ 		/* This is called for allocating swap entry, not cache */
+ 		offset = scan_swap_map(si, 1);
+@@ -1046,6 +1057,7 @@ swp_entry_t get_swap_page_of_type(int type)
+ 		atomic_long_inc(&nr_swap_pages);
+ 	}
+ 	spin_unlock(&si->lock);
++fail:
+ 	return (swp_entry_t) {0};
+ }
+ 
+@@ -1057,9 +1069,9 @@ static struct swap_info_struct *__swap_info_get(swp_entry_t entry)
+ 	if (!entry.val)
+ 		goto out;
+ 	type = swp_type(entry);
+-	if (type >= nr_swapfiles)
++	p = swap_type_to_swap_info(type);
++	if (!p)
+ 		goto bad_nofile;
+-	p = swap_info[type];
+ 	if (!(p->flags & SWP_USED))
+ 		goto bad_device;
+ 	offset = swp_offset(entry);
+@@ -1708,10 +1720,9 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
+ sector_t swapdev_block(int type, pgoff_t offset)
+ {
+ 	struct block_device *bdev;
++	struct swap_info_struct *si = swap_type_to_swap_info(type);
+ 
+-	if ((unsigned int)type >= nr_swapfiles)
+-		return 0;
+-	if (!(swap_info[type]->flags & SWP_WRITEOK))
++	if (!si || !(si->flags & SWP_WRITEOK))
+ 		return 0;
+ 	return map_swap_entry(swp_entry(type, offset), &bdev);
+ }
+@@ -2269,7 +2280,7 @@ static sector_t map_swap_entry(swp_entry_t entry, struct block_device **bdev)
+ 	struct swap_extent *se;
+ 	pgoff_t offset;
+ 
+-	sis = swap_info[swp_type(entry)];
++	sis = swp_swap_info(entry);
+ 	*bdev = sis->bdev;
+ 
+ 	offset = swp_offset(entry);
+@@ -2707,9 +2718,7 @@ static void *swap_start(struct seq_file *swap, loff_t *pos)
+ 	if (!l)
+ 		return SEQ_START_TOKEN;
+ 
+-	for (type = 0; type < nr_swapfiles; type++) {
+-		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
+-		si = swap_info[type];
++	for (type = 0; (si = swap_type_to_swap_info(type)); type++) {
+ 		if (!(si->flags & SWP_USED) || !si->swap_map)
+ 			continue;
+ 		if (!--l)
+@@ -2729,9 +2738,7 @@ static void *swap_next(struct seq_file *swap, void *v, loff_t *pos)
+ 	else
+ 		type = si->type + 1;
+ 
+-	for (; type < nr_swapfiles; type++) {
+-		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
+-		si = swap_info[type];
++	for (; (si = swap_type_to_swap_info(type)); type++) {
+ 		if (!(si->flags & SWP_USED) || !si->swap_map)
+ 			continue;
+ 		++*pos;
+@@ -2838,14 +2845,14 @@ static struct swap_info_struct *alloc_swap_info(void)
+ 	}
+ 	if (type >= nr_swapfiles) {
+ 		p->type = type;
+-		swap_info[type] = p;
++		WRITE_ONCE(swap_info[type], p);
+ 		/*
+ 		 * Write swap_info[type] before nr_swapfiles, in case a
+ 		 * racing procfs swap_start() or swap_next() is reading them.
+ 		 * (We never shrink nr_swapfiles, we never free this entry.)
+ 		 */
+ 		smp_wmb();
+-		nr_swapfiles++;
++		WRITE_ONCE(nr_swapfiles, nr_swapfiles + 1);
+ 	} else {
+ 		kvfree(p);
+ 		p = swap_info[type];
+@@ -3365,7 +3372,7 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
+ {
+ 	struct swap_info_struct *p;
+ 	struct swap_cluster_info *ci;
+-	unsigned long offset, type;
++	unsigned long offset;
+ 	unsigned char count;
+ 	unsigned char has_cache;
+ 	int err = -EINVAL;
+@@ -3373,10 +3380,10 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
+ 	if (non_swap_entry(entry))
+ 		goto out;
+ 
+-	type = swp_type(entry);
+-	if (type >= nr_swapfiles)
++	p = swp_swap_info(entry);
++	if (!p)
+ 		goto bad_file;
+-	p = swap_info[type];
++
+ 	offset = swp_offset(entry);
+ 	if (unlikely(offset >= p->max))
+ 		goto out;
+@@ -3473,7 +3480,7 @@ int swapcache_prepare(swp_entry_t entry)
+ 
+ struct swap_info_struct *swp_swap_info(swp_entry_t entry)
+ {
+-	return swap_info[swp_type(entry)];
++	return swap_type_to_swap_info(swp_type(entry));
+ }
+ 
+ struct swap_info_struct *page_swap_info(struct page *page)
+-- 
+2.19.1
+
