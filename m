@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3247CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F86C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BAE206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85890204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713631;
-	bh=v7Jd0JAl+/9UcRWQKrnPGywfye/WvuRuVHs5NvaZEWc=;
+	s=default; t=1553713644;
+	bh=leqLK4KabfZFYeZFiqXT6CPiOF2/1HcOcBsWkIuaGHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMkiiBr8ojMyT92a6r74jUlJ9HW5aa8vBNMlZRL1nB1NV4Ze+jPqTjRIE7G0APkKN
-	 VtX+T0USVbTN5JZcYtFJBveZspbwSuhSHZMHif+zdxsmqZ8VwXPzPZBRXQrHbd1lvd
-	 goaMXg2Y904KS+pC+h55N4P9dlxLmondzmXcLpQQ=
+	b=gj6o+Yi9/OzazIQnJ5tR8NG7nTAYh3TarR4DiMqBypT5XXoGMWs3omeYg59aTl4kU
+	 3f605mVguWp6kCwZJqAr4Qe7Fb1LVDI6ceieSuKEs6kK605WPyMRWqifsXFKcXB63e
+	 1yd4dcDyV4jiBaJbAsupVc6nMZxeso3APU4dnFts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389585AbfC0THJ (ORCPT
+        id S2389153AbfC0SML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbfC0SMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:19 -0400
+        id S2389136AbfC0SMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C1521738;
-        Wed, 27 Mar 2019 18:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0512147C;
+        Wed, 27 Mar 2019 18:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710338;
-        bh=v7Jd0JAl+/9UcRWQKrnPGywfye/WvuRuVHs5NvaZEWc=;
+        s=default; t=1553710324;
+        bh=leqLK4KabfZFYeZFiqXT6CPiOF2/1HcOcBsWkIuaGHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CsP0/IDznJb6gEv38//8rX/UebeSh/ROBkdSR08AiS7ruFjyXBWJs/cdsKDJGh1+p
-         v1NiPl3bVuLQ2S8pi6IebcydKwsASJKYtNnGA/3+9t4DS3Dx9KQInhBX2+6NzmjLh1
-         2dDu0IjAcdag4exOtn6Chkk3dtsAU+RngI+7F0wE=
+        b=GUQA972kU1vEOgrBlh4kiwIsy7fRbHmRwQ/Z5ypMLj6QkIsqSPG1vFDPhwbhxe49P
+         IVfFj03unEEtR8sRypCWTKeMsnvqH+vGJeZs+6ETTPH8RrJiAzQeYPImt7f+3mHAsC
+         1eLUMbXTfJ96UyMY7MQ90pZqzRLgVJ3k3vyesTEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 063/192] net: dsa: mv88e6xxx: Add lockdep classes to fix false positive splat
-Date:   Wed, 27 Mar 2019 14:08:15 -0400
-Message-Id: <20190327181025.13507-63-sashal@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 056/192] coresight: etm4x: Add support to enable ETMv4.2
+Date:   Wed, 27 Mar 2019 14:08:08 -0400
+Message-Id: <20190327181025.13507-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,119 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit f6d9758b12660484b6639364cc406da92a918c96 ]
+[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
 
-The following false positive lockdep splat has been observed.
+SDM845 has ETMv4.2 and can use the existing etm4x driver.
+But the current etm driver checks only for ETMv4.0 and
+errors out for other etm4x versions. This patch adds this
+missing support to enable SoC's with ETMv4x to use same
+driver by checking only the ETM architecture major version
+number.
 
-======================================================
-WARNING: possible circular locking dependency detected
-4.20.0+ #302 Not tainted
-------------------------------------------------------
-systemd-udevd/160 is trying to acquire lock:
-edea6080 (&chip->reg_lock){+.+.}, at: __setup_irq+0x640/0x704
+Without this change, we get below error during etm probe:
 
-but task is already holding lock:
-edff0340 (&desc->request_mutex){+.+.}, at: __setup_irq+0xa0/0x704
+/ # dmesg | grep etm
+[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
 
-which lock already depends on the new lock.
+With this change, etm probe is successful:
 
-the existing dependency chain (in reverse order) is:
+/ # dmesg | grep etm
+[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
 
--> #1 (&desc->request_mutex){+.+.}:
-       mutex_lock_nested+0x1c/0x24
-       __setup_irq+0xa0/0x704
-       request_threaded_irq+0xd0/0x150
-       mv88e6xxx_probe+0x41c/0x694 [mv88e6xxx]
-       mdio_probe+0x2c/0x54
-       really_probe+0x200/0x2c4
-       driver_probe_device+0x5c/0x174
-       __driver_attach+0xd8/0xdc
-       bus_for_each_dev+0x58/0x7c
-       bus_add_driver+0xe4/0x1f0
-       driver_register+0x7c/0x110
-       mdio_driver_register+0x24/0x58
-       do_one_initcall+0x74/0x2e8
-       do_init_module+0x60/0x1d0
-       load_module+0x1968/0x1ff4
-       sys_finit_module+0x8c/0x98
-       ret_fast_syscall+0x0/0x28
-       0xbedf2ae8
-
--> #0 (&chip->reg_lock){+.+.}:
-       __mutex_lock+0x50/0x8b8
-       mutex_lock_nested+0x1c/0x24
-       __setup_irq+0x640/0x704
-       request_threaded_irq+0xd0/0x150
-       mv88e6xxx_g2_irq_setup+0xcc/0x1b4 [mv88e6xxx]
-       mv88e6xxx_probe+0x44c/0x694 [mv88e6xxx]
-       mdio_probe+0x2c/0x54
-       really_probe+0x200/0x2c4
-       driver_probe_device+0x5c/0x174
-       __driver_attach+0xd8/0xdc
-       bus_for_each_dev+0x58/0x7c
-       bus_add_driver+0xe4/0x1f0
-       driver_register+0x7c/0x110
-       mdio_driver_register+0x24/0x58
-       do_one_initcall+0x74/0x2e8
-       do_init_module+0x60/0x1d0
-       load_module+0x1968/0x1ff4
-       sys_finit_module+0x8c/0x98
-       ret_fast_syscall+0x0/0x28
-       0xbedf2ae8
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&desc->request_mutex);
-                               lock(&chip->reg_lock);
-                               lock(&desc->request_mutex);
-  lock(&chip->reg_lock);
-
-&desc->request_mutex refer to two different mutex. #1 is the GPIO for
-the chip interrupt. #2 is the chained interrupt between global 1 and
-global 2.
-
-Add lockdep classes to the GPIO interrupt to avoid this.
-
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index c078c791f481..dabe89968a78 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -442,12 +442,20 @@ static int mv88e6xxx_g1_irq_setup_common(struct mv88e6xxx_chip *chip)
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 1d94ebec027b..2bce7cf0b0af 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -54,7 +54,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
  
- static int mv88e6xxx_g1_irq_setup(struct mv88e6xxx_chip *chip)
+ static bool etm4_arch_supported(u8 arch)
  {
-+	static struct lock_class_key lock_key;
-+	static struct lock_class_key request_key;
- 	int err;
- 
- 	err = mv88e6xxx_g1_irq_setup_common(chip);
- 	if (err)
- 		return err;
- 
-+	/* These lock classes tells lockdep that global 1 irqs are in
-+	 * a different category than their parent GPIO, so it won't
-+	 * report false recursion.
-+	 */
-+	irq_set_lockdep_class(chip->irq, &lock_key, &request_key);
-+
- 	err = request_threaded_irq(chip->irq, NULL,
- 				   mv88e6xxx_g1_irq_thread_fn,
- 				   IRQF_ONESHOT,
+-	switch (arch) {
++	/* Mask out the minor version number */
++	switch (arch & 0xf0) {
+ 	case ETM_ARCH_V4:
+ 		break;
+ 	default:
 -- 
 2.19.1
 
