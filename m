@@ -2,146 +2,94 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4583DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2587C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFE62146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553701233;
-	bh=Vv69CyZDAdI5phXsBuaCREGJToik5CgoOszAvDKqv60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0fTG5DZExHLIvnL1ZSoNRGbvRRe3sp+IcZAJcEUXyVpP7rnQdaI21BK4ATt6bOzs8
-	 JJLtHKYB+CIZouTsNte6Spl4Kh7FFkGOPZm84cfvsmVz20tZJJuIC/sOIO8kcafjyC
-	 dcckA0LC9utFs0d1BSnlMJuzvb1Il4yChBBWA+w4=
+	by mail.kernel.org (Postfix) with ESMTP id 68237206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e2oaMwes"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfC0Pkc (ORCPT
+        id S1727430AbfC0Pnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 11:40:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfC0Pkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 11:40:31 -0400
-Received: from linux-8ccs (nat.nue.novell.com [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBEE206B8;
-        Wed, 27 Mar 2019 15:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553701230;
-        bh=Vv69CyZDAdI5phXsBuaCREGJToik5CgoOszAvDKqv60=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JmbV03XskTRR6jrWyq2R+1dRwypI5hAv8q7enXSyuvKoNpVAoM/8yNqTulKyXeF+7
-         LzE7kX8TliUZxd/ewfZ7WjtZOjNVKkMQg787QYjLyq9cwn9NwsApj1kMgXY+vybGk3
-         xr7+1Ws6qxbCMNpEnR/kSjlky9andvbs2n71t6P4=
-Date:   Wed, 27 Mar 2019 16:40:25 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>
-Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
- modules in separate file
-Message-ID: <20190327154025.GB23293@linux-8ccs>
-References: <20190315101013.GN8455@Legion-PC.fortress>
- <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
- <20190326172411.GA15936@Legion-PC.fortress>
+        Wed, 27 Mar 2019 11:43:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39982 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfC0Pnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 11:43:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bIQZt3cHis3bRLr/kRRtEAGcbTHWTUHz99CURSRVQhY=; b=e2oaMwesAKm+yybV0I1U2PXDI4
+        CLVBWkrRPdrAPfNtJtVGeSNiPv5xSjIvfFVSoXZhlZbmQzAz6tWkYWCVrf14eq9Wcyd078YDy+QhF
+        WhlDcg3Q3acPoKfhxNzUuQAyrWsLZYc83KUeybBf+KmlPKg9akhj1UJPJdhkqklCK94KJR+MLPa7k
+        NLRSVDAlGHVnl58PWTdAqrh1bb10MvwVdp7CNjFSEsGSsP3e0thASpmMQztfPcIs8yx3b+wvVN0yr
+        jm17UMHlrbtgNGANXNxcNY2wRhXBZUNHCpzOGrjJm7hIoGop9yIgZUNm7mA9Z21krGVUvwoZ4tVva
+        pkx60xxw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h9Ai3-00011G-LM; Wed, 27 Mar 2019 15:43:23 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Cc:     Piotr Stankiewicz <piotrs@opensource.cirrus.co>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        patches@opensource.cirrus.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] ASoC: fix SND_SOC_LOCHNAGAR_SC kconfig warning
+Message-ID: <fb9f38e4-c4c9-400e-fb16-fa2714eb8d00@infradead.org>
+Date:   Wed, 27 Mar 2019 08:43:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190326172411.GA15936@Legion-PC.fortress>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Alexey Gladkov [26/03/19 18:24 +0100]:
->On Fri, Mar 22, 2019 at 02:34:12PM +0900, Masahiro Yamada wrote:
->> Hi.
->>
->> (added some people to CC)
+From: Randy Dunlap <rdunlap@infradead.org>
 
-(Thanks Masahiro for the CC!)
+Fix kconfig warning for SND_SOC_LOCHNAGAR_SC:
 
->>
->> On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->> >
->> > Problem:
->> >
->> > When a kernel module is compiled as a separate module, some important
->> > information about the kernel module is available via .modinfo section of
->> > the module.  In contrast, when the kernel module is compiled into the
->> > kernel, that information is not available.
->>
->>
->> I might be missing something, but
->> vmlinux provides info of builtin modules
->> in /sys/module/.
->
->No. There are definitely not all modules. I have a builtin sha256_generic,
->but I can't find him in the /sys/module.
+WARNING: unmet direct dependencies detected for SND_SOC_LOCHNAGAR_SC
+  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && MFD_LOCHNAGAR [=n]
+  Selected by [m]:
+  - SND_SOC_ALL_CODECS [=m] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=m] && COMPILE_TEST [=y]
 
-Yeah, you'll only find builtin modules under /sys/module/ if it has any module
-parameters, otherwise you won't find it there. As Masahiro already mentioned,
-if a builtin module has any parameters, they would be accessible under /sys/module/.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Piotr Stankiewicz <piotrs@opensource.cirrus.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: patches@opensource.cirrus.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
+---
+ sound/soc/codecs/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> (Looks like currently only module_param and MODULE_VERSION)
->>
->> This patch is not exactly the same, but I see a kind of overwrap.
->> I'd like to be sure if we want this new scheme.
->
->The /sys/module is only for running kernel. One of my use cases is
->to create an initrd for a new kernel.
->
->>
->> > Information about built-in modules is necessary in the following cases:
->> >
->> > 1. When it is necessary to find out what additional parameters can be
->> > passed to the kernel at boot time.
->>
->>
->> Actually, /sys/module/<module>/parameters/
->> exposes this information.
->>
->> Doesn't it work for your purpose?
->
->No, since creating an initrd needs to know all the modalias before
->I get the sysfs for new kernel. Also there are no modalias at all.
->
->> > 2. When you need to know which module names and their aliases are in
->> > the kernel. This is very useful for creating an initrd image.
->> >
+--- linux-next-20190327.orig/sound/soc/codecs/Kconfig
++++ linux-next-20190327/sound/soc/codecs/Kconfig
+@@ -94,7 +94,7 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_JZ4725B_CODEC
+ 	select SND_SOC_LM4857 if I2C
+ 	select SND_SOC_LM49453 if I2C
+-	select SND_SOC_LOCHNAGAR_SC
++	select SND_SOC_LOCHNAGAR_SC if MFD_LOCHNAGAR
+ 	select SND_SOC_MAX98088 if I2C
+ 	select SND_SOC_MAX98090 if I2C
+ 	select SND_SOC_MAX98095 if I2C
 
-Hm, I do see one possible additional use-case for preserving module alias
-information for built-in modules - modprobe will currently error (I think,
-correct me if I'm wrong) if we try invoking modprobe with an alias of a
-built-in module, simply because this information is not in modules.builtin or
-modules.alias.
-
-Since kbuild already outputs modules.builtin, I would suggest outputting
-something like a modules.builtin.alias file (and I guess maybe a modules.builtin.param
-file too if that's deemed useful), in a format that is consumable by kmod/modprobe,
-so that modprobing an alias of a built-in module doesn't produce an error. I
-think this should be easy to do if we keep and parse the resulting .modinfo for
-builtin modules. This is just an idea, opinions welcome. I've added Lucas to CC
-in case he has any thoughts.
-
-
-Thanks,
-
-Jessica
 
