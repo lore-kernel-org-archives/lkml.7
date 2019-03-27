@@ -2,49 +2,63 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FC7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E54AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F6521734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F59206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714462;
-	bh=tY6m4gMFrbq290y8iLZ6xF/E/AavLNKoa550KMQGXfM=;
+	s=default; t=1553714470;
+	bh=ZtjQP0+V1OpSEShmYI8C5soUdckfqe+NQc3AjHGDwKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j2BEaWZomubZBk8xuCt4v8iHoRgvF/K4jUEntVEkqnIbI2EjxOo+yQvlVLzDbF+Wt
-	 TdgGMN+2j5MDh7pMj4rZ3Moc5jccHgRotXQ+zhSyO2c4hkLptYZ1CaysUzi8jyW76s
-	 rRTcFf4N79LO7mXk9w0mswaNtmToBrDHhjuKrjTI=
+	b=z+H8WXNCsOvwdP39ovXrM4+LSmu7VQb9PRAYzjxrgxMM5GnsvPodva7sOIBVjB4gk
+	 Wfi8bgl/WpzCr/iYd43jpE6+OJJ6zbdUryq3PO6Crp7r7s6B+BXZxDraLu/Wk9Jgr7
+	 ifSSgdzMlLsnZGvNpQBmvFNKZjzvbM3yDiI9xv3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388813AbfC0TVA (ORCPT
+        id S2388089AbfC0TVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388089AbfC0SHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:06 -0400
+        id S2388067AbfC0SHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2A12183F;
-        Wed, 27 Mar 2019 18:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0E62063F;
+        Wed, 27 Mar 2019 18:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710026;
-        bh=tY6m4gMFrbq290y8iLZ6xF/E/AavLNKoa550KMQGXfM=;
+        s=default; t=1553710019;
+        bh=ZtjQP0+V1OpSEShmYI8C5soUdckfqe+NQc3AjHGDwKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pII9+LTrObQaGbko5geEVCOYHzyhCup7ud5XkbcoIzchE2NoZhbb2+iCtRY4EqgyC
-         08mpIIzwtkW3vODWad8x0qxVdzvTIgUCMIy2wCbrCT8nmEBSICEjUxdZm1nKpngkd5
-         hqum8jyiV328rSJNnx8PJSUhNWa3DkzuuH3TWZfQ=
+        b=1LQcngouSLaEQVlX5DjiOdU2QTqshJYi9p6kTBJqhYY4dhqeCf9qOr3y7QYw4LykL
+         WYJQGaiH7YdsiXzHJLOP1v+sjOmSCsdKKwgJ25tJ8HWLa2HopEtCPJEhVfgsR10Mlp
+         wx6QOeDfSpGclMI34fe4vCOOZj9Ye2SW6916GaUw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 163/262] bcache: improve sysfs_strtoul_clamp()
-Date:   Wed, 27 Mar 2019 14:00:18 -0400
-Message-Id: <20190327180158.10245-163-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        Zeng Tao <prime.zeng@hisilicon.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Thinh Nguyen <thinh.nguyen@synopsys.com>,
+        Chen Yu <chenyu56@huawei.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 158/262] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
+Date:   Wed, 27 Mar 2019 14:00:13 -0400
+Message-Id: <20190327180158.10245-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -56,64 +70,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
+[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
 
-Currently sysfs_strtoul_clamp() is defined as,
- 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
- 83 do {                                                               \
- 84         if (attr == &sysfs_ ## file)                               \
- 85                 return strtoul_safe_clamp(buf, var, min, max)      \
- 86                         ?: (ssize_t) size;                         \
- 87 } while (0)
+Since the 5.0 merge window opened, I've been seeing frequent
+crashes on suspend and reboot with the trace:
 
-The problem is, if bit width of var is less then unsigned long, min and
-max may not protect var from integer overflow, because overflow happens
-in strtoul_safe_clamp() before checking min and max.
+[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
+[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
+...
+[   36.950666] Call trace:
+[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
+[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
+[   36.950692]  complete+0x28/0x70
+[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
+[   36.950713]  usb_gadget_giveback_request+0x34/0x108
+[   36.950721]  dwc3_gadget_giveback+0x50/0x68
+[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
+[   36.950731]  irq_thread_fn+0x30/0x88
+[   36.950734]  irq_thread+0x114/0x1b0
+[   36.950739]  kthread+0x104/0x130
+[   36.950747]  ret_from_fork+0x10/0x1c
 
-To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
-effect, this patch adds an unsigned long variable, and uses it to macro
-strtoul_safe_clamp() to convert an unsigned long value in range defined
-by [min, max]. Then assign this value to var. By this method, if bit
-width of var is less than unsigned long, integer overflow won't happen
-before min and max are checking.
+I isolated this down to in ffs_epfile_io():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
 
-Now sysfs_strtoul_clamp() can properly handle smaller data type like
-unsigned int, of cause min and max should be defined in range of
-unsigned int too.
+Where the completion done is setup on the stack:
+  DECLARE_COMPLETION_ONSTACK(done);
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Then later we setup a request and queue it, and wait for it:
+  if (unlikely(wait_for_completion_interruptible(&done))) {
+    /*
+    * To avoid race condition with ffs_epfile_io_complete,
+    * dequeue the request first then check
+    * status. usb_ep_dequeue API should guarantee no race
+    * condition with req->complete callback.
+    */
+    usb_ep_dequeue(ep->ep, req);
+    interrupted = ep->status < 0;
+  }
+
+The problem is, that we end up being interrupted, dequeue the
+request, and exit.
+
+But then the irq triggers and we try calling complete() on the
+context pointer which points to now random stack space, which
+results in the panic.
+
+Alan Stern pointed out there is a bug here, in that the snippet
+above "assumes that usb_ep_dequeue() waits until the request has
+been completed." And that:
+
+    wait_for_completion(&done);
+
+Is needed right after the usb_ep_dequeue().
+
+Thus this patch implements that change. With it I no longer see
+the crashes on suspend or reboot.
+
+This issue seems to have been uncovered by behavioral changes in
+the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
+remove wait_end_transfer").
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Zeng Tao <prime.zeng@hisilicon.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Cc: Chen Yu <chenyu56@huawei.com>
+Cc: Jerry Zhang <zhangjerry@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Vincent Pelletier <plr.vincent@gmail.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.h | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
-index 3fe82425859c..0ad2715a884e 100644
---- a/drivers/md/bcache/sysfs.h
-+++ b/drivers/md/bcache/sysfs.h
-@@ -81,9 +81,16 @@ do {									\
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 1e5430438703..0f8d16de7a37 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1082,6 +1082,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ 			 * condition with req->complete callback.
+ 			 */
+ 			usb_ep_dequeue(ep->ep, req);
++			wait_for_completion(&done);
+ 			interrupted = ep->status < 0;
+ 		}
  
- #define sysfs_strtoul_clamp(file, var, min, max)			\
- do {									\
--	if (attr == &sysfs_ ## file)					\
--		return strtoul_safe_clamp(buf, var, min, max)		\
--			?: (ssize_t) size;				\
-+	if (attr == &sysfs_ ## file) {					\
-+		unsigned long v = 0;					\
-+		ssize_t ret;						\
-+		ret = strtoul_safe_clamp(buf, v, min, max);		\
-+		if (!ret) {						\
-+			var = v;					\
-+			return size;					\
-+		}							\
-+		return ret;						\
-+	}								\
- } while (0)
- 
- #define strtoul_or_return(cp)						\
 -- 
 2.19.1
 
