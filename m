@@ -2,149 +2,239 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1C5C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F99C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40BB2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B752087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbfC0Iy3 (ORCPT
+        id S1732252AbfC0I4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:54:29 -0400
-Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:49152 "EHLO
-        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbfC0Iy2 (ORCPT
+        Wed, 27 Mar 2019 04:56:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726241AbfC0I4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:54:28 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 19A0F1C24DC
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 08:54:26 +0000 (GMT)
-Received: (qmail 16859 invoked from network); 27 Mar 2019 08:54:25 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Mar 2019 08:54:25 -0000
-Date:   Wed, 27 Mar 2019 08:54:24 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Qian Cai <cai@lca.pw>, linux-mm@kvack.org, vbabka@suse.cz,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Correct zone boundary handling when resetting pageblock skip
- hints
-Message-ID: <20190327085424.GL3189@techsingularity.net>
+        Wed, 27 Mar 2019 04:56:01 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R8mpgH034111
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 04:56:00 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rg3ykdb7n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 04:55:59 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Wed, 27 Mar 2019 08:55:59 -0000
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Mar 2019 08:55:52 -0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2R8tnDw14680118
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 08:55:49 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49C8FC6055;
+        Wed, 27 Mar 2019 08:55:49 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10CF9C6059;
+        Wed, 27 Mar 2019 08:55:39 +0000 (GMT)
+Received: from [9.102.0.57] (unknown [9.102.0.57])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Mar 2019 08:55:39 +0000 (GMT)
+Subject: Re: [PATCH v8 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     Alexandre Ghiti <alex@ghiti.fr>, mpe@ellerman.id.au,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190327063626.18421-1-alex@ghiti.fr>
+ <20190327063626.18421-5-alex@ghiti.fr>
+ <f6e74ad8-acca-3b1e-27eb-a2881ac8437d@linux.ibm.com>
+ <fbae7220-2e6f-8516-cf93-fbe430452043@ghiti.fr>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Wed, 27 Mar 2019 14:25:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fbae7220-2e6f-8516-cf93-fbe430452043@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032708-8235-0000-0000-00000E73BD0A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010822; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000282; SDB=6.01180325; UDB=6.00617688; IPR=6.00961042;
+ MB=3.00026176; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-27 08:55:58
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032708-8236-0000-0000-000044ECBA18
+Message-Id: <aabfc780-1681-c69a-9927-4645d6499984@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903270065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mikhail Gavrilo reported the following bug being triggered in a Fedora
-kernel based on 5.1-rc1 but it is relevant to a vanilla kernel.
+On 3/27/19 2:14 PM, Alexandre Ghiti wrote:
+> 
+> 
+> On 03/27/2019 08:01 AM, Aneesh Kumar K.V wrote:
+>> On 3/27/19 12:06 PM, Alexandre Ghiti wrote:
+>>> On systems without CONTIG_ALLOC activated but that support gigantic 
+>>> pages,
+>>> boottime reserved gigantic pages can not be freed at all. This patch
+>>> simply enables the possibility to hand back those pages to memory
+>>> allocator.
+>>>
+>>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+>>> Acked-by: David S. Miller <davem@davemloft.net> [sparc]
+>>>
+>>> diff --git a/arch/powerpc/include/asm/book3s/64/hugetlb.h 
+>>> b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+>>> index ec2a55a553c7..7013284f0f1b 100644
+>>> --- a/arch/powerpc/include/asm/book3s/64/hugetlb.h
+>>> +++ b/arch/powerpc/include/asm/book3s/64/hugetlb.h
+>>> @@ -36,8 +36,8 @@ static inline int hstate_get_psize(struct hstate 
+>>> *hstate)
+>>>       }
+>>>   }
+>>>   -#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+>>> -static inline bool gigantic_page_supported(void)
+>>> +#define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+>>> +static inline bool gigantic_page_runtime_supported(void)
+>>>   {
+>>>       /*
+>>>        * We used gigantic page reservation with hypervisor assist in 
+>>> some case.
+>>> @@ -49,7 +49,6 @@ static inline bool gigantic_page_supported(void)
+>>>         return true;
+>>>   }
+>>> -#endif
+>>>     /* hugepd entry valid bit */
+>>>   #define HUGEPD_VAL_BITS        (0x8000000000000000UL)
+>>
+>> Is that correct when CONTIG_ALLOC is not enabled? I guess we want
+>>
+>> gigantic_page_runtime_supported to return false when CONTIG_ALLOC is 
+>> not enabled on all architectures and on POWER when it is enabled we 
+>> want it to be conditional as it is now.
+>>
+>> -aneesh
+>>
+> 
+> CONFIG_ARCH_HAS_GIGANTIC_PAGE is set by default when an architecture 
+> supports gigantic
+> pages: on its own, it allows to allocate boottime gigantic pages AND to 
+> free them at runtime
+> (this is the goal of this series), but not to allocate runtime gigantic 
+> pages.
+> If CONTIG_ALLOC is set, it allows in addition to allocate runtime 
+> gigantic pages.
+> 
+> I re-introduced the runtime checks because we can't know at compile time 
+> if powerpc can
+> or not support gigantic pages.
+> 
+> So for all architectures, gigantic_page_runtime_supported only depends on
+> CONFIG_ARCH_HAS_GIGANTIC_PAGE enabled or not. The possibility to 
+> allocate runtime
+> gigantic pages is dealt with after those runtime checks.
+> 
 
- kernel: page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
- kernel: ------------[ cut here ]------------
- kernel: kernel BUG at include/linux/mm.h:1021!
- kernel: invalid opcode: 0000 [#1] SMP NOPTI
- kernel: CPU: 6 PID: 116 Comm: kswapd0 Tainted: G         C        5.1.0-0.rc1.git1.3.fc31.x86_64 #1
- kernel: Hardware name: System manufacturer System Product Name/ROG STRIX X470-I GAMING, BIOS 1201 12/07/2018
- kernel: RIP: 0010:__reset_isolation_pfn+0x244/0x2b0
- kernel: Code: fe 06 e8 0f 8e fc ff 44 0f b6 4c 24 04 48 85 c0 0f 85 dc fe ff ff e9 68 fe ff ff 48 c7 c6 58 b7 2e 8c 4c 89 ff e8 0c 75 00 00 <0f> 0b 48 c7 c6 58 b7 2e 8c e8 fe 74 00 00 0f 0b 48 89 fa 41 b8 01
- kernel: RSP: 0018:ffff9e2d03f0fde8 EFLAGS: 00010246
- kernel: RAX: 0000000000000034 RBX: 000000000081f380 RCX: ffff8cffbddd6c20
- kernel: RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff8cffbddd6c20
- kernel: RBP: 0000000000000001 R08: 0000009898b94613 R09: 0000000000000000
- kernel: R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000100000
- kernel: R13: 0000000000100000 R14: 0000000000000001 R15: ffffca7de07ce000
- kernel: FS:  0000000000000000(0000) GS:ffff8cffbdc00000(0000) knlGS:0000000000000000
- kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- kernel: CR2: 00007fc1670e9000 CR3: 00000007f5276000 CR4: 00000000003406e0
- kernel: Call Trace:
- kernel:  __reset_isolation_suitable+0x62/0x120
- kernel:  reset_isolation_suitable+0x3b/0x40
- kernel:  kswapd+0x147/0x540
- kernel:  ? finish_wait+0x90/0x90
- kernel:  kthread+0x108/0x140
- kernel:  ? balance_pgdat+0x560/0x560
- kernel:  ? kthread_park+0x90/0x90
- kernel:  ret_from_fork+0x27/0x50
+you removed that #ifdef in the patch above. ie we had
+#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+static inline bool gigantic_page_supported(void)
+{
+	/*
+	 * We used gigantic page reservation with hypervisor assist in some case.
+	 * We cannot use runtime allocation of gigantic pages in those platforms
+	 * This is hash translation mode LPARs.
+	 */
+	if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+		return false;
 
-He bisected it down to commit e332f741a8dd ("mm, compaction: be selective
-about what pageblocks to clear skip hints"). The problem is that the patch
-in question was sloppy with respect to the handling of zone boundaries. In
-some instances, it was possible for PFNs outside of a zone to be examined
-and if those were not properly initialised or poisoned then it would
-trigger the VM_BUG_ON. This patch corrects the zone boundary issues when
-resetting pageblock skip hints and Mikhail reported that the bug did not
-trigger after 30 hours of testing.
+	return true;
+}
+#endif
 
-Fixes: e332f741a8dd ("mm, compaction: be selective about what pageblocks to clear skip hints")
-Reported-and-tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
----
- mm/compaction.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index f171a83707ce..b4930bf93c8a 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -242,6 +242,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
- 							bool check_target)
- {
- 	struct page *page = pfn_to_online_page(pfn);
-+	struct page *block_page;
- 	struct page *end_page;
- 	unsigned long block_pfn;
- 
-@@ -267,20 +268,26 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
- 	    get_pageblock_migratetype(page) != MIGRATE_MOVABLE)
- 		return false;
- 
-+	/* Ensure the start of the pageblock or zone is online and valid */
-+	block_pfn = pageblock_start_pfn(pfn);
-+	block_page = pfn_to_online_page(max(block_pfn, zone->zone_start_pfn));
-+	if (block_page) {
-+		page = block_page;
-+		pfn = block_pfn;
-+	}
-+
-+	/* Ensure the end of the pageblock or zone is online and valid */
-+	block_pfn += pageblock_nr_pages;
-+	block_pfn = min(block_pfn, zone_end_pfn(zone) - 1);
-+	end_page = pfn_to_online_page(block_pfn);
-+	if (!end_page)
-+		return false;
-+
- 	/*
- 	 * Only clear the hint if a sample indicates there is either a
- 	 * free page or an LRU page in the block. One or other condition
- 	 * is necessary for the block to be a migration source/target.
- 	 */
--	block_pfn = pageblock_start_pfn(pfn);
--	pfn = max(block_pfn, zone->zone_start_pfn);
--	page = pfn_to_page(pfn);
--	if (zone != page_zone(page))
--		return false;
--	pfn = block_pfn + pageblock_nr_pages;
--	pfn = min(pfn, zone_end_pfn(zone));
--	end_page = pfn_to_page(pfn);
--
- 	do {
- 		if (pfn_valid_within(pfn)) {
- 			if (check_source && PageLRU(page)) {
-@@ -309,7 +316,7 @@ __reset_isolation_pfn(struct zone *zone, unsigned long pfn, bool check_source,
- static void __reset_isolation_suitable(struct zone *zone)
- {
- 	unsigned long migrate_pfn = zone->zone_start_pfn;
--	unsigned long free_pfn = zone_end_pfn(zone);
-+	unsigned long free_pfn = zone_end_pfn(zone) - 1;
- 	unsigned long reset_migrate = free_pfn;
- 	unsigned long reset_free = migrate_pfn;
- 	bool source_set = false;
+This is now
+#define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+static inline bool gigantic_page_runtime_supported(void)
+{
+if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+		return false;
+
+	return true;
+}
+
+
+I am wondering whether it should be
+
+#define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+static inline bool gigantic_page_runtime_supported(void)
+{
+
+    if (!IS_ENABLED(CONFIG_CONTIG_ALLOC))
+		return false;
+
+if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+		return false;
+
+	return true;
+}
+
+or add that #ifdef back.
+
+> By the way, I forgot to ask you why you think that if an arch cannot 
+> allocate runtime gigantic
+> pages, it should not be able to free boottime gigantic pages ?
+> 
+
+on virtualized platforms like powervm which use a paravirtualized page 
+table update mechanism (we dont' have two level table). The ability to 
+map a page huge depends on how hypervisor allocated the guest ram. 
+Hypervisor also allocates the guest specific page table of a specific 
+size depending on how many pages are going to be mapped by what page size.
+
+on POWER we indicate possible guest real address that can be mapped via 
+hugepage (in this case 16G) using a device tree node 
+(ibm,expected#pages) . It is expected that we will map these pages only 
+as 16G pages. Hence we cannot free them back to the buddy where it could 
+get mapped via 64K page size.
+
+-aneesh
+
+
