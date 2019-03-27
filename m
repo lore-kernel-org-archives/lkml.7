@@ -2,156 +2,119 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C740FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943BFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05202082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2372082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553677752;
+	bh=mwmTBe11TAHGITkfDXH8v01IOyj6L5ru/mBWXbqn3TU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nYq67JXw+Cg83rtoHsow1sIhEzAPASTlQFkjB2Ct1izcxOWLoCQdYDd/dkd90ULhL
+	 E9UMFiPUt/hOpRpkJmJhDga730e3oh1ph3YD1o9hnVtokuGssS6Ygu0gZT4lZyCNHY
+	 6UEyYP4wjL4sIWvyQ/FI6gjr6JqxkXrk+Mm04s+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfC0JGh (ORCPT
+        id S1732164AbfC0JJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:06:37 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2969 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbfC0JGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:06:31 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R96Awq011159;
-        Wed, 27 Mar 2019 10:06:20 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rddhtfcb4-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 27 Mar 2019 10:06:20 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ECF5F3F;
-        Wed, 27 Mar 2019 09:05:44 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE44E2B66;
-        Wed, 27 Mar 2019 09:05:44 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 27 Mar
- 2019 10:05:44 +0100
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 27 Mar
- 2019 10:05:42 +0100
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V4 2/5] mmc: mmci: define get_dctrl_cfg for legacy variant
-Date:   Wed, 27 Mar 2019 10:05:29 +0100
-Message-ID: <1553677532-3539-3-git-send-email-ludovic.Barre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
-References: <1553677532-3539-1-git-send-email-ludovic.Barre@st.com>
+        Wed, 27 Mar 2019 05:09:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbfC0JJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:09:11 -0400
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 721A12075D;
+        Wed, 27 Mar 2019 09:09:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553677750;
+        bh=mwmTBe11TAHGITkfDXH8v01IOyj6L5ru/mBWXbqn3TU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yCK1Hfv/dX16A3xwY3Ier1Be6vjMf4bqX8vpoCOVFJBGTFlP/8AbYBud9eiKSCl0M
+         IqqEEAKGuSKVKU8YD3TKoi63cvbUN5OBA/G3I3TsW2nCQEzCKh+Cqhz4s0QndIXwBe
+         9jXxiRdemliTmdWef3nsrNv95BdoFiEGJC+VRsSc=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86 <x86@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next v1] x86/apic: Reduce print level of CPU limit announcement
+Date:   Wed, 27 Mar 2019 11:09:05 +0200
+Message-Id: <20190327090905.5588-1-leon@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_05:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-This patch defines get_dctrl_cfg callback for legacy variants
-whatever DMA_ENGINE configuration.
+Kernel is booted with less possible CPUs (possible_cpus kernel boot
+option) than available CPUs will have prints like this:
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+[    1.131039] APIC: NR_CPUS/possible_cpus limit of 8 reached. Processor 55/0x1f ignored.
+[    1.132228] ACPI: Unable to map lapic to logical cpu number
+
+Those warnings are printed for every not-enabled CPU and on the systems
+with large number of such CPUs, we see a lot of those prints for default
+print level.
+
+Simple conversion of first line to be in debug level and removal of second line
+which is redundant, will remove them while leaving the option to debug system.
+
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 ---
- drivers/mmc/host/mmci.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+Changelog v0->v1:
+ * Completely removed print from boot.c and updated commit message accordingly.
+---
+ arch/x86/kernel/acpi/boot.c | 4 +---
+ arch/x86/kernel/apic/apic.c | 6 +++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 9e6a2c1..a818511 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -46,11 +46,8 @@
- 
- #define DRIVER_NAME "mmci-pl18x"
- 
--#ifdef CONFIG_DMA_ENGINE
- static void mmci_variant_init(struct mmci_host *host);
--#else
--static inline void mmci_variant_init(struct mmci_host *host) {}
--#endif
-+static void ux500v2_variant_init(struct mmci_host *host);
- 
- static unsigned int fmax = 515633;
- 
-@@ -231,7 +228,7 @@ static struct variant_data variant_ux500v2 = {
- 	.irq_pio_mask		= MCI_IRQ_PIO_MASK,
- 	.start_err		= MCI_STARTBITERR,
- 	.opendrain		= MCI_OD,
--	.init			= mmci_variant_init,
-+	.init			= ux500v2_variant_init,
- };
- 
- static struct variant_data variant_stm32 = {
-@@ -617,6 +614,16 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
- 	sg_miter_start(&host->sg_miter, data->sg, data->sg_len, flags);
- }
- 
-+static u32 mmci_get_dctrl_cfg(struct mmci_host *host)
-+{
-+	return MCI_DPSM_ENABLE | mmci_dctrl_blksz(host);
-+}
-+
-+static u32 ux500v2_get_dctrl_cfg(struct mmci_host *host)
-+{
-+	return MCI_DPSM_ENABLE | (host->data->blksz << 16);
-+}
-+
- /*
-  * All the DMA operation mode stuff goes inside this ifdef.
-  * This assumes that you have a generic DMA device interface,
-@@ -941,6 +948,7 @@ void mmci_dmae_unprep_data(struct mmci_host *host,
- static struct mmci_host_ops mmci_variant_ops = {
- 	.prep_data = mmci_dmae_prep_data,
- 	.unprep_data = mmci_dmae_unprep_data,
-+	.get_datactrl_cfg = mmci_get_dctrl_cfg,
- 	.get_next_data = mmci_dmae_get_next_data,
- 	.dma_setup = mmci_dmae_setup,
- 	.dma_release = mmci_dmae_release,
-@@ -948,12 +956,22 @@ static struct mmci_host_ops mmci_variant_ops = {
- 	.dma_finalize = mmci_dmae_finalize,
- 	.dma_error = mmci_dmae_error,
- };
-+#else
-+static struct mmci_host_ops mmci_variant_ops = {
-+	.get_datactrl_cfg = mmci_get_dctrl_cfg,
-+}
-+#endif
- 
- void mmci_variant_init(struct mmci_host *host)
- {
- 	host->ops = &mmci_variant_ops;
- }
--#endif
-+
-+void ux500v2_variant_init(struct mmci_host *host)
-+{
-+	host->ops = &mmci_variant_ops;
-+	host->ops->get_datactrl_cfg = ux500v2_get_dctrl_cfg;
-+}
- 
- static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
- {
--- 
-2.7.4
+diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
+index 8dcbf6890714..baac0a40bc44 100644
+--- a/arch/x86/kernel/acpi/boot.c
++++ b/arch/x86/kernel/acpi/boot.c
+@@ -769,10 +769,8 @@ int acpi_map_cpu(acpi_handle handle, phys_cpuid_t physid, u32 acpi_id,
+ 	int cpu;
+
+ 	cpu = acpi_register_lapic(physid, acpi_id, ACPI_MADT_ENABLED);
+-	if (cpu < 0) {
+-		pr_info(PREFIX "Unable to map lapic to logical cpu number\n");
++	if (cpu < 0)
+ 		return cpu;
+-	}
+
+ 	acpi_processor_set_pdc(handle);
+ 	acpi_map_cpu2node(handle, cpu, physid);
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index b7bcdd781651..8c2a487b5216 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2305,9 +2305,9 @@ int generic_processor_info(int apicid, int version)
+ 	if (num_processors >= nr_cpu_ids) {
+ 		int thiscpu = max + disabled_cpus;
+
+-		pr_warning("APIC: NR_CPUS/possible_cpus limit of %i "
+-			   "reached. Processor %d/0x%x ignored.\n",
+-			   max, thiscpu, apicid);
++		pr_debug(
++			"APIC: NR_CPUS/possible_cpus limit of %i reached. Processor %d/0x%x ignored.\n",
++			max, thiscpu, apicid);
+
+ 		disabled_cpus++;
+ 		return -EINVAL;
+--
+2.20.1
 
