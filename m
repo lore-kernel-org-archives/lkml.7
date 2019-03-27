@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60699C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908D5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC7620449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F6F2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710664;
-	bh=zcUWEd8r4bdfUA9lLYV7HIhvNLrDQzQMyVa3/2CYLk8=;
+	s=default; t=1553710674;
+	bh=oOsHueSDynTBqyQfRATmn7YDhmBcUdZBk+Bu+oxLWlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAprlUdTgMnQPlhHK4dVbZbtirAtTNUW3vsKsGpoi0qAsNGYjir7wNpCNzTSsXSSb
-	 Ka34PGWcID5poJQbUx36dhmgGWmutOolzoRVOErNogG/0KBmp92onM3NRwIMbdFUxO
-	 1H3Jj8DRE53WjzypQB3bI0CcczCC9vvGp0FxqkLc=
+	b=r/a+IlcCOY2SwrGYrQQRntx510mC8HKvJdzwkeb6X3QiRU0JuoYjCwxcusR22AEbd
+	 K/CiqewATgTNoIN108Nt3h9DOB5dzh6x4C5uLEwCpThGllLH8kEpdYyXvd4LVf3xvT
+	 mhdWvnScDW04EkzbVvQQEwWhLBeGp4aIvhc5YWDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390358AbfC0SRn (ORCPT
+        id S2390384AbfC0SRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389700AbfC0SRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:36 -0400
+        id S2390030AbfC0SRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EFE82082F;
-        Wed, 27 Mar 2019 18:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C072082F;
+        Wed, 27 Mar 2019 18:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710656;
-        bh=zcUWEd8r4bdfUA9lLYV7HIhvNLrDQzQMyVa3/2CYLk8=;
+        s=default; t=1553710662;
+        bh=oOsHueSDynTBqyQfRATmn7YDhmBcUdZBk+Bu+oxLWlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiKdzsx+m3uwxn33SjTDScw2MnDGs0bpq899jJoiUGOsUFqOLrjDepP0Tz8JBuWsq
-         GpMn33M/s3PMhQFKZLyc9DYVqoxjQrcbUqCL0TbOeSJoalpIlR0xiqkdfGVP5G/62m
-         +jdPXtdL5vL+MnmpS7CdqURQBjVVpeRAGAERei1U=
+        b=k6NAOhr06H6RWwtvWQh3qewZ3054YGwwoVPMDn52ipXur9fULJ10QCWPaQXWGEA+N
+         syiEz8OAx7z6g7X+3MNj5k7QyHRt0zMhVbM9Jmm0zjeKPkiT/iyWJP593PkMGyFMXg
+         AOsN/dGTRleehjZsWK+hSGSNgbLMLJYXImuorx8Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Jan Glauber <jglauber@cavium.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 035/123] crypto: cavium/zip - fix collision with generic cra_driver_name
-Date:   Wed, 27 Mar 2019 14:14:59 -0400
-Message-Id: <20190327181628.15899-35-sashal@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 039/123] coresight: etm4x: Add support to enable ETMv4.2
+Date:   Wed, 27 Mar 2019 14:15:03 -0400
+Message-Id: <20190327181628.15899-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -59,68 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 41798036430015ad45137db2d4c213cd77fd0251 ]
+[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
 
-The cavium/zip implementation of the deflate compression algorithm is
-incorrectly being registered under the generic driver name, which
-prevents the generic implementation from being registered with the
-crypto API when CONFIG_CRYPTO_DEV_CAVIUM_ZIP=y.  Similarly the lzs
-algorithm (which does not currently have a generic implementation...)
-is incorrectly being registered as lzs-generic.
+SDM845 has ETMv4.2 and can use the existing etm4x driver.
+But the current etm driver checks only for ETMv4.0 and
+errors out for other etm4x versions. This patch adds this
+missing support to enable SoC's with ETMv4x to use same
+driver by checking only the ETM architecture major version
+number.
 
-Fix the naming collision by adding a suffix "-cavium" to the
-cra_driver_name of the cavium/zip algorithms.
+Without this change, we get below error during etm probe:
 
-Fixes: 640035a2dc55 ("crypto: zip - Add ThunderX ZIP driver core")
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Jan Glauber <jglauber@cavium.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+/ # dmesg | grep etm
+[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+
+With this change, etm probe is successful:
+
+/ # dmesg | grep etm
+[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/cavium/zip/zip_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/cavium/zip/zip_main.c b/drivers/crypto/cavium/zip/zip_main.c
-index 1cd8aa488185..a6425a7afa7b 100644
---- a/drivers/crypto/cavium/zip/zip_main.c
-+++ b/drivers/crypto/cavium/zip/zip_main.c
-@@ -351,6 +351,7 @@ static struct pci_driver zip_driver = {
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 5a1a14bcae72..78cb3b8881fa 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -61,7 +61,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
  
- static struct crypto_alg zip_comp_deflate = {
- 	.cra_name		= "deflate",
-+	.cra_driver_name	= "deflate-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -365,6 +366,7 @@ static struct crypto_alg zip_comp_deflate = {
- 
- static struct crypto_alg zip_comp_lzs = {
- 	.cra_name		= "lzs",
-+	.cra_driver_name	= "lzs-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -384,7 +386,7 @@ static struct scomp_alg zip_scomp_deflate = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "deflate",
--		.cra_driver_name	= "deflate-scomp",
-+		.cra_driver_name	= "deflate-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
-@@ -397,7 +399,7 @@ static struct scomp_alg zip_scomp_lzs = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "lzs",
--		.cra_driver_name	= "lzs-scomp",
-+		.cra_driver_name	= "lzs-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
+ static bool etm4_arch_supported(u8 arch)
+ {
+-	switch (arch) {
++	/* Mask out the minor version number */
++	switch (arch & 0xf0) {
+ 	case ETM_ARCH_V4:
+ 		break;
+ 	default:
 -- 
 2.19.1
 
