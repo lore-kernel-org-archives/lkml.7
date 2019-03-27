@@ -2,106 +2,118 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524FDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59ABC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233BB2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875692075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ob7shVw8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zlONF8A3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfC0Kcz (ORCPT
+        id S1733151AbfC0KdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:32:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33026 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfC0Kcv (ORCPT
+        Wed, 27 Mar 2019 06:33:12 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53833 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfC0KdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:32:51 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2RADYV8043066;
-        Wed, 27 Mar 2019 10:32:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=Y1De08/xPcyggzI3BCpgTfIH3to8eq5cRgEsOUIlgQc=;
- b=ob7shVw8WrDBoRtuv0r0+8YY/J2J0HwBv5lkvbLyCNsUwh02bG88UFNFiamhWmROlraT
- 3WhpMqu+GqQkupFCl8opo8BXEDALLlXcqoCBb6bNZ92ynojCIcbKuo9cVyMRkOaTSgtI
- w9KdixD4VE1bI01NiqKq/9JcSJXY1Vy9bhim0eaJty5kY6ytRqVulm0p7rh14ZxxIYx8
- 7jDFWspTydDBeix6odvXxcs52B4z5MqPpL4jO27NRO7zTIrSC6dOLIydrX2AJVpTJGDv
- XB3sIcLygRVMUCQmt+QaXY6OTApPkPxqMEkYOdvDWS7STsim4urVmp3BqXvbcHbY5umV Nw== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2re6g17njp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 10:32:46 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2RAWiXw000973
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 10:32:45 GMT
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2RAWirR001152;
-        Wed, 27 Mar 2019 10:32:44 GMT
-Received: from linux.cn.oracle.com (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 Mar 2019 03:32:43 -0700
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Cc:     mst@redhat.com, jasowang@redhat.com, axboe@kernel.dk,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] scsi: virtio_scsi: limit number of hw queues by nr_cpu_ids
-Date:   Wed, 27 Mar 2019 18:36:35 +0800
-Message-Id: <1553682995-5682-3-git-send-email-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1553682995-5682-1-git-send-email-dongli.zhang@oracle.com>
-References: <1553682995-5682-1-git-send-email-dongli.zhang@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9207 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903270074
+        Wed, 27 Mar 2019 06:33:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q16so15586767wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 03:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o137uva63juW93zS7C+0X9Xktfg/ljv44fOwKD1OTCM=;
+        b=zlONF8A3Nt8bDK5P9VU0SFMt96DS+Y3By+98O1lbKJN0YDlsMnXavpm++5/mMToNKa
+         JTQGB4RvIMzqYSX4qdHDuKRTlmbj9AeAoH6R1vn5bqkLyxDhuh/Ifgx5OfUl0KUPOUj7
+         l7ytOEH9wcuzgNDJqfFOZmMs+b8HJ1ZhSlcdNQBPQrRe7L0PDWGkR5lzhRU2yMuAD5NK
+         0eP1Zrc85PIUYRyFJDhcVY92+J7dFhU32sz56xVT82E/BN5toIp1PhUVRXsLb+pjJPdo
+         V3xB6vg1m4xTmDSkZV4qrDvuOn2pgL+gtX0F1WpxIfT1A2waUnKjvk42UQFMvnbLoU/a
+         08tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o137uva63juW93zS7C+0X9Xktfg/ljv44fOwKD1OTCM=;
+        b=m4dYKZV2fdP0uCIR+k7IfolJW34KOR0BxzRSRZ6pdqn5rtLvonZ/MDUtVMQ4jKJmMT
+         dY/8TTo1DlUILsPkp0FaCgUkldMFVaAYwk6UioiTiyYBTyTFGIUTxFk6N0AryOotoUiu
+         +Fk36nxVPALaBNfMFP3QWnY0h77po5vOeGDcw70fVv9aWfnJClR2JkYRFhQ3o+QFyCa1
+         dMcs8a04WMO8j0GY8w1w7cvQSjo5L8wMKo2kMb5z+xdpcz/KDe/77Dawf222NDukBhip
+         oX093PuAzi854d8skRlxZ/STwp1UY61gZsMFSZ0/rwM3zCzY78jVGjOhScS60VQTMyyc
+         7GWw==
+X-Gm-Message-State: APjAAAXRVJ91C0WBNOw74iXYGgNBC77zA3OxaNRkPlNl9zfHOKMQ30c4
+        uAVg8obXiuZ5ng9WY58Oedf1qg==
+X-Google-Smtp-Source: APXvYqxBjvjVbbq2HrJnePVNzZsvZDvrKjzkQS4V25pQD2mdZxL4dsYp9YbkWpTCjPon63XiuOUFcQ==
+X-Received: by 2002:a1c:9c0e:: with SMTP id f14mr18752585wme.78.1553682790182;
+        Wed, 27 Mar 2019 03:33:10 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a20sm27017513wmb.17.2019.03.27.03.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 27 Mar 2019 03:33:09 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/6] arm64: Add initial support for Odroid-N2
+Date:   Wed, 27 Mar 2019 11:33:02 +0100
+Message-Id: <20190327103308.25058-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When tag_set->nr_maps is 1, the block layer limits the number of hw queues
-by nr_cpu_ids. No matter how many hw queues are used by virtio-scsi, as it
-has (tag_set->nr_maps == 1), it can use at most nr_cpu_ids hw queues.
+This patchset adds basic support for :
+- Amlogic G12B, which is very similar to G12A
+- The HardKernel Odroid-N2 based on the S922X SoC
 
-In addition, specifically for pci scenario, when the 'num_queues' specified
-by qemu is more than maxcpus, virtio-scsi would not be able to allocate
-more than maxcpus vectors in order to have a vector for each queue. As a
-result, it falls back into MSI-X with one vector for config and one shared
-for queues.
+The Amlogic G12B SoC is very similar with the G12A SoC, sharing
+most of the features and architecture, but with these differences :
+- The first CPU cluster only has 2xCortex-A53 instead of 4
+- G12B has a second cluster of 4xCortex-A73
+- Both cluster can achieve 2GHz instead of 1,8GHz for G12A
+- CPU Clock architecture is difference, thus needing a different
+  compatible to handle this slight difference
+- Supports a MIPI CSI input
+- Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
 
-Considering above reasons, this patch limits the number of hw queues used
-by virtio-scsi by nr_cpu_ids.
+Actual support is done in the same way as for the GXM support, including
+the G12A dtsi and redefining the CPU clusters.
+Unlike GXM, the first cluster is different, thus needing to remove
+the last 2 cpu nodes of the first cluster.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- drivers/scsi/virtio_scsi.c | 1 +
- 1 file changed, 1 insertion(+)
+G12B clock driver is very close, the main differences are :
+- the clock tree is duplicated for the both clusters, and the
+  SYS_PLL are swapped between the clusters
+- G12A has additional clocks like for CSI an other components
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 8af0177..9c4a3e1 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -793,6 +793,7 @@ static int virtscsi_probe(struct virtio_device *vdev)
- 
- 	/* We need to know how many queues before we allocate. */
- 	num_queues = virtscsi_config_get(vdev, num_queues) ? : 1;
-+	num_queues = min_t(unsigned int, nr_cpu_ids, num_queues);
- 
- 	num_targets = virtscsi_config_get(vdev, max_target) + 1;
- 
+Neil Armstrong (6):
+  dt-bindings: clk: meson: add g12b periph clock controller bindings
+  clk: meson: g12a: Add support for G12B CPUB clocks
+  clk: meson: g12a: mark fclk_div3 as critical
+  dt-bindings: arm: amlogic: add G12B bindings
+  dt-bindings: arm: amlogic: add Odroid-N2 binding
+  arm64: dts: meson: Add minimal support for Odroid-N2
+
+ .../devicetree/bindings/arm/amlogic.txt       |   6 +
+ .../bindings/clock/amlogic,gxbb-clkc.txt      |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 178 +++++++
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  82 +++
+ drivers/clk/meson/g12a.c                      | 466 ++++++++++++++++++
+ drivers/clk/meson/g12a.h                      |  20 +-
+ 7 files changed, 753 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+
 -- 
-2.7.4
+2.21.0
 
