@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8621C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BB1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815952070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BF42147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710824;
-	bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
+	s=default; t=1553710829;
+	bh=OisHe8l2SYZxHPQktuAuQoE3rQywW6/ru5CWHjKEZUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSfjVb0ByoEDolSNdTr3+rCroqwhgh8l1niD544NJHzDCOOJpooDos8Z/OvSDdZP7
-	 k4cSItLFnH4VshKEpBRMo2gBTHct5i9lnpqW97xNXp0uxYnKq3qZ0HoMcf+qB48RkX
-	 AuzEHiI3MUwq2zS188i3+obhsOxzSmP9k/t6OCt4=
+	b=KWho0zFj2dGMYs+c9E/aJGQTLp5FSCl8VPiFd02jGtTkr6UQACJMf4+JwVq+arohn
+	 fsVytsbPfqxwhAmdQxK6rgWF9PDD/O6aQ1uHDKM+7+a7xMS7aghwnvWPrvwQfncxcV
+	 O9qj98QAiaUfxmXT8it/i7wisouSJeUGtV8cqL/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390901AbfC0SUW (ORCPT
+        id S2390919AbfC0SU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390886AbfC0SUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:17 -0400
+        id S2390660AbfC0SU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A18D20643;
-        Wed, 27 Mar 2019 18:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C87B20651;
+        Wed, 27 Mar 2019 18:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710817;
-        bh=nBqsL9zi+vzLwP1AJqbLoF/rg3z26w5g1tpdpVL1Lj0=;
+        s=default; t=1553710825;
+        bh=OisHe8l2SYZxHPQktuAuQoE3rQywW6/ru5CWHjKEZUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPEBuJp8+VjKOvTxZDocPryrPvEQu09lHnVQx41O+mHrlECsDaXiC4cW3cKNZcxN6
-         95bXSCxKmmwvMpoksxVkuzN0WoqejFYZg6jpIspxAHTa9Qsrr4HGc8ea1N0dwtxOvT
-         gJmRSD59FM1QE5R7mrRL7xEgOM9Fk/skwM1R3uwQ=
+        b=WNzcecbMAu9BeppxsotehZhYrTHix7wR/Q1Dm95ppCC3Pp6c9JdtVui97UB6/mZlS
+         DvCHHUnfiQFFXcVOzDnbXl8VWEiN3hZnT25d6YDZqoyIZLoIGcrfgI9fYqWgyb5gPM
+         dmOKTCQcxoXv3a96zeBC01G+lUjxNHhFvwYNhISY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+Cc:     George Rimar <grimar@accesssoftek.com>, Tri Vo <trong@android.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Michael Matz <matz@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>, morbo@google.com,
+        ndesaulniers@google.com, ruiu@google.com, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 112/123] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
-Date:   Wed, 27 Mar 2019 14:16:16 -0400
-Message-Id: <20190327181628.15899-112-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 115/123] x86/build: Specify elf_i386 linker emulation explicitly for i386 objects
+Date:   Wed, 27 Mar 2019 14:16:19 -0400
+Message-Id: <20190327181628.15899-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,55 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: George Rimar <grimar@accesssoftek.com>
 
-[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
+[ Upstream commit 927185c124d62a9a4d35878d7f6d432a166b74e3 ]
 
-The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
+The kernel uses the OUTPUT_FORMAT linker script command in it's linker
+scripts. Most of the time, the -m option is passed to the linker with
+correct architecture, but sometimes (at least for x86_64) the -m option
+contradicts the OUTPUT_FORMAT directive.
 
-The problems in below entry:
-  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
+Specifically, arch/x86/boot and arch/x86/realmode/rm produce i386 object
+files, but are linked with the -m elf_x86_64 linker flag when building
+for x86_64.
 
-1. The off-by-one min_sel causes wrong volatage calculation.
-   The min_sel should be 192.
-2. According to the datasheet[1] Table 7. (on page 43):
-   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
+The GNU linker manpage doesn't explicitly state any tie-breakers between
+-m and OUTPUT_FORMAT. But with BFD and Gold linkers, OUTPUT_FORMAT
+overrides the emulation value specified with the -m option.
 
-Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
+LLVM lld has a different behavior, however. When supplied with
+contradicting -m and OUTPUT_FORMAT values it fails with the following
+error message:
 
-[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+  ld.lld: error: arch/x86/realmode/rm/header.o is incompatible with elf_x86_64
 
-Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Therefore, just add the correct -m after the incorrect one (it overrides
+it), so the linker invocation looks like this:
+
+  ld -m elf_x86_64 -z max-page-size=0x200000 -m elf_i386 --emit-relocs -T \
+    realmode.lds header.o trampoline_64.o stack.o reboot.o -o realmode.elf
+
+This is not a functional change for GNU ld, because (although not
+explicitly documented) OUTPUT_FORMAT overrides -m EMULATION.
+
+Tested by building x86_64 kernel with GNU gcc/ld toolchain and booting
+it in QEMU.
+
+ [ bp: massage and clarify text. ]
+
+Suggested-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: George Rimar <grimar@accesssoftek.com>
+Signed-off-by: Tri Vo <trong@android.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tri Vo <trong@android.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Michael Matz <matz@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: morbo@google.com
+Cc: ndesaulniers@google.com
+Cc: ruiu@google.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190111201012.71210-1-trong@android.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/act8865-regulator.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/boot/Makefile        | 2 +-
+ arch/x86/realmode/rm/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
-index 7652477e6a9d..39e8d60df060 100644
---- a/drivers/regulator/act8865-regulator.c
-+++ b/drivers/regulator/act8865-regulator.c
-@@ -131,7 +131,7 @@
-  * ACT8865 voltage number
-  */
- #define	ACT8865_VOLTAGE_NUM	64
--#define ACT8600_SUDCDC_VOLTAGE_NUM	255
-+#define ACT8600_SUDCDC_VOLTAGE_NUM	256
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index d88a2fddba8c..1c060748c813 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -100,7 +100,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
+ AFLAGS_header.o += -I$(objtree)/$(obj)
+ $(obj)/header.o: $(obj)/zoffset.h
  
- struct act8865 {
- 	struct regmap *regmap;
-@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
- 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
- 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
--	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
-+	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
-+	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
- };
+-LDFLAGS_setup.elf	:= -T
++LDFLAGS_setup.elf	:= -m elf_i386 -T
+ $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
+ 	$(call if_changed,ld)
  
- static struct regulator_ops act8865_ops = {
+diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
+index 4463fa72db94..96cb20de08af 100644
+--- a/arch/x86/realmode/rm/Makefile
++++ b/arch/x86/realmode/rm/Makefile
+@@ -47,7 +47,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+ targets += realmode.lds
+ $(obj)/realmode.lds: $(obj)/pasyms.h
+ 
+-LDFLAGS_realmode.elf := --emit-relocs -T
++LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
+ CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
+ 
+ targets += realmode.elf
 -- 
 2.19.1
 
