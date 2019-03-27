@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7BEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AE5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B68D204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3B7204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711500;
-	bh=Cv5edxJQ8j2Ls8FXrs2+BPpGdrg1QZJIlGmKbgYU1Q4=;
+	s=default; t=1553711502;
+	bh=p66AfuCCtHpd6NVd/Q8MuZ9yiO+gluwZA/TQsO8CcHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRQWeadABCE41Dm+PODs7LfcR+RwJiRqidyFTQCyVJu6DilqpioYps7OA6tAVAOht
-	 qnNmoyoqUj4qM9VHtzYPTRpqwp1lsEjuVYUeRpleeya1SM33izOG+fNbZ5sEmYlC9Z
-	 Ig/HE8SzyW/T0l+IPvm92xnrBS9jUUq+RRohyj9E=
+	b=X4i4OBoqHkC+KzWA+xnsYaeT7Lsjf0Ss8kNc4tXADVpbgNBozl7rKtZjKiKgq3olH
+	 GlFrDhsL7eAr3jQczt3toaqSIpU4ok5XN/bDEu5XChZYnciF17HPcHAFuE1dWDyCfc
+	 t3kAEDljXNswG+O0htySHl1Qf2+N67bsQAWjLXb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404266AbfC0SZu (ORCPT
+        id S2391837AbfC0Sbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbfC0SZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:45 -0400
+        id S2404264AbfC0SZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 104242082F;
-        Wed, 27 Mar 2019 18:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7B42147C;
+        Wed, 27 Mar 2019 18:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711143;
-        bh=Cv5edxJQ8j2Ls8FXrs2+BPpGdrg1QZJIlGmKbgYU1Q4=;
+        s=default; t=1553711149;
+        bh=p66AfuCCtHpd6NVd/Q8MuZ9yiO+gluwZA/TQsO8CcHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jngEvz3PCv+hRpd5yezE5QtrzdOUk3EotTb5Km4XuRPcTDPmFedDjGH3NdTGgTKoC
-         4pHEHBOoid43aAkRnTvxyg9fdP9qtwYufBOim3ednYjVm3+GLdEPHK70q1gA/maTdq
-         LXZB64lf5V/eGNtwIzkCgOfCAHPFlSK6Dn8q46kw=
+        b=CQYA8Z/QwZTF7/LneUnfVFpUELKkQDyDkuEcFeH1v23mqEgtBApNzal+gcYtxubRC
+         1o7wlnmtWwMvAAf/PkXgMggpU2PSB9whJWDxuf40I6GBGNL6RtQyGTzbe8yq+o6AhF
+         +ktMuDLFFuklOR24vuQHTqJ0tSJgUUZi05gInsSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 13/41] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 27 Mar 2019 14:24:50 -0400
-Message-Id: <20190327182518.19394-13-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 16/41] e1000e: Fix -Wformat-truncation warnings
+Date:   Wed, 27 Mar 2019 14:24:53 -0400
+Message-Id: <20190327182518.19394-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -57,114 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit 135e7245479addc6b1f5d031e3d7e2ddb3d2b109 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+Provide precision hints to snprintf() since we know the destination
+buffer size of the RX/TX ring names are IFNAMSIZ + 5 - 1. This fixes the
+following warnings:
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+drivers/net/ethernet/intel/e1000e/netdev.c: In function
+'e1000_request_msix':
+drivers/net/ethernet/intel/e1000e/netdev.c:2109:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-rx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2107:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->rx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->rx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-rx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/intel/e1000e/netdev.c:2125:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-tx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2123:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->tx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->tx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-tx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
-
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
-
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 3386e72ba7e4..156ee22462e6 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -229,7 +229,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	extern void scsi_requeue_run_queue(struct work_struct *work);
- 
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
- 
-@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1083,7 +1083,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 0beeebdc0c01..ef5699103ec2 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -2132,7 +2132,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->rx_ring->name,
+ 			 sizeof(adapter->rx_ring->name) - 1,
+-			 "%s-rx-0", netdev->name);
++			 "%.14s-rx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->rx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
+@@ -2148,7 +2148,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->tx_ring->name,
+ 			 sizeof(adapter->tx_ring->name) - 1,
+-			 "%s-tx-0", netdev->name);
++			 "%.14s-tx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->tx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
 -- 
 2.19.1
 
