@@ -6,58 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD36FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7BEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC29B204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B68D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711490;
-	bh=FI+63TrXruTEG5G8GwS02//cow3xzOzHyW73TIJSKLM=;
+	s=default; t=1553711500;
+	bh=Cv5edxJQ8j2Ls8FXrs2+BPpGdrg1QZJIlGmKbgYU1Q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqizSWm839lvcctvl7AZQ9MWxcZB8dOZzWTlZECSLPQX4lfBZfe3mC6EwU4TJYoeN
-	 xExV9YjG+hjxtlcpKhK2JqojiFugpW/hzsvwthR+1bG8aOF/PXZKKiST/N2PEieP2f
-	 yheNSO5/e9xl6bVv8JiGt6JqJmbfiwSGqiJHc5oM=
+	b=SRQWeadABCE41Dm+PODs7LfcR+RwJiRqidyFTQCyVJu6DilqpioYps7OA6tAVAOht
+	 qnNmoyoqUj4qM9VHtzYPTRpqwp1lsEjuVYUeRpleeya1SM33izOG+fNbZ5sEmYlC9Z
+	 Ig/HE8SzyW/T0l+IPvm92xnrBS9jUUq+RRohyj9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391630AbfC0Sb3 (ORCPT
+        id S2404266AbfC0SZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404296AbfC0SZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:54 -0400
+        id S1728489AbfC0SZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2717C2177E;
-        Wed, 27 Mar 2019 18:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 104242082F;
+        Wed, 27 Mar 2019 18:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711154;
-        bh=FI+63TrXruTEG5G8GwS02//cow3xzOzHyW73TIJSKLM=;
+        s=default; t=1553711143;
+        bh=Cv5edxJQ8j2Ls8FXrs2+BPpGdrg1QZJIlGmKbgYU1Q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bqN7FQojosdYVeKFzdBCipkXrzMhGe4yEr05wQs6/4MGifjQoT+1S81oBLbw/CNiZ
-         97I51K7MT51ezE5wukRZcksudfRT1jtjlBIL5IzzyYCXk9sNsYvGTzSWKQqqUv9J17
-         1BRGXeogXUnIMgA3hH7vfI3lZMxWL0ABMZizPcMk=
+        b=jngEvz3PCv+hRpd5yezE5QtrzdOUk3EotTb5Km4XuRPcTDPmFedDjGH3NdTGgTKoC
+         4pHEHBOoid43aAkRnTvxyg9fdP9qtwYufBOim3ednYjVm3+GLdEPHK70q1gA/maTdq
+         LXZB64lf5V/eGNtwIzkCgOfCAHPFlSK6Dn8q46kw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 19/41] SoC: imx-sgtl5000: add missing put_device()
-Date:   Wed, 27 Mar 2019 14:24:56 -0400
-Message-Id: <20190327182518.19394-19-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 13/41] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 27 Mar 2019 14:24:50 -0400
+Message-Id: <20190327182518.19394-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -69,56 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
+
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
+
+Here is the contexts for the three functions so far:
+
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
+
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index 1cb22dd034eb..110f3cf361af 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -115,6 +115,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
- 	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 3386e72ba7e4..156ee22462e6 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -229,7 +229,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	extern void scsi_requeue_run_queue(struct work_struct *work);
+ 
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
+ 
+@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
+ 
+@@ -1083,7 +1083,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
+ 
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
