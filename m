@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAA4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4017C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2AB20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D9B20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711784;
-	bh=XX8Hn9a9Oah4IHGno6eDUs0zRW/pen3d/J+I3YWdfkA=;
+	s=default; t=1553711796;
+	bh=NgvFUcz5LSukjqDzJajH0n4BVFW0v/zEcoEDnKzZJ5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XiT4Dpyvnd9lkX1G70da26Ss2RNW4JYkUjV7V41QFIEFQGleowcUr8NdV7HFfowtv
-	 DnXdnM7iAL2Xtl1eW/NrR7TWnA4Urfl7CfS4K14O0b1FKSxudEpzKqjfC+Q7ufo8g4
-	 jpir8qL2bJvbpsY6anxorl+gZDJ2eM2+o3uDur4M=
+	b=jZEmeR0DcH/b/E9WV8HZj33GuzQOEVASG0la7dg+4Vx7n9cDRIwiEn6qoGpQyDL1r
+	 Eb2pjpJQhP+U7R3xKPuLiT/trcDMxQWOQMlAnDg9J+aO8nXKLv1PaA9RvOVe5bsjOl
+	 hrP3VgAuTR2UpdKn59B4YMtSoPm1ukA+yQTelycw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404226AbfC0SgY (ORCPT
+        id S2391613AbfC0Sgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42872 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403963AbfC0SYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:03 -0400
+        id S2391132AbfC0SX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9370A206BA;
-        Wed, 27 Mar 2019 18:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D0A2082F;
+        Wed, 27 Mar 2019 18:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711042;
-        bh=XX8Hn9a9Oah4IHGno6eDUs0zRW/pen3d/J+I3YWdfkA=;
+        s=default; t=1553711038;
+        bh=NgvFUcz5LSukjqDzJajH0n4BVFW0v/zEcoEDnKzZJ5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVbHX2X6Eq/I6Q7RwGMV03CRkNXVHj2jg43qrYxLHDUD6iWay3Hcon3gsetznkIby
-         ifjIjQWUBfSVZdpgZB3jeQ+0e7NYPeGQrivY98shQhf/xi/Tm6+x771aX5QNvtz2hF
-         lnLYsWp+7n0IvES13bDwWLsqb9BVe8YSUH9zx1o0=
+        b=XMVWpyyRtwEKxeR3ZRCXjToj64TCyf0NkUGn4VhMeiU9FXspV01x9tiQ1jM89SiQq
+         /yDRbTlPcRWAfxPVTq7Y6avwg2hf3Jsny3B67LMo19mHQc4/eNm7fiCsl4Wye1W2Om
+         52nrMwh+0wk2s/OzogkhSKwRgDUfMZ4PBA2mVvj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 23/63] ARM: 8840/1: use a raw_spinlock_t in unwind
-Date:   Wed, 27 Mar 2019 14:22:43 -0400
-Message-Id: <20190327182323.18577-23-sashal@kernel.org>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 21/63] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 27 Mar 2019 14:22:41 -0400
+Message-Id: <20190327182323.18577-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -57,92 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Benjamin Block <bblock@linux.ibm.com>
 
-[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-Mostly unwind is done with irqs enabled however SLUB may call it with
-irqs disabled while creating a new SLUB cache.
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-I had system freeze while loading a module which called
-kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
-interrupts and then
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-->new_slab_objects()
- ->new_slab()
-  ->setup_object()
-   ->setup_object_debug()
-    ->init_tracking()
-     ->set_track()
-      ->save_stack_trace()
-       ->save_stack_trace_tsk()
-        ->walk_stackframe()
-         ->unwind_frame()
-          ->unwind_find_idx()
-           =>spin_lock_irqsave(&unwind_lock);
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
+
+Here is the contexts for the three functions so far:
+
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
+
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/unwind.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 0bee233fef9a..314cfb232a63 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
- static const struct unwind_idx *__origin_unwind_idx;
- extern const struct unwind_idx __stop_unwind_idx[];
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 850ddc5fac04..3e2288af56bc 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -217,7 +217,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	extern void scsi_requeue_run_queue(struct work_struct *work);
  
--static DEFINE_SPINLOCK(unwind_lock);
-+static DEFINE_RAW_SPINLOCK(unwind_lock);
- static LIST_HEAD(unwind_tables);
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
  
- /* Convert a prel31 symbol to an absolute address */
-@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 		/* module unwind tables */
- 		struct unwind_table *table;
+@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
  
--		spin_lock_irqsave(&unwind_lock, flags);
-+		raw_spin_lock_irqsave(&unwind_lock, flags);
- 		list_for_each_entry(table, &unwind_tables, list) {
- 			if (addr >= table->begin_addr &&
- 			    addr < table->end_addr) {
-@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 				break;
- 			}
- 		}
--		spin_unlock_irqrestore(&unwind_lock, flags);
-+		raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 	}
+@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
  
- 	pr_debug("%s: idx = %p\n", __func__, idx);
-@@ -529,9 +529,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
- 	tab->begin_addr = text_addr;
- 	tab->end_addr = text_addr + text_size;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_add_tail(&tab->list, &unwind_tables);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	return tab;
- }
-@@ -543,9 +543,9 @@ void unwind_table_del(struct unwind_table *tab)
- 	if (!tab)
- 		return;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_del(&tab->list);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	kfree(tab);
- }
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
