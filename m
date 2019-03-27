@@ -6,54 +6,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A55CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8250CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A69217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5149E20449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710476;
-	bh=qQYRrUdY9HzXkXpCefCoabG0tLU6r57foGjiE/FfqPg=;
+	s=default; t=1553710479;
+	bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gsMZWu7f5IqM/48Ew6iDbRCvt1avqinya9i80XzIvhBBRGLuj7WTgv5BzY6sI6vFD
-	 ptYDg/km+MryxoGr6y6dznoLQCdHI72IwB27+f9dI0FsrXHHwe0WSc+9xNQLh3uoIo
-	 02bR/sIq6X97e5U32KCM+EJ3OqQwfpVimM5tN3eU=
+	b=lljKUaffR52r73IJPHR/htaf45uZEE4G8mz4IPNWj9IBRh6LXn8Uyy6pWJ2WdKWfB
+	 IjJGAQTYKKh/d+lthHuz7CDJyudemjPwklmBxhnMRuSTbSWAsKW0EBBtuRF0uvE4vg
+	 8lXF1FOAE4CRvWrUPn8HAdgTSnAGqR3tIAy83/xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389658AbfC0SOd (ORCPT
+        id S2389666AbfC0SOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57594 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388467AbfC0SO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:14:28 -0400
+        id S2388467AbfC0SOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:14:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 985B22082F;
-        Wed, 27 Mar 2019 18:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F7BA2087C;
+        Wed, 27 Mar 2019 18:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710468;
-        bh=qQYRrUdY9HzXkXpCefCoabG0tLU6r57foGjiE/FfqPg=;
+        s=default; t=1553710473;
+        bh=KIaSZbyVU7oeCQc+8FkgNKioQ7h8nz580PI1iesjiK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=14VyZNWxxZlgWfBTTmHQuVP5+n3J/iZMmA2Rcdp5pEWWBx3DAJKRX1a2iM4fUP4K/
-         haV0hcAc7yrReJDEq5edxZZVmpLmHrbWQf7TxyHPw5YmOOuXNkB3e7LL6i27yHl5v5
-         cTQWaqTY5ZvwsaHYdcXPMCvOJI/7OsJ9nZaKnCD4=
+        b=krEXYG9SoEzfcOZA8NYn+Y8tP2d0j2p3xFAFXEAQTpGP0ltWurOcuRPe34bKw2fnT
+         iKYNTafMOnuOOIj82ax3gdybHuPw5sZA/5QvoD6/xE658hGXe1vDvybO2Lt68mM10j
+         GzZb2uez05C9VRMXkwV2vuWEemvAPQKe89Kv1vgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     wen yang <yellowriver2010@hotmail.com>,
-        Wen Yang <yellowriver2010@hotmil.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 133/192] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
-Date:   Wed, 27 Mar 2019 14:09:25 -0400
-Message-Id: <20190327181025.13507-133-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Alexander Graf <agraf@suse.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leif Lindholm <leif.lindholm@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Jones <pjones@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 136/192] efi/memattr: Don't bail on zero VA if it equals the region's PA
+Date:   Wed, 27 Mar 2019 14:09:28 -0400
+Message-Id: <20190327181025.13507-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -65,43 +70,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wen yang <yellowriver2010@hotmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
+[ Upstream commit 5de0fef0230f3c8d75cff450a71740a7bf2db866 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+The EFI memory attributes code cross-references the EFI memory map with
+the more granular EFI memory attributes table to ensure that they are in
+sync before applying the strict permissions to the regions it describes.
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Since we always install virtual mappings for the EFI runtime regions to
+which these strict permissions apply, we currently perform a sanity check
+on the EFI memory descriptor, and ensure that the EFI_MEMORY_RUNTIME bit
+is set, and that the virtual address has been assigned.
+
+However, in cases where a runtime region exists at physical address 0x0,
+and the virtual mapping equals the physical mapping, e.g., when running
+in mixed mode on x86, we encounter a memory descriptor with the runtime
+attribute and virtual address 0x0, and incorrectly draw the conclusion
+that a runtime region exists for which no virtual mapping was installed,
+and give up altogether. The consequence of this is that firmware mappings
+retain their read-write-execute permissions, making the system more
+vulnerable to attacks.
+
+So let's only bail if the virtual address of 0x0 has been assigned to a
+physical region that does not reside at address 0x0.
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Alexander Graf <agraf@suse.de>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Jones <pjones@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Fixes: 10f0d2f577053 ("efi: Implement generic support for the Memory ...")
+Link: http://lkml.kernel.org/r/20190202094119.13230-4-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/firmware/efi/memattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 44433b20435c..600d9be9706e 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -689,6 +689,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- asrc_fail:
- 	of_node_put(asrc_np);
- 	of_node_put(codec_np);
-+	put_device(&cpu_pdev->dev);
- fail:
- 	of_node_put(cpu_np);
+diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
+index 8986757eafaf..aac972b056d9 100644
+--- a/drivers/firmware/efi/memattr.c
++++ b/drivers/firmware/efi/memattr.c
+@@ -94,7 +94,7 @@ static bool entry_is_valid(const efi_memory_desc_t *in, efi_memory_desc_t *out)
  
+ 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
+ 			continue;
+-		if (md->virt_addr == 0) {
++		if (md->virt_addr == 0 && md->phys_addr != 0) {
+ 			/* no virtual mapping has been installed by the stub */
+ 			break;
+ 		}
 -- 
 2.19.1
 
