@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C56C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4053CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E782321741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4A5217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710203;
-	bh=msjFF8eo6gGgMTQ4XxMKfeipSQsjw7auNNcjzzP9jFg=;
+	s=default; t=1553710209;
+	bh=0qLHF3LgfFbvHLtMyDGO59z6r4GEQMr2fBPiTFD6aKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Xvdqr4a46B9xrC4aKbhAffZtG3QaUXnxFhMt6xiKx1vFuIgv7KgN5wd+ETvDJk88
-	 6mgRZ6vrD/xlFTZcuKVklMkxsFRbnP5gOqkMJ/H9d19/o9rMZiRXOdgAkamR+fa1h3
-	 BVvGyFT1dKhRuSX2seM2TEmJFZ3mcO8AK1JLtRRA=
+	b=YvvVTKXZpUjXJpVhcjwcUsNuBWjYOKPFebIZXtAYrVi+8FyrxXWP9D/eqjAZv6NNH
+	 DLCTWu/vVFFvjfnQ9P6RSeVcXdlzS7172SjT1ISiqnXmbJavx8+X5ywq9qd9PZf6TC
+	 NV92UeERVepLFtoK5eAwLWF6OvHO6CBxD4TLWQHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388718AbfC0SKB (ORCPT
+        id S2388738AbfC0SKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51902 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388678AbfC0SJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:59 -0400
+        id S2388719AbfC0SKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF2A9217F9;
-        Wed, 27 Mar 2019 18:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 975622183E;
+        Wed, 27 Mar 2019 18:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710198;
-        bh=msjFF8eo6gGgMTQ4XxMKfeipSQsjw7auNNcjzzP9jFg=;
+        s=default; t=1553710204;
+        bh=0qLHF3LgfFbvHLtMyDGO59z6r4GEQMr2fBPiTFD6aKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQ2ReW0C7nZv08CYHkhZHLFzBFJxeBnnz048hMctzAx4R+1iqeyTSL4N5mrnZB9xb
-         kmuj9lPAxsVEF+mj6zWCWSQXgteMl4eWAsLdMGl+NnWvz8k4jf8zUNiytHOwQfyM9K
-         cQMkvmjp9nSNyjLWxBaYVDzkGYWNcU2QzHA9N11I=
+        b=z7szw4K1HlPrFyzhLKWr7YaLNk9wEtzwifobN06PJzjuefnnmybUSX6LFkJOCpCKH
+         CAKA4qjqe+Pu/gWvzGzWwO06VIPluk5ApwgLuOLjYD9MJw3mYaXNONFZWOIg916DjU
+         vuhuEOiFsEV+V2DvYK2epcsznsM9wT/Za3v+HLnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 246/262] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Wed, 27 Mar 2019 14:01:41 -0400
-Message-Id: <20190327180158.10245-246-sashal@kernel.org>
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 249/262] clk: meson: clean-up clock registration
+Date:   Wed, 27 Mar 2019 14:01:44 -0400
+Message-Id: <20190327180158.10245-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,59 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zumeng Chen <zumeng.chen@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit 8d9981efbcab066d17af4d3c85c169200f6f78df ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+Order, ids and size  between the table of regmap clocks and the onecell
+data table could be different.
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
+Set regmap pointer in all the regmap clocks before starting the
+registration using the onecell data, to make sure we don't
+get into an incoherent situation.
 
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lkml.kernel.org/r/20181221160239.26265-3-jbrunet@baylibre.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/clk/meson/meson-aoclk.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 26b187336875..2e12de813a5b 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1085,8 +1085,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
+diff --git a/drivers/clk/meson/meson-aoclk.c b/drivers/clk/meson/meson-aoclk.c
+index f965845917e3..258c8d259ea1 100644
+--- a/drivers/clk/meson/meson-aoclk.c
++++ b/drivers/clk/meson/meson-aoclk.c
+@@ -65,15 +65,20 @@ int meson_aoclkc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
+-	/*
+-	 * Populate regmap and register all clks
+-	 */
+-	for (clkid = 0; clkid < data->num_clks; clkid++) {
++	/* Populate regmap */
++	for (clkid = 0; clkid < data->num_clks; clkid++)
+ 		data->clks[clkid]->map = regmap;
  
- out:
- 	return ret;
++	/* Register all clks */
++	for (clkid = 0; clkid < data->hw_data->num; clkid++) {
++		if (!data->hw_data->hws[clkid])
++			continue;
++
+ 		ret = devm_clk_hw_register(dev, data->hw_data->hws[clkid]);
+-		if (ret)
++		if (ret) {
++			dev_err(dev, "Clock registration failed\n");
+ 			return ret;
++		}
+ 	}
+ 
+ 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
 -- 
 2.19.1
 
