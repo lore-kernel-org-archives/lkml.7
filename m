@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A84C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03090C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E59217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC882183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710071;
-	bh=WwdVZgGGO49Ql0Yky44C0CnNOZ0SpZ/J/QDO9zN7mWA=;
+	s=default; t=1553710075;
+	bh=KmERyaP2SScHkgC+FfJ/EX4B148TZzpTex/i/vYfU+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8dOvXSahxo5NW0oGoDkc0ZtrDait8di8zdTgHR/wghDjON8Dai0n7Bk4xW1ki7Hc
-	 NxyeHZgsM19tEpjpdhTPzK4fPFAi6VD4DpMAvsBDqGHHvfo80jS9xsrWBhEYGC0QIJ
-	 8WDyEv4cGAKFQGYoDItP9RdOWkQybg+GxSIgk8RQ=
+	b=Fq1vtL51Qz3NzbdRav/aJOC+MfPLUdfiKOA+2lw1UM77gMh5E/WDltD6fFTHnnWBt
+	 6ngw6N7KoWrR/92x1gDTb7xpGGdu9NlTEUW0l3+4BBM174k9dUPdHQVug9UFc9DqQi
+	 jOntAMKgIVgjqUzBfscJ8hzg7MZlytswe1mksauA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfC0SHt (ORCPT
+        id S2387401AbfC0SHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388241AbfC0SHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:46 -0400
+        id S2388247AbfC0SHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23F321734;
-        Wed, 27 Mar 2019 18:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A308A2063F;
+        Wed, 27 Mar 2019 18:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710065;
-        bh=WwdVZgGGO49Ql0Yky44C0CnNOZ0SpZ/J/QDO9zN7mWA=;
+        s=default; t=1553710068;
+        bh=KmERyaP2SScHkgC+FfJ/EX4B148TZzpTex/i/vYfU+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rJOiakgwmlGzMGivcHkMHiCCoa06NcbCRYYUBO+xXdg7E9no4pG2vFYJu6Qh2ix9u
-         10MYk3GhdPpqZl3ojEn84yB/6ORCaNrqjAMRd4ZI13ci37kUb1i+exPH6tlJIjnDHt
-         /15lfNgOI0fkzIwjtj+O93sD/WC0nCwDinxuJyRg=
+        b=gFUzrEP3MZx8/WaK27N2zs46MDMbLggk3yrXRwnqp3icrTOCjFdbmEa7rFj8BR7Ub
+         98eODEraGHUZ9kMxae5wtM52lAvU5njqX/uZ4/a9vfIWNBMLR6WxF9gIA8PyQC3uNL
+         NIVGVsJk5fGUIRpFMW+aQ7kjJ8rinnqMTc+/eWps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Roese <sr@denx.de>, Mark Brown <broonie@kernel.org>,
-        Sankalp Negi <sankalpnegi2310@gmail.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.0 181/262] staging: spi: mt7621: Add return code check on device_reset()
-Date:   Wed, 27 Mar 2019 14:00:36 -0400
-Message-Id: <20190327180158.10245-181-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 182/262] iwlwifi: mvm: fix RFH config command with >=10 CPUs
+Date:   Wed, 27 Mar 2019 14:00:37 -0400
+Message-Id: <20190327180158.10245-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -60,50 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 46c337872f34bc6387b0c29a4964f562c70139e3 ]
+[ Upstream commit dbf592f3d14fb7d532cb7c820b1065cf33e02aaa ]
 
-This patch adds a return code check on device_reset() and removes the
-compile warning.
+If we have >=10 (logical) CPUs, our command size exceeds the
+internal buffer size and the command fails; fix that by using
+IWL_HCMD_DFL_NOCOPY for the command that's allocated anyway.
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Sankalp Negi <sankalpnegi2310@gmail.com>
-Cc: Chuanhong Guo <gch981213@gmail.com>
-Cc: John Crispin <john@phrozen.org>
-Reviewed-by: NeilBrown <neil@brown.name>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+While at it, also fix the leak of cmd, and use struct_size()
+to calculate its size.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 8edbfaa19835 ("iwlwifi: mvm: configure multi RX queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-spi/spi-mt7621.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
-index 513b6e79b985..e1f50efd0922 100644
---- a/drivers/staging/mt7621-spi/spi-mt7621.c
-+++ b/drivers/staging/mt7621-spi/spi-mt7621.c
-@@ -330,6 +330,7 @@ static int mt7621_spi_probe(struct platform_device *pdev)
- 	int status = 0;
- 	struct clk *clk;
- 	struct mt7621_spi_ops *ops;
-+	int ret;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 0d6c313b6669..19ec55cef802 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -127,13 +127,17 @@ static int iwl_send_rss_cfg_cmd(struct iwl_mvm *mvm)
  
- 	match = of_match_device(mt7621_spi_match, &pdev->dev);
- 	if (!match)
-@@ -377,7 +378,11 @@ static int mt7621_spi_probe(struct platform_device *pdev)
- 	rs->pending_write = 0;
- 	dev_info(&pdev->dev, "sys_freq: %u\n", rs->sys_freq);
+ static int iwl_configure_rxq(struct iwl_mvm *mvm)
+ {
+-	int i, num_queues, size;
++	int i, num_queues, size, ret;
+ 	struct iwl_rfh_queue_config *cmd;
++	struct iwl_host_cmd hcmd = {
++		.id = WIDE_ID(DATA_PATH_GROUP, RFH_QUEUE_CONFIG_CMD),
++		.dataflags[0] = IWL_HCMD_DFL_NOCOPY,
++	};
  
--	device_reset(&pdev->dev);
-+	ret = device_reset(&pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "SPI reset failed!\n");
-+		return ret;
-+	}
+ 	/* Do not configure default queue, it is configured via context info */
+ 	num_queues = mvm->trans->num_rx_queues - 1;
  
- 	mt7621_spi_reset(rs);
+-	size = sizeof(*cmd) + num_queues * sizeof(struct iwl_rfh_queue_data);
++	size = struct_size(cmd, data, num_queues);
  
+ 	cmd = kzalloc(size, GFP_KERNEL);
+ 	if (!cmd)
+@@ -154,10 +158,14 @@ static int iwl_configure_rxq(struct iwl_mvm *mvm)
+ 		cmd->data[i].fr_bd_wid = cpu_to_le32(data.fr_bd_wid);
+ 	}
+ 
+-	return iwl_mvm_send_cmd_pdu(mvm,
+-				    WIDE_ID(DATA_PATH_GROUP,
+-					    RFH_QUEUE_CONFIG_CMD),
+-				    0, size, cmd);
++	hcmd.data[0] = cmd;
++	hcmd.len[0] = size;
++
++	ret = iwl_mvm_send_cmd(mvm, &hcmd);
++
++	kfree(cmd);
++
++	return ret;
+ }
+ 
+ static int iwl_mvm_send_dqa_cmd(struct iwl_mvm *mvm)
 -- 
 2.19.1
 
