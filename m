@@ -2,120 +2,125 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483BEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C76C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1676B2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:11:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDUkbUGq"
+	by mail.kernel.org (Postfix) with ESMTP id 074A62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfC0ILa (ORCPT
+        id S1726810AbfC0ILq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:11:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40137 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfC0ILa (ORCPT
+        Wed, 27 Mar 2019 04:11:46 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:54744 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfC0ILq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:11:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c207so9356149pfc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5xIaxSWXWv+BY7u3XIDDZCXSsuWmT0gj1RNn3WeT6jo=;
-        b=QDUkbUGqhpo4mh26u6+6fJDLRi51HRBGNv0mnS7OcMbzOuIlaFRuKc9qh/JTpiP2oR
-         +dNJjTzuZKSip2oL5sSVFNmwMMJEBlTGz7F9i5J94LUb9QzWEz5LEIvjOpImpRwCGkn0
-         DaSRosFNuElqdewtOD2flq+aPQ5qbcdLl8OogFnsPedk0d8BWi4xQSZ3YtWpzgdAjZSM
-         MGrUkmZmLEtGiVMAZ/YMWpCrennhk3E/+RzGb6MBHZFuRXX8Z7x82XPersQ4untPeX+J
-         iHTS8c0emg0xZpD/V3D1ZzmwS4aiJ91GoqqRikCL/Hqf0ktPdGMyPurit+xm59PliXUy
-         SqBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5xIaxSWXWv+BY7u3XIDDZCXSsuWmT0gj1RNn3WeT6jo=;
-        b=uAHz2Wx8G6q5myBJ01Deu8+gKLOsAAywiM5sesfcMiUrBWrTMQOD/sgpWbwsv+Pury
-         T7I3EKNEFf1R3k2tJae+VAFEw9HPePWjxQHb1/8Nu60oGJaVgrBRC+9pCaDNTqbJCBle
-         4GD1J7rDjabLcJi7NRGRcWwZj0l+FQrNqeh9F0LRiIlZHhzrN0g2ZHLOdur6wqbFV8Yw
-         RDq4FyLKpH/devichJZp6ph75mxYfHpvbIeoTE5qIiFC/7BGmOad0mXQt1of4/B18PiC
-         iK6MoaF3nJ+17hPRuBcTiNkVgjkY2Xgh6ORd7343ekWnV5VQX69tUVK7kqkMqjJve+KV
-         K1fA==
-X-Gm-Message-State: APjAAAWgJ89F5u899/4pi2mLTxwKAr2kgaK/Za1fJjXWcC5rkXZ1vctC
-        rWGjBxuHf3Mg0mpMKl4VvnU=
-X-Google-Smtp-Source: APXvYqyGwNgHJjAbPErgp7d92efsGb28B/mHjGqeW1D+0PbIqhHqZP46gOI3+zH2ceFzkqpuRTyLWQ==
-X-Received: by 2002:a63:e10b:: with SMTP id z11mr29626167pgh.46.1553674289531;
-        Wed, 27 Mar 2019 01:11:29 -0700 (PDT)
-Received: from localhost.localdomain ([220.94.163.20])
-        by smtp.gmail.com with ESMTPSA id f9sm25852488pfd.10.2019.03.27.01.11.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 01:11:28 -0700 (PDT)
-From:   Sidong Yang <realwakka@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sidong Yang <realwakka@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: pi433: Fix rf69_set_tx_cfg() logic
-Date:   Wed, 27 Mar 2019 08:11:20 +0000
-Message-Id: <20190327081120.11152-1-realwakka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 Mar 2019 04:11:46 -0400
+Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
+        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
+        id S23990411AbfC0ILnRRv0d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:11:43 +0100
+Date:   Wed, 27 Mar 2019 09:11:42 +0100
+From:   Ladislav Michl <ladis@linux-mips.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
+ omap_dm_timer_set_load_start
+Message-ID: <20190327081142.GA11034@lenoch>
+References: <20190327050126.12064-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327050126.12064-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moved code to configure sync to where check enable_sync option before.
-There is no need to check enable_sync twice. Configuring sync should be
-executed immediately after enabling sync.
+Hello Nathan,
 
-Signed-off-by: Sidong Yang <realwakka@gmail.com>
----
- drivers/staging/pi433/pi433_if.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
+> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
+> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
+> static because its prototype was not defined in a header. Unfortunately,
+> this causes a build warning on multi_v7_defconfig because this function
+> is not used anywhere in this translation unit:
+> 
+> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
+> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
+> 
+> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
+> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
+> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
+> Make unexported functions static"), which is probably where this should
+> have happened.
 
-diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
-index 53928af696a6..0a48d6cb9547 100644
---- a/drivers/staging/pi433/pi433_if.c
-+++ b/drivers/staging/pi433/pi433_if.c
-@@ -318,10 +318,17 @@ rf69_set_tx_cfg(struct pi433_device *dev, struct pi433_tx_cfg *tx_cfg)
- 			return ret;
- 	}
- 
-+	/* configure sync, if enabled */
- 	if (tx_cfg->enable_sync == OPTION_ON) {
- 		ret = rf69_enable_sync(dev->spi);
- 		if (ret < 0)
- 			return ret;
-+		ret = rf69_set_sync_size(dev->spi, tx_cfg->sync_length);
-+		if (ret < 0)
-+			return ret;
-+		ret = rf69_set_sync_values(dev->spi, tx_cfg->sync_pattern);
-+		if (ret < 0)
-+			return ret;
- 	} else {
- 		ret = rf69_disable_sync(dev->spi);
- 		if (ret < 0)
-@@ -348,16 +355,6 @@ rf69_set_tx_cfg(struct pi433_device *dev, struct pi433_tx_cfg *tx_cfg)
- 			return ret;
- 	}
- 
--	/* configure sync, if enabled */
--	if (tx_cfg->enable_sync == OPTION_ON) {
--		ret = rf69_set_sync_size(dev->spi, tx_cfg->sync_length);
--		if (ret < 0)
--			return ret;
--		ret = rf69_set_sync_values(dev->spi, tx_cfg->sync_pattern);
--		if (ret < 0)
--			return ret;
--	}
--
- 	return 0;
- }
- 
--- 
-2.17.1
+Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
+capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
+function being removed here). It is a part of an attempt to add event capture
+for OMAP. Of course I would like this functionality to be implemented, but
+as I do not have a time to continue, I cannot really object removing this
+function.
 
+Just in case you'd be interested in finishing this task ;-)
+
+	ladis
+
+> Fixes: 592ea6bd1fad ("clocksource: timer-ti-dm: Make unexported functions static")
+> Fixes: 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make omap_dm_timer_set_load_start() static")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+> My apologies if this has already been sent, I didn't see anything in tip
+> or on LKML.
+> 
+>  drivers/clocksource/timer-ti-dm.c | 28 ----------------------------
+>  1 file changed, 28 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+> index 3352da6ed61f..ee8ec5a8cb16 100644
+> --- a/drivers/clocksource/timer-ti-dm.c
+> +++ b/drivers/clocksource/timer-ti-dm.c
+> @@ -585,34 +585,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
+>  	return 0;
+>  }
+>  
+> -/* Optimized set_load which removes costly spin wait in timer_start */
+> -static int omap_dm_timer_set_load_start(struct omap_dm_timer *timer,
+> -					int autoreload, unsigned int load)
+> -{
+> -	u32 l;
+> -
+> -	if (unlikely(!timer))
+> -		return -EINVAL;
+> -
+> -	omap_dm_timer_enable(timer);
+> -
+> -	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
+> -	if (autoreload) {
+> -		l |= OMAP_TIMER_CTRL_AR;
+> -		omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
+> -	} else {
+> -		l &= ~OMAP_TIMER_CTRL_AR;
+> -	}
+> -	l |= OMAP_TIMER_CTRL_ST;
+> -
+> -	__omap_dm_timer_load_start(timer, l, load, timer->posted);
+> -
+> -	/* Save the context */
+> -	timer->context.tclr = l;
+> -	timer->context.tldr = load;
+> -	timer->context.tcrr = load;
+> -	return 0;
+> -}
+>  static int omap_dm_timer_set_match(struct omap_dm_timer *timer, int enable,
+>  
