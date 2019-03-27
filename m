@@ -2,121 +2,103 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A48C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA26C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA1120651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711855;
-	bh=xfPjTZbl0guBHbXrcyWt9wkOWvjJdbxsx62YRpHf9ac=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AV8fvYyI+iszz1Cwxps9vuVZkbEJgENVBVmVcsHaO2pCY14+MFPvrYkngfGqME/6P
-	 R43xYxBOCt+7076u6bA4yunE8RM9XyneuU049E0UtZtS2Dt3onXXe1sj1yXTYhXvCr
-	 cYjc5EyL2dlno9G8/hJcg+0qniYCcEmJEj3EGwsk=
+	by mail.kernel.org (Postfix) with ESMTP id 21F1620651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403892AbfC0SXn (ORCPT
+        id S2391860AbfC0Shp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42270 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:37:45 -0400
+Received: from muru.com ([72.249.23.125]:43004 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391524AbfC0SXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:38 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5553C2063F;
-        Wed, 27 Mar 2019 18:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711017;
-        bh=xfPjTZbl0guBHbXrcyWt9wkOWvjJdbxsx62YRpHf9ac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lhQGtHRG9WIxZZJiiS/XrOZzo9iLllM+FNSvFo2TAaitEoMfLTMbpIqS6xwPAD4+a
-         sxTnmPuBHmUYIb4VCkcZQjScT/Lo6mG01bzdKB0Oq/ylZUfpfHqMLM0EOLIYEzSuxP
-         7Jc1Okzg9XN+Ew7+Putt4Kaw9Y6NUMcW0dubqE6w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>, Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.4 08/63] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Wed, 27 Mar 2019 14:22:28 -0400
-Message-Id: <20190327182323.18577-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
-References: <20190327182323.18577-1-sashal@kernel.org>
+        id S2391388AbfC0Shn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:37:43 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id BA5F680BB;
+        Wed, 27 Mar 2019 18:37:55 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 11:37:38 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 09/14] bus: ti-sysc: Move rstctrl reset to happen later
+Message-ID: <20190327183738.GE49658@atomide.com>
+References: <20190325215849.13182-1-tony@atomide.com>
+ <20190325215849.13182-10-tony@atomide.com>
+ <20190326231306.GC49658@atomide.com>
+ <b6bd2b04-00b4-6730-4401-6ac95e75322a@ti.com>
+ <20190326234022.GD49658@atomide.com>
+ <cd0bce74-4af7-bcde-2552-e12c8d1c9da4@ti.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd0bce74-4af7-bcde-2552-e12c8d1c9da4@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+* Suman Anna <s-anna@ti.com> [190327 16:27]:
+> On 3/26/19 6:40 PM, Tony Lindgren wrote:
+> > That's for rstctrl. I just did a quick test with my earlier
+> > reset-simple patch and I noticed sgx on am33xx produces a
+> > clock error unless we deassert it's rstrctrl before enabling
+> > clocks first:
+> > 
+> > gfx-l3-clkctrl:0004:0: failed to enable
+> 
+> Yeah, and I see a similar one across the other modules controlled by
+> RSTCTRL bits for me as well - MMUs, PRUSS etc. This is because you can
+> only check the module ready status in _omap4_clkctrl_clk_enable() only
+> both after the clocks are turned on and resets are deasserted. That
+> check will always fail with rstctrl asserted. The omap_hwmod code does
+> use the reset status checks for bailing out, but that stuff is not
+> present in clkctrl code and can only be achieved by adding a
+> CLKF_NO_IDLEST (somewhat misnamed) to the corresponding clkctrl atm.
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+Sounds like on ti-sysc init we should just deassert the rstctrl if
+asserted, then enable clocks, and then read the revision.
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+Then if we actually need to toggle rstctrl reset, that can be added
+with later patches. But with reset driver, the device IP handling
+device driver(s) should probably manage the rstctrl bits directly.
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+> See [1] for AM33xx SGX. I will be posting some of these once I check the
+> behavior.
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+Yeah OK sounds like we can avoid those issues by deasserting the
+module related rstctrl bit before enabling the clocks. Then
+deal with resets later if needed.
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> > Note that you probably also want to leave out the struct
+> > omap_hwmod data from omap_hwmod_*_data.c files with rstctrl
+> > entries.
+> 
+> You mean no hwmod entries at all, or hwmod entries with no rstctrl data?
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 43f4a122e969..f0d91aca5a4c 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -339,12 +339,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
- 
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
- 
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
--- 
-2.19.1
+Except for the lack of rstctrl reset driver, struct hwmod_data
+entries should only be needed for the few cases where we're not
+yet handling some oh->flags quirks. I think most of the remaining
+unhandled quirks are for omap2 and 3.
 
+Regards,
+
+Tony
+
+
+> [1]
+> http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=commitdiff;h=536d660714e98bdb7f96e5990a095283e52e4d8a
+> 
+> 
