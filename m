@@ -4,53 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4871C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A912064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EE92064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714018;
-	bh=k54kCTv1u60xloHCbK3Ff8ZrJjnxpilCWaadgutsJpM=;
+	s=default; t=1553714025;
+	bh=H83m7k6HEq1j/R9JVvwoogyGOHWzdbitz2Xwp1up8y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hBuLoJWz8sv+M8EWEuyhS5/j3ImWnYQFe/otZSXDu7/OxJDhlpelTyHGk+gf0oW/A
-	 68i5KzOBR5AoUj150Saqm06VAqU1IflbsjOCH3JkFnzUHZ6KLeQ9dQ+Sc8ZVveXwAt
-	 80lXKNJBoxYIrNofRC25u0GY4zZdYyhtAAbGvUQg=
+	b=Qlez/HQXvPFj5Xg0bUHzzKhU4OUE0vNJUbokWxix911tpHJzCQF6Yk5Y9YOy+VCAp
+	 jsJ2KC6E14f9zg3PHf9+0BbN0QNm7M99KFbqvfV6xboCtTxN4V520pajGTr9RmeISh
+	 mJ0qYd52nlzlnO89rJ8JsUg7nER6KI51rAY+K7yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388970AbfC0TNh (ORCPT
+        id S1732468AbfC0SKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:13:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388734AbfC0SKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:07 -0400
+        id S2387842AbfC0SKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECAE221741;
-        Wed, 27 Mar 2019 18:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38B1C217F5;
+        Wed, 27 Mar 2019 18:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710206;
-        bh=k54kCTv1u60xloHCbK3Ff8ZrJjnxpilCWaadgutsJpM=;
+        s=default; t=1553710202;
+        bh=H83m7k6HEq1j/R9JVvwoogyGOHWzdbitz2Xwp1up8y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFHRZownGUvXlspDT2lo077zi1aIb7+Xb4cqDMhYuhALmT8Q7w3iQChZwG+A9093Y
-         VjNEFmasMbs/N3tdK0/EfcHY3slF4jhw4dz2vEXLrD7aIHxQ4T+cp0/Merydyj62dF
-         vUbevPK4lVrDZCUNYxNi7dNlRjHr+Ri54Ivg+1qY=
+        b=NgBVAw7C+UqLlmyqeKJpj4eZ54chOdLSrGeZKj4ZhA2mpGY3u0menpGoasqEBs1hj
+         MaHSQvkmv3dDBQPgEAeqReZdyC92DuVaSKNr4QaXYRSudhj5ROIMeBJkjWHn7U4QN7
+         d0DE6f4MV9RXRxTAbs3Nh35UaUjjeEQqTBw6U1zo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 251/262] clk: rockchip: fix frac settings of GPLL clock for rk3328
-Date:   Wed, 27 Mar 2019 14:01:46 -0400
-Message-Id: <20190327180158.10245-251-sashal@kernel.org>
+Cc:     =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
+        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Cao Jin <caoj.fnst@cn.fujitsu.com>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tri Vo <trong@android.com>, dima@golovin.in, morbo@google.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 247/262] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
+Date:   Wed, 27 Mar 2019 14:01:42 -0400
+Message-Id: <20190327180158.10245-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,65 +67,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Rafael Ávila de Espíndola <rafael@espindo.la>
 
-[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
+[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
 
-This patch fixes settings of GPLL frequency in fractional mode for
-rk3328. In this mode, FOUTVCO is calcurated by following formula:
-  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
+Accessing per-CPU variables is done by finding the offset of the
+variable in the per-CPU block and adding it to the address of the
+respective CPU's block.
 
-The problem is in FREF * FRAC >> 24 term. This result always lacks
-one from target value is specified by rate member. For example first
-itme of rk3328_pll_frac_rate originally has
-  - rate  : 1016064000
-  - refdiv: 3
-  - fbdiv : 127
-  - frac  : 134217
-  - FREF * FBDIV / REFDIV        = 1016000000
-  - (FREF * FRAC / REFDIV) >> 24 = 63999
-Thus calculated rate is 1016063999. It seems wrong.
+Section 3.10.8 of ld.bfd's documentation states:
 
-If frac has 134218 (it is increased 1 from original value), second
-term is 64000. All other items have same situation. So this patch
-adds 1 to frac member in all items of rk3328_pll_frac_rate.
+  For expressions involving numbers, relative addresses and absolute
+  addresses, ld follows these rules to evaluate terms:
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+  Other binary operations, that is, between two relative addresses
+  not in the same section, or between a relative address and an
+  absolute address, first convert any non-absolute term to an
+  absolute address before applying the operator."
+
+Note that LLVM's linker does not adhere to the GNU ld's implementation
+and as such requires implicitly-absolute terms to be explicitly marked
+as absolute in the linker script. If not, it fails currently with:
+
+  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
+  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
+  Makefile:1040: recipe for target 'vmlinux' failed
+
+This is not a functional change for ld.bfd which converts the term to an
+absolute symbol anyways as specified above.
+
+Based on a previous submission by Tri Vo <trong@android.com>.
+
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
+[ Update commit message per Boris' and Michael's suggestions. ]
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+[ Massage commit message more, fix typos. ]
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Dmitry Golovin <dima@golovin.in>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tri Vo <trong@android.com>
+Cc: dima@golovin.in
+Cc: morbo@google.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index faa94adb2a37..65ab5c2f48b0 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 0d618ee634ac..ee3b5c7d662e 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -401,7 +401,7 @@ SECTIONS
+  * Per-cpu symbols which need to be offset from __per_cpu_load
+  * for the boot processor.
+  */
+-#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
++#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
+ INIT_PER_CPU(gdt_page);
+ INIT_PER_CPU(irq_stack_union);
  
- static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
- 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
--	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
-+	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
- 	/* vco = 1016064000 */
--	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
-+	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
-+	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
-+	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
- 	/* vco = 860156000 */
--	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
-+	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
- 	/* vco = 903168000 */
--	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
-+	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
- 	/* vco = 819200000 */
- 	{ /* sentinel */ },
- };
 -- 
 2.19.1
 
