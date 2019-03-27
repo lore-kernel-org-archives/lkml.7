@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BBCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929EBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95F82087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6420D20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711194;
-	bh=FXdjSr8HVrfDYqWKqWAVa1HiI4r+mcXUJ3XGWwCbs4s=;
+	s=default; t=1553711198;
+	bh=/pH4zZYlc0BWQ1TfawHbkZe5KAVeNbC1loGu3hyaHNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5GB1IvHmmCqwe/ImjCEPnwWgduaFSA+LmIsRplGu2DmcXd5CsNzC3WEdWUW+4r5f
-	 HgtG4RWiekLCC2wK2nfewAH1PEFieAukUmN636OLYTNBrbCHfnF09snx6UaWYl7OIL
-	 0yuY+DB2r0TQK4wQV2Oq/hEvLEytsD+O3Y63gqSs=
+	b=hwWC6qUr+ul81/aM1U78iKIbZ5tkXcFVtawxvZt98zlcffYotwiH9JZoyPHuZEnO2
+	 sqzXOe06LjscLTaATlDX1R6Xya0HL2NxmKvoBY04ThetVgBjQb1XoCTnH9P1CTYkQb
+	 L6ZRu+YQMDnZgEYpV3vIvRvWqHkofjLa1q90YUlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391714AbfC0S0c (ORCPT
+        id S2391732AbfC0S0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45738 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391671AbfC0S0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:10 -0400
+        id S2390135AbfC0S0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88C0D2147C;
-        Wed, 27 Mar 2019 18:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A03802147C;
+        Wed, 27 Mar 2019 18:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711169;
-        bh=FXdjSr8HVrfDYqWKqWAVa1HiI4r+mcXUJ3XGWwCbs4s=;
+        s=default; t=1553711174;
+        bh=/pH4zZYlc0BWQ1TfawHbkZe5KAVeNbC1loGu3hyaHNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSutqCwQQwwMc96REyhahLzMljuy4kzdaHv5Kt1QzNpckeZc5/OVGada0DJR0siNS
-         08X2xPsYi8tMOtWCkQA8s+/5kPShiOXV91+9uQcsUCgKzi6JVuLLMZDs1VIEQIFOEM
-         nY4mOJwOVhMmtdb7HcR6ubVcPZELmvhXBuy/DLYY=
+        b=vARNbBdmaH6GyObTUorxhKDjtCufG+4rm8e+h1t35kA3kDxGRjhBf8yt1ev4kZnS/
+         COqpJEyPM2cwQkrsIXt3Lt/TUwpOC20i89bjnWgh9qGdGw0rNYgqXvPleeON9yXNNu
+         QUWvzDcxo4dA6BQ4IUUoW5Yr6uDOqPL8I/42W9R0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 26/41] bcache: improve sysfs_strtoul_clamp()
-Date:   Wed, 27 Mar 2019 14:25:03 -0400
-Message-Id: <20190327182518.19394-26-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 29/41] e1000e: fix cyclic resets at link up with active tx
+Date:   Wed, 27 Mar 2019 14:25:06 -0400
+Message-Id: <20190327182518.19394-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -56,64 +57,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
+[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
 
-Currently sysfs_strtoul_clamp() is defined as,
- 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
- 83 do {                                                               \
- 84         if (attr == &sysfs_ ## file)                               \
- 85                 return strtoul_safe_clamp(buf, var, min, max)      \
- 86                         ?: (ssize_t) size;                         \
- 87 } while (0)
+I'm seeing series of e1000e resets (sometimes endless) at system boot
+if something generates tx traffic at this time. In my case this is
+netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
+have been disabled in order to enable jumbo frames" from e1000e itself.
+As result e1000_watchdog_task sees used tx buffer while carrier is off
+and start this reset cycle again.
 
-The problem is, if bit width of var is less then unsigned long, min and
-max may not protect var from integer overflow, because overflow happens
-in strtoul_safe_clamp() before checking min and max.
+[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
+[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   27.174495] 8021q: 802.1Q VLAN Support v1.8
+[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
+[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
+[   30.898564] netpoll: netconsole: local port 6666
+[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
+[   30.898567] netpoll: netconsole: interface 'eth1'
+[   30.898568] netpoll: netconsole: remote port 6666
+[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
+[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
+[   30.917747] console [netcon0] enabled
+[   30.917749] netconsole: network logging started
+[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
 
-To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
-effect, this patch adds an unsigned long variable, and uses it to macro
-strtoul_safe_clamp() to convert an unsigned long value in range defined
-by [min, max]. Then assign this value to var. By this method, if bit
-width of var is less than unsigned long, integer overflow won't happen
-before min and max are checking.
+This patch flushes tx buffers only once when carrier is off
+rather than at each watchdog iteration.
 
-Now sysfs_strtoul_clamp() can properly handle smaller data type like
-unsigned int, of cause min and max should be defined in range of
-unsigned int too.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.h | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
-index 0526fe92a683..e7a3c12aa66f 100644
---- a/drivers/md/bcache/sysfs.h
-+++ b/drivers/md/bcache/sysfs.h
-@@ -80,9 +80,16 @@ do {									\
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index ef5699103ec2..52920d036f49 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5073,8 +5073,13 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
++			 *
++			 * If the link is lost the controller stops DMA, but
++			 * if there is queued Tx work it cannot be done.  So
++			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
++			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
++			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5097,14 +5102,6 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
- #define sysfs_strtoul_clamp(file, var, min, max)			\
- do {									\
--	if (attr == &sysfs_ ## file)					\
--		return strtoul_safe_clamp(buf, var, min, max)		\
--			?: (ssize_t) size;				\
-+	if (attr == &sysfs_ ## file) {					\
-+		unsigned long v = 0;					\
-+		ssize_t ret;						\
-+		ret = strtoul_safe_clamp(buf, v, min, max);		\
-+		if (!ret) {						\
-+			var = v;					\
-+			return size;					\
-+		}							\
-+		return ret;						\
-+	}								\
- } while (0)
- 
- #define strtoul_or_return(cp)						\
+-	/* If the link is lost the controller stops DMA, but
+-	 * if there is queued Tx work it cannot be done.  So
+-	 * reset the controller to flush the Tx packet buffers.
+-	 */
+-	if (!netif_carrier_ok(netdev) &&
+-	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
+-		adapter->flags |= FLAG_RESTART_NOW;
+-
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 -- 
 2.19.1
 
