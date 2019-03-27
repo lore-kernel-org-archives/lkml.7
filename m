@@ -2,111 +2,102 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD7AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27088C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D13321734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714532;
-	bh=Aw51D3dFq+SHYFP4bkygBxYF3FzCG3/YZ0jZlOKBKEg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jYy90tVmQnxGYkK8nsLhSXjOvgYL56wzRqMC6izrM4YowqkZREck0k2zH/ZzCpafA
-	 XhtaEsi0Wc2D3Nwt0tT4HSWsFTu61i78FCNJ+40WmmRaOCg4w7V7bKPNT/Gh2puCkO
-	 h7toaMC9RygyUOz3h8j8AbztINempoVeNGlIg4vY=
+	by mail.kernel.org (Postfix) with ESMTP id 03682206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388096AbfC0TWK (ORCPT
+        id S2388087AbfC0TWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:22:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18072 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733214AbfC0SGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8FFA2063F;
-        Wed, 27 Mar 2019 18:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709995;
-        bh=Aw51D3dFq+SHYFP4bkygBxYF3FzCG3/YZ0jZlOKBKEg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mGJE040D6aM8xh0/QciPU2Hgq8Uq/6XbaEw2PPsxoujRd7PJ/sMWtHEnbBrLk4Pw6
-         mxMz/Du6T603XNMXj7LLbIRQDqtMPmUVyTvO6qwbhHw6YfNRbNtxLF64vyO+k84rJU
-         3HEj6Ab01c2bWYI6p2wlYYBOHS3ycHMdxZ8KYmpk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 148/262] =?UTF-8?q?selftests:=20ir:=20fix=20wa?= =?UTF-8?q?rning:=20"%s"=20directive=20output=20may=20be=20truncated=20?= =?UTF-8?q?=E2=80=99=20directive=20output=20may=20be=20truncated?=
-Date:   Wed, 27 Mar 2019 14:00:03 -0400
-Message-Id: <20190327180158.10245-148-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
+        id S1733214AbfC0TWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:22:12 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 12:22:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,277,1549958400"; 
+   d="scan'208";a="310925863"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga005.jf.intel.com with ESMTP; 27 Mar 2019 12:22:07 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9E7i-0002fO-1A; Wed, 27 Mar 2019 21:22:06 +0200
+Date:   Wed, 27 Mar 2019 21:22:06 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] Input: add Apple SPI keyboard and trackpad driver.
+Message-ID: <20190327192206.GQ9224@smile.fi.intel.com>
+References: <20190327014807.7472-1-ronald@innovation.ch>
+ <20190327014807.7472-5-ronald@innovation.ch>
+ <20190327093530.GH9224@smile.fi.intel.com>
+ <20190327184526.GA11095@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190327184526.GA11095@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <shuah@kernel.org>
+On Wed, Mar 27, 2019 at 07:45:26PM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 27, 2019 at 11:35:30AM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 26, 2019 at 06:48:07PM -0700, Ronald Tschal�r wrote:
+> > > The keyboard and trackpad on recent MacBook's (since 8,1) and
+> > > MacBookPro's (13,* and 14,*) are attached to an SPI controller instead
+> > > of USB, as previously. The higher level protocol is not publicly
+> > > documented and hence has been reverse engineered. As a consequence there
+> > > are still a number of unknown fields and commands. However, the known
+> > > parts have been working well and received extensive testing and use.
+> > > 
+> > > In order for this driver to work, the proper SPI drivers need to be
+> > > loaded too; for MB8,1 these are spi_pxa2xx_platform and spi_pxa2xx_pci;
+> > > for all others they are spi_pxa2xx_platform and intel_lpss_pci. For this
+> > > reason enabling this driver in the config implies enabling the above
+> > > drivers.
+> > 
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > 
+> > According to last changes this should be GPL-2.0-only
+> 
+> What "last changes"?  "GPL-2.0" is a totally valid SPDX identifier for
+> the kernel.  Don't buy into the "-only" prefix crud that the newer SPDX
+> version adopted for crazy reasons.  The in-kernel documentation lists
+> the valid identifiers and the version of SPDX we are currently using.
 
-[ Upstream commit ed675ed9da6d951322efd72d739d6b5ce1c18f02 ]
+Thanks for this clarification.
 
-Fix the following warning by sizing the buffer to max. of sysfs
-path max. size + d_name max. size.
+// offtopic
 
-gcc -Wall -O2 -I../../../include/uapi ir_loopback.c  -o ../tools/testing/selftests/ir/ir_loopback
-ir_loopback.c: In function ‘lirc_open’:
-ir_loopback.c:71:37: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 95 [-Wformat-truncation=]
-    snprintf(buf, sizeof(buf), "/dev/%s", dent->d_name);
-                                     ^~
-In file included from /usr/include/stdio.h:862:0,
-                 from ir_loopback.c:14:
-/usr/include/x86_64-linux-gnu/bits/stdio2.h:64:10: note: ‘__builtin___snprintf_chk’ output between 6 and 261 bytes into a destination of size 100
-   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        __bos (__s), __fmt, __va_arg_pack ());
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Bartosz, so, it seems my first mail has been a correct one: in-kernel
+documentation clarifies things for kernel.
 
-Signed-off-by: Shuah Khan <shuah@kernel.org>
-Acked-by: Sean Young <sean@mess.org>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/ir/ir_loopback.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+// offtopic
 
-diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
-index 858c19caf224..8cdf1b89ac9c 100644
---- a/tools/testing/selftests/ir/ir_loopback.c
-+++ b/tools/testing/selftests/ir/ir_loopback.c
-@@ -27,6 +27,8 @@
- 
- #define TEST_SCANCODES	10
- #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
-+#define SYSFS_PATH_MAX 256
-+#define DNAME_PATH_MAX 256
- 
- static const struct {
- 	enum rc_proto proto;
-@@ -56,7 +58,7 @@ static const struct {
- int lirc_open(const char *rc)
- {
- 	struct dirent *dent;
--	char buf[100];
-+	char buf[SYSFS_PATH_MAX + DNAME_PATH_MAX];
- 	DIR *d;
- 	int fd;
- 
 -- 
-2.19.1
+With Best Regards,
+Andy Shevchenko
+
 
