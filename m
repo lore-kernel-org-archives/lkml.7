@@ -6,53 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B5DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1F2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6662087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359262082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712593;
-	bh=fRRvlS6BSlWJEOgJ6mK/HtJMXrjrzPEBnyi5d58cgt8=;
+	s=default; t=1553712602;
+	bh=LvLKoPMWKuLlrz0K3rjLUwBtbKSrMaa6v0Vn/KQONoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4LVNQUwFU/lgS1fm1sYEHu2IjV1npnJvO7x5Tw+beuOcosnh4D4b/InmSkmEF93k
-	 cA2Emu5QrKfn4wa7xqKIip54zy5CAE09FudrBNwaP9vmiQv6K7qHtC++jRQ823wbgM
-	 j2FIF8mrUQX9ynFEdqW9YB/O4VRlKlkMns4tCKmY=
+	b=b7Kxw8iIejJMQP/xWBRd1/shVieCsT6orcaOBzE7YzLz8ABxNoUqwHEcwCG0/0sP5
+	 MYhnQNZdFKIAJRJTQQ4JLKxYTq6Nw6Phz1OIlGQKYDSPWLpNk+jQzSIeXeMJHd4HT2
+	 aNDfnWU65mhVDYJly09zxz95fWU3fmFJ90AvtOXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390608AbfC0Stw (ORCPT
+        id S2390512AbfC0SSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390167AbfC0SSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:32 -0400
+        id S2390491AbfC0SSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94CFC21738;
-        Wed, 27 Mar 2019 18:18:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F21320449;
+        Wed, 27 Mar 2019 18:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710711;
-        bh=fRRvlS6BSlWJEOgJ6mK/HtJMXrjrzPEBnyi5d58cgt8=;
+        s=default; t=1553710702;
+        bh=LvLKoPMWKuLlrz0K3rjLUwBtbKSrMaa6v0Vn/KQONoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuXAKnqLFf0TLwMWvm4bSceUnt9D0Ec9aCXHPHkCcvcvI2ryHsoUdXor10hFTPtnA
-         TT1d1q3keITiBSdzQZjsogburTmGjRo0Zmuzzi183po3FOSKaq10xi67hOSeQChW3G
-         HSX+vEArsbexiqSdpKUtpdIN+q0aDanreBlxRuvc=
+        b=033PxYWxDPmdoWDmuu9g9EjvDoJgRpNaLoQb403j5pawi2O5VZspeAXiqJR8YS9On
+         XuIv3l0VG1uTMXdrmS/3Q3yqC+3MkutF9JQ7nYxloGgn3E9fQZcZ4hM17KkXHBTG/n
+         V843UHUY8tGG4XUftm2lW5H9fPYKsTNTyu68U3yA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <righi.andrea@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 069/123] kprobes: Prohibit probing on bsearch()
-Date:   Wed, 27 Mar 2019 14:15:33 -0400
-Message-Id: <20190327181628.15899-69-sashal@kernel.org>
+Cc:     Hong Liu <hong.liu@intel.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 063/123] HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
+Date:   Wed, 27 Mar 2019 14:15:27 -0400
+Message-Id: <20190327181628.15899-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -64,56 +56,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <righi.andrea@gmail.com>
+From: Hong Liu <hong.liu@intel.com>
 
-[ Upstream commit 02106f883cd745523f7766d90a739f983f19e650 ]
+[ Upstream commit 0d28f49412405d87d3aae83da255070a46e67627 ]
 
-Since kprobe breakpoing handler is using bsearch(), probing on this
-routine can cause recursive breakpoint problem.
+When performing a warm reset in ishtp bus driver, the ishtp_cl_device
+will not be removed, its fw_client still points to the already freed
+ishtp_device.fw_clients array.
 
-int3
- ->do_int3()
-   ->ftrace_int3_handler()
-     ->ftrace_location()
-       ->ftrace_location_range()
-         ->bsearch() -> int3
+Later after driver finishing ishtp client enumeration, this dangling
+pointer may cause driver to bind the wrong ishtp_cl_device to the new
+client, causing wrong callback to be called for messages intended for
+the new client.
 
-Prohibit probing on bsearch().
+This helps in development of firmware where frequent switching of
+firmwares is required without Linux reboot.
 
-Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998813406.31052.8791425358974650922.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hong Liu <hong.liu@intel.com>
+Tested-by: Hongyan Song <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/bsearch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp/bus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bsearch.c b/lib/bsearch.c
-index 18b445b010c3..82512fe7b33c 100644
---- a/lib/bsearch.c
-+++ b/lib/bsearch.c
-@@ -11,6 +11,7 @@
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
+index 2623a567ffba..f546635e9ac9 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.c
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
+@@ -623,7 +623,8 @@ int ishtp_cl_device_bind(struct ishtp_cl *cl)
+ 	spin_lock_irqsave(&cl->dev->device_list_lock, flags);
+ 	list_for_each_entry(cl_device, &cl->dev->device_list,
+ 			device_link) {
+-		if (cl_device->fw_client->client_id == cl->fw_client_id) {
++		if (cl_device->fw_client &&
++		    cl_device->fw_client->client_id == cl->fw_client_id) {
+ 			cl->device = cl_device;
+ 			rv = 0;
+ 			break;
+@@ -683,6 +684,7 @@ void ishtp_bus_remove_all_clients(struct ishtp_device *ishtp_dev,
+ 	spin_lock_irqsave(&ishtp_dev->device_list_lock, flags);
+ 	list_for_each_entry_safe(cl_device, n, &ishtp_dev->device_list,
+ 				 device_link) {
++		cl_device->fw_client = NULL;
+ 		if (warm_reset && cl_device->reference_count)
+ 			continue;
  
- #include <linux/export.h>
- #include <linux/bsearch.h>
-+#include <linux/kprobes.h>
- 
- /*
-  * bsearch - binary search an array of elements
-@@ -53,3 +54,4 @@ void *bsearch(const void *key, const void *base, size_t num, size_t size,
- 	return NULL;
- }
- EXPORT_SYMBOL(bsearch);
-+NOKPROBE_SYMBOL(bsearch);
 -- 
 2.19.1
 
