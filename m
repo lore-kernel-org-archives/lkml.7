@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652A6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB51C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFEC2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3EC2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712190;
-	bh=i4J60JcTR2AZDGF22aA/OXqKdTRnPaeZ853LEL+myt8=;
+	s=default; t=1553712194;
+	bh=TWb3FiZY2lcX+OVO/8orZQpe9P8p5eQYRP+FMmiza24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pBDXsKJ5mPbVgRACCYTDmXgXfYGhrV6yVti0Go7G8r9GHBdBeFDT4nQkimzdS39W
-	 0ZNnWvTStgJo/OL2+1KWfBbG8nNAP22BEzhw5TYmQlUuAEXccGepywm8f0e3xX+9kx
-	 Bl/Ev8vBgKBBcN/8mO9LUpYAYdR+8HH/UHMY6VtE=
+	b=vIVqgehK/5aajpGywff5uBciPon1C/mQcUTxv+gWo6PMrIZ3nxV0R0rspBipI24zC
+	 7ltg6PM05R9QIsE26elPbAuM1dQl+l+EkyZUNIdLYiGaKNCgzmIyR9av6k/n8LogwB
+	 8PyYmW1zmnq1f3FzsU7bcoQlQJ5sv0tCHqO2d/m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403771AbfC0SVk (ORCPT
+        id S2391879AbfC0SnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39468 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:43:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391196AbfC0SVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:33 -0400
+        id S2390309AbfC0SVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 823BC20643;
-        Wed, 27 Mar 2019 18:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43B0621738;
+        Wed, 27 Mar 2019 18:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710893;
-        bh=i4J60JcTR2AZDGF22aA/OXqKdTRnPaeZ853LEL+myt8=;
+        s=default; t=1553710899;
+        bh=TWb3FiZY2lcX+OVO/8orZQpe9P8p5eQYRP+FMmiza24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ujTL8YN1iboUDF66HoVYQcRHfUZumBdWVOF095okmVJIP1V9U18FKQ8nIuQLDtrDz
-         alNMMv/IGV5MYywxyU5GP3uRCIHJ7iew3cTLfIfVJJ4Gw2Pz5S/lMIzP3qCnB3UM3s
-         b+V7z2WmdZBppxXMuibXHqc3J+v+vB6AoK8a3RuM=
+        b=lIy2y11uxcYk16F5pvb3o3t1o3oFqclbbY7/MgTWO8uFhBGNdMqRclVLeSC+avsgO
+         f9SRfmnepTuahUjymyqOPoqqkk1AzjlhvVYoKWySIKCQaO/MlENxD8L+ra5yupny55
+         +IEtbXhxgEm2wvMjnh2mUB+N5PxXX/TEcIyyT1mA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 31/87] mmc: omap: fix the maximum timeout setting
-Date:   Wed, 27 Mar 2019 14:19:44 -0400
-Message-Id: <20190327182040.17444-31-sashal@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 36/87] scsi: megaraid_sas: return error when create DMA pool failed
+Date:   Wed, 27 Mar 2019 14:19:49 -0400
+Message-Id: <20190327182040.17444-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,51 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Jason Yan <yanaijie@huawei.com>
 
-[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
+[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
 
-When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
+when create DMA pool for cmd frames failed, we should return -ENOMEM,
+instead of 0.
+In some case in:
 
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	[ad inf.]
+    megasas_init_adapter_fusion()
 
-Emulator warnings appear to be valid. The TI document SPRU680 [1]
-("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
-(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
-cycles and "0xff and 0xfe cannot be used".
+    -->megasas_alloc_cmds()
+       -->megasas_create_frame_pool
+          create DMA pool failed,
+        --> megasas_free_cmds() [1]
 
-Fix by using 0xfd as the maximum timeout.
+    -->megasas_alloc_cmds_fusion()
+       failed, then goto fail_alloc_cmds.
+    -->megasas_free_cmds() [2]
 
-Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
-real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
-(OMAP2420) that MMC works as before.
+we will call megasas_free_cmds twice, [1] will kfree cmd_list,
+[2] will use cmd_list.it will cause a problem:
 
-[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+Unable to handle kernel NULL pointer dereference at virtual address
+00000000
+pgd = ffffffc000f70000
+[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
+*pmd=0000001fbf894003, *pte=006000006d000707
+Internal error: Oops: 96000005 [#1] SMP
+ Modules linked in:
+ CPU: 18 PID: 1 Comm: swapper/0 Not tainted
+ task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
+ PC is at megasas_free_cmds+0x30/0x70
+ LR is at megasas_free_cmds+0x24/0x70
+ ...
+ Call trace:
+ [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
+ [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
+ [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
+ [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
+ [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
+ [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
+ [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
+ [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
+ [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
+  [<ffffffc000539e88>] driver_attach+0x28/0x34
+ [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
+ [<ffffffc00053b234>] driver_register+0x6c/0x138
+ [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
+ [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
+ [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
+ [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
+ [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
 
-Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-index a4bf14e21b5e..21dfce21aa63 100644
---- a/drivers/mmc/host/omap.c
-+++ b/drivers/mmc/host/omap.c
-@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
- 	reg &= ~(1 << 5);
- 	OMAP_MMC_WRITE(host, SDIO, reg);
- 	/* Set maximum timeout */
--	OMAP_MMC_WRITE(host, CTO, 0xff);
-+	OMAP_MMC_WRITE(host, CTO, 0xfd);
- }
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 5de024a50e15..5b1c37e3913c 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3956,6 +3956,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
+ 	if (megasas_create_frame_pool(instance)) {
+ 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
+ 		megasas_free_cmds(instance);
++		return -ENOMEM;
+ 	}
  
- static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
+ 	return 0;
 -- 
 2.19.1
 
