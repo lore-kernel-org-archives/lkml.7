@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17697C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456E2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5EC2184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1233321741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710256;
-	bh=uXnjpxAhJ0NJevHTQ+WLhA3oWQsyO/F5W2zTP3iwFJw=;
+	s=default; t=1553710262;
+	bh=wVUETQHDiou0k6as7Fe9sQVT27TspykKTPXvNz1Lqys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8QtrExeUAbbMsY/pilAqzQzaq8FoBRrICzJejjcH6+z7Oq0F37ZLxBK4Csn5jdMy
-	 VM9IUsg/M08+LClpSnDUTOLzmM1Y3ccmDVUWCZiOYu+SVgth7vnDO+dRMPz2pHxVmC
-	 c1bIiDQzbsEHCjnrRcJ6HtTIUJksGIV/lnpIJmmM=
+	b=CBaXUQCmU6Hdl4TbCp878O3gNuGZ7cfSSfIYIL8ZOb9/KNmMRTPgwy8Lvgi3QbD5p
+	 5V8FYVAbTTcabewQF8dRmcaqYmFKtIaGKQGz8iDvKfhaIY74pTk0nqnTFUJvTGTIcE
+	 32gnGt+t4QEHukZ5j8CaZ3r65Bxqk4ERVMwPQmDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388949AbfC0SKz (ORCPT
+        id S2388964AbfC0SLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbfC0SKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:52 -0400
+        id S2388927AbfC0SKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 715792177E;
-        Wed, 27 Mar 2019 18:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A970218A3;
+        Wed, 27 Mar 2019 18:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710251;
-        bh=uXnjpxAhJ0NJevHTQ+WLhA3oWQsyO/F5W2zTP3iwFJw=;
+        s=default; t=1553710253;
+        bh=wVUETQHDiou0k6as7Fe9sQVT27TspykKTPXvNz1Lqys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMJnXPy0fVcYTvrH3DCuhlczdxlgqAyjnvpriz+TOwQmNoi58Anv1Lt01Et05OrDg
-         HWVsVDTENo4UoOsmGUXAEiHds9r2aQaKzvQC5CenwrrBZVu0L0iTYbo7bmuAXhlNmY
-         m4w5knp2fiqYBXb8Cges5dwxOAF4PY2/Ty757vdQ=
+        b=b2aAZFhA6iglzIyKUgHYLHmvdjJf1vf9YKxaJifkY8qzVRqdSnneNkYeecBYcRyyw
+         cNeE1tSoU3yuOqZgpOY7aLVN0u9USlXNoQJKs+8wX07YskakVYwFM8NisUxdL4jyCr
+         W/XwYHGq6FM5HTTbrtxxHz6ZzZVfxGggwz/7Eq6Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 018/192] iio: adc: fix warning in Qualcomm PM8xxx HK/XOADC driver
-Date:   Wed, 27 Mar 2019 14:07:30 -0400
-Message-Id: <20190327181025.13507-18-sashal@kernel.org>
+Cc:     Kairui Song <kasong@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dave Young <dyoung@redhat.com>, devel@linuxdriverproject.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 019/192] x86/hyperv: Fix kernel panic when kexec on HyperV
+Date:   Wed, 27 Mar 2019 14:07:31 -0400
+Message-Id: <20190327181025.13507-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,76 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Kairui Song <kasong@redhat.com>
 
-[ Upstream commit e0f0ae838a25464179d37f355d763f9ec139fc15 ]
+[ Upstream commit 179fb36abb097976997f50733d5b122a29158cba ]
 
-The pm8xxx_get_channel() implementation is unclear, and causes gcc to
-suddenly generate odd warnings.  The trigger for the warning (at least
-for me) was the entirely unrelated commit 79a4e91d1bb2 ("device.h: Add
-__cold to dev_<level> logging functions"), which apparently changes gcc
-code generation in the caller function enough to cause this:
+After commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments"),
+kexec fails with a kernel panic:
 
-  drivers/iio/adc/qcom-pm8xxx-xoadc.c: In function ‘pm8xxx_xoadc_probe’:
-  drivers/iio/adc/qcom-pm8xxx-xoadc.c:633:8: warning: ‘ch’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-    ret = pm8xxx_read_channel_rsv(adc, ch, AMUX_RSV4,
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-             &read_nomux_rsv4, true);
-             ~~~~~~~~~~~~~~~~~~~~~~~
-  drivers/iio/adc/qcom-pm8xxx-xoadc.c:426:27: note: ‘ch’ was declared here
-    struct pm8xxx_chan_info *ch;
-                             ^~
+kexec_core: Starting new kernel
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v3.0 03/02/2018
+RIP: 0010:0xffffc9000001d000
 
-because gcc for some reason then isn't able to see that the termination
-condition for the "for( )" loop in that function is also the condition
-for returning NULL.
+Call Trace:
+ ? __send_ipi_mask+0x1c6/0x2d0
+ ? hv_send_ipi_mask_allbutself+0x6d/0xb0
+ ? mp_save_irq+0x70/0x70
+ ? __ioapic_read_entry+0x32/0x50
+ ? ioapic_read_entry+0x39/0x50
+ ? clear_IO_APIC_pin+0xb8/0x110
+ ? native_stop_other_cpus+0x6e/0x170
+ ? native_machine_shutdown+0x22/0x40
+ ? kernel_kexec+0x136/0x156
 
-So it's not _actually_ uninitialized, but the function is admittedly
-just unnecessarily oddly written.
+That happens if hypercall based IPIs are used because the hypercall page is
+reset very early upon kexec reboot, but kexec sends IPIs to stop CPUs,
+which invokes the hypercall and dereferences the unusable page.
 
-Simplify and clarify the function, making gcc also see that it always
-returns a valid initialized value.
+To fix his, reset hv_hypercall_pg to NULL before the page is reset to avoid
+any misuse, IPI sending will fall back to the non hypercall based
+method. This only happens on kexec / kdump so just setting the pointer to
+NULL is good enough.
 
-Cc: Joe Perches <joe@perches.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: devel@linuxdriverproject.org
+Link: https://lkml.kernel.org/r/20190306111827.14131-1-kasong@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/qcom-pm8xxx-xoadc.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/x86/hyperv/hv_init.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/qcom-pm8xxx-xoadc.c b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
-index b093ecddf1a8..54db848f0bcd 100644
---- a/drivers/iio/adc/qcom-pm8xxx-xoadc.c
-+++ b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
-@@ -423,18 +423,14 @@ static irqreturn_t pm8xxx_eoc_irq(int irq, void *d)
- static struct pm8xxx_chan_info *
- pm8xxx_get_channel(struct pm8xxx_xoadc *adc, u8 chan)
- {
--	struct pm8xxx_chan_info *ch;
- 	int i;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 20c876c7c5bf..87abd5145cc9 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -387,6 +387,13 @@ void hyperv_cleanup(void)
+ 	/* Reset our OS id */
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
  
- 	for (i = 0; i < adc->nchans; i++) {
--		ch = &adc->chans[i];
-+		struct pm8xxx_chan_info *ch = &adc->chans[i];
- 		if (ch->hwchan->amux_channel == chan)
--			break;
-+			return ch;
- 	}
--	if (i == adc->nchans)
--		return NULL;
--
--	return ch;
-+	return NULL;
- }
- 
- static int pm8xxx_read_channel_rsv(struct pm8xxx_xoadc *adc,
++	/*
++	 * Reset hypercall page reference before reset the page,
++	 * let hypercall operations fail safely rather than
++	 * panic the kernel for using invalid hypercall page
++	 */
++	hv_hypercall_pg = NULL;
++
+ 	/* Reset the hypercall page */
+ 	hypercall_msr.as_uint64 = 0;
+ 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
 -- 
 2.19.1
 
