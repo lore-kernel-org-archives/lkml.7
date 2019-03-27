@@ -2,165 +2,114 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E0BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02027C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C932087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C276E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 01:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="R1p1fRuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbfC0Brh (ORCPT
+        id S1732577AbfC0BsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 21:47:37 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36619 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730441AbfC0Brg (ORCPT
+        Tue, 26 Mar 2019 21:48:18 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:48314 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731934AbfC0BsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 21:47:36 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s15so1409592qtn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 18:47:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l0+FE3R7y4eKhOfGWYrRGcNP1DJMRU69lrfnv9T01WQ=;
-        b=CNm8PzT/DoRYQXj/i0UZTYDH7hwFlxDP78KPxVIzRKKO84lliZ0h941r/Lq3po8gxU
-         67xM+JKpg3XfBzfF21tzzF3O9cGNrdkcKrkI5ir4OnT2AuV5OfqSO7J6CyHEBVbvbQYD
-         4AhQePIgKSUBU19aP6q/M4WNIakEsR2dWrYziE9IHAx6ZDnRKMeSfBg8L9bVQ+A+QzaA
-         UjwOpf56DMjbOmIOXdjgchmOmEWpo0QRtklJFzQyWFjLIGOkgxaWN3zGqXvUDwIhcQMr
-         2/bZKMJdAwH5Iubosr6GQP2k4X88g1ZKiuTSXodPF9K1Ywf4XrGthvr1ktak7M1k5bxI
-         xUMg==
-X-Gm-Message-State: APjAAAXA3MIFh+m2yMyu1p5hRjlN0sKCYcpWnwzRLoPZ9x2Y/y0yfcCr
-        I3nqtR7wKj11AvdaaY9juLLTEg==
-X-Google-Smtp-Source: APXvYqwUl9nDggK/cWu3GjYJTURBKiTm0ezea0atblaMfeYcmQDFnWO1/g+cGSmTE6zhmUBmHKlHaw==
-X-Received: by 2002:ac8:51cd:: with SMTP id d13mr19046824qtn.45.1553651255916;
-        Tue, 26 Mar 2019 18:47:35 -0700 (PDT)
-Received: from ?IPv6:2601:602:9800:dae6::fa4a? ([2601:602:9800:dae6::fa4a])
-        by smtp.gmail.com with ESMTPSA id m41sm3790039qtb.58.2019.03.26.18.47.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 Mar 2019 18:47:35 -0700 (PDT)
-Subject: Re: [PATCH] iwlwifi: mvm: no need to check return value of
- debugfs_create functions
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org
-References: <20190122152151.16139-24-gregkh@linuxfoundation.org>
- <03bb68be-8e42-a463-2d57-3be051dc2016@redhat.com>
- <20190327012600.GA3649@kroah.com>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <5660d50d-6cbf-3b36-6e6c-312b1617ed23@redhat.com>
-Date:   Tue, 26 Mar 2019 18:47:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 26 Mar 2019 21:48:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by chill.innovation.ch (Postfix) with ESMTP id 3862464013F;
+        Tue, 26 Mar 2019 18:48:17 -0700 (PDT)
+X-Virus-Scanned: amavisd-new at 
+Received: from chill.innovation.ch ([127.0.0.1])
+        by localhost (chill.innovation.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id G_IDRkml_2Eo; Tue, 26 Mar 2019 18:48:15 -0700 (PDT)
+From:   =?UTF-8?q?Ronald=20Tschal=C3=A4r?= <ronald@innovation.ch>
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch DBB6E640114
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1553651295;
+        bh=jKJAI4BVg7Agjkv6HfZrBiBPJ9+GI2U7E3AkTvssGmA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=R1p1fRucG2nLlZZHzhy4Ovm2Fb98NXzo3HKFfhJzXL+H5oOBuJa1w8nZhv/RRUFnn
+         DxNHoHJHTbgRKa6HW07gR8K94caP+h9GzRBqm/77+BhTginGSeOR8XLwnld8xw9A6i
+         DB1gK15N5hTtop7/yS8z6b5g4VKuOExtEIFy9vZbfrwpvpHv8dis16s9hHC8+vdSD8
+         r5wHhqpeMlpahP+Kbti29pEmjHlHTrSGKuCJeznC8DJBi4cdMP5Y8MBMGdq8O7ZAEL
+         uzcruqePoCh7xWTdnzE1wymP3pRad9GD7CJOp5bAC2nJIZTcAwWWiNOkOz0O22xoDF
+         WeH/fsSmJmNsA==
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Add Apple SPI keyboard and trackpad driver
+Date:   Tue, 26 Mar 2019 18:48:03 -0700
+Message-Id: <20190327014807.7472-1-ronald@innovation.ch>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190327012600.GA3649@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/19 6:26 PM, Greg Kroah-Hartman wrote:
-> On Tue, Mar 26, 2019 at 04:55:54PM -0700, Laura Abbott wrote:
->> On 1/22/19 7:21 AM, Greg Kroah-Hartman wrote:
->>> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
->>> index 33b0af24a537..c52cdc538678 100644
->>> --- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
->>> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
->>> @@ -1446,9 +1446,8 @@ static ssize_t iwl_dbgfs_quota_min_read(struct file *file,
->>>    #define MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz) \
->>>    	_MVM_DEBUGFS_READ_WRITE_FILE_OPS(name, bufsz, struct ieee80211_vif)
->>>    #define MVM_DEBUGFS_ADD_FILE_VIF(name, parent, mode) do {		\
->>> -		if (!debugfs_create_file(#name, mode, parent, vif,	\
->>> -					 &iwl_dbgfs_##name##_ops))	\
->>> -			goto err;					\
->>> +		debugfs_create_file(#name, mode, parent, vif,		\
->>> +				    &iwl_dbgfs_##name##_ops);		\
->>>    	} while (0)
->>>    MVM_DEBUGFS_READ_FILE_OPS(mac_params);
->>> @@ -1483,12 +1482,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
->>>    	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
->>> -	if (!mvmvif->dbgfs_dir) {
->>> -		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
->>> -			dbgfs_dir);
->>> -		return;
->>> -	}
->>> -
->>>    	if (iwlmvm_mod_params.power_scheme != IWL_POWER_SCHEME_CAM &&
->>>    	    ((vif->type == NL80211_IFTYPE_STATION && !vif->p2p) ||
->>>    	     (vif->type == NL80211_IFTYPE_STATION && vif->p2p)))
->>> @@ -1537,12 +1530,6 @@ void iwl_mvm_vif_dbgfs_register(struct iwl_mvm *mvm, struct ieee80211_vif *vif)
->>>    	mvmvif->dbgfs_slink = debugfs_create_symlink(dbgfs_dir->d_name.name,
->>>    						     mvm->debugfs_dir, buf);
->>> -	if (!mvmvif->dbgfs_slink)
->>> -		IWL_ERR(mvm, "Can't create debugfs symbolic link under %pd\n",
->>> -			dbgfs_dir);
->>> -	return;
->>> -err:
->>> -	IWL_ERR(mvm, "Can't create debugfs entity\n");
->>>    }
->>
->> Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1691034
->> of a crash with 5.0 and the user did a bisect which pointed to ff9fb72bc077
->> ("debugfs: return error values, not NULL") because the error checking is
->> no longer correct in this driver.
->>
->> Based on https://patchwork.kernel.org/patch/10865839/, it looks like
->> this is supposed to go in for 5.2 but this needs to go in now as
->> the error checking is currently broken without it. Can this get queued
->> for Linus so we can get it in 5.0 stable?
-> 
-> That's odd, I can't see how the error checking is wrong here.  If the
-> directory is not created, an error will be returned, which should be
-> able to be handled by debugfs_create_file().
-> 
-> So with this patch does the error go away?
-> 
+This changeset adds a driver for the SPI keyboard and trackpad on recent
+MacBook's and MacBook Pro's. The driver has seen a fair amount of use
+over the last 2 years (basically anybody running linux on these
+machines), with only relatively small changes in the last year or so.
+For those interested, the driver development has been hosted at
+https://github.com/cb22/macbook12-spi-driver/ (as well as my clone at
+https://github.com/roadrunner2/macbook12-spi-driver/).
 
-The full patch didn't apply cleanly and I didn't try to backport it
-for the reporter to test. I was going off of the theory that if the
-patch was there it would fix the problem.
+The first patch is just a placeholder for now and is provided in case
+somebody wants to compile the driver while it's being reviewed here; the
+real patch has been submitted to dri-devel and is being discussed there,
+with the intent/hope that I can get an Ack and permission to merge it
+through the input subsystem tree here as part of this patch series.
 
-What I _think_ is going wrong is dbgfs_dir is actually an errno value:
+The second and third patches add a new dev_print_hex_dump() helper as
+the dev_xxx() analog of print_hex_dump().
 
+The fourth patch finally contains the new applespi driver.
 
-         struct dentry *dbgfs_dir = vif->debugfs_dir;
-         struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
-         char buf[100];
+Changes in v3:
+  Applied all feedback from review by Andy Shevchenko, including:
+  - move dev_print_hex_dump() to driver core
+  - clean up keyboard modifier bits testing/modifying
+  - remove DEV() macro
+  - minor style issues
+  The full set of changes to applespi can be viewed at
+  https://github.com/roadrunner2/macbook12-spi-driver/ as individual
+  commits f832caa..3a6262e in the upstreaming-review branch.
 
-         /*
-          * Check if debugfs directory already exist before creating it.
-          * This may happen when, for example, resetting hw or suspend-resume
-          */
-         if (!dbgfs_dir || mvmvif->dbgfs_dir)
-                 return;
+Ronald Tschalär (4):
+  drm/bridge: sil_sii8620: depend on INPUT instead of selecting it.
+  lib/hexdump.c: factor out generic hexdump formatting for reuse.
+  driver core: add dev_print_hex_dump() logging function.
+  Input: add Apple SPI keyboard and trackpad driver.
 
+ drivers/base/core.c               |   43 +
+ drivers/gpu/drm/bridge/Kconfig    |    2 +-
+ drivers/input/keyboard/Kconfig    |   15 +
+ drivers/input/keyboard/Makefile   |    1 +
+ drivers/input/keyboard/applespi.c | 1988 +++++++++++++++++++++++++++++
+ include/linux/device.h            |   15 +
+ include/linux/printk.h            |   12 +
+ lib/hexdump.c                     |   95 +-
+ 8 files changed, 2146 insertions(+), 25 deletions(-)
+ create mode 100644 drivers/input/keyboard/applespi.c
 
-so this blows up in the snprintf
-
-         snprintf(buf, 100, "../../../%pd3/%pd",
-                  dbgfs_dir,
-                  mvmvif->dbgfs_dir);
-
-Unless I misunderstood what the debugfs error change did. I think this
-also means the if check needs to look for IS_ERR and not just !dbgfs_dir.
-
-Thanks,
-Laura
-
-> strange,
-> 
-> greg k-h
-> 
+-- 
+2.20.1
 
