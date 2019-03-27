@@ -2,149 +2,200 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0126BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75BDC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19642075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA672075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBiu3Qda"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kWGQCLuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732836AbfC0JwB (ORCPT
+        id S1732871AbfC0JwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:52:01 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35800 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfC0Jv7 (ORCPT
+        Wed, 27 Mar 2019 05:52:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38338 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfC0JwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:51:59 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s39so7907625edb.2;
-        Wed, 27 Mar 2019 02:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/5AIoA6ChhwDIegaA+cCOSrOTfzvCLOmDA5uUa6xubw=;
-        b=KBiu3QdalWk+uy2S35xmGZmzR7JkdTt9uB+noCYRIudp6H4Tbobaya+SAq2y57+bue
-         RXET1QkI5YifAHNdOUbIznEQgxDfDvSqRc5cwAjDhFeGepsLiI9DehzRdqnDKPIIj+ba
-         Sa01n2SpNgi2/5BRKFJMmeeO4M6L2odH7GpLPWejxC+5LjUcTtnAfGNqqDK3TTypJzm5
-         A+7g9DcWOhnszQ7QXJ70LIMkyHfF6pBOc89Nyve6MefzoRhWZBMY8f3L/UoYnH5SOAiS
-         z4M49J7WcJxOjA8hiTx6C0xFA4ebO85MfbLnaJqt2yZFLdKSPT6osalW3nJjCU2BslO2
-         CGSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/5AIoA6ChhwDIegaA+cCOSrOTfzvCLOmDA5uUa6xubw=;
-        b=kHKR+RWxF6rM7njetMnMQawZ/7qyVFsoQV7fue7NQuTb1SXozyKRMJJ3N5qjGQiHNM
-         eciGnwEpjGrj4WzPaKxnN8IlBCnI6FufyG/Fjr7CZippUmUz/wPJdbFNwbQH7cb8SKqZ
-         VoSRCMV9u4Ae7KWS4kVyVh449WvLQrscokpn3XzGBD4z/ZzuwvcSoMs80m2p+qfwL2Z1
-         G8OGeB50N2xuPPexywNw1MlueW4fNXbe8kV7gypke2bqp9yQdoa++FZqcTuyZenhbtyw
-         q2PgvPe/QSpp2DVt7EXbz39NBg4O/Ujlu1jRyzMXVrMXSh8vSpV9d6Ah5cLHpgU0RXBQ
-         7cdA==
-X-Gm-Message-State: APjAAAUpVHcpXUMPIYAY8nsh4q5DXUXGcLrK/FF2ath4kt83Mvo4Zq7z
-        Wgw5PM6pZFePGQUeOk3yquNTOPF7IOMnIu3mrIs=
-X-Google-Smtp-Source: APXvYqxja82EKeeVTfP4Uu6LO7CfFfwNHq2zdWAx9rwjiLRuyrD0Ma6yZ5eEmKVebIeER0womJZsFIrFIFaKYIqMn54=
-X-Received: by 2002:a50:aa2e:: with SMTP id o43mr23262618edc.67.1553680317412;
- Wed, 27 Mar 2019 02:51:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190308120141.3698-1-daniel.baluta@nxp.com> <20190308120141.3698-2-daniel.baluta@nxp.com>
- <20190319143139.GA24315@dragon> <f5934d5bca4b9241d0ac84de463fbeed@www.akkea.ca>
-In-Reply-To: <f5934d5bca4b9241d0ac84de463fbeed@www.akkea.ca>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 27 Mar 2019 11:51:45 +0200
-Message-ID: <CAEnQRZD27=jCvGB_Go-niXyEtrFu=MP2Wyvvqcx2CpnQ4Npx-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] arm64: dts: imx8mq: Add SDMA nodes
-To:     Angus Ainslie <angus@akkea.ca>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        baruch@tkos.co.il, Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        ccaione@baylibre.com, Chris Spencer <spencercw@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>, agx@sigxcpu.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Lucas Stach <l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 Mar 2019 05:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=25jiIoMP75VuQY7AxHHjoE81Wj2vmFoM4ekAAjTD+gQ=; b=kWGQCLuFtdH7oTSzgnqVB5RmP
+        YXP20A7blNVO/uNrWsJvDbkWwZDSZeyjPFnIq9kgPVK6YNnvpR9c52CXxbzHOuGrZff1zRDFV5x2a
+        roQT4K9Ze91vFov+SYlWoYbNyIDgxn3daE6vjy+l5KEKj03IcknAvF37WyAcBVPzu3r+ikeiW5ZMD
+        /Clex0vxmxvpH1YW6Vmw+k8XbFWnlD8j/FhG78gd5M6gC8UjJTI6hCKCE1UBQyB63CqGHBB9yPNbq
+        t/FsXZ8QXGPGtXMfWIm2sG/YQNtRxU35NK263T/5q+tOr/+IDv2gMN4n6tY94u9OG0I0+nruMHm1+
+        8S25tdbMQ==;
+Received: from [54.239.6.177] (helo=u3832b3a9db3152.ant.amazon.com)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h95EJ-0006Sa-4u; Wed, 27 Mar 2019 09:52:19 +0000
+Message-ID: <d02a76ff37dc2db153c7b9c4d00a0399f9ac1b47.camel@infradead.org>
+Subject: Re: [PATCH v2] PCI: al: Add Amazon Annapurna Labs PCIe host
+ controller driver
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Jonathan Chocron <jonnyc@amazon.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        vaerov@amazon.com, benh@kernel.crashing.org, alisaidi@amazon.com,
+        zeev@amazon.com, ronenk@amazon.com, barakw@amazon.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Date:   Wed, 27 Mar 2019 09:52:15 +0000
+In-Reply-To: <20190326155837.GA8820@e107981-ln.cambridge.arm.com>
+References: <1553512040-4453-1-git-send-email-jonnyc@amazon.com>
+         <1553594455-30436-1-git-send-email-jonnyc@amazon.com>
+         <20190326121727.GA4171@e107981-ln.cambridge.arm.com>
+         <07838dad0e0cdb14c42080ef19c11829f72c8814.camel@infradead.org>
+         <20190326155837.GA8820@e107981-ln.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-F/WmsPzV8pVAfsLFczu6"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:44 PM Angus Ainslie <angus@akkea.ca> wrote:
->
-> On 2019-03-19 07:31, Shawn Guo wrote:
-> > On Fri, Mar 08, 2019 at 12:02:22PM +0000, Daniel Baluta wrote:
-> >> SDMA1 is part of AIPS-3 region and SDMA2 is part
-> >> of AIPS-1 region.
-> >>
-> >> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >
-> > Reviewed-by tag should go after your SoB, since that's the sequence of
-> > how they come.
-> >
-> >> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> >> [initial submit in i.MX internal tree]
-> >> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> >> [adaptation for linux-next]
-> >
-> > I would see these notes in commit log or even just cover letter.
-> >
-> > Shawn
-> >
-> >> ---
-> >>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
-> >>  1 file changed, 22 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> index 9155bd4784eb..9d48450453fb 100644
-> >> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> >> @@ -234,6 +234,17 @@
-> >>                              status = "disabled";
-> >>                      };
-> >>
-> >> +                    sdma2: sdma@302c0000 {
-> >> +                            compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
-> >> +                            reg = <0x302c0000 0x10000>;
-> >> +                            interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                            clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
-> >> +                                     <&clk IMX8MQ_CLK_SDMA2_ROOT>;
-> >> +                            clock-names = "ipg", "ahb";
-> >> +                            #dma-cells = <3>;
-> >> +                            fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
-> >> +                    };
-> >> +
-> >>                      iomuxc: iomuxc@30330000 {
-> >>                              compatible = "fsl,imx8mq-iomuxc";
-> >>                              reg = <0x30330000 0x10000>;
-> >> @@ -575,6 +586,17 @@
-> >>                              status = "disabled";
-> >>                      };
-> >>
-> >> +                    sdma1: sdma@30bd0000 {
-> >> +                            compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
->
-> There shouldn't be a space in the imx8mq compatible string.
 
-Oh, nice catch. This patch series is already in so care to send a fix?
+--=-F/WmsPzV8pVAfsLFczu6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Otherwise, I will take care of it.
+On Tue, 2019-03-26 at 15:58 +0000, Lorenzo Pieralisi wrote:
+> > We did that internally. You really don't want me telling engineers to
+> > post to the list *first* without running things by me to get the basics
+> > right. Not to start with, at least.
+>=20
+> Hi David,
+>=20
+> I am obviously in favour of internal review and I do not question it was
+> carried out internally, I just kindly ask developers to drop review tags
+> given internally when going to public mailing lists - I understand it is
+> churn for you but I prefer them to be given explicitly.
 
-thanks,
-Daniel.
+Sure, I've provided mine in public now.
+
+I will attempt to remember your preference, although I'm not sure I
+think it's necessary.
+
+What's the failure mode we're protecting against here? That my
+engineers are lying and have *faked* my reviewed-by tag?
+
+Don't you think I'd *eat* them if I ever found that happening?
+
+What's next? That you only accept such tags in signed email, so that
+the dishonest engineer in question can't *fake* an email from me to the
+list? They know I'm afflicted by Exchange so they can always send that
+fake message with a message-id matching another message they know is
+already in my inbox, so Exchange will helpfully discard theirs. :)
+
+--=-F/WmsPzV8pVAfsLFczu6
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTkw
+MzI3MDk1MjE1WjAvBgkqhkiG9w0BCQQxIgQgW5HEqRO3VRggxDYrQkpV/JguAWfoIBWXw+Mt0hiy
+72Ywgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAJwNKx7QqOe4Tw5sPXcOI1M27L53e0UZzOb+sGI8CqGTKyc3g/aE/hpdY5b035jG
+GrwlVNT1CswGEMI1ZuL3RKvZMU3uMlLuveXgHyRJitvvSBeqA9o+89A4hOrgslbrH5vYxukZVR38
+ut0JoPO4IB0M6gEi9o+G4KfOzAqwCxGUwveMxNgBLd+W4tICghCWIb0W/7XiPn9qMT4Qr5nMpjXb
+PKjpM4r8G6VGIaOfID3v/jyiv9tt+gKJnZJ636GwB9ykBRseEkDg+EFlBHEyO/ujph1qVrkVxUI1
++JmK8O0nveVYdGLYn01zm4hCA6lXFzJ60aM7E8iCzB3WMJJX9kcAAAAAAAA=
+
+
+--=-F/WmsPzV8pVAfsLFczu6--
+
