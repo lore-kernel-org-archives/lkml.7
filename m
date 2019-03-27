@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA50C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F63CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1547217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E59217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709955;
-	bh=hKjVv6VHntGbB4pdgikxy5NK6H7Oij6CRbuX/3IyRt0=;
+	s=default; t=1553709959;
+	bh=RjFWTkJ6gpACcsLvmy+kyqlzVKRiTFDE3NNAdDRzJe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZRmcujLcovTvuJZ4efZblGFjib3lJo/WKeKm2DIN5aOjdFy7GSK015omKtaMOIH+I
-	 x3dWMaY2KUUxNxh6Mj3VpdNUhfG2z0h6FBpo6F/OTvTsPc+ouqMa652CZ1V1m+aZWi
-	 OpwvfkWSxGy4iU4iS9YOqWo7UQmuyhIPoTfIazGQ=
+	b=KgJM0B6zHt1kD1EGJnS90ffc5Bfgp8PP258FXh5+PCxc5uBiqztTe7VBQZdfYMOXE
+	 Dlbxf1UJZgdMqLlKRigo61Uf8YV+obFxFrnK8cY1TXqN4B2mKWvx9NO2VXkeLDchYn
+	 CLlRVijQNKLkF81zG3fV+2vNTwnPTxMDCcInAEFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387797AbfC0SFx (ORCPT
+        id S2387817AbfC0SF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731498AbfC0SFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:51 -0400
+        id S2387790AbfC0SFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A852063F;
-        Wed, 27 Mar 2019 18:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE09D217F9;
+        Wed, 27 Mar 2019 18:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709950;
-        bh=hKjVv6VHntGbB4pdgikxy5NK6H7Oij6CRbuX/3IyRt0=;
+        s=default; t=1553709952;
+        bh=RjFWTkJ6gpACcsLvmy+kyqlzVKRiTFDE3NNAdDRzJe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsmZa/lK1C5h5NnCH3p9ssK+QGSKp7EKJ0Bw4dKZOHQoFR7WXMYegKEqot/tm8v+W
-         yMoiFpj/qjipBKB+JQxhl/IVmZruIKzvmI3SNmxmAl5WXwXYy0zLGGWSA3H75gVRQz
-         uHjvJ4L/jBHVXvZ0m3+n68Ji2KMtpb2tJIM/u/Hg=
+        b=jDWI3bFaZ1WSNXvfc83hwzAuKjhu+/63MKSe0/TkawbShUWzPityAHZhRt6HZJLGu
+         JqAcC55fSf9X8VdouQB5I+EbF+1PL9ncBs+xL09sTPDOX9aQq5fxAMTGscHJnwQRXW
+         6uvicYhUCX7CTexhHO2ppSp7TM/Acnc5bp04oprQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 126/262] media: rockchip/vpu: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 13:59:41 -0400
-Message-Id: <20190327180158.10245-126-sashal@kernel.org>
+Cc:     Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 128/262] Bluetooth: hci_ldisc: Initialize hci_dev before open()
+Date:   Wed, 27 Mar 2019 13:59:43 -0400
+Message-Id: <20190327180158.10245-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,100 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-[ Upstream commit 29701c3612fa025d5e8dc64c7a4ae8dc4763912e ]
+[ Upstream commit 32a7b4cbe93b0a0ef7e63d31ca69ce54736c4412 ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+The hci_dev struct hdev is referenced in work queues and timers started
+by open() in some protocols. This creates a race between the
+initialization function and the work or timer which can result hdev
+being dereferenced while it is still null.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+The syzbot report contains a reliable reproducer which causes a null
+pointer dereference of hdev in hci_uart_write_work() by making the
+memory allocation for hdev fail.
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+To fix this, ensure hdev is valid from before calling a protocol's
+open() until after calling a protocol's close().
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: syzbot+257790c15bcdef6fe00c@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c | 6 +++---
- drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/bluetooth/hci_ldisc.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c b/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
-index 5282236d1bb1..06daea66fb49 100644
---- a/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
-+++ b/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
-@@ -80,7 +80,7 @@ rk3288_vpu_jpeg_enc_set_qtable(struct rockchip_vpu_dev *vpu,
- void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index fbf7b4df23ab..4918fefc4a6f 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -207,11 +207,11 @@ void hci_uart_init_work(struct work_struct *work)
+ 	err = hci_register_dev(hu->hdev);
+ 	if (err < 0) {
+ 		BT_ERR("Can't register HCI device");
++		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
++		hu->proto->close(hu);
+ 		hdev = hu->hdev;
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+-		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		hu->proto->close(hu);
+ 		return;
+ 	}
+ 
+@@ -616,6 +616,7 @@ static void hci_uart_tty_receive(struct tty_struct *tty, const u8 *data,
+ static int hci_uart_register_dev(struct hci_uart *hu)
  {
- 	struct rockchip_vpu_dev *vpu = ctx->dev;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct rockchip_vpu_jpeg_ctx jpeg_ctx;
- 	u32 reg;
+ 	struct hci_dev *hdev;
++	int err;
  
-@@ -88,7 +88,7 @@ void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+ 	BT_DBG("");
  
- 	memset(&jpeg_ctx, 0, sizeof(jpeg_ctx));
--	jpeg_ctx.buffer = vb2_plane_vaddr(dst_buf, 0);
-+	jpeg_ctx.buffer = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
- 	jpeg_ctx.width = ctx->dst_fmt.width;
- 	jpeg_ctx.height = ctx->dst_fmt.height;
- 	jpeg_ctx.quality = ctx->jpeg_quality;
-@@ -99,7 +99,7 @@ void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
- 			   VEPU_REG_ENC_CTRL);
+@@ -659,11 +660,22 @@ static int hci_uart_register_dev(struct hci_uart *hu)
+ 	else
+ 		hdev->dev_type = HCI_PRIMARY;
  
- 	rk3288_vpu_set_src_img_ctrl(vpu, ctx);
--	rk3288_vpu_jpeg_enc_set_buffers(vpu, ctx, src_buf);
-+	rk3288_vpu_jpeg_enc_set_buffers(vpu, ctx, &src_buf->vb2_buf);
- 	rk3288_vpu_jpeg_enc_set_qtable(vpu,
- 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 0),
- 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 1));
-diff --git a/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c b/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
-index dbc86d95fe3b..3d438797692e 100644
---- a/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
-+++ b/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
-@@ -111,7 +111,7 @@ rk3399_vpu_jpeg_enc_set_qtable(struct rockchip_vpu_dev *vpu,
- void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
- {
- 	struct rockchip_vpu_dev *vpu = ctx->dev;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct rockchip_vpu_jpeg_ctx jpeg_ctx;
- 	u32 reg;
++	/* Only call open() for the protocol after hdev is fully initialized as
++	 * open() (or a timer/workqueue it starts) may attempt to reference it.
++	 */
++	err = hu->proto->open(hu);
++	if (err) {
++		hu->hdev = NULL;
++		hci_free_dev(hdev);
++		return err;
++	}
++
+ 	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+ 		return 0;
  
-@@ -119,7 +119,7 @@ void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+ 	if (hci_register_dev(hdev) < 0) {
+ 		BT_ERR("Can't register HCI device");
++		hu->proto->close(hu);
+ 		hu->hdev = NULL;
+ 		hci_free_dev(hdev);
+ 		return -ENODEV;
+@@ -683,17 +695,12 @@ static int hci_uart_set_proto(struct hci_uart *hu, int id)
+ 	if (!p)
+ 		return -EPROTONOSUPPORT;
  
- 	memset(&jpeg_ctx, 0, sizeof(jpeg_ctx));
--	jpeg_ctx.buffer = vb2_plane_vaddr(dst_buf, 0);
-+	jpeg_ctx.buffer = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
- 	jpeg_ctx.width = ctx->dst_fmt.width;
- 	jpeg_ctx.height = ctx->dst_fmt.height;
- 	jpeg_ctx.quality = ctx->jpeg_quality;
-@@ -130,7 +130,7 @@ void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
- 			   VEPU_REG_ENCODE_START);
+-	err = p->open(hu);
+-	if (err)
+-		return err;
+-
+ 	hu->proto = p;
+ 	set_bit(HCI_UART_PROTO_READY, &hu->flags);
  
- 	rk3399_vpu_set_src_img_ctrl(vpu, ctx);
--	rk3399_vpu_jpeg_enc_set_buffers(vpu, ctx, src_buf);
-+	rk3399_vpu_jpeg_enc_set_buffers(vpu, ctx, &src_buf->vb2_buf);
- 	rk3399_vpu_jpeg_enc_set_qtable(vpu,
- 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 0),
- 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 1));
+ 	err = hci_uart_register_dev(hu);
+ 	if (err) {
+ 		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-		p->close(hu);
+ 		return err;
+ 	}
+ 
 -- 
 2.19.1
 
