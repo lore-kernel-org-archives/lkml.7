@@ -2,605 +2,188 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A11AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08767C10F05
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CB02075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08192075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 02:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="m833RcT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732359AbfC0CKy convert rfc822-to-8bit (ORCPT
+        id S1732567AbfC0CLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 22:10:54 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35722 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730441AbfC0CKx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 22:10:53 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 229B212F7A9FF;
-        Tue, 26 Mar 2019 19:10:52 -0700 (PDT)
-Date:   Tue, 26 Mar 2019 19:10:49 -0700 (PDT)
-Message-Id: <20190326.191049.35928665035979956.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 26 Mar 2019 19:10:52 -0700 (PDT)
+        Tue, 26 Mar 2019 22:11:17 -0400
+Received: from mail-eopbgr40086.outbound.protection.outlook.com ([40.107.4.86]:39241
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730441AbfC0CLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 22:11:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LjG9eQjhJkxY8MRuuKAF91SlkJUcRuJFemIgcjm4nE4=;
+ b=m833RcT/Oz9YARZTSw0bi7I5v9EHUq28uT/cldch3P7ZovNQ6FxWwzLccIBhbtA1Y4i9IAFjpjyqyoGAN7+Zzpl1wZvVDBW+IIDLbMH3Z26nYh1E6F3nqoFzBXSH7NIOLMlRI6YLLKQ3nilE+wpKV+W3JEfDSsXe0y0qGEO3iZ0=
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
+ AM6PR04MB4008.eurprd04.prod.outlook.com (52.135.160.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 02:11:13 +0000
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7]) by AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7%2]) with mapi id 15.20.1750.014; Wed, 27 Mar 2019
+ 02:11:13 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Topic: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Thread-Index: AQHU1+z8oUtBku7HKUGEtP8v8oioHaYeRVIAgACOOoA=
+Date:   Wed, 27 Mar 2019 02:11:13 +0000
+Message-ID: <AM6PR04MB5781A99C7DD26F525E7E9A1C84580@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190326173730.GC10666@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190326173730.GC10666@e107981-ln.cambridge.arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a576d353-908e-4979-83eb-08d6b2597cb6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4008;
+x-ms-traffictypediagnostic: AM6PR04MB4008:
+x-microsoft-antispam-prvs: <AM6PR04MB4008A5B08D12AC4A5E6DCEF984580@AM6PR04MB4008.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(136003)(376002)(346002)(39860400002)(396003)(366004)(189003)(13464003)(199004)(186003)(26005)(5660300002)(86362001)(99286004)(7696005)(476003)(55016002)(14454004)(76176011)(229853002)(9686003)(68736007)(53546011)(102836004)(446003)(11346002)(6506007)(486006)(52536014)(71190400001)(71200400001)(6116002)(6916009)(2906002)(7416002)(3846002)(7736002)(8936002)(305945005)(8676002)(81156014)(81166006)(74316002)(14444005)(66066001)(256004)(105586002)(106356001)(316002)(6246003)(53936002)(4326008)(54906003)(33656002)(6436002)(25786009)(478600001)(97736004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4008;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e2TyfGea+96Kh77MnCqbYLXKBRyqN6j5SBfpOAWUivjjhpKFhVkTTNb49ONSbs7ApmMI+ZMr1eJQo8136uxX05q15tO9PbdL0KqfYqgcWYHGW0Z94HoIr6kGGglHU/vvxfosedGC8f98M5iQZxbl4YG2muerO6n8iAsvfzeyMu6Cqpjeg9kbkt4ksoTt82utFsfUAnjgzU5+T6yVL2DqyUfVNJxNm11V5vj9xA9u4TPKr2/bNFJsSwXM/6rer34D0agFY1MC9T81WfwHgptwQEbT+FN1rWzNSxDUI3V6M7AWAL6KO/EmxAzyssgTFl67BByC3Fs6OMyTlyPWQ33WSTtYuS/TyZvsBwuoydM7L3rCsgNSeRSZqzCzth4OedYsvTaNj2uVijTJEMVsEejsPOg69a8YUt0tj1+HD46Kft8=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a576d353-908e-4979-83eb-08d6b2597cb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 02:11:13.3243
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Fixes here and there, a couple new device IDs, as usual:
-
-1) Fix BQL race in dpaa2-eth driver, from Ioana Ciornei.
-
-2) Fix 64-bit division in iwlwifi, from Arnd Bergmann.
-
-3) Fix documentation for some eBPF helpers, from Quentin Monnet.
-
-4) Some UAPI bpf header sync with tools, also from Quentin Monnet.
-
-5) Set descriptor ownership bit at the right time for jumbo frames
-   in stmmac driver, from Aaro Koskinen.
-
-6) Set IFF_UP properly in tun driver, from Eric Dumazet.
-
-7) Fix load/store doubleword instruction generation in powerpc eBPF
-   JIT, from Naveen N. Rao.
-
-8) nla_nest_start() return value checks all over, from Kangjie Lu.
-
-9) Fix asoc_id handling in SCTP after the SCTP_*_ASSOC changes this
-   merge window.  From Marcelo Ricardo Leitner and Xin Long.
-
-10) Fix memory corruption with large MTUs in stmmac, from Aaro
-    Koskinen.
-
-11) Do not use ipv4 header for ipv6 flows in TCP and DCCP, from Eric
-    Dumazet.
-
-12) Fix topology subscription cancellation in tipc, from Erik Hugne.
-
-13) Memory leak in genetlink error path, from Yue Haibing.
-
-14) Valid control actions properly in packet scheduler, from Davide
-    Caratti.
-
-15) Even if we get EEXIST, we still need to rehash if a shrink was
-    delayed.  From Herbert Xu.
-
-16) Fix interrupt mask handling in interrupt handler of r8169, from
-    Heiner Kallweit.
-
-17) Fix leak in ehea driver, from Wen Yang.
-
-Please pull, thanks a lot.
-
-The following changes since commit f261c4e529dac5608a604d3dd3ae1cd2adf23c89:
-
-  Merge branch 'akpm' (patches from Andrew) (2019-03-14 15:10:10 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
-
-for you to fetch changes up to 8c838f53e149871561a9261ac768a9c7071b43d0:
-
-  dpaa2-eth: fix race condition with bql frame accounting (2019-03-26 11:43:49 -0700)
-
-----------------------------------------------------------------
-Aaro Koskinen (3):
-      net: stmmac: don't set own bit too early for jumbo frames
-      net: stmmac: fix jumbo frame sending with non-linear skbs
-      net: stmmac: fix memory corruption with large MTUs
-
-Aditya Pakki (2):
-      qlcnic: Avoid potential NULL pointer dereference
-      nfc: Fix to check for kmemdup failure
-
-Alexei Starovoitov (4):
-      Merge branch 'fix-fullsock-access-after-bpf_sk_release'
-      Merge branch 'fix-fwd-enum-resolution'
-      Merge branch 'fix-bpf-docs'
-      Merge branch 'libbpf-fixup'
-
-Alin Nastac (1):
-      netfilter: nf_conntrack_sip: remove direct dependency on IPv6
-
-Andrii Nakryiko (3):
-      libbpf: handle BTF parsing and loading properly
-      btf: resolve enum fwds in btf_dedup
-      selftests/bpf: add fwd enum resolution test for btf_dedup
-
-Arnd Bergmann (6):
-      iwlwifi: fix 64-bit division
-      netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
-      mlxsw: core: mlxsw: core: avoid -Wint-in-bool-context warning
-      3c515: fix integer overflow warning
-      rxrpc: avoid clang -Wuninitialized warning
-      chelsio: use BUG() instead of BUG_ON(1)
-
-Bjorn Helgaas (1):
-      mISDN: hfcpci: Test both vendor & device ID for Digium HFC4S
-
-Björn Töpel (1):
-      xsk: fix umem memory leak on cleanup
-
-Christian Lamparter (4):
-      dt-bindings: net: dsa: qca8k: fix example
-      dt-bindings: net: dsa: qca8k: support internal mdio-bus
-      net: dsa: qca8k: remove leftover phy accessors
-      net: dsa: qca8k: extend slave-bus implementations
-
-Christoph Paasch (1):
-      net/packet: Set __GFP_NOWARN upon allocation in alloc_pg_vec
-
-Colin Ian King (2):
-      drivers: net: atp: fix various indentation issues
-      net: sis900: fix indentation issues, remove some spaces
-
-Dan Murphy (1):
-      net: phy: Add DP83825I to the DP83822 driver
-
-Daniel Borkmann (2):
-      bpf, libbpf: fix version info and add it to shared object
-      bpf, libbpf: clarify bump in libbpf version info
-
-David S. Miller (9):
-      Merge git://git.kernel.org/.../bpf/bpf
-      Merge branch 'sctp-fix-ignoring-asoc_id-for-tcp-style-sockets-on-some-setsockopts'
-      Merge branch 's390-qeth-fixes'
-      Merge branch 'ieee802154-for-davem-2019-03-19' of git://git.kernel.org/.../sschmidt/wpan
-      Merge tag 'wireless-drivers-for-davem-2019-03-19' of git://git.kernel.org/.../kvalo/wireless-drivers
-      Merge branch 'ks8851-fixes'
-      Merge git://git.kernel.org/.../pablo/nf
-      Merge branch 'net-sched-validate-the-control-action-with-all-the-other-parameters'
-      Merge git://git.kernel.org/.../bpf/bpf
-
-Davide Caratti (18):
-      net/sched: prepare TC actions to properly validate the control action
-      net/sched: act_bpf: validate the control action inside init()
-      net/sched: act_csum: validate the control action inside init()
-      net/sched: act_gact: validate the control action inside init()
-      net/sched: act_ife: validate the control action inside init()
-      net/sched: act_mirred: validate the control action inside init()
-      net/sched: act_connmark: validate the control action inside init()
-      net/sched: act_nat: validate the control action inside init()
-      net/sched: act_pedit: validate the control action inside init()
-      net/sched: act_police: validate the control action inside init()
-      net/sched: act_sample: validate the control action inside init()
-      net/sched: act_simple: validate the control action inside init()
-      net/sched: act_skbedit: validate the control action inside init()
-      net/sched: act_skbmod: validate the control action inside init()
-      net/sched: act_tunnel_key: validate the control action inside init()
-      net/sched: act_vlan: validate the control action inside init()
-      net/sched: don't dereference a->goto_chain to read the chain index
-      net/sched: let actions use RCU to access 'goto_chain'
-
-Dmitry Bezrukov (1):
-      net: usb: aqc111: Extend HWID table by QNAP device
-
-Dmitry Bogdanov (1):
-      net: aquantia: fix rx checksum offload for UDP/TCP over IPv6
-
-Eric Dumazet (5):
-      tun: properly test for IFF_UP
-      tun: add a missing rcu_read_unlock() in error path
-      net: rose: fix a possible stack overflow
-      tcp: do not use ipv6 header for ipv4 flow
-      dccp: do not use ipv6 header for ipv4 flow
-
-Erik Hugne (2):
-      tipc: allow service ranges to be connect()'ed on RDM/DGRAM
-      tipc: fix cancellation of topology subscriptions
-
-Felix Fietkau (16):
-      mt76: rewrite dma descriptor base and ring size on queue reset
-      mt76: mt76x02: when setting a key, use PN from mac80211
-      mt76: mt76x2: implement full device restart on watchdog reset
-      mt76: mt76x02: only update the base mac address if necessary
-      mt76: mt76x02: reduce false positives in ED/CCA tx blocking
-      mt76: mt7603: fix tx status HT rate validation
-      mt76: mt76x2: fix external LNA gain settings
-      mt76: mt76x2: fix 2.4 GHz channel gain settings
-      mt76: mt7603: clear ps filtering mode before releasing buffered frames
-      mt76: mt7603: fix up hardware queue index for PS filtered packets
-      mt76: mt7603: notify mac80211 about buffered frames in ps queue
-      mt76: mt7603: clear the service period on releasing PS filtered packets
-      mt76: when releasing PS frames, end the service period if no frame was found
-      mt76: mt76x02: disable ED/CCA by default
-      mt76: mt7603: set moredata flag when queueing ps-filtered packets
-      mt76: mt7603: use the correct hweight8() function
-
-Finn Thain (1):
-      mac8390: Fix mmio access size probe
-
-Florian Fainelli (2):
-      Documentation: networking: Update netdev-FAQ regarding patches
-      net: phy: Re-parent menus for MDIO bus drivers correctly
-
-Harini Katakam (1):
-      net: macb: Add null check for PCLK and HCLK
-
-Heiner Kallweit (3):
-      r8169: don't read interrupt mask register in interrupt handler
-      r8169: fix cable re-plugging issue
-      net: phy: don't clear BMCR in genphy_soft_reset
-
-Herbert Xu (1):
-      rhashtable: Still do rehash when we get EEXIST
-
-Ioana Ciocoi Radulescu (1):
-      dpaa2-eth: Fix possible access beyond end of array
-
-Ioana Ciornei (1):
-      dpaa2-eth: fix race condition with bql frame accounting
-
-Jakub Kicinski (1):
-      bpf: verifier: propagate liveness on all frames
-
-Jerome Brunet (1):
-      net: phy: meson-gxl: fix interrupt support
-
-Jiri Pirko (1):
-      net: devlink: skip info_get op call if it is not defined in dumpit
-
-John Hurley (1):
-      net: sched: fix cleanup NULL pointer exception in act_mirr
-
-Jon Maloy (1):
-      tipc: tipc clang warning
-
-Julian Wiedmann (3):
-      s390/qeth: don't erase configuration while probing
-      s390/qeth: fix race when initializing the IP address table
-      s390/qeth: be drop monitor friendly
-
-Kalle Valo (1):
-      Merge tag 'mt76-for-kvalo-2019-03-07' of https://github.com/nbd168/wireless
-
-Kangjie Lu (8):
-      net: ieee802154: fix a potential NULL pointer dereference
-      net: strparser: fix a missing check for create_singlethread_workqueue
-      net: openvswitch: fix a NULL pointer dereference
-      net: openvswitch: fix missing checks for nla_nest_start
-      net: ncsi: fix a missing check for nla_nest_start
-      net: tipc: fix a missing check of nla_nest_start
-      net: tipc: fix a missing check for nla_nest_start
-      netfilter: ip6t_srh: fix NULL pointer dereferences
-
-Leslie Monis (1):
-      net: sched: Kconfig: update reference link for PIE
-
-Li RongQing (1):
-      ieee802154: hwsim: propagate genlmsg_reply return code
-
-Lorenzo Bianconi (3):
-      mt76: introduce q->stopped parameter
-      mt76x2u: remove duplicated entry in mt76x2u_device_table
-      mt76: fix schedule while atomic in mt76x02_reset_state
-
-Lukas Wunner (6):
-      net: ks8851: Dequeue RX packets explicitly
-      net: ks8851: Reassert reset pin if chip ID check fails
-      net: ks8851: Delay requesting IRQ until opened
-      net: ks8851: Set initial carrier state to down
-      net: ks8851: Fix register macro misnomers
-      net: ks8851: Deduplicate register macros
-
-Magnus Karlsson (1):
-      libbpf: fix to reject unknown flags in xsk_socket__create()
-
-Marcelo Ricardo Leitner (1):
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_DEFAULT_SEND_PARAM sockopt
-
-Martin KaFai Lau (6):
-      bpf: Fix bpf_tcp_sock and bpf_sk_fullsock issue related to bpf_sk_release
-      bpf: Add bpf_get_listener_sock(struct bpf_sock *sk) helper
-      bpf: Sync bpf.h to tools/
-      bpf: Test ref release issue in bpf_tcp_sock and bpf_sk_fullsock
-      bpf: Add an example for bpf_get_listener_sock
-      bpf: Only print ref_obj_id for refcounted reg
-
-Martynas Pumputis (1):
-      bpf: Try harder when allocating memory for large maps
-
-Matteo Croce (1):
-      gtp: change NET_UDP_TUNNEL dependency to select
-
-Maxime Chevallier (1):
-      packets: Always register packet sk in the same order
-
-Naveen N. Rao (1):
-      powerpc: bpf: Fix generation of load/store DW instructions
-
-Pablo Neira Ayuso (4):
-      netfilter: nft_set_rbtree: check for inactive element after flag mismatch
-      netfilter: nf_tables: bogus EBUSY in helper removal from transaction
-      netfilter: nft_redir: fix module autoload with ip4
-      netfilter: nf_flowtable: remove duplicated transition in diagram
-
-Pedro Tammela (1):
-      net: add documentation to socket.c
-
-Quentin Monnet (3):
-      bpf: fix documentation for eBPF helpers
-      bpf: add documentation for helpers bpf_spin_lock(), bpf_spin_unlock()
-      tools: bpf: synchronise BPF UAPI header with tools
-
-Randy Dunlap (1):
-      networking: fix snmp_counter.rst Doc. Warnings
-
-Stanislaw Gruszka (4):
-      mt76x02: fix hdr pointer in write txwi for USB
-      mt7601u: check chip version on probe
-      mt76x02u: check chip version on probe
-      mt76x02: do not enable RTS/CTS by default
-
-Stefan Schmidt (1):
-      Merge remote-tracking branch 'net/master'
-
-Taehee Yoo (1):
-      netfilter: nf_tables: add missing ->release_ops() in error path of newrule()
-
-Tobias Klauser (1):
-      doc: fix link to MSG_ZEROCOPY patchset
-
-Toke Høiland-Jørgensen (1):
-      sch_cake: Interpret fwmark parameter as a bitmask
-
-Vinay K Nallamothu (1):
-      mpls: Fix 6PE forwarding
-
-Vladimir Oltean (1):
-      net: phy: bcm54xx: Encode link speed and activity into LEDs
-
-Wang Hai (1):
-      net-sysfs: Fix memory leak in netdev_register_kobject
-
-Wei Yongjun (1):
-      mt76: fix return value check in mt76_wmac_probe()
-
-Wen Yang (3):
-      net: xilinx: fix possible object reference leak
-      net: ibm: fix possible object reference leak
-      net: ethernet: ti: fix possible object reference leak
-
-Xin Long (18):
-      netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
-      sctp: get sctphdr by offset in sctp_compute_cksum
-      sctp: not copy sctp_sock pd_lobby in sctp_copy_descendant
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_DELAYED_SACK sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_DEFAULT_SNDINFO sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_CONTEXT sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_MAX_BURST sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_AUTH_KEY sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_AUTH_ACTIVE_KEY sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_AUTH_DELETE_KEY sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_AUTH_DEACTIVATE_KEY sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_DEFAULT_PRINFO sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_ENABLE_STREAM_RESET sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_EVENT sockopt
-      sctp: fix ignoring asoc_id for tcp-style sockets on SCTP_STREAM_SCHEDULER sockopt
-      ipv6: make ip6_create_rt_rcu return ip6_null_entry instead of NULL
-      sctp: use memdup_user instead of vmemdup_user
-      tipc: change to check tipc_own_id to return in tipc_net_stop
-
-Xu Yu (1):
-      bpf: do not restore dst_reg when cur_state is freed
-
-Yonghong Song (1):
-      selftests/bpf: fix segfault of test_progs when prog loading failed
-
-Yoshiki Komachi (1):
-      af_packet: fix the tx skb protocol in raw sockets with ETH_P_ALL
-
-YueHaibing (3):
-      appletalk: Fix potential NULL pointer dereference in unregister_snap_client
-      net-sysfs: call dev_hold if kobject_init_and_add success
-      genetlink: Fix a memory leak on error path
-
-Yunsheng Lin (1):
-      net: hns3: fix for not calculating tx bd num correctly
-
-Zhiqiang Liu (1):
-      vxlan: Don't call gro_cells_destroy() before device is unregistered
-
- Documentation/devicetree/bindings/net/dsa/qca8k.txt                 |  73 ++++++++++++++++--
- Documentation/networking/msg_zerocopy.rst                           |   2 +-
- Documentation/networking/netdev-FAQ.rst                             |  13 ++++
- Documentation/networking/nf_flowtable.txt                           |   8 +-
- Documentation/networking/snmp_counter.rst                           |  12 ++-
- arch/powerpc/include/asm/ppc-opcode.h                               |   2 +
- arch/powerpc/net/bpf_jit.h                                          |  17 ++--
- arch/powerpc/net/bpf_jit32.h                                        |   4 +
- arch/powerpc/net/bpf_jit64.h                                        |  20 +++++
- arch/powerpc/net/bpf_jit_comp64.c                                   |  12 +--
- drivers/isdn/hardware/mISDN/hfcmulti.c                              |   3 +-
- drivers/net/Kconfig                                                 |   4 +-
- drivers/net/dsa/qca8k.c                                             | 174 ++++++++++++++++++++++++++++++++++++-----
- drivers/net/dsa/qca8k.h                                             |  13 ++++
- drivers/net/ethernet/3com/3c515.c                                   |   2 +-
- drivers/net/ethernet/8390/mac8390.c                                 |  19 +++--
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c                    |   5 +-
- drivers/net/ethernet/cadence/macb_main.c                            |  10 ++-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c                  |   2 +-
- drivers/net/ethernet/chelsio/cxgb4/sge.c                            |   2 +-
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c                    |  15 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c                     |  13 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h                     |   1 -
- drivers/net/ethernet/ibm/ehea/ehea_main.c                           |   1 +
- drivers/net/ethernet/mellanox/mlxsw/core_env.c                      |   2 +-
- drivers/net/ethernet/micrel/ks8851.c                                |  42 +++++-----
- drivers/net/ethernet/micrel/ks8851.h                                |  93 +++++++++++-----------
- drivers/net/ethernet/micrel/ks8851_mll.c                            | 317 ++-------------------------------------------------------------------------
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c                 |   2 +
- drivers/net/ethernet/realtek/atp.c                                  |   2 +-
- drivers/net/ethernet/realtek/r8169.c                                |   8 +-
- drivers/net/ethernet/sis/sis900.c                                   |  10 +--
- drivers/net/ethernet/stmicro/stmmac/ring_mode.c                     |  13 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c                   |  14 ++--
- drivers/net/ethernet/ti/netcp_ethss.c                               |   8 +-
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c                   |   2 +
- drivers/net/ieee802154/adf7242.c                                    |   4 +
- drivers/net/ieee802154/mac802154_hwsim.c                            |   2 +-
- drivers/net/phy/Kconfig                                             |   3 +
- drivers/net/phy/broadcom.c                                          |  13 ++++
- drivers/net/phy/dp83822.c                                           |  34 ++++----
- drivers/net/phy/meson-gxl.c                                         |   6 ++
- drivers/net/phy/phy_device.c                                        |   2 +-
- drivers/net/tun.c                                                   |  16 +++-
- drivers/net/usb/aqc111.c                                            |  15 ++++
- drivers/net/usb/cdc_ether.c                                         |   8 ++
- drivers/net/vxlan.c                                                 |   4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c              |   4 +-
- drivers/net/wireless/mediatek/mt76/dma.c                            |   7 +-
- drivers/net/wireless/mediatek/mt76/mac80211.c                       |  18 +++--
- drivers/net/wireless/mediatek/mt76/mt76.h                           |   4 +
- drivers/net/wireless/mediatek/mt76/mt7603/beacon.c                  |   3 +-
- drivers/net/wireless/mediatek/mt76/mt7603/dma.c                     |  17 +++-
- drivers/net/wireless/mediatek/mt76/mt7603/init.c                    |   2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c                     |   2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/main.c                    |  16 ++++
- drivers/net/wireless/mediatek/mt76/mt7603/mcu.c                     |   2 +-
- drivers/net/wireless/mediatek/mt76/mt7603/soc.c                     |   4 +-
- drivers/net/wireless/mediatek/mt76/mt76x0/initvals.h                |   2 +-
- drivers/net/wireless/mediatek/mt76/mt76x0/usb.c                     |  10 ++-
- drivers/net/wireless/mediatek/mt76/mt76x02.h                        |  11 +++
- drivers/net/wireless/mediatek/mt76/mt76x02_debugfs.c                |  27 +++++++
- drivers/net/wireless/mediatek/mt76/mt76x02_dfs.c                    |   3 +-
- drivers/net/wireless/mediatek/mt76/mt76x02_mac.c                    |  67 ++++++++++++++--
- drivers/net/wireless/mediatek/mt76/mt76x02_mac.h                    |   2 +
- drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c                   |  82 ++++++++++++++++++--
- drivers/net/wireless/mediatek/mt76/mt76x02_phy.c                    |   2 +
- drivers/net/wireless/mediatek/mt76/mt76x02_usb_core.c               |   3 +-
- drivers/net/wireless/mediatek/mt76/mt76x02_util.c                   |  14 +++-
- drivers/net/wireless/mediatek/mt76/mt76x2/init.c                    |   2 +-
- drivers/net/wireless/mediatek/mt76/mt76x2/mt76x2.h                  |   1 +
- drivers/net/wireless/mediatek/mt76/mt76x2/pci_init.c                |   2 +-
- drivers/net/wireless/mediatek/mt76/mt76x2/pci_mcu.c                 |  21 +++++
- drivers/net/wireless/mediatek/mt76/mt76x2/phy.c                     |  30 ++++++--
- drivers/net/wireless/mediatek/mt76/mt76x2/usb.c                     |   7 +-
- drivers/net/wireless/mediatek/mt76/mt76x2/usb_mac.c                 |   1 -
- drivers/net/wireless/mediatek/mt76/tx.c                             |  11 ++-
- drivers/net/wireless/mediatek/mt76/usb.c                            |   6 +-
- drivers/net/wireless/mediatek/mt7601u/usb.c                         |   4 +
- drivers/s390/net/qeth_core_main.c                                   |   5 +-
- drivers/s390/net/qeth_l2_main.c                                     |   7 +-
- drivers/s390/net/qeth_l3_main.c                                     |   8 +-
- include/linux/atalk.h                                               |   2 +-
- include/linux/bpf.h                                                 |   1 -
- include/linux/bpf_verifier.h                                        |  40 ++++++++++
- include/linux/brcmphy.h                                             |  16 ++++
- include/linux/net.h                                                 |   6 ++
- include/linux/socket.h                                              |  12 +--
- include/net/act_api.h                                               |   9 ++-
- include/net/sch_generic.h                                           |   1 +
- include/net/sctp/checksum.h                                         |   2 +-
- include/net/sock.h                                                  |   6 ++
- include/net/tc_act/tc_gact.h                                        |   2 +-
- include/net/xdp_sock.h                                              |   1 -
- include/uapi/linux/bpf.h                                            | 188 +++++++++++++++++++++++++++++---------------
- kernel/bpf/syscall.c                                                |  22 ++++--
- kernel/bpf/verifier.c                                               | 154 +++++++++++++++++++++---------------
- lib/rhashtable.c                                                    |   8 +-
- net/appletalk/aarp.c                                                |  15 +++-
- net/appletalk/ddp.c                                                 |  20 +++--
- net/bridge/br_netfilter_hooks.c                                     |   1 +
- net/bridge/br_netfilter_ipv6.c                                      |   2 +
- net/core/devlink.c                                                  |   5 ++
- net/core/filter.c                                                   |  27 +++++--
- net/core/net-sysfs.c                                                |  20 +++--
- net/dccp/ipv6.c                                                     |   4 +-
- net/ipv6/netfilter/ip6t_srh.c                                       |   6 ++
- net/ipv6/route.c                                                    |  18 +++--
- net/ipv6/tcp_ipv6.c                                                 |   8 +-
- net/mpls/mpls_iptunnel.c                                            |  12 ++-
- net/ncsi/ncsi-netlink.c                                             |   4 +
- net/netfilter/Kconfig                                               |   1 +
- net/netfilter/nf_conntrack_sip.c                                    |  37 ++++-----
- net/netfilter/nf_tables_api.c                                       |   5 +-
- net/netfilter/nft_objref.c                                          |  19 ++++-
- net/netfilter/nft_redir.c                                           |   2 +-
- net/netfilter/nft_set_rbtree.c                                      |   7 +-
- net/netlink/genetlink.c                                             |   3 +-
- net/nfc/llcp_sock.c                                                 |   9 ++-
- net/openvswitch/datapath.c                                          |  12 +++
- net/packet/af_packet.c                                              |   7 +-
- net/rose/rose_subr.c                                                |  21 ++---
- net/rxrpc/output.c                                                  |  11 ++-
- net/sched/Kconfig                                                   |   3 +-
- net/sched/act_api.c                                                 | 101 ++++++++++++++----------
- net/sched/act_bpf.c                                                 |  25 ++++--
- net/sched/act_connmark.c                                            |  22 +++++-
- net/sched/act_csum.c                                                |  22 +++++-
- net/sched/act_gact.c                                                |  15 +++-
- net/sched/act_ife.c                                                 |  35 +++++----
- net/sched/act_ipt.c                                                 |  11 +--
- net/sched/act_mirred.c                                              |  25 +++++-
- net/sched/act_nat.c                                                 |  15 +++-
- net/sched/act_pedit.c                                               |  18 ++++-
- net/sched/act_police.c                                              |  13 +++-
- net/sched/act_sample.c                                              |  21 ++++-
- net/sched/act_simple.c                                              |  54 +++++++++----
- net/sched/act_skbedit.c                                             |  20 ++++-
- net/sched/act_skbmod.c                                              |  20 ++++-
- net/sched/act_tunnel_key.c                                          |  19 ++++-
- net/sched/act_vlan.c                                                |  22 +++++-
- net/sched/cls_api.c                                                 |   2 +-
- net/sched/sch_cake.c                                                |  25 +++---
- net/sctp/socket.c                                                   |  54 +++++++++++--
- net/socket.c                                                        | 277 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
- net/strparser/strparser.c                                           |   2 +
- net/tipc/group.c                                                    |   3 +
- net/tipc/net.c                                                      |   5 +-
- net/tipc/node.c                                                     |   7 +-
- net/tipc/socket.c                                                   |  22 ++++--
- net/tipc/topsrv.c                                                   |   1 +
- net/xdp/xdp_umem.c                                                  |  19 +----
- tools/include/uapi/linux/bpf.h                                      | 188 +++++++++++++++++++++++++++++---------------
- tools/lib/bpf/Makefile                                              |  42 ++++++----
- tools/lib/bpf/README.rst                                            |   1 +
- tools/lib/bpf/btf.c                                                 |  51 ++++++++----
- tools/lib/bpf/libbpf.c                                              |  13 +++-
- tools/lib/bpf/xsk.c                                                 |  15 +++-
- tools/testing/selftests/bpf/bpf_helpers.h                           |   2 +
- tools/testing/selftests/bpf/prog_tests/map_lock.c                   |   2 +-
- tools/testing/selftests/bpf/prog_tests/spinlock.c                   |   2 +-
- tools/testing/selftests/bpf/progs/test_sock_fields_kern.c           |  88 +++++++++++++++++----
- tools/testing/selftests/bpf/test_btf.c                              |  44 +++++++++++
- tools/testing/selftests/bpf/test_sock_fields.c                      | 134 +++++++++++++++++++++++++-------
- tools/testing/selftests/bpf/verifier/calls.c                        |  25 ++++++
- tools/testing/selftests/bpf/verifier/ref_tracking.c                 | 168 ++++++++++++++++++++++++++++++++++++++++
- tools/testing/selftests/bpf/verifier/sock.c                         |   4 +-
- tools/testing/selftests/tc-testing/tc-tests/actions/bpf.json        |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/connmark.json   |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/csum.json       |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/gact.json       |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/ife.json        |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/mirred.json     |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/nat.json        |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/pedit.json      |  51 ++++++++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/police.json     |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/sample.json     |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/simple.json     |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/skbedit.json    |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/skbmod.json     |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/tunnel_key.json |  25 ++++++
- tools/testing/selftests/tc-testing/tc-tests/actions/vlan.json       |  25 ++++++
- 182 files changed, 3121 insertions(+), 1137 deletions(-)
- create mode 100644 tools/testing/selftests/tc-testing/tc-tests/actions/pedit.json
+SGkgTG9yZW56bywNCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzIQ0KDQo+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJh
+bGlzaUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOoz1MIyN8jVIDE6MzgNCj4gVG86IFoucS4gSG91
+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdv
+b2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwu
+c3VicmFobWFueWFAbW9iaXZlaWwuY28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0K
+PiA8bGVveWFuZy5saUBueHAuY29tPjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVh
+Y29uQGFybS5jb207DQo+IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlh
+biA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54
+cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2NCAwMC8yOF0gUENJOiByZWZhY3RvciBNb2Jp
+dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdlbjQNCj4gZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2Fw
+ZSBTb0NzDQo+IA0KPiBPbiBNb24sIE1hciAxMSwgMjAxOSBhdCAwOToyOTo1NEFNICswMDAwLCBa
+LnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAu
+Y29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMgYWltIHRvIHJlZmFjdG9yIHRoZSBNb2Jp
+dmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llDQo+ID4gc3VwcG9ydCBmb3IgTlhQIExheWVyc2NhcGUg
+c2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUgR2VuNA0KPiA+IGNvbnRyb2xs
+ZXIuDQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDI4KToNCj4gPiAgIFBDSTogbW9iaXZlaWw6IHVu
+aWZvcm0gdGhlIHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDogZm9ybWF0
+IHRoZSBjb2RlIHdpdGhvdXQgZnVuY3Rpb24gY2hhbmdlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBj
+b3JyZWN0IHRoZSByZXR1cm5lZCBlcnJvciBudW1iZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IHJl
+bW92ZSBmbGFnIE1TSV9GTEFHX01VTFRJX1BDSV9NU0kNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGNv
+cnJlY3QgUENJIGJhc2UgYWRkcmVzcyBpbiBNRU0vSU8gb3V0Ym91bmQgd2luZG93cw0KPiA+ICAg
+UENJOiBtb2JpdmVpbDogcmVwbGFjZSB0aGUgcmVzb3VyY2UgbGlzdCBpdGVyYXRpb24gZnVuY3Rp
+b24NCj4gPiAgIFBDSTogbW9iaXZlaWw6IHVzZSBXSU5fTlVNXzAgZXhwbGljaXRseSBmb3IgQ0ZH
+IG91dGJvdW5kIHdpbmRvdw0KPiA+ICAgUENJOiBtb2JpdmVpbDogdXNlIHRoZSAxc3QgaW5ib3Vu
+ZCB3aW5kb3cgZm9yIE1FTSBpbmJvdW5kDQo+IHRyYW5zYWN0aW9ucw0KPiA+ICAgUENJOiBtb2Jp
+dmVpbDogY29ycmVjdCBpbmJvdW5kL291dGJvdW5kIHdpbmRvdyBzZXR1cCByb3V0aW5lcw0KPiA+
+ICAgUENJOiBtb2JpdmVpbDogZml4IHRoZSBJTlR4IHByb2Nlc3MgZXJyb3INCj4gPiAgIFBDSTog
+bW9iaXZlaWw6IG9ubHkgZml4IHVwIHRoZSBDbGFzcyBDb2RlIGZpZWxkDQo+ID4gICBQQ0k6IG1v
+Yml2ZWlsOiBtb3ZlIG91dCB0aGUgbGluayB1cCB3YWl0aW5nIGZyb20gbW9iaXZlaWxfaG9zdF9p
+bml0DQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBtb3ZlIGlycSBjaGFpbmVkIGhhbmRsZXIgc2V0dXAg
+b3V0IG9mIERUIHBhcnNlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBpbml0aWFsaXplIFByaW1hcnkv
+U2Vjb25kYXJ5L1N1Ym9yZGluYXRlIGJ1cyBudW1iZXINCj4gPiAgIGR0LWJpbmRpbmdzOiBwY2k6
+IG1vYml2ZWlsOiBjaGFuZ2UgZ3Bpb19zbGF2ZSBhbmQgYXBiX2NzciB0byBvcHRpb25hbA0KPiA+
+ICAgUENJOiBtb2JpdmVpbDogcmVmYWN0b3IgTW9iaXZlaWwgUENJZSBIb3N0IEJyaWRnZSBJUCBk
+cml2ZXINCj4gPiAgIFBDSTogbW9iaXZlaWw6IGZpeCB0aGUgY2hlY2tpbmcgb2YgdmFsaWQgZGV2
+aWNlDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBhZGQgbGluayB1cCBjb25kaXRpb24gY2hlY2sNCj4g
+PiAgIFBDSTogbW9iaXZlaWw6IGNvbnRpbnVlIHRvIGluaXRpYWxpemUgdGhlIGhvc3QgdXBvbiBu
+byBQQ0llIGxpbmsNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGRpc2FibGVkIElCIGFuZCBPQiB3aW5k
+b3dzIHNldCBieSBib290bG9hZGVyDQo+ID4gICBQQ0k6IG1vYml2ZWlsOiBhZGQgQnl0ZSBhbmQg
+SGFsZi1Xb3JkIHdpZHRoIHJlZ2lzdGVyIGFjY2Vzc29ycw0KPiA+ICAgUENJOiBtb2JpdmVpbDog
+bWFrZSBtb2JpdmVpbF9ob3N0X2luaXQgY2FuIGJlIHVzZWQgdG8gcmUtaW5pdCBob3N0DQo+ID4g
+ICBkdC1iaW5kaW5nczogcGNpOiBBZGQgTlhQIExheWVyc2NhcGUgU29DcyBQQ0llIEdlbjQgY29u
+dHJvbGxlcg0KPiA+ICAgUENJOiBtb2JpdmVpbDogYWRkIFBDSWUgR2VuNCBSQyBkcml2ZXIgZm9y
+IE5YUCBMYXllcnNjYXBlIFNvQ3MNCj4gPiAgIFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFk
+ZCBXb3JrYXJvdW5kIGZvciBBLTAxMTU3Nw0KPiA+ICAgUENJOiBtb2JpdmVpbDogbHNfcGNpZV9n
+NDogYWRkIFdvcmthcm91bmQgZm9yIEEtMDExNDUxDQo+ID4gICBhcm02NDogZHRzOiBmcmVlc2Nh
+bGU6IGx4MjE2MGE6IGFkZCBwY2llIERUIG5vZGVzDQo+ID4gICBhcm02NDogZGVmY29uZmlnOiBF
+bmFibGUgQ09ORklHX1BDSV9MQVlFUlNDQVBFX0dFTjQNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3Mv
+cGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0ICAgICAgfCAgNTIgKysNCj4gPiAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGNpL21vYml2ZWlsLXBjaWUudHh0IHwgICAyICsNCj4gPiAgTUFJTlRB
+SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICstDQo+ID4gIC4u
+Li9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEuZHRzaSB8IDE2MyArKysrDQo+
+ID4gIGFyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMSAr
+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAx
+MSArLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL01ha2VmaWxlICAgICAgICAgICAgICAg
+fCAgIDIgKy0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9LY29uZmlnICAg
+ICAgIHwgIDM0ICsNCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9NYWtlZmls
+ZSAgICAgIHwgICA1ICsNCj4gPiAgLi4uL2NvbnRyb2xsZXIvbW9iaXZlaWwvcGNpLWxheWVyc2Nh
+cGUtZ2VuNC5jIHwgMzA2ICsrKysrKysNCj4gPiAuLi4vY29udHJvbGxlci9tb2JpdmVpbC9wY2ll
+LW1vYml2ZWlsLWhvc3QuYyAgfCA2NDAgKysrKysrKysrKysrKw0KPiA+IC4uLi9jb250cm9sbGVy
+L21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jICB8ICA1NCArKw0KPiA+ICAuLi4vcGNpL2Nv
+bnRyb2xsZXIvbW9iaXZlaWwvcGNpZS1tb2JpdmVpbC5jICAgfCAyNDYgKysrKysNCj4gPiAgLi4u
+L3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuaCAgIHwgMjI5ICsrKysrDQo+
+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jICAgICAgICB8IDg2MSAt
+LS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgMTUgZmlsZXMgY2hhbmdlZCwgMTc0MyBpbnNlcnRpb25z
+KCspLCA4NzMgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+IDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLWdlbjQudHh0DQo+ID4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL0tjb25m
+aWcNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvbW9iaXZl
+aWwvTWFrZWZpbGUNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9tb2JpdmVpbC9wY2ktbGF5ZXJzY2FwZS1nZW40LmMNCj4gPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0DQo+ID4gZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1vYml2ZWls
+LWhvc3QuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBkcml2ZXJzL3BjaS9jb250cm9s
+bGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwtcGxhdC5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL3BjaS9jb250cm9sbGVyL21vYml2ZWlsL3BjaWUtbW9iaXZlaWwuYw0KPiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9tb2JpdmVpbC9wY2llLW1v
+Yml2ZWlsLmgNCj4gPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+cGNpZS1tb2JpdmVpbC5jDQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBpcyBhIG1peHR1cmUgb2Yg
+Zml4ZXMsIHJlZmFjdG9yaW5nIGFuZCBkZXZlbG9wbWVudCBhbmQgdG8gYmUNCj4gZnJhbmsgaXQg
+aXMgYSBiaXQgaGFyZCB0byByZXZpZXcuIEtlZXBpbmcgaW4gbWluZCBhbGwgdGhlIHJldmlldyBj
+b21tZW50cw0KPiBhbHJlYWR5IHJlY2VpdmVkIGFuZCB0aGF0IEkgZXhwZWN0IHlvdSB0byBpbnRl
+Z3JhdGUsIGRvIHlvdSBtaW5kIHNwbGl0dGluZyBpdCBpbg0KPiBsb2dpY2FsIHNlcmllcyBlYWNo
+IG9uZSBzZXJ2aW5nIGEgc3BlY2lmaWMgcHVycG9zZSAoZWcgZml4ZXMsIExheWVyc2NhcGUgc3Vw
+cG9ydCwNCj4gZXRjLikgPw0KPiANCj4gTGV0J3Mgc3RhcnQgd2l0aCBwb3N0aW5nIGFuZCBtZXJn
+aW5nIHRoZSBmaXhlcyBmaXJzdC4NCg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb24sIGFuZCB3
+aWxsIHNwbGl0IHRoZW0uDQoNCj4gDQo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2guDQo+IA0KPiBMb3Jl
+bnpvDQoNClRoYW5rcywNClpoaXFpYW5nDQo=
