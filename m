@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7427DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10115C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA0D2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D482087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="fYNU1kDG"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="pmBv5ZmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbfC0A1z (ORCPT
+        id S1732879AbfC0A1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:27:55 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53794 "EHLO vps.xff.cz"
+        Tue, 26 Mar 2019 20:27:53 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53790 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732433AbfC0A1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727483AbfC0A1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 Mar 2019 20:27:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1553645935; bh=e0nnK3rTomZ/ylsbcx/9arI5/NLZs1j94ZDpFtu3D0I=;
+        t=1553645935; bh=hix23JteI8Gnawnkk7CYam4uCur8J7Owg3iSq2HxzIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYNU1kDGlQjGU/t9NjO/hEQoxy/v5tKR7aYDUKpUoMcM3lHzZrVXsdu55Ha9WBO9P
-         sfSVQZNX0cRFzTPbJI8SALaFZfrLTHrRsVes5rEmhnrZoHS7jTdnRuMd9emUaLeOSH
-         9po1tgXfC/tlKwUFBtQoZ9i5J8zHTob5+UFyWde0=
+        b=pmBv5ZmVMA7kiI5p7tz9w4OXo9RlP+/ytJFPEfwQwWXSqJp5ZSI5Xr2aRs1ZPDhl2
+         DopIrtI5bv4FhwXhUeFDeqieRH9BjW/Pm2VoAu2qXsp/LtEhgSO/4BleubOIQJg5n6
+         GAr4ZVaJm/HdwWLR9fQ3efbyfUREIkpxyGpf56Ag=
 From:   megous@megous.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
         johan@kernel.org, mark.rutland@arm.com
 Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: [PATCH 2/7] ARM: dts: sun8i: tbs-a711: Add node for BMA250 accelerometer
-Date:   Wed, 27 Mar 2019 01:18:38 +0100
-Message-Id: <20190327001843.2420-3-megous@megous.com>
+Subject: [PATCH 1/7] ARM: dts: sun8i: tbs-a711: Enable bluetooth
+Date:   Wed, 27 Mar 2019 01:18:37 +0100
+Message-Id: <20190327001843.2420-2-megous@megous.com>
 In-Reply-To: <20190327001843.2420-1-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 MIME-Version: 1.0
@@ -47,40 +47,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-A711 tablet has BMA250 accelerometer connected to I2C1 bus. Enable
-both the I2C1 bus and add the accelerometer device to it.
+TBS A711 tablet has a bcm20702a1 bluetooth chip (part of AP6210 WiFi/BT
+module) connected to UART1. Add node for the blutooth chip.
+
+The driver needs brcm/BCM20702A1.hcd firmware file to run.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 6aae70c89a1e..347fc0c31fa4 100644
+index 1e840ab5a541..6aae70c89a1e 100644
 --- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
 +++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -156,6 +156,21 @@
+@@ -406,7 +406,20 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
  	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm20702a1";
++		clocks = <&ac100_rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vbat>;
++		vddio-supply = <&reg_dldo1>;
++		device-wakeup-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
++		host-wakeup-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++		max-speed = <1500000>;
++	};
  };
  
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 10 IRQ_TYPE_EDGE_RISING>; /* PH10 / EINT10 */
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_dcdc1>;
- 	pinctrl-names = "default";
+ &usb_otg {
 -- 
 2.21.0
 
