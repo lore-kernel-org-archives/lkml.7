@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE9DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD4221734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18659217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710002;
-	bh=v/McQ8zuyyWPuOFNT+nvSJuiC9XFfyIZCPFgJPbTjZs=;
+	s=default; t=1553710005;
+	bh=sxtYnsIQngx0yYgIvLXLddPljEIXcT77fqa43VhPKiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsPflOu/bRCRZ0MzAN/d+Kl6+V7+aYvPT6+28DXUFrNTTAaNP0afiqTLG5+vH8Emy
-	 mHcPpR4adRMNThnLNNRY784zcnXSZU2xrpMUM3AEWpkshWfHDIoUAg9le747pctewr
-	 gTDc83hIBoYTHfGSA10xVjBQMHvm4ZY/mt+pwUzc=
+	b=I/iY3tbVcoRyF58UhvjbS+k5Lg5Vqmfd8rd/gZisLr9yWfyfwjAtKbo6EN80CWhnX
+	 eD/4hktxdbDOUlclQYW++kkPk1N8ekJTyNtiyNA/zGZXgyvHAoCA5JrwFqsEbsT9kj
+	 fg6Yi4vvFuk+LT2s08qZ6Cienjwrdu3TSg063AYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387991AbfC0SGk (ORCPT
+        id S2388002AbfC0SGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387953AbfC0SGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:31 -0400
+        id S2387968AbfC0SGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73062177E;
-        Wed, 27 Mar 2019 18:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB67421734;
+        Wed, 27 Mar 2019 18:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709990;
-        bh=v/McQ8zuyyWPuOFNT+nvSJuiC9XFfyIZCPFgJPbTjZs=;
+        s=default; t=1553709996;
+        bh=sxtYnsIQngx0yYgIvLXLddPljEIXcT77fqa43VhPKiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtfQGsVt59cEqcP2RKlg4UfY/M0SpKVlBlLfyqjkoUTfZ29ci7zR0bxPCRHpwFBYy
-         kuSsBIWdgJ+XDpenIwv+kT4WQsAsPj+vCmVe+lxrCxh8dqkpvVCWt6rRDLpXdoKLHb
-         ZPMlHb0JkrTTTOSkkASinj/mn9QClxVb/VawckBw=
+        b=aDN5vgXg4D6RFugf/xSVuEDJ6F3w2cI9plBtnvybvCuPUMaa6LHO5RN2sYpj6xVvk
+         QfxfmyakhkoTFOYXfcvn0uqwQfJhpbStwGevzF6BStUDIQ+8dNgxCxmDm1lrOHUAMK
+         xal5QbvY/Luk9or7LXlRTj+BR5LeKwzbXJjE0ft8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 146/262] ACPI / video: Refactor and fix dmi_is_desktop()
-Date:   Wed, 27 Mar 2019 14:00:01 -0400
-Message-Id: <20190327180158.10245-146-sashal@kernel.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>, Shuah Khan <shuah@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 149/262] selftests: skip seccomp get_metadata test if not real root
+Date:   Wed, 27 Mar 2019 14:00:04 -0400
+Message-Id: <20190327180158.10245-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,72 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
+[ Upstream commit 3aa415dd2128e478ea3225b59308766de0e94d6b ]
 
-This commit refactors the chassis-type detection introduced by
-commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") (where desktop means anything without a builtin
-screen).
+The get_metadata() test requires real root, so let's skip it if we're not
+real root.
 
-The DMI chassis_type is an unsigned integer, so rather then doing a
-whole bunch of string-compares on it, convert it to an int and feed
-the result to a switch case.
+Note that I used XFAIL here because that's what the test does later if
+CONFIG_CHEKCKPOINT_RESTORE happens to not be enabled. After looking at the
+code, there doesn't seem to be a nice way to skip tests defined as TEST(),
+since there's no return code (I tried exit(KSFT_SKIP), but that didn't work
+either...). So let's do it this way to be consistent, and easier to fix
+when someone comes along and fixes it.
 
-Note the switch case uses hex values, this is done because the spec
-uses hex values too. This changes the check for "Main Server Chassis"
-from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
-the original check for 11 decimal was wrong.
-
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-[ rjw: Drop redundant return statements ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index f0b52266b3ac..1ab1460c4a4e 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2124,21 +2124,28 @@ static int __init intel_opregion_present(void)
- 	return opregion;
- }
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 7e632b465ab4..6d7a81306f8a 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -2971,6 +2971,12 @@ TEST(get_metadata)
+ 	struct seccomp_metadata md;
+ 	long ret;
  
-+/* Check if the chassis-type indicates there is no builtin LCD panel */
- static bool dmi_is_desktop(void)
- {
- 	const char *chassis_type;
-+	unsigned long type;
- 
- 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	if (!chassis_type)
- 		return false;
- 
--	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
--	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
--	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
--	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
--	    !strcmp(chassis_type, "7") || /*  7: Tower */
--	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
-+	if (kstrtoul(chassis_type, 10, &type) != 0)
-+		return false;
-+
-+	switch (type) {
-+	case 0x03: /* Desktop */
-+	case 0x04: /* Low Profile Desktop */
-+	case 0x05: /* Pizza Box */
-+	case 0x06: /* Mini Tower */
-+	case 0x07: /* Tower */
-+	case 0x11: /* Main Server Chassis */
- 		return true;
++	/* Only real root can get metadata. */
++	if (geteuid()) {
++		XFAIL(return, "get_metadata requires real root");
++		return;
 +	}
++
+ 	ASSERT_EQ(0, pipe(pipefd));
  
- 	return false;
- }
+ 	pid = fork();
 -- 
 2.19.1
 
