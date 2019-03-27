@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F5FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EC8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65D52075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61F5E2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdBZtwpR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hq0NGWzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbfC0IFq (ORCPT
+        id S1732562AbfC0IFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:05:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60766 "EHLO
+        Wed, 27 Mar 2019 04:05:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60770 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732179AbfC0IFp (ORCPT
+        with ESMTP id S1732432AbfC0IFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 04:05:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -29,15 +29,15 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6GC+yBLfBaQWhOa/Bgemo6INqrofP5PzasrWOcl4tMU=; b=qdBZtwpRKRyhSBo9ChzlpV5mO6
-        6eUDrchuxYu7NtcDlU2Y4+3NjS/R64O0YvexYqfag8xWLBwPgi38str9q0IyldNYJVRppSllCBvx0
-        gHFmR2j5bBJikBFdmijssdboBuC1acuqTYU663TeHBYViUUUhKnncVCZ9DC+uMjnCJogD6OXWejat
-        Swi8i0Wt5X9eWRTjq9OPufMWmsgmpg33B89UKUUzqsXMOqDGlW4XzCp9K2DpWNsWxPWlRyF1uRzGL
-        XFnSpr9hdqnwUNiXrAhlmDMVMpmaGHkGVpqdC3B8K2ysSgUPpx35xI3/RuCXydcaBHTik3bu3Orct
-        OoTh/v5A==;
+        bh=OMEu+uGgCvsJfEy2oq3BSPLG12mwQ1W+zA4NNTTHNEE=; b=hq0NGWzqivPCtSYFcsUfY9g9UK
+        eVuU4FVL1nNl6zrqkxz31AExcfEKvGZBq/bhOoG1jfj+n9fzOoEPOR1YUSBBohF2cOMdb7sFQc+yO
+        LnSr+jifjG0p9q5n7kLcVmJvKQ9kva2e1dq/pA6v64dLI+fi0wrvxVUt76FGLy9bd0usn+oDldeP9
+        pqe0mYx6sqIUPRGszt6h+d6aIJtRPv4rWaAGIf0jhQSRPU2rrl2bH97clEgYn3BkKduJVVeQakpGo
+        qAE2SLCBE2dojYGqBGB06oQQl94qXApsBKcZGvDg0DggHyze9HuqaL6drOFbenSFmmcyd7laZEivF
+        Rh8V2KQg==;
 Received: from 213-225-14-48.nat.highway.a1.net ([213.225.14.48] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h93Z3-0006S5-DN; Wed, 27 Mar 2019 08:05:37 +0000
+        id 1h93Z5-0006cg-Vk; Wed, 27 Mar 2019 08:05:40 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Robin Murphy <robin.murphy@arm.com>
 Cc:     Joerg Roedel <joro@8bytes.org>,
@@ -46,9 +46,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         iommu@lists.linux-foundation.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 09/21] dma-iommu: refactor iommu_dma_get_sgtable
-Date:   Wed, 27 Mar 2019 09:04:36 +0100
-Message-Id: <20190327080448.5500-10-hch@lst.de>
+Subject: [PATCH 10/21] dma-iommu: move __iommu_dma_map
+Date:   Wed, 27 Mar 2019 09:04:37 +0100
+Message-Id: <20190327080448.5500-11-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327080448.5500-1-hch@lst.de>
 References: <20190327080448.5500-1-hch@lst.de>
@@ -60,94 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the vm_area handling into a new iommu_dma_get_sgtable_remap helper.
-
-Inline __iommu_dma_get_sgtable_page into the main function to simplify
-the code flow a bit.
+Moving this function up to its unmap counterpart helps to keep related
+code together for the following changes.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/iommu/dma-iommu.c | 54 +++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 30 deletions(-)
+ drivers/iommu/dma-iommu.c | 46 +++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 43bd3c7e0f6b..57f2d8621112 100644
+index 57f2d8621112..4d46beeea5b7 100644
 --- a/drivers/iommu/dma-iommu.c
 +++ b/drivers/iommu/dma-iommu.c
-@@ -625,6 +625,18 @@ static int iommu_dma_mmap_remap(void *cpu_addr, size_t size,
- 	return ret;
+@@ -435,6 +435,29 @@ static void __iommu_dma_unmap(struct iommu_domain *domain, dma_addr_t dma_addr,
+ 	iommu_dma_free_iova(cookie, dma_addr, size);
  }
  
-+static int iommu_dma_get_sgtable_remap(struct sg_table *sgt, void *cpu_addr,
-+		size_t size)
++static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
++		size_t size, int prot, struct iommu_domain *domain)
 +{
-+	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-+	struct vm_struct *area = find_vm_area(cpu_addr);
++	struct iommu_dma_cookie *cookie = domain->iova_cookie;
++	size_t iova_off = 0;
++	dma_addr_t iova;
 +
-+	if (WARN_ON(!area || !area->pages))
-+		return -ENXIO;
-+	return sg_alloc_table_from_pages(sgt, area->pages, count, 0, size,
-+			GFP_KERNEL);
++	if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
++		iova_off = iova_offset(&cookie->iovad, phys);
++		size = iova_align(&cookie->iovad, size + iova_off);
++	}
++
++	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
++	if (!iova)
++		return DMA_MAPPING_ERROR;
++
++	if (iommu_map(domain, iova, phys - iova_off, size, prot)) {
++		iommu_dma_free_iova(cookie, iova, size);
++		return DMA_MAPPING_ERROR;
++	}
++	return iova + iova_off;
 +}
 +
- static void iommu_dma_sync_single_for_cpu(struct device *dev,
- 		dma_addr_t dma_handle, size_t size, enum dma_data_direction dir)
+ static void __iommu_dma_free_pages(struct page **pages, int count)
  {
-@@ -1084,42 +1096,24 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
- 			vma_pages(vma) << PAGE_SHIFT, vma->vm_page_prot);
+ 	while (count--)
+@@ -689,29 +712,6 @@ static void iommu_dma_sync_sg_for_device(struct device *dev,
+ 		arch_sync_dma_for_device(dev, sg_phys(sg), sg->length, dir);
  }
  
--static int __iommu_dma_get_sgtable_page(struct sg_table *sgt, struct page *page,
--		size_t size)
+-static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+-		size_t size, int prot, struct iommu_domain *domain)
 -{
--	int ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+-	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+-	size_t iova_off = 0;
+-	dma_addr_t iova;
 -
--	if (!ret)
--		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
--	return ret;
+-	if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
+-		iova_off = iova_offset(&cookie->iovad, phys);
+-		size = iova_align(&cookie->iovad, size + iova_off);
+-	}
+-
+-	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
+-	if (!iova)
+-		return DMA_MAPPING_ERROR;
+-
+-	if (iommu_map(domain, iova, phys - iova_off, size, prot)) {
+-		iommu_dma_free_iova(cookie, iova, size);
+-		return DMA_MAPPING_ERROR;
+-	}
+-	return iova + iova_off;
 -}
 -
- static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
- 		void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		unsigned long attrs)
+ static dma_addr_t __iommu_dma_map_page(struct device *dev, struct page *page,
+ 		unsigned long offset, size_t size, int prot)
  {
--	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	struct vm_struct *area = find_vm_area(cpu_addr);
--
--	if (!is_vmalloc_addr(cpu_addr)) {
--		struct page *page = virt_to_page(cpu_addr);
--		return __iommu_dma_get_sgtable_page(sgt, page, size);
--	}
--
--	if (attrs & DMA_ATTR_FORCE_CONTIGUOUS) {
--		/*
--		 * DMA_ATTR_FORCE_CONTIGUOUS allocations are always remapped,
--		 * hence in the vmalloc space.
--		 */
--		struct page *page = vmalloc_to_page(cpu_addr);
--		return __iommu_dma_get_sgtable_page(sgt, page, size);
--	}
-+	struct page *page;
-+	int ret;
- 
--	if (WARN_ON(!area || !area->pages))
--		return -ENXIO;
-+	if (is_vmalloc_addr(cpu_addr)) {
-+		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
-+			return iommu_dma_get_sgtable_remap(sgt, cpu_addr, size);
-+		page = vmalloc_to_page(cpu_addr);
-+	} else
-+		page = virt_to_page(cpu_addr);
- 
--	return sg_alloc_table_from_pages(sgt, area->pages, count, 0, size,
--					 GFP_KERNEL);
-+	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-+	if (!ret)
-+		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-+	return ret;
- }
- 
- static const struct dma_map_ops iommu_dma_ops = {
 -- 
 2.20.1
 
