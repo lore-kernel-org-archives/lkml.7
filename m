@@ -2,144 +2,101 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E23C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859BDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1F820700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A56F20700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 15:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rKrLlMPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfC0P57 (ORCPT
+        id S1727683AbfC0P7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 11:57:59 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57234 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfC0P57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 11:57:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D458F80D;
-        Wed, 27 Mar 2019 08:57:58 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10D253F575;
-        Wed, 27 Mar 2019 08:57:54 -0700 (PDT)
-Subject: Re: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI wakeup
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-References: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
- <1553701479.2561.38.camel@pengutronix.de>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <564216aa-1144-71de-e887-00c58f466bf5@arm.com>
-Date:   Wed, 27 Mar 2019 15:57:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 27 Mar 2019 11:59:15 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44277 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbfC0P7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 11:59:14 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i21so13257260oib.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 08:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ms8R5t0Sy0cFQVVltiL0O3pOI93JHwc/k56q+HG3fXo=;
+        b=rKrLlMPPavT06CXNHUXV1sMSGzmf7uBiIS0VpP/Ucd/08D57cykjjr/9k2JKTbgo2Y
+         eJUKIjwS9BKAxj2uxMh4GhiRWYe0Nz06ckI0QNWbm6JAMBQCUdEIsvMLlCBW7S3M9Hrm
+         HPTKMXZnudKp1DP8wC4Yd0JK56oKg2bMOjMDTS0dKUWt6vZuVgxii/bBZzeJCA0VXmFr
+         5IX8fM3XlHpQuSg6m46aVojuLNCBySuEGb/K7TzhKDmLWj2G8Bv/2akdYO5tbDf9ADua
+         Xv/2aKfuuWK/7u6scWr/hUONPVgJ+75MRnsTBGYanBSlrH4eAnorx8B/ff6PYGzr6ZpM
+         FgAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ms8R5t0Sy0cFQVVltiL0O3pOI93JHwc/k56q+HG3fXo=;
+        b=NgEh5L1DDpE20R5qcTvcXQ0GWsU+D8Ikd1MQ+UgNaeiWWBGaxdp5+4vVjr2UyD2fAf
+         QFJHZVeR5jy1qWYb7N0Z+ajEa5sI548UmObkE9gh43sGnm1fW+IOG3Xlypysnepfk16V
+         1T+MwyidodPB98cP91ZX5SGQoYBJ8fPpkuJGt8Kpc6eDA/q4stm2p6G34BXv/MmjG+a3
+         PjOKxRLS2lzB12vdgh8Allc0su7lt6rc0d7GvJdNo3hsgosmA3yz+nWDvxfCa+Xzg31g
+         6gsOo7I8cpJTWSdB1QS+xIO2Lm7o7wIoCXhguC2TasgWL0BKyievN9s80MYL2EnN5S7y
+         g4xg==
+X-Gm-Message-State: APjAAAUcar+eHBRQ+2u0jm9bw/E/fTW8tHHu8HOhflilJHuIKi4IXmYW
+        aFU+YKW9+YU2ys1h9CWzTA5hnc1pGU1KMhoxwtbSLQ==
+X-Google-Smtp-Source: APXvYqxmz0Pxbbw/ZMNJiT0Y7it7SGwv82lXAwKvDSjynw2uHIdjQMyrJc60RmazjatESgYJn1aKogl3Rg4rjg7Xkd8=
+X-Received: by 2002:aca:4c88:: with SMTP id z130mr20220332oia.170.1553702354071;
+ Wed, 27 Mar 2019 08:59:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553701479.2561.38.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <bfe609b73c36810457e5ae75b74e1d0fb7f6c5ac.1553696064.git.sramani@mellanox.com>
+In-Reply-To: <bfe609b73c36810457e5ae75b74e1d0fb7f6c5ac.1553696064.git.sramani@mellanox.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 27 Mar 2019 16:59:03 +0100
+Message-ID: <CAMpxmJXB5cGi7z3b0p4Nmgtb=iPRXut+RTrGf=JnT6Bc3ziXeQ@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: gpio-mlxbf: Add dependency on 64BIT to Kconfig entry
+To:     Shravan Kumar Ramani <sramani@mellanox.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/03/2019 15:44, Lucas Stach wrote:
-> Hi Abel,
-> 
-> Am Mittwoch, den 27.03.2019, 13:21 +0000 schrieb Abel Vesa:
->> This work is a workaround I'm looking into (more as a background task)
->> in order to add support for cpuidle on i.MX8MQ based platforms.
->>
->> The main idea here is getting around the missing GIC wake_request signal
->> (due to integration design issue) by waking up a each individual core through
->> some dedicated SW power-up bits inside the power controller (GPC) right before
->> every IPI is requested for that each individual core.
-> 
-> Just a general comment, without going into the details of this series:
-> this issue is not only affecting IPIs, but also MSIs terminated at the
-> GIC. Currently MSIs are terminated at the PCIe core, but terminating
-> them at the GIC is clearly preferable, as this allows assigning CPU
-> affinity to individual MSIs and lowers IRQ service overhead.
-> 
-> I'm not sure what the consequences are for upstream Linux support yet,
-> but we should keep in mind that having a workaround for IPIs is only
-> solving part of the issue.
+=C5=9Br., 27 mar 2019 o 15:15 Shravan Kumar Ramani <sramani@mellanox.com> n=
+apisa=C5=82(a):
+>
+> Fixes a compile test failure
+>
+> Signed-off-by: Shravan Kumar Ramani <sramani@mellanox.com>
+> ---
+>  drivers/gpio/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 0d9ddff..530ee34 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1318,7 +1318,7 @@ config GPIO_MERRIFIELD
+>
+>  config GPIO_MLXBF
+>         tristate "Mellanox BlueField SoC GPIO"
+> -       depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || COMPILE_TEST
+> +       depends on (MELLANOX_PLATFORM && ARM64 && ACPI) || (64BIT && COMP=
+ILE_TEST)
+>         select GPIO_GENERIC
+>         help
+>           Say Y here if you want GPIO support on Mellanox BlueField SoC.
+> --
+> 2.1.2
+>
 
-If this erratum is affecting more than just IPIs, then indeed I don't
-see how this patch series solves anything.
+Applied, thanks!
 
-But the erratum documentation seems to imply that only SGIs are
-affected, and goes as far as suggesting to use an external interrupt
-would solve it. How comes this is not the case? Or is it that anything
-directly routed to a redistributor is also affected? This would break
-LPIs (and thus MSIs) and PPIs (the CPU timer, among others).
-
-What is the *exact* status of this thing? I have the ugly feeling that
-the true workaround is just to disable cpuidle.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Bart
