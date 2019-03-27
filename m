@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6123EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755FEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3056E204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48586204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713606;
-	bh=dq14Ui6MinerqReU55BDs0HhZmU0AuT2Xe8ZLcevFWI=;
+	s=default; t=1553713609;
+	bh=xsksBoADc80winDbW5xDWov7jv52uHFWN7sncZNcPJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8fQQiNTJLYfoGxk/glwwfxQptEIcBmuHjwMwy02Nh8/GjbbyApwuzh6Lu69OnFzE
-	 89F0XmN93/w0j5pnht29tcE1Wt5fSK5mhuWGu7rz5EFPSmz+4brVseXg8Mnm4qKNut
-	 JKkXl+CCEqA0zjIyVoPfwfRsGDIuYmtFpcLemi4E=
+	b=pwa4fT9CawKrR9HexN8gcxqnKocHtYAuaUYaJenAwoTmoZb8MtgQrb9xiJ5OnsVCd
+	 4U5bEEtptF56H7JT6qmObGEqL4eL+UUaPZCAnVQ30V483VXf/KLQgA4puxgFwd6ni5
+	 /BGfuV9Kp7SDl0gHJB1vLWi13bpfKXrtqy53bRJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389188AbfC0SMV (ORCPT
+        id S2389276AbfC0TGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54676 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:06:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388324AbfC0SMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:15 -0400
+        id S2389180AbfC0SMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254AD2177E;
-        Wed, 27 Mar 2019 18:12:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D689217D9;
+        Wed, 27 Mar 2019 18:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710333;
-        bh=dq14Ui6MinerqReU55BDs0HhZmU0AuT2Xe8ZLcevFWI=;
+        s=default; t=1553710340;
+        bh=xsksBoADc80winDbW5xDWov7jv52uHFWN7sncZNcPJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YLYmK6dBhAllRSexHpoupFQU1gLqHdzsulAjnbg3qQGzpcRAf8xuxbhP8SIc3NksP
-         5A01GVNDMJqvM/VCrM0bViNAMwnGBbM7isdTHkQb16f9UTPFbUpbkY4pBxegKnq8/5
-         oXS0UME+Lq+1ZWzH8U4uRv8RXCfXUazMWszcJVHI=
+        b=TvVtCUJHqY2CIiETrRqCOjcoRTMer4UABfOw5AmmOxd2mfQFtYo6VbgqO1rWBcWgt
+         YLXpoaTTIgrpUO790GAO8n763SE6284S/I3ZoUFK5F2bJWLep8sVUIS5ermAu0vQTr
+         elhm7u0713yg5fa23s/cI9lPAAyt5RqHbZUfFjbM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 061/192] btrfs: qgroup: Make qgroup async transaction commit more aggressive
-Date:   Wed, 27 Mar 2019 14:08:13 -0400
-Message-Id: <20190327181025.13507-61-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 065/192] mlxsw: spectrum: Avoid -Wformat-truncation warnings
+Date:   Wed, 27 Mar 2019 14:08:17 -0400
+Message-Id: <20190327181025.13507-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -56,117 +57,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit f5fef4593653dfa2a865c485bb81415de51d5c99 ]
+[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
 
-[BUG]
-Btrfs qgroup will still hit EDQUOT under the following case:
+Give precision identifiers to the two snprintf() formatting the priority
+and TC strings to avoid producing these two warnings:
 
-  $ dev=/dev/test/test
-  $ mnt=/mnt/btrfs
-  $ umount $mnt &> /dev/null
-  $ umount $dev &> /dev/null
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_prio_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
+directive output may be truncated writing between 1 and 3 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
+output between 3 and 36 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_prio_stats[i].str, prio);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
+'mlxsw_sp_port_get_tc_strings':
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
+directive output may be truncated writing between 1 and 11 bytes into a
+region of size between 0 and 31 [-Wformat-truncation=]
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+                                     ^~
+drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
+output between 3 and 44 bytes into a destination of size 32
+   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     mlxsw_sp_port_hw_tc_stats[i].str, tc);
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  $ mkfs.btrfs -f $dev
-  $ mount $dev $mnt -o nospace_cache
-
-  $ btrfs subv create $mnt/subv
-  $ btrfs quota enable $mnt
-  $ btrfs quota rescan -w $mnt
-  $ btrfs qgroup limit -e 1G $mnt/subv
-
-  $ fallocate -l 900M $mnt/subv/padding
-  $ sync
-
-  $ rm $mnt/subv/padding
-
-  # Hit EDQUOT
-  $ xfs_io -f -c "pwrite 0 512M" $mnt/subv/real_file
-
-[CAUSE]
-Since commit a514d63882c3 ("btrfs: qgroup: Commit transaction in advance
-to reduce early EDQUOT"), btrfs is not forced to commit transaction to
-reclaim more quota space.
-
-Instead, we just check pertrans metadata reservation against some
-threshold and try to do asynchronously transaction commit.
-
-However in above case, the pertrans metadata reservation is pretty small
-thus it will never trigger asynchronous transaction commit.
-
-[FIX]
-Instead of only accounting pertrans metadata reservation, we calculate
-how much free space we have, and if there isn't much free space left,
-commit transaction asynchronously to try to free some space.
-
-This may slow down the fs when we have less than 32M free qgroup space,
-but should reduce a lot of false EDQUOT, so the cost should be
-acceptable.
-
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index e1fcb28ad4cc..e46e83e87600 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2427,16 +2427,15 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- /*
-  * Two limits to commit transaction in advance.
-  *
-- * For RATIO, it will be 1/RATIO of the remaining limit
-- * (excluding data and prealloc meta) as threshold.
-+ * For RATIO, it will be 1/RATIO of the remaining limit as threshold.
-  * For SIZE, it will be in byte unit as threshold.
-  */
--#define QGROUP_PERTRANS_RATIO		32
--#define QGROUP_PERTRANS_SIZE		SZ_32M
-+#define QGROUP_FREE_RATIO		32
-+#define QGROUP_FREE_SIZE		SZ_32M
- static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 				const struct btrfs_qgroup *qg, u64 num_bytes)
- {
--	u64 limit;
-+	u64 free;
- 	u64 threshold;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index a12b5710891e..f9bef030ee05 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -1988,7 +1988,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
+ 	int i;
  
- 	if ((qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_RFER) &&
-@@ -2455,20 +2454,21 @@ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
- 	 */
- 	if ((qg->lim_flags & (BTRFS_QGROUP_LIMIT_MAX_RFER |
- 			      BTRFS_QGROUP_LIMIT_MAX_EXCL))) {
--		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL)
--			limit = qg->max_excl;
--		else
--			limit = qg->max_rfer;
--		threshold = (limit - qg->rsv.values[BTRFS_QGROUP_RSV_DATA] -
--			    qg->rsv.values[BTRFS_QGROUP_RSV_META_PREALLOC]) /
--			    QGROUP_PERTRANS_RATIO;
--		threshold = min_t(u64, threshold, QGROUP_PERTRANS_SIZE);
-+		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL) {
-+			free = qg->max_excl - qgroup_rsv_total(qg) - qg->excl;
-+			threshold = min_t(u64, qg->max_excl / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		} else {
-+			free = qg->max_rfer - qgroup_rsv_total(qg) - qg->rfer;
-+			threshold = min_t(u64, qg->max_rfer / QGROUP_FREE_RATIO,
-+					  QGROUP_FREE_SIZE);
-+		}
- 
- 		/*
- 		 * Use transaction_kthread to commit transaction, so we no
- 		 * longer need to bother nested transaction nor lock context.
- 		 */
--		if (qg->rsv.values[BTRFS_QGROUP_RSV_META_PERTRANS] > threshold)
-+		if (free < threshold)
- 			btrfs_commit_transaction_locksafe(fs_info);
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
+ 		*p += ETH_GSTRING_LEN;
  	}
+@@ -1999,7 +1999,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
+ 	int i;
  
+ 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
+-		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
++		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
+ 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
+ 		*p += ETH_GSTRING_LEN;
+ 	}
 -- 
 2.19.1
 
