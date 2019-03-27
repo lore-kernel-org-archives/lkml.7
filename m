@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF885C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BE9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A104B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747F1204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713654;
-	bh=x1HBLcWmEzllZzb9mSrEd1wTDa88jevw1A+V6DK5I00=;
+	s=default; t=1553713668;
+	bh=AP7cva8TbLaLFS2dooYewXOUpiSQJpEY/luiKtpdZe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHKLSffCUbipRPW6jY86/ntuy8FvlwmexWndzcALX5BifpPrIuJXHycCpsTj41+eX
-	 tiECEvlVdoqrXEcuCnljQbN72nlEa8tdTSiHpK+ZVkqMFMH3FWU62OOE+8PMMYUldj
-	 f7N9S9OOytZSGkCWFzp8Sj48tyQBNf3nta9wDpnM=
+	b=NIsY2jutYL/My2ONQ2J+qYE+31vxPDy7giUNFwCJDuNsqWdCzNJU9hzF8ykTshhLs
+	 oabsQ/ZLsP52Sc/tmNolUjUFEA93PVUsPzCHMjf+RI4rSCG4blRDQgVZyq48w6q1Zd
+	 O6Ue5W6m7fOWA5VGvIWPJMf2LvZd6Or+FF1Lz8Q0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389624AbfC0TH1 (ORCPT
+        id S2389262AbfC0THr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54598 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388542AbfC0SML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:11 -0400
+        id S2389130AbfC0SMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D87712177E;
-        Wed, 27 Mar 2019 18:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0884021738;
+        Wed, 27 Mar 2019 18:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710330;
-        bh=x1HBLcWmEzllZzb9mSrEd1wTDa88jevw1A+V6DK5I00=;
+        s=default; t=1553710321;
+        bh=AP7cva8TbLaLFS2dooYewXOUpiSQJpEY/luiKtpdZe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDB4l3IBXIQXZiQDslBtZFMBojQ+e5TWan2ljRdQMnFgIeos/TogPOfwmxr7CPLcc
-         AhXaCx5UiV00cEvI2WdYzuUHGyqVWqd6mkL9Y6hjIkJq5MK8govjMRvs4LBeStXvuE
-         i27du2gdrlg67l/NQV5jQr3jhA5aN9Z2I9CZl4BU=
+        b=oTtkLRv7ugtJMxdvJrZTkBBIh3qImr+RyTdgsPFJW37Uf+FodFhM5hqKRGIWwKTGW
+         oOKlLSExiAywm1WkBeUP64f4hKY5mjCB3eYe6K8mAEBSp/e+K2jkk0MfGWHRCrxj8u
+         ooyjlytXX0OSX7EF5lEQ24wJeTrib8q92Rm/ehPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 059/192] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
-Date:   Wed, 27 Mar 2019 14:08:11 -0400
-Message-Id: <20190327181025.13507-59-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 054/192] kbuild: invoke syncconfig if include/config/auto.conf.cmd is missing
+Date:   Wed, 27 Mar 2019 14:08:06 -0400
+Message-Id: <20190327181025.13507-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,51 +56,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
+[ Upstream commit 9390dff66a52d1a60c6e517d8fa6cdbdffc83cb1 ]
 
-L1 tables are allocated with __get_dma_pages, and therefore already
-ignored by kmemleak.
+If include/config/auto.conf.cmd is lost for some reasons, it is not
+self-healing, so the top Makefile misses to run syncconfig.
+Move include/config/auto.conf.cmd to the target side.
 
-Without this, the kernel would print this error message on boot,
-when the first L1 table is allocated:
+I used a pattern rule instead of a normal rule here although it is
+a bit gross.
 
-[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
-[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
-[    2.831227] Workqueue: events deferred_probe_work_func
-[    2.836353] Call trace:
-...
-[    2.852532]  paint_ptr+0xa0/0xa8
-[    2.855750]  kmemleak_ignore+0x38/0x6c
-[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
-[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
-[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
-...
+If the rule were written with a normal rule like this,
 
-Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+  include/config/auto.conf \
+  include/config/auto.conf.cmd \
+  include/config/tristate.conf: $(KCONFIG_CONFIG)
+          $(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
+
+... syncconfig would be executed per target.
+
+Using a pattern rule makes sure that syncconfig is executed just once
+because Make assumes the recipe will create all of the targets.
+
+Here is a quote from the GNU Make manual [1]:
+
+"Pattern rules may have more than one target. Unlike normal rules,
+this does not act as many different rules with the same prerequisites
+and recipe. If a pattern rule has multiple targets, make knows that
+the rule's recipe is responsible for making all of the targets. The
+recipe is executed only once to make all the targets. When searching
+for a pattern rule to match a target, the target patterns of a rule
+other than the one that matches the target in need of a rule are
+incidental: make worries only about giving a recipe and prerequisites
+to the file presently in question. However, when this file's recipe is
+run, the other targets are marked as having been updated themselves."
+
+[1]: https://www.gnu.org/software/make/manual/html_node/Pattern-Intro.html
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Makefile | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index b5948ba6b3b3..7a3ce176f47f 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -217,7 +217,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
- 		if (dma != phys)
- 			goto out_unmap;
- 	}
--	kmemleak_ignore(table);
-+	if (lvl == 2)
-+		kmemleak_ignore(table);
- 	return table;
+diff --git a/Makefile b/Makefile
+index 3b1c6cff6700..c35c1b0aa661 100644
+--- a/Makefile
++++ b/Makefile
+@@ -626,12 +626,15 @@ ifeq ($(may-sync-config),1)
+ -include include/config/auto.conf.cmd
  
- out_unmap:
+ # To avoid any implicit rule to kick in, define an empty command
+-$(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
++$(KCONFIG_CONFIG): ;
+ 
+ # The actual configuration files used during the build are stored in
+ # include/generated/ and include/config/. Update them if .config is newer than
+ # include/config/auto.conf (which mirrors .config).
+-include/config/%.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
++#
++# This exploits the 'multi-target pattern rule' trick.
++# The syncconfig should be executed only once to make all the targets.
++%/auto.conf %/auto.conf.cmd %/tristate.conf: $(KCONFIG_CONFIG)
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
+ else
+ # External modules and some install targets need include/generated/autoconf.h
 -- 
 2.19.1
 
