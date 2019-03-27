@@ -2,250 +2,121 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C487C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529F0206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF1B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553664829;
+	bh=hA9dsY4to0sqzSBA2TeuG0sLGRkc7aTwCqIlM+otlVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N+aplqKVS9lG3l0ZKkSFhUNDw8J4IDbUcNn2h3EDDO7Hcm5XzOjnF9sNnGj9FoNG7
+	 XMnvv9ta2mh6QFLGaPAKgFIWsUr/zNQw3MgNbRJJBbHCGx63QeYbPc0hWiTtIYi/ZZ
+	 ZjhgbHGVU9W118mf+ehofcT+9FqLsfLiALaHZTYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732380AbfC0Fc3 (ORCPT
+        id S1732985AbfC0Fds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:32:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36800 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726185AbfC0Fc2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:32:28 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2R5TLYv061191
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:27 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rfy7aqra8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 01:32:27 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 27 Mar 2019 05:32:25 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Mar 2019 05:32:22 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2R5WLQo40960242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Mar 2019 05:32:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3D79A405F;
-        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22440A4062;
-        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Mar 2019 05:32:21 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 27 Mar 2019 01:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbfC0Fdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 01:33:47 -0400
+Received: from localhost (unknown [218.148.84.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0C27AA00BD;
-        Wed, 27 Mar 2019 16:32:20 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 2/7] ocxl: Don't pass pci_dev around
-Date:   Wed, 27 Mar 2019 16:31:31 +1100
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327053137.15173-1-alastair@au1.ibm.com>
-References: <20190327053137.15173-1-alastair@au1.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B2DEC206DF;
+        Wed, 27 Mar 2019 05:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553664826;
+        bh=hA9dsY4to0sqzSBA2TeuG0sLGRkc7aTwCqIlM+otlVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LZYhc/cecXucqv1HhsBTNZpEzAlz/iDrz0l46W+8b1JXG2Oyq7Ag6hAxuiTRouNJo
+         UrfY/CQPTsiptlAx3HHvZXWaYa5+zING6/TPhqCI+VFGW6JXiCuLMrqGx6M4tfXGKt
+         QZCldccKm7DQjDkhUdlqg7/XjRqVH3ykHupyizp0=
+Date:   Wed, 27 Mar 2019 14:33:42 +0900
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked
+ down
+Message-ID: <20190327053342.GA17484@kroah.com>
+References: <20190326182742.16950-1-matthewgarrett@google.com>
+ <20190326182742.16950-26-matthewgarrett@google.com>
+ <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
+ <20190327003057.GA27311@kroah.com>
+ <CALCETrVDDf4dj3Md1Nxc5P_NCToXGnAbEO3bGfwgKSfeVmU4Kw@mail.gmail.com>
+ <20190327050615.GA548@kroah.com>
+ <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032705-0028-0000-0000-00000358B773
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032705-0029-0000-0000-0000241771B2
-Message-Id: <20190327053137.15173-3-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903270038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Tue, Mar 26, 2019 at 10:29:41PM -0700, Andy Lutomirski wrote:
+> 
+> 
+> > On Mar 26, 2019, at 10:06 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > 
+> >> On Tue, Mar 26, 2019 at 09:29:14PM -0700, Andy Lutomirski wrote:
+> >>> On Tue, Mar 26, 2019 at 5:31 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >>> 
+> >>>> On Tue, Mar 26, 2019 at 12:20:24PM -0700, Andy Lutomirski wrote:
+> >>>> On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
+> >>>> <matthewgarrett@google.com> wrote:
+> >>>>> 
+> >>>>> From: Matthew Garrett <mjg59@google.com>
+> >>>>> 
+> >>>>> debugfs has not been meaningfully audited in terms of ensuring that
+> >>>>> userland cannot trample over the kernel. At Greg's request, disable
+> >>>>> access to it entirely when the kernel is locked down. This is done at
+> >>>>> open() time rather than init time as the kernel lockdown status may be
+> >>>>> made stricter at runtime.
+> >>>> 
+> >>>> Ugh.  Some of those files are very useful.  Could this perhaps still
+> >>>> allow O_RDONLY if we're in INTEGRITY mode?
+> >>> 
+> >>> Useful for what?  Debugging, sure, but for "normal operation", no kernel
+> >>> functionality should ever require debugfs.  If it does, that's a bug and
+> >>> should be fixed.
+> >>> 
+> >> 
+> >> I semi-regularly read files in debugfs to diagnose things, and I think
+> >> it would be good for this to work on distro kernels.
+> > 
+> > Doing that for debugging is wonderful.  People who want this type of
+> > "lock down" are trading potential security for diagnositic ability.
+> > 
+> 
+> I think you may be missing the point of splitting lockdown to separate integrity and confidentiality.  Can you actually think of a case where *reading* a debugfs file can take over a kernel?
 
-This data is already available in a struct
+Reading a debugfs file can expose loads of things that can help take
+over a kernel, or at least make it easier.  Pointer addresses, internal
+system state, loads of other fun things.  And before 4.14 or so, it was
+pretty trivial to use it to oops the kernel as well (not an issue here
+anymore, but people are right to be nervous).
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+Personally, I think these are all just "confidentiality" type things,
+but who really knows given the wild-west nature of debugfs (which is as
+designed).  And given that I think this patch series just crazy anyway,
+I really don't care :)
 
-diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-index 1a4411b72d35..2f2fe12eac1e 100644
---- a/drivers/misc/ocxl/core.c
-+++ b/drivers/misc/ocxl/core.c
-@@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
- 	return rc;
- }
- 
--static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
-+static int assign_afu_actag(struct ocxl_afu *afu)
- {
- 	struct ocxl_fn *fn = afu->fn;
- 	int actag_count, actag_offset;
-+	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
- 
- 	/*
- 	 * if there were not enough actags for the function, each afu
-@@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
- 		fn->actag_enabled / fn->actag_supported;
- 	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
- 	if (actag_offset < 0) {
--		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
-+		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
- 			actag_count, actag_offset);
- 		return actag_offset;
- 	}
- 	afu->actag_base = fn->actag_base + actag_offset;
- 	afu->actag_enabled = actag_count;
- 
--	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
-+	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
- 				afu->actag_base, afu->actag_enabled);
--	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
-+	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
- 		afu->actag_base, afu->actag_enabled);
- 	return 0;
- }
-@@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
- 	ocxl_actag_afu_free(afu->fn, start_offset, size);
- }
- 
--static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
-+static int assign_afu_pasid(struct ocxl_afu *afu)
- {
- 	struct ocxl_fn *fn = afu->fn;
- 	int pasid_count, pasid_offset;
-+	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
- 
- 	/*
- 	 * We only support the case where the function configuration
-@@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
- 	pasid_count = 1 << afu->config.pasid_supported_log;
- 	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
- 	if (pasid_offset < 0) {
--		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
-+		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
- 			pasid_count, pasid_offset);
- 		return pasid_offset;
- 	}
-@@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
- 	afu->pasid_count = 0;
- 	afu->pasid_max = pasid_count;
- 
--	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
-+	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
- 				afu->pasid_base,
- 				afu->config.pasid_supported_log);
--	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
-+	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
- 		afu->pasid_base, pasid_count);
- 	return 0;
- }
-@@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
- 	WARN_ON(fn->bar_used[idx] < 0);
- }
- 
--static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
-+static int map_mmio_areas(struct ocxl_afu *afu)
- {
- 	int rc;
-+	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
- 
- 	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
- 	if (rc)
-@@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
- 	}
- 
- 	afu->global_mmio_start =
--		pci_resource_start(dev, afu->config.global_mmio_bar) +
-+		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
- 		afu->config.global_mmio_offset;
- 	afu->pp_mmio_start =
--		pci_resource_start(dev, afu->config.pp_mmio_bar) +
-+		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
- 		afu->config.pp_mmio_offset;
- 
- 	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
-@@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
- 	if (!afu->global_mmio_ptr) {
- 		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
- 		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
--		dev_err(&dev->dev, "Error mapping global mmio area\n");
-+		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
- 	if (rc)
- 		return rc;
- 
--	rc = assign_afu_actag(afu, dev);
-+	rc = assign_afu_actag(afu);
- 	if (rc)
- 		return rc;
- 
--	rc = assign_afu_pasid(afu, dev);
-+	rc = assign_afu_pasid(afu);
- 	if (rc) {
- 		reclaim_afu_actag(afu);
- 		return rc;
- 	}
- 
--	rc = map_mmio_areas(afu, dev);
-+	rc = map_mmio_areas(afu);
- 	if (rc) {
- 		reclaim_afu_pasid(afu);
- 		reclaim_afu_actag(afu);
-@@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
- 	device_unregister(&afu->dev);
- }
- 
--static struct ocxl_fn *alloc_function(struct pci_dev *dev)
-+static struct ocxl_fn *alloc_function(void)
- {
- 	struct ocxl_fn *fn;
- 
-@@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
- 	INIT_LIST_HEAD(&fn->afu_list);
- 	INIT_LIST_HEAD(&fn->pasid_list);
- 	INIT_LIST_HEAD(&fn->actag_list);
-+
- 	return fn;
- }
- 
-@@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
- 	struct ocxl_fn *fn;
- 	int rc;
- 
--	fn = alloc_function(dev);
-+	fn = alloc_function();
- 	if (!fn)
- 		return ERR_PTR(-ENOMEM);
- 
--- 
-2.20.1
+thanks,
 
+greg k-h
