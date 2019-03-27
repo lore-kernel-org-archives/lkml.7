@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858EEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D407EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5641821734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25D4206C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714440;
-	bh=4QeUpAm9uf4hKkkPetnR2jOpZ/R93cT3mmnxji3B1L8=;
+	s=default; t=1553714458;
+	bh=EJRaAlaxoQ5w5EprQQHjB8rBX/vEQj03XJIgeZe3zJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nG7yiZhR1F/9MvB4gVRWQEzrQZZQic4bF7QRWnWF5gOlryFUW13P3YxIs72QwsK09
-	 223PUcQfqHq/lHsY9UYBfJreMT/JlIHZILXVErjUcvqWhIpUi8pYT2y/X4kTj3xJT3
-	 Z0elEvqxuAEqJDDfXabORBIaoFh+ZoLif8dOBqPM=
+	b=qhf3Of0gtnYZ2XoLEOWOjppsp2OoSKHz1QC63mq07i1pAeLbs1IXKuG543wgpx3M6
+	 9S5/UAsqlwTHudyM0QK+rORDVUu5i3kLvtJXAeJUToRXF/cBEPPmmsY1cKVoQwf2nl
+	 /1HEQ/TNRLAvmex+z3lKkAtLoQYHfnN4VA04bJYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388596AbfC0TUj (ORCPT
+        id S2387497AbfC0SHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49098 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:07:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388120AbfC0SHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:17 -0400
+        id S2387532AbfC0SHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8A8217F9;
-        Wed, 27 Mar 2019 18:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3409F217F9;
+        Wed, 27 Mar 2019 18:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710036;
-        bh=4QeUpAm9uf4hKkkPetnR2jOpZ/R93cT3mmnxji3B1L8=;
+        s=default; t=1553710022;
+        bh=EJRaAlaxoQ5w5EprQQHjB8rBX/vEQj03XJIgeZe3zJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsZ8MQMIFQU4LYCmuXo1QDmJF2Nl/+ITmy9/RsoQCSh7GwqsjHFrhU18RMtASy57E
-         /fNK3mR+gN78aNzVYXpj881PHiNpNbP3cDw7DouHebtYVMkgC1jXLqixDKOY5bNrAY
-         SAJdQlYktSv4VOT/UdWgdiEiU3u6ewIIW0HPmaqQ=
+        b=mdtp5YJXLT5lwwb5OE0ZdM5d2jdCHetB0s1klHb5AhFgH8y2qYDr+I/gTwTqX9e0l
+         gvl4iGPJ5biH7aN7U0fqhBJePKix9t625+3+mvxMkFtibQUEhk/NtMubIbP310Jerm
+         snnEEIjEHjc7e2JF4wYgeREjab7RzJNse3rS4fLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 167/262] net: phy: consider latched link-down status in polling mode
-Date:   Wed, 27 Mar 2019 14:00:22 -0400
-Message-Id: <20190327180158.10245-167-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 159/262] sched/topology: Fix percpu data types in struct sd_data & struct s_data
+Date:   Wed, 27 Mar 2019 14:00:14 -0400
+Message-Id: <20190327180158.10245-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,85 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 93c0970493c71f264e6c3c7caf1ff24a9e1de786 ]
+[ Upstream commit 99687cdbb3f6c8e32bcc7f37496e811f30460e48 ]
 
-The link status value latches link-down events. To get the current
-status we read the register twice in genphy_update_link(). There's
-a potential risk that we miss a link-down event in polling mode.
-This may cause issues if the user e.g. connects his machine to a
-different network.
+The percpu members of struct sd_data and s_data are declared as:
 
-On the other hand reading the latched value may cause issues in
-interrupt mode. Following scenario:
+	struct ... ** __percpu member;
 
-- After boot link goes up
-- phy_start() is called triggering an aneg restart, hence link goes
-  down and link-down info is latched.
-- After aneg has finished link goes up and triggers an interrupt.
-  Interrupt handler reads link status, means it reads the latched
-  "link is down" info. But there won't be another interrupt as long
-  as link stays up, therefore phylib will never recognize that link
-  is up.
+So their type is:
 
-Deal with both scenarios by reading the register twice in interrupt
-mode only.
+	__percpu pointer to pointer to struct ...
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+But looking at how they're used, their type should be:
+
+	pointer to __percpu pointer to struct ...
+
+and they should thus be declared as:
+
+	struct ... * __percpu *member;
+
+So fix the placement of '__percpu' in the definition of these
+structures.
+
+This addresses a bunch of Sparse's warnings like:
+
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
+
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190118144936.79158-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy-c45.c    | 10 ++++++++--
- drivers/net/phy/phy_device.c | 13 +++++++++----
- 2 files changed, 17 insertions(+), 6 deletions(-)
+ include/linux/sched/topology.h | 8 ++++----
+ kernel/sched/topology.c        | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
-index 03af927fa5ad..e39bf0428dd9 100644
---- a/drivers/net/phy/phy-c45.c
-+++ b/drivers/net/phy/phy-c45.c
-@@ -147,9 +147,15 @@ int genphy_c45_read_link(struct phy_device *phydev, u32 mmd_mask)
- 		mmd_mask &= ~BIT(devad);
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index c31d3a47a47c..57c7ed3fe465 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -176,10 +176,10 @@ typedef int (*sched_domain_flags_f)(void);
+ #define SDTL_OVERLAP	0x01
  
- 		/* The link state is latched low so that momentary link
--		 * drops can be detected.  Do not double-read the status
--		 * register if the link is down.
-+		 * drops can be detected. Do not double-read the status
-+		 * in polling mode to detect such short link drops.
- 		 */
-+		if (!phy_polling_mode(phydev)) {
-+			val = phy_read_mmd(phydev, devad, MDIO_STAT1);
-+			if (val < 0)
-+				return val;
-+		}
-+
- 		val = phy_read_mmd(phydev, devad, MDIO_STAT1);
- 		if (val < 0)
- 			return val;
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 46c86725a693..b3d564592ad4 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1683,10 +1683,15 @@ int genphy_update_link(struct phy_device *phydev)
- {
- 	int status;
+ struct sd_data {
+-	struct sched_domain **__percpu sd;
+-	struct sched_domain_shared **__percpu sds;
+-	struct sched_group **__percpu sg;
+-	struct sched_group_capacity **__percpu sgc;
++	struct sched_domain *__percpu *sd;
++	struct sched_domain_shared *__percpu *sds;
++	struct sched_group *__percpu *sg;
++	struct sched_group_capacity *__percpu *sgc;
+ };
  
--	/* Do a fake read */
--	status = phy_read(phydev, MII_BMSR);
--	if (status < 0)
--		return status;
-+	/* The link state is latched low so that momentary link
-+	 * drops can be detected. Do not double-read the status
-+	 * in polling mode to detect such short link drops.
-+	 */
-+	if (!phy_polling_mode(phydev)) {
-+		status = phy_read(phydev, MII_BMSR);
-+		if (status < 0)
-+			return status;
-+	}
+ struct sched_domain_topology_level {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 3f35ba1d8fde..efca2489d881 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -676,7 +676,7 @@ cpu_attach_domain(struct sched_domain *sd, struct root_domain *rd, int cpu)
+ }
  
- 	/* Read link and autonegotiation status */
- 	status = phy_read(phydev, MII_BMSR);
+ struct s_data {
+-	struct sched_domain ** __percpu sd;
++	struct sched_domain * __percpu *sd;
+ 	struct root_domain	*rd;
+ };
+ 
 -- 
 2.19.1
 
