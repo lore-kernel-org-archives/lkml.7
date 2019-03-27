@@ -6,49 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F7AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB39FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871082177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA592177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710574;
-	bh=budrJgi/pFw8l0QbBn9K0Zq9B3SGW4WXRE6mxj9lw28=;
+	s=default; t=1553710577;
+	bh=UIUXeW/Aut1a/NmMfCr9gK5WIqNPbrDcI5+ziZX0UsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STZVwRSNucitrq9dSbiTAWmJPSgaKOoYC2B4uj4+jeYu/oOatlD0EvN3gRZ37s5Wo
-	 l4qGLnjiBPJzSh/9eV86anIu8bVU3AX6moky0YHt6R6KKbGKQZ2b9dLLSzURT2T5LN
-	 w3Eis0pm4PtJr2olFe6K24Cu4K5Eb5sqr1jA4dKs=
+	b=xgrm4ZpivCyXTjeMl/8ilciOwaBPyJYrD5BqZpV2uXo5cAfNEf5l+e998pGjsjZem
+	 uKpyAxB0MbegsLe+wpvOaJpttz7m51aD925MqOzz6KxavazZ60BFPRfkK6XvvF1P57
+	 5KRR8bQPeGh6k9r+RxaE9JW/w2+i/OWk3ftel/E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbfC0SQH (ORCPT
+        id S2390012AbfC0SQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59898 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389939AbfC0SQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:04 -0400
+        id S2388950AbfC0SQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCC0C20449;
-        Wed, 27 Mar 2019 18:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03ADE2082F;
+        Wed, 27 Mar 2019 18:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710563;
-        bh=budrJgi/pFw8l0QbBn9K0Zq9B3SGW4WXRE6mxj9lw28=;
+        s=default; t=1553710569;
+        bh=UIUXeW/Aut1a/NmMfCr9gK5WIqNPbrDcI5+ziZX0UsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/wamGEtFEmZylLlifYl+09m9Q8c8YVcdcrQLVw6I4lUtfUO46U7pAolzW9xB0R+w
-         TdOKTUdbT1RwUg2I96UbDnLEPH4D7u/YtXsRYPyNC5bNOa+2TdW2Q7CUgw7OSKv6zM
-         ZIKb/5DlLwQxWB29Ne9x+409DM2k5ZU00rKHgrZQ=
+        b=qNONTYzsbN0+2wTsEMa+D2Ol4JBrL7I2wKT3KEOn8LPfkNv+3QVNAxIjn+G8VwgHa
+         BcdzzMOoy+VwgIP4PEVKDjlv6/sJDKGiTOfMxLpTomJtF3AfDQMq4Uj9L2Jdhggm8k
+         kSpvISbMh5fKGFKQ7poFPwi2tGJxblKk9FJBGmEk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Rimar <grimar@accesssoftek.com>, Tri Vo <trong@android.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Michael Matz <matz@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>, morbo@google.com,
-        ndesaulniers@google.com, ruiu@google.com, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 178/192] x86/build: Specify elf_i386 linker emulation explicitly for i386 objects
-Date:   Wed, 27 Mar 2019 14:10:10 -0400
-Message-Id: <20190327181025.13507-178-sashal@kernel.org>
+Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 181/192] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
+Date:   Wed, 27 Mar 2019 14:10:13 -0400
+Message-Id: <20190327181025.13507-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -60,90 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Rimar <grimar@accesssoftek.com>
+From: Zumeng Chen <zumeng.chen@gmail.com>
 
-[ Upstream commit 927185c124d62a9a4d35878d7f6d432a166b74e3 ]
+[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
 
-The kernel uses the OUTPUT_FORMAT linker script command in it's linker
-scripts. Most of the time, the -m option is passed to the linker with
-correct architecture, but sometimes (at least for x86_64) the -m option
-contradicts the OUTPUT_FORMAT directive.
+Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
+failed instead of meaningless goto out to avoid the following memory leak
+reports(Only the last one listed):
 
-Specifically, arch/x86/boot and arch/x86/realmode/rm produce i386 object
-files, but are linked with the -m elf_x86_64 linker flag when building
-for x86_64.
+unreferenced object 0xc28a9a00 (size 512):
+  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<6624adab>] kmemleak_alloc+0x40/0x74
+    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
+    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
+    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
+    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
+    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
+    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
+    [<7e1d425a>] process_one_work+0x284/0x42c
+    [<55f9432e>] worker_thread+0x2fc/0x48c
+    [<abb582c6>] kthread+0x148/0x160
+    [<63144b13>] ret_from_fork+0x14/0x2c
+    [< (null)>] (null)
+    [<1f6e7715>] 0xffffffff
 
-The GNU linker manpage doesn't explicitly state any tie-breakers between
--m and OUTPUT_FORMAT. But with BFD and Gold linkers, OUTPUT_FORMAT
-overrides the emulation value specified with the -m option.
-
-LLVM lld has a different behavior, however. When supplied with
-contradicting -m and OUTPUT_FORMAT values it fails with the following
-error message:
-
-  ld.lld: error: arch/x86/realmode/rm/header.o is incompatible with elf_x86_64
-
-Therefore, just add the correct -m after the incorrect one (it overrides
-it), so the linker invocation looks like this:
-
-  ld -m elf_x86_64 -z max-page-size=0x200000 -m elf_i386 --emit-relocs -T \
-    realmode.lds header.o trampoline_64.o stack.o reboot.o -o realmode.elf
-
-This is not a functional change for GNU ld, because (although not
-explicitly documented) OUTPUT_FORMAT overrides -m EMULATION.
-
-Tested by building x86_64 kernel with GNU gcc/ld toolchain and booting
-it in QEMU.
-
- [ bp: massage and clarify text. ]
-
-Suggested-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: George Rimar <grimar@accesssoftek.com>
-Signed-off-by: Tri Vo <trong@android.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Tri Vo <trong@android.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Michael Matz <matz@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: morbo@google.com
-Cc: ndesaulniers@google.com
-Cc: ruiu@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190111201012.71210-1-trong@android.com
+Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile        | 2 +-
- arch/x86/realmode/rm/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 9b5adae9cc40..e2839b5c246c 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -100,7 +100,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
- AFLAGS_header.o += -I$(objtree)/$(obj)
- $(obj)/header.o: $(obj)/zoffset.h
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index 19e3c5a0b715..2ca5658bbc2a 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -1084,8 +1084,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
+ 		goto out;
  
--LDFLAGS_setup.elf	:= -T
-+LDFLAGS_setup.elf	:= -m elf_i386 -T
- $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
- 	$(call if_changed,ld)
+ 	ret = wl12xx_fetch_firmware(wl, plt);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		kfree(wl->fw_status);
++		kfree(wl->raw_fw_status);
++		kfree(wl->tx_res_if);
++	}
  
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index 4463fa72db94..96cb20de08af 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -47,7 +47,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
- targets += realmode.lds
- $(obj)/realmode.lds: $(obj)/pasyms.h
- 
--LDFLAGS_realmode.elf := --emit-relocs -T
-+LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
- CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
- 
- targets += realmode.elf
+ out:
+ 	return ret;
 -- 
 2.19.1
 
