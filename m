@@ -4,57 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1592C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721F6206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6910820449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711210;
-	bh=yawqTZrChr6D92eiKv2N3JuBDjeHA2PxrqmDq8+T1jc=;
+	s=default; t=1553711214;
+	bh=VpMy5Bjr30Obf/2X6Riy77zuBN1BKEofdhM296+Fn2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fd4EXaq+EnKYgKzrp8qkHn5nYlx3Eh4DDoT5EO13W5uqapC7qOCFgz5P8BIvh9SSt
-	 Yf7Z7qToIkyGmpyucx/COTp7wnKoQGBa21/UHa7M5tUGWmcPdcsnJe3DmBLGHPK0Vu
-	 4vouwVz1lpi0JBie+6nlb4IjVtobHJg+BecQQub0=
+	b=zPRzgXMMpmkrI9gplpqi0fyFI4j2eMRhdTY6uVDn4Yojrj3qJgAMHqOH4veB5mIc0
+	 kuc7p3fa1tYEPXBPksQ6npa4sUtJV0nCc/8TtD300nYpoBvtI1bXo1ooyHl6VI2add
+	 TkcrpWAjb6zm/ozVJ2nMXKHj9dNKr3o4FAUXD5PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391733AbfC0S0s (ORCPT
+        id S2404303AbfC0SZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391671AbfC0S0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:33 -0400
+        id S2404271AbfC0SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B05EE2070B;
-        Wed, 27 Mar 2019 18:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D40BE206BA;
+        Wed, 27 Mar 2019 18:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711192;
-        bh=yawqTZrChr6D92eiKv2N3JuBDjeHA2PxrqmDq8+T1jc=;
+        s=default; t=1553711150;
+        bh=VpMy5Bjr30Obf/2X6Riy77zuBN1BKEofdhM296+Fn2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4XNDFIclXvDJGXgn+YdFVuwFPFIaay0HGzJ+5UoYuYd7xfirmkDSpMtcCwIG6ee/
-         Or4Zjnj7cr3+h6soENQHlcpRtllGMAkw96c8ePKt2aaCJoFmPRsV+9gZe8bTITqOMO
-         IbtLVepgBqFJ7/Vg+SH/7F93PCG6RCfu24hypeBc=
+        b=Of+8Qk1AxfBs6nAF56nALQHB3buJMs39yn8jJxfOQqWVEjy4fAR4JE1u7W2XqaXef
+         7OZD+n2RQtWnmWlrwVb2mlN2E7jkX8feQvVxMFO3mZMyloKPYJUyW3WUR+GVvxe89Y
+         jnOyCthHoEVAf2qKErdAKVulYek31vvogE3/PVHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, dima@golovin.in, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 39/41] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Wed, 27 Mar 2019 14:25:16 -0400
-Message-Id: <20190327182518.19394-39-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 17/41] IB/mlx4: Increase the timeout for CM cache
+Date:   Wed, 27 Mar 2019 14:24:54 -0400
+Message-Id: <20190327182518.19394-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -67,76 +58,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael Ávila de Espíndola <rafael@espindo.la>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-Section 3.10.8 of ld.bfd's documentation states:
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
 
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
 
-Based on a previous submission by Tri Vo <trong@android.com>.
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
 
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 49edf2dd3613..1bd47a144db1 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -345,7 +345,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index 56a593e0ae5d..2aedbd18ffbc 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
+ #include "mlx4_ib.h"
+ 
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
+ 
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
