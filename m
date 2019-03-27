@@ -2,102 +2,141 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91164C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A0AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C272075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E769A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715137;
-	bh=CMCpaVhDmDcoWRphIWIaRtDVI7E2LveCJahY9SuRQE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ovbswV7mRRA45C5YgEaShGpX9niqL6/fOk8NMd+xF19+o7VaE/lZ/DJU/HacPzs4w
-	 bzx6fKpxjfIOESIC9zSrGde28ttjOinJyvf2IIp1yu/wLQUv+sFL/ctLhG2pWWUk2H
-	 lsYLd9J+GI4Z7rzl7p9R3CMPBTXShHD6WySOW6s8=
+	s=default; t=1553715141;
+	bh=CbAhMA3lg9JDPTBM/DaZXG/h9VWpHuEJOUQzn66PHgU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NFcTQ++V0rX40XdbhuNW2RLi2HupEBqB63td3n9s320yF/FvHtlh3VaMSXYWld54H
+	 0zwizoFmruTEruqtX9bU2BIMjEfhSmkRxGtNepQ6p4E8Hp4DYz6M/2zu4ZB2rzlSMh
+	 xssVIfsQ/6Qh62QTMEZt7M0paxdwXbLp/ykEaTGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbfC0TcP (ORCPT
+        id S2387784AbfC0TcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:32:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58404 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727815AbfC0TcO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 15:32:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Fk+ZaCMLnd5JH2GGV0Aw/dB1Oh2T25U9JuYmOwtZ+bE=; b=UQKP9zuH+hZByJU0EdTRd8RaE
-        TU7YLNq63nTPyekzZ+XOtS6LzEulU2UT9UDH6dLd5YQE4uEsxiYtu2gnkSf5Q/vFedlDy6yGpIAQF
-        OYfc6EawJp3RaRrpjT582fOb4vcmrdGy7fZEA4KoN2c5SGtcDCsqfN2++Nk81DNSK3/AM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h9EHT-0000ij-U2; Wed, 27 Mar 2019 19:32:11 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 8065D1128E50; Wed, 27 Mar 2019 19:32:11 +0000 (GMT)
-Date:   Wed, 27 Mar 2019 19:32:11 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Axel Lin <axel.lin@ingics.com>
-Subject: Re: [PATCH AUTOSEL 5.0 209/262] regulator: mcp16502: Include
- linux/gpio/consumer.h to fix build error
-Message-ID: <20190327193211.GC11404@sirena.org.uk>
+Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731337AbfC0SCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:02:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14BF92183F;
+        Wed, 27 Mar 2019 18:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553709762;
+        bh=CbAhMA3lg9JDPTBM/DaZXG/h9VWpHuEJOUQzn66PHgU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oRmwNyJG63fnfRebzQaINBoI/wb3e7JIrtsWV0RU0wLTq48gxYwP5ZHd6e9JzFsxX
+         sDLQyXj7cH1SWaW3CYJw0SwP74VgIgziGQz88iLvaHEBRW7BqJS33Vnp5UVGlAZgca
+         Zb+Y7OdPPI/cpOP4zKqP1vsX39jlmjxy4fBiA9VA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 027/262] iio: adc: fix warning in Qualcomm PM8xxx HK/XOADC driver
+Date:   Wed, 27 Mar 2019 13:58:02 -0400
+Message-Id: <20190327180158.10245-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
- <20190327180158.10245-209-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
-Content-Disposition: inline
-In-Reply-To: <20190327180158.10245-209-sashal@kernel.org>
-X-Cookie: May be too intense for some viewers.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
---m51xatjYGsM+13rf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit e0f0ae838a25464179d37f355d763f9ec139fc15 ]
 
-On Wed, Mar 27, 2019 at 02:01:04PM -0400, Sasha Levin wrote:
-> From: Axel Lin <axel.lin@ingics.com>
->=20
-> [ Upstream commit f3c6a1a194317f3a31ee2b2067bb0a41de64bc8b ]
->=20
-> Fix below build error:
-> drivers/regulator/mcp16502.c: In function =E2=80=98mcp16502_gpio_set_mode=
-=E2=80=99:
-> drivers/regulator/mcp16502.c:135:3: error: implicit declaration of functi=
-on =E2=80=98gpiod_set_value=E2=80=99; did you mean =E2=80=98gpio_set_value=
-=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->    gpiod_set_value(mcp->lpm, 0);
+The pm8xxx_get_channel() implementation is unclear, and causes gcc to
+suddenly generate odd warnings.  The trigger for the warning (at least
+for me) was the entirely unrelated commit 79a4e91d1bb2 ("device.h: Add
+__cold to dev_<level> logging functions"), which apparently changes gcc
+code generation in the caller function enough to cause this:
 
-Does this error actually manifest in v5.0?
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c: In function ‘pm8xxx_xoadc_probe’:
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:633:8: warning: ‘ch’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    ret = pm8xxx_read_channel_rsv(adc, ch, AMUX_RSV4,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             &read_nomux_rsv4, true);
+             ~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:426:27: note: ‘ch’ was declared here
+    struct pm8xxx_chan_info *ch;
+                             ^~
 
---m51xatjYGsM+13rf
-Content-Type: application/pgp-signature; name="signature.asc"
+because gcc for some reason then isn't able to see that the termination
+condition for the "for( )" loop in that function is also the condition
+for returning NULL.
 
------BEGIN PGP SIGNATURE-----
+So it's not _actually_ uninitialized, but the function is admittedly
+just unnecessarily oddly written.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlybz7oACgkQJNaLcl1U
-h9BejAf9GlvrAtMOeojVFXCPXf2+IE88vxo1323ksrIKNMY++bF6nM6JnUbXD+dn
-f14gH8/aa7UChCWHMqfhP5ZYhKrEzO31mLylUInFZgwRyv9HlsXMCNRuRSgC4Ppp
-G69x0R1+/JxxkScc4GCeaTZ/TFO0De1tOdOCAVNVOGuGCbDxkYG10p3Q0btTTxfq
-dW/6reZdemqne+IdkUoqNttsF9HMxNLR70zVfXDowNjP140A9CU3oM+jD2SRCaNb
-ZbmmgxweORr3s2/MPNgqWp/fIIMKPP8vFr3IlkCAFQe7p3SnP4npkAipla2kSPUs
-kcMROaawLmiso3/uS7ENHm0E6lQ1/Q==
-=wrRX
------END PGP SIGNATURE-----
+Simplify and clarify the function, making gcc also see that it always
+returns a valid initialized value.
 
---m51xatjYGsM+13rf--
+Cc: Joe Perches <joe@perches.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/adc/qcom-pm8xxx-xoadc.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/iio/adc/qcom-pm8xxx-xoadc.c b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+index c30c002f1fef..4735f8a1ca9d 100644
+--- a/drivers/iio/adc/qcom-pm8xxx-xoadc.c
++++ b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+@@ -423,18 +423,14 @@ static irqreturn_t pm8xxx_eoc_irq(int irq, void *d)
+ static struct pm8xxx_chan_info *
+ pm8xxx_get_channel(struct pm8xxx_xoadc *adc, u8 chan)
+ {
+-	struct pm8xxx_chan_info *ch;
+ 	int i;
+ 
+ 	for (i = 0; i < adc->nchans; i++) {
+-		ch = &adc->chans[i];
++		struct pm8xxx_chan_info *ch = &adc->chans[i];
+ 		if (ch->hwchan->amux_channel == chan)
+-			break;
++			return ch;
+ 	}
+-	if (i == adc->nchans)
+-		return NULL;
+-
+-	return ch;
++	return NULL;
+ }
+ 
+ static int pm8xxx_read_channel_rsv(struct pm8xxx_xoadc *adc,
+-- 
+2.19.1
+
