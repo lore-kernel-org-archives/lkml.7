@@ -2,51 +2,50 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D00C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F566C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780BF2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1555121741
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710642;
-	bh=pOgZd/U7FSJLKEyNGQwtfZxELyH1PvJoNh1+uBAsVok=;
+	s=default; t=1553710645;
+	bh=HfIHmk9zpWr/7zFN2rq86p5Xey8P2xNsXyD8uzDSDBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j1iv8dYn+eU84eEZAijjkjJhohpRG9B0pftDerTQZpGh0lj383UF0giqO/k45CHzk
-	 h2WVEKfXwgaz33fP1bprGuCC/vSLWzJpHaZTG5Q3jbXRQV1EH3a2jUAwYYVnRqysok
-	 Zph2o7bK4K2lwsVmj57lbJpGt62w4KJkpgY5rHfA=
+	b=D5DLlvl1Up/AXvl2oMs/gYl222dk/M1Leqqp2D0SBYRL4X7XjnWYlViN5fsOIWFS3
+	 PScP/CsrizHFH5Cudz2s1fOy1UGTCR+jvLCYCyR/lJlvk9eFXPKsKBsbeGU30i4sv3
+	 /Qlpe+krXIMEGL4quZnQKkHeb3Z2ulDBcsAg+erA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390262AbfC0SRV (ORCPT
+        id S2390278AbfC0SRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:17:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389691AbfC0SRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:19 -0400
+        id S2389933AbfC0SRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD492184C;
-        Wed, 27 Mar 2019 18:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357E020449;
+        Wed, 27 Mar 2019 18:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710638;
-        bh=pOgZd/U7FSJLKEyNGQwtfZxELyH1PvJoNh1+uBAsVok=;
+        s=default; t=1553710640;
+        bh=HfIHmk9zpWr/7zFN2rq86p5Xey8P2xNsXyD8uzDSDBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oktNJwbGwtmi8pbbhyXL7P1gt1rszLWGPiulN8psSPBXQeV8fsAP5fIsNoPuPTzoi
-         Hr4BFiem+T2HBMP5Lgjmi6VnP6Exm9Zrz1tU1x1kPn+Iw4R7WuLHj0dJFF1sZlm9T4
-         0W720jlZozci3xO/h/bClOVhZAbRG0PDPJVyyKVc=
+        b=1SQpBz0c+TqtguqrXV5XHyq6Q3Lf2M4j5Dqs31lIQwjt8Q1s4sRKJL9eI5TfVOhsf
+         PNfEgXWAB3WbMVGGmSKeVZ5R/q+xbehuUKnvEYuhqoz8MNVciqZJfUSuNCP6pUIP3M
+         WRzij+UU352Jyk6nT0OioPNUtmdVXiuXCPekI6as=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Taylor <louis@kragniz.eu>,
+Cc:     Yao Liu <yotta.liu@ucloud.cn>,
         Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 025/123] cifs: use correct format characters
-Date:   Wed, 27 Mar 2019 14:14:49 -0400
-Message-Id: <20190327181628.15899-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 027/123] cifs: Fix NULL pointer dereference of devname
+Date:   Wed, 27 Mar 2019 14:14:51 -0400
+Message-Id: <20190327181628.15899-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,80 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Taylor <louis@kragniz.eu>
+From: Yao Liu <yotta.liu@ucloud.cn>
 
-[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
+[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
 
-When compiling with -Wformat, clang emits the following warnings:
+There is a NULL pointer dereference of devname in strspn()
 
-fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                         tgt_total_cnt, total_in_tgt);
-                                        ^~~~~~~~~~~~
+The oops looks something like:
 
-fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                 ^~~~~~~~~~
+  CIFS: Attempting to mount (null)
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:strspn+0x0/0x50
+  ...
+  Call Trace:
+   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
+   ? cifs_get_volume_info+0x2f/0x80 [cifs]
+   cifs_setup_volume_info+0x20/0x190 [cifs]
+   cifs_get_volume_info+0x50/0x80 [cifs]
+   cifs_smb3_do_mount+0x59/0x630 [cifs]
+   ? ida_alloc_range+0x34b/0x3d0
+   cifs_do_mount+0x11/0x20 [cifs]
+   mount_fs+0x52/0x170
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                             ^~~~~~~~~~~~~~~~
+Fix this by adding a NULL check on devname in cifs_parse_devname()
 
-fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                 ^~~~~~~~~~~~~
-
-fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                                ^~~~~~~~~~~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for ints and unsigned
-ints.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
 Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifs_dfs_ref.c | 4 ++--
- fs/cifs/smb1ops.c      | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/cifs/connect.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
-index 6b61df117fd4..563e2f6268c3 100644
---- a/fs/cifs/cifs_dfs_ref.c
-+++ b/fs/cifs/cifs_dfs_ref.c
-@@ -271,9 +271,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
- {
- 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
- 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
--	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
-+	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
- 		 ref->flags, ref->server_type);
--	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
-+	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
- 		 ref->ref_flag, ref->path_consumed);
- }
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 48aa854c564a..33cd844579ae 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1265,6 +1265,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
+ 	const char *delims = "/\\";
+ 	size_t len;
  
-diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
-index d8cd82001c1c..f50d3d0b9b87 100644
---- a/fs/cifs/smb1ops.c
-+++ b/fs/cifs/smb1ops.c
-@@ -306,7 +306,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
- 	remaining = tgt_total_cnt - total_in_tgt;
- 
- 	if (remaining < 0) {
--		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
-+		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
- 			 tgt_total_cnt, total_in_tgt);
- 		return -EPROTO;
- 	}
++	if (unlikely(!devname || !*devname)) {
++		cifs_dbg(VFS, "Device name not specified.\n");
++		return -EINVAL;
++	}
++
+ 	/* make sure we have a valid UNC double delimiter prefix */
+ 	len = strspn(devname, delims);
+ 	if (len != 2)
 -- 
 2.19.1
 
