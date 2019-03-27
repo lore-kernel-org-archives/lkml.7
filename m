@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42C5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232D5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D63204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD62D204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713684;
-	bh=nY+eHoxEhyDZlB54lIOyeUi9JPcqzwmLIWIwepUcsRk=;
+	s=default; t=1553713692;
+	bh=HsYyoFIPy0JTyw1gC/LQ/DP5R9J5hYacmOCuux4BoAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjo37wy/fGzHiGEzQ54Q9eT4LyWc5XluAoqhw+SUQixa7uENa9W6GY5x7ozXZCqV2
-	 EYcj+4I6ZMVcnsH9vt+DsnRlsed7cYCIYyewFWqligWxyPZ1IQ4GgHn5BWcr1iJBGp
-	 clslhhI+F9ADi50auo6uNLAHwRWjwT817T6EmjYo=
+	b=nVh/zW1DFoceu0XwomrEBRFXmTIwMyfC31CkNrtu4KZ1FC5Va9TH07ZzWSSnkK7T6
+	 nK6T2vwLpD+Fam+QDlAsvtDjxIsZ8wGq3kT0+xdHUuxpplXF1JUARhVo30FwvEXoUL
+	 Y7wzFbQb3vvY0zmwzLg0P/0gd011aKAg/XDIPPNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389561AbfC0TID (ORCPT
+        id S2389103AbfC0SLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:08:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388407AbfC0SLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:54 -0400
+        id S2389022AbfC0SLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0852147C;
-        Wed, 27 Mar 2019 18:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 790CF217F9;
+        Wed, 27 Mar 2019 18:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710313;
-        bh=nY+eHoxEhyDZlB54lIOyeUi9JPcqzwmLIWIwepUcsRk=;
+        s=default; t=1553710299;
+        bh=HsYyoFIPy0JTyw1gC/LQ/DP5R9J5hYacmOCuux4BoAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHobZjoK6ZYkXZSQls/kD3defEHNo9QdmBn1fYfWxwayhWc4K63WvrfxxofY2Oaa6
-         2cO3592VsDRuPyAHn0D3OHfuB+7CwfonlqzKUcUNP8Wci128xQx8sJzI3c2BXyDrOv
-         NIXZUiMoeiQ+p9aZNa3Z5grT7eA3jF/vnx5RW0DU=
+        b=mQyhpJLI4p2/AI/POYeXMs1Nz0HzXryxvk3IMRZ8TP4GXofd+LnByfphASJdsLY44
+         Pi0twh9WMqb4yuElxATHwYrXRtkStIfRcmd6aEBPHEdg1RsMLnJrILG9znziUOD1B/
+         OFLDj/lIx9m72wp9rVj/5VZ/FI+JMLHULgzkPv0Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Mahipal Challa <mahipalreddy2006@gmail.com>,
-        Jan Glauber <jglauber@cavium.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 050/192] crypto: cavium/zip - fix collision with generic cra_driver_name
-Date:   Wed, 27 Mar 2019 14:08:02 -0400
-Message-Id: <20190327181025.13507-50-sashal@kernel.org>
+Cc:     luojiajun <luojiajun3@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 043/192] jbd2: fix invalid descriptor block checksum
+Date:   Wed, 27 Mar 2019 14:07:55 -0400
+Message-Id: <20190327181025.13507-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,68 +56,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: luojiajun <luojiajun3@huawei.com>
 
-[ Upstream commit 41798036430015ad45137db2d4c213cd77fd0251 ]
+[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
 
-The cavium/zip implementation of the deflate compression algorithm is
-incorrectly being registered under the generic driver name, which
-prevents the generic implementation from being registered with the
-crypto API when CONFIG_CRYPTO_DEV_CAVIUM_ZIP=y.  Similarly the lzs
-algorithm (which does not currently have a generic implementation...)
-is incorrectly being registered as lzs-generic.
+In jbd2_journal_commit_transaction(), if we are in abort mode,
+we may flush the buffer without setting descriptor block checksum
+by goto start_journal_io. Then fs is mounted,
+jbd2_descriptor_block_csum_verify() failed.
 
-Fix the naming collision by adding a suffix "-cavium" to the
-cra_driver_name of the cavium/zip algorithms.
+[  271.379811] EXT4-fs (vdd): shut down requested (2)
+[  271.381827] Aborting journal on device vdd-8.
+[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
+[  271.598023] JBD2: recovery failed
+[  271.598484] EXT4-fs (vdd): error loading journal
 
-Fixes: 640035a2dc55 ("crypto: zip - Add ThunderX ZIP driver core")
-Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
-Cc: Jan Glauber <jglauber@cavium.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fix this problem by keep setting descriptor block checksum if the
+descriptor buffer is not NULL.
+
+This checksum problem can be reproduced by xfstests generic/388.
+
+Signed-off-by: luojiajun <luojiajun3@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/cavium/zip/zip_main.c | 6 ++++--
+ fs/jbd2/commit.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/cavium/zip/zip_main.c b/drivers/crypto/cavium/zip/zip_main.c
-index be055b9547f6..6183f9128a8a 100644
---- a/drivers/crypto/cavium/zip/zip_main.c
-+++ b/drivers/crypto/cavium/zip/zip_main.c
-@@ -351,6 +351,7 @@ static struct pci_driver zip_driver = {
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 150cc030b4d7..65ea0355a4f6 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -691,9 +691,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                            the last tag we set up. */
  
- static struct crypto_alg zip_comp_deflate = {
- 	.cra_name		= "deflate",
-+	.cra_driver_name	= "deflate-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -365,6 +366,7 @@ static struct crypto_alg zip_comp_deflate = {
- 
- static struct crypto_alg zip_comp_lzs = {
- 	.cra_name		= "lzs",
-+	.cra_driver_name	= "lzs-cavium",
- 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
- 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
- 	.cra_priority           = 300,
-@@ -384,7 +386,7 @@ static struct scomp_alg zip_scomp_deflate = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "deflate",
--		.cra_driver_name	= "deflate-scomp",
-+		.cra_driver_name	= "deflate-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
-@@ -397,7 +399,7 @@ static struct scomp_alg zip_scomp_lzs = {
- 	.decompress		= zip_scomp_decompress,
- 	.base			= {
- 		.cra_name		= "lzs",
--		.cra_driver_name	= "lzs-scomp",
-+		.cra_driver_name	= "lzs-scomp-cavium",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = 300,
- 	}
+ 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
+-
+-			jbd2_descriptor_block_csum_set(journal, descriptor);
+ start_journal_io:
++			if (descriptor)
++				jbd2_descriptor_block_csum_set(journal,
++							descriptor);
++
+ 			for (i = 0; i < bufs; i++) {
+ 				struct buffer_head *bh = wbuf[i];
+ 				/*
 -- 
 2.19.1
 
