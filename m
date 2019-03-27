@@ -2,202 +2,136 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA8FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9B3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856F92075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C5620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMzUCZ+S"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jjsVZAuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732779AbfC0GCZ (ORCPT
+        id S1732578AbfC0GHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:02:25 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34982 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfC0GCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:02:24 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p19so2801575plo.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 23:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=KzoF20xLXXHyuCyJwFWJTRtr4sQQnjQpJ/lE1vgkmDI=;
-        b=OMzUCZ+SoT5qG9yhUgwjX7tjNPt4pdrwVBKikzC8q4ys0U+U7jlniqAK67wQfpn2Sb
-         ycL2UxyNUjumwbILINLWnq/pk+DeQjNZAnF7oC/Q7YwV0tNl4dPnnNyoeMIYuJIkrITH
-         HQtirbdtYx7gOu7gvMyTjQd/3V0MgNfR0kec7bRMlp37RyhZ/RPwlrp3El9CQzfCrVUO
-         FIaFeD0tRgDQIJFdbMOYrjTzpJidV74U8FjXIJzX9+zEeQsrJAeVSYpjJu2jf5E4kLVD
-         hKLiITEYF51aeNiB8DeaRm9eu+j/tl/nSK9VJKebZmzf/dJF2OSWgtgfj63NwJ6cz+Xm
-         guvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=KzoF20xLXXHyuCyJwFWJTRtr4sQQnjQpJ/lE1vgkmDI=;
-        b=CEUT1I0SDyh9E/LsFhCB8DNHlLGQJIpCnALIEc14kTVxewUEwbvi4hxNbHsX+47A73
-         wTsj9YNB31CetNrcSw9RtJlNeb6DFpfgFAIHIO6/xgupPtoSqAgoLO4Z7TMOADX07X0/
-         Ykzwl79i2gnRPq9wh1C8MKYXULADXvdUXUo87QR/ON5Q4kaafePkn8Nz/wiFx2B4/7/U
-         +atrhEAv+WyYLzfM4rb1hxi2TN0BurKTz7tKn/WKsty1YgDgjoqAuw0lX2YZ6H4aBybl
-         B3z5Ybkh2AM9kl5/9F1RQTFf2yAAbopcWjl+ImiNX6IlAPkcXwhdq5j9nRlbWg2IIlDg
-         NEDg==
-X-Gm-Message-State: APjAAAW9zoky7GTI8COCnQpBJvA6EegO5zlYn2rNWpbN64psjX5Mgk2j
-        NLpneAq9XYJmv8/ZcVQ92Ok=
-X-Google-Smtp-Source: APXvYqxZoXL+IoJDc/8cBoh2N4FAo4Gu3+AaV6eO4N/9bOzKfQAxU7wuWbbkiFSkSI5928eYORtmZw==
-X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr35900971plk.282.1553666543898;
-        Tue, 26 Mar 2019 23:02:23 -0700 (PDT)
-Received: from localhost (14-202-58-188.tpgi.com.au. [14.202.58.188])
-        by smtp.gmail.com with ESMTPSA id w123sm31329456pfw.72.2019.03.26.23.02.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 Mar 2019 23:02:23 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 16:02:16 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2]  arch/powerpc: Rework local_paca to avoid LTO warnings
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        =?iso-8859-1?q?Mahesh=0A?= Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        =?iso-8859-1?q?Mike=0A?= Rapoport <rppt@linux.vnet.ibm.com>
-References: <20190313034208.13134-1-alastair@au1.ibm.com>
-        <20190314023125.10076-1-alastair@au1.ibm.com>
-        <1553579424.0r39b9otz6.astroid@bobo.none>
-        <8d8a97e145758b92c2760012373f5217877a035c.camel@au1.ibm.com>
-In-Reply-To: <8d8a97e145758b92c2760012373f5217877a035c.camel@au1.ibm.com>
-MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1553665102.ow7h62jw1u.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
+        Wed, 27 Mar 2019 02:07:10 -0400
+Received: from mail-eopbgr30073.outbound.protection.outlook.com ([40.107.3.73]:27559
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725613AbfC0GHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:07:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7iJYIbmrnT583ospKU4CTyL/y2D6ddI6TmFpciroNXk=;
+ b=jjsVZAuQjksappIjU3bzSvNeRHn6E8zrbrOQhsbM/klJedHURSkNTVIAa2GYrAtOVDR7vgKl3qGem4R+rh2Q3+78BsShWOOtOqNUNxvU8OQR+Uf5LiGQITulY7GVXpBpUvE6W5Jj++mH5x7wa9TjQilAC9eE2JiqYSIXNq7C/q0=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3900.eurprd04.prod.outlook.com (52.134.71.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 06:07:06 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::f1b4:a1fb:cfd1:3f08%7]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 06:07:06 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V2] input: keyboard: snvs: initialize necessary driver data
+ before enabling IRQ
+Thread-Topic: [PATCH V2] input: keyboard: snvs: initialize necessary driver
+ data before enabling IRQ
+Thread-Index: AQHU5GNN8W1L9gH3DEapcQ5xt6rW9A==
+Date:   Wed, 27 Mar 2019 06:07:06 +0000
+Message-ID: <1553666514-21505-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0059.apcprd04.prod.outlook.com
+ (2603:1096:202:14::27) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fdb7fcb0-325e-4636-922a-08d6b27a700c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3900;
+x-ms-traffictypediagnostic: DB3PR0402MB3900:
+x-microsoft-antispam-prvs: <DB3PR0402MB3900041ECA85FD064D35BE45F5580@DB3PR0402MB3900.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(366004)(39860400002)(376002)(199004)(189003)(7736002)(68736007)(2906002)(8936002)(97736004)(81156014)(305945005)(14454004)(8676002)(81166006)(53936002)(6512007)(478600001)(2501003)(50226002)(6436002)(106356001)(4326008)(25786009)(105586002)(6486002)(36756003)(66066001)(316002)(5660300002)(99286004)(52116002)(6506007)(3846002)(6116002)(2201001)(110136005)(476003)(486006)(14444005)(256004)(186003)(86362001)(71190400001)(71200400001)(102836004)(2616005)(26005)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3900;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +qDcASEaua+8slafwi2hpY0SonZNcnO1MsuT7SQBC9rkeJqCJ1K7DW6eto6PytG72ThWN9Mz46MEhkr4jYbAbUFgTdTgTgK0o0UJHkxR5R+lc2wfidPX6Z32m0YiRiqyz0LdzkVatHiJwNu+0baZOQKRGvup4tb0T6I6K9xjLry0ZBwA5zXCiDv4VKQps1iawwTwlF4xsHnigabu0uZXowIit4ZPX6Sibg5P+c3VNQn0pby2+pl7Xq2+YoMApJRTsyhklcIJSOeG2GefHLluvjGG1zf1eYMO6oG78LwjTzVd9/lyOMKqjhnyJZ2R0Kzxb6fwMjgDTiaXOpUjfn0g/xRcZn1/a4Pqi7CqFUXIgcrH9UL2qwjNoXQ+cjGh7drxWnbFCz0IEE6mjk4zH9tYG1XuENRjwy5OlyNherBFo9o=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdb7fcb0-325e-4636-922a-08d6b27a700c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 06:07:06.0764
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3900
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alastair D'Silva's on March 27, 2019 2:37 pm:
-> On Tue, 2019-03-26 at 15:58 +1000, Nicholas Piggin wrote:
->> Alastair D'Silva's on March 14, 2019 12:31 pm:
->> > From: Alastair D'Silva <alastair@d-silva.org>
->> >=20
->> > When building an LTO kernel, the existing code generates warnings:
->> >     ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
->> >         =E2=80=98local_paca=E2=80=99 used for multiple global register=
- variables
->> >      register struct paca_struct *local_paca asm("r13");
->> >                                   ^
->> >     ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
->> >         =E2=80=98local_paca=E2=80=99
->>=20
->> Isn't this a bogus warning? It doesn't look like there's a way to=20
->> define it any other way.
->=20
-> There isn't any other way to define it as a global. However, the
-> warning is legitimate.
->=20
-> The compiler sees that there are multiple global register variables,
-> all pointing at the same register.
+SNVS IRQ is requested before necessary driver data initialized,
+if there is a pending IRQ during driver probe phase, kernel
+NULL pointer panic will occur in IRQ handler. To avoid such
+scenario, just initialize necessary driver data before enabling
+IRQ. This patch is inspired by NXP's internal kernel tree.
 
-It's one variable though, so it's not a legitimate warning (unless
-there is a way to declare a "reference" to it that we are not doing).
+Fixes: d3dc6e232215 ("input: keyboard: imx: add snvs power key driver")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- move the platform data initialization to before IRQ enable instead of mo=
+ving the IRQ enable
+	  to the end of probe function.
+---
+ drivers/input/keyboard/snvs_pwrkey.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->=20
-> The compiler can only determine this when LTO is used, as otherwise it
-> only sees the one in the current compilation unit, whicd disappears by
-> the time the kernel is linked.
->=20
->>=20
->> > This patch reworks local_paca into an inline getter & setter
->> > function,
->> > which addresses the warning.
->> >=20
->> > Changelog:
->> > V2
->> >   - Address whitespace issues
->> >   - keep new implementation close to where the old implementation
->> > was
->> >=20
->> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
->> > ---
->> >  arch/powerpc/include/asm/paca.h | 37 +++++++++++++++++++++++++--
->> > ------
->> >  arch/powerpc/kernel/paca.c      |  2 +-
->> >  2 files changed, 29 insertions(+), 10 deletions(-)
->> >=20
->> > diff --git a/arch/powerpc/include/asm/paca.h
->> > b/arch/powerpc/include/asm/paca.h
->> > index e843bc5d1a0f..2fa0b43357c9 100644
->> > --- a/arch/powerpc/include/asm/paca.h
->> > +++ b/arch/powerpc/include/asm/paca.h
->> > @@ -34,19 +34,38 @@
->> >  #include <asm/cpuidle.h>
->> >  #include <asm/atomic.h>
->> > =20
->> > -register struct paca_struct *local_paca asm("r13");
->> > -
->> >  #if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
->> >  extern unsigned int debug_smp_processor_id(void); /* from
->> > linux/smp.h */
->> > -/*
->> > - * Add standard checks that preemption cannot occur when using
->> > get_paca():
->> > - * otherwise the paca_struct it points to may be the wrong one
->> > just after.
->> > - */
->> > -#define get_paca()	((void) debug_smp_processor_id(), local_paca)
->> > -#else
->> > -#define get_paca()	local_paca
->> >  #endif
->> > =20
->> > +static inline struct paca_struct *get_paca_no_preempt_check(void)
->> > +{
->> > +	register struct paca_struct *paca asm("r13");
->> > +
->> > +	return paca;
->> > +}
->>=20
->> Problem is it now changes the global register variable to a local=20
->> register variable. The compiler would presumably be within its rights
->> to "cache" that return value or use another register for it, which
->> is not really what we want.
->>=20
->>=20
->=20
-> I've confirmed that at least with GCC 8.2.0, the generated assembler is
-> similar, but yes, the compiler may be free to take a copy into another
-> register (although that would be a terrible optimisation), and then
-> operate on that value.
+diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/=
+snvs_pwrkey.c
+index effb632..4c67cf3 100644
+--- a/drivers/input/keyboard/snvs_pwrkey.c
++++ b/drivers/input/keyboard/snvs_pwrkey.c
+@@ -148,6 +148,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device=
+ *pdev)
+ 		return error;
+ 	}
+=20
++	pdata->input =3D input;
++	platform_set_drvdata(pdev, pdata);
++
+ 	error =3D devm_request_irq(&pdev->dev, pdata->irq,
+ 			       imx_snvs_pwrkey_interrupt,
+ 			       0, pdev->name, pdev);
+@@ -163,9 +166,6 @@ static int imx_snvs_pwrkey_probe(struct platform_device=
+ *pdev)
+ 		return error;
+ 	}
+=20
+-	pdata->input =3D input;
+-	platform_set_drvdata(pdev, pdata);
+-
+ 	device_init_wakeup(&pdev->dev, pdata->wakeup);
+=20
+ 	return 0;
+--=20
+2.7.4
 
-Yep.
-
->=20
-> Subsequent uses would still have to call the function (ie. fetch the
-> data from r13) regardless, so I believe this scenario is safe.
->=20
-> Can you think of a scenario where this is a problem?
-
-It wouldn't be the subsequent use but the one use. If you're preempted
-then you can't be using a stale r13 value.
-
-Quite possibly any bug like that would already be buggy now, the cases
-where it matters tend to need asm to access it. And it's something we
-need to really audit and have proper accessors and preempt warnings
-that Ben always harped on about.
-
-But to just work around this warning it seems pretty dangerous to
-change this and hope.
-
-Thanks,
-Nick
-
-=
