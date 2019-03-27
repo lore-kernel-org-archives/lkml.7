@@ -2,116 +2,138 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87E9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ADDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0F3206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553687102;
-	bh=Kio6SDYjK2T6k+leQ8Z8TPGLE4GYZBqVLuWHkNOstL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SD1CRB9lPwA9gfzrk253LNX6RfRgJAVCH857XdB7LytFoelPQri3nag62cbpZEBw8
-	 yPy+2t51u4kl26HxYDsKrH/D5MIs+WLqU6cvJQlqCC+jdJTWwDixuO7McF2UaCP26F
-	 GFd9NzYwaQ0IyxhI94deuMd1gwDXuYkg25sYnOSM=
+	by mail.kernel.org (Postfix) with ESMTP id 8EDA1206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RmQYpu6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbfC0LpB (ORCPT
+        id S1728302AbfC0LrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:45:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49246 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726312AbfC0LpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:45:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9BD45AEF5;
-        Wed, 27 Mar 2019 11:44:59 +0000 (UTC)
-Date:   Wed, 27 Mar 2019 12:44:58 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, catalin.marinas@arm.com, cl@linux.com,
-        willy@infradead.org, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] kmemleak: survive in a low-memory situation
-Message-ID: <20190327114458.GF11927@dhcp22.suse.cz>
-References: <20190327005948.24263-1-cai@lca.pw>
- <20190327084432.GA11927@dhcp22.suse.cz>
- <651bd879-c8c0-b162-fee7-1e523904b14e@lca.pw>
+        Wed, 27 Mar 2019 07:47:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58060 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfC0LrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 07:47:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2RBlMN1030653;
+        Wed, 27 Mar 2019 06:47:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1553687242;
+        bh=Ap9vSdyenjhy6ZrSqkBKTpucJfeAHKBiWk38SRU+1x8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RmQYpu6nyfgJAqIEy65X60yzWh1TeieWwJ1LvOzsGhnfAgQILFG+5RQFpfzF3DSB7
+         WePpirGcVmIeAgVFaSTr8mdky5rmlWbJoCO0xzbZNIEQxbdNMW70j9xU4GUoIA3Qj8
+         r+cLveaHC8/9WAGhfMoqpA0kTZh/x5jGhvxwGfGs=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2RBlMFu022959
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Mar 2019 06:47:22 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 27
+ Mar 2019 06:47:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 27 Mar 2019 06:47:21 -0500
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2RBlJrZ092265;
+        Wed, 27 Mar 2019 06:47:19 -0500
+Subject: Re: [PATCH v4 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
+ error during tuning
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+CC:     <ulf.hansson@linaro.org>, <kishon@ti.com>
+References: <20190326110057.7055-1-faiz_abbas@ti.com>
+ <20190326110057.7055-3-faiz_abbas@ti.com>
+ <508e9423-c1f9-f2cc-4aa9-2cc5b1cf40a8@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <05a2f5ef-1fee-15f4-6a9b-e3f3f3ee5a82@ti.com>
+Date:   Wed, 27 Mar 2019 17:17:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <651bd879-c8c0-b162-fee7-1e523904b14e@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <508e9423-c1f9-f2cc-4aa9-2cc5b1cf40a8@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27-03-19 07:34:32, Qian Cai wrote:
-> On 3/27/19 4:44 AM, Michal Hocko wrote:
-> >> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> >> index a2d894d3de07..7f4545ab1f84 100644
-> >> --- a/mm/kmemleak.c
-> >> +++ b/mm/kmemleak.c
-> >> @@ -580,7 +580,16 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
-> >>  	struct rb_node **link, *rb_parent;
-> >>  	unsigned long untagged_ptr;
-> >>  
-> >> -	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
-> >> +	/*
-> >> +	 * The tracked memory was allocated successful, if the kmemleak object
-> >> +	 * failed to allocate for some reasons, it ends up with the whole
-> >> +	 * kmemleak disabled, so try it harder.
-> >> +	 */
-> >> +	gfp = (in_atomic() || irqs_disabled()) ?
-> >> +	       gfp_kmemleak_mask(gfp) | GFP_ATOMIC :
-> >> +	       gfp_kmemleak_mask(gfp) | __GFP_DIRECT_RECLAIM;
-> > 
-> > 
-> > The comment for in_atomic says:
-> >  * Are we running in atomic context?  WARNING: this macro cannot
-> >  * always detect atomic context; in particular, it cannot know about
-> >  * held spinlocks in non-preemptible kernels.  Thus it should not be
-> >  * used in the general case to determine whether sleeping is possible.
-> >  * Do not use in_atomic() in driver code.
-> 
-> That is why it needs both in_atomic() and irqs_disabled(), so irqs_disabled()
-> can detect kernel functions held spinlocks even in non-preemptible kernels.
-> 
-> According to [1],
-> 
-> "This [2] is useful if you know that the data in question is only ever
-> manipulated from a "process context", ie no interrupts involved."
-> 
-> Since kmemleak only deal with kernel context, if a spinlock was held, it always
-> has local interrupt disabled.
+Hi Adrian,
 
-What? Normal spin lock implementation doesn't disable interrupts. So
-either I misunderstand what you are saying or you seem to be confused.
-the thing is that in_atomic relies on preempt_count to work properly and
-if you have CONFIG_PREEMPT_COUNT=n then you simply never know whether
-preemption is disabled so you do not know that a spin_lock is held.
-irqs_disabled on the other hand checks whether arch specific flag for
-IRQs handling is set (or cleared). So you would only catch irq safe spin
-locks with the above check.
-
-> ftrace is in the same boat where this commit was merged a while back that has
-> the same check.
+On 27/03/19 4:45 PM, Adrian Hunter wrote:
+> On 26/03/19 1:00 PM, Faiz Abbas wrote:
+>> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+>> callback") skips data resets during tuning operation. Because of this,
+>> a data error or data finish interrupt might still arrive after a command
+>> error has been handled and the mrq ended. This ends up with a "mmc0: Got
+>> data interrupt 0x00000002 even though no data operation was in progress"
+>> error message.
+>>
+>> Fix this by adding a platform specific callback for sdhci_irq. Mark the
+>> mrq as a failure but wait for a data interrupt instead of calling
+>> finish_mrq().
+>>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  drivers/mmc/host/sdhci-omap.c | 37 +++++++++++++++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+>> index 5bbed477c9b1..9da2ff9ede8b 100644
+>> --- a/drivers/mmc/host/sdhci-omap.c
+>> +++ b/drivers/mmc/host/sdhci-omap.c
+>> @@ -797,6 +797,42 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
+>>  	sdhci_reset(host, mask);
+>>  }
+>>  
+>> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX |\
+>> +		      SDHCI_INT_TIMEOUT)
+>> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
+>> +
+>> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	if (omap_host->is_tuning && (intmask & CMD_ERR_MASK)) {
+>> +
+>> +		/*
+>> +		 * Since we are not resetting data lines during tuning
+>> +		 * operation, data error or data complete interrupts
+>> +		 * might still arrive. Mark this request as a failure
+>> +		 * but still wait for the data interrupt
+>> +		 */
+>> +		if (intmask & SDHCI_INT_TIMEOUT)
+>> +			host->cmd->error = -ETIMEDOUT;
+>> +		else
+>> +			host->cmd->error = -EILSEQ;
+>> +
+>> +		sdhci_finish_command(host);
 > 
-> ef99b88b16be
-> tracing: Handle ftrace_dump() atomic context in graph_trace_open()
-> 
-> [1] https://www.kernel.org/doc/Documentation/locking/spinlocks.txt
-> [2]
-> 	spin_lock(&lock);
-> 	...
-> 	spin_unlock(&lock);
+> Would it be possible to set SDHCI_INT_RESPONSE instead of calling
+> sdhci_finish_command() directly?
+>
 
--- 
-Michal Hocko
-SUSE Labs
+It should be possible. But what we are trying to do won't be very clear
+from the code. Ideally an interrupt handler should not set any interrupt
+bits, just handle and clear them. Also, setting the RESPONSE bit even
+when there has been no response seems wrong and makes the code more
+convoluted.
+
+Thanks,
+Faiz
+
