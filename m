@@ -2,50 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACAAC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDA6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D763205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84F9205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712986;
-	bh=ue8sRECZPNkgdQONQjHTxJ1XRFmgWVYkYyDvdhg2IJI=;
+	s=default; t=1553712990;
+	bh=7EH4dVlSDuD7rrHSEaMh/smm3ISlrRpdbt8Mqn3fxRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14SjK34j+9riEZIMuzaKTUdXfKC99ZOaVC5zVxnyQOWoiwGS19HyycBqVw0B0X6SN
-	 VjfspQ5XzYSKjldvQKeztTI/Ru+y6CuR+9hlDVmyDlyqF016LGnnjSReLCHATUrJQQ
-	 jH/rVxIPQkXHbrOXJjq7xZisx/QpiV5z1kE8LC5Y=
+	b=pCz/Kfe0ZioyRU2HTF8/zh04cZ/YVnrLH/ZaXzTywldPQ3YXtAZSRaWNrFT3MuhqI
+	 oso3sdpH5dgcduGPf1ZQrNk3GRttcuPsSWJZEx8pdoE2p6Si6CYEhY01RHBE+6HHMu
+	 8sV1jGxmoe1w2j1Ty7qAHOzVU3FsrhHEgGXsH+OM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390047AbfC0SQ0 (ORCPT
+        id S2390540AbfC0S42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:56:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388977AbfC0SQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:21 -0400
+        id S2390040AbfC0SQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29736217F5;
-        Wed, 27 Mar 2019 18:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF9A72183E;
+        Wed, 27 Mar 2019 18:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710580;
-        bh=ue8sRECZPNkgdQONQjHTxJ1XRFmgWVYkYyDvdhg2IJI=;
+        s=default; t=1553710584;
+        bh=7EH4dVlSDuD7rrHSEaMh/smm3ISlrRpdbt8Mqn3fxRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhT66B2/HPrUjmwlDMN0kGQlH/UqNgAeq6qZclernVNrpfpt8h37PBkfFiV2+Cju2
-         zFi8YjcGSwX6ybryNz5pNnPXZteBxgv3Eq2/5uagUwUfMwBtKBcCj+PhpQ4Gr0fM+b
-         LKPohHcTt+ggQiDjfCBJfHe25E3aMS9A8z/ii2ZA=
+        b=dUI0rk08FPh+u/2dGaA726xhld9XKAmT1TnKVAYeHHP3tvc4X6yioDG7HE7Ww+zdB
+         MmJkSI2QRlxPAADizVR7u8cMS2XLhF/WWCeSmzpP8QMU0XbI6eVaO7Z6uMgBrUwsyD
+         Vt2q/CtR/HrW9KvoqUTYCcSSKkL1cMJ+MjFknTns=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 187/192] Input: soc_button_array - fix mapping of the 5th GPIO in a PNP0C40 device
-Date:   Wed, 27 Mar 2019 14:10:19 -0400
-Message-Id: <20190327181025.13507-187-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 190/192] net: stmmac: Avoid one more sometimes uninitialized Clang warning
+Date:   Wed, 27 Mar 2019 14:10:22 -0400
+Message-Id: <20190327181025.13507-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,54 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e9eb788f9442d1b5d93efdb30c3be071ce8a22b1 ]
+[ Upstream commit 1f5d861f7fefa971b2c6e766f77932c86419a319 ]
 
-The Microsoft documenation for the PNP0C40 device aka the
-"Windows-compatible button array" describes the 5th GpioInt listed in
-the resources as: '5. Interrupt corresponding to the "Rotation Lock"
-button, if supported'.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-Notice this describes the 5th entry as a button while we sofar have been
-mapping it to EV_SW, SW_ROTATE_LOCK. On my Point of View TAB P1006W-232
-which actually comes with a rotation-lock button, the button indeed is a
-button and not a slider/switch. An image search for other Windows tablets
-has found 2 more models with a rotation-lock button and on both of those
-it too is a push-button and not a slider/switch.
+drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
+'ns' is used uninitialized whenever 'if' condition is false
+[-Werror,-Wsometimes-uninitialized]
+drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c:111:2: error: variable
+'ns' is used uninitialized whenever '&&' condition is false
+[-Werror,-Wsometimes-uninitialized]
 
-Further evidence can be found in the HUT extension HUTRR52 from Microsoft
-which adds rotation lock support to the HUT, which describes 2 different
-usages: "0xC9 System Display Rotation Lock Button" and
-"0xCA System Display Rotation Lock Slider Switch" note that switch is seen
-as a separate thing here and the non switch wording is an exact match for
-the "Windows-compatible button array" spec wording.
+Clang is concerned with the use of stmmac_do_void_callback (which
+stmmac_get_systime wraps), as it may fail to initialize these values if
+the if condition was ever false (meaning the callback doesn't exist).
+It's not wrong because the callback is what initializes ns. While it's
+unlikely that the callback is going to disappear at some point and make
+that condition false, we can easily avoid this warning by zero
+initializing the variable.
 
-TL;DR: our current mapping of the 5th GPIO to SW_ROTATE_LOCK is wrong
-because the 5th GPIO is for a push-button not a switch.
-
-This commit fixes this by maping the 5th GPIO to KEY_ROTATE_LOCK_TOGGLE.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/384
+Fixes: df103170854e ("net: stmmac: Avoid sometimes uninitialized Clang warnings")
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/soc_button_array.c | 2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-index 23520df7650f..55cd6e0b409c 100644
---- a/drivers/input/misc/soc_button_array.c
-+++ b/drivers/input/misc/soc_button_array.c
-@@ -373,7 +373,7 @@ static struct soc_button_info soc_button_PNP0C40[] = {
- 	{ "home", 1, EV_KEY, KEY_LEFTMETA, false, true },
- 	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
- 	{ "volume_down", 3, EV_KEY, KEY_VOLUMEDOWN, true, false },
--	{ "rotation_lock", 4, EV_SW, SW_ROTATE_LOCK, false, false },
-+	{ "rotation_lock", 4, EV_KEY, KEY_ROTATE_LOCK_TOGGLE, false, false },
- 	{ }
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+index 2293e21f789f..cc60b3fb0892 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c
+@@ -105,7 +105,7 @@ static int stmmac_get_time(struct ptp_clock_info *ptp, struct timespec64 *ts)
+ 	struct stmmac_priv *priv =
+ 	    container_of(ptp, struct stmmac_priv, ptp_clock_ops);
+ 	unsigned long flags;
+-	u64 ns;
++	u64 ns = 0;
  
+ 	spin_lock_irqsave(&priv->ptp_lock, flags);
+ 	stmmac_get_systime(priv, priv->ptpaddr, &ns);
 -- 
 2.19.1
 
