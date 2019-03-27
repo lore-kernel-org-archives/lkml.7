@@ -2,140 +2,88 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FD2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791CBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AA52075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3588B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:43:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553730223;
+	bh=3H91yTnlmYLSB3g9sniguGrQ5U4UG59dCRzHA2puXZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ak4WdVz7mKcLUxa37QWq6sOLVzvly66XpQD62WHNbVxP4UIOQTwallxgfQQRcNYUy
+	 AGhzfmbxp+rgmHLMvEvotQYIT0QxMYcr/0aFBIhg9bQfeBtwoQ+ALDsnV6Jes0zgY5
+	 YQwU7MR7e/ifRJrFeEaoiTQcP/2DSQnwkn8D9gac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbfC0Xnd (ORCPT
+        id S1733243AbfC0Xnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:43:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36140 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726305AbfC0Xnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:43:31 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2DF830B2550;
-        Wed, 27 Mar 2019 23:43:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 744D15D9C4;
-        Wed, 27 Mar 2019 23:43:29 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 23/68] vfs: Convert nfsctl to use the new mount API
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dhowells@redhat.com
-Date:   Wed, 27 Mar 2019 23:43:28 +0000
-Message-ID: <155373020870.7602.11859525820326964283.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
-References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 27 Mar 2019 19:43:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45579 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfC0Xni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 19:43:38 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y84so14324872oia.12;
+        Wed, 27 Mar 2019 16:43:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tcNph9Id69E8YhpBRkzJlYXeaGJpvhJ4H1oJ7noArf4=;
+        b=pHwOGUxMNXvTkyliOX1003htPwTbZmse65VrB55csnC2gIU1lkjT0eN2IsyrLphrom
+         t6MITnFmUHmuFgitJ5cHNoQg4JbUBgU3mBT0ru7GM+Ks6SaRv0etJz4nSKM9UM4K5APj
+         RT/pIXM2IBvidynqNikKWlNvp+HuomYfnr5usBEckex2vq898GkuAgZlr4yYpPbJLih1
+         bTiw3DaLCFI8PGdcb7Ff4fetpDLVczenFs9YDijxtGNWX1/Nocqm+pWOMIgbCzVfYdUY
+         AavxpJPpSKqAZUdw0KKabuwgLx67s0GQWGk5O5m/8q+ZK5Sv2B55uX6gz2YpMS3YlRJf
+         yNzA==
+X-Gm-Message-State: APjAAAWNnRXgmkEv9MhfJv7hVuSyg+OEYDU52OtvMUJisGXvOe1W5Dcf
+        gugxZ7dzidhW1pJ+tESylk+8CiI=
+X-Google-Smtp-Source: APXvYqwZ37Ax9Wip1cheKrD17VWGGSjdCdqC1GQnBJrUBPgfc681U2qv1liHAycHGCUo+mBfxAWXfA==
+X-Received: by 2002:aca:3c8a:: with SMTP id j132mr11824869oia.38.1553730217755;
+        Wed, 27 Mar 2019 16:43:37 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 66sm2927148otn.39.2019.03.27.16.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Mar 2019 16:43:37 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 18:43:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: remoteproc: Rename qcom,adsp binding
+ document
+Message-ID: <20190327234336.GA20438@bogus>
+References: <20190306232220.32722-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 27 Mar 2019 23:43:30 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190306232220.32722-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the nfsctl filesystem to the new internal mount API as the old
-one will be obsoleted and removed.  This allows greater flexibility in
-communication of mount parameters between userspace, the VFS and the
-filesystem.
+On Wed,  6 Mar 2019 15:22:20 -0800, Bjorn Andersson wrote:
+> The qcom,adsp binding document has evolved to cover the mechanism to
+> load and boot firmware on a range of different Hexagon based remote
+> subsystems. Rename the binding and update the description to better
+> capture this.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../{qcom,adsp.txt => qcom,q6v5-pas.txt}          | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>  rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp.txt => qcom,q6v5-pas.txt} (88%)
+> 
 
-See Documentation/filesystems/mount_api.txt for more information.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "J. Bruce Fields" <bfields@fieldses.org>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-nfs@vger.kernel.org
----
-
- fs/nfsd/nfsctl.c |   33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
-
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index f2feb2d11bae..d4eb4f34a94c 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -7,6 +7,7 @@
- #include <linux/slab.h>
- #include <linux/namei.h>
- #include <linux/ctype.h>
-+#include <linux/fs_context.h>
- 
- #include <linux/sunrpc/svcsock.h>
- #include <linux/lockd/lockd.h>
-@@ -1146,7 +1147,7 @@ static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t size)
-  *	populating the filesystem.
-  */
- 
--static int nfsd_fill_super(struct super_block * sb, void * data, int silent)
-+static int nfsd_fill_super(struct super_block *sb, struct fs_context *fc)
- {
- 	static const struct tree_descr nfsd_files[] = {
- 		[NFSD_List] = {"exports", &exports_nfsd_operations, S_IRUGO},
-@@ -1176,15 +1177,33 @@ static int nfsd_fill_super(struct super_block * sb, void * data, int silent)
- #endif
- 		/* last one */ {""}
- 	};
--	get_net(sb->s_fs_info);
-+
- 	return simple_fill_super(sb, 0x6e667364, nfsd_files);
- }
- 
--static struct dentry *nfsd_mount(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data)
-+static int nfsd_fs_get_tree(struct fs_context *fc)
-+{
-+	fc->s_fs_info = get_net(fc->net_ns);
-+	return vfs_get_super(fc, vfs_get_keyed_super, nfsd_fill_super);
-+}
-+
-+static void nfsd_fs_free_fc(struct fs_context *fc)
-+{
-+	if (fc->s_fs_info)
-+		put_net(fc->s_fs_info);
-+}
-+
-+static const struct fs_context_operations nfsd_fs_context_ops = {
-+	.free		= nfsd_fs_free_fc,
-+	.get_tree	= nfsd_fs_get_tree,
-+};
-+
-+static int nfsd_init_fs_context(struct fs_context *fc)
- {
--	struct net *net = current->nsproxy->net_ns;
--	return mount_ns(fs_type, flags, data, net, net->user_ns, nfsd_fill_super);
-+	put_user_ns(fc->user_ns);
-+	fc->user_ns = get_user_ns(fc->net_ns->user_ns);
-+	fc->ops = &nfsd_fs_context_ops;
-+	return 0;
- }
- 
- static void nfsd_umount(struct super_block *sb)
-@@ -1198,7 +1217,7 @@ static void nfsd_umount(struct super_block *sb)
- static struct file_system_type nfsd_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "nfsd",
--	.mount		= nfsd_mount,
-+	.init_fs_context = nfsd_init_fs_context,
- 	.kill_sb	= nfsd_umount,
- };
- MODULE_ALIAS_FS("nfsd");
-
+Reviewed-by: Rob Herring <robh@kernel.org>
