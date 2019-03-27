@@ -6,46 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657C4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60699C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F012082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC7620449
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710654;
-	bh=3qeTIHeLPVV4jzsIh8sPtnx562VU0Z5Y5oFvo9BWeeo=;
+	s=default; t=1553710664;
+	bh=zcUWEd8r4bdfUA9lLYV7HIhvNLrDQzQMyVa3/2CYLk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iU4xcWahjRWHNXm7fnogCDCB8S2PlQCgQLrIj1tP8aBea1Kq+Lflx/GTIOEAB905Q
-	 NiLXOK6PXZAt7mvJCYYTYZnLxDjXCBRdPBzPyDdFdiUeuXclnz8lXkZBuhOQIJ0Xig
-	 az+Ppi5z5Cs75n53zrXfdLnotitpHlZzEaBrTSfE=
+	b=lAprlUdTgMnQPlhHK4dVbZbtirAtTNUW3vsKsGpoi0qAsNGYjir7wNpCNzTSsXSSb
+	 Ka34PGWcID5poJQbUx36dhmgGWmutOolzoRVOErNogG/0KBmp92onM3NRwIMbdFUxO
+	 1H3Jj8DRE53WjzypQB3bI0CcczCC9vvGp0FxqkLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390325AbfC0SRc (ORCPT
+        id S2390358AbfC0SRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390312AbfC0SRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:30 -0400
+        id S2389700AbfC0SRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C448820449;
-        Wed, 27 Mar 2019 18:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EFE82082F;
+        Wed, 27 Mar 2019 18:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710649;
-        bh=3qeTIHeLPVV4jzsIh8sPtnx562VU0Z5Y5oFvo9BWeeo=;
+        s=default; t=1553710656;
+        bh=zcUWEd8r4bdfUA9lLYV7HIhvNLrDQzQMyVa3/2CYLk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QXZFDgAMMbSqECaEPlWwzTybQNyddXcqkXf9q/tFEiDodKbk956IQHW4zuR16xn6d
-         o7WGrjBfVRtn/Rqr5ntLpG3XHk7Tf8z2fbiCyvWYhYtshQsXV4Z3DRVlE7P45t/vh1
-         65qzwbZwTf5JhO+M5+s0UxSRJ8eFzyKSQPWDXy3E=
+        b=oiKdzsx+m3uwxn33SjTDScw2MnDGs0bpq899jJoiUGOsUFqOLrjDepP0Tz8JBuWsq
+         GpMn33M/s3PMhQFKZLyc9DYVqoxjQrcbUqCL0TbOeSJoalpIlR0xiqkdfGVP5G/62m
+         +jdPXtdL5vL+MnmpS7CdqURQBjVVpeRAGAERei1U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 032/123] PCI/PME: Fix hotplug/sysfs remove deadlock in pcie_pme_remove()
-Date:   Wed, 27 Mar 2019 14:14:56 -0400
-Message-Id: <20190327181628.15899-32-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Mahipal Challa <mahipalreddy2006@gmail.com>,
+        Jan Glauber <jglauber@cavium.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 035/123] crypto: cavium/zip - fix collision with generic cra_driver_name
+Date:   Wed, 27 Mar 2019 14:14:59 -0400
+Message-Id: <20190327181628.15899-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,143 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 95c80bc6952b6a5badc7b702d23e5bf14d251e7c ]
+[ Upstream commit 41798036430015ad45137db2d4c213cd77fd0251 ]
 
-Dongdong reported a deadlock triggered by a hotplug event during a sysfs
-"remove" operation:
+The cavium/zip implementation of the deflate compression algorithm is
+incorrectly being registered under the generic driver name, which
+prevents the generic implementation from being registered with the
+crypto API when CONFIG_CRYPTO_DEV_CAVIUM_ZIP=y.  Similarly the lzs
+algorithm (which does not currently have a generic implementation...)
+is incorrectly being registered as lzs-generic.
 
-  pciehp 0000:00:0c.0:pcie004: Slot(0-1): Link Up
-  # echo 1 > 0000:00:0c.0/remove
+Fix the naming collision by adding a suffix "-cavium" to the
+cra_driver_name of the cavium/zip algorithms.
 
-  PME and hotplug share an MSI/MSI-X vector.  The sysfs "remove" side is:
-
-    remove_store
-       pci_stop_and_remove_bus_device_locked
-	 pci_lock_rescan_remove
-	 pci_stop_and_remove_bus_device
-	   ...
-	   pcie_pme_remove
-	     pcie_pme_suspend
-	       synchronize_irq        # wait for hotplug IRQ handler
-	 pci_unlock_rescan_remove
-
-  The hotplug side is:
-
-    pciehp_ist
-       pciehp_handle_presence_or_link_change
-	 pciehp_configure_device
-	   pci_lock_rescan_remove     # wait for pci_unlock_rescan_remove()
-
-  INFO: task bash:10913 blocked for more than 120 seconds.
-
-  # ps -ax |grep D
-   PID TTY      STAT   TIME COMMAND
-  10913 ttyAMA0  Ds+    0:00 -bash
-  14022 ?        D      0:00 [irq/745-pciehp]
-
-  # cat /proc/14022/stack
-  __switch_to+0x94/0xd8
-  pci_lock_rescan_remove+0x20/0x28
-  pciehp_configure_device+0x30/0x140
-  pciehp_handle_presence_or_link_change+0x324/0x458
-  pciehp_ist+0x1dc/0x1e0
-
-  # cat /proc/10913/stack
-  __switch_to+0x94/0xd8
-  synchronize_irq+0x8c/0xc0
-  pcie_pme_suspend+0xa4/0x118
-  pcie_pme_remove+0x20/0x40
-  pcie_port_remove_service+0x3c/0x58
-  ...
-  pcie_port_device_remove+0x2c/0x48
-  pcie_portdrv_remove+0x68/0x78
-  pci_device_remove+0x48/0x120
-  ...
-  pci_stop_bus_device+0x84/0xc0
-  pci_stop_and_remove_bus_device_locked+0x24/0x40
-  remove_store+0xa4/0xb8
-  dev_attr_store+0x44/0x60
-  sysfs_kf_write+0x58/0x80
-
-It is incorrect to call pcie_pme_suspend() from pcie_pme_remove() for two
-reasons.
-
-First, pcie_pme_suspend() calls synchronize_irq(), which will wait for the
-native hotplug interrupt handler as well as for the PME one, because they
-share one IRQ (as per the spec).  That may deadlock if hotplug is signaled
-while pcie_pme_remove() is running and the latter calls
-pci_lock_rescan_remove() before the former.
-
-Second, if pcie_pme_suspend() figures out that wakeup needs to be enabled
-for the port, it will return without disabling the interrupt as expected by
-pcie_pme_remove() which was overlooked by commit c7b5a4e6e8fb ("PCI / PM:
-Fix native PME handling during system suspend/resume").
-
-To fix that, rework pcie_pme_remove() to disable the PME interrupt, clear
-its status and prevent the PME worker function from re-enabling it before
-calling free_irq() on it, which should be sufficient.
-
-Fixes: c7b5a4e6e8fb ("PCI / PM: Fix native PME handling during system suspend/resume")
-Link: https://lore.kernel.org/linux-pci/c7697e7c-e1af-13e4-8491-0a3996e6ab5d@huawei.com
-Reported-by: Dongdong Liu <liudongdong3@huawei.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-[bhelgaas: add URL and deadlock details from Dongdong]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 640035a2dc55 ("crypto: zip - Add ThunderX ZIP driver core")
+Cc: Mahipal Challa <mahipalreddy2006@gmail.com>
+Cc: Jan Glauber <jglauber@cavium.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/pme.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/crypto/cavium/zip/zip_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index df290aa58dce..c2e6e3d1073f 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -367,6 +367,16 @@ static bool pcie_pme_check_wakeup(struct pci_bus *bus)
- 	return false;
- }
+diff --git a/drivers/crypto/cavium/zip/zip_main.c b/drivers/crypto/cavium/zip/zip_main.c
+index 1cd8aa488185..a6425a7afa7b 100644
+--- a/drivers/crypto/cavium/zip/zip_main.c
++++ b/drivers/crypto/cavium/zip/zip_main.c
+@@ -351,6 +351,7 @@ static struct pci_driver zip_driver = {
  
-+static void pcie_pme_disable_interrupt(struct pci_dev *port,
-+				       struct pcie_pme_service_data *data)
-+{
-+	spin_lock_irq(&data->lock);
-+	pcie_pme_interrupt_enable(port, false);
-+	pcie_clear_root_pme_status(port);
-+	data->noirq = true;
-+	spin_unlock_irq(&data->lock);
-+}
-+
- /**
-  * pcie_pme_suspend - Suspend PCIe PME service device.
-  * @srv: PCIe service device to suspend.
-@@ -391,11 +401,7 @@ static int pcie_pme_suspend(struct pcie_device *srv)
- 			return 0;
+ static struct crypto_alg zip_comp_deflate = {
+ 	.cra_name		= "deflate",
++	.cra_driver_name	= "deflate-cavium",
+ 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
+ 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
+ 	.cra_priority           = 300,
+@@ -365,6 +366,7 @@ static struct crypto_alg zip_comp_deflate = {
+ 
+ static struct crypto_alg zip_comp_lzs = {
+ 	.cra_name		= "lzs",
++	.cra_driver_name	= "lzs-cavium",
+ 	.cra_flags		= CRYPTO_ALG_TYPE_COMPRESS,
+ 	.cra_ctxsize		= sizeof(struct zip_kernel_ctx),
+ 	.cra_priority           = 300,
+@@ -384,7 +386,7 @@ static struct scomp_alg zip_scomp_deflate = {
+ 	.decompress		= zip_scomp_decompress,
+ 	.base			= {
+ 		.cra_name		= "deflate",
+-		.cra_driver_name	= "deflate-scomp",
++		.cra_driver_name	= "deflate-scomp-cavium",
+ 		.cra_module		= THIS_MODULE,
+ 		.cra_priority           = 300,
  	}
- 
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(port, false);
--	pcie_clear_root_pme_status(port);
--	data->noirq = true;
--	spin_unlock_irq(&data->lock);
-+	pcie_pme_disable_interrupt(port, data);
- 
- 	synchronize_irq(srv->irq);
- 
-@@ -431,9 +437,11 @@ static int pcie_pme_resume(struct pcie_device *srv)
-  */
- static void pcie_pme_remove(struct pcie_device *srv)
- {
--	pcie_pme_suspend(srv);
-+	struct pcie_pme_service_data *data = get_service_data(srv);
-+
-+	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
--	kfree(get_service_data(srv));
-+	kfree(data);
- }
- 
- static struct pcie_port_service_driver pcie_pme_driver = {
+@@ -397,7 +399,7 @@ static struct scomp_alg zip_scomp_lzs = {
+ 	.decompress		= zip_scomp_decompress,
+ 	.base			= {
+ 		.cra_name		= "lzs",
+-		.cra_driver_name	= "lzs-scomp",
++		.cra_driver_name	= "lzs-scomp-cavium",
+ 		.cra_module		= THIS_MODULE,
+ 		.cra_priority           = 300,
+ 	}
 -- 
 2.19.1
 
