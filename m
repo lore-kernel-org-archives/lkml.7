@@ -2,78 +2,188 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B776CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E254C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8722020700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ASt0g41f"
+	by mail.kernel.org (Postfix) with ESMTP id 66D44205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbfC0KSQ (ORCPT
+        id S1733183AbfC0KS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:18:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35678 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731904AbfC0KSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:18:15 -0400
-Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7B3C91EC0513;
-        Wed, 27 Mar 2019 11:18:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1553681894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=XpCEzMyjx7ggizZrzRsQC5sDjf4G3AU/LAu6FL1x6jc=;
-        b=ASt0g41fFYRemv28OU20I04+9BUVfdTQE5TrRpmsYZcdaHIX54Fyawrg6vVBAawB4Df6vw
-        8rYZc2r7br01ki44pyACXeU2p3qfUfgssCQPonVvmXAuHA/tfEbYBVGMlcETcjMvBnOq9I
-        lPvqhKXS3hHxi05cdifAySTqjA4QATM=
-Date:   Wed, 27 Mar 2019 11:18:15 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86 <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v1] x86/apic: Reduce print level of CPU limit
- announcement
-Message-ID: <20190327101815.GB32571@zn.tnic>
-References: <20190327090905.5588-1-leon@kernel.org>
- <fef570d91276280f055a0b1c2561b3dd8e20a0c3.camel@perches.com>
- <20190327093844.GO22899@mtr-leonro.mtl.com>
- <55774b1a8c82e94b2796c992889929f1da905d9b.camel@perches.com>
- <20190327095337.GP22899@mtr-leonro.mtl.com>
- <20190327101133.GQ22899@mtr-leonro.mtl.com>
+        Wed, 27 Mar 2019 06:18:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35592 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731904AbfC0KS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:18:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4BA91AD2F;
+        Wed, 27 Mar 2019 10:18:55 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     oneukum@suse.de, Terry.Junge@plantronics.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] HID: core: move Usage Page concatenation to Main item
+Date:   Wed, 27 Mar 2019 11:18:48 +0100
+Message-Id: <20190327101848.25477-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190327101133.GQ22899@mtr-leonro.mtl.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 12:11:33PM +0200, Leon Romanovsky wrote:
-> ok, I tested your variant and it still prints a t least on my systems,
+As seen on some USB wireless keyboards manufactured by Primax, the HID
+parser was using some assumptions that are not always true. In this case
+it's s the fact that, inside the scope of a main item, an Usage Page
+will always precede an Usage.
 
-Probably because your loglevel is set to debug. And no, we don't want to
-have to enable some config option in order to see this.
+The spec is not pretty clear as 6.2.2.7 states "Any usage that follows
+is interpreted as a Usage ID and concatenated with the Usage Page".
+While 6.2.2.8 states "When the parser encounters a main item it
+concatenates the last declared Usage Page with a Usage to form a
+complete usage value." Being somewhat contradictory it was decided to
+match Window's implementation, which follows 6.2.2.8.
 
-Also, the ugly linebreak needs to go.
+In summary, the patch moves the Usage Page concatenation from the local
+item parsing function to the main item parsing function.
 
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+
+v3->v4: - Use u8 instead of __u8
+        - Remove overly complex usage size calculation
+
+v2->v3: - Update patch title
+
+v1->v2: - Add usage concatenation to hid_scan_main()
+        - Rework tests in hid-tools, making sure no-one is failing
+
+ drivers/hid/hid-core.c | 36 ++++++++++++++++++++++++------------
+ include/linux/hid.h    |  1 +
+ 2 files changed, 25 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 9993b692598f..852bbd303d9a 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct hid_parser *parser, unsigned type)
+  * Add a usage to the temporary parser table.
+  */
+ 
+-static int hid_add_usage(struct hid_parser *parser, unsigned usage)
++static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
+ {
+ 	if (parser->local.usage_index >= HID_MAX_USAGES) {
+ 		hid_err(parser->device, "usage index exceeded\n");
+ 		return -1;
+ 	}
+ 	parser->local.usage[parser->local.usage_index] = usage;
++	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+ 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
+@@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
+ 
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+-		return hid_add_usage(parser, data);
++		return hid_add_usage(parser, data, item->size);
+ 
+ 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
+ 
+@@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
+ 
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+ 		parser->local.usage_minimum = data;
+ 		return 0;
+ 
+@@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 			return 0;
+ 		}
+ 
+-		if (item->size <= 2)
+-			data = (parser->global.usage_page << 16) + data;
+-
+ 		count = data - parser->local.usage_minimum;
+ 		if (count + parser->local.usage_index >= HID_MAX_USAGES) {
+ 			/*
+@@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 		}
+ 
+ 		for (n = parser->local.usage_minimum; n <= data; n++)
+-			if (hid_add_usage(parser, n)) {
++			if (hid_add_usage(parser, n, item->size)) {
+ 				dbg_hid("hid_add_usage failed\n");
+ 				return -1;
+ 			}
+@@ -547,6 +539,22 @@ static int hid_parser_local(struct hid_parser *parser, struct hid_item *item)
+ 	return 0;
+ }
+ 
++/*
++ * Concatenate Usage Pages into Usages where relevant:
++ * As per specification, 6.2.2.8: "When the parser encounters a main item it
++ * concatenates the last declared Usage Page with a Usage to form a complete
++ * usage value."
++ */
++
++static void hid_concatenate_usage_page(struct hid_parser *parser)
++{
++	int i;
++
++	for (i = 0; i < parser->local.usage_index; i++)
++		if (parser->local.usage_size[i] <= 2)
++			parser->local.usage[i] += parser->global.usage_page << 16;
++}
++
+ /*
+  * Process a main item.
+  */
+@@ -556,6 +564,8 @@ static int hid_parser_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int ret;
+ 
++	hid_concatenate_usage_page(parser);
++
+ 	data = item_udata(item);
+ 
+ 	switch (item->tag) {
+@@ -765,6 +775,8 @@ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+ 	__u32 data;
+ 	int i;
+ 
++	hid_concatenate_usage_page(parser);
++
+ 	data = item_udata(item);
+ 
+ 	switch (item->tag) {
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index f9707d1dcb58..ac0c70b4ce10 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -417,6 +417,7 @@ struct hid_global {
+ 
+ struct hid_local {
+ 	unsigned usage[HID_MAX_USAGES]; /* usage array */
++	u8 usage_size[HID_MAX_USAGES]; /* usage size array */
+ 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
+ 	unsigned usage_index;
+ 	unsigned usage_minimum;
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
