@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF85C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B75C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00B9205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89889205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712279;
-	bh=K3L1QrWnx926yWnfdjcoBCpEnUloRUMInMsuVk8muqE=;
+	s=default; t=1553712284;
+	bh=C90KdFVurOru+27x9lvZAq2zZZcarX0PSb/kb3PzBaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jV7gBzTaKyywRk5edAGc4Pen5s3UqH7Fs9C3zoqhlTtRE6fBY5YXnRPUEmQmfboyI
-	 ylg3Dl1MpJ9e/x3qy076EibHCLtwLgnnRm29UC+IDdEWNdHI8h4ING1fZMzPwJD0Hl
-	 AJ+yo3WtZVWPR6E/fY5HzSHJQ5/dcWbJ14gRwtxs=
+	b=aG0+GYiO2ZZ0w1wQwVZRMHfTbiy76iCKXTKu5esXYoUc/ozYhIOJw5HP5vnj3P+oZ
+	 t/AcqsBgXxDcRlhKrrY5y4ljjCeCS1LFQ8nBovcjsfOBSC/yYiydDOEHQvf41W9LwI
+	 iDlgaztNGEjOK41nQ+DiQf84BgbxS6AW44RHvZZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391329AbfC0Soi (ORCPT
+        id S2391091AbfC0SVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391093AbfC0SVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:14 -0400
+        id S2391041AbfC0SVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A94532177E;
-        Wed, 27 Mar 2019 18:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E8A2147C;
+        Wed, 27 Mar 2019 18:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710873;
-        bh=K3L1QrWnx926yWnfdjcoBCpEnUloRUMInMsuVk8muqE=;
+        s=default; t=1553710868;
+        bh=C90KdFVurOru+27x9lvZAq2zZZcarX0PSb/kb3PzBaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hS0Nerg3ABSkqA0XbNrGbR4iaQc6tHWycDcBYKHJP5L31t+9cc/oYamJ4JTKDd1L9
-         kAzwfKSNp9h+r3Vxo9vc0sfWAUTRf6KGffGG/55CWXo09M7/P+eskviGPnzh3So8wR
-         f28/i3hCcaULc4QarejGb4/RQ3h5YG6OMgkDR+VU=
+        b=cylfIBbMv5PHDcPZ70wLkJ8TneMaHXw6AagdgA5aEkOqwXMDgCkRylr/Am9LYdmJL
+         WivlkPXfzlw7JMO7ezu6M19PxYXmMbEh4ZwurDZy2MRBiRVkgYMfXFd1jIZccg0pzP
+         zMDcaHgr1Z5uMdf7vFgd+kGxBBVzukiOrwu4y3jk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>,
-        Jason Cai <jason.cai@linux.alibaba.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+Cc:     Jia Guo <guojia12@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 18/87] dm thin: add sanity checks to thin-pool and external snapshot creation
-Date:   Wed, 27 Mar 2019 14:19:31 -0400
-Message-Id: <20190327182040.17444-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/87] ocfs2: fix a panic problem caused by o2cb_ctl
+Date:   Wed, 27 Mar 2019 14:19:27 -0400
+Message-Id: <20190327182040.17444-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,110 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason Cai (Xiang Feng)" <jason.cai.kern@gmail.com>
+From: Jia Guo <guojia12@huawei.com>
 
-[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
+[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
 
-Invoking dm_get_device() twice on the same device path with different
-modes is dangerous.  Because in that case, upgrade_mode() will alloc a
-new 'dm_dev' and free the old one, which may be referenced by a previous
-caller.  Dereferencing the dangling pointer will trigger kernel NULL
-pointer dereference.
+In the process of creating a node, it will cause NULL pointer
+dereference in kernel if o2cb_ctl failed in the interval (mkdir,
+o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
 
-The following two cases can reproduce this issue.  Actually, they are
-invalid setups that must be disallowed, e.g.:
+The node num is initialized to 0 in function o2nm_node_group_make_item,
+o2nm_node_group_drop_item will mistake the node number 0 for a valid
+node number when we delete the node before the node number is set
+correctly.  If the local node number of the current host happens to be
+0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
+o2hb_thread still running.  The panic stack is generated as follows:
 
-1. Creating a thin-pool with read_only mode, and the same device as
-both metadata and data.
+  o2hb_thread
+      \-o2hb_do_disk_heartbeat
+          \-o2hb_check_own_slot
+              |-slot = &reg->hr_slots[o2nm_this_node()];
+              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
 
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+We need to check whether the node number is set when we delete the node.
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
-...
-Call Trace:
- new_read+0xfb/0x110 [dm_bufio]
- dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
- ? kmem_cache_alloc_trace+0x15c/0x1e0
- __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
- dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
- pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
- ? realloc_argv+0x50/0x70 [dm_mod]
- dm_table_add_target+0x14e/0x330 [dm_mod]
- table_load+0x122/0x2e0 [dm_mod]
- ? dev_status+0x40/0x40 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ? handle_mm_fault+0xda/0x200
- ? __do_page_fault+0x26c/0x4f0
- ksys_ioctl+0x60/0x90
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-2. Creating a external snapshot using the same thin-pool device.
-
-dmsetup create thinp --table \
-    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
-dmsetup message /dev/mapper/thinp 0 "create_thin 0"
-dmsetup create snap --table \
-            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
-
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-...
-Call Trace:
-? __alloc_pages_nodemask+0x13c/0x2e0
-retrieve_status+0xa5/0x1f0 [dm_mod]
-? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
- table_status+0x61/0xa0 [dm_mod]
- ctl_ioctl+0x1aa/0x3e0 [dm_mod]
- dm_ctl_ioctl+0xa/0x10 [dm_mod]
- do_vfs_ioctl+0xa2/0x600
- ksys_ioctl+0x60/0x90
- ? ksys_write+0x4f/0xb0
- __x64_sys_ioctl+0x16/0x20
- do_syscall_64+0x55/0x150
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
+Signed-off-by: Jia Guo <guojia12@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Acked-by: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
-index 345f4d81ba07..23a7e108352a 100644
---- a/drivers/md/dm-thin.c
-+++ b/drivers/md/dm-thin.c
-@@ -3295,6 +3295,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	as.argc = argc;
- 	as.argv = argv;
+diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
+index c204ac9b49e5..81a0d5d82757 100644
+--- a/fs/ocfs2/cluster/nodemanager.c
++++ b/fs/ocfs2/cluster/nodemanager.c
+@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
+ 	struct o2nm_node *node = to_o2nm_node(item);
+ 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
  
-+	/* make sure metadata and data are different devices */
-+	if (!strcmp(argv[0], argv[1])) {
-+		ti->error = "Error setting metadata or data device";
-+		r = -EINVAL;
-+		goto out_unlock;
-+	}
-+
- 	/*
- 	 * Set default pool features.
- 	 */
-@@ -4177,6 +4184,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
- 	tc->sort_bio_list = RB_ROOT;
+-	o2net_disconnect_node(node);
++	if (cluster->cl_nodes[node->nd_num] == node) {
++		o2net_disconnect_node(node);
  
- 	if (argc == 3) {
-+		if (!strcmp(argv[0], argv[2])) {
-+			ti->error = "Error setting origin device";
-+			r = -EINVAL;
-+			goto bad_origin_dev;
+-	if (cluster->cl_has_local &&
+-	    (cluster->cl_local_node == node->nd_num)) {
+-		cluster->cl_has_local = 0;
+-		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
+-		o2net_stop_listening(node);
++		if (cluster->cl_has_local &&
++		    (cluster->cl_local_node == node->nd_num)) {
++			cluster->cl_has_local = 0;
++			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
++			o2net_stop_listening(node);
 +		}
-+
- 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
- 		if (r) {
- 			ti->error = "Error opening origin device";
+ 	}
+ 
+ 	/* XXX call into net to stop this node from trading messages */
 -- 
 2.19.1
 
