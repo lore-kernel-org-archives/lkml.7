@@ -4,51 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE2CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB40BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF4D20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883C720657
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711697;
-	bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
+	s=default; t=1553711707;
+	bh=FXdjSr8HVrfDYqWKqWAVa1HiI4r+mcXUJ3XGWwCbs4s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltL4teks3wxtt3DV9zsctf0iEyb6dcRISODmN+Io6+tnp7B9/Jl0ODiMK3kABTa8M
-	 rAGISjhM5iZRte823AOEDlgUT6HE97z+M6IGG8YEhQMyNdrwKJa04TOwXZVCz3F1DD
-	 mGU9SyH+0cwGliBDPStuklUPaDjrs0sI1gIyHQ70=
+	b=yefwF4JJnChuj5g/RJTPIkdWQ1olFZ50New1a3XbHej/WjgF2hCWjXs8G7SeGIey9
+	 Xz1LjKbVJi9HptXdtl8gas6wCz86tKOz+DvOEAs4Z+J3ND09MxXLoo6DRmSPcFtQtR
+	 NWm0CB2Dhzp63oFoZylhWEzpGq3S6XfdE6betxKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404084AbfC0Se4 (ORCPT
+        id S2404152AbfC0SfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404029AbfC0SYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:24:40 -0400
+        id S2404022AbfC0SYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:24:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2FEC2183F;
-        Wed, 27 Mar 2019 18:24:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F3D12063F;
+        Wed, 27 Mar 2019 18:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711079;
-        bh=XE08yZ348PsFqqowFmR1SfyWqAgmpKzl36yM7xjkuXQ=;
+        s=default; t=1553711077;
+        bh=FXdjSr8HVrfDYqWKqWAVa1HiI4r+mcXUJ3XGWwCbs4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/myEO9716473vbFFTmEZpcykYhtFWFoJjeY9VKZzsuczT0762vDNtaFCrBTguR04
-         /fASVTW/PWAAZ/tFTGFItlGGWk1DJNnlySBnRp/YnAIyZNImvTjVkT//TNg8DE14aw
-         73/AQQBC2Kswfk5qlsLJ8GL97DhehWRomSEtRZg0=
+        b=RrTLiTinJL75eIwV9dryu/ImCRc/vHVO5zD08oQy2/LpiE/aJa8hXNlc1KYaM5cJg
+         9FV65gocYmRV7s7R/gZrdMD5opOPUOlEjZoTxvk6b3U7ePlmH8fDQtrtreyd+ZQ4BG
+         cXSdBGWss6jk0JnjlNEHLVe2PXuWsUgCNYPBcCEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 42/63] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Wed, 27 Mar 2019 14:23:02 -0400
-Message-Id: <20190327182323.18577-42-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 41/63] bcache: improve sysfs_strtoul_clamp()
+Date:   Wed, 27 Mar 2019 14:23:01 -0400
+Message-Id: <20190327182323.18577-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182323.18577-1-sashal@kernel.org>
 References: <20190327182323.18577-1-sashal@kernel.org>
@@ -60,52 +56,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+Currently sysfs_strtoul_clamp() is defined as,
+ 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
+ 83 do {                                                               \
+ 84         if (attr == &sysfs_ ## file)                               \
+ 85                 return strtoul_safe_clamp(buf, var, min, max)      \
+ 86                         ?: (ssize_t) size;                         \
+ 87 } while (0)
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+The problem is, if bit width of var is less then unsigned long, min and
+max may not protect var from integer overflow, because overflow happens
+in strtoul_safe_clamp() before checking min and max.
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
+effect, this patch adds an unsigned long variable, and uses it to macro
+strtoul_safe_clamp() to convert an unsigned long value in range defined
+by [min, max]. Then assign this value to var. By this method, if bit
+width of var is less than unsigned long, integer overflow won't happen
+before min and max are checking.
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Now sysfs_strtoul_clamp() can properly handle smaller data type like
+unsigned int, of cause min and max should be defined in range of
+unsigned int too.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/md/bcache/sysfs.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index ea2bd6208a2f..9eae191728d2 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -425,6 +425,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
+diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
+index 0526fe92a683..e7a3c12aa66f 100644
+--- a/drivers/md/bcache/sysfs.h
++++ b/drivers/md/bcache/sysfs.h
+@@ -80,9 +80,16 @@ do {									\
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
-+
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
+ #define sysfs_strtoul_clamp(file, var, min, max)			\
+ do {									\
+-	if (attr == &sysfs_ ## file)					\
+-		return strtoul_safe_clamp(buf, var, min, max)		\
+-			?: (ssize_t) size;				\
++	if (attr == &sysfs_ ## file) {					\
++		unsigned long v = 0;					\
++		ssize_t ret;						\
++		ret = strtoul_safe_clamp(buf, v, min, max);		\
++		if (!ret) {						\
++			var = v;					\
++			return size;					\
++		}							\
++		return ret;						\
++	}								\
+ } while (0)
+ 
+ #define strtoul_or_return(cp)						\
 -- 
 2.19.1
 
