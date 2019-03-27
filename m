@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DE1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDB4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F522075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9312087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 00:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aLYCmoev"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="jvQ4WquI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfC0A1j (ORCPT
+        id S1732788AbfC0A1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 20:27:39 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53792 "EHLO vps.xff.cz"
+        Tue, 26 Mar 2019 20:27:38 -0400
+Received: from vps.xff.cz ([195.181.215.36]:53782 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732429AbfC0A1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 20:27:36 -0400
+        id S1731690AbfC0A1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 Mar 2019 20:27:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1553645935; bh=/nOga8bOYXjgFoiwANB3x24IlAmM6uUBGPD5umeU/zk=;
+        t=1553645936; bh=ssSXd7+PNEzjyd8ROSpyiTVASiF6qcXHM3EkfZjFTjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aLYCmoev6V5jEI/5KnXTFqW/BqHzLiFf14MwjFdAhSsbwl9urNkN7Ym+m6JZlkiJ1
-         L8cfVAS4erhtjT1XDXrTKXxukWmsKQYRZD60wLHwCPKakAStZVBi5Dl1mDHIulj/Mx
-         s3397J5enIC0BGfZdMz/x8P7EfU/KCzEo5h+NVY8=
+        b=jvQ4WquIZXqo6TUZoICIs6JgkcaMt065YrKIkytcBAvCnz1WZgDFaj5Z+UWTMruNT
+         xAPQwa+etxyIzJlnPOXHNKQ8ms//MppRc1KK8jjOqaz3C4eQuP5kIVhEmErZV1M2gD
+         RA8WS8qfRpo1twklVa78E7hDZnltxAEKd29zCTPc=
 From:   megous@megous.com
 To:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
         johan@kernel.org, mark.rutland@arm.com
 Cc:     Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: [PATCH 3/7] ARM: dts: sun8i: a83t: Add nodes for UART2-UART4
-Date:   Wed, 27 Mar 2019 01:18:39 +0100
-Message-Id: <20190327001843.2420-4-megous@megous.com>
+Subject: [PATCH 7/7] ARM: dts: sun8i: tbs-a711: Enable UART2 (for NEO-6M GPS module)
+Date:   Wed, 27 Mar 2019 01:18:43 +0100
+Message-Id: <20190327001843.2420-8-megous@megous.com>
 In-Reply-To: <20190327001843.2420-1-megous@megous.com>
 References: <20190327001843.2420-1-megous@megous.com>
 MIME-Version: 1.0
@@ -48,58 +48,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-A83T has 5 UART interfaces, but only the first two have their nodes
-defined in sun8i-a83t.dtsi. Add nodes for the missing interfaces.
+TBS A711 tablet contains u-blox NEO-6M module connected to UART2.
+Enable UART2 to gain access to the module from userspace.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index fcb7ef5ce2df..e5c39eef1c29 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -873,6 +873,39 @@
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 347fc0c31fa4..f9e7f5d3eff5 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -98,6 +98,13 @@
  		};
+ 	};
  
-+		uart2: serial@1c28800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28800 0x400>;
-+			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
-+			status = "disabled";
-+		};
++	reg_gps: reg-gps {
++		compatible = "regulator-fixed";
++		regulator-name = "gps";
++		regulator-min-microvolt = <3000000>;
++		regulator-max-microvolt = <3000000>;
++	};
 +
-+		uart3: serial@1c28c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28c00 0x400>;
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART3>;
-+			resets = <&ccu RST_BUS_UART3>;
-+			status = "disabled";
-+		};
+ 	reg_vbat: reg-vbat {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vbat";
+@@ -437,6 +444,20 @@
+ 	};
+ };
+ 
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pb_pins>;
++	status = "okay";
 +
-+		uart4: serial@1c29000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c29000 0x400>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&ccu CLK_BUS_UART4>;
-+			resets = <&ccu RST_BUS_UART4>;
-+			status = "disabled";
-+		};
++	gnss {
++		compatible = "u-blox,neo-6m";
 +
- 		i2c0: i2c@1c2ac00 {
- 			compatible = "allwinner,sun8i-a83t-i2c",
- 				     "allwinner,sun6i-a31-i2c";
++		v-bckp-supply = <&reg_rtc_ldo>;
++		vcc-supply = <&reg_gps>;
++		current-speed = <9600>;
++	};
++};
++
+ &usb_otg {
+ 	dr_mode = "otg";
+ 	status = "okay";
 -- 
 2.21.0
 
