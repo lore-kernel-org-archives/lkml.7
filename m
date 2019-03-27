@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E7DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DE0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2482177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38106217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710401;
-	bh=8TAwaKG1VvgoFcR6NMI8mzJ0+bwY/i1GL2QnJsrG6Rc=;
+	s=default; t=1553710404;
+	bh=MJVzSy+4vdMfW0w03710h4/91SJYYvX1MThx5vyfq/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIdSgC2WgHBBQwsezxh/JN1Xhf6CxeB1w0dfukBnoeV3Pkjmijgsf+1Cjd8rx+wr9
-	 ErdPjXwObtoXQUBvmk/1zdtWLssZ9R1lElCia653jpH7SfQv+6c5EZiUeTmkYM0WMc
-	 d+hicGpD0Mx/xvBqACJR7k6/DVwVOTxZC02UtbLg=
+	b=vaZhhNf277sRD9/c3Tvz4KonJzi65xfg0HWy7cZD+QNgUl0i96dITse1hfu0sX5Fw
+	 fOF3MGAYkDUmloAhhZHfvXCOzzAPC8NqQqlnAlBYvrFDlcSdMyyYaQUw80KYX2FT1P
+	 9Stxt6hjTe+VnZX9ybLFZIn/1mMa3w9e0OtfqFoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbfC0SNT (ORCPT
+        id S2389410AbfC0SNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388870AbfC0SNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:16 -0400
+        id S2389387AbfC0SNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:13:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03E112147C;
-        Wed, 27 Mar 2019 18:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D85E2184C;
+        Wed, 27 Mar 2019 18:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710395;
-        bh=8TAwaKG1VvgoFcR6NMI8mzJ0+bwY/i1GL2QnJsrG6Rc=;
+        s=default; t=1553710398;
+        bh=MJVzSy+4vdMfW0w03710h4/91SJYYvX1MThx5vyfq/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mfCFz6VJYFVts45UVUj+uaVEoHx7XPNCo+JhJYJyXgCGpKIp2epTG2XhfiiQ+bGwG
-         bwXhCeYQWFn4EZqvWXg6JFu280LNTqxzVmHUjorEjK7SDVYkevguC3zCsTaWph6bgf
-         WxGfsscybTHMEP3JxbJqDF+toIxr3Jn5AEm4pS3M=
+        b=ZWd1ARpl33+to/sjVEymt6FiB/urLOJ04NGQto444KVt8GJ0XlgNtyR+PcSB4MG6U
+         wdXicoA4zQFaK1dl8Rg+eqZztJqIs6TeaGgw6ojkSBvNzWfc8th81MC7UnhKZl6dyz
+         2jGkQeKpmcBSt92rBQhd+IKp9BrEg8vJosEacW4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 099/192] perf report: Add s390 diagnosic sampling descriptor size
-Date:   Wed, 27 Mar 2019 14:08:51 -0400
-Message-Id: <20190327181025.13507-99-sashal@kernel.org>
+Cc:     Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 100/192] iwlwifi: pcie: fix emergency path
+Date:   Wed, 27 Mar 2019 14:08:52 -0400
+Message-Id: <20190327181025.13507-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,63 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 2187d87eacd46f6214ce3dc9cfd7a558375a4153 ]
+[ Upstream commit c6ac9f9fb98851f47b978a9476594fc3c477a34d ]
 
-On IBM z13 machine types 2964 and 2965 the descriptor
-sizes for sampling and diagnostic sampling entries
-might be missing in the trailer entry and are set to zero.
+Allocator swaps the pending requests with 0 when it starts
+working. This means that relying on it n RX path to decide if
+to move to emergency is not always a good idea, since it may
+be zero, but there are still a lot of unallocated RBs in the
+system. Change allocator to decrement the pending requests on
+real time. It is more expensive since it accesses the atomic
+variable more times, but it gives the RX path a better idea
+of the system's status.
 
-This leads to a perf report failure when processing diagnostic
-sampling entries.
-
-This patch adds missing descriptor sizes when the trailer entry
-contains zero for these fields.
-
-Output before:
-  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
-  0xabbf0 [0x8]: failed to process type: 68
-  Error:
-  failed to process sample
-  [root@s38lp82 perf]#
-
-Output after:
-  [root@s38lp82 perf]#  ./perf report --stdio | fgrep Samples
-  # Total Lost Samples: 0
-  # Samples: 3K of event 'SF_CYCLES_BASIC_DIAG'
-  # Samples: 162  of event 'CF_DIAG'
-  [root@s38lp82 perf]#
-
-Fixes: 2b1444f2e28b ("perf report: Add raw report support for s390 auxiliary trace")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190211100627.85714-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 868a1e863f95 ("iwlwifi: pcie: avoid empty free RB queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/s390-cpumsf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index aa7f8c11fbb7..910f2621d211 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -294,6 +294,11 @@ static bool s390_cpumsf_validate(int machine_type,
- 			*dsdes = 85;
- 			*bsdes = 32;
- 			break;
-+		case 2964:
-+		case 2965:
-+			*dsdes = 112;
-+			*bsdes = 32;
-+			break;
- 		default:
- 			/* Illegal trailer entry */
- 			return false;
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index d4a31e014c82..b2905f01b7df 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -502,7 +502,7 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_rb_allocator *rba = &trans_pcie->rba;
+ 	struct list_head local_empty;
+-	int pending = atomic_xchg(&rba->req_pending, 0);
++	int pending = atomic_read(&rba->req_pending);
+ 
+ 	IWL_DEBUG_RX(trans, "Pending allocation requests = %d\n", pending);
+ 
+@@ -557,11 +557,13 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 			i++;
+ 		}
+ 
++		atomic_dec(&rba->req_pending);
+ 		pending--;
++
+ 		if (!pending) {
+-			pending = atomic_xchg(&rba->req_pending, 0);
++			pending = atomic_read(&rba->req_pending);
+ 			IWL_DEBUG_RX(trans,
+-				     "Pending allocation requests = %d\n",
++				     "Got more pending allocation requests = %d\n",
+ 				     pending);
+ 		}
+ 
+@@ -573,12 +575,15 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 		spin_unlock(&rba->lock);
+ 
+ 		atomic_inc(&rba->req_ready);
++
+ 	}
+ 
+ 	spin_lock(&rba->lock);
+ 	/* return unused rbds to the allocator empty list */
+ 	list_splice_tail(&local_empty, &rba->rbd_empty);
+ 	spin_unlock(&rba->lock);
++
++	IWL_DEBUG_RX(trans, "%s, exit.\n", __func__);
+ }
+ 
+ /*
 -- 
 2.19.1
 
