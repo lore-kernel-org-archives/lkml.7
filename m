@@ -3,50 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8546C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27CFC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95B321738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68DD2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710312;
-	bh=7UOoLXlUFszD+HcmlaWF9eaK77r1jF6eGS1PpY37ZRE=;
+	s=default; t=1553710317;
+	bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cjrSzPWGEm7zzqFBMwqaB6HRSR+b3rJ0Eel3BDA+7LJDIPajk88z2Q+jr8qdKa4m
-	 voEqIe2KlA9MbdIleQpfUER2vqOAFhij245JpgTktIAJadzOpurphsZ9Ep/DqvQ+o9
-	 M1z9AQcLsFkQG2nY+V+UBhwytbmfhLLdWbwHXkUo=
+	b=ltbztbSdDJULGFxO1amePZ6AzSupvBA0Y4se3iOvATs5b+FCG/5Q6XHkG3ftlUm8j
+	 REo1kvBuf+1hZf7eBxs3uAs3SWM8gfGRjJPc1cOChscQgfEkm0wQumhKtmq1TtqRSl
+	 ER6Bk7ib6j38KTaDBZue6JU10QHS52um6JnX8t5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389112AbfC0SLv (ORCPT
+        id S2389121AbfC0SL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:11:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389054AbfC0SLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:11:41 -0400
+        id S2389109AbfC0SLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:11:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9011E2054F;
-        Wed, 27 Mar 2019 18:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D51E82054F;
+        Wed, 27 Mar 2019 18:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710300;
-        bh=7UOoLXlUFszD+HcmlaWF9eaK77r1jF6eGS1PpY37ZRE=;
+        s=default; t=1553710310;
+        bh=1DoeZeAmhz5vnmPgc0iStjhMBU9n/Iennb9MIbXakDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEqjOoDzz6w++B47crp7+r8CTueEdfABVGkQZ9IVRDLbKGIskVg3gtRAykSO2r7bZ
-         xw/7lYRkocjJIc4ZwpoYoXtw+ZatGyRHuCSXV5FJPoc5j//EucUsUA6KBD+i/d2GYy
-         ++uAprdv9FgR+DCdKluuU1kOQvf8KupK1WwoJBCU=
+        b=nPuI8WCUmHY6ZbHIXRmpChF47+TqQa2zRJysf7mpP8451T0y16d2SE7VH9BrDn+Ax
+         GheLEGs3Nl5jBYeyhhB4IJvI1Cj0gKKXjdiR7NSlhm1+mwtzSoMpTN+bHU9624tOAc
+         TzFnmkFr1TJL2wd++JwGIMCANW2sY7XvG61cV0Gk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Carlos Maiolino <cmaiolino@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 044/192] fs: fix guard_bio_eod to check for real EOD errors
-Date:   Wed, 27 Mar 2019 14:07:56 -0400
-Message-Id: <20190327181025.13507-44-sashal@kernel.org>
+Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 049/192] crypto: crypto4xx - add missing of_node_put after of_device_is_available
+Date:   Wed, 27 Mar 2019 14:08:01 -0400
+Message-Id: <20190327181025.13507-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,79 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlos Maiolino <cmaiolino@redhat.com>
+From: Julia Lawall <Julia.Lawall@lip6.fr>
 
-[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
+[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
 
-guard_bio_eod() can truncate a segment in bio to allow it to do IO on
-odd last sectors of a device.
+Add an of_node_put when a tested device node is not available.
 
-It already checks if the IO starts past EOD, but it does not consider
-the possibility of an IO request starting within device boundaries can
-contain more than one segment past EOD.
+The semantic patch that fixes this problem is as follows
+(http://coccinelle.lip6.fr):
 
-In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
-underflow bvec->bv_len.
+// <smpl>
+@@
+identifier f;
+local idexpression e;
+expression x;
+@@
 
-Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
+e = f(...);
+... when != of_node_put(e)
+    when != x = e
+    when != e = x
+    when any
+if (<+...of_device_is_available(e)...+>) {
+  ... when != of_node_put(e)
+(
+  return e;
+|
++ of_node_put(e);
+  return ...;
+)
+}
+// </smpl>
 
-This situation has been found on filesystems such as isofs and vfat,
-which doesn't check the device size before mount, if the device is
-smaller than the filesystem itself, a readahead on such filesystem,
-which spans EOD, can trigger this situation, leading a call to
-zero_user() with a wrong size possibly corrupting memory.
-
-I didn't see any crash, or didn't let the system run long enough to
-check if memory corruption will be hit somewhere, but adding
-instrumentation to guard_bio_end() to check truncated_bytes size, was
-enough to see the error.
-
-The following script can trigger the error.
-
-MNT=/mnt
-IMG=./DISK.img
-DEV=/dev/loop0
-
-mkfs.vfat $IMG
-mount $IMG $MNT
-cp -R /etc $MNT &> /dev/null
-umount $MNT
-
-losetup -D
-
-losetup --find --show --sizelimit 16247280 $IMG
-mount $DEV $MNT
-
-find $MNT -type f -exec cat {} + >/dev/null
-
-Kudos to Eric Sandeen for coming up with the reproducer above
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index c083c4b3c1e7..a550e0d8e965 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3027,6 +3027,13 @@ void guard_bio_eod(int op, struct bio *bio)
- 	/* Uhhuh. We've got a bio that straddles the device size! */
- 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
+diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
+index 5e63742b0d22..53ab1f140a26 100644
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
  
-+	/*
-+	 * The bio contains more than one segment which spans EOD, just return
-+	 * and let IO layer turn it into an EIO
-+	 */
-+	if (truncated_bytes > bvec->bv_len)
-+		return;
-+
- 	/* Truncate the bio.. */
- 	bio->bi_iter.bi_size -= truncated_bytes;
- 	bvec->bv_len -= truncated_bytes;
+ 	/* Find the TRNG device node and map it */
+ 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
+-	if (!trng || !of_device_is_available(trng))
++	if (!trng || !of_device_is_available(trng)) {
++		of_node_put(trng);
+ 		return;
++	}
+ 
+ 	dev->trng_base = of_iomap(trng, 0);
+ 	of_node_put(trng);
 -- 
 2.19.1
 
