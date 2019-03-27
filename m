@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A27EC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63377C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B592217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328E22064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714271;
-	bh=wiBNtt7w3Hcq7fxB52lMT81otl/nnJhqu4dHJTQJCSA=;
+	s=default; t=1553714289;
+	bh=M7gpAwpicE9RVF3LMLloeqU6+OyvD7pICDKzU6ZWqH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ey1bBA1mRNod/vxRYvs0Kgm9k8Ok8WrbzdvnbJG0SNDxLQjrT6M1EIVrEjyCLC5QX
-	 o9soUebAj6yp7PA9NUwZdiTXmcq03atArIX4koVRRJKEQnXoiOhzqjZEkqtIuCmFQC
-	 Nyhp2KXsu/fjFjUrovPAcXvFKD/ispadplAelVYQ=
+	b=uZZIbkd0hJOwm79W+DZbUcxo/Hc2VdN8bTEra4zzdt4FSNAtyjvCSg7DhanizNlCw
+	 rzt0+kjuanDo80RepmCFaOTRYtLru3LyCiasULE/k+Ik+84mtYRNLKbXqPBZy/R7V4
+	 TQsDk3nVGFLnnrimZ/vUVF6yQW0fxdTcruKYUz94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387942AbfC0SIp (ORCPT
+        id S2388415AbfC0TSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:18:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388356AbfC0SIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:08:35 -0400
+        id S1729540AbfC0SI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:08:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF812183F;
-        Wed, 27 Mar 2019 18:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C00732063F;
+        Wed, 27 Mar 2019 18:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710114;
-        bh=wiBNtt7w3Hcq7fxB52lMT81otl/nnJhqu4dHJTQJCSA=;
+        s=default; t=1553710108;
+        bh=M7gpAwpicE9RVF3LMLloeqU6+OyvD7pICDKzU6ZWqH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsxeekbQdryYNBtZp031yBL48SFlDrlP7ncJND6Z9H3dwI/rjIA1NtmtYxLC4KFtZ
-         ctoD3wHISodPlD65RgZUM7VXsOxNHh4mnhdbxxcJEdoIqU6I7X011SZueHAU4DB7xF
-         0LlEyXCCeEs3glkGqqyf3jfkYvIpKEhoc0Q0G7ew=
+        b=Hv9I5NzAwgLex21NJugYx9hIAcSWTMeEIfW9HCUND6jliamRG7f/omP5apFSbZJFk
+         St8ZgSv15PSTIIU5heCQYz9wkmebDcJCWr7R4Kppez9GVYva/6+TXI3ZmK+pFx/nJ5
+         3qHPF4Psf0PE5deC3qmkqQOPS/RvouuJgeG7CIcg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolai Stange <nstange@suse.de>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.0 202/262] powerpc/64s: Clear on-stack exception marker upon exception return
-Date:   Wed, 27 Mar 2019 14:00:57 -0400
-Message-Id: <20190327180158.10245-202-sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 198/262] block, bfq: fix in-service-queue check for queue merging
+Date:   Wed, 27 Mar 2019 14:00:53 -0400
+Message-Id: <20190327180158.10245-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -59,80 +57,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolai Stange <nstange@suse.de>
+From: Paolo Valente <paolo.valente@linaro.org>
 
-[ Upstream commit eddd0b332304d554ad6243942f87c2fcea98c56b ]
+[ Upstream commit 058fdecc6de7cdecbf4c59b851e80eb2d6c5295f ]
 
-The ppc64 specific implementation of the reliable stacktracer,
-save_stack_trace_tsk_reliable(), bails out and reports an "unreliable
-trace" whenever it finds an exception frame on the stack. Stack frames
-are classified as exception frames if the STACK_FRAME_REGS_MARKER
-magic, as written by exception prologues, is found at a particular
-location.
+When a new I/O request arrives for a bfq_queue, say Q, bfq checks
+whether that request is close to
+(a) the head request of some other queue waiting to be served, or
+(b) the last request dispatched for the in-service queue (in case Q
+itself is not the in-service queue)
 
-However, as observed by Joe Lawrence, it is possible in practice that
-non-exception stack frames can alias with prior exception frames and
-thus, that the reliable stacktracer can find a stale
-STACK_FRAME_REGS_MARKER on the stack. It in turn falsely reports an
-unreliable stacktrace and blocks any live patching transition to
-finish. Said condition lasts until the stack frame is
-overwritten/initialized by function call or other means.
+If a queue, say Q2, is found for which the above condition holds, then
+bfq merges Q and Q2, to hopefully get a more sequential I/O in the
+resulting merged queue, and thus a possibly higher throughput.
 
-In principle, we could mitigate this by making the exception frame
-classification condition in save_stack_trace_tsk_reliable() stronger:
-in addition to testing for STACK_FRAME_REGS_MARKER, we could also take
-into account that for all exceptions executing on the kernel stack
-  - their stack frames's backlink pointers always match what is saved
-    in their pt_regs instance's ->gpr[1] slot and that
-  - their exception frame size equals STACK_INT_FRAME_SIZE, a value
-    uncommonly large for non-exception frames.
+Case (b) is checked by comparing the new request for Q with the last
+request dispatched, assuming that the latter necessarily belonged to the
+in-service queue. Unfortunately, this assumption is no longer always
+correct, since commit d0edc2473be9 ("block, bfq: inject other-queue I/O
+into seeky idle queues on NCQ flash").
 
-However, while these are currently true, relying on them would make
-the reliable stacktrace implementation more sensitive towards future
-changes in the exception entry code. Note that false negatives, i.e.
-not detecting exception frames, would silently break the live patching
-consistency model.
+When the assumption does not hold, queues that must not be merged may be
+merged, causing unexpected loss of control on per-queue service
+guarantees.
 
-Furthermore, certain other places (diagnostic stacktraces, perf, xmon)
-rely on STACK_FRAME_REGS_MARKER as well.
+This commit solves this problem by adding an extra field, which stores
+the actual last request dispatched for the in-service queue, and by
+using this new field to correctly check case (b).
 
-Make the exception exit code clear the on-stack
-STACK_FRAME_REGS_MARKER for those exceptions running on the "normal"
-kernel stack and returning to kernelspace: because the topmost frame
-is ignored by the reliable stack tracer anyway, returns to userspace
-don't need to take care of clearing the marker.
-
-Furthermore, as I don't have the ability to test this on Book 3E or 32
-bits, limit the change to Book 3S and 64 bits.
-
-Fixes: df78d3f61480 ("powerpc/livepatch: Implement reliable stack tracing for the consistency model")
-Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/entry_64.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ block/bfq-iosched.c | 5 ++++-
+ block/bfq-iosched.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 435927f549c4..a2c168b395d2 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -1002,6 +1002,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r2,_NIP(r1)
- 	mtspr	SPRN_SRR0,r2
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index cd307767a134..f010810c095f 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2224,7 +2224,8 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
-+	/*
-+	 * Leaving a stale exception_marker on the stack can confuse
-+	 * the reliable stack unwinder later on. Clear it.
-+	 */
-+	li	r2,0
-+	std	r2,STACK_FRAME_OVERHEAD-16(r1)
+ 	if (in_service_bfqq && in_service_bfqq != bfqq &&
+ 	    likely(in_service_bfqq != &bfqd->oom_bfqq) &&
+-	    bfq_rq_close_to_sector(io_struct, request, bfqd->last_position) &&
++	    bfq_rq_close_to_sector(io_struct, request,
++				   bfqd->in_serv_last_pos) &&
+ 	    bfqq->entity.parent == in_service_bfqq->entity.parent &&
+ 	    bfq_may_be_close_cooperator(bfqq, in_service_bfqq)) {
+ 		new_bfqq = bfq_setup_merge(bfqq, in_service_bfqq);
+@@ -2764,6 +2765,8 @@ static void bfq_update_peak_rate(struct bfq_data *bfqd, struct request *rq)
+ 	bfq_update_rate_reset(bfqd, rq);
+ update_last_values:
+ 	bfqd->last_position = blk_rq_pos(rq) + blk_rq_sectors(rq);
++	if (RQ_BFQQ(rq) == bfqd->in_service_queue)
++		bfqd->in_serv_last_pos = bfqd->last_position;
+ 	bfqd->last_dispatch = now_ns;
+ }
+ 
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 0b02bf302de0..746bd570b85a 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -537,6 +537,9 @@ struct bfq_data {
+ 	/* on-disk position of the last served request */
+ 	sector_t last_position;
+ 
++	/* position of the last served request for the in-service queue */
++	sector_t in_serv_last_pos;
 +
- 	ld	r0,GPR0(r1)
- 	ld	r2,GPR2(r1)
- 	ld	r3,GPR3(r1)
+ 	/* time of last request completion (ns) */
+ 	u64 last_completion;
+ 
 -- 
 2.19.1
 
