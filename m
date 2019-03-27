@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5B3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C486C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004492075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34812146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbfC0JUA (ORCPT
+        id S1732789AbfC0JUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:20:00 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:64704 "EHLO
+        Wed, 27 Mar 2019 05:20:03 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:39261 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725768AbfC0JUA (ORCPT
+        with ESMTP id S1732606AbfC0JUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 05:20:00 -0400
-X-UUID: 5e1f4f2e20154bbb9c5b7588761d199e-20190327
-X-UUID: 5e1f4f2e20154bbb9c5b7588761d199e-20190327
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+X-UUID: a19421498f9c40a783685b1a18170b7d-20190327
+X-UUID: a19421498f9c40a783685b1a18170b7d-20190327
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <wangyan.wang@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1498101831; Wed, 27 Mar 2019 17:19:50 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Mar
- 2019 17:19:49 +0800
+        with ESMTP id 1787033016; Wed, 27 Mar 2019 17:19:54 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 Mar
+ 2019 17:19:53 +0800
 Received: from mszsdclx1067.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 27 Mar 2019 17:19:48 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 27 Mar 2019 17:19:52 +0800
 From:   wangyan wang <wangyan.wang@mediatek.com>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, CK Hu <ck.hu@mediatek.com>
@@ -49,9 +49,9 @@ CC:     wangyan wang <wangyan.wang@mediatek.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <dri-devel@lists.freedesktop.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH V7 2/6] drm/mediatek: move the setting of fixed divider
-Date:   Wed, 27 Mar 2019 17:19:25 +0800
-Message-ID: <20190327091929.73162-3-wangyan.wang@mediatek.com>
+Subject: [PATCH V7 3/6] drm/mediatek: using different flags of clk for HDMI phy
+Date:   Wed, 27 Mar 2019 17:19:26 +0800
+Message-ID: <20190327091929.73162-4-wangyan.wang@mediatek.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <20190327091929.73162-1-wangyan.wang@mediatek.com>
 References: <20190327091929.73162-1-wangyan.wang@mediatek.com>
@@ -65,63 +65,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: chunhui dai <chunhui.dai@mediatek.com>
 
-move the setting of fixed divider from enable/disable
-to the function of setting rate.
-
-the patch is for hdmi pll divider, the divder should
-be configured before clock calculation to ensure the
-clock is right.
+The parent rate of hdmi phy had set by DPI driver.
+We should not set or change the parent rate of MT2701 hdmi phy,
+as a result we should remove the flags of "CLK_SET_RATE_PARENT"
+from the clock of MT2701 hdmi phy.
 
 Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
 Signed-off-by: wangyan wang <wangyan.wang@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 13 +++++--------
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        |  1 +
+ drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c |  1 +
+ drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c |  1 +
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+index 13c5e65b9ead..370309d684ec 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+@@ -107,13 +107,11 @@ mtk_hdmi_phy_dev_get_ops(const struct mtk_hdmi_phy *hdmi_phy)
+ 		return NULL;
+ }
+ 
+-static void mtk_hdmi_phy_clk_get_ops(struct mtk_hdmi_phy *hdmi_phy,
+-				     const struct clk_ops **ops)
++static void mtk_hdmi_phy_clk_get_data(struct mtk_hdmi_phy *hdmi_phy,
++				     struct clk_init_data *clk_init)
+ {
+-	if (hdmi_phy && hdmi_phy->conf && hdmi_phy->conf->hdmi_phy_clk_ops)
+-		*ops = hdmi_phy->conf->hdmi_phy_clk_ops;
+-	else
+-		dev_err(hdmi_phy->dev, "Failed to get clk ops of phy\n");
++	clk_init->flags = hdmi_phy->conf->flags;
++	clk_init->ops = hdmi_phy->conf->hdmi_phy_clk_ops;
+ }
+ 
+ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+@@ -126,7 +124,6 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+ 	struct clk_init_data clk_init = {
+ 		.num_parents = 1,
+ 		.parent_names = (const char * const *)&ref_clk_name,
+-		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+ 	};
+ 
+ 	struct phy *phy;
+@@ -164,7 +161,7 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+ 	hdmi_phy->dev = dev;
+ 	hdmi_phy->conf =
+ 		(struct mtk_hdmi_phy_conf *)of_device_get_match_data(dev);
+-	mtk_hdmi_phy_clk_get_ops(hdmi_phy, &clk_init.ops);
++	mtk_hdmi_phy_clk_get_data(hdmi_phy, &clk_init);
+ 	hdmi_phy->pll_hw.init = &clk_init;
+ 	hdmi_phy->pll = devm_clk_register(dev, &hdmi_phy->pll_hw);
+ 	if (IS_ERR(hdmi_phy->pll)) {
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+index fdad8b17a915..446e2acd1926 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+@@ -21,6 +21,7 @@ struct mtk_hdmi_phy;
+ 
+ struct mtk_hdmi_phy_conf {
+ 	bool tz_disabled;
++	unsigned long flags;
+ 	const struct clk_ops *hdmi_phy_clk_ops;
+ 	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+ 	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
 diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-index 9dcf9c2ff37a..6f29e87eefd0 100644
+index 6f29e87eefd0..fb26a83988dc 100644
 --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
 +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-@@ -79,7 +79,6 @@ static int mtk_hdmi_pll_prepare(struct clk_hw *hw)
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
- 	usleep_range(80, 100);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
--	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
-@@ -94,7 +93,6 @@ static void mtk_hdmi_pll_unprepare(struct clk_hw *hw)
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
--	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
- 	usleep_range(80, 100);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
-@@ -123,6 +121,7 @@ static int mtk_hdmi_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+@@ -232,6 +232,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
  
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON6, RG_HTPLL_PREDIV_MASK);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON6, RG_HTPLL_POSDIV_MASK);
-+	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
- 	mtk_hdmi_phy_mask(hdmi_phy, HDMI_CON6, (0x1 << RG_HTPLL_IC),
- 			  RG_HTPLL_IC_MASK);
- 	mtk_hdmi_phy_mask(hdmi_phy, HDMI_CON6, (0x1 << RG_HTPLL_IR),
-@@ -207,7 +206,6 @@ static void mtk_hdmi_phy_enable_tmds(struct mtk_hdmi_phy *hdmi_phy)
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
- 	usleep_range(80, 100);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
--	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
- 	mtk_hdmi_phy_set_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
-@@ -219,7 +217,6 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_DRV_MASK);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_PRED_MASK);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SER_MASK);
--	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_EN_TX_POSDIV);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON2, RG_HDMITX_MBIAS_LPF_EN);
- 	usleep_range(80, 100);
- 	mtk_hdmi_phy_clear_bits(hdmi_phy, HDMI_CON0, RG_HDMITX_EN_SLDO_MASK);
+ struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
+ 	.tz_disabled = true,
++	.flags = CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_GATE,
+ 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+ 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+ 	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+index cb23c1e4692a..63dde42521b8 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
+@@ -317,6 +317,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+ }
+ 
+ struct mtk_hdmi_phy_conf mtk_hdmi_phy_8173_conf = {
++	.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_GATE,
+ 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+ 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+ 	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
 -- 
 2.14.1
 
