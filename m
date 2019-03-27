@@ -2,92 +2,107 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7D4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE0AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B382082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D742075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSBcKdpJ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DHubhqpF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XnmFszp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfC0Nls (ORCPT
+        id S1729419AbfC0Nmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:41:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38012 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfC0Nlr (ORCPT
+        Wed, 27 Mar 2019 09:42:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41780 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfC0Nmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:41:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 10so9741008pfo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 06:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=g64NzOYHhFaeLQNMRHtCoZ/wUSvowjY4eT4QLVZOk5M=;
-        b=BSBcKdpJJCrXUjnoptIA+TlIulw+CJnhVw1MrAGaIXgATaDnns+m79mb8U91VGup2t
-         0SootiOv0xgF1vlqFjZG49Vqxvq1y0wBGd1W3hmhObAOSJlJeUorNYJ/YFOCVck1Evbq
-         KO305+EyiAxdMBdmyWkzNiypnM+Sy9LD5RxfCsnXbfgIAZgzJuEfMfYlUycBWZeTiPDw
-         F8ylPjjWFj+kqalzPn5i0idLSaAHpgSTbQkhND8Y5xy6VvSQLlLmZmhWG+YT+AabJj1p
-         dQO6qLIkYisGpltWVV0y+GRE1BMrf3XCV7zjB01PM0pGRXDlMTMmfT3cb8Q5S3t3bc5w
-         Bm3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=g64NzOYHhFaeLQNMRHtCoZ/wUSvowjY4eT4QLVZOk5M=;
-        b=MAN1yMJExY7f89dKeB/mEfg7p+nT8q0XA8Mki+Cjw+031K1LO2zQiDbpf1veZsJoRw
-         FXd85ciAo/SsctzO7Q9VRmQigxv00HSbh/rAAtNTnS7Udm0MDw5Eag3ueclt8O4VYcF4
-         Uvf1cEsqwmewF8StlGquLZrbqzsftTlV6CI/Cj+GZG0cVbme6CdWVfKdW5dLkjV1PrNG
-         YId5oqYsjy8OLDkHyxivJ7uMS6SjuJKl/a+VkbsyVuQ449CLPzrGzwTO7ItyjCO7avZB
-         gCtF5jsxFCTTb82z4H2cxHKgEI9FzOrqwNXhwKwf/v54iUpoTf+EDPvaIEkbd9IIYwl4
-         I59w==
-X-Gm-Message-State: APjAAAW9Hr9D5n9oXp48qK1/o2RqxFwGr/Wf3uCIeZ1EH/XoL62+VWxV
-        BUrCfI5CiX3jSNd9ozHMeeBbKKw8
-X-Google-Smtp-Source: APXvYqxfvv1JXWxWUiUzaQoZLUvdLLN/UVZs9I2Qdf32Qsbfl2hNyQEhnU6bcT0RugfLlBApfEzMXQ==
-X-Received: by 2002:aa7:8a87:: with SMTP id a7mr36509717pfc.252.1553694107263;
-        Wed, 27 Mar 2019 06:41:47 -0700 (PDT)
-Received: from CentOS76.localdomain.localdomain ([49.205.222.128])
-        by smtp.gmail.com with ESMTPSA id 71sm18759471pfs.36.2019.03.27.06.41.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 06:41:46 -0700 (PDT)
-From:   jagdsh.linux@gmail.com
-To:     linux@armlinux.org.uk, paul.burton@mips.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Subject: [PATCH] arm:mach-sa1100/hackkit.c :  Remove duplicate header
-Date:   Thu, 28 Mar 2019 00:41:36 +0530
-Message-Id: <1553713896-25575-1-git-send-email-jagdsh.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 27 Mar 2019 09:42:43 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 269AB60C72; Wed, 27 Mar 2019 13:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694162;
+        bh=uqkwQJliackH0EEgsbA3hj/4fTUuBH6MhhnAy3sKmYI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DHubhqpFyAJ/wbDXfkgXuzMSJZFJrPfv6eugE1+ym33m4q7R3AaYDrh25GPwXoKRx
+         Jbk+hbsakGZob8ZYi4TIImB+EDXge4O5qIG0g1GE/xZWU/s5QiAEpgwQoj4MM+CPAd
+         QHQ0+zz2wdy49WBdFZyxSGNwtFz6nyC90cHmlsyY=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3C8D60CF1;
+        Wed, 27 Mar 2019 13:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553694160;
+        bh=uqkwQJliackH0EEgsbA3hj/4fTUuBH6MhhnAy3sKmYI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XnmFszp2I/ctNar+RzMLI/6ut3O9EUBTnPeJTsUMV/3lM5XIIIBMr2PtEpQMTUZeD
+         IR3vo8oKtl88t+8X9n3GspTI1RXPUe6Mpz4u1Ij79BfpyGZ0DkutiVAJKEFGq0R8ca
+         Ldsa4urAEG5mMOcxFwlsSBMAv8G//cC4SyZc1CHU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F3C8D60CF1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] net: stmmac: fix a potential NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190312073241.27495-1-kjlu@umn.edu>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <7dbb5203-19fa-36f5-487a-9fbb08a34c4d@codeaurora.org>
+Date:   Wed, 27 Mar 2019 19:12:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
+MIME-Version: 1.0
+In-Reply-To: <20190312073241.27495-1-kjlu@umn.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
 
-Remove duplicate header which is included twice.
+On 3/12/2019 1:02 PM, Kangjie Lu wrote:
+> In case of_device_get_match_data fails, the fix return -ENOMEM
 
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
----
- arch/arm/mach-sa1100/hackkit.c | 1 -
- 1 file changed, 1 deletion(-)
+s/-ENOMEM/-EINVAL
 
-diff --git a/arch/arm/mach-sa1100/hackkit.c b/arch/arm/mach-sa1100/hackkit.c
-index 643d5f2..0016d25 100644
---- a/arch/arm/mach-sa1100/hackkit.c
-+++ b/arch/arm/mach-sa1100/hackkit.c
-@@ -22,7 +22,6 @@
- #include <linux/serial_core.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/partitions.h>
--#include <linux/tty.h>
- #include <linux/gpio.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
--- 
-1.8.3.1
 
+Otherwise looks good to me.
+Make the above correction.
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+> to avoid the NULL pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> index 3256e5cbad27..344ead5949b1 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> @@ -485,6 +485,8 @@ static int dwc_eth_dwmac_remove(struct platform_device *pdev)
+>   	int err;
+>   
+>   	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data)
+> +		return -EINVAL;
+>   
+>   	err = stmmac_dvr_remove(&pdev->dev);
+>   	if (err < 0)
