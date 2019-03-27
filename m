@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A772C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9277AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED43E2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DC1218A6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710603;
-	bh=njuQRNXT+2fbG7yYGEmsBKfcZdq9dAPSx+Jt2Lphc0A=;
+	s=default; t=1553710608;
+	bh=ZB704bNPOTk1fsKGwJGdcHCzS42Q0vdTB4MSRiictgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqDm4EsvvxjZtAOvmdvbf5lhxl/2H9f9RxsgIs8oAuMMRj2e+H2Zxd88p7CncR+p4
-	 vf5PEeSMB1EcsvG0EStNxnDl5rPh9X4fsQ0u+EMtVjGFUoUQMhgx/TlnkzE6cwXH1u
-	 KWjhZMAUcdgEKntQ9q+pZAyc/Pk9wFILxy5tPnjU=
+	b=uU8yWSdsD4dzMLRd1RcLXmtf7H0tRZ00rhy3pBu9UEkb8/eRrxPwCCsc5D1DfK/o1
+	 iKVuUeh1G9NIrqY8cfS3SYh01NIc8aIot83Ay+OpT1+b4Zocuw28bz8bgTSz9FGMxv
+	 CshWJMyU/7z21csh8TYHxUIdg7fTdV7dDEoPqvHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390120AbfC0SQl (ORCPT
+        id S2390128AbfC0SQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:16:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390099AbfC0SQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:16:38 -0400
+        id S2389816AbfC0SQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:16:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4E72082F;
-        Wed, 27 Mar 2019 18:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010EE21738;
+        Wed, 27 Mar 2019 18:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710597;
-        bh=njuQRNXT+2fbG7yYGEmsBKfcZdq9dAPSx+Jt2Lphc0A=;
+        s=default; t=1553710600;
+        bh=ZB704bNPOTk1fsKGwJGdcHCzS42Q0vdTB4MSRiictgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQlBabh0qFAe1ot+29h/x5G8oE2pyLZumd2itDhHFtP2e3S7+flxsI7AfPJ0nB+kJ
-         X/OuFai9qJdZWEJR6I5C56vH0Z/CliUoFV926FvZNLhnQxvtjdgx0hwLxukkgMZloz
-         AGDb+mPqwyEmPQcMZpnXEte0n53d5t6AUs+Ck90U=
+        b=XqrS6WGDitWW/n3G8pPiBVqUGGP2vsc78yb45DNst9gwyhipMKa5UyLF0NI/oEfRK
+         KI7+LiSg2R2QC5UYgpQZWFiS0ZEXmx+OV47GJBPj4EQnLwyx0HrfyyapLeXUWBMVo7
+         QjteJtky7WZ80YlD5J7/EJSJ1YlWMVMkLvTLDFaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Mohamad Haj Yahia <mohamad@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 006/123] net/mlx5: Avoid panic when setting vport rate
-Date:   Wed, 27 Mar 2019 14:14:30 -0400
-Message-Id: <20190327181628.15899-6-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 008/123] gpio: gpio-omap: fix level interrupt idling
+Date:   Wed, 27 Mar 2019 14:14:32 -0400
+Message-Id: <20190327181628.15899-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -60,80 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-If we try to set VFs rate on a VF (not PF) net device, the kernel
-will be crash. The commands are show as below:
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
-$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-If not applied the first patch ("net/mlx5: Avoid panic when setting
-vport mac, getting vport config"), the command:
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
-$ ip link set $MLX_VF0 vf 0 rate 100
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
 
-can also crash the kernel.
+However, this does not appear to be a practical problem.
 
-[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
-[ 1650.007092]  do_setlink+0x982/0xd20
-[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
-[ 1650.007374]  rtnl_newlink+0x43/0x60
-[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
-[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
-[ 1650.007519]  netlink_unicast+0x17f/0x230
-[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
-[ 1650.007592]  sock_sendmsg+0x36/0x50
-[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
-[ 1650.007963]  __sys_sendmsg+0x58/0xa0
-[ 1650.007998]  do_syscall_64+0x5b/0x180
-[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
 
-Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
-Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Acked-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
+
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
+
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 2f93e6e9dc9e..2aec0c021b6c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1966,19 +1966,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
- int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
- 				u32 max_rate, u32 min_rate)
- {
--	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
--	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
--					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
--	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
- 	struct mlx5_vport *evport;
-+	u32 fw_max_bw_share;
- 	u32 previous_min_rate;
- 	u32 divider;
-+	bool min_rate_supported;
-+	bool max_rate_supported;
- 	int err = 0;
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 3233b72b6828..148e81eea35a 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -841,14 +841,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
  
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport))
- 		return -EINVAL;
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
 +
-+	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
-+	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
-+				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
-+	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
-+
- 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
- 		return -EOPNOTSUPP;
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
+ 
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
  
 -- 
 2.19.1
