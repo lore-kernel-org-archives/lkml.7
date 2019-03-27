@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA7EC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D40C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7314521850
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3B521850
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710553;
-	bh=bQA4rep4aoj+gAR143fIhWCpWxLbReAsPfQHlFROyJU=;
+	s=default; t=1553710556;
+	bh=SeuXXXEJshdCjxNBfiXdPj39+UBW8JBgmx3N6Jlwr0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWjkE74kFfk2LpZiUqt+7RtL8jVcH2NgjcZN7pTuAGKKvHQDxfNqCl30DHrMmIkEY
-	 FkPCUCXhFQd+Qgu2sy+sk+KgxfaxJBGYYM/N/zHYiPkINThDAoU7JBf7GW9nrKVdDy
-	 JUO+zBXdrwxE3ns77V8KIr0jlUKPlBucZpPdk3Ik=
+	b=V1DBVEGTvJGtlVi5oEjiLTJrRVoXIXcXqmbcrKoFUYN87I2hsDEipXm3Fdi/DHz7M
+	 XaoPv8X2te/iXjEKibIWuDbKrFedg3UY8Y8uHM1Ba9HRxcicnmcHAHrJF2eXB+nvfS
+	 Xn97XfbPwNyZpGPoUWE1Fu4l6sOPocHeWMu92KKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389910AbfC0SPv (ORCPT
+        id S2389662AbfC0SPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59490 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389385AbfC0SPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:49 -0400
+        id S2388942AbfC0SPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E67020449;
-        Wed, 27 Mar 2019 18:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA9A217D9;
+        Wed, 27 Mar 2019 18:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710548;
-        bh=bQA4rep4aoj+gAR143fIhWCpWxLbReAsPfQHlFROyJU=;
+        s=default; t=1553710550;
+        bh=SeuXXXEJshdCjxNBfiXdPj39+UBW8JBgmx3N6Jlwr0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vGnrVDrfNh2oa+w4TIYiL9wueL8sORmsyvE38AXP0qEj+cj4fXGJ0drInax+RDvYm
-         PNyNxKKgTcKFJOzZ3PBd2yzfMotWeMYVTsQtFRHMKEjrENy8RqE9CyIAu2v+gN0YaU
-         v72gWA9L2B8KxBu5y2yEFbp3hTilYwyW4cR/GVTI=
+        b=hFXHPKK+2c9xJA+7+8PB2R4GjtTCGWrMxh7iFVclwSVNKvD5WadNTcooNTRqwamcU
+         jC5yo48kCJP3O5+jb6d8A9umyQ4A+51yzsjj997JJH3ZvLWzLrvUf6PiwxEPjz6IID
+         k29BybciNqkcLKfM3l0ik82X4FxtEezUOBTRSn+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 170/192] dmaengine: qcom_hidma: initialize tx flags in hidma_prep_dma_*
-Date:   Wed, 27 Mar 2019 14:10:02 -0400
-Message-Id: <20190327181025.13507-170-sashal@kernel.org>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 172/192] media: rcar-vin: Allow independent VIN link enablement
+Date:   Wed, 27 Mar 2019 14:10:04 -0400
+Message-Id: <20190327181025.13507-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,55 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-[ Upstream commit 875aac8a46424e5b73a9ff7f40b83311b609e407 ]
+[ Upstream commit c5ff0edb8e2270a75935c73217fb0de1abd2d910 ]
 
-In async_tx_test_ack(), it uses flags in struct dma_async_tx_descriptor
-to check the ACK status. As hidma reuses the descriptor in a free list
-when hidma_prep_dma_*(memcpy/memset) is called, the flag will keep ACKed
-if the descriptor has been used before. This will cause a BUG_ON in
-async_tx_quiesce().
+There is a block of code in rvin_group_link_notify() that prevents
+enabling a link to a VIN node if any entity in the media graph is
+in use. This prevents enabling a VIN link even if there is an in-use
+entity somewhere in the graph that is independent of the link's
+pipeline.
 
-  kernel BUG at crypto/async_tx/async_tx.c:282!
-  Internal error: Oops - BUG: 0 1 SMP
-  ...
-  task: ffff8017dd3ec000 task.stack: ffff8017dd3e8000
-  PC is at async_tx_quiesce+0x54/0x78 [async_tx]
-  LR is at async_trigger_callback+0x98/0x110 [async_tx]
+For example, the code block will prevent enabling a link from
+the first rcar-csi2 receiver to a VIN node even if there is an
+enabled link somewhere far upstream on the second independent
+rcar-csi2 receiver pipeline.
 
-This patch initializes flags in dma_async_tx_descriptor by the flags
-passed from the caller when hidma_prep_dma_*(memcpy/memset) is called.
+If this code block is meant to prevent modifying a link if any entity
+in the graph is actively involved in streaming (because modifying
+the CHSEL register fields can disrupt any/all running streams), then
+the entities stream counts should be checked rather than the use counts.
 
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+(There is already such a check in __media_entity_setup_link() that verifies
+the stream_count of the link's source and sink entities are both zero,
+but that is insufficient, since there should be no running streams in
+the entire graph).
+
+Modify the code block to check the entity stream_count instead of the
+use_count (and elaborate on the comment). VIN node links can now be
+enabled even if there are other independent in-use entities that are
+not streaming.
+
+Fixes: c0cc5aef31 ("media: rcar-vin: add link notify for Gen3")
+
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/platform/rcar-vin/rcar-core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index ea219bca116d..411f91fde734 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -416,6 +416,7 @@ hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dest, dma_addr_t src,
- 	if (!mdesc)
- 		return NULL;
+diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+index ce09799976ef..e1085e3ab3cc 100644
+--- a/drivers/media/platform/rcar-vin/rcar-core.c
++++ b/drivers/media/platform/rcar-vin/rcar-core.c
+@@ -131,9 +131,13 @@ static int rvin_group_link_notify(struct media_link *link, u32 flags,
+ 	    !is_media_entity_v4l2_video_device(link->sink->entity))
+ 		return 0;
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     src, dest, len, flags,
- 				     HIDMA_TRE_MEMCPY);
-@@ -448,6 +449,7 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
- 	if (!mdesc)
- 		return NULL;
+-	/* If any entity is in use don't allow link changes. */
++	/*
++	 * Don't allow link changes if any entity in the graph is
++	 * streaming, modifying the CHSEL register fields can disrupt
++	 * running streams.
++	 */
+ 	media_device_for_each_entity(entity, &group->mdev)
+-		if (entity->use_count)
++		if (entity->stream_count)
+ 			return -EBUSY;
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     value, dest, len, flags,
- 				     HIDMA_TRE_MEMSET);
+ 	mutex_lock(&group->lock);
 -- 
 2.19.1
 
