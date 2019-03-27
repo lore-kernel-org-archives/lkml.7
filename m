@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6519C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A93C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB28208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F72E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n+pYY9aa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j/YsHbxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbfC0F5o (ORCPT
+        id S2387411AbfC0F5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:57:44 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17631 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733198AbfC0F5l (ORCPT
+        Wed, 27 Mar 2019 01:57:49 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:6275 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbfC0F5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:57:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9b10d70000>; Tue, 26 Mar 2019 22:57:43 -0700
+        Wed, 27 Mar 2019 01:57:46 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9b10d70001>; Tue, 26 Mar 2019 22:57:43 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 26 Mar 2019 22:57:40 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 26 Mar 2019 22:57:45 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 26 Mar 2019 22:57:40 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 05:57:39 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 27 Mar 2019 05:57:39 +0000
+        by hqpgpgate102.nvidia.com on Tue, 26 Mar 2019 22:57:45 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 05:57:44 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 27 Mar 2019 05:57:44 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.161.83]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c9b10d10003>; Tue, 26 Mar 2019 22:57:39 -0700
+        id <B5c9b10d60001>; Tue, 26 Mar 2019 22:57:44 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <talho@nvidia.com>, <skomatineni@nvidia.com>, <broonie@kernel.org>,
@@ -46,9 +46,9 @@ To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
 CC:     <ldewangan@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH V1 22/26] spi: tegra114: add support for tuning clock delay
-Date:   Tue, 26 Mar 2019 22:56:43 -0700
-Message-ID: <1553666207-11414-22-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V1 24/26] spi: tegra114: de-assert CS before SPI mode is reset to its default
+Date:   Tue, 26 Mar 2019 22:56:45 -0700
+Message-ID: <1553666207-11414-24-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
 References: <1553666207-11414-1-git-send-email-skomatineni@nvidia.com>
@@ -56,120 +56,81 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553666263; bh=NkBXpKQJ407zfskKrIvF7fFzgILoKGcrrlOTed2L25U=;
+        t=1553666263; bh=qqcxJt6Vkn8IPNbfhZkyYZ2kfpA+TQeqAqxGiomjZbY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=n+pYY9aa1xnP3miROvQHcG+A3IDpBfYygKziesyBFj5+MBdsGgI8v3y4USO9UM15f
-         CqX4UU+hbR2Ozl57GVYChOydBnuZF4Bcl8GZ2a6eDSU2VLS43J/FSjZe5g1eMbJcC5
-         vBv6RNHxvi2qrbiNizKPh7DblZxm5clO5pKRCnBJGqGIZsKi3sKaKVkuz4nTyd+2Xd
-         jJ2CeEBByKjSnErYFhFhOR4B6rG4nO3OaxGW4bFiKF2h41fBPTyYfS4kpzJw80ssSx
-         1JjbWYGewY9PsLrR4/px03HouMednHT7TNbjEuzUSzl5u8JAczy505Qf5prU5eWnzy
-         YP6nhyWxk6u7g==
+        b=j/YsHbxJBF8Tt7C+TuyXooW6iNYA4KM+B6lpkBm9ej7etjTtdle8lJ3RRj5t4lE+T
+         NGD2K3aNngR5QNoHMPZq2qbh/2pYH9sYSch7neZq6RrI7vj2BnOe8PG1JV6Iiu6xLl
+         BsMc4rz7Tot9hH4recMkPu7e7ODZ9DiEHFdxSrQrvH+8iVbZrJEwoxJTylu6Z8EC+v
+         XHppunBEnmaSr1DzwoUMrHzcuDn8Do83W7JBojOwTyTboNzAhF/xVv01uzVuD7CBbv
+         xs7Ixeome1T9ahFqvXG/QyNodoLH/+umw00dvbd7nAnibwHcgV41uqBDYzP/67ZvoG
+         vB2tVec/+Bqtw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra SPI controller has TX_CLK_TAP_DELAY and RX_CLK_TAP_DELAY in
-COMMAND2 register to tune delay of the clock going out to external
-device during transmit and also for the clock coming in from external
-device during receive.
+With SW CS, during transfer completion CS is de-asserted by writing the
+default command1 register value to SPI_COMMAND1 register. With this both
+mode and CS state are set at the same time and if current transfer mode
+is different to default SPI mode and if mode change happens prior to CS
+de-assert, clock polarity can change while CS is active before transfer
+finishes.
 
-TX/RX clock tap delays may vary based on the trace lengths of the
-platform design for each of the slaves on the SPI bus.
+This causes Slave to see spurious clock edges resulting in data mismatch.
 
-This patch adds support for configuring TX/RX clock delays specified
-through device tree properties.
+This patch fixes this by de-asserting CS before writing SPI_COMMAND1 to
+its default value so through out the transfer it will be in same SPI mode.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/spi/spi-tegra114.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/spi/spi-tegra114.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index e01962344bde..725d60364ec6 100644
+index 9b216e9d6079..e1669ab3b0fe 100644
 --- a/drivers/spi/spi-tegra114.c
 +++ b/drivers/spi/spi-tegra114.c
-@@ -174,6 +174,8 @@ struct tegra_spi_client_data {
- 	int cs_setup_clk_count;
- 	int cs_hold_clk_count;
- 	int cs_inactive_cycles;
-+	int tx_clk_tap_delay;
-+	int rx_clk_tap_delay;
- };
- 
- struct tegra_spi_data {
-@@ -215,8 +217,10 @@ struct tegra_spi_data {
- 	u32					command1_reg;
- 	u32					dma_control_reg;
- 	u32					def_command1_reg;
-+	u32					def_command2_reg;
- 	u32					spi_cs_timing1;
- 	u32					spi_cs_timing2;
-+	u8					last_used_cs;
- 
- 	struct completion			xfer_completion;
- 	struct spi_transfer			*curr_xfer;
-@@ -780,7 +784,9 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 	u32 speed = t->speed_hz;
- 	u8 bits_per_word = t->bits_per_word;
- 	u32 command1;
-+	u32 command2;
- 	int req_mode;
-+	u32 tx_tap = 0, rx_tap = 0;
- 
- 	if (speed != tspi->cur_speed) {
- 		clk_set_rate(tspi->clk, speed);
-@@ -843,7 +849,18 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 			command1 &= ~(SPI_CS_SW_HW | SPI_CS_SW_VAL);
- 		}
- 
--		tegra_spi_writel(tspi, 0, SPI_COMMAND2);
-+		if (tspi->last_used_cs != spi->chip_select) {
-+			if (cdata && cdata->tx_clk_tap_delay)
-+				tx_tap = cdata->tx_clk_tap_delay;
-+			if (cdata && cdata->rx_clk_tap_delay)
-+				rx_tap = cdata->rx_clk_tap_delay;
-+			command2 = SPI_TX_TAP_DELAY(tx_tap) |
-+				   SPI_RX_TAP_DELAY(rx_tap);
-+			if (command2 != tspi->def_command2_reg)
-+				tegra_spi_writel(tspi, command2, SPI_COMMAND2);
-+			tspi->last_used_cs = spi->chip_select;
-+		}
-+
- 	} else {
- 		command1 = tspi->command1_reg;
- 		command1 &= ~SPI_BIT_LENGTH(~0);
-@@ -923,6 +940,10 @@ static struct tegra_spi_client_data
- 			     &cdata->cs_hold_clk_count);
- 	of_property_read_u32(slave_np, "nvidia,cs-inactive-cycles",
- 			     &cdata->cs_inactive_cycles);
-+	of_property_read_u32(slave_np, "nvidia,tx-clk-tap-delay",
-+			     &cdata->tx_clk_tap_delay);
-+	of_property_read_u32(slave_np, "nvidia,rx-clk-tap-delay",
-+			     &cdata->rx_clk_tap_delay);
- 	return cdata;
- }
- 
-@@ -1379,6 +1400,8 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
- 	tspi->spi_cs_timing1 = tegra_spi_readl(tspi, SPI_CS_TIMING1);
- 	tspi->spi_cs_timing2 = tegra_spi_readl(tspi, SPI_CS_TIMING2);
-+	tspi->def_command2_reg = tegra_spi_readl(tspi, SPI_COMMAND2);
-+	tspi->last_used_cs = master->num_chipselect + 1;
- 	pm_runtime_put(&pdev->dev);
- 	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
- 				   tegra_spi_isr_thread, IRQF_ONESHOT,
-@@ -1451,6 +1474,8 @@ static int tegra_spi_resume(struct device *dev)
- 		return ret;
- 	}
- 	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	tegra_spi_writel(tspi, tspi->def_command2_reg, SPI_COMMAND2);
-+	tspi->last_used_cs = master->num_chipselect + 1;
- 	pm_runtime_put(dev);
- 
- 	return spi_master_resume(master);
+@@ -1147,6 +1147,12 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 		if (ret < 0 || skip) {
+ 			if (cstate->cs_gpio_valid)
+ 				gpio_set_value(spi->cs_gpio, cs_val);
++			if (cs_val && !tspi->use_hw_based_cs)
++				tspi->command1_reg |= SPI_CS_SW_VAL;
++			else
++				tspi->command1_reg &= ~SPI_CS_SW_VAL;
++			tegra_spi_writel(tspi, tspi->command1_reg,
++					 SPI_COMMAND1);
+ 			tegra_spi_writel(tspi, tspi->def_command1_reg,
+ 					SPI_COMMAND1);
+ 			tegra_spi_transfer_delay(xfer->delay_usecs);
+@@ -1158,6 +1164,12 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 			else {
+ 				if (cstate->cs_gpio_valid)
+ 					gpio_set_value(spi->cs_gpio, cs_val);
++				if (cs_val && !tspi->use_hw_based_cs)
++					tspi->command1_reg |= SPI_CS_SW_VAL;
++				else
++					tspi->command1_reg &= ~SPI_CS_SW_VAL;
++				tegra_spi_writel(tspi, tspi->command1_reg,
++						 SPI_COMMAND1);
+ 				tegra_spi_writel(tspi, tspi->def_command1_reg,
+ 						SPI_COMMAND1);
+ 				tegra_spi_transfer_delay(xfer->delay_usecs);
+@@ -1165,6 +1177,12 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 		} else if (xfer->cs_change) {
+ 			if (cstate->cs_gpio_valid)
+ 				gpio_set_value(spi->cs_gpio, cs_val);
++			if (cs_val && !tspi->use_hw_based_cs)
++				tspi->command1_reg |= SPI_CS_SW_VAL;
++			else
++				tspi->command1_reg &= ~SPI_CS_SW_VAL;
++			tegra_spi_writel(tspi, tspi->command1_reg,
++					 SPI_COMMAND1);
+ 			tegra_spi_writel(tspi, tspi->def_command1_reg,
+ 					SPI_COMMAND1);
+ 			tegra_spi_transfer_delay(xfer->delay_usecs);
 -- 
 2.7.4
 
