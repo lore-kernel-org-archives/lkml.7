@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FC9C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3561FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB27C20449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F392063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710830;
-	bh=xxATMUAFr8KVA8Og4E6NFJj1OcuDRKZN1nqWzJQ4Ue8=;
+	s=default; t=1553710834;
+	bh=skjNL9xN1S3j3/04nZjFiqXe+kT4bME8Nf9fiGII61A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/wuQlVvG/REFirhw858pezp49NeaM/vdd4SzHD5wui4DsxTArn8AQkr8CZ/tHEL3
-	 f6pMiiygqy0P+y00Lpt/aH7n7e8BA/fWZgdxznRjm52smHrtobH4yhLJlLh0ORGcRm
-	 tKr781qHmCEYwq+h2SUFK5OGcYc8wSTE/Qa9kdZo=
+	b=ZcDKO6hIiWcIzkT+LGLpqUsqZ8cMwb+ly7kOM2NkdJmkCKUKof8AXVCantrjBgDGM
+	 yqHnINLTOcgGqpu/U+S8H1BwKpp9NtCoA/iNF+km4tsBsy55OWPp3p3y4nzAb1I4EM
+	 YYeWjd6Tk/zV8Ct3nr7xI1bj9w7cwQJ6YxE1nwXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390928AbfC0SU3 (ORCPT
+        id S2390943AbfC0SUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390907AbfC0SU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:27 -0400
+        id S2390661AbfC0SUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A24F2147C;
-        Wed, 27 Mar 2019 18:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07FF52087C;
+        Wed, 27 Mar 2019 18:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710826;
-        bh=xxATMUAFr8KVA8Og4E6NFJj1OcuDRKZN1nqWzJQ4Ue8=;
+        s=default; t=1553710829;
+        bh=skjNL9xN1S3j3/04nZjFiqXe+kT4bME8Nf9fiGII61A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCXtCWAsZjzMxMrPbUeTxeWtQrfLKKwhmoBC+d3x3Q4+1PTjcNQ48mGx1ZqNxo+bT
-         TQ7652BaQuuh1tpMJEyShQZUhSfSLX2uwuTn32y/qUnIIxowCJJlG5NncFWT22mCGa
-         F/TFGVAsCe9SFP6xa8hTwYbaz8X4sjEO5vddnGh4=
+        b=zOOCkIqAxWTd9gDLhaTrscHZxXSJSYRVMBTkn9jRNldqb0LNPCCYW5EP6mkMSXZar
+         KIcEketJd8X/mPDhXZg+xE9yIX1HHk9VLVrbl5WfMKgKGMe1xr2Qgw9MyRrsULFFiw
+         7kJPE8G99E9550GCuoQnzHt3A3eRUsg5ZwWx3kxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 116/123] selinux: do not override context on context mounts
-Date:   Wed, 27 Mar 2019 14:16:20 -0400
-Message-Id: <20190327181628.15899-116-sashal@kernel.org>
+Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 117/123] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
+Date:   Wed, 27 Mar 2019 14:16:21 -0400
+Message-Id: <20190327181628.15899-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,100 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Mosnacek <omosnace@redhat.com>
+From: Zumeng Chen <zumeng.chen@gmail.com>
 
-[ Upstream commit 53e0c2aa9a59a48e3798ef193d573ade85aa80f5 ]
+[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
 
-Ignore all selinux_inode_notifysecctx() calls on mounts with SBLABEL_MNT
-flag unset. This is achived by returning -EOPNOTSUPP for this case in
-selinux_inode_setsecurtity() (because that function should not be called
-in such case anyway) and translating this error to 0 in
-selinux_inode_notifysecctx().
+Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
+failed instead of meaningless goto out to avoid the following memory leak
+reports(Only the last one listed):
 
-This fixes behavior of kernfs-based filesystems when mounted with the
-'context=' option. Before this patch, if a node's context had been
-explicitly set to a non-default value and later the filesystem has been
-remounted with the 'context=' option, then this node would show up as
-having the manually-set context and not the mount-specified one.
+unreferenced object 0xc28a9a00 (size 512):
+  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<6624adab>] kmemleak_alloc+0x40/0x74
+    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
+    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
+    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
+    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
+    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
+    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
+    [<7e1d425a>] process_one_work+0x284/0x42c
+    [<55f9432e>] worker_thread+0x2fc/0x48c
+    [<abb582c6>] kthread+0x148/0x160
+    [<63144b13>] ret_from_fork+0x14/0x2c
+    [< (null)>] (null)
+    [<1f6e7715>] 0xffffffff
 
-Steps to reproduce:
-    # mount -t cgroup2 cgroup2 /sys/fs/cgroup/unified
-    # chcon unconfined_u:object_r:user_home_t:s0 /sys/fs/cgroup/unified/cgroup.stat
-    # ls -lZ /sys/fs/cgroup/unified
-    total 0
-    -r--r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.controllers
-    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.depth
-    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.descendants
-    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.procs
-    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
-    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.subtree_control
-    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.threads
-    # umount /sys/fs/cgroup/unified
-    # mount -o context=system_u:object_r:tmpfs_t:s0 -t cgroup2 cgroup2 /sys/fs/cgroup/unified
-
-Result before:
-    # ls -lZ /sys/fs/cgroup/unified
-    total 0
-    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.controllers
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.depth
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.descendants
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.procs
-    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.subtree_control
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.threads
-
-Result after:
-    # ls -lZ /sys/fs/cgroup/unified
-    total 0
-    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.controllers
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.depth
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.descendants
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.procs
-    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.stat
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.subtree_control
-    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.threads
-
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index a5d9c0146ac3..b72aa48f6478 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3339,12 +3339,16 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
- 				     const void *value, size_t size, int flags)
- {
- 	struct inode_security_struct *isec = inode_security_novalidate(inode);
-+	struct superblock_security_struct *sbsec = inode->i_sb->s_security;
- 	u32 newsid;
- 	int rc;
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index c346c021b999..eb3a7971c1d3 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -1058,8 +1058,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
+ 		goto out;
  
- 	if (strcmp(name, XATTR_SELINUX_SUFFIX))
- 		return -EOPNOTSUPP;
+ 	ret = wl12xx_fetch_firmware(wl, plt);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		kfree(wl->fw_status);
++		kfree(wl->raw_fw_status);
++		kfree(wl->tx_res_if);
++	}
  
-+	if (!(sbsec->flags & SBLABEL_MNT))
-+		return -EOPNOTSUPP;
-+
- 	if (!value || !size)
- 		return -EACCES;
- 
-@@ -6103,7 +6107,10 @@ static void selinux_inode_invalidate_secctx(struct inode *inode)
-  */
- static int selinux_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
- {
--	return selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX, ctx, ctxlen, 0);
-+	int rc = selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX,
-+					   ctx, ctxlen, 0);
-+	/* Do not return error when suppressing label (SBLABEL_MNT not set). */
-+	return rc == -EOPNOTSUPP ? 0 : rc;
- }
- 
- /*
+ out:
+ 	return ret;
 -- 
 2.19.1
 
