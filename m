@@ -3,72 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED51C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1FBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE992146F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553692663;
-	bh=BjFoG9XzZkpiLXtKPSIyofs1qGd4Qt2+xY1fYv8QKgc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MMz+kLzv/atR4YMyK14a9Xb4QmVmxAnbAS0werUJERd+5CDVuRBUeM+LeP1CRCjpa
-	 J0rZ8IEOKei/Od2503zd+crF0zhMlJtbRhy5f6aJbb73QC+sQyQeBPWtDI3Lp8gBk7
-	 yS5Ql+grJ7YfBResSHzI761+/O2ALzgBY/Ojl6tA=
+	by mail.kernel.org (Postfix) with ESMTP id 1736520651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H2YmVlEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbfC0NRm (ORCPT
+        id S1729561AbfC0NS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfC0NRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:17:42 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC442146F;
-        Wed, 27 Mar 2019 13:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553692661;
-        bh=BjFoG9XzZkpiLXtKPSIyofs1qGd4Qt2+xY1fYv8QKgc=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=NZiX+ywia8/TWwDzrncmbXl9lrOczLXHfdx5kM4W+BI3cb04Be4mtr8t2YZlR6Yha
-         nZ56+TS0zklrUBuMMpfTU1NU1VUCmJqJqQsiF1hqO6WW2gQPocG5OWKdyFEkGUtuFx
-         crt+gta6ZQvDy93LUyDWRsqhMFFjmPeYj0rkpTZc=
-Date:   Wed, 27 Mar 2019 14:17:38 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        bjorn.andersson@linaro.org, lee.jones@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: quirks: Fix keyboard + touchpad on Lenovo Miix
- 630
-In-Reply-To: <20190326165554.17266-1-jeffrey.l.hugo@gmail.com>
-Message-ID: <nycvar.YFH.7.76.1903271417240.19912@cbobk.fhfr.pm>
-References: <20190326165554.17266-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 27 Mar 2019 09:18:57 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15352 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbfC0NS5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:18:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c9b783b0000>; Wed, 27 Mar 2019 06:18:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 27 Mar 2019 06:18:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 27 Mar 2019 06:18:56 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
+ 2019 13:18:55 +0000
+Subject: Re: [PATCH v2 1/2] bus: tegra-aconnect: use devm_clk_*() helpers
+To:     Sameer Pujar <spujar@nvidia.com>, <treding@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1552452119-6574-1-git-send-email-spujar@nvidia.com>
+ <32ab970f-d6a3-1232-77f1-41f97cc04f9a@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <67a87b1d-b22f-f1c6-b792-cf180797409a@nvidia.com>
+Date:   Wed, 27 Mar 2019 13:18:53 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <32ab970f-d6a3-1232-77f1-41f97cc04f9a@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1553692731; bh=cjZ8oHzfhyVcFuraclhEkZKli7qmH7JS4sX23B2VYm4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=H2YmVlEdZ3OfNJa04GjqDE5RU22c5f1dkrN96PqWSr/YUBsdoskH57eibURoQc36G
+         xHA1JXHsqhqq2XS1q9izi9WCt/WDdBWA2l9OgfYTff5aqM1syoLbV+xPSpYo+Gu8lc
+         fXHfy1Ko7ii/70ShEpUiMNyftzbQrcKB7GSrDKLOAcvL/6QhHHzHOfdKv87VL8riNS
+         tcmkhbXLh/8RKKRoXDeAO/hR4gbmPsrHM+40sMsxAhlOOXwTaE4GxrWrgiyxq8JSWr
+         0xV7yvxCrYCyRMYndixEjn6l01XYKHXebrhCTPUa7Orqh3/e1gmnqnx7XRuTD2AtR5
+         Zp7Yg+FoYlPtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019, Jeffrey Hugo wrote:
 
-> Similar to commit edfc3722cfef ("HID: quirks: Fix keyboard + touchpad on
-> Toshiba Click Mini not working"), the Lenovo Miix 630 has a combo
-> keyboard/touchpad device with vid:pid of 04F3:0400, which is shared with
-> Elan touchpads.  The combo on the Miix 630 has an ACPI id of QTEC0001,
-> which is not claimed by the elan_i2c driver, so key on that similar to
-> what was done for the Toshiba Click Mini.
+On 27/03/2019 11:10, Sameer Pujar wrote:
+> Hi Reviewers,
+> 
+> Request for review and approval.
 
-Applied to for-5.1/upstream-fixes, thanks.
+Fine with me. I think you have my reviewed/acked-by.
+
+If there are any changes we need to make, we could also use the clk_bulk
+APIs here too. However, not critical.
+
+Cheers
+Jon
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+nvpublic
