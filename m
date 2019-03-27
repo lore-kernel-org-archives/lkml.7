@@ -2,116 +2,127 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439C6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04068C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146872064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713924;
-	bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZHWjlKwfWgoZ+i0n0kOqzgla9x/74OLWd3T88B/hTtNl2Aw2WEDZv1x0vskSbRri
-	 ILh8kJNn+UzqJNLvSjx4LJzT0t9ZwOZVfXIwJGL1gSTTC7/9Eoop8KTvqVzzwSTGch
-	 EaCX8w9fiUfQnvV41iGAjAzhPQTO2Ez6x8hHarZY=
+	by mail.kernel.org (Postfix) with ESMTP id D3DCD2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389044AbfC0TMC (ORCPT
+        id S2389035AbfC0TMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388141AbfC0SKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C12DC2177E;
-        Wed, 27 Mar 2019 18:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710232;
-        bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5cbDrTu6ub9+8Eon4/QPRg5ay++f+Q9hit6b1kt3s3aGreVR4sm0rv85HEu17fC4
-         2emzi52idyMA1UZh1PqgFhCQTDpNxHB4Wbxd+S3NVL7Hm1rWg2XpyEoz4UEcNHpX+h
-         VQ1iKNeogSkgDC45hstMA3riFpXhdd32ob1W/mOo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Taylor <louis@kragniz.eu>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 006/192] i2c: sis630: correct format strings
-Date:   Wed, 27 Mar 2019 14:07:18 -0400
-Message-Id: <20190327181025.13507-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+        Wed, 27 Mar 2019 15:12:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47026 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388820AbfC0SKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:30 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2RIA2CS090946
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:10:29 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rge4ag818-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:10:28 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 27 Mar 2019 18:10:26 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Mar 2019 18:10:22 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2RIAL3541812212
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 18:10:22 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD321A4060;
+        Wed, 27 Mar 2019 18:10:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F3143A4064;
+        Wed, 27 Mar 2019 18:10:20 +0000 (GMT)
+Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Mar 2019 18:10:20 +0000 (GMT)
+Subject: Re: [PATCH v8 10/10] integrity: support EC-RDSA signatures for
+ asymmetric_verify
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Vitaly Chikunov <vt@altlinux.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 27 Mar 2019 14:10:20 -0400
+In-Reply-To: <20190326125842.24110-11-vt@altlinux.org>
+References: <20190326125842.24110-1-vt@altlinux.org>
+         <20190326125842.24110-11-vt@altlinux.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032718-0016-0000-0000-00000267D81D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032718-0017-0000-0000-000032C3167B
+Message-Id: <1553710220.4608.9.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903270127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Taylor <louis@kragniz.eu>
+On Tue, 2019-03-26 at 15:58 +0300, Vitaly Chikunov wrote:
+> Allow to use EC-RDSA signatures for IMA by determining signature type by
+> the hash algorithm name. This works good for EC-RDSA since Streebog and
+> EC-RDSA should always be used together.
+> 
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+> Cc: linux-integrity@vger.kernel.org
+> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+> ---
+>  security/integrity/digsig_asymmetric.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
+> index d775e03fbbcc..99080871eb9f 100644
+> --- a/security/integrity/digsig_asymmetric.c
+> +++ b/security/integrity/digsig_asymmetric.c
+> @@ -104,9 +104,16 @@ int asymmetric_verify(struct key *keyring, const char *sig,
+>  
+>  	memset(&pks, 0, sizeof(pks));
+>  
+> -	pks.pkey_algo = "rsa";
+>  	pks.hash_algo = hash_algo_name[hdr->hash_algo];
+> -	pks.encoding = "pkcs1";
+> +	if (hdr->hash_algo == HASH_ALGO_STREEBOG_256 ||
+> +	    hdr->hash_algo == HASH_ALGO_STREEBOG_512) {
+> +		/* EC-RDSA and Streebog should go together. */
+> +		pks.pkey_algo = "ecrdsa";
+> +		pks.encoding = "raw";
 
-[ Upstream commit 60f7691c624b41a05bfc3493d9b0519e7951b7ef ]
+IMA signatures are stored as xattrs, making them persistent.  Support
+for streebog was upstreamed in linux-5.0.  This change would break
+existing systems using streebog.  As long as this is not yet a concern
 
-When compiling with -Wformat, clang warns:
+Reviewed-by:  Mimi Zohar <zohar@linux.ibm.com>
 
-drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS,
-                        ^~~~~~~~~~~~~~~~~~~~
-
-drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-                                          ~~~~~   ^~~~~~~~~~~~~~~~~~~~
-
-This patch fixes the format strings to use the format type for int.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-sis630.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
-index 1e6805b5cef2..a57aa4fe51a4 100644
---- a/drivers/i2c/busses/i2c-sis630.c
-+++ b/drivers/i2c/busses/i2c-sis630.c
-@@ -478,7 +478,7 @@ static int sis630_setup(struct pci_dev *sis630_dev)
- 	if (!request_region(smbus_base + SMB_STS, SIS630_SMB_IOREGION,
- 			    sis630_driver.name)) {
- 		dev_err(&sis630_dev->dev,
--			"I/O Region 0x%04hx-0x%04hx for SMBus already in use.\n",
-+			"I/O Region 0x%04x-0x%04x for SMBus already in use.\n",
- 			smbus_base + SMB_STS,
- 			smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
- 		retval = -EBUSY;
-@@ -528,7 +528,7 @@ static int sis630_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	sis630_adapter.dev.parent = &dev->dev;
- 
- 	snprintf(sis630_adapter.name, sizeof(sis630_adapter.name),
--		 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-+		 "SMBus SIS630 adapter at %04x", smbus_base + SMB_STS);
- 
- 	return i2c_add_adapter(&sis630_adapter);
- }
--- 
-2.19.1
+> +	} else {
+> +		pks.pkey_algo = "rsa";
+> +		pks.encoding = "pkcs1";
+> +	}
+>  	pks.digest = (u8 *)data;
+>  	pks.digest_size = datalen;
+>  	pks.s = hdr->sig;
 
