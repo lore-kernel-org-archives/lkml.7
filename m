@@ -6,51 +6,59 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AB2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17697C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9889421741
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA5EC2184C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710253;
-	bh=Y8IqOOQiRInxcECn8A9wf9S4T57fqM7rE0mVXgDmTug=;
+	s=default; t=1553710256;
+	bh=uXnjpxAhJ0NJevHTQ+WLhA3oWQsyO/F5W2zTP3iwFJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iD7RgTSmPvP69NCYWdUL0LR7HA8wgo7QMPfW4N1CUKB2uZpv+s2rLiOywDiKJljVT
-	 KzV3KHlRiLdOIxuMmPtb9Jwr9yc8ZpD+4QdKmKtSZdYll+29e1F7te01vrxo3T5pQK
-	 P3O8NTQPo4XwLq7kNy7pQfrptNoEDwzVa60YRPhc=
+	b=l8QtrExeUAbbMsY/pilAqzQzaq8FoBRrICzJejjcH6+z7Oq0F37ZLxBK4Csn5jdMy
+	 VM9IUsg/M08+LClpSnDUTOLzmM1Y3ccmDVUWCZiOYu+SVgth7vnDO+dRMPz2pHxVmC
+	 c1bIiDQzbsEHCjnrRcJ6HtTIUJksGIV/lnpIJmmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388926AbfC0SKv (ORCPT
+        id S2388949AbfC0SKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:10:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52930 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388363AbfC0SKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:48 -0400
+        id S2388363AbfC0SKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:10:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034FD21855;
-        Wed, 27 Mar 2019 18:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 715792177E;
+        Wed, 27 Mar 2019 18:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710247;
-        bh=Y8IqOOQiRInxcECn8A9wf9S4T57fqM7rE0mVXgDmTug=;
+        s=default; t=1553710251;
+        bh=uXnjpxAhJ0NJevHTQ+WLhA3oWQsyO/F5W2zTP3iwFJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVkvPo6Mjj2zgvQ34K7B5J0sJuD/rR9+xrpxeXIBQpRK6wJKMlkPXJl73FY244uYd
-         F0t+8Ji7ypeypZcfMc6n2lo0+D1YdIpgLyjd57+6SLD9Z5kSGYx9yUJffnFHDTVbJJ
-         P40cDyOy68eHi6ixMhcVbYt48I710wn0NNOdUQfY=
+        b=FMJnXPy0fVcYTvrH3DCuhlczdxlgqAyjnvpriz+TOwQmNoi58Anv1Lt01Et05OrDg
+         HWVsVDTENo4UoOsmGUXAEiHds9r2aQaKzvQC5CenwrrBZVu0L0iTYbo7bmuAXhlNmY
+         m4w5knp2fiqYBXb8Cges5dwxOAF4PY2/Ty757vdQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 015/192] libbpf: force fixdep compilation at the start of the build
-Date:   Wed, 27 Mar 2019 14:07:27 -0400
-Message-Id: <20190327181025.13507-15-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 018/192] iio: adc: fix warning in Qualcomm PM8xxx HK/XOADC driver
+Date:   Wed, 27 Mar 2019 14:07:30 -0400
+Message-Id: <20190327181025.13507-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,120 +66,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 8e2688876c7f7073d925e1f150e86b8ed3338f52 ]
+[ Upstream commit e0f0ae838a25464179d37f355d763f9ec139fc15 ]
 
-libbpf targets don't explicitly depend on fixdep target, so when
-we do 'make -j$(nproc)', there is a high probability, that some
-objects will be built before fixdep binary is available.
+The pm8xxx_get_channel() implementation is unclear, and causes gcc to
+suddenly generate odd warnings.  The trigger for the warning (at least
+for me) was the entirely unrelated commit 79a4e91d1bb2 ("device.h: Add
+__cold to dev_<level> logging functions"), which apparently changes gcc
+code generation in the caller function enough to cause this:
 
-Fix this by running sub-make; this makes sure that fixdep dependency
-is properly accounted for.
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c: In function ‘pm8xxx_xoadc_probe’:
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:633:8: warning: ‘ch’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    ret = pm8xxx_read_channel_rsv(adc, ch, AMUX_RSV4,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             &read_nomux_rsv4, true);
+             ~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:426:27: note: ‘ch’ was declared here
+    struct pm8xxx_chan_info *ch;
+                             ^~
 
-For the same issue in perf, see commit abb26210a395 ("perf tools: Force
-fixdep compilation at the start of the build").
+because gcc for some reason then isn't able to see that the termination
+condition for the "for( )" loop in that function is also the condition
+for returning NULL.
 
-Before:
+So it's not _actually_ uninitialized, but the function is admittedly
+just unnecessarily oddly written.
 
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
+Simplify and clarify the function, making gcc also see that it always
+returns a valid initialized value.
 
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
- # cannot find fixdep (/usr/local/google/home/sdf/src/linux/xxx//fixdep)
- # using basic dep data
-
-/tmp/bld/libbpf.o: libbpf.c /usr/include/stdc-predef.h \
- /usr/include/stdlib.h /usr/include/features.h \
- /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
-
-After:
-
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
-
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
-cmd_/tmp/bld/libbpf.o := gcc -Wp,-MD,/tmp/bld/.libbpf.o.d -Wp,-MT,/tmp/bld/libbpf.o -g -Wall -DHAVE_LIBELF_MMAP_SUPPORT -DCOMPAT_NEED_REALLOCARRAY -Wbad-function-cast -Wdeclaration-after-statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat -Wstrict-aliasing=3 -Werror -Wall -fPIC -I. -I/usr/local/google/home/sdf/src/linux/tools/include -I/usr/local/google/home/sdf/src/linux/tools/arch/x86/include/uapi -I/usr/local/google/home/sdf/src/linux/tools/include/uapi -fvisibility=hidden -D"BUILD_STR(s)=$(pound)s" -c -o /tmp/bld/libbpf.o libbpf.c
-
-source_/tmp/bld/libbpf.o := libbpf.c
-
-deps_/tmp/bld/libbpf.o := \
-  /usr/include/stdc-predef.h \
-  /usr/include/stdlib.h \
-  /usr/include/features.h \
-  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
-  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-
-Fixes: 7c422f557266 ("tools build: Build fixdep helper from perf and basic libs")
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Joe Perches <joe@perches.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iio/adc/qcom-pm8xxx-xoadc.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index d49902e818b5..3624557550a1 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -149,7 +149,8 @@ CMD_TARGETS = $(LIB_FILE)
+diff --git a/drivers/iio/adc/qcom-pm8xxx-xoadc.c b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+index b093ecddf1a8..54db848f0bcd 100644
+--- a/drivers/iio/adc/qcom-pm8xxx-xoadc.c
++++ b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+@@ -423,18 +423,14 @@ static irqreturn_t pm8xxx_eoc_irq(int irq, void *d)
+ static struct pm8xxx_chan_info *
+ pm8xxx_get_channel(struct pm8xxx_xoadc *adc, u8 chan)
+ {
+-	struct pm8xxx_chan_info *ch;
+ 	int i;
  
- TARGETS = $(CMD_TARGETS)
+ 	for (i = 0; i < adc->nchans; i++) {
+-		ch = &adc->chans[i];
++		struct pm8xxx_chan_info *ch = &adc->chans[i];
+ 		if (ch->hwchan->amux_channel == chan)
+-			break;
++			return ch;
+ 	}
+-	if (i == adc->nchans)
+-		return NULL;
+-
+-	return ch;
++	return NULL;
+ }
  
--all: fixdep all_cmd
-+all: fixdep
-+	$(Q)$(MAKE) all_cmd
- 
- all_cmd: $(CMD_TARGETS)
- 
+ static int pm8xxx_read_channel_rsv(struct pm8xxx_xoadc *adc,
 -- 
 2.19.1
 
