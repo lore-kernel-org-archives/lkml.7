@@ -4,73 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81DCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B3E2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A972075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="bwA+CJs9";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="l2MLy+bJ"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Aq5pOywE";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="lI4DLtiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfC0K3O (ORCPT
+        id S1732922AbfC0KaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:29:14 -0400
-Received: from mail177-9.suw61.mandrillapp.com ([198.2.177.9]:57723 "EHLO
-        mail177-9.suw61.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726305AbfC0K3O (ORCPT
+        Wed, 27 Mar 2019 06:30:17 -0400
+Received: from mail128-16.atl41.mandrillapp.com ([198.2.128.16]:24730 "EHLO
+        mail128-16.atl41.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727328AbfC0KaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:29:14 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Mar 2019 06:29:13 EDT
+        Wed, 27 Mar 2019 06:30:17 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Mar 2019 06:30:16 EDT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
  h=From:Subject:To:Cc:Message-Id:In-Reply-To:References:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=e8HYmYugXSvAr9S+tFkQEap2XogCxVY+blXQqfdS8eY=;
- b=bwA+CJs9NV86wdMXamuuRoHZA0x4/NXHwK+hn3y8J+AJUphDKVouD1IgZb+5Bgjjz50OvoK9ZlL8
-   NrYm1p6f/rB2K39A7NYr4h2nYqLiX9062tpAlaitqMjebW5XSPw+2QIzrO9ezzWpj2x0jTuXZi4v
-   nhZTP/v4/sdwrvX4Fv0=
-Received: from pmta06.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail177-9.suw61.mandrillapp.com id hjd87i22rtk0 for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:14:12 +0000 (envelope-from <bounce-md_31050260.5c9b4cf3.v1-79ee1a4a408346d9baf236bbd10d9599@mandrillapp.com>)
+ bh=5CmMhAf2ZqyrN+ETYX+NFf1/omfg9P9nGlFxAhjhWIM=;
+ b=Aq5pOywEGKvR6EPAg2gLQv2h0Py1QDE5gKiZo6bFMbB93BgRio2hMQZGbA2BN/lnc5K/CvjpufY2
+   Y0XCKjQH0HPzVs2LLKEiYnEQt4r9uldfiTinURpKRdUWkIpa4Ll1/Ade8tA8nz+EpO8jnC9JAp/I
+   NmadWnoKuUKJNmgCHpE=
+Received: from pmta01.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail128-16.atl41.mandrillapp.com id hjd8bg1mqukr for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 10:15:15 +0000 (envelope-from <bounce-md_31050260.5c9b4d33.v1-2848fb7c92a24ed1a7a21cb5bf3746a3@mandrillapp.com>)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1553681651; h=From : 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1553681715; h=From : 
  Subject : To : Cc : Message-Id : In-Reply-To : References : Date : 
  MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
  Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=e8HYmYugXSvAr9S+tFkQEap2XogCxVY+blXQqfdS8eY=; 
- b=l2MLy+bJ5ALyc0/hns9OuvfjcJbyJRwv9MVspXa2bS2fZiKNCn1ykhKVkKxdwJ/5QQ58T2
- g3bbDXqObf1rnLNV9Mj9TmWucAjay/q/be2uyzEnUpBoIfajTYjtFWpMOiV65sBziyoGySvS
- JZqQgi2wdlOLhuZ++rkdPGV911HYI=
+ bh=5CmMhAf2ZqyrN+ETYX+NFf1/omfg9P9nGlFxAhjhWIM=; 
+ b=lI4DLtizPnph4Fol58asV2VgF5uCRTCBlnkKV3XJKiPimJbs+eaCsVdyiZireVckDyrJ4T
+ QzbKOXtnyRPN725YYkgayhfyS/brYqIPsnCNlya3QlrQsXdN5fBJKnBBQCAyO/xGvy7TCstJ
+ dvHHP9lVJ+2Za0xHYEkpPEucZtwoA=
 From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [RESEND1, PATCH v2 2/2] fuse: allow filesystems to have precise control over data cache
-Received: from [87.98.221.171] by mandrillapp.com id 79ee1a4a408346d9baf236bbd10d9599; Wed, 27 Mar 2019 10:14:11 +0000
+Subject: [RESEND4, PATCH 2/2] fuse: require /dev/fuse reads to have enough buffer capacity as negotiated
+Received: from [87.98.221.171] by mandrillapp.com id 2848fb7c92a24ed1a7a21cb5bf3746a3; Wed, 27 Mar 2019 10:15:15 +0000
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159
 To:     Miklos Szeredi <miklos@szeredi.hu>,
         Miklos Szeredi <mszeredi@redhat.com>
-Cc:     Brian Foster <bfoster@redhat.com>,
-        Maxim Patlasov <mpatlasov@parallels.com>,
-        Anatol Pomozov <anatol.pomozov@gmail.com>,
-        Pavel Emelyanov <xemul@openvz.org>,
-        Andrew Gallagher <andrewjcg@fb.com>,
-        "Anand V . Avati" <avati@redhat.com>,
-        Alexey Kuznetsov <kuznet@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+Cc:     Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
         Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Constantine Shulyupin <const@MakeLinux.com>,
-        Chad Austin <chadaustin@fb.com>,
-        Dan Schatzberg <dschatzberg@fb.com>,
-        <linux-fsdevel@vger.kernel.org>,
-        <fuse-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        Han-Wen Nienhuys <hanwen@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <fuse-devel@lists.sourceforge.net>,
         Kirill Smelkov <kirr@nexedi.com>
-Message-Id: <e0b43507976d6ea9010f1bacaef067f18de49f1f.1553677194.git.kirr@nexedi.com>
-In-Reply-To: <cover.1553677194.git.kirr@nexedi.com>
-References: <cover.1553677194.git.kirr@nexedi.com>
+Message-Id: <d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com>
+In-Reply-To: <cover.1553680185.git.kirr@nexedi.com>
+References: <cover.1553680185.git.kirr@nexedi.com>
 X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.79ee1a4a408346d9baf236bbd10d9599
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.2848fb7c92a24ed1a7a21cb5bf3746a3
 X-Mandrill-User: md_31050260
-Date:   Wed, 27 Mar 2019 10:14:11 +0000
+Date:   Wed, 27 Mar 2019 10:15:15 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
@@ -79,154 +69,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On networked filesystems file data can be changed externally.
-FUSE provides notification messages for filesystem to inform kernel that
-metadata or data region of a file needs to be invalidated in local page
-cache. That provides the basis for filesystem implementations to
-invalidate kernel cache precisely based on observed filesystem-specific
-events.
+A FUSE filesystem server queues /dev/fuse sys_read calls to get
+filesystem requests to handle. It does not know in advance what would be
+that request as it can be anything that client issues - LOOKUP, READ,
+WRITE, ... Many requests are short and retrieve data from the
+filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
 
-FUSE has also "automatic" invalidation mode(*) when the kernel
-automatically invalidates data cache of a file if it sees mtime change.
-It also automatically invalidates whole data cache of a file if it sees
-file size being changed.
+Before getting into operation phase, FUSE filesystem server and kernel
+client negotiate what should be the maximum write size the client will
+ever issue. After negotiation the contract in between server/client is
+that the filesystem server then should queue /dev/fuse sys_read calls with
+enough buffer capacity to receive any client request - WRITE in
+particular, while FUSE client should not, in particular, send WRITE
+requests with > negotiated max_write payload. FUSE client in kernel and
+libfuse historically reserve 4K for request header. This way the
+contract is that filesystem server should queue sys_reads with
+4K+max_write buffer.
 
-The automatic mode has corresponding capability - FUSE_AUTO_INVAL_DATA.
-However, due to probably historical reason, that capability controls
-only whether mtime change should be resulting in automatic invalidation
-or not. A change in file size always results in invalidating whole data
-cache of a file irregardless of whether FUSE_AUTO_INVAL_DATA was
-negotiated(+).
+If the filesystem server does not follow this contract, what can happen
+is that fuse_dev_do_read will see that request size is > buffer size,
+and then it will return EIO to client who issued the request but won't
+indicate in any way that there is a problem to filesystem server.
+This can be hard to diagnose because for some requests, e.g. for
+NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+waiting for request completion and that EIO goes nowhere, while on
+filesystem server side things look like the kernel is not replying back
+after successful NOTIFY_RETRIEVE request made by the server.
 
-The filesystem I write[1] represents data arrays stored in networked
-database as local files suitable for mmap. It is read-only filesystem -
-changes to data are committed externally via database interfaces and the
-filesystem only glues data into contiguous file streams suitable for
-mmap and traditional array processing. The files are big - starting from
-hundreds gigabytes and more. The files change regularly, and frequently
-by data being appended to their end. The size of files thus changes
-frequently.
+-> We can make the problem easy to diagnose if we indicate via error
+return to filesystem server when it is violating the contract.
+This should not practically cause problems because if a filesystem
+server is using shorter buffer, writes to it were already very likely to
+cause EIO, and if the filesystem is read-only it should be too following
+8K minimum buffer size (= either FUSE_MIN_READ_BUFFER, see 1d3d752b47,
+or = 4K + min(max_write)=4k cared to be so by process_init_reply).
 
-If a file was accessed locally and some part of its data got into page
-cache, we want that data to stay cached unless there is memory pressure,
-or unless corresponding part of the file was actually changed. However
-current FUSE behaviour - when it sees file size change - is to
-invalidate the whole file. The data cache of the file is thus completely
-lost even on small size change, and despite that the filesystem server is
-careful to accurately translate database changes into FUSE invalidation
-messages to kernel.
+Please see [1] for context where the problem of stuck filesystem was hit
+for real (because kernel client was incorrectly sending more than
+max_write data with NOTIFY_REPLY; see also previous patch), how the
+situation was traced and for more involving patch that did not make it
+into the tree.
 
-Let's fix it: if a filesystem, through new FUSE_PRECISE_INVAL_DATA
-capability, indicates to kernel that it is fully responsible for data
-cache invalidation, then the kernel won't invalidate files data cache on
-size change and only truncate that cache to new size in case the size
-decreased.
-
-(*) see 72d0d248ca "fuse: add FUSE_AUTO_INVAL_DATA init flag",
-eed2179efe "fuse: invalidate inode mapping if mtime changes"
-
-(+) in writeback mode the kernel does not invalidate data cache on file
-size change, but neither it allows the filesystem to set the size due to
-external event (see 8373200b12 "fuse: Trust kernel i_size only")
-
-[1] https://lab.nexedi.com/kirr/wendelin.core/blob/a50f1d9f/wcfs/wcfs.go#L20
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
 
 Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
 ---
- fs/fuse/fuse_i.h          |  3 +++
- fs/fuse/inode.c           | 12 ++++++++++--
- include/uapi/linux/fuse.h |  7 ++++++-
- 3 files changed, 19 insertions(+), 3 deletions(-)
+ fs/fuse/dev.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index e6195bc8f836..154f6cdd94d1 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -694,6 +694,9 @@ struct fuse_conn {
- 	/** Use enhanced/automatic page cache invalidation. */
- 	unsigned auto_inval_data:1;
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 38e94bc43053..8fdfbafed037 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1317,6 +1317,16 @@ static ssize_t fuse_dev_do_read(struct fuse_dev *fud, struct file *file,
+ 	unsigned reqsize;
+ 	unsigned int hash;
  
-+	/** Filesystem is fully reponsible for page cache invalidation. */
-+	unsigned precise_inval_data:1;
++	/*
++	 * Require sane minimum read buffer - that has capacity for fixed part
++	 * of any request header + negotated max_write room for data. If the
++	 * requirement is not satisfied return EINVAL to the filesystem server
++	 * to indicate that it is not following FUSE server/client contract.
++	 * Don't dequeue / abort any request.
++	 */
++	if (nbytes < (fc->conn_init ? 4096 + fc->max_write : FUSE_MIN_READ_BUFFER))
++		return -EINVAL;
 +
- 	/** Does the filesystem support readdirplus? */
- 	unsigned do_readdirplus:1;
- 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 1bca5023bcc5..2be0bca7f76c 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -237,7 +237,8 @@ void fuse_change_attributes(struct inode *inode, struct fuse_attr *attr,
- 
- 		if (oldsize != attr->size) {
- 			truncate_pagecache(inode, attr->size);
--			inval = true;
-+			if (!fc->precise_inval_data)
-+				inval = true;
- 		} else if (fc->auto_inval_data) {
- 			struct timespec64 new_mtime = {
- 				.tv_sec = attr->mtime,
-@@ -912,6 +913,13 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_req *req)
- 				fc->dont_mask = 1;
- 			if (arg->flags & FUSE_AUTO_INVAL_DATA)
- 				fc->auto_inval_data = 1;
-+			if (arg->flags & FUSE_PRECISE_INVAL_DATA)
-+				fc->precise_inval_data = 1;
-+			if (fc->auto_inval_data && fc->precise_inval_data) {
-+				pr_warn("filesystem requested both auto and "
-+					"precise cache control - using auto\n");
-+				fc->precise_inval_data = 0;
-+			}
- 			if (arg->flags & FUSE_DO_READDIRPLUS) {
- 				fc->do_readdirplus = 1;
- 				if (arg->flags & FUSE_READDIRPLUS_AUTO)
-@@ -973,7 +981,7 @@ static void fuse_send_init(struct fuse_conn *fc, struct fuse_req *req)
- 		FUSE_WRITEBACK_CACHE | FUSE_NO_OPEN_SUPPORT |
- 		FUSE_PARALLEL_DIROPS | FUSE_HANDLE_KILLPRIV | FUSE_POSIX_ACL |
- 		FUSE_ABORT_ERROR | FUSE_MAX_PAGES | FUSE_CACHE_SYMLINKS |
--		FUSE_NO_OPENDIR_SUPPORT;
-+		FUSE_NO_OPENDIR_SUPPORT | FUSE_PRECISE_INVAL_DATA;
- 	req->in.h.opcode = FUSE_INIT;
- 	req->in.numargs = 1;
- 	req->in.args[0].size = sizeof(*arg);
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 2ac598614a8f..33de8f6391ec 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -125,6 +125,9 @@
-  *
-  *  7.29
-  *  - add FUSE_NO_OPENDIR_SUPPORT flag
-+ *
-+ *  7.30
-+ *  - add FUSE_PRECISE_INVAL_DATA
-  */
- 
- #ifndef _LINUX_FUSE_H
-@@ -160,7 +163,7 @@
- #define FUSE_KERNEL_VERSION 7
- 
- /** Minor version number of this interface */
--#define FUSE_KERNEL_MINOR_VERSION 29
-+#define FUSE_KERNEL_MINOR_VERSION 30
- 
- /** The node ID of the root inode */
- #define FUSE_ROOT_ID 1
-@@ -263,6 +266,7 @@ struct fuse_file_lock {
-  * FUSE_MAX_PAGES: init_out.max_pages contains the max number of req pages
-  * FUSE_CACHE_SYMLINKS: cache READLINK responses
-  * FUSE_NO_OPENDIR_SUPPORT: kernel supports zero-message opendir
-+ * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for data cache invalidation
-  */
- #define FUSE_ASYNC_READ		(1 << 0)
- #define FUSE_POSIX_LOCKS	(1 << 1)
-@@ -289,6 +293,7 @@ struct fuse_file_lock {
- #define FUSE_MAX_PAGES		(1 << 22)
- #define FUSE_CACHE_SYMLINKS	(1 << 23)
- #define FUSE_NO_OPENDIR_SUPPORT (1 << 24)
-+#define FUSE_PRECISE_INVAL_DATA (1 << 25)
- 
- /**
-  * CUSE INIT request/reply flags
+  restart:
+ 	spin_lock(&fiq->waitq.lock);
+ 	err = -EAGAIN;
 -- 
 2.21.0.392.gf8f6787159
