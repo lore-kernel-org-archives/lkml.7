@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4569FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0705920449
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DDB2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711260;
-	bh=c3XWfLwZP22Jpout+dc3uFSGqpSJb2NxuqbbgaIuvXk=;
+	s=default; t=1553711262;
+	bh=wumdO0su/Z2Md4GVykijzEP6DfeH5JNliSCdM+aLOeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nuyffvp8VicjrAthrtXfPzR7C2NiWUHUFsPVNb/8CsqOyAOSoxWzlCBmdKIt41JG9
-	 m5d2mA62/ZmZ4Wq+0vDU3I5jdlVlfu3BFAlUjXANkLwXzj/R87DEcUUaDPJPvukiGl
-	 L+3O4klDyK97C7gAzWCPsZKCMDGiJtpI+dnrLGZc=
+	b=gyaiOROFLVwUcH9PZPDkEdmKDYQrz7Vg6LQxN20Lk5vfGLDYRTwJ4TKiuBeZ9F7Ip
+	 mHYWj84qEW2orqumyCEhRfg9Yhg9J9eH4t2ouwvf1tAgpRRNbxIexB/oSJLOXjxyBP
+	 QMHCV0ljjZ7mEFrEAK4bUQBEpsq0J/lBCxWABdgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391820AbfC0S1i (ORCPT
+        id S2387980AbfC0S1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46234 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391699AbfC0S0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:26:30 -0400
+        id S2391691AbfC0S03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FBC220449;
-        Wed, 27 Mar 2019 18:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC00D21734;
+        Wed, 27 Mar 2019 18:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711189;
-        bh=c3XWfLwZP22Jpout+dc3uFSGqpSJb2NxuqbbgaIuvXk=;
+        s=default; t=1553711186;
+        bh=wumdO0su/Z2Md4GVykijzEP6DfeH5JNliSCdM+aLOeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xxPc37UeQ7T698naH8gknnDvv0aXZA8GJzX2FRyHkHTeFAEtg7ei36AOwoyUUhuU
-         xweVT8qykYJp0bVZr0On28r/yLSiXHq58LknWB65qfPIDTyMVC0Kf7U5vqzK3QfRzT
-         acBaFGV9d4YNtcsdjvzvJYqEp3MQHCiLpcUgMZi4=
+        b=hSQpjDm/I++XYROZtG5JtL/Nm24P4KS+0VldHIQIur7N6O5H6DWS39ebfmNMmPJcz
+         DEYXyQByI0vnWx9AInJR5Rxy55oVGSmV6QP5xwRpxaATRH0WNsoDbMEyphc9io4OQg
+         7/9URXhrKSsWQLmDwwVSogC3WM7LXFBpF+P6c3mI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zumeng Chen <zumeng.chen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 38/41] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Wed, 27 Mar 2019 14:25:15 -0400
-Message-Id: <20190327182518.19394-38-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 37/41] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Wed, 27 Mar 2019 14:25:14 -0400
+Message-Id: <20190327182518.19394-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
 References: <20190327182518.19394-1-sashal@kernel.org>
@@ -59,59 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zumeng Chen <zumeng.chen@gmail.com>
+From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Tested on s5pv210-galaxys (Samsung i9000 phone).
+
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
+
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 575c8f6d4009..16b69b026f8f 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1110,8 +1110,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 6fcc7f072ace..480266e01037 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1011,13 +1011,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
+ }
  
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
  
- out:
- 	return ret;
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1043,11 +1046,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1056,11 +1059,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
