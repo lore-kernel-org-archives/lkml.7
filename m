@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4761BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F97C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1E52082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6562146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 03:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfC0DqC (ORCPT
+        id S1733023AbfC0DqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 Mar 2019 23:46:02 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40505 "EHLO
+        Tue, 26 Mar 2019 23:46:04 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40541 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732962AbfC0Dpz (ORCPT
+        with ESMTP id S1733039AbfC0DqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 Mar 2019 23:45:55 -0400
+        Tue, 26 Mar 2019 23:46:00 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 27 Mar 2019 05:45:52 +0200
+        with ESMTPS (AES256-SHA encrypted); 27 Mar 2019 05:45:58 +0200
 Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x2R3jlG6031531;
-        Wed, 27 Mar 2019 05:45:51 +0200
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x2R3jlGA031531;
+        Wed, 27 Mar 2019 05:45:57 +0200
 From:   Parav Pandit <parav@mellanox.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         kwankhede@nvidia.com, alex.williamson@redhat.com
 Cc:     cjia@nvidia.com, parav@mellanox.com
-Subject: [PATCHv1 2/7] vfio/mdev: Removed unused kref
-Date:   Tue, 26 Mar 2019 22:45:40 -0500
-Message-Id: <1553658345-43995-3-git-send-email-parav@mellanox.com>
+Subject: [PATCHv1 6/7] vfio/mdev: Fix aborting mdev child device removal if one fails
+Date:   Tue, 26 Mar 2019 22:45:44 -0500
+Message-Id: <1553658345-43995-7-git-send-email-parav@mellanox.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1553658345-43995-1-git-send-email-parav@mellanox.com>
 References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
@@ -40,41 +40,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unused kref from the mdev_device structure.
+device_for_each_child() stops executing callback function for remaining
+child devices, if callback hits an error.
+Each child mdev device is independent of each other.
+While unregistering parent device, mdev core must remove all child mdev
+devices.
+Therefore, mdev_device_remove_cb() always returns success so that
+device_for_each_child doesn't abort if one child removal hits error.
+
+While at it, improve remove and unregister functions for below simplicity.
+
+There isn't need to pass forced flag pointer during mdev parent
+removal which invokes mdev_device_remove(). So simplify the flow.
+
+mdev_device_remove() is called from two paths.
+1. mdev_unregister_driver()
+     mdev_device_remove_cb()
+       mdev_device_remove()
+2. remove_store()
+     mdev_device_remove()
+
+When device is removed by user using remote_store(), device under
+removal is mdev device.
+When device is removed during parent device removal using generic child
+iterator, mdev check is already done using dev_is_mdev().
+
+Hence, remove the unnecessary loop in mdev_device_remove().
 
 Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Reviewed By: Kirti Wankhede <kwankhede@nvidia.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Parav Pandit <parav@mellanox.com>
 ---
- drivers/vfio/mdev/mdev_core.c    | 1 -
- drivers/vfio/mdev/mdev_private.h | 1 -
- 2 files changed, 2 deletions(-)
+ drivers/vfio/mdev/mdev_core.c | 23 +++++------------------
+ 1 file changed, 5 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 1299d2e..00ca613 100644
+index 836d319..aefcf34 100644
 --- a/drivers/vfio/mdev/mdev_core.c
 +++ b/drivers/vfio/mdev/mdev_core.c
-@@ -311,7 +311,6 @@ int mdev_device_create(struct kobject *kobj,
- 	mutex_unlock(&mdev_list_lock);
+@@ -149,10 +149,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
  
- 	mdev->parent = parent;
--	kref_init(&mdev->ref);
+ static int mdev_device_remove_cb(struct device *dev, void *data)
+ {
+-	if (!dev_is_mdev(dev))
+-		return 0;
++	if (dev_is_mdev(dev))
++		mdev_device_remove(dev, true);
  
- 	mdev->dev.parent  = dev;
- 	mdev->dev.bus     = &mdev_bus_type;
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-index 379758c..ddcf9c7 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -30,7 +30,6 @@ struct mdev_device {
+-	return mdev_device_remove(dev, data ? *(bool *)data : true);
++	return 0;
+ }
+ 
+ /*
+@@ -240,7 +240,6 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ void mdev_unregister_device(struct device *dev)
+ {
  	struct mdev_parent *parent;
- 	guid_t uuid;
- 	void *driver_data;
--	struct kref ref;
- 	struct list_head next;
- 	struct kobject *type_kobj;
- 	bool active;
+-	bool force_remove = true;
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -254,8 +253,7 @@ void mdev_unregister_device(struct device *dev)
+ 	list_del(&parent->next);
+ 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+ 
+-	device_for_each_child(dev, (void *)&force_remove,
+-			      mdev_device_remove_cb);
++	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+ 
+ 	parent_remove_sysfs_files(parent);
+ 
+@@ -348,24 +346,13 @@ int mdev_device_create(struct kobject *kobj,
+ 
+ int mdev_device_remove(struct device *dev, bool force_remove)
+ {
+-	struct mdev_device *mdev, *tmp;
++	struct mdev_device *mdev;
+ 	struct mdev_parent *parent;
+ 	struct mdev_type *type;
+ 	int ret;
+ 
+ 	mdev = to_mdev_device(dev);
+-
+ 	mutex_lock(&mdev_list_lock);
+-	list_for_each_entry(tmp, &mdev_list, next) {
+-		if (tmp == mdev)
+-			break;
+-	}
+-
+-	if (tmp != mdev) {
+-		mutex_unlock(&mdev_list_lock);
+-		return -ENODEV;
+-	}
+-
+ 	if (!mdev->active) {
+ 		mutex_unlock(&mdev_list_lock);
+ 		return -EAGAIN;
 -- 
 1.8.3.1
 
