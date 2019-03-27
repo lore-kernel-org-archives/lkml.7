@@ -6,50 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3111C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CBBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4F02082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3286121738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710539;
-	bh=ZCpGmlUiyQlnIU/YuoOeiYZlF1lxYMG3ZSe4OFVu0mI=;
+	s=default; t=1553710542;
+	bh=C+m6dDbr8RtFbwiDPqHtgWLlpOXUXxJZlReMOk2cRm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ByZl2Wd0pM5sSiPB/FDrGJLC+TaLXmFW1/wzZLuu86ENjxK38wNI96elCB1BTgvvW
-	 TMfIo959hha73Wfb4+UyE/c5vBQsPshAsvzEownZSqT+u29E9w9F/xcP8b0OqzNuNU
-	 WnCaxP9Dey8stiRCPbjkz2CjBTJxnVYnttxwvXjE=
+	b=zJCZ0HgYP3P2SgJ+wS7ODjG3dYGBTEyWwEUXMu5Z2yCmD4LUfB1Jg7IrnuR2+Ygrf
+	 253ThvPq/jWIxXtPFMlKa+RFPDsuv3jKDLvrRpG1L8+u5pg8kidHDQ+i5K8Ryr9C0L
+	 RIJ4W9vu/MJy1Q7MGcfkwbokNRbfCjpzU5aXl+LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389850AbfC0SPb (ORCPT
+        id S2389870AbfC0SPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389551AbfC0SP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:29 -0400
+        id S2389594AbfC0SPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E13ED2087C;
-        Wed, 27 Mar 2019 18:15:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B393D217D9;
+        Wed, 27 Mar 2019 18:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710529;
-        bh=ZCpGmlUiyQlnIU/YuoOeiYZlF1lxYMG3ZSe4OFVu0mI=;
+        s=default; t=1553710531;
+        bh=C+m6dDbr8RtFbwiDPqHtgWLlpOXUXxJZlReMOk2cRm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyfNFsYtX1ZzvKxDhTvOeG4swyhIA0k+XAf/CpVr7y5ax6oVgq+A+uFqk2/Wwp2An
-         17kdlYpDuWgPOMo2W62DA73nY8f4oFcE18WLcNBY4uMUpu8YO433nR74soV8iX4+Ul
-         Qf7o74QGVyFRLCFIm9XIMcvFvrn3T34HQXJAdFXc=
+        b=iWtigCfv6/YVW3U4eGRyMecWWk1ui9jONaa2qq886rAoidp0LXpAd2c56hQtkt5Ry
+         vlnF+c35CppA8V2WG4NZUHWhII2t53fbN5Hqd7MdyBlx2/7/FF81Dqh58n2KmRvrYl
+         oD2eQfcztkpM7XGUvnutnv6NjS02MRQ1O0oF4+eY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 159/192] media: mt9m111: set initial frame size other than 0x0
-Date:   Wed, 27 Mar 2019 14:09:51 -0400
-Message-Id: <20190327181025.13507-159-sashal@kernel.org>
+Cc:     David Tolnay <dtolnay@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 160/192] hwrng: virtio - Avoid repeated init of completion
+Date:   Wed, 27 Mar 2019 14:09:52 -0400
+Message-Id: <20190327181025.13507-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -61,39 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: David Tolnay <dtolnay@gmail.com>
 
-[ Upstream commit 29856308137de1c21eda89411695f4fc6e9780ff ]
+[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
 
-This driver sets initial frame width and height to 0x0, which is invalid.
-So set it to selection rectangle bounds instead.
+The virtio-rng driver uses a completion called have_data to wait for a
+virtio read to be fulfilled by the hypervisor. The completion is reset
+before placing a buffer on the virtio queue and completed by the virtio
+callback once data has been written into the buffer.
 
-This is detected by v4l2-compliance detected.
+Prior to this commit, the driver called init_completion on this
+completion both during probe as well as when registering virtio buffers
+as part of a hwrng read operation. The second of these init_completion
+calls should instead be reinit_completion because the have_data
+completion has already been inited by probe. As described in
+Documentation/scheduler/completion.txt, "Calling init_completion() twice
+on the same completion object is most likely a bug".
 
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This bug was present in the initial implementation of virtio-rng in
+f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
+then the have_data completion was a single static completion rather than
+a member of one of potentially multiple virtrng_info structs as
+implemented later by 08e53fbdb85c ("virtio-rng: support multiple
+virtio-rng devices"). The original driver incorrectly used
+init_completion rather than INIT_COMPLETION to reset have_data during
+read.
+
+Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
+Chrome OS virtual machine monitor, and confirming that the virtio-rng
+driver successfully produces random bytes from the host.
+
+Signed-off-by: David Tolnay <dtolnay@gmail.com>
+Tested-by: David Tolnay <dtolnay@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/mt9m111.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/char/hw_random/virtio-rng.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/mt9m111.c b/drivers/media/i2c/mt9m111.c
-index efda1aa95ca0..7a7d3969af20 100644
---- a/drivers/media/i2c/mt9m111.c
-+++ b/drivers/media/i2c/mt9m111.c
-@@ -1014,6 +1014,8 @@ static int mt9m111_probe(struct i2c_client *client,
- 	mt9m111->rect.top	= MT9M111_MIN_DARK_ROWS;
- 	mt9m111->rect.width	= MT9M111_MAX_WIDTH;
- 	mt9m111->rect.height	= MT9M111_MAX_HEIGHT;
-+	mt9m111->width		= mt9m111->rect.width;
-+	mt9m111->height		= mt9m111->rect.height;
- 	mt9m111->fmt		= &mt9m111_colour_fmts[0];
- 	mt9m111->lastpage	= -1;
- 	mutex_init(&mt9m111->power_lock);
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index b89df66ea1ae..7abd604e938c 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+ 
+ 	if (!vi->busy) {
+ 		vi->busy = true;
+-		init_completion(&vi->have_data);
++		reinit_completion(&vi->have_data);
+ 		register_buffer(vi, buf, size);
+ 	}
+ 
 -- 
 2.19.1
 
