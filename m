@@ -6,46 +6,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65DEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2116FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5436217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E405021850
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709973;
-	bh=U7tU5y2CRENKlerLOQ5CeCmU75qni7Iu4sfRbfu8gk8=;
+	s=default; t=1553709978;
+	bh=XVjp35Tex1zTpPcHxN1Y3LCrM06SxgzVYHwwVeTfrD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p177LNxaQsywAF6ZyKIF9QiOWSureIpZEQyYMrs4IFAws9Z7HmpGOC/V4q93qM0cl
-	 IEuOhAEUf6gcyk5eRJfDXK/HNpklAt3r6H2UQmKPsk0BCPpfvNUquGDxnofa+v04Ox
-	 j42VMEEHfN28O5u6g4hoZG3/YueCXt0bxCCTXn1c=
+	b=MnnGSt13OXsxfeLEhSOzwz7rlWniXy0iMwzNeQ0RLSCWWEuxmdynCVkIWSusoZtqQ
+	 BaiA9m4YNpZgR2SXqGHZ/t5KmOE7wtBpo6iSWRPzipaZN9VTWvhQWOVuKoieStLhum
+	 NgYu0ks9YJgOvbr2MAXjQAsa5h2qYcxyqLH0lzew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbfC0SGM (ORCPT
+        id S2387894AbfC0SGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387865AbfC0SGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:06:08 -0400
+        id S2387879AbfC0SGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:06:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5B2E217D9;
-        Wed, 27 Mar 2019 18:06:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CD62177E;
+        Wed, 27 Mar 2019 18:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709967;
-        bh=U7tU5y2CRENKlerLOQ5CeCmU75qni7Iu4sfRbfu8gk8=;
+        s=default; t=1553709970;
+        bh=XVjp35Tex1zTpPcHxN1Y3LCrM06SxgzVYHwwVeTfrD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XX3LhIyhKtv8c6DZJpnc2ADJZDTfC/hxK4e8nFV2Ykk4AYhgvf6f1qIiJhE/Csaz6
-         KLcoDtSS0X4rIMUEXpv9naItaBowr1PgD6VDBWflo10b50pSC9gozOQZUNfeNcAZBZ
-         FrTq55RYzwtWl487hsasGBFlTd7UmZvJ8FlblKI4=
+        b=Kb6e2CCd2j86tc451gnD5ZZzoiBZ5WRaliYY9ihlKFqhbwlnRrXXYtf4nPT9VYUBI
+         E/e5bKP+clNxd68fdDVlWtqSznlTWSEGSH48WP6OEysxTJT2N455Dx+3SqFIyFyZiT
+         yNPybi2/3qeeUBkTvDwHvD8B10wowz2vJmjxFlTU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 136/262] regulator: core: Take lock before applying system load
-Date:   Wed, 27 Mar 2019 13:59:51 -0400
-Message-Id: <20190327180158.10245-136-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 139/262] tools build: Add -lrt to FEATURE_CHECK_LDFLAGS-libaio
+Date:   Wed, 27 Mar 2019 13:59:54 -0400
+Message-Id: <20190327180158.10245-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -57,102 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit e5e21f70bfd3a201e627b48aed82793d1bcd6f78 ]
+[ Upstream commit aa8f9c517ebce7a0959da064ef2660ea03f133f8 ]
 
-Take the regulator lock before applying system load.
+Since we need it to resolve the AIO symbols, otherwise we fail with:
 
-Fixes the following lockdep splat:
+  $ cat /tmp/build/perf/feature/test-all.make.output
+  /usr/bin/ld: /tmp/ccEqrj36.o: undefined reference to symbol 'aio_return64@@GLIBC_2.2.5'
+  /usr/bin/ld: //usr/lib64/librt.so.1: error adding symbols: DSO missing from command line
+  collect2: error: ld returned 1 exit status
+  $
 
-[    5.583581] WARNING: CPU: 1 PID: 16 at drivers/regulator/core.c:925 drms_uA_update+0x114/0x360
-[    5.588467] Modules linked in:
-[    5.596833] CPU: 1 PID: 16 Comm: kworker/1:0 Not tainted 5.0.0-rc6-next-20190213-00002-g0fce66ab480f #18
-[    5.599933] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    5.609544] Workqueue: events qcom_channel_state_worker
-[    5.616209] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    5.621152] pc : drms_uA_update+0x114/0x360
-[    5.626006] lr : drms_uA_update+0x110/0x360
-[    5.630084] sp : ffff0000124b3490
-[    5.634242] x29: ffff0000124b3490 x28: ffff800005326e00
-[    5.637735] x27: ffff0000124b35f8 x26: 000000000032bc48
-[    5.643117] x25: ffff800004c7e800 x24: ffff800004c6d500
-[    5.648411] x23: ffff800004c38a80 x22: 00000000000000d1
-[    5.653706] x21: 00000000001ab3f0 x20: ffff800004c7e800
-[    5.659001] x19: ffff0000114c3000 x18: ffffffffffffffff
-[    5.664297] x17: 0000000000000000 x16: 0000000000000000
-[    5.669592] x15: ffff0000114c3808 x14: 0720072007200720
-[    5.674888] x13: 00000000199c9b28 x12: ffff80002bcccc40
-[    5.680183] x11: ffff000012286000 x10: ffff0000114c3808
-[    5.685477] x9 : 0720072007200720 x8 : ffff000010e9e808
-[    5.690772] x7 : ffff0000106da568 x6 : 0000000000000000
-[    5.696067] x5 : 0000000000000000 x4 : 0000000000000000
-[    5.701362] x3 : 0000000000000004 x2 : 0000000000000000
-[    5.706658] x1 : 0000000000000000 x0 : 0000000000000000
-[    5.711952] Call trace:
-[    5.717223]  drms_uA_update+0x114/0x360
-[    5.719405]  regulator_register+0xb30/0x1140
-[    5.723230]  devm_regulator_register+0x4c/0xa8
-[    5.727745]  rpm_reg_probe+0xfc/0x1b0
-[    5.731992]  platform_drv_probe+0x50/0xa0
-[    5.735727]  really_probe+0x20c/0x2b8
-[    5.739718]  driver_probe_device+0x58/0x100
-[    5.743368]  __device_attach_driver+0x90/0xd0
-[    5.747363]  bus_for_each_drv+0x64/0xc8
-[    5.751870]  __device_attach+0xd8/0x138
-[    5.755516]  device_initial_probe+0x10/0x18
-[    5.759341]  bus_probe_device+0x98/0xa0
-[    5.763502]  device_add+0x3d0/0x640
-[    5.767319]  of_device_add+0x48/0x58
-[    5.770793]  of_platform_device_create_pdata+0xb0/0x128
-[    5.774629]  of_platform_bus_create+0x174/0x370
-[    5.779569]  of_platform_populate+0x78/0xe0
-[    5.784082]  qcom_smd_rpm_probe+0x80/0xa0
-[    5.788245]  rpmsg_dev_probe+0x114/0x1a0
-[    5.792411]  really_probe+0x20c/0x2b8
-[    5.796401]  driver_probe_device+0x58/0x100
-[    5.799964]  __device_attach_driver+0x90/0xd0
-[    5.803960]  bus_for_each_drv+0x64/0xc8
-[    5.808468]  __device_attach+0xd8/0x138
-[    5.812115]  device_initial_probe+0x10/0x18
-[    5.815936]  bus_probe_device+0x98/0xa0
-[    5.820099]  device_add+0x3d0/0x640
-[    5.823916]  device_register+0x1c/0x28
-[    5.827391]  rpmsg_register_device+0x4c/0x90
-[    5.831216]  qcom_channel_state_worker+0x170/0x298
-[    5.835651]  process_one_work+0x294/0x6e8
-[    5.840241]  worker_thread+0x40/0x450
-[    5.844318]  kthread+0x11c/0x120
-[    5.847961]  ret_from_fork+0x10/0x18
-[    5.851260] irq event stamp: 9090
-[    5.854820] hardirqs last  enabled at (9089): [<ffff000010160798>] console_unlock+0x3e0/0x5b0
-[    5.858086] hardirqs last disabled at (9090): [<ffff0000100817cc>] do_debug_exception+0x104/0x140
-[    5.866596] softirqs last  enabled at (9086): [<ffff000010082024>] __do_softirq+0x474/0x574
-[    5.875446] softirqs last disabled at (9079): [<ffff0000100f2254>] irq_exit+0x13c/0x148
-[    5.883598] ---[ end trace 6984ef7f081afa21 ]---
+When we added the aio support in 'perf record' only the test-libaio.bin
+target got the -lrt, i.e. the feature detection slow path. Fix it.
 
-Fixes: fa94e48e13a1 ("regulator: core: Apply system load even if no consumer loads")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 2a07d814747b ("tools build feature: Check if libaio is available")
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 2 ++
+ tools/perf/Makefile.config | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index b9d7b45c7295..e2caf11598c7 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1349,7 +1349,9 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 		 * We'll only apply the initial system load if an
- 		 * initial mode wasn't specified.
- 		 */
-+		regulator_lock(rdev);
- 		drms_uA_update(rdev);
-+		regulator_unlock(rdev);
- 	}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b441c88cafa1..e6360d47e73a 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -218,6 +218,8 @@ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
+ FEATURE_CHECK_CFLAGS-libpython-version := $(PYTHON_EMBED_CCOPTS)
+ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
  
- 	if ((rdev->constraints->ramp_delay || rdev->constraints->ramp_disable)
++FEATURE_CHECK_LDFLAGS-libaio = -lrt
++
+ CFLAGS += -fno-omit-frame-pointer
+ CFLAGS += -ggdb3
+ CFLAGS += -funwind-tables
 -- 
 2.19.1
 
