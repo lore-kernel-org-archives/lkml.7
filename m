@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F82C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5950DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32A1217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE4B21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710506;
-	bh=6709uOp69RMOUkuyrJ3Y7ObzWXNAD4dFwy6QQibu5kc=;
+	s=default; t=1553710512;
+	bh=ZU5RwbfEiO7IsGOqU7Wof/yoOaZkodhg/2O0X7EmJQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZwRbWJSWH0e1mw1gd7qVZa7qg+vZi/+S7V+V8AoR/+ceo2sQYG4xENtASElxIXGzr
-	 LwZzGJpVAzVwm4V5gpiYX7oOtEWVmzTS/lsh5LfFdtU6yAJGzOcHIiWe7QVHuKqiWS
-	 H9YrO9nFc1Jh3PVHzRrrE7PSEt3NAq92HcP1Hvlc=
+	b=2E0LFNh/WtVq5wwaZESkhMUNaAlxCxd+stVWqGHYoBnbZYkR+NQUuG7fnJCMuZLY7
+	 fXai9ggFXJWnGn4iiJPzA59IOEzwZJdrBTp54Joc0+Lq56ChSZsYXhomJEvMUZ2YAq
+	 haEnErSPSdrsAyqGHfU/0C1uiD4e1mT1eyyL+Kdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389104AbfC0SPF (ORCPT
+        id S2389787AbfC0SPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389735AbfC0SPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:01 -0400
+        id S2389768AbfC0SPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22B392087C;
-        Wed, 27 Mar 2019 18:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF44D2183E;
+        Wed, 27 Mar 2019 18:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710501;
-        bh=6709uOp69RMOUkuyrJ3Y7ObzWXNAD4dFwy6QQibu5kc=;
+        s=default; t=1553710506;
+        bh=ZU5RwbfEiO7IsGOqU7Wof/yoOaZkodhg/2O0X7EmJQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v7y29M3xga+XrnRi7F72MG9UsIAfgGLFJgQOqKvrz36oWiqYZaLheg7anJmR28lIt
-         URc0ETbNIRqMUbuv5BpcmxVNGvfmYNyXH3fbi1OxtobFmz67HdYnT2znZIi1xacdEk
-         V40laqeNdw5J34NRG5iRBKGCgSi3D3+tfVOybrx8=
+        b=1sPx/Ql3XXd77IJhcZiEgTEOS2RBQNhU4qtmjLHUVQqXs4VAaFbPBsXmuA5k3wuQ+
+         iZXOAjbAoA23rYCDjfSudUQbFfcrWmImVG8ejAP+cfgh322oB+VnWz6hYDEgh/d0h6
+         XhVINVRBzZ0Qu78aMucTicdk8PESbauzzoOH2V4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 147/192] selftests/bpf: skip verifier tests for unsupported program types
-Date:   Wed, 27 Mar 2019 14:09:39 -0400
-Message-Id: <20190327181025.13507-147-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 150/192] backlight: pwm_bl: Use gpiod_get_value_cansleep() to get initial state
+Date:   Wed, 27 Mar 2019 14:09:42 -0400
+Message-Id: <20190327181025.13507-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -59,71 +57,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
+[ Upstream commit cec2b18832e26bc866bef2be22eff4e25bbc4034 ]
 
-Use recently introduced bpf_probe_prog_type() to skip tests in the
-test_verifier() if bpf_verify_program() fails. The skipped test is
-indicated in the output.
+gpiod_get_value() gives out a warning if access to the underlying gpiochip
+requires sleeping, which is common for I2C based chips:
 
-Example:
+    WARNING: CPU: 0 PID: 77 at drivers/gpio/gpiolib.c:2500 gpiod_get_value+0xd0/0x100
+    Modules linked in:
+    CPU: 0 PID: 77 Comm: kworker/0:2 Not tainted 4.14.0-rc3-00589-gf32897915d48-dirty #90
+    Hardware name: Allwinner sun4i/sun5i Families
+    Workqueue: events deferred_probe_work_func
+    [<c010ec50>] (unwind_backtrace) from [<c010b784>] (show_stack+0x10/0x14)
+    [<c010b784>] (show_stack) from [<c0797224>] (dump_stack+0x88/0x9c)
+    [<c0797224>] (dump_stack) from [<c0125b08>] (__warn+0xe8/0x100)
+    [<c0125b08>] (__warn) from [<c0125bd0>] (warn_slowpath_null+0x20/0x28)
+    [<c0125bd0>] (warn_slowpath_null) from [<c037069c>] (gpiod_get_value+0xd0/0x100)
+    [<c037069c>] (gpiod_get_value) from [<c03778d0>] (pwm_backlight_probe+0x238/0x508)
+    [<c03778d0>] (pwm_backlight_probe) from [<c0411a2c>] (platform_drv_probe+0x50/0xac)
+    [<c0411a2c>] (platform_drv_probe) from [<c0410224>] (driver_probe_device+0x238/0x2e8)
+    [<c0410224>] (driver_probe_device) from [<c040e820>] (bus_for_each_drv+0x44/0x94)
+    [<c040e820>] (bus_for_each_drv) from [<c040ff0c>] (__device_attach+0xb0/0x114)
+    [<c040ff0c>] (__device_attach) from [<c040f4f8>] (bus_probe_device+0x84/0x8c)
+    [<c040f4f8>] (bus_probe_device) from [<c040f944>] (deferred_probe_work_func+0x50/0x14c)
+    [<c040f944>] (deferred_probe_work_func) from [<c013be84>] (process_one_work+0x1ec/0x414)
+    [<c013be84>] (process_one_work) from [<c013ce5c>] (worker_thread+0x2b0/0x5a0)
+    [<c013ce5c>] (worker_thread) from [<c0141908>] (kthread+0x14c/0x154)
+    [<c0141908>] (kthread) from [<c0107ab0>] (ret_from_fork+0x14/0x24)
 
-...
-679/p bpf_get_stack return R0 within range SKIP (unsupported program
-type 5)
-680/p ld_abs: invalid op 1 OK
-...
-Summary: 863 PASSED, 165 SKIPPED, 3 FAILED
+This was missed in commit 0c9501f823a4 ("backlight: pwm_bl: Handle gpio
+that can sleep"). The code was then moved to a separate function in
+commit 7613c922315e ("backlight: pwm_bl: Move the checks for initial power
+state to a separate function").
 
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+The only usage of gpiod_get_value() is during the probe stage, which is
+safe to sleep in. Switch to gpiod_get_value_cansleep().
+
+Fixes: 0c9501f823a4 ("backlight: pwm_bl: Handle gpio that can sleep")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_verifier.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/video/backlight/pwm_bl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 9db5a7378f40..294fc18aba2a 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -32,6 +32,7 @@
- #include <linux/if_ether.h>
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 6bde543452f2..7ddc0930e98c 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -425,7 +425,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ 	 */
  
- #include <bpf/bpf.h>
-+#include <bpf/libbpf.h>
+ 	/* if the enable GPIO is disabled, do not enable the backlight */
+-	if (pb->enable_gpio && gpiod_get_value(pb->enable_gpio) == 0)
++	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
+ 		return FB_BLANK_POWERDOWN;
  
- #ifdef HAVE_GENHDR
- # include "autoconf.h"
-@@ -56,6 +57,7 @@
- 
- #define UNPRIV_SYSCTL "kernel/unprivileged_bpf_disabled"
- static bool unpriv_disabled = false;
-+static int skips;
- 
- struct bpf_test {
- 	const char *descr;
-@@ -12770,6 +12772,11 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	fd_prog = bpf_verify_program(prog_type ? : BPF_PROG_TYPE_SOCKET_FILTER,
- 				     prog, prog_len, test->flags & F_LOAD_WITH_STRICT_ALIGNMENT,
- 				     "GPL", 0, bpf_vlog, sizeof(bpf_vlog), 1);
-+	if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
-+		printf("SKIP (unsupported program type %d)\n", prog_type);
-+		skips++;
-+		goto close_fds;
-+	}
- 
- 	expected_ret = unpriv && test->result_unpriv != UNDEF ?
- 		       test->result_unpriv : test->result;
-@@ -12905,7 +12912,7 @@ static void get_unpriv_disabled()
- 
- static int do_test(bool unpriv, unsigned int from, unsigned int to)
- {
--	int i, passes = 0, errors = 0, skips = 0;
-+	int i, passes = 0, errors = 0;
- 
- 	for (i = from; i < to; i++) {
- 		struct bpf_test *test = &tests[i];
+ 	/* The regulator is disabled, do not enable the backlight */
 -- 
 2.19.1
 
