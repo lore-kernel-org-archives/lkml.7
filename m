@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D2BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46651C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF152147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B79321738
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710884;
-	bh=2j7PLRLt/M+BsKgB9z0U9KW2fA2Leh2JvhNClrDAYH8=;
+	s=default; t=1553710886;
+	bh=62NBNnPu9SNnmesvvyF6HAsOH7LdsagTCki+Evg2+HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eeqDkgspc3nYAPqLCPD2P0NB7Jrxi09QkNdHhwLJnxjs8tf9KybjT1av/MW6iTqhu
-	 pN9syDBiWcaJ5IFXPtJ1tzyZ2JKXgy0OyIJ98yYWsVvifI2ZJShD32t4dB+/4julfZ
-	 bGAjBxXxFpxH6t0/H8h4KkLML062eTFgvIE2Xwdo=
+	b=PmDaJ3S3Gs2Um2kXEImAAtlpYYaGNE2W8PPZPsCDLXfkdUHPXLGD4aBkWXJG0Pgk3
+	 /vsFPOBG1/gAXm6bmJRBzF9T7tymplzW1FQQmIdckB/JAIRtj9G5xLK8EkKREtD0/3
+	 1W1dFvrqSURNU2AnPrKRtV1cz1rqdPFtxyJZ8+Yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391148AbfC0SVW (ORCPT
+        id S2391169AbfC0SVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390824AbfC0SVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:20 -0400
+        id S2391145AbfC0SVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747892063F;
-        Wed, 27 Mar 2019 18:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D1C72147C;
+        Wed, 27 Mar 2019 18:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710880;
-        bh=2j7PLRLt/M+BsKgB9z0U9KW2fA2Leh2JvhNClrDAYH8=;
+        s=default; t=1553710881;
+        bh=62NBNnPu9SNnmesvvyF6HAsOH7LdsagTCki+Evg2+HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJvlKS7h/NTHkM42zu/XfAeHnroyD9k8QyHtq96sv4BtdpVtGkeqAPfFtnoA1duDT
-         RBXqwJdLkoDycFVnHqbB6aaPK3yk4SgisAm4dfGr85VNSnpGzJUNBSdrNbfsyfh6WX
-         IgQ5duzmy9kj9NEhoPHIX9eDg19Rg2twv+vNa/Hw=
+        b=gsNzh6/OdF4NPphrCF46p4xmmYjcBT0JFkbK9vdOMK8yf4nDb7QVwn7KLsWMv+gED
+         jkCUsAneTEjH2EPc689LfiG8FTsharjwccu4fxvaA6LpNN6I3P2Wyf4rxLQxGBXk+m
+         5cA6Rhiw84ygAQKdEJAtcpreg4riXOnT3Skr/F3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Jones <tonyj@suse.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 23/87] tools lib traceevent: Fix buffer overflow in arg_eval
-Date:   Wed, 27 Mar 2019 14:19:36 -0400
-Message-Id: <20190327182040.17444-23-sashal@kernel.org>
+Cc:     Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/87] wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
+Date:   Wed, 27 Mar 2019 14:19:37 -0400
+Message-Id: <20190327182040.17444-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,47 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
 
-[ Upstream commit 7c5b019e3a638a5a290b0ec020f6ca83d2ec2aaa ]
+[ Upstream commit de77a53c2d1e8fb3621e63e8e1f0f0c9a1a99ff7 ]
 
-Fix buffer overflow observed when running perf test.
+ies1 or ies2 might be null when code inside
+_wil_cfg80211_merge_extra_ies access them.
+Add explicit check for null and make sure ies1/ies2 are not
+accessed in such a case.
 
-The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
-resulting in -9223372036854775808 which overflows the 20 character
-buffer.
+spos might be null and be accessed inside
+_wil_cfg80211_merge_extra_ies.
+Add explicit check for null in the while condition statement
+and make sure spos is not accessed in such a case.
 
-If is possible this bug has been reported before but I still don't see
-any fix checked in:
-
-See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
-
-Reported-by: Michael Sartain <mikesart@fastmail.com>
-Reported-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/wil6210/cfg80211.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 669475300ba8..700c74b0aed0 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2428,7 +2428,7 @@ static int arg_num_eval(struct print_arg *arg, long long *val)
- static char *arg_eval (struct print_arg *arg)
- {
- 	long long val;
--	static char buf[20];
-+	static char buf[24];
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index d117240d9a73..b8eeaef17edc 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -1005,6 +1005,12 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
+ 	u8 *buf, *dpos;
+ 	const u8 *spos;
  
- 	switch (arg->type) {
- 	case PRINT_ATOM:
++	if (!ies1)
++		ies1_len = 0;
++
++	if (!ies2)
++		ies2_len = 0;
++
+ 	if (ies1_len == 0 && ies2_len == 0) {
+ 		*merged_ies = NULL;
+ 		*merged_len = 0;
+@@ -1014,17 +1020,19 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
+ 	buf = kmalloc(ies1_len + ies2_len, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+-	memcpy(buf, ies1, ies1_len);
++	if (ies1)
++		memcpy(buf, ies1, ies1_len);
+ 	dpos = buf + ies1_len;
+ 	spos = ies2;
+-	while (spos + 1 < ies2 + ies2_len) {
++	while (spos && (spos + 1 < ies2 + ies2_len)) {
+ 		/* IE tag at offset 0, length at offset 1 */
+ 		u16 ielen = 2 + spos[1];
+ 
+ 		if (spos + ielen > ies2 + ies2_len)
+ 			break;
+ 		if (spos[0] == WLAN_EID_VENDOR_SPECIFIC &&
+-		    !_wil_cfg80211_find_ie(ies1, ies1_len, spos, ielen)) {
++		    (!ies1 || !_wil_cfg80211_find_ie(ies1, ies1_len,
++						     spos, ielen))) {
+ 			memcpy(dpos, spos, ielen);
+ 			dpos += ielen;
+ 		}
 -- 
 2.19.1
 
