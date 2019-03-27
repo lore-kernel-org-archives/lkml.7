@@ -2,135 +2,111 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1CDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A6DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E813206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711161;
-	bh=2lXrXpyqa7BiMbFvzsRVrfOsxWCms1EHHH8Mz/Q5dZg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=llrm8StwWnbKxqVeDELYf9RSpbiaBI2l83dGSF9AblyYWr7po092J1n3tb6whTsEJ
-	 zHMVdibZVm5BazcmYE0prjLfRd3HqfOq+EuVg+k+HajzlyC6m+RmGKY+WN/m2ck9O7
-	 tkuITilQzVsyuFKyAXuY9kdAR4mWm2qUd1avYmsU=
+	by mail.kernel.org (Postfix) with ESMTP id 256542063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="zZfAbUqB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1QCGt068"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391579AbfC0S0A (ORCPT
+        id S2391633AbfC0S0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:26:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404018AbfC0SZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:26:02 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:46655 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404276AbfC0SZw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 14:25:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC1462063F;
-        Wed, 27 Mar 2019 18:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711151;
-        bh=2lXrXpyqa7BiMbFvzsRVrfOsxWCms1EHHH8Mz/Q5dZg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bDx0KnJMlLum6BsgR1Yq89iGxZgExPw5GNLUPYYksMbfme6D0QiAfJ5DaF0FU9h37
-         uqtb3Wvojlr5nFcplA80RK6pzvvWi/Uwn0kHl3EiNraqVxbaphteEQgmrNlQ5yqxOH
-         TNOiI3dpOrEorhWPu51aE02gn+gFwT3XagP+VkbE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 18/41] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 27 Mar 2019 14:24:55 -0400
-Message-Id: <20190327182518.19394-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
-References: <20190327182518.19394-1-sashal@kernel.org>
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1597B219EB;
+        Wed, 27 Mar 2019 14:25:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 27 Mar 2019 14:25:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=6ya/TRqV/AR/KMXtQfj6+BOK3Io
+        c9vbZ4iNRalwWLlo=; b=zZfAbUqBZLWJ8xId4gN0lN+RpvYDO/8W7kHe5KLVd3/
+        QZ2/UmtFhYUJgn/BDCa09wg9nDR+dv4xdss/zyOetznQtvAguznMdXEvOMyu5Qq1
+        cx+i9D2aQmeeumLGg5an5niBbrsQo4TGtFpr42mwPqHRdjcSJVW6b+GWiXeNsVZ0
+        L2hvizQPciFUK5DJRtINyK8V4ik2eQxnKwrQJD4ByGI4Pilspt0PjLYwwF7u3+OF
+        HxCNApABBBwFareFFqouZmZ8yQ1jd0GvyF9O4UpWWUWCJT6VTvqWorwEEfvPABqU
+        Mwa6UTIMCA4CZ3Ce4m0kSwXl5g/z9BnH2LXxEl9Z7lQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6ya/TR
+        qV/AR/KMXtQfj6+BOK3Ioc9vbZ4iNRalwWLlo=; b=1QCGt068Shpex0D4LMrfX6
+        BxZr1JNCAxOIqgy4CGLfGCJKDmiK00lmvPmLKbWR7D4Cpz/gSRAv09EOHR1FwgIe
+        3g0eDRi2f2nSC5VuUzYIeZ7PAsD+7sAmAt38r4Gk/nPu1xDw/BlXC8a/8N0FVEca
+        gfO8p/UNCfVtkmCFAM6rePyehTXy/8hu3KQaCSANMccN5VKt50u+k2YcO0XCdMRA
+        HB6h9xUX18nlH1kMdLTtIEt1pUlZzA5UYzCFmUVVX29ULbNQVHzU6nUjNY9boYQj
+        q2nNyDRRRaEKph0hrdMcPVdh4GKr6p4M1JeGb//m2buWeQ/las+5Bm+10iP6u/2w
+        ==
+X-ME-Sender: <xms:LsCbXOVw28rOjKTMWAWNNpuCtJAvpEuTcFXuWqOxMJjXIo6JUp13Mw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedvgddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekkedruddvkedrkedtrd
+    dvfeefnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:LsCbXFModoAr0NaTRqb7n5MhXT_AA6yNs0gYllRzSIuPoOZ0Uxja1g>
+    <xmx:LsCbXGeocsqAW2Lo8PbyuPcqspXIkhU1pgtyWioUH6rDEDBIY-6_IA>
+    <xmx:LsCbXKnCiLs8VcYSpwRcM0t9TMshzJrK7RziZY5CI5u8IERAsbgL-w>
+    <xmx:L8CbXFz9BV87QHHdcJw12KjHXH1PFb30vYC8kCFNhrak3MNwfn5iTA>
+Received: from localhost (unknown [88.128.80.233])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1F8A2E49DC;
+        Wed, 27 Mar 2019 14:25:50 -0400 (EDT)
+Date:   Wed, 27 Mar 2019 23:35:13 +0900
+From:   Greg KH <greg@kroah.com>
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     "open list:ANDROID ION DRIVER" <devel@driverdev.osuosl.org>,
+        "open list:ANDROID ION DRIVER" <dri-devel@lists.freedesktop.org>,
+        "moderated list:ANDROID ION DRIVER" <linaro-mm-sig@lists.linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] driver : staging : ion: optimization for decreasing
+ memory fragmentaion
+Message-ID: <20190327143513.GA14931@kroah.com>
+References: <1553063903-26768-1-git-send-email-huangzhaoyang@gmail.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553063903-26768-1-git-send-email-huangzhaoyang@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+On Wed, Mar 20, 2019 at 02:38:23PM +0800, Zhaoyang Huang wrote:
+> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> 
+> Two action for this patch:
+> 1. set a batch size for system heap's shrinker, which can have it buffer
+> reasonable page blocks in pool for future allocation.
+> 2. reverse the order sequence when free page blocks, the purpose is also
+> to have system heap keep as more big blocks as it can.
+> 
+> By testing on an android system with 2G RAM, the changes with setting
+> batch = 48MB can help reduce the fragmentation obviously and improve
+> big block allocation speed for 15%.
+> 
+> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> ---
+>  drivers/staging/android/ion/ion_heap.c        | 16 +++++++++++++++-
+>  drivers/staging/android/ion/ion_system_heap.c |  2 +-
+>  2 files changed, 16 insertions(+), 2 deletions(-)
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+What changed from v1?  Always put that below the --- line as the
+documentation asks you to.
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+thanks,
 
-    megasas_init_adapter_fusion()
-
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
-
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
-
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 1ff0ece87644..24cc8786ff06 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3743,6 +3743,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		printk(KERN_DEBUG "megasas: Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
- 	}
- 
- 	return 0;
--- 
-2.19.1
-
+greg k-h
