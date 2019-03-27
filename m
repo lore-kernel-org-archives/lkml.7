@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DADBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42563C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5E32075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CEA2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715093;
-	bh=bkvAwSRW2kdTBz6wEtsCEVuLtCU6WmdZ3q5g1mqKhYM=;
+	s=default; t=1553715099;
+	bh=ivaTjn1jSV5RyjTdZjh90E05Ur4A5uE28t4p8BVbvH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PdY11W8jswtCLprU3Tu5ixegToa6XN27/K7HCE8c/iwOAuQZKqrQlAV/MJ+B6jwg2
-	 K8h1lbjdirPkutRL9Iwgwgue+xQiTlIZC/22/saEgPBbjUCvfjpasMZ8j3OEd8Glko
-	 S9WSS4DnTGy2PEHwYt7CFUABs0wyqBJiySfT9DjU=
+	b=2mFToM/2JRDxXsRzRDgJtxBwKSgsAIJrKfwq6ruobR50VsisHW3u1XO3YdFLltfi5
+	 VUDGO5jZQxadkwxakCcEsaji4vFkeXWeTR5xI3vdEXl2SgzB2fdNBpqrvVJxYhcIxR
+	 YrKL3fKi67MAxt9BoxfL2UqE142k0TNlI/Eo0Cco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387963AbfC0Tbc (ORCPT
+        id S1732164AbfC0SDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43376 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732159AbfC0SDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:15 -0400
+        id S1731851AbfC0SDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1328C217D9;
-        Wed, 27 Mar 2019 18:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53348217F9;
+        Wed, 27 Mar 2019 18:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709794;
-        bh=bkvAwSRW2kdTBz6wEtsCEVuLtCU6WmdZ3q5g1mqKhYM=;
+        s=default; t=1553709791;
+        bh=ivaTjn1jSV5RyjTdZjh90E05Ur4A5uE28t4p8BVbvH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5VRgT48xVKd/HrywgW0QAcHDO3yur8EAdz8UVM8gu+BY9S1WRW9j0uNPGZb7QCHY
-         Ym976fxPZlu46cx7GgE7JbT6RlVSTU6UgTAcyjGMLs/rjRT9nZHN+54flHsvL6ammF
-         pNYFeHMR7iC9Nb/WguAo1jC/MqBLtusSiSThZCYA=
+        b=MrhfaG5IpPJcBKGXBUKD9STs53I/yePxyTJzbX9O5IfY1CPYmIk4eun+h90HMZU9d
+         g7AwA9mHv+BwPC0CxVigdCwglQ24MPQg8Dht2w03ZHSZpNCDKPldLUDZtnHp8k6VCv
+         PwdtOKLLAhVsePeBkUm6+6VRB816hfgImAJbG1OI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia Guo <guojia12@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
+Cc:     Qian Cai <cai@lca.pw>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 040/262] ocfs2: fix a panic problem caused by o2cb_ctl
-Date:   Wed, 27 Mar 2019 13:58:15 -0400
-Message-Id: <20190327180158.10245-40-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 039/262] mm/slab.c: kmemleak no scan alien caches
+Date:   Wed, 27 Mar 2019 13:58:14 -0400
+Message-Id: <20190327180158.10245-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -61,70 +63,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia Guo <guojia12@huawei.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
+[ Upstream commit 92d1d07daad65c300c7d0b68bbef8867e9895d54 ]
 
-In the process of creating a node, it will cause NULL pointer
-dereference in kernel if o2cb_ctl failed in the interval (mkdir,
-o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
+Kmemleak throws endless warnings during boot due to in
+__alloc_alien_cache(),
 
-The node num is initialized to 0 in function o2nm_node_group_make_item,
-o2nm_node_group_drop_item will mistake the node number 0 for a valid
-node number when we delete the node before the node number is set
-correctly.  If the local node number of the current host happens to be
-0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
-o2hb_thread still running.  The panic stack is generated as follows:
+    alc = kmalloc_node(memsize, gfp, node);
+    init_arraycache(&alc->ac, entries, batch);
+    kmemleak_no_scan(ac);
 
-  o2hb_thread
-      \-o2hb_do_disk_heartbeat
-          \-o2hb_check_own_slot
-              |-slot = &reg->hr_slots[o2nm_this_node()];
-              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
+Kmemleak does not track the array cache (alc->ac) but the alien cache
+(alc) instead, so let it track the latter by lifting kmemleak_no_scan()
+out of init_arraycache().
 
-We need to check whether the node number is set when we delete the node.
+There is another place that calls init_arraycache(), but
+alloc_kmem_cache_cpus() uses the percpu allocation where will never be
+considered as a leak.
 
-Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Acked-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
+  kmemleak: Found object by alias at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   lookup_object+0x84/0xac
+   find_and_get_object+0x84/0xe4
+   kmemleak_no_scan+0x74/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+  kmemleak: Object 0xffff8007b9aa7e00 (size 256):
+  kmemleak:   comm "swapper/0", pid 1, jiffies 4294697137
+  kmemleak:   min_count = 1
+  kmemleak:   count = 0
+  kmemleak:   flags = 0x1
+  kmemleak:   checksum = 0
+  kmemleak:   backtrace:
+       kmemleak_alloc+0x84/0xb8
+       kmem_cache_alloc_node_trace+0x31c/0x3a0
+       __kmalloc_node+0x58/0x78
+       setup_kmem_cache_node+0x26c/0x35c
+       __do_tune_cpucache+0x250/0x2d4
+       do_tune_cpucache+0x4c/0xe4
+       enable_cpucache+0xc8/0x110
+       setup_cpu_cache+0x40/0x1b8
+       __kmem_cache_create+0x240/0x358
+       create_cache+0xc0/0x198
+       kmem_cache_create_usercopy+0x158/0x20c
+       kmem_cache_create+0x50/0x64
+       fsnotify_init+0x58/0x6c
+       do_one_initcall+0x194/0x388
+       kernel_init_freeable+0x668/0x688
+       kernel_init+0x18/0x124
+  kmemleak: Not scanning unknown object at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   kmemleak_no_scan+0x90/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+
+Link: http://lkml.kernel.org/r/20190129184518.39808-1-cai@lca.pw
+Fixes: 1fe00d50a9e8 ("slab: factor out initialization of array cache")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mm/slab.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
-index 0e4166cc23a0..4ac775e32240 100644
---- a/fs/ocfs2/cluster/nodemanager.c
-+++ b/fs/ocfs2/cluster/nodemanager.c
-@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
- 	struct o2nm_node *node = to_o2nm_node(item);
- 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+diff --git a/mm/slab.c b/mm/slab.c
+index 91c1863df93d..757e646baa5d 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -550,14 +550,6 @@ static void start_cpu_timer(int cpu)
  
--	o2net_disconnect_node(node);
-+	if (cluster->cl_nodes[node->nd_num] == node) {
-+		o2net_disconnect_node(node);
+ static void init_arraycache(struct array_cache *ac, int limit, int batch)
+ {
+-	/*
+-	 * The array_cache structures contain pointers to free object.
+-	 * However, when such objects are allocated or transferred to another
+-	 * cache the pointers are not cleared and they could be counted as
+-	 * valid references during a kmemleak scan. Therefore, kmemleak must
+-	 * not scan such objects.
+-	 */
+-	kmemleak_no_scan(ac);
+ 	if (ac) {
+ 		ac->avail = 0;
+ 		ac->limit = limit;
+@@ -573,6 +565,14 @@ static struct array_cache *alloc_arraycache(int node, int entries,
+ 	struct array_cache *ac = NULL;
  
--	if (cluster->cl_has_local &&
--	    (cluster->cl_local_node == node->nd_num)) {
--		cluster->cl_has_local = 0;
--		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
--		o2net_stop_listening(node);
-+		if (cluster->cl_has_local &&
-+		    (cluster->cl_local_node == node->nd_num)) {
-+			cluster->cl_has_local = 0;
-+			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
-+			o2net_stop_listening(node);
-+		}
+ 	ac = kmalloc_node(memsize, gfp, node);
++	/*
++	 * The array_cache structures contain pointers to free object.
++	 * However, when such objects are allocated or transferred to another
++	 * cache the pointers are not cleared and they could be counted as
++	 * valid references during a kmemleak scan. Therefore, kmemleak must
++	 * not scan such objects.
++	 */
++	kmemleak_no_scan(ac);
+ 	init_arraycache(ac, entries, batchcount);
+ 	return ac;
+ }
+@@ -667,6 +667,7 @@ static struct alien_cache *__alloc_alien_cache(int node, int entries,
+ 
+ 	alc = kmalloc_node(memsize, gfp, node);
+ 	if (alc) {
++		kmemleak_no_scan(alc);
+ 		init_arraycache(&alc->ac, entries, batch);
+ 		spin_lock_init(&alc->lock);
  	}
- 
- 	/* XXX call into net to stop this node from trading messages */
 -- 
 2.19.1
 
