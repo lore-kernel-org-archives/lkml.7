@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6BBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415E7C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57DB205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DA12075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712327;
-	bh=tsEwdK4bz9q3pOh9P+soQ2+50/Ss0lGmLcWF6Ak5pRc=;
+	s=default; t=1553712331;
+	bh=6HoH24Lvr7B8D+QzW9PUQDxGfTcmVK01tBbGaVFDf5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gytK5ARI8HGM2IwttN/0x/j6Dy5lKNILbmWyQtajs/GUsffrtVmKUDUuHmfPmNi+I
-	 QsdhRpevDVdyqsoIYaIfiDS5pSZm6t5vpYvg4CeE0sX9wTib/ZcP/uSVqiJzMuFMYj
-	 x4X+kmuFgMA5fA1nQophyyOoumtVbhrrRYri/ldU=
+	b=mTXuMCjpZSEIp8O/M5uNZxpDeLvFxcKFQJibTCWBUnmFgfX0BZSN4L36+YxelhTwQ
+	 OJNpgLPiP/rIJepkHlGXBlthdQ8vDFZByDgW9H59jAiYPTCVX/dXTD9QXiR4vagxPZ
+	 /PNXsch6jghpTmLiFgW5crOUwbdimumT3TN6wXWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391718AbfC0Sp0 (ORCPT
+        id S2390101AbfC0SU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390349AbfC0SU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:59 -0400
+        id S2390349AbfC0SUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:20:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64CE92070B;
-        Wed, 27 Mar 2019 18:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1E5220651;
+        Wed, 27 Mar 2019 18:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710858;
-        bh=tsEwdK4bz9q3pOh9P+soQ2+50/Ss0lGmLcWF6Ak5pRc=;
+        s=default; t=1553710848;
+        bh=6HoH24Lvr7B8D+QzW9PUQDxGfTcmVK01tBbGaVFDf5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmFP0tSU11W96Yllejv+omo0Q2DcErdfDO6XU3S0k6TlRipOTpt+OoUwbXQm9F2Yl
-         KnrqlOqHmZFErX/sVQ7CdtzM+CT0fC5xzKkw1zSFTeog82b5kRjZmvIV38CvTCiZ5r
-         poZBVyVuDuOSfa5RspzMu3k7S+SEXAO/oLJm6lak=
+        b=FH47WM+BXBsZWJgK9jinshjT+c6L/lOfqSnXEBlN484RMIu3Ff+zEa3P3Ap3HmhTi
+         GV6B3T2Vyecudd1YGhJnEFgFhG65/+5cYPHkpXVcp0jop1ZZES9hAEbTJygEP83Kn4
+         If40XP2B8MW3TtmRo2h1xlWI3jgrwWBVgoldc05c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>, Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.9 10/87] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Wed, 27 Mar 2019 14:19:23 -0400
-Message-Id: <20190327182040.17444-10-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/87] gpio: gpio-omap: fix level interrupt idling
+Date:   Wed, 27 Mar 2019 14:19:18 -0400
+Message-Id: <20190327182040.17444-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -64,59 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
+
+However, this does not appear to be a practical problem.
+
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
+
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
+
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
+
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 397687fc51f9..b5d8847497a3 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -339,12 +339,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 6f9c9ac6ee70..75f30a0c418a 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -837,14 +837,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
  
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
++
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
  
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
  
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
 -- 
 2.19.1
 
