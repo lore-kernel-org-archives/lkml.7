@@ -2,200 +2,131 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06A7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8234EC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C50D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553719204;
-	bh=g+GpdYE9VXsEIgisQyN2A1NrJJ32XpGjambXFTZ2vH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y6MW8FrJFklK19pN++iGsfeb/Im9M/ZQV7v6qLYcCRqVsxZHT/fAKTZO1eE1AFsyQ
-	 9OjfqqBSjvzqHnLg0io5i3h+7KGqQKML0nMlDW37tR0UOFKf0DqQ0eVhZiugUQRltv
-	 isSx5Sf2EFRcrZKFps9bRFj+XxJtngHjq9wgbw30=
+	by mail.kernel.org (Postfix) with ESMTP id 4C4012054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 20:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbfC0UkD (ORCPT
+        id S1728466AbfC0UkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 16:40:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46449 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfC0UkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 16:40:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x188so13996693oia.13;
-        Wed, 27 Mar 2019 13:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4gs1k9h/r+rR22WgCUHcRbiFNQiFMIAqAW+9dotws5o=;
-        b=ivlXsGN+p0T5FvFaEbYdidQpfjsrnLQEugeyh5SgEhpwy7h9nur3h/pbD9FR4fMls5
-         LcX1E9neYrTqm10fp0j6mFtJJQZG6AQ43oGSEhlolQNF0kWG4aTU02Au7CEkYuUKfqJv
-         bs4xZlEWCyItBz5pew9BvNM4ygKRjv7wI98utNufvRwUKFLS/dBUM+p7cH7aYEoSFWGL
-         X0JM/ReQ7F07iIP1h7L2zBg7ZYsy/sTGnNCbh1nLZbNRy4LaFGkcPuHl3JR85VNyFmYc
-         2Ez2RmeXM7oyGKTRjdCOFtgyPZQtWziMIcKOVy+/o/zCBW5tl1+sUXrJKCQujPYVWmki
-         B9KQ==
-X-Gm-Message-State: APjAAAWFm9WOPm0SmG90RT5QRDxXzBS7rj2W1KTnHYnST7Ugih8Z5hjB
-        w1twBIQarDD87a5G3P7/Iw==
-X-Google-Smtp-Source: APXvYqwiLSwO8LZWbdcBRnH42bGTBkfd4DgaMpEeNCh1wnZaZdD3X72tHIoPAa+g7pIuHz+CxCG+Aw==
-X-Received: by 2002:aca:5757:: with SMTP id l84mr21554261oib.155.1553719201655;
-        Wed, 27 Mar 2019 13:40:01 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a34sm2067893otc.46.2019.03.27.13.39.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 13:39:59 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 15:39:59 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3] dt-bindings: gpu: add bindings for the ARM Mali
- Bifrost GPU
-Message-ID: <20190327203959.GA31523@bogus>
-References: <20190304105802.6010-1-narmstrong@baylibre.com>
+        Wed, 27 Mar 2019 16:40:13 -0400
+Received: from mga11.intel.com ([192.55.52.93]:51565 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfC0UkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 16:40:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 13:40:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,277,1549958400"; 
+   d="scan'208";a="310943635"
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga005.jf.intel.com with ESMTP; 27 Mar 2019 13:40:07 -0700
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+To:     Matthew Wilcox <willy@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190326135837.GP28406@dhcp22.suse.cz>
+ <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
+ <20190326183731.GV28406@dhcp22.suse.cz>
+ <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
+ <20190327090100.GD11927@dhcp22.suse.cz>
+ <CAPcyv4heiUbZvP7Ewoy-Hy=-mPrdjCjEuSw+0rwdOUHdjwetxg@mail.gmail.com>
+ <20190327203520.GU10344@bombadil.infradead.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <7cb4e229-a1a9-e236-f806-926351a917cc@intel.com>
+Date:   Wed, 27 Mar 2019 13:40:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304105802.6010-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190327203520.GU10344@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 11:58:02AM +0100, Neil Armstrong wrote:
-> Add the bindings for the Bifrost family of ARM Mali GPUs.
+On 3/27/19 1:35 PM, Matthew Wilcox wrote:
 > 
-> The Bifrost GPU architecture is similar to the Midgard family,
-> but with a different Shader Core & Execution Engine structures.
+> pmem1 --- node1 --- node2 --- pmem2
+>             |   \ /   |
+>             |    X    |
+>             |   / \   |
+> pmem3 --- node3 --- node4 --- pmem4
 > 
-> Bindings are based on the Midgard family bindings, but the inner
-> architectural changes makes it a separate family needing separate
-> bindings.
-> 
-> The Bifrost GPUs are present in a number of recent SoCs, like the
-> Amlogic G12A Family, and many other vendors.
-> The Amlogic vendor specific compatible is added to handle the
-> specific IP integration differences and dependencies.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/gpu/arm,mali-bifrost.txt         | 90 +++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> 
-> Changes since v2:
-> - moved to a single compatible since HW is fully discoverable
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> new file mode 100644
-> index 000000000000..e068fccf4ce9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-> @@ -0,0 +1,90 @@
-> +ARM Mali Bifrost GPU
-> +====================
-> +
-> +Required properties:
-> +
-> +- compatible :
-> +  * Must contain one the following:
-> +    + "arm,mali-bifrost"
+> which I could actually see someone building with normal DRAM, and we
+> should probably handle the same way as pmem; for a process running on
+> node3, allocate preferentially from node3, then pmem3, then other nodes,
+> then other pmems.
 
-Perhaps a note that the specific model/revision is discoverable.
+That makes sense.  But, it might _also_ make sense to fill up all DRAM
+first before using any pmem.  That could happen if the NUMA interconnect
+is really fast and pmem is really slow.
 
-> +  * which must be preceded by one of the following vendor specifics:
-> +    + "amlogic,meson-g12a-mali"
-> +
-> +- reg : Physical base address of the device and length of the register area.
-> +
-> +- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
-> +
-> +- interrupt-names : Contains the names of IRQ resources in the order they were
-> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+Basically, with the current patches we are depending on the firmware to
+"nicely" enumerate the topology and we're keeping the behavior that we
+end up with, for now, whatever it might be.
 
-Please make the order defined.
-
-> +
-> +Optional properties:
-> +
-> +- clocks : Phandle to clock for the Mali Bifrost device.
-> +
-> +- mali-supply : Phandle to regulator for the Mali device. Refer to
-> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-> +
-> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-> +  for details.
-> +
-> +- resets : Phandle of the GPU reset line.
-> +
-> +Vendor-specific bindings
-> +------------------------
-> +
-> +The Mali GPU is integrated very differently from one SoC to
-> +another. In order to accomodate those differences, you have the option
-> +to specify one more vendor-specific compatible, among:
-> +
-> +- "amlogic,meson-g12a-mali"
-> +  Required properties:
-> +  - resets : Should contain phandles of :
-> +    + GPU reset line
-> +    + GPU APB glue reset line
-> +
-> +Example for a Mali-G31:
-> +
-> +gpu@ffa30000 {
-> +	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-> +	reg = <0xffe40000 0x10000>;
-> +	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "job", "mmu", "gpu";
-> +	clocks = <&clk CLKID_MALI>;
-> +	mali-supply = <&vdd_gpu>;
-> +	operating-points-v2 = <&gpu_opp_table>;
-> +	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
-> +};
-> +
-> +gpu_opp_table: opp_table0 {
-> +	compatible = "operating-points-v2";
-> +
-> +	opp@533000000 {
-> +		opp-hz = /bits/ 64 <533000000>;
-> +		opp-microvolt = <1250000>;
-> +	};
-> +	opp@450000000 {
-> +		opp-hz = /bits/ 64 <450000000>;
-> +		opp-microvolt = <1150000>;
-> +	};
-> +	opp@400000000 {
-> +		opp-hz = /bits/ 64 <400000000>;
-> +		opp-microvolt = <1125000>;
-> +	};
-> +	opp@350000000 {
-> +		opp-hz = /bits/ 64 <350000000>;
-> +		opp-microvolt = <1075000>;
-> +	};
-> +	opp@266000000 {
-> +		opp-hz = /bits/ 64 <266000000>;
-> +		opp-microvolt = <1025000>;
-> +	};
-> +	opp@160000000 {
-> +		opp-hz = /bits/ 64 <160000000>;
-> +		opp-microvolt = <925000>;
-> +	};
-> +	opp@100000000 {
-> +		opp-hz = /bits/ 64 <100000000>;
-> +		opp-microvolt = <912500>;
-> +	};
-> +};
-> -- 
-> 2.20.1
-> 
+Now, let's sit back and see how nice the firmware is. :)
