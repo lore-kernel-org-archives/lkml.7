@@ -2,121 +2,105 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C487C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B69DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF1B206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553664829;
-	bh=hA9dsY4to0sqzSBA2TeuG0sLGRkc7aTwCqIlM+otlVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N+aplqKVS9lG3l0ZKkSFhUNDw8J4IDbUcNn2h3EDDO7Hcm5XzOjnF9sNnGj9FoNG7
-	 XMnvv9ta2mh6QFLGaPAKgFIWsUr/zNQw3MgNbRJJBbHCGx63QeYbPc0hWiTtIYi/ZZ
-	 ZjhgbHGVU9W118mf+ehofcT+9FqLsfLiALaHZTYM=
+	by mail.kernel.org (Postfix) with ESMTP id 124FA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbfC0Fds (ORCPT
+        id S1732061AbfC0Fgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49506 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 01:36:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36220 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfC0Fdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:33:47 -0400
-Received: from localhost (unknown [218.148.84.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725795AbfC0Fgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 01:36:45 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2DEC206DF;
-        Wed, 27 Mar 2019 05:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553664826;
-        bh=hA9dsY4to0sqzSBA2TeuG0sLGRkc7aTwCqIlM+otlVk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LZYhc/cecXucqv1HhsBTNZpEzAlz/iDrz0l46W+8b1JXG2Oyq7Ag6hAxuiTRouNJo
-         UrfY/CQPTsiptlAx3HHvZXWaYa5+zING6/TPhqCI+VFGW6JXiCuLMrqGx6M4tfXGKt
-         QZCldccKm7DQjDkhUdlqg7/XjRqVH3ykHupyizp0=
-Date:   Wed, 27 Mar 2019 14:33:42 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked
- down
-Message-ID: <20190327053342.GA17484@kroah.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
- <20190326182742.16950-26-matthewgarrett@google.com>
- <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
- <20190327003057.GA27311@kroah.com>
- <CALCETrVDDf4dj3Md1Nxc5P_NCToXGnAbEO3bGfwgKSfeVmU4Kw@mail.gmail.com>
- <20190327050615.GA548@kroah.com>
- <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id 163AAC0021CA;
+        Wed, 27 Mar 2019 05:36:45 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-12-53.pek2.redhat.com [10.72.12.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7B855C28D;
+        Wed, 27 Mar 2019 05:36:34 +0000 (UTC)
+From:   Lianbo Jiang <lijiang@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kexec@lists.infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, akpm@linux-foundation.org, x86@kernel.org,
+        hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com, brijesh.singh@amd.com
+Subject: [PATCH 0/3 v2] Add kdump support for the SEV enabled guest
+Date:   Wed, 27 Mar 2019 13:36:26 +0800
+Message-Id: <20190327053629.17935-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 27 Mar 2019 05:36:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 10:29:41PM -0700, Andy Lutomirski wrote:
-> 
-> 
-> > On Mar 26, 2019, at 10:06 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > 
-> >> On Tue, Mar 26, 2019 at 09:29:14PM -0700, Andy Lutomirski wrote:
-> >>> On Tue, Mar 26, 2019 at 5:31 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>> 
-> >>>> On Tue, Mar 26, 2019 at 12:20:24PM -0700, Andy Lutomirski wrote:
-> >>>> On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
-> >>>> <matthewgarrett@google.com> wrote:
-> >>>>> 
-> >>>>> From: Matthew Garrett <mjg59@google.com>
-> >>>>> 
-> >>>>> debugfs has not been meaningfully audited in terms of ensuring that
-> >>>>> userland cannot trample over the kernel. At Greg's request, disable
-> >>>>> access to it entirely when the kernel is locked down. This is done at
-> >>>>> open() time rather than init time as the kernel lockdown status may be
-> >>>>> made stricter at runtime.
-> >>>> 
-> >>>> Ugh.  Some of those files are very useful.  Could this perhaps still
-> >>>> allow O_RDONLY if we're in INTEGRITY mode?
-> >>> 
-> >>> Useful for what?  Debugging, sure, but for "normal operation", no kernel
-> >>> functionality should ever require debugfs.  If it does, that's a bug and
-> >>> should be fixed.
-> >>> 
-> >> 
-> >> I semi-regularly read files in debugfs to diagnose things, and I think
-> >> it would be good for this to work on distro kernels.
-> > 
-> > Doing that for debugging is wonderful.  People who want this type of
-> > "lock down" are trading potential security for diagnositic ability.
-> > 
-> 
-> I think you may be missing the point of splitting lockdown to separate integrity and confidentiality.  Can you actually think of a case where *reading* a debugfs file can take over a kernel?
+Just like the physical machines support kdump, the virtual machines
+also need kdump. When a virtual machine panic, we also need to dump
+its memory for analysis.
 
-Reading a debugfs file can expose loads of things that can help take
-over a kernel, or at least make it easier.  Pointer addresses, internal
-system state, loads of other fun things.  And before 4.14 or so, it was
-pretty trivial to use it to oops the kernel as well (not an issue here
-anymore, but people are right to be nervous).
+For the SEV virtual machine, the memory is also encrypted. When SEV
+is enabled, the first kernel is loaded into the encrypted area.
+Unlike the SME, the first kernel is loaded into the decrypted area.
 
-Personally, I think these are all just "confidentiality" type things,
-but who really knows given the wild-west nature of debugfs (which is as
-designed).  And given that I think this patch series just crazy anyway,
-I really don't care :)
+Because of this difference between SME and SEV, we need to properly
+map the kexec memory area in order to correctly access it.
 
-thanks,
+Test tools:
+makedumpfile[v1.6.5]:
+git://git.code.sf.net/p/makedumpfile/code
+commit <d222b01e516b> ("Add support for AMD Secure Memory Encryption")
+Note: This patch was merged into the devel branch.
 
-greg k-h
+crash-7.2.5: https://github.com/crash-utility/crash.git
+commit <942d813cda35> ("Fix for the "kmem -i" option on Linux 5.0")
+
+kexec-tools-2.0.19:
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+commit <942d813cda35> ("Fix for the kmem '-i' option on Linux 5.0")
+http://lists.infradead.org/pipermail/kexec/2019-March/022576.html
+Note: The second kernel cann't boot without this patch.
+
+kernel:
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit <f261c4e529da> ("Merge branch 'akpm' (patches from Andrew)")
+
+Test steps:
+[1] load the vmlinux and initrd for kdump
+# kexec -p /boot/vmlinuz-5.0.0+ --initrd=/boot/initramfs-5.0.0+kdump.img --command-line="BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.0.0+ ro resume=UUID=126c5e95-fc8b-48d6-a23b-28409198a52e console=ttyS0,115200 earlyprintk=serial irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never disable_cpu_apicid=0"
+
+[2] trigger panic
+# echo 1 > /proc/sys/kernel/sysrq
+# echo c > /proc/sysrq-trigger
+
+[3] check and parse the vmcore
+# crash vmlinux /var/crash/127.0.0.1-2019-03-15-05\:03\:42/vmcore
+
+Changes since v1:
+1. Modify the patch subject prefixes.
+2. Improve patch log: add parentheses at the end of the function names.
+3. Fix the multiple confusing checks.
+4. Add comment in the arch_kexec_post_alloc_pages().
+
+Lianbo Jiang (3):
+  x86/kexec: Do not map the kexec area as decrypted when SEV is active
+  x86/kexec: Set the C-bit in the identity map page table when SEV is
+    active
+  kdump,proc/vmcore: Enable kdumping encrypted memory when SEV was
+    active
+
+ arch/x86/kernel/machine_kexec_64.c | 27 ++++++++++++++++++++++++++-
+ fs/proc/vmcore.c                   |  6 +++---
+ 2 files changed, 29 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
