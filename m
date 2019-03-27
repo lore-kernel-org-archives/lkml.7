@@ -2,115 +2,137 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59008C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE8FC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A20206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:12:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F92JhV41"
+	by mail.kernel.org (Postfix) with ESMTP id CFBFA2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553703191;
+	bh=l41n9CsSLHz2kmm4qng7uxI3AEHkGlci+TdhUQ30cVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=calTjS6QcKQ7g6HnUdsOBW/2K/BdRsYo9A9OpVCw7Duf96h2j5RyJ58zGeROKKVVK
+	 +qbqZMdpF45oSxJ3KMlndDVKRlgmL0VP1yjIbX+zBTgDwl7FQUu4JuEl4TGVEaCUbm
+	 m1+D+HMABYVBMLeWyDorW2Li9y2okCaV7vve72YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfC0QMU (ORCPT
+        id S1727885AbfC0QNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:12:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40262 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbfC0QMU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:12:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c207so9935434pfc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:12:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jkZ2hr27HPMhS9m1VJNrg0kukcfh5YaVg9wVSXAsMPg=;
-        b=F92JhV41FO7etqxGJ+p1TOFdjzMvn1yeJYSAfvfxD+tvO1KLYxG/p/uSy19nARkpMl
-         jZfH3w+sMD34FGXm+p62SAXESAW3817vaAPe6pZ0Z1hgTwDF/kSKwJx2rHddR9sc8Owa
-         FJV+XcpwoklnbfwDm+oZtsh8zoUUZuAdDY3XB7wArJG5TGtXVHpfx/kSbZblH7Ky9jj5
-         rNA0UKsPwFjkOm//ozr3Wvp28Wfn2Wqt/wUhn60Jspap3QLjc92nOva/9tjli5cJ2hPh
-         tW2b2ADEaCMw8jzbkeOeUyBt619Bk+iGbJuXQbhUjpV9rZFn9q1p/Q55jjZL0J6hdmwA
-         s/UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jkZ2hr27HPMhS9m1VJNrg0kukcfh5YaVg9wVSXAsMPg=;
-        b=WwS9RqzXYGXDd4W+tsZZNQECKIvsCA6RdsXNOXOljuZhvNjKLTnj10jUw/gbEctFCk
-         2xcISH4k+SVXVYXvlXQ8J7c7bz+VscFktKx2uEqj/qO5+iLDN9jg3UZ3TscWpWd/NI6O
-         gtnNfRgJxTIj4ivfCi73RRZPQFOWnyTUHXvkmnHMA/n4LDbLlkn9XgEADGSx0NiInd3e
-         UsqRbTIB77Iz7yBoqU/8HHmgalG5y8SuccVNMQE4WKzuyk7jCrmavduX/AuQh3CmooNi
-         PX2+Pix8QbxMjLH5XgPqLccD9PnNJT1HmhmBs265FOxrQ5y5JRyjbwsoW/9y0jsXHaSn
-         vq+g==
-X-Gm-Message-State: APjAAAWhIBSoS8SjwqIFkrQFDq8pVJB4GJg9VdBoyg9AL7k36wdkKL0I
-        XgwCjlFp8BkoDC9I5r+4PFI=
-X-Google-Smtp-Source: APXvYqwBn9gnmzPfntdGH9Wu5eH7fT4kYRuxbUpdoAh0ZlJclARI69st9OHesKdZGfLyUzXWp7duYg==
-X-Received: by 2002:a63:4343:: with SMTP id q64mr5635918pga.105.1553703139536;
-        Wed, 27 Mar 2019 09:12:19 -0700 (PDT)
-Received: from CentOS76.localdomain.localdomain ([49.205.222.128])
-        by smtp.gmail.com with ESMTPSA id l187sm27218206pgl.75.2019.03.27.09.12.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 09:12:18 -0700 (PDT)
-From:   jagdsh.linux@gmail.com
-To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        airlied@linux.ie, daniel@ffwll.ch, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Subject: [PATCH] gpu:drm: Remove duplicate headers
-Date:   Thu, 28 Mar 2019 02:41:56 +0530
-Message-Id: <1553721116-37832-1-git-send-email-jagdsh.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 27 Mar 2019 12:13:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45776 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726126AbfC0QNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 12:13:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56E54AE0E;
+        Wed, 27 Mar 2019 16:13:08 +0000 (UTC)
+Date:   Wed, 27 Mar 2019 17:13:06 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 00/10] mm: Sub-section memory hotplug support
+Message-ID: <20190327161306.GM11927@dhcp22.suse.cz>
+References: <155327387405.225273.9325594075351253804.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190322180532.GM32418@dhcp22.suse.cz>
+ <CAPcyv4gBGNP95APYaBcsocEa50tQj9b5h__83vgngjq3ouGX_Q@mail.gmail.com>
+ <20190325101945.GD9924@dhcp22.suse.cz>
+ <CAPcyv4iJCgu-akJM_O8ZtscqWQt=CU-fvx-ViGYeau-NJufmSQ@mail.gmail.com>
+ <20190326080408.GC28406@dhcp22.suse.cz>
+ <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jUeUPwbfToWQtWX1AxfgFLNpBUhm8BvgJ2Hv1RbNPiog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+On Tue 26-03-19 17:20:41, Dan Williams wrote:
+> On Tue, Mar 26, 2019 at 1:04 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 25-03-19 13:03:47, Dan Williams wrote:
+> > > On Mon, Mar 25, 2019 at 3:20 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > [...]
+> > > > > User-defined memory namespaces have this problem, but 2MB is the
+> > > > > default alignment and is sufficient for most uses.
+> > > >
+> > > > What does prevent users to go and use a larger alignment?
+> > >
+> > > Given that we are living with 64MB granularity on mainstream platforms
+> > > for the foreseeable future, the reason users can't rely on a larger
+> > > alignment to address the issue is that the physical alignment may
+> > > change from one boot to the next.
+> >
+> > I would love to learn more about this inter boot volatility. Could you
+> > expand on that some more? I though that the HW configuration presented
+> > to the OS would be more or less stable unless the underlying HW changes.
+> 
+> Even if the configuration is static there can be hardware failures
+> that prevent a DIMM, or a PCI device to be included in the memory map.
+> When that happens the BIOS needs to re-layout the map and the result
+> is not guaranteed to maintain the previous alignment.
+> 
+> > > No, you can't just wish hardware / platform firmware won't do this,
+> > > because there are not enough platform resources to give every hardware
+> > > device a guaranteed alignment.
+> >
+> > Guarantee is one part and I can see how nobody wants to give you
+> > something as strong but how often does that happen in the real life?
+> 
+> I expect a "rare" event to happen everyday in a data-center fleet.
+> Failure rates tend towards 100% daily occurrence at scale and in this
+> case the kernel has everything it needs to mitigate such an event.
+> 
+> Setting aside the success rate of a software-alignment mitigation, the
+> reason I am charging this hill again after a 2 year hiatus is the
+> realization that this problem is wider spread than the original
+> failing scenario. Back in 2017 the problem seemed limited to custom
+> memmap= configurations, and collisions between PMEM and System RAM.
+> Now it is clear that the collisions can happen between PMEM regions
+> and namespaces as well, and the problem spans platforms from multiple
+> vendors. Here is the most recent collision problem:
+> https://github.com/pmem/ndctl/issues/76, from a third-party platform.
+> 
+> The fix for that issue uncovered a bug in the padding implementation,
+> and a fix for that bug would result in even more hacks in the nvdimm
+> code for what is a core kernel deficiency. Code review of those
+> changes resulted in changing direction to go after the core
+> deficiency.
 
-Remove duplicate headers which are included twice.
+This kind of information along with real world examples is exactly what
+you should have added into the cover letter. A previous very vague
+claims were not really convincing or something that can be considered a
+proper justification. Please do realize that people who are not working
+with the affected HW are unlikely to have an idea how serious/relevant
+those problems really are.
 
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
----
- drivers/gpu/drm/bridge/panel.c       | 1 -
- drivers/gpu/drm/i915/intel_display.c | 7 -------
- 2 files changed, 8 deletions(-)
+People are asking for a smaller memory hotplug granularity for other
+usecases (e.g. memory ballooning into VMs) which are quite dubious to
+be honest and not really worth all the code rework. If we are talking
+about something that can be worked around elsewhere then it is preferred
+because the code base is not in an excellent shape and putting more on
+top is just going to cause more headaches.
 
-diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-index 38eeaf8..eb9567d 100644
---- a/drivers/gpu/drm/bridge/panel.c
-+++ b/drivers/gpu/drm/bridge/panel.c
-@@ -15,7 +15,6 @@
- #include <drm/drm_encoder.h>
- #include <drm/drm_modeset_helper_vtables.h>
- #include <drm/drm_probe_helper.h>
--#include <drm/drm_panel.h>
- 
- struct panel_bridge {
- 	struct drm_bridge bridge;
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index ccb6163..1166342 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -51,14 +51,7 @@
- #include "intel_dsi.h"
- #include "intel_frontbuffer.h"
- 
--#include "intel_drv.h"
--#include "intel_dsi.h"
--#include "intel_frontbuffer.h"
--
--#include "i915_drv.h"
--#include "i915_gem_clflush.h"
- #include "i915_reset.h"
--#include "i915_trace.h"
- 
- /* Primary plane formats for gen <= 3 */
- static const u32 i8xx_primary_formats[] = {
+I will try to find some time to review this more deeply (no promises
+though because time is hectic and this is not a simple feature). For the
+future, please try harder to write up a proper justification and a
+highlevel design description which tells a bit about all important parts
+of the new scheme.
+
 -- 
-1.8.3.1
-
+Michal Hocko
+SUSE Labs
