@@ -4,61 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36BFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D52C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0CD2063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CA92063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710063;
-	bh=c7NA7H8XaVDxlLy7m/rKytgHq7mmc3lGh5TreghupYY=;
+	s=default; t=1553710067;
+	bh=T2EEJeWaeg2bcZzdl6pMEHLRndjmxTcMyCbeco6TNfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TIq5dsPvAW/kGAqEKpPNJQ18NFPiUauOC1SbIbiS0aU9LXJU9a4YQB3jgN4vYpT85
-	 5pTHtco0oPGDbUF3MgbO5k6//2c59+dJl8QvA340ojyGmocE26Xwsf7LiPXRVj+UiA
-	 X6gfnckm6Dh8aRZRDUzsOakTqow0d/hQLF/9K9/A=
+	b=r40Z1itqShjkiF9tVnfRWk1OJyntucZ9zHvQa/GGJr6VURz03/YQdfl2eAjZ/V50+
+	 BGJNiFKWTVsB4BNPflkKrn92qKIByzXNDOgh7mByI/HdmhavjukOF7okvMjBy+AcUa
+	 YHEd8RtYdqbRXb+IYgZeigMOFl6FNnTC6fnuMevg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbfC0SHm (ORCPT
+        id S2388243AbfC0SHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387595AbfC0SHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:39 -0400
+        id S2387595AbfC0SHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 760662070B;
-        Wed, 27 Mar 2019 18:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBBF621734;
+        Wed, 27 Mar 2019 18:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710058;
-        bh=c7NA7H8XaVDxlLy7m/rKytgHq7mmc3lGh5TreghupYY=;
+        s=default; t=1553710061;
+        bh=T2EEJeWaeg2bcZzdl6pMEHLRndjmxTcMyCbeco6TNfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V4dWMfWQ14NeAU33t1mZfrsqnXDYWe3GcGe7yTZt82BfEWGPhHrTl9LRyf843p08w
-         iLHd8f0IJl1tK3iG/oZLxmQIV+R/537474h5fZIDo3aJty/19jaWjyJSGCZKbAMD/P
-         Ws3CZXVMRT+M9h0WJT7dWGZs0YjFK+2HjZ7RtgS0=
+        b=IUGr7sD87QjDfhohs6X2A0vmjq2ev57Ks0mCSR9IhC4MUFQcTr9M8y0Di3SfXoN0+
+         jOPh3HuQY17msP6IOwZJ//1+kXXcQ+8QFXeXRiipSRdIpI7JWsyyKbnP5SkpGCrZvc
+         jtweMHov911n3OZzAHa68ram0xu13n1DU3UUU0Qw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 176/262] perf/aux: Make perf_event accessible to setup_aux()
-Date:   Wed, 27 Mar 2019 14:00:31 -0400
-Message-Id: <20190327180158.10245-176-sashal@kernel.org>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        "David E. Box" <david.e.box@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 179/262] platform/x86: intel_pmc_core: Fix PCH IP sts reading
+Date:   Wed, 27 Mar 2019 14:00:34 -0400
+Message-Id: <20190327180158.10245-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -70,174 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-[ Upstream commit 840018668ce2d96783356204ff282d6c9b0e5f66 ]
+[ Upstream commit 0e68eeea9894feeba2edf7ec63e4551b87f39621 ]
 
-When pmu::setup_aux() is called the coresight PMU needs to know which
-sink to use for the session by looking up the information in the
-event's attr::config2 field.
+A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
+family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
+better abstraction to this driver but has some fundamental issues.
 
-As such simply replace the cpu information by the complete perf_event
-structure and change all affected customers.
+e.g. the following condition
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki Poulouse <suzuki.poulose@arm.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190131184714.20388-2-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+for (index = 0; index < pmcdev->map->ppfear_buckets &&
+	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+
+is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
+is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
+all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
+patch refactors the pfear show logic to correctly read PCH IP power
+gating status for Cannonlake and beyond.
+
+Cc: "David E. Box" <david.e.box@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c                  | 6 +++---
- arch/x86/events/intel/bts.c                      | 4 +++-
- arch/x86/events/intel/pt.c                       | 5 +++--
- drivers/hwtracing/coresight/coresight-etm-perf.c | 6 +++---
- drivers/perf/arm_spe_pmu.c                       | 6 +++---
- include/linux/perf_event.h                       | 2 +-
- kernel/events/ring_buffer.c                      | 2 +-
- 7 files changed, 17 insertions(+), 14 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 3 ++-
+ drivers/platform/x86/intel_pmc_core.h | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index bfabeb1889cc..1266194afb02 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1600,7 +1600,7 @@ static void aux_sdb_init(unsigned long sdb)
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 22dbf115782e..c37e74ee609d 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -380,7 +380,8 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
+ 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+ 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
  
- /*
-  * aux_buffer_setup() - Setup AUX buffer for diagnostic mode sampling
-- * @cpu:	On which to allocate, -1 means current
-+ * @event:	Event the buffer is setup for, event->cpu == -1 means current
-  * @pages:	Array of pointers to buffer pages passed from perf core
-  * @nr_pages:	Total pages
-  * @snapshot:	Flag for snapshot mode
-@@ -1612,8 +1612,8 @@ static void aux_sdb_init(unsigned long sdb)
-  *
-  * Return the private AUX buffer structure if success or NULL if fails.
-  */
--static void *aux_buffer_setup(int cpu, void **pages, int nr_pages,
--			      bool snapshot)
-+static void *aux_buffer_setup(struct perf_event *event, void **pages,
-+			      int nr_pages, bool snapshot)
- {
- 	struct sf_buffer *sfb;
- 	struct aux_buffer *aux;
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index a01ef1b0f883..7cdd7b13bbda 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -77,10 +77,12 @@ static size_t buf_size(struct page *page)
- }
+-	for (index = 0; map[index].name; index++)
++	for (index = 0; map[index].name &&
++	     index < pmcdev->map->ppfear_buckets * 8; index++)
+ 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
  
- static void *
--bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
-+bts_buffer_setup_aux(struct perf_event *event, void **pages,
-+		     int nr_pages, bool overwrite)
- {
- 	struct bts_buffer *buf;
- 	struct page *page;
-+	int cpu = event->cpu;
- 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
- 	unsigned long offset;
- 	size_t size = nr_pages << PAGE_SHIFT;
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 9494ca68fd9d..c0e86ff21f81 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1114,10 +1114,11 @@ static int pt_buffer_init_topa(struct pt_buffer *buf, unsigned long nr_pages,
-  * Return:	Our private PT buffer structure.
-  */
- static void *
--pt_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool snapshot)
-+pt_buffer_setup_aux(struct perf_event *event, void **pages,
-+		    int nr_pages, bool snapshot)
- {
- 	struct pt_buffer *buf;
--	int node, ret;
-+	int node, ret, cpu = event->cpu;
- 
- 	if (!nr_pages)
- 		return NULL;
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index abe8249b893b..f21eb28b6782 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -177,15 +177,15 @@ static void etm_free_aux(void *data)
- 	schedule_work(&event_data->work);
- }
- 
--static void *etm_setup_aux(int event_cpu, void **pages,
-+static void *etm_setup_aux(struct perf_event *event, void **pages,
- 			   int nr_pages, bool overwrite)
- {
--	int cpu;
-+	int cpu = event->cpu;
- 	cpumask_t *mask;
- 	struct coresight_device *sink;
- 	struct etm_event_data *event_data = NULL;
- 
--	event_data = alloc_event_data(event_cpu);
-+	event_data = alloc_event_data(cpu);
- 	if (!event_data)
- 		return NULL;
- 	INIT_WORK(&event_data->work, free_event_data);
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 8e46a9dad2fa..7cb766dafe85 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -824,10 +824,10 @@ static void arm_spe_pmu_read(struct perf_event *event)
- {
- }
- 
--static void *arm_spe_pmu_setup_aux(int cpu, void **pages, int nr_pages,
--				   bool snapshot)
-+static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
-+				   int nr_pages, bool snapshot)
- {
--	int i;
-+	int i, cpu = event->cpu;
- 	struct page **pglist;
- 	struct arm_spe_pmu_buf *buf;
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e1a051724f7e..7cbbd891bfcd 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -409,7 +409,7 @@ struct pmu {
- 	/*
- 	 * Set up pmu-private data structures for an AUX area
- 	 */
--	void *(*setup_aux)		(int cpu, void **pages,
-+	void *(*setup_aux)		(struct perf_event *event, void **pages,
- 					 int nr_pages, bool overwrite);
- 					/* optional */
- 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5ab4fe3b1dcc..878c62ec0190 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -658,7 +658,7 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
- 			goto out;
- 	}
- 
--	rb->aux_priv = event->pmu->setup_aux(event->cpu, rb->aux_pages, nr_pages,
-+	rb->aux_priv = event->pmu->setup_aux(event, rb->aux_pages, nr_pages,
- 					     overwrite);
- 	if (!rb->aux_priv)
- 		goto out;
+ 	return 0;
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 89554cba5758..1a0104d2cbf0 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -32,7 +32,7 @@
+ #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+ #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
+ #define MTPMC_MASK				0xffff0000
+-#define PPFEAR_MAX_NUM_ENTRIES			5
++#define PPFEAR_MAX_NUM_ENTRIES			12
+ #define SPT_PPFEAR_NUM_ENTRIES			5
+ #define SPT_PMC_READ_DISABLE_BIT		0x16
+ #define SPT_PMC_MSG_FULL_STS_BIT		0x18
 -- 
 2.19.1
 
