@@ -2,87 +2,149 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540A0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0126BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146D72075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19642075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1/0SjnQW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBiu3Qda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732689AbfC0Jv6 (ORCPT
+        id S1732836AbfC0JwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:51:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40222 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfC0Jv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:51:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=C2M7XfpVnaKC6q2LLuPi3SVsBeVZZFaSm3Y/SueYprU=; b=1/0SjnQWJG4xr3FKUKMcNQ/6KT
-        oPXUd3KZN3dIQ5YGolaQ8AiHPaQd4PFj+UPBnn0keBmALrhfa7ZdzOMONZX9vMT0eoi14eoU6+Z+X
-        t8wKeSS9rEoiglz3I9QRGJODWo+154kj4M5sM+0j4xjNvztgwhyKeO0gw6lQqB6RIEwk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h95Do-0005e4-MP; Wed, 27 Mar 2019 10:51:48 +0100
-Date:   Wed, 27 Mar 2019 10:51:48 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 08/22] ethtool: support for netlink
- notifications
-Message-ID: <20190327095148.GE15396@lunn.ch>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <3578e5f334acf11b84e75d0ee41c072340a7b085.1553532199.git.mkubecek@suse.cz>
- <20190326163400.GC4958@nanopsycho.orion>
- <20190326181720.GO26076@unicorn.suse.cz>
- <20190327093843.GB6979@nanopsycho>
+        Wed, 27 Mar 2019 05:52:01 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35800 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfC0Jv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:51:59 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s39so7907625edb.2;
+        Wed, 27 Mar 2019 02:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/5AIoA6ChhwDIegaA+cCOSrOTfzvCLOmDA5uUa6xubw=;
+        b=KBiu3QdalWk+uy2S35xmGZmzR7JkdTt9uB+noCYRIudp6H4Tbobaya+SAq2y57+bue
+         RXET1QkI5YifAHNdOUbIznEQgxDfDvSqRc5cwAjDhFeGepsLiI9DehzRdqnDKPIIj+ba
+         Sa01n2SpNgi2/5BRKFJMmeeO4M6L2odH7GpLPWejxC+5LjUcTtnAfGNqqDK3TTypJzm5
+         A+7g9DcWOhnszQ7QXJ70LIMkyHfF6pBOc89Nyve6MefzoRhWZBMY8f3L/UoYnH5SOAiS
+         z4M49J7WcJxOjA8hiTx6C0xFA4ebO85MfbLnaJqt2yZFLdKSPT6osalW3nJjCU2BslO2
+         CGSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/5AIoA6ChhwDIegaA+cCOSrOTfzvCLOmDA5uUa6xubw=;
+        b=kHKR+RWxF6rM7njetMnMQawZ/7qyVFsoQV7fue7NQuTb1SXozyKRMJJ3N5qjGQiHNM
+         eciGnwEpjGrj4WzPaKxnN8IlBCnI6FufyG/Fjr7CZippUmUz/wPJdbFNwbQH7cb8SKqZ
+         VoSRCMV9u4Ae7KWS4kVyVh449WvLQrscokpn3XzGBD4z/ZzuwvcSoMs80m2p+qfwL2Z1
+         G8OGeB50N2xuPPexywNw1MlueW4fNXbe8kV7gypke2bqp9yQdoa++FZqcTuyZenhbtyw
+         q2PgvPe/QSpp2DVt7EXbz39NBg4O/Ujlu1jRyzMXVrMXSh8vSpV9d6Ah5cLHpgU0RXBQ
+         7cdA==
+X-Gm-Message-State: APjAAAUpVHcpXUMPIYAY8nsh4q5DXUXGcLrK/FF2ath4kt83Mvo4Zq7z
+        Wgw5PM6pZFePGQUeOk3yquNTOPF7IOMnIu3mrIs=
+X-Google-Smtp-Source: APXvYqxja82EKeeVTfP4Uu6LO7CfFfwNHq2zdWAx9rwjiLRuyrD0Ma6yZ5eEmKVebIeER0womJZsFIrFIFaKYIqMn54=
+X-Received: by 2002:a50:aa2e:: with SMTP id o43mr23262618edc.67.1553680317412;
+ Wed, 27 Mar 2019 02:51:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327093843.GB6979@nanopsycho>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190308120141.3698-1-daniel.baluta@nxp.com> <20190308120141.3698-2-daniel.baluta@nxp.com>
+ <20190319143139.GA24315@dragon> <f5934d5bca4b9241d0ac84de463fbeed@www.akkea.ca>
+In-Reply-To: <f5934d5bca4b9241d0ac84de463fbeed@www.akkea.ca>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 27 Mar 2019 11:51:45 +0200
+Message-ID: <CAEnQRZD27=jCvGB_Go-niXyEtrFu=MP2Wyvvqcx2CpnQ4Npx-Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] arm64: dts: imx8mq: Add SDMA nodes
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        baruch@tkos.co.il, Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        ccaione@baylibre.com, Chris Spencer <spencercw@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>, agx@sigxcpu.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 10:38:43AM +0100, Jiri Pirko wrote:
-> Tue, Mar 26, 2019 at 07:17:20PM CET, mkubecek@suse.cz wrote:
-> >On Tue, Mar 26, 2019 at 05:34:00PM +0100, Jiri Pirko wrote:
-> >> Mon, Mar 25, 2019 at 06:08:18PM CET, mkubecek@suse.cz wrote:
-> >> >+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
-> >> >+		    unsigned int cmd, u32 req_mask, const void *data)
-> >> >+{
-> >> >+	if (unlikely(!ethnl_ok))
-> >> 
-> >> Why do you need this?
+On Tue, Mar 26, 2019 at 11:44 PM Angus Ainslie <angus@akkea.ca> wrote:
+>
+> On 2019-03-19 07:31, Shawn Guo wrote:
+> > On Fri, Mar 08, 2019 at 12:02:22PM +0000, Daniel Baluta wrote:
+> >> SDMA1 is part of AIPS-3 region and SDMA2 is part
+> >> of AIPS-1 region.
+> >>
+> >> Reviewed-by: Fabio Estevam <festevam@gmail.com>
 > >
-> >If genetlink family registration fails, ethtool_notify() can be still
-> >called from other code (e.g. the ethtool ioctl interface). In such case,
-> >better bail out right away than fail somewhere later (probably after
-> >preparing the message which can't be sent anyway).
-> 
-> Again, haven't seen this in any other gen netlink implementation. Why do
-> they not need it?
+> > Reviewed-by tag should go after your SoB, since that's the sequence of
+> > how they come.
+> >
+> >> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> >> [initial submit in i.MX internal tree]
+> >> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> >> [adaptation for linux-next]
+> >
+> > I would see these notes in commit log or even just cover letter.
+> >
+> > Shawn
+> >
+> >> ---
+> >>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 22 ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> index 9155bd4784eb..9d48450453fb 100644
+> >> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> >> @@ -234,6 +234,17 @@
+> >>                              status = "disabled";
+> >>                      };
+> >>
+> >> +                    sdma2: sdma@302c0000 {
+> >> +                            compatible = "fsl,imx8mq-sdma","fsl,imx7d-sdma";
+> >> +                            reg = <0x302c0000 0x10000>;
+> >> +                            interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                            clocks = <&clk IMX8MQ_CLK_SDMA2_ROOT>,
+> >> +                                     <&clk IMX8MQ_CLK_SDMA2_ROOT>;
+> >> +                            clock-names = "ipg", "ahb";
+> >> +                            #dma-cells = <3>;
+> >> +                            fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
+> >> +                    };
+> >> +
+> >>                      iomuxc: iomuxc@30330000 {
+> >>                              compatible = "fsl,imx8mq-iomuxc";
+> >>                              reg = <0x30330000 0x10000>;
+> >> @@ -575,6 +586,17 @@
+> >>                              status = "disabled";
+> >>                      };
+> >>
+> >> +                    sdma1: sdma@30bd0000 {
+> >> +                            compatible = "fsl, imx8mq-sdma","fsl,imx7d-sdma";
+>
+> There shouldn't be a space in the imx8mq compatible string.
 
-Hi Jiri
+Oh, nice catch. This patch series is already in so care to send a fix?
 
-All other gen netlink kill the machine dead if they cannot register
-the socket.
+Otherwise, I will take care of it.
 
-    Andrew
+thanks,
+Daniel.
