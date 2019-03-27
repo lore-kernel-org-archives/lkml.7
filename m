@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1F2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F89C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359262082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AD82082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712602;
-	bh=LvLKoPMWKuLlrz0K3rjLUwBtbKSrMaa6v0Vn/KQONoQ=;
+	s=default; t=1553712605;
+	bh=obaYy4YuILPpmU1jJhv6AtZkirhMgeoSyuWypcPsZL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7Kxw8iIejJMQP/xWBRd1/shVieCsT6orcaOBzE7YzLz8ABxNoUqwHEcwCG0/0sP5
-	 MYhnQNZdFKIAJRJTQQ4JLKxYTq6Nw6Phz1OIlGQKYDSPWLpNk+jQzSIeXeMJHd4HT2
-	 aNDfnWU65mhVDYJly09zxz95fWU3fmFJ90AvtOXQ=
+	b=DSjg2M7/pwC+sfxv11qeoUQK4jGcxk2j6rM8bUBicWRDQHXvydswufqppvckShecs
+	 sbJ3cjV3zayYsxOe1aXIUKODoAa5Jy92vm7YREZm8QY47R9CP75uU3cy4O1hyplxok
+	 Drwo28nzDfNb/WgKZo2YI6th4d2xTRZIqey7nYHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390512AbfC0SSY (ORCPT
+        id S2390949AbfC0SuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:50:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390491AbfC0SSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:23 -0400
+        id S2389921AbfC0SS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F21320449;
-        Wed, 27 Mar 2019 18:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319EF2147C;
+        Wed, 27 Mar 2019 18:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710702;
-        bh=LvLKoPMWKuLlrz0K3rjLUwBtbKSrMaa6v0Vn/KQONoQ=;
+        s=default; t=1553710707;
+        bh=obaYy4YuILPpmU1jJhv6AtZkirhMgeoSyuWypcPsZL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=033PxYWxDPmdoWDmuu9g9EjvDoJgRpNaLoQb403j5pawi2O5VZspeAXiqJR8YS9On
-         XuIv3l0VG1uTMXdrmS/3Q3yqC+3MkutF9JQ7nYxloGgn3E9fQZcZ4hM17KkXHBTG/n
-         V843UHUY8tGG4XUftm2lW5H9fPYKsTNTyu68U3yA=
+        b=Zfkkdbqfmh5ELrpVyJE5kNGH+S74tH6M1XZC69oiHytn8V/5mg1kWGjJRiVKsRrx2
+         JA8dpedbM6VNyzgwJnduHxuqTvSMV2maTq0YlYUOu4PhRujfE+FHzwUjIAB/FwDzAX
+         K76FI7RMOVgd26H69nIkyzOsAaY3HJMshJErvo1I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hong Liu <hong.liu@intel.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 063/123] HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
-Date:   Wed, 27 Mar 2019 14:15:27 -0400
-Message-Id: <20190327181628.15899-63-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 067/123] ACPI / video: Refactor and fix dmi_is_desktop()
+Date:   Wed, 27 Mar 2019 14:15:31 -0400
+Message-Id: <20190327181628.15899-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -56,53 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hong Liu <hong.liu@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 0d28f49412405d87d3aae83da255070a46e67627 ]
+[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
 
-When performing a warm reset in ishtp bus driver, the ishtp_cl_device
-will not be removed, its fw_client still points to the already freed
-ishtp_device.fw_clients array.
+This commit refactors the chassis-type detection introduced by
+commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") (where desktop means anything without a builtin
+screen).
 
-Later after driver finishing ishtp client enumeration, this dangling
-pointer may cause driver to bind the wrong ishtp_cl_device to the new
-client, causing wrong callback to be called for messages intended for
-the new client.
+The DMI chassis_type is an unsigned integer, so rather then doing a
+whole bunch of string-compares on it, convert it to an int and feed
+the result to a switch case.
 
-This helps in development of firmware where frequent switching of
-firmwares is required without Linux reboot.
+Note the switch case uses hex values, this is done because the spec
+uses hex values too. This changes the check for "Main Server Chassis"
+from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
+the original check for 11 decimal was wrong.
 
-Signed-off-by: Hong Liu <hong.liu@intel.com>
-Tested-by: Hongyan Song <hongyan.song@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ rjw: Drop redundant return statements ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp/bus.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/acpi_video.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index 2623a567ffba..f546635e9ac9 100644
---- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -623,7 +623,8 @@ int ishtp_cl_device_bind(struct ishtp_cl *cl)
- 	spin_lock_irqsave(&cl->dev->device_list_lock, flags);
- 	list_for_each_entry(cl_device, &cl->dev->device_list,
- 			device_link) {
--		if (cl_device->fw_client->client_id == cl->fw_client_id) {
-+		if (cl_device->fw_client &&
-+		    cl_device->fw_client->client_id == cl->fw_client_id) {
- 			cl->device = cl_device;
- 			rv = 0;
- 			break;
-@@ -683,6 +684,7 @@ void ishtp_bus_remove_all_clients(struct ishtp_device *ishtp_dev,
- 	spin_lock_irqsave(&ishtp_dev->device_list_lock, flags);
- 	list_for_each_entry_safe(cl_device, n, &ishtp_dev->device_list,
- 				 device_link) {
-+		cl_device->fw_client = NULL;
- 		if (warm_reset && cl_device->reference_count)
- 			continue;
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index dbdd460a9958..9f56c066227c 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2123,21 +2123,28 @@ static int __init intel_opregion_present(void)
+ 	return opregion;
+ }
  
++/* Check if the chassis-type indicates there is no builtin LCD panel */
+ static bool dmi_is_desktop(void)
+ {
+ 	const char *chassis_type;
++	unsigned long type;
+ 
+ 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	if (!chassis_type)
+ 		return false;
+ 
+-	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
+-	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
+-	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
+-	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
+-	    !strcmp(chassis_type, "7") || /*  7: Tower */
+-	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
++	if (kstrtoul(chassis_type, 10, &type) != 0)
++		return false;
++
++	switch (type) {
++	case 0x03: /* Desktop */
++	case 0x04: /* Low Profile Desktop */
++	case 0x05: /* Pizza Box */
++	case 0x06: /* Mini Tower */
++	case 0x07: /* Tower */
++	case 0x11: /* Main Server Chassis */
+ 		return true;
++	}
+ 
+ 	return false;
+ }
 -- 
 2.19.1
 
