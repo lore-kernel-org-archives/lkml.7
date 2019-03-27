@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170F8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717DCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7FF2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396F82075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712213;
-	bh=TblNBVOkdAhOPwWf2nktlqjhN4Ftu9aCTyBhrGow1vo=;
+	s=default; t=1553712221;
+	bh=kvkCwcHxhjJCvdDnaatwvmnKYzQOI7wCcLz8mpqrU+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOhu3bcURjijIXW1AVB3EmrHmBsV1GGy4bD2y40XMVAklytbakBP98Uo0NK/tFON5
-	 rG9XJI3MHWAKGTk3zeOHmpxaq8g+0rAeJDaq6gP9oo8eZwVVtvJiebwQa7s1ugCecL
-	 dVeZPebw8Nf6ISMLB2AA3/2DCP6I5p6ePMxAljiY=
+	b=HyziU7iYY3c5T6lyuYeoDXvFo3lupqFs7Rf8fWBamf2oXLvhKqIS1xB5yDcGdhgFW
+	 XvUMsugwR8ZjFfrnn1AIe38+aU1GNmKFGkD0Fe68T1c4z5bwm3vH9cHePm/uV98JgK
+	 cIy4da0kbc98G5ipAGZYXcSBvGvlrnAjvatUbKkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfC0Snc (ORCPT
+        id S2391189AbfC0SVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39528 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390632AbfC0SVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:36 -0400
+        id S2391159AbfC0SVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D639E2082F;
-        Wed, 27 Mar 2019 18:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A76D20651;
+        Wed, 27 Mar 2019 18:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710895;
-        bh=TblNBVOkdAhOPwWf2nktlqjhN4Ftu9aCTyBhrGow1vo=;
+        s=default; t=1553710883;
+        bh=kvkCwcHxhjJCvdDnaatwvmnKYzQOI7wCcLz8mpqrU+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jslJmU5KXn3OY1JPUIKmYGyb9+bKl63qX1AXZwm4zaUPT3Hv5cBaP+OWeCDBaVmdK
-         voBw5gvsgklKSrvyv7s+9dJYO5cyA51W8IBe9DOlxSnu8NJn2X8J9FVXhOLhrKrOq0
-         WuFC1cYzFPi/c34Jl4R1Y8rnLAI5p/b0OJ1CZVcs=
+        b=VHH1qpO7H6GY9XoKrQRy3MXEPTvaoIf9lqTQ/y0fsJJtD9qwGpPHLDjaEIggw5AhI
+         at7rCULtFYdRXy8l435jImqejpJTZseU+5MNVukfDj1VjcAEtZ1jgrij/mDYBngmNJ
+         uQ/bG+2BxXzdMvHtOj8L1dfLEY8kdN6ljuZx/s+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/87] mlxsw: spectrum: Avoid -Wformat-truncation warnings
-Date:   Wed, 27 Mar 2019 14:19:46 -0400
-Message-Id: <20190327182040.17444-33-sashal@kernel.org>
+Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 25/87] crypto: crypto4xx - add missing of_node_put after of_device_is_available
+Date:   Wed, 27 Mar 2019 14:19:38 -0400
+Message-Id: <20190327182040.17444-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -57,70 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Julia Lawall <Julia.Lawall@lip6.fr>
 
-[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
+[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
 
-Give precision identifiers to the two snprintf() formatting the priority
-and TC strings to avoid producing these two warnings:
+Add an of_node_put when a tested device node is not available.
 
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_prio_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
-directive output may be truncated writing between 1 and 3 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
-output between 3 and 36 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_prio_stats[i].str, prio);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_tc_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
-directive output may be truncated writing between 1 and 11 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
-output between 3 and 44 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_tc_stats[i].str, tc);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The semantic patch that fixes this problem is as follows
+(http://coccinelle.lip6.fr):
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+// <smpl>
+@@
+identifier f;
+local idexpression e;
+expression x;
+@@
+
+e = f(...);
+... when != of_node_put(e)
+    when != x = e
+    when != e = x
+    when any
+if (<+...of_device_is_available(e)...+>) {
+  ... when != of_node_put(e)
+(
+  return e;
+|
++ of_node_put(e);
+  return ...;
+)
+}
+// </smpl>
+
+Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 22a5916e477e..cc847e0cac2d 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1565,7 +1565,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
- 	int i;
+diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
+index 677ca17fd223..368c5599515e 100644
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
  
- 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
- 		*p += ETH_GSTRING_LEN;
- 	}
-@@ -1576,7 +1576,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
- 	int i;
+ 	/* Find the TRNG device node and map it */
+ 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
+-	if (!trng || !of_device_is_available(trng))
++	if (!trng || !of_device_is_available(trng)) {
++		of_node_put(trng);
+ 		return;
++	}
  
- 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
- 		*p += ETH_GSTRING_LEN;
- 	}
+ 	dev->trng_base = of_iomap(trng, 0);
+ 	of_node_put(trng);
 -- 
 2.19.1
 
