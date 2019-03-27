@@ -2,96 +2,134 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C88C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25637C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB3F2075D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0083206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 06:17:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJBufUdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732851AbfC0GKd (ORCPT
+        id S1732789AbfC0GRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 02:10:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60370 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfC0GKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 02:10:33 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BABB2315009D;
-        Wed, 27 Mar 2019 06:10:32 +0000 (UTC)
-Received: from ovpn-118-18.phx2.redhat.com (ovpn-118-18.phx2.redhat.com [10.3.118.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F34A05C231;
-        Wed, 27 Mar 2019 06:10:31 +0000 (UTC)
-Message-ID: <29827fcdcdd4fb46b680a6bd184b44fca638666e.camel@redhat.com>
-Subject: Re: [PATCH 03/17] fpga: dfl: fme: support 512bit data width PR
-From:   Scott Wood <swood@redhat.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Date:   Wed, 27 Mar 2019 01:10:31 -0500
-In-Reply-To: <20190327043743.GA20968@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
-         <1553483264-5379-4-git-send-email-hao.wu@intel.com>
-         <127a9356a7bf597d35dd361f2b16bf80460f0370.camel@redhat.com>
-         <655bf2991a4f8bf6a473c91218d6dba7748520aa.camel@redhat.com>
-         <CANk1AXSBHAudsLfNkSK1OuE6R9bogo6jW9bYmmZdvweTt3eCiA@mail.gmail.com>
-         <580c6c604d3915c105f076fc7f22ab5da98598fc.camel@redhat.com>
-         <20190327043743.GA20968@hao-dev>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 27 Mar 2019 02:17:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43394 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfC0GRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 02:17:01 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so3155730pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Mar 2019 23:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5go5OgNTkr9kwYSngNUXmNBPaME9TqXKw/IYsgh97w8=;
+        b=kJBufUdYlQ9e+0ElY3qYCQdDQQ8N66kwdgsAs9OAxBkflvdEy4CS8i30t1HCiKpOFt
+         9nZgew5YDkxz0Yjb6Pgji4Exu5ZCE3gtAU/5vYSXYiJf4hUwo6oiUgcR81O8iBnIGsWa
+         6yy+WY7dnnqphytQNK0pw/h9abpggoC1/YO6pDE87VzwrwRbuO5UJrw+M9YRlasMaDEX
+         DLR2H9DWIrGeXK3nIvieOwjrIX1UXtlhyiuQ2M9dsGjt6YQpexDx16Z2Q76Bgir9OSvy
+         +4tcl7pJvUFYRhdeX5ceQj4JpehvmujkkrFTUIkYeGmO0GuKBkxaRL/Al41XbejA5f03
+         SWww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5go5OgNTkr9kwYSngNUXmNBPaME9TqXKw/IYsgh97w8=;
+        b=delPHZrm342GLOFv+XYaUGywWJEFfjUpPKXvuMsegOhvF0rLoRhW/N+JJp1+SFE/Dz
+         RxyyMl4N1F/YDI94KvoNjeR8lzeS8XMKaNG3kpklLPicQ0L5sWEPlU3kKzkfXiqeFTyd
+         IHz+AcHARbCS2FseeoC0bsvVvH/szHa2x4zn4Ed+f5rxaNI3UplW4aIw4e0Iy5Y+lTCZ
+         We+EiSvKuCqEl5F7ndhAo+8Zw6Z+CmqoguZBikMT1Gch2H2OhqHeQ3lvvXnCCfWHo75j
+         q8BEdgSlo/NT4VjYOnjI84A0iZXsSaN8t5Gy8l981lwQEbr/KMOFDmIRKRxs7Vu9RV3g
+         x3GQ==
+X-Gm-Message-State: APjAAAUW0pMdlBUInNoggMWgy3XGi3Az3BV9x150QOCam5YBPnjpp9pf
+        okSN4g7YhK1V70W3vd3YC7wn2A==
+X-Google-Smtp-Source: APXvYqwotSRzPnVrr4Ld14luyLFWvYh4edOMxBZzUHh1yVHvqQXI5sp2rE4HiAMMAdlWsZmDZKKrew==
+X-Received: by 2002:a63:94:: with SMTP id 142mr32775762pga.277.1553667420090;
+        Tue, 26 Mar 2019 23:17:00 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i16sm29972304pgk.51.2019.03.26.23.16.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 Mar 2019 23:16:58 -0700 (PDT)
+Date:   Tue, 26 Mar 2019 23:16:56 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        SCSI <linux-scsi@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 0/3] UFS on APQ8098/MSM8998
+Message-ID: <20190327061656.GL27005@builder>
+References: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 27 Mar 2019 06:10:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43768d77-80b7-9cdc-b6e0-08ec4a026c21@free.fr>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-27 at 12:37 +0800, Wu Hao wrote:
-> On Tue, Mar 26, 2019 at 04:22:34PM -0500, Scott Wood wrote:
-> > On Tue, 2019-03-26 at 14:33 -0500, Alan Tull wrote:
-> > > On Mon, Mar 25, 2019 at 5:58 PM Scott Wood <swood@redhat.com> wrote:
-> > > > > 
-> > > Hi Scott,
-> > > 
-> > > > On Mon, 2019-03-25 at 17:53 -0500, Scott Wood wrote:
-> > > > > On Mon, 2019-03-25 at 11:07 +0800, Wu Hao wrote:
-> > > > > > +#else
-> > > > > > +static inline void copy512(void *src, void __iomem *dst)
-> > > > > > +{
-> > > > > > +   WARN_ON_ONCE(1);
-> > > > > > +}
-> > > > > > +#endif
-> > > > > 
-Likewise, this will be called if a revision 2 device is used on non-
-> > > > > x86
-> > > > > (or on x86 with an old binutils).  The driver should fall back to
-> > > > > 32-
-> > > > > bit
-> > > > > in such cases.
+On Mon 25 Feb 04:16 PST 2019, Marc Gonzalez wrote:
+
+> Hello,
 > 
-> Unfortunately revision 2 is only for integrated FPGA solution, and it
-> doesn't
-> support any fallback solution (original 32bit data partial reconfiguration
-> is
-> not supported any more), so driver has to WARN in such path.
+> This series adds support for the UFS host controller on APQ8098/MSM8998-based boards.
+> 
+> This should be the final rev ;-)
+> 
+> Differences between v4 and v5:
+> - Drop patches that have already been accepted or spun off
+> 
+> Differences between v3 and v4:
+> - Rebase on top of -next
+> - Pick up Douglas Anderson's UFSHC doc fix
+> - Document 8998 UFSHC binding
+> - Improve UFS PHY binding doc
+> - Put the UFS DT patch at the end of the series
+> 
+> Difference between v2 and v3:
+> - Add qcom,msm8998-qmp-ufs-phy compat string and match it in the PHY driver
+> - Drop vdd-hba-fixed-regulator
+> - Write the reg addresses with full 32-bit width
+> - Set regulator-allow-set-load only on the 3 rails used by UFS.
+> - Revert the patch introducing ufshcd_set_vccq_rail_unused
+> 
+> Difference between v1 and v2:
+> - New patch to add 'regulator-allow-set-load' prop to all vreg nodes
+> - Rename rpmcc node to 'clock-controller' + Add Review tags
+> - Drop UFS pinctrl gymnastics (not required, probably left enabled in bootloader)
+> - Delete GCC_UFS_ICE_CORE_CLK (ICE not used upstream, I think)
+> - Fix sizes of ufsphy register areas based on Jeffrey's feedback
+> - Hack ufshcd_set_vccq_rail_unused into a NOP to work around lock up + reboot
+> 
+> 
+> Marc Gonzalez (3):
+>   dt-bindings: ufs: Add msm8998 compatible string
+>   arm64: dts: qcom: msm8998: Allow UFSHC driver to set-load
+>   arm64: dts: qcom: msm8998: Add UFS nodes
+> 
 
-From the commit message it seemed like this was just an optimization, not
-something necessary to support revision 2.
+Picked up with Lee's tested-by.
 
-If there's no way to program the device without AVX512, then printing an
-error message and returning an error to userspace would be better than
-WARN_ON, since it's not actually a kernel bug.
+Thanks,
+Bjorn
 
--Scott
-
-
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  1 +
+>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     | 22 +++++++
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi         | 65 +++++++++++++++++++
+>  3 files changed, 88 insertions(+)
+> 
+> -- 
+> 2.17.1
