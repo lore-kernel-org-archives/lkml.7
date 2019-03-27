@@ -2,154 +2,228 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35868C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25265C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0067820700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F1B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 21:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfC0VQE (ORCPT
+        id S1728643AbfC0VRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 17:16:04 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:51704 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfC0VQE (ORCPT
+        Wed, 27 Mar 2019 17:17:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40293 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbfC0VRZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 17:16:04 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1h9Ftm-0002En-OI; Wed, 27 Mar 2019 22:15:50 +0100
-Date:   Wed, 27 Mar 2019 22:15:50 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andi Kleen <ak@linux.intel.com>
-cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arjan van de Ven <arjan@linux.intel.com>
-Subject: Re: New feature/ABI review process [was Re: [RESEND PATCH v6 04/12]
- x86/fsgsbase/64:..]
-In-Reply-To: <20190326225638.GQ18020@tassilo.jf.intel.com>
-Message-ID: <alpine.DEB.2.21.1903272147180.1789@nanos.tec.linutronix.de>
-References: <1552680405-5265-1-git-send-email-chang.seok.bae@intel.com> <1552680405-5265-5-git-send-email-chang.seok.bae@intel.com> <alpine.DEB.2.21.1903251107300.1798@nanos.tec.linutronix.de> <20190326003804.GK18020@tassilo.jf.intel.com>
- <alpine.DEB.2.21.1903261010380.1789@nanos.tec.linutronix.de> <20190326225638.GQ18020@tassilo.jf.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 27 Mar 2019 17:17:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t8so11030081otp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 14:17:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BBdzqCeQMHcoqYr9jcZnmkytQeItgBZTai/slYi5Ggo=;
+        b=aRXrHPd3Jeim2ZnfY1qdhTssq0ZRJgc6iq51GlqQ/wzte1AsDLgEp9IBWaFfGarLEr
+         vWjsn7KOt8EOS/hvpa6eD3Ix8mDxwzNV6SDnnvq1H0JPUPNFhbP/HWjyWNqtMU4WuOc3
+         /sizSO81CEEiYGNzme4T0ejHuKlslhlh5W7O6XXNBSKm9XNIWilVUmA4rUkW9O6NbVqD
+         2yzW2IQXyqQckzgK4buO+HZY18RZ8qItWg1LWP2IxyKNXaoaM9GYheTIACCV2V4ZMuKJ
+         hzwdmJK1qwByVL4pyJOibJB/avuOS7G8Z0eRPjs/NJB+5hWw0J+uHeq242LlD+wcsvgO
+         p43A==
+X-Gm-Message-State: APjAAAUn4v7nBlsbGXew+2cxkA+0Y9OIV3dXjTyYBAckRMxpk+zmnEki
+        J2YgFfJXNdps9mt3+K0fWuC0rgk4mlS3nbIKwXqVnA==
+X-Google-Smtp-Source: APXvYqxH+fh3Qdeqpl93FpTbEiYOcb/qwPkDG3ZAgBVvK28We2rhKiqhTEj7ULdHWqanYb5h6V9bWc8rLG9z2Xx7uBU=
+X-Received: by 2002:a9d:1b2f:: with SMTP id l44mr9765053otl.217.1553721444358;
+ Wed, 27 Mar 2019 14:17:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <cover.1552665316.git.rgb@redhat.com> <a5a612bff629574cf4b678e7c7a9315e0e60a27c.1552665316.git.rgb@redhat.com>
+In-Reply-To: <a5a612bff629574cf4b678e7c7a9315e0e60a27c.1552665316.git.rgb@redhat.com>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Wed, 27 Mar 2019 22:17:13 +0100
+Message-ID: <CAFqZXNuMjvds9OKoj--zgn5j8CGuW55ZGhTPHtKGb+ZOR6B2-A@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V5 05/10] audit: add containerid support for ptrace
+ and signals
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Simo Sorce <simo@redhat.com>,
+        Eric Paris <eparis@parisplace.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>, nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 Mar 2019, Andi Kleen wrote:
-> As long as everything is cache hot it's likely only a couple
-> of cycles difference (as Intel CPUs are very good executing
-> crappy code too), but if it's not then you end up with a huge cache miss
-> cost, causing jitter. That's a problem for real time for example.
+On Fri, Mar 15, 2019 at 7:34 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> Add audit container identifier support to ptrace and signals.  In
+> particular, the "ref" field provides a way to label the auxiliary record
+> to which it is associated.
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> Acked-by: Serge Hallyn <serge@hallyn.com>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  include/linux/audit.h |  1 +
+>  kernel/audit.c        |  2 ++
+>  kernel/audit.h        |  2 ++
+>  kernel/auditsc.c      | 23 +++++++++++++++++------
+>  4 files changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index 43438192ca2a..ebd6625ca80e 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -35,6 +35,7 @@ struct audit_sig_info {
+>         uid_t           uid;
+>         pid_t           pid;
+>         char            ctx[0];
+> +       u64             cid;
+>  };
 
-That extra cache miss is really not the worst issue for realtime. The
-inherent latencies of contemporary systems have way worse to offer than
-that. Any realtime system has to cope with the worst case and an extra
-cache miss is not the end of the world.
+It seems like this structure implicitly defines the format of some
+message that is sent to userspace... If so, how will userspace detect
+that a new format (including the cid) is being used? Even assuming the
+fixed order as pointed out by Neil, the message still seems to be
+variable-sized so userspace cannot even use the length to infer that.
+Am I missing something here? (I hope I am :)
 
-> >   > Accessing user GSBASE needs a couple of SWAPGS operations. It is
-> >   > avoidable if the user GSBASE is saved at kernel entry, being updated as
-> >   > changes, and restored back at kernel exit. However, it seems to spend
-> >   > more cycles for savings and restorations. Little or no benefit was
-> >   > measured from experiments.
-> > 
-> > So little or no benefit was measured. I don't see how that maps to your
-> > 'SWAPGS will be a lot faster' claim. One of those claims is obviously
-> > wrong.
-> 
-> If everything is cache hot it won't make much difference,
-> but if you have a cache miss you end up eating the cost.
-> 
-> > 
-> > Aside of this needs more than numbers:
-> > 
-> >   1) Proper documentation how the mixed bag is managed.
-> 
-> How SWAPGS is managed?
-> 
-> Like it always was since 20+ years when the x86_64
-> port was originally born.
+>
+>  struct audit_buffer;
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index 8cc0e88d7f2a..cfa659b3f6c4 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -138,6 +138,7 @@ struct audit_net {
+>  kuid_t         audit_sig_uid = INVALID_UID;
+>  pid_t          audit_sig_pid = -1;
+>  u32            audit_sig_sid = 0;
+> +u64            audit_sig_cid = AUDIT_CID_UNSET;
+>
+>  /* Records can be lost in several ways:
+>     0) [suppressed in audit_alloc]
+> @@ -1515,6 +1516,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+>                         memcpy(sig_data->ctx, ctx, len);
+>                         security_release_secctx(ctx, len);
+>                 }
+> +               sig_data->cid = audit_sig_cid;
+>                 audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
+>                                  sig_data, sizeof(*sig_data) + len);
+>                 kfree(sig_data);
+> diff --git a/kernel/audit.h b/kernel/audit.h
+> index c00e2ee3c6b3..c5ac6436317e 100644
+> --- a/kernel/audit.h
+> +++ b/kernel/audit.h
+> @@ -148,6 +148,7 @@ struct audit_context {
+>         kuid_t              target_uid;
+>         unsigned int        target_sessionid;
+>         u32                 target_sid;
+> +       u64                 target_cid;
+>         char                target_comm[TASK_COMM_LEN];
+>
+>         struct audit_tree_refs *trees, *first_trees;
+> @@ -344,6 +345,7 @@ extern void audit_filter_inodes(struct task_struct *tsk,
+>  extern pid_t audit_sig_pid;
+>  extern kuid_t audit_sig_uid;
+>  extern u32 audit_sig_sid;
+> +extern u64 audit_sig_cid;
+>
+>  extern int audit_filter(int msgtype, unsigned int listtype);
+>
+> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> index a8c8b44b954d..f04e115df5dc 100644
+> --- a/kernel/auditsc.c
+> +++ b/kernel/auditsc.c
+> @@ -113,6 +113,7 @@ struct audit_aux_data_pids {
+>         kuid_t                  target_uid[AUDIT_AUX_PIDS];
+>         unsigned int            target_sessionid[AUDIT_AUX_PIDS];
+>         u32                     target_sid[AUDIT_AUX_PIDS];
+> +       u64                     target_cid[AUDIT_AUX_PIDS];
+>         char                    target_comm[AUDIT_AUX_PIDS][TASK_COMM_LEN];
+>         int                     pid_count;
+>  };
+> @@ -1514,7 +1515,7 @@ static void audit_log_exit(void)
+>         for (aux = context->aux_pids; aux; aux = aux->next) {
+>                 struct audit_aux_data_pids *axs = (void *)aux;
+>
+> -               for (i = 0; i < axs->pid_count; i++)
+> +               for (i = 0; i < axs->pid_count; i++) {
+>                         if (audit_log_pid_context(context, axs->target_pid[i],
+>                                                   axs->target_auid[i],
+>                                                   axs->target_uid[i],
+> @@ -1522,14 +1523,20 @@ static void audit_log_exit(void)
+>                                                   axs->target_sid[i],
+>                                                   axs->target_comm[i]))
+>                                 call_panic = 1;
+> +                       audit_log_contid(context, axs->target_cid[i]);
+> +               }
+>         }
+>
+> -       if (context->target_pid &&
+> -           audit_log_pid_context(context, context->target_pid,
+> -                                 context->target_auid, context->target_uid,
+> -                                 context->target_sessionid,
+> -                                 context->target_sid, context->target_comm))
+> +       if (context->target_pid) {
+> +               if (audit_log_pid_context(context, context->target_pid,
+> +                                         context->target_auid,
+> +                                         context->target_uid,
+> +                                         context->target_sessionid,
+> +                                         context->target_sid,
+> +                                         context->target_comm))
+>                         call_panic = 1;
+> +               audit_log_contid(context, context->target_cid);
+> +       }
+>
+>         if (context->pwd.dentry && context->pwd.mnt) {
+>                 ab = audit_log_start(context, GFP_KERNEL, AUDIT_CWD);
+> @@ -2360,6 +2367,7 @@ void __audit_ptrace(struct task_struct *t)
+>         context->target_uid = task_uid(t);
+>         context->target_sessionid = audit_get_sessionid(t);
+>         security_task_getsecid(t, &context->target_sid);
+> +       context->target_cid = audit_get_contid(t);
+>         memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
+>  }
+>
+> @@ -2387,6 +2395,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+>                 else
+>                         audit_sig_uid = uid;
+>                 security_task_getsecid(current, &audit_sig_sid);
+> +               audit_sig_cid = audit_get_contid(current);
+>         }
+>
+>         if (!audit_signals || audit_dummy_context())
+> @@ -2400,6 +2409,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+>                 ctx->target_uid = t_uid;
+>                 ctx->target_sessionid = audit_get_sessionid(t);
+>                 security_task_getsecid(t, &ctx->target_sid);
+> +               ctx->target_cid = audit_get_contid(t);
+>                 memcpy(ctx->target_comm, t->comm, TASK_COMM_LEN);
+>                 return 0;
+>         }
+> @@ -2421,6 +2431,7 @@ int audit_signal_info(int sig, struct task_struct *t)
+>         axp->target_uid[axp->pid_count] = t_uid;
+>         axp->target_sessionid[axp->pid_count] = audit_get_sessionid(t);
+>         security_task_getsecid(t, &axp->target_sid[axp->pid_count]);
+> +       axp->target_cid[axp->pid_count] = audit_get_contid(t);
+>         memcpy(axp->target_comm[axp->pid_count], t->comm, TASK_COMM_LEN);
+>         axp->pid_count++;
+>
+> --
+> 1.8.3.1
+>
 
-I know how SWAPGS works.
- 
-> The only case which has to do an two SWAPGS is the 
-> context switch when it switches the base. Everything else
-> just does SWAPGS at the edges for kernel entries.
 
-And exactly here is the problem. You are not even describing it correctly
-now:
-
-	You cannot do SWAPGS on _all_ edges.
-
-You cannot do SWAPGS in the paranoid entry when FSGSBASE is in use, because
-user space can write arbitrary values into GS. Which breaks the existing
-differentiation of kernel/user GS. That's why you have the FSGSBASE variant
-there. Is that documented?
-
-The changelog has some convoluted description of it:
-
-  "The FSGSBASE instructions allow fast accesses on GSBASE.  Now, at the
-   paranoid_entry, the per-CPU base value can be always copied to GSBASE.
-   And the original GSBASE value will be restored at the exit."
-
-So that part blurbs about fast access and comes first. Really useful.
-
-  "So far, GSBASE modification has not been directly allowed from userspace.
-   So, swapping GSBASE has been conditionally executed according to the
-   kernel-enforced convention that a negative GSBASE indicates a kernel value.
-   But when FSGSBASE is enabled, userspace can put an arbitrary value in
-   GSBASE. The change will secure a correct GSBASE value with FSGSBASE."
-
-I can decode that because I'm familiar with the inner workings of the
-paranoid entry code. But that changelog is just not providing properly
-structured information and the full context.
-
-What's worse is the comment in the code itself:
-
-+ * When FSGSBASE enabled, current GSBASE is always copied to %rbx.
-
-Where is the documentation that FSGSBASE is required to be used here and
-why? I can blody well see from the code that the FSGSBASE path does this
-unconditionally. But that does not explain why and it does not explain why
-FSGSBASE is not used all over the place instead of SWAPGS and just here.
-
-+ * Without FSGSBASE, SWAPGS is needed when entering from userspace.
-+ * A positive GSBASE means it is a user value and a negative GSBASE
-+ * means it is a kernel value.
-
-So this has more explanation about the SWAPGS mode than about the
-subtlities of FSGSBASE.
-
-This stuff wants to be documented in great length for everyones sake
-including yourself when you have to stare into that code a year from now. I
-don't care about you're headache but I care about mine and that of people
-who might end up debugging some subtle bug in that area.
-
-Thanks,
-
-	tglx
-
-
-
-
-
-
-
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
