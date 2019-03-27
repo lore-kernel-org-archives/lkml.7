@@ -2,125 +2,154 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDD8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A69F2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iqqquzAB"
+	by mail.kernel.org (Postfix) with ESMTP id 7BE782075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbfC0J3p (ORCPT
+        id S1732498AbfC0Jbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:29:45 -0400
-Received: from mail-eopbgr40067.outbound.protection.outlook.com ([40.107.4.67]:51265
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726257AbfC0J3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:29:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5unYHKtMDUDeG4xLPNpLUg7JC8nwYOMXovA+iDGX/M=;
- b=iqqquzAB5kez5asWl3ctgC2AM0zsvVrnr8BDvwXWK8LQC4yFUJpDsOGKJR7g1HxOuwLQiV6nLzta4EBo7dxscoFP+WRp57XvPCK1rrYH5GlgGPl47Hm4W9W12DUo8JSyxEtkaStLKv2ZNSgxmTwlJff1ECMAWKkO49ihNmFKdk8=
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
- VI1PR04MB5022.eurprd04.prod.outlook.com (20.177.50.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Wed, 27 Mar 2019 09:29:38 +0000
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2594:3cf0:20a2:8888]) by VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2594:3cf0:20a2:8888%3]) with mapi id 15.20.1750.014; Wed, 27 Mar 2019
- 09:29:38 +0000
-From:   Viorel Suman <viorel.suman@nxp.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Cosmin Samoila <cosmin.samoila@nxp.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Viorel Suman <viorel.suman@gmail.com>
-Subject: [PATCH] ASoC: fsl_audmix: Fix kbuild failure
-Thread-Topic: [PATCH] ASoC: fsl_audmix: Fix kbuild failure
-Thread-Index: AQHU5H+Za4taWNTOpUOEdsHqnsjN/w==
-Date:   Wed, 27 Mar 2019 09:29:38 +0000
-Message-ID: <1553678953-31228-1-git-send-email-viorel.suman@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR02CA0057.eurprd02.prod.outlook.com
- (2603:10a6:802:14::28) To VI1PR04MB4704.eurprd04.prod.outlook.com
- (2603:10a6:803:52::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=viorel.suman@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ca4440bf-59b1-426e-7c53-08d6b296bb81
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5022;
-x-ms-traffictypediagnostic: VI1PR04MB5022:
-x-microsoft-antispam-prvs: <VI1PR04MB50229C84456A739C87B62B8692580@VI1PR04MB5022.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0989A7979C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(376002)(136003)(366004)(199004)(189003)(99286004)(4744005)(66066001)(256004)(14444005)(6116002)(3846002)(44832011)(6512007)(106356001)(86362001)(6436002)(71190400001)(71200400001)(7416002)(6486002)(105586002)(186003)(486006)(102836004)(8676002)(26005)(386003)(4326008)(5660300002)(53936002)(476003)(2616005)(316002)(110136005)(54906003)(478600001)(6506007)(50226002)(8936002)(81156014)(97736004)(36756003)(2906002)(7736002)(6636002)(305945005)(81166006)(14454004)(68736007)(52116002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5022;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y8Rj6gvpmM4QpUcWXG8KZbbPsxA+S/5C6kIcSa3FlcFLrf7u2vn9oTRemPgkXODNl0DdzX4zcA9A/U9PvLFhYt+z5qO2Qx1KiuXZubnDWmfvqxu2jommPWH8WkyVwgcAHWo1RDC0dNfhh0ST5mp5QKHSyYO26rHBNYeMZMNd1R1qE7s/qmB0pzd58sz5dusesOqLq6QqpJMKj8enqVQWrWxTNgcrWPR6kJfiVAT2o+wyoET5p5RuveD+77oA6lmRdC+6ip5I53SvNOaxXuhditpl0u7t4/hlqM1yzZ4yg51FUjnIkqIzc+0d/nOL/eTni8mIvavND4OMVBiNLGA0+OQzb1NFBTNIXJG/hyjxGzFVQxCZwXdaf0zlV+5+bm4tbKnjlktxcyVVexY+OZRRrAZgoG0jiJj7bfifQHsNru8=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 Mar 2019 05:31:41 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46612 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfC0Jbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:31:40 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A787A280C97
+Subject: Re: [PATCH v2] mfd: cros: Update EC protocol to match current EC code
+To:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org
+References: <CAPUE2usTh3Th8FySCUsbgp_WGEL2k94pxDfwp4GT1uUkksok8w@mail.gmail.com>
+ <CAPUE2usMGzQVnL-rSrRoeWm=BHYD6pKkWXGNkaMpDOvFOy0HAQ@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f7e7b21c-60e4-fd38-d836-49550eb55e50@collabora.com>
+Date:   Wed, 27 Mar 2019 10:31:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca4440bf-59b1-426e-7c53-08d6b296bb81
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 09:29:38.3249
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5022
+In-Reply-To: <CAPUE2usMGzQVnL-rSrRoeWm=BHYD6pKkWXGNkaMpDOvFOy0HAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The format in dev_dbg function must be a constant.
+Hi Gwendal,
 
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
----
- sound/soc/fsl/fsl_audmix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Unless my pwclient or patchwork is doing something weird I have some issues
+trying to apply this patch. Could you check that is correctly formatted?
 
-diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
-index 3356cb6..dabde03 100644
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -90,7 +90,7 @@ static int fsl_audmix_state_trans(struct snd_soc_componen=
-t *comp,
- 	struct fsl_audmix *priv =3D snd_soc_component_get_drvdata(comp);
- 	/* Enforce all required TDMs are started */
- 	if ((priv->tdms & prm.tdms) !=3D prm.tdms) {
--		dev_dbg(comp->dev, prm.msg);
-+		dev_dbg(comp->dev, "%s", prm.msg);
- 		return -EINVAL;
- 	}
-=20
---=20
-2.7.4
+$ pwclient git-am 1055029
 
+Applying patch #1055029 using u'git am'
+Description: [v2] mfd: cros: Update EC protocol to match current EC code
+Applying: mfd: cros: Update EC protocol to match current EC code
+error: patch fragment without header at line 11: @@ -105,15 +120,24 @@
+Patch failed at 0001 mfd: cros: Update EC protocol to match current EC code
+hint: Use 'git am --show-current-patch' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+'git am' failed with exit status 128
+
+Also if I try to apply the patch directly I got:
+
+$ git am --show-current-patch | patch -p1
+patching file include/linux/mfd/cros_ec_commands.h
+patch: **** malformed patch at line 5615: (8-bit) */
+
+On 26/3/19 18:21, Gwendal Grignou wrote:
+> Chromebook Embedded Controller protocol is defined in the kernel at
+> cros_ec_commands.h.
+> The source of trust for the EC protocol is at
+> https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+> 
+> Only needed changes have been picked up from this file to the kernel
+> include file leading to gaps between the upstream version and what the
+> latest ECs can do.
+> 
+> Fill the gaps to ease future integrations. Changes from the original
+> files is header/footer for license and include files for alignment.
+> 
+> Check this include file works on ChomeOS kernel 4.14 and 4.19 on eve.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+> Changes in v2:
+> - Replace 1 << with BIT()
+> - Check checkpatch warning/errors are outside kernel scope.
+> - Update .h with latest changes.
+> 
+>  include/linux/mfd/cros_ec_commands.h | 3723 +++++++++++++++++++++-----
+>  1 file changed, 2992 insertions(+), 731 deletions(-)
+> 
+> diff --git a/include/linux/mfd/cros_ec_commands.h
+> b/include/linux/mfd/cros_ec_commands.h
+> index fc91082d4c35..5c4764e3db6f 100644
+> --- a/include/linux/mfd/cros_ec_commands.h
+> +++ b/include/linux/mfd/cros_ec_commands.h
+
+[snip]
+
+> @@ -33,7 +46,7 @@
+>  #define EC_PROTO_VERSION          0x00000002
+> 
+>  /* Command version mask */
+> -#define EC_VER_MASK(version) (1UL << (version))
+> +#define EC_VER_MASK(version) BIT(version)
+> 
+>  /* I/O addresses for ACPI commands */
+>  #define EC_LPC_ADDR_ACPI_DATA  0x62
+> @@ -59,13 +72,13 @@
+>  #define EC_HOST_CMD_REGION_SIZE 0x80
+> 
+>  /* EC command register bit functions */
+> -#define EC_LPC_CMDR_DATA	(1 << 0)  /* Data ready for host to read */
+> -#define EC_LPC_CMDR_PENDING	(1 << 1)  /* Write pending to EC */
+> -#define EC_LPC_CMDR_BUSY	(1 << 2)  /* EC is busy processing a command */
+> -#define EC_LPC_CMDR_CMD		(1 << 3)  /* Last host write was a command */
+> -#define EC_LPC_CMDR_ACPI_BRST	(1 << 4)  /* Burst mode (not used) */
+> -#define EC_LPC_CMDR_SCI		(1 << 5)  /* SCI event is pending */
+> -#define EC_LPC_CMDR_SMI		(1 << 6)  /* SMI event is pending */
+> +#define EC_LPC_CMDR_DATA	BIT(0)  /* Data ready for host to read */
+> +#define EC_LPC_CMDR_PENDING	BIT(1)  /* Write pending to EC */
+> +#define EC_LPC_CMDR_BUSY	BIT(2)  /* EC is busy processing a command */
+> +#define EC_LPC_CMDR_CMD		BIT(3)  /* Last host write was a command */
+> +#define EC_LPC_CMDR_ACPI_BRST	BIT(4)  /* Burst mode (not used) */
+> +#define EC_LPC_CMDR_SCI		BIT(5)  /* SCI event is pending */
+> +#define EC_LPC_CMDR_SMI		BIT(6)  /* SMI event is pending */
+> 
+>  #define EC_LPC_ADDR_MEMMAP       0x900
+>  #define EC_MEMMAP_SIZE         255 /* ACPI IO buffer max is 255 bytes */
+> @@ -85,13 +98,15 @@
+>  /* Unused 0x28 - 0x2f */
+>  #define EC_MEMMAP_SWITCHES         0x30	/* 8 bits */
+>  /* Unused 0x31 - 0x33 */
+> -#define EC_MEMMAP_HOST_EVENTS      0x34 /* 32 bits */
+> -/* Reserve 0x38 - 0x3f for additional host event-related stuff */
+> -/* Battery values are all 32 bits */
+> +#define EC_MEMMAP_HOST_EVENTS      0x34 /* 64 bits */
+> +/* Battery values are all 32 bits, unless otherwise noted. */
+>  #define EC_MEMMAP_BATT_VOLT        0x40 /* Battery Present Voltage */
+>  #define EC_MEMMAP_BATT_RATE        0x44 /* Battery Present Rate */
+>  #define EC_MEMMAP_BATT_CAP         0x48 /* Battery Remaining Capacity */
+> -#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, defined below */
+> +#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, see below (8-bit) */
+> +#define EC_MEMMAP_BATT_COUNT       0x4d /* Battery Count (8-bit) */
+> +#define EC_MEMMAP_BATT_INDEX       0x4e /* Current Battery Data Index
+> (8-bit) */
+
+Complains about this malformed line, but even after fix this I got other issues.
+
+Thanks,
+ Enric
