@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B19FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95CCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23990205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2FF205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712583;
-	bh=YboIJ9xGZYQ8MqdF0ODplfNKwJID2H5wwXNyblJ9Swk=;
+	s=default; t=1553712591;
+	bh=hD2RJPnaS6Es29brTXoGgh69te7zm5LCCsCvee9+LEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJbGEW6lh4xF8u2wZwwTfOP8G3CQIDh14tAZ62aqSxTbGwjA7S4gZEkSe38OYF8FW
-	 sgy5vYH7QSIkp5OAV8v+ofEB/BMvReODYASf62f4fHvNTV3Y2VysLMYxShaGMb6eEt
-	 8xdrmjya60DTZMuaaXcb7x8kYFWdZDYfAiRgHjSY=
+	b=fvbut2hKeTwQ+1TQ1X+AjH1fIsyz6syvmpJH0osVJ5jD6kyliW31PEr0lp/EdWuXC
+	 kSLS11FuoDV0jspB++zaa0pHMtb6mZgALPpojlrGHfk2sfIdObmeBRvercrT9sh3MG
+	 LJLb9rIC3/1qZP3vhWENtVydpRSPS52M787LtQLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390236AbfC0SSh (ORCPT
+        id S2390531AbfC0SSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35570 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390537AbfC0SSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:34 -0400
+        id S2390509AbfC0SSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CE720449;
-        Wed, 27 Mar 2019 18:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A5182147C;
+        Wed, 27 Mar 2019 18:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710713;
-        bh=YboIJ9xGZYQ8MqdF0ODplfNKwJID2H5wwXNyblJ9Swk=;
+        s=default; t=1553710704;
+        bh=hD2RJPnaS6Es29brTXoGgh69te7zm5LCCsCvee9+LEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uzDQy3gZ3mIoGM36HJMMv5IL0kzyR4OuMGJk+W6G15NFtDaZayN38xFz2m0W+WOiK
-         n7WQWBVjZW7NmCmTY7qHg3VX/xgRQR6nXF28B5JplIS2u0Pi9CBhRQFa9UZFlIjlFj
-         VDm0bdNwsy7o5e3HdG2s5xDbUwsZUx38nUm2vuzg=
+        b=RINpthu572oMWeOyUpaHZ6EQ7g/72ZQbDrDCbRccumRkV1h1zkN+JfG/8TYUXwJVY
+         ieBN++4N93CpeQiOKErizgX92oWWry/Q3IR5GJGPd/n6Tx6BF098tXC9pLQufikB2h
+         o9e4X3flj+8tTKr+DBAhwTuxIxb6eslcIlC0NVXQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chieh-Min Wang <chiehminw@synology.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 070/123] netfilter: conntrack: fix cloned unconfirmed skb->_nfct race in __nf_conntrack_confirm
-Date:   Wed, 27 Mar 2019 14:15:34 -0400
-Message-Id: <20190327181628.15899-70-sashal@kernel.org>
+Cc:     Michal Kazior <michal@plume.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 065/123] leds: lp55xx: fix null deref on firmware load failure
+Date:   Wed, 27 Mar 2019 14:15:29 -0400
+Message-Id: <20190327181628.15899-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -60,130 +57,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chieh-Min Wang <chiehminw@synology.com>
+From: Michal Kazior <michal@plume.com>
 
-[ Upstream commit 13f5251fd17088170c18844534682d9cab5ff5aa ]
+[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
 
-For bridge(br_flood) or broadcast/multicast packets, they could clone
-skb with unconfirmed conntrack which break the rule that unconfirmed
-skb->_nfct is never shared.  With nfqueue running on my system, the race
-can be easily reproduced with following warning calltrace:
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
-[13257.707525] CPU: 0 PID: 12132 Comm: main Tainted: P        W       4.4.60 #7744
-[13257.707568] Hardware name: Qualcomm (Flattened Device Tree)
-[13257.714700] [<c021f6dc>] (unwind_backtrace) from [<c021bce8>] (show_stack+0x10/0x14)
-[13257.720253] [<c021bce8>] (show_stack) from [<c0449e10>] (dump_stack+0x94/0xa8)
-[13257.728240] [<c0449e10>] (dump_stack) from [<c022a7e0>] (warn_slowpath_common+0x94/0xb0)
-[13257.735268] [<c022a7e0>] (warn_slowpath_common) from [<c022a898>] (warn_slowpath_null+0x1c/0x24)
-[13257.743519] [<c022a898>] (warn_slowpath_null) from [<c06ee450>] (__nf_conntrack_confirm+0xa8/0x618)
-[13257.752284] [<c06ee450>] (__nf_conntrack_confirm) from [<c0772670>] (ipv4_confirm+0xb8/0xfc)
-[13257.761049] [<c0772670>] (ipv4_confirm) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
-[13257.769725] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
-[13257.777108] [<c06e7af0>] (nf_hook_slow) from [<c07f20b4>] (br_nf_post_routing+0x274/0x31c)
-[13257.784486] [<c07f20b4>] (br_nf_post_routing) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
-[13257.792556] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
-[13257.800458] [<c06e7af0>] (nf_hook_slow) from [<c07e5580>] (br_forward_finish+0x94/0xa4)
-[13257.808010] [<c07e5580>] (br_forward_finish) from [<c07f22ac>] (br_nf_forward_finish+0x150/0x1ac)
-[13257.815736] [<c07f22ac>] (br_nf_forward_finish) from [<c06e8df0>] (nf_reinject+0x108/0x170)
-[13257.824762] [<c06e8df0>] (nf_reinject) from [<c06ea854>] (nfqnl_recv_verdict+0x3d8/0x420)
-[13257.832924] [<c06ea854>] (nfqnl_recv_verdict) from [<c06e940c>] (nfnetlink_rcv_msg+0x158/0x248)
-[13257.841256] [<c06e940c>] (nfnetlink_rcv_msg) from [<c06e5564>] (netlink_rcv_skb+0x54/0xb0)
-[13257.849762] [<c06e5564>] (netlink_rcv_skb) from [<c06e4ec8>] (netlink_unicast+0x148/0x23c)
-[13257.858093] [<c06e4ec8>] (netlink_unicast) from [<c06e5364>] (netlink_sendmsg+0x2ec/0x368)
-[13257.866348] [<c06e5364>] (netlink_sendmsg) from [<c069fb8c>] (sock_sendmsg+0x34/0x44)
-[13257.874590] [<c069fb8c>] (sock_sendmsg) from [<c06a03dc>] (___sys_sendmsg+0x1ec/0x200)
-[13257.882489] [<c06a03dc>] (___sys_sendmsg) from [<c06a11c8>] (__sys_sendmsg+0x3c/0x64)
-[13257.890300] [<c06a11c8>] (__sys_sendmsg) from [<c0209b40>] (ret_fast_syscall+0x0/0x34)
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
 
-The original code just triggered the warning but do nothing. It will
-caused the shared conntrack moves to the dying list and the packet be
-droppped (nf_ct_resolve_clash returns NF_DROP for dying conntrack).
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
 
-- Reproduce steps:
-
-+----------------------------+
-|          br0(bridge)       |
-|                            |
-+-+---------+---------+------+
-  | eth0|   | eth1|   | eth2|
-  |     |   |     |   |     |
-  +--+--+   +--+--+   +---+-+
-     |         |          |
-     |         |          |
-  +--+-+     +-+--+    +--+-+
-  | PC1|     | PC2|    | PC3|
-  +----+     +----+    +----+
-
-iptables -A FORWARD -m mark --mark 0x1000000/0x1000000 -j NFQUEUE --queue-num 100 --queue-bypass
-
-ps: Our nfq userspace program will set mark on packets whose connection
-has already been processed.
-
-PC1 sends broadcast packets simulated by hping3:
-
-hping3 --rand-source --udp 192.168.1.255 -i u100
-
-- Broadcast racing flow chart is as follow:
-
-br_handle_frame
-  BR_HOOK(NFPROTO_BRIDGE, NF_BR_PRE_ROUTING, br_handle_frame_finish)
-  // skb->_nfct (unconfirmed conntrack) is constructed at PRE_ROUTING stage
-  br_handle_frame_finish
-    // check if this packet is broadcast
-    br_flood_forward
-      br_flood
-        list_for_each_entry_rcu(p, &br->port_list, list) // iterate through each port
-          maybe_deliver
-            deliver_clone
-              skb = skb_clone(skb)
-              __br_forward
-                BR_HOOK(NFPROTO_BRIDGE, NF_BR_FORWARD,...)
-                // queue in our nfq and received by our userspace program
-                // goto __nf_conntrack_confirm with process context on CPU 1
-    br_pass_frame_up
-      BR_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,...)
-      // goto __nf_conntrack_confirm with softirq context on CPU 0
-
-Because conntrack confirm can happen at both INPUT and POSTROUTING
-stage.  So with NFQUEUE running, skb->_nfct with the same unconfirmed
-conntrack could race on different core.
-
-This patch fixes a repeating kernel splat, now it is only displayed
-once.
-
-Signed-off-by: Chieh-Min Wang <chiehminw@synology.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index f07357ba9629..06520bf30f29 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -763,10 +763,18 @@ __nf_conntrack_confirm(struct sk_buff *skb)
- 	 * REJECT will give spurious warnings here.
- 	 */
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 5377f22ff994..e2655953667c 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
  
--	/* No external references means no one else could have
--	 * confirmed us.
-+	/* Another skb with the same unconfirmed conntrack may
-+	 * win the race. This may happen for bridge(br_flood)
-+	 * or broadcast/multicast packets do skb_clone with
-+	 * unconfirmed conntrack.
- 	 */
--	WARN_ON(nf_ct_is_confirmed(ct));
-+	if (unlikely(nf_ct_is_confirmed(ct))) {
-+		WARN_ON_ONCE(1);
-+		nf_conntrack_double_unlock(hash, reply_hash);
-+		local_bh_enable();
-+		return NF_DROP;
-+	}
-+
- 	pr_debug("Confirming conntrack %p\n", ct);
- 	/* We have to check the DYING flag after unlink to prevent
- 	 * a race against nf_ct_get_next_corpse() possibly called from
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* handling firmware data is chip dependent */
+@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
+ }
+ 
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
