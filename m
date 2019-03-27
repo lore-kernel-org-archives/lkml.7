@@ -6,51 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA21C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A435C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3B12147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6249E2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710989;
-	bh=eZsqNRtN7AcSby9VLPWL4CoNCTpAnqwEXDqEMG50gLg=;
+	s=default; t=1553710994;
+	bh=j1gkuQlke2C0Q/P6z+5UCuBRWkRQxc6+f39anwhRZIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsFi9Q8NO0PcmKLMwqgwO6Rxwo0umYJnCKPbz5k70b/oROiCXM1i8j02luLZQOnMY
-	 1aX8iHjyBP1VrNM7ihNZMjIkiimxrw38PpL7gaT7V0FQ7nrkOudPHsc5wxcZEXrl1T
-	 8yawfuJ15V6IWASukE23oylSrruW3UBc/qRqQM88=
+	b=kNq8bt/RCNp4IXI/d6926+fLUhlBv3imnYP4BMjU6ZpoDQJd4rRvAcOfAIWlt9Gls
+	 bJlpL2b0s/xLCc6OfZ0mhiMJGRaNdxf33GL3F/pPNY1WEoas6+jaBU4OIUzIGWPhm1
+	 XxjlnS/q8E2ATC3Trc1uHP7LhJsdhBsupOITqKM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391424AbfC0SXH (ORCPT
+        id S2391427AbfC0SXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391407AbfC0SXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:23:05 -0400
+        id S2388836AbfC0SXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:23:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF8072147C;
-        Wed, 27 Mar 2019 18:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6461720651;
+        Wed, 27 Mar 2019 18:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710984;
-        bh=eZsqNRtN7AcSby9VLPWL4CoNCTpAnqwEXDqEMG50gLg=;
+        s=default; t=1553710988;
+        bh=j1gkuQlke2C0Q/P6z+5UCuBRWkRQxc6+f39anwhRZIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=orfspIClEptIN4qQvx78xLCX1ss07gokJlj5ojPxcWnODemwzARFfuz1D6+RIf8EV
-         gs2u1ZthJu0RelugC2Ixmjgs6YfjEIih1v4p/7l7sftZjCgpixx56GPRVQGMplfFZp
-         9jOaqNRUhwVIn4TZd2TbvKJgd8BJgxzLOrStDfZs=
+        b=YvC46zd8oxhx0GgzLCHFdvgeF7z8Gtm+NF4JDDXxD26AnPAl+GdIvwEb2yjCXNyhq
+         lKL2msn13MSTJtfIAu+JGBieEYulwvGbY62SswUoO7BQKmCBIs4ucmrczswLW3cWrJ
+         ka+yDtTZLRQmrMY+iTHrJDGh4lm8LesdWVCOvL/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 78/87] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
-Date:   Wed, 27 Mar 2019 14:20:31 -0400
-Message-Id: <20190327182040.17444-78-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 80/87] drm/nouveau: Stop using drm_crtc_force_disable
+Date:   Wed, 27 Mar 2019 14:20:33 -0400
+Message-Id: <20190327182040.17444-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,86 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
+[ Upstream commit 934c5b32a5e43d8de2ab4f1566f91d7c3bf8cb64 ]
 
-Previously when doing format enumeration, it was returning all
- formats supported by driver, even if they're not supported by hw.
-Add missing check for fmt_ver_flag, so it'll be fixed and only those
- supported by hw will be returned. Similar thing is already done
- in s5p_jpeg_find_format.
+The correct way for legacy drivers to update properties that need to
+do a full modeset, is to do a full modeset.
 
-It was found by using v4l2-compliance tool and checking result
- of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
-and using v4l2-ctl to get list of all supported formats.
+Note that we don't need to call the drm_mode_config_internal helper
+because we're not changing any of the refcounted paramters.
 
-Tested on s5pv210-galaxys (Samsung i9000 phone).
+v2: Fixup error handling (Ville). Since the old code didn't bother
+I decided to just delete it instead of adding even more code for just
+error handling.
 
-Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
-
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com> (v1)
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181217194303.14397-2-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 06e2b72d07ca..c89922fb42ce 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -1264,13 +1264,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+index 434d1e29f279..cd37d00e9723 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+@@ -750,7 +750,9 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
+ 		/* Disable the crtc to ensure a full modeset is
+ 		 * performed whenever it's turned on again. */
+ 		if (crtc)
+-			drm_crtc_force_disable(crtc);
++			drm_crtc_helper_set_mode(crtc, &crtc->mode,
++						 crtc->x, crtc->y,
++						 crtc->primary->fb);
+ 	}
+ 
  	return 0;
- }
- 
--static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
-+static int enum_fmt(struct s5p_jpeg_ctx *ctx,
-+		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
- 		    struct v4l2_fmtdesc *f, u32 type)
- {
- 	int i, num = 0;
-+	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
- 
- 	for (i = 0; i < n; ++i) {
--		if (sjpeg_formats[i].flags & type) {
-+		if (sjpeg_formats[i].flags & type &&
-+		    sjpeg_formats[i].flags & fmt_ver_flag) {
- 			/* index-th format of type type found ? */
- 			if (num == f->index)
- 				break;
-@@ -1297,11 +1300,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_CAPTURE);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_CAPTURE);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_CAPTURE);
- }
- 
- static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
-@@ -1310,11 +1313,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
- 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
--		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
- 				SJPEG_FMT_FLAG_ENC_OUTPUT);
- 
--	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
--					SJPEG_FMT_FLAG_DEC_OUTPUT);
-+	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
-+			SJPEG_FMT_FLAG_DEC_OUTPUT);
- }
- 
- static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
