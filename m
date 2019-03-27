@@ -2,51 +2,53 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6960C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0682082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C912177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711128;
-	bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uWOy2KYx6ubDIwJ1b9Ml1YxidfqBa1nl21bNtJ40xoqi2krWrTmhtlztWg2MZIl9A
-	 roWLY7i/9NmKex0ELdIw5bRcwDA1V3p17L3I77kAkaqCmp/WLzm6r9kCC2g2ecTEzj
-	 cbjjMaE38+l20TTSgk2Nk1Z8XvkchGwLU4sYa/cM=
+	s=default; t=1553711130;
+	bh=u7JrxVM2Qj3OnqH/5zUWHJRX+hA3aA2UhfXhYgA1vg4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HTB/lJRODPGUgKcJjJlxH4yj3sMDCq4FOacmq1aCwexJidbaAs81UoXfQZAidwzP9
+	 tGX1jM0FKfiQErXRNJCDvl60GGgrI02At3F31XE7uUmImqZr86/oQt6lZP+gIZ6uZJ
+	 bz+sCbi+Mti57XqwOXMB4KLpWZJktv484CwXn8oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404196AbfC0SZ1 (ORCPT
+        id S2404207AbfC0SZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44408 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391336AbfC0SZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:25:21 -0400
+        id S2404173AbfC0SZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F352082F;
-        Wed, 27 Mar 2019 18:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FA9206BA;
+        Wed, 27 Mar 2019 18:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711120;
-        bh=LdnaTTwEfKeySI/RW2qOf3CLXnrpU6S599i+vNalKec=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zmhOWLXphUQUanEBneJNlb2ddwJQ2aeLFFUAsIRk4iTVgLputYccDxKXrFsH21PvK
-         B5uQvc+ElhFkeVguGzQyI1Qq6jKxeeL2nUvPNBKuqAZSy4ZlqA10RDGass9BdxgcMX
-         94nTggGfXgQ7o9J0GuwE9Q2EEQCv+IbfNkqiIf8k=
+        s=default; t=1553711123;
+        bh=u7JrxVM2Qj3OnqH/5zUWHJRX+hA3aA2UhfXhYgA1vg4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GE/cFKJ8tTP7+E9Vre/3uZ6UiiGiADPzsfrFXngySlYSQEzxcpMiuz93AkSJR9pWi
+         cEIfJ56x/Vs0RJ6oIZQm1hra4dsKx4pnAae7dYrc9UeeUp6zGzXAyvHSzaivTQvka6
+         YpPxmdfqPan3y8LqZULAZ4ZCs1j4yqziW6fIL8kU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Taylor <louis@kragniz.eu>, Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 01/41] i2c: sis630: correct format strings
-Date:   Wed, 27 Mar 2019 14:24:38 -0400
-Message-Id: <20190327182518.19394-1-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 02/41] tracing: kdb: Fix ftdump to not sleep
+Date:   Wed, 27 Mar 2019 14:24:39 -0400
+Message-Id: <20190327182518.19394-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
+References: <20190327182518.19394-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -55,61 +57,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Taylor <louis@kragniz.eu>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 60f7691c624b41a05bfc3493d9b0519e7951b7ef ]
+[ Upstream commit 31b265b3baaf55f209229888b7ffea523ddab366 ]
 
-When compiling with -Wformat, clang warns:
+As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
+BUG for "sleeping function called from invalid context".
 
-drivers/i2c/busses/i2c-sis630.c:482:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS,
-                        ^~~~~~~~~~~~~~~~~~~~
+kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
+atomic context.  A very simple solution for this is to add allocation
+flags to ring_buffer_read_prepare() so kdb can call it without
+triggering the allocation error.  This patch does that.
 
-drivers/i2c/busses/i2c-sis630.c:483:4: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                        smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Note that in the original email thread about this, it was suggested
+that perhaps the solution for kdb was to either preallocate the buffer
+ahead of time or create our own iterator.  I'm hoping that this
+alternative of adding allocation flags to ring_buffer_read_prepare()
+can be considered since it means I don't need to duplicate more of the
+core trace code into "trace_kdb.c" (for either creating my own
+iterator or re-preparing a ring allocator whose memory was already
+allocated).
 
-drivers/i2c/busses/i2c-sis630.c:531:37: warning: format specifies type
-      'unsigned short' but the argument has type 'int' [-Wformat]
-                 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-                                          ~~~~~   ^~~~~~~~~~~~~~~~~~~~
+NOTE: another option for kdb is to actually figure out how to make it
+reuse the existing ftrace_dump() function and totally eliminate the
+duplication.  This sounds very appealing and actually works (the "sr
+z" command can be seen to properly dump the ftrace buffer).  The
+downside here is that ftrace_dump() fully consumes the trace buffer.
+Unless that is changed I'd rather not use it because it means "ftdump
+| grep xyz" won't be very useful to search the ftrace buffer since it
+will throw away the whole trace on the first grep.  A future patch to
+dump only the last few lines of the buffer will also be hard to
+implement.
 
-This patch fixes the format strings to use the format type for int.
+[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
+
+Reported-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-sis630.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/ring_buffer.h | 2 +-
+ kernel/trace/ring_buffer.c  | 5 +++--
+ kernel/trace/trace.c        | 6 ++++--
+ kernel/trace/trace_kdb.c    | 6 ++++--
+ 4 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-sis630.c b/drivers/i2c/busses/i2c-sis630.c
-index 1e6805b5cef2..a57aa4fe51a4 100644
---- a/drivers/i2c/busses/i2c-sis630.c
-+++ b/drivers/i2c/busses/i2c-sis630.c
-@@ -478,7 +478,7 @@ static int sis630_setup(struct pci_dev *sis630_dev)
- 	if (!request_region(smbus_base + SMB_STS, SIS630_SMB_IOREGION,
- 			    sis630_driver.name)) {
- 		dev_err(&sis630_dev->dev,
--			"I/O Region 0x%04hx-0x%04hx for SMBus already in use.\n",
-+			"I/O Region 0x%04x-0x%04x for SMBus already in use.\n",
- 			smbus_base + SMB_STS,
- 			smbus_base + SMB_STS + SIS630_SMB_IOREGION - 1);
- 		retval = -EBUSY;
-@@ -528,7 +528,7 @@ static int sis630_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	sis630_adapter.dev.parent = &dev->dev;
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 4daa5069cbdb..561f79803c13 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -125,7 +125,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
  
- 	snprintf(sis630_adapter.name, sizeof(sis630_adapter.name),
--		 "SMBus SIS630 adapter at %04hx", smbus_base + SMB_STS);
-+		 "SMBus SIS630 adapter at %04x", smbus_base + SMB_STS);
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_prepare_sync(void);
+ void ring_buffer_read_start(struct ring_buffer_iter *iter);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index d2b609412c3a..173ff025ea75 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4039,6 +4039,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
++ * @flags: gfp flags to use for memory allocation
+  *
+  * This performs the initial preparations necessary to iterate
+  * through the buffer.  Memory is allocated, buffer recording
+@@ -4056,7 +4057,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * This overall must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -4064,7 +4065,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
  
- 	return i2c_add_adapter(&sis630_adapter);
- }
+-	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
++	iter = kmalloc(sizeof(*iter), flags);
+ 	if (!iter)
+ 		return NULL;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 69af9a1b1031..934c1a1813dd 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3047,7 +3047,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++				ring_buffer_read_prepare(iter->trace_buffer->buffer,
++							 cpu, GFP_KERNEL);
+ 		}
+ 		ring_buffer_read_prepare_sync();
+ 		for_each_tracing_cpu(cpu) {
+@@ -3057,7 +3058,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter->trace_buffer->buffer,
++						 cpu, GFP_KERNEL);
+ 		ring_buffer_read_prepare_sync();
+ 		ring_buffer_read_start(iter->buffer_iter[cpu]);
+ 		tracing_iter_reset(iter, cpu);
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index bd90e1b06088..ebbf28492573 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -46,14 +46,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu, GFP_ATOMIC);
+ 			ring_buffer_read_start(iter.buffer_iter[cpu]);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu_file, GFP_ATOMIC);
+ 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
 -- 
 2.19.1
 
