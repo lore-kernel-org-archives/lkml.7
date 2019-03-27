@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B359C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D96C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427FD206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0BB2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714031;
-	bh=01VqPdlFPIK6RNZX2Ff987mTB+xR27JBA6daZlddGLY=;
+	s=default; t=1553714043;
+	bh=dhB+nJjCKHYyE1/ZbW72elKblZJ8Gnr4w/43IGlIqCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VgTbQiSWpss+jimA+0GcvLN4PIb+WfGCh1eLm9N9H+0Rsv4GR7i4cIeoiIZef5DQ/
-	 mm+4jeSjlJLwmtJEM7pmrsHc9n8t8QdbFm6Hyk204es3DduTtWPvFGrOMNgHZYMJ7q
-	 EL46f63MLOpdVntMSL+L0KavWOS0Dwz4+awtjEic=
+	b=pzWZPvFCPEJgL5nRBEzX8KPLmT1JpRY7jOOfXNLVDD37A1dniwJDvyJB8E2RkjlMR
+	 CD9DAyRO1VnaHNlKVUbkMRrtkqPJNQHHRbezACuWZIRlzLg1Gce8JOsrmHe6a0pT8/
+	 UCBpge4wm/+3LgH8Lr4rkefmZJOHm1E/SBDCN/gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbfC0TNt (ORCPT
+        id S2388690AbfC0SJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731047AbfC0SKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:10:04 -0400
+        id S2388058AbfC0SJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F32B2184C;
-        Wed, 27 Mar 2019 18:10:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73712217F5;
+        Wed, 27 Mar 2019 18:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710203;
-        bh=01VqPdlFPIK6RNZX2Ff987mTB+xR27JBA6daZlddGLY=;
+        s=default; t=1553710193;
+        bh=dhB+nJjCKHYyE1/ZbW72elKblZJ8Gnr4w/43IGlIqCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZWpmB1D0u9jThXdFuZtEKrWZb5ZAnlEjD7gkaM7yOz47VpNq4taxePQQjGKm++O1
-         aFcEq9eYA25k0SkUeJhLn0CWqdiqQX3BRHBZRmu15oDPqz1lMjlI2+0LfssXNSZ/J2
-         VB05hi9cPY52Q4iSjlls4BPVzoMVW2jsbC1CjH1o=
+        b=zzsP0nyCapuqndupcxJCP9p+djYXjpe5KGQQJ4dgXnBNxffZvKmarM0Ak9st5UmpF
+         VkVhkpb/CWJyUmXOK4o/T5zk83OpJYpCbRck08hRbQlzuH6xFjDX2hljry1UfaO7Jc
+         YD/rYlvIx83pm7a0FoSpmoRxbjr4bRiVBjbg1YFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Wu <peter@lekensteyn.nl>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 248/262] drm/fb-helper: fix leaks in error path of drm_fb_helper_fbdev_setup
-Date:   Wed, 27 Mar 2019 14:01:43 -0400
-Message-Id: <20190327180158.10245-248-sashal@kernel.org>
+Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 244/262] selinux: do not override context on context mounts
+Date:   Wed, 27 Mar 2019 14:01:39 -0400
+Message-Id: <20190327180158.10245-244-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,64 +58,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Wu <peter@lekensteyn.nl>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-[ Upstream commit 00eb5b0da8d27b3c944bfc959c3344d665caae26 ]
+[ Upstream commit 53e0c2aa9a59a48e3798ef193d573ade85aa80f5 ]
 
-After drm_fb_helper_fbdev_setup calls drm_fb_helper_init,
-"dev->fb_helper" will be initialized (and thus drm_fb_helper_fini will
-have some effect). After that, drm_fb_helper_initial_config is called
-which may call the "fb_probe" driver callback.
+Ignore all selinux_inode_notifysecctx() calls on mounts with SBLABEL_MNT
+flag unset. This is achived by returning -EOPNOTSUPP for this case in
+selinux_inode_setsecurtity() (because that function should not be called
+in such case anyway) and translating this error to 0 in
+selinux_inode_notifysecctx().
 
-This driver callback may call drm_fb_helper_defio_init (as is done by
-drm_fb_helper_generic_probe) or set a framebuffer (as is done by bochs)
-as documented. These are normally cleaned up on exit by
-drm_fb_helper_fbdev_teardown which also calls drm_fb_helper_fini.
+This fixes behavior of kernfs-based filesystems when mounted with the
+'context=' option. Before this patch, if a node's context had been
+explicitly set to a non-default value and later the filesystem has been
+remounted with the 'context=' option, then this node would show up as
+having the manually-set context and not the mount-specified one.
 
-If an error occurs after "fb_probe", but before setup is complete, then
-calling just drm_fb_helper_fini will leak resources. This was triggered
-by df2052cc922 ("bochs: convert to drm_fb_helper_fbdev_setup/teardown"):
+Steps to reproduce:
+    # mount -t cgroup2 cgroup2 /sys/fs/cgroup/unified
+    # chcon unconfined_u:object_r:user_home_t:s0 /sys/fs/cgroup/unified/cgroup.stat
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.threads
+    # umount /sys/fs/cgroup/unified
+    # mount -o context=system_u:object_r:tmpfs_t:s0 -t cgroup2 cgroup2 /sys/fs/cgroup/unified
 
-    [   50.008030] bochsdrmfb: enable CONFIG_FB_LITTLE_ENDIAN to support this framebuffer
-    [   50.009436] bochs-drm 0000:00:02.0: [drm:drm_fb_helper_fbdev_setup] *ERROR* fbdev: Failed to set configuration (ret=-38)
-    [   50.011456] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 2
-    [   50.013604] WARNING: CPU: 1 PID: 1 at drivers/gpu/drm/drm_mode_config.c:477 drm_mode_config_cleanup+0x280/0x2a0
-    [   50.016175] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G                T 4.20.0-rc7 #1
-    [   50.017732] EIP: drm_mode_config_cleanup+0x280/0x2a0
-    ...
-    [   50.023155] Call Trace:
-    [   50.023155]  ? bochs_kms_fini+0x1e/0x30
-    [   50.023155]  ? bochs_unload+0x18/0x40
+Result before:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.threads
 
-This can be reproduced with QEMU and CONFIG_FB_LITTLE_ENDIAN=n.
+Result after:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.threads
 
-Link: https://lkml.kernel.org/r/20181221083226.GI23332@shao2-debian
-Link: https://lkml.kernel.org/r/20181223004315.GA11455@al
-Fixes: 8741216396b2 ("drm/fb-helper: Add drm_fb_helper_fbdev_setup/teardown()")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Cc: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Peter Wu <peter@lekensteyn.nl>
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181223005507.28328-1-peter@lekensteyn.nl
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_fb_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/selinux/hooks.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 70fc8e356b18..edd8cb497f3b 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -2891,7 +2891,7 @@ int drm_fb_helper_fbdev_setup(struct drm_device *dev,
- 	return 0;
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index cf20dd36a30f..07b11b5aaf1f 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3244,12 +3244,16 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+ 				     const void *value, size_t size, int flags)
+ {
+ 	struct inode_security_struct *isec = inode_security_novalidate(inode);
++	struct superblock_security_struct *sbsec = inode->i_sb->s_security;
+ 	u32 newsid;
+ 	int rc;
  
- err_drm_fb_helper_fini:
--	drm_fb_helper_fini(fb_helper);
-+	drm_fb_helper_fbdev_teardown(dev);
+ 	if (strcmp(name, XATTR_SELINUX_SUFFIX))
+ 		return -EOPNOTSUPP;
  
- 	return ret;
++	if (!(sbsec->flags & SBLABEL_MNT))
++		return -EOPNOTSUPP;
++
+ 	if (!value || !size)
+ 		return -EACCES;
+ 
+@@ -6398,7 +6402,10 @@ static void selinux_inode_invalidate_secctx(struct inode *inode)
+  */
+ static int selinux_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
+ {
+-	return selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX, ctx, ctxlen, 0);
++	int rc = selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX,
++					   ctx, ctxlen, 0);
++	/* Do not return error when suppressing label (SBLABEL_MNT not set). */
++	return rc == -EOPNOTSUPP ? 0 : rc;
  }
+ 
+ /*
 -- 
 2.19.1
 
