@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC0EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284ADC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B4F205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C0E205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712734;
-	bh=kvkCwcHxhjJCvdDnaatwvmnKYzQOI7wCcLz8mpqrU+M=;
+	s=default; t=1553712739;
+	bh=FYMtKjHmBTqNTrOMBJX7ZRwd93MDXAZLnKlWJmMW6XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMdWK+ZjIGP9PLhkbkOf532bd0CHRVUmFFM7jHEF3PF+VmfhUPPmiiZjAF+qzCzTU
-	 nkPSgn1tlglCMgfm3d0TQwpUgWLerdmW+DrhJRQga9PEMTwFMy5SlseuG/FZz1W675
-	 VoqixQLjZzsKtcsSP448t81mRccJDo3NWrBzpHQM=
+	b=OeMV3oPeU0GBMOpG0/Qp57vauIdMwz1c8CsfPqkV7izr3FIQHnj16h/7EYihJJQ6b
+	 2fMXzogLAXV1LRPROA9fZvL0t/59Bwwx/jgPjjrKsKPR5QAd00ApmOOU2khfUmT4pk
+	 TtxbQoiJHfhkyYovQv0fa4vN5FObmQPA8K/V9ytI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389765AbfC0SRu (ORCPT
+        id S2390729AbfC0SwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388074AbfC0SRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:17:34 -0400
+        id S2390371AbfC0SRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:17:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A50A420449;
-        Wed, 27 Mar 2019 18:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B1922087C;
+        Wed, 27 Mar 2019 18:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710653;
-        bh=kvkCwcHxhjJCvdDnaatwvmnKYzQOI7wCcLz8mpqrU+M=;
+        s=default; t=1553710668;
+        bh=FYMtKjHmBTqNTrOMBJX7ZRwd93MDXAZLnKlWJmMW6XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OsOU4GczQaVCbBSDcHBAAQY9npV0AMUQ8Uom1NPXX79h1+NfePEjK8/DochSKBect
-         hqhXvf+oGA97vwEHvBbrdIokRFlG7JORKOe4yjkjc9pgHZ7FgAfu6kApkmvKpw9dyq
-         be+9CGHQuZbpsXMsi529Xuzre4FQAkufbHdPeAsQ=
+        b=YMQW32wZXlSTJnoXokTRBFT5XebEhFwMVBesF0mTRJqEYDCfuuek/f0fVvV+Rg7Nk
+         hNnTLZiTN8GbU4mVdaGQMewLqK+BmOC1QVEn+BudrvLaWfhBGY8YZrF3nCrt1C0KmZ
+         DZFkFfU1YGHfwi4yaSX7cKJZbyW67ShnWlG7coN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 034/123] crypto: crypto4xx - add missing of_node_put after of_device_is_available
-Date:   Wed, 27 Mar 2019 14:14:58 -0400
-Message-Id: <20190327181628.15899-34-sashal@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 042/123] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
+Date:   Wed, 27 Mar 2019 14:15:06 -0400
+Message-Id: <20190327181628.15899-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -57,62 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
+[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
 
-Add an of_node_put when a tested device node is not available.
+L1 tables are allocated with __get_dma_pages, and therefore already
+ignored by kmemleak.
 
-The semantic patch that fixes this problem is as follows
-(http://coccinelle.lip6.fr):
+Without this, the kernel would print this error message on boot,
+when the first L1 table is allocated:
 
-// <smpl>
-@@
-identifier f;
-local idexpression e;
-expression x;
-@@
+[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
+[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
+[    2.831227] Workqueue: events deferred_probe_work_func
+[    2.836353] Call trace:
+...
+[    2.852532]  paint_ptr+0xa0/0xa8
+[    2.855750]  kmemleak_ignore+0x38/0x6c
+[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
+[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
+[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
+...
 
-e = f(...);
-... when != of_node_put(e)
-    when != x = e
-    when != e = x
-    when any
-if (<+...of_device_is_available(e)...+>) {
-  ... when != of_node_put(e)
-(
-  return e;
-|
-+ of_node_put(e);
-  return ...;
-)
-}
-// </smpl>
-
-Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 677ca17fd223..368c5599515e 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index 29b7a6755fcd..56368c8bd791 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -217,7 +217,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
+ 		if (dma != phys)
+ 			goto out_unmap;
+ 	}
+-	kmemleak_ignore(table);
++	if (lvl == 2)
++		kmemleak_ignore(table);
+ 	return table;
  
- 	/* Find the TRNG device node and map it */
- 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
--	if (!trng || !of_device_is_available(trng))
-+	if (!trng || !of_device_is_available(trng)) {
-+		of_node_put(trng);
- 		return;
-+	}
- 
- 	dev->trng_base = of_iomap(trng, 0);
- 	of_node_put(trng);
+ out_unmap:
 -- 
 2.19.1
 
