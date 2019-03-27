@@ -4,61 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680CAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B9EC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399E921734
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E35021734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709937;
-	bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
+	s=default; t=1553709941;
+	bh=q0zk8KEDQEgvh8ubdaJsH166k3Oq1SumMRWSL2h0ha0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jIdv1TPtEzisUzadyXqM5X7kEx6A4UtP6dwORVghVtGGDK3ZQOl9iCn3+Z7OS49ec
-	 sqv+nYiO+aT/6Gtgl0oZrhuy5i6HZmXQrJReYnDz5a4eNvcH8g3tK6W7DrWN+LQApd
-	 4p0QuTXs5Pwei4mmCqdHCm8tE7OZAWVN4W58gsv8=
+	b=2o3oYnKyUTv5Y1udOiwsX8aH6W91amLHSGagmbwu+7i7T1JbV9r0vk+I5OgAP95bw
+	 Cl0ssB2UGX6sd89CcwHWUdTA9Sd6DvBneC07WJ+3zpFVcGKGivgZU6v7FGtsfkEAqH
+	 id8LmLO+G6Ab9tgjrd6/htRNevk4Q2gzXb4WQ5n0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732695AbfC0SFf (ORCPT
+        id S2387761AbfC0SFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387721AbfC0SFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:31 -0400
+        id S2387721AbfC0SFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72320217F9;
-        Wed, 27 Mar 2019 18:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 966832075C;
+        Wed, 27 Mar 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709931;
-        bh=TfJu8wyhrjGqEs8YMbzF5xb8e6sBLHmcYhsNjOCYKx8=;
+        s=default; t=1553709936;
+        bh=q0zk8KEDQEgvh8ubdaJsH166k3Oq1SumMRWSL2h0ha0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCavE9D3WEGTDgaVosLXqQE/YRwh1yh3RdhmUp4zXi6MV7iADlLmGwiC+IIUDRwZN
-         O6lk3F7l68fibbr1hwtzD36ObACu90xMuy94ftksAN4lOYJ4e/H9a+/PxT3hdk7tA6
-         tOL3ukAHpqMDzhBmuy1IbVkbm9QkgYWRKGxo/A48=
+        b=Ajrx0r5V5I9eoz3EefDAQoOfpAvhcpBFL/jUby+BeiYxqS+L4qHU6ESGkMTebJomv
+         MqInvVw2l2tYuZuhwlNtR5nub7mQEtvYkBj3m2Oye2fbPV2GJAYwDB7c+2PEXI34ln
+         MMWtKvKWJhIoO6MAE664EjXyAEmrO10q54OPb92g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 118/262] SoC: imx-sgtl5000: add missing put_device()
-Date:   Wed, 27 Mar 2019 13:59:33 -0400
-Message-Id: <20190327180158.10245-118-sashal@kernel.org>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 121/262] media: s5p-jpeg: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 13:59:36 -0400
+Message-Id: <20190327180158.10245-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -70,56 +59,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <yellowriver2010@hotmail.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit 4a88f89885c7cf65c62793f385261a6e3315178a ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 38 ++++++++++-----------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index c29200cf755a..9b9a7ec52905 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -108,6 +108,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 3f9000b70385..4b47d9f42117 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -793,14 +793,14 @@ static void skip(struct s5p_jpeg_buffer *buf, long len);
+ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, x, components;
+ 
+ 	jpeg_buffer.size = 2; /* Ls */
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sos + 2;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sos + 2;
+ 	jpeg_buffer.curr = 0;
+ 
+ 	word = 0;
+@@ -830,14 +830,14 @@ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, n, j;
+ 
+ 	for (j = 0; j < ctx->out_q.dht.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dht.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dht.marker[j];
+ 		jpeg_buffer.curr = 0;
+ 
+@@ -889,13 +889,13 @@ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	int c, x, components;
+ 
+ 	jpeg_buffer.size = ctx->out_q.sof_len;
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sof;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sof;
+ 	jpeg_buffer.curr = 0;
+ 
+ 	skip(&jpeg_buffer, 5); /* P, Y, X */
+@@ -920,14 +920,14 @@ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_q_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, j;
+ 
+ 	for (j = 0; j < ctx->out_q.dqt.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dqt.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dqt.marker[j];
+ 		jpeg_buffer.curr = 0;
+ 
+@@ -2072,15 +2072,15 @@ static void s5p_jpeg_device_run(void *priv)
+ {
+ 	struct s5p_jpeg_ctx *ctx = priv;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	unsigned long src_addr, dst_addr, flags;
+ 
+ 	spin_lock_irqsave(&ctx->jpeg->slock, flags);
+ 
+ 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-	src_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	dst_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
++	src_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
++	dst_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+ 
+ 	s5p_jpeg_reset(jpeg->regs);
+ 	s5p_jpeg_poweron(jpeg->regs);
+@@ -2153,7 +2153,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size, padding_bytes = 0;
+ 
+@@ -2172,7 +2172,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		vb = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
  	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+ 
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size - padding_bytes;
+@@ -2190,7 +2190,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2198,7 +2198,7 @@ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	if (jpeg->variant->version == SJPEG_EXYNOS5433 &&
+ 	    ctx->mode == S5P_JPEG_DECODE)
+ 		jpeg_addr += ctx->out_q.sos;
+@@ -2314,7 +2314,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size;
+ 
+@@ -2328,7 +2328,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		fmt = ctx->cap_q.fmt;
+ 	}
+ 
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size;
+@@ -2346,7 +2346,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2354,7 +2354,7 @@ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	exynos3250_jpeg_jpgadr(jpeg->regs, jpeg_addr);
+ }
+ 
 -- 
 2.19.1
 
