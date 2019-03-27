@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85C5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B16C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C992177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831572075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553709923;
-	bh=3viYCtu81UAAKhQ6NUnzOSWUlL6JSP2ZXor9Eq2z3Lk=;
+	s=default; t=1553709930;
+	bh=TGEWCY/rvzWzZ9YrYMXVfiNXzxSPUBhPdrFq5cU5Us4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovVGxrxBf/Ovvc9pPoep31wUxNBTCgpIw4MyH0Iq7A+2OWaO/+kgsFd8DWcm+V3us
-	 jOpd5WbHW3H22fycFG4RYi/y12iJW1/PnztUKyL+Q0otfmqfG7DMMTG9LFGJ3njXVC
-	 gzBP402RqLfanEKy39VsDXMwmE+Cfvr6eR7F80Pk=
+	b=kvcsenPMXvvoQepEXgBeFTjz4X6aWic0QsrTFmJJHD6zD7EWjKCTvpWymYqj2R2Kk
+	 P5xGeOhjqRoyvKlLfVimC/Pq1iizoPd3jGFpwVPqk+iu7kv3dxet2dCz1sSX5WRaMP
+	 k7Qm+Tkeetsy+1Nt36Vn5QF+ien7PaF8sQLnSpeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732539AbfC0SFW (ORCPT
+        id S2387715AbfC0SF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387660AbfC0SFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:18 -0400
+        id S2387677AbfC0SFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0AD0217D9;
-        Wed, 27 Mar 2019 18:05:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B55217F9;
+        Wed, 27 Mar 2019 18:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709917;
-        bh=3viYCtu81UAAKhQ6NUnzOSWUlL6JSP2ZXor9Eq2z3Lk=;
+        s=default; t=1553709925;
+        bh=TGEWCY/rvzWzZ9YrYMXVfiNXzxSPUBhPdrFq5cU5Us4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuFLMFWlC531nSadTMsd1Ip4WxFaOxZ6DYlfwwrel1ECN0QPX5aQj9CQ1Vm4zvry9
-         OXWdVKwHsvAuoYW584hfOXoE0R4agMc/B0iAB+6dmQL2QULLV1c80dXWiNgiwJ4pB8
-         4wkhMyoVsY4nqoQb1F4Hw+EO8eD4hEwlv/nrEYi0=
+        b=1h4BKuPNweDNADW1ffCRCDt1qF1naEkH1s/hBoTyeZoRcsWJSIn2So/gZkuJZIGMK
+         vqaHIqAP+4d4YOBQiejCFhDqcaxV35dSWykbczgLZBYqUVZDdQUBT4rJFCzxkJ5OEU
+         Onap/9qsHSobyhFQB+Vko56Qe6Mk0I22ZeejXGoc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 112/262] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 27 Mar 2019 13:59:27 -0400
-Message-Id: <20190327180158.10245-112-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 116/262] mwifiex: don't advertise IBSS features without FW support
+Date:   Wed, 27 Mar 2019 13:59:31 -0400
+Message-Id: <20190327180158.10245-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,79 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+[ Upstream commit 6f21ab30469d670de620f758330aca9f3433f693 ]
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+As it is, doing something like
 
-    megasas_init_adapter_fusion()
+  # iw phy phy0 interface add foobar type ibss
 
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
+on a firmware that doesn't have ad-hoc support just yields failures of
+HostCmd_CMD_SET_BSS_MODE, which happened to return a '-1' error code
+(-EPERM? not really right...) and sometimes may even crash the firmware
+along the way.
 
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
+Let's parse the firmware capability flag while registering the wiphy, so
+we don't allow attempting IBSS at all, and we get a proper -EOPNOTSUPP
+from nl80211 instead.
 
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: e267e71e68ae ("mwifiex: Disable adhoc feature based on firmware capability")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index fcbff83c0097..c9811d1aa007 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4188,6 +4188,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
- 	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 1467af22e394..883752f640b4 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -4310,11 +4310,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->mgmt_stypes = mwifiex_mgmt_stypes;
+ 	wiphy->max_remain_on_channel_duration = 5000;
+ 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+-				 BIT(NL80211_IFTYPE_ADHOC) |
+ 				 BIT(NL80211_IFTYPE_P2P_CLIENT) |
+ 				 BIT(NL80211_IFTYPE_P2P_GO) |
+ 				 BIT(NL80211_IFTYPE_AP);
  
- 	return 0;
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
++
+ 	wiphy->bands[NL80211_BAND_2GHZ] = &mwifiex_band_2ghz;
+ 	if (adapter->config_bands & BAND_A)
+ 		wiphy->bands[NL80211_BAND_5GHZ] = &mwifiex_band_5ghz;
+@@ -4374,11 +4376,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->available_antennas_tx = BIT(adapter->number_of_antenna) - 1;
+ 	wiphy->available_antennas_rx = BIT(adapter->number_of_antenna) - 1;
+ 
+-	wiphy->features |= NL80211_FEATURE_HT_IBSS |
+-			   NL80211_FEATURE_INACTIVITY_TIMER |
++	wiphy->features |= NL80211_FEATURE_INACTIVITY_TIMER |
+ 			   NL80211_FEATURE_LOW_PRIORITY_SCAN |
+ 			   NL80211_FEATURE_NEED_OBSS_SCAN;
+ 
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->features |= NL80211_FEATURE_HT_IBSS;
++
+ 	if (ISSUPP_RANDOM_MAC(adapter->fw_cap_info))
+ 		wiphy->features |= NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR |
+ 				   NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR |
 -- 
 2.19.1
 
