@@ -2,115 +2,105 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF258C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED494C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A454D21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89932082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="igZAXwuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfC0WUS (ORCPT
+        id S1728156AbfC0WXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:20:18 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:57850 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbfC0WUR (ORCPT
+        Wed, 27 Mar 2019 18:23:11 -0400
+Received: from sonic302-28.consmr.mail.gq1.yahoo.com ([98.137.68.154]:40556
+        "EHLO sonic302-28.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727949AbfC0WXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:20:17 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 74A0072CC64;
-        Thu, 28 Mar 2019 01:20:14 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 65CED7CC74C; Thu, 28 Mar 2019 01:20:14 +0300 (MSK)
-Date:   Thu, 28 Mar 2019 01:20:14 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
-Message-ID: <20190327222014.GA32540@altlinux.org>
-References: <20190228192746.GA13021@embeddedor>
- <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de>
- <20190326151244.GC16837@redhat.com>
- <20190327012606.GA16532@altlinux.org>
- <alpine.DEB.2.21.1903271527110.1789@nanos.tec.linutronix.de>
+        Wed, 27 Mar 2019 18:23:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1553725387; bh=ueiVI00k5m8nsgXBS6wbvjI/In5zeVy+hAOsEd3t680=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=igZAXwuKk93n7Y8HieVo1lNpv/apZYp8Ob8N+3dYi6LnVSEYzJHzaAB7ZBEdoGSW7oKQ6uo7PDX8Cxm+OYNLH/N1zR2mhL6RdG61nTrFfDXiXa/p4CayKI56WVByQGTDRPSbNP70rJH4tHovZXGOkV2vD6d5inaw5rdl90FhCtpP85Iw4S2pT0VF2NWTs5n+qjj2ea3U+vpiqxilnqaysT7aixYixq4EV3524aOYdo9SjuAAgMfuQqozTA4HYEJwjYqko7e/JpFDI3qtbJIMy0I4iq0xdpRWdEQfhtuLLrVdnBmScqbtlmE5pT5P5RM+on3uTcfL4tdrtuBfaZG1tw==
+X-YMail-OSG: _Ob_3IMVM1mEBM3nVZsMw6giyYaLx3lIHsYiJDmJnptTy5EUtSUXPZciHF5Wbnx
+ SkI4VImMlvKzwv.UiacYVRNnEfEExts_P.7muaa_M1fPvrMlDWuJrI0m8Hwfuz1qBWivEs1MUEmz
+ Oc.QJKqmh2RNyliKW8wyCx2DfwAUi_ekcdlIH6WdLEbpGqa1pwu2bnjmwUGWgR8zgMUzcUcKtjhD
+ fbcvrBy0oV0LJct04eed9HKUFRyFfIWVn4bEg9mCM4NlBGlsAcC303nkg7C8afBEA8_buHgxSPom
+ LR2g79M9bCUx2BN.hEJTFvPHifJ3WCZssl_OZRTUKrZQt7sJ.wLc9pZO2ge4swZUj5PY_Kp92BsS
+ WeZGR02Yn0t69PBVvS3rkmouZ5TdJvWGin935ifYc0FgoDfhPqT53GN6QkEUaaEQz9ScCyeJwHy8
+ eTCwtEdau1Qja9WxiJJClQw9xO3rfbwUtzzxTV49UC2sPs4LowYq6S58J_HDnOPq8kVA8dbuWHic
+ nW.a8Oys9Om8IOhrQ67poE77QqSJpjPyZaS_6xEoElCHYYy05CWnE6FytIvEIze6G0FufGFoPmok
+ j0.MoBlPFaTy22V0hyazQsyt36dlasCzYZSH7Qyh98rogHQxUdGqXKyHYg00G16.jp9XhhkeGr.l
+ zMCpLA_fvWdh7zoJrnDlByyvku3Ke_aGB1obiTEPWyVVccmLAQ1u.rqnSynMI9bSRVAJ3Pkp4o9W
+ 9a54U1P9Jr2wCMi_ie4P0o09d7ZwUZ.5T7A6TyamcGTBaiF5hYL4Kb5eOpiZAYeckBCFfVwdQFBM
+ DnVZvdEv95STu0Ipl61PxcOC4LQG2lgwG90ub3IbI2OHZtkgWqwKY0_qipf9Y_2cfV9MH7JRKJmd
+ VHflAo4E.ZHdY4fAZp4E_XeFIZBEZb297BiuK7uvx2tT7gEx5YspSugPHANu4lhs3yywYjG.aZpW
+ wfNSqYXRYuRseSqR1f_FFnWBtmPP71Pxq2ew1DP4f4OVftsKKJ9Thps6lZ1j.aggQbggnH0jZT.S
+ DjTyiFCJy.y5oBfAocPvOrSJFT_hDR8L.PYRCYbhhfoTxT1a1gbE.JMPzzf7Ar5YSayBWwa1m_qp
+ yWwpr9hb7KA8f7f7.wygjshY-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.gq1.yahoo.com with HTTP; Wed, 27 Mar 2019 22:23:07 +0000
+Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
+          by smtp403.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID b6479920000130207a67c9c69c115433;
+          Wed, 27 Mar 2019 22:23:07 +0000 (UTC)
+Subject: Re: Linux 5.1-rc2
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+References: <CAHk-=wgg_PRWs3a6u2gnFLQjhxOJcrFkqqWVnLw60eQAwD-DNw@mail.gmail.com>
+ <2d4f3bfa-22c7-a18c-3902-fe1b6ac401f7@infradead.org>
+ <alpine.LRH.2.21.1903260607500.13529@namei.org>
+ <8811b2e4-28e1-2f01-024b-fb7d0196483f@i-love.sakura.ne.jp>
+ <CAGXu5jJZ1H1RFMFBxPsoBW+T17ya+50-d7-31Gr9ciRgpCOaDA@mail.gmail.com>
+ <98289cd2-095a-f0cd-e405-887ecbba0030@i-love.sakura.ne.jp>
+ <CAGXu5jKWECKxksJWPpCkBKG+wB26DhYK=nYBpuuoS+Pv9AsNwQ@mail.gmail.com>
+ <e1f6f5a6-9fce-2e95-4593-79f1e836bac5@i-love.sakura.ne.jp>
+ <CAGXu5jL0YzgQR_p9otyOX4+00a0i7Tfv9aLqauZFZs4-Kfjakg@mail.gmail.com>
+ <ea75aace-a493-b2fa-1fef-d6ae76085c39@i-love.sakura.ne.jp>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <d067619e-8c7f-94ec-a835-fc86d1b449e3@schaufler-ca.com>
+Date:   Wed, 27 Mar 2019 15:23:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903271527110.1789@nanos.tec.linutronix.de>
+In-Reply-To: <ea75aace-a493-b2fa-1fef-d6ae76085c39@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/27/2019 3:05 PM, Tetsuo Handa wrote:
+> On 2019/03/28 6:43, Kees Cook wrote:
+>>>> I don't see problems for an exclusive LSM user (AA, SELinux, Smack)
+>>>> also initializing TOMOYO, though. It should be a no-op. Is there some
+>>>> situation where this is not true?
+>>> There should be no problem except some TOMOYO messages are printed.
+>> Okay, so I should send my latest version of the patch to James? Or do
+>> you explicitly want TOMOYO removed from all the CONFIG_LSM default
+>> lines except when selected by CONFIG_DEFAULT_SECURITY_TOMOYO? (I worry
+>> the latter will lead to less testing of the stacking.)
+>>
+> My approach is "opt-in" while your approach is "opt-out". And the problem
+> here is that people might fail to change CONFIG_LSM from the default value
+> to what they need. (And Jakub did not change CONFIG_LSM to reflect
+> CONFIG_DEFAULT_SECURITY_APPARMOR from the old config.) Thus, I suggest
+> "opt-in" approach; which includes up to only one legacy major LSM and allows
+> people to change the default value to include multiple legacy major LSMs.
+>
+> You can propose your latest version. If SELinux/Smack/AppArmor people
+> prefer "opt-out" approach, I'm fine with "opt-out" approach.
 
---BXVAT5kNtrzKuDFl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In the long haul we want people to use CONFIG_LSM to set their
+list of modules. Providing a backward compatible CONFIG_DEFAULT_SECURITY_BLAH
+makes some sense, but it's important that we encourage a mindset change.
+Maybe with CONFIG_DEFAULT_SECURITY_LIST with a a full list, which uses the
+value from CONFIG_LSM, and make it the default?
 
-On Wed, Mar 27, 2019 at 03:29:16PM +0100, Thomas Gleixner wrote:
-> On Wed, 27 Mar 2019, Dmitry V. Levin wrote:
-> > On Tue, Mar 26, 2019 at 04:12:45PM +0100, Oleg Nesterov wrote:
-> > > On 03/23, Thomas Gleixner wrote:
-> > [...]
-> > > >  2) syscall_set_arguments() has been introduced in 2008 and we stil=
-l have
-> > > >     no caller. Instead of polishing it, can it be removed completel=
-y or are
-> > > >     there plans to actually use it?
-> > >=20
-> > > I think it can die.
-> >=20
-> > When PTRACE_GET_SYSCALL_INFO is finally squeezed into the kernel,
-> > we could discuss adding PTRACE_SET_SYSCALL_INFO as well, and it
-> > will need syscall_set_arguments().
->=20
-> So if that ever happens, then adding the code back isn't rocket
-> science. But if not, then there is no point in carrying the dead horse
-> around another 11 years.
-
-Given that it took me roughly 4 months to get a relatively simple revert
-of commit 5e937a9ae913 accepted into linux-next, adding the code back
-might be time-consuming.
-
-Could we delay the removal of syscall_set_arguments() until
-PTRACE_GET_SYSCALL_INFO is merged into the kernel?
-I hope it won't take another 11 years.
-
-
---=20
-ldv
-
---BXVAT5kNtrzKuDFl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcm/ceAAoJEAVFT+BVnCUIEE8QALYlKI6C3NwfhOKR/dR7HX+P
-RPjSGvTsGqP6qvOn0WTMaab2nuU2YnyM0k+dnuQIKqbPChWiWzYdhtBCCJGGsnHo
-f9HxIguGBwTvUL3B7QvB6iYw0vPG+aZ/S1Bj3gswwDvmQqPMZOLxJtLnUUX9r8zA
-EkobwgBp/kr44VycJIPkAifCvpri53Bf84e6aGsaUvJzRLlYBubIuoSi0SbNX7lC
-wmOcanjcFB/FcbXPwyDiyXmhLfs5V36Lq2C84IIDzqDeDp9SSR7v7Sw/GBmUcIQa
-NWcpn9zOYGpD1Vex3/CvBiGPcZauVJgZsiNgU5uO5Ms5SXhPdgAL9dl9Bmyaycqx
-qTTW821o3xTwdhOAYUJUStS7ZzQLPqUNKxJA9gaiY/D73I9cm/YK/H6D8AY0wG+d
-CSk7xY9648B2ioN16bsZgJCrh3Qzy4iLPY1fyd5WkTDf1dKxCwgHU30o9VwQdDn5
-Ptf0KuxwJx4c+rFZhqGPeSWcT13+Y80tbixwsVUvy+rwEtOSVKH3knfc/hSWasvc
-INDXY1+SNKf+J+d/riM1l7zlu3UwG+NPwCzvVbITa5CAqHplReEmPntjs7WdfPV/
-wIYBV0CmpfWp17cw8k0rTnEKFFWPgSCeT9aBTHFZdPZ9IEaFNtnNxD+wHsbwNBli
-85U7SHuwXllNC2nE+wc6
-=bttL
------END PGP SIGNATURE-----
-
---BXVAT5kNtrzKuDFl--
