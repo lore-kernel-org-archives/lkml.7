@@ -2,246 +2,86 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3B6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6251C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E300820700
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9838921734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 13:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553692411;
+	bh=ldyO8hXl6NzVcqV0X1ccrFDZLQrtwPRyFbaP5VC0zIY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PGxS0OtBYlRtk1vM7E7yr2sIiKrscd7p32wFlZpNGQYxMKPRO9t2aUkKqfIVM76ig
+	 73OEW1DMpiwADBshRlfDFLQGK11oDi3MH7pJbzKRBASCEVQcphAPm9IAedt0qvgTpo
+	 YENoQ3rn6P25IL7nX5/VAYMSQ5RZpJJClyUZfMvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbfC0NNO (ORCPT
+        id S1729783AbfC0NNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 09:13:14 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42667 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728101AbfC0NNN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 09:13:13 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TNmZ5u._1553691737;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TNmZ5u._1553691737)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 Mar 2019 21:02:18 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     alex.shi@linux.alibaba.com, harryxiyou@gmail.com, corbet@lwn.net,
-        leoyang.li@nxp.com, linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 04/42] docs/zh_CN: add Chinese 1.Intro file
-Date:   Wed, 27 Mar 2019 21:01:10 +0800
-Message-Id: <20190327130148.3258-5-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.856.g8858448bb
-In-Reply-To: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
-References: <20190327130148.3258-1-alex.shi@linux.alibaba.com>
+        Wed, 27 Mar 2019 09:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728101AbfC0NN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 09:13:29 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BA221773;
+        Wed, 27 Mar 2019 13:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553692409;
+        bh=ldyO8hXl6NzVcqV0X1ccrFDZLQrtwPRyFbaP5VC0zIY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tvwsQFJTuDVfa0jegPO6stpVEPdegcd4DGBpNy01AP+MmfeXwG9taBFRCzQ2xwppB
+         dYWXqjcCAOOIBES4HAy/gHp0udoDplgKGiF7wxMMKQQEQ5M6VAbiM0IW6g+Wlfxc9q
+         GNSbnORYS3sEDElxYqJFwykSx6SCjNIM6kLhd3Rc=
+Received: by mail-qt1-f181.google.com with SMTP id d13so13999367qth.5;
+        Wed, 27 Mar 2019 06:13:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAU2rETCSX6KsC8WKgaiUiWiGN3QyrkVv6r4aLCIsxm5pxgMRjJU
+        lPcxcWheIRwBEz2J7pScbKtQKkHhQYSkisZRwg==
+X-Google-Smtp-Source: APXvYqz8FVRPXTmPYEoUGBnOPU0JvMFcTskTfjhJQPvgWJY6PudZW1ULZBglipzA6zR6RS1csLuD+qXwHjzp3eo9BTI=
+X-Received: by 2002:ac8:7647:: with SMTP id i7mr29089899qtr.38.1553692408279;
+ Wed, 27 Mar 2019 06:13:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190326133938.oitfjxlx2kou26lm@arbad>
+In-Reply-To: <20190326133938.oitfjxlx2kou26lm@arbad>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 27 Mar 2019 08:13:17 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
+Message-ID: <CAL_JsqKV1Qy05oX9wm+Fz1HAkAEe4gE3whCNvafPfxsg6hgp8A@mail.gmail.com>
+Subject: Re: [PATCH v2] devantech-srf04.yaml: transform DT binding to YAML
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the Chinese version of 1.Intro.rst file.
+On Tue, Mar 26, 2019 at 8:40 AM Andreas Klinger <ak@it-klinger.de> wrote:
+>
+> devantech-srf04.yaml: yaml devicetree binding for iio ultrasonic
+> proximity driver of devantech srf04
+>
+> use devantech-srf04.txt, transform binding into yaml and remove the
+> outdated DT documentation
+>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ----------
+>  .../bindings/iio/proximity/devantech-srf04.yaml    | 59 ++++++++++++++++++++++
+>  2 files changed, 59 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Harry Wei <harryxiyou@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../translations/zh_CN/process/1.Intro.rst    | 181 ++++++++++++++++++
- 1 file changed, 181 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/process/1.Intro.rst
-
-diff --git a/Documentation/translations/zh_CN/process/1.Intro.rst b/Documentation/translations/zh_CN/process/1.Intro.rst
-new file mode 100644
-index 000000000000..0da4b70a27db
---- /dev/null
-+++ b/Documentation/translations/zh_CN/process/1.Intro.rst
-@@ -0,0 +1,181 @@
-+.. _cn_development_process_intro:
-+
-+介绍
-+====
-+
-+执行摘要
-+--------
-+
-+本节的其余部分涵盖了内核开发过程的范围，以及开发人员及其雇主在这方面可能遇
-+到的各种挫折。内核代码应该合并到正式的（“主线”）内核中有很多原因，包括对用
-+户的自动可用性、多种形式的社区支持以及影响内核开发方向的能力。提供给Linux
-+内核的代码必须在与GPL兼容的许可证下可用。
-+
-+:ref:`cn_development_process` 介绍了开发过程、内核发布周期和合并窗口的机制。
-+涵盖了补丁开发、审查和合并周期中的各个阶段。有一些关于工具和邮件列表的讨论。
-+鼓励希望开始内核开发的开发人员作为初始练习跟踪并修复bug。
-+
-+
-+:ref:`cn_development_early_stage` 包括早期项目规划，重点是尽快让开发社区参与
-+
-+:ref:`cn_development_coding` 是关于编码过程的；讨论了其他开发人员遇到的几个
-+陷阱。对补丁的一些要求已经涵盖，并且介绍了一些工具，这些工具有助于确保内核
-+补丁是正确的。
-+
-+:ref:`cn_development_posting` 讨论发布补丁以供评审的过程。为了让开发社区
-+认真对待，补丁必须正确格式化和描述，并且必须发送到正确的地方。遵循本节中的
-+建议有助于确保为您的工作提供最好的接纳。
-+
-+:ref:`cn_development_followthrough` 介绍了发布补丁之后发生的事情；该工作
-+在这一点上还远远没有完成。与审阅者一起工作是开发过程中的一个重要部分；本节
-+提供了一些关于如何在这个重要阶段避免问题的提示。当补丁被合并到主线中时，
-+开发人员要注意不要假定任务已经完成。
-+
-+:ref:`cn_development_advancedtopics` 介绍了两个“高级”主题：
-+使用Git管理补丁和查看其他人发布的补丁。
-+
-+:ref:`cn_development_conclusion` 总结了有关内核开发的更多信息，附带有带有
-+指向资源的链接.
-+
-+这个文件是关于什么的
-+--------------------
-+
-+Linux内核有超过800万行代码，每个版本的贡献者超过1000人，是现存最大、最活跃
-+的免费软件项目之一。从1991年开始，这个内核已经发展成为一个最好的操作系统
-+组件，运行在袖珍数字音乐播放器、台式PC、现存最大的超级计算机以及所有类型的
-+系统上。它是一种适用于几乎任何情况的健壮、高效和可扩展的解决方案。
-+
-+随着Linux的发展，希望参与其开发的开发人员（和公司）的数量也在增加。硬件供应商
-+希望确保Linux能够很好地支持他们的产品，使这些产品对Linux用户具有吸引力。嵌入
-+式系统供应商使用Linux作为集成产品的组件，希望Linux能够尽可能地胜任手头的任务。
-+分销商和其他基于Linux的软件供应商对Linux内核的功能、性能和可靠性有着明确的
-+兴趣。最终用户也常常希望修改Linux，使之更好地满足他们的需求。
-+
-+Linux最引人注目的特性之一是这些开发人员可以访问它；任何具备必要技能的人都可以
-+改进Linux并影响其开发方向。专有产品不能提供这种开放性，这是自由软件的一个特点。
-+但是，如果有什么不同的话，内核比大多数其他自由软件项目更开放。一个典型的三个月
-+内核开发周期可以涉及1000多个开发人员，他们为100多个不同的公司
-+（或者根本没有公司）工作。
-+
-+与内核开发社区合作并不是特别困难。但是，尽管如此，许多潜在的贡献者在尝试做
-+内核工作时遇到了困难。内核社区已经发展了自己独特的操作方式，使其能够在每天
-+都要更改数千行代码的环境中顺利运行（并生成高质量的产品）。因此，Linux内核开发
-+过程与专有的开发方法有很大的不同也就不足为奇了。
-+
-+对于新开发人员来说，内核的开发过程可能会让人感到奇怪和恐惧，但这个背后有充分的
-+理由和坚实的经验。一个不了解内核社区的方式的开发人员（或者更糟的是，他们试图
-+抛弃或规避内核社区的方式）会有一个令人沮丧的体验。开发社区, 在帮助那些试图学习
-+的人的同时，没有时间帮助那些不愿意倾听或不关心开发过程的人。
-+
-+希望阅读本文的人能够避免这种令人沮丧的经历。这里有很多材料，但阅读时所做的
-+努力会在短时间内得到回报。开发社区总是需要能让内核变更好的开发人员；下面的
-+文本应该帮助您或为您工作的人员加入我们的社区。
-+
-+致谢
-+----
-+
-+本文件由jonathan corbet撰写，corbet@lwn.net。以下人员的建议使之更为完善：
-+Johannes Berg, James Berry, Alex Chiang, Roland Dreier, Randy Dunlap,
-+Jake Edge, Jiri Kosina, Matt Mackall, Arthur Marsh, Amanda McPherson,
-+Andrew Morton, Andrew Price, Tsugikazu Shibata, 和 Jochen Voß.
-+
-+这项工作得到了Linux基金会的支持，特别感谢Amanda McPherson，他看到了这香工作
-+的价值并使之发生。
-+
-+代码进入主线的重要性
-+--------------------
-+
-+有些公司和开发人员偶尔会想，为什么他们要费心学习如何与内核社区合作，并将代码
-+放入主线内核（“主线”是由Linus Torvalds维护的内核，Linux发行商将其用作基础）。
-+在短期内，贡献代码看起来像是一种可以避免的开销；仅仅将代码分开并直接支持用户
-+似乎更容易。事实上，保持代码独立（“树外”）是在经济上是错误的。
-+
-+作为说明树外代码成本的一种方法，下面是内核开发过程的一些相关方面；本文稍后将
-+更详细地讨论其中的大部分内容。考虑：
-+
-+- 所有Linux用户都可以使用合并到主线内核中的代码。它将自动出现在所有启用它的
-+  发行版上。不需要驱动程序磁盘、下载，也不需要为多个发行版的多个版本提供支持；
-+  对于开发人员和用户来说，这一切都是可行的。并入主线解决了大量的分布和支持问题
-+
-+- 当内核开发人员努力维护一个稳定的用户空间接口时，内部内核API处于不断变化之中.
-+  缺乏一个稳定的内部接口是一个深思熟虑的设计决策；它允许在任何时候进行基本的改
-+  进，并产生更高质量的代码。但该策略的一个结果是，如果要使用新的内核，任何树外
-+  代码都需要持续的维护。维护树外代码需要大量的工作才能使代码保持工作状态。
-+
-+  相反，位于主线中的代码不需要这样做，因为一个简单的规则要求进行API更改的任何
-+  开发人员也必须修复由于该更改而破坏的任何代码。因此，合并到主线中的代码大大
-+  降低了维护成本。
-+
-+- 除此之外，内核中的代码通常会被其他开发人员改进。令人惊讶的结果可能来自授权
-+  您的用户社区和客户改进您的产品。
-+
-+- 内核代码在合并到主线之前和之后都要经过审查。不管原始开发人员的技能有多强，
-+  这个审查过程总是能找到改进代码的方法。审查经常发现严重的错误和安全问题。
-+  这对于在封闭环境中开发的代码尤其如此；这种代码从外部开发人员的审查中获益
-+  匪浅。树外代码是低质量代码。
-+
-+- 参与开发过程是您影响内核开发方向的方式。旁观者的抱怨会被听到，但是活跃的
-+  开发人员有更强的声音——并且能够实现使内核更好地满足其需求的更改。
-+
-+- 当单独维护代码时，总是存在第三方为类似功能提供不同实现的可能性。如果发生
-+  这种情况，合并代码将变得更加困难——甚至到了不可能的地步。然后，您将面临以下
-+  令人不快的选择：（1）无限期地维护树外的非标准特性，或（2）放弃代码并将用户
-+  迁移到树内版本。
-+
-+- 代码的贡献是使整个过程工作的根本。通过贡献代码，您可以向内核添加新功能，并
-+  提供其他内核开发人员使用的功能和示例。如果您已经为Linux开发了代码（或者
-+  正在考虑这样做），那么您显然对这个平台的持续成功感兴趣；贡献代码是确保成功
-+  的最好方法之一。
-+
-+上述所有理由都适用于任何树外内核代码，包括以专有的、仅二进制形式分发的代码。
-+然而，在考虑任何类型的纯二进制内核代码分布之前，还需要考虑其他因素。这些包括：
-+
-+- 围绕专有内核模块分发的法律问题充其量是模糊的；相当多的内核版权所有者认为，
-+  大多数仅限二进制的模块是内核的派生产品，因此，它们的分发违反了GNU通用公共
-+  许可证（下面将详细介绍）。您的作者不是律师，本文档中的任何内容都不可能被
-+  视为法律建议。封闭源代码模块的真实法律地位只能由法院决定。但不管怎样，困扰
-+  这些模块的不确定性仍然存在。
-+
-+- 二进制模块大大增加了调试内核问题的难度，以至于大多数内核开发人员甚至都不会
-+  尝试。因此，只分发二进制模块将使您的用户更难从社区获得支持。
-+
-+- 对于只支持二进制的模块的发行者来说，支持也更加困难，他们必须为他们希望支持
-+  的每个发行版和每个内核版本提供一个版本的模块。为了提供相当全面的覆盖范围，
-+  可能需要一个模块的几十个构建，并且每次升级内核时，您的用户都必须单独升级
-+  您的模块。
-+
-+- 上面提到的关于代码评审的所有问题都更加存在于封闭源代码。由于该代码根本不可
-+  用，因此社区无法对其进行审查，毫无疑问，它将存在严重问题。
-+
-+尤其是嵌入式系统的制造商，可能会倾向于忽视本节中所说的大部分内容，因为他们
-+相信自己正在商用一种使用冻结内核版本的独立产品，在发布后不需要再进行开发。
-+这个论点忽略了广泛的代码审查的价值以及允许用户向产品添加功能的价值。但这些
-+产品也有有限的商业寿命，之后必须发布新版本的产品。在这一点上，代码在主线上
-+并得到良好维护的供应商将能够更好地占位，以使新产品快速上市。
-+
-+许可
-+----
-+
-+代码是根据一些许可证提供给Linux内核的，但是所有代码都必须与GNU通用公共许可
-+证（GPLV2）的版本2兼容，该版本是覆盖整个内核分发的许可证。在实践中，这意味
-+着所有代码贡献都由GPLv2（可选地，语言允许在更高版本的GPL下分发）或3子句BSD
-+许可（New BSD License, 译者注）覆盖。任何不包含在兼容许可证中的贡献都不会
-+被接受到内核中。
-+
-+贡献给内核的代码不需要（或请求）版权分配。合并到主线内核中的所有代码都保留
-+其原始所有权；因此，内核现在拥有数千个所有者。
-+
-+这种所有权结构的一个暗示是，任何改变内核许可的尝试都注定会失败。很少有实际
-+的场景可以获得所有版权所有者的同意（或者从内核中删除他们的代码）。因此，特
-+别是，在可预见的将来，不可能迁移到GPL的版本3。
-+
-+所有贡献给内核的代码都必须是合法的免费软件。因此，不接受匿名（或匿名）贡献
-+者的代码。所有贡献者都需要在他们的代码上“sign off”，声明代码可以在GPL下与内
-+核一起分发。无法提供未被其所有者许可为免费软件的代码，或可能为内核造成版权
-+相关问题的代码（例如，由缺乏适当保护的反向工程工作派生的代码）不能被接受。
-+
-+有关版权相关问题的问题在Linux开发邮件列表中很常见。这样的问题通常会得到不少
-+答案，但要记住，回答这些问题的人不是律师，不能提供法律咨询。如果您有关于
-+Linux源代码的法律问题，那么与了解该领域的律师交流是无法替代的。依靠从技术
-+邮件列表中获得的答案是一件冒险的事情。
-+
--- 
-2.19.1.856.g8858448bb
-
+Reviewed-by: Rob Herring <robh@kernel.org>
