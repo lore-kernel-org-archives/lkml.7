@@ -2,125 +2,264 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1ADC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A102C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDDD2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:12:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QZnKuQ42"
+	by mail.kernel.org (Postfix) with ESMTP id C763F20700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733086AbfC0KM6 (ORCPT
+        id S1732911AbfC0KPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:12:58 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3627 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726305AbfC0KM5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:12:57 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9b4ca30002>; Wed, 27 Mar 2019 03:12:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 27 Mar 2019 03:12:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 27 Mar 2019 03:12:56 -0700
-Received: from [10.24.47.154] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 Mar
- 2019 10:12:44 +0000
-Subject: Re: [PATCH 10/10] arm64: Add Tegra194 PCIe driver to defconfig
-To:     Jon Hunter <jonathanh@nvidia.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <kishon@ti.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
-        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
-        <horms+renesas@verge.net.au>, <olof@lixom.net>,
-        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
-        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
-        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
-        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
-        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
-        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
-        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-11-git-send-email-vidyas@nvidia.com>
- <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <44d7ff1d-c317-6ba2-86c0-981a6356ee9e@nvidia.com>
-Date:   Wed, 27 Mar 2019 15:42:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 27 Mar 2019 06:15:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35142 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726305AbfC0KPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 06:15:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 284E1AE7A;
+        Wed, 27 Mar 2019 10:15:18 +0000 (UTC)
+Message-ID: <0226eb8f5b20acd07e1bdd49c855e692ecad6306.camel@suse.de>
+Subject: Re: [PATCH v3] HID: core: move Usage Page concatenation to Main item
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     "Junge, Terry" <terry.junge@poly.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "oneukum@suse.de" <oneukum@suse.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 27 Mar 2019 11:15:16 +0100
+In-Reply-To: <BYAPR02MB560738248E330DF46CAA199A8A5F0@BYAPR02MB5607.namprd02.prod.outlook.com>
+References: <20190326200331.25934-1-nsaenzjulienne@suse.de>
+         <BYAPR02MB560738248E330DF46CAA199A8A5F0@BYAPR02MB5607.namprd02.prod.outlook.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-0MzzpiNQ/MdpCQZBnVyu"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-In-Reply-To: <a0491042-2f24-4ba8-754b-ba3959b77d6f@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553681571; bh=q0w7xv5B3iVJwel4fEU0DFth5diQoA+o7LlUSyXGUm0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QZnKuQ42UtuDY/QhJ1LHkU0uCevVUcMXXMWsy6cdDuYdSfjKw0X58fZLfAs1/VsSC
-         MPwW+mnexCjeUonrkyGoZuRBViojlu9DEzM4eA6XeKxdmaWVbaQDifUojeSxd8zzdU
-         WtfL9ld1+/SNP5dSYAkgKLjbAbc1fCtyQI/bUcxI8JLfAzscCfNb9cT40jGNdyBnTS
-         2bid1mkwh7mpSYNbw+K5PGKOyvz1pPki45TlIxGOW1eZg21JeZPffsvPidcc1M6PW2
-         DufOU/rIRuAdYHSWGD/gGJJ30Xs5iiOcvAc6XmNeQRy8eiNCX760NzCV4aFaII8+bd
-         PvOFXMgcjxT9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/27/2019 3:38 PM, Jon Hunter wrote:
-> 
-> On 26/03/2019 15:13, Vidya Sagar wrote:
->> Add PCIe host controller driver for DesignWare core based
->> PCIe controller IP present in Tegra194.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   arch/arm64/configs/defconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index 2d9c39033c1a..2ddea5c4e87d 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=y
->>   CONFIG_PCIE_ARMADA_8K=y
->>   CONFIG_PCIE_KIRIN=y
->>   CONFIG_PCIE_HISI_STB=y
->> +CONFIG_PCIE_TEGRA194=y
->>   CONFIG_ARM64_VA_BITS_48=y
->>   CONFIG_SCHED_MC=y
->>   CONFIG_NUMA=y
-> 
-> Maybe building as a module is more appropriate here as I am not sure
-> that anyone else will want this built-in and it is not critical to
-> booting AFAIK.
-Since the DesignWare core framework doesn't yet have support for making this
-as a module, I added it as a built-in driver. I'll switch it to a module
-once support is available.
 
-> 
-> Cheers
-> Jon
-> 
+--=-0MzzpiNQ/MdpCQZBnVyu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Terry, thanks for the review!
+
+On Tue, 2019-03-26 at 22:43 +0000, Junge, Terry wrote:
+> Hi Nicolas,
+>=20
+> This patch looks good except for one comment/question below.
+>=20
+> Thanks,
+> Terry
+>=20
+> On Tuesday, March 26, 2019 1:04 PM Nicolas Saenz Julienne <
+> nsaenzjulienne@suse.de> wrote:
+> > As seen on some USB wireless keyboards manufactured by Primax, the HID
+> > parser was using some assumptions that are not always true. In this cas=
+e
+> > it's s
+> > the fact that, inside the scope of a main item, an Usage Page will alwa=
+ys
+> > precede an Usage.
+> >=20
+> > The spec is not pretty clear as 6.2.2.7 states "Any usage that follows =
+is
+> > interpreted as a Usage ID and concatenated with the Usage Page".
+> > While 6.2.2.8 states "When the parser encounters a main item it concate=
+nates
+> > the last declared Usage Page with a Usage to form a complete usage valu=
+e."
+> > Being somewhat contradictory it was decided to match Window's
+> > implementation, which follows 6.2.2.8.
+> >=20
+> > In summary, the patch moves the Usage Page concatenation from the local
+> > item parsing function to the main item parsing function.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> >=20
+> > v2->v3: - Update patch title
+> >=20
+> > v1->v2: - Add usage concatenation to hid_scan_main()
+> > 	- Rework tests in hid-tools, making sure no-one is failing
+> >=20
+> > drivers/hid/hid-core.c | 40 ++++++++++++++++++++++++++++------------
+> > include/linux/hid.h    |  1 +
+> > 2 files changed, 29 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c index
+> > 9993b692598f..40c836ce3248 100644
+> > --- a/drivers/hid/hid-core.c
+> > +++ b/drivers/hid/hid-core.c
+> > @@ -218,13 +218,14 @@ static unsigned hid_lookup_collection(struct
+> > hid_parser *parser, unsigned type)
+> >  * Add a usage to the temporary parser table.
+> >  */
+> >=20
+> > -static int hid_add_usage(struct hid_parser *parser, unsigned usage)
+> > +static int hid_add_usage(struct hid_parser *parser, unsigned usage,
+> > +__u8 size)
+> > {
+> > 	if (parser->local.usage_index >=3D HID_MAX_USAGES) {
+> > 		hid_err(parser->device, "usage index exceeded\n");
+> > 		return -1;
+> > 	}
+> > 	parser->local.usage[parser->local.usage_index] =3D usage;
+> > +	parser->local.usage_size[parser->local.usage_index] =3D size;
+> > 	parser->local.collection_index[parser->local.usage_index] =3D
+> > 		parser->collection_stack_ptr ?
+> > 		parser->collection_stack[parser->collection_stack_ptr - 1] : 0;
+> > @@ -486,10 +487,7 @@ static int hid_parser_local(struct hid_parser *par=
+ser,
+> > struct hid_item *item)
+> > 			return 0;
+> > 		}
+> >=20
+> > -		if (item->size <=3D 2)
+> > -			data =3D (parser->global.usage_page << 16) + data;
+> > -
+> > -		return hid_add_usage(parser, data);
+> > +		return hid_add_usage(parser, data, item->size);
+> >=20
+> > 	case HID_LOCAL_ITEM_TAG_USAGE_MINIMUM:
+> >=20
+> > @@ -498,9 +496,6 @@ static int hid_parser_local(struct hid_parser *pars=
+er,
+> > struct hid_item *item)
+> > 			return 0;
+> > 		}
+> >=20
+> > -		if (item->size <=3D 2)
+> > -			data =3D (parser->global.usage_page << 16) + data;
+> > -
+> > 		parser->local.usage_minimum =3D data;
+> > 		return 0;
+> >=20
+> > @@ -511,9 +506,6 @@ static int hid_parser_local(struct hid_parser *pars=
+er,
+> > struct hid_item *item)
+> > 			return 0;
+> > 		}
+> >=20
+> > -		if (item->size <=3D 2)
+> > -			data =3D (parser->global.usage_page << 16) + data;
+> > -
+> > 		count =3D data - parser->local.usage_minimum;
+> > 		if (count + parser->local.usage_index >=3D HID_MAX_USAGES) {
+> > 			/*
+> > @@ -533,7 +525,7 @@ static int hid_parser_local(struct hid_parser *pars=
+er,
+> > struct hid_item *item)
+> > 		}
+> >=20
+> > 		for (n =3D parser->local.usage_minimum; n <=3D data; n++)
+> > -			if (hid_add_usage(parser, n)) {
+> > +			if (hid_add_usage(parser, n, item->size)) {
+> > 				dbg_hid("hid_add_usage failed\n");
+> > 				return -1;
+> > 			}
+> > @@ -547,6 +539,26 @@ static int hid_parser_local(struct hid_parser *par=
+ser,
+> > struct hid_item *item)
+> > 	return 0;
+> > }
+> >=20
+> > +/*
+> > + * Concatenate Usage Pages into Usages where relevant:
+> > + * As per specification, 6.2.2.8: "When the parser encounters a main
+> > +item it
+> > + * concatenates the last declared Usage Page with a Usage to form a
+> > +complete
+> > + * usage value."
+> > + */
+> > +
+> > +static void hid_concatenate_usage_page(struct hid_parser *parser) {
+> > +	unsigned usages;
+> > +	int i;
+> > +
+> > +	usages =3D max_t(unsigned, parser->local.usage_index,
+> > +				 parser->global.report_count);
+>=20
+> I don't think we need to worry about global.report_count here,
+> just concatenate for the usages currently in the local queue so could
+> this be simplified by removing usages and just using local.usage_index?
+>=20
+>         for (i =3D 0; i < local.usage_index; i++)
+
+Sounds about right.
+
+>=20
+> > +
+> > +	for (i =3D 0; i < usages; i++)
+> > +		if (parser->local.usage_size[i] <=3D 2)
+> > +			parser->local.usage[i] +=3D parser->global.usage_page
+> > << 16; }
+> > +
+> > /*
+> >  * Process a main item.
+> >  */
+> > @@ -556,6 +568,8 @@ static int hid_parser_main(struct hid_parser *parse=
+r,
+> > struct hid_item *item)
+> > 	__u32 data;
+> > 	int ret;
+> >=20
+> > +	hid_concatenate_usage_page(parser);
+> > +
+> > 	data =3D item_udata(item);
+> >=20
+> > 	switch (item->tag) {
+> > @@ -765,6 +779,8 @@ static int hid_scan_main(struct hid_parser *parser,
+> > struct hid_item *item)
+> > 	__u32 data;
+> > 	int i;
+> >=20
+> > +	hid_concatenate_usage_page(parser);
+> > +
+> > 	data =3D item_udata(item);
+> >=20
+> > 	switch (item->tag) {
+> > diff --git a/include/linux/hid.h b/include/linux/hid.h index
+> > f9707d1dcb58..d1fb4b678873 100644
+> > --- a/include/linux/hid.h
+> > +++ b/include/linux/hid.h
+> > @@ -417,6 +417,7 @@ struct hid_global {
+> >=20
+> > struct hid_local {
+> > 	unsigned usage[HID_MAX_USAGES]; /* usage array */
+> > +	__u8 usage_size[HID_MAX_USAGES]; /* usage size array */
+> > 	unsigned collection_index[HID_MAX_USAGES]; /* collection index
+> > array */
+> > 	unsigned usage_index;
+> > 	unsigned usage_minimum;
+> > --
+> > 2.21.0
+
+
+--=-0MzzpiNQ/MdpCQZBnVyu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlybTTQACgkQlfZmHno8
+x/7/Vgf/UiRVrv2IOVhaj2wOpE6rYHjnqeLs8LA7Y0SpFKwc51HAPwSRzjTO+L8l
+byxiE/sdqDwGtoK+1cDYO2m4zvsb41IhiE/+6yLINeV90UsEcXmN5jLA+qvHTG87
+UOCvB+UZbTjyMC7g9U+xxLKmQC12x3phKNbWL8kzyITPtzGA0hQgx7iJ0Zo/9Zcf
+MoiQR9au1prHJZ05GnjNZ/84geuKsDFWnlieJQUnHZMTTY37p9jeJRwIi6jZVghJ
+ZBeywdrV4rl5+sHkPgaX3YPO4g5mldwEbV0AMuUDuQHumUftb8ASwHiSN9T4hOph
+5MZLbTLmnZEQpBH0Pfjwp4M/yf+J2g==
+=BW3o
+-----END PGP SIGNATURE-----
+
+--=-0MzzpiNQ/MdpCQZBnVyu--
 
