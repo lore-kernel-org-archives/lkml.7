@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72BFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865EEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B542063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BAD2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710153;
-	bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
+	s=default; t=1553710159;
+	bh=6TRaSxgQjJ78zgKBLjuZr9V1KfYyKpvXETRlkqiJE+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dh9FFzI0wxSU6alfcDWlxaW4zKtk7JRbqkKiuywdhgO/yKDvz+q9EPDOwh5v4hWad
-	 P3wz4rUtxJsmzASqAtJIQEG9vAc0lZoi4Iah45VlvYPWPAsLfKq+KafbzKiOUBmPuG
-	 G3ZMgetpcwxbpY9qBRH9Uzi/tOt1i3QeVTCn4K2U=
+	b=PFYQazua4zaE7V+7Ry4eyxc3t39UQ1Mwu7PW2g6IkW7oT8XFYNhuZ8HynMMj3ThOM
+	 SIuqHwrysbk8C9mAyWdvWPowj8ERmMe9//aZwYVa3+aR3JynPE9aehfhc31n0f7L5Y
+	 4Y4pkaGR2cQqILrf5Oh2rnhOp1/jkfSYjBikbWNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbfC0SJM (ORCPT
+        id S2388134AbfC0SJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50950 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388500AbfC0SJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:08 -0400
+        id S2388514AbfC0SJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5AE32063F;
-        Wed, 27 Mar 2019 18:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F07217F9;
+        Wed, 27 Mar 2019 18:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710147;
-        bh=nQWkrAGZT1WT2M1gYYlrH5k4ifylVNwinfdKOWwdX14=;
+        s=default; t=1553710152;
+        bh=6TRaSxgQjJ78zgKBLjuZr9V1KfYyKpvXETRlkqiJE+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Up9N3n7yRFPtvA9VJqBicd0IuTJku7EQ05c8m2A8Yl2kDVCTcgMWsd23co1PGWoQd
-         Ln8hrS8mwcdxgEh+KmAJyBTf8GhkaPvs6N9w/YZDs1KEjtYf3BaUCyaz35jiQKbtjk
-         4Gvv4S9vM4JdtMbmgsEMrzW4wSEaCXr/rzTA0SdM=
+        b=AcUHQEUFqydYTArK5WapHMSU+AqcYwfC2oxSjyWgK4azOy4MPHrST+KBerm+iSOGL
+         lJYKymnqoUAr5SMMDqHU4gxJefJxoimIBp4Bbf10b2JRNLuaw2ODgFrAYJSUyhgdm1
+         3MrWxslyIu63kYDDDplf1Hmdx+pq0uQ2vMSSLNyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Timo Alho <talho@nvidia.com>, Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 217/262] soc/tegra: fuse: Fix illegal free of IO base address
-Date:   Wed, 27 Mar 2019 14:01:12 -0400
-Message-Id: <20190327180158.10245-217-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 220/262] drm/vkms: Fix flush_work() without INIT_WORK().
+Date:   Wed, 27 Mar 2019 14:01:15 -0400
+Message-Id: <20190327180158.10245-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -56,108 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Timo Alho <talho@nvidia.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 51294bf6b9e897d595466dcda5a3f2751906a200 ]
+[ Upstream commit b30b61ff6b1dc37f276cf56a8328b80086a3ffca ]
 
-On cases where device tree entries for fuse and clock provider are in
-different order, fuse driver needs to defer probing. This leads to
-freeing incorrect IO base address as the fuse->base variable gets
-overwritten once during first probe invocation. This leads to the
-following spew during boot:
+syzbot is hitting a lockdep warning [1] because flush_work() is called
+without INIT_WORK() after kzalloc() at vkms_atomic_crtc_reset().
 
-[    3.082285] Trying to vfree() nonexistent vm area (00000000cfe8fd94)
-[    3.082308] WARNING: CPU: 5 PID: 126 at /hdd/l4t/kernel/stable/mm/vmalloc.c:1511 __vunmap+0xcc/0xd8
-[    3.082318] Modules linked in:
-[    3.082330] CPU: 5 PID: 126 Comm: kworker/5:1 Tainted: G S                4.19.7-tegra-gce119d3 #1
-[    3.082340] Hardware name: quill (DT)
-[    3.082353] Workqueue: events deferred_probe_work_func
-[    3.082364] pstate: 40000005 (nZcv daif -PAN -UAO)
-[    3.082372] pc : __vunmap+0xcc/0xd8
-[    3.082379] lr : __vunmap+0xcc/0xd8
-[    3.082385] sp : ffff00000a1d3b60
-[    3.082391] x29: ffff00000a1d3b60 x28: 0000000000000000
-[    3.082402] x27: 0000000000000000 x26: ffff000008e8b610
-[    3.082413] x25: 0000000000000000 x24: 0000000000000009
-[    3.082423] x23: ffff000009221a90 x22: ffff000009f6d000
-[    3.082432] x21: 0000000000000000 x20: 0000000000000000
-[    3.082442] x19: ffff000009f6d000 x18: ffffffffffffffff
-[    3.082452] x17: 0000000000000000 x16: 0000000000000000
-[    3.082462] x15: ffff0000091396c8 x14: 0720072007200720
-[    3.082471] x13: 0720072007200720 x12: 0720072907340739
-[    3.082481] x11: 0764076607380765 x10: 0766076307300730
-[    3.082491] x9 : 0730073007300730 x8 : 0730073007280720
-[    3.082501] x7 : 0761076507720761 x6 : 0000000000000102
-[    3.082510] x5 : 0000000000000000 x4 : 0000000000000000
-[    3.082519] x3 : ffffffffffffffff x2 : ffff000009150ff8
-[    3.082528] x1 : 3d95b1429fff5200 x0 : 0000000000000000
-[    3.082538] Call trace:
-[    3.082545]  __vunmap+0xcc/0xd8
-[    3.082552]  vunmap+0x24/0x30
-[    3.082561]  __iounmap+0x2c/0x38
-[    3.082569]  tegra_fuse_probe+0xc8/0x118
-[    3.082577]  platform_drv_probe+0x50/0xa0
-[    3.082585]  really_probe+0x1b0/0x288
-[    3.082593]  driver_probe_device+0x58/0x100
-[    3.082601]  __device_attach_driver+0x98/0xf0
-[    3.082609]  bus_for_each_drv+0x64/0xc8
-[    3.082616]  __device_attach+0xd8/0x130
-[    3.082624]  device_initial_probe+0x10/0x18
-[    3.082631]  bus_probe_device+0x90/0x98
-[    3.082638]  deferred_probe_work_func+0x74/0xb0
-[    3.082649]  process_one_work+0x1e0/0x318
-[    3.082656]  worker_thread+0x228/0x450
-[    3.082664]  kthread+0x128/0x130
-[    3.082672]  ret_from_fork+0x10/0x18
-[    3.082678] ---[ end trace 0810fe6ba772c1c7 ]---
+Commit 6c234fe37c57627a ("drm/vkms: Implement CRC debugfs API") added
+INIT_WORK() to only vkms_atomic_crtc_duplicate_state() side. Assuming
+that lifecycle of crc_work is appropriately managed, fix this problem
+by adding INIT_WORK() to vkms_atomic_crtc_reset() side.
 
-Fix this by retaining the value of fuse->base until driver has
-successfully probed.
+[1] https://syzkaller.appspot.com/bug?id=a5954455fcfa51c29ca2ab55b203076337e1c770
 
-Signed-off-by: Timo Alho <talho@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reported-and-tested-by: syzbot <syzbot+12f1b031b6da017e34f8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1547829823-9877-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index a33ee8ef8b6b..51625703399e 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -137,13 +137,17 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	fuse->phys = res->start;
- 	fuse->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(fuse->base))
--		return PTR_ERR(fuse->base);
-+	if (IS_ERR(fuse->base)) {
-+		err = PTR_ERR(fuse->base);
-+		fuse->base = base;
-+		return err;
-+	}
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index a0bef7de9df7..1054f535178a 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -95,6 +95,7 @@ static void vkms_atomic_crtc_reset(struct drm_crtc *crtc)
+ 	vkms_state = kzalloc(sizeof(*vkms_state), GFP_KERNEL);
+ 	if (!vkms_state)
+ 		return;
++	INIT_WORK(&vkms_state->crc_work, vkms_crc_work_handle);
  
- 	fuse->clk = devm_clk_get(&pdev->dev, "fuse");
- 	if (IS_ERR(fuse->clk)) {
- 		dev_err(&pdev->dev, "failed to get FUSE clock: %ld",
- 			PTR_ERR(fuse->clk));
-+		fuse->base = base;
- 		return PTR_ERR(fuse->clk);
- 	}
- 
-@@ -152,8 +156,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 
- 	if (fuse->soc->probe) {
- 		err = fuse->soc->probe(fuse);
--		if (err < 0)
-+		if (err < 0) {
-+			fuse->base = base;
- 			return err;
-+		}
- 	}
- 
- 	if (tegra_fuse_create_sysfs(&pdev->dev, fuse->soc->info->size,
+ 	crtc->state = &vkms_state->base;
+ 	crtc->state->crtc = crtc;
 -- 
 2.19.1
 
