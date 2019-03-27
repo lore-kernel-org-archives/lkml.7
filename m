@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87305C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39227C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF37205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F3A206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712634;
-	bh=CeQ62Pbfbh6tZwFK4ti5CCpPzHMeTwY0GTEr+LaJKJw=;
+	s=default; t=1553712650;
+	bh=K2h82NWgGtr80u32s7EAJCB1788MmhCG23Jy8Y0Db8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucnUSy3HPFaBKnPc7g/Nhn4JLZDCs75+f1gOy8kM8YXQR7awxX0BIYNZqVypKAKUw
-	 pd5B3064xBeRawDeyVxzTIaSXdC3mqvTxvJ/owW6TApPyprJ6Tgvpi6kRkKVSQsfYB
-	 IS01Obwskg7/n8MRcRsQE5fJacIbqIVrk4mYfm40=
+	b=rav9QyZwvLjymRG3xdmNCTgYbEuu2uAAp8tKGEA0Lrlm3EEonBmwUY3782/6JjSQJ
+	 4I2qo4w3lme8AYU8uk075yseSV45t4mz6ZsKKgdmkLpmYuukAhl1lq6OmfJqz5+afb
+	 5SPB4w5BvbZnSQG8QBkdLzGUkcrKMfLC9FoMvrEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390987AbfC0Sud (ORCPT
+        id S2390950AbfC0Sut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:50:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390475AbfC0SSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:18 -0400
+        id S2390451AbfC0SSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 982812087C;
-        Wed, 27 Mar 2019 18:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AEA521738;
+        Wed, 27 Mar 2019 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710697;
-        bh=CeQ62Pbfbh6tZwFK4ti5CCpPzHMeTwY0GTEr+LaJKJw=;
+        s=default; t=1553710692;
+        bh=K2h82NWgGtr80u32s7EAJCB1788MmhCG23Jy8Y0Db8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pSr14/okJOS9ZDBqydy4hQDEvVxV1F8WGnkIy7w55YFn+flDYpDcwpML4b9Jh40WI
-         jdbpqOfjXr+8tF0yLDp7+cMhL6IgZRWJ+oTV3khX8qWXgZe2OcbC0xRG/AcBmVQQqg
-         BZwLHkFtNEOaAGpc3YlUyHkiS/ymGiVti7pqE7hA=
+        b=O2vrXvDLqorjMOr0iWTwboWamJweI5TsHQ9QwvgDNpi0U+LCrErlcpDehB08JhGbi
+         vpp/0xDCaELuY09qvzFZvrGySvvysoVQvPgkG8Bhxlz3cFZDp4OpPlmTWI7q6WE8mL
+         1pJR2b8VnJGiB/sczyet/nJi6M5NBOnKIrTNorl8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 060/123] media: mtk-jpeg: Correct return type for mem2mem buffer helpers
-Date:   Wed, 27 Mar 2019 14:15:24 -0400
-Message-Id: <20190327181628.15899-60-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 057/123] media: s5p-jpeg: Correct return type for mem2mem buffer helpers
+Date:   Wed, 27 Mar 2019 14:15:21 -0400
+Message-Id: <20190327181628.15899-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -60,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 1b275e4e8b70dbff9850874b30831c1bd8d3c504 ]
+[ Upstream commit 4a88f89885c7cf65c62793f385261a6e3315178a ]
 
 Fix the assigned type of mem2mem buffer handling API.
 Namely, these functions:
@@ -86,150 +88,171 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 38 ++++++++++-----------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-index 226f90886484..46c996936798 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-@@ -702,7 +702,7 @@ static void mtk_jpeg_buf_queue(struct vb2_buffer *vb)
- 	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, to_vb2_v4l2_buffer(vb));
- }
- 
--static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
-+static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- 				 enum v4l2_buf_type type)
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index faac8161b683..d7679e4585fd 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -793,14 +793,14 @@ static void skip(struct s5p_jpeg_buffer *buf, long len);
+ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
  {
- 	if (V4L2_TYPE_IS_OUTPUT(type))
-@@ -714,7 +714,7 @@ static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, x, components;
+ 
+ 	jpeg_buffer.size = 2; /* Ls */
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sos + 2;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sos + 2;
+ 	jpeg_buffer.curr = 0;
+ 
+ 	word = 0;
+@@ -830,14 +830,14 @@ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
  {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	int ret = 0;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, n, j;
  
- 	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-@@ -724,14 +724,14 @@ static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
- 	return 0;
- err:
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_QUEUED);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
- 	return ret;
- }
+ 	for (j = 0; j < ctx->out_q.dht.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dht.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dht.marker[j];
+ 		jpeg_buffer.curr = 0;
  
- static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
+@@ -889,13 +889,13 @@ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
  {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	int c, x, components;
  
- 	/*
- 	 * STREAMOFF is an acknowledgment for source change event.
-@@ -743,7 +743,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 		struct mtk_jpeg_src_buf *src_buf;
+ 	jpeg_buffer.size = ctx->out_q.sof_len;
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sof;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sof;
+ 	jpeg_buffer.curr = 0;
  
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
--		src_buf = mtk_jpeg_vb2_to_srcbuf(vb);
-+		src_buf = mtk_jpeg_vb2_to_srcbuf(&vb->vb2_buf);
- 		mtk_jpeg_set_queue_data(ctx, &src_buf->dec_param);
- 		ctx->state = MTK_JPEG_RUNNING;
- 	} else if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-@@ -751,7 +751,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 	}
- 
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_ERROR);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
- 
- 	pm_runtime_put_sync(ctx->jpeg->dev);
- }
-@@ -807,7 +807,7 @@ static void mtk_jpeg_device_run(void *priv)
+ 	skip(&jpeg_buffer, 5); /* P, Y, X */
+@@ -920,14 +920,14 @@ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_q_tbl(struct s5p_jpeg_ctx *ctx)
  {
- 	struct mtk_jpeg_ctx *ctx = priv;
- 	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, j;
+ 
+ 	for (j = 0; j < ctx->out_q.dqt.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dqt.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dqt.marker[j];
+ 		jpeg_buffer.curr = 0;
+ 
+@@ -2072,15 +2072,15 @@ static void s5p_jpeg_device_run(void *priv)
+ {
+ 	struct s5p_jpeg_ctx *ctx = priv;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
 -	struct vb2_buffer *src_buf, *dst_buf;
 +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	unsigned long flags;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
-@@ -817,11 +817,11 @@ static void mtk_jpeg_device_run(void *priv)
+ 	unsigned long src_addr, dst_addr, flags;
+ 
+ 	spin_lock_irqsave(&ctx->jpeg->slock, flags);
  
  	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
  	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+-	src_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	dst_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
++	src_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
++	dst_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
  
- 	if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
--		for (i = 0; i < dst_buf->num_planes; i++)
--			vb2_set_plane_payload(dst_buf, i, 0);
-+		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
- 		buf_state = VB2_BUF_STATE_DONE;
- 		goto dec_end;
- 	}
-@@ -833,8 +833,8 @@ static void mtk_jpeg_device_run(void *priv)
- 		return;
- 	}
- 
--	mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
--	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
-+	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
-+	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
- 		goto dec_end;
- 
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
-@@ -849,8 +849,8 @@ static void mtk_jpeg_device_run(void *priv)
- dec_end:
- 	v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- }
- 
-@@ -926,7 +926,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+ 	s5p_jpeg_reset(jpeg->regs);
+ 	s5p_jpeg_poweron(jpeg->regs);
+@@ -2153,7 +2153,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
  {
- 	struct mtk_jpeg_dev *jpeg = priv;
- 	struct mtk_jpeg_ctx *ctx;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	u32	dec_irq_ret;
-@@ -943,7 +943,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size, padding_bytes = 0;
  
- 	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
- 
- 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
- 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-@@ -953,15 +953,15 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 		goto dec_end;
+@@ -2172,7 +2172,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		vb = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
  	}
  
--	for (i = 0; i < dst_buf->num_planes; i++)
--		vb2_set_plane_payload(dst_buf, i,
-+	for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+		vb2_set_plane_payload(&dst_buf->vb2_buf, i,
- 				      jpeg_src_buf->dec_param.comp_size[i]);
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
  
- 	buf_state = VB2_BUF_STATE_DONE;
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size - padding_bytes;
+@@ -2190,7 +2190,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
  
- dec_end:
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- 	return IRQ_HANDLED;
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2198,7 +2198,7 @@ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	if (jpeg->variant->version == SJPEG_EXYNOS5433 &&
+ 	    ctx->mode == S5P_JPEG_DECODE)
+ 		jpeg_addr += ctx->out_q.sos;
+@@ -2314,7 +2314,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size;
+ 
+@@ -2328,7 +2328,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		fmt = ctx->cap_q.fmt;
+ 	}
+ 
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size;
+@@ -2346,7 +2346,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2354,7 +2354,7 @@ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	exynos3250_jpeg_jpgadr(jpeg->regs, jpeg_addr);
  }
+ 
 -- 
 2.19.1
 
