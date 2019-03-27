@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D2FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23318C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4BB205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23B7206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713108;
-	bh=reVFkqiAp1HrF7VKpjcfa+LqHqM9kSGWxN6mBfx7qws=;
+	s=default; t=1553713114;
+	bh=MSo0u1jGOEaroxkvuEdEFti/DU0XOeTCR5vg8pBF0Kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bs/76YuhIr8BfDKd6kQv5Tuxio7ICAGsGHhyREW+dSHeMiTeRFPfG07l9H6oPzsv0
-	 GRLt6hi//7aNT1KZe/b9KRlqp8OaacMyonYWb1KpPnR+SDtvOwVAUnXS2qOCW3Z285
-	 rE+Tdn7Wxc37+IzgYVlx87qCOxVbYFptm58L/xYY=
+	b=jxha6mCRy7vOwez09vhoB6VorbQlEEypTzyhSR2wFHI4Q+6TUKtnWKypwNrWdM8/j
+	 ry4giod1mgQq7ZhPLJrQCyHyhbvnMGLEuCT2GTAGDsCQDw7n3Yf7acFyBffpNZJCcY
+	 NPGGP83BEuqDoZ1UH68GQcRDHh6PNlO4XzI4JJO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390096AbfC0S60 (ORCPT
+        id S2390172AbfC0S6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:58:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389867AbfC0SPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:15:40 -0400
+        id S2388767AbfC0SPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:15:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D88C217F5;
-        Wed, 27 Mar 2019 18:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E003A21741;
+        Wed, 27 Mar 2019 18:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710539;
-        bh=reVFkqiAp1HrF7VKpjcfa+LqHqM9kSGWxN6mBfx7qws=;
+        s=default; t=1553710537;
+        bh=MSo0u1jGOEaroxkvuEdEFti/DU0XOeTCR5vg8pBF0Kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQD/XTVBx9t0mg57OwzUDzOUxOTotGGat2dPEIX+w+/3EXEMhgdP+6rl5QxyGY3qt
-         fR2PiWPlCjtu0uVHCWdaWrVkVZAwK2U1IWa9W8pM7OVHvdbjaFWdmjeJ857Ip0sm0K
-         DZy16fgPFUbvY18cAVt2+ntHLlnE4BFZpITd9Qtk=
+        b=K3agCSO8ZtzFlyTYk0utqwvaUdczJHKSvwYZMojEod2z2XtSY/dn/cFrh/gUuuazj
+         xlTrSB67PF/AqbsAcie33m7kMfKwyO3Mee5AQLTShwskPubGtdn2QM4JZ0TB4zFx7K
+         F4CoJYqn8uTiP3HFoiiFUXC51yOfdeKgpfyuuSYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Buland Singh <bsingh@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 165/192] hpet: Fix missing '=' character in the __setup() code of hpet_mmap_enable
-Date:   Wed, 27 Mar 2019 14:09:57 -0400
-Message-Id: <20190327181025.13507-165-sashal@kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 163/192] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Wed, 27 Mar 2019 14:09:55 -0400
+Message-Id: <20190327181025.13507-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -57,58 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Buland Singh <bsingh@redhat.com>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
+[ Upstream commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 ]
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-Before this patch:
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
 
-[    0.204152] HPET mmap disabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204192] HPET mmap disabled
-
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/l2cap_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index 4a22b4b41aef..9bffcd37cc7b 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char *str)
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
- }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index d17a4736e47c..6c873dc549b0 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3336,6 +3336,8 @@ static int l2cap_parse_conf_req(struct l2cap_chan *chan, void *data, size_t data
  
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
- {
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3547,6 +3549,8 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3727,6 +3731,8 @@ static void l2cap_conf_rfc_get(struct l2cap_chan *chan, void *rsp, int len)
+ 
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 -- 
 2.19.1
 
