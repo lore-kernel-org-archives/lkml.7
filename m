@@ -3,132 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C92C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B35C10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735812075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F952082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 23:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfC0XMT (ORCPT
+        id S1728294AbfC0XMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 19:12:19 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:39312 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfC0XMS (ORCPT
+        Wed, 27 Mar 2019 19:12:24 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49984 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbfC0XMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 19:12:18 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 4842272CC64;
-        Thu, 28 Mar 2019 02:12:15 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 395DA7CC74C; Thu, 28 Mar 2019 02:12:15 +0300 (MSK)
-Date:   Thu, 28 Mar 2019 02:12:15 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: Re: [PATCH v2] x86/syscalls: Mark expected switch fall-throughs
-Message-ID: <20190327231215.GA815@altlinux.org>
-References: <20190228192746.GA13021@embeddedor>
- <alpine.DEB.2.21.1903231457590.1798@nanos.tec.linutronix.de>
- <20190326151244.GC16837@redhat.com>
- <20190327012606.GA16532@altlinux.org>
- <alpine.DEB.2.21.1903271527110.1789@nanos.tec.linutronix.de>
- <20190327222014.GA32540@altlinux.org>
- <alpine.DEB.2.21.1903272351110.1789@nanos.tec.linutronix.de>
+        Wed, 27 Mar 2019 19:12:23 -0400
+Received: by ajax-webmail-mail (Coremail) ; Thu, 28 Mar 2019 07:12:13 +0800
+ (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+X-Originating-IP: [123.151.77.70]
+Date:   Thu, 28 Mar 2019 07:12:13 +0800 (GMT+08:00)
+From:   qiaochong <qiaochong@loongson.cn>
+To:     "Doug Anderson" <dianders@chromium.org>
+Cc:     "Ralf Baechle" <ralf@linux-mips.org>,
+        "Paul Burton" <paul.burton@mips.com>,
+        "James Hogan" <jhogan@kernel.org>,
+        "Daniel Thompson" <daniel.thompson@linaro.org>,
+        "Will Deacon" <will.deacon@arm.com>,
+        "Christophe Leroy" <christophe.leroy@c-s.fr>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re:Re: Re: [PATCH] MIPS: KGDB: fix kgdb support for SMP platforms.
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT3.0.6a_preview build
+ 20150605(69773.7394) Copyright (c) 2002-2019 www.mailtech.cn loongson
+In-Reply-To: <CAD=FV=UhqQh2i1CUfgGHPdUtFWsTznCL_1tNafG+F74oHXM1Ew@mail.gmail.com>
+References: <20190327150551.12851-1-qiaochong@loongson.cn>
+ <CAD=FV=WAvzz+wXZzoLZvxBhO4P_RjV2op=uiX9dHD2dPdSCruw@mail.gmail.com>
+ <727cd934.9e92.169c1422cf2.Coremail.qiaochong@loongson.cn>
+ <CAD=FV=UhqQh2i1CUfgGHPdUtFWsTznCL_1tNafG+F74oHXM1Ew@mail.gmail.com>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: spvbGWZvb3Rlcl90eHQ9NjAyOjczNA==
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903272351110.1789@nanos.tec.linutronix.de>
+Message-ID: <419d0aab.9e93.169c16ce62c.Coremail.qiaochong@loongson.cn>
+X-CM-TRANSID: QMiowPDxpuRNA5xc2mG0AA--.9549W
+X-CM-SenderInfo: 5tld0upkrqwqxorr0wxvrqhubq/1tbiAQACDFEBqdSvPAALs6
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW5Jw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGkgRG91ZywKCkkgaGF2ZSBjaGFuZ2VkIG5hbWUgYW5kIHNpZ25vZmYgaW5mbyAgZm9ybWF0IGFu
+ZCByZXNlbnQgcGF0Y2ggIGp1c3Qgbm93LgpUaGFua3MgYSBsb3QuCgrlnKggMjAxOS0wMy0yOCAw
+NjoyNzoyNu+8jCJEb3VnIEFuZGVyc29uIiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiDlhpnpgZPv
+vJoKCj5IaSwKPgo+T24gV2VkLCBNYXIgMjcsIDIwMTkgYXQgMzoyNSBQTSBxaWFvY2hvbmcgPHFp
+YW9jaG9uZ0Bsb29uZ3Nvbi5jbj4gd3JvdGU6Cj4+Cj4+Cj4+IE15IG5hbWUgIGlzIFFpYW9DaG9u
+Z++8jCB3aGljaCBpcyBzYW1lIHRvIG15IHVzZXJuYW1lLgo+PiBRaWFvIGlzIG15IGZhbWlseSBu
+YW1lLgo+PiBUaGFua3MgYSBsb3QuCj4KPkkgZ3Vlc3MgaXQgd2lsbCBiZSB1cCB0byB3aGljaGV2
+ZXIgbWFpbnRhaW5lciBsYW5kcyB0aGlzIChtYXliZQo+RGFuaWVsPykgb24gd2hldGhlciB0aGV5
+IHdhbnQgeW91IHRvIHNwaW4gaXQuICBJIHRoaW5rIGZvbGtzIGV4cGVjdCB0bwo+c2VlIGEgcmVh
+bCBuYW1lIHRoYXQgaXMgY2FwaXRhbGl6ZWQgYW5kIHVzdWFsbHkgYSBzcGFjZSBiZXR3ZWVuIHRo
+ZQo+ZmFtaWx5IG5hbWUgYW5kIHRoZSBnaXZlbiBuYW1lLgo+Cj4tRG91ZwoNCg0K5YyX5Lqs5biC
+5rW35reA5Yy65Lit5YWz5p2R546v5L+d56eR5oqA56S66IyD5Zut6b6Z6Iqv5Lqn5Lia5ZutMuWP
+t+alvCAxMDAwOTXnlLXor506ICs4NiAoMTApIDYyNTQ2NjY45Lyg55yfOiArODYgKDEwKSA2MjYw
+MDgyNnd3dy5sb29uZ3Nvbi5jbuacrOmCruS7tuWPiuWFtumZhOS7tuWQq+aciem+meiKr+S4reen
+keaKgOacr+aciemZkOWFrOWPuOeahOWVhuS4muenmOWvhuS/oeaBr++8jOS7hemZkOS6juWPkemA
+gee7meS4iumdouWcsOWdgOS4reWIl+WHuueahOS4quS6uuaIlue+pOe7hOOAguemgeatouS7u+S9
+leWFtuS7luS6uuS7peS7u+S9leW9ouW8j+S9v+eUqO+8iOWMheaLrOS9huS4jemZkOS6juWFqOmD
+qOaIlumDqCDliIblnLDms4TpnLLjgIHlpI3liLbmiJbmlaPlj5HvvInmnKzpgq7ku7blj4rlhbbp
+mYTku7bkuK3nmoTkv6Hmga/jgILlpoLmnpzmgqjplJnmlLbmnKzpgq7ku7bvvIzor7fmgqjnq4vl
+jbPnlLXor53miJbpgq7ku7bpgJrnn6Xlj5Hku7bkurrlubbliKDpmaTmnKzpgq7ku7bjgIIgDQoN
+ClRoaXMgZW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250YWluIGNvbmZpZGVudGlhbCBpbmZv
+cm1hdGlvbiBmcm9tIExvb25nc29uDQpUZWNobm9sb2d5IENvcnBvcmF0aW9uIExpbWl0ZWQsIHdo
+aWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5DQp3aG9zZSBhZGRy
+ZXNzIGlzIGxpc3RlZCBhYm92ZS4gQW55IHVzZSBvZiB0aGUgaW5mb3JtYXRpb24gY29udGFpbmVk
+IGhlcmVpbiBpbg0KYW55IHdheSAoaW5jbHVkaW5nLCBidXQgbm90IGxpbWl0ZWQgdG8sIHRvdGFs
+IG9yIHBhcnRpYWwgZGlzY2xvc3VyZSwNCnJlcHJvZHVjdGlvbiBvciBkaXNzZW1pbmF0aW9uKSBi
+eSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lwaWVudChzKQ0KaXMgcHJvaGli
+aXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0
+aGUgc2VuZGVyIGJ5DQpwaG9uZSBvciBlbWFpbCBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0LiA=
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 27, 2019 at 11:52:19PM +0100, Thomas Gleixner wrote:
-> On Thu, 28 Mar 2019, Dmitry V. Levin wrote:
-> > On Wed, Mar 27, 2019 at 03:29:16PM +0100, Thomas Gleixner wrote:
-> > > On Wed, 27 Mar 2019, Dmitry V. Levin wrote:
-> > > > On Tue, Mar 26, 2019 at 04:12:45PM +0100, Oleg Nesterov wrote:
-> > > > > On 03/23, Thomas Gleixner wrote:
-> > > > [...]
-> > > > > >  2) syscall_set_arguments() has been introduced in 2008 and we =
-still have
-> > > > > >     no caller. Instead of polishing it, can it be removed compl=
-etely or are
-> > > > > >     there plans to actually use it?
-> > > > >=20
-> > > > > I think it can die.
-> > > >=20
-> > > > When PTRACE_GET_SYSCALL_INFO is finally squeezed into the kernel,
-> > > > we could discuss adding PTRACE_SET_SYSCALL_INFO as well, and it
-> > > > will need syscall_set_arguments().
-> > >=20
-> > > So if that ever happens, then adding the code back isn't rocket
-> > > science. But if not, then there is no point in carrying the dead horse
-> > > around another 11 years.
-> >=20
-> > Given that it took me roughly 4 months to get a relatively simple revert
-> > of commit 5e937a9ae913 accepted into linux-next, adding the code back
-> > might be time-consuming.
-> >=20
-> > Could we delay the removal of syscall_set_arguments() until
-> > PTRACE_GET_SYSCALL_INFO is merged into the kernel?
-> > I hope it won't take another 11 years.
->=20
-> Hope dies last :)
->=20
-> Seriously. If we keep it can we at least remove all the unused arguments
-> which we have on both functions to simplify the whole mess?
-
-In case of syscall_set_arguments() I think we can safely remove
-"i" and "n" arguments assuming i =3D=3D 0 and n =3D=3D 6.
-
-All I can say about syscall_get_arguments() is that
-- all current users invoke it with i =3D=3D 0,
-- all current users that invoke it with n !=3D 6 are in kernel/trace/trace_=
-syscalls.c
-so it may actually be invoked with n < 6.
-
-
---=20
-ldv
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJcnANOAAoJEAVFT+BVnCUI+asQAN0ek3uJ5dOzgkhSZjL4bdq/
-0A5IiG3DL1Vmk59JHexHl1c7r9AFYM/b/7d5YYF5eYxWpXkz25jIr+qmF9Z8TYj7
-Pvo76uwn+hEcE2s6OYaPMjQqfUHa7mDh81slK5/Hm/o3GSJHHmt5VeV/OvljNFQJ
-yeXph+G5DCKfvp4YLA4RS++R5uDTMGyz3IPV+++CPkv/+bXgHeF6ClGJ3DShL5w9
-qk8kABNN+xSJVgKhDTl5VNnGJ+i3MkRdslwUrQxDYkgIrmjDcOqXhkzdU/0S4QAC
-UDbklunwFgTXBvAW9AglHvIRamXTYmUW9W2vWzddQcNcFvNoyF5l8C97xjqK1+Bv
-nBsb0Zc9PxxqyVTQVTESzMA9401PVh8dHLCux23rwqlDNTvxXOAMSkuXdBQlE2RA
-IKCBE1XsnwSPLjI+BeD8S45sUwFYFY/knspFm0jp01Nxu66BNZdWNXSqQPlLyYXW
-HJV7ay4z/8qjQNP3EG+ac/USNP3/pKZmn+6Fu1WwsVuFNy0I7svl4/RyTqxaWNsB
-TA3P16OinlK4ZxFPv8D/kiyT0YBQtqYDB5JdEBUGRJVdIqY4anbtgqjXTCq4ID5C
-EjWJIFa2hyOoCuXUlr83h8FAQzfN2ekD4vxjpapBLauI4200x/NcTv+DBj3YmEHX
-ep30N9s4jRfALRP65wpR
-=k+yg
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
