@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C934C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6464E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1887A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 08:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733079AbfC0IpN (ORCPT
+        id S1733117AbfC0IpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 04:45:13 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:37663 "EHLO
+        Wed, 27 Mar 2019 04:45:16 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:58983 "EHLO
         relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733035AbfC0IpL (ORCPT
+        with ESMTP id S1733076AbfC0IpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 04:45:11 -0400
+        Wed, 27 Mar 2019 04:45:14 -0400
 X-Originating-IP: 90.88.32.136
 Received: from mc-bl-xps13.lan (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
         (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id AF15940003;
-        Wed, 27 Mar 2019 08:45:07 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 660204001E;
+        Wed, 27 Mar 2019 08:45:10 +0000 (UTC)
 From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -35,9 +35,9 @@ Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
         ymarkman@marvell.com, mw@semihalf.com,
         Russell King <linux@armlinux.org.uk>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next 14/18] net: mvpp2: cls: Don't use the sequence attribute for classification
-Date:   Wed, 27 Mar 2019 09:44:18 +0100
-Message-Id: <20190327084422.4209-15-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 15/18] net: mvpp2: cls: Rename the flow table macros
+Date:   Wed, 27 Mar 2019 09:44:19 +0100
+Message-Id: <20190327084422.4209-16-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190327084422.4209-1-maxime.chevallier@bootlin.com>
 References: <20190327084422.4209-1-maxime.chevallier@bootlin.com>
@@ -48,79 +48,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The classifier allows to combine multiple lookups in one "sequence" that
-is counted as a single lookup to an engine, with a single result.
+The Flow Table dictates what lookups will be issued for each flow type.
+The lookup sequence for each flow is similar, and the index of each
+lookup is computed by some macros.
 
-We don't actually use that feature, so remove any places where we set
-this field, so that the classifier doesn't try to interpret these
-fields.
+There are similar mechanisms for the C2 TCAM lookups, so in order to
+avoid confusion, rename the flow table index computing macros with a
+common prefix.
+
+The only difference in behaviour is that we now use the very first entry
+in the flow for the RSS lookup (the first entry was previously unused).
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 10 ----------
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h |  8 --------
- 2 files changed, 18 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c     | 12 +++++-------
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h     | 13 +++++++------
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c |  4 ++--
+ 3 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index 533919982735..e50154e03141 100644
+index e50154e03141..482de582f994 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -429,12 +429,6 @@ static void mvpp2_cls_flow_port_id_sel(struct mvpp2_cls_flow_entry *fe,
- 		fe->data[0] &= ~MVPP2_CLS_FLOW_TBL0_PORT_ID_SEL;
- }
+@@ -478,7 +478,7 @@ static void mvpp2_cls_flow_lkp_init(struct mvpp2 *priv,
+ 	/* We point on the first lookup in the sequence for the flow, that is
+ 	 * the C2 lookup.
+ 	 */
+-	le.data |= MVPP2_CLS_LKP_FLOW_PTR(MVPP2_FLOW_C2_ENTRY(flow->flow_id));
++	le.data |= MVPP2_CLS_LKP_FLOW_PTR(MVPP2_CLS_FLT_FIRST(flow->flow_id));
  
--static void mvpp2_cls_flow_seq_set(struct mvpp2_cls_flow_entry *fe, u32 seq)
--{
--	fe->data[1] &= ~MVPP2_CLS_FLOW_TBL1_SEQ(MVPP2_CLS_FLOW_TBL1_SEQ_MASK);
--	fe->data[1] |= MVPP2_CLS_FLOW_TBL1_SEQ(seq);
--}
--
- static void mvpp2_cls_flow_last_set(struct mvpp2_cls_flow_entry *fe,
- 				    bool is_last)
- {
-@@ -548,7 +542,6 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+ 	/* CLS is always enabled, RSS is enabled/disabled in C2 lookup */
+ 	le.data |= MVPP2_CLS_LKP_TBL_LOOKUP_EN_MASK;
+@@ -536,7 +536,7 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+ 
+ 	/* C2 lookup */
+ 	memset(&fe, 0, sizeof(fe));
+-	fe.index = MVPP2_FLOW_C2_ENTRY(flow->flow_id);
++	fe.index = MVPP2_CLS_FLT_C2_RSS_ENTRY(flow->flow_id);
+ 
+ 	mvpp2_cls_flow_eng_set(&fe, MVPP22_CLS_ENGINE_C2);
  	mvpp2_cls_flow_port_id_sel(&fe, true);
- 	mvpp2_cls_flow_last_set(&fe, 0);
- 	mvpp2_cls_flow_pri_set(&fe, 0);
--	mvpp2_cls_flow_seq_set(&fe, MVPP2_CLS_FLOW_SEQ_FIRST1);
- 	mvpp2_cls_flow_lu_type_set(&fe, MVPP2_CLS_LU_ALL);
- 
- 	/* Add all ports */
-@@ -564,7 +557,6 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+@@ -553,7 +553,7 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+ 	/* C3Hx lookups */
+ 	for (i = 0; i < MVPP2_MAX_PORTS; i++) {
+ 		memset(&fe, 0, sizeof(fe));
+-		fe.index = MVPP2_PORT_FLOW_HASH_ENTRY(i, flow->flow_id);
++		fe.index = MVPP2_CLS_FLT_HASH_ENTRY(i, flow->flow_id);
  
  		mvpp2_cls_flow_port_id_sel(&fe, true);
  		mvpp2_cls_flow_pri_set(&fe, i + 1);
--		mvpp2_cls_flow_seq_set(&fe, MVPP2_CLS_FLOW_SEQ_MIDDLE);
- 		mvpp2_cls_flow_port_add(&fe, BIT(i));
+@@ -661,8 +661,7 @@ static int mvpp2_port_rss_hash_opts_set(struct mvpp2_port *port, int flow_type,
+ 		if (!flow)
+ 			return -EINVAL;
  
- 		mvpp2_cls_flow_write(priv, &fe);
-@@ -572,8 +564,6 @@ static void mvpp2_cls_flow_init(struct mvpp2 *priv,
+-		flow_index = MVPP2_PORT_FLOW_HASH_ENTRY(port->id,
+-							flow->flow_id);
++		flow_index = MVPP2_CLS_FLT_HASH_ENTRY(port->id, flow->flow_id);
  
- 	/* Update the last entry */
- 	mvpp2_cls_flow_last_set(&fe, 1);
--	mvpp2_cls_flow_seq_set(&fe, MVPP2_CLS_FLOW_SEQ_LAST);
--
- 	mvpp2_cls_flow_write(priv, &fe);
- }
+ 		mvpp2_cls_flow_read(port->priv, flow_index, &fe);
+ 
+@@ -747,8 +746,7 @@ static u16 mvpp2_port_rss_hash_opts_get(struct mvpp2_port *port, int flow_type)
+ 		if (!flow)
+ 			return 0;
+ 
+-		flow_index = MVPP2_PORT_FLOW_HASH_ENTRY(port->id,
+-							flow->flow_id);
++		flow_index = MVPP2_CLS_FLT_HASH_ENTRY(port->id, flow->flow_id);
+ 
+ 		mvpp2_cls_flow_read(port->priv, flow_index, &fe);
  
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-index fa588b07d182..9a4796fc0219 100644
+index 9a4796fc0219..36299b57599c 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-@@ -71,14 +71,6 @@ enum mvpp2_cls_field_id {
- 	MVPP22_CLS_FIELD_L4DIP = 0x1e,
+@@ -177,12 +177,13 @@ struct mvpp2_cls_flow {
+ 	struct mvpp2_prs_result_info prs_ri;
  };
  
--enum mvpp2_cls_flow_seq {
--	MVPP2_CLS_FLOW_SEQ_NORMAL = 0,
--	MVPP2_CLS_FLOW_SEQ_FIRST1,
--	MVPP2_CLS_FLOW_SEQ_FIRST2,
--	MVPP2_CLS_FLOW_SEQ_LAST,
--	MVPP2_CLS_FLOW_SEQ_MIDDLE
--};
 -
- /* Classifier C2 engine constants */
- #define MVPP22_CLS_C2_TCAM_EN(data)		((data) << 16)
+-#define MVPP2_ENTRIES_PER_FLOW			(MVPP2_MAX_PORTS + 1)
+-#define MVPP2_FLOW_C2_ENTRY(id)			((((id) - MVPP2_FL_START) * \
+-						 MVPP2_ENTRIES_PER_FLOW) + 1)
+-#define MVPP2_PORT_FLOW_HASH_ENTRY(port, id)	(MVPP2_FLOW_C2_ENTRY(id) + \
+-						 1 + (port))
++#define MVPP2_CLS_FLT_ENTRIES_PER_FLOW		(MVPP2_MAX_PORTS + 1)
++#define MVPP2_CLS_FLT_FIRST(id)			(((id) - MVPP2_FL_START) * \
++						 MVPP2_CLS_FLT_ENTRIES_PER_FLOW)
++#define MVPP2_CLS_FLT_C2_RSS_ENTRY(id)		(MVPP2_CLS_FLT_FIRST(id))
++#define MVPP2_CLS_FLT_HASH_ENTRY(port, id)	(MVPP2_CLS_FLT_C2_RSS_ENTRY(id) + (port) + 1)
++#define MVPP2_CLS_FLT_LAST(id)			(MVPP2_CLS_FLT_FIRST(id) + \
++						 MVPP2_CLS_FLT_ENTRIES_PER_FLOW - 1)
+ 
+ /* Iterate on each classifier flow id. Sets 'i' to be the index of the first
+  * entry in the cls_flows table for each different flow_id.
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+index 302d3e9513be..0ee39ea47b6b 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+@@ -150,7 +150,7 @@ static int mvpp2_dbgfs_port_flow_hash_opt_show(struct seq_file *s, void *unused)
+ 	if (!f)
+ 		return -EINVAL;
+ 
+-	flow_index = MVPP2_PORT_FLOW_HASH_ENTRY(entry->port->id, f->flow_id);
++	flow_index = MVPP2_CLS_FLT_HASH_ENTRY(entry->port->id, f->flow_id);
+ 
+ 	mvpp2_cls_flow_read(port->priv, flow_index, &fe);
+ 
+@@ -175,7 +175,7 @@ static int mvpp2_dbgfs_port_flow_engine_show(struct seq_file *s, void *unused)
+ 	if (!f)
+ 		return -EINVAL;
+ 
+-	flow_index = MVPP2_PORT_FLOW_HASH_ENTRY(entry->port->id, f->flow_id);
++	flow_index = MVPP2_CLS_FLT_HASH_ENTRY(entry->port->id, f->flow_id);
+ 
+ 	mvpp2_cls_flow_read(port->priv, flow_index, &fe);
  
 -- 
 2.20.1
