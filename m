@@ -2,80 +2,93 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056E1C10F00
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53B8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B6D2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="kRlm4b3S"
+	by mail.kernel.org (Postfix) with ESMTP id A3A002075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 09:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbfC0Jcq (ORCPT
+        id S1732631AbfC0JeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 05:32:46 -0400
-Received: from m13-68.163.com ([220.181.13.68]:60379 "EHLO m13-68.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfC0Jcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 05:32:45 -0400
-X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 Mar 2019 05:32:44 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=G5oi1
-        9ZA0X4816eHrENqAbN3PPrrhPtsFymGAe9GwJY=; b=kRlm4b3SDDkrFIGYUQLpr
-        8EiEEytZ11lpCVUdnwlylW5tpOZK0lA1xRmwh9rouxZYhhT39DcrIvTafqMrEIrv
-        rIo/b9DyoejisWoQTRqckWjB4jGUfNiO5kOiJyo1XjTcGF77N9ph7srOgr7Xln0p
-        sag++0+0K6ygsqWPzL390o=
-Received: from luferry$163.com ( [42.120.75.132] ) by ajax-webmail-wmsvr68
- (Coremail) ; Wed, 27 Mar 2019 17:17:18 +0800 (CST)
-X-Originating-IP: [42.120.75.132]
-Date:   Wed, 27 Mar 2019 17:17:18 +0800 (CST)
-From:   luferry <luferry@163.com>
-To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     "Jens Axboe" <axboe@kernel.dk>,
-        "Dongli Zhang" <dongli.zhang@oracle.com>,
-        "Ming Lei" <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH] make blk_mq_map_queues more friendly for cpu
- topology
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
- 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 163com
-In-Reply-To: <20190327081619.GG20525@lst.de>
-References: <20190325152640.48120-1-luferry@163.com>
- <20190326073954.GD21617@lst.de>
- <48ca2186.fc76.169b8fef63a.Coremail.luferry@163.com>
- <20190327081619.GG20525@lst.de>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
-MIME-Version: 1.0
-Message-ID: <764f3c.12445.169be70834b.Coremail.luferry@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: RMGowACnB+WeP5tc06siAA--.37485W
-X-CM-SenderInfo: poxiv2lu16il2tof0z/1tbitB+EWlSIbM+hQwACsq
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+        Wed, 27 Mar 2019 05:34:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34353 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfC0JeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 05:34:05 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1h94wX-0005Bg-Da; Wed, 27 Mar 2019 10:33:57 +0100
+Message-ID: <1553679236.2561.27.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Daniel Baluta <daniel.baluta@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Anson Huang <anson.huang@nxp.com>, Teo Hall <teo.hall@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 27 Mar 2019 10:33:56 +0100
+In-Reply-To: <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
+References: <20190326094239.5910-1-daniel.baluta@nxp.com>
+         <20190326094239.5910-3-daniel.baluta@nxp.com>
+         <VI1PR04MB4222A8DBC2312E72AAD3AFAE805F0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+         <CAEnQRZCb=rZMdBYyYCSCQ3Dba5Nk43BvV6whHx-vNPmox-OOSw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgoKQWN0dWFsbHksICBJIGp1c3QgYm91Z2h0IG9uZSB2bSBmcm9tIHB1YmxpYyBjbG91ZCBwcm92
-aWRlciBhbmQgcnVuIGludG8gdGhpcyBwcm9ibGVtLgphZnRlciByZWFkaW5nIGNvZGUgYW5kIGNv
-bXBhcmUgcGNpIGRldmljZSBpbmZvLCBJIHJlcHJvZHVjZSB0aGlzIHNjZW5hcmlvLgoKU2luY2Ug
-Y29tbW9uIHVzZXJzIGNhbm5vdCBjaGFuZ2UgbXNpIHZlY3RvciBudW1iZXJzLCBzbyBJIHN1Z2dl
-c3QgYmxrX21xX21hcF9xdWV1ZXMgdG8gYmUgCm1vcmUgZnJpZW5kbHkuIGJsa19tcV9tYXBfcXVl
-dWVzIG1heSBiZSB0aGUgIGxhc3QgY2hvaWNlLiAKCgoKCgpBdCAyMDE5LTAzLTI3IDE2OjE2OjE5
-LCAiQ2hyaXN0b3BoIEhlbGx3aWciIDxoY2hAbHN0LmRlPiB3cm90ZToKPk9uIFR1ZSwgTWFyIDI2
-LCAyMDE5IGF0IDAzOjU1OjEwUE0gKzA4MDAsIGx1ZmVycnkgd3JvdGU6Cj4+IAo+PiAKPj4gCj4+
-IEF0IDIwMTktMDMtMjYgMTU6Mzk6NTQsICJDaHJpc3RvcGggSGVsbHdpZyIgPGhjaEBsc3QuZGU+
-IHdyb3RlOgo+PiA+V2h5IGlzbid0IHRoaXMgdXNpbmcgdGhlIGF1dG9tYXRpYyBQQ0ktbGV2ZWwg
-YWZmaW5pdHkgYXNzaWdubWVudCB0bwo+PiA+c3RhcnQgd2l0aD8KPj4gCj4+IFdoZW4gZW5hYmxl
-IHZpcnRpby1ibGsgd2l0aCBtdWx0aSBxdWV1ZXMgYnV0IHdpdGggb25seSAyIG1zaXgtdmVjdG9y
-Lgo+PiB2cF9kZXYtPnBlcl92cV92ZWN0b3JzIHdpbGwgYmUgZmFsc2UsIHZwX2dldF92cV9hZmZp
-bnRpdHkgd2lsbCByZXR1cm4gTlVMTCBkaXJlY3RseQo+PiBzbyBibGtfbXFfdmlydGlvX21hcF9x
-dWV1ZXMgd2lsbCBmYWxsYmFjayB0byBibGtfbXFfbWFwX3F1ZXVlcy4KPgo+V2hhdCBpcyB0aGUg
-cG9pbnQgb2YgdGhlIG11bHRpcXVldWUgbW9kZSBpZiB5b3UgZG9uJ3QgaGF2ZSBlbm91Z2gKPih2
-aXJ0dWFsKSBNU0ktWCB2ZWN0b3JzPwo=
+Hi Daniel,
+
+Am Mittwoch, den 27.03.2019, 10:51 +0200 schrieb Daniel Baluta:
+[...]
+> 
+> > or
+> > "fsl,imx8qxp-edma", "fsl,imx8qm-edma"?
+> 
+> One thing that it is not clear for me is why there are places
+> where we use two compatible strings?
+> 
+> I understand the situation where are two distinct drivers, but is there
+> any other reason to add multiple compatible strings for a node in dts?
+
+We use 2 compatible string where there should not be any differences
+between the IP blocks of this SoC and a version the driver already
+supports.
+
+So if the eDMA driver already supports the software interface for
+"fsl,imx8qm-edma" and the IP block is compatible with this, we add this
+to the DT, so the we don't need any driver changes just to support a
+new SoC. But as you can never be sure if there are subtle differences
+in the IP block and/or SOC integration when adding the DT support, we
+also add a more specific compatible to the DT. If it turns out that
+there are software visible differences, we only need to adapt the
+driver to check for the more specific compatible to trigger the changed
+behavior, allowing to keep the DT stable.
+
+Regards,
+Lucas
