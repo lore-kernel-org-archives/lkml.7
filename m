@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EB5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FC2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CA1206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2554A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714412;
-	bh=PV+ZNkfna2MH+a+qrrQ54e+h3H+BE59K0deX1cA54vw=;
+	s=default; t=1553714423;
+	bh=ILWUV+WkoJGEKH1nu4EKtUh0n5zRY5W6K6rX3S1TNZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LlflY+w5IutZWtnHaGvog6Ut20CoSFXvMiDp0uLR9SMO/YjXkSriW/PNeYbsvLs/N
-	 c7C9vvfBO2h2fQ1YAzMG4lr6cElvCjZMgKIYHn2q12TO1xvoFTj/knxXqMrUFgU0vA
-	 1dbthLlLYFJ57ZjAeIMzDX/3XV3HzUXIPxTKwaS0=
+	b=m6QBS05ZQfW2uQ4nn4CNKeD8rW+Cv17o4PqyvBO+kzYGFStMhVl0tl7ngroM85feB
+	 pR6EEhcfJwNLuc/ApX1cyWyWlIM1B4hxVBdPGEDIxkoV+UMmBRuz5TxQK5OHw+3jr/
+	 zIXcPqTFDCDtUpbB9RIALvWlLgo1xsQ4fzSrz3E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388188AbfC0SH2 (ORCPT
+        id S2388418AbfC0TUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49236 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388165AbfC0SHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:24 -0400
+        id S1731740AbfC0SHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:07:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ADC52063F;
-        Wed, 27 Mar 2019 18:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4620E21734;
+        Wed, 27 Mar 2019 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710044;
-        bh=PV+ZNkfna2MH+a+qrrQ54e+h3H+BE59K0deX1cA54vw=;
+        s=default; t=1553710039;
+        bh=ILWUV+WkoJGEKH1nu4EKtUh0n5zRY5W6K6rX3S1TNZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jiuOP88uKK9shC8pDY8B7DqVlQUaQJrz+Vv9JJy++u+QHfou9l4WFVZtK9zNkRVnQ
-         rlFbMT1Jq5fnrC0PFOHZytiM9JToztQxEeNxamdWvo4WNQiLrw1jipP+qcwmFoY/L5
-         JX43bGZG1srTMzDHVro6HaH9TlOlpiSUDRGD2C3o=
+        b=CWJKVbHt3lQzMr9HUNzg7g2x9gBu26ykHDEdyFYqVDe7GWoz0iRKgdslUErvUtA3v
+         mSqMXw9Efby6Faus0TAGTI4dsAXUsMNE7Abx4e0f1ft+Fcq8b91LgFglXuNqEtwJQS
+         vLCuBQEkuFEkRyU0KnnzA2uQ30q5Cd+zW8pA1ASs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 171/262] drm/amd/display: Don't re-program planes for DPMS changes
-Date:   Wed, 27 Mar 2019 14:00:26 -0400
-Message-Id: <20190327180158.10245-171-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 169/262] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Wed, 27 Mar 2019 14:00:24 -0400
+Message-Id: <20190327180158.10245-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -58,64 +57,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 5062b797db4103218fa00ee254417b8ecaab7401 ]
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-[Why]
-There are opt1c lock warnings and CRTC read timeouts when running the
-"igt@kms_plane@plane-position-hole-dpms-pipe-*" tests. These are
-caused by trying to reprogram planes that are not in the current
-context.
+The following traceback is sometimes seen when booting an image in qemu:
 
-DPMS off removes the stream from the context. In this case:
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-The planes are reprogrammed before the stream is removed from the
-context because stream_state->mode_changed = false.
+Use a static atomic to ensure that the function is executed exactly once.
 
-For DPMS adds the stream and planes back to the context:
-
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
-
-The planes are also reprogrammed here before the stream is added to the
-context because stream_state->mode_changed = true. They were not
-previously in the current context so warnings occur here.
-
-[How]
-Set stream_state->mode_changed = true when
-new_crtc_state->active_changed = true too.
-
-This prevents reprogramming before the context is applied in DC. The
-programming will be done after the context is applied.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 6d77fd966dbd..0040605cace8 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4975,7 +4975,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
- 						struct dc_stream_state *stream_state)
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 614ecdbb4ab7..933268b8d6a5 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
+ 
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3692,9 +3693,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
+ 
+ static void cdrom_sysctl_register(void)
  {
--	stream_state->mode_changed = crtc_state->mode_changed;
-+	stream_state->mode_changed =
-+		crtc_state->mode_changed || crtc_state->active_changed;
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
+ 
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3705,8 +3706,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
  }
  
- static int amdgpu_dm_atomic_commit(struct drm_device *dev,
+ static void cdrom_sysctl_unregister(void)
 -- 
 2.19.1
 
