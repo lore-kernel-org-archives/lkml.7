@@ -2,400 +2,231 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB85C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF5602147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7B82146F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 14:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbfC0OT4 (ORCPT
+        id S1730522AbfC0OUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 10:19:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33056 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfC0OTz (ORCPT
+        Wed, 27 Mar 2019 10:20:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50816 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729294AbfC0OUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 10:19:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z6so4964007wmi.0;
-        Wed, 27 Mar 2019 07:19:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BQbVqwfLSedAA+1iq89L/TOBJh3jo67TcOYLzlEPVtQ=;
-        b=p/xpzgSgVNcF/zp54xQI/yCqc+QlKhRi2DDPIrZqTbk8gOL84KoNTeChYrrjQ1fqH/
-         U8h5MMKAYO6aSHvgWrnlJLSWMCJYl2P6IfqfXy71zUSzrS43v/XxHyg2oiN3Nw4R7uWo
-         yuLgsh5rsuwvhJJ9PPuTdSy7xIoplGrvH+py1frEityD9KKNfJer1n1izD+lIFA0gQR6
-         WKSyMXaw+2WCH5hSQ2zWU7K/Vpr1RMwMIreAAN1CqgPqhAGt05sk3c26YNRX/hpKvu17
-         JZfPSKHH4YMnkkfwxQIS5Im6I2wJictU3izswySZoEipzfEEN01rGEG19yKNQWXK5DTA
-         iaFg==
-X-Gm-Message-State: APjAAAU3YrnF5XLP2HfeZ+CPQvUCIelVIzO9NlxPmUikXane0T42WN/6
-        X2tPIKp0a5T6OSYbyEUQH6k=
-X-Google-Smtp-Source: APXvYqzGwRMyGp0uyWR7MGzJcLSun7gA8WXZuRka/rYQiOm0wJYHzhfSTyr6xMxDScfjH+tpnPQsdg==
-X-Received: by 2002:a1c:cbc5:: with SMTP id b188mr1878545wmg.87.1553696392229;
-        Wed, 27 Mar 2019 07:19:52 -0700 (PDT)
-Received: from oberon.eng.vmware.com ([146.247.46.5])
-        by smtp.gmail.com with ESMTPSA id t69sm205022wmt.16.2019.03.27.07.19.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 07:19:51 -0700 (PDT)
-From:   Tzvetomir Stoyanov <tstoyanov@vmware.com>
-To:     rostedt@goodmis.org
-Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/5] tools/perf,tools/lib/traceevent: Rename "pevent" member of struct tep_event to "tep"
-Date:   Wed, 27 Mar 2019 16:19:44 +0200
-Message-Id: <20190327141946.4353-4-tstoyanov@vmware.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190327141946.4353-1-tstoyanov@vmware.com>
-References: <20190327141946.4353-1-tstoyanov@vmware.com>
+        Wed, 27 Mar 2019 10:20:20 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h99PV-0003dB-Us; Wed, 27 Mar 2019 15:20:10 +0100
+Date:   Wed, 27 Mar 2019 15:20:08 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andi Kleen <andi@firstfloor.org>
+cc:     Andi Kleen <ak@linux.intel.com>, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
+ .text
+In-Reply-To: <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org>
+Message-ID: <alpine.DEB.2.21.1903270820530.1789@nanos.tec.linutronix.de>
+References: <20190321220009.29334-1-andi@firstfloor.org> <20190321220009.29334-3-andi@firstfloor.org> <alpine.DEB.2.21.1903261751490.1789@nanos.tec.linutronix.de> <20190326213803.GN18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de>
+ <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renames "pevent" member of the struct tep_event to "tep". This makes
-the struct consistent with the chosen naming convention:
-tep (trace event parser), instead of the old pevent.
+Andi,
 
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
----
- tools/lib/traceevent/event-parse.c            | 32 +++++++++----------
- tools/lib/traceevent/event-parse.h            |  2 +-
- tools/lib/traceevent/parse-filter.c           |  6 ++--
- tools/lib/traceevent/plugin_function.c        |  2 +-
- tools/lib/traceevent/plugin_kmem.c            |  4 +--
- tools/lib/traceevent/plugin_kvm.c             |  4 +--
- tools/lib/traceevent/plugin_sched_switch.c    |  2 +-
- tools/perf/builtin-kmem.c                     |  2 +-
- tools/perf/util/data-convert-bt.c             |  4 +--
- tools/perf/util/python.c                      |  2 +-
- .../util/scripting-engines/trace-event-perl.c |  2 +-
- .../scripting-engines/trace-event-python.c    |  2 +-
- tools/perf/util/trace-event-parse.c           |  2 +-
- 13 files changed, 33 insertions(+), 33 deletions(-)
+On Tue, 26 Mar 2019, Andi Kleen wrote:
+> > Well, we better should know the real reason for this wreckage. I mean, the
+> > default section for text is suprisingly .text. I don't see a reason why
+> > this would be any different for an assembly function implemented in a C
+> > file.
+> 
+> What happens is that when the function before the asm changes
+> the section, gcc only changes it back for the next function/variable
+> with a different section. But it doesn't change it back for the asm.
+> 
+> 
+> e.g. here
+> 
+> __attribute__((section("foo"))) void func(void)
+> {
+> }
+> 
+> asm("foo:\n");
+> 
+> gives with gcc -S (might be different with optimization):
+> 
+>  .section foo,"ax",@progbits <----------------- sets the section
+>  .globl func
+>  .type func, @function
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index f04cc0b68450..18fb22a89ef2 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -804,7 +804,7 @@ static int add_event(struct tep_handle *pevent, struct tep_event *event)
- 	pevent->events[i] = event;
- 	pevent->nr_events++;
+SNIP
+
+> .LFE0:
+>  .size func, .-func
+> <--------------------------- no section reset before the asm
+> #APP
+>  foo:
+> 
+>  .ident "GCC: (GNU) 8.3.1 20190223 (Red Hat 8.3.1-2)"
+>  .section .note.GNU-stack,"",@progbits
+
+Makes sense, but comes as a surprise when the thing is actually marked as a
+function.
+
+> But gcc reorders functions even without LTO inside files, so it could
+> eventually happen.
+
+Adding
+
++void __init foo(void)
++{
++       pr_info("foo\n");
++}
+
+right before the kretprobe_trampoline and compiling it with GCC 6.
+
+So one would assume that kretprobe_trampoline now ends up in
+.init.text. But it ends up in the .text section because it's reordered and
+ends up at the top of .text.
+
+So clearly stuff gets reordered and those top level ASM constructs which
+lack a section are just working by chance and we need the annotations and
+backport them.
+
+We also need a way to detect such wreckage automatically. This can happen
+again and as the GCC behaviour is random there is no guarantee that it's
+noticed right away. Josh, can objtool help here or do we need some other
+form of checking that?
+
+So independent of the LTO issue, this information needs to be in the
+changelog.
+
+For the patch itself. The kprobes/vide/error-inject parts are fine because
+these are clearly functions: ".type $NAME, @function\n".
+
+But this hunk not so much:
+
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -372,7 +372,7 @@ extern struct paravirt_patch_template pv_ops;
  
--	event->pevent = pevent;
-+	event->tep = pevent;
+>  #define DEF_NATIVE(ops, name, code)					\
+> 	__visible extern const char start_##ops##_##name[], end_##ops##_##name[];	\
+> -	asm(NATIVE_LABEL("start_", ops, name) code NATIVE_LABEL("end_", ops, name))
+> +	asm(".text\n\t" NATIVE_LABEL("start_", ops, name) code NATIVE_LABEL("end_", ops, name))
+
+Because it is NOT text.
+
+That 'code' is never executed in place. It's a patch table, which is used
+by the alternative code to patch in the native instructions so the pv_ops
+indirection can be avoided on bare metal. It's only copied into a buffer
+nothing else. So blindly slapping '.text' on it is just wrong.
+
+But that's not the only thing which is wrong here. DEF_NATIVE is only used
+in paravirt_patch_32/64.c and the resulting labels are not used outside of
+this either. So why are these labels global and the c declaration __visible
+extern?
+
+global was already in the original paravirt code and should have never been
+there in the first place.
+
+But __visible? That was added via:
+
+  commit 9a55fdbe941e ("x86, asmlinkage, paravirt: Add __visible/asmlinkage to xen paravirt ops")
+
+with a completely empty changelog. Really helpful.
+
+And further down the road it was again LTO "improved":
+
+commit 824a2870098fa536 ("x86, asmlinkage, paravirt: Don't rely on local assembler labels")
+
+with the following changelog in 2013:
+
+    "The paravirt patching code assumes that it can reference a
+     local assembler label between two different top level assembler
+     statements. This does not work with LTO
+     where the assembler code may end up in different assembler files.
+    
+     Replace it with extern / global /asm linkage labels."
+    
+This clearly shows that it was never analyzed proper and even the current
+patch lacks any form of proper root cause analysis as the "changelog"
+clearly shows:
+
+  "With gcc 8 toplevel assembler statements that do not mark themselves
+   as .text may end up in other sections. I had boot crashes because
+   various assembler statements ended up in the middle of the initcall
+   section."
+
+Admittedly it contains at least some information, which is progress over an
+empty changelog. But it's clearly NOT a gcc8 problem and it has absolutely
+nothing to do with LTO, which the subject suggests.
+
+Is it really necessary, that I need to:
+
+  - urge you to talk with GCC people?
+
+  - ask about whether this needs to be backported?
+
+  - ask whether this is an LTO only problem?
+
+  - do your homework of analysing the root cause?
+
+  - do your homework of analysing the patched code?
+
+  - do your homework of fixing it proper?
+
+And you ask why it takes ages to get your stuff merged? Yes, it takes ages
+because patches based on 'works for me' engineering are simply not
+acceptable. You have a proven track record of that and I'm trusting you and
+your patches not at all. Done that, got burned often enough. Not going to
+happen again. It's solely up to you to change that situation.
+
+Proper fix below.
+
+Thanks,
+
+	tglx
+
+8<-------------------
+
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -367,11 +367,15 @@ extern struct paravirt_patch_template pv
+ 	_paravirt_alt(insn_string, "%c[paravirt_typenum]", "%c[paravirt_clobber]")
  
- 	return 0;
- }
-@@ -1656,8 +1656,8 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
- 			else if (field->flags & TEP_FIELD_IS_STRING)
- 				field->elementsize = 1;
- 			else if (field->flags & TEP_FIELD_IS_LONG)
--				field->elementsize = event->pevent ?
--						     event->pevent->long_size :
-+				field->elementsize = event->tep ?
-+						     event->tep->long_size :
- 						     sizeof(long);
- 		} else
- 			field->elementsize = field->size;
-@@ -3075,7 +3075,7 @@ process_function(struct tep_event *event, struct tep_print_arg *arg,
- 		return process_dynamic_array_len(event, arg, tok);
- 	}
+ /* Simple instruction patching code. */
+-#define NATIVE_LABEL(a,x,b) "\n\t.globl " a #x "_" #b "\n" a #x "_" #b ":\n\t"
++#define NATIVE_LABEL(a,x,b) "\n" a #x "_" #b ":\n\t"
  
--	func = find_func_handler(event->pevent, token);
-+	func = find_func_handler(event->tep, token);
- 	if (func) {
- 		free_token(token);
- 		return process_func_handler(event, func, arg, tok);
-@@ -3405,7 +3405,7 @@ int tep_read_number_field(struct tep_format_field *field, const void *data,
- 	case 2:
- 	case 4:
- 	case 8:
--		*value = tep_read_number(field->event->pevent,
-+		*value = tep_read_number(field->event->tep,
- 					 data + field->offset, field->size);
- 		return 0;
- 	default:
-@@ -3566,7 +3566,7 @@ tep_find_event_by_name(struct tep_handle *tep,
- static unsigned long long
- eval_num_arg(void *data, int size, struct tep_event *event, struct tep_print_arg *arg)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long val = 0;
- 	unsigned long long left, right;
- 	struct tep_print_arg *typearg = NULL;
-@@ -3907,7 +3907,7 @@ static void print_str_arg(struct trace_seq *s, void *data, int size,
- 			  struct tep_event *event, const char *format,
- 			  int len_arg, struct tep_print_arg *arg)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_print_flag_sym *flag;
- 	struct tep_format_field *field;
- 	struct printk_map *printk;
-@@ -4256,7 +4256,7 @@ static void free_args(struct tep_print_arg *args)
+ #define DEF_NATIVE(ops, name, code)					\
+-	__visible extern const char start_##ops##_##name[], end_##ops##_##name[];	\
+-	asm(NATIVE_LABEL("start_", ops, name) code NATIVE_LABEL("end_", ops, name))
++	static const char start_##ops##_##name[], end_##ops##_##name[]; \
++	asm(".pushsection .rodata, \"a\"\n"				\
++	    NATIVE_LABEL("start_", ops, name)				\
++	    code							\
++	    NATIVE_LABEL("end_", ops, name)				\
++	    ".popsection\n")
  
- static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_format_field *field, *ip_field;
- 	struct tep_print_arg *args, *arg, **next;
- 	unsigned long long ip, val;
-@@ -4433,7 +4433,7 @@ static char *
- get_bprint_format(void *data, int size __maybe_unused,
- 		  struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long addr;
- 	struct tep_format_field *field;
- 	struct printk_map *printk;
-@@ -4834,7 +4834,7 @@ void tep_print_field(struct trace_seq *s, void *data,
- {
- 	unsigned long long val;
- 	unsigned int offset, len, i;
--	struct tep_handle *pevent = field->event->pevent;
-+	struct tep_handle *pevent = field->event->tep;
- 
- 	if (field->flags & TEP_FIELD_IS_ARRAY) {
- 		offset = field->offset;
-@@ -4909,7 +4909,7 @@ void tep_print_fields(struct trace_seq *s, void *data,
- 
- static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_event *event)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	struct tep_print_fmt *print_fmt = &event->print_fmt;
- 	struct tep_print_arg *arg = print_fmt->args;
- 	struct tep_print_arg *args = NULL;
-@@ -5423,7 +5423,7 @@ void tep_event_info(struct trace_seq *s, struct tep_event *event,
- {
- 	int print_pretty = 1;
- 
--	if (event->pevent->print_raw || (event->flags & TEP_EVENT_FL_PRINTRAW))
-+	if (event->tep->print_raw || (event->flags & TEP_EVENT_FL_PRINTRAW))
- 		tep_print_fields(s, record->data, record->size, event);
- 	else {
- 
-@@ -6097,7 +6097,7 @@ enum tep_errno __tep_parse_format(struct tep_event **eventp,
- 	}
- 
- 	/* Add pevent to event so that it can be referenced */
--	event->pevent = pevent;
-+	event->tep = pevent;
- 
- 	ret = event_read_format(event);
- 	if (ret < 0) {
-@@ -6291,8 +6291,8 @@ void *tep_get_field_raw(struct trace_seq *s, struct tep_event *event,
- 
- 	offset = field->offset;
- 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
--		offset = tep_read_number(event->pevent,
--					    data + offset, field->size);
-+		offset = tep_read_number(event->tep,
-+					 data + offset, field->size);
- 		*len = offset >> 16;
- 		offset &= 0xffff;
- 	} else
-@@ -6426,7 +6426,7 @@ int tep_print_func_field(struct trace_seq *s, const char *fmt,
- 			 struct tep_record *record, int err)
- {
- 	struct tep_format_field *field = tep_find_field(event, name);
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long val;
- 	struct func_map *func;
- 	char tmp[128];
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index 6438f9b55fbe..594f9c52ebf1 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -278,7 +278,7 @@ struct tep_print_fmt {
- };
- 
- struct tep_event {
--	struct tep_handle	*pevent;
-+	struct tep_handle	*tep;
- 	char			*name;
- 	int			id;
- 	int			flags;
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index ce437ac286e9..231e9cae5729 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1531,8 +1531,8 @@ get_comm(struct tep_event *event, struct tep_record *record)
- 	const char *comm;
- 	int pid;
- 
--	pid = tep_data_pid(event->pevent, record);
--	comm = tep_data_comm_from_pid(event->pevent, pid);
-+	pid = tep_data_pid(event->tep, record);
-+	comm = tep_data_comm_from_pid(event->tep, pid);
- 	return comm;
- }
- 
-@@ -1730,7 +1730,7 @@ static const char *get_field_str(struct tep_filter_arg *arg, struct tep_record *
- 
- 	} else {
- 		event = arg->str.field->event;
--		pevent = event->pevent;
-+		pevent = event->tep;
- 		addr = get_value(event, arg->str.field, record);
- 
- 		if (arg->str.field->flags & (TEP_FIELD_IS_POINTER | TEP_FIELD_IS_LONG))
-diff --git a/tools/lib/traceevent/plugin_function.c b/tools/lib/traceevent/plugin_function.c
-index e93f33bd705f..d6a8df060614 100644
---- a/tools/lib/traceevent/plugin_function.c
-+++ b/tools/lib/traceevent/plugin_function.c
-@@ -126,7 +126,7 @@ static int add_and_get_index(const char *parent, const char *child, int cpu)
- static int function_handler(struct trace_seq *s, struct tep_record *record,
- 			    struct tep_event *event, void *context)
- {
--	struct tep_handle *pevent = event->pevent;
-+	struct tep_handle *pevent = event->tep;
- 	unsigned long long function;
- 	unsigned long long pfunction;
- 	const char *func;
-diff --git a/tools/lib/traceevent/plugin_kmem.c b/tools/lib/traceevent/plugin_kmem.c
-index c09bafdd8377..edaec5d962c3 100644
---- a/tools/lib/traceevent/plugin_kmem.c
-+++ b/tools/lib/traceevent/plugin_kmem.c
-@@ -39,11 +39,11 @@ static int call_site_handler(struct trace_seq *s, struct tep_record *record,
- 	if (tep_read_number_field(field, data, &val))
- 		return 1;
- 
--	func = tep_find_function(event->pevent, val);
-+	func = tep_find_function(event->tep, val);
- 	if (!func)
- 		return 1;
- 
--	addr = tep_find_function_address(event->pevent, val);
-+	addr = tep_find_function_address(event->tep, val);
- 
- 	trace_seq_printf(s, "(%s+0x%x) ", func, (int)(val - addr));
- 	return 1;
-diff --git a/tools/lib/traceevent/plugin_kvm.c b/tools/lib/traceevent/plugin_kvm.c
-index 472298c2b531..c8e623065a7e 100644
---- a/tools/lib/traceevent/plugin_kvm.c
-+++ b/tools/lib/traceevent/plugin_kvm.c
-@@ -389,8 +389,8 @@ static int kvm_mmu_print_role(struct trace_seq *s, struct tep_record *record,
- 	 * We can only use the structure if file is of the same
- 	 * endianness.
- 	 */
--	if (tep_is_file_bigendian(event->pevent) ==
--	    tep_is_local_bigendian(event->pevent)) {
-+	if (tep_is_file_bigendian(event->tep) ==
-+	    tep_is_local_bigendian(event->tep)) {
- 
- 		trace_seq_printf(s, "%u q%u%s %s%s %spae %snxe %swp%s%s%s",
- 				 role.level,
-diff --git a/tools/lib/traceevent/plugin_sched_switch.c b/tools/lib/traceevent/plugin_sched_switch.c
-index 701c22913cf8..957389a0ff7a 100644
---- a/tools/lib/traceevent/plugin_sched_switch.c
-+++ b/tools/lib/traceevent/plugin_sched_switch.c
-@@ -62,7 +62,7 @@ static void write_and_save_comm(struct tep_format_field *field,
- 	comm = &s->buffer[len];
- 
- 	/* Help out the comm to ids. This will handle dups */
--	tep_register_comm(field->event->pevent, comm, pid);
-+	tep_register_comm(field->event->tep, comm, pid);
- }
- 
- static int sched_wakeup_handler(struct trace_seq *s,
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index fa520f4b8095..b80eee455111 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -1975,7 +1975,7 @@ int cmd_kmem(int argc, const char **argv)
- 			goto out_delete;
- 		}
- 
--		kmem_page_size = tep_get_page_size(evsel->tp_format->pevent);
-+		kmem_page_size = tep_get_page_size(evsel->tp_format->tep);
- 		symbol_conf.use_callchain = true;
- 	}
- 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 26af43ad9ddd..e0311c9750ad 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -310,7 +310,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
- 	if (flags & TEP_FIELD_IS_DYNAMIC) {
- 		unsigned long long tmp_val;
- 
--		tmp_val = tep_read_number(fmtf->event->pevent,
-+		tmp_val = tep_read_number(fmtf->event->tep,
- 					  data + offset, len);
- 		offset = tmp_val;
- 		len = offset >> 16;
-@@ -354,7 +354,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
- 			unsigned long long value_int;
- 
- 			value_int = tep_read_number(
--					fmtf->event->pevent,
-+					fmtf->event->tep,
- 					data + offset + i * len, len);
- 
- 			if (!(flags & TEP_FIELD_IS_SIGNED))
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index dda0ac978b1e..6aa7e2352e16 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -342,7 +342,7 @@ static bool is_tracepoint(struct pyrf_event *pevent)
- static PyObject*
- tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
- {
--	struct tep_handle *pevent = field->event->pevent;
-+	struct tep_handle *pevent = field->event->tep;
- 	void *data = pe->sample.raw_data;
- 	PyObject *ret = NULL;
- 	unsigned long long val;
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 5f06378a482b..61aa7f3df915 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -372,7 +372,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 	ns = nsecs - s * NSEC_PER_SEC;
- 
- 	scripting_context->event_data = data;
--	scripting_context->pevent = evsel->tp_format->pevent;
-+	scripting_context->pevent = evsel->tp_format->tep;
- 
- 	ENTER;
- 	SAVETMPS;
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 09604c6508f0..22f52b669871 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -837,7 +837,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	ns = nsecs - s * NSEC_PER_SEC;
- 
- 	scripting_context->event_data = data;
--	scripting_context->pevent = evsel->tp_format->pevent;
-+	scripting_context->pevent = evsel->tp_format->tep;
- 
- 	context = _PyCapsule_New(scripting_context, NULL, NULL);
- 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index ad74be1f0e42..863955e4094e 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -111,7 +111,7 @@ raw_field_value(struct tep_event *event, const char *name, void *data)
- 
- unsigned long long read_size(struct tep_event *event, void *ptr, int size)
- {
--	return tep_read_number(event->pevent, ptr, size);
-+	return tep_read_number(event->tep, ptr, size);
- }
- 
- void event_format__fprintf(struct tep_event *event,
--- 
-2.20.1
+ unsigned paravirt_patch_ident_64(void *insnbuf, unsigned len);
+ unsigned paravirt_patch_default(u8 type, void *insnbuf,
+
+
 
