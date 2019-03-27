@@ -2,178 +2,129 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EA6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B86C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF8A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E70420651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 16:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="DUPDODfl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jPVIDhFf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfC0QWb (ORCPT
+        id S1727695AbfC0QZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 12:22:31 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40351 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfC0QWQ (ORCPT
+        Wed, 27 Mar 2019 12:25:21 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46273 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbfC0QZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 12:22:16 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h22so14558891edw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:22:15 -0700 (PDT)
+        Wed, 27 Mar 2019 12:25:20 -0400
+Received: by mail-vs1-f68.google.com with SMTP id w26so9224370vsk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NLtjwEAo6dHd3Q0YdwPoEYvw8wxE9iWpDqCggNGnMXo=;
-        b=DUPDODflowlbmOivqcd1GgQmgOMNMVSSGyxbYH+T7FGcHcEbS52Pwradw2Db/8wI+a
-         Nzxfi2IJTQocAnb7Kt7eGU3cAQWus82sbDQS9cE/XjNH8BolCGSdSOgy9yhWsM/I/5h4
-         iRtLiAy1LDHsBR+8TnelB3mm/SvdM/kao5zVLfZCqH/O6+UahV0VF5A/ISA3CaTRTKTE
-         BxuhHdjb7UY2+5C/fBCLyaJVxfBbsRajpNNJ3vFaAMJB9x2MiaoWqVcR+sfd0DAYiilI
-         WPwF9pDKmc/YAj4HZzkoiroLYtCX5y9yyFLt+fTgob6Uu9TeshRCdo3S1Tpoxg+VFCKe
-         CDvw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bpwWCz5S/eK94PUEocrnBlFeInwqE4hvKSz6SqcHPTU=;
+        b=jPVIDhFfP2g6/5fmXwhEwnSwot4rKvqCaI7dbjWFTe7jbIQqNNj5nrPv+HU65dqRi1
+         nn//Su5xweQCbmWsFuroQZfZQ/R+tl2F9DT/yiEf+kOx5x1DErgY8HPltR0p33jOUert
+         rimjjVQmY6brzxOcVq3wXjTT7PMDlesEpHl8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NLtjwEAo6dHd3Q0YdwPoEYvw8wxE9iWpDqCggNGnMXo=;
-        b=rnxxj8loSQnO6BMrMgT7tXSypuiUYFJhd+mZYvCPC0OoTC2VjlXgaImjYI5RFAwWXZ
-         XDIHRHGMOfy/yTD0sw9SdfLLVwfI72q18Q5OzvzaZXQUsRwb8s71VtRQqQEx/x1ugzSb
-         7zu3wowowCqju+gISCvcNXFEyq6v39Ca5MaSmfV7D+UhICfGLqLc5jb+NWh5AT25gyiI
-         PbWQdlfLSwD8IxWw3ac09EzZq7UpelJbsgPECq5H/QW0y1KOaEcXxli7PzZwJ3KEqxdi
-         8HV1PN14WGWw1jszeEkXLKqSTm95MdGs75e+SR66J/ydWqOW9s5kIwCmahkxOeGKkqbG
-         naQQ==
-X-Gm-Message-State: APjAAAWUffl+7wJCuphWJQhizh9rgLJ3sYSykd/2YUWbemxoQ5p+IXUb
-        fWpqD1vs9uvT99JMH9tiCsUgOg==
-X-Google-Smtp-Source: APXvYqzXxdcA0Qvu/xtCrPmVyXT7C2311d0uHj9jplAK0rpZdIe8G0hieVt9gAU+6aAb9yasoPMa9Q==
-X-Received: by 2002:aa7:dd0e:: with SMTP id i14mr25395080edv.172.1553703734811;
-        Wed, 27 Mar 2019 09:22:14 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8109:b6bf:d24a:b136:35b0:7c8c:280a])
-        by smtp.gmail.com with ESMTPSA id m4sm4786276ejl.49.2019.03.27.09.22.13
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bpwWCz5S/eK94PUEocrnBlFeInwqE4hvKSz6SqcHPTU=;
+        b=N7Xdm+N/M6GKZxmdkUttpl8+QH99BtCQGpcDoiC3QPXGVQI7vJUXyyIrgNQZ5PbBsb
+         x8TWuh/EYpYSo9bybnoPGALxuipp2yTMbrpsjKRloNMkYQbJ+6VNSJHGpeaG/EQd6b14
+         ad6XUUwxQd+OI9mzTYpZNNQNbQVp6dmK2OHH2bzQrh0QQiy80idK0O5VR08UVof4qxMe
+         0NOhjKDGSYzoYvro65QOW7Xl4ZhyDV2o5TAOyO1yyLmpFo9vRcYe3B+3EBgi/ZULaBkT
+         KbmDdVq649/3fu3SXcLD8ZFYQV8tB8UOrSfEUSkVj7jD/RFx7rPJEOhgZqiiFJ85kslN
+         jQaA==
+X-Gm-Message-State: APjAAAX+rCt2H2MP840V9Mt3pJUeu1qDsNgp90VBWED5KMchH8Kk1iry
+        who1NoFHAFRF8jrpBUNmcnGJWYZ5Oig=
+X-Google-Smtp-Source: APXvYqxWxD1xMPD3r4wIyaCOfDeXHGJ0igdn933yDM9gAQexAZ20UxSFlVnlEuIyAmqpjcSUJjBHLw==
+X-Received: by 2002:a67:1c82:: with SMTP id c124mr23776137vsc.229.1553703919209;
+        Wed, 27 Mar 2019 09:25:19 -0700 (PDT)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id 190sm17366020vsz.0.2019.03.27.09.25.18
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 09:22:14 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     jannh@google.com, khlebnikov@yandex-team.ru, luto@kernel.org,
-        dhowells@redhat.com, serge@hallyn.com, ebiederm@xmission.com,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     arnd@arndb.de, keescook@chromium.org, adobriyan@gmail.com,
-        tglx@linutronix.de, mtk.manpages@gmail.com, bl0pbl33p@gmail.com,
-        ldv@altlinux.org, akpm@linux-foundation.org, oleg@redhat.com,
-        nagarathnam.muthusamy@oracle.com, cyphar@cyphar.com,
-        viro@zeniv.linux.org.uk, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH 3/4] signal: support pidfd_open() with pidfd_send_signal()
-Date:   Wed, 27 Mar 2019 17:21:46 +0100
-Message-Id: <20190327162147.23198-4-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190327162147.23198-1-christian@brauner.io>
-References: <20190327162147.23198-1-christian@brauner.io>
+        Wed, 27 Mar 2019 09:25:18 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id f15so10278062vsk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 09:25:18 -0700 (PDT)
+X-Received: by 2002:a67:c812:: with SMTP id u18mr5947372vsk.87.1553703917672;
+ Wed, 27 Mar 2019 09:25:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190327150551.12851-1-qiaochong@loongson.cn>
+In-Reply-To: <20190327150551.12851-1-qiaochong@loongson.cn>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 27 Mar 2019 09:25:06 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WAvzz+wXZzoLZvxBhO4P_RjV2op=uiX9dHD2dPdSCruw@mail.gmail.com>
+Message-ID: <CAD=FV=WAvzz+wXZzoLZvxBhO4P_RjV2op=uiX9dHD2dPdSCruw@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: KGDB: fix kgdb support for SMP platforms.
+To:     qiaochong <qiaochong@loongson.cn>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let pidfd_send_signal() use pidfds retrieved via pidfd_open(). With this
-patch pidfd_send_signal() becomes independent of procfs. This fullfils the
-request made when we merged the pidfd_send_signal() patchset. The
-pidfd_send_signal() syscall is now always available allowing for it to be
-used by users without procfs mounted or even users without procfs support
-compiled into the kernel.
+Hi,
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Reviewed-by: David Howells <dhowells@redhat.com>
-Acked-by: Serge Hallyn <serge@hallyn.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com
-Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc: "Dmitry V. Levin" <ldv@altlinux.org>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
----
- kernel/signal.c | 14 ++++++++++----
- kernel/sys_ni.c |  3 ---
- 2 files changed, 10 insertions(+), 7 deletions(-)
+On Wed, Mar 27, 2019 at 8:06 AM qiaochong <qiaochong@loongson.cn> wrote:
+>
+> KGDB_call_nmi_hook is called by other cpu through smp call.
+> MIPS smp call is processed in ipi irq handler and regs is saved in
+>  handle_int.
+> So kgdb_call_nmi_hook get regs by get_irq_regs and regs will be passed
+>  to kgdb_cpu_enter.
+>
+> Signed-off-by: qiaochong <qiaochong@loongson.cn>
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index b7953934aa99..eb97d0cc6ef7 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -3513,7 +3513,6 @@ SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
- 	return kill_something_info(sig, &info, pid);
- }
- 
--#ifdef CONFIG_PROC_FS
- /*
-  * Verify that the signaler and signalee either are in the same pid namespace
-  * or that the signaler's pid namespace is an ancestor of the signalee's pid
-@@ -3550,6 +3549,14 @@ static int copy_siginfo_from_user_any(kernel_siginfo_t *kinfo, siginfo_t *info)
- 	return copy_siginfo_from_user(kinfo, info);
- }
- 
-+static struct pid *pidfd_to_pid(const struct file *file)
-+{
-+	if (file->f_op == &pidfd_fops)
-+		return file->private_data;
-+
-+	return tgid_pidfd_to_pid(file);
-+}
-+
- /**
-  * sys_pidfd_send_signal - send a signal to a process through a task file
-  *                          descriptor
-@@ -3581,12 +3588,12 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	if (flags)
- 		return -EINVAL;
- 
--	f = fdget_raw(pidfd);
-+	f = fdget(pidfd);
- 	if (!f.file)
- 		return -EBADF;
- 
- 	/* Is this a pidfd? */
--	pid = tgid_pidfd_to_pid(f.file);
-+	pid = pidfd_to_pid(f.file);
- 	if (IS_ERR(pid)) {
- 		ret = PTR_ERR(pid);
- 		goto err;
-@@ -3625,7 +3632,6 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
- 	fdput(f);
- 	return ret;
- }
--#endif /* CONFIG_PROC_FS */
- 
- static int
- do_send_specific(pid_t tgid, pid_t pid, int sig, struct kernel_siginfo *info)
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index d21f4befaea4..4d9ae5ea6caf 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -167,9 +167,6 @@ COND_SYSCALL(syslog);
- 
- /* kernel/sched/core.c */
- 
--/* kernel/signal.c */
--COND_SYSCALL(pidfd_send_signal);
--
- /* kernel/sys.c */
- COND_SYSCALL(setregid);
- COND_SYSCALL(setgid);
--- 
-2.21.0
+Note that you might want to adjust your git settings.  Usually in the
+kernel they require that a Signed-off-by have your real name, not just
+your username.  You probably need to spin your patch to fix this.  You
+should make sure that the authorship of the patch also has your real
+name.
 
+
+> ---
+>  arch/mips/kernel/kgdb.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/kernel/kgdb.c b/arch/mips/kernel/kgdb.c
+> index 6e574c02e4c3b..ea781b29f7f17 100644
+> --- a/arch/mips/kernel/kgdb.c
+> +++ b/arch/mips/kernel/kgdb.c
+> @@ -33,6 +33,7 @@
+>  #include <asm/processor.h>
+>  #include <asm/sigcontext.h>
+>  #include <linux/uaccess.h>
+> +#include <asm/irq_regs.h>
+>
+>  static struct hard_trap_info {
+>         unsigned char tt;       /* Trap type code for MIPS R3xxx and R4xxx */
+> @@ -214,7 +215,7 @@ void kgdb_call_nmi_hook(void *ignored)
+>         old_fs = get_fs();
+>         set_fs(KERNEL_DS);
+>
+> -       kgdb_nmicallback(raw_smp_processor_id(), NULL);
+> +       kgdb_nmicallback(raw_smp_processor_id(), get_irq_regs());
+>
+>         set_fs(old_fs);
+>  }
+
+As per my reply on V1, feel free to add:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
