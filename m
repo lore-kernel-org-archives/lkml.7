@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD3BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC12C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F992070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9686B2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 22:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfC0WOz (ORCPT
+        id S1727910AbfC0WRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 18:14:55 -0400
-Received: from sauhun.de ([88.99.104.3]:39396 "EHLO pokefinder.org"
+        Wed, 27 Mar 2019 18:17:35 -0400
+Received: from sauhun.de ([88.99.104.3]:39446 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbfC0WOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 18:14:55 -0400
+        id S1725972AbfC0WRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 18:17:34 -0400
 Received: from localhost (p5486CE6B.dip0.t-ipconnect.de [84.134.206.107])
-        by pokefinder.org (Postfix) with ESMTPSA id 8DE3E2E35A2;
-        Wed, 27 Mar 2019 23:14:52 +0100 (CET)
-Date:   Wed, 27 Mar 2019 23:14:52 +0100
+        by pokefinder.org (Postfix) with ESMTPSA id 132EB2E35A2;
+        Wed, 27 Mar 2019 23:17:33 +0100 (CET)
+Date:   Wed, 27 Mar 2019 23:17:32 +0100
 From:   Wolfram Sang <wsa@the-dreams.de>
 To:     Ray Jui <ray.jui@broadcom.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -31,17 +31,16 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
-        Michael Cheng <ccheng@broadcom.com>
-Subject: Re: [PATCH v5 2/8] i2c: iproc: Add slave mode support
-Message-ID: <20190327221452.GA15396@kunai>
+        Shreesha Rajashekar <shreesha@broadcom.com>
+Subject: Re: [PATCH v5 1/8] i2c: iproc: Extend I2C read up to 255 bytes
+Message-ID: <20190327221732.GB15396@kunai>
 References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-3-ray.jui@broadcom.com>
+ <20190214175725.60462-2-ray.jui@broadcom.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
 Content-Disposition: inline
-In-Reply-To: <20190214175725.60462-3-ray.jui@broadcom.com>
+In-Reply-To: <20190214175725.60462-2-ray.jui@broadcom.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,109 +48,48 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---a8Wt8u1KmwUX3Y2C
+--v9Ux+11Zm5mwPlX6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 
-> +static void bcm_iproc_i2c_slave_init(
-> +	struct bcm_iproc_i2c_dev *iproc_i2c, bool need_reset)
-> +{
-> +	u32 val;
+> +		if (!((readl(iproc_i2c->base +
+> +		M_FIFO_CTRL_OFFSET) >>
+> +		M_FIFO_RX_CNT_SHIFT) &
+> +		M_FIFO_RX_CNT_MASK))
+
+Don't be too strict with the 80 char limit. I think the above is hardly
+readable...
+
+> +			break;
 > +
-> +	if (need_reset) {
-> +		/* put controller in reset */
-> +		val =3D readl(iproc_i2c->base + CFG_OFFSET);
-> +		val |=3D BIT(CFG_RESET_SHIFT);
-> +		writel(val, iproc_i2c->base + CFG_OFFSET);
-> +
-> +		/* wait 100 usec per spec */
-> +		udelay(100);
-> +
-> +		/* bring controller out of reset */
-> +		val &=3D ~(BIT(CFG_RESET_SHIFT));
-> +		writel(val, iproc_i2c->base + CFG_OFFSET);
-> +	}
-> +
-> +	/* flush TX/RX FIFOs */
-> +	val =3D (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-> +	writel(val, iproc_i2c->base + S_FIFO_CTRL_OFFSET);
+> +		msg->buf[iproc_i2c->rx_bytes] =
+> +			(readl(iproc_i2c->base + M_RX_OFFSET) >>
+> +			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
 
-Will flushing FIFOs work when a slave is register while a master
-transfer is on-going at the same time?
+... this here is MUCH better.
 
-> +
-> +	/* RANDOM SLAVE STRETCH time - 20ms*/
-
-What is a "random stretch time"? 20ms sounds like a lot. Also, missing
-space before comment terminator.
-
-> @@ -224,22 +473,25 @@ static int bcm_iproc_i2c_init(struct bcm_iproc_i2c_=
-dev *iproc_i2c)
-> =20
->  	/* put controller in reset */
->  	val =3D readl(iproc_i2c->base + CFG_OFFSET);
-> -	val |=3D 1 << CFG_RESET_SHIFT;
-> -	val &=3D ~(1 << CFG_EN_SHIFT);
-> +	val |=3D BIT(CFG_RESET_SHIFT);
-> +	val &=3D ~(BIT(CFG_EN_SHIFT));
->  	writel(val, iproc_i2c->base + CFG_OFFSET);
-> =20
->  	/* wait 100 usec per spec */
->  	udelay(100);
-> =20
->  	/* bring controller out of reset */
-> -	val &=3D ~(1 << CFG_RESET_SHIFT);
-> +	val &=3D ~(BIT(CFG_RESET_SHIFT));
->  	writel(val, iproc_i2c->base + CFG_OFFSET);
-> =20
->  	/* flush TX/RX FIFOs and set RX FIFO threshold to zero */
-> -	val =3D (1 << M_FIFO_RX_FLUSH_SHIFT) | (1 << M_FIFO_TX_FLUSH_SHIFT);
-> +	val =3D (BIT(M_FIFO_RX_FLUSH_SHIFT) | BIT(M_FIFO_TX_FLUSH_SHIFT));
->  	writel(val, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
->  	/* disable all interrupts */
-> -	writel(0, iproc_i2c->base + IE_OFFSET);
-> +	val =3D readl(iproc_i2c->base + IE_OFFSET);
-> +	val &=3D ~(IE_M_ALL_INTERRUPT_MASK <<
-> +			IE_M_ALL_INTERRUPT_SHIFT);
-> +	writel(val, iproc_i2c->base + IE_OFFSET);
-
-This block looks unrelated, but I won't be too strict here...
-
-> +	case M_CMD_STATUS_FIFO_UNDERRUN:
-> +		dev_dbg(iproc_i2c->device, "FIFO under-run\n");
-> +		return -ENXIO;
-> +
-> +	case M_CMD_STATUS_RX_FIFO_FULL:
-> +		dev_dbg(iproc_i2c->device, "Master Rx FIFO full > 10ms\n");
-> +		return -ETIMEDOUT;
-> +
-
-=2E.. however, this looks really unrelated to me. This is about master
-transmission, or?
-
-Rest looks OK.
+Rest looks good.
 
 
---a8Wt8u1KmwUX3Y2C
+--v9Ux+11Zm5mwPlX6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyb9dcACgkQFA3kzBSg
-KbYvFQ//Z+N9U4yZ41ffQw2ciDW9/bABxl29fya7wzHtKzk0h1w0WYA174nmWoZX
-GLr9ulh+NL5aAmQuLBoawUsn0Z7Yh+Pf2yLWv9LbRVqfnuEzIrQE9nzk4I5eG0VE
-7XBO08s+LMpyx+L55+dlztYqWCfa1+CvCsH4q4bMlMLjL3dQDnEP0i6L2nbtUs/S
-yyQOZa7mPF1ISETxDyMeaqZa+NiJNC+T2r2QH2utnKg6eDBFybQ79NtaBdxxbCMq
-ZP5NKUrTcl4c+yHEtpZIfpcHfZwASlp9t8kFXthb0ohRorhDHoXmjFLTLnebteEJ
-I3CzhREgiZqc8YYnduJ/um1O8H1+EwQ3HxWt+q4LFZ0Ldnr/H3vvBQwGjmyUNwwP
-VOm/ETtwyRoN95Pv9Ny60rRY1Ht6nCqJpbWI8uatozb0DzdXldD0gBbGrXBujwDR
-so1131GoaEM0Di32fR1QbkckswrFMCRWEAqP2m93ajpppFoCM4u3HNsX+XKuz0rS
-ufQqhAVoFa1yzdPnfVniz1wkagbZ6/kBDet3LGYNIeeCvw3ZaZw0Pu+N5L685Me5
-Z1qpwni5g1ukEkyCNx3F/2+TM9ROXMmaR/WwTEJVm72bpDU9NUP8yXeFBovhiO7M
-7wZKkII2VNA3KG1MJd/wykhxcVDbNpo0l59N1XEBM/DuODhaE2Y=
-=AuIn
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyb9nwACgkQFA3kzBSg
+KbYzdg//TqhPqqJ8jsf33y2YrdjFG4eYNsHy58/R6LsqUp47WsYfxCSK+pIqGFds
+w7Tr35HB0oOQCqxAMnsV0hJV1bdITMR3N5KpW2LPL4YHBOIfsdtwJShPjo/n7vJE
+XLCEWto8fyIxjFYu/VfIPpeFyMK0djtvnAr1aT0Hu7iJbNuqPtgK0Htu5YqJUAHF
++KqsZtyIue8+16veAvEJ7jzQl7XcXkejpak1oOBrm69i3tvi5P0HK0wRTAninCZn
+v1GgOWnoP0iltCJpSDiZIRtEWcstGvx9vuHCu1DI9b/f7bk9F1Qh4V6Vwuot2JiF
+oG+J6UptJjoK90ZSBY4Z2yiDRU+qVYAwjskY2PLeG2AgMYP47LhZ7RDzfcNtJmiE
+fA+cwS3GhqIiFZbo0FPP1nKMvaJHr4xm0RDgPoTvmqxAUt5BwIMM2V8/ZnI8rlvW
+GVPoX9W2V4z5W8BF6/QXaaYk1QY6WLnTEgi31fofCbnYyxSre0MwvvtUzfiVdCr9
+IKQKV4N1s4MDYk6nOQ6x+rGa0tmJrw2wP8UJBGD4vl/TtSrCHmd8IJAE9xF/A85v
+7L0NpRIomYRXpeJRtm7mYsr8Nl/HY5nXGgK+eKScXanv7kV81P88dF+KrFDh2Ymg
++tB0iOV1QGcCKxNEx0h73cs1nhTfQLL2lCZpz3d0XntkA1q2Ysg=
+=5U3k
 -----END PGP SIGNATURE-----
 
---a8Wt8u1KmwUX3Y2C--
+--v9Ux+11Zm5mwPlX6--
