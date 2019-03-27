@@ -7,46 +7,58 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D91C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF08C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE552177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54592177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710726;
-	bh=gL9fmTEySaqd3QN3u1aDAF/Lcl5/ci1tCDVlSAkNNok=;
+	s=default; t=1553710730;
+	bh=TKkvdM3wjz8wa5jZlRk9rqtGhfEV+dYeNS8YZxQNC5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/tgCPWaKc+rRxegp/SQQ0qlpqk8JS8+YeNKF2NW5UkThsVLGjqEV/jZF6xmXv0IO
-	 0QfCizieixQGVU+RDpZNyMOZbUb0Yf4mxHWAjwsEE/6wp5Pv5bqXti0t2cCHoZLYDu
-	 HiLe8Dd5mlktXZe1ev9R2uS3N99klooomBuX5CLs=
+	b=FtvOKqvC4fpM7qlP50OiBp6f0XydeZO6AChrFWTsnFnm6cT9dGe/ZOzvy/RaKS0OF
+	 AYiSk+kG2Q6NoVNmf1qFsA769AiuXnlJHeWWDawhbfBS5GNAPRqNY5dtwwEbVLT5lU
+	 a+Ovn7/UAqKHYdPiqkA05xBdEHPLDNcHNky1EndQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbfC0SSp (ORCPT
+        id S2390599AbfC0SSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:18:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390570AbfC0SSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:18:42 -0400
+        id S2390585AbfC0SSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:18:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69D0D2082F;
-        Wed, 27 Mar 2019 18:18:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D9920449;
+        Wed, 27 Mar 2019 18:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710721;
-        bh=gL9fmTEySaqd3QN3u1aDAF/Lcl5/ci1tCDVlSAkNNok=;
+        s=default; t=1553710724;
+        bh=TKkvdM3wjz8wa5jZlRk9rqtGhfEV+dYeNS8YZxQNC5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqAXcaJpd+dX0lSSYD9TRSiMWoRF/eKrUlmkYGgXziQzV7OHm3TvZjVGHsDP/YutQ
-         cfo4cEoaa5/SC3j02E94il2/gai6czVijHlLlCHSIrFMlchD8EuY13Z7GL8CtY5Ozx
-         3QETfxywZeSbunZYxNNz3ytCKHIUnZOR4gw4SHH0=
+        b=EgOUUog4KJQ00I6UPH4EuHvlM2WxkTiVJNJoCpVJQfVWnukkbRfutbSvPblAlev+L
+         U7L8ADA8dvfJw/iMt0ZhM5b3pBh9x+vxSS2/wB57oYDbeGB8+PjwQL5Uha0zqo1//g
+         7kliAZq5L+V87q6u4t6WHO4+WVUFAH8Ra0TdBhWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 072/123] ALSA: PCM: check if ops are defined before suspending PCM
-Date:   Wed, 27 Mar 2019 14:15:36 -0400
-Message-Id: <20190327181628.15899-72-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        Zeng Tao <prime.zeng@hisilicon.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Thinh Nguyen <thinh.nguyen@synopsys.com>,
+        Chen Yu <chenyu56@huawei.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 073/123] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
+Date:   Wed, 27 Mar 2019 14:15:37 -0400
+Message-Id: <20190327181628.15899-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -58,49 +70,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit d9c0b2afe820fa3b3f8258a659daee2cc71ca3ef ]
+[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
 
-BE dai links only have internal PCM's and their substream ops may
-not be set. Suspending these PCM's will result in their
- ops->trigger() being invoked and cause a kernel oops.
-So skip suspending PCM's if their ops are NULL.
+Since the 5.0 merge window opened, I've been seeing frequent
+crashes on suspend and reboot with the trace:
 
-[ NOTE: this change is required now for following the recent PCM core
-  change to get rid of snd_pcm_suspend() call.  Since DPCM BE takes
-  the runtime carried from FE while keeping NULL ops, it can hit this
-  bug.  See details at:
-     https://github.com/thesofproject/linux/pull/582
-  -- tiwai ]
+[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
+[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
+...
+[   36.950666] Call trace:
+[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
+[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
+[   36.950692]  complete+0x28/0x70
+[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
+[   36.950713]  usb_gadget_giveback_request+0x34/0x108
+[   36.950721]  dwc3_gadget_giveback+0x50/0x68
+[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
+[   36.950731]  irq_thread_fn+0x30/0x88
+[   36.950734]  irq_thread+0x114/0x1b0
+[   36.950739]  kthread+0x104/0x130
+[   36.950747]  ret_from_fork+0x10/0x1c
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+I isolated this down to in ffs_epfile_io():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
+
+Where the completion done is setup on the stack:
+  DECLARE_COMPLETION_ONSTACK(done);
+
+Then later we setup a request and queue it, and wait for it:
+  if (unlikely(wait_for_completion_interruptible(&done))) {
+    /*
+    * To avoid race condition with ffs_epfile_io_complete,
+    * dequeue the request first then check
+    * status. usb_ep_dequeue API should guarantee no race
+    * condition with req->complete callback.
+    */
+    usb_ep_dequeue(ep->ep, req);
+    interrupted = ep->status < 0;
+  }
+
+The problem is, that we end up being interrupted, dequeue the
+request, and exit.
+
+But then the irq triggers and we try calling complete() on the
+context pointer which points to now random stack space, which
+results in the panic.
+
+Alan Stern pointed out there is a bug here, in that the snippet
+above "assumes that usb_ep_dequeue() waits until the request has
+been completed." And that:
+
+    wait_for_completion(&done);
+
+Is needed right after the usb_ep_dequeue().
+
+Thus this patch implements that change. With it I no longer see
+the crashes on suspend or reboot.
+
+This issue seems to have been uncovered by behavioral changes in
+the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
+remove wait_end_transfer").
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Zeng Tao <prime.zeng@hisilicon.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Cc: Chen Yu <chenyu56@huawei.com>
+Cc: Jerry Zhang <zhangjerry@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Vincent Pelletier <plr.vincent@gmail.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_native.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/usb/gadget/function/f_fs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 966ac384c3f4..d0490fec8775 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1475,6 +1475,14 @@ int snd_pcm_suspend_all(struct snd_pcm *pcm)
- 			/* FIXME: the open/close code should lock this as well */
- 			if (substream->runtime == NULL)
- 				continue;
-+
-+			/*
-+			 * Skip BE dai link PCM's that are internal and may
-+			 * not have their substream ops set.
-+			 */
-+			if (!substream->ops)
-+				continue;
-+
- 			err = snd_pcm_suspend(substream);
- 			if (err < 0 && err != -EBUSY)
- 				return err;
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 52e6897fa35a..79900c0b4f3a 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1009,6 +1009,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ 			 * condition with req->complete callback.
+ 			 */
+ 			usb_ep_dequeue(ep->ep, req);
++			wait_for_completion(&done);
+ 			interrupted = ep->status < 0;
+ 		}
+ 
 -- 
 2.19.1
 
