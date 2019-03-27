@@ -2,142 +2,115 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F24DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4C9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F26EA204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946F4204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553711524;
-	bh=JkniCfTXMqYRp0YFhUkfp8QCK4JuIgZmgdfsNhO0zN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N1MQ6ioP5Bh82kX5XY+Gy/z+PwtfMf0oODrG+NVCWKqmfvGC0pDNTRL3hQqIirgH3
-	 KVpmKvqrE1bpoewlnBiw+dH6pd/7LFkEoYVw45e3xuNbNF7UECz3pWqmE629z06IoR
-	 76Q+Pww6Z4Bj5UvHz9WM9YNA11HhZ1Zi25s+JITs=
+	s=default; t=1553711531;
+	bh=N2/r+LM+NJ1f3JmOsTRyGvXbjDxj+ST7Ee+qWE0CXik=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TDVSbbFBd4kc+4bsRTLC3e9ntyUyiA7YfLZhvoa+H8ewBGHSdDblK9slMkFeRCOhN
+	 WqB5BJNGVfvsJx3sKS+6NVqT0F96aBkahYJJq/od+2bUKa66t7NjDvaPszyR4WhxZ1
+	 7B5P2ViVn4sM3nf2SUDCbcH+d2aU1s0Oe3558T9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391902AbfC0ScC (ORCPT
+        id S2391931AbfC0ScK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52802 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbfC0ScA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:32:00 -0400
-Received: from localhost (unknown [88.128.80.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2391620AbfC0SZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:25:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54944204FD;
-        Wed, 27 Mar 2019 18:31:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733912184C;
+        Wed, 27 Mar 2019 18:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553711519;
-        bh=JkniCfTXMqYRp0YFhUkfp8QCK4JuIgZmgdfsNhO0zN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2cki3BQ3qlGqon5UBAwAsFt/nI3qAv6CUDDtvg5CWd3adDjQB1GeEgYp1z+MKfnsM
-         VHvEFprWizcDCh1O5f+4d4AEAga/BsBiI7/Bl2tJeCOQtkCdV44stIkoFBpCsq+NA9
-         s1hLSeJScln20jv+1G9vkO6eIFeO2pDFDKymWTG4=
-Date:   Thu, 28 Mar 2019 03:31:52 +0900
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH V31 25/25] debugfs: Disable open() when kernel is locked
- down
-Message-ID: <20190327183152.GB9371@kroah.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
- <20190326182742.16950-26-matthewgarrett@google.com>
- <CALCETrXDF2c2-gnOyNTnEn-uPAZp0AaSB_PB8e2y8jf7zo=Cyg@mail.gmail.com>
- <20190327003057.GA27311@kroah.com>
- <CALCETrVDDf4dj3Md1Nxc5P_NCToXGnAbEO3bGfwgKSfeVmU4Kw@mail.gmail.com>
- <20190327050615.GA548@kroah.com>
- <16124107-70D3-4CA0-9766-36FC6DC10128@amacapital.net>
- <20190327053342.GA17484@kroah.com>
- <CALCETrUW=r=xyr4pGiGnn9zUEevf=z6PP3111Ds6qguV5SjYUQ@mail.gmail.com>
+        s=default; t=1553711139;
+        bh=N2/r+LM+NJ1f3JmOsTRyGvXbjDxj+ST7Ee+qWE0CXik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bWqlv516Irpij6xASr4a2D6rZBF2Dla6drjYRvPUm+WrKUW18FS1wg+9exmwbiaL6
+         XhIwK/TOx1nNdQ7RH03b4Dgc2DlhiH9rG3RPYhgriVjEgVueke+hsdDuj/xBYsDk1u
+         pnmnnueL37/TKQfKmxjkVSapyOqXoHUTBrnGspAA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yao Liu <yotta.liu@ucloud.cn>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 10/41] cifs: Fix NULL pointer dereference of devname
+Date:   Wed, 27 Mar 2019 14:24:47 -0400
+Message-Id: <20190327182518.19394-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190327182518.19394-1-sashal@kernel.org>
+References: <20190327182518.19394-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUW=r=xyr4pGiGnn9zUEevf=z6PP3111Ds6qguV5SjYUQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 10:39:53AM -0700, Andy Lutomirski wrote:
-> On Tue, Mar 26, 2019 at 10:33 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 26, 2019 at 10:29:41PM -0700, Andy Lutomirski wrote:
-> > >
-> > >
-> > > > On Mar 26, 2019, at 10:06 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > >> On Tue, Mar 26, 2019 at 09:29:14PM -0700, Andy Lutomirski wrote:
-> > > >>> On Tue, Mar 26, 2019 at 5:31 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >>>
-> > > >>>> On Tue, Mar 26, 2019 at 12:20:24PM -0700, Andy Lutomirski wrote:
-> > > >>>> On Tue, Mar 26, 2019 at 11:28 AM Matthew Garrett
-> > > >>>> <matthewgarrett@google.com> wrote:
-> > > >>>>>
-> > > >>>>> From: Matthew Garrett <mjg59@google.com>
-> > > >>>>>
-> > > >>>>> debugfs has not been meaningfully audited in terms of ensuring that
-> > > >>>>> userland cannot trample over the kernel. At Greg's request, disable
-> > > >>>>> access to it entirely when the kernel is locked down. This is done at
-> > > >>>>> open() time rather than init time as the kernel lockdown status may be
-> > > >>>>> made stricter at runtime.
-> > > >>>>
-> > > >>>> Ugh.  Some of those files are very useful.  Could this perhaps still
-> > > >>>> allow O_RDONLY if we're in INTEGRITY mode?
-> > > >>>
-> > > >>> Useful for what?  Debugging, sure, but for "normal operation", no kernel
-> > > >>> functionality should ever require debugfs.  If it does, that's a bug and
-> > > >>> should be fixed.
-> > > >>>
-> > > >>
-> > > >> I semi-regularly read files in debugfs to diagnose things, and I think
-> > > >> it would be good for this to work on distro kernels.
-> > > >
-> > > > Doing that for debugging is wonderful.  People who want this type of
-> > > > "lock down" are trading potential security for diagnositic ability.
-> > > >
-> > >
-> > > I think you may be missing the point of splitting lockdown to separate integrity and confidentiality.  Can you actually think of a case where *reading* a debugfs file can take over a kernel?
-> >
-> > Reading a debugfs file can expose loads of things that can help take
-> > over a kernel, or at least make it easier.  Pointer addresses, internal
-> > system state, loads of other fun things.  And before 4.14 or so, it was
-> > pretty trivial to use it to oops the kernel as well (not an issue here
-> > anymore, but people are right to be nervous).
-> >
-> > Personally, I think these are all just "confidentiality" type things,
-> > but who really knows given the wild-west nature of debugfs (which is as
-> > designed).  And given that I think this patch series just crazy anyway,
-> > I really don't care :)
-> >
-> 
-> As far as I'm concerned, preventing root from crashing the system
-> should not be a design goal of lockdown at all.  And I think that the
-> "integrity" mode should be as non-annoying as possible, so I think we
-> should allow reading from debugfs.
+From: Yao Liu <yotta.liu@ucloud.cn>
 
-Sorry, the "crash the system" is not the issue here.  The issue is if
-everyone can "ensure" that "everything" in debugfs is "safe" for this
-mode of "lock down".  Given that no one has any idea of what really is
-in debugfs, and to try to compare that with the design goals of what
-"lock down" really is trying to achive, I think the goal of just giving
-up and restricting access is fine if that makes people feel better about
-this whole thing.
+[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
 
-If this is locked down, it is going to cause distros more pain in
-debugging user's issues, but that's their choice, not mine :)
+There is a NULL pointer dereference of devname in strspn()
 
-thanks,
+The oops looks something like:
 
-greg k-h
+  CIFS: Attempting to mount (null)
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:strspn+0x0/0x50
+  ...
+  Call Trace:
+   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
+   ? cifs_get_volume_info+0x2f/0x80 [cifs]
+   cifs_setup_volume_info+0x20/0x190 [cifs]
+   cifs_get_volume_info+0x50/0x80 [cifs]
+   cifs_smb3_do_mount+0x59/0x630 [cifs]
+   ? ida_alloc_range+0x34b/0x3d0
+   cifs_do_mount+0x11/0x20 [cifs]
+   mount_fs+0x52/0x170
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix this by adding a NULL check on devname in cifs_parse_devname()
+
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cifs/connect.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 7d4c2bf2fea2..f5f5aab3457f 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1186,6 +1186,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
+ 	const char *delims = "/\\";
+ 	size_t len;
+ 
++	if (unlikely(!devname || !*devname)) {
++		cifs_dbg(VFS, "Device name not specified.\n");
++		return -EINVAL;
++	}
++
+ 	/* make sure we have a valid UNC double delimiter prefix */
+ 	len = strspn(devname, delims);
+ 	if (len != 2)
+-- 
+2.19.1
+
