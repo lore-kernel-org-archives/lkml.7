@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C69BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F30C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2583204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09549204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713579;
-	bh=eO+FsWqCgcDGLQwkANGQvPR+AWgXIpvlND091seKMpM=;
+	s=default; t=1553713589;
+	bh=g5ArAhgRGHk/oY9osD+uFBy0N+3cAzjoJE/yxecXbBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFCgdnm1wGy6dpUrmeChOqZeI10ZAYRbtIuHm0b1KgtCkxppR0fqd+TBziiQqFGy/
-	 b3G1sJvzNj4dAhDormjbZ43cOlg8pTGqjmYYN275MZuSTMP5iRCwpUZkcOFDNQfB+f
-	 gCgV9MJ9RcCE/UEU2cl08as+rKxAasXpvQmvc0Fg=
+	b=vfR4JWbjOvxyA7uz9+sapjC/q5hu2mAS6h8q88J2Zl2IaqF7JZe0y8aa8sZJJQJ68
+	 4MdlCdpwQLozbULZvYg9qiPIV/9ley9BGyegRjUwTEaFzFFBqSUwr98IhHbNtJ7EWr
+	 RtV0/6S9PQmc3GqKdopCyMGAWxFx8VTxzSLsDwq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389463AbfC0TGS (ORCPT
+        id S2389491AbfC0TG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388590AbfC0SMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:12:30 -0400
+        id S2388933AbfC0SM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:12:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5F2217D9;
-        Wed, 27 Mar 2019 18:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8297B21738;
+        Wed, 27 Mar 2019 18:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710349;
-        bh=eO+FsWqCgcDGLQwkANGQvPR+AWgXIpvlND091seKMpM=;
+        s=default; t=1553710348;
+        bh=g5ArAhgRGHk/oY9osD+uFBy0N+3cAzjoJE/yxecXbBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jg/rDybjphTFeGiGs66xiKMpoTo9klmGkf+ylwJWK2/0FA8QMMBTkN8fuNLbrFVqS
-         K5TfkcV+rObJ9U+QqBNuPMie6rvucq/T2Pf7V8n49n9gLfitcITV61yfKCsbdSU2rR
-         E6KBPqf0Q4yUhZCQukZ70o8r7vmkQdLmmSST+JGs=
+        b=TGmmeSawJBbiDEWi9z2saPzg8BF0V3g3deRQcUHRUtwuS7mUkQF/ci7KRNxb0igyX
+         fDYx/y/pUaB0JJrNRevxReFwjLq0a7iSmN6BCDS+HgwIzVX6ZyZilQuUvQ7NcoRm61
+         yfemPzo4ko/sR0REBSYXUUFgC+PlAAuMzpdpzuOM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Wei Li <liwei391@huawei.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 072/192] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
-Date:   Wed, 27 Mar 2019 14:08:24 -0400
-Message-Id: <20190327181025.13507-72-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 071/192] perf annotate: Fix getting source line failure
+Date:   Wed, 27 Mar 2019 14:08:23 -0400
+Message-Id: <20190327181025.13507-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
@@ -58,87 +62,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
+[ Upstream commit 11db1ad4513d6205d2519e1a30ff4cef746e3243 ]
 
-The apq8016 driver leaves the of-node refcount at aborting from the
-loop of for_each_child_of_node() in the error path.  Not only the
-iterator node of for_each_child_of_node(), the children nodes referred
-from it for codec and cpu have to be properly unreferenced.
+The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
+("perf annotate: No need to calculate notes->start twice") removed notes->start
+assignment in symbol__calc_lines(). It will get failed in
+find_address_in_section() from symbol__tty_annotate() subroutine as the
+a2l->addr is wrong. So the annotate summary doesn't report the line number of
+source code correctly.
 
-Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Before fix:
+
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
+  void hotspot_1(void)
+  {
+	volatile int i;
+
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
+	for (i = 0; i < 0x10000000; i++);
+  }
+
+  int main(void)
+  {
+	hotspot_1();
+
+	return 0;
+  }
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
+
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
+
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
+
+   19.30 common_while_1[32]
+   19.03 common_while_1[4e]
+   19.01 common_while_1[16]
+    5.04 common_while_1[13]
+    4.99 common_while_1[4b]
+    4.78 common_while_1[2c]
+    4.77 common_while_1[10]
+    4.66 common_while_1[2f]
+    4.59 common_while_1[51]
+    4.59 common_while_1[35]
+    4.52 common_while_1[19]
+    4.20 common_while_1[56]
+    0.51 common_while_1[48]
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
+   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
+      0.00 :   618:   jle    607 <hotspot_1+0xd>
+           :                 for (i = 0; i < 0x10000000; i++);
+  ...
+
+After fix:
+
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
+  [ perf record: Woken up 2 times to write data ]
+  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
+  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
+
+  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
+  ----------------------------------------------
+
+   33.34 common_while_1.c:5
+   33.34 common_while_1.c:6
+   33.32 common_while_1.c:7
+   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
+  -----------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :         Disassembly of section .text:
+         :
+         :         00000000000005fa <hotspot_1>:
+         :         hotspot_1():
+         :         void hotspot_1(void)
+         :         {
+    0.00 :   5fa:   push   %rbp
+    0.00 :   5fb:   mov    %rsp,%rbp
+         :                 volatile int i;
+         :
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
+    0.00 :   605:   jmp    610 <hotspot_1+0x16>
+    0.00 :   607:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
+    4.89 :   60d:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
+   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
+    0.00 :   618:   jle    607 <hotspot_1+0xd>
+         :                 for (i = 0; i < 0x10000000; i++);
+    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
+    0.00 :   621:   jmp    62c <hotspot_1+0x32>
+    0.00 :   623:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
+    4.73 :   629:   mov    %eax,-0x4(%rbp)
+   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
+   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
+  ...
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
+Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-index 1dd23bba1bed..4b559932adc3 100644
---- a/sound/soc/qcom/apq8016_sbc.c
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -164,41 +164,52 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 28cd6a17491b..dfee110b3a58 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1862,6 +1862,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 		     struct annotation_options *options,
+ 		     struct arch **parch)
+ {
++	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+ 		.privsize	= privsize,
+ 		.evsel		= evsel,
+@@ -1892,6 +1893,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
  
- 		if (!cpu || !codec) {
- 			dev_err(dev, "Can't find cpu/codec DT node\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
+ 	args.ms.map = map;
+ 	args.ms.sym = sym;
++	notes->start = map__rip_2objdump(map, sym->start);
  
- 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
- 		if (!link->cpu_of_node) {
- 			dev_err(card->dev, "error getting cpu phandle\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting cpu dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
- 
- 		if (ret < 0) {
- 			dev_err(card->dev, "error getting codec dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->platform_of_node = link->cpu_of_node;
- 		ret = of_property_read_string(np, "link-name", &link->name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai_link name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->stream_name = link->name;
- 		link->init = apq8016_sbc_dai_init;
- 		link++;
-+
-+		of_node_put(cpu);
-+		of_node_put(codec);
- 	}
- 
- 	return data;
-+
-+ error:
-+	of_node_put(np);
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+	return ERR_PTR(ret);
+ 	return symbol__disassemble(sym, &args);
  }
+@@ -2746,8 +2748,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
  
- static const struct snd_soc_dapm_widget apq8016_sbc_dapm_widgets[] = {
+ 	symbol__calc_percent(sym, evsel);
+ 
+-	notes->start = map__rip_2objdump(map, sym->start);
+-
+ 	annotation__set_offsets(notes, size);
+ 	annotation__mark_jump_targets(notes, sym);
+ 	annotation__compute_ipc(notes, size);
 -- 
 2.19.1
 
