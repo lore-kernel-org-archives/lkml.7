@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656BFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F475C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CCEE2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B7421734
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714743;
-	bh=L5DVtnfAeB1dhNOpFZXhe9aUDAAf5Dkw0v8tUmuSn4U=;
+	s=default; t=1553714752;
+	bh=S4n0aZimLdD4R+tsUCTIIZdShqHluTM1NeplZyOBN9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02tdIVhBSbgUsDp7FR5t/axwNpCn+T3MgQ3HupEYZvC8T3mZ17VfhMlufQbQ5ACuz
-	 vha8W/onQcVgKyqPWjwakq4vTn45HonlZpRwwEB8v5Qgl/eVElb5IcV+qYjwLtJ6a6
-	 WBfAInTY2swaFDAjR9tD1g3ompqMzWSVUjZauZfc=
+	b=N6R218HchAq7MbBEqAgrwdc4z9M0/bRHdM+JkVNoGC9o4OPqbGL4h/Rm/xYKh/uCl
+	 6mQhFP9mHS+vjOnv4ISmUMlQzSelARyDbcvFmusGcHaly6iD846fkATaOhG6dV7KVk
+	 mWpjaxvqtPiY7sMBO6S8bcNOYmFoSP7RCqcR6HHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfC0TZm (ORCPT
+        id S2387606AbfC0SFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46298 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387632AbfC0SFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:05:15 -0400
+        id S2387583AbfC0SFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:05:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A2E217F9;
-        Wed, 27 Mar 2019 18:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4935C217F9;
+        Wed, 27 Mar 2019 18:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709914;
-        bh=L5DVtnfAeB1dhNOpFZXhe9aUDAAf5Dkw0v8tUmuSn4U=;
+        s=default; t=1553709906;
+        bh=S4n0aZimLdD4R+tsUCTIIZdShqHluTM1NeplZyOBN9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7OndqDdshyZr2ekSR/DiJb0uuZsKPSdGiftlk5ybJ2dSNQ9XLJC/QO80AZdaDt6/
-         ZO6pv75+4o/tclUfiyqbO2jIPGlgz14k30r8WwCc9c2WX7zPMPXr4HcAdjzt118bGf
-         dhV87uDTbm5/mM5dhVHnN6U4LbusZSlQFduVQIuI=
+        b=UDE3V18stRNuYojBG28gUikLhNetOUbMMEYSQgPlADx9adS4PLkMwE1mjhHn2MpjN
+         xeV8GAl2NAhRzGaypqoQxGHaORF7+XHvFLouO9n4ESzZkQLaloArUE/AXh/YBd7lvI
+         dLvXR2WGahVAfzeT1teS/7CIj57n3EJq1IvuWLxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
-        Erwan Velu <e.velu@criteo.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 109/262] cpufreq: acpi-cpufreq: Report if CPU doesn't support boost technologies
-Date:   Wed, 27 Mar 2019 13:59:24 -0400
-Message-Id: <20190327180158.10245-109-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 103/262] IB/mlx4: Increase the timeout for CM cache
+Date:   Wed, 27 Mar 2019 13:59:18 -0400
+Message-Id: <20190327180158.10245-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,48 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Velu <erwanaliasr1@gmail.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit 1222d527f314c86a3b59a522115d62facc5a7965 ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-There is some rare cases where CPB (and possibly IDA) are missing on
-processors.
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-This is the case fixed by commit f7f3dc00f612 ("x86/cpu/AMD: Fix
-erratum 1076 (CPB bit)") and following.
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-In such context, the boost status isn't reported by
-/sys/devices/system/cpu/cpufreq/boost.
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-This commit is about printing a message to report that the CPU
-doesn't expose the boost capabilities.
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-This message could help debugging platforms hit by this phenomena.
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
-[ rjw: Change the message text somewhat ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
+
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
+
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
+
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/acpi-cpufreq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index d62fd374d5c7..c72258a44ba4 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -916,8 +916,10 @@ static void __init acpi_cpufreq_boost_init(void)
- {
- 	int ret;
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index fedaf8260105..8c79a480f2b7 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
--	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA)))
-+	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA))) {
-+		pr_debug("Boost capabilities not present in the processor\n");
- 		return;
-+	}
+ #include "mlx4_ib.h"
  
- 	acpi_cpufreq_driver.set_boost = set_boost;
- 	acpi_cpufreq_driver.boost_enabled = boost_state(0);
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
+ 
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
