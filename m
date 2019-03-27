@@ -2,119 +2,165 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3ACC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863EDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281C82070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="iuZvIrac"
+	by mail.kernel.org (Postfix) with ESMTP id 5F6612070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 10:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732906AbfC0KEo (ORCPT
+        id S1733035AbfC0KFf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 06:04:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35252 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731664AbfC0KEo (ORCPT
+        Wed, 27 Mar 2019 06:05:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732920AbfC0KFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 06:04:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w1so17822608wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 03:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+Ngg8dVEnWPMGor+nIV4V2v+8f2pclCfsBtCpdi6Jbc=;
-        b=iuZvIracgjguJPsJ/z/h1PhxSafhOzr1WHs3aKRwhCRoLl2sDOQGjpLyTERZnccfNk
-         9gYlhx4cSUWxB0oV2exkNi32kY13LNIY3lUjYkHRC0cQJffVX7pBuyxrZSBkw93NkL3M
-         FDPPEZ12IVQzjCrPK3be+CYtg9GphN70HXIUJlBh3X1ixIGupscJuPorJ9xDLfoE0DbX
-         IGaxIoJ/xqqPJGMF5HQ4cB5PwAwY565yU9l6EyG3+pkLXAxZ89OTCiz5xbIabW+WwmOw
-         +K3Vyfv9HlLMEgWfiSUjkcF9/79BKOQ7MQYt9z+R14e2/JZEApfT1cUntfCRfws5/zrp
-         uozQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+Ngg8dVEnWPMGor+nIV4V2v+8f2pclCfsBtCpdi6Jbc=;
-        b=bsANO/dc2sd3tKbVyrK/mnlrIFsrOELfn7Aoztn9Z+j6/MiFWX+/Z23LK1WTdCtwP8
-         2IQSRx7fq4lIGOjMqFiU1bT2mO0rz8CWsm6Y8PM7ggovRUaFupgfUiNmhkLKMGKJ6XmR
-         yOzzarum+YxG3tgJdXSH5W1v9e81lTzQ1dFUOKyJhJvaFHd9OcLxDVPzANsLzrl6jdOJ
-         blouRo3pTl2oFfaXhUdg2cPFBoFKIIfFNLXNfRmlgrqn/6ae36iq+Yv7Tzk9bOlL3XbB
-         n7ZPWs2CNjuKhmL2JHu6rcaGvgcKB+o57kq6wjWWUZTQDqJJV+qdxiay/gpxXXbfT7XY
-         6a3w==
-X-Gm-Message-State: APjAAAXVDexlF4SUAe/KSGP2d9mcjNYs2JpUCD+UPJ6y2nTcHwa0Cpm1
-        MVVqr6w2nZEICwR5/M29n1yU4g==
-X-Google-Smtp-Source: APXvYqx9D1nJfDYegGAhJhC46JPrAznTHepYjXS7SfsmmNQQ3b9G4ZxdAeFyv+Vzz9MVzuc9sdCDCw==
-X-Received: by 2002:a05:6000:124a:: with SMTP id j10mr23653836wrx.24.1553681082668;
-        Wed, 27 Mar 2019 03:04:42 -0700 (PDT)
-Received: from localhost (ip-94-113-223-73.net.upcbroadband.cz. [94.113.223.73])
-        by smtp.gmail.com with ESMTPSA id h131sm5657809wmh.1.2019.03.27.03.04.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 03:04:42 -0700 (PDT)
-Date:   Wed, 27 Mar 2019 11:04:41 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 08/22] ethtool: support for netlink
- notifications
-Message-ID: <20190327100441.GE6979@nanopsycho>
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <3578e5f334acf11b84e75d0ee41c072340a7b085.1553532199.git.mkubecek@suse.cz>
- <20190326163400.GC4958@nanopsycho.orion>
- <20190326181720.GO26076@unicorn.suse.cz>
- <20190327093843.GB6979@nanopsycho>
- <20190327095148.GE15396@lunn.ch>
+        Wed, 27 Mar 2019 06:05:35 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2RA4qXB030824
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 06:05:33 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rg5vf3j9q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 06:05:33 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Wed, 27 Mar 2019 10:05:30 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Mar 2019 10:05:22 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2RA5Ld536831236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 10:05:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA8ADAE045;
+        Wed, 27 Mar 2019 10:05:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44B49AE051;
+        Wed, 27 Mar 2019 10:05:15 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.102.0.57])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Mar 2019 10:05:15 +0000 (GMT)
+X-Mailer: emacs 26.1 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Alexandre Ghiti <alex@ghiti.fr>, mpe@ellerman.id.au,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v8 4/4] hugetlb: allow to free gigantic pages regardless of the configuration
+In-Reply-To: <e7637427-5f17-b4f4-93a2-70cac9b3a264@ghiti.fr>
+References: <20190327063626.18421-1-alex@ghiti.fr> <20190327063626.18421-5-alex@ghiti.fr> <f6e74ad8-acca-3b1e-27eb-a2881ac8437d@linux.ibm.com> <fbae7220-2e6f-8516-cf93-fbe430452043@ghiti.fr> <aabfc780-1681-c69a-9927-4645d6499984@linux.ibm.com> <e7637427-5f17-b4f4-93a2-70cac9b3a264@ghiti.fr>
+Date:   Wed, 27 Mar 2019 15:35:13 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327095148.GE15396@lunn.ch>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19032710-4275-0000-0000-0000031FC8B0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032710-4276-0000-0000-0000382E6206
+Message-Id: <87pnqcws2u.fsf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903270073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Mar 27, 2019 at 10:51:48AM CET, andrew@lunn.ch wrote:
->On Wed, Mar 27, 2019 at 10:38:43AM +0100, Jiri Pirko wrote:
->> Tue, Mar 26, 2019 at 07:17:20PM CET, mkubecek@suse.cz wrote:
->> >On Tue, Mar 26, 2019 at 05:34:00PM +0100, Jiri Pirko wrote:
->> >> Mon, Mar 25, 2019 at 06:08:18PM CET, mkubecek@suse.cz wrote:
->> >> >+void ethtool_notify(struct net_device *dev, struct netlink_ext_ack *extack,
->> >> >+		    unsigned int cmd, u32 req_mask, const void *data)
->> >> >+{
->> >> >+	if (unlikely(!ethnl_ok))
->> >> 
->> >> Why do you need this?
->> >
->> >If genetlink family registration fails, ethtool_notify() can be still
->> >called from other code (e.g. the ethtool ioctl interface). In such case,
->> >better bail out right away than fail somewhere later (probably after
->> >preparing the message which can't be sent anyway).
->> 
->> Again, haven't seen this in any other gen netlink implementation. Why do
->> they not need it?
+Alexandre Ghiti <alex@ghiti.fr> writes:
+
+> On 03/27/2019 09:55 AM, Aneesh Kumar K.V wrote:
+>> On 3/27/19 2:14 PM, Alexandre Ghiti wrote:
+>>>
+>>>
+>>> On 03/27/2019 08:01 AM, Aneesh Kumar K.V wrote:
+>>>> On 3/27/19 12:06 PM, Alexandre Ghiti wrote:
 >
->Hi Jiri
+
+.....
+
+>>
+>> This is now
+>> #define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+>> static inline bool gigantic_page_runtime_supported(void)
+>> {
+>> if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+>>         return false;
+>>
+>>     return true;
+>> }
+>>
+>>
+>> I am wondering whether it should be
+>>
+>> #define __HAVE_ARCH_GIGANTIC_PAGE_RUNTIME_SUPPORTED
+>> static inline bool gigantic_page_runtime_supported(void)
+>> {
+>>
+>>    if (!IS_ENABLED(CONFIG_CONTIG_ALLOC))
+>>         return false;
 >
->All other gen netlink kill the machine dead if they cannot register
+> I don't think this test should happen here, CONFIG_CONTIG_ALLOC only allows
+> to allocate gigantic pages, doing that check here would prevent powerpc
+> to free boottime gigantic pages when not a guest. Note that this check
+> is actually done in set_max_huge_pages.
+>
+>
+>>
+>> if (firmware_has_feature(FW_FEATURE_LPAR) && !radix_enabled())
+>>         return false;
+>
+> Maybe I did not understand this check: I understood that, in the case 
+> the system
+> is virtualized, we do not want it to hand back gigantic pages. Does this 
+> check
+> test if the system is currently being virtualized ?
+> If yes, I think the patch is correct: it prevents freeing gigantic pages 
+> when the system
+> is virtualized but allows a 'normal' system to free gigantic pages.
+>
+>
+>>
 
-Wait, what do you mean be "kill the machine dead"?
+Ok double checked the patch applying the the tree. I got confused by the
+removal of that #ifdef. So we now disallow the runtime free by checking
+for gigantic_page_runtime_supported() in  __nr_hugepages_store_common.
+Now if we allow and if CONFIG_CONTIG_ALLOC is disabled, we still should
+allow to free the boot time allocated pages back to buddy.
 
->the socket.
+The patch looks good. You can add for the series
 
-Example:
-static int __init devlink_init(void)
-{
-        return genl_register_family(&devlink_nl_family);
-}
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+
+-aneesh
 
