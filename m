@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C325DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E8DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0FF20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2832F20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553710969;
-	bh=VxLRPoFUaxmkasMBWYgpKIBw+K7EIdjUkpuXT0x37mk=;
+	s=default; t=1553710973;
+	bh=cn4V+fSsi2BQl34RHV67lGICAMYzDZ86VUNOYl0s4gU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pbu3pfxrOZ6Mz1O1tOqma2U6zw0Ipi5bBewjE1b7oyG1T5dY5eNpcmLAIZ3OGZD1D
-	 iZj5dgCkGwvpzcYQqvfBZVRLv+rHV9zC550a3yhsf7qVgp7hHoWTBr5tdT0eKbMk1u
-	 WJ/ktdp1GGRAvJOH46hQndDifpXtZHq7IAvihYPk=
+	b=IxQx3Ix0j/Ja640z1oYEe5ChteBCJ46P6s92d7bJ8csgukuqVZlSIaZWhbtTlHQ0g
+	 cKfr47ieBc9Mcrn+9EgC9LMBGS93w1x04+J0FBBPdRknJ9QVqjZPyhOWt7dyPvfQrS
+	 yQTmbgrRrrRzpON5mN3eAM35+Y9UNRA7448ZskaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391352AbfC0SWs (ORCPT
+        id S2391190AbfC0SWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391341AbfC0SWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:22:43 -0400
+        id S2391350AbfC0SWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:22:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76B62063F;
-        Wed, 27 Mar 2019 18:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E45520449;
+        Wed, 27 Mar 2019 18:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710962;
-        bh=VxLRPoFUaxmkasMBWYgpKIBw+K7EIdjUkpuXT0x37mk=;
+        s=default; t=1553710967;
+        bh=cn4V+fSsi2BQl34RHV67lGICAMYzDZ86VUNOYl0s4gU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOqKTPieHOht7uZlwogLtSmPUrO+1FgSlodpNuK2aaG0JSDHaDeZt2XuZnCdJEmk5
-         CKT80RtdaDvZhsOOjakDIO6KM+lkET0mNtbUYW5cRw63KfO/2miMTWke2dtD7r+tW+
-         B0Rbto9hT8GujiBMjHUPI/ZdFCHzfS97zSqr5VO8=
+        b=naILtvKjUo/ghjDksWJ8bQmV9kqFFpPWS4pXS5L/1uyjAgTT+6C8AnCz5Cno58pd1
+         pVANGVNL5jrY9PjsesSGQ9UAr9pB+pIAD5V+N+IumDtMjv/1P9hRv9tOJMPiIE/d1h
+         16sM3KxCcHO6T42oDIUkuS0VBZMOR08HZ/4fOiWg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 67/87] tty: increase the default flip buffer limit to 2*640K
-Date:   Wed, 27 Mar 2019 14:20:20 -0400
-Message-Id: <20190327182040.17444-67-sashal@kernel.org>
+Cc:     Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        "Michael W . Bringmann" <mwb@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 68/87] powerpc/pseries: Perform full re-add of CPU for topology update post-migration
+Date:   Wed, 27 Mar 2019 14:20:21 -0400
+Message-Id: <20190327182040.17444-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -59,51 +58,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
+[ Upstream commit 81b61324922c67f73813d8a9c175f3c153f6a1c6 ]
 
-We increase the default limit for buffer memory allocation by a factor of
-10 to 640K to prevent data loss when using fast serial interfaces.
+On pseries systems, performing a partition migration can result in
+altering the nodes a CPU is assigned to on the destination system. For
+exampl, pre-migration on the source system CPUs are in node 1 and 3,
+post-migration on the destination system CPUs are in nodes 2 and 3.
 
-For example when using RS485 without flow-control at speeds of 1Mbit/s
-an upwards we've run into problems such as applications being too slow
-to read out this buffer (on embedded devices based on imx53 or imx6).
+Handling the node change for a CPU can cause corruption in the slab
+cache if we hit a timing where a CPUs node is changed while cache_reap()
+is invoked. The corruption occurs because the slab cache code appears
+to rely on the CPU and slab cache pages being on the same node.
 
-If you want to write transmitted data to a slow SD card and thus have
-realtime requirements, this limit can become a problem.
+The current dynamic updating of a CPUs node done in arch/powerpc/mm/numa.c
+does not prevent us from hitting this scenario.
 
-That shouldn't be the case and 640K buffers fix such problems for us.
+Changing the device tree property update notification handler that
+recognizes an affinity change for a CPU to do a full DLPAR remove and
+add of the CPU instead of dynamically changing its node resolves this
+issue.
 
-This value is a maximum limit for allocation only. It has no effect
-on systems that currently run fine. When transmission is slow enough
-applications and hardware can keep up and increasing this limit
-doesn't change anything.
-
-It only _allows_ to allocate more than 2*64K in cases we currently fail to
-allocate memory despite having some.
-
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Signed-off-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Tested-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/topology.h          |  2 ++
+ arch/powerpc/mm/numa.c                       |  9 +--------
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 41b9a7ccce08..ca9c82ee6c35 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -25,7 +25,7 @@
-  * Byte threshold to limit memory consumption for flip buffers.
-  * The actual memory limit is > 2x this amount.
-  */
--#define TTYB_DEFAULT_MEM_LIMIT	65536
-+#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 8b3b46b7b0f2..229c91bcf616 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -90,6 +90,8 @@ static inline int prrn_is_enabled(void)
+ #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
+ #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
+ #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
++
++int dlpar_cpu_readd(int cpu);
+ #endif
+ #endif
  
- /*
-  * We default to dicing tty buffer allocations to this many characters
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 0ef83c274019..9cad2ed812ab 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1540,13 +1540,6 @@ static void reset_topology_timer(void)
+ 
+ #ifdef CONFIG_SMP
+ 
+-static void stage_topology_update(int core_id)
+-{
+-	cpumask_or(&cpu_associativity_changes_mask,
+-		&cpu_associativity_changes_mask, cpu_sibling_mask(core_id));
+-	reset_topology_timer();
+-}
+-
+ static int dt_update_callback(struct notifier_block *nb,
+ 				unsigned long action, void *data)
+ {
+@@ -1559,7 +1552,7 @@ static int dt_update_callback(struct notifier_block *nb,
+ 		    !of_prop_cmp(update->prop->name, "ibm,associativity")) {
+ 			u32 core_id;
+ 			of_property_read_u32(update->dn, "reg", &core_id);
+-			stage_topology_update(core_id);
++			rc = dlpar_cpu_readd(core_id);
+ 			rc = NOTIFY_OK;
+ 		}
+ 		break;
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index a1b63e00b2f7..7a2beedb9740 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -785,6 +785,25 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
+ 	return rc;
+ }
+ 
++int dlpar_cpu_readd(int cpu)
++{
++	struct device_node *dn;
++	struct device *dev;
++	u32 drc_index;
++	int rc;
++
++	dev = get_cpu_device(cpu);
++	dn = dev->of_node;
++
++	rc = of_property_read_u32(dn, "ibm,my-drc-index", &drc_index);
++
++	rc = dlpar_cpu_remove_by_index(drc_index);
++	if (!rc)
++		rc = dlpar_cpu_add(drc_index);
++
++	return rc;
++}
++
+ int dlpar_cpu(struct pseries_hp_errorlog *hp_elog)
+ {
+ 	u32 count, drc_index;
 -- 
 2.19.1
 
