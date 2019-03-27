@@ -2,55 +2,51 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F2FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2E1C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34662075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1562075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553715028;
-	bh=VmseP4cW3fe9niHuW0Is9N0JXM0IwEDP0nn1p6xWHdA=;
+	s=default; t=1553715036;
+	bh=ELbBOpgyJxj1MQ/U5w1pooSJN7v97l9mDWii1E/3yPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qIcZ/wKlhpmHnE37Xt+pi52x0tC4Ft3etDbs0F2hO7ZnPYQIJQ2puT4KAvRg0wykE
-	 9gEqYZHyrbJu9s88x6l2ULZ1lO3lh+gC+72HUSUHQTmB1zs283YUKUbUdD3AFKwigt
-	 uC3xr4GTMSZy/0dUMk45pdMeJlwmxWfty1DTjSVA=
+	b=vooYb+/VcqxblQ3q4VSPSXnR5181ICAb5T5p7Q7VL4tm0aMt0mZ1jtGkv1fcDhZco
+	 NMM0aQ41xVxVQg8q+s8+8pV7WhH0ZWQ3A49yhETmskN7/7QJlQluUULi8d5YT8uaQR
+	 IJTE7iBF35DuL50qUbg1KETbljV6vXGRdnuKKGBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbfC0Ta0 (ORCPT
+        id S2387707AbfC0Taf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:30:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:30:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732562AbfC0SDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:03:34 -0400
+        id S1732518AbfC0SDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:03:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B81222184E;
-        Wed, 27 Mar 2019 18:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27ACE2183E;
+        Wed, 27 Mar 2019 18:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553709813;
-        bh=VmseP4cW3fe9niHuW0Is9N0JXM0IwEDP0nn1p6xWHdA=;
+        s=default; t=1553709809;
+        bh=ELbBOpgyJxj1MQ/U5w1pooSJN7v97l9mDWii1E/3yPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpPSkokY9Ukofq3AalGXgtr739MToPWjtjfFblyD1l0DN4bb8QFWb6Qwq5e4JPBGw
-         VO43NlNqmWevUFsD30H4Z5aGji+SleYgtkHxpPncPTxteWrb670y1tp3l+Si+4sAqP
-         jY6vWz28XcF13rXcdDDh+h0FvgZKQj9cMLmAv5MU=
+        b=OKkNXdSoQrsf5vSz3ZR3zRBGAwE+ENxNb9A5V2HWUc8vJkE5WZO+Md7JEduVEj0Fs
+         jWZGiKJCu/X5HmFpJhW71wpfJkcFTG1co+sIr88E1ZQT+4AFGQf0u/h/oapfag49/r
+         Z+x/vuprp41/n61BAzVJyjXE7yQdqvkjT7E7M5RE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 053/262] netfilter: nf_tables: check the result of dereferencing base_chain->stats
-Date:   Wed, 27 Mar 2019 13:58:28 -0400
-Message-Id: <20190327180158.10245-53-sashal@kernel.org>
+Cc:     Slavomir Kaslev <kaslevs@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 051/262] fs: Make splice() and tee() take into account O_NONBLOCK flag on pipes
+Date:   Wed, 27 Mar 2019 13:58:26 -0400
+Message-Id: <20190327180158.10245-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
@@ -62,69 +58,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Slavomir Kaslev <kaslevs@vmware.com>
 
-[ Upstream commit a9f5e78c403d2d62ade4f4c85040efc85f4049b8 ]
+[ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
 
-Check the result of dereferencing base_chain->stats, instead of result
-of this_cpu_ptr with NULL.
+The current implementation of splice() and tee() ignores O_NONBLOCK set
+on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag for
+blocking on pipe arguments.  This is inconsistent since splice()-ing
+from/to non-pipe file descriptors does take O_NONBLOCK into
+consideration.
 
-base_chain->stats maybe be changed to NULL when a chain is updated and a
-new NULL counter can be attached.
+Fix this by promoting O_NONBLOCK, when set on a pipe, to
+SPLICE_F_NONBLOCK.
 
-And we do not need to check returning of this_cpu_ptr since
-base_chain->stats is from percpu allocator if it is non-NULL,
-this_cpu_ptr returns a valid value.
+Some context for how the current implementation of splice() leads to
+inconsistent behavior.  In the ongoing work[1] to add VM tracing
+capability to trace-cmd we stream tracing data over named FIFOs or
+vsockets from guests back to the host.
 
-And fix two sparse error by replacing rcu_access_pointer and
-rcu_dereference with READ_ONCE under rcu_read_lock.
+When we receive SIGINT from user to stop tracing, we set O_NONBLOCK on
+the input file descriptor and set SPLICE_F_NONBLOCK for the next call to
+splice().  If splice() was blocked waiting on data from the input FIFO,
+after SIGINT splice() restarts with the same arguments (no
+SPLICE_F_NONBLOCK) and blocks again instead of returning -EAGAIN when no
+data is available.
 
-Thanks for Eric's help to finish this patch.
+This differs from the splice() behavior when reading from a vsocket or
+when we're doing a traditional read()/write() loop (trace-cmd's
+--nosplice argument).
 
-Fixes: 009240940e84c1 ("netfilter: nf_tables: don't assume chain stats are set when jumplabel is set")
-Signed-off-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+With this patch applied we get the same behavior in all situations after
+setting O_NONBLOCK which also matches the behavior of doing a
+read()/write() loop instead of splice().
+
+This change does have potential of breaking users who don't expect
+EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH programs
+that set O_NONBLOCK and don't anticipate EAGAIN are arguably buggy[2].
+
+ [1] https://github.com/skaslev/trace-cmd/tree/vsock
+ [2] https://github.com/torvalds/linux/blob/d47e3da1759230e394096fd742aad423c291ba48/fs/read_write.c#L1425
+
+Signed-off-by: Slavomir Kaslev <kaslevs@vmware.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ fs/splice.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
-index a50500232b0a..7e8dae82ca52 100644
---- a/net/netfilter/nf_tables_core.c
-+++ b/net/netfilter/nf_tables_core.c
-@@ -98,21 +98,23 @@ static noinline void nft_update_chain_stats(const struct nft_chain *chain,
- 					    const struct nft_pktinfo *pkt)
- {
- 	struct nft_base_chain *base_chain;
-+	struct nft_stats __percpu *pstats;
- 	struct nft_stats *stats;
+diff --git a/fs/splice.c b/fs/splice.c
+index 90c29675d573..f568273ac336 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1123,6 +1123,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (ipipe == opipe)
+ 			return -EINVAL;
  
- 	base_chain = nft_base_chain(chain);
--	if (!rcu_access_pointer(base_chain->stats))
--		return;
- 
--	local_bh_disable();
--	stats = this_cpu_ptr(rcu_dereference(base_chain->stats));
--	if (stats) {
-+	rcu_read_lock();
-+	pstats = READ_ONCE(base_chain->stats);
-+	if (pstats) {
-+		local_bh_disable();
-+		stats = this_cpu_ptr(pstats);
- 		u64_stats_update_begin(&stats->syncp);
- 		stats->pkts++;
- 		stats->bytes += pkt->skb->len;
- 		u64_stats_update_end(&stats->syncp);
-+		local_bh_enable();
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		return splice_pipe_to_pipe(ipipe, opipe, len, flags);
  	}
--	local_bh_enable();
-+	rcu_read_unlock();
- }
  
- struct nft_jumpstack {
+@@ -1148,6 +1151,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 		if (unlikely(ret < 0))
+ 			return ret;
+ 
++		if (in->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		file_start_write(out);
+ 		ret = do_splice_from(ipipe, out, &offset, len, flags);
+ 		file_end_write(out);
+@@ -1172,6 +1178,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
+ 			offset = in->f_pos;
+ 		}
+ 
++		if (out->f_flags & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		pipe_lock(opipe);
+ 		ret = wait_for_space(opipe, flags);
+ 		if (!ret)
+@@ -1721,6 +1730,9 @@ static long do_tee(struct file *in, struct file *out, size_t len,
+ 	 * copying the data.
+ 	 */
+ 	if (ipipe && opipe && ipipe != opipe) {
++		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
++			flags |= SPLICE_F_NONBLOCK;
++
+ 		/*
+ 		 * Keep going, unless we encounter an error. The ipipe/opipe
+ 		 * ordering doesn't really matter.
 -- 
 2.19.1
 
