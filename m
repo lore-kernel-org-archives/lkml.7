@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AB4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DBDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE11206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082202064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714056;
-	bh=uWUGsKf5++BnjiYmQRr1ejbbK4d8tDhLO6rT5Vnf96c=;
+	s=default; t=1553714063;
+	bh=eWNi1/2LgvDUiHsHnel0TmTz8K9TZ+gzcNTjsTjv8Sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0Rdm0JaYGqhvi3/AtOL2SbRge7TOw9oqvI3RPkIuCWVTkUY84gRQ1FMfv/7wi3jG
-	 oVtgejmyyfbgulBt6SGs3qoOdArX5VxYM5pDVi34mIspQTTfSavHJFl3HacYESYSiW
-	 Vk/Obp5SkMrMKRF54bYgXLZD4W5KG5KucGzFqBCY=
+	b=DI2W9V4rWYfIOuzu0srhE7QWphNKf4X1VM7iKIC34ihp0xV+emqveapgdOw2txeLz
+	 CYHKexHxO7mN9ETIY+nlQZo4TTz1oI+M9pYYMwNRzM5YqpVn0oNtW6SKjPEPtjuVsM
+	 kQLsopL4S7u1utXtAWHzpLU20SJdnmUk9kXgL33Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388651AbfC0SJt (ORCPT
+        id S2388828AbfC0TOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51606 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388618AbfC0SJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:09:45 -0400
+        id S2388631AbfC0SJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:09:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ECC1217F5;
-        Wed, 27 Mar 2019 18:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB8CC2063F;
+        Wed, 27 Mar 2019 18:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710185;
-        bh=uWUGsKf5++BnjiYmQRr1ejbbK4d8tDhLO6rT5Vnf96c=;
+        s=default; t=1553710187;
+        bh=eWNi1/2LgvDUiHsHnel0TmTz8K9TZ+gzcNTjsTjv8Sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zhy7U1YXh2gMNvno8MKc+FzoB6pe+sfHZXG/SQb/rhRXJ3Ywo7DLlTkemFZzqIWTv
-         ii7tOPDMIfTNKouX0K5iRt+wAFA1HzcKGJrrqikD3TaQ3lIcCe3zZQDRrrnlDY+rYe
-         e5OReAJY2PscoDat8n5XeIzQLNkTAtseGEJWSo2o=
+        b=uiXFnSa4B8Ra9vjSymB+G4y0LPmNsfz3llPtIAsu72Nt/b0NdAmlRHpwTipm7/KGF
+         SdOv7Xxc2dz0RunzATSRa1lRiWYk6Wn4iOUZyz0JwfX0otIcwSQF9+tGyOoBQzDXHH
+         rT599GNrtlmCe7K+z+PDoJh8MDhz9vqEoBof96+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 241/262] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
-Date:   Wed, 27 Mar 2019 14:01:36 -0400
-Message-Id: <20190327180158.10245-241-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 242/262] drm/nouveau: Stop using drm_crtc_force_disable
+Date:   Wed, 27 Mar 2019 14:01:37 -0400
+Message-Id: <20190327180158.10245-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,46 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-[ Upstream commit 890880ddfdbe256083170866e49c87618b706ac7 ]
+[ Upstream commit 934c5b32a5e43d8de2ab4f1566f91d7c3bf8cb64 ]
 
-When drivers pass non-empty lists of modifiers for initializing their
-planes, we can infer that they allow framebuffer modifiers and set the
-driver's allow_fb_modifiers mode config element.
+The correct way for legacy drivers to update properties that need to
+do a full modeset, is to do a full modeset.
 
-In case the allow_fb_modifiers element was not set (some drivers tend
-to set them after registering planes), the modifiers will still be
-registered but won't be available to userspace unless the flag is set
-later. However in that case, the IN_FORMATS blob won't be created.
+Note that we don't need to call the drm_mode_config_internal helper
+because we're not changing any of the refcounted paramters.
 
-In order to avoid this case and generally reduce the trouble associated
-with the flag, always set allow_fb_modifiers when a non-empty list of
-format modifiers is passed at plane init.
+v2: Fixup error handling (Ville). Since the old code didn't bother
+I decided to just delete it instead of adding even more code for just
+error handling.
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190104085610.5829-1-paul.kocialkowski@bootlin.com
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com> (v1)
+Cc: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181217194303.14397-2-daniel.vetter@ffwll.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_plane.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-index 5f650d8fc66b..4cfb56893b7f 100644
---- a/drivers/gpu/drm/drm_plane.c
-+++ b/drivers/gpu/drm/drm_plane.c
-@@ -220,6 +220,9 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 			format_modifier_count++;
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+index 6a4ca139cf5d..8fd8124d72ba 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
+@@ -750,7 +750,9 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
+ 		/* Disable the crtc to ensure a full modeset is
+ 		 * performed whenever it's turned on again. */
+ 		if (crtc)
+-			drm_crtc_force_disable(crtc);
++			drm_crtc_helper_set_mode(crtc, &crtc->mode,
++						 crtc->x, crtc->y,
++						 crtc->primary->fb);
  	}
  
-+	if (format_modifier_count)
-+		config->allow_fb_modifiers = true;
-+
- 	plane->modifier_count = format_modifier_count;
- 	plane->modifiers = kmalloc_array(format_modifier_count,
- 					 sizeof(format_modifiers[0]),
+ 	return 0;
 -- 
 2.19.1
 
