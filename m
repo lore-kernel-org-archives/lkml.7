@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FF4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC027C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E991620811
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8F92064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 05:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553663936;
-	bh=vMaM1cF0JhIv9VYOQ0sWkkbVGKEVNZ+cYUuys5vv7J8=;
+	s=default; t=1553663940;
+	bh=M8cxc49th/sF93ek4Y1f0opn8hhIknJbst0GRjzeZBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hH5I5ThMszbnQ5GmuxHHgAK7LYg3HDktQlOC9oca+kAcJ8oo1lLXYtk0q+0cL2B8b
-	 95z/qcByW/MVSrYc0kQn98KrPMzfP71lJMXQ0HfRbGaAhtRJmjQA7PhRrs3TlV3F3W
-	 L+AICTv+LMbT55+4XjTWjKb6ImIu9l3rDaUnZcG4=
+	b=rQAHFMh78ndwFqVQ4HjiLDAH4W2LjoFdt7EdNNxRtJQP1HMqQ2EI6/ZtH9k/fYirZ
+	 frLx8ne+kgMX6TyBCVkdVH4tom8QmmV2uGmY+gfQ+sgotv4BGgXlcLhky0i2zA0z8x
+	 CeZ91ruanllARe7qTk5y+2hm1Fp/WbjzshIOZzaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfC0FSy (ORCPT
+        id S1732978AbfC0FS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 01:18:54 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:58289 "EHLO
+        Wed, 27 Mar 2019 01:18:59 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:60645 "EHLO
         out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbfC0FSx (ORCPT
+        by vger.kernel.org with ESMTP id S1725768AbfC0FS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 01:18:53 -0400
+        Wed, 27 Mar 2019 01:18:58 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id AE288221A6;
-        Wed, 27 Mar 2019 01:18:52 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 15D0F22182;
+        Wed, 27 Mar 2019 01:18:57 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:52 -0400
+  by compute3.internal (MEProxy); Wed, 27 Mar 2019 01:18:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=LkBxDEwxK//pbnzUp1eCPuq5rRkpN350XpuuORksqBQ=; b=l4jC4z7F
-        DpzUVRJKal7eiOgn/4LoHoWYUYE+EfKyrbx7OG0puXmTBoEc6NVwGhk0h68Fwk4m
-        94KcUwS7+wCEPhxDHK4L+TCS55inmGcaBz7NSSZLrpDU8JEaVhQr1r0JaMrdj4ql
-        e40ceB6uYUbW09DLEkVkeftaLdwQg3N1CDpOFs8IhqivIoDddy6BtfO19Op4PUQE
-        F97OmqNLkhots0YhRNqyZvRHedAb+E8nccPjPvydffothqFmwrVFWirEPOCSfyrA
-        JFdCKptvDbvCR5XHPNYPKcxGFAnOy335L4uta0oFp3gYTVS/ADmqm916yUqlMkME
-        vkyUDig0b5O2EQ==
-X-ME-Sender: <xms:vAebXEh1GaN-0sTsdDKWbE5j7m7EYO_YW_CaizoDbDG-jJ6Pgo-0_A>
+        fm2; bh=FqyxCLe/wISnBAcGxX5AgS9mwT8j1bYo0bgbXhS32hE=; b=NDgQ8BWo
+        za41wXLXv+r5SwptguOj/i2/m0SDHJ4ZZgkw5IGVEI2Yc6spCunLd1lhDaxn4J0M
+        KbGVYfaUZJciXO+CzeF35Nuz6990FDhrXLYNfwsqSO7Yy2shi7HgKQMWy5xPeWrX
+        A4L5UMppSq50VCXzJat7MAadDpjd8MDJIpdb14CkwEUDKYMCiHr+RYl6BEbqY+AN
+        EXV+Vss6WIgH0eddO3d5ifkf3WIo4EF+SUWQOgbhk7rKJdsSv+eWOv54Qy+RXey3
+        kcuzKQlvpfqr5+Z6B57NbPPxOSGM4lb7d2D1z2u3YoCGYkZn5zGHA9beljm4axZC
+        jul9uFZ3zYT/0Q==
+X-ME-Sender: <xms:wAebXMcoS_fsEy1zk0tDiN7ZiDVQeWb3KJf0E_VjFVwoMA_DBmtAoQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -51,13 +51,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrkedugdektdcutefuodetggdote
     ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
     epuddvgedrudeiledrudefledrudelvdenucfrrghrrghmpehmrghilhhfrhhomhepthho
     sghinheskhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgepie
-X-ME-Proxy: <xmx:vAebXEBgxEJypLXXjdKu0CMH7jcbcmYuDZr-9Mggh4SBriLll_kbZA>
-    <xmx:vAebXBGJAIX1RcE2LFRdaouY0pX7ylIk1d91sHY3rHRiPTT7__sDJg>
-    <xmx:vAebXEKwKw9jW6rU4lrmWUBXisEpFYAuSy-nW62JO4YkBz5W8qaEPg>
-    <xmx:vAebXLArfwAW_1V_rfsoZcKOqqV9kgn8zkUQMi8r4t5LperaAnnWAw>
+X-ME-Proxy: <xmx:wAebXAQtyCcE_wBHdjF00eOb6KuzaukrPLTWfF1I2uR-WfNeyhwP8A>
+    <xmx:wAebXHkKyDOsXZ6YSIEInZGJsjv2LkVut9TRjGp5vLiXROzIFOEwVg>
+    <xmx:wAebXMoWymD1gfOn47zb1TtMk1G5bL4QZ_dwKaEw0MVri5pPH05CQg>
+    <xmx:wQebXL9ptU6ScdH1UEOg4TWocVAobQnem8uj4nnFZpgU-oHYTlbjKQ>
 Received: from eros.localdomain (124-169-139-192.dyn.iinet.net.au [124.169.139.192])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2249DE4210;
-        Wed, 27 Mar 2019 01:18:48 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6AD75E40FF;
+        Wed, 27 Mar 2019 01:18:53 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -67,9 +67,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/24] fs: Fix function docstring for posix_acl_update_mode()
-Date:   Wed, 27 Mar 2019 16:17:00 +1100
-Message-Id: <20190327051717.23225-8-tobin@kernel.org>
+Subject: [PATCH v3 08/24] dcache: Remove trailing whitespace
+Date:   Wed, 27 Mar 2019 16:17:01 +1100
+Message-Id: <20190327051717.23225-9-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190327051717.23225-1-tobin@kernel.org>
 References: <20190327051717.23225-1-tobin@kernel.org>
@@ -80,58 +80,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sphinx emits a bunch of warnings due to undocumented function parameters
-for posix_acl_update_mode().  We should document all the parameters.
+File contains various instances of trailing whitespace. As initial stage
+of working on dcache lets clean up the trailing whitespace.
 
-Docstring is currently stale in places, it references a non-existent
-function, inode_change_ok().  As noted in the documentation file
-Documentation/filesystems/Porting this function is now called
-setattr_prepare().
-
-Currently docstring includes 'setgit bit', meaning is not totally
-clear (to me), setattr_prepare() uses term 'SGID bit', let's use this
-too.
-
-Fix function docstring for posix_acl_update_mode():
-
- - Document function parameters.
- - Reference setattr_prepare() instead of inode_change_ok().
- - Use 'SGID bit' instead of 'setgit bit'.
+Remove trailing whitespace.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- fs/posix_acl.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ fs/dcache.c            | 26 +++++++++++++-------------
+ include/linux/dcache.h |  6 +++---
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index 2fd0fde16fe1..07394510c3d6 100644
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -629,14 +629,18 @@ posix_acl_create(struct inode *dir, umode_t *mode,
- EXPORT_SYMBOL_GPL(posix_acl_create);
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 2593153471cf..7bc7cf9b8962 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -254,7 +254,7 @@ static void __d_free(struct rcu_head *head)
+ {
+ 	struct dentry *dentry = container_of(head, struct dentry, d_u.d_rcu);
  
- /**
-- * posix_acl_update_mode  -  update mode in set_acl
-+ * posix_acl_update_mode() - Update mode in set_acl.
-+ * @inode: The inode we are working on.
-+ * @mode_p: New mode to use when updating.
-+ * @acl: ACL we are operating on.
+-	kmem_cache_free(dentry_cache, dentry); 
++	kmem_cache_free(dentry_cache, dentry);
+ }
+ 
+ static void __d_free_external(struct rcu_head *head)
+@@ -784,7 +784,7 @@ static inline bool fast_dput(struct dentry *dentry)
+ }
+ 
+ 
+-/* 
++/*
+  * This is dput
   *
-- * Update the file mode when setting an ACL: compute the new file permission
-- * bits based on the ACL.  In addition, if the ACL is equivalent to the new
-- * file mode, set *acl to NULL to indicate that no ACL should be set.
-+ * Update the file mode when setting an ACL, compute the new file
-+ * permission bits based on the ACL.  In addition, if the ACL is
-+ * equivalent to the new file mode, set ``*acl`` to %NULL to indicate
-+ * that no ACL should be set.
+  * This is complicated by the fact that we do not want to put
+@@ -803,7 +803,7 @@ static inline bool fast_dput(struct dentry *dentry)
+ 
+ /*
+  * dput - release a dentry
+- * @dentry: dentry to release 
++ * @dentry: dentry to release
   *
-- * As with chmod, clear the setgit bit if the caller is not in the owning group
-- * or capable of CAP_FSETID (see inode_change_ok).
-+ * As with chmod, clear the SGID bit if the caller is not in the owning
-+ * group or capable of CAP_FSETID (see setattr_prepare()).
-  *
-  * Called from set_acl inode operations.
+  * Release a dentry. This will drop the usage count and if appropriate
+  * call the dentry unlink method as well as removing it from the queues and
+@@ -1589,7 +1589,7 @@ EXPORT_SYMBOL(d_invalidate);
+  * available. On a success the dentry is returned. The name passed in is
+  * copied and the copy passed in may be reused after this call.
   */
+- 
++
+ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+ {
+ 	struct dentry *dentry;
+@@ -1616,14 +1616,14 @@ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+ 						  GFP_KERNEL_ACCOUNT |
+ 						  __GFP_RECLAIMABLE);
+ 		if (!p) {
+-			kmem_cache_free(dentry_cache, dentry); 
++			kmem_cache_free(dentry_cache, dentry);
+ 			return NULL;
+ 		}
+ 		atomic_set(&p->u.count, 1);
+ 		dname = p->name;
+ 	} else  {
+ 		dname = dentry->d_iname;
+-	}	
++	}
+ 
+ 	dentry->d_name.len = name->len;
+ 	dentry->d_name.hash = name->hash;
+@@ -1842,7 +1842,7 @@ static void __d_instantiate(struct dentry *dentry, struct inode *inode)
+  * (or otherwise set) by the caller to indicate that it is now
+  * in use by the dcache.
+  */
+- 
++
+ void d_instantiate(struct dentry *entry, struct inode * inode)
+ {
+ 	BUG_ON(!hlist_unhashed(&entry->d_u.d_alias));
+@@ -2054,7 +2054,7 @@ struct dentry *d_add_ci(struct dentry *dentry, struct inode *inode,
+ 		if (!found) {
+ 			iput(inode);
+ 			return ERR_PTR(-ENOMEM);
+-		} 
++		}
+ 	}
+ 	res = d_splice_alias(inode, found);
+ 	if (res) {
+@@ -2263,7 +2263,7 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
+ 	 * See Documentation/filesystems/path-lookup.txt for more details.
+ 	 */
+ 	rcu_read_lock();
+-	
++
+ 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
+ 
+ 		if (dentry->d_name.hash != hash)
+@@ -2326,7 +2326,7 @@ EXPORT_SYMBOL(d_hash_and_lookup);
+  * it from the hash queues and waiting for
+  * it to be deleted later when it has no users
+  */
+- 
++
+ /**
+  * d_delete - delete a dentry
+  * @dentry: The dentry to delete
+@@ -2334,7 +2334,7 @@ EXPORT_SYMBOL(d_hash_and_lookup);
+  * Turn the dentry into a negative dentry if possible, otherwise
+  * remove it from the hash queues so it can be deleted later
+  */
+- 
++
+ void d_delete(struct dentry * dentry)
+ {
+ 	struct inode *inode = dentry->d_inode;
+@@ -2372,7 +2372,7 @@ static void __d_rehash(struct dentry *entry)
+  *
+  * Adds a dentry to the hash according to its name.
+  */
+- 
++
+ void d_rehash(struct dentry * entry)
+ {
+ 	spin_lock(&entry->d_lock);
+@@ -2964,7 +2964,7 @@ EXPORT_SYMBOL(d_splice_alias);
+  * Returns false otherwise.
+  * Caller must ensure that "new_dentry" is pinned before calling is_subdir()
+  */
+-  
++
+ bool is_subdir(struct dentry *new_dentry, struct dentry *old_dentry)
+ {
+ 	bool result;
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index ef4b70f64f33..2fc9fc59adb1 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -266,7 +266,7 @@ extern int path_has_submounts(const struct path *);
+  * This adds the entry to the hash queues.
+  */
+ extern void d_rehash(struct dentry *);
+- 
++
+ extern void d_add(struct dentry *, struct inode *);
+ 
+ /* used for rename() and baskets */
+@@ -306,7 +306,7 @@ extern char *dentry_path(struct dentry *, char *, int);
+  *	@dentry: dentry to get a reference to
+  *
+  *	Given a dentry or %NULL pointer increment the reference count
+- *	if appropriate and return the dentry. A dentry will not be 
++ *	if appropriate and return the dentry. A dentry will not be
+  *	destroyed when it has references.
+  */
+ static inline struct dentry *dget_dlock(struct dentry *dentry)
+@@ -331,7 +331,7 @@ extern struct dentry *dget_parent(struct dentry *dentry);
+  *
+  *	Returns true if the dentry passed is not currently hashed.
+  */
+- 
++
+ static inline int d_unhashed(const struct dentry *dentry)
+ {
+ 	return hlist_bl_unhashed(&dentry->d_hash);
 -- 
 2.21.0
 
