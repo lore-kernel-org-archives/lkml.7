@@ -2,249 +2,312 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9AEC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2647FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0B72087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C0F20700
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 11:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="ePDr9PIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732193AbfC0LYx (ORCPT
+        id S1729662AbfC0L1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 07:24:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47856 "EHLO huawei.com"
+        Wed, 27 Mar 2019 07:27:40 -0400
+Received: from mail-eopbgr110100.outbound.protection.outlook.com ([40.107.11.100]:2112
+        "EHLO GBR01-CWL-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726262AbfC0LYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 07:24:52 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8FC72B528003A6F37B6C;
-        Wed, 27 Mar 2019 19:24:49 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Wed, 27 Mar 2019
- 19:24:41 +0800
-Subject: Re: [RFC PATCH v2 1/3] resource: Request IO port regions from
- children of ioport_resource
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
- <1553105650-28012-2-git-send-email-john.garry@huawei.com>
- <20190325233255.GF24180@google.com>
- <b9164269-c2a1-e0fa-4c17-2d06fb42f39b@huawei.com>
- <20190326224810.GY24180@google.com>
-CC:     <rafael@kernel.org>, <arnd@arndb.de>, <lorenzo.pieralisi@arm.com>,
-        <bp@suse.de>, <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <wangkefeng.wang@huawei.com>,
-        <linuxarm@huawei.com>, <andy.shevchenko@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2343a281-eb6e-99f9-4600-96931d00d215@huawei.com>
-Date:   Wed, 27 Mar 2019 11:24:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1726308AbfC0L1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 07:27:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m1AjVaG5PCdDn42Rm9juN3OUtU/UjEkdqEUmJQhGUAo=;
+ b=ePDr9PIca9d9AwteWkI6b7Rk+FI9HPX6+dZCUN7P/UlrqKMG+KHcbTj3qHyWOC+c0TzCI/4YHGZshaxkg4eNH+qoVAXW0trcfV9V+ruuuVpTZojmPEK7ytirNc8nioGGtrmy00GNSbQ67yoogVPuWNM2/M0dDzbCdgttocoycgs=
+Received: from LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM (20.176.139.20) by
+ LO2P265MB0079.GBRP265.PROD.OUTLOOK.COM (10.166.99.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Wed, 27 Mar 2019 11:27:32 +0000
+Received: from LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::ed34:1290:4306:3157]) by LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::ed34:1290:4306:3157%3]) with mapi id 15.20.1730.019; Wed, 27 Mar 2019
+ 11:27:32 +0000
+From:   Gary Guo <gary@garyguo.net>
+To:     Anup Patel <Anup.Patel@wdc.com>
+CC:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RISC-V: Implement ASID allocator
+Thread-Topic: [PATCH] RISC-V: Implement ASID allocator
+Thread-Index: AQHU5IQth95RRmVyw0y1O3lxWJG/36YfVxgA
+Date:   Wed, 27 Mar 2019 11:27:32 +0000
+Message-ID: <7edf91f1-1df5-5513-d372-d84edd12edf3@garyguo.net>
+References: <20190327100201.32220-1-anup.patel@wdc.com>
+In-Reply-To: <20190327100201.32220-1-anup.patel@wdc.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LNXP265CA0058.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5d::22) To LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8c::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gary@garyguo.net; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2001:630:212:238:3697:f6ff:fe55:55b1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 00db8a23-76b6-4b0b-832b-08d6b2a733e9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600127)(711020)(4605104)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7153060)(7193020);SRVR:LO2P265MB0079;
+x-ms-traffictypediagnostic: LO2P265MB0079:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <LO2P265MB007946B2986330B59974DD5CD6580@LO2P265MB0079.GBRP265.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0989A7979C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(366004)(39830400003)(396003)(189003)(199004)(97736004)(105586002)(4326008)(25786009)(966005)(508600001)(14454004)(6916009)(31686004)(52116002)(76176011)(53546011)(386003)(30864003)(5660300002)(6506007)(106356001)(186003)(54906003)(316002)(102836004)(6512007)(6116002)(8676002)(99286004)(11346002)(2616005)(53936002)(6486002)(476003)(486006)(6246003)(36756003)(256004)(6306002)(14444005)(446003)(31696002)(8936002)(7736002)(305945005)(81166006)(81156014)(86362001)(68736007)(71190400001)(71200400001)(46003)(6436002)(2906002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:LO2P265MB0079;H:LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: garyguo.net does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XF6qdKtcT7kCqTgJulpcix5FAHk3ehp/9vTc/+O20pjUsl9n/1PdwQreyq0n5OzWkCjGLDJYfXZQDJecRHVz7bueVukADvPdRuYao46zewFlBL8li71ijyia0Nlxfx/XXXaaRcn8w3yGBdvzYV/V/kiPIdE++VdUt8Jff6QMT48EkwPM2pULH0AoLT7eDIQQcpw+i8FVnloXgc5d38eoZcYbO6JPraJP0zw0OkQdpiHz7dzkCH8mR3cxi5ZdbpzUr5QC0Me3eV8pR1GP0IBe5Qr1GK3SWQhNw9Xq5NB4m6zPsqLjrzSHCf/v+D8O5MsKSjwsKLuAOk8MdRAY8zqPPe7tjaLzD3MGoD89PbQoN7SiI0F68z3AOAUJXOFe4Mlq6ocUqEt2OX2oJ4cJCO8Tv1egt9T7rkZ8FbnxY/etM/4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DEADDFCEDDA2EB4F9F89C89F4775B008@GBRP265.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190326224810.GY24180@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00db8a23-76b6-4b0b-832b-08d6b2a733e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2019 11:27:32.1739
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB0079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 22:48, Bjorn Helgaas wrote:
-> [+cc Catalin, Will, linux-arm-kernel]
->
->> From my checking, the f71882fg hwmon is accessed via the super-io interface
->> on the PCH on x86. The super-io interface is at fixed addresses, those being
->> 0x2e and 0x4e.
->>
->> Please see the following:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/hwmon/f71805f.c?h=v5.1-rc2#n1621
->>
->> and
->>
->> https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/8-series-chipset-pch-datasheet.pdf
->> (Table 9.2).
->>
->> On x86 systems, these PCH IO ports will be mapped on a PCI bus, like:
->>
->> $more /proc/ioports
->> 0000-0cf7 : PCI Bus 0000:00
->>   0000-001f : dma1
->>   0020-0021 : pic1
->>   0040-0043 : timer0
->>   0050-0053 : timer1
->>   0060-0060 : keyboard
->>   0064-0064 : keyboard
->>   0070-0077 : rtc0
->>   0080-008f : dma page reg
->>   00a0-00a1 : pic2
->>   00c0-00df : dma2
->>   00f0-00ff : fpu
->>
->> So, the idea in the patch is that if PCI Bus 0000:00 does not exist because
->> of no PCI host, then we should fail a request to an IO port region.
->
-
-Hi Bjorn,
-
-> I'm not convinced about this last sentence.
->
-> It's true that on most modern systems, including that Intel PCH, the
-> Super I/O controller is attached via an LPC bridge on a PCI bus.
->
-> But I don't think it's an actual requirement that PCI be involved.
-> There certainly once were systems, e.g., PC/104, that had ISA devices
-> but no PCI.  Maybe Super I/O attached via ISA is obsolete enough that
-> we don't care any more, but I really don't know.
-
-OK, fine. So if this is true, then this patch falls apart.
-
-However I don't know for sure either. I would still like to think that 
-these legacy ISA system should still insert a bus resource under 
-ioport_resource, from which devices on that bus should request resources.
-
->
->>> On x86, I think inb/inw/inl from a port where nothing responds
->>> probably just returns ~0, and outb/outw/outl just get dropped.
->>> Shouldn't arm64 do the same, without crashing?
->>
->> That would be ideal and we're doing something similar in patch 2/3.
->>
->> So on ARM64 we have to IO remap the PCI IO resource. If this mapping is not
->> done (due to no PCI host), then any inb/inw/inl calls will crash the system.
->
-> My take is that ARM64 is responsible for implementing inb/inw/inl in
-> such a way that they don't crash.  I don't think it's practical to
-> update all the old ISA drivers or even the core code to work around
-> that.
-
-As I mentioned below, I was actually also fixing up inb/inw/inl et al 
-for arm64 such that they don't crash the system in this case. This was 
-in patch 2/3.
-
-So on arm64 - which defines PCI_IOBASE - we need to IO remap the PCI IO 
-space resource. If this is not done and we access PCI IO space, then we 
-crash.
-
-However with the introduction of logical PIO space in commit 
-031e3601869c, we can test this mapping by ensuring that we have a 
-logical PIO region registered. If there is none, then we can discard the 
-access.
-
-However this would only be for when INDIRECT_PIO is defined. Maybe I can 
-make it work for when INDIRECT_PIO is not defined, or even drop 
-!INDIRECT_PIO support.
-
-A final note on hwmon f71882fg: even with the change in 2/3, this driver 
-still accesses IO ports 0x2e and 0x4e, which would not be a PCH fixed IO 
-port on !x86 systems, so far from ideal.
-
-I saw that in commit 746cdfbf01c0 ("hwmon: Avoid building drivers for 
-powerpc that read/write ISA addresses"), PPC would not build these 
-drivers, as, like arm, it has no native ISA.
-
->
->> So in patch 2/3, I am also making the change to the logical PIO inb/inw/inl
->> accessors to discard accesses when no PCI MMIO regions are registered in
->> logical PIO space.
->>
->> This is really a second line of defense (this patch being the first).
->>
->>>> root@(none)$root@(none)$ insmod f71882fg.ko
->>>> [  152.215377] Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->>>> [  152.231299] Mem abort info:
->>>> [  152.236898]   ESR = 0x96000046
->>>> [  152.243019]   Exception class = DABT (current EL), IL = 32 bits
->>>> [  152.254905]   SET = 0, FnV = 0
->>>> [  152.261024]   EA = 0, S1PTW = 0
->>>> [  152.267320] Data abort info:
->>>> [  152.273091]   ISV = 0, ISS = 0x00000046
->>>> [  152.280784]   CM = 0, WnR = 1
->>>> [  152.286730] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->>>> [  152.300537] [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
->>>> [  152.318016] Internal error: Oops: 96000046 [#1] PREEMPT SMP
->>>> [  152.329199] Modules linked in: f71882fg(+)
->>>> [  152.337415] CPU: 8 PID: 2732 Comm: insmod Not tainted 5.1.0-rc1-00002-gab1a0e9200b8-dirty #102
->>>> [  152.354712] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->>>> [  152.373058] pstate: 80000005 (Nzcv daif -PAN -UAO)
->>>> [  152.382675] pc : logic_outb+0x54/0xb8
->>>> [  152.390017] lr : f71882fg_find+0x64/0x390 [f71882fg]
->>>> [  152.399977] sp : ffff000013393aa0
->>>> [  152.406618] x29: ffff000013393aa0 x28: ffff000008b98b10
->>>> [  152.417278] x27: ffff000013393df0 x26: 0000000000000100
->>>> [  152.427938] x25: ffff801f8c872d30 x24: ffff000011420000
->>>> [  152.438598] x23: ffff801fb49d2940 x22: ffff000011291000
->>>> [  152.449257] x21: 000000000000002e x20: 0000000000000087
->>>> [  152.459917] x19: ffff000013393b44 x18: ffffffffffffffff
->>>> [  152.470577] x17: 0000000000000000 x16: 0000000000000000
->>>> [  152.481236] x15: ffff00001127d6c8 x14: ffff801f8cfd691c
->>>> [  152.491896] x13: 0000000000000000 x12: 0000000000000000
->>>> [  152.502555] x11: 0000000000000003 x10: 0000801feace2000
->>>> [  152.513215] x9 : 0000000000000000 x8 : ffff841fa654f280
->>>> [  152.523874] x7 : 0000000000000000 x6 : 0000000000ffc0e3
->>>> [  152.534534] x5 : ffff000011291360 x4 : ffff801fb4949f00
->>>> [  152.545194] x3 : 0000000000ffbffe x2 : 76e767a63713d500
->>>> [  152.555853] x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->>>> [  152.566514] Process insmod (pid: 2732, stack limit = 0x(____ptrval____))
->>>> [  152.579968] Call trace:
->>>> [  152.584863]  logic_outb+0x54/0xb8
->>>> [  152.591506]  f71882fg_find+0x64/0x390 [f71882fg]
->>>> [  152.600768]  f71882fg_init+0x38/0xc70 [f71882fg]
->>>> [  152.610031]  do_one_initcall+0x5c/0x198
->>>> [  152.617723]  do_init_module+0x54/0x1b0
->>>> [  152.625237]  load_module+0x1dc4/0x2158
->>>> [  152.632752]  __se_sys_init_module+0x14c/0x1e8
->>>> [  152.641490]  __arm64_sys_init_module+0x18/0x20
->>>> [  152.650404]  el0_svc_common+0x5c/0x100
->>>> [  152.657919]  el0_svc_handler+0x2c/0x80
->>>> [  152.665433]  el0_svc+0x8/0xc
->>>> [  152.671202] Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->>>> [  152.683434] ---[ end trace fd4f35b610829a48 ]---
->>>> Segmentation fault
->>>> root@(none)$
->>>
->>>> Note that the f71882fg driver correctly calls request_muxed_region().
->>>>
->>>> This issue was originally reported in [1].
->>>>
->>>> This patch changes the functionality of request{muxed_}_region() to
->>>> request a region from a direct child descendent of the top
->>>> ioport_resource.
->>>>
->>>> In this, if the IO port region has not been mapped for a particular IO
->>>> region, the PCI IO resource would also not have been inserted, and so a
->>>> suitable child region will not exist. As such,
->>>> request_{muxed_}region() calls will fail.
->>>>
->>>> A side note: there are many drivers in the kernel which fail to even call
->>>> request_{muxed_}region() prior to IO port accesses, and they also need to
->>>> be fixed (to call request_{muxed_}region(), as appropriate) separately.
->>>>
->>>> [1] https://www.spinics.net/lists/linux-pci/msg49821.html
->>>
->>> Please use a https://lore.kernel.org/ URL instead of spinics.net.
->>
->> ok, I hope that I can find this old thread.
->
-> The beauty of lore.kernel.org is that the URL contains the Message-ID, so
-> it's easy build the URL and it would contain useful information even if
-> lore.kernel.org disappeared:
->
-> https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->
-
-ok, great.
-
-Thanks again,
-John
-
-> Bjorn
->
-
+SGkgQW51cCwNCg0KVGhpcyB3b24ndCB3b3JrIGluIGFuIGFjdHVhbCBoYXJkd2FyZSB3aXRoIEFT
+SUQgc3VwcG9ydC4gVGhlcmUncmUgbW9yZSANCmludGVyYWN0aW9ucyB3aXRoIFRMQiBmbHVzaGVz
+IHRoYXQgbmVlZCB0byBiZSBjb25zaWRlcmVkLiBZb3Ugd29uJ3Qgc2VlIA0KdGhpcyBvbiBib3Ro
+IFFFTVUgYW5kIFNpRml2ZSBib2FyZCwgYXMgUUVNVSBkb2VzIG5vdCBoYXZlIEFTSUQsIHNvIGl0
+IA0KcHJldGVuZHMgdGhhdCBBU0lEIGlzIHN1cHBvcnRlZCBieSBqdXN0IGZsdXNoaW5nIGl0cyBU
+TEIgZXZlcnl0aW1lIHlvdSANCmNoYW5nZSBzcHRici4gSSBzdXNwZWN0IHRoZSBwZXJmb3JtYW5j
+ZSBnYWluIHlvdSBzZWUgaXMganVzdCBkdWUgdG8gDQpzYXZlZCBUTEIgZmx1c2ggYXMgVExCIGZs
+dXNoIGlzIHN1cGVyIGV4cGVuc2l2ZSBpbiBRRU1VIChhbGwgdHJhbnNsYXRpb24gDQpibG9jayBq
+dW1wcyBuZWVkIHRvIGJlIGNsZWFyZWQpLg0KDQpJIGhhdmUgbXkgdmVyc2lvbiBoZXJlIGh0dHBz
+Oi8vZ2l0aHViLmNvbS9uYmRkMDEyMS9saW51eC90cmVlL2FzaWQuIEkgDQpoYXZlbid0IGRvbmUg
+Y29kZSBjbGVhbnVwcyB5ZXQsIGJ1dCB0aGlzIHZlcnNpb24gaGFzIGNvcnJlY3RuZXNzIG9mIGl0
+cyANCkFTSUQgY29kZSB0ZXN0ZWQgb24gb3VyIFRMQiBzaW11bGF0b3IgdG9vbCAod2hpY2ggdW5m
+b3J0dW5hdGVseSBJIGNhbid0IA0Kc2hhcmUgcmlnaHQgbm93IGFzIGl0IGludm9sdmVzIHdpdGgg
+dW5wdWJsaXNoZWQgd29ya3MpLg0KDQpJbiBmYWN0IG15IHN1Ym1pdCBteSBwcmV2aW91cyBwYXRj
+aCBzZXJpZXMgZXhhY3RseSBhcyB0aGUgYmFzaXMgb2YgdGhpcyANCnBhdGNoLg0KDQpCZXN0LA0K
+R2FyeSBHdW8NCg0KT24gMjcvMDMvMjAxOSAxMDowMiwgQW51cCBQYXRlbCB3cm90ZToNCj4gQ3Vy
+cmVudGx5LCB3ZSBkbyBsb2NhbCBUTEIgZmx1c2ggb24gZXZlcnkgTU0gc3dpdGNoLiBUaGlzIGlz
+IHZlcnkgaGFyc2gNCj4gb24gcGVyZm9ybWFuY2UgYmVjYXVzZSB3ZSBhcmUgZm9yY2luZyBwYWdl
+IHRhYmxlIHdhbGtzIGFmdGVyIGV2ZXJ5IE1NDQo+IHN3aXRjaC4NCj4gDQo+IFRoaXMgcGF0Y2gg
+aW1wbGVtZW50cyBBU0lEIGFsbG9jYXRvciBmb3IgYXNzaWduaW5nIGFuIEFTSUQgdG8gZXZlcnkg
+TU0NCj4gY29udGV4dC4gVGhlIG51bWJlciBvZiBBU0lEcyBhcmUgbGltaXRlZCBpbiBIVyBzbyB3
+ZSBjcmVhdGUgYSBsb2dpY2FsDQo+IGVudGl0eSBuYW1lZCBDT05URVhUSUQgZm9yIGFzc2lnbmlu
+ZyB0byBNTSBjb250ZXh0LiBUaGUgbG93ZXIgYml0cyBvZg0KPiBDT05URVhUSUQgYXJlIEFTSUQg
+YW5kIHVwcGVyIGJpdHMgYXJlIFZFUlNJT04gbnVtYmVyLiBXZSBhbGxvY2F0ZSBuZXcNCj4gQ09O
+VEVYVElEIG9uIGZpcnN0IE1NIHN3aXRjaCBvZiBhIE1NIGNvbnRleHQgd2hlcmUgdGhlIEFTSUQg
+aXMgYWxsb2NhdGVkDQo+IGZyb20gYW4gQVNJRCBiaXRtYXAgYW5kIFZFUlNJT04gaXMgcHJvdmlk
+ZSBieSBhbiBhdG9taWMgY291bnRlci4NCj4gDQo+IEF0IHRpbWUgb2YgYWxsb2NhdGluZyBuZXcg
+Q09OVEVYVElELCBpZiB3ZSBydW4gb3V0IG9mIEFTSURzIHRoZW46DQo+IDEuIFdlIGZsdXNoIHRo
+ZSBBU0lEIGJpdG1hcA0KPiAyLiBJbmNyZW1lbnQgVkVSU0lPTiBhdG9taWMgY291bnRlcg0KPiAz
+LiBGb3JjZSBsb2NhbCB0bGIgZmx1c2ggb24gYWxsIENQVXMNCj4gNC4gUmUtYWxsb2NhdGUgQVNJ
+RCBmcm9tIEFTSUQgYml0bWFwDQo+IDUuIEZvcmNlIENPTlRFWFRJRCByZS1hc3NpZ25tZW50IG9u
+IGFsbCBDUFVzDQo+IA0KPiBVc2luZyBhYm92ZSBhcHByb2FjaCwgd2UgaGF2ZSB2aXJ0dWFsbHkg
+aW5maW5pdGUgQ09OVEVYVElEcyBvbi10b3Atb2YNCj4gbGltaXRlZCBudW1iZXIgb2YgSFcgQVNJ
+RHMuIFRoaXMgYXBwcm9hY2ggaXMgaW5zcGlyZWQgZnJvbSBBU0lEIGFsbG9jYXRvcg0KPiB1c2Vk
+IGZvciBMaW51eCBBUk0vQVJNNjQgYnV0IHdlIGhhdmUgc2ltcGxpZmllZCBpdCBhcyBtdWNoIGFz
+IHBvc3NpYmxlLg0KPiANCj4gT3ZlcmFsbCwgdGhpcyBBU0lEIGFsbG9jYXRvciBoZWxwcyB1cyBy
+ZWR1Y2UgcmF0ZSBvZiBsb2NhbCBUTEIgZmx1c2hlcw0KPiBvbiBldmVyeSBDUFUgdGhlcmVieSBp
+bmNyZWFzaW5nIHBlcmZvcm1hbmNlLiBUaGUgbnVtYmVyIG9mIGF2YWlsYWJsZQ0KPiBBU0lEcyBh
+cmUgZGV0ZWN0ZWQgYXQgYm9vdC10aW1lIGJ5IHdyaXRpbmcgMXMgdG8gQVNJRCBiaXRzIGluIFNB
+VFAgQ1NSLg0KPiBUaGUgQVNJRCAjMCBpcyBhbHdheXMgcmVzZXJ2ZWQgYmVjYXVzZSBpdCBpcyB1
+c2VkIGF0IGJvb3QtdGltZSBmb3INCj4gaW5pdGlhbCBNTSBjb250ZXh0Lg0KPiANCj4gVGhpcyBw
+YXRjaCBpcyB0ZXN0ZWQgb24gUUVNVS92aXJ0IG1hY2hpbmUgYW5kIFNpRml2ZSBVbmxlYXNoZWQg
+Ym9hcmQuDQo+IE9uIFFFTVUvdmlydCBtYWNoaW5lLCB3ZSBzZWUgMTAlIChhcHByb3gpIHBlcmZv
+cm1hbmNlIGltcHJvdmVtZW50IHdpdGgNCj4gU1cgZW11bGF0ZWQgVExCcyBhbmQgQVNJRHMgcHJv
+dmlkZWQgYnkgUUVNVS4gVW5mb3J0dW5hdGVseSwgQVNJRCBiaXRzDQo+IG9mIFNBVFAgQ1NSIGFy
+ZSBub3QgaW1wbGVtZW50ZWQgb24gU2lGaXZlIFVubGVhc2hlZCBib2FyZCBzbyB3ZSBkb24ndA0K
+PiBzZWUgYW55IGNoYW5nZSBpbiBwZXJmb3JtYW5jZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFu
+dXAgUGF0ZWwgPGFudXAucGF0ZWxAd2RjLmNvbT4NCj4gLS0tDQo+IFRoaXMgcGF0Y2ggaXMgYmFz
+ZWQgb24gTGludXgtNS4xLXJjMiBhbmQgVExCIGZsdXNoIGNsZWFudXAgcGF0Y2hlcyB2NA0KPiBm
+cm9tIEdhcnkgR3VvLiBJdCBjYW4gYmUgYWxzbyBmb3VuZCBpbiByaXNjdl9hc2lkX2FsbG9jYXRv
+cl92MSBicmFuY2gNCj4gb2YgaHR0cHM6Ly9naXRodWIuY29tL2F2cGF0ZWwvbGludXguZ2l0DQo+
+IC0tLQ0KPiAgIGFyY2gvcmlzY3YvaW5jbHVkZS9hc20vY3NyLmggICAgICAgICB8ICAgNiArDQo+
+ICAgYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9tbXUuaCAgICAgICAgIHwgICAxICsNCj4gICBhcmNo
+L3Jpc2N2L2luY2x1ZGUvYXNtL21tdV9jb250ZXh0LmggfCAgIDEgKw0KPiAgIGFyY2gvcmlzY3Yv
+bW0vY29udGV4dC5jICAgICAgICAgICAgICB8IDIwNCArKysrKysrKysrKysrKysrKysrKysrKysr
+LS0NCj4gICA0IGZpbGVzIGNoYW5nZWQsIDIwMCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMo
+LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2Nzci5oIGIvYXJj
+aC9yaXNjdi9pbmNsdWRlL2FzbS9jc3IuaA0KPiBpbmRleCAyOGEwZDFjYjM3NGMuLmNlMThhYjhm
+NTNlZCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9jc3IuaA0KPiArKysg
+Yi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2Nzci5oDQo+IEBAIC00NSwxMCArNDUsMTYgQEANCj4g
+ICAjZGVmaW5lIFNBVFBfUFBOICAgICBfQUMoMHgwMDNGRkZGRiwgVUwpDQo+ICAgI2RlZmluZSBT
+QVRQX01PREVfMzIgX0FDKDB4ODAwMDAwMDAsIFVMKQ0KPiAgICNkZWZpbmUgU0FUUF9NT0RFICAg
+IFNBVFBfTU9ERV8zMg0KPiArI2RlZmluZSBTQVRQX0FTSURfQklUUwk5DQo+ICsjZGVmaW5lIFNB
+VFBfQVNJRF9TSElGVAkyMg0KPiArI2RlZmluZSBTQVRQX0FTSURfTUFTSwlfQUMoMHgxRkYsIFVM
+KQ0KPiAgICNlbHNlDQo+ICAgI2RlZmluZSBTQVRQX1BQTiAgICAgX0FDKDB4MDAwMDBGRkZGRkZG
+RkZGRiwgVUwpDQo+ICAgI2RlZmluZSBTQVRQX01PREVfMzkgX0FDKDB4ODAwMDAwMDAwMDAwMDAw
+MCwgVUwpDQo+ICAgI2RlZmluZSBTQVRQX01PREUgICAgU0FUUF9NT0RFXzM5DQo+ICsjZGVmaW5l
+IFNBVFBfQVNJRF9CSVRTCTE2DQo+ICsjZGVmaW5lIFNBVFBfQVNJRF9TSElGVAk0NA0KPiArI2Rl
+ZmluZSBTQVRQX0FTSURfTUFTSwlfQUMoMHhGRkZGLCBVTCkNCj4gICAjZW5kaWYNCj4gDQo+ICAg
+LyogSW50ZXJydXB0IEVuYWJsZSBhbmQgSW50ZXJydXB0IFBlbmRpbmcgZmxhZ3MgKi8NCj4gZGlm
+ZiAtLWdpdCBhL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vbW11LmggYi9hcmNoL3Jpc2N2L2luY2x1
+ZGUvYXNtL21tdS5oDQo+IGluZGV4IDVkZjJkY2NkYmExMi4uZGNiYmVmYjg5ZWJjIDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL21tdS5oDQo+ICsrKyBiL2FyY2gvcmlzY3Yv
+aW5jbHVkZS9hc20vbW11LmgNCj4gQEAgLTE4LDYgKzE4LDcgQEANCj4gICAjaWZuZGVmIF9fQVNT
+RU1CTFlfXw0KPiANCj4gICB0eXBlZGVmIHN0cnVjdCB7DQo+ICsJYXRvbWljNjRfdCBpZDsNCj4g
+ICAJdm9pZCAqdmRzbzsNCj4gICAjaWZkZWYgQ09ORklHX1NNUA0KPiAgIAkvKiBBIGxvY2FsIGlj
+YWNoZSBmbHVzaCBpcyBuZWVkZWQgYmVmb3JlIHVzZXIgZXhlY3V0aW9uIGNhbiByZXN1bWUuICov
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL21tdV9jb250ZXh0LmggYi9h
+cmNoL3Jpc2N2L2luY2x1ZGUvYXNtL21tdV9jb250ZXh0LmgNCj4gaW5kZXggYmY0ZjA5N2E5MDUx
+Li43ODVkZDY1YWE5MDQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vbW11
+X2NvbnRleHQuaA0KPiArKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL21tdV9jb250ZXh0LmgN
+Cj4gQEAgLTMwLDYgKzMwLDcgQEAgc3RhdGljIGlubGluZSB2b2lkIGVudGVyX2xhenlfdGxiKHN0
+cnVjdCBtbV9zdHJ1Y3QgKm1tLA0KPiAgIHN0YXRpYyBpbmxpbmUgaW50IGluaXRfbmV3X2NvbnRl
+eHQoc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrLA0KPiAgIAlzdHJ1Y3QgbW1fc3RydWN0ICptbSkN
+Cj4gICB7DQo+ICsJYXRvbWljNjRfc2V0KCYobW0pLT5jb250ZXh0LmlkLCAwKTsNCj4gICAJcmV0
+dXJuIDA7DQo+ICAgfQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvbW0vY29udGV4dC5j
+IGIvYXJjaC9yaXNjdi9tbS9jb250ZXh0LmMNCj4gaW5kZXggMGY3ODdiY2QzYTdhLi5hYTQzZjZh
+YTcyN2UgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvcmlzY3YvbW0vY29udGV4dC5jDQo+ICsrKyBiL2Fy
+Y2gvcmlzY3YvbW0vY29udGV4dC5jDQo+IEBAIC0yLDEzICsyLDE1OCBAQA0KPiAgIC8qDQo+ICAg
+ICogQ29weXJpZ2h0IChDKSAyMDEyIFJlZ2VudHMgb2YgdGhlIFVuaXZlcnNpdHkgb2YgQ2FsaWZv
+cm5pYQ0KPiAgICAqIENvcHlyaWdodCAoQykgMjAxNyBTaUZpdmUNCj4gKyAqIENvcHlyaWdodCAo
+QykgMjAxOSBXZXN0ZXJuIERpZ2l0YWwgQ29ycG9yYXRpb24gb3IgaXRzIGFmZmlsaWF0ZXMuDQo+
+ICAgICovDQo+IA0KPiArI2luY2x1ZGUgPGxpbnV4L2JpdG9wcy5oPg0KPiAgICNpbmNsdWRlIDxs
+aW51eC9tbS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gDQo+ICAgI2luY2x1ZGUg
+PGFzbS90bGJmbHVzaC5oPg0KPiAgICNpbmNsdWRlIDxhc20vY2FjaGVmbHVzaC5oPg0KPiANCj4g
+K3N0YXRpYyBib29sIHVzZV9hc2lkX2FsbG9jYXRvcjsNCj4gK3N0YXRpYyB1bnNpZ25lZCBsb25n
+IGFzaWRfYml0czsNCj4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIG51bV9hc2lkczsNCj4gK3N0YXRp
+YyB1bnNpZ25lZCBsb25nIGFzaWRfbWFzazsNCj4gK3N0YXRpYyB1NjQgZmlyc3RfdmVyc2lvbjsN
+Cj4gKw0KPiArc3RhdGljIERFRklORV9SQVdfU1BJTkxPQ0soY29udGV4dF9sb2NrKTsNCj4gK3N0
+YXRpYyBhdG9taWM2NF90IGNvbnRleHRfdmVyc2lvbjsNCj4gK3N0YXRpYyB1bnNpZ25lZCBsb25n
+ICpjb250ZXh0X2FzaWRfbWFwOw0KPiArc3RhdGljIGNwdW1hc2tfdCBjb250ZXh0X3RsYl9mbHVz
+aF9wZW5kaW5nOw0KPiArDQo+ICtzdGF0aWMgREVGSU5FX1BFUl9DUFUoYXRvbWljNjRfdCwgYWN0
+aXZlX2NvbnRleHQpOw0KPiArDQo+ICsvKiBOb3RlOiBtdXN0IGJlIGNhbGxlZCB3aXRoIGNvbnRl
+eHRfbG9jayBoZWxkICovDQo+ICtzdGF0aWMgdm9pZCBfX2ZsdXNoX2NvbnRleHQodm9pZCkNCj4g
+K3sNCj4gKwlpbnQgaTsNCj4gKwl1NjQgY250eCwgY250eF9hc2lkLCBjbnR4X3ZlcjsNCj4gKw0K
+PiArCS8qIFVwZGF0ZSB0aGUgbGlzdCBvZiByZXNlcnZlZCBBU0lEcyBhbmQgdGhlIEFTSUQgYml0
+bWFwLiAqLw0KPiArCWJpdG1hcF9jbGVhcihjb250ZXh0X2FzaWRfbWFwLCAwLCBudW1fYXNpZHMp
+Ow0KPiArDQo+ICsJLyogTWFyayBhbHJlYWR5IGFjaXR2ZSBBU0lEcyBhcyB1c2VkICovDQo+ICsJ
+Zm9yX2VhY2hfcG9zc2libGVfY3B1KGkpIHsNCj4gKwkJY250eCA9IGF0b21pYzY0X3hjaGdfcmVs
+YXhlZCgmcGVyX2NwdShhY3RpdmVfY29udGV4dCwgaSksIDApOw0KPiArDQo+ICsJCWNudHhfYXNp
+ZCA9IGNudHggJiBhc2lkX21hc2s7DQo+ICsJCWNudHhfdmVyID0gY250eCA+PiBhc2lkX2JpdHM7
+DQo+ICsNCj4gKwkJaWYgKGNudHhfdmVyKQ0KPiArCQkJX19zZXRfYml0KGNudHhfYXNpZCwgY29u
+dGV4dF9hc2lkX21hcCk7DQo+ICsJfQ0KPiArDQo+ICsJLyogTWFyayBBU0lEICMwIGFzIHVzZWQg
+YmVjYXVzZSBpdCBpcyB1c2VkIGF0IGJvb3QtdGltZSAqLw0KPiArCV9fc2V0X2JpdCgwLCBjb250
+ZXh0X2FzaWRfbWFwKTsNCj4gKw0KPiArCS8qIFF1ZXVlIGEgVExCIGludmFsaWRhdGlvbiBmb3Ig
+ZWFjaCBDUFUgb24gbmV4dCBjb250ZXh0LXN3aXRjaCAqLw0KPiArCWNwdW1hc2tfc2V0YWxsKCZj
+b250ZXh0X3RsYl9mbHVzaF9wZW5kaW5nKTsNCj4gK30NCj4gKw0KPiArLyogTm90ZTogbXVzdCBi
+ZSBjYWxsZWQgd2l0aCBjb250ZXh0X2xvY2sgaGVsZCAqLw0KPiArc3RhdGljIHU2NCBfX25ld19j
+b250ZXh0KHN0cnVjdCBtbV9zdHJ1Y3QgKm1tKQ0KPiArew0KPiArCXN0YXRpYyB1MzIgY3VyX2lk
+eCA9IDE7DQo+ICsJdTY0IGFzaWQsIHZlciA9IGF0b21pYzY0X3JlYWQoJmNvbnRleHRfdmVyc2lv
+bik7DQo+ICsNCj4gKwkvKg0KPiArCSAqIEFsbG9jYXRlIGEgZnJlZSBBU0lELiBJZiB3ZSBjYW4n
+dCBmaW5kIG9uZSB0aGVuIGluY3JlbWVudA0KPiArCSAqIGNvbnRleHRfdmVyc2lvbiBhbmQgZmx1
+c2ggYWxsIEFTSURzLg0KPiArCSAqLw0KPiArCWFzaWQgPSBmaW5kX25leHRfemVyb19iaXQoY29u
+dGV4dF9hc2lkX21hcCwgbnVtX2FzaWRzLCBjdXJfaWR4KTsNCj4gKwlpZiAoYXNpZCAhPSBudW1f
+YXNpZHMpDQo+ICsJCWdvdG8gc2V0X2FzaWQ7DQo+ICsNCj4gKwkvKiBXZSdyZSBvdXQgb2YgQVNJ
+RHMsIHNvIGluY3JlbWVudCB0aGUgZ2xvYmFsIHZlcnNpb24gY291bnQgKi8NCj4gKwl2ZXIgPSBh
+dG9taWM2NF9hZGRfcmV0dXJuX3JlbGF4ZWQoZmlyc3RfdmVyc2lvbiwNCj4gKwkJCQkJICAmY29u
+dGV4dF92ZXJzaW9uKTsNCj4gKw0KPiArCV9fZmx1c2hfY29udGV4dCgpOw0KPiArDQo+ICsJLyog
+V2UgaGF2ZSBtb3JlIEFTSURzIHRoYW4gQ1BVcywgc28gdGhpcyB3aWxsIGFsd2F5cyBzdWNjZWVk
+ICovDQo+ICsJYXNpZCA9IGZpbmRfbmV4dF96ZXJvX2JpdChjb250ZXh0X2FzaWRfbWFwLCBudW1f
+YXNpZHMsIDEpOw0KPiArDQo+ICtzZXRfYXNpZDoNCj4gKwlfX3NldF9iaXQoYXNpZCwgY29udGV4
+dF9hc2lkX21hcCk7DQo+ICsJY3VyX2lkeCA9IGFzaWQ7DQo+ICsJcmV0dXJuIGFzaWQgfCB2ZXI7
+DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIHNldF9tbV9hc2lkKHN0cnVjdCBtbV9zdHJ1Y3Qg
+Km1tLCB1bnNpZ25lZCBpbnQgY3B1KQ0KPiArew0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+
+ICsJdTY0IGNudHgsIG9sZF9hY3RpdmVfY250eDsNCj4gKw0KPiArCWNudHggPSBhdG9taWM2NF9y
+ZWFkKCZtbS0+Y29udGV4dC5pZCk7DQo+ICsNCj4gKwkvKg0KPiArCSAqIElmIG91ciBhY3RpdmVf
+Y29udGV4dCBpcyBub24temVybyBhbmQgdGhlIGNvbnRleHQgbWF0Y2hlcyB0aGUNCj4gKwkgKiBj
+dXJyZW50IHZlcnNpb24sIHRoZW4gd2UgdXBkYXRlIHRoZSBhY3RpdmVfY29udGV4dCBlbnRyeSB3
+aXRoIGENCj4gKwkgKiByZWxheGVkIGNtcHhjaGcuDQo+ICsJICoNCj4gKwkgKiBGb2xsb3dpbmcg
+aXMgaG93IHdlIGhhbmRsZSByYWNpbmcgd2l0aCBhIGNvbmN1cnJlbnQgcm9sbG92ZXI6DQo+ICsJ
+ICoNCj4gKwkgKiAtIFdlIGdldCBhIHplcm8gYmFjayBmcm9tIHRoZSBjbXB4Y2hnIGFuZCBlbmQg
+dXAgd2FpdGluZyBvbiB0aGUNCj4gKwkgKiAgIGxvY2suIFRha2luZyB0aGUgbG9jayBzeW5jaHJv
+bmlzZXMgd2l0aCB0aGUgcm9sbG92ZXIgYW5kIHNvDQo+ICsJICogICB3ZSBhcmUgZm9yY2VkIHRv
+IHNlZSB0aGUgdXBkYXRlZCB2ZXJpb24uDQo+ICsJICoNCj4gKwkgKiAtIFdlIGdldCBhIHZhbGlk
+IGNvbnRleHQgYmFjayBmcm9tIHRoZSBjbXB4Y2hnIHRoZW4gd2UgY29udGludWUNCj4gKwkgKiAg
+IHVzaW5nIG9sZCBBU0lEIGJlY2F1c2UgX19mbHVzaF9jb250ZXh0KCkgd291bGQgaGF2ZSBtYXJr
+ZWQgQVNJRA0KPiArCSAqICAgb2YgYWN0aXZlX2NvbnRleHQgYXMgdXNlZCBhbmQgbmV4dCBjb250
+ZXh0IHN3aXRjaCB3ZSB3aWxsIGFsbG9jYXRlDQo+ICsJICogICBuZXcgY29udGV4dC4NCj4gKwkg
+Ki8NCj4gKwlvbGRfYWN0aXZlX2NudHggPSBhdG9taWM2NF9yZWFkKCZwZXJfY3B1KGFjdGl2ZV9j
+b250ZXh0LCBjcHUpKTsNCj4gKwlpZiAob2xkX2FjdGl2ZV9jbnR4ICYmDQo+ICsJICAgICEoKGNu
+dHggXiBhdG9taWM2NF9yZWFkKCZjb250ZXh0X3ZlcnNpb24pKSA+PiBhc2lkX2JpdHMpICYmDQo+
+ICsJICAgIGF0b21pYzY0X2NtcHhjaGdfcmVsYXhlZCgmcGVyX2NwdShhY3RpdmVfY29udGV4dCwg
+Y3B1KSwNCj4gKwkJCQkgICAgIG9sZF9hY3RpdmVfY250eCwgY250eCkpDQo+ICsJCWdvdG8gc3dp
+dGNoX21tX2Zhc3Q7DQo+ICsNCj4gKwlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmNvbnRleHRfbG9j
+aywgZmxhZ3MpOw0KPiArDQo+ICsJLyogQ2hlY2sgdGhhdCBvdXIgQVNJRCBiZWxvbmdzIHRvIHRo
+ZSBjdXJyZW50IHZlcnNpb24uICovDQo+ICsJY250eCA9IGF0b21pYzY0X3JlYWQoJm1tLT5jb250
+ZXh0LmlkKTsNCj4gKwlpZiAoKGNudHggXiBhdG9taWM2NF9yZWFkKCZjb250ZXh0X3ZlcnNpb24p
+KSA+PiBhc2lkX2JpdHMpIHsNCj4gKwkJY250eCA9IF9fbmV3X2NvbnRleHQobW0pOw0KPiArCQlh
+dG9taWM2NF9zZXQoJm1tLT5jb250ZXh0LmlkLCBjbnR4KTsNCj4gKwl9DQo+ICsNCj4gKwlpZiAo
+Y3B1bWFza190ZXN0X2FuZF9jbGVhcl9jcHUoY3B1LCAmY29udGV4dF90bGJfZmx1c2hfcGVuZGlu
+ZykpDQo+ICsJCWxvY2FsX2ZsdXNoX3RsYl9hbGwoKTsNCj4gKw0KPiArCWF0b21pYzY0X3NldCgm
+cGVyX2NwdShhY3RpdmVfY29udGV4dCwgY3B1KSwgY250eCk7DQo+ICsNCj4gKwlyYXdfc3Bpbl91
+bmxvY2tfaXJxcmVzdG9yZSgmY29udGV4dF9sb2NrLCBmbGFncyk7DQo+ICsNCj4gK3N3aXRjaF9t
+bV9mYXN0Og0KPiArCS8qDQo+ICsJICogVXNlIHRoZSBvbGQgc3BidHIgbmFtZSBpbnN0ZWFkIG9m
+IHVzaW5nIHRoZSBjdXJyZW50IHNhdHANCj4gKwkgKiBuYW1lIHRvIHN1cHBvcnQgYmludXRpbHMg
+Mi4yOSB3aGljaCBkb2Vzbid0IGtub3cgYWJvdXQgdGhlDQo+ICsJICogcHJpdmlsZWdlZCBJU0Eg
+MS4xMCB5ZXQuDQo+ICsJICovDQo+ICsJY3NyX3dyaXRlKHNwdGJyLCB2aXJ0X3RvX3BmbihtbS0+
+cGdkKSB8DQo+ICsJCSAgKChjbnR4ICYgYXNpZF9tYXNrKSA8PCBTQVRQX0FTSURfU0hJRlQpIHwg
+U0FUUF9NT0RFKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIHZvaWQgc2V0X21tX25vYXNpZChzdHJ1
+Y3QgbW1fc3RydWN0ICptbSkNCj4gK3sNCj4gKwkvKg0KPiArCSAqIFVzZSB0aGUgb2xkIHNwYnRy
+IG5hbWUgaW5zdGVhZCBvZiB1c2luZyB0aGUgY3VycmVudCBzYXRwDQo+ICsJICogbmFtZSB0byBz
+dXBwb3J0IGJpbnV0aWxzIDIuMjkgd2hpY2ggZG9lc24ndCBrbm93IGFib3V0IHRoZQ0KPiArCSAq
+IHByaXZpbGVnZWQgSVNBIDEuMTAgeWV0Lg0KPiArCSAqLw0KPiArCWNzcl93cml0ZShzcHRiciwg
+dmlydF90b19wZm4obW0tPnBnZCkgfCBTQVRQX01PREUpOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBz
+ZmVuY2Uudm1hIGFmdGVyIFNBVFAgd3JpdGUuIFdlIGNhbGwgaXQgb24gTU0gY29udGV4dCBpbnN0
+ZWFkIG9mDQo+ICsJICogY2FsbGluZyBsb2NhbF9mbHVzaF90bGJfYWxsIHRvIHByZXZlbnQgZ2xv
+YmFsIG1hcHBpbmdzIGZyb20gYmVpbmcNCj4gKwkgKiBhZmZlY3RlZC4NCj4gKwkgKi8NCj4gKwls
+b2NhbF9mbHVzaF90bGJfbW0obW0pOw0KPiArfQ0KPiArDQo+ICAgLyoNCj4gICAgKiBXaGVuIG5l
+Y2Vzc2FyeSwgcGVyZm9ybXMgYSBkZWZlcnJlZCBpY2FjaGUgZmx1c2ggZm9yIHRoZSBnaXZlbiBN
+TSBjb250ZXh0LA0KPiAgICAqIG9uIHRoZSBsb2NhbCBDUFUuICBSSVNDLVYgaGFzIG5vIGRpcmVj
+dCBtZWNoYW5pc20gZm9yIGluc3RydWN0aW9uIGNhY2hlDQo+IEBAIC01OCwyMCArMjAzLDU1IEBA
+IHZvaWQgc3dpdGNoX21tKHN0cnVjdCBtbV9zdHJ1Y3QgKnByZXYsIHN0cnVjdCBtbV9zdHJ1Y3Qg
+Km5leHQsDQo+ICAgCWNwdW1hc2tfY2xlYXJfY3B1KGNwdSwgbW1fY3B1bWFzayhwcmV2KSk7DQo+
+ICAgCWNwdW1hc2tfc2V0X2NwdShjcHUsIG1tX2NwdW1hc2sobmV4dCkpOw0KPiANCj4gLQkvKg0K
+PiAtCSAqIFVzZSB0aGUgb2xkIHNwYnRyIG5hbWUgaW5zdGVhZCBvZiB1c2luZyB0aGUgY3VycmVu
+dCBzYXRwDQo+IC0JICogbmFtZSB0byBzdXBwb3J0IGJpbnV0aWxzIDIuMjkgd2hpY2ggZG9lc24n
+dCBrbm93IGFib3V0IHRoZQ0KPiAtCSAqIHByaXZpbGVnZWQgSVNBIDEuMTAgeWV0Lg0KPiAtCSAq
+Lw0KPiAtCWNzcl93cml0ZShzcHRiciwgdmlydF90b19wZm4obmV4dC0+cGdkKSB8IFNBVFBfTU9E
+RSk7DQo+ICsJaWYgKHVzZV9hc2lkX2FsbG9jYXRvcikNCj4gKwkJc2V0X21tX2FzaWQobmV4dCwg
+Y3B1KTsNCj4gKwllbHNlDQo+ICsJCXNldF9tbV9ub2FzaWQobmV4dCk7DQo+ICsNCj4gKwlmbHVz
+aF9pY2FjaGVfZGVmZXJyZWQobmV4dCk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgYXNpZHNf
+aW5pdCh2b2lkKQ0KPiArew0KPiArCXVuc2lnbmVkIGxvbmcgb2xkLCBuZXc7DQo+ICsNCj4gKwkv
+KiBGaWd1cmUtb3V0IG51bWJlciBvZiBBU0lEIGJpdHMgaW4gSFcgKi8NCj4gKwlvbGQgPSBjc3Jf
+cmVhZChzcHRicik7DQo+ICsJbmV3ID0gb2xkIHwgKFNBVFBfQVNJRF9NQVNLIDw8IFNBVFBfQVNJ
+RF9TSElGVCk7DQo+ICsJY3NyX3dyaXRlKHNwdGJyLCBuZXcpOw0KPiArCW5ldyA9IChjc3JfcmVh
+ZChzcHRicikgPj4gU0FUUF9BU0lEX1NISUZUKSAgJiBTQVRQX0FTSURfTUFTSzsNCj4gKwlhc2lk
+X2JpdHMgPSBmbHNfbG9uZyhuZXcpOw0KPiArCWNzcl93cml0ZShzcHRiciwgb2xkKTsNCj4gKw0K
+PiArCS8qIFByZS1jb21wdXRlIEFTSUQgZGV0YWlscyAqLw0KPiArCW51bV9hc2lkcyA9IDFVTCA8
+PCBhc2lkX2JpdHM7DQo+ICsJYXNpZF9tYXNrID0gbnVtX2FzaWRzIC0gMTsNCj4gKwlmaXJzdF92
+ZXJzaW9uID0gbnVtX2FzaWRzOw0KPiANCj4gICAJLyoNCj4gLQkgKiBzZmVuY2Uudm1hIGFmdGVy
+IFNBVFAgd3JpdGUuIFdlIGNhbGwgaXQgb24gTU0gY29udGV4dCBpbnN0ZWFkIG9mDQo+IC0JICog
+Y2FsbGluZyBsb2NhbF9mbHVzaF90bGJfYWxsIHRvIHByZXZlbnQgZ2xvYmFsIG1hcHBpbmdzIGZy
+b20gYmVpbmcNCj4gLQkgKiBhZmZlY3RlZC4NCj4gKwkgKiBVc2UgQVNJRCBhbGxvY2F0b3Igb25s
+eSBpZiBudW1iZXIgb2YgSFcgQVNJRHMgYXJlDQo+ICsJICogYXQtbGVhc3QgdHdpY2UgbW9yZSB0
+aGFuIENQVXMNCj4gICAJICovDQo+IC0JbG9jYWxfZmx1c2hfdGxiX21tKG5leHQpOw0KPiArCXVz
+ZV9hc2lkX2FsbG9jYXRvciA9DQo+ICsJCShudW1fYXNpZHMgPD0gKDIgKiBudW1fcG9zc2libGVf
+Y3B1cygpKSkgPyBmYWxzZSA6IHRydWU7DQo+IA0KPiAtCWZsdXNoX2ljYWNoZV9kZWZlcnJlZChu
+ZXh0KTsNCj4gLX0NCj4gKwkvKiBTZXR1cCBBU0lEIGFsbG9jYXRvciBpZiBhdmFpbGFibGUgKi8N
+Cj4gKwlpZiAodXNlX2FzaWRfYWxsb2NhdG9yKSB7DQo+ICsJCWF0b21pYzY0X3NldCgmY29udGV4
+dF92ZXJzaW9uLCBmaXJzdF92ZXJzaW9uKTsNCj4gKw0KPiArCQljb250ZXh0X2FzaWRfbWFwID0g
+a2NhbGxvYyhCSVRTX1RPX0xPTkdTKG51bV9hc2lkcyksDQo+ICsJCQkJICAgc2l6ZW9mKCpjb250
+ZXh0X2FzaWRfbWFwKSwgR0ZQX0tFUk5FTCk7DQo+ICsJCWlmICghY29udGV4dF9hc2lkX21hcCkN
+Cj4gKwkJCXBhbmljKCJGYWlsZWQgdG8gYWxsb2NhdGUgYml0bWFwIGZvciAlbHUgQVNJRHNcbiIs
+DQo+ICsJCQkgICAgICBudW1fYXNpZHMpOw0KPiANCj4gKwkJX19zZXRfYml0KDAsIGNvbnRleHRf
+YXNpZF9tYXApOw0KPiArDQo+ICsJCXByX2luZm8oIkFTSUQgYWxsb2NhdG9yIHVzaW5nICVsdSBl
+bnRyaWVzXG4iLCBudW1fYXNpZHMpOw0KPiArCX0gZWxzZSB7DQo+ICsJCXByX2luZm8oIkFTSUQg
+YWxsb2NhdG9yIGRpc2FibGVkXG4iKTsNCj4gKwl9DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30N
+Cj4gK2Vhcmx5X2luaXRjYWxsKGFzaWRzX2luaXQpOw0KPiAtLQ0KPiAyLjE3LjENCj4gDQo=
