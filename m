@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6530EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F17C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37530205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1259F205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712417;
-	bh=BY5vyQWNAcUSAxrSk6eGzpXGswr2lrBtVSiAhSEF8Vs=;
+	s=default; t=1553712428;
+	bh=4boexCSvbIANl711eLcEK2PrZfhSrN40Sjqponto9lM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6EqCJMHLYLWzDoscHq1SzYsbVnFK5tNK2IhFpJRpy6OJsx+ONKXLBOabv/2JpZ88
-	 8YZWZNkVTgNoNoSdd7NnUxvedRhpv5eHIK6ccrt2CQwAsurk5nRSMZGaBmuDw4LL4Z
-	 o7Xb8BrsHdC0YSjUsaF6H3zL4sBmb/3CnshxW1xM=
+	b=qDqZhBkNLwdNK1Qb/kPPlFuCHFt7KicRC8YRbHxa/gg4tm3Kgx2s6XgERxaR4UPRC
+	 VAt/s9qTv+dMKyMpbgaLbr3/JMKjsxbxqvch/l+ykzW1pBY0bwWO+hbJyHe0563/F5
+	 cFW+yrrdP4MGocF5OR/QbaM6C1z/uKkkNgT7Sns8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391254AbfC0Sqz (ORCPT
+        id S2390876AbfC0SUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:46:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390877AbfC0SUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:20:16 -0400
+        id S2390813AbfC0ST5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:19:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D737D21855;
-        Wed, 27 Mar 2019 18:20:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC942063F;
+        Wed, 27 Mar 2019 18:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710814;
-        bh=BY5vyQWNAcUSAxrSk6eGzpXGswr2lrBtVSiAhSEF8Vs=;
+        s=default; t=1553710796;
+        bh=4boexCSvbIANl711eLcEK2PrZfhSrN40Sjqponto9lM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+CTP0U+nv+qrCypI4FNjcFS9l1dVJh/9+n5XX+WXrmNO+2LzXCyv2hywmnQrX7/h
-         vPmuLBJaQcYg5wSStzO1iQ/F/onPdeFZijTtC473ATzJSMiR//CAn90YCZrVGd9BAg
-         O3+zdf0HkyNXG9SnLlcpO0sPbpDSa+m6eGtZcpYs=
+        b=P8SHXUMu/NF3qwQNHcr14otDSYGUTlg7rYoyADW2izhMSzWSaSCRcx7IS+07mL6ZJ
+         9+aW66XGHZTom3h6/gmqUihaIhlqy/sU42gi3XIDNdXE7o45uKrRE20uz0rMYgrLAK
+         /Qsk1jUO4Nj0z0WjwZZ9qqhDDUX5d3n+wqcSulQ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 110/123] netfilter: physdev: relax br_netfilter dependency
-Date:   Wed, 27 Mar 2019 14:16:14 -0400
-Message-Id: <20190327181628.15899-110-sashal@kernel.org>
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 104/123] Bluetooth: Verify that l2cap_get_conf_opt provides large enough buffer
+Date:   Wed, 27 Mar 2019 14:16:08 -0400
+Message-Id: <20190327181628.15899-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 References: <20190327181628.15899-1-sashal@kernel.org>
@@ -59,95 +58,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
+[ Upstream commit 7c9cbd0b5e38a1672fcd137894ace3b042dfbf69 ]
 
-Following command:
-  iptables -D FORWARD -m physdev ...
-causes connectivity loss in some setups.
+The function l2cap_get_conf_opt will return L2CAP_CONF_OPT_SIZE + opt->len
+as length value. The opt->len however is in control over the remote user
+and can be used by an attacker to gain access beyond the bounds of the
+actual packet.
 
-Reason is that iptables userspace will probe kernel for the module revision
-of the physdev patch, and physdev has an artificial dependency on
-br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
-is loaded).
+To prevent any potential leak of heap memory, it is enough to check that
+the resulting len calculation after calling l2cap_get_conf_opt is not
+below zero. A well formed packet will always return >= 0 here and will
+end with the length value being zero after the last option has been
+parsed. In case of malformed packets messing with the opt->len field the
+length value will become negative. If that is the case, then just abort
+and ignore the option.
 
-This causes the "phydev" module to be loaded, which in turn enables the
-"call-iptables" infrastructure.
+In case an attacker uses a too short opt->len value, then garbage will
+be parsed, but that is protected by the unknown option handling and also
+the option parameter size checks.
 
-bridged packets might then get dropped by the iptables ruleset.
-
-The better fix would be to change the "call-iptables" defaults to 0 and
-enforce explicit setting to 1, but that breaks backwards compatibility.
-
-This does the next best thing: add a request_module call to checkentry.
-This was a stray '-D ... -m physdev' won't activate br_netfilter
-anymore.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/br_netfilter.h | 1 -
- net/bridge/br_netfilter_hooks.c      | 5 -----
- net/netfilter/xt_physdev.c           | 9 +++++++--
- 3 files changed, 7 insertions(+), 8 deletions(-)
+ net/bluetooth/l2cap_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
-index 74af19c3a8f7..a4ba601b5d04 100644
---- a/include/net/netfilter/br_netfilter.h
-+++ b/include/net/netfilter/br_netfilter.h
-@@ -49,7 +49,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
- }
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index 9b7907ebfa01..7a8a58af8c98 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -3336,6 +3336,8 @@ static int l2cap_parse_conf_req(struct l2cap_chan *chan, void *data, size_t data
  
- struct net_device *setup_pre_routing(struct sk_buff *skb);
--void br_netfilter_enable(void);
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&req, &type, &olen, &val);
++		if (len < 0)
++			break;
  
- #if IS_ENABLED(CONFIG_IPV6)
- int br_validate_ipv6(struct net *net, struct sk_buff *skb);
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 3f3859b8d49f..5fd283d9929e 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -881,11 +881,6 @@ static const struct nf_br_ops br_ops = {
- 	.br_dev_xmit_hook =	br_nf_dev_xmit,
- };
+ 		hint  = type & L2CAP_CONF_HINT;
+ 		type &= L2CAP_CONF_MASK;
+@@ -3547,6 +3549,8 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
  
--void br_netfilter_enable(void)
--{
--}
--EXPORT_SYMBOL_GPL(br_netfilter_enable);
--
- /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
-  * br_dev_queue_push_xmit is called afterwards */
- static const struct nf_hook_ops br_nf_ops[] = {
-diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
-index bb33598e4530..ec247d8370e8 100644
---- a/net/netfilter/xt_physdev.c
-+++ b/net/netfilter/xt_physdev.c
-@@ -96,8 +96,7 @@ physdev_mt(const struct sk_buff *skb, struct xt_action_param *par)
- static int physdev_mt_check(const struct xt_mtchk_param *par)
- {
- 	const struct xt_physdev_info *info = par->matchinfo;
--
--	br_netfilter_enable();
-+	static bool brnf_probed __read_mostly;
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
  
- 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
- 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
-@@ -113,6 +112,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
- 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
- 			return -EINVAL;
- 	}
-+
-+	if (!brnf_probed) {
-+		brnf_probed = true;
-+		request_module("br_netfilter");
-+	}
-+
- 	return 0;
- }
+ 		switch (type) {
+ 		case L2CAP_CONF_MTU:
+@@ -3727,6 +3731,8 @@ static void l2cap_conf_rfc_get(struct l2cap_chan *chan, void *rsp, int len)
  
+ 	while (len >= L2CAP_CONF_OPT_SIZE) {
+ 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
++		if (len < 0)
++			break;
+ 
+ 		switch (type) {
+ 		case L2CAP_CONF_RFC:
 -- 
 2.19.1
 
