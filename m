@@ -2,126 +2,161 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05098C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFF8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB702206C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553713454;
-	bh=pylpkBLNcCZBLgMSDbploWxJ69hWPZeS0H5eeVswZy0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xv45+yD7nR+asDHTi7IVHeSfhSVCEG6mN01J668KgNCWJqPlTG9AjCW1lmjM6lDTT
-	 8EjAYoLMXNRtF/ANOOGGedtBVcNIb29qi1fNNH8scPbj7GFIfU78NlNa5ZrXWuY0VW
-	 vQzZlYNMsYkPAEHnX2NOfkXA+qlY7h+2f0JGgHC0=
+	by mail.kernel.org (Postfix) with ESMTP id 38AF72184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389496AbfC0TEM (ORCPT
+        id S2389603AbfC0TEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389116AbfC0SNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:13:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4F121855;
-        Wed, 27 Mar 2019 18:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710389;
-        bh=pylpkBLNcCZBLgMSDbploWxJ69hWPZeS0H5eeVswZy0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=atcY4NnBqaJaP0SxO43hxrgEkFntdLvPvltrq22Te2DxE3yNfhjI0DpyYl92D39YZ
-         DMJ1xOJwKMPnAWe1YEDFO3UOa82izGwCELjb/ynYkYJ4vntr8MxZ64+wkvgvsZBz+e
-         mhdcaUOWMiwwHsDx1nEqZxrW9V/xIknNILk5SkEg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 096/192] cgroup, rstat: Don't flush subtree root unless necessary
-Date:   Wed, 27 Mar 2019 14:08:48 -0400
-Message-Id: <20190327181025.13507-96-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+        Wed, 27 Mar 2019 15:04:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389498AbfC0TEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:04:14 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2RIsNka059060
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 15:04:13 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rgdxu2hp2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 15:04:12 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 27 Mar 2019 19:04:10 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Mar 2019 19:04:05 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2RJ44Kl54919208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Mar 2019 19:04:04 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 552BD5205A;
+        Wed, 27 Mar 2019 19:04:04 +0000 (GMT)
+Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 951FD52054;
+        Wed, 27 Mar 2019 19:04:02 +0000 (GMT)
+Subject: Re: [PATCH 1/2] efi: add a function for transferring status to
+ string
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>, Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Date:   Wed, 27 Mar 2019 15:04:02 -0400
+In-Reply-To: <CAKv+Gu9B6h3zGVTctepd1GE5LaaMaT5x14Le1v05AOhbH36bpQ@mail.gmail.com>
+References: <20190324002621.3551-1-jlee@suse.com>
+         <CAKv+Gu9B6h3zGVTctepd1GE5LaaMaT5x14Le1v05AOhbH36bpQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19032719-0016-0000-0000-00000267DC29
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032719-0017-0000-0000-000032C31AB4
+Message-Id: <1553713442.4608.20.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-27_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903270133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+On Wed, 2019-03-27 at 19:58 +0100, Ard Biesheuvel wrote:
+> On Sun, 24 Mar 2019 at 01:26, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> >
+> > This function can be used to transfer EFI status code to string
+> > for printing out debug message. Using this function can improve
+> > the readability of log.
 
-[ Upstream commit b4ff1b44bcd384d22fcbac6ebaf9cc0d33debe50 ]
+Maybe instead of "for transferring status" use "to convert the status
+value to a" in the Subject line and here in the patch description.
 
-cgroup_rstat_cpu_pop_updated() is used to traverse the updated cgroups
-on flush.  While it was only visiting updated ones in the subtree, it
-was visiting @root unconditionally.  We can easily check whether @root
-is updated or not by looking at its ->updated_next just as with the
-cgroups in the subtree.
+> >
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Anton Vorontsov <anton@enomsg.org>
+> > Cc: Colin Cross <ccross@android.com>
+> > Cc: Tony Luck <tony.luck@intel.com>
+> > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+> > ---
+> >  include/linux/efi.h | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >
+> > diff --git a/include/linux/efi.h b/include/linux/efi.h
+> > index 54357a258b35..a43cb0dc37af 100644
+> > --- a/include/linux/efi.h
+> > +++ b/include/linux/efi.h
+> > @@ -1768,4 +1768,32 @@ struct linux_efi_memreserve {
+> >  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+> >         / sizeof(((struct linux_efi_memreserve *)0)->entry[0]))
+> >
+> > +#define EFI_STATUS_STR(_status) \
+> > +case EFI_##_status: \
+> > +       return "EFI_" __stringify(_status);
+> > +
+> > +static inline char *
+> > +efi_status_to_str(efi_status_t status)
+> > +{
+> > +       switch (status) {
+> > +       EFI_STATUS_STR(SUCCESS)
+> > +       EFI_STATUS_STR(LOAD_ERROR)
+> > +       EFI_STATUS_STR(INVALID_PARAMETER)
+> > +       EFI_STATUS_STR(UNSUPPORTED)
+> > +       EFI_STATUS_STR(BAD_BUFFER_SIZE)
+> > +       EFI_STATUS_STR(BUFFER_TOO_SMALL)
+> > +       EFI_STATUS_STR(NOT_READY)
+> > +       EFI_STATUS_STR(DEVICE_ERROR)
+> > +       EFI_STATUS_STR(WRITE_PROTECTED)
+> > +       EFI_STATUS_STR(OUT_OF_RESOURCES)
+> > +       EFI_STATUS_STR(NOT_FOUND)
+> > +       EFI_STATUS_STR(ABORTED)
+> > +       EFI_STATUS_STR(SECURITY_VIOLATION)
+> > +       default:
+> > +               pr_warn("Unknown efi status: 0x%lx", status);
+> > +       }
+> > +
+> > +       return "Unknown efi status";
+> > +}
+> > +
+> >  #endif /* _LINUX_EFI_H */
+> > --
+> > 2.16.4
+> >
+> 
+> Please turn this into a proper function so that not every calling
+> object has to duplicate all these strings.
 
-* Remove the unnecessary cgroup_parent() test.  The system root cgroup
-  is never updated and thus its ->updated_next is always NULL.  No
-  need to test whether cgroup_parent() exists in addition to
-  ->updated_next.
+Hi Ard,
 
-* Terminate traverse if ->updated_next is NULL.  This can only happen
-  for subtree @root and there's no reason to visit it if it's not
-  marked updated.
+Keeping the status values and strings in sync is difficult.  I was
+going to suggest moving the macro immediately after the status value
+definitions.
 
-This reduces cpu consumption when reading a lot of rstat backed files.
-In a micro benchmark reading stat from ~1600 cgroups, the sys time was
-lowered by >40%.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/cgroup/rstat.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index d503d1a9007c..bb95a35e8c2d 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -87,7 +87,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 						   struct cgroup *root, int cpu)
- {
- 	struct cgroup_rstat_cpu *rstatc;
--	struct cgroup *parent;
- 
- 	if (pos == root)
- 		return NULL;
-@@ -115,8 +114,8 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 	 * However, due to the way we traverse, @pos will be the first
- 	 * child in most cases. The only exception is @root.
- 	 */
--	parent = cgroup_parent(pos);
--	if (parent && rstatc->updated_next) {
-+	if (rstatc->updated_next) {
-+		struct cgroup *parent = cgroup_parent(pos);
- 		struct cgroup_rstat_cpu *prstatc = cgroup_rstat_cpu(parent, cpu);
- 		struct cgroup_rstat_cpu *nrstatc;
- 		struct cgroup **nextp;
-@@ -140,9 +139,12 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 		 * updated stat.
- 		 */
- 		smp_mb();
-+
-+		return pos;
- 	}
- 
--	return pos;
-+	/* only happens for @root */
-+	return NULL;
- }
- 
- /* see cgroup_rstat_flush() */
--- 
-2.19.1
+Mimi 
 
