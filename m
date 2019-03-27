@@ -4,49 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C689C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B11DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9603205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3009C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 18:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553712308;
-	bh=2QAsr3WAmydxI/msKJTBBTMS9RdXid/6wfLINpYNJ5c=;
+	s=default; t=1553712317;
+	bh=KopFzjyqiGzG6wk/FnitGtZe8KmXMgXBUElcH87QTQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mH6Zcd4fB2HuuKfVpZ+r30RweGoVsBznlpkqMadf1BxiS4DXb8UE47LDbbq+nCe6Y
-	 gg2pVKNHDH6iEgWWtYrSms4REnEAkBBptaeuVHYce7l1lE4aDXB82ENumaK8ribyZT
-	 F/sDkWM82Hzb6qpkzX/PsWz+4l6Ix7bsT06b3ryA=
+	b=JkUk+XmMbod2ioYGd/6yfbGrrGc5ffLKEBfn9BN1drK03NOZiql2Hsw2pBJ5JIehY
+	 86UoA7raseNb3El/S+V82hcwS4F0WFYb35nMSRv66RTLJEWRRDSxXZl3/Ix04kSVYl
+	 T2FBSpI4VrMC1f8qMwbanZVm01+qfP9MfdBvhcHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391412AbfC0SpG (ORCPT
+        id S2391802AbfC0SpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 14:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 14:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391057AbfC0SVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:21:10 -0400
+        id S2389351AbfC0SVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 14:21:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8B520651;
-        Wed, 27 Mar 2019 18:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C492E20643;
+        Wed, 27 Mar 2019 18:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710869;
-        bh=2QAsr3WAmydxI/msKJTBBTMS9RdXid/6wfLINpYNJ5c=;
+        s=default; t=1553710864;
+        bh=KopFzjyqiGzG6wk/FnitGtZe8KmXMgXBUElcH87QTQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0O6nIBttf/giZbUx7iUwxn4KRu5UZONGGvyEPuSWarU5WYl8AuD0tBoLnky54cHIn
-         lgpE/9eH3ZiTudw73iR6vHJqggVfQmwluccgtMDlt3nq6SxFeBJm4OjnzR0BX3adwe
-         opef4LSnRv3DRzY9+uLH9M57Bz0KC8RyoItO53Ac=
+        b=F1CYIjoy1SpwNNZOEJrSmd/7Rr06sRebaCwL88QQ85Gp28hBFjUyPY3sbmjBnbruU
+         j3963DFxFcz53GRlbkHfs1WuI5RVUo9xnEM+ztHihaVytImB/pzy9YhabaJrdGFrpO
+         qJrQ5xQuIYzK3JN1oR8S2V/w97VjE2zscrMcb9JI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 15/87] f2fs: do not use mutex lock in atomic context
-Date:   Wed, 27 Mar 2019 14:19:28 -0400
-Message-Id: <20190327182040.17444-15-sashal@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Ingo Molnar <mingo@elte.hu>,
+        Joel Fernandes <joelaf@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.9 12/87] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
+Date:   Wed, 27 Mar 2019 14:19:25 -0400
+Message-Id: <20190327182040.17444-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190327182040.17444-1-sashal@kernel.org>
 References: <20190327182040.17444-1-sashal@kernel.org>
@@ -58,62 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sahitya Tummala <stummala@codeaurora.org>
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
-[ Upstream commit 9083977dabf3833298ddcd40dee28687f1e6b483 ]
+[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
 
-Fix below warning coming because of using mutex lock in atomic context.
+One of the vmalloc stress test case triggers the kernel BUG():
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:98
-in_atomic(): 1, irqs_disabled(): 0, pid: 585, name: sh
-Preemption disabled at: __radix_tree_preload+0x28/0x130
-Call trace:
- dump_backtrace+0x0/0x2b4
- show_stack+0x20/0x28
- dump_stack+0xa8/0xe0
- ___might_sleep+0x144/0x194
- __might_sleep+0x58/0x8c
- mutex_lock+0x2c/0x48
- f2fs_trace_pid+0x88/0x14c
- f2fs_set_node_page_dirty+0xd0/0x184
+  <snip>
+  [60.562151] ------------[ cut here ]------------
+  [60.562154] kernel BUG at mm/vmalloc.c:512!
+  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
+  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
+  <snip>
 
-Do not use f2fs_radix_tree_insert() to avoid doing cond_resched() with
-spin_lock() acquired.
+it can happen due to big align request resulting in overflowing of
+calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fix it by checking if calculated address is within vstart/vend range.
+
+Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/trace.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ mm/vmalloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/trace.c b/fs/f2fs/trace.c
-index 73b4e1d1912a..501c283761d2 100644
---- a/fs/f2fs/trace.c
-+++ b/fs/f2fs/trace.c
-@@ -61,6 +61,7 @@ void f2fs_trace_pid(struct page *page)
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e6aa073f01df..73afe460caf0 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -459,7 +459,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	}
  
- 	page->private = pid;
+ found:
+-	if (addr + size > vend)
++	/*
++	 * Check also calculated address against the vstart,
++	 * because it can be 0 because of big align request.
++	 */
++	if (addr + size > vend || addr < vstart)
+ 		goto overflow;
  
-+retry:
- 	if (radix_tree_preload(GFP_NOFS))
- 		return;
- 
-@@ -71,7 +72,12 @@ void f2fs_trace_pid(struct page *page)
- 	if (p)
- 		radix_tree_delete(&pids, pid);
- 
--	f2fs_radix_tree_insert(&pids, pid, current);
-+	if (radix_tree_insert(&pids, pid, current)) {
-+		spin_unlock(&pids_lock);
-+		radix_tree_preload_end();
-+		cond_resched();
-+		goto retry;
-+	}
- 
- 	trace_printk("%3x:%3x %4x %-16s\n",
- 			MAJOR(inode->i_sb->s_dev), MINOR(inode->i_sb->s_dev),
+ 	va->va_start = addr;
 -- 
 2.19.1
 
