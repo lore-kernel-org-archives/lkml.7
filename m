@@ -2,154 +2,93 @@ Return-Path: <SRS0=95/N=R6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FC2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E541C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2554A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553714423;
-	bh=ILWUV+WkoJGEKH1nu4EKtUh0n5zRY5W6K6rX3S1TNZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m6QBS05ZQfW2uQ4nn4CNKeD8rW+Cv17o4PqyvBO+kzYGFStMhVl0tl7ngroM85feB
-	 pR6EEhcfJwNLuc/ApX1cyWyWlIM1B4hxVBdPGEDIxkoV+UMmBRuz5TxQK5OHw+3jr/
-	 zIXcPqTFDCDtUpbB9RIALvWlLgo1xsQ4fzSrz3E0=
+	by mail.kernel.org (Postfix) with ESMTP id D398F2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Mar 2019 19:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbfC0TUV (ORCPT
+        id S2388519AbfC0TUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 15:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
+        Wed, 27 Mar 2019 15:20:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:34074 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731740AbfC0SHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 14:07:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4620E21734;
-        Wed, 27 Mar 2019 18:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553710039;
-        bh=ILWUV+WkoJGEKH1nu4EKtUh0n5zRY5W6K6rX3S1TNZ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWJKVbHt3lQzMr9HUNzg7g2x9gBu26ykHDEdyFYqVDe7GWoz0iRKgdslUErvUtA3v
-         mSqMXw9Efby6Faus0TAGTI4dsAXUsMNE7Abx4e0f1ft+Fcq8b91LgFglXuNqEtwJQS
-         vLCuBQEkuFEkRyU0KnnzA2uQ30q5Cd+zW8pA1ASs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 169/262] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Wed, 27 Mar 2019 14:00:24 -0400
-Message-Id: <20190327180158.10245-169-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-References: <20190327180158.10245-1-sashal@kernel.org>
+        id S1727796AbfC0TU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 15:20:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87995374;
+        Wed, 27 Mar 2019 12:20:28 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 773E83F557;
+        Wed, 27 Mar 2019 12:20:27 -0700 (PDT)
+Date:   Wed, 27 Mar 2019 19:20:21 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Vladimir Kondratiev <vladimir.kondratiev@linux.intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: do not overwrite .gitignore in output directory
+Message-ID: <20190327192021.5d676019@donnerap.cambridge.arm.com>
+In-Reply-To: <1553574418-21033-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1553574418-21033-1-git-send-email-yamada.masahiro@socionext.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+On Tue, 26 Mar 2019 13:26:58 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+Masahiro,
 
-The following traceback is sometimes seen when booting an image in qemu:
+> Commit 3a51ff344204 ("kbuild: gitignore output directory") seemed to
+> bother people who version-control output directories.
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
+Thanks a lot for the patch, that works for me.
 
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
+> Andre Przywara says:
+> "Unfortunately this breaks my setup, because I keep a totally separate
+> git repository in my build directories to track (various versions of)
+> .config. So .gitignore there is carefully crafted to ignore most build
+> artefacts, but not .config, for instance."
+> 
+> Link: https://lkml.org/lkml/2019/3/22/1819
+> Reported-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Use a static atomic to ensure that the function is executed exactly once.
+Tested-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Cheers,
+Andre.
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 614ecdbb4ab7..933268b8d6a5 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
- 
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3692,9 +3693,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
- 
- static void cdrom_sysctl_register(void)
- {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3705,8 +3706,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
--
--	initialized = 1;
- }
- 
- static void cdrom_sysctl_unregister(void)
--- 
-2.19.1
+> ---
+> 
+>  Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 5fe5431..70fc778 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -499,7 +499,8 @@ outputmakefile:
+>  ifneq ($(KBUILD_SRC),)
+>  	$(Q)ln -fsn $(srctree) source
+>  	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+> -	$(Q){ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
+> +	$(Q)test -e .gitignore || \
+> +	{ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
+>  endif
+>  
+>  ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
 
