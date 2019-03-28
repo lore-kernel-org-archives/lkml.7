@@ -2,100 +2,100 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A369C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8600C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAE5204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B6C217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 00:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="LXaWDevn"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OBcGMsbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfC1A2S (ORCPT
+        id S1727617AbfC1A3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 20:28:18 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:46478 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfC1A2S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 20:28:18 -0400
-Date:   Wed, 27 Mar 2019 17:28:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch B0F3064012F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1553732897;
-        bh=PnD/kJ5jljm83pOyhUHVhxzvfANwJQLt3lLt3UoHwWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LXaWDevnMEJrf1Uvh9scLDEGAqMvT3W5Vw/MCnxWfJIsPLMjXli31JGe9CTMewh6K
-         D/CWNlTS1LtwgMekgqIUn4bixxScAkjs3R0rqCfvcgj3n9xXRVZ/+JPIqdqr5LqacY
-         CqTRbbBj6LPZ08ygCeanNklnTL7Po8UWsR3VB2zdxVAVNjrqj/N1EaPh/UhU5OwwcN
-         YDneO9kc1jStqvt+35qj7MNqp9Za3/BKbY0cLGuCeVBz5iypjiUFoTHnGeDW4RlqMR
-         B9ee1IKyDXNKl2CkMAFoYguxLzEJa6W03hYj+jHs4Bvq1MmmTlXpaCkHfP+UtX0FSm
-         a2mFsv9afsOtg==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] driver core: add dev_print_hex_dump() logging
- function.
-Message-ID: <20190328002817.GF24753@innovation.ch>
-References: <20190327014807.7472-1-ronald@innovation.ch>
- <20190327014807.7472-4-ronald@innovation.ch>
- <20190327023757.GB20766@kroah.com>
+        Wed, 27 Mar 2019 20:29:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:44311 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfC1A3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 20:29:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44V5N661DDz9sP2;
+        Thu, 28 Mar 2019 11:29:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553732967;
+        bh=2HDfh37B3oTaWYridyQIivww1MgZ/2YCDwF8F2ZOxAs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OBcGMsbfIm1ckJgyNVza/xcOsXDc0QhS2mur7EizDirqRa8uipuKju4CQHKWjSiXg
+         DvGXU9ekYbhQflHtUi0UW0c5WupZo8RP8cuo3i1hFs6gcGzHO8xO4sxJlZwfhAPNB5
+         AEZt6L5dQb7CH/x2Awo6qthZR7J2fcfm24N7cWU+CPjbi5w78xX+dp7BFF/Oem53AX
+         SIZrNA3dtRTNqsqvxcAyqUEmW3OdZNxIH4s2o6bze6KWZQnCboKqieNjd4SXsSAb9o
+         viaGHP8dmHYLX/3/DaMNy1lG/1oQIewvYaQZZPdXM9ba3uVAI5+ULwpmFEBrpWd9Q0
+         AIR0NCx6mvEqw==
+Date:   Thu, 28 Mar 2019 11:29:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: linux-next: build warning after merge of the phy-next tree
+Message-ID: <20190328112925.0fbe34e2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190327023757.GB20766@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/A75oY2WFi94l+5SHUQy+Dbz"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/A75oY2WFi94l+5SHUQy+Dbz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 27, 2019 at 11:37:57AM +0900, Greg Kroah-Hartman wrote:
-> On Tue, Mar 26, 2019 at 06:48:06PM -0700, Ronald Tschalär wrote:
-> > This is the dev_xxx() analog to print_hex_dump(), using dev_printk()
-> > instead of straight printk() to match other dev_xxx() logging functions.
-> > ---
-> >  drivers/base/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/device.h | 15 +++++++++++++++
-> >  2 files changed, 58 insertions(+)
-> 
-> No signed-off-by?
+Hi Kishon,
 
-Aargh! Apologies, fixed for the future.
+After merging the phy-next tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-> Anyway, no, please do not do this.  Please do not dump large hex values
-> like this to the kernel log, it does not help anyone.
-> 
-> You can do this while debugging, sure, but not for "real" kernel code.
+In file included from include/linux/phy/phy.h:19,
+                 from drivers/phy/broadcom/phy-bcm-sr-usb.c:10:
+drivers/phy/broadcom/phy-bcm-sr-usb.c: In function 'bcm_usb_phy_probe':
+include/linux/device.h:1138:19: warning: 'phy_cfg' may be used uninitialize=
+d in this function [-Wmaybe-uninitialized]
+  dev->driver_data =3D data;
+  ~~~~~~~~~~~~~~~~~^~~~~~
+drivers/phy/broadcom/phy-bcm-sr-usb.c:289:26: note: 'phy_cfg' was declared =
+here
+  struct bcm_usb_phy_cfg *phy_cfg;
+                          ^~~~~~~
 
-As used by this driver, it is definitely called for debugging only and
-must be explicitly enabled via a module param. But having the ability
-for folks to easily generate and print out debugging info has proven
-quite valuable.
+Introduced by commit
 
-> Worst case, just create a debugfs file for your device that you can read
-> the binary data from if you really need it.  For any "normal" operation,
-> this is not something that you should ever need.
+  a3b96057577c ("phy: sr-usb: Add Stingray USB PHY driver")
 
-Ok, can do that.
+--=20
+Cheers,
+Stephen Rothwell
 
-I'll retract the two print_hex_dump related patches then.
+--Sig_/A75oY2WFi94l+5SHUQy+Dbz
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-  Cheers,
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlycFWUACgkQAVBC80lX
+0GyCkAf8CwUajFzg0df2VEAQ2KqWX9pxxk3XEx1Gegym0hh9Q9OOOwf089BZvHdk
+OqVLeWCWxjYbpXHy9qILwrFMEBtHY8XSFglD2M6A/XEhxjb47gjf+nb7csGpKZ2s
+y8amVjDBDhc+adXHOw9e90L4qRR5npCrjJYTodbzlDtfwTvi8VWpsLmKAiAyU3fd
+vctKk5d0+Nod166EaqY879SOzGdAdgMzmfrzZ0S3S6sz1sSh7RutojhIAUCyUIf3
+/AD3MuZkKw/g1YvdtHuEa8rq/tP3ISgfANW4oMefdYJLdsyOCBZb4p9rXpfxt3n0
+El2QQ1lKfhQZ+XQR1XL1zd4zurtoPg==
+=Lzh8
+-----END PGP SIGNATURE-----
 
-  Ronald
-
+--Sig_/A75oY2WFi94l+5SHUQy+Dbz--
