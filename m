@@ -3,66 +3,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC99C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C842320811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CE221850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfC1TWP (ORCPT
+        id S1726476AbfC1TWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:22:15 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52754 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfC1TWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:22:15 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8A8AC106FCB98;
-        Thu, 28 Mar 2019 12:22:14 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 12:22:14 -0700 (PDT)
-Message-Id: <20190328.122214.1269115693598269959.davem@davemloft.net>
-To:     haiyangz@linuxonhyperv.com
-Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH hyperv-fixes,v2] hv_netvsc: Fix unwanted wakeup after
- tx_disable
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190328191637.6698-1-haiyangz@linuxonhyperv.com>
-References: <20190328191637.6698-1-haiyangz@linuxonhyperv.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Thu, 28 Mar 2019 15:22:22 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50494 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfC1TWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 15:22:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38AB715AB;
+        Thu, 28 Mar 2019 12:22:21 -0700 (PDT)
+Received: from [10.37.12.85] (unknown [10.37.12.85])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5A8C3F614;
+        Thu, 28 Mar 2019 12:22:18 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: coresight: Support static funnel
+To:     leo.yan@linaro.org, mathieu.poirier@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        shiwanglai@hisilicon.com
+References: <20190328023509.22242-1-leo.yan@linaro.org>
+ <20190328023509.22242-2-leo.yan@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <4b0ecaee-a578-f328-7f62-8ca49f7729bb@arm.com>
+Date:   Thu, 28 Mar 2019 19:24:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190328023509.22242-2-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 Mar 2019 12:22:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@linuxonhyperv.com>
-Date: Thu, 28 Mar 2019 19:16:37 +0000
+On 03/28/2019 02:35 AM, Leo Yan wrote:
+> Document DT binding for static (non-configurable) funnel and give an
+> example for it.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Wanglai Shi <shiwanglai@hisilicon.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> 
-> After queue stopped, the wakeup mechanism may wake it up again
-> when ring buffer usage is lower than a threshold. This may cause
-> send path panic on NULL pointer when we stopped all tx queues in
-> netvsc_detach and start removing the netvsc device.
-> 
-> This patch fix it by adding a tx_disable flag to prevent unwanted
-> queue wakeup.
-> 
-> Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-> Reported-by: Mohammed Gamal <mgamal@redhat.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-Still need to fix the inline issues I mentioned in v1.
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
