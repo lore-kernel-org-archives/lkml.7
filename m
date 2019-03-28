@@ -2,209 +2,245 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98118C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667C82082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80976217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfC1Mj0 (ORCPT
+        id S1727839AbfC1MjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:39:26 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57259 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbfC1MjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:39:24 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2SCcb4A3318555
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Mar 2019 05:38:37 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2SCcblE3318552;
-        Thu, 28 Mar 2019 05:38:37 -0700
-Date:   Thu, 28 Mar 2019 05:38:37 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-206b92353c839c0b27a0b9bec24195f93fd6cf7a@git.kernel.org>
-Cc:     peterz@infradead.org, hpa@zytor.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, bp@alien8.de, michael.h.kelley@microsoft.com,
-        linux-kernel@vger.kernel.org, jkosina@suse.cz,
-        Tianyu.Lan@microsoft.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, konrad.wilk@oracle.com,
-        mojha@codeaurora.org, luto@kernel.org, riel@surriel.com,
-        kys@microsoft.com, jpoimboe@redhat.com
-Reply-To: riel@surriel.com, luto@kernel.org, mojha@codeaurora.org,
-          jpoimboe@redhat.com, kys@microsoft.com, bp@alien8.de,
-          tglx@linutronix.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-          peterz@infradead.org, konrad.wilk@oracle.com,
-          torvalds@linux-foundation.org, Tianyu.Lan@microsoft.com,
-          jkosina@suse.cz, mingo@kernel.org, linux-kernel@vger.kernel.org,
-          michael.h.kelley@microsoft.com
-In-Reply-To: <20190326163811.503390616@linutronix.de>
-References: <20190326163811.503390616@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:smp/urgent] cpu/hotplug: Prevent crash when CPU bringup fails
- on CONFIG_HOTPLUG_CPU=n
-Git-Commit-ID: 206b92353c839c0b27a0b9bec24195f93fd6cf7a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Mar 2019 08:39:06 -0400
+Received: from mga09.intel.com ([134.134.136.24]:34153 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727210AbfC1Mgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 08:36:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="138136885"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Mar 2019 05:36:41 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 7FF7E9E5; Thu, 28 Mar 2019 14:36:34 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 16/36] thunderbolt: Add functions for allocating and releasing HopIDs
+Date:   Thu, 28 Mar 2019 15:36:13 +0300
+Message-Id: <20190328123633.42882-17-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  206b92353c839c0b27a0b9bec24195f93fd6cf7a
-Gitweb:     https://git.kernel.org/tip/206b92353c839c0b27a0b9bec24195f93fd6cf7a
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Tue, 26 Mar 2019 17:36:05 +0100
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 28 Mar 2019 13:34:58 +0100
+Each port has a separate path configuration space that is used for
+finding the next hop (switch) in the path. HopID is an index to this
+configuration space. HopIDs 0 - 7 are reserved by the protocol.
 
-cpu/hotplug: Prevent crash when CPU bringup fails on CONFIG_HOTPLUG_CPU=n
+In order to get next available HopID for each direction we provide two
+pairs of helper functions that can be used to allocate and release
+HopIDs for a given port.
 
-Tianyu reported a crash in a CPU hotplug teardown callback when booting a
-kernel which has CONFIG_HOTPLUG_CPU disabled with the 'nosmt' boot
-parameter.
+While there remove obsolete TODO comment.
 
-It turns out that the SMP=y CONFIG_HOTPLUG_CPU=n case has been broken
-forever in case that a bringup callback fails. Unfortunately this issue was
-not recognized when the CPU hotplug code was reworked, so the shortcoming
-just stayed in place.
-
-When a bringup callback fails, the CPU hotplug code rolls back the
-operation and takes the CPU offline.
-
-The 'nosmt' command line argument uses a bringup failure to abort the
-bringup of SMT sibling CPUs. This partial bringup is required due to the
-MCE misdesign on Intel CPUs.
-
-With CONFIG_HOTPLUG_CPU=y the rollback works perfectly fine, but
-CONFIG_HOTPLUG_CPU=n lacks essential mechanisms to exercise the low level
-teardown of a CPU including the synchronizations in various facilities like
-RCU, NOHZ and others.
-
-As a consequence the teardown callbacks which must be executed on the
-outgoing CPU within stop machine with interrupts disabled are executed on
-the control CPU in interrupt enabled and preemptible context causing the
-kernel to crash and burn. The pre state machine code has a different
-failure mode which is more subtle and resulting in a less obvious use after
-free crash because the control side frees resources which are still in use
-by the undead CPU.
-
-But this is not a x86 only problem. Any architecture which supports the
-SMP=y HOTPLUG_CPU=n combination suffers from the same issue. It's just less
-likely to be triggered because in 99.99999% of the cases all bringup
-callbacks succeed.
-
-The easy solution of making HOTPLUG_CPU mandatory for SMP is not working on
-all architectures as the following architectures have either no hotplug
-support at all or not all subarchitectures support it:
-
- alpha, arc, hexagon, openrisc, riscv, sparc (32bit), mips (partial).
-
-Crashing the kernel in such a situation is not an acceptable state
-either.
-
-Implement a minimal rollback variant by limiting the teardown to the point
-where all regular teardown callbacks have been invoked and leave the CPU in
-the 'dead' idle state. This has the following consequences:
-
- - the CPU is brought down to the point where the stop_machine takedown
-   would happen.
-
- - the CPU stays there forever and is idle
-
- - The CPU is cleared in the CPU active mask, but not in the CPU online
-   mask which is a legit state.
-
- - Interrupts are not forced away from the CPU
-
- - All facilities which only look at online mask would still see it, but
-   that is the case during normal hotplug/unplug operations as well. It's
-   just a (way) longer time frame.
-
-This will expose issues, which haven't been exposed before or only seldom,
-because now the normally transient state of being non active but online is
-a permanent state. In testing this exposed already an issue vs. work queues
-where the vmstat code schedules work on the almost dead CPU which ends up
-in an unbound workqueue and triggers 'preemtible context' warnings. This is
-not a problem of this change, it merily exposes an already existing issue.
-Still this is better than crashing fully without a chance to debug it.
-
-This is mainly thought as workaround for those architectures which do not
-support HOTPLUG_CPU. All others should enforce HOTPLUG_CPU for SMP.
-
-Fixes: 2e1a3483ce74 ("cpu/hotplug: Split out the state walk into functions")
-Reported-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Konrad Wilk <konrad.wilk@oracle.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Micheal Kelley <michael.h.kelley@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190326163811.503390616@linutronix.de
-
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- kernel/cpu.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ drivers/thunderbolt/nhi.c    |  3 +-
+ drivers/thunderbolt/switch.c | 87 +++++++++++++++++++++++++++++++++++-
+ drivers/thunderbolt/tb.h     | 11 +++++
+ 3 files changed, 98 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 025f419d16f6..6754f3ecfd94 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -564,6 +564,20 @@ static void undo_cpu_up(unsigned int cpu, struct cpuhp_cpu_state *st)
- 		cpuhp_invoke_callback(cpu, st->state, false, NULL, NULL);
+diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+index 9aa44f9762a3..cac1ead5e302 100644
+--- a/drivers/thunderbolt/nhi.c
++++ b/drivers/thunderbolt/nhi.c
+@@ -27,8 +27,7 @@
+  * use this ring for anything else.
+  */
+ #define RING_E2E_UNUSED_HOPID	2
+-/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
+-#define RING_FIRST_USABLE_HOPID	8
++#define RING_FIRST_USABLE_HOPID	TB_PATH_MIN_HOPID
+ 
+ /*
+  * Minimal number of vectors when we use MSI-X. Two for control channel
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index b132439618da..30f3d6a9fe90 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -594,11 +594,88 @@ static int tb_init_port(struct tb_port *port)
+ 
+ 	tb_dump_port(port->sw->tb, &port->config);
+ 
+-	/* TODO: Read dual link port, DP port and more from EEPROM. */
++	/* Control port does not need HopID allocation */
++	if (port->port) {
++		ida_init(&port->in_hopids);
++		ida_init(&port->out_hopids);
++	}
++
+ 	return 0;
+ 
  }
  
-+static inline bool can_rollback_cpu(struct cpuhp_cpu_state *st)
++static int tb_port_alloc_hopid(struct tb_port *port, bool in, int min_hopid,
++			       int max_hopid)
 +{
-+	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-+		return true;
-+	/*
-+	 * When CPU hotplug is disabled, then taking the CPU down is not
-+	 * possible because takedown_cpu() and the architecture and
-+	 * subsystem specific mechanisms are not available. So the CPU
-+	 * which would be completely unplugged again needs to stay around
-+	 * in the current state.
-+	 */
-+	return st->state <= CPUHP_BRINGUP_CPU;
++	int port_max_hopid;
++	struct ida *ida;
++
++	if (in) {
++		port_max_hopid = port->config.max_in_hop_id;
++		ida = &port->in_hopids;
++	} else {
++		port_max_hopid = port->config.max_out_hop_id;
++		ida = &port->out_hopids;
++	}
++
++	/* HopIDs 0-7 are reserved */
++	if (min_hopid < TB_PATH_MIN_HOPID)
++		min_hopid = TB_PATH_MIN_HOPID;
++
++	if (max_hopid < 0 || max_hopid > port_max_hopid)
++		max_hopid = port_max_hopid;
++
++	return ida_simple_get(ida, min_hopid, max_hopid + 1, GFP_KERNEL);
 +}
 +
- static int cpuhp_up_callbacks(unsigned int cpu, struct cpuhp_cpu_state *st,
- 			      enum cpuhp_state target)
++/**
++ * tb_port_alloc_in_hopid() - Allocate input HopID from port
++ * @port: Port to allocate HopID for
++ * @min_hopid: Minimum acceptable input HopID
++ * @max_hopid: Maximum acceptable input HopID
++ *
++ * Return: HopID between @min_hopid and @max_hopid or negative errno in
++ * case of error.
++ */
++int tb_port_alloc_in_hopid(struct tb_port *port, int min_hopid, int max_hopid)
++{
++	return tb_port_alloc_hopid(port, true, min_hopid, max_hopid);
++}
++
++/**
++ * tb_port_alloc_out_hopid() - Allocate output HopID from port
++ * @port: Port to allocate HopID for
++ * @min_hopid: Minimum acceptable output HopID
++ * @max_hopid: Maximum acceptable output HopID
++ *
++ * Return: HopID between @min_hopid and @max_hopid or negative errno in
++ * case of error.
++ */
++int tb_port_alloc_out_hopid(struct tb_port *port, int min_hopid, int max_hopid)
++{
++	return tb_port_alloc_hopid(port, false, min_hopid, max_hopid);
++}
++
++/**
++ * tb_port_release_in_hopid() - Release allocated input HopID from port
++ * @port: Port whose HopID to release
++ * @hopid: HopID to release
++ */
++void tb_port_release_in_hopid(struct tb_port *port, int hopid)
++{
++	ida_simple_remove(&port->in_hopids, hopid);
++}
++
++/**
++ * tb_port_release_out_hopid() - Release allocated output HopID from port
++ * @port: Port whose HopID to release
++ * @hopid: HopID to release
++ */
++void tb_port_release_out_hopid(struct tb_port *port, int hopid)
++{
++	ida_simple_remove(&port->out_hopids, hopid);
++}
++
+ /**
+  * tb_pci_port_enable() - Enable PCIe adapter port
+  * @port: PCIe port to enable
+@@ -1055,9 +1132,17 @@ static const struct attribute_group *switch_groups[] = {
+ static void tb_switch_release(struct device *dev)
  {
-@@ -574,8 +588,10 @@ static int cpuhp_up_callbacks(unsigned int cpu, struct cpuhp_cpu_state *st,
- 		st->state++;
- 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
- 		if (ret) {
--			st->target = prev_state;
--			undo_cpu_up(cpu, st);
-+			if (can_rollback_cpu(st)) {
-+				st->target = prev_state;
-+				undo_cpu_up(cpu, st);
-+			}
- 			break;
- 		}
- 	}
+ 	struct tb_switch *sw = tb_to_switch(dev);
++	int i;
+ 
+ 	dma_port_free(sw->dma_port);
+ 
++	for (i = 1; i <= sw->config.max_port_number; i++) {
++		if (!sw->ports[i].disabled) {
++			ida_destroy(&sw->ports[i].in_hopids);
++			ida_destroy(&sw->ports[i].out_hopids);
++		}
++	}
++
+ 	kfree(sw->uuid);
+ 	kfree(sw->device_name);
+ 	kfree(sw->vendor_name);
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index d1f8e9722f33..1cb5009195f9 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -127,6 +127,8 @@ struct tb_switch {
+  * @dual_link_port: If the switch is connected using two ports, points
+  *		    to the other port.
+  * @link_nr: Is this primary or secondary port on the dual_link.
++ * @in_hopids: Currently allocated input HopIDs
++ * @out_hopids: Currently allocated output HopIDs
+  */
+ struct tb_port {
+ 	struct tb_regs_port_header config;
+@@ -139,6 +141,8 @@ struct tb_port {
+ 	bool disabled;
+ 	struct tb_port *dual_link_port;
+ 	u8 link_nr:1;
++	struct ida in_hopids;
++	struct ida out_hopids;
+ };
+ 
+ /**
+@@ -194,6 +198,9 @@ struct tb_path {
+ 	int path_length; /* number of hops */
+ };
+ 
++/* HopIDs 0-7 are reserved by the Thunderbolt protocol */
++#define TB_PATH_MIN_HOPID	8
++
+ /**
+  * struct tb_cm_ops - Connection manager specific operations vector
+  * @driver_ready: Called right after control channel is started. Used by
+@@ -453,6 +460,10 @@ static inline bool tb_switch_is_er(const struct tb_switch *sw)
+ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
+ int tb_port_add_nfc_credits(struct tb_port *port, int credits);
+ int tb_port_clear_counter(struct tb_port *port, int counter);
++int tb_port_alloc_in_hopid(struct tb_port *port, int hopid, int max_hopid);
++void tb_port_release_in_hopid(struct tb_port *port, int hopid);
++int tb_port_alloc_out_hopid(struct tb_port *port, int hopid, int max_hopid);
++void tb_port_release_out_hopid(struct tb_port *port, int hopid);
+ 
+ int tb_switch_find_vse_cap(struct tb_switch *sw, enum tb_switch_vse_cap vsec);
+ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap);
+-- 
+2.20.1
+
