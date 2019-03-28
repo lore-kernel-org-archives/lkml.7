@@ -2,421 +2,190 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFB4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169D3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1F82184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 22:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NmXtfaKN"
+	by mail.kernel.org (Postfix) with ESMTP id CF9922184C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfC1W7c (ORCPT
+        id S1728483AbfC1XFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 18:59:32 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:34616 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbfC1W7b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 18:59:31 -0400
-Received: by mail-qt1-f202.google.com with SMTP id x58so476677qtc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 15:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=/UBSp3tNYunqFdlh1KeBZH5j7TSeXC8kiXYI0PSZPV4=;
-        b=NmXtfaKNspUl8WZxDGodUUwt24DocWoSFRWLjvYBZbrgv1MxU2q8ExZgfRGiJUwU0O
-         7+Uhz9t/CSj7T+/54xVjOwy07CDabix6aZ0QgTFQfCReNfuQ/Gu4dIW5jLhqP26WIQUd
-         A2IXbtgg+9UuWeJwRB3P3t0zQAHhxJpkyQLeRMV1YBgZ3NK4QMcYZEDib1slHX8N7HNL
-         ja/uxI2Mln6s0KniBEOVAPaPKqFxxHbecnMxGnqj63J6fRRw4Bmv1F+ufX1XiNkSJB6l
-         +oL2oDwtqjki7TiuHwO0wT7b4mTw92xO6yz2WJDsB0of4qaCFMpCJL+uc3iKwWUHlBVp
-         VEgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=/UBSp3tNYunqFdlh1KeBZH5j7TSeXC8kiXYI0PSZPV4=;
-        b=s90/BXtChnjamx+MUN0B7l3FU3RWt2uukBMnnWutqAN8g5mUV3EnGId+3YAvnVL24f
-         RXVdFBaluriMWSQmSVc2Yr7U90A1/heSMkDoGGHCURbMYnbniLIlvI/jTviu7OpLwbfB
-         hDAZF3q/OAW02SSVI8dlZ3KgisKxnkBR/JFwMGq63ojK8dEi/e6lIaPknj6g3xhqY1rn
-         eoSpN/EU4Hb6KSXjxiNExIKCl5X5psDY3sItxwSpF9uobhFReNj2oqryd+bOSVJbOCKk
-         vZ3nGt1EGXb5pqj/SdCP20NezfGPBIdvQQMA0P4uBigOJVqEVi+V/vBLFk+SEWwbVGjz
-         yLpw==
-X-Gm-Message-State: APjAAAWOpEaQnUugv0PpDik2YszLvA7Mcaj3orqhetaSSBbOo8eRI6q9
-        d/vnVtS/EpHtjeUih1Q4lEelCo0aUQ==
-X-Google-Smtp-Source: APXvYqyI/fW7961Ac11uHPQdrpy7I2EWoxC8M5o7HmS/CmOHNdELj1osLbBciY6NxVHnWhBmCLG/YXqTmQ==
-X-Received: by 2002:ac8:2dcf:: with SMTP id q15mr3393729qta.2.1553813969919;
- Thu, 28 Mar 2019 15:59:29 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 23:59:25 +0100
-Message-Id: <20190328225925.241998-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH] x86/calgary: fix bitcast type warnings
-From:   Jann Horn <jannh@google.com>
-To:     Muli Ben-Yehuda <mulix@mulix.org>, Jon Mason <jdmason@kudzu.us>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, jannh@google.com
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 Mar 2019 19:05:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49146 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728470AbfC1XFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 19:05:47 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7522F86676;
+        Thu, 28 Mar 2019 23:05:46 +0000 (UTC)
+Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A31F45C29A;
+        Thu, 28 Mar 2019 23:05:45 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 19:05:43 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 10/11] mm/hmm: add helpers for driver to safely take
+ the mmap_sem v2
+Message-ID: <20190328230543.GI13560@redhat.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-11-jglisse@redhat.com>
+ <9df742eb-61ca-3629-a5f4-8ad1244ff840@nvidia.com>
+ <20190328213047.GB13560@redhat.com>
+ <a16efd42-3e2b-1b72-c205-0c2659de2750@nvidia.com>
+ <20190328220824.GE13560@redhat.com>
+ <068db0a8-fade-8ed1-3b9d-c29c27797301@nvidia.com>
+ <20190328224032.GH13560@redhat.com>
+ <0b698b36-da17-434b-b8e7-4a91ac6c9d82@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b698b36-da17-434b-b8e7-4a91ac6c9d82@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 28 Mar 2019 23:05:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sparse checker attempts to ensure that all conversions between
-fixed-endianness numbers and numbers with native endianness are explicit.
-However, the calgary code reads and writes big-endian numbers from/to IO
-memory using {read,write}{l,q}(), which return native-endian numbers.
+On Thu, Mar 28, 2019 at 03:43:33PM -0700, John Hubbard wrote:
+> On 3/28/19 3:40 PM, Jerome Glisse wrote:
+> > On Thu, Mar 28, 2019 at 03:25:39PM -0700, John Hubbard wrote:
+> >> On 3/28/19 3:08 PM, Jerome Glisse wrote:
+> >>> On Thu, Mar 28, 2019 at 02:41:02PM -0700, John Hubbard wrote:
+> >>>> On 3/28/19 2:30 PM, Jerome Glisse wrote:
+> >>>>> On Thu, Mar 28, 2019 at 01:54:01PM -0700, John Hubbard wrote:
+> >>>>>> On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
+> >>>>>>> From: Jérôme Glisse <jglisse@redhat.com>
+> >> [...]
+> >>>>
+> >>>>>>
+> >>>>>> If you insist on having this wrapper, I think it should have approximately 
+> >>>>>> this form:
+> >>>>>>
+> >>>>>> void hmm_mirror_mm_down_read(...)
+> >>>>>> {
+> >>>>>> 	WARN_ON(...)
+> >>>>>> 	down_read(...)
+> >>>>>> } 
+> >>>>>
+> >>>>> I do insist as it is useful and use by both RDMA and nouveau and the
+> >>>>> above would kill the intent. The intent is do not try to take the lock
+> >>>>> if the process is dying.
+> >>>>
+> >>>> Could you provide me a link to those examples so I can take a peek? I
+> >>>> am still convinced that this whole thing is a race condition at best.
+> >>>
+> >>> The race is fine and ok see:
+> >>>
+> >>> https://cgit.freedesktop.org/~glisse/linux/commit/?h=hmm-odp-v2&id=eebd4f3095290a16ebc03182e2d3ab5dfa7b05ec
+> >>>
+> >>> which has been posted and i think i provided a link in the cover
+> >>> letter to that post. The same patch exist for nouveau i need to
+> >>> cleanup that tree and push it.
+> >>
+> >> Thanks for that link, and I apologize for not keeping up with that
+> >> other review thread.
+> >>
+> >> Looking it over, hmm_mirror_mm_down_read() is only used in one place.
+> >> So, what you really want there is not a down_read() wrapper, but rather,
+> >> something like
+> >>
+> >> 	hmm_sanity_check()
+> >>
+> >> , that ib_umem_odp_map_dma_pages() calls.
+> > 
+> > Why ? The device driver pattern is:
+> >     if (hmm_is_it_dying()) {
+> >         // handle when process die and abort the fault ie useless
+> >         // to call within HMM
+> >     }
+> >     down_read(mmap_sem);
+> > 
+> > This pattern is common within nouveau and RDMA and other device driver in
+> > the work. Hence why i am replacing it with just one helper. Also it has the
+> > added benefit that changes being discussed around the mmap sem will be easier
+> > to do as it avoid having to update each driver but instead it can be done
+> > just once for the HMM helpers.
+> 
+> Yes, and I'm saying that the pattern is broken. Because it's racy. :)
 
-This could be addressed by putting __force casts all over the place, but
-that would kind of defeat the point of the warning. Instead, create new
-helpers {read,write}{l,q}_be() for big-endian IO that convert from/to
-native endianness.
+And i explained why it is fine, it just an optimization, in most case
+it takes time to tear down a process and the device page fault handler
+can be trigger while that happens, so instead of having it pile more
+work on we can detect that even if it is racy. It is just about avoiding
+useless work. There is nothing about correctness here. It does not need
+to identify dying process with 100% accuracy. The fact that the process
+is dying will be identified race free later on and it just means that in
+the meantime we are doing useless works, potential tons of useless works.
 
-Most of this patch is a straightforward conversion; the following parts
-aren't just mechanical replacement:
+They are hardware that can storm the page fault handler and we end up
+with hundred of page fault queued up against a process that might be
+dying. It is a big waste to go over all those fault and do works that
+will be trown on the floor later on.
 
- - ->tar_val is now a native-endian number instead of big-endian
- - calioc2_handle_quirks() did `cpu_to_be32(readl(target))` when it
-   intended to do `be32_to_cpu(readl(target))` (but that has no actual
-   effects outside of type warnings)
+> 
+> >>>>>>> +{
+> >>>>>>> +	struct mm_struct *mm;
+> >>>>>>> +
+> >>>>>>> +	/* Sanity check ... */
+> >>>>>>> +	if (!mirror || !mirror->hmm)
+> >>>>>>> +		return -EINVAL;
+> >>>>>>> +	/*
+> >>>>>>> +	 * Before trying to take the mmap_sem make sure the mm is still
+> >>>>>>> +	 * alive as device driver context might outlive the mm lifetime.
+> >>>>>>
+> >>>>>> Let's find another way, and a better place, to solve this problem.
+> >>>>>> Ref counting?
+> >>>>>
+> >>>>> This has nothing to do with refcount or use after free or anthing
+> >>>>> like that. It is just about checking wether we are about to do
+> >>>>> something pointless. If the process is dying then it is pointless
+> >>>>> to try to take the lock and it is pointless for the device driver
+> >>>>> to trigger handle_mm_fault().
+> >>>>
+> >>>> Well, what happens if you let such pointless code run anyway? 
+> >>>> Does everything still work? If yes, then we don't need this change.
+> >>>> If no, then we need a race-free version of this change.
+> >>>
+> >>> Yes everything work, nothing bad can happen from a race, it will just
+> >>> do useless work which never hurt anyone.
+> >>>
+> >>
+> >> OK, so let's either drop this patch, or if merge windows won't allow that,
+> >> then *eventually* drop this patch. And instead, put in a hmm_sanity_check()
+> >> that does the same checks.
+> > 
+> > RDMA depends on this, so does the nouveau patchset that convert to new API.
+> > So i do not see reason to drop this. They are user for this they are posted
+> > and i hope i explained properly the benefit.
+> > 
+> > It is a common pattern. Yes it only save couple lines of code but down the
+> > road i will also help for people working on the mmap_sem patchset.
+> > 
+> 
+> It *adds* a couple of lines that are misleading, because they look like they
+> make things safer, but they don't actually do so.
 
-This gets rid of 108 lines of sparse warnings.
+It is not about safety, sorry if it confused you but there is nothing about
+safety here, i can add a big fat comment that explains that there is no safety
+here. The intention is to allow the page fault handler that potential have
+hundred of page fault queue up to abort as soon as it sees that it is pointless
+to keep faulting on a dying process.
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
-compile-tested only
+Again if we race it is _fine_ nothing bad will happen, we are just doing use-
+less work that gonna be thrown on the floor and we are just slowing down the
+process tear down.
 
- arch/x86/kernel/pci-calgary_64.c | 108 ++++++++++++++++++-------------
- 1 file changed, 64 insertions(+), 44 deletions(-)
-
-diff --git a/arch/x86/kernel/pci-calgary_64.c b/arch/x86/kernel/pci-calgary_64.c
-index c70720f61a34..36cd66d940fb 100644
---- a/arch/x86/kernel/pci-calgary_64.c
-+++ b/arch/x86/kernel/pci-calgary_64.c
-@@ -534,6 +534,26 @@ static inline int is_cal_pci_dev(unsigned short device)
- 	return (is_calgary(device) || is_calioc2(device));
- }
- 
-+static inline u32 readl_be(const void __iomem *addr)
-+{
-+	return be32_to_cpu((__force __be32)readl(addr));
-+}
-+
-+static inline u64 readq_be(const void __iomem *addr)
-+{
-+	return be64_to_cpu((__force __be64)readq(addr));
-+}
-+
-+static inline void writel_be(u32 val, void __iomem *addr)
-+{
-+	writel((__force u32)cpu_to_be32(val), addr);
-+}
-+
-+static inline void writeq_be(u64 val, void __iomem *addr)
-+{
-+	writeq((__force u64)cpu_to_be64(val), addr);
-+}
-+
- static void calgary_tce_cache_blast(struct iommu_table *tbl)
- {
- 	u64 val;
-@@ -562,7 +582,7 @@ static void calgary_tce_cache_blast(struct iommu_table *tbl)
- 
- 	/* invalidate TCE cache */
- 	target = calgary_reg(bbar, tar_offset(tbl->it_busno));
--	writeq(tbl->tar_val, target);
-+	writeq_be(tbl->tar_val, target);
- 
- 	/* enable arbitration */
- 	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_AER_OFFSET);
-@@ -586,11 +606,11 @@ static void calioc2_tce_cache_blast(struct iommu_table *tbl)
- 
- 	/* 1. using the Page Migration Control reg set SoftStop */
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "1a. read 0x%x [LE] from %p\n", val, target);
- 	val |= PMR_SOFTSTOP;
- 	printk(KERN_DEBUG "1b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
-+	writel_be(val, target);
- 
- 	/* 2. poll split queues until all DMA activity is done */
- 	printk(KERN_DEBUG "2a. starting to poll split queues\n");
-@@ -604,7 +624,7 @@ static void calioc2_tce_cache_blast(struct iommu_table *tbl)
- 
- 	/* 3. poll Page Migration DEBUG for SoftStopFault */
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "3. read 0x%x [LE] from %p\n", val, target);
- 
- 	/* 4. if SoftStopFault - goto (1) */
-@@ -620,21 +640,21 @@ static void calioc2_tce_cache_blast(struct iommu_table *tbl)
- 	/* 5. Slam into HardStop by reading PHB_PAGE_MIG_CTRL */
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
- 	printk(KERN_DEBUG "5a. slamming into HardStop by reading %p\n", target);
--	val = be32_to_cpu(readl(target));
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "5b. read 0x%x [LE] from %p\n", val, target);
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_DEBUG);
--	val = be32_to_cpu(readl(target));
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "5c. read 0x%x [LE] from %p (debug)\n", val, target);
- 
- 	/* 6. invalidate TCE cache */
- 	printk(KERN_DEBUG "6. invalidating TCE cache\n");
- 	target = calgary_reg(bbar, tar_offset(bus));
--	writeq(tbl->tar_val, target);
-+	writeq_be(tbl->tar_val, target);
- 
- 	/* 7. Re-read PMCR */
- 	printk(KERN_DEBUG "7a. Re-reading PMCR\n");
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
--	val = be32_to_cpu(readl(target));
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "7b. read 0x%x [LE] from %p\n", val, target);
- 
- 	/* 8. Remove HardStop */
-@@ -642,8 +662,8 @@ static void calioc2_tce_cache_blast(struct iommu_table *tbl)
- 	target = calgary_reg(bbar, phb_offset(bus) | PHB_PAGE_MIG_CTRL);
- 	val = 0;
- 	printk(KERN_DEBUG "8b. writing 0x%x [LE] to %p\n", val, target);
--	writel(cpu_to_be32(val), target);
--	val = be32_to_cpu(readl(target));
-+	writel_be(val, target);
-+	val = readl_be(target);
- 	printk(KERN_DEBUG "8c. read 0x%x [LE] from %p\n", val, target);
- }
- 
-@@ -670,11 +690,11 @@ static void __init calgary_reserve_peripheral_mem_1(struct pci_dev *dev)
- 
- 	/* peripheral MEM_1 region */
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_LOW);
--	low = be32_to_cpu(readl(target));
-+	low = readl_be(target);
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_HIGH);
--	high = be32_to_cpu(readl(target));
-+	high = readl_be(target);
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_1_SIZE);
--	sizelow = be32_to_cpu(readl(target));
-+	sizelow = readl_be(target);
- 
- 	start = (high << 32) | low;
- 	limit = sizelow;
-@@ -694,18 +714,18 @@ static void __init calgary_reserve_peripheral_mem_2(struct pci_dev *dev)
- 
- 	/* is it enabled? */
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
-+	val32 = readl_be(target);
- 	if (!(val32 & PHB_MEM2_ENABLE))
- 		return;
- 
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_LOW);
--	low = be32_to_cpu(readl(target));
-+	low = readl_be(target);
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_HIGH);
--	high = be32_to_cpu(readl(target));
-+	high = readl_be(target);
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_LOW);
--	sizelow = be32_to_cpu(readl(target));
-+	sizelow = readl_be(target);
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_MEM_2_SIZE_HIGH);
--	sizehigh = be32_to_cpu(readl(target));
-+	sizehigh = readl_be(target);
- 
- 	start = (high << 32) | low;
- 	limit = (sizehigh << 32) | sizelow;
-@@ -774,7 +794,7 @@ static int __init calgary_setup_tar(struct pci_dev *dev, void __iomem *bbar)
- 
- 	/* set TARs for each PHB */
- 	target = calgary_reg(bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
-+	val64 = readq_be(target);
- 
- 	/* zero out all TAR bits under sw control */
- 	val64 &= ~TAR_SW_BITS;
-@@ -785,9 +805,9 @@ static int __init calgary_setup_tar(struct pci_dev *dev, void __iomem *bbar)
- 	BUG_ON(specified_table_size > TCE_TABLE_SIZE_8M);
- 	val64 |= (u64) specified_table_size;
- 
--	tbl->tar_val = cpu_to_be64(val64);
-+	tbl->tar_val = val64;
- 
--	writeq(tbl->tar_val, target);
-+	writeq_be(tbl->tar_val, target);
- 	readq(target); /* flush */
- 
- 	return 0;
-@@ -801,9 +821,9 @@ static void __init calgary_free_bus(struct pci_dev *dev)
- 	unsigned int bitmapsz;
- 
- 	target = calgary_reg(tbl->bbar, tar_offset(dev->bus->number));
--	val64 = be64_to_cpu(readq(target));
-+	val64 = readq_be(target);
- 	val64 &= ~TAR_SW_BITS;
--	writeq(cpu_to_be64(val64), target);
-+	writeq_be(val64, target);
- 	readq(target); /* flush */
- 
- 	bitmapsz = tbl->it_size / BITS_PER_BYTE;
-@@ -825,10 +845,10 @@ static void calgary_dump_error_regs(struct iommu_table *tbl)
- 	u32 csr, plssr;
- 
- 	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
-+	csr = readl_be(target);
- 
- 	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
-+	plssr = readl_be(target);
- 
- 	/* If no error, the agent ID in the CSR is not valid */
- 	pr_emerg("DMA error on Calgary PHB 0x%x, 0x%08x@CSR 0x%08x@PLSSR\n",
-@@ -847,16 +867,16 @@ static void calioc2_dump_error_regs(struct iommu_table *tbl)
- 
- 	/* dump CSR */
- 	target = calgary_reg(bbar, phboff | PHB_CSR_OFFSET);
--	csr = be32_to_cpu(readl(target));
-+	csr = readl_be(target);
- 	/* dump PLSSR */
- 	target = calgary_reg(bbar, phboff | PHB_PLSSR_OFFSET);
--	plssr = be32_to_cpu(readl(target));
-+	plssr = readl_be(target);
- 	/* dump CSMR */
- 	target = calgary_reg(bbar, phboff | 0x290);
--	csmr = be32_to_cpu(readl(target));
-+	csmr = readl_be(target);
- 	/* dump mck */
- 	target = calgary_reg(bbar, phboff | 0x800);
--	mck = be32_to_cpu(readl(target));
-+	mck = readl_be(target);
- 
- 	pr_emerg("DMA error on CalIOC2 PHB 0x%x\n", tbl->it_busno);
- 
-@@ -869,14 +889,14 @@ static void calioc2_dump_error_regs(struct iommu_table *tbl)
- 		/* err regs are at 0x810 - 0x870 */
- 		erroff = (0x810 + (i * 0x10));
- 		target = calgary_reg(bbar, phboff | erroff);
--		errregs[i] = be32_to_cpu(readl(target));
-+		errregs[i] = readl_be(target);
- 		pr_cont("0x%08x@0x%lx ", errregs[i], erroff);
- 	}
- 	pr_cont("\n");
- 
- 	/* root complex status */
- 	target = calgary_reg(bbar, phboff | PHB_ROOT_COMPLEX_STATUS);
--	rcstat = be32_to_cpu(readl(target));
-+	rcstat = readl_be(target);
- 	printk(KERN_EMERG "Calgary: 0x%08x@0x%x\n", rcstat,
- 	       PHB_ROOT_COMPLEX_STATUS);
- }
-@@ -889,7 +909,7 @@ static void calgary_watchdog(struct timer_list *t)
- 	void __iomem *target;
- 
- 	target = calgary_reg(bbar, phb_offset(tbl->it_busno) | PHB_CSR_OFFSET);
--	val32 = be32_to_cpu(readl(target));
-+	val32 = readl_be(target);
- 
- 	/* If no error, the agent ID in the CSR is not valid */
- 	if (val32 & CSR_AGENT_MASK) {
-@@ -901,9 +921,9 @@ static void calgary_watchdog(struct timer_list *t)
- 		/* Disable bus that caused the error */
- 		target = calgary_reg(bbar, phb_offset(tbl->it_busno) |
- 				     PHB_CONFIG_RW_OFFSET);
--		val32 = be32_to_cpu(readl(target));
-+		val32 = readl_be(target);
- 		val32 |= PHB_SLOT_DISABLE;
--		writel(cpu_to_be32(val32), target);
-+		writel_be(val32, target);
- 		readl(target); /* flush */
- 	} else {
- 		/* Reset the timer */
-@@ -933,13 +953,13 @@ static void __init calgary_set_split_completion_timeout(void __iomem *bbar,
- 	}
- 
- 	target = calgary_reg(bbar, CALGARY_CONFIG_REG);
--	val64 = be64_to_cpu(readq(target));
-+	val64 = readq_be(target);
- 
- 	/* zero out this PHB's timer bits */
- 	mask = ~(0xFUL << phb_shift);
- 	val64 &= mask;
- 	val64 |= (timeout << phb_shift);
--	writeq(cpu_to_be64(val64), target);
-+	writeq_be(val64, target);
- 	readq(target); /* flush */
- }
- 
-@@ -954,9 +974,9 @@ static void __init calioc2_handle_quirks(struct iommu_table *tbl, struct pci_dev
- 	 * CalIOC2 designers recommend setting bit 8 in 0xnDB0 to 1
- 	 */
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_SAVIOR_L2);
--	val = cpu_to_be32(readl(target));
-+	val = readl_be(target);
- 	val |= 0x00800000;
--	writel(cpu_to_be32(val), target);
-+	writel_be(val, target);
- }
- 
- static void __init calgary_handle_quirks(struct iommu_table *tbl, struct pci_dev *dev)
-@@ -986,7 +1006,7 @@ static void __init calgary_enable_translation(struct pci_dev *dev)
- 
- 	/* enable TCE in PHB Config Register */
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
-+	val32 = readl_be(target);
- 	val32 |= PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE;
- 
- 	printk(KERN_INFO "Calgary: enabling translation on %s PHB %#x\n",
-@@ -995,7 +1015,7 @@ static void __init calgary_enable_translation(struct pci_dev *dev)
- 	printk(KERN_INFO "Calgary: errant DMAs will now be prevented on this "
- 	       "bus.\n");
- 
--	writel(cpu_to_be32(val32), target);
-+	writel_be(val32, target);
- 	readl(target); /* flush */
- 
- 	timer_setup(&tbl->watchdog_timer, calgary_watchdog, 0);
-@@ -1016,11 +1036,11 @@ static void __init calgary_disable_translation(struct pci_dev *dev)
- 
- 	/* disable TCE in PHB Config Register */
- 	target = calgary_reg(bbar, phb_offset(busnum) | PHB_CONFIG_RW_OFFSET);
--	val32 = be32_to_cpu(readl(target));
-+	val32 = readl_be(target);
- 	val32 &= ~(PHB_TCE_ENABLE | PHB_DAC_DISABLE | PHB_MCSR_ENABLE);
- 
- 	printk(KERN_INFO "Calgary: disabling translation on PHB %#x!\n", busnum);
--	writel(cpu_to_be32(val32), target);
-+	writel_be(val32, target);
- 	readl(target); /* flush */
- 
- 	del_timer_sync(&tbl->watchdog_timer);
-@@ -1096,7 +1116,7 @@ static int __init calgary_locate_bbars(void)
- 			offset = phb_debug_offsets[phb] | PHB_DEBUG_STUFF_OFFSET;
- 			target = calgary_reg(bbar, offset);
- 
--			val = be32_to_cpu(readl(target));
-+			val = readl_be(target);
- 
- 			start_bus = (u8)((val & 0x00FF0000) >> 16);
- 			end_bus = (u8)((val & 0x0000FF00) >> 8);
-@@ -1333,7 +1353,7 @@ static void __init get_tce_space_from_tar(void)
- 						translate_empty_slots) {
- 			target = calgary_reg(bus_info[bus].bbar,
- 						tar_offset(bus));
--			tce_space = be64_to_cpu(readq(target));
-+			tce_space = readq_be(target);
- 			tce_space = tce_space & TAR_SW_BITS;
- 
- 			tce_space = tce_space & (~specified_table_size);
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Cheers,
+Jérôme
