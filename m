@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3455EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C850C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE122173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5792173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F19NqBy9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iMJb67+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbfC1Xrk (ORCPT
+        id S1728648AbfC1Xra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 19:47:40 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:55348 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbfC1Xre (ORCPT
+        Thu, 28 Mar 2019 19:47:30 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51820 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfC1Xra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 19:47:34 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SNiRs1129269;
-        Thu, 28 Mar 2019 23:47:21 GMT
+        Thu, 28 Mar 2019 19:47:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SNiDr2124232;
+        Thu, 28 Mar 2019 23:47:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=YIsUhxU4+gts/JPtIOY3p0GcgAlB/Grz4wjUuRKy0gc=;
- b=F19NqBy9epTh+nTN9Tzp4A10Ci+lWRm+5Sbwnc7wMHqwCGpyrdFpcyZkg3mzQs28hXSY
- BadHFdhW9ncY6AsNh2BCx+cIlHPvcbqyoh/+G80jHQPvIFIN/brMUplsVxJT9Yz4gj/1
- DOe2KBQnlo2BUtdFCU3OkJYBTGQaaoAQQLiyrd79OTc3aAjRA+RkUOxsORnM4XLInNWw
- LKvrMSsCEBwUhVwbS/GJ9aVlf3sF4vKR/311pUgLatTW4czGABD60aY6rdTIFvZ8nL3X
- ZfnHY0xE7UJ7MM98N3vRxtR/AKXyvBJgAPr1TuM4SzpPE6+86zD5eQxBjjkgDHCBdg/8 Aw== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2re6g19kk2-1
+ bh=DCoXfwtDoQElNXOEfosWBeE/6jSxU0DiQdqtsDNUNdE=;
+ b=iMJb67+fuQVNpdvgaj3dV0A+AKOE1Ws5y9ti9ugYJXb0jmPwNHSMgBZLJ2ghZf1RxYfY
+ ZVKJxyvwPsX4deBz06LETu0pe7dW+HHRhb4ldKbzdy+iWE1HaofJhO5X844P+IoIoh+u
+ Dtip/rPUMHoKAxeR27Ne9UR+hNrUE0LIZyBnbDtDoTsAC7ezawApX7XkHGYeqxMfaVWg
+ 9FIm6sMgoRPA+9cvxQ8mhAb7vR4ooIc/eSMBx/KNKYRDphJTwW2kNOy2YkvbXN6S9BUd
+ 57hmuqYfb6DRD/cpCBUo4ENRRvVTD9Xz8pBvgk+URNjn0o35llqnPu8I6C73cWuyAbMd vw== 
+Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
+        by userp2130.oracle.com with ESMTP id 2re6g1hj1n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:21 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlL8i015665
+        Thu, 28 Mar 2019 23:47:19 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlJSq008392
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:21 GMT
+        Thu, 28 Mar 2019 23:47:19 GMT
 Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlK0Q016061;
-        Thu, 28 Mar 2019 23:47:20 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2SNlIn5018631;
+        Thu, 28 Mar 2019 23:47:18 GMT
 Received: from monkey.oracle.com (/50.38.38.67)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Mar 2019 16:47:20 -0700
+        with ESMTP ; Thu, 28 Mar 2019 16:47:18 -0700
 From:   Mike Kravetz <mike.kravetz@oracle.com>
 To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Davidlohr Bueso <dave@stgolabs.net>
@@ -58,9 +58,9 @@ Cc:     Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH v2 2/2] hugetlb: use same fault hash key for shared and private mappings
-Date:   Thu, 28 Mar 2019 16:47:04 -0700
-Message-Id: <20190328234704.27083-3-mike.kravetz@oracle.com>
+Subject: [PATCH v2 1/2] huegtlbfs: on restore reserve error path retain subpool reservation
+Date:   Thu, 28 Mar 2019 16:47:03 -0700
+Message-Id: <20190328234704.27083-2-mike.kravetz@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328234704.27083-1-mike.kravetz@oracle.com>
 References: <20190328234704.27083-1-mike.kravetz@oracle.com>
@@ -69,7 +69,7 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9209 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=973 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1903280154
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,149 +77,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hugetlb uses a fault mutex hash table to prevent page faults of the
-same pages concurrently.  The key for shared and private mappings is
-different.  Shared keys off address_space and file index.  Private
-keys off mm and virtual address.  Consider a private mappings of a
-populated hugetlbfs file.  A write fault will first map the page from
-the file and then do a COW to map a writable page.
+When a huge page is allocated, PagePrivate() is set if the allocation
+consumed a reservation.  When freeing a huge page, PagePrivate is checked.
+If set, it indicates the reservation should be restored.  PagePrivate
+being set at free huge page time mostly happens on error paths.
 
-Hugetlbfs hole punch uses the fault mutex to prevent mappings of file
-pages.  It uses the address_space file index key.  However, private
-mappings will use a different key and could temporarily map the file
-page before COW.  This causes problems (BUG) for the hole punch code
-as it expects the mutex to prevent additional uses/mappings of the page.
+When huge page reservations are created, a check is made to determine if
+the mapping is associated with an explicitly mounted filesystem.  If so,
+pages are also reserved within the filesystem.  The default action when
+freeing a huge page is to decrement the usage count in any associated
+explicitly mounted filesystem.  However, if the reservation is to be
+restored the reservation/use count within the filesystem should not be
+decrementd.  Otherwise, a subsequent page allocation and free for the same
+mapping location will cause the file filesystem usage to go 'negative'.
 
-There seems to be another potential COW issue/race with this approach
-of different private and shared keys as notes in commit 8382d914ebf7
-("mm, hugetlb: improve page-fault scalability").
+Filesystem                         Size  Used Avail Use% Mounted on
+nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
 
-Since every hugetlb mapping (even anon and private) is actually a file
-mapping, just use the address_space index key for all mappings.  This
-results in potentially more hash collisions.  However, this should not
-be the common case.
+To fix, when freeing a huge page do not adjust filesystem usage if
+PagePrivate() is set to indicate the reservation should be restored.
 
 Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 ---
- fs/hugetlbfs/inode.c    |  7 ++-----
- include/linux/hugetlb.h |  4 +---
- mm/hugetlb.c            | 22 ++++++----------------
- mm/userfaultfd.c        |  3 +--
- 4 files changed, 10 insertions(+), 26 deletions(-)
+ mm/hugetlb.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index ec32fece5e1e..6189ba80b57b 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -440,9 +440,7 @@ static void remove_inode_hugepages(struct inode *inode, loff_t lstart,
- 			u32 hash;
- 
- 			index = page->index;
--			hash = hugetlb_fault_mutex_hash(h, current->mm,
--							&pseudo_vma,
--							mapping, index, 0);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, index, 0);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 			/*
-@@ -639,8 +637,7 @@ static long hugetlbfs_fallocate(struct file *file, int mode, loff_t offset,
- 		addr = index * hpage_size;
- 
- 		/* mutex taken here, fault path and hole punch */
--		hash = hugetlb_fault_mutex_hash(h, mm, &pseudo_vma, mapping,
--						index, addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, index, addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		/* See if already present in mapping to avoid alloc/free */
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index ea35263eb76b..3bc0d02649fe 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -123,9 +123,7 @@ void move_hugetlb_state(struct page *oldpage, struct page *newpage, int reason);
- void free_huge_page(struct page *page);
- void hugetlb_fix_reserve_counts(struct inode *inode);
- extern struct mutex *hugetlb_fault_mutex_table;
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--				struct vm_area_struct *vma,
--				struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 				pgoff_t idx, unsigned long address);
- 
- pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud);
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 8651d6a602f9..4409a87434f1 100644
+index f79ae4e42159..8651d6a602f9 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -3837,8 +3837,7 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
- 			 * handling userfault.  Reacquire after handling
- 			 * fault to make calling code simpler.
- 			 */
--			hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping,
--							idx, haddr);
-+			hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 			mutex_unlock(&hugetlb_fault_mutex_table[hash]);
- 			ret = handle_userfault(&vmf, VM_UFFD_MISSING);
- 			mutex_lock(&hugetlb_fault_mutex_table[hash]);
-@@ -3946,21 +3945,14 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
- }
+@@ -1268,12 +1268,23 @@ void free_huge_page(struct page *page)
+ 	ClearPagePrivate(page);
  
- #ifdef CONFIG_SMP
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	unsigned long key[2];
- 	u32 hash;
- 
--	if (vma->vm_flags & VM_SHARED) {
--		key[0] = (unsigned long) mapping;
--		key[1] = idx;
--	} else {
--		key[0] = (unsigned long) mm;
--		key[1] = address >> huge_page_shift(h);
--	}
-+	key[0] = (unsigned long) mapping;
-+	key[1] = idx;
- 
- 	hash = jhash2((u32 *)&key, sizeof(key)/sizeof(u32), 0);
- 
-@@ -3971,9 +3963,7 @@ u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
-  * For uniprocesor systems we always use a single mutex, so just
-  * return 0 and avoid the hashing overhead.
-  */
--u32 hugetlb_fault_mutex_hash(struct hstate *h, struct mm_struct *mm,
--			    struct vm_area_struct *vma,
--			    struct address_space *mapping,
-+u32 hugetlb_fault_mutex_hash(struct hstate *h, struct address_space *mapping,
- 			    pgoff_t idx, unsigned long address)
- {
- 	return 0;
-@@ -4018,7 +4008,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 	 * get spurious allocation failures if two CPUs race to instantiate
- 	 * the same page in the page cache.
+ 	/*
+-	 * A return code of zero implies that the subpool will be under its
+-	 * minimum size if the reservation is not restored after page is free.
+-	 * Therefore, force restore_reserve operation.
++	 * If PagePrivate() was set on page, page allocation consumed a
++	 * reservation.  If the page was associated with a subpool, there
++	 * would have been a page reserved in the subpool before allocation
++	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
++	 * reservtion, do not call hugepage_subpool_put_pages() as this will
++	 * remove the reserved page from the subpool.
  	 */
--	hash = hugetlb_fault_mutex_hash(h, mm, vma, mapping, idx, haddr);
-+	hash = hugetlb_fault_mutex_hash(h, mapping, idx, haddr);
- 	mutex_lock(&hugetlb_fault_mutex_table[hash]);
+-	if (hugepage_subpool_put_pages(spool, 1) == 0)
+-		restore_reserve = true;
++	if (!restore_reserve) {
++		/*
++		 * A return code of zero implies that the subpool will be
++		 * under its minimum size if the reservation is not restored
++		 * after page is free.  Therefore, force restore_reserve
++		 * operation.
++		 */
++		if (hugepage_subpool_put_pages(spool, 1) == 0)
++			restore_reserve = true;
++	}
  
- 	entry = huge_ptep_get(ptep);
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index d59b5a73dfb3..9932d5755e4c 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -271,8 +271,7 @@ static __always_inline ssize_t __mcopy_atomic_hugetlb(struct mm_struct *dst_mm,
- 		 */
- 		idx = linear_page_index(dst_vma, dst_addr);
- 		mapping = dst_vma->vm_file->f_mapping;
--		hash = hugetlb_fault_mutex_hash(h, dst_mm, dst_vma, mapping,
--								idx, dst_addr);
-+		hash = hugetlb_fault_mutex_hash(h, mapping, idx, dst_addr);
- 		mutex_lock(&hugetlb_fault_mutex_table[hash]);
- 
- 		err = -ENOMEM;
+ 	spin_lock(&hugetlb_lock);
+ 	clear_page_huge_active(page);
 -- 
 2.20.1
 
