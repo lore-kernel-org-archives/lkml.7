@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2653C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613EEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B045A217F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D51E20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553800669;
-	bh=pko2GDOk5oAEPmlGbjhr9sBqylFw6iA0CXlW3ZgD5/8=;
+	s=default; t=1553800720;
+	bh=f2ji7CVfytWBk37WbP0EbCRpcyaKhvnEsIfc+5kEh4w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2YODmmfKW1tPm59+S3sdyme2fc/mNSVD108Ep3j2nKdEcz7PmG5ccfxwHRNOianj3
-	 ChiTFB0LSVbmsUunmQJOnOB01eO5Dv8ze9Qa8ueqhHKd+Uyu0xnikGJ1xeV8zafgiz
-	 hEUT3gyH6/qh4JduqxByVkU59QDwakV2tipFMaL0=
+	b=lHmzzzwYAhwqnsswHx1QaZQw6mnyx7OKJxcoWgbbZb8DTPpOY7vUEjGhlpNo1Xj7B
+	 xzcnbFomYZqzUDO2y//3fsnWaFYnK8HdrqXdhrqfF9Mp87kGfChrNvQLHxcwdsnjpA
+	 Igfcein6JUBspKC0m1ry4I+hE++UrI2SPT5EP3vE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfC1TRs (ORCPT
+        id S1726375AbfC1TSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 15:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfC1TRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:17:47 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        id S1725828AbfC1TSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 15:18:38 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 926AC2183F;
-        Thu, 28 Mar 2019 19:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD54421850;
+        Thu, 28 Mar 2019 19:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553800665;
-        bh=pko2GDOk5oAEPmlGbjhr9sBqylFw6iA0CXlW3ZgD5/8=;
+        s=default; t=1553800716;
+        bh=f2ji7CVfytWBk37WbP0EbCRpcyaKhvnEsIfc+5kEh4w=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S4Mb8xUcGor//kV1mgTYGn5FlGQpl7SV1np/HGFR+dfgbix5GLRZv7jNrvKeIEBtc
-         jBDu+8fctvVmNohvcC5e954EzjYINIJi72kJ3GOQZRHcu9ynymHL//5R03xf0Wvuxo
-         EnBly+b2zOURbwQN1pBbYm7mzCQVHMVqEVuvS06E=
-Received: by mail-qt1-f176.google.com with SMTP id v20so24431117qtv.12;
-        Thu, 28 Mar 2019 12:17:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWfTvrKGS/uHVOqPUznBHgreQJJBQ+qeXEw5AhvboHC1Dprmcq8
-        Np7i8S2+Wn3Fp4Z/0Wf/dU+yDEiK7jEZEVZCzg==
-X-Google-Smtp-Source: APXvYqypVSpcLiCqp8pG0Yel355QYBUVvbK7lfWpS61Wo2s6OiEJjXjLo73smcPOuhaMxgzxizDzgncbZpWu1EAqMNk=
-X-Received: by 2002:aed:35b0:: with SMTP id c45mr38037155qte.144.1553800664817;
- Thu, 28 Mar 2019 12:17:44 -0700 (PDT)
+        b=2twr3E5rkYrQDEKKkP4pslbmLhC58Incr6HAaBYRkDhudfnS2TEEMt+en7zGZqP+G
+         rpV7EDYQqVRfnZ27RYpuVssEUVuLuyMEzjZNBbU5u8XOTQWQgPs+YpyzcRQe3qo5rN
+         aQNbxprBPn+QhD/LPezbh8KK1UDPUNO63Rz9mzPI=
+Received: by mail-qt1-f174.google.com with SMTP id w5so24425508qtb.11;
+        Thu, 28 Mar 2019 12:18:35 -0700 (PDT)
+X-Gm-Message-State: APjAAAVroS1Qgp6doWsVj/VzYeStgr+YTSM6Fp3Pp+5oel1FVpGokRab
+        /EV8ZsoRH+Kl6lfWhiIzOkuazMz3IbTpS2piaA==
+X-Google-Smtp-Source: APXvYqwrhDy5nQn/wGlVX1Wk959GiBJT3M/q//wbyVP1mE0yuhqcRHk2psgN3r5631QIz6slN3zVgcbRT5pLNxPDHvU=
+X-Received: by 2002:ac8:267c:: with SMTP id v57mr36980294qtv.76.1553800715059;
+ Thu, 28 Mar 2019 12:18:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-2-fparent@baylibre.com>
-In-Reply-To: <20190323211612.860-2-fparent@baylibre.com>
+References: <20190323211612.860-1-fparent@baylibre.com> <20190323211612.860-8-fparent@baylibre.com>
+In-Reply-To: <20190323211612.860-8-fparent@baylibre.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 28 Mar 2019 14:17:33 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ72_qMgN0+R41UiickZhY_B88=twyEj9yYS3qPrT4LPQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ72_qMgN0+R41UiickZhY_B88=twyEj9yYS3qPrT4LPQ@mail.gmail.com>
-Subject: Re: [PATCH 01/24] dt-bindings: regulator: add support for MT6392
+Date:   Thu, 28 Mar 2019 14:18:23 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLN9+NeCjYcuiACtpxqsTzttemaLt=L9fkXH+EjiC4rdA@mail.gmail.com>
+Message-ID: <CAL_JsqLN9+NeCjYcuiACtpxqsTzttemaLt=L9fkXH+EjiC4rdA@mail.gmail.com>
+Subject: Re: [PATCH 07/24] arm64: dts: mt6392: Add PMIC mt6392 dtsi
 To:     Fabien Parent <fparent@baylibre.com>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -84,58 +84,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sat, Mar 23, 2019 at 4:16 PM Fabien Parent <fparent@baylibre.com> wrote:
 >
-> Add binding documentation of the regulator for MT6392 SoCs.
+> Add the regulator nodes for the MT6392 PMIC.
 >
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  .../bindings/regulator/mt6392-regulator.txt   | 220 ++++++++++++++++++
->  1 file changed, 220 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
+>  arch/arm64/boot/dts/mediatek/mt6392.dtsi | 208 +++++++++++++++++++++++
+>  1 file changed, 208 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt6392.dtsi
 >
-> diff --git a/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6392.dtsi b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
 > new file mode 100644
-> index 000000000000..edf207c838dc
+> index 000000000000..e33a45fd52af
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mt6392-regulator.txt
-> @@ -0,0 +1,220 @@
-> +Mediatek MT6392 Regulator
+> +++ b/arch/arm64/boot/dts/mediatek/mt6392.dtsi
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + */
 > +
-> +Required properties:
-> +- compatible: "mediatek,mt6392-regulator"
-> +- mt6392regulator: List of regulators provided by this controller. It is named
-> +  according to its regulator type, buck_<name> and ldo_<name>.
-> +  The definition for each of these nodes is defined using the standard binding
-> +  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +The valid names for regulators are::
-> +BUCK:
-> +  buck_vproc, buck_vsys, buck_vcore
-> +LDO:
-> +  ldo_vxo22, ldo_vaud22, ldo_vcama, ldo_vaud28, ldo_vadc18, ldo_vcn35,
-> +  ldo_vio28. ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-> +  ldo_vcn18, ldo_vcamaf, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio, ldo_vm25,
-> +  ldo_vefuse
-> +
-> +Example:
+> +&pwrap {
 > +       pmic: mt6392 {
 
-pmic {
+Same comments in binding example apply here.
 
 > +               compatible = "mediatek,mt6392", "mediatek,mt6323";
 > +               mediatek,system-power-controller;
 > +
 > +               mt6392_regulator: mt6392_regulator {
-
-regulators {
-
 > +                       compatible = "mediatek,mt6392-regulator";
 > +
 > +                       mt6392_vproc_reg: buck_vproc {
-
-buck-vproc {
-
-And similar for the rest.
-
 > +                               regulator-name = "buck_vproc";
 > +                               regulator-min-microvolt = < 700000>;
 > +                               regulator-max-microvolt = <1350000>;
@@ -329,6 +308,7 @@ And similar for the rest.
 > +                       };
 > +               };
 > +       };
+> +};
 > --
 > 2.20.1
 >
