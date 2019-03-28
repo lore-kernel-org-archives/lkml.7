@@ -2,105 +2,187 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A06FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84375C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1811E2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534492173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RunNMqM5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yh086HFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfC1Xra (ORCPT
+        id S1728672AbfC1Xrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 19:47:30 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42480 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728591AbfC1Xra (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 19:47:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SNiccZ133406;
-        Thu, 28 Mar 2019 23:47:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=YKhHIoTYyJM/435yIx1s2AWNgwh6kvVxpU1hFFuHow4=;
- b=RunNMqM53f2PTc1aTaL863HSzFU5Y20yO6WA/b5ENbcYKGy6uL/Mk11FCpzOzmQbBkRz
- UHsoR0QGvMuLX1VdKwBoGleRvWf9U2++d0SDNEn6HXQsPBMVaI5sZeowoST/a0P38ZwT
- nhE0iL9guZ0GLI+6UztwknnSg4NAou4PcEDTOCTi9KF7NCOaoUDLTjl1wsB2A+g9EIDU
- SWi2yPpYdU+SjWeB01HY8PY/9jsboYWxeHQgOS9JNGaeJlLnN44kLR0b9wzWLaByA8B7
- LgvWo48KbhGmEMTUNPBocd2uxXB+1NqgXEmAVHXFzFpvLSP17iotEADPRLJ9i2+WA+yd jg== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2re6djsmec-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:20 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlIZL015595
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:18 GMT
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlEpm015975;
-        Thu, 28 Mar 2019 23:47:15 GMT
-Received: from monkey.oracle.com (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Mar 2019 16:47:14 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH v2 0/2] A couple hugetlbfs fixes
-Date:   Thu, 28 Mar 2019 16:47:02 -0700
-Message-Id: <20190328234704.27083-1-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 28 Mar 2019 19:47:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:60321 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728589AbfC1Xre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 19:47:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44VhPG07dhz9sQy;
+        Fri, 29 Mar 2019 10:47:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1553816850;
+        bh=EcIRos7//W8AlSG9bSaCmUPnVbeLg4qcNGq2kqZQijc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Yh086HFbVziKPRifqKG4CvRDxoZmHwODVM9/L/IQ2AH63lzUD7rR6fg1GsFXRWbmR
+         utGu5SegMw8fPxlVGZxmtl0jIcJ3esrKyUEeORjrtBcft5T+i0IfTyLCG+3VZaz3n4
+         f3ZMzyzoRyY+Qa5oGTv+T0anDLQUxqMBMeUvgsI6zf1YpatJi0fVcdYBzFnkM7n4ce
+         YZ/5PQo/GyMxoE6b1KSD36ByXaHRzZfoWMrJP6K5gzi7ENfHuYlAYGFtKDldtEf0A7
+         OzFdhllo9S75Eg+dO+mKPXkMGOJJqvuPMeEUSkaL2F2a6AmHUWSwNYSjvwHV39Z8jq
+         7LiLEg+ORp0OA==
+Date:   Fri, 29 Mar 2019 10:47:11 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: stats (Was: Linux 5.1-rc1)
+Message-ID: <20190329104711.12718e5a@canb.auug.org.au>
+In-Reply-To: <CAHk-=wj1c_Tb-wwM6qaPLdggXtW3rOh1JzYUOs+O7PsHt-=+jg@mail.gmail.com>
+References: <CAHk-=wj1c_Tb-wwM6qaPLdggXtW3rOh1JzYUOs+O7PsHt-=+jg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9209 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=747 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280154
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bUmv7_/x3SXNwr=7WGREpV0"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I stumbled on these two hugetlbfs issues while looking at other things:
-- The 'restore reserve' functionality at page free time should not
-  be adjusting subpool counts.
-- A BUG can be triggered (not easily) due to temporarily mapping a
-  page before doing a COW.
+--Sig_/bUmv7_/x3SXNwr=7WGREpV0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Both are described in detail in the commit message of the patches.
-I would appreciate comments from Davidlohr Bueso as one patch is
-directly related to code he added in commit 8382d914ebf7.
+Hi all,
 
-I did not cc stable as the first problem has been around since reserves
-were added to hugetlbfs and nobody has noticed.  The second is very hard
-to hit/reproduce.
+As usual, the executive friendly graph is at
+http://neuling.org/linux-next-size.html :-)
 
-v2 - Update definition and all callers of hugetlb_fault_mutex_hash as
-     the arguments mm and vma are no longer used or necessary.
+(No merge commits counted, next-20190304 was the first linux-next after
+the merge window opened.)
 
-Mike Kravetz (2):
-  huegtlbfs: on restore reserve error path retain subpool reservation
-  hugetlb: use same fault hash key for shared and private mappings
+Commits in v5.1-rc1 (relative to v5.0):            11241
+Commits in next-20190304:                          10955
+Commits with the same SHA1:                        10131
+Commits with the same patch_id:                      375 (1)
+Commits with the same subject line:                   39 (1)
 
- fs/hugetlbfs/inode.c    |  7 ++-----
- include/linux/hugetlb.h |  4 +---
- mm/hugetlb.c            | 43 +++++++++++++++++++++--------------------
- mm/userfaultfd.c        |  3 +--
- 4 files changed, 26 insertions(+), 31 deletions(-)
+(1) not counting those in the lines above.
 
--- 
-2.20.1
+So commits in -rc1 that were in next-20190304:     10545 93%
 
+Some breakdown of the list of extra commits (relative to next-20190304)
+in -rc1:
+
+Top ten first word of commit summary:
+
+     69 net
+     43 perf
+     30 drm
+     24 scsi
+     18 kbuild
+     18 cifs
+     17 platform
+     16 sunrpc
+     15 tracing
+     15 pwm
+
+Top ten authors:
+
+     39 trond.myklebust@hammerspace.com
+     30 arnd@arndb.de
+     21 yamada.masahiro@socionext.com
+     14 alexandre.belloni@bootlin.com
+     12 vadimp@mellanox.com
+     12 mchehab+samsung@kernel.org
+     12 kjlu@umn.edu
+     11 lsahlber@redhat.com
+     11 evan.quan@amd.com
+     10 stfrench@microsoft.com
+
+Top ten commiters:
+
+    143 davem@davemloft.net
+     41 trond.myklebust@hammerspace.com
+     35 acme@redhat.com
+     28 yamada.masahiro@socionext.com
+     28 stfrench@microsoft.com
+     24 torvalds@linux-foundation.org
+     23 martin.petersen@oracle.com
+     23 alexander.deucher@amd.com
+     22 rafael.j.wysocki@intel.com
+     21 axboe@kernel.dk
+
+There are also 410 commits in next-20190304 that didn't make it into
+v5.1-rc1.
+
+Top ten first word of commit summary:
+
+     41 mm
+     23 scsi
+     23 btrfs
+     22 arm
+     20 xtensa
+     13 dt-bindings
+     12 nvmem
+     12 clocksource
+     11 nfc
+     10 dm
+
+Top ten authors:
+
+     32 gustavo@embeddedor.com
+     20 akpm@linux-foundation.org
+     18 jcmvbkbc@gmail.com
+     12 wqu@suse.com
+     12 stefan.wahren@i2se.com
+     10 jglisse@redhat.com
+      8 logang@deltatee.com
+      8 claudiu.beznea@microchip.com
+      8 arnd@arndb.de
+      7 snitzer@redhat.com
+
+Some of Andrew's patches are fixes for other patches in his tree (and
+have been merged into those).
+
+Top ten commiters:
+
+    125 sfr@canb.auug.org.au
+     24 gustavo@embeddedor.com
+     24 dsterba@suse.com
+     23 jcmvbkbc@gmail.com
+     18 srinivas.kandagatla@linaro.org
+     18 daniel.lezcano@linaro.org
+     14 mst@redhat.com
+     12 stefan.wahren@i2se.com
+     11 sameo@linux.intel.com
+     10 vgupta@synopsys.com
+
+Those commits by me are from the quilt series (mainly Andrew's mmotm
+tree).
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bUmv7_/x3SXNwr=7WGREpV0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlydXP8ACgkQAVBC80lX
+0GwtEQf/WC/9sHySpboyxsYXmzQm4Qm3NakchAGUZkjwnui8wf738j9K7nxl+NyS
+5igffjsJ3SyWcVXEbUbKr1hGYK/z2JmKBBUKsJddtZzclpv1+M5g1jUXROygQ3vw
+Y+ydOx3FZUpJpD9rmxPcPhBSTD0jVO2+FPejAakAjXSwX2c2ip6Y1ABS4gwWRlhx
+he94+/+2CH2/jI9E7H90UO5WNQ54ggvf1VDNXWdY/7lUN61MxoRs9NdUHLPS1fwY
+/J+UPxhGtM3jvAKilZ13uPe+m2TbghzNLZGG6om9zTbAVKHIa44TN4FMBstQ+tfv
+N9Kh/sj7n1++JI7E6SEWT3INIUt1/A==
+=GnVu
+-----END PGP SIGNATURE-----
+
+--Sig_/bUmv7_/x3SXNwr=7WGREpV0--
