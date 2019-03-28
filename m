@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA13C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCACC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54E60206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06ACE206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfC1PWC (ORCPT
+        id S1727217AbfC1PWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:22:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46190 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbfC1PWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:22:01 -0400
+        Thu, 28 Mar 2019 11:22:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:46222 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbfC1PWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:22:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFAE0165C;
-        Thu, 28 Mar 2019 08:22:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EBB81684;
+        Thu, 28 Mar 2019 08:22:05 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99DC33F557;
-        Thu, 28 Mar 2019 08:21:57 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C39E3F557;
+        Thu, 28 Mar 2019 08:22:01 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -42,10 +42,13 @@ Cc:     Steven Price <steven.price@arm.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: [PATCH v7 02/20] arm64: mm: Add p?d_large() definitions
-Date:   Thu, 28 Mar 2019 15:20:46 +0000
-Message-Id: <20190328152104.23106-3-steven.price@arm.com>
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH v7 03/20] mips: mm: Add p?d_large() definitions
+Date:   Thu, 28 Mar 2019 15:20:47 +0000
+Message-Id: <20190328152104.23106-4-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328152104.23106-1-steven.price@arm.com>
 References: <20190328152104.23106-1-steven.price@arm.com>
@@ -58,39 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 walk_page_range() is going to be allowed to walk page tables other than
 those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information will be provided by the
+'leaf' entry in the page tables. This information is provided by the
 p?d_large() functions/macros.
 
-For arm64, we already have p?d_sect() macros which we can reuse for
-p?d_large().
+For mips, we only support large pages on 64 bit.
 
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Will Deacon <will.deacon@arm.com>
+For 64 bit if _PAGE_HUGE is defined we can simply look for it. When not
+defined we can be confident that there are no large pages in existence
+and fall back on the generic implementation (added in a later patch)
+which returns 0.
+
+CC: Ralf Baechle <ralf@linux-mips.org>
+CC: Paul Burton <paul.burton@mips.com>
+CC: James Hogan <jhogan@kernel.org>
+CC: linux-mips@vger.kernel.org
 Signed-off-by: Steven Price <steven.price@arm.com>
+Acked-by: Paul Burton <paul.burton@mips.com>
 ---
- arch/arm64/include/asm/pgtable.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/include/asm/pgtable-64.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index de70c1eabf33..6eef345dbaf4 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -428,6 +428,7 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 				 PMD_TYPE_TABLE)
- #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
- 				 PMD_TYPE_SECT)
-+#define pmd_large(pmd)		pmd_sect(pmd)
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index 93a9dce31f25..42162877ac62 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -273,6 +273,10 @@ static inline int pmd_present(pmd_t pmd)
+ 	return pmd_val(pmd) != (unsigned long) invalid_pte_table;
+ }
  
- #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
- #define pud_sect(pud)		(0)
-@@ -511,6 +512,7 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- #define pud_none(pud)		(!pud_val(pud))
- #define pud_bad(pud)		(!(pud_val(pud) & PUD_TABLE_BIT))
- #define pud_present(pud)	pte_present(pud_pte(pud))
-+#define pud_large(pud)		pud_sect(pud)
- #define pud_valid(pud)		pte_valid(pud_pte(pud))
++#ifdef _PAGE_HUGE
++#define pmd_large(pmd)	((pmd_val(pmd) & _PAGE_HUGE) != 0)
++#endif
++
+ static inline void pmd_clear(pmd_t *pmdp)
+ {
+ 	pmd_val(*pmdp) = ((unsigned long) invalid_pte_table);
+@@ -297,6 +301,10 @@ static inline int pud_present(pud_t pud)
+ 	return pud_val(pud) != (unsigned long) invalid_pmd_table;
+ }
  
- static inline void set_pud(pud_t *pudp, pud_t pud)
++#ifdef _PAGE_HUGE
++#define pud_large(pud)	((pud_val(pud) & _PAGE_HUGE) != 0)
++#endif
++
+ static inline void pud_clear(pud_t *pudp)
+ {
+ 	pud_val(*pudp) = ((unsigned long) invalid_pmd_table);
 -- 
 2.20.1
 
