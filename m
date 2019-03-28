@@ -2,212 +2,129 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC07C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02DAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0D421773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DBB21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tBDmZpF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfC1QOJ (ORCPT
+        id S1727612AbfC1QOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:14:09 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:35032 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfC1QOH (ORCPT
+        Thu, 28 Mar 2019 12:14:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52836 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726235AbfC1QOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:14:07 -0400
-Received: by mail-it1-f198.google.com with SMTP id n19so709502itb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:14:06 -0700 (PDT)
+        Thu, 28 Mar 2019 12:14:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a184so4198187wma.2;
+        Thu, 28 Mar 2019 09:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PwLP4GHnY7t3ILf3RUqHf/6mqNVCKol4vS1jhfznyc8=;
+        b=tBDmZpF7gZOh4mbtgFSvDXBq+twOkd85QGHgnhhcYs0QIIcMVhk2osdtmggN+UXRI+
+         G69R+fYTuobjqRnRCc+yrhXHCuwOE0l7qvlKrTKuSBjEKSqB1UUbTng44sKzVM0ShaWa
+         VBQ98P2xVWH9D+8P6CsEyivSdDEmbjPZHLhj+QH3ojTRnMVUyg9qrgAUrhtPGyRMIEeE
+         8DreyscYOJBhKPa0NQq4M0ozzXHQ8FwxKIEuXeefBC0t1EAI4YCFMVCAhiS59eIJlalr
+         H0ed/LPzjaY2uheMV8idcWHr/GZzE8EgP8wdRnaSMUIvZKCTQwELkuKUtxpeVT5TqfW4
+         R7hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=B09Z/iqd+WXO0+yxuBZ/s9h8/2B6z/0VrC0szfGcazw=;
-        b=Xf0ZM1STCmcGXA9W/X7ovceI31wQwofVx6jqe6mHW19nrS7b4V823VpX/yXA+V9zxw
-         W6PxbsiyLowsDHvzV/Wr+ttxvw5bQ/NGvQJ5I29nm8R2/AqsBQLR92x+ErcggMGpZjVW
-         /h+I81ZfufgEBA6y7uY6if5CpKLwzgmDA4Q/syU60tNHyn50I3RzseO7b69lvbIVmX9F
-         wJEPnzjPfwQk2iPDtNhlDOI41yZDQxCDIyBSIR4elOV8V+85a6DHjQllOaTJWmtz1Wxw
-         ZmdYE0VfS++wlM8+4nGdZmtJzL0FvjxhkOWJi9AwgYfOG4myIsAIwv2URNy9lomRAJE7
-         k/Lg==
-X-Gm-Message-State: APjAAAW0teeGIrStNkNrqkhesogCJ1SWqsGiUu+7hBN7dKcDxdUNJimc
-        3ralRcXDhl0lFL8xk1MNFL/EqIvLh2Rcxgsmlchc0pmeQRAt
-X-Google-Smtp-Source: APXvYqzcPahElXOJlxvvvWTgoXVSiEQjcVr2FCoR3T19M3vS3CtQYbjXKgaKsk3dlgj8qqU8iDG8toTBWXtymv32kJ7YfAOlAiNi
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PwLP4GHnY7t3ILf3RUqHf/6mqNVCKol4vS1jhfznyc8=;
+        b=R3cK33FkwmorrAB5l2WQ051izRHJEt4DZHzEtiSdVxdo+eZJJS2fDZUjiltfOk6F0n
+         KMoXDobDfshsAPvyPU1LaiM94nbkcUK+lc2boDJgSxXdHFJCrm+W4/X/8+KHVnZFST9X
+         Ty8yj7P+FG8nNe+/ALU5vPWfl7+uT6IPNq3MiGLmGUkiHfgNYA8Zso1fzA0JdJNjHnpr
+         zU5FjiR0OHkfk/DqEURGuR3s+Do3cL7G5nwDOX1u3dYDw9eNFZ+XihiF+eJ2O5qoRM5n
+         MJGCqoz7SBaqG5+/0X1Ib/xA0A7wEeqfCjIKXO8GZTA4y5wKYCiUYvT1QJvDVfR5uFtt
+         vIUw==
+X-Gm-Message-State: APjAAAUYExd1qW9DENpHpp2zL+HvqcpVY2Tv3av8HSy5oYb/4Neey9N5
+        VLUKxU7pIXbV6sE7kMUzalw=
+X-Google-Smtp-Source: APXvYqyHnmzsr+mw6eztpiFX2SxY13B5l84UVRw3FcRLQ9K3DJX0sHA6S8z/+xBh+VpZZ5Smr3ptnw==
+X-Received: by 2002:a1c:3543:: with SMTP id c64mr535323wma.75.1553789679088;
+        Thu, 28 Mar 2019 09:14:39 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id z20sm3373891wma.48.2019.03.28.09.14.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 09:14:38 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 17:14:37 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     linux@armlinux.org.uk, digetx@gmail.com, jhogan@kernel.org,
+        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org, treding@nvidia.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] ARM: tegra: enforce PM requirement
+Message-ID: <20190328161437.GE5518@ulmo>
+References: <1551255628-4794-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:8243:: with SMTP id q3mr2565648jag.6.1553789646402;
- Thu, 28 Mar 2019 09:14:06 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 09:14:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ee01ef058529d74c@google.com>
-Subject: possible deadlock in __dev_queue_xmit (2)
-From:   syzbot <syzbot+f8c40b4da41f3e8049c4@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PPYy/fEw/8QCHSq3"
+Content-Disposition: inline
+In-Reply-To: <1551255628-4794-1-git-send-email-spujar@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--PPYy/fEw/8QCHSq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    356d71e0 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=178772cd200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3116859fdc14be5c
-dashboard link: https://syzkaller.appspot.com/bug?extid=f8c40b4da41f3e8049c4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On Wed, Feb 27, 2019 at 01:50:28PM +0530, Sameer Pujar wrote:
+> Currently runtime PM is enabled for Tegra HDA driver. One of the concern
+> raised was about handling !PM case in HDA driver. In this case, there is
+> a need to manage clocks and power explicitly in the driver and reviewers
+> were not really convinced about this. The consensus at the end was to
+> enforce PM requirement to keep things simple, rather driver mentioning a
+> dependency on PM. This is how it is done for ARM 64-bit Tegra platforms
+> and the same can be done for 32-bit Tegra platforms too.
+>=20
+> Finally the objective is to remove dependency on PM availability for all
+> Tegra drivers. The detailed discussion can be found in following patch,
+> https://patchwork.ozlabs.org/patch/1031007/
+>=20
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
+> ---
+>  arch/arm/mach-tegra/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Applied to for-5.2/arm/soc, thanks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f8c40b4da41f3e8049c4@syzkaller.appspotmail.com
+Thierry
 
-============================================
-WARNING: possible recursive locking detected
-5.1.0-rc2+ #112 Not tainted
---------------------------------------------
-syz-executor.0/13941 is trying to acquire lock:
-000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: spin_lock  
-include/linux/spinlock.h:329 [inline]
-000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
-include/linux/netdevice.h:3893 [inline]
-000000009c1e85f2 (_xmit_ETHER#2){+.-.}, at: __dev_queue_xmit+0x2b65/0x36b0  
-net/core/dev.c:3867
+--PPYy/fEw/8QCHSq3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-but task is already holding lock:
-000000000ad63340 (_xmit_ETHER#2){+.-.}, at: spin_lock  
-include/linux/spinlock.h:329 [inline]
-000000000ad63340 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
-include/linux/netdevice.h:3893 [inline]
-000000000ad63340 (_xmit_ETHER#2){+.-.}, at: sch_direct_xmit+0x2de/0xf70  
-net/sched/sch_generic.c:325
+-----BEGIN PGP SIGNATURE-----
 
-other info that might help us debug this:
-  Possible unsafe locking scenario:
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyc8u0ACgkQ3SOs138+
+s6EdjhAAk1+0yhpb2a8qaFvS5uO1yjOA6wkkw/sTEkZDvfAA01N5/Lg4nn6i+Obr
+4zTcz12Q/uk15Gb6zrAMSnztYlqIwCdzRRSCgFxa47Ob+So6b3PXAVNV4l3y9cXA
+QMlcw8Ua3bztPstydBzqP9VxdNjtQF9KW1ZZp7GglkpnBBLCguJwLpsr2I9BgWm8
+UqAOnSjT1o7gauQXE2dhifNsv7ZV+sL5PqKUs+cQAUo2RdGgDAtipEhJzosK0q4s
+Dtrw8JKVKjxWkJF5F3AxlkGp5zjqk4Wcgzlw0Wb+OciFX3b8bcLtCO0Zrm4Kf5Lc
+vDgWmv9KbNu0rWpc2TGBTr2kv62j2u2Ea1IB455NPuXw1itMt/+d2nPkNh+AJ+xZ
++CnEEknhOUjLyub7XW3mDERvTtV3kDIRGmj6az/ivma4Codyg6Xzf9Rh8LMNO539
+VWR+bpxcrelQw5aWA7M7dGOOU9II49iaEmHec7rJeuHPGo7kWxIRHpEWEn4xAoHN
+ozvo8+Qv7jR3BPNHM5Z7e1PjVRF2znIbY4LMhbILBmEjUGlnhUnUJ7FRjp72bKTz
+kXaj6Kd5PSYz+BbgNjdv0SLRIGkjEb7iiZcMlimPYEvIiHOyZp6U5mGjMgCmsitT
+NuP4s3b5ZPCJarWUBAvBeEewlpC1x33pAx89U38E/9oT+Kj2vm8=
+=WZZP
+-----END PGP SIGNATURE-----
 
-        CPU0
-        ----
-   lock(_xmit_ETHER#2);
-   lock(_xmit_ETHER#2);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
-7 locks held by syz-executor.0/13941:
-  #0: 000000007091b59b (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
-include/net/lwtunnel.h:92 [inline]
-  #0: 000000007091b59b (rcu_read_lock_bh){....}, at:  
-ip_finish_output2+0x2af/0x1740 net/ipv4/ip_output.c:213
-  #1: 000000007091b59b (rcu_read_lock_bh){....}, at:  
-__dev_queue_xmit+0x20a/0x36b0 net/core/dev.c:3805
-  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: spin_trylock  
-include/linux/spinlock.h:339 [inline]
-  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: qdisc_run_begin  
-include/net/sch_generic.h:159 [inline]
-  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at: __dev_xmit_skb  
-net/core/dev.c:3472 [inline]
-  #2: 00000000aa7d63d7 (&(&sch->seqlock)->rlock){+...}, at:  
-__dev_queue_xmit+0x251d/0x36b0 net/core/dev.c:3839
-  #3: 00000000a23aaf2c (dev->qdisc_running_key ?: &qdisc_running_key){+...},  
-at: dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
-  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at: spin_lock  
-include/linux/spinlock.h:329 [inline]
-  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at: __netif_tx_lock  
-include/linux/netdevice.h:3893 [inline]
-  #4: 000000000ad63340 (_xmit_ETHER#2){+.-.}, at:  
-sch_direct_xmit+0x2de/0xf70 net/sched/sch_generic.c:325
-  #5: 000000007091b59b (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect  
-include/net/lwtunnel.h:92 [inline]
-  #5: 000000007091b59b (rcu_read_lock_bh){....}, at:  
-ip_finish_output2+0x2af/0x1740 net/ipv4/ip_output.c:213
-  #6: 000000007091b59b (rcu_read_lock_bh){....}, at:  
-__dev_queue_xmit+0x20a/0x36b0 net/core/dev.c:3805
-
-stack backtrace:
-CPU: 1 PID: 13941 Comm: syz-executor.0 Not tainted 5.1.0-rc2+ #112
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_deadlock_bug kernel/locking/lockdep.c:2100 [inline]
-  check_deadlock kernel/locking/lockdep.c:2144 [inline]
-  validate_chain kernel/locking/lockdep.c:2698 [inline]
-  __lock_acquire.cold+0x233/0x50d kernel/locking/lockdep.c:3701
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:144
-  spin_lock include/linux/spinlock.h:329 [inline]
-  __netif_tx_lock include/linux/netdevice.h:3893 [inline]
-  __dev_queue_xmit+0x2b65/0x36b0 net/core/dev.c:3867
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
-  neigh_resolve_output net/core/neighbour.c:1487 [inline]
-  neigh_resolve_output+0x5a7/0x970 net/core/neighbour.c:1467
-  neigh_output include/net/neighbour.h:508 [inline]
-  ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
-  ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
-  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-  ip_mc_output+0x292/0xf70 net/ipv4/ip_output.c:390
-  dst_output include/net/dst.h:433 [inline]
-  ip_local_out+0xc4/0x1b0 net/ipv4/ip_output.c:124
-  iptunnel_xmit+0x58e/0x980 net/ipv4/ip_tunnel_core.c:91
-  ip_tunnel_xmit+0x1038/0x2bfa net/ipv4/ip_tunnel.c:831
-  __gre_xmit+0x5e9/0x9a0 net/ipv4/ip_gre.c:444
-  erspan_xmit+0x912/0x28b0 net/ipv4/ip_gre.c:679
-  __netdev_start_xmit include/linux/netdevice.h:4409 [inline]
-  netdev_start_xmit include/linux/netdevice.h:4418 [inline]
-  xmit_one net/core/dev.c:3278 [inline]
-  dev_hard_start_xmit+0x1b2/0x980 net/core/dev.c:3294
-  sch_direct_xmit+0x370/0xf70 net/sched/sch_generic.c:327
-  __dev_xmit_skb net/core/dev.c:3475 [inline]
-  __dev_queue_xmit+0x282d/0x36b0 net/core/dev.c:3839
-  dev_queue_xmit+0x18/0x20 net/core/dev.c:3904
-  neigh_resolve_output net/core/neighbour.c:1487 [inline]
-  neigh_resolve_output+0x5a7/0x970 net/core/neighbour.c:1467
-  neigh_output include/net/neighbour.h:508 [inline]
-  ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
-  ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
-  NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-  ip_mc_output+0x292/0xf70 net/ipv4/ip_output.c:390
-  dst_output include/net/dst.h:433 [inline]
-  ip_local_out+0xc4/0x1b0 net/ipv4/ip_output.c:124
-  ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1465
-  udp_send_skb.isra.0+0x6b2/0x1180 net/ipv4/udp.c:901
-  udp_sendmsg+0x1dfd/0x2820 net/ipv4/udp.c:1188
-  inet_sendmsg+0x147/0x5e0 net/ipv4/af_inet.c:802
-  sock_sendmsg_nosec net/socket.c:651 [inline]
-  sock_sendmsg+0xdd/0x130 net/socket.c:661
-  ___sys_sendmsg+0x3e2/0x930 net/socket.c:2260
-  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2355
-  __do_sys_sendmmsg net/socket.c:2384 [inline]
-  __se_sys_sendmmsg net/socket.c:2381 [inline]
-  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2381
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458209
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1154031c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458209
-RDX: 04000000000001a8 RSI: 0000000020007fc0 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f11540326d4
-R13: 00000000004c5190 R14: 00000000004d92e0 R15: 00000000ffffffff
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--PPYy/fEw/8QCHSq3--
