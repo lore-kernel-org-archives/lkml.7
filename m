@@ -2,129 +2,134 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D26C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B34EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938CC20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D827221773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfC1GgE (ORCPT
+        id S1726221AbfC1Gir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:36:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54194 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfC1GgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:36:03 -0400
-Received: from mail-wr1-f72.google.com ([209.85.221.72])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1h9Odu-0005iL-P7
-        for linux-kernel@vger.kernel.org; Thu, 28 Mar 2019 06:36:02 +0000
-Received: by mail-wr1-f72.google.com with SMTP id p13so10237698wrm.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 23:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZCbQcu+6lIkxzNPMoAuRGk0babrO/Mj266g8UlT9E/s=;
-        b=Zt7sqK8SG/taUHkJnHHkS6PVCcwT16LYKeeylrKaa/kWrTZxw1fkOvcQiEAU7pW0qz
-         HbB9v1e2GFIZX3wSGtPHIt4md7ezFBTBkM6Iceqw4TD3PPVZSQQLw20AWCSULoeWxeLf
-         g9NdtdBADKas5NIWZEZQRqUwPOp/Y/4/guHW5P0k3XCeLEkZsd7daib00W/iZwQS3V9a
-         kffgpk2r/Mz3oFbT9AmuIbNmMQYYBEMQTh6pUv3rTmvxZZYwKQPosW0V4iRE/6wzqOTX
-         zYkCJPUNOr9pxziqrl6pMbf0fPp4/Tvrnkf2FLvQedjaKU46w9W4w6BYFaUcxIwA6Wou
-         y8Eg==
-X-Gm-Message-State: APjAAAWsLk84RLOo5WYOXO5xzhZAZzVdhxA4CoMOi14a60GXOw35/j7h
-        6FhXWZ/NiLKMLDXJqelVCTKoGnnqOnLfA3lX3e9cifACW85jdjmGjTOGxUqG4X1cRsIbGMAwtFH
-        HQxzKTD6CTz7tMjYvoT3PxyZdlZFP0oGvnu0NUUiJxw==
-X-Received: by 2002:a05:600c:24f:: with SMTP id 15mr5543191wmj.48.1553754962485;
-        Wed, 27 Mar 2019 23:36:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy9yTibCKgdZfHvIIBRmSNoR53M8eZ1Wxeg46iykn+/YqtPZxGEax3FM1QAzG9fQH7dGL/NDQ==
-X-Received: by 2002:a05:600c:24f:: with SMTP id 15mr5543181wmj.48.1553754962259;
-        Wed, 27 Mar 2019 23:36:02 -0700 (PDT)
-Received: from localhost (host141-127-dynamic.17-87-r.retail.telecomitalia.it. [87.17.127.141])
-        by smtp.gmail.com with ESMTPSA id c10sm31539295wrt.65.2019.03.27.23.36.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 23:36:01 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 07:36:00 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Pravin B Shelar <pshelar@ovn.org>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        dev@openvswitch.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] openvswitch: fix flow actions reallocation
-Message-ID: <20190328063600.GC16096@xps-13>
+        Thu, 28 Mar 2019 02:38:47 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35656 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfC1Gir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 02:38:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Mar 2019 23:38:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,278,1549958400"; 
+   d="scan'208";a="126541690"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga007.jf.intel.com with ESMTP; 27 Mar 2019 23:38:44 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] iommu/vt-d: Bounce buffer for untrusted devices
+To:     Christoph Hellwig <hch@infradead.org>
+References: <20190327063506.32564-1-baolu.lu@linux.intel.com>
+ <20190327064823.GA13309@infradead.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <04b41eb3-5584-5c7d-5f5e-7c6f28a19b50@linux.intel.com>
+Date:   Thu, 28 Mar 2019 14:33:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190327064823.GA13309@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The flow action buffer can be resized if it's not big enough to contain
-all the requested flow actions. However, this resize doesn't take into
-account the new requested size, the buffer is only increased by a factor
-of 2x. This might be not enough to contain the new data, causing a
-buffer overflow, for example:
+Hi,
 
-[   42.044472] =============================================================================
-[   42.045608] BUG kmalloc-96 (Not tainted): Redzone overwritten
-[   42.046415] -----------------------------------------------------------------------------
+On 3/27/19 2:48 PM, Christoph Hellwig wrote:
+> On Wed, Mar 27, 2019 at 02:34:56PM +0800, Lu Baolu wrote:
+>>    - During the v1 review cycle, we discussed the possibility
+>>      of reusing swiotlb code to avoid code dumplication, but
+>>      we found the swiotlb implementations are not ready for the
+>>      use of bounce page pool.
+>>      https://lkml.org/lkml/2019/3/19/259
+> 
+> So make it ready.  You too can contribute to common code.  Robin
+> also explicitly asked to make the bounce policy iommu-subsystem wide.
+> 
 
-[   42.047715] Disabling lock debugging due to kernel taint
-[   42.047716] INFO: 0x8bf2c4a5-0x720c0928. First byte 0x0 instead of 0xcc
-[   42.048677] INFO: Slab 0xbc6d2040 objects=29 used=18 fp=0xdc07dec4 flags=0x2808101
-[   42.049743] INFO: Object 0xd53a3464 @offset=2528 fp=0xccdcdebb
+Sure. I am glad to make the code common. I will try to make it with a
+new version.
 
-[   42.050747] Redzone 76f1b237: cc cc cc cc cc cc cc cc                          ........
-[   42.051839] Object d53a3464: 6b 6b 6b 6b 6b 6b 6b 6b 0c 00 00 00 6c 00 00 00  kkkkkkkk....l...
-[   42.053015] Object f49a30cc: 6c 00 0c 00 00 00 00 00 00 00 00 03 78 a3 15 f6  l...........x...
-[   42.054203] Object acfe4220: 20 00 02 00 ff ff ff ff 00 00 00 00 00 00 00 00   ...............
-[   42.055370] Object 21024e91: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   42.056541] Object 070e04c3: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   42.057797] Object 948a777a: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-[   42.059061] Redzone 8bf2c4a5: 00 00 00 00                                      ....
-[   42.060189] Padding a681b46e: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
+For the swiotlb APIs, I am thinking about keeping current APIs untouched
+and adding below new ones for bounce page.
 
-Fix by making sure the new buffer is properly resized to contain all the
-requested data.
+/**
+  * swiotlb_bounce_page_map - create a bounce page mapping
+  * @dev: the device
+  * @phys: the physical address of the buffer requiring bounce
+  * @size: the size of the buffer
+  * @align: IOMMU page align
+  * @dir: DMA direction
+  * @attrs: DMA attributions
+  *
+  * This creates a swiotlb bounce page mapping for the buffer at @phys,
+  * and in case of DMAing to the device copy the data into it as well.
+  * Return the tlb addr on success, otherwise DMA_MAPPING_ERROR.
+  */
+dma_addr_t
+swiotlb_bounce_page_map(struct device *dev, phys_addr_t phys,
+                         size_t size, unsigned long align,
+                         enum dma_data_direction dir, unsigned long attrs)
+{
+         return 0;
+}
 
-BugLink: https://bugs.launchpad.net/bugs/1813244
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
-Changes in v2:
- - correctly resize to current_size+req_size (thanks to Pravin)
+/**
+  * swiotlb_bounce_page_unmap - destroy a bounce page mapping
+  * @dev: the device
+  * @tlb_addr: the tlb address of the buffer requiring bounce
+  * @size: the size of the buffer
+  * @align: IOMMU page align
+  * @dir: DMA direction
+  * @attrs: DMA attributions
+  *
+  * This destroys a swiotlb bounce page mapping for the buffer at @tlb_addr,
+  * and in case of DMAing from the device copy the data from it as well.
+  */
+void
+swiotlb_bounce_page_unmap(struct device *dev, phys_addr_t tlb_addr,
+                           size_t size, unsigned long align,
+                           enum dma_data_direction dir, unsigned long attrs)
+{
+}
 
- net/openvswitch/flow_netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+/**
+  * swiotlb_bounce_page_sync - sync bounce page mapping
+  * @dev: the device
+  * @tlb_addr: the tlb address of the buffer requiring bounce
+  * @size: the size of the buffer
+  * @align: IOMMU page align
+  * @dir: DMA direction
+  * @attrs: DMA attributions
+  *
+  * This syncs a swiotlb bounce page mapping for the buffer at @tlb_addr.
+  */
+void
+swiotlb_bounce_page_sync(struct device *dev, phys_addr_t tlb_addr,
+                           size_t size, unsigned long align,
+                           enum dma_data_direction dir, unsigned long attrs)
+{
+}
 
-diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-index 691da853bef5..4bdf5e3ac208 100644
---- a/net/openvswitch/flow_netlink.c
-+++ b/net/openvswitch/flow_netlink.c
-@@ -2306,14 +2306,14 @@ static struct nlattr *reserve_sfa_size(struct sw_flow_actions **sfa,
- 
- 	struct sw_flow_actions *acts;
- 	int new_acts_size;
--	int req_size = NLA_ALIGN(attr_len);
-+	size_t req_size = NLA_ALIGN(attr_len);
- 	int next_offset = offsetof(struct sw_flow_actions, actions) +
- 					(*sfa)->actions_len;
- 
- 	if (req_size <= (ksize(*sfa) - next_offset))
- 		goto out;
- 
--	new_acts_size = ksize(*sfa) * 2;
-+	new_acts_size = max(next_offset + req_size, ksize(*sfa) * 2);
- 
- 	if (new_acts_size > MAX_ACTIONS_BUFSIZE) {
- 		if ((MAX_ACTIONS_BUFSIZE - next_offset) < req_size) {
--- 
-2.19.1
+Any comments?
 
+Best regards,
+Lu Baolu
