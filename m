@@ -2,189 +2,163 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767BAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC55C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399C8206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9FA2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ah3mYQbd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IvRyCtlv"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="SooABjy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfC1Pbw (ORCPT
+        id S1727192AbfC1PcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:31:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55192 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfC1Pbv (ORCPT
+        Thu, 28 Mar 2019 11:32:19 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:50085 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfC1PcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:31:51 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3A97E615E6; Thu, 28 Mar 2019 15:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553787110;
-        bh=ekY/aAthvQkAaPSnvEmgypuBryjqNG/WtGqPPo2knLA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Ah3mYQbdcYlOaACZmXWiF/teORv+t45Dm4fVUU4mC44ARmCv8/YC+hrmXDvoAgXDh
-         L7BGLw2dQ8MZ8RQLeFC9EZ5Kl+9ltYFZdiC8vli6wdqZjyCmUrDmIZ2SpYHSXP83Ip
-         SdmvJCPukjfw6MK3q9WmCjrlUaLn2+R8ZyHn7ZQE=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5027609CD;
-        Thu, 28 Mar 2019 15:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553787105;
-        bh=ekY/aAthvQkAaPSnvEmgypuBryjqNG/WtGqPPo2knLA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IvRyCtlv1wQ2IXH1TrHbC6kWVEn9u4EunCsg6CQONLTaCkRsV/03KV/v3GrX9rLvi
-         pgeSExm5WsK+vvGLy3VIngHbdWZvTxFap4kibNk0wbegXV6rCH3urTgbNYCszuLvHR
-         D+ORcanRp/Q/znOyScb/V/4pYUiDhUW0Ni+44rzo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5027609CD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 2/3] gpio: Fix gpiochip_add_data_with_key() error path
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190328131349.18838-1-geert+renesas@glider.be>
- <20190328131349.18838-3-geert+renesas@glider.be>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <c7b93076-4016-5413-dc03-0be1965bf498@codeaurora.org>
-Date:   Thu, 28 Mar 2019 21:01:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190328131349.18838-3-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Mar 2019 11:32:19 -0400
+X-IronPort-AV: E=Sophos;i="5.60,280,1549954800"; 
+   d="scan'208";a="30346664"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 28 Mar 2019 08:32:18 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.37) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Thu, 28 Mar 2019 08:32:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hleiMnvGaMVfWbPfWwVn16uXFbAZ5IQyouvv9S+Fa18=;
+ b=SooABjy16nvpaOmlsQoBOOdJymP4T2e9gFrb+6g362vjWz+2+2GyP0aWPEBFTHnasUbGU08GGPTvOXOY41Pda/DMywcfS+eKfMz7Cpvs30t+doI1kI6IP5Yic6Taki+mGq7YY2qviSJOioh94dm86Tghf0Ij+fym9NhUIpw6yOU=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB0076.namprd11.prod.outlook.com (10.164.155.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Thu, 28 Mar 2019 15:32:16 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e8b6:2ae9:9b9c:2ca8]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e8b6:2ae9:9b9c:2ca8%3]) with mapi id 15.20.1750.014; Thu, 28 Mar 2019
+ 15:32:16 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <linux-media@vger.kernel.org>, <hverkuil@xs4all.nl>,
+        <Nicolas.Ferre@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mchehab@kernel.org>
+CC:     <ksloat@aampglobal.com>, <Eugen.Hristev@microchip.com>
+Subject: [PATCH v3 2/2] media: atmel: atmel-isc: removed ARGB32 added ABGR32
+ and XBGR32
+Thread-Topic: [PATCH v3 2/2] media: atmel: atmel-isc: removed ARGB32 added
+ ABGR32 and XBGR32
+Thread-Index: AQHU5XtrYsjZYeedI0q6N+pQVkcx+Q==
+Date:   Thu, 28 Mar 2019 15:32:14 +0000
+Message-ID: <1553786825-16942-2-git-send-email-eugen.hristev@microchip.com>
+References: <1553786825-16942-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1553786825-16942-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: ro-RO, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0238.eurprd08.prod.outlook.com
+ (2603:10a6:802:15::47) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Eugen.Hristev@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 40504d05-9600-4664-f966-08d6b3928dae
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:DM5PR11MB0076;
+x-ms-traffictypediagnostic: DM5PR11MB0076:
+x-microsoft-antispam-prvs: <DM5PR11MB00760928B5B291C17BB2D281E8590@DM5PR11MB0076.namprd11.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(366004)(136003)(199004)(189003)(2501003)(53936002)(2201001)(26005)(6506007)(386003)(5660300002)(86362001)(102836004)(71190400001)(71200400001)(6512007)(52116002)(76176011)(186003)(2616005)(486006)(476003)(99286004)(25786009)(110136005)(68736007)(316002)(446003)(7736002)(54906003)(305945005)(50226002)(8936002)(11346002)(72206003)(81156014)(81166006)(2906002)(8676002)(14454004)(3846002)(478600001)(6116002)(256004)(14444005)(4326008)(66066001)(6486002)(97736004)(6436002)(107886003)(106356001)(36756003)(105586002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0076;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /FUYuBUlqzDgm6rbK9sNunkOogXHLX95Xnj266qZ6LmS4T9J/bKEHjql1kmRQqJRJnVeuOFb+2WpDMgVld5O4Fs9+61U/7E/sXfZXyT836bojVvTf5/8QUglUp1PIaI++u8XUS/rNHn2ri1X75TOP21prCJc1OzSiNELdX8dyDgOhpNwwvnwyQV10VMY/OACscwcrxeowskvUukhWu7XE6GdAbnVxyIVjUNNagJS34UrXWevGPRIAOKkPatJzTFLV88UPHQENnS2jXCbV8OXQ4LHNCnqKt7tuSH1fNOTDAStkFz8TjPxowyCadEsK31zCh1+fOqNoqQ5mxxI5TlG9RCj9R99SpnKA0LP/zZ0BNGTHmTJQoEdef6X9sn+f6nYkLJuTIU8QqQ5aibeCwB125QShdEYOC6tJ+4ndOXxBQo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40504d05-9600-4664-f966-08d6b3928dae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 15:32:14.7609
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0076
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-On 3/28/2019 6:43 PM, Geert Uytterhoeven wrote:
-> The err_remove_chip block is too coarse, and may perform cleanup that
-> must not be done.  E.g. if of_gpiochip_add() fails, of_gpiochip_remove()
-> is still called, causing:
->
->      OF: ERROR: Bad of_node_put() on /soc/gpio@e6050000
->      CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.1.0-rc2-koelsch+ #407
->      Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
->      Workqueue: events deferred_probe_work_func
->      [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
->      [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
->      [<c07c1224>] (dump_stack) from [<c07c5a80>] (kobject_put+0x94/0xbc)
->      [<c07c5a80>] (kobject_put) from [<c0470420>] (gpiochip_add_data_with_key+0x8d8/0xa3c)
->      [<c0470420>] (gpiochip_add_data_with_key) from [<c0473738>] (gpio_rcar_probe+0x1d4/0x314)
->      [<c0473738>] (gpio_rcar_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
->
-> and later, if a GPIO consumer tries to use a GPIO from a failed
-> controller:
->
->      WARNING: CPU: 0 PID: 1 at lib/refcount.c:156 kobject_get+0x38/0x4c
->      refcount_t: increment on 0; use-after-free.
->      Modules linked in:
->      CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc2-koelsch+ #407
->      Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
->      [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
->      [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
->      [<c07c1224>] (dump_stack) from [<c0221580>] (__warn+0xd0/0xec)
->      [<c0221580>] (__warn) from [<c02215e0>] (warn_slowpath_fmt+0x44/0x6c)
->      [<c02215e0>] (warn_slowpath_fmt) from [<c07c58fc>] (kobject_get+0x38/0x4c)
->      [<c07c58fc>] (kobject_get) from [<c068b3ec>] (of_node_get+0x14/0x1c)
->      [<c068b3ec>] (of_node_get) from [<c0686f24>] (of_find_node_by_phandle+0xc0/0xf0)
->      [<c0686f24>] (of_find_node_by_phandle) from [<c0686fbc>] (of_phandle_iterator_next+0x68/0x154)
->      [<c0686fbc>] (of_phandle_iterator_next) from [<c0687fe4>] (__of_parse_phandle_with_args+0x40/0xd0)
->      [<c0687fe4>] (__of_parse_phandle_with_args) from [<c0688204>] (of_parse_phandle_with_args_map+0x100/0x3ac)
->      [<c0688204>] (of_parse_phandle_with_args_map) from [<c0471240>] (of_get_named_gpiod_flags+0x38/0x380)
->      [<c0471240>] (of_get_named_gpiod_flags) from [<c046f864>] (gpiod_get_from_of_node+0x24/0xd8)
->      [<c046f864>] (gpiod_get_from_of_node) from [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child+0xa0/0x144)
->      [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child) from [<c05f425c>] (gpio_keys_probe+0x418/0x7bc)
->      [<c05f425c>] (gpio_keys_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
->
-> Fix this by splitting the cleanup block, and adding a missing call to
-> gpiochip_irqchip_remove().
->
-> Fixes: 28355f81969962cf ("gpio: defer probe if pinctrl cannot be found")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> I'm not so sure about the need for the call to
-> gpiochip_irqchip_remove(), as add/remove are not really symmetrical.
-> Any comments?
-> ---
->   drivers/gpio/gpiolib.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 144af07335815998..ed4da07effe0ac40 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1379,7 +1379,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   
->   	status = gpiochip_add_irqchip(chip, lock_key, request_key);
->   	if (status)
-> -		goto err_remove_chip;
-> +		goto err_free_irqchip_mask;
+ISC will output the "ARGB32" configuration in byte order: B, G, R, Alpha.
+This is in fact the format BGRA, aka ABGR32.
+If alpha is missing, the same format is equivalent to XBGR32.
+Added both formats and removed ARGB32 which is wrong.
 
-Name is quite confusing
-this should be
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ drivers/media/platform/atmel/atmel-isc.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-s/err_free_irqchip_mask/err_free_gpiochip_mask
+diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platf=
+orm/atmel/atmel-isc.c
+index 8c4b6f1..2cab777 100644
+--- a/drivers/media/platform/atmel/atmel-isc.c
++++ b/drivers/media/platform/atmel/atmel-isc.c
+@@ -228,7 +228,10 @@ static struct isc_format controller_formats[] =3D {
+ 		.fourcc		=3D V4L2_PIX_FMT_RGB565,
+ 	},
+ 	{
+-		.fourcc		=3D V4L2_PIX_FMT_ARGB32,
++		.fourcc		=3D V4L2_PIX_FMT_ABGR32,
++	},
++	{
++		.fourcc		=3D V4L2_PIX_FMT_XBGR32,
+ 	},
+ 	{
+ 		.fourcc		=3D V4L2_PIX_FMT_YUV420,
+@@ -1099,7 +1102,8 @@ static int isc_try_validate_formats(struct isc_device=
+ *isc)
+ 		break;
+=20
+ 	case V4L2_PIX_FMT_RGB565:
+-	case V4L2_PIX_FMT_ARGB32:
++	case V4L2_PIX_FMT_ABGR32:
++	case V4L2_PIX_FMT_XBGR32:
+ 	case V4L2_PIX_FMT_ARGB444:
+ 	case V4L2_PIX_FMT_ARGB555:
+ 		ret =3D 0;
+@@ -1183,7 +1187,8 @@ static int isc_try_configure_rlp_dma(struct isc_devic=
+e *isc, bool direct_dump)
+ 		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
+ 		isc->try_config.bpp =3D 16;
+ 		break;
+-	case V4L2_PIX_FMT_ARGB32:
++	case V4L2_PIX_FMT_ABGR32:
++	case V4L2_PIX_FMT_XBGR32:
+ 		isc->try_config.rlp_cfg_mode =3D ISC_RLP_CFG_MODE_ARGB32;
+ 		isc->try_config.dcfg_imode =3D ISC_DCFG_IMODE_PACKED32;
+ 		isc->try_config.dctrl_dview =3D ISC_DCTRL_DVIEW_PACKED;
+@@ -1229,7 +1234,8 @@ static int isc_try_configure_pipeline(struct isc_devi=
+ce *isc)
+ 	case V4L2_PIX_FMT_RGB565:
+ 	case V4L2_PIX_FMT_ARGB555:
+ 	case V4L2_PIX_FMT_ARGB444:
+-	case V4L2_PIX_FMT_ARGB32:
++	case V4L2_PIX_FMT_ABGR32:
++	case V4L2_PIX_FMT_XBGR32:
+ 		/* if sensor format is RAW, we convert inside ISC */
+ 		if (ISC_IS_FORMAT_RAW(isc->try_config.sd_format->mbus_code)) {
+ 			isc->try_config.bits_pipeline =3D CFA_ENABLE |
+--=20
+2.7.4
 
-
->   
->   	status = of_gpiochip_add(chip);
->   	if (status)
-> @@ -1387,7 +1387,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   
->   	status = gpiochip_init_valid_mask(chip);
->   	if (status)
-> -		goto err_remove_chip;
-> +		goto err_remove_of_chip;
->   
->   	for (i = 0; i < chip->ngpio; i++) {
->   		struct gpio_desc *desc = &gdev->descs[i];
-> @@ -1415,14 +1415,18 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
->   	if (gpiolib_initialized) {
->   		status = gpiochip_setup_dev(gdev);
->   		if (status)
-> -			goto err_remove_chip;
-> +			goto err_remove_acpi_chip;
->   	}
->   	return 0;
->   
-> -err_remove_chip:
-> +err_remove_acpi_chip:
->   	acpi_gpiochip_remove(chip);
-> +err_remove_of_chip:
->   	gpiochip_free_hogs(chip);
->   	of_gpiochip_remove(chip);
-> +err_remove_chip:
-> +	gpiochip_irqchip_remove(chip);
-> +err_free_irqchip_mask:
-
-
-same here.
-
-After reviewing back and forth it looks good, apart from the naming.
-Please fix.
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
--Mukesh
-
-
->   	gpiochip_free_valid_mask(chip);
->   err_remove_irqchip_mask:
->   	gpiochip_irqchip_free_valid_mask(chip);
