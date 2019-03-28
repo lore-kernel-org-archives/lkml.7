@@ -2,331 +2,137 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCD3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38FDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D303E2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dPrGKYld"
+	by mail.kernel.org (Postfix) with ESMTP id A7E662173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfC1RaC (ORCPT
+        id S1727270AbfC1Rac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:30:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54340 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1RaB (ORCPT
+        Thu, 28 Mar 2019 13:30:32 -0400
+Received: from gateway36.websitewelcome.com ([192.185.195.25]:15347 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbfC1Rac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:30:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2SHTueR121381;
-        Thu, 28 Mar 2019 12:29:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1553794196;
-        bh=DPLwyDSPpWsFJUrW++DNtp7p7ya1q+p9JYFeEkkOGuQ=;
-        h=From:To:CC:Subject:Date;
-        b=dPrGKYldmhfSL/nKrrdMGHH+QL43nRwHzaqjYJqi4FxIjHR+eIUyC+Iip2+DrVMAj
-         gxF6uSh+6IhstPD6cKZXulf5CxnJqqh3+WLO8d2IMLvmQM7NmeQe+dyB5MI5aUUK+T
-         iuB8ihJyMKIU46BTB0bSwuJUh43CAdQ45RxliUiI=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2SHTuhD014445
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Mar 2019 12:29:56 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 28
- Mar 2019 12:29:56 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 28 Mar 2019 12:29:56 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x2SHTt7J034032;
-        Thu, 28 Mar 2019 12:29:55 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        <linux-omap@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH net-next] net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
-Date:   Thu, 28 Mar 2019 19:29:53 +0200
-Message-ID: <1553794193-8098-1-git-send-email-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 Mar 2019 13:30:32 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id C1012400C6F33
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:47:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9YrHhmxo12qH79YrHhCS3J; Thu, 28 Mar 2019 12:30:31 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.117.246] (port=37512 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h9YrG-0033kW-O4; Thu, 28 Mar 2019 12:30:30 -0500
+Date:   Thu, 28 Mar 2019 12:30:29 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] Bluetooth: Use struct_size() helper
+Message-ID: <20190328173029.GA13869@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.117.246
+X-Source-L: No
+X-Exim-ID: 1h9YrG-0033kW-O4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.117.246]:37512
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both drivers CPSW and EMAC can't work without CPDMA, hence simplify build
-of those drivers by always linking davinci_cpdma and drop TI_DAVINCI_CPDMA
-config option.
-Note. the davinci_emac driver module was changed to "ti_davinci_emac" to
-make build work.
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+struct foo {
+    int stuff;
+    struct boo entry[];
+};
+
+size = sizeof(struct foo) + count * sizeof(struct boo);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+size = struct_size(instance, entry, count);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
+ net/bluetooth/mgmt.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-It's been marked as RFC as I've had to change davinci_emac.c module name
- to "ti_davinci_emac".  if no objection - I'd like to do the same for ALE module also
- and then resend.
-
- drivers/net/ethernet/ti/Kconfig         |  2 ++
- drivers/net/ethernet/ti/Makefile        |  6 +++---
- drivers/net/ethernet/ti/davinci_cpdma.c | 26 -------------------------
- 3 files changed, 5 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index 8b21b40a9fe5..bf5bead0d465 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -22,6 +22,7 @@ config TI_DAVINCI_EMAC
- 	select TI_DAVINCI_MDIO
- 	select TI_DAVINCI_CPDMA
- 	select PHYLIB
-+	default m
- 	---help---
- 	  This driver supports TI's DaVinci Ethernet .
- 
-@@ -68,6 +69,7 @@ config TI_CPSW
- 	select TI_CPSW_ALE
- 	select MFD_SYSCON
- 	select REGMAP
-+	default m
- 	---help---
- 	  This driver supports TI's CPSW Ethernet Switch.
- 
-diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
-index 0be551de821c..a763e1b27304 100644
---- a/drivers/net/ethernet/ti/Makefile
-+++ b/drivers/net/ethernet/ti/Makefile
-@@ -8,14 +8,14 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
- 
- obj-$(CONFIG_TLAN) += tlan.o
- obj-$(CONFIG_CPMAC) += cpmac.o
--obj-$(CONFIG_TI_DAVINCI_EMAC) += davinci_emac.o
-+obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
-+ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
- obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
--obj-$(CONFIG_TI_DAVINCI_CPDMA) += davinci_cpdma.o
- obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
- obj-$(CONFIG_TI_CPSW_ALE) += cpsw_ale.o
- obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
- obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
--ti_cpsw-y := cpsw.o
-+ti_cpsw-y := cpsw.o davinci_cpdma.o
- 
- obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
- keystone_netcp-y := netcp_core.o
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 4236dcdd5634..b8df342ba217 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -527,7 +527,6 @@ struct cpdma_ctlr *cpdma_ctlr_create(struct cpdma_params *params)
- 		ctlr->num_chan = CPDMA_MAX_CHANNELS;
- 	return ctlr;
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_create);
- 
- int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
- {
-@@ -588,7 +587,6 @@ int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_start);
- 
- int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
- {
-@@ -621,7 +619,6 @@ int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_stop);
- 
- int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
- {
-@@ -639,7 +636,6 @@ int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
- 	cpdma_desc_pool_destroy(ctlr);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_destroy);
- 
- int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
- {
-@@ -660,25 +656,21 @@ int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_int_ctrl);
- 
- void cpdma_ctlr_eoi(struct cpdma_ctlr *ctlr, u32 value)
- {
- 	dma_reg_write(ctlr, CPDMA_MACEOIVECTOR, value);
- }
--EXPORT_SYMBOL_GPL(cpdma_ctlr_eoi);
- 
- u32 cpdma_ctrl_rxchs_state(struct cpdma_ctlr *ctlr)
- {
- 	return dma_reg_read(ctlr, CPDMA_RXINTSTATMASKED);
- }
--EXPORT_SYMBOL_GPL(cpdma_ctrl_rxchs_state);
- 
- u32 cpdma_ctrl_txchs_state(struct cpdma_ctlr *ctlr)
- {
- 	return dma_reg_read(ctlr, CPDMA_TXINTSTATMASKED);
- }
--EXPORT_SYMBOL_GPL(cpdma_ctrl_txchs_state);
- 
- static void cpdma_chan_set_descs(struct cpdma_ctlr *ctlr,
- 				 int rx, int desc_num,
-@@ -774,7 +766,6 @@ int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr)
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_split_pool);
- 
- 
- /* cpdma_chan_set_weight - set weight of a channel in percentage.
-@@ -807,7 +798,6 @@ int cpdma_chan_set_weight(struct cpdma_chan *ch, int weight)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_set_weight);
- 
- /* cpdma_chan_get_min_rate - get minimum allowed rate for channel
-  * Should be called before cpdma_chan_set_rate.
-@@ -822,7 +812,6 @@ u32 cpdma_chan_get_min_rate(struct cpdma_ctlr *ctlr)
- 
- 	return DIV_ROUND_UP(divident, divisor);
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_get_min_rate);
- 
- /* cpdma_chan_set_rate - limits bandwidth for transmit channel.
-  * The bandwidth * limited channels have to be in order beginning from lowest.
-@@ -867,7 +856,6 @@ int cpdma_chan_set_rate(struct cpdma_chan *ch, u32 rate)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_set_rate);
- 
- u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
- {
-@@ -880,7 +868,6 @@ u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
- 
- 	return rate;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_get_rate);
- 
- struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
- 				     cpdma_handler_fn handler, int rx_type)
-@@ -940,7 +927,6 @@ struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return chan;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_create);
- 
- int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
- {
-@@ -953,7 +939,6 @@ int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
- 
- 	return desc_num;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_get_rx_buf_num);
- 
- int cpdma_chan_destroy(struct cpdma_chan *chan)
- {
-@@ -975,7 +960,6 @@ int cpdma_chan_destroy(struct cpdma_chan *chan)
- 	spin_unlock_irqrestore(&ctlr->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_destroy);
- 
- int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats)
-@@ -988,7 +972,6 @@ int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_get_stats);
- 
- static void __cpdma_chan_submit(struct cpdma_chan *chan,
- 				struct cpdma_desc __iomem *desc)
-@@ -1095,7 +1078,6 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_submit);
- 
- bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
- {
-@@ -1110,7 +1092,6 @@ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return free_tx_desc;
- }
--EXPORT_SYMBOL_GPL(cpdma_check_free_tx_desc);
- 
- static void __cpdma_chan_free(struct cpdma_chan *chan,
- 			      struct cpdma_desc __iomem *desc,
-@@ -1204,7 +1185,6 @@ int cpdma_chan_process(struct cpdma_chan *chan, int quota)
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 2457f408d17d..150114e33b20 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -2301,8 +2301,7 @@ static int load_link_keys(struct sock *sk, struct hci_dev *hdev, void *data,
+ 				       MGMT_STATUS_INVALID_PARAMS);
  	}
- 	return used;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_process);
  
- int cpdma_chan_start(struct cpdma_chan *chan)
- {
-@@ -1224,7 +1204,6 @@ int cpdma_chan_start(struct cpdma_chan *chan)
+-	expected_len = sizeof(*cp) + key_count *
+-					sizeof(struct mgmt_link_key_info);
++	expected_len = struct_size(cp, keys, key_count);
+ 	if (expected_len != len) {
+ 		bt_dev_err(hdev, "load_link_keys: expected %u bytes, got %u bytes",
+ 			   expected_len, len);
+@@ -5030,7 +5029,7 @@ static int load_irks(struct sock *sk, struct hci_dev *hdev, void *cp_data,
+ 				       MGMT_STATUS_INVALID_PARAMS);
+ 	}
  
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_start);
+-	expected_len = sizeof(*cp) + irk_count * sizeof(struct mgmt_irk_info);
++	expected_len = struct_size(cp, irks, irk_count);
+ 	if (expected_len != len) {
+ 		bt_dev_err(hdev, "load_irks: expected %u bytes, got %u bytes",
+ 			   expected_len, len);
+@@ -5112,8 +5111,7 @@ static int load_long_term_keys(struct sock *sk, struct hci_dev *hdev,
+ 				       MGMT_STATUS_INVALID_PARAMS);
+ 	}
  
- int cpdma_chan_stop(struct cpdma_chan *chan)
- {
-@@ -1287,7 +1266,6 @@ int cpdma_chan_stop(struct cpdma_chan *chan)
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(cpdma_chan_stop);
+-	expected_len = sizeof(*cp) + key_count *
+-					sizeof(struct mgmt_ltk_info);
++	expected_len = struct_size(cp, keys, key_count);
+ 	if (expected_len != len) {
+ 		bt_dev_err(hdev, "load_keys: expected %u bytes, got %u bytes",
+ 			   expected_len, len);
+@@ -5847,8 +5845,7 @@ static int load_conn_param(struct sock *sk, struct hci_dev *hdev, void *data,
+ 				       MGMT_STATUS_INVALID_PARAMS);
+ 	}
  
- int cpdma_chan_int_ctrl(struct cpdma_chan *chan, bool enable)
- {
-@@ -1329,25 +1307,21 @@ int cpdma_control_set(struct cpdma_ctlr *ctlr, int control, int value)
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(cpdma_control_set);
- 
- int cpdma_get_num_rx_descs(struct cpdma_ctlr *ctlr)
- {
- 	return ctlr->num_rx_desc;
- }
--EXPORT_SYMBOL_GPL(cpdma_get_num_rx_descs);
- 
- int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr)
- {
- 	return ctlr->num_tx_desc;
- }
--EXPORT_SYMBOL_GPL(cpdma_get_num_tx_descs);
- 
- void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
- {
- 	ctlr->num_rx_desc = num_rx_desc;
- 	ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
- }
--EXPORT_SYMBOL_GPL(cpdma_set_num_rx_descs);
- 
- MODULE_LICENSE("GPL");
+-	expected_len = sizeof(*cp) + param_count *
+-					sizeof(struct mgmt_conn_param);
++	expected_len = struct_size(cp, params, param_count);
+ 	if (expected_len != len) {
+ 		bt_dev_err(hdev, "load_conn_param: expected %u bytes, got %u bytes",
+ 			   expected_len, len);
 -- 
-2.17.1
+2.21.0
 
