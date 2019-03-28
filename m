@@ -2,307 +2,92 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225EAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020E9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD1B2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5986218A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jBLvne+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfC1PYn (ORCPT
+        id S1727248AbfC1PYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:24:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726275AbfC1PYn (ORCPT
+        Thu, 28 Mar 2019 11:24:51 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35508 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbfC1PYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:24:43 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SFM4i8020754
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:24:42 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rgy3h62t1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:24:41 -0400
-Received: from localhost
-        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 28 Mar 2019 15:24:40 -0000
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 15:24:37 -0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SFOWgC60948496
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 15:24:32 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C5767805F;
-        Thu, 28 Mar 2019 15:24:32 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27D7E7806D;
-        Thu, 28 Mar 2019 15:24:31 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 15:24:30 +0000 (GMT)
-Subject: Re: [PATCH v6 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     pmorel@linux.ibm.com, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-2-git-send-email-pmorel@linux.ibm.com>
- <66abb1f6-425a-df94-cc7c-f1fdec0ece9c@linux.ibm.com>
- <1489c200-8eec-309e-f253-8dce5a6d88d1@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Thu, 28 Mar 2019 11:24:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <1489c200-8eec-309e-f253-8dce5a6d88d1@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032815-0012-0000-0000-0000171E6971
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010828; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01180932; UDB=6.00618054; IPR=6.00961650;
- MB=3.00026193; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 15:24:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032815-0013-0000-0000-000056AB3F7B
-Message-Id: <ade7bcb0-216c-81b6-3c0c-05c64647d936@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280103
+        Thu, 28 Mar 2019 11:24:51 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h39so23571637qte.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 08:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=isKXPTi8LFmieVU9az7vGWyOVcJN5veMcrXh05ersr4=;
+        b=jBLvne+Y5fUraduT/VckpbPVKTob1kJZoDxd9KIjZfV7U+A806jqSPp/3QykQO3IOL
+         fyiBYokAsKRGPXyKm9dUIYpXQjenxKIR799LfwrYU80WZCiMf7RkKCJ0xMgXRCY3xARP
+         IHclH8z4Gz3yeTTYZNYpg7mhCT38xCQg+18K/v5Jtb2s/1svWH6+lM84nFnGOi8VvPOt
+         mIWCvs7RJ35Tx/39vtbXtYmwM1G3xfqHBpV3TJF6f+i613mkgc4W6X9aY861AMQrrBgB
+         Z5Ks5QqGIv+9dqQTPzarnv6W7YWpxaLDKmEcsbklI/SHB/y/ebAtD0cE0jNhNTD1BUao
+         IMsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=isKXPTi8LFmieVU9az7vGWyOVcJN5veMcrXh05ersr4=;
+        b=GIR04ruq4rcTD5mTbpanHXZAQkqdhBbO1feAzILQusBXP3g1100xTHXAOUWkOX3XCP
+         DXGDyqbrzJRZXD9keMHD2bz4IBAYMnem/UfSqdIxR3Jaii6Ov4LMuZ4NmZLG4km4wEx4
+         Es99NVUyhBFgX4l8ShVCqneAGJOaEqgGgMEiOz40IGczS0n5QNyJ1D5uaSu2MkZa8TeY
+         6GiklnBXppWAAASyB9v8MHswFapoq2R843HOMq/4IC24FdeVSseRtoiL4cDKWDzep1Xa
+         Fz0WFNMIf3ZBQDJvUoTB0N0y237MfHnlwkXRX67Hdu7Ku35XBnqCxBc8Qyje6QvNQukH
+         BR9Q==
+X-Gm-Message-State: APjAAAXLjsxDJfvyoBAcoZf9X0MzMGfoQXL40xc/xx2HiXchtHFJcdzR
+        5GF+i3V8CVpXEboqxy0KnMe7R2k2jbY=
+X-Google-Smtp-Source: APXvYqzeVsoiYbOK4d1VbCnhthXv63Uaa1JU9I1KDKpO6mOK9lOyKBYREjeg0vBsAw56x/2RTtLzGA==
+X-Received: by 2002:a0c:afd4:: with SMTP id t20mr21676186qvc.128.1553786689804;
+        Thu, 28 Mar 2019 08:24:49 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id s43sm14189589qth.47.2019.03.28.08.24.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 08:24:49 -0700 (PDT)
+Message-ID: <1553786687.26196.26.camel@lca.pw>
+Subject: Re: [PATCH v4] kmemleak: survive in a low-memory situation
+From:   Qian Cai <cai@lca.pw>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
+        cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 28 Mar 2019 11:24:47 -0400
+In-Reply-To: <20190328145917.GC10283@arrakis.emea.arm.com>
+References: <20190327005948.24263-1-cai@lca.pw>
+         <20190327084432.GA11927@dhcp22.suse.cz>
+         <20190327172955.GB17247@arrakis.emea.arm.com>
+         <20190327182158.GS10344@bombadil.infradead.org>
+         <20190328145917.GC10283@arrakis.emea.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 8:43 AM, Pierre Morel wrote:
-> On 26/03/2019 19:57, Tony Krowiak wrote:
->> On 3/22/19 10:43 AM, Pierre Morel wrote:
->>> We prepare the interception of the PQAP/AQIC instruction for
->>> the case the AQIC facility is enabled in the guest.
->>>
-> 
-> ...snip...
-> 
->>> +/*
->>> + * handle_pqap: Handling pqap interception
->>> + * @vcpu: the vcpu having issue the pqap instruction
->>> + *
->>> + * We now support PQAP/AQIC instructions and we need to correctly
->>> + * answer the guest even if no dedicated driver's hook is available.
->>> + *
->>> + * The intercepting code calls a dedicated callback for this 
->>> instruction
->>> + * if a driver did register one in the CRYPTO satellite of the
->>> + * SIE block.
->>> + *
->>> + * For PQAP AQIC and TAPQ instructions, verify privilege and 
->>> specifications.
->>
->> The two paragraphs above should be described via the comments embedded
->> in the code and is not necessary here.
->>
->>> + *
->>> + * If no callback available, the queues are not available, return 
->>> this to
->>> + * the caller.
->>
->> This implies it is specified via the return code when it is in fact
->> the response code in the status word.
->>
->>> + * Else return the value returned by the callback.
->>> + */
->>
->> Given this handler may be called for any PQAP instruction sub-function,
->> I think the function doc should be more generic, providing:
->>
->> * A general description of what the function does
->> * A description of each input parameter
->> * A description of the value returned. If the return value is a return
->>    code, the possible rc values can be enumerated with a description for
->>    of the reason each particular value may be returned.
-> 
-> Sorry, I do not understand what you want here.
-> Isn't it exactly what is done?
+On Thu, 2019-03-28 at 14:59 +0000, Catalin Marinas wrote:		2
+> +/* minimum memory pool sizes */
+> +#define MIN_OBJECT_POOL		(NR_CPUS * 4)
+> +#define MIN_SCAN_AREA_POOL	(NR_CPUS * 1)
 
-No, what you have provided is a description that includes details that
-may not apply in the future. I'm thinking something more like this:
+I am thinking about making those are tunable, so people could have a big pool
+depends on their workloads.
 
-/*
-  * handle_pqap
-  *
-  * @vcpu: the vcpu that executed the PQAP instruction
-  *
-  * Handles interception of the PQAP instruction. A specification
-  * exception will be injected into the guest if the input parameters
-  * to the PQAP instruction are not properly formatted.
-  *
-  * Returns zero if the PQAP instruction is handled successfully;
-  * otherwise, returns an error.
-  */
-
-> 
-> And don't you exactly say the opposite when you say that the description 
-> should be done by the embedded comments?
-
-Not really, that was directed at only the two sentences preceding the
-comment.
-
-> 
-> 
->>
->>> +static int handle_pqap(struct kvm_vcpu *vcpu)
->>> +{
->>> +    struct ap_queue_status status = {};
->>> +    unsigned long reg0;
->>> +    int ret;
->>> +    uint8_t fc;
->>> +
->>> +    /* Verify that the AP instruction are available */
->>> +    if (!ap_instructions_available())
->>> +        return -EOPNOTSUPP;
->>> +    /* Verify that the guest is allowed to use AP instructions */
->>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->>> +        return -EOPNOTSUPP;
->>> +    /*
->>> +     * The only possibly intercepted instructions when AP 
->>> instructions are
->>> +     * available for the guest are AQIC and TAPQ with the t bit set
->>> +     * since we do not set IC.3 (FIII) we currently will not intercept
->>> +     * TAPQ.
->>> +     * The following code will only treat AQIC function code.
->>> +     */
->>
->> Simplify to:
->>
->> /* The only supported PQAP function is AQIC (0x03) */
-> 
-> OK, but then istn't obvious from reading the code ?
-
-It's obvious that you are verifying the function code is
-0x03, but only those familiar with the architecture will
-know the is the AQIC function. Besides, I was merely modifying
-the comment you already had. You can leave the comment out
-if you prefer.
-
-> 
->>
->>> +    reg0 = vcpu->run->s.regs.gprs[0];
->>> +    fc = reg0 >> 24;
->>> +    if (fc != 0x03) {
->>> +        pr_warn("%s: Unexpected interception code 0x%02x\n",
->>> +            __func__, fc);
-
-I would change the text to:
-"Unexpected PQAP function code 0x%02x\n"
-
->>> +        return -EOPNOTSUPP;
->>> +    }
->>> +    /* All PQAP instructions are allowed for guest kernel only */
->>
->> There is only one PQAP instruction with multiple sub-functions.
->> /* PQAP instruction is allowed for guest kernel only */
->>                          or
->> /* PQAP instruction is privileged */
-> 
-> OK
-> 
->>
->>> +    if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE)
->>> +        return kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
->>> +    /*
->>> +     * Common tests for PQAP instructions to generate a specification
->>> +     * exception
->>> +     */
->>
->> This comment is unnecessary as the individual comments below adequately
->> do the job.
-> 
-> OK
-> 
->>
->>> +    /* Zero bits overwrite produce a specification exception */
->>
->> This comment has no meaning unless you intimately know the architecture.
->> The following would make more sense:
->>
->>      /* Bits 41-47 must all be zeros */
->>
->> It's probably not a big deal, but since we don't support PQAP(TAPQ),
->> would it make more sense to make sure bits 40-47 are zeros (i.e.,
->> the 't' bit is not set)?
-> 
-> I am not sure about this one as APFT is installed in our case.
-> Or do you want that we test if it is installed and test the bit 40?
-> 
-> We should discuss this offline because I do not find any evidence that 
-> we should really do this in the documentation.
-
-I am okay with not checking bit 40, but I would change the comment as
-suggested: /* Bits 41-47 must all be zeros */
-
-> 
->>
->>> +    if (reg0 & 0x007f0000UL)
->>> +        goto specification_except;
->>> +    /* If APXA is not installed APQN is limited */
->>
->> Wouldn't it be better to state how the APQN is limited?
->> For example:
->>
->>      /*
->>       * If APXA is not installed, then the maximum APID is
->>       * 63 (bits 48-49 of reg0 must be zero) and the maximum
->>       * APQI is 15 (bits 56-59 must be zero)
->>       */
-> OK
->>
->>> +    if (!(vcpu->kvm->arch.crypto.crycbd & 0x02))
->>> +        if (reg0 & 0x000030f0UL)
->>
->> If APXA is not installed, then bits 48-49 and 56-59 must all be
->> zeros. Shouldn't this mask be 0x0000c0f0UL?
-> 
-> You can better count than I do ;)
-> I will change this to c0f0.
-> 
-> ...snip...
->>
->>
->>
->>> +    status.response_code = 0x01;
->>> +    memcpy(&vcpu->run->s.regs.gprs[1], &status, sizeof(status));
-> 
-> hum,
-> I miss a
->      kvm_s390_set_psw_cc(vcpu, 3);
-> here
-> and certainly wherever fault in the status response code are set.
-> 
-> Will be corrected in the next iteration.
-
-Sounds good.
-
-> 
-> 
-> Thanks for the comments,
-> 
-> regards,
-> Pierre
-> 
-> 
-> 
-
+Also, I would like to see a way to refill this emergency pool. For example, once
+OOM kiler freed up more memory. Maybe at the time of kmemleak_scan kthread
+kicked in and then monitor and refill the pool whenever possible.
