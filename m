@@ -2,83 +2,104 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD26C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F44C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C0A206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B626206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfC1RIC (ORCPT
+        id S1727327AbfC1RIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:08:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41111 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfC1RIB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:08:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id e126so16014802ioa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=nsKviR5t4bkwiMD3XR/+AXw8AQHK1X1Lwd9zYfIP0KQ=;
-        b=AvOeYexPt7sWlbGi7/vTSbcDtjOD4pCNoUCU8cKhvqQ2LxT5KxxpuuAKSpAoz7ItR4
-         FT6nEaq2oZKFItnRy5C9eQ4p3JOXMQlA8R9fAGn7JE//6DZKck5JFVWPf6MiutXMdT7C
-         IOB+T7NnGvJU5QAX3mULRBC1LVHMV1YfsrThHFb8B5LNxIDYJxW4JOfgY3Pii8diCGAU
-         1IFIe53SwkO3rjsy3vDKWV5m9IFF79HjapvKYQWw7oh7sJazmyoSGL9uRPHMKo3OQtE4
-         gbVxPqNxvwzNK/hwvU1RWjuw/0LBTi0lf8kA1B6sx/3KoW9jwbw7XtBl23pD4J5rE5Hg
-         mGJA==
-X-Gm-Message-State: APjAAAU/N8n3WGWKYGHU1YQ9T0u2J+oxA+38fqKwR+VKovCplSFdZa1P
-        Sl4k18YSmSIgdEiAUS7p3v2WGpIbbbVHxauhMBnY8ibSQbk9
-X-Google-Smtp-Source: APXvYqxOe/Gq/iAWJ0JCUQX3iMclT7FD1f2YYet2gyiwVQP7XJzIEgsYSFNQuAsV2heohdLGUxGAO2Xy3XyFv9VcRbEBG4WFwEKh
+        Thu, 28 Mar 2019 13:08:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48670 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfC1RIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:08:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31BFE80D;
+        Thu, 28 Mar 2019 10:08:46 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C766A3F557;
+        Thu, 28 Mar 2019 10:08:44 -0700 (PDT)
+Subject: Re: [PATCH v3 3/5] PCI: dwc: Free MSI in the error code path of
+ dw_pcie_host_init()
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190318174415.74fd25a5@xhacker.debian>
+ <20190318174841.522fb6fd@xhacker.debian>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <689f8a0f-ba79-da80-d0e3-24ef6814a9aa@arm.com>
+Date:   Thu, 28 Mar 2019 17:08:43 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-Received: by 2002:a24:28d:: with SMTP id 135mr332348itu.16.1553792880757;
- Thu, 28 Mar 2019 10:08:00 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:08:00 -0700
-In-Reply-To: <000000000000d014010576cc00f4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b6565e05852a9811@google.com>
-Subject: Re: KASAN: use-after-free Read in generic_gcmaes_encrypt
-From:   syzbot <syzbot+6d3612ba5e254e387153@syzkaller.appspotmail.com>
-To:     ard.biesheuvel@linaro.org, aviadye@mellanox.com,
-        borisp@mellanox.com, bp@alien8.de, davejwatson@fb.com,
-        davem@davemloft.net, herbert@gondor.apana.org.au, hpa@zytor.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vakul.garg@nxp.com, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190318174841.522fb6fd@xhacker.debian>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On 18/03/2019 09:56, Jisheng Zhang wrote:
+> If we ever did some msi related initializations, we need to call
+> dw_pcie_free_msi() in the error code path.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>   drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index a71b874ae3c0..585080699675 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -483,7 +483,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   	if (pp->ops->host_init) {
+>   		ret = pp->ops->host_init(pp);
+>   		if (ret)
+> -			goto error;
+> +			goto err_free_msi;
+>   	}
+>   
+>   	pp->root_bus_nr = pp->busn->start;
+> @@ -497,7 +497,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   
+>   	ret = pci_scan_root_bus_bridge(bridge);
+>   	if (ret)
+> -		goto error;
+> +		goto err_free_msi;
+>   
+>   	bus = bridge->bus;
+>   
+> @@ -513,6 +513,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>   	pci_bus_add_devices(bus);
+>   	return 0;
+>   
+> +err_free_msi:
+> +	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled() &&
 
-commit a42055e8d2c30d4decfc13ce943d09c7b9dad221
-Author: Vakul Garg <vakul.garg@nxp.com>
-Date:   Fri Sep 21 04:16:13 2018 +0000
+pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI, so you 
+shouldn't need an explicit IS_ENABLED() here.
 
-     net/tls: Add support for async encryption of records for performance
+Robin.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15e6797d200000
-start commit:   5694cecd Merge tag 'arm64-upstream' of git://git.kernel.or..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17e6797d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e6797d200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91a256823ef17263
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d3612ba5e254e387153
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110db3c7400000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=113fa5ed400000
-
-Reported-by: syzbot+6d3612ba5e254e387153@syzkaller.appspotmail.com
-Fixes: a42055e8d2c3 ("net/tls: Add support for async encryption of records  
-for performance")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> +			!pp->ops->msi_host_init)
+> +		dw_pcie_free_msi(pp);
+>   error:
+>   	pci_free_host_bridge(bridge);
+>   	return ret;
+> 
