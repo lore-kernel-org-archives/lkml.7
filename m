@@ -2,5616 +2,684 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18343C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD219C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1DD2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:52:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="anXF6CM5"
+	by mail.kernel.org (Postfix) with ESMTP id 491312173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfC1VwR (ORCPT
+        id S1727963AbfC1Vw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 17:52:17 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:35775 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfC1VwQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 17:52:16 -0400
-Received: by mail-it1-f194.google.com with SMTP id w15so738299itc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 14:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:in-reply-to:references:mime-version:date:message-id:subject:to
-         :cc;
-        bh=1z69QGLSIWcs9nXI+w1kXUBR6kHxskXtp3BdF0cICFQ=;
-        b=anXF6CM5b6AzyMogOGLI+Z0+1XCQO/hyny28+xS3FOS2Rm5E5Sfs6NBoe1LzGYsqfv
-         I2oVb9W0b8+cAhcUs8+cxFQrAyhyIxB0Z1pbCWgpHz97m8j1NWKWfc2XBYXlVp6XPlQ5
-         JWiPTePFWeHC9k+zOdQ3H9C9ZEFwNjtE1xOTo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:in-reply-to:references:mime-version:date
-         :message-id:subject:to:cc;
-        bh=1z69QGLSIWcs9nXI+w1kXUBR6kHxskXtp3BdF0cICFQ=;
-        b=O6TV0ffAMHev3PzVFnOyVVv60P+gwCrLBpE/JFalzzinWoc06d0aR0pz43Z98IOlZk
-         IrW4uAChzjwK/RHIZHT4OCQbO/EBeweH7KQ5CmjNvT3gIGQ/wWBXhZ+j5iQTl4xyr6Ez
-         xsadQ4BdBW9yR0O8u3TF9CHrpisHxLsYgVNa4+NT5bALu5X7WhCkMlOnhCPJ0VNqB3TB
-         77xyMOInLr2TrUnGTRnIDf+zRHaosK6bX7OcMf3wkoxw5bn/z0AenBaiMH2WM+PDdN5a
-         z9ibGUxDPeaLrRU6oOV98pa3bJDflPeSSSx1HzRdSLM5cLaU672m/J8NGpt8v5ZKCUEG
-         I3hA==
-X-Gm-Message-State: APjAAAUk3iXSOmZbbkgCGz9I2nmsJCWbp94ejbzqicgtbEAVdv2wjheM
-        T/IUcw4rPXPSMzwZBWEMSDmMWwPTsuhZwj6sg6OkyQ==
-X-Google-Smtp-Source: APXvYqxnHXy8fg4pa991L2q7MAa/rQ4nAXAnsyybTpNlaByMEIIsHn0ijFCijb+qx4bCjaWriQX4FxoXc4uZGVMD7N4=
-X-Received: by 2002:a24:2705:: with SMTP id g5mr1943184ita.120.1553809931131;
- Thu, 28 Mar 2019 14:52:11 -0700 (PDT)
-Received: from 764776645087 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 28 Mar 2019 14:52:10 -0700
-From:   Gwendal Grignou <gwendal@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <CAPUE2ut9MjVuvOxZuVNBnZiFvz9Y2XBgCPSQRrdM=6w+p4Rv1Q@mail.gmail.com>
-References: <CAPUE2ut9MjVuvOxZuVNBnZiFvz9Y2XBgCPSQRrdM=6w+p4Rv1Q@mail.gmail.com>
+        Thu, 28 Mar 2019 17:52:28 -0400
+Received: from mga05.intel.com ([192.55.52.43]:50524 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfC1Vw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:52:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 14:52:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
+   d="gz'50?scan'50,208,50";a="138278338"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Mar 2019 14:52:24 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h9cwi-000CKO-EQ; Fri, 29 Mar 2019 05:52:24 +0800
+Date:   Fri, 29 Mar 2019 05:51:36 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2019.03.27a 35/46]
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c:45: undefined reference to
+ `kfd_processes_srcu'
+Message-ID: <201903290533.Cy39CvTk%lkp@intel.com>
 MIME-Version: 1.0
-Date:   Thu, 28 Mar 2019 14:52:10 -0700
-Message-ID: <CAPUE2uvhfwwt31=AMKvH-kPGYZsjpGqbetGJ46sBU4owFPRgsg@mail.gmail.com>
-Subject: [PATCH v3] mfd: cros: Update EC protocol to match current EC code
-To:     enric.balletbo@collabora.com, bleung@chromium.org,
-        groeck@chromium.org, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chromebook Embedded Controller protocol is defined in the kernel at
-cros_ec_commands.h.
-The source of trust for the EC protocol is at
-https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
 
-Only needed changes have been picked up from this file to the kernel
-include file leading to gaps between the upstream version and what the
-latest ECs can do.
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fill the gaps to ease future integrations. Changes from the original
-files is header/footer for license and include files for alignment.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.03.27a
+head:   3833875fa13a3f442252a48784a18f27879a4551
+commit: 016b9910f5db3d900066a0c3a8b42855f70bb1cf [35/46] drivers/gpu/drm/amd: Dynamically allocate kfd_processes_srcu
+config: i386-randconfig-m1-201912 (attached as .config)
+compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+reproduce:
+        git checkout 016b9910f5db3d900066a0c3a8b42855f70bb1cf
+        # save the attached .config to linux build tree
+        make ARCH=i386 
 
-Check this include file works on ChomeOS kernel 4.14 and 4.19 on eve.
+All errors (new ones prefixed by >>):
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.o: In function `amdgpu_amdkfd_init':
+>> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c:45: undefined reference to `kfd_processes_srcu'
+   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.o: In function `amdgpu_amdkfd_fini':
+   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c:64: undefined reference to `kfd_processes_srcu'
+
+vim +45 drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
+
+    39	
+    40	int amdgpu_amdkfd_init(void)
+    41	{
+    42		struct sysinfo si;
+    43		int ret;
+    44	
+  > 45		ret = init_srcu_struct(&kfd_processes_srcu);
+    46		WARN_ON(ret);
+    47		si_meminfo(&si);
+    48		amdgpu_amdkfd_total_mem_size = si.totalram - si.totalhigh;
+    49		amdgpu_amdkfd_total_mem_size *= si.mem_unit;
+    50	
+
 ---
-Changes in v3:
-- No changes, resending
-
-Changes in v2:
-- Replace 1 << with BIT()
-- Check checkpatch warning/errors are outside kernel scope.
-- Update .h with latest changes.
-
- include/linux/mfd/cros_ec_commands.h | 3723 +++++++++++++++++++++-----
- 1 file changed, 2992 insertions(+), 731 deletions(-)
-
-diff --git a/include/linux/mfd/cros_ec_commands.h
-b/include/linux/mfd/cros_ec_commands.h
-index fc91082d4c35..5c4764e3db6f 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -1,28 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Host communication command constants for ChromeOS EC
-  *
-  * Copyright (C) 2012 Google, Inc
-  *
-- * This software is licensed under the terms of the GNU General Public
-- * License version 2, as published by the Free Software Foundation, and
-- * may be copied, distributed, and modified under those terms.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * The ChromeOS EC multi function device is used to mux all the requests
-- * to the EC device for its multiple features: keyboard controller,
-- * battery charging and regulator control, firmware update.
-- *
-  * NOTE: This file is copied verbatim from the ChromeOS EC Open Source
-  * project in an attempt to make future updates easy to make.
-  */
-
-+/* Host communication command constants for Chrome EC */
-+
- #ifndef __CROS_EC_COMMANDS_H
- #define __CROS_EC_COMMANDS_H
-
-+#if !defined(__ACPI__) && !defined(__KERNEL__)
-+#include <stdint.h>
-+#endif
-+
-+#ifdef __cplusplus
-+extern "C"{
-+#endif
-+
-+/*
-+ * Include common.h for CONFIG_HOSTCMD_ALIGNED, if it's defined. This
-+ * generates more efficient code for accessing request/response structures on
-+ * ARM Cortex-M if the structures are guaranteed 32-bit aligned.
-+ */
-+#ifdef CHROMIUM_EC
-+#include "common.h"
-+#endif
-+
-+#ifdef __KERNEL__
-+#define BUILD_ASSERT(_cond)
-+#else
-+#include "compile_time_macros.h"
-+#endif
-+
- /*
-  * Current version of this protocol
-  *
-@@ -33,7 +46,7 @@
- #define EC_PROTO_VERSION          0x00000002
-
- /* Command version mask */
--#define EC_VER_MASK(version) (1UL << (version))
-+#define EC_VER_MASK(version) BIT(version)
-
- /* I/O addresses for ACPI commands */
- #define EC_LPC_ADDR_ACPI_DATA  0x62
-@@ -59,13 +72,13 @@
- #define EC_HOST_CMD_REGION_SIZE 0x80
-
- /* EC command register bit functions */
--#define EC_LPC_CMDR_DATA	(1 << 0)  /* Data ready for host to read */
--#define EC_LPC_CMDR_PENDING	(1 << 1)  /* Write pending to EC */
--#define EC_LPC_CMDR_BUSY	(1 << 2)  /* EC is busy processing a command */
--#define EC_LPC_CMDR_CMD		(1 << 3)  /* Last host write was a command */
--#define EC_LPC_CMDR_ACPI_BRST	(1 << 4)  /* Burst mode (not used) */
--#define EC_LPC_CMDR_SCI		(1 << 5)  /* SCI event is pending */
--#define EC_LPC_CMDR_SMI		(1 << 6)  /* SMI event is pending */
-+#define EC_LPC_CMDR_DATA	BIT(0)  /* Data ready for host to read */
-+#define EC_LPC_CMDR_PENDING	BIT(1)  /* Write pending to EC */
-+#define EC_LPC_CMDR_BUSY	BIT(2)  /* EC is busy processing a command */
-+#define EC_LPC_CMDR_CMD		BIT(3)  /* Last host write was a command */
-+#define EC_LPC_CMDR_ACPI_BRST	BIT(4)  /* Burst mode (not used) */
-+#define EC_LPC_CMDR_SCI		BIT(5)  /* SCI event is pending */
-+#define EC_LPC_CMDR_SMI		BIT(6)  /* SMI event is pending */
-
- #define EC_LPC_ADDR_MEMMAP       0x900
- #define EC_MEMMAP_SIZE         255 /* ACPI IO buffer max is 255 bytes */
-@@ -85,13 +98,15 @@
- /* Unused 0x28 - 0x2f */
- #define EC_MEMMAP_SWITCHES         0x30	/* 8 bits */
- /* Unused 0x31 - 0x33 */
--#define EC_MEMMAP_HOST_EVENTS      0x34 /* 32 bits */
--/* Reserve 0x38 - 0x3f for additional host event-related stuff */
--/* Battery values are all 32 bits */
-+#define EC_MEMMAP_HOST_EVENTS      0x34 /* 64 bits */
-+/* Battery values are all 32 bits, unless otherwise noted. */
- #define EC_MEMMAP_BATT_VOLT        0x40 /* Battery Present Voltage */
- #define EC_MEMMAP_BATT_RATE        0x44 /* Battery Present Rate */
- #define EC_MEMMAP_BATT_CAP         0x48 /* Battery Remaining Capacity */
--#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, defined below */
-+#define EC_MEMMAP_BATT_FLAG        0x4c /* Battery State, see below (8-bit) */
-+#define EC_MEMMAP_BATT_COUNT       0x4d /* Battery Count (8-bit) */
-+#define EC_MEMMAP_BATT_INDEX       0x4e /* Current Battery Data Index
-(8-bit) */
-+/* Unused 0x4f */
- #define EC_MEMMAP_BATT_DCAP        0x50 /* Battery Design Capacity */
- #define EC_MEMMAP_BATT_DVLT        0x54 /* Battery Design Voltage */
- #define EC_MEMMAP_BATT_LFCC        0x58 /* Battery Last Full Charge Capacity */
-@@ -105,15 +120,24 @@
- /* Unused 0x84 - 0x8f */
- #define EC_MEMMAP_ACC_STATUS       0x90 /* Accelerometer status (8 bits )*/
- /* Unused 0x91 */
--#define EC_MEMMAP_ACC_DATA         0x92 /* Accelerometer data 0x92 - 0x9f */
-+#define EC_MEMMAP_ACC_DATA         0x92 /* Accelerometers data 0x92 - 0x9f */
-+/* 0x92: Lid Angle if available, LID_ANGLE_UNRELIABLE otherwise */
-+/* 0x94 - 0x99: 1st Accelerometer */
-+/* 0x9a - 0x9f: 2nd Accelerometer */
- #define EC_MEMMAP_GYRO_DATA        0xa0 /* Gyroscope data 0xa0 - 0xa5 */
--/* Unused 0xa6 - 0xfe (remember, 0xff is NOT part of the memmap region) */
-+/* Unused 0xa6 - 0xdf */
-
-+/*
-+ * ACPI is unable to access memory mapped data at or above this offset due to
-+ * limitations of the ACPI protocol. Do not place data in the range 0xe0 - 0xfe
-+ * which might be needed by ACPI.
-+ */
-+#define EC_MEMMAP_NO_ACPI 0xe0
-
- /* Define the format of the accelerometer mapped memory status byte. */
- #define EC_MEMMAP_ACC_STATUS_SAMPLE_ID_MASK  0x0f
--#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        (1 << 4)
--#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    (1 << 7)
-+#define EC_MEMMAP_ACC_STATUS_BUSY_BIT        BIT(4)
-+#define EC_MEMMAP_ACC_STATUS_PRESENCE_BIT    BIT(7)
-
- /* Number of temp sensors at EC_MEMMAP_TEMP_SENSOR */
- #define EC_TEMP_SENSOR_ENTRIES     16
-@@ -157,6 +181,8 @@
- #define EC_BATT_FLAG_DISCHARGING  0x04
- #define EC_BATT_FLAG_CHARGING     0x08
- #define EC_BATT_FLAG_LEVEL_CRITICAL 0x10
-+/* Set if some of the static/dynamic data is invalid (or outdated). */
-+#define EC_BATT_FLAG_INVALID_DATA 0x20
-
- /* Switch flags at EC_MEMMAP_SWITCHES */
- #define EC_SWITCH_LID_OPEN               0x01
-@@ -182,6 +208,194 @@
- #define EC_WIRELESS_SWITCH_WWAN       0x04  /* WWAN power */
- #define EC_WIRELESS_SWITCH_WLAN_POWER 0x08  /* WLAN power */
-
-+/*****************************************************************************/
-+/*
-+ * ACPI commands
-+ *
-+ * These are valid ONLY on the ACPI command/data port.
-+ */
-+
-+/*
-+ * ACPI Read Embedded Controller
-+ *
-+ * This reads from ACPI memory space on the EC (EC_ACPI_MEM_*).
-+ *
-+ * Use the following sequence:
-+ *
-+ *    - Write EC_CMD_ACPI_READ to EC_LPC_ADDR_ACPI_CMD
-+ *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-+ *    - Write address to EC_LPC_ADDR_ACPI_DATA
-+ *    - Wait for EC_LPC_CMDR_DATA bit to set
-+ *    - Read value from EC_LPC_ADDR_ACPI_DATA
-+ */
-+#define EC_CMD_ACPI_READ 0x0080
-+
-+/*
-+ * ACPI Write Embedded Controller
-+ *
-+ * This reads from ACPI memory space on the EC (EC_ACPI_MEM_*).
-+ *
-+ * Use the following sequence:
-+ *
-+ *    - Write EC_CMD_ACPI_WRITE to EC_LPC_ADDR_ACPI_CMD
-+ *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-+ *    - Write address to EC_LPC_ADDR_ACPI_DATA
-+ *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-+ *    - Write value to EC_LPC_ADDR_ACPI_DATA
-+ */
-+#define EC_CMD_ACPI_WRITE 0x0081
-+
-+/*
-+ * ACPI Burst Enable Embedded Controller
-+ *
-+ * This enables burst mode on the EC to allow the host to issue several
-+ * commands back-to-back. While in this mode, writes to mapped multi-byte
-+ * data are locked out to ensure data consistency.
-+ */
-+#define EC_CMD_ACPI_BURST_ENABLE 0x0082
-+
-+/*
-+ * ACPI Burst Disable Embedded Controller
-+ *
-+ * This disables burst mode on the EC and stops preventing EC writes to mapped
-+ * multi-byte data.
-+ */
-+#define EC_CMD_ACPI_BURST_DISABLE 0x0083
-+
-+/*
-+ * ACPI Query Embedded Controller
-+ *
-+ * This clears the lowest-order bit in the currently pending host events, and
-+ * sets the result code to the 1-based index of the bit (event 0x00000001 = 1,
-+ * event 0x80000000 = 32), or 0 if no event was pending.
-+ */
-+#define EC_CMD_ACPI_QUERY_EVENT 0x0084
-+
-+/* Valid addresses in ACPI memory space, for read/write commands */
-+
-+/* Memory space version; set to EC_ACPI_MEM_VERSION_CURRENT */
-+#define EC_ACPI_MEM_VERSION            0x00
-+/*
-+ * Test location; writing value here updates test compliment byte to (0xff -
-+ * value).
-+ */
-+#define EC_ACPI_MEM_TEST               0x01
-+/* Test compliment; writes here are ignored. */
-+#define EC_ACPI_MEM_TEST_COMPLIMENT    0x02
-+
-+/* Keyboard backlight brightness percent (0 - 100) */
-+#define EC_ACPI_MEM_KEYBOARD_BACKLIGHT 0x03
-+/* DPTF Target Fan Duty (0-100, 0xff for auto/none) */
-+#define EC_ACPI_MEM_FAN_DUTY           0x04
-+
-+/*
-+ * DPTF temp thresholds. Any of the EC's temp sensors can have up to two
-+ * independent thresholds attached to them. The current value of the ID
-+ * register determines which sensor is affected by the THRESHOLD and COMMIT
-+ * registers. The THRESHOLD register uses the same EC_TEMP_SENSOR_OFFSET scheme
-+ * as the memory-mapped sensors. The COMMIT register applies those settings.
-+ *
-+ * The spec does not mandate any way to read back the threshold settings
-+ * themselves, but when a threshold is crossed the AP needs a way to determine
-+ * which sensor(s) are responsible. Each reading of the ID register clears and
-+ * returns one sensor ID that has crossed one of its threshold (in either
-+ * direction) since the last read. A value of 0xFF means "no new thresholds
-+ * have tripped". Setting or enabling the thresholds for a sensor will clear
-+ * the unread event count for that sensor.
-+ */
-+#define EC_ACPI_MEM_TEMP_ID            0x05
-+#define EC_ACPI_MEM_TEMP_THRESHOLD     0x06
-+#define EC_ACPI_MEM_TEMP_COMMIT        0x07
-+/*
-+ * Here are the bits for the COMMIT register:
-+ *   bit 0 selects the threshold index for the chosen sensor (0/1)
-+ *   bit 1 enables/disables the selected threshold (0 = off, 1 = on)
-+ * Each write to the commit register affects one threshold.
-+ */
-+#define EC_ACPI_MEM_TEMP_COMMIT_SELECT_MASK BIT(0)
-+#define EC_ACPI_MEM_TEMP_COMMIT_ENABLE_MASK BIT(1)
-+/*
-+ * Example:
-+ *
-+ * Set the thresholds for sensor 2 to 50 C and 60 C:
-+ *   write 2 to [0x05]      --  select temp sensor 2
-+ *   write 0x7b to [0x06]   --  C_TO_K(50) - EC_TEMP_SENSOR_OFFSET
-+ *   write 0x2 to [0x07]    --  enable threshold 0 with this value
-+ *   write 0x85 to [0x06]   --  C_TO_K(60) - EC_TEMP_SENSOR_OFFSET
-+ *   write 0x3 to [0x07]    --  enable threshold 1 with this value
-+ *
-+ * Disable the 60 C threshold, leaving the 50 C threshold unchanged:
-+ *   write 2 to [0x05]      --  select temp sensor 2
-+ *   write 0x1 to [0x07]    --  disable threshold 1
-+ */
-+
-+/* DPTF battery charging current limit */
-+#define EC_ACPI_MEM_CHARGING_LIMIT     0x08
-+
-+/* Charging limit is specified in 64 mA steps */
-+#define EC_ACPI_MEM_CHARGING_LIMIT_STEP_MA   64
-+/* Value to disable DPTF battery charging limit */
-+#define EC_ACPI_MEM_CHARGING_LIMIT_DISABLED  0xff
-+
-+/*
-+ * Report device orientation
-+ *  Bits       Definition
-+ *  3:1        Device DPTF Profile Number (DDPN)
-+ *               0   = Reserved for backward compatibility (indicates no valid
-+ *                     profile number. Host should fall back to using TBMD).
-+ *              1..7 = DPTF Profile number to indicate to host which
-table needs
-+ *                     to be loaded.
-+ *   0         Tablet Mode Device Indicator (TBMD)
-+ */
-+#define EC_ACPI_MEM_DEVICE_ORIENTATION 0x09
-+#define EC_ACPI_MEM_TBMD_SHIFT         0
-+#define EC_ACPI_MEM_TBMD_MASK          0x1
-+#define EC_ACPI_MEM_DDPN_SHIFT         1
-+#define EC_ACPI_MEM_DDPN_MASK          0x7
-+
-+/*
-+ * Report device features. Uses the same format as the host command, except:
-+ *
-+ * bit 0 (EC_FEATURE_LIMITED) changes meaning from "EC code has a limited set
-+ * of features", which is of limited interest when the system is already
-+ * interpreting ACPI bytecode, to "EC_FEATURES[0-7] is not supported". Since
-+ * these are supported, it defaults to 0.
-+ * This allows detecting the presence of this field since older versions of
-+ * the EC codebase would simply return 0xff to that unknown address. Check
-+ * FEATURES0 != 0xff (or FEATURES0[0] == 0) to make sure that the other bits
-+ * are valid.
-+ */
-+#define EC_ACPI_MEM_DEVICE_FEATURES0 0x0a
-+#define EC_ACPI_MEM_DEVICE_FEATURES1 0x0b
-+#define EC_ACPI_MEM_DEVICE_FEATURES2 0x0c
-+#define EC_ACPI_MEM_DEVICE_FEATURES3 0x0d
-+#define EC_ACPI_MEM_DEVICE_FEATURES4 0x0e
-+#define EC_ACPI_MEM_DEVICE_FEATURES5 0x0f
-+#define EC_ACPI_MEM_DEVICE_FEATURES6 0x10
-+#define EC_ACPI_MEM_DEVICE_FEATURES7 0x11
-+
-+#define EC_ACPI_MEM_BATTERY_INDEX    0x12
-+
-+/*
-+ * USB Port Power. Each bit indicates whether the corresponding USB
-ports' power
-+ * is enabled (1) or disabled (0).
-+ *   bit 0 USB port ID 0
-+ *   ...
-+ *   bit 7 USB port ID 7
-+ */
-+#define EC_ACPI_MEM_USB_PORT_POWER 0x13
-+
-+/*
-+ * ACPI addresses 0x20 - 0xff map to EC_MEMMAP offset 0x00 - 0xdf.  This data
-+ * is read-only from the AP.  Added in EC_ACPI_MEM_VERSION 2.
-+ */
-+#define EC_ACPI_MEM_MAPPED_BEGIN   0x20
-+#define EC_ACPI_MEM_MAPPED_SIZE    0xe0
-+
-+/* Current version of ACPI memory address space */
-+#define EC_ACPI_MEM_VERSION_CURRENT 2
-+
-+
- /*
-  * This header file is used in coreboot both in C and ACPI code.  The ACPI code
-  * is pre-processed to handle constants but the ASL compiler is unable to
-@@ -197,6 +411,92 @@
- #define __packed __attribute__((packed))
- #endif
-
-+#ifndef __aligned
-+#define __aligned(x) __attribute__((aligned(x)))
-+#endif
-+
-+/*
-+ * Attributes for EC request and response packets.  Just defining __packed
-+ * results in inefficient assembly code on ARM, if the structure is actually
-+ * 32-bit aligned, as it should be for all buffers.
-+ *
-+ * Be very careful when adding these to existing structures.  They will round
-+ * up the structure size to the specified boundary.
-+ *
-+ * Also be very careful to make that if a structure is included in some other
-+ * parent structure that the alignment will still be true given the packing of
-+ * the parent structure.  This is particularly important if the sub-structure
-+ * will be passed as a pointer to another function, since that function will
-+ * not know about the misaligment caused by the parent structure's packing.
-+ *
-+ * Also be very careful using __packed - particularly when nesting non-packed
-+ * structures inside packed ones.  In fact, DO NOT use __packed directly;
-+ * always use one of these attributes.
-+ *
-+ * Once everything is annotated properly, the following search strings should
-+ * not return ANY matches in this file other than right here:
-+ *
-+ * "__packed" - generates inefficient code; all sub-structs must also be packed
-+ *
-+ * "struct [^_]" - all structs should be annotated, except for structs that are
-+ * members of other structs/unions (and their original declarations should be
-+ * annotated).
-+ */
-+#ifdef CONFIG_HOSTCMD_ALIGNED
-+
-+/*
-+ * Packed structures where offset and size are always aligned to 1, 2, or 4
-+ * byte boundary.
-+ */
-+#define __ec_align1 __packed
-+#define __ec_align2 __packed __aligned(2)
-+#define __ec_align4 __packed __aligned(4)
-+
-+/*
-+ * Packed structure which must be under-aligned, because its size is not a
-+ * 4-byte multiple.  This is sub-optimal because it forces byte-wise access
-+ * of all multi-byte fields in it, even though they are themselves aligned.
-+ *
-+ * In theory, we could duplicate the structure with __aligned(4) for accessing
-+ * its members, but use the __packed version for sizeof().
-+ */
-+#define __ec_align_size1 __packed
-+
-+/*
-+ * Packed structure which must be under-aligned, because its offset inside a
-+ * parent structure is not a 4-byte multiple.
-+ */
-+#define __ec_align_offset1 __packed
-+#define __ec_align_offset2 __packed __aligned(2)
-+
-+/*
-+ * Structures which are complicated enough that I'm skipping them on the first
-+ * pass.  They are effectively unchanged from their previous definitions.
-+ *
-+ * TODO(rspangler): Figure out what to do with these.  It's likely necessary
-+ * to work out the size and offset of each member and add explicit padding to
-+ * maintain those.
-+ */
-+#define __ec_todo_packed __packed
-+#define __ec_todo_unpacked
-+
-+#else  /* !CONFIG_HOSTCMD_ALIGNED */
-+
-+/*
-+ * Packed structures make no assumption about alignment, so they do inefficient
-+ * byte-wise reads.
-+ */
-+#define __ec_align1 __packed
-+#define __ec_align2 __packed
-+#define __ec_align4 __packed
-+#define __ec_align_size1 __packed
-+#define __ec_align_offset1 __packed
-+#define __ec_align_offset2 __packed
-+#define __ec_todo_packed __packed
-+#define __ec_todo_unpacked
-+
-+#endif  /* !CONFIG_HOSTCMD_ALIGNED */
-+
- /* LPC command status byte masks */
- /* EC has written a byte in the data register and host hasn't read it yet */
- #define EC_LPC_STATUS_TO_HOST     0x01
-@@ -206,7 +506,7 @@
- #define EC_LPC_STATUS_PROCESSING  0x04
- /* Last write to EC was a command, not data */
- #define EC_LPC_STATUS_LAST_CMD    0x08
--/* EC is in burst mode.  Unsupported by Chrome EC, so this bit is never set */
-+/* EC is in burst mode */
- #define EC_LPC_STATUS_BURST_MODE  0x10
- /* SCI event is pending (requesting SCI query) */
- #define EC_LPC_STATUS_SCI_PENDING 0x20
-@@ -222,7 +522,9 @@
- #define EC_LPC_STATUS_BUSY_MASK \
- 	(EC_LPC_STATUS_FROM_HOST | EC_LPC_STATUS_PROCESSING)
-
--/* Host command response codes */
-+/* Host command response codes (16-bit).  Note that response codes should be
-+ * stored in a uint16_t rather than directly in a value of this type.
-+ */
- enum ec_status {
- 	EC_RES_SUCCESS = 0,
- 	EC_RES_INVALID_COMMAND = 1,
-@@ -238,7 +540,13 @@ enum ec_status {
- 	EC_RES_OVERFLOW = 11,		/* Table / data overflow */
- 	EC_RES_INVALID_HEADER = 12,     /* Header contains invalid data */
- 	EC_RES_REQUEST_TRUNCATED = 13,  /* Didn't get the entire request */
--	EC_RES_RESPONSE_TOO_BIG = 14    /* Response was too big to handle */
-+	EC_RES_RESPONSE_TOO_BIG = 14,   /* Response was too big to handle */
-+	EC_RES_BUS_ERROR = 15,		/* Communications bus error */
-+	EC_RES_BUSY = 16,		/* Up but too busy.  Should retry */
-+	EC_RES_INVALID_HEADER_VERSION = 17,  /* Header version invalid */
-+	EC_RES_INVALID_HEADER_CRC = 18,      /* Header CRC invalid */
-+	EC_RES_INVALID_DATA_CRC = 19,        /* Data CRC invalid */
-+	EC_RES_DUP_UNAVAILABLE = 20,         /* Can't resend response */
- };
-
- /*
-@@ -258,7 +566,8 @@ enum host_event_code {
- 	EC_HOST_EVENT_BATTERY_CRITICAL = 7,
- 	EC_HOST_EVENT_BATTERY = 8,
- 	EC_HOST_EVENT_THERMAL_THRESHOLD = 9,
--	EC_HOST_EVENT_THERMAL_OVERLOAD = 10,
-+	/* Event generated by a device attached to the EC */
-+	EC_HOST_EVENT_DEVICE = 10,
- 	EC_HOST_EVENT_THERMAL = 11,
- 	EC_HOST_EVENT_USB_CHARGER = 12,
- 	EC_HOST_EVENT_KEY_PRESSED = 13,
-@@ -285,15 +594,34 @@ enum host_event_code {
- 	EC_HOST_EVENT_HANG_DETECT = 20,
- 	/* Hang detect logic detected a hang and warm rebooted the AP */
- 	EC_HOST_EVENT_HANG_REBOOT = 21,
-+
- 	/* PD MCU triggering host event */
- 	EC_HOST_EVENT_PD_MCU = 22,
-
--	/* EC desires to change state of host-controlled USB mux */
--	EC_HOST_EVENT_USB_MUX = 28,
-+	/* Battery Status flags have changed */
-+	EC_HOST_EVENT_BATTERY_STATUS = 23,
-+
-+	/* EC encountered a panic, triggering a reset */
-+	EC_HOST_EVENT_PANIC = 24,
-+
-+	/* Keyboard fastboot combo has been pressed */
-+	EC_HOST_EVENT_KEYBOARD_FASTBOOT = 25,
-
- 	/* EC RTC event occurred */
- 	EC_HOST_EVENT_RTC = 26,
-
-+	/* Emulate MKBP event */
-+	EC_HOST_EVENT_MKBP = 27,
-+
-+	/* EC desires to change state of host-controlled USB mux */
-+	EC_HOST_EVENT_USB_MUX = 28,
-+
-+	/* TABLET/LAPTOP mode or detachable base attach/detach event */
-+	EC_HOST_EVENT_MODE_CHANGE = 29,
-+
-+	/* Keyboard recovery combo with hardware reinitialization */
-+	EC_HOST_EVENT_KEYBOARD_RECOVERY_HW_REINIT = 30,
-+
- 	/*
- 	 * The high bit of the event mask is not used as a host event code.  If
- 	 * it reads back as set, then the entire event mask should be
-@@ -304,7 +632,7 @@ enum host_event_code {
- 	EC_HOST_EVENT_INVALID = 32
- };
- /* Host event mask */
--#define EC_HOST_EVENT_MASK(event_code) (1UL << ((event_code) - 1))
-+#define EC_HOST_EVENT_MASK(event_code) BIT_ULL((event_code) - 1)
-
- /**
-  * struct ec_lpc_host_args - Arguments at EC_LPC_ADDR_HOST_ARGS
-@@ -319,7 +647,7 @@ struct ec_lpc_host_args {
- 	uint8_t command_version;
- 	uint8_t data_size;
- 	uint8_t checksum;
--} __packed;
-+} __ec_align4;
-
- /* Flags for ec_lpc_host_args.flags */
- /*
-@@ -329,7 +657,7 @@ struct ec_lpc_host_args {
-  * If EC gets a command and this flag is not set, this is an old-style command.
-  * Command version is 0 and params from host are at EC_LPC_ADDR_OLD_PARAM with
-  * unknown length.  EC must respond with an old-style response (that is,
-- * withouth setting EC_HOST_ARGS_FLAG_TO_HOST).
-+ * without setting EC_HOST_ARGS_FLAG_TO_HOST).
-  */
- #define EC_HOST_ARGS_FLAG_FROM_HOST 0x01
- /*
-@@ -490,7 +818,7 @@ struct ec_host_request {
- 	uint8_t command_version;
- 	uint8_t reserved;
- 	uint16_t data_len;
--} __packed;
-+} __ec_align4;
-
- #define EC_HOST_RESPONSE_VERSION 3
-
-@@ -509,18 +837,151 @@ struct ec_host_response {
- 	uint16_t result;
- 	uint16_t data_len;
- 	uint16_t reserved;
--} __packed;
-+} __ec_align4;
-+
-+/*****************************************************************************/
-+
-+/*
-+ * Host command protocol V4.
-+ *
-+ * Packets always start with a request or response header.  They are followed
-+ * by data_len bytes of data.  If the data_crc_present flag is set, the data
-+ * bytes are followed by a CRC-8 of that data, using using x^8 + x^2 + x + 1
-+ * polynomial.
-+ *
-+ * Host algorithm when sending a request q:
-+ *
-+ * 101) tries_left=(some value, e.g. 3);
-+ * 102) q.seq_num++
-+ * 103) q.seq_dup=0
-+ * 104) Calculate q.header_crc.
-+ * 105) Send request q to EC.
-+ * 106) Wait for response r.  Go to 201 if received or 301 if timeout.
-+ *
-+ * 201) If r.struct_version != 4, go to 301.
-+ * 202) If r.header_crc mismatches calculated CRC for r header, go to 301.
-+ * 203) If r.data_crc_present and r.data_crc mismatches, go to 301.
-+ * 204) If r.seq_num != q.seq_num, go to 301.
-+ * 205) If r.seq_dup == q.seq_dup, return success.
-+ * 207) If r.seq_dup == 1, go to 301.
-+ * 208) Return error.
-+ *
-+ * 301) If --tries_left <= 0, return error.
-+ * 302) If q.seq_dup == 1, go to 105.
-+ * 303) q.seq_dup = 1
-+ * 304) Go to 104.
-+ *
-+ * EC algorithm when receiving a request q.
-+ * EC has response buffer r, error buffer e.
-+ *
-+ * 101) If q.struct_version != 4, set e.result = EC_RES_INVALID_HEADER_VERSION
-+ *      and go to 301
-+ * 102) If q.header_crc mismatches calculated CRC, set e.result =
-+ *      EC_RES_INVALID_HEADER_CRC and go to 301
-+ * 103) If q.data_crc_present, calculate data CRC.  If that mismatches the CRC
-+ *      byte at the end of the packet, set e.result = EC_RES_INVALID_DATA_CRC
-+ *      and go to 301.
-+ * 104) If q.seq_dup == 0, go to 201.
-+ * 105) If q.seq_num != r.seq_num, go to 201.
-+ * 106) If q.seq_dup == r.seq_dup, go to 205, else go to 203.
-+ *
-+ * 201) Process request q into response r.
-+ * 202) r.seq_num = q.seq_num
-+ * 203) r.seq_dup = q.seq_dup
-+ * 204) Calculate r.header_crc
-+ * 205) If r.data_len > 0 and data is no longer available, set e.result =
-+ *      EC_RES_DUP_UNAVAILABLE and go to 301.
-+ * 206) Send response r.
-+ *
-+ * 301) e.seq_num = q.seq_num
-+ * 302) e.seq_dup = q.seq_dup
-+ * 303) Calculate e.header_crc.
-+ * 304) Send error response e.
-+ */
-+
-+/* Version 4 request from host */
-+struct ec_host_request4 {
-+	/*
-+	 * bits 0-3: struct_version: Structure version (=4)
-+	 * bit    4: is_response: Is response (=0)
-+	 * bits 5-6: seq_num: Sequence number
-+	 * bit    7: seq_dup: Sequence duplicate flag
-+	 */
-+	uint8_t fields0;
-+
-+	/*
-+	 * bits 0-4: command_version: Command version
-+	 * bits 5-6: Reserved (set 0, ignore on read)
-+	 * bit    7: data_crc_present: Is data CRC present after data
-+	 */
-+	uint8_t fields1;
-+
-+	/* Command code (EC_CMD_*) */
-+	uint16_t command;
-+
-+	/* Length of data which follows this header (not including data CRC) */
-+	uint16_t data_len;
-+
-+	/* Reserved (set 0, ignore on read) */
-+	uint8_t reserved;
-+
-+	/* CRC-8 of above fields, using x^8 + x^2 + x + 1 polynomial */
-+	uint8_t header_crc;
-+} __ec_align4;
-+
-+/* Version 4 response from EC */
-+struct ec_host_response4 {
-+	/*
-+	 * bits 0-3: struct_version: Structure version (=4)
-+	 * bit    4: is_response: Is response (=1)
-+	 * bits 5-6: seq_num: Sequence number
-+	 * bit    7: seq_dup: Sequence duplicate flag
-+	 */
-+	uint8_t fields0;
-+
-+	/*
-+	 * bits 0-6: Reserved (set 0, ignore on read)
-+	 * bit    7: data_crc_present: Is data CRC present after data
-+	 */
-+	uint8_t fields1;
-+
-+	/* Result code (EC_RES_*) */
-+	uint16_t result;
-+
-+	/* Length of data which follows this header (not including data CRC) */
-+	uint16_t data_len;
-+
-+	/* Reserved (set 0, ignore on read) */
-+	uint8_t reserved;
-+
-+	/* CRC-8 of above fields, using x^8 + x^2 + x + 1 polynomial */
-+	uint8_t header_crc;
-+} __ec_align4;
-+
-+/* Fields in fields0 byte */
-+#define EC_PACKET4_0_STRUCT_VERSION_MASK	0x0f
-+#define EC_PACKET4_0_IS_RESPONSE_MASK		0x10
-+#define EC_PACKET4_0_SEQ_NUM_SHIFT		5
-+#define EC_PACKET4_0_SEQ_NUM_MASK		0x60
-+#define EC_PACKET4_0_SEQ_DUP_MASK		0x80
-+
-+/* Fields in fields1 byte */
-+#define EC_PACKET4_1_COMMAND_VERSION_MASK	0x1f  /* (request only) */
-+#define EC_PACKET4_1_DATA_CRC_PRESENT_MASK	0x80
-
- /*****************************************************************************/
- /*
-  * Notes on commands:
-  *
-  * Each command is an 16-bit command value.  Commands which take params or
-- * return response data specify structs for that data.  If no struct is
-+ * return response data specify structures for that data.  If no structure is
-  * specified, the command does not input or output data, respectively.
-  * Parameter/response length is implicit in the structs.  Some underlying
-  * communication protocols (I2C, SPI) may add length or checksum headers, but
-  * those are implementation-dependent and not defined here.
-+ *
-+ * All commands MUST be #defined to be 4-digit UPPER CASE hex values
-+ * (e.g., 0x00AB, not 0xab) for CONFIG_HOSTCMD_SECTION_SORTED to work.
-  */
-
- /*****************************************************************************/
-@@ -530,7 +991,7 @@ struct ec_host_response {
-  * Get protocol version, used to deal with non-backward compatible protocol
-  * changes.
-  */
--#define EC_CMD_PROTO_VERSION 0x00
-+#define EC_CMD_PROTO_VERSION 0x0000
-
- /**
-  * struct ec_response_proto_version - Response to the proto version command.
-@@ -538,13 +999,13 @@ struct ec_host_response {
-  */
- struct ec_response_proto_version {
- 	uint32_t version;
--} __packed;
-+} __ec_align4;
-
- /*
-  * Hello.  This is a simple command to test the EC is responsive to
-  * commands.
-  */
--#define EC_CMD_HELLO 0x01
-+#define EC_CMD_HELLO 0x0001
-
- /**
-  * struct ec_params_hello - Parameters to the hello command.
-@@ -552,7 +1013,7 @@ struct ec_response_proto_version {
-  */
- struct ec_params_hello {
- 	uint32_t in_data;
--} __packed;
-+} __ec_align4;
-
- /**
-  * struct ec_response_hello - Response to the hello command.
-@@ -560,10 +1021,10 @@ struct ec_params_hello {
-  */
- struct ec_response_hello {
- 	uint32_t out_data;
--} __packed;
-+} __ec_align4;
-
- /* Get version number */
--#define EC_CMD_GET_VERSION 0x02
-+#define EC_CMD_GET_VERSION 0x0002
-
- enum ec_current_image {
- 	EC_IMAGE_UNKNOWN = 0,
-@@ -583,10 +1044,10 @@ struct ec_response_get_version {
- 	char version_string_rw[32];
- 	char reserved[32];
- 	uint32_t current_image;
--} __packed;
-+} __ec_align4;
-
- /* Read test */
--#define EC_CMD_READ_TEST 0x03
-+#define EC_CMD_READ_TEST 0x0003
-
- /**
-  * struct ec_params_read_test - Parameters for the read test command.
-@@ -596,7 +1057,7 @@ struct ec_response_get_version {
- struct ec_params_read_test {
- 	uint32_t offset;
- 	uint32_t size;
--} __packed;
-+} __ec_align4;
-
- /**
-  * struct ec_response_read_test - Response to the read test command.
-@@ -604,17 +1065,17 @@ struct ec_params_read_test {
-  */
- struct ec_response_read_test {
- 	uint32_t data[32];
--} __packed;
-+} __ec_align4;
-
- /*
-  * Get build information
-  *
-  * Response is null-terminated string.
-  */
--#define EC_CMD_GET_BUILD_INFO 0x04
-+#define EC_CMD_GET_BUILD_INFO 0x0004
-
- /* Get chip info */
--#define EC_CMD_GET_CHIP_INFO 0x05
-+#define EC_CMD_GET_CHIP_INFO 0x0005
-
- /**
-  * struct ec_response_get_chip_info - Response to the get chip info command.
-@@ -626,10 +1087,10 @@ struct ec_response_get_chip_info {
- 	char vendor[32];
- 	char name[32];
- 	char revision[32];
--} __packed;
-+} __ec_align4;
-
- /* Get board HW version */
--#define EC_CMD_GET_BOARD_VERSION 0x06
-+#define EC_CMD_GET_BOARD_VERSION 0x0006
-
- /**
-  * struct ec_response_board_version - Response to the board version command.
-@@ -637,7 +1098,7 @@ struct ec_response_get_chip_info {
-  */
- struct ec_response_board_version {
- 	uint16_t board_version;
--} __packed;
-+} __ec_align2;
-
- /*
-  * Read memory-mapped data.
-@@ -647,7 +1108,7 @@ struct ec_response_board_version {
-  *
-  * Response is params.size bytes of data.
-  */
--#define EC_CMD_READ_MEMMAP 0x07
-+#define EC_CMD_READ_MEMMAP 0x0007
-
- /**
-  * struct ec_params_read_memmap - Parameters for the read memory map command.
-@@ -657,10 +1118,10 @@ struct ec_response_board_version {
- struct ec_params_read_memmap {
- 	uint8_t offset;
- 	uint8_t size;
--} __packed;
-+} __ec_align1;
-
- /* Read versions supported for a command */
--#define EC_CMD_GET_CMD_VERSIONS 0x08
-+#define EC_CMD_GET_CMD_VERSIONS 0x0008
-
- /**
-  * struct ec_params_get_cmd_versions - Parameters for the get command versions.
-@@ -668,7 +1129,7 @@ struct ec_params_read_memmap {
-  */
- struct ec_params_get_cmd_versions {
- 	uint8_t cmd;
--} __packed;
-+} __ec_align1;
-
- /**
-  * struct ec_params_get_cmd_versions_v1 - Parameters for the get command
-@@ -677,7 +1138,7 @@ struct ec_params_get_cmd_versions {
-  */
- struct ec_params_get_cmd_versions_v1 {
- 	uint16_t cmd;
--} __packed;
-+} __ec_align2;
-
- /**
-  * struct ec_response_get_cmd_version - Response to the get command versions.
-@@ -686,20 +1147,20 @@ struct ec_params_get_cmd_versions_v1 {
-  */
- struct ec_response_get_cmd_versions {
- 	uint32_t version_mask;
--} __packed;
-+} __ec_align4;
-
- /*
-- * Check EC communcations status (busy). This is needed on i2c/spi but not
-+ * Check EC communications status (busy). This is needed on i2c/spi but not
-  * on lpc since it has its own out-of-band busy indicator.
-  *
-  * lpc must read the status from the command register. Attempting this on
-  * lpc will overwrite the args/parameter space and corrupt its data.
-  */
--#define EC_CMD_GET_COMMS_STATUS		0x09
-+#define EC_CMD_GET_COMMS_STATUS		0x0009
-
- /* Avoid using ec_status which is for return values */
- enum ec_comms_status {
--	EC_COMMS_STATUS_PROCESSING	= 1 << 0,	/* Processing cmd */
-+	EC_COMMS_STATUS_PROCESSING	= BIT(0),	/* Processing cmd */
- };
-
- /**
-@@ -709,29 +1170,29 @@ enum ec_comms_status {
-  */
- struct ec_response_get_comms_status {
- 	uint32_t flags;		/* Mask of enum ec_comms_status */
--} __packed;
-+} __ec_align4;
-
- /* Fake a variety of responses, purely for testing purposes. */
--#define EC_CMD_TEST_PROTOCOL		0x0a
-+#define EC_CMD_TEST_PROTOCOL		0x000A
-
- /* Tell the EC what to send back to us. */
- struct ec_params_test_protocol {
- 	uint32_t ec_result;
- 	uint32_t ret_len;
- 	uint8_t buf[32];
--} __packed;
-+} __ec_align4;
-
- /* Here it comes... */
- struct ec_response_test_protocol {
- 	uint8_t buf[32];
--} __packed;
-+} __ec_align4;
-
--/* Get prococol information */
--#define EC_CMD_GET_PROTOCOL_INFO	0x0b
-+/* Get protocol information */
-+#define EC_CMD_GET_PROTOCOL_INFO	0x000B
-
- /* Flags for ec_response_get_protocol_info.flags */
- /* EC_RES_IN_PROGRESS may be returned if a command is slow */
--#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED (1 << 0)
-+#define EC_PROTOCOL_INFO_IN_PROGRESS_SUPPORTED BIT(0)
-
- /**
-  * struct ec_response_get_protocol_info - Response to the get protocol info.
-@@ -747,7 +1208,7 @@ struct ec_response_get_protocol_info {
- 	uint16_t max_request_packet_size;
- 	uint16_t max_response_packet_size;
- 	uint32_t flags;
--} __packed;
-+} __ec_align4;
-
-
- /*****************************************************************************/
-@@ -765,19 +1226,19 @@ struct ec_response_get_protocol_info {
- struct ec_params_get_set_value {
- 	uint32_t flags;
- 	uint32_t value;
--} __packed;
-+} __ec_align4;
-
- struct ec_response_get_set_value {
- 	uint32_t flags;
- 	uint32_t value;
--} __packed;
-+} __ec_align4;
-
--/* More than one command can use these structs to get/set paramters. */
--#define EC_CMD_GSV_PAUSE_IN_S5	0x0c
-+/* More than one command can use these structs to get/set parameters. */
-+#define EC_CMD_GSV_PAUSE_IN_S5	0x000C
-
- /*****************************************************************************/
- /* List the features supported by the firmware */
--#define EC_CMD_GET_FEATURES  0x0d
-+#define EC_CMD_GET_FEATURES  0x000D
-
- /* Supported features */
- enum ec_feature_code {
-@@ -840,7 +1301,7 @@ enum ec_feature_code {
- 	 * (Common Smart Battery System Interface Specification)
- 	 */
- 	EC_FEATURE_SMART_BATTERY = 18,
--	/* EC can dectect when the host hangs. */
-+	/* EC can detect when the host hangs. */
- 	EC_FEATURE_HANG_DETECT = 19,
- 	/* Report power information, for pit only */
- 	EC_FEATURE_PMU = 20,
-@@ -852,24 +1313,68 @@ enum ec_feature_code {
- 	EC_FEATURE_USB_MUX = 23,
- 	/* Motion Sensor code has an internal software FIFO */
- 	EC_FEATURE_MOTION_SENSE_FIFO = 24,
-+	/* Support temporary secure vstore */
-+	EC_FEATURE_VSTORE = 25,
-+	/* EC decides on USB-C SS mux state, muxes configured by host */
-+	EC_FEATURE_USBC_SS_MUX_VIRTUAL = 26,
- 	/* EC has RTC feature that can be controlled by host commands */
- 	EC_FEATURE_RTC = 27,
-+	/* The MCU exposes a Fingerprint sensor */
-+	EC_FEATURE_FINGERPRINT = 28,
-+	/* The MCU exposes a Touchpad */
-+	EC_FEATURE_TOUCHPAD = 29,
-+	/* The MCU has RWSIG task enabled */
-+	EC_FEATURE_RWSIG = 30,
-+	/* EC has device events support */
-+	EC_FEATURE_DEVICE_EVENT = 31,
-+	/* EC supports the unified wake masks for LPC/eSPI systems */
-+	EC_FEATURE_UNIFIED_WAKE_MASKS = 32,
-+	/* EC supports 64-bit host events */
-+	EC_FEATURE_HOST_EVENT64 = 33,
-+	/* EC runs code in RAM (not in place, a.k.a. XIP) */
-+	EC_FEATURE_EXEC_IN_RAM = 34,
- 	/* EC supports CEC commands */
- 	EC_FEATURE_CEC = 35,
-+	/* EC supports tight sensor timestamping. */
-+	EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS = 36,
-+	/*
-+	 * EC supports tablet mode detection aligned to Chrome and allows
-+	 * setting of threshold by host command using
-+	 * MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE.
-+	 */
-+	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
-+	/* EC supports audio codec. */
-+	EC_FEATURE_AUDIO_CODEC = 38,
-+	/* EC Supports SCP. */
-+	EC_FEATURE_SCP = 39,
-+	/* The MCU is an Integrated Sensor Hub */
-+	EC_FEATURE_ISH = 40,
- };
-
--#define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
--#define EC_FEATURE_MASK_1(event_code) (1UL << (event_code - 32))
-+#define EC_FEATURE_MASK_0(event_code) BIT(event_code % 32)
-+#define EC_FEATURE_MASK_1(event_code) BIT(event_code - 32)
-
- struct ec_response_get_features {
- 	uint32_t flags[2];
--} __packed;
-+} __ec_align4;
-+
-+/*****************************************************************************/
-+/* Get the board's SKU ID from EC */
-+#define EC_CMD_GET_SKU_ID 0x000E
-+
-+/* Set SKU ID from AP */
-+#define EC_CMD_SET_SKU_ID 0x000F
-+
-+struct ec_sku_id_info {
-+	uint32_t sku_id;
-+} __ec_align4;
-
- /*****************************************************************************/
- /* Flash commands */
-
- /* Get flash info */
--#define EC_CMD_FLASH_INFO 0x10
-+#define EC_CMD_FLASH_INFO 0x0010
-+#define EC_VER_FLASH_INFO 2
-
- /**
-  * struct ec_response_flash_info - Response to the flash info command.
-@@ -888,11 +1393,22 @@ struct ec_response_flash_info {
- 	uint32_t write_block_size;
- 	uint32_t erase_block_size;
- 	uint32_t protect_block_size;
--} __packed;
-+} __ec_align4;
-+
-+/*
-+ * Flags for version 1+ flash info command
-+ * EC flash erases bits to 0 instead of 1.
-+ */
-+#define EC_FLASH_INFO_ERASE_TO_0 BIT(0)
-
--/* Flags for version 1+ flash info command */
--/* EC flash erases bits to 0 instead of 1 */
--#define EC_FLASH_INFO_ERASE_TO_0 (1 << 0)
-+/*
-+ * Flash must be selected for read/write/erase operations to succeed.  This may
-+ * be necessary on a chip where write/erase can be corrupted by other board
-+ * activity, or where the chip needs to enable some sort of
-programming voltage,
-+ * or where the read/write/erase operations require cleanly suspending other
-+ * chip functionality.
-+ */
-+#define EC_FLASH_INFO_SELECT_REQUIRED BIT(1)
-
- /**
-  * struct ec_response_flash_info_1 - Response to the flash info v1 command.
-@@ -914,7 +1430,14 @@ struct ec_response_flash_info {
-  * fields following.
-  *
-  * gcc anonymous structs don't seem to get along with the __packed directive;
-- * if they did we'd define the version 0 struct as a sub-struct of this one.
-+ * if they did we'd define the version 0 structure as a sub-structure of this
-+ * one.
-+ *
-+ * Version 2 supports flash banks of different sizes:
-+ * The caller specified the number of banks it has preallocated
-+ * (num_banks_desc)
-+ * The EC returns the number of banks describing the flash memory.
-+ * It adds banks descriptions up to num_banks_desc.
-  */
- struct ec_response_flash_info_1 {
- 	/* Version 0 fields; see above for description */
-@@ -926,14 +1449,50 @@ struct ec_response_flash_info_1 {
- 	/* Version 1 adds these fields: */
- 	uint32_t write_ideal_size;
- 	uint32_t flags;
--} __packed;
-+} __ec_align4;
-+
-+struct ec_params_flash_info_2 {
-+	/* Number of banks to describe */
-+	uint16_t num_banks_desc;
-+	/* Reserved; set 0; ignore on read */
-+	uint8_t reserved[2];
-+} __ec_align4;
-+
-+struct ec_flash_bank {
-+	/* Number of sector is in this bank. */
-+	uint16_t count;
-+	/* Size in power of 2 of each sector (8 --> 256 bytes) */
-+	uint8_t size_exp;
-+	/* Minimal write size for the sectors in this bank */
-+	uint8_t write_size_exp;
-+	/* Erase size for the sectors in this bank */
-+	uint8_t erase_size_exp;
-+	/* Size for write protection, usually identical to erase size. */
-+	uint8_t protect_size_exp;
-+	/* Reserved; set 0; ignore on read */
-+	uint8_t reserved[2];
-+};
-+
-+struct ec_response_flash_info_2 {
-+	/* Total flash in the EC. */
-+	uint32_t flash_size;
-+	/* Flags; see EC_FLASH_INFO_* */
-+	uint32_t flags;
-+	/* Maximum size to use to send data to write to the EC. */
-+	uint32_t write_ideal_size;
-+	/* Number of banks present in the EC. */
-+	uint16_t num_banks_total;
-+	/* Number of banks described in banks array. */
-+	uint16_t num_banks_desc;
-+	struct ec_flash_bank banks[0];
-+} __ec_align4;
-
- /*
-  * Read flash
-  *
-  * Response is params.size bytes of data.
-  */
--#define EC_CMD_FLASH_READ 0x11
-+#define EC_CMD_FLASH_READ 0x0011
-
- /**
-  * struct ec_params_flash_read - Parameters for the flash read command.
-@@ -943,10 +1502,10 @@ struct ec_response_flash_info_1 {
- struct ec_params_flash_read {
- 	uint32_t offset;
- 	uint32_t size;
--} __packed;
-+} __ec_align4;
-
- /* Write flash */
--#define EC_CMD_FLASH_WRITE 0x12
-+#define EC_CMD_FLASH_WRITE 0x0012
- #define EC_VER_FLASH_WRITE 1
-
- /* Version 0 of the flash command supported only 64 bytes of data */
-@@ -961,56 +1520,102 @@ struct ec_params_flash_write {
- 	uint32_t offset;
- 	uint32_t size;
- 	/* Followed by data to write */
--} __packed;
-+} __ec_align4;
-
- /* Erase flash */
--#define EC_CMD_FLASH_ERASE 0x13
-+#define EC_CMD_FLASH_ERASE 0x0013
-
- /**
-- * struct ec_params_flash_erase - Parameters for the flash erase command.
-+ * struct ec_params_flash_erase - Parameters for the flash erase command, v0.
-  * @offset: Byte offset to erase.
-  * @size: Size to erase in bytes.
-  */
- struct ec_params_flash_erase {
- 	uint32_t offset;
- 	uint32_t size;
--} __packed;
-+} __ec_align4;
-
- /*
-- * Get/set flash protection.
-- *
-- * If mask!=0, sets/clear the requested bits of flags.  Depending on the
-- * firmware write protect GPIO, not all flags will take effect immediately;
-- * some flags require a subsequent hard reset to take effect.  Check the
-- * returned flags bits to see what actually happened.
-+ * v1 add async erase:
-+ * subcommands can returns:
-+ * EC_RES_SUCCESS : erased (see ERASE_SECTOR_ASYNC case below).
-+ * EC_RES_INVALID_PARAM : offset/size are not aligned on a erase boundary.
-+ * EC_RES_ERROR : other errors.
-+ * EC_RES_BUSY : an existing erase operation is in progress.
-+ * EC_RES_ACCESS_DENIED: Trying to erase running image.
-+ *
-+ * When ERASE_SECTOR_ASYNC returns EC_RES_SUCCESS, the operation is just
-+ * properly queued. The user must call ERASE_GET_RESULT subcommand to get
-+ * the proper result.
-+ * When ERASE_GET_RESULT returns EC_RES_BUSY, the caller must wait and send
-+ * ERASE_GET_RESULT again to get the result of ERASE_SECTOR_ASYNC.
-+ * ERASE_GET_RESULT command may timeout on EC where flash access is not
-+ * permitted while erasing. (For instance, STM32F4).
-+ */
-+enum ec_flash_erase_cmd {
-+	FLASH_ERASE_SECTOR,     /* Erase and wait for result */
-+	FLASH_ERASE_SECTOR_ASYNC,  /* Erase and return immediately. */
-+	FLASH_ERASE_GET_RESULT,  /* Ask for last erase result */
-+};
-+
-+/**
-+ * struct ec_params_flash_erase_v1 - Parameters for the flash erase
-command, v1.
-+ * @cmd: One of ec_flash_erase_cmd.
-+ * @reserved: Pad byte; currently always contains 0.
-+ * @flag: No flags defined yet; set to 0.
-+ * @params: Same as v0 parameters.
-+ */
-+struct ec_params_flash_erase_v1 {
-+	uint8_t  cmd;
-+	uint8_t  reserved;
-+	uint16_t flag;
-+	struct ec_params_flash_erase params;
-+} __ec_align4;
-+
-+/*
-+ * Get/set flash protection.
-+ *
-+ * If mask!=0, sets/clear the requested bits of flags.  Depending on the
-+ * firmware write protect GPIO, not all flags will take effect immediately;
-+ * some flags require a subsequent hard reset to take effect.  Check the
-+ * returned flags bits to see what actually happened.
-  *
-  * If mask=0, simply returns the current flags state.
-  */
--#define EC_CMD_FLASH_PROTECT 0x15
-+#define EC_CMD_FLASH_PROTECT 0x0015
- #define EC_VER_FLASH_PROTECT 1  /* Command version 1 */
-
- /* Flags for flash protection */
- /* RO flash code protected when the EC boots */
--#define EC_FLASH_PROTECT_RO_AT_BOOT         (1 << 0)
-+#define EC_FLASH_PROTECT_RO_AT_BOOT         BIT(0)
- /*
-  * RO flash code protected now.  If this bit is set, at-boot status cannot
-  * be changed.
-  */
--#define EC_FLASH_PROTECT_RO_NOW             (1 << 1)
-+#define EC_FLASH_PROTECT_RO_NOW             BIT(1)
- /* Entire flash code protected now, until reboot. */
--#define EC_FLASH_PROTECT_ALL_NOW            (1 << 2)
-+#define EC_FLASH_PROTECT_ALL_NOW            BIT(2)
- /* Flash write protect GPIO is asserted now */
--#define EC_FLASH_PROTECT_GPIO_ASSERTED      (1 << 3)
-+#define EC_FLASH_PROTECT_GPIO_ASSERTED      BIT(3)
- /* Error - at least one bank of flash is stuck locked, and cannot be
-unlocked */
--#define EC_FLASH_PROTECT_ERROR_STUCK        (1 << 4)
-+#define EC_FLASH_PROTECT_ERROR_STUCK        BIT(4)
- /*
-  * Error - flash protection is in inconsistent state.  At least one bank of
-  * flash which should be protected is not protected.  Usually fixed by
-  * re-requesting the desired flags, or by a hard reset if that fails.
-  */
--#define EC_FLASH_PROTECT_ERROR_INCONSISTENT (1 << 5)
--/* Entile flash code protected when the EC boots */
--#define EC_FLASH_PROTECT_ALL_AT_BOOT        (1 << 6)
-+#define EC_FLASH_PROTECT_ERROR_INCONSISTENT BIT(5)
-+/* Entire flash code protected when the EC boots */
-+#define EC_FLASH_PROTECT_ALL_AT_BOOT        BIT(6)
-+/* RW flash code protected when the EC boots */
-+#define EC_FLASH_PROTECT_RW_AT_BOOT         BIT(7)
-+/* RW flash code protected now. */
-+#define EC_FLASH_PROTECT_RW_NOW             BIT(8)
-+/* Rollback information flash region protected when the EC boots */
-+#define EC_FLASH_PROTECT_ROLLBACK_AT_BOOT   BIT(9)
-+/* Rollback information flash region protected now */
-+#define EC_FLASH_PROTECT_ROLLBACK_NOW       BIT(10)
-+
-
- /**
-  * struct ec_params_flash_protect - Parameters for the flash protect command.
-@@ -1020,7 +1625,7 @@ struct ec_params_flash_erase {
- struct ec_params_flash_protect {
- 	uint32_t mask;
- 	uint32_t flags;
--} __packed;
-+} __ec_align4;
-
- /**
-  * struct ec_response_flash_protect - Response to the flash protect command.
-@@ -1035,7 +1640,7 @@ struct ec_response_flash_protect {
- 	uint32_t flags;
- 	uint32_t valid_flags;
- 	uint32_t writable_flags;
--} __packed;
-+} __ec_align4;
-
- /*
-  * Note: commands 0x14 - 0x19 version 0 were old commands to get/set flash
-@@ -1043,22 +1648,37 @@ struct ec_response_flash_protect {
-  */
-
- /* Get the region offset/size */
--#define EC_CMD_FLASH_REGION_INFO 0x16
-+#define EC_CMD_FLASH_REGION_INFO 0x0016
- #define EC_VER_FLASH_REGION_INFO 1
-
- enum ec_flash_region {
- 	/* Region which holds read-only EC image */
- 	EC_FLASH_REGION_RO = 0,
--	/* Region which holds rewritable EC image */
--	EC_FLASH_REGION_RW,
-+	/*
-+	 * Region which holds active RW image. 'Active' is different from
-+	 * 'running'. Active means 'scheduled-to-run'. Since RO image always
-+	 * scheduled to run, active/non-active applies only to RW images (for
-+	 * the same reason 'update' applies only to RW images. It's a state of
-+	 * an image on a flash. Running image can be RO, RW_A, RW_B but active
-+	 * image can only be RW_A or RW_B. In recovery mode, an active RW image
-+	 * doesn't enter 'running' state but it's still active on a flash.
-+	 */
-+	EC_FLASH_REGION_ACTIVE,
- 	/*
- 	 * Region which should be write-protected in the factory (a superset of
- 	 * EC_FLASH_REGION_RO)
- 	 */
- 	EC_FLASH_REGION_WP_RO,
-+	/* Region which holds updatable (non-active) RW image */
-+	EC_FLASH_REGION_UPDATE,
- 	/* Number of regions */
- 	EC_FLASH_REGION_COUNT,
- };
-+/*
-+ * 'RW' is vague if there are multiple RW images; we mean the active one,
-+ * so the old constant is deprecated.
-+ */
-+#define EC_FLASH_REGION_RW EC_FLASH_REGION_ACTIVE
-
- /**
-  * struct ec_params_flash_region_info - Parameters for the flash region info
-@@ -1067,15 +1687,15 @@ enum ec_flash_region {
-  */
- struct ec_params_flash_region_info {
- 	uint32_t region;
--} __packed;
-+} __ec_align4;
-
- struct ec_response_flash_region_info {
- 	uint32_t offset;
- 	uint32_t size;
--} __packed;
-+} __ec_align4;
-
- /* Read/write VbNvContext */
--#define EC_CMD_VBNV_CONTEXT 0x17
-+#define EC_CMD_VBNV_CONTEXT 0x0017
- #define EC_VER_VBNV_CONTEXT 1
- #define EC_VBNV_BLOCK_SIZE 16
-
-@@ -1087,52 +1707,99 @@ enum ec_vbnvcontext_op {
- struct ec_params_vbnvcontext {
- 	uint32_t op;
- 	uint8_t block[EC_VBNV_BLOCK_SIZE];
--} __packed;
-+} __ec_align4;
-
- struct ec_response_vbnvcontext {
- 	uint8_t block[EC_VBNV_BLOCK_SIZE];
--} __packed;
-+} __ec_align4;
-+
-+
-+/* Get SPI flash information */
-+#define EC_CMD_FLASH_SPI_INFO 0x0018
-+
-+struct ec_response_flash_spi_info {
-+	/* JEDEC info from command 0x9F (manufacturer, memory type, size) */
-+	uint8_t jedec[3];
-+
-+	/* Pad byte; currently always contains 0 */
-+	uint8_t reserved0;
-+
-+	/* Manufacturer / device ID from command 0x90 */
-+	uint8_t mfr_dev_id[2];
-+
-+	/* Status registers from command 0x05 and 0x35 */
-+	uint8_t sr1, sr2;
-+} __ec_align1;
-+
-+
-+/* Select flash during flash operations */
-+#define EC_CMD_FLASH_SELECT 0x0019
-+
-+/**
-+ * struct ec_params_flash_select - Parameters for the flash select command.
-+ * @select: 1 to select flash, 0 to deselect flash
-+ */
-+struct ec_params_flash_select {
-+	uint8_t select;
-+} __ec_align4;
-+
-
- /*****************************************************************************/
- /* PWM commands */
-
- /* Get fan target RPM */
--#define EC_CMD_PWM_GET_FAN_TARGET_RPM 0x20
-+#define EC_CMD_PWM_GET_FAN_TARGET_RPM 0x0020
-
- struct ec_response_pwm_get_fan_rpm {
- 	uint32_t rpm;
--} __packed;
-+} __ec_align4;
-
- /* Set target fan RPM */
--#define EC_CMD_PWM_SET_FAN_TARGET_RPM 0x21
-+#define EC_CMD_PWM_SET_FAN_TARGET_RPM 0x0021
-+
-+/* Version 0 of input params */
-+struct ec_params_pwm_set_fan_target_rpm_v0 {
-+	uint32_t rpm;
-+} __ec_align4;
-
--struct ec_params_pwm_set_fan_target_rpm {
-+/* Version 1 of input params */
-+struct ec_params_pwm_set_fan_target_rpm_v1 {
- 	uint32_t rpm;
--} __packed;
-+	uint8_t fan_idx;
-+} __ec_align_size1;
-
- /* Get keyboard backlight */
--#define EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT 0x22
-+/* OBSOLETE - Use EC_CMD_PWM_SET_DUTY */
-+#define EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT 0x0022
-
- struct ec_response_pwm_get_keyboard_backlight {
- 	uint8_t percent;
- 	uint8_t enabled;
--} __packed;
-+} __ec_align1;
-
- /* Set keyboard backlight */
--#define EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT 0x23
-+/* OBSOLETE - Use EC_CMD_PWM_SET_DUTY */
-+#define EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT 0x0023
-
- struct ec_params_pwm_set_keyboard_backlight {
- 	uint8_t percent;
--} __packed;
-+} __ec_align1;
-
- /* Set target fan PWM duty cycle */
--#define EC_CMD_PWM_SET_FAN_DUTY 0x24
-+#define EC_CMD_PWM_SET_FAN_DUTY 0x0024
-+
-+/* Version 0 of input params */
-+struct ec_params_pwm_set_fan_duty_v0 {
-+	uint32_t percent;
-+} __ec_align4;
-
--struct ec_params_pwm_set_fan_duty {
-+/* Version 1 of input params */
-+struct ec_params_pwm_set_fan_duty_v1 {
- 	uint32_t percent;
--} __packed;
-+	uint8_t fan_idx;
-+} __ec_align_size1;
-
--#define EC_CMD_PWM_SET_DUTY 0x25
-+#define EC_CMD_PWM_SET_DUTY 0x0025
- /* 16 bit duty cycle, 0xffff = 100% */
- #define EC_PWM_MAX_DUTY 0xffff
-
-@@ -1150,18 +1817,18 @@ struct ec_params_pwm_set_duty {
- 	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
- 	uint8_t pwm_type;  /* ec_pwm_type */
- 	uint8_t index;     /* Type-specific index, or 0 if unique */
--} __packed;
-+} __ec_align4;
-
--#define EC_CMD_PWM_GET_DUTY 0x26
-+#define EC_CMD_PWM_GET_DUTY 0x0026
-
- struct ec_params_pwm_get_duty {
- 	uint8_t pwm_type;  /* ec_pwm_type */
- 	uint8_t index;     /* Type-specific index, or 0 if unique */
--} __packed;
-+} __ec_align1;
-
- struct ec_response_pwm_get_duty {
- 	uint16_t duty;     /* Duty cycle, EC_PWM_MAX_DUTY = 100% */
--} __packed;
-+} __ec_align2;
-
- /*****************************************************************************/
- /*
-@@ -1170,11 +1837,11 @@ struct ec_response_pwm_get_duty {
-  * into a subcommand. We'll make separate structs for subcommands with
-  * different input args, so that we know how much to expect.
-  */
--#define EC_CMD_LIGHTBAR_CMD 0x28
-+#define EC_CMD_LIGHTBAR_CMD 0x0028
-
- struct rgb_s {
- 	uint8_t r, g, b;
--};
-+} __ec_todo_unpacked;
-
- #define LB_BATTERY_LEVELS 4
-
-@@ -1214,7 +1881,7 @@ struct lightbar_params_v0 {
-
- 	/* Color palette */
- 	struct rgb_s color[8];			/* 0-3 are Google colors */
--} __packed;
-+} __ec_todo_packed;
-
- struct lightbar_params_v1 {
- 	/* Timing */
-@@ -1227,9 +1894,72 @@ struct lightbar_params_v1 {
- 	int32_t s3_sleep_for;
- 	int32_t s3_ramp_up;
- 	int32_t s3_ramp_down;
-+	int32_t s5_ramp_up;
-+	int32_t s5_ramp_down;
-+	int32_t tap_tick_delay;
-+	int32_t tap_gate_delay;
-+	int32_t tap_display_time;
-+
-+	/* Tap-for-battery params */
-+	uint8_t tap_pct_red;
-+	uint8_t tap_pct_green;
-+	uint8_t tap_seg_min_on;
-+	uint8_t tap_seg_max_on;
-+	uint8_t tap_seg_osc;
-+	uint8_t tap_idx[3];
-+
-+	/* Oscillation */
-+	uint8_t osc_min[2];			/* AC=0/1 */
-+	uint8_t osc_max[2];			/* AC=0/1 */
-+	uint8_t w_ofs[2];			/* AC=0/1 */
-+
-+	/* Brightness limits based on the backlight and AC. */
-+	uint8_t bright_bl_off_fixed[2];		/* AC=0/1 */
-+	uint8_t bright_bl_on_min[2];		/* AC=0/1 */
-+	uint8_t bright_bl_on_max[2];		/* AC=0/1 */
-+
-+	/* Battery level thresholds */
-+	uint8_t battery_threshold[LB_BATTERY_LEVELS - 1];
-+
-+	/* Map [AC][battery_level] to color index */
-+	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
-+	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
-+
-+	/* s5: single color pulse on inhibited power-up */
-+	uint8_t s5_idx;
-+
-+	/* Color palette */
-+	struct rgb_s color[8];			/* 0-3 are Google colors */
-+} __ec_todo_packed;
-+
-+/* Lightbar command params v2
-+ * crbug.com/467716
-+ *
-+ * lightbar_parms_v1 was too big for i2c, therefore in v2, we split them up by
-+ * logical groups to make it more manageable ( < 120 bytes).
-+ *
-+ * NOTE: Each of these groups must be less than 120 bytes.
-+ */
-+
-+struct lightbar_params_v2_timing {
-+	/* Timing */
-+	int32_t google_ramp_up;
-+	int32_t google_ramp_down;
-+	int32_t s3s0_ramp_up;
-+	int32_t s0_tick_delay[2];		/* AC=0/1 */
-+	int32_t s0a_tick_delay[2];		/* AC=0/1 */
-+	int32_t s0s3_ramp_down;
-+	int32_t s3_sleep_for;
-+	int32_t s3_ramp_up;
-+	int32_t s3_ramp_down;
-+	int32_t s5_ramp_up;
-+	int32_t s5_ramp_down;
- 	int32_t tap_tick_delay;
-+	int32_t tap_gate_delay;
- 	int32_t tap_display_time;
-+} __ec_todo_packed;
-
-+struct lightbar_params_v2_tap {
- 	/* Tap-for-battery params */
- 	uint8_t tap_pct_red;
- 	uint8_t tap_pct_green;
-@@ -1237,102 +1967,140 @@ struct lightbar_params_v1 {
- 	uint8_t tap_seg_max_on;
- 	uint8_t tap_seg_osc;
- 	uint8_t tap_idx[3];
-+} __ec_todo_packed;
-
-+struct lightbar_params_v2_oscillation {
- 	/* Oscillation */
- 	uint8_t osc_min[2];			/* AC=0/1 */
- 	uint8_t osc_max[2];			/* AC=0/1 */
- 	uint8_t w_ofs[2];			/* AC=0/1 */
-+} __ec_todo_packed;
-
-+struct lightbar_params_v2_brightness {
- 	/* Brightness limits based on the backlight and AC. */
- 	uint8_t bright_bl_off_fixed[2];		/* AC=0/1 */
- 	uint8_t bright_bl_on_min[2];		/* AC=0/1 */
- 	uint8_t bright_bl_on_max[2];		/* AC=0/1 */
-+} __ec_todo_packed;
-
-+struct lightbar_params_v2_thresholds {
- 	/* Battery level thresholds */
- 	uint8_t battery_threshold[LB_BATTERY_LEVELS - 1];
-+} __ec_todo_packed;
-
-+struct lightbar_params_v2_colors {
- 	/* Map [AC][battery_level] to color index */
- 	uint8_t s0_idx[2][LB_BATTERY_LEVELS];	/* AP is running */
- 	uint8_t s3_idx[2][LB_BATTERY_LEVELS];	/* AP is sleeping */
-
-+	/* s5: single color pulse on inhibited power-up */
-+	uint8_t s5_idx;
-+
- 	/* Color palette */
- 	struct rgb_s color[8];			/* 0-3 are Google colors */
--} __packed;
-+} __ec_todo_packed;
-
--/* Lightbar program */
-+/* Lightbyte program. */
- #define EC_LB_PROG_LEN 192
- struct lightbar_program {
- 	uint8_t size;
- 	uint8_t data[EC_LB_PROG_LEN];
--};
-+} __ec_todo_unpacked;
-
- struct ec_params_lightbar {
- 	uint8_t cmd;		      /* Command (see enum lightbar_command) */
- 	union {
--		struct {
--			/* no args */
--		} dump, off, on, init, get_seq, get_params_v0, get_params_v1,
--			version, get_brightness, get_demo, suspend, resume;
-+		/*
-+		 * The following commands have no args:
-+		 *
-+		 * dump, off, on, init, get_seq, get_params_v0, get_params_v1,
-+		 * version, get_brightness, get_demo, suspend, resume,
-+		 * get_params_v2_timing, get_params_v2_tap, get_params_v2_osc,
-+		 * get_params_v2_bright, get_params_v2_thlds,
-+		 * get_params_v2_colors
-+		 *
-+		 * Don't use an empty struct, because C++ hates that.
-+		 */
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t num;
- 		} set_brightness, seq, demo;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t ctrl, reg, value;
- 		} reg;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t led, red, green, blue;
- 		} set_rgb;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t led;
- 		} get_rgb;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t enable;
- 		} manual_suspend_ctrl;
-
- 		struct lightbar_params_v0 set_params_v0;
- 		struct lightbar_params_v1 set_params_v1;
-+
-+		struct lightbar_params_v2_timing set_v2par_timing;
-+		struct lightbar_params_v2_tap set_v2par_tap;
-+		struct lightbar_params_v2_oscillation set_v2par_osc;
-+		struct lightbar_params_v2_brightness set_v2par_bright;
-+		struct lightbar_params_v2_thresholds set_v2par_thlds;
-+		struct lightbar_params_v2_colors set_v2par_colors;
-+
- 		struct lightbar_program set_program;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_response_lightbar {
- 	union {
--		struct {
--			struct {
-+		struct __ec_todo_unpacked {
-+			struct __ec_todo_unpacked {
- 				uint8_t reg;
- 				uint8_t ic0;
- 				uint8_t ic1;
- 			} vals[23];
- 		} dump;
-
--		struct  {
-+		struct __ec_todo_unpacked {
- 			uint8_t num;
- 		} get_seq, get_brightness, get_demo;
-
- 		struct lightbar_params_v0 get_params_v0;
- 		struct lightbar_params_v1 get_params_v1;
-
--		struct {
-+
-+		struct lightbar_params_v2_timing get_params_v2_timing;
-+		struct lightbar_params_v2_tap get_params_v2_tap;
-+		struct lightbar_params_v2_oscillation get_params_v2_osc;
-+		struct lightbar_params_v2_brightness get_params_v2_bright;
-+		struct lightbar_params_v2_thresholds get_params_v2_thlds;
-+		struct lightbar_params_v2_colors get_params_v2_colors;
-+
-+		struct __ec_todo_unpacked {
- 			uint32_t num;
- 			uint32_t flags;
- 		} version;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t red, green, blue;
- 		} get_rgb;
-
--		struct {
--			/* no return params */
--		} off, on, init, set_brightness, seq, reg, set_rgb,
--			demo, set_params_v0, set_params_v1,
--			set_program, manual_suspend_ctrl, suspend, resume;
-+		/*
-+		 * The following commands have no response:
-+		 *
-+		 * off, on, init, set_brightness, seq, reg, set_rgb, demo,
-+		 * set_params_v0, set_params_v1, set_program,
-+		 * manual_suspend_ctrl, suspend, resume, set_v2par_timing,
-+		 * set_v2par_tap, set_v2par_osc, set_v2par_bright,
-+		 * set_v2par_thlds, set_v2par_colors
-+		 */
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- /* Lightbar commands */
- enum lightbar_command {
-@@ -1358,13 +2126,25 @@ enum lightbar_command {
- 	LIGHTBAR_CMD_MANUAL_SUSPEND_CTRL = 19,
- 	LIGHTBAR_CMD_SUSPEND = 20,
- 	LIGHTBAR_CMD_RESUME = 21,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_TIMING = 22,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_TIMING = 23,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_TAP = 24,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_TAP = 25,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_OSCILLATION = 26,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_OSCILLATION = 27,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_BRIGHTNESS = 28,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_BRIGHTNESS = 29,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_THRESHOLDS = 30,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_THRESHOLDS = 31,
-+	LIGHTBAR_CMD_GET_PARAMS_V2_COLORS = 32,
-+	LIGHTBAR_CMD_SET_PARAMS_V2_COLORS = 33,
- 	LIGHTBAR_NUM_CMDS
- };
-
- /*****************************************************************************/
- /* LED control commands */
-
--#define EC_CMD_LED_CONTROL 0x29
-+#define EC_CMD_LED_CONTROL 0x0029
-
- enum ec_led_id {
- 	/* LED to indicate battery state of charge */
-@@ -1376,13 +2156,21 @@ enum ec_led_id {
- 	EC_LED_ID_POWER_LED,
- 	/* LED on power adapter or its plug */
- 	EC_LED_ID_ADAPTER_LED,
-+	/* LED to indicate left side */
-+	EC_LED_ID_LEFT_LED,
-+	/* LED to indicate right side */
-+	EC_LED_ID_RIGHT_LED,
-+	/* LED to indicate recovery mode with HW_REINIT */
-+	EC_LED_ID_RECOVERY_HW_REINIT_LED,
-+	/* LED to indicate sysrq debug mode. */
-+	EC_LED_ID_SYSRQ_DEBUG_LED,
-
- 	EC_LED_ID_COUNT
- };
-
- /* LED control flags */
--#define EC_LED_FLAGS_QUERY (1 << 0) /* Query LED capability only */
--#define EC_LED_FLAGS_AUTO  (1 << 1) /* Switch LED back to automatic control */
-+#define EC_LED_FLAGS_QUERY BIT(0) /* Query LED capability only */
-+#define EC_LED_FLAGS_AUTO  BIT(1) /* Switch LED back to automatic control */
-
- enum ec_led_colors {
- 	EC_LED_COLOR_RED = 0,
-@@ -1390,6 +2178,7 @@ enum ec_led_colors {
- 	EC_LED_COLOR_BLUE,
- 	EC_LED_COLOR_YELLOW,
- 	EC_LED_COLOR_WHITE,
-+	EC_LED_COLOR_AMBER,
-
- 	EC_LED_COLOR_COUNT
- };
-@@ -1399,7 +2188,7 @@ struct ec_params_led_control {
- 	uint8_t flags;      /* Control flags */
-
- 	uint8_t brightness[EC_LED_COLOR_COUNT];
--} __packed;
-+} __ec_align1;
-
- struct ec_response_led_control {
- 	/*
-@@ -1410,7 +2199,7 @@ struct ec_response_led_control {
- 	 * Other values means the LED is control by PWM.
- 	 */
- 	uint8_t brightness_range[EC_LED_COLOR_COUNT];
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* Verified boot commands */
-@@ -1421,7 +2210,7 @@ struct ec_response_led_control {
-  */
-
- /* Verified boot hash command */
--#define EC_CMD_VBOOT_HASH 0x2A
-+#define EC_CMD_VBOOT_HASH 0x002A
-
- struct ec_params_vboot_hash {
- 	uint8_t cmd;             /* enum ec_vboot_hash_cmd */
-@@ -1431,7 +2220,7 @@ struct ec_params_vboot_hash {
- 	uint32_t offset;         /* Offset in flash to hash */
- 	uint32_t size;           /* Number of bytes to hash */
- 	uint8_t nonce_data[64];  /* Nonce data; ignored if nonce_size=0 */
--} __packed;
-+} __ec_align4;
-
- struct ec_response_vboot_hash {
- 	uint8_t status;          /* enum ec_vboot_hash_status */
-@@ -1441,7 +2230,7 @@ struct ec_response_vboot_hash {
- 	uint32_t offset;         /* Offset in flash which was hashed */
- 	uint32_t size;           /* Number of bytes hashed */
- 	uint8_t hash_digest[64]; /* Hash digest data */
--} __packed;
-+} __ec_align4;
-
- enum ec_vboot_hash_cmd {
- 	EC_VBOOT_HASH_GET = 0,       /* Get current hash status */
-@@ -1465,15 +2254,22 @@ enum ec_vboot_hash_status {
-  * If one of these is specified, the EC will automatically update offset and
-  * size to the correct values for the specified image (RO or RW).
-  */
--#define EC_VBOOT_HASH_OFFSET_RO 0xfffffffe
--#define EC_VBOOT_HASH_OFFSET_RW 0xfffffffd
-+#define EC_VBOOT_HASH_OFFSET_RO		0xfffffffe
-+#define EC_VBOOT_HASH_OFFSET_ACTIVE	0xfffffffd
-+#define EC_VBOOT_HASH_OFFSET_UPDATE	0xfffffffc
-+
-+/*
-+ * 'RW' is vague if there are multiple RW images; we mean the active one,
-+ * so the old constant is deprecated.
-+ */
-+#define EC_VBOOT_HASH_OFFSET_RW EC_VBOOT_HASH_OFFSET_ACTIVE
-
- /*****************************************************************************/
- /*
-  * Motion sense commands. We'll make separate structs for sub-commands with
-  * different input args, so that we know how much to expect.
-  */
--#define EC_CMD_MOTION_SENSE_CMD 0x2B
-+#define EC_CMD_MOTION_SENSE_CMD 0x002B
-
- /* Motion sense commands */
- enum motionsense_command {
-@@ -1492,7 +2288,13 @@ enum motionsense_command {
-
- 	/*
- 	 * EC Rate command is a setter/getter command for the EC sampling rate
--	 * of all motion sensors in milliseconds.
-+	 * in milliseconds.
-+	 * It is per sensor, the EC run sample task  at the minimum of all
-+	 * sensors EC_RATE.
-+	 * For sensors without hardware FIFO, EC_RATE should be equals to 1/ODR
-+	 * to collect all the sensor samples.
-+	 * For sensor with hardware FIFO, EC_RATE is used as the maximal delay
-+	 * to process of all motion sensors in milliseconds.
- 	 */
- 	MOTIONSENSE_CMD_EC_RATE = 2,
-
-@@ -1523,32 +2325,76 @@ enum motionsense_command {
- 	MOTIONSENSE_CMD_DATA = 6,
-
- 	/*
--	 * Perform low level calibration.. On sensors that support it, ask to
--	 * do offset calibration.
-+	 * Return sensor fifo info.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_INFO = 7,
-+
-+	/*
-+	 * Insert a flush element in the fifo and return sensor fifo info.
-+	 * The host can use that element to synchronize its operation.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_FLUSH = 8,
-+
-+	/*
-+	 * Return a portion of the fifo.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_READ = 9,
-+
-+	/*
-+	 * Perform low level calibration.
-+	 * On sensors that support it, ask to do offset calibration.
- 	 */
- 	MOTIONSENSE_CMD_PERFORM_CALIB = 10,
-
- 	/*
--	 * Sensor Offset command is a setter/getter command for the offset used
--	 * for calibration. The offsets can be calculated by the host, or via
-+	 * Sensor Offset command is a setter/getter command for the offset
-+	 * used for calibration.
-+	 * The offsets can be calculated by the host, or via
- 	 * PERFORM_CALIB command.
- 	 */
- 	MOTIONSENSE_CMD_SENSOR_OFFSET = 11,
-
--	/* Number of motionsense sub-commands. */
--	MOTIONSENSE_NUM_CMDS
--};
-+	/*
-+	 * List available activities for a MOTION sensor.
-+	 * Indicates if they are enabled or disabled.
-+	 */
-+	MOTIONSENSE_CMD_LIST_ACTIVITIES = 12,
-+
-+	/*
-+	 * Activity management
-+	 * Enable/Disable activity recognition.
-+	 */
-+	MOTIONSENSE_CMD_SET_ACTIVITY = 13,
-
--enum motionsensor_id {
--	EC_MOTION_SENSOR_ACCEL_BASE = 0,
--	EC_MOTION_SENSOR_ACCEL_LID = 1,
--	EC_MOTION_SENSOR_GYRO = 2,
-+	/*
-+	 * Lid Angle
-+	 */
-+	MOTIONSENSE_CMD_LID_ANGLE = 14,
-+
-+	/*
-+	 * Allow the FIFO to trigger interrupt via MKBP events.
-+	 * By default the FIFO does not send interrupt to process the FIFO
-+	 * until the AP is ready or it is coming from a wakeup sensor.
-+	 */
-+	MOTIONSENSE_CMD_FIFO_INT_ENABLE = 15,
-+
-+	/*
-+	 * Spoof the readings of the sensors.  The spoofed readings can be set
-+	 * to arbitrary values, or will lock to the last read actual values.
-+	 */
-+	MOTIONSENSE_CMD_SPOOF = 16,
-+
-+	/* Set lid angle for tablet mode detection. */
-+	MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE = 17,
-
- 	/*
--	 * Note, if more sensors are added and this count changes, the padding
--	 * in ec_response_motion_sense dump command must be modified.
-+	 * Sensor Scale command is a setter/getter command for the calibration
-+	 * scale.
- 	 */
--	EC_MOTION_SENSOR_COUNT = 3
-+	MOTIONSENSE_CMD_SENSOR_SCALE = 18,
-+
-+	/* Number of motionsense sub-commands. */
-+	MOTIONSENSE_NUM_CMDS
- };
-
- /* List of motion sensor types. */
-@@ -1560,6 +2406,7 @@ enum motionsensor_type {
- 	MOTIONSENSE_TYPE_LIGHT = 4,
- 	MOTIONSENSE_TYPE_ACTIVITY = 5,
- 	MOTIONSENSE_TYPE_BARO = 6,
-+	MOTIONSENSE_TYPE_SYNC = 7,
- 	MOTIONSENSE_TYPE_MAX,
- };
-
-@@ -1567,19 +2414,115 @@ enum motionsensor_type {
- enum motionsensor_location {
- 	MOTIONSENSE_LOC_BASE = 0,
- 	MOTIONSENSE_LOC_LID = 1,
-+	MOTIONSENSE_LOC_CAMERA = 2,
- 	MOTIONSENSE_LOC_MAX,
- };
-
- /* List of motion sensor chips. */
- enum motionsensor_chip {
- 	MOTIONSENSE_CHIP_KXCJ9 = 0,
-+	MOTIONSENSE_CHIP_LSM6DS0 = 1,
-+	MOTIONSENSE_CHIP_BMI160 = 2,
-+	MOTIONSENSE_CHIP_SI1141 = 3,
-+	MOTIONSENSE_CHIP_SI1142 = 4,
-+	MOTIONSENSE_CHIP_SI1143 = 5,
-+	MOTIONSENSE_CHIP_KX022 = 6,
-+	MOTIONSENSE_CHIP_L3GD20H = 7,
-+	MOTIONSENSE_CHIP_BMA255 = 8,
-+	MOTIONSENSE_CHIP_BMP280 = 9,
-+	MOTIONSENSE_CHIP_OPT3001 = 10,
-+	MOTIONSENSE_CHIP_BH1730 = 11,
-+	MOTIONSENSE_CHIP_GPIO = 12,
-+	MOTIONSENSE_CHIP_LIS2DH = 13,
-+	MOTIONSENSE_CHIP_LSM6DSM = 14,
-+	MOTIONSENSE_CHIP_LIS2DE = 15,
-+	MOTIONSENSE_CHIP_LIS2MDL = 16,
-+	MOTIONSENSE_CHIP_LSM6DS3 = 17,
-+	MOTIONSENSE_CHIP_LSM6DSO = 18,
-+	MOTIONSENSE_CHIP_MAX,
-+};
-+
-+/* List of orientation positions */
-+enum motionsensor_orientation {
-+	MOTIONSENSE_ORIENTATION_LANDSCAPE = 0,
-+	MOTIONSENSE_ORIENTATION_PORTRAIT = 1,
-+	MOTIONSENSE_ORIENTATION_UPSIDE_DOWN_PORTRAIT = 2,
-+	MOTIONSENSE_ORIENTATION_UPSIDE_DOWN_LANDSCAPE = 3,
-+	MOTIONSENSE_ORIENTATION_UNKNOWN = 4,
-+};
-+
-+struct ec_response_motion_sensor_data {
-+	/* Flags for each sensor. */
-+	uint8_t flags;
-+	/* sensor number the data comes from */
-+	uint8_t sensor_num;
-+	/* Each sensor is up to 3-axis. */
-+	union {
-+		int16_t             data[3];
-+		struct __ec_todo_packed {
-+			uint16_t    reserved;
-+			uint32_t    timestamp;
-+		};
-+		struct __ec_todo_unpacked {
-+			uint8_t     activity; /* motionsensor_activity */
-+			uint8_t     state;
-+			int16_t     add_info[2];
-+		};
-+	};
-+} __ec_todo_packed;
-+
-+/* Note: used in ec_response_get_next_data */
-+struct ec_response_motion_sense_fifo_info {
-+	/* Size of the fifo */
-+	uint16_t size;
-+	/* Amount of space used in the fifo */
-+	uint16_t count;
-+	/* Timestamp recorded in us.
-+	 * aka accurate timestamp when host event was triggered.
-+	 */
-+	uint32_t timestamp;
-+	/* Total amount of vector lost */
-+	uint16_t total_lost;
-+	/* Lost events since the last fifo_info, per sensors */
-+	uint16_t lost[0];
-+} __ec_todo_packed;
-+
-+struct ec_response_motion_sense_fifo_data {
-+	uint32_t number_data;
-+	struct ec_response_motion_sensor_data data[0];
-+} __ec_todo_packed;
-+
-+/* List supported activity recognition */
-+enum motionsensor_activity {
-+	MOTIONSENSE_ACTIVITY_RESERVED = 0,
-+	MOTIONSENSE_ACTIVITY_SIG_MOTION = 1,
-+	MOTIONSENSE_ACTIVITY_DOUBLE_TAP = 2,
-+	MOTIONSENSE_ACTIVITY_ORIENTATION = 3,
- };
-
-+struct ec_motion_sense_activity {
-+	uint8_t sensor_num;
-+	uint8_t activity; /* one of enum motionsensor_activity */
-+	uint8_t enable;   /* 1: enable, 0: disable */
-+	uint8_t reserved;
-+	uint16_t parameters[3]; /* activity dependent parameters */
-+} __ec_todo_unpacked;
-+
- /* Module flag masks used for the dump sub-command. */
--#define MOTIONSENSE_MODULE_FLAG_ACTIVE (1<<0)
-+#define MOTIONSENSE_MODULE_FLAG_ACTIVE BIT(0)
-
- /* Sensor flag masks used for the dump sub-command. */
--#define MOTIONSENSE_SENSOR_FLAG_PRESENT (1<<0)
-+#define MOTIONSENSE_SENSOR_FLAG_PRESENT BIT(0)
-+
-+/*
-+ * Flush entry for synchronization.
-+ * data contains time stamp
-+ */
-+#define MOTIONSENSE_SENSOR_FLAG_FLUSH BIT(0)
-+#define MOTIONSENSE_SENSOR_FLAG_TIMESTAMP BIT(1)
-+#define MOTIONSENSE_SENSOR_FLAG_WAKEUP BIT(2)
-+#define MOTIONSENSE_SENSOR_FLAG_TABLET_MODE BIT(3)
-+#define MOTIONSENSE_SENSOR_FLAG_ODR BIT(4)
-
- /*
-  * Send this value for the data element to only perform a read. If you
-@@ -1590,48 +2533,79 @@ enum motionsensor_chip {
-
- #define EC_MOTION_SENSE_INVALID_CALIB_TEMP 0x8000
-
-+/* MOTIONSENSE_CMD_SENSOR_OFFSET subcommand flag */
- /* Set Calibration information */
--#define MOTION_SENSE_SET_OFFSET	1
-+#define MOTION_SENSE_SET_OFFSET BIT(0)
-
--struct ec_response_motion_sensor_data {
--	/* Flags for each sensor. */
--	uint8_t flags;
--	/* Sensor number the data comes from */
--	uint8_t sensor_num;
--	/* Each sensor is up to 3-axis. */
--	union {
--		int16_t             data[3];
--		struct {
--			uint16_t    rsvd;
--			uint32_t    timestamp;
--		} __packed;
--		struct {
--			uint8_t     activity; /* motionsensor_activity */
--			uint8_t     state;
--			int16_t     add_info[2];
--		};
--	};
--} __packed;
-+/* Default Scale value, factor 1. */
-+#define MOTION_SENSE_DEFAULT_SCALE BIT(15)
-+
-+#define LID_ANGLE_UNRELIABLE 500
-+
-+enum motionsense_spoof_mode {
-+	/* Disable spoof mode. */
-+	MOTIONSENSE_SPOOF_MODE_DISABLE = 0,
-+
-+	/* Enable spoof mode, but use provided component values. */
-+	MOTIONSENSE_SPOOF_MODE_CUSTOM,
-+
-+	/* Enable spoof mode, but use the current sensor values. */
-+	MOTIONSENSE_SPOOF_MODE_LOCK_CURRENT,
-+
-+	/* Query the current spoof mode status for the sensor. */
-+	MOTIONSENSE_SPOOF_MODE_QUERY,
-+};
-
- struct ec_params_motion_sense {
- 	uint8_t cmd;
- 	union {
--		/* Used for MOTIONSENSE_CMD_DUMP. */
--		struct {
--			/* no args */
-+		/* Used for MOTIONSENSE_CMD_DUMP */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Maximal number of sensor the host is expecting.
-+			 * 0 means the host is only interested in the number
-+			 * of sensors controlled by the EC.
-+			 */
-+			uint8_t max_sensor_count;
- 		} dump;
-
- 		/*
--		 * Used for MOTIONSENSE_CMD_EC_RATE and
--		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE.
-+		 * Used for MOTIONSENSE_CMD_KB_WAKE_ANGLE.
- 		 */
--		struct {
--			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
-+		struct __ec_todo_unpacked {
-+			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read.
-+			 * kb_wake_angle: angle to wakup AP.
-+			 */
- 			int16_t data;
--		} ec_rate, kb_wake_angle;
-+		} kb_wake_angle;
-+
-+		/*
-+		 * Used for MOTIONSENSE_CMD_INFO, MOTIONSENSE_CMD_DATA
-+		 * and MOTIONSENSE_CMD_PERFORM_CALIB.
-+		 */
-+		struct __ec_todo_unpacked {
-+			uint8_t sensor_num;
-+		} info, info_3, data, fifo_flush, perform_calib,
-+				list_activities;
-+
-+		/*
-+		 * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR
-+		 * and MOTIONSENSE_CMD_SENSOR_RANGE.
-+		 */
-+		struct __ec_todo_unpacked {
-+			uint8_t sensor_num;
-+
-+			/* Rounding flag, true for round-up, false for down. */
-+			uint8_t roundup;
-+
-+			uint16_t reserved;
-+
-+			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
-+			int32_t data;
-+		} ec_rate, sensor_odr, sensor_range;
-
- 		/* Used for MOTIONSENSE_CMD_SENSOR_OFFSET */
--		struct {
-+		struct __ec_todo_packed {
- 			uint8_t sensor_num;
-
- 			/*
-@@ -1657,51 +2631,117 @@ struct ec_params_motion_sense {
- 			 * Compass:       1/16 uT
- 			 */
- 			int16_t offset[3];
--		} __packed sensor_offset;
-+		} sensor_offset;
-
--		/* Used for MOTIONSENSE_CMD_INFO. */
--		struct {
-+		/* Used for MOTIONSENSE_CMD_SENSOR_SCALE */
-+		struct __ec_todo_packed {
- 			uint8_t sensor_num;
--		} info;
-
--		/*
--		 * Used for MOTIONSENSE_CMD_SENSOR_ODR and
--		 * MOTIONSENSE_CMD_SENSOR_RANGE.
--		 */
--		struct {
--			/* Should be element of enum motionsensor_id. */
--			uint8_t sensor_num;
-+			/*
-+			 * bit 0: If set (MOTION_SENSE_SET_OFFSET), set
-+			 * the calibration information in the EC.
-+			 * If unset, just retrieve calibration information.
-+			 */
-+			uint16_t flags;
-
--			/* Rounding flag, true for round-up, false for down. */
--			uint8_t roundup;
-+			/*
-+			 * Temperature at calibration, in units of 0.01 C
-+			 * 0x8000: invalid / unknown.
-+			 * 0x0: 0C
-+			 * 0x7fff: +327.67C
-+			 */
-+			int16_t temp;
-
--			uint16_t reserved;
-+			/*
-+			 * Scale for calibration:
-+			 * By default scale is 1, it is encoded on 16bits:
-+			 * 1 = BIT(15)
-+			 * ~2 = 0xFFFF
-+			 * ~0 = 0.
-+			 */
-+			uint16_t scale[3];
-+		} sensor_scale;
-
--			/* Data to set or EC_MOTION_SENSE_NO_VALUE to read. */
--			int32_t data;
--		} sensor_odr, sensor_range;
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_INFO */
-+		/* (no params) */
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_READ */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Number of expected vector to return.
-+			 * EC may return less or 0 if none available.
-+			 */
-+			uint32_t max_data_vector;
-+		} fifo_read;
-+
-+		struct ec_motion_sense_activity set_activity;
-+
-+		/* Used for MOTIONSENSE_CMD_LID_ANGLE */
-+		/* (no params) */
-+
-+		/* Used for MOTIONSENSE_CMD_FIFO_INT_ENABLE */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * 1: enable, 0 disable fifo,
-+			 * EC_MOTION_SENSE_NO_VALUE return value.
-+			 */
-+			int8_t enable;
-+		} fifo_int_enable;
-+
-+		/* Used for MOTIONSENSE_CMD_SPOOF */
-+		struct __ec_todo_packed {
-+			uint8_t sensor_id;
-+
-+			/* See enum motionsense_spoof_mode. */
-+			uint8_t spoof_enable;
-+
-+			/* Ignored, used for alignment. */
-+			uint8_t reserved;
-+
-+			/* Individual component values to spoof. */
-+			int16_t components[3];
-+		} spoof;
-+
-+		/* Used for MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE. */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Lid angle threshold for switching between tablet and
-+			 * clamshell mode.
-+			 */
-+			int16_t lid_angle;
-+
-+			/*
-+			 * Hysteresis degree to prevent fluctuations between
-+			 * clamshell and tablet mode if lid angle keeps
-+			 * changing around the threshold. Lid motion driver will
-+			 * use lid_angle + hys_degree to trigger tablet mode and
-+			 * lid_angle - hys_degree to trigger clamshell mode.
-+			 */
-+			int16_t hys_degree;
-+		} tablet_mode_threshold;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_response_motion_sense {
- 	union {
--		/* Used for MOTIONSENSE_CMD_DUMP. */
--		struct {
-+		/* Used for MOTIONSENSE_CMD_DUMP */
-+		struct __ec_todo_unpacked {
- 			/* Flags representing the motion sensor module. */
- 			uint8_t module_flags;
-
--			/* Number of sensors managed directly by the EC. */
-+			/* Number of sensors managed directly by the EC */
- 			uint8_t sensor_count;
-
- 			/*
--			 * Sensor data is truncated if response_max is too small
-+			 * sensor data is truncated if response_max is too small
- 			 * for holding all the data.
- 			 */
- 			struct ec_response_motion_sensor_data sensor[0];
- 		} dump;
-
- 		/* Used for MOTIONSENSE_CMD_INFO. */
--		struct {
-+		struct __ec_todo_unpacked {
- 			/* Should be element of enum motionsensor_type. */
- 			uint8_t type;
-
-@@ -1712,74 +2752,166 @@ struct ec_response_motion_sense {
- 			uint8_t chip;
- 		} info;
-
-+		/* Used for MOTIONSENSE_CMD_INFO version 3 */
-+		struct __ec_todo_unpacked {
-+			/* Should be element of enum motionsensor_type. */
-+			uint8_t type;
-+
-+			/* Should be element of enum motionsensor_location. */
-+			uint8_t location;
-+
-+			/* Should be element of enum motionsensor_chip. */
-+			uint8_t chip;
-+
-+			/* Minimum sensor sampling frequency */
-+			uint32_t min_frequency;
-+
-+			/* Maximum sensor sampling frequency */
-+			uint32_t max_frequency;
-+
-+			/* Max number of sensor events that could be in fifo */
-+			uint32_t fifo_max_event_count;
-+		} info_3;
-+
- 		/* Used for MOTIONSENSE_CMD_DATA */
- 		struct ec_response_motion_sensor_data data;
-
- 		/*
- 		 * Used for MOTIONSENSE_CMD_EC_RATE, MOTIONSENSE_CMD_SENSOR_ODR,
--		 * MOTIONSENSE_CMD_SENSOR_RANGE, and
--		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE.
-+		 * MOTIONSENSE_CMD_SENSOR_RANGE,
-+		 * MOTIONSENSE_CMD_KB_WAKE_ANGLE,
-+		 * MOTIONSENSE_CMD_FIFO_INT_ENABLE and
-+		 * MOTIONSENSE_CMD_SPOOF.
- 		 */
--		struct {
-+		struct __ec_todo_unpacked {
- 			/* Current value of the parameter queried. */
- 			int32_t ret;
--		} ec_rate, sensor_odr, sensor_range, kb_wake_angle;
-+		} ec_rate, sensor_odr, sensor_range, kb_wake_angle,
-+		  fifo_int_enable, spoof;
-
--		/* Used for MOTIONSENSE_CMD_SENSOR_OFFSET */
--		struct {
-+		/*
-+		 * Used for MOTIONSENSE_CMD_SENSOR_OFFSET,
-+		 * PERFORM_CALIB.
-+		 */
-+		struct __ec_todo_unpacked  {
- 			int16_t temp;
- 			int16_t offset[3];
- 		} sensor_offset, perform_calib;
--	};
--} __packed;
-
--/*****************************************************************************/
--/* USB charging control commands */
-+		/* Used for MOTIONSENSE_CMD_SENSOR_SCALE */
-+		struct __ec_todo_unpacked  {
-+			int16_t temp;
-+			uint16_t scale[3];
-+		} sensor_scale;
-
--/* Set USB port charging mode */
--#define EC_CMD_USB_CHARGE_SET_MODE 0x30
-+		struct ec_response_motion_sense_fifo_info fifo_info, fifo_flush;
-
--struct ec_params_usb_charge_set_mode {
--	uint8_t usb_port_id;
--	uint8_t mode;
--} __packed;
-+		struct ec_response_motion_sense_fifo_data fifo_read;
-
--/*****************************************************************************/
-+		struct __ec_todo_packed {
-+			uint16_t reserved;
-+			uint32_t enabled;
-+			uint32_t disabled;
-+		} list_activities;
-+
-+		/* No params for set activity */
-+
-+		/* Used for MOTIONSENSE_CMD_LID_ANGLE */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Angle between 0 and 360 degree if available,
-+			 * LID_ANGLE_UNRELIABLE otherwise.
-+			 */
-+			uint16_t value;
-+		} lid_angle;
-+
-+		/* Used for MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE. */
-+		struct __ec_todo_unpacked {
-+			/*
-+			 * Lid angle threshold for switching between tablet and
-+			 * clamshell mode.
-+			 */
-+			uint16_t lid_angle;
-+
-+			/* Hysteresis degree. */
-+			uint16_t hys_degree;
-+		} tablet_mode_threshold;
-+
-+	};
-+} __ec_todo_packed;
-+
-+/*****************************************************************************/
-+/* Force lid open command */
-+
-+/* Make lid event always open */
-+#define EC_CMD_FORCE_LID_OPEN 0x002C
-+
-+struct ec_params_force_lid_open {
-+	uint8_t enabled;
-+} __ec_align1;
-+
-+/*****************************************************************************/
-+/* Configure the behavior of the power button */
-+#define EC_CMD_CONFIG_POWER_BUTTON 0x002D
-+
-+enum ec_config_power_button_flags {
-+	/* Enable/Disable power button pulses for x86 devices */
-+	EC_POWER_BUTTON_ENABLE_PULSE = BIT(0),
-+};
-+
-+struct ec_params_config_power_button {
-+	/* See enum ec_config_power_button_flags */
-+	uint8_t flags;
-+} __ec_align1;
-+
-+/*****************************************************************************/
-+/* USB charging control commands */
-+
-+/* Set USB port charging mode */
-+#define EC_CMD_USB_CHARGE_SET_MODE 0x0030
-+
-+struct ec_params_usb_charge_set_mode {
-+	uint8_t usb_port_id;
-+	uint8_t mode:7;
-+	uint8_t inhibit_charge:1;
-+} __ec_align1;
-+
-+/*****************************************************************************/
- /* Persistent storage for host */
-
- /* Maximum bytes that can be read/written in a single command */
- #define EC_PSTORE_SIZE_MAX 64
-
- /* Get persistent storage info */
--#define EC_CMD_PSTORE_INFO 0x40
-+#define EC_CMD_PSTORE_INFO 0x0040
-
- struct ec_response_pstore_info {
- 	/* Persistent storage size, in bytes */
- 	uint32_t pstore_size;
- 	/* Access size; read/write offset and size must be a multiple of this */
- 	uint32_t access_size;
--} __packed;
-+} __ec_align4;
-
- /*
-  * Read persistent storage
-  *
-  * Response is params.size bytes of data.
-  */
--#define EC_CMD_PSTORE_READ 0x41
-+#define EC_CMD_PSTORE_READ 0x0041
-
- struct ec_params_pstore_read {
- 	uint32_t offset;   /* Byte offset to read */
- 	uint32_t size;     /* Size to read in bytes */
--} __packed;
-+} __ec_align4;
-
- /* Write persistent storage */
--#define EC_CMD_PSTORE_WRITE 0x42
-+#define EC_CMD_PSTORE_WRITE 0x0042
-
- struct ec_params_pstore_write {
- 	uint32_t offset;   /* Byte offset to write */
- 	uint32_t size;     /* Size to write in bytes */
- 	uint8_t data[EC_PSTORE_SIZE_MAX];
--} __packed;
-+} __ec_align4;
-
- /*****************************************************************************/
- /* Real-time clock */
-@@ -1787,21 +2919,21 @@ struct ec_params_pstore_write {
- /* RTC params and response structures */
- struct ec_params_rtc {
- 	uint32_t time;
--} __packed;
-+} __ec_align4;
-
- struct ec_response_rtc {
- 	uint32_t time;
--} __packed;
-+} __ec_align4;
-
- /* These use ec_response_rtc */
--#define EC_CMD_RTC_GET_VALUE 0x44
--#define EC_CMD_RTC_GET_ALARM 0x45
-+#define EC_CMD_RTC_GET_VALUE 0x0044
-+#define EC_CMD_RTC_GET_ALARM 0x0045
-
- /* These all use ec_params_rtc */
--#define EC_CMD_RTC_SET_VALUE 0x46
--#define EC_CMD_RTC_SET_ALARM 0x47
-+#define EC_CMD_RTC_SET_VALUE 0x0046
-+#define EC_CMD_RTC_SET_ALARM 0x0047
-
--/* Pass as param to SET_ALARM to clear the current alarm */
-+/* Pass as time param to SET_ALARM to clear the current alarm */
- #define EC_RTC_ALARM_CLEAR 0
-
- /*****************************************************************************/
-@@ -1811,8 +2943,8 @@ struct ec_response_rtc {
- #define EC_PORT80_SIZE_MAX 32
-
- /* Get last port80 code from previous boot */
--#define EC_CMD_PORT80_LAST_BOOT 0x48
--#define EC_CMD_PORT80_READ 0x48
-+#define EC_CMD_PORT80_LAST_BOOT 0x0048
-+#define EC_CMD_PORT80_READ 0x0048
-
- enum ec_port80_subcmd {
- 	EC_PORT80_GET_INFO = 0,
-@@ -1822,29 +2954,72 @@ enum ec_port80_subcmd {
- struct ec_params_port80_read {
- 	uint16_t subcmd;
- 	union {
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint32_t offset;
- 			uint32_t num_entries;
- 		} read_buffer;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_response_port80_read {
- 	union {
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint32_t writes;
- 			uint32_t history_size;
- 			uint32_t last_boot;
- 		} get_info;
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint16_t codes[EC_PORT80_SIZE_MAX];
- 		} data;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_response_port80_last_boot {
- 	uint16_t code;
--} __packed;
-+} __ec_align2;
-+
-+/*****************************************************************************/
-+/* Temporary secure storage for host verified boot use */
-+
-+/* Number of bytes in a vstore slot */
-+#define EC_VSTORE_SLOT_SIZE 64
-+
-+/* Maximum number of vstore slots */
-+#define EC_VSTORE_SLOT_MAX 32
-+
-+/* Get persistent storage info */
-+#define EC_CMD_VSTORE_INFO 0x0049
-+struct ec_response_vstore_info {
-+	/* Indicates which slots are locked */
-+	uint32_t slot_locked;
-+	/* Total number of slots available */
-+	uint8_t slot_count;
-+} __ec_align_size1;
-+
-+/*
-+ * Read temporary secure storage
-+ *
-+ * Response is EC_VSTORE_SLOT_SIZE bytes of data.
-+ */
-+#define EC_CMD_VSTORE_READ 0x004A
-+
-+struct ec_params_vstore_read {
-+	uint8_t slot; /* Slot to read from */
-+} __ec_align1;
-+
-+struct ec_response_vstore_read {
-+	uint8_t data[EC_VSTORE_SLOT_SIZE];
-+} __ec_align1;
-+
-+/*
-+ * Write temporary secure storage and lock it.
-+ */
-+#define EC_CMD_VSTORE_WRITE 0x004B
-+
-+struct ec_params_vstore_write {
-+	uint8_t slot; /* Slot to write to */
-+	uint8_t data[EC_VSTORE_SLOT_SIZE];
-+} __ec_align1;
-
- /*****************************************************************************/
- /* Thermal engine commands. Note that there are two implementations. We'll
-@@ -1853,8 +3028,8 @@ struct ec_response_port80_last_boot {
-  * Version 1 separates the CPU thermal limits from the fan control.
-  */
-
--#define EC_CMD_THERMAL_SET_THRESHOLD 0x50
--#define EC_CMD_THERMAL_GET_THRESHOLD 0x51
-+#define EC_CMD_THERMAL_SET_THRESHOLD 0x0050
-+#define EC_CMD_THERMAL_GET_THRESHOLD 0x0051
-
- /* The version 0 structs are opaque. You have to know what they are for
-  * the get/set commands to make any sense.
-@@ -1865,17 +3040,17 @@ struct ec_params_thermal_set_threshold {
- 	uint8_t sensor_type;
- 	uint8_t threshold_id;
- 	uint16_t value;
--} __packed;
-+} __ec_align2;
-
- /* Version 0 - get */
- struct ec_params_thermal_get_threshold {
- 	uint8_t sensor_type;
- 	uint8_t threshold_id;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_thermal_get_threshold {
- 	uint16_t value;
--} __packed;
-+} __ec_align2;
-
-
- /* The version 1 structs are visible. */
-@@ -1887,19 +3062,39 @@ enum ec_temp_thresholds {
- 	EC_TEMP_THRESH_COUNT
- };
-
--/* Thermal configuration for one temperature sensor. Temps are in degrees K.
-+/*
-+ * Thermal configuration for one temperature sensor. Temps are in degrees K.
-  * Zero values will be silently ignored by the thermal task.
-+ *
-+ * Set 'temp_host' value allows thermal task to trigger some event
-with 1 degree
-+ * hysteresis.
-+ * For example,
-+ *	temp_host[EC_TEMP_THRESH_HIGH] = 300 K
-+ *	temp_host_release[EC_TEMP_THRESH_HIGH] = 0 K
-+ * EC will throttle ap when temperature >= 301 K, and release throttling when
-+ * temperature <= 299 K.
-+ *
-+ * Set 'temp_host_release' value allows thermal task has a custom hysteresis.
-+ * For example,
-+ *	temp_host[EC_TEMP_THRESH_HIGH] = 300 K
-+ *	temp_host_release[EC_TEMP_THRESH_HIGH] = 295 K
-+ * EC will throttle ap when temperature >= 301 K, and release throttling when
-+ * temperature <= 294 K.
-+ *
-+ * Note that this structure is a sub-structure of
-+ * ec_params_thermal_set_threshold_v1, but maintains its alignment there.
-  */
- struct ec_thermal_config {
- 	uint32_t temp_host[EC_TEMP_THRESH_COUNT]; /* levels of hotness */
-+	uint32_t temp_host_release[EC_TEMP_THRESH_COUNT]; /* release levels */
- 	uint32_t temp_fan_off;		/* no active cooling needed */
- 	uint32_t temp_fan_max;		/* max active cooling needed */
--} __packed;
-+} __ec_align4;
-
- /* Version 1 - get config for one sensor. */
- struct ec_params_thermal_get_threshold_v1 {
- 	uint32_t sensor_num;
--} __packed;
-+} __ec_align4;
- /* This returns a struct ec_thermal_config */
-
- /* Version 1 - set config for one sensor.
-@@ -1907,51 +3102,82 @@ struct ec_params_thermal_get_threshold_v1 {
- struct ec_params_thermal_set_threshold_v1 {
- 	uint32_t sensor_num;
- 	struct ec_thermal_config cfg;
--} __packed;
-+} __ec_align4;
- /* This returns no data */
-
- /****************************************************************************/
-
- /* Toggle automatic fan control */
--#define EC_CMD_THERMAL_AUTO_FAN_CTRL 0x52
-+#define EC_CMD_THERMAL_AUTO_FAN_CTRL 0x0052
-
--/* Get TMP006 calibration data */
--#define EC_CMD_TMP006_GET_CALIBRATION 0x53
-+/* Version 1 of input params */
-+struct ec_params_auto_fan_ctrl_v1 {
-+	uint8_t fan_idx;
-+} __ec_align1;
-+
-+/* Get/Set TMP006 calibration data */
-+#define EC_CMD_TMP006_GET_CALIBRATION 0x0053
-+#define EC_CMD_TMP006_SET_CALIBRATION 0x0054
-+
-+/*
-+ * The original TMP006 calibration only needed four params, but now we need
-+ * more. Since the algorithm is nothing but magic numbers anyway, we'll leave
-+ * the params opaque. The v1 "get" response will include the algorithm number
-+ * and how many params it requires. That way we can change the EC code without
-+ * needing to update this file. We can also use a different algorithm on each
-+ * sensor.
-+ */
-
-+/* This is the same struct for both v0 and v1. */
- struct ec_params_tmp006_get_calibration {
- 	uint8_t index;
--} __packed;
-+} __ec_align1;
-
--struct ec_response_tmp006_get_calibration {
-+/* Version 0 */
-+struct ec_response_tmp006_get_calibration_v0 {
- 	float s0;
- 	float b0;
- 	float b1;
- 	float b2;
--} __packed;
-+} __ec_align4;
-
--/* Set TMP006 calibration data */
--#define EC_CMD_TMP006_SET_CALIBRATION 0x54
--
--struct ec_params_tmp006_set_calibration {
-+struct ec_params_tmp006_set_calibration_v0 {
- 	uint8_t index;
--	uint8_t reserved[3];  /* Reserved; set 0 */
-+	uint8_t reserved[3];
- 	float s0;
- 	float b0;
- 	float b1;
- 	float b2;
--} __packed;
-+} __ec_align4;
-+
-+/* Version 1 */
-+struct ec_response_tmp006_get_calibration_v1 {
-+	uint8_t algorithm;
-+	uint8_t num_params;
-+	uint8_t reserved[2];
-+	float val[0];
-+} __ec_align4;
-+
-+struct ec_params_tmp006_set_calibration_v1 {
-+	uint8_t index;
-+	uint8_t algorithm;
-+	uint8_t num_params;
-+	uint8_t reserved;
-+	float val[0];
-+} __ec_align4;
-+
-
- /* Read raw TMP006 data */
--#define EC_CMD_TMP006_GET_RAW 0x55
-+#define EC_CMD_TMP006_GET_RAW 0x0055
-
- struct ec_params_tmp006_get_raw {
- 	uint8_t index;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_tmp006_get_raw {
- 	int32_t t;  /* In 1/100 K */
- 	int32_t v;  /* In nV */
--};
-+} __ec_align4;
-
- /*****************************************************************************/
- /* MKBP - Matrix KeyBoard Protocol */
-@@ -1966,24 +3192,24 @@ struct ec_response_tmp006_get_raw {
-  * to obtain the instantaneous state, use EC_CMD_MKBP_INFO with the type
-  * EC_MKBP_INFO_CURRENT and event EC_MKBP_EVENT_KEY_MATRIX.
-  */
--#define EC_CMD_MKBP_STATE 0x60
-+#define EC_CMD_MKBP_STATE 0x0060
-
- /*
-  * Provide information about various MKBP things.  See enum ec_mkbp_info_type.
-  */
--#define EC_CMD_MKBP_INFO 0x61
-+#define EC_CMD_MKBP_INFO 0x0061
-
- struct ec_response_mkbp_info {
- 	uint32_t rows;
- 	uint32_t cols;
- 	/* Formerly "switches", which was 0. */
- 	uint8_t reserved;
--} __packed;
-+} __ec_align_size1;
-
- struct ec_params_mkbp_info {
- 	uint8_t info_type;
- 	uint8_t event_type;
--} __packed;
-+} __ec_align1;
-
- enum ec_mkbp_info_type {
- 	/*
-@@ -2025,17 +3251,28 @@ enum ec_mkbp_info_type {
- };
-
- /* Simulate key press */
--#define EC_CMD_MKBP_SIMULATE_KEY 0x62
-+#define EC_CMD_MKBP_SIMULATE_KEY 0x0062
-
- struct ec_params_mkbp_simulate_key {
- 	uint8_t col;
- 	uint8_t row;
- 	uint8_t pressed;
--} __packed;
-+} __ec_align1;
-+
-+#define EC_CMD_GET_KEYBOARD_ID 0x0063
-+
-+struct ec_response_keyboard_id {
-+	uint32_t keyboard_id;
-+} __ec_align4;
-+
-+enum keyboard_id {
-+	KEYBOARD_ID_UNSUPPORTED = 0,
-+	KEYBOARD_ID_UNREADABLE = 0xffffffff,
-+};
-
- /* Configure keyboard scanning */
--#define EC_CMD_MKBP_SET_CONFIG 0x64
--#define EC_CMD_MKBP_GET_CONFIG 0x65
-+#define EC_CMD_MKBP_SET_CONFIG 0x0064
-+#define EC_CMD_MKBP_GET_CONFIG 0x0065
-
- /* flags */
- enum mkbp_config_flags {
-@@ -2043,16 +3280,21 @@ enum mkbp_config_flags {
- };
-
- enum mkbp_config_valid {
--	EC_MKBP_VALID_SCAN_PERIOD		= 1 << 0,
--	EC_MKBP_VALID_POLL_TIMEOUT		= 1 << 1,
--	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= 1 << 3,
--	EC_MKBP_VALID_OUTPUT_SETTLE		= 1 << 4,
--	EC_MKBP_VALID_DEBOUNCE_DOWN		= 1 << 5,
--	EC_MKBP_VALID_DEBOUNCE_UP		= 1 << 6,
--	EC_MKBP_VALID_FIFO_MAX_DEPTH		= 1 << 7,
-+	EC_MKBP_VALID_SCAN_PERIOD		= BIT(0),
-+	EC_MKBP_VALID_POLL_TIMEOUT		= BIT(1),
-+	EC_MKBP_VALID_MIN_POST_SCAN_DELAY	= BIT(3),
-+	EC_MKBP_VALID_OUTPUT_SETTLE		= BIT(4),
-+	EC_MKBP_VALID_DEBOUNCE_DOWN		= BIT(5),
-+	EC_MKBP_VALID_DEBOUNCE_UP		= BIT(6),
-+	EC_MKBP_VALID_FIFO_MAX_DEPTH		= BIT(7),
- };
-
--/* Configuration for our key scanning algorithm */
-+/*
-+ * Configuration for our key scanning algorithm.
-+ *
-+ * Note that this is used as a sub-structure of
-+ * ec_{params/response}_mkbp_get_config.
-+ */
- struct ec_mkbp_config {
- 	uint32_t valid_mask;		/* valid fields */
- 	uint8_t flags;		/* some flags (enum mkbp_config_flags) */
-@@ -2072,18 +3314,18 @@ struct ec_mkbp_config {
- 	uint16_t debounce_up_us;	/* time for debounce on key up */
- 	/* maximum depth to allow for fifo (0 = no keyscan output) */
- 	uint8_t fifo_max_depth;
--} __packed;
-+} __ec_align_size1;
-
- struct ec_params_mkbp_set_config {
- 	struct ec_mkbp_config config;
--} __packed;
-+} __ec_align_size1;
-
- struct ec_response_mkbp_get_config {
- 	struct ec_mkbp_config config;
--} __packed;
-+} __ec_align_size1;
-
- /* Run the key scan emulation */
--#define EC_CMD_KEYSCAN_SEQ_CTRL 0x66
-+#define EC_CMD_KEYSCAN_SEQ_CTRL 0x0066
-
- enum ec_keyscan_seq_cmd {
- 	EC_KEYSCAN_SEQ_STATUS = 0,	/* Get status information */
-@@ -2098,23 +3340,23 @@ enum ec_collect_flags {
- 	 * Indicates this scan was processed by the EC. Due to timing, some
- 	 * scans may be skipped.
- 	 */
--	EC_KEYSCAN_SEQ_FLAG_DONE	= 1 << 0,
-+	EC_KEYSCAN_SEQ_FLAG_DONE	= BIT(0),
- };
-
- struct ec_collect_item {
- 	uint8_t flags;		/* some flags (enum ec_collect_flags) */
--};
-+} __ec_align1;
-
- struct ec_params_keyscan_seq_ctrl {
- 	uint8_t cmd;	/* Command to send (enum ec_keyscan_seq_cmd) */
- 	union {
--		struct {
-+		struct __ec_align1 {
- 			uint8_t active;		/* still active */
- 			uint8_t num_items;	/* number of items */
- 			/* Current item being presented */
- 			uint8_t cur_item;
- 		} status;
--		struct {
-+		struct __ec_todo_unpacked {
- 			/*
- 			 * Absolute time for this scan, measured from the
- 			 * start of the sequence.
-@@ -2122,29 +3364,40 @@ struct ec_params_keyscan_seq_ctrl {
- 			uint32_t time_us;
- 			uint8_t scan[0];	/* keyscan data */
- 		} add;
--		struct {
-+		struct __ec_align1 {
- 			uint8_t start_item;	/* First item to return */
- 			uint8_t num_items;	/* Number of items to return */
- 		} collect;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_result_keyscan_seq_ctrl {
- 	union {
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t num_items;	/* Number of items */
- 			/* Data for each item */
- 			struct ec_collect_item item[0];
- 		} collect;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- /*
-- * Command for retrieving the next pending MKBP event from the EC device
-+ * Get the next pending MKBP event.
-  *
-- * The device replies with UNAVAILABLE if there aren't any pending events.
-+ * Returns EC_RES_UNAVAILABLE if there is no event pending.
-+ */
-+#define EC_CMD_GET_NEXT_EVENT 0x0067
-+
-+#define EC_MKBP_HAS_MORE_EVENTS_SHIFT 7
-+
-+/*
-+ * We use the most significant bit of the event type to indicate to the host
-+ * that the EC has more MKBP events available to provide.
-  */
--#define EC_CMD_GET_NEXT_EVENT 0x67
-+#define EC_MKBP_HAS_MORE_EVENTS BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT)
-+
-+/* The mask to apply to get the raw event type */
-+#define EC_MKBP_EVENT_TYPE_MASK (BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT) - 1)
-
- enum ec_mkbp_event {
- 	/* Keyboard matrix changed. The event data is the new matrix state. */
-@@ -2162,9 +3415,21 @@ enum ec_mkbp_event {
- 	/* The state of the switches have changed. */
- 	EC_MKBP_EVENT_SWITCH = 4,
-
--	/* EC sent a sysrq command */
-+	/* New Fingerprint sensor event, the event data is fp_events bitmap. */
-+	EC_MKBP_EVENT_FINGERPRINT = 5,
-+
-+	/*
-+	 * Sysrq event: send emulated sysrq. The event data is sysrq,
-+	 * corresponding to the key to be pressed.
-+	 */
- 	EC_MKBP_EVENT_SYSRQ = 6,
-
-+	/*
-+	 * New 64-bit host event.
-+	 * The event data is 8 bytes of host event flags.
-+	 */
-+	EC_MKBP_EVENT_HOST_EVENT64 = 7,
-+
- 	/* Notify the AP that something happened on CEC */
- 	EC_MKBP_EVENT_CEC_EVENT = 8,
-
-@@ -2174,65 +3439,140 @@ enum ec_mkbp_event {
- 	/* Number of MKBP events */
- 	EC_MKBP_EVENT_COUNT,
- };
-+BUILD_ASSERT(EC_MKBP_EVENT_COUNT <= EC_MKBP_EVENT_TYPE_MASK);
-
--union ec_response_get_next_data {
--	uint8_t   key_matrix[13];
-+union __ec_align_offset1 ec_response_get_next_data {
-+	uint8_t key_matrix[13];
-
- 	/* Unaligned */
--	uint32_t  host_event;
-+	uint32_t host_event;
-+	uint64_t host_event64;
-+
-+	struct __ec_todo_unpacked {
-+		/* For aligning the fifo_info */
-+		uint8_t reserved[3];
-+		struct ec_response_motion_sense_fifo_info info;
-+	} sensor_fifo;
-+
-+	uint32_t buttons;
-+
-+	uint32_t switches;
-
--	uint32_t   buttons;
--	uint32_t   switches;
--	uint32_t   sysrq;
--} __packed;
-+	uint32_t fp_events;
-
--union ec_response_get_next_data_v1 {
-+	uint32_t sysrq;
-+
-+	/* CEC events from enum mkbp_cec_event */
-+	uint32_t cec_events;
-+};
-+
-+union __ec_align_offset1 ec_response_get_next_data_v1 {
- 	uint8_t key_matrix[16];
-+
-+	/* Unaligned */
- 	uint32_t host_event;
-+	uint64_t host_event64;
-+
-+	struct __ec_todo_unpacked {
-+		/* For aligning the fifo_info */
-+		uint8_t reserved[3];
-+		struct ec_response_motion_sense_fifo_info info;
-+	} sensor_fifo;
-+
- 	uint32_t buttons;
-+
- 	uint32_t switches;
-+
-+	uint32_t fp_events;
-+
- 	uint32_t sysrq;
-+
-+	/* CEC events from enum mkbp_cec_event */
- 	uint32_t cec_events;
-+
- 	uint8_t cec_message[16];
--} __packed;
-+};
-+BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
-
- struct ec_response_get_next_event {
- 	uint8_t event_type;
- 	/* Followed by event data if any */
- 	union ec_response_get_next_data data;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_get_next_event_v1 {
- 	uint8_t event_type;
- 	/* Followed by event data if any */
- 	union ec_response_get_next_data_v1 data;
--} __packed;
-+} __ec_align1;
-
- /* Bit indices for buttons and switches.*/
- /* Buttons */
- #define EC_MKBP_POWER_BUTTON	0
- #define EC_MKBP_VOL_UP		1
- #define EC_MKBP_VOL_DOWN	2
-+#define EC_MKBP_RECOVERY	3
-
- /* Switches */
- #define EC_MKBP_LID_OPEN	0
- #define EC_MKBP_TABLET_MODE	1
- #define EC_MKBP_BASE_ATTACHED	2
-
-+/* Run keyboard factory test scanning */
-+#define EC_CMD_KEYBOARD_FACTORY_TEST 0x0068
-+
-+struct ec_response_keyboard_factory_test {
-+	uint16_t shorted;	/* Keyboard pins are shorted */
-+} __ec_align2;
-+
-+/* Fingerprint events in 'fp_events' for EC_MKBP_EVENT_FINGERPRINT */
-+#define EC_MKBP_FP_RAW_EVENT(fp_events) ((fp_events) & 0x00FFFFFF)
-+#define EC_MKBP_FP_ERRCODE(fp_events)   ((fp_events) & 0x0000000F)
-+#define EC_MKBP_FP_ENROLL_PROGRESS_OFFSET 4
-+#define EC_MKBP_FP_ENROLL_PROGRESS(fpe) (((fpe) & 0x00000FF0) \
-+					 >> EC_MKBP_FP_ENROLL_PROGRESS_OFFSET)
-+#define EC_MKBP_FP_MATCH_IDX_OFFSET 12
-+#define EC_MKBP_FP_MATCH_IDX_MASK 0x0000F000
-+#define EC_MKBP_FP_MATCH_IDX(fpe) (((fpe) & EC_MKBP_FP_MATCH_IDX_MASK) \
-+					 >> EC_MKBP_FP_MATCH_IDX_OFFSET)
-+#define EC_MKBP_FP_ENROLL               BIT(27)
-+#define EC_MKBP_FP_MATCH                BIT(28)
-+#define EC_MKBP_FP_FINGER_DOWN          BIT(29)
-+#define EC_MKBP_FP_FINGER_UP            BIT(30)
-+#define EC_MKBP_FP_IMAGE_READY          BIT(31)
-+/* code given by EC_MKBP_FP_ERRCODE() when EC_MKBP_FP_ENROLL is set */
-+#define EC_MKBP_FP_ERR_ENROLL_OK               0
-+#define EC_MKBP_FP_ERR_ENROLL_LOW_QUALITY      1
-+#define EC_MKBP_FP_ERR_ENROLL_IMMOBILE         2
-+#define EC_MKBP_FP_ERR_ENROLL_LOW_COVERAGE     3
-+#define EC_MKBP_FP_ERR_ENROLL_INTERNAL         5
-+/* Can be used to detect if image was usable for enrollment or not. */
-+#define EC_MKBP_FP_ERR_ENROLL_PROBLEM_MASK     1
-+/* code given by EC_MKBP_FP_ERRCODE() when EC_MKBP_FP_MATCH is set */
-+#define EC_MKBP_FP_ERR_MATCH_NO                0
-+#define EC_MKBP_FP_ERR_MATCH_NO_INTERNAL       6
-+#define EC_MKBP_FP_ERR_MATCH_NO_TEMPLATES      7
-+#define EC_MKBP_FP_ERR_MATCH_NO_LOW_QUALITY    2
-+#define EC_MKBP_FP_ERR_MATCH_NO_LOW_COVERAGE   4
-+#define EC_MKBP_FP_ERR_MATCH_YES               1
-+#define EC_MKBP_FP_ERR_MATCH_YES_UPDATED       3
-+#define EC_MKBP_FP_ERR_MATCH_YES_UPDATE_FAILED 5
-+
-+
- /*****************************************************************************/
- /* Temperature sensor commands */
-
- /* Read temperature sensor info */
--#define EC_CMD_TEMP_SENSOR_GET_INFO 0x70
-+#define EC_CMD_TEMP_SENSOR_GET_INFO 0x0070
-
- struct ec_params_temp_sensor_get_info {
- 	uint8_t id;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_temp_sensor_get_info {
- 	char sensor_name[32];
- 	uint8_t sensor_type;
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
-
-@@ -2245,49 +3585,131 @@ struct ec_response_temp_sensor_get_info {
- /*****************************************************************************/
- /* Host event commands */
-
-+
-+/* Obsolete. New implementation should use EC_CMD_HOST_EVENT instead */
- /*
-  * Host event mask params and response structures, shared by all of the host
-  * event commands below.
-  */
- struct ec_params_host_event_mask {
- 	uint32_t mask;
--} __packed;
-+} __ec_align4;
-
- struct ec_response_host_event_mask {
- 	uint32_t mask;
--} __packed;
-+} __ec_align4;
-
- /* These all use ec_response_host_event_mask */
--#define EC_CMD_HOST_EVENT_GET_B         0x87
--#define EC_CMD_HOST_EVENT_GET_SMI_MASK  0x88
--#define EC_CMD_HOST_EVENT_GET_SCI_MASK  0x89
--#define EC_CMD_HOST_EVENT_GET_WAKE_MASK 0x8d
-+#define EC_CMD_HOST_EVENT_GET_B         0x0087
-+#define EC_CMD_HOST_EVENT_GET_SMI_MASK  0x0088
-+#define EC_CMD_HOST_EVENT_GET_SCI_MASK  0x0089
-+#define EC_CMD_HOST_EVENT_GET_WAKE_MASK 0x008D
-
- /* These all use ec_params_host_event_mask */
--#define EC_CMD_HOST_EVENT_SET_SMI_MASK  0x8a
--#define EC_CMD_HOST_EVENT_SET_SCI_MASK  0x8b
--#define EC_CMD_HOST_EVENT_CLEAR         0x8c
--#define EC_CMD_HOST_EVENT_SET_WAKE_MASK 0x8e
--#define EC_CMD_HOST_EVENT_CLEAR_B       0x8f
-+#define EC_CMD_HOST_EVENT_SET_SMI_MASK  0x008A
-+#define EC_CMD_HOST_EVENT_SET_SCI_MASK  0x008B
-+#define EC_CMD_HOST_EVENT_CLEAR         0x008C
-+#define EC_CMD_HOST_EVENT_SET_WAKE_MASK 0x008E
-+#define EC_CMD_HOST_EVENT_CLEAR_B       0x008F
-+
-+/*
-+ * Unified host event programming interface - Should be used by newer versions
-+ * of BIOS/OS to program host events and masks
-+ */
-+
-+struct ec_params_host_event {
-+
-+	/* Action requested by host - one of enum ec_host_event_action. */
-+	uint8_t action;
-+
-+	/*
-+	 * Mask type that the host requested the action on - one of
-+	 * enum ec_host_event_mask_type.
-+	 */
-+	uint8_t mask_type;
-+
-+	/* Set to 0, ignore on read */
-+	uint16_t reserved;
-+
-+	/* Value to be used in case of set operations. */
-+	uint64_t value;
-+} __ec_align4;
-+
-+/*
-+ * Response structure returned by EC_CMD_HOST_EVENT.
-+ * Update the value on a GET request. Set to 0 on GET/CLEAR
-+ */
-+
-+struct ec_response_host_event {
-+
-+	/* Mask value in case of get operation */
-+	uint64_t value;
-+} __ec_align4;
-+
-+enum ec_host_event_action {
-+	/*
-+	 * params.value is ignored. Value of mask_type populated
-+	 * in response.value
-+	 */
-+	EC_HOST_EVENT_GET,
-+
-+	/* Bits in params.value are set */
-+	EC_HOST_EVENT_SET,
-+
-+	/* Bits in params.value are cleared */
-+	EC_HOST_EVENT_CLEAR,
-+};
-+
-+enum ec_host_event_mask_type {
-+
-+	/* Main host event copy */
-+	EC_HOST_EVENT_MAIN,
-+
-+	/* Copy B of host events */
-+	EC_HOST_EVENT_B,
-+
-+	/* SCI Mask */
-+	EC_HOST_EVENT_SCI_MASK,
-+
-+	/* SMI Mask */
-+	EC_HOST_EVENT_SMI_MASK,
-+
-+	/* Mask of events that should be always reported in hostevents */
-+	EC_HOST_EVENT_ALWAYS_REPORT_MASK,
-+
-+	/* Active wake mask */
-+	EC_HOST_EVENT_ACTIVE_WAKE_MASK,
-+
-+	/* Lazy wake mask for S0ix */
-+	EC_HOST_EVENT_LAZY_WAKE_MASK_S0IX,
-+
-+	/* Lazy wake mask for S3 */
-+	EC_HOST_EVENT_LAZY_WAKE_MASK_S3,
-+
-+	/* Lazy wake mask for S5 */
-+	EC_HOST_EVENT_LAZY_WAKE_MASK_S5,
-+};
-+
-+#define EC_CMD_HOST_EVENT       0x00A4
-
- /*****************************************************************************/
- /* Switch commands */
-
- /* Enable/disable LCD backlight */
--#define EC_CMD_SWITCH_ENABLE_BKLIGHT 0x90
-+#define EC_CMD_SWITCH_ENABLE_BKLIGHT 0x0090
-
- struct ec_params_switch_enable_backlight {
- 	uint8_t enabled;
--} __packed;
-+} __ec_align1;
-
- /* Enable/disable WLAN/Bluetooth */
--#define EC_CMD_SWITCH_ENABLE_WIRELESS 0x91
-+#define EC_CMD_SWITCH_ENABLE_WIRELESS 0x0091
- #define EC_VER_SWITCH_ENABLE_WIRELESS 1
-
- /* Version 0 params; no response */
- struct ec_params_switch_enable_wireless_v0 {
- 	uint8_t enabled;
--} __packed;
-+} __ec_align1;
-
- /* Version 1 params */
- struct ec_params_switch_enable_wireless_v1 {
-@@ -2306,7 +3728,7 @@ struct ec_params_switch_enable_wireless_v1 {
-
- 	/* Which flags to copy from suspend_flags */
- 	uint8_t suspend_mask;
--} __packed;
-+} __ec_align1;
-
- /* Version 1 response */
- struct ec_response_switch_enable_wireless_v1 {
-@@ -2315,55 +3737,56 @@ struct ec_response_switch_enable_wireless_v1 {
-
- 	/* Flags to leave enabled in S3 */
- 	uint8_t suspend_flags;
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* GPIO commands. Only available on EC if write protect has been disabled. */
-
- /* Set GPIO output value */
--#define EC_CMD_GPIO_SET 0x92
-+#define EC_CMD_GPIO_SET 0x0092
-
- struct ec_params_gpio_set {
- 	char name[32];
- 	uint8_t val;
--} __packed;
-+} __ec_align1;
-
- /* Get GPIO value */
--#define EC_CMD_GPIO_GET 0x93
-+#define EC_CMD_GPIO_GET 0x0093
-
- /* Version 0 of input params and response */
- struct ec_params_gpio_get {
- 	char name[32];
--} __packed;
-+} __ec_align1;
-+
- struct ec_response_gpio_get {
- 	uint8_t val;
--} __packed;
-+} __ec_align1;
-
- /* Version 1 of input params and response */
- struct ec_params_gpio_get_v1 {
- 	uint8_t subcmd;
- 	union {
--		struct {
-+		struct __ec_align1 {
- 			char name[32];
- 		} get_value_by_name;
--		struct {
-+		struct __ec_align1 {
- 			uint8_t index;
- 		} get_info;
- 	};
--} __packed;
-+} __ec_align1;
-
- struct ec_response_gpio_get_v1 {
- 	union {
--		struct {
-+		struct __ec_align1 {
- 			uint8_t val;
- 		} get_value_by_name, get_count;
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint8_t val;
- 			char name[32];
- 			uint32_t flags;
- 		} get_info;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- enum gpio_get_subcmd {
- 	EC_GPIO_GET_BY_NAME = 0,
-@@ -2375,25 +3798,28 @@ enum gpio_get_subcmd {
- /* I2C commands. Only available when flash write protect is unlocked. */
-
- /*
-- * TODO(crosbug.com/p/23570): These commands are deprecated, and will be
-- * removed soon.  Use EC_CMD_I2C_XFER instead.
-+ * CAUTION: These commands are deprecated, and are not supported anymore in EC
-+ * builds >= 8398.0.0 (see crosbug.com/p/23570).
-+ *
-+ * Use EC_CMD_I2C_PASSTHRU instead.
-  */
-
- /* Read I2C bus */
--#define EC_CMD_I2C_READ 0x94
-+#define EC_CMD_I2C_READ 0x0094
-
- struct ec_params_i2c_read {
- 	uint16_t addr; /* 8-bit address (7-bit shifted << 1) */
- 	uint8_t read_size; /* Either 8 or 16. */
- 	uint8_t port;
- 	uint8_t offset;
--} __packed;
-+} __ec_align_size1;
-+
- struct ec_response_i2c_read {
- 	uint16_t data;
--} __packed;
-+} __ec_align2;
-
- /* Write I2C bus */
--#define EC_CMD_I2C_WRITE 0x95
-+#define EC_CMD_I2C_WRITE 0x0095
-
- struct ec_params_i2c_write {
- 	uint16_t data;
-@@ -2401,7 +3827,7 @@ struct ec_params_i2c_write {
- 	uint8_t write_size; /* Either 8 or 16. */
- 	uint8_t port;
- 	uint8_t offset;
--} __packed;
-+} __ec_align_size1;
-
- /*****************************************************************************/
- /* Charge state commands. Only available when flash write protect unlocked. */
-@@ -2409,7 +3835,7 @@ struct ec_params_i2c_write {
- /* Force charge state machine to stop charging the battery or force it to
-  * discharge the battery.
-  */
--#define EC_CMD_CHARGE_CONTROL 0x96
-+#define EC_CMD_CHARGE_CONTROL 0x0096
- #define EC_VER_CHARGE_CONTROL 1
-
- enum ec_charge_control_mode {
-@@ -2420,13 +3846,12 @@ enum ec_charge_control_mode {
-
- struct ec_params_charge_control {
- 	uint32_t mode;  /* enum charge_control_mode */
--} __packed;
-+} __ec_align4;
-
- /*****************************************************************************/
--/* Console commands. Only available when flash write protect is unlocked. */
-
- /* Snapshot console output buffer for use by EC_CMD_CONSOLE_READ. */
--#define EC_CMD_CONSOLE_SNAPSHOT 0x97
-+#define EC_CMD_CONSOLE_SNAPSHOT 0x0097
-
- /*
-  * Read data from the saved snapshot. If the subcmd parameter is
-@@ -2440,7 +3865,7 @@ struct ec_params_charge_control {
-  * Response is null-terminated string.  Empty string, if there is no more
-  * remaining output.
-  */
--#define EC_CMD_CONSOLE_READ 0x98
-+#define EC_CMD_CONSOLE_READ 0x0098
-
- enum ec_console_read_subcmd {
- 	CONSOLE_READ_NEXT = 0,
-@@ -2449,7 +3874,7 @@ enum ec_console_read_subcmd {
-
- struct ec_params_console_read_v1 {
- 	uint8_t subcmd; /* enum ec_console_read_subcmd */
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
-
-@@ -2460,14 +3885,13 @@ struct ec_params_console_read_v1 {
-  *	  EC_RES_SUCCESS if the command was successful.
-  *	  EC_RES_ERROR if the cut off command failed.
-  */
-+#define EC_CMD_BATTERY_CUT_OFF 0x0099
-
--#define EC_CMD_BATTERY_CUT_OFF 0x99
--
--#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	(1 << 0)
-+#define EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN	BIT(0)
-
- struct ec_params_battery_cutoff {
- 	uint8_t flags;
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* USB port mux control. */
-@@ -2475,11 +3899,11 @@ struct ec_params_battery_cutoff {
- /*
-  * Switch USB mux or return to automatic switching.
-  */
--#define EC_CMD_USB_MUX 0x9a
-+#define EC_CMD_USB_MUX 0x009A
-
- struct ec_params_usb_mux {
- 	uint8_t mux;
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* LDOs / FETs control. */
-@@ -2492,25 +3916,25 @@ enum ec_ldo_state {
- /*
-  * Switch on/off a LDO.
-  */
--#define EC_CMD_LDO_SET 0x9b
-+#define EC_CMD_LDO_SET 0x009B
-
- struct ec_params_ldo_set {
- 	uint8_t index;
- 	uint8_t state;
--} __packed;
-+} __ec_align1;
-
- /*
-  * Get LDO state.
-  */
--#define EC_CMD_LDO_GET 0x9c
-+#define EC_CMD_LDO_GET 0x009C
-
- struct ec_params_ldo_get {
- 	uint8_t index;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_ldo_get {
- 	uint8_t state;
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* Power info. */
-@@ -2518,7 +3942,7 @@ struct ec_response_ldo_get {
- /*
-  * Get power info.
-  */
--#define EC_CMD_POWER_INFO 0x9d
-+#define EC_CMD_POWER_INFO 0x009D
-
- struct ec_response_power_info {
- 	uint32_t usb_dev_type;
-@@ -2526,21 +3950,21 @@ struct ec_response_power_info {
- 	uint16_t voltage_system;
- 	uint16_t current_system;
- 	uint16_t usb_current_limit;
--} __packed;
-+} __ec_align4;
-
- /*****************************************************************************/
- /* I2C passthru command */
-
--#define EC_CMD_I2C_PASSTHRU 0x9e
-+#define EC_CMD_I2C_PASSTHRU 0x009E
-
- /* Read data; if not present, message is a write */
--#define EC_I2C_FLAG_READ	(1 << 15)
-+#define EC_I2C_FLAG_READ	BIT(15)
-
- /* Mask for address */
- #define EC_I2C_ADDR_MASK	0x3ff
-
--#define EC_I2C_STATUS_NAK	(1 << 0) /* Transfer was not acknowledged */
--#define EC_I2C_STATUS_TIMEOUT	(1 << 1) /* Timeout during transfer */
-+#define EC_I2C_STATUS_NAK	BIT(0) /* Transfer was not acknowledged */
-+#define EC_I2C_STATUS_TIMEOUT	BIT(1) /* Timeout during transfer */
-
- /* Any error */
- #define EC_I2C_STATUS_ERROR	(EC_I2C_STATUS_NAK | EC_I2C_STATUS_TIMEOUT)
-@@ -2548,49 +3972,49 @@ struct ec_response_power_info {
- struct ec_params_i2c_passthru_msg {
- 	uint16_t addr_flags;	/* I2C slave address (7 or 10 bits) and flags */
- 	uint16_t len;		/* Number of bytes to read or write */
--} __packed;
-+} __ec_align2;
-
- struct ec_params_i2c_passthru {
- 	uint8_t port;		/* I2C port number */
- 	uint8_t num_msgs;	/* Number of messages */
- 	struct ec_params_i2c_passthru_msg msg[];
- 	/* Data to write for all messages is concatenated here */
--} __packed;
-+} __ec_align2;
-
- struct ec_response_i2c_passthru {
- 	uint8_t i2c_status;	/* Status flags (EC_I2C_STATUS_...) */
- 	uint8_t num_msgs;	/* Number of messages processed */
- 	uint8_t data[];		/* Data read by messages concatenated here */
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* Power button hang detect */
-
--#define EC_CMD_HANG_DETECT 0x9f
-+#define EC_CMD_HANG_DETECT 0x009F
-
- /* Reasons to start hang detection timer */
- /* Power button pressed */
--#define EC_HANG_START_ON_POWER_PRESS  (1 << 0)
-+#define EC_HANG_START_ON_POWER_PRESS  BIT(0)
-
- /* Lid closed */
--#define EC_HANG_START_ON_LID_CLOSE    (1 << 1)
-+#define EC_HANG_START_ON_LID_CLOSE    BIT(1)
-
-  /* Lid opened */
--#define EC_HANG_START_ON_LID_OPEN     (1 << 2)
-+#define EC_HANG_START_ON_LID_OPEN     BIT(2)
-
- /* Start of AP S3->S0 transition (booting or resuming from suspend) */
--#define EC_HANG_START_ON_RESUME       (1 << 3)
-+#define EC_HANG_START_ON_RESUME       BIT(3)
-
- /* Reasons to cancel hang detection */
-
- /* Power button released */
--#define EC_HANG_STOP_ON_POWER_RELEASE (1 << 8)
-+#define EC_HANG_STOP_ON_POWER_RELEASE BIT(8)
-
- /* Any host command from AP received */
--#define EC_HANG_STOP_ON_HOST_COMMAND  (1 << 9)
-+#define EC_HANG_STOP_ON_HOST_COMMAND  BIT(9)
-
- /* Stop on end of AP S0->S3 transition (suspending or shutting down) */
--#define EC_HANG_STOP_ON_SUSPEND       (1 << 10)
-+#define EC_HANG_STOP_ON_SUSPEND       BIT(10)
-
- /*
-  * If this flag is set, all the other fields are ignored, and the hang detect
-@@ -2598,14 +4022,14 @@ struct ec_response_i2c_passthru {
-  * without reconfiguring any of the other hang detect settings.  Note that
-  * you must previously have configured the timeouts.
-  */
--#define EC_HANG_START_NOW             (1 << 30)
-+#define EC_HANG_START_NOW             BIT(30)
-
- /*
-  * If this flag is set, all the other fields are ignored (including
-  * EC_HANG_START_NOW).  This provides the AP a way to stop the hang timer
-  * without reconfiguring any of the other hang detect settings.
-  */
--#define EC_HANG_STOP_NOW              (1 << 31)
-+#define EC_HANG_STOP_NOW              BIT(31)
-
- struct ec_params_hang_detect {
- 	/* Flags; see EC_HANG_* */
-@@ -2616,7 +4040,7 @@ struct ec_params_hang_detect {
-
- 	/* Timeout in msec before generating warm reboot, if enabled */
- 	uint16_t warm_reboot_timeout_msec;
--} __packed;
-+} __ec_align4;
-
- /*****************************************************************************/
- /* Commands for battery charging */
-@@ -2625,7 +4049,7 @@ struct ec_params_hang_detect {
-  * This is the single catch-all host command to exchange data regarding the
-  * charge state machine (v2 and up).
-  */
--#define EC_CMD_CHARGE_STATE 0xa0
-+#define EC_CMD_CHARGE_STATE 0x00A0
-
- /* Subcommands for this host command */
- enum charge_state_command {
-@@ -2645,6 +4069,11 @@ enum charge_state_params {
- 	CS_PARAM_CHG_INPUT_CURRENT,   /* charger input current limit */
- 	CS_PARAM_CHG_STATUS,	      /* charger-specific status */
- 	CS_PARAM_CHG_OPTION,	      /* charger-specific options */
-+	CS_PARAM_LIMIT_POWER,	      /*
-+				       * Check if power is limited due to
-+				       * low battery and / or a weak external
-+				       * charger. READ ONLY.
-+				       */
- 	/* How many so far? */
- 	CS_NUM_BASE_PARAMS,
-
-@@ -2652,30 +4081,39 @@ enum charge_state_params {
- 	CS_PARAM_CUSTOM_PROFILE_MIN = 0x10000,
- 	CS_PARAM_CUSTOM_PROFILE_MAX = 0x1ffff,
-
-+	/* Range for CONFIG_CHARGE_STATE_DEBUG params */
-+	CS_PARAM_DEBUG_MIN = 0x20000,
-+	CS_PARAM_DEBUG_CTL_MODE = 0x20000,
-+	CS_PARAM_DEBUG_MANUAL_MODE,
-+	CS_PARAM_DEBUG_SEEMS_DEAD,
-+	CS_PARAM_DEBUG_SEEMS_DISCONNECTED,
-+	CS_PARAM_DEBUG_BATT_REMOVED,
-+	CS_PARAM_DEBUG_MANUAL_CURRENT,
-+	CS_PARAM_DEBUG_MANUAL_VOLTAGE,
-+	CS_PARAM_DEBUG_MAX = 0x2ffff,
-+
- 	/* Other custom param ranges go here... */
- };
-
- struct ec_params_charge_state {
- 	uint8_t cmd;				/* enum charge_state_command */
- 	union {
--		struct {
--			/* no args */
--		} get_state;
-+		/* get_state has no args */
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint32_t param;		/* enum charge_state_param */
- 		} get_param;
-
--		struct {
-+		struct __ec_todo_unpacked {
- 			uint32_t param;		/* param to set */
- 			uint32_t value;		/* value to set */
- 		} set_param;
- 	};
--} __packed;
-+} __ec_todo_packed;
-
- struct ec_response_charge_state {
- 	union {
--		struct {
-+		struct __ec_align4 {
- 			int ac;
- 			int chg_voltage;
- 			int chg_current;
-@@ -2683,24 +4121,23 @@ struct ec_response_charge_state {
- 			int batt_state_of_charge;
- 		} get_state;
-
--		struct {
-+		struct __ec_align4 {
- 			uint32_t value;
- 		} get_param;
--		struct {
--			/* no return values */
--		} set_param;
-+
-+		/* set_param returns no args */
- 	};
--} __packed;
-+} __ec_align4;
-
-
- /*
-  * Set maximum battery charging current.
-  */
--#define EC_CMD_CHARGE_CURRENT_LIMIT 0xa1
-+#define EC_CMD_CHARGE_CURRENT_LIMIT 0x00A1
-
- struct ec_params_current_limit {
- 	uint32_t limit; /* in mA */
--} __packed;
-+} __ec_align4;
-
- /*
-  * Set maximum external voltage / current.
-@@ -2711,58 +4148,134 @@ struct ec_params_current_limit {
- struct ec_params_external_power_limit_v1 {
- 	uint16_t current_lim; /* in mA, or EC_POWER_LIMIT_NONE to clear limit */
- 	uint16_t voltage_lim; /* in mV, or EC_POWER_LIMIT_NONE to clear limit */
--} __packed;
-+} __ec_align2;
-
- #define EC_POWER_LIMIT_NONE 0xffff
-
-+/*
-+ * Set maximum voltage & current of a dedicated charge port
-+ */
-+#define EC_CMD_OVERRIDE_DEDICATED_CHARGER_LIMIT 0x00A3
-+
-+struct ec_params_dedicated_charger_limit {
-+	uint16_t current_lim; /* in mA */
-+	uint16_t voltage_lim; /* in mV */
-+} __ec_align2;
-+
-+/*****************************************************************************/
-+/* Hibernate/Deep Sleep Commands */
-+
-+/* Set the delay before going into hibernation. */
-+#define EC_CMD_HIBERNATION_DELAY 0x00A8
-+
-+struct ec_params_hibernation_delay {
-+	/*
-+	 * Seconds to wait in G3 before hibernate.  Pass in 0 to read the
-+	 * current settings without changing them.
-+	 */
-+	uint32_t seconds;
-+} __ec_align4;
-+
-+struct ec_response_hibernation_delay {
-+	/*
-+	 * The current time in seconds in which the system has been in the G3
-+	 * state.  This value is reset if the EC transitions out of G3.
-+	 */
-+	uint32_t time_g3;
-+
-+	/*
-+	 * The current time remaining in seconds until the EC should hibernate.
-+	 * This value is also reset if the EC transitions out of G3.
-+	 */
-+	uint32_t time_remaining;
-+
-+	/*
-+	 * The current time in seconds that the EC should wait in G3 before
-+	 * hibernating.
-+	 */
-+	uint32_t hibernate_delay;
-+} __ec_align4;
-+
- /* Inform the EC when entering a sleep state */
--#define EC_CMD_HOST_SLEEP_EVENT 0xa9
-+#define EC_CMD_HOST_SLEEP_EVENT 0x00A9
-
- enum host_sleep_event {
- 	HOST_SLEEP_EVENT_S3_SUSPEND   = 1,
- 	HOST_SLEEP_EVENT_S3_RESUME    = 2,
- 	HOST_SLEEP_EVENT_S0IX_SUSPEND = 3,
--	HOST_SLEEP_EVENT_S0IX_RESUME  = 4
-+	HOST_SLEEP_EVENT_S0IX_RESUME  = 4,
-+	/* S3 suspend with additional enabled wake sources */
-+	HOST_SLEEP_EVENT_S3_WAKEABLE_SUSPEND = 5,
- };
-
- struct ec_params_host_sleep_event {
- 	uint8_t sleep_event;
--} __packed;
-+} __ec_align1;
-+
-+/*****************************************************************************/
-+/* Device events */
-+#define EC_CMD_DEVICE_EVENT 0x00AA
-+
-+enum ec_device_event {
-+	EC_DEVICE_EVENT_TRACKPAD,
-+	EC_DEVICE_EVENT_DSP,
-+	EC_DEVICE_EVENT_WIFI,
-+};
-+
-+enum ec_device_event_param {
-+	/* Get and clear pending device events */
-+	EC_DEVICE_EVENT_PARAM_GET_CURRENT_EVENTS,
-+	/* Get device event mask */
-+	EC_DEVICE_EVENT_PARAM_GET_ENABLED_EVENTS,
-+	/* Set device event mask */
-+	EC_DEVICE_EVENT_PARAM_SET_ENABLED_EVENTS,
-+};
-+
-+#define EC_DEVICE_EVENT_MASK(event_code) BIT(event_code % 32)
-+
-+struct ec_params_device_event {
-+	uint32_t event_mask;
-+	uint8_t param;
-+} __ec_align_size1;
-+
-+struct ec_response_device_event {
-+	uint32_t event_mask;
-+} __ec_align4;
-
- /*****************************************************************************/
- /* Smart battery pass-through */
-
- /* Get / Set 16-bit smart battery registers */
--#define EC_CMD_SB_READ_WORD   0xb0
--#define EC_CMD_SB_WRITE_WORD  0xb1
-+#define EC_CMD_SB_READ_WORD   0x00B0
-+#define EC_CMD_SB_WRITE_WORD  0x00B1
-
- /* Get / Set string smart battery parameters
-  * formatted as SMBUS "block".
-  */
--#define EC_CMD_SB_READ_BLOCK  0xb2
--#define EC_CMD_SB_WRITE_BLOCK 0xb3
-+#define EC_CMD_SB_READ_BLOCK  0x00B2
-+#define EC_CMD_SB_WRITE_BLOCK 0x00B3
-
- struct ec_params_sb_rd {
- 	uint8_t reg;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_sb_rd_word {
- 	uint16_t value;
--} __packed;
-+} __ec_align2;
-
- struct ec_params_sb_wr_word {
- 	uint8_t reg;
- 	uint16_t value;
--} __packed;
-+} __ec_align1;
-
- struct ec_response_sb_rd_block {
- 	uint8_t data[32];
--} __packed;
-+} __ec_align1;
-
- struct ec_params_sb_wr_block {
- 	uint8_t reg;
- 	uint16_t data[32];
--} __packed;
-+} __ec_align1;
-
- /*****************************************************************************/
- /* Battery vendor parameters
-@@ -2773,7 +4286,7 @@ struct ec_params_sb_wr_block {
-  * requested value.
-  */
-
--#define EC_CMD_BATTERY_VENDOR_PARAM 0xb4
-+#define EC_CMD_BATTERY_VENDOR_PARAM 0x00B4
-
- enum ec_battery_vendor_param_mode {
- 	BATTERY_VENDOR_PARAM_MODE_GET = 0,
-@@ -2784,257 +4297,105 @@ struct ec_params_battery_vendor_param {
- 	uint32_t param;
- 	uint32_t value;
- 	uint8_t mode;
--} __packed;
-+} __ec_align_size1;
-
- struct ec_response_battery_vendor_param {
- 	uint32_t value;
--} __packed;
-+} __ec_align4;
-
- /*****************************************************************************/
--/* Commands for I2S recording on audio codec. */
--
--#define EC_CMD_CODEC_I2S 0x00BC
--
--enum ec_codec_i2s_subcmd {
--	EC_CODEC_SET_SAMPLE_DEPTH = 0x0,
--	EC_CODEC_SET_GAIN = 0x1,
--	EC_CODEC_GET_GAIN = 0x2,
--	EC_CODEC_I2S_ENABLE = 0x3,
--	EC_CODEC_I2S_SET_CONFIG = 0x4,
--	EC_CODEC_I2S_SET_TDM_CONFIG = 0x5,
--	EC_CODEC_I2S_SET_BCLK = 0x6,
-+/*
-+ * Smart Battery Firmware Update Commands
-+ */
-+#define EC_CMD_SB_FW_UPDATE 0x00B5
-+
-+enum ec_sb_fw_update_subcmd {
-+	EC_SB_FW_UPDATE_PREPARE  = 0x0,
-+	EC_SB_FW_UPDATE_INFO     = 0x1, /*query sb info */
-+	EC_SB_FW_UPDATE_BEGIN    = 0x2, /*check if protected */
-+	EC_SB_FW_UPDATE_WRITE    = 0x3, /*check if protected */
-+	EC_SB_FW_UPDATE_END      = 0x4,
-+	EC_SB_FW_UPDATE_STATUS   = 0x5,
-+	EC_SB_FW_UPDATE_PROTECT  = 0x6,
-+	EC_SB_FW_UPDATE_MAX      = 0x7,
- };
-
--enum ec_sample_depth_value {
--	EC_CODEC_SAMPLE_DEPTH_16 = 0,
--	EC_CODEC_SAMPLE_DEPTH_24 = 1,
--};
-+#define SB_FW_UPDATE_CMD_WRITE_BLOCK_SIZE 32
-+#define SB_FW_UPDATE_CMD_STATUS_SIZE 2
-+#define SB_FW_UPDATE_CMD_INFO_SIZE 8
-
--enum ec_i2s_config {
--	EC_DAI_FMT_I2S = 0,
--	EC_DAI_FMT_RIGHT_J = 1,
--	EC_DAI_FMT_LEFT_J = 2,
--	EC_DAI_FMT_PCM_A = 3,
--	EC_DAI_FMT_PCM_B = 4,
--	EC_DAI_FMT_PCM_TDM = 5,
--};
-+struct ec_sb_fw_update_header {
-+	uint16_t subcmd;  /* enum ec_sb_fw_update_subcmd */
-+	uint16_t fw_id;   /* firmware id */
-+} __ec_align4;
-
--struct ec_param_codec_i2s {
--	/*
--	 * enum ec_codec_i2s_subcmd
--	 */
--	uint8_t cmd;
-+struct ec_params_sb_fw_update {
-+	struct ec_sb_fw_update_header hdr;
- 	union {
--		/*
--		 * EC_CODEC_SET_SAMPLE_DEPTH
--		 * Value should be one of ec_sample_depth_value.
--		 */
--		uint8_t depth;
--
--		/*
--		 * EC_CODEC_SET_GAIN
--		 * Value should be 0~43 for both channels.
--		 */
--		struct ec_param_codec_i2s_set_gain {
--			uint8_t left;
--			uint8_t right;
--		} __packed gain;
--
--		/*
--		 * EC_CODEC_I2S_ENABLE
--		 * 1 to enable, 0 to disable.
--		 */
--		uint8_t i2s_enable;
--
--		/*
--		 * EC_CODEC_I2S_SET_COFNIG
--		 * Value should be one of ec_i2s_config.
--		 */
--		uint8_t i2s_config;
-+		/* EC_SB_FW_UPDATE_PREPARE  = 0x0 */
-+		/* EC_SB_FW_UPDATE_INFO     = 0x1 */
-+		/* EC_SB_FW_UPDATE_BEGIN    = 0x2 */
-+		/* EC_SB_FW_UPDATE_END      = 0x4 */
-+		/* EC_SB_FW_UPDATE_STATUS   = 0x5 */
-+		/* EC_SB_FW_UPDATE_PROTECT  = 0x6 */
-+		/* Those have no args */
-+
-+		/* EC_SB_FW_UPDATE_WRITE    = 0x3 */
-+		struct __ec_align4 {
-+			uint8_t  data[SB_FW_UPDATE_CMD_WRITE_BLOCK_SIZE];
-+		} write;
-+	};
-+} __ec_align4;
-
--		/*
--		 * EC_CODEC_I2S_SET_TDM_CONFIG
--		 * Value should be one of ec_i2s_config.
--		 */
--		struct ec_param_codec_i2s_tdm {
--			/*
--			 * 0 to 496
--			 */
--			int16_t ch0_delay;
--			/*
--			 * -1 to 496
--			 */
--			int16_t ch1_delay;
--			uint8_t adjacent_to_ch0;
--			uint8_t adjacent_to_ch1;
--		} __packed tdm_param;
-+struct ec_response_sb_fw_update {
-+	union {
-+		/* EC_SB_FW_UPDATE_INFO     = 0x1 */
-+		struct __ec_align1 {
-+			uint8_t data[SB_FW_UPDATE_CMD_INFO_SIZE];
-+		} info;
-
--		/*
--		 * EC_CODEC_I2S_SET_BCLK
--		 */
--		uint32_t bclk;
-+		/* EC_SB_FW_UPDATE_STATUS   = 0x5 */
-+		struct __ec_align1 {
-+			uint8_t data[SB_FW_UPDATE_CMD_STATUS_SIZE];
-+		} status;
- 	};
--} __packed;
-+} __ec_align1;
-
- /*
-- * For subcommand EC_CODEC_GET_GAIN.
-+ * Entering Verified Boot Mode Command
-+ * Default mode is VBOOT_MODE_NORMAL if EC did not receive this command.
-+ * Valid Modes are: normal, developer, and recovery.
-  */
--struct ec_response_codec_gain {
--	uint8_t left;
--	uint8_t right;
--} __packed;
-+#define EC_CMD_ENTERING_MODE 0x00B6
-
--/*****************************************************************************/
--/* System commands */
-+struct ec_params_entering_mode {
-+	int vboot_mode;
-+} __ec_align4;
-+
-+#define VBOOT_MODE_NORMAL    0
-+#define VBOOT_MODE_DEVELOPER 1
-+#define VBOOT_MODE_RECOVERY  2
-
-+/*****************************************************************************/
- /*
-- * TODO(crosbug.com/p/23747): This is a confusing name, since it doesn't
-- * necessarily reboot the EC.  Rename to "image" or something similar?
-+ * I2C passthru protection command: Protects I2C tunnels against access on
-+ * certain addresses (board-specific).
-  */
--#define EC_CMD_REBOOT_EC 0xd2
-+#define EC_CMD_I2C_PASSTHRU_PROTECT 0x00B7
-
--/* Command */
--enum ec_reboot_cmd {
--	EC_REBOOT_CANCEL = 0,        /* Cancel a pending reboot */
--	EC_REBOOT_JUMP_RO = 1,       /* Jump to RO without rebooting */
--	EC_REBOOT_JUMP_RW = 2,       /* Jump to RW without rebooting */
--	/* (command 3 was jump to RW-B) */
--	EC_REBOOT_COLD = 4,          /* Cold-reboot */
--	EC_REBOOT_DISABLE_JUMP = 5,  /* Disable jump until next reboot */
--	EC_REBOOT_HIBERNATE = 6      /* Hibernate EC */
-+enum ec_i2c_passthru_protect_subcmd {
-+	EC_CMD_I2C_PASSTHRU_PROTECT_STATUS = 0x0,
-+	EC_CMD_I2C_PASSTHRU_PROTECT_ENABLE = 0x1,
- };
-
--/* Flags for ec_params_reboot_ec.reboot_flags */
--#define EC_REBOOT_FLAG_RESERVED0      (1 << 0)  /* Was recovery request */
--#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN (1 << 1)  /* Reboot after AP shutdown */
--
--struct ec_params_reboot_ec {
--	uint8_t cmd;           /* enum ec_reboot_cmd */
--	uint8_t flags;         /* See EC_REBOOT_FLAG_* */
--} __packed;
--
--/*
-- * Get information on last EC panic.
-- *
-- * Returns variable-length platform-dependent panic information.  See panic.h
-- * for details.
-- */
--#define EC_CMD_GET_PANIC_INFO 0xd3
--
--/*****************************************************************************/
--/*
-- * ACPI commands
-- *
-- * These are valid ONLY on the ACPI command/data port.
-- */
--
--/*
-- * ACPI Read Embedded Controller
-- *
-- * This reads from ACPI memory space on the EC (EC_ACPI_MEM_*).
-- *
-- * Use the following sequence:
-- *
-- *    - Write EC_CMD_ACPI_READ to EC_LPC_ADDR_ACPI_CMD
-- *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-- *    - Write address to EC_LPC_ADDR_ACPI_DATA
-- *    - Wait for EC_LPC_CMDR_DATA bit to set
-- *    - Read value from EC_LPC_ADDR_ACPI_DATA
-- */
--#define EC_CMD_ACPI_READ 0x80
--
--/*
-- * ACPI Write Embedded Controller
-- *
-- * This reads from ACPI memory space on the EC (EC_ACPI_MEM_*).
-- *
-- * Use the following sequence:
-- *
-- *    - Write EC_CMD_ACPI_WRITE to EC_LPC_ADDR_ACPI_CMD
-- *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-- *    - Write address to EC_LPC_ADDR_ACPI_DATA
-- *    - Wait for EC_LPC_CMDR_PENDING bit to clear
-- *    - Write value to EC_LPC_ADDR_ACPI_DATA
-- */
--#define EC_CMD_ACPI_WRITE 0x81
--
--/*
-- * ACPI Query Embedded Controller
-- *
-- * This clears the lowest-order bit in the currently pending host events, and
-- * sets the result code to the 1-based index of the bit (event 0x00000001 = 1,
-- * event 0x80000000 = 32), or 0 if no event was pending.
-- */
--#define EC_CMD_ACPI_QUERY_EVENT 0x84
--
--/* Valid addresses in ACPI memory space, for read/write commands */
--
--/* Memory space version; set to EC_ACPI_MEM_VERSION_CURRENT */
--#define EC_ACPI_MEM_VERSION            0x00
--/*
-- * Test location; writing value here updates test compliment byte to (0xff -
-- * value).
-- */
--#define EC_ACPI_MEM_TEST               0x01
--/* Test compliment; writes here are ignored. */
--#define EC_ACPI_MEM_TEST_COMPLIMENT    0x02
--
--/* Keyboard backlight brightness percent (0 - 100) */
--#define EC_ACPI_MEM_KEYBOARD_BACKLIGHT 0x03
--/* DPTF Target Fan Duty (0-100, 0xff for auto/none) */
--#define EC_ACPI_MEM_FAN_DUTY           0x04
--
--/*
-- * DPTF temp thresholds. Any of the EC's temp sensors can have up to two
-- * independent thresholds attached to them. The current value of the ID
-- * register determines which sensor is affected by the THRESHOLD and COMMIT
-- * registers. The THRESHOLD register uses the same EC_TEMP_SENSOR_OFFSET scheme
-- * as the memory-mapped sensors. The COMMIT register applies those settings.
-- *
-- * The spec does not mandate any way to read back the threshold settings
-- * themselves, but when a threshold is crossed the AP needs a way to determine
-- * which sensor(s) are responsible. Each reading of the ID register clears and
-- * returns one sensor ID that has crossed one of its threshold (in either
-- * direction) since the last read. A value of 0xFF means "no new thresholds
-- * have tripped". Setting or enabling the thresholds for a sensor will clear
-- * the unread event count for that sensor.
-- */
--#define EC_ACPI_MEM_TEMP_ID            0x05
--#define EC_ACPI_MEM_TEMP_THRESHOLD     0x06
--#define EC_ACPI_MEM_TEMP_COMMIT        0x07
--/*
-- * Here are the bits for the COMMIT register:
-- *   bit 0 selects the threshold index for the chosen sensor (0/1)
-- *   bit 1 enables/disables the selected threshold (0 = off, 1 = on)
-- * Each write to the commit register affects one threshold.
-- */
--#define EC_ACPI_MEM_TEMP_COMMIT_SELECT_MASK (1 << 0)
--#define EC_ACPI_MEM_TEMP_COMMIT_ENABLE_MASK (1 << 1)
--/*
-- * Example:
-- *
-- * Set the thresholds for sensor 2 to 50 C and 60 C:
-- *   write 2 to [0x05]      --  select temp sensor 2
-- *   write 0x7b to [0x06]   --  C_TO_K(50) - EC_TEMP_SENSOR_OFFSET
-- *   write 0x2 to [0x07]    --  enable threshold 0 with this value
-- *   write 0x85 to [0x06]   --  C_TO_K(60) - EC_TEMP_SENSOR_OFFSET
-- *   write 0x3 to [0x07]    --  enable threshold 1 with this value
-- *
-- * Disable the 60 C threshold, leaving the 50 C threshold unchanged:
-- *   write 2 to [0x05]      --  select temp sensor 2
-- *   write 0x1 to [0x07]    --  disable threshold 1
-- */
--
--/* DPTF battery charging current limit */
--#define EC_ACPI_MEM_CHARGING_LIMIT     0x08
--
--/* Charging limit is specified in 64 mA steps */
--#define EC_ACPI_MEM_CHARGING_LIMIT_STEP_MA   64
--/* Value to disable DPTF battery charging limit */
--#define EC_ACPI_MEM_CHARGING_LIMIT_DISABLED  0xff
-+struct ec_params_i2c_passthru_protect {
-+	uint8_t subcmd;
-+	uint8_t port;		/* I2C port number */
-+} __ec_align1;
-
--/* Current version of ACPI memory address space */
--#define EC_ACPI_MEM_VERSION_CURRENT 1
-+struct ec_response_i2c_passthru_protect {
-+	uint8_t status;		/* Status flags (0: unlocked, 1: locked) */
-+} __ec_align1;
-
-
- /*****************************************************************************/
-@@ -3043,7 +4404,8 @@ struct ec_params_reboot_ec {
-  *
-  * These commands are for sending and receiving message via HDMI CEC
-  */
--#define EC_MAX_CEC_MSG_LEN 16
-+
-+#define MAX_CEC_MSG_LEN 16
-
- /* CEC message from the AP to be written on the CEC bus */
- #define EC_CMD_CEC_WRITE_MSG 0x00B8
-@@ -3053,8 +4415,8 @@ struct ec_params_reboot_ec {
-  * @msg: message content to write to the CEC bus
-  */
- struct ec_params_cec_write {
--	uint8_t msg[EC_MAX_CEC_MSG_LEN];
--} __packed;
-+	uint8_t msg[MAX_CEC_MSG_LEN];
-+} __ec_align1;
-
- /* Set various CEC parameters */
- #define EC_CMD_CEC_SET 0x00BA
-@@ -3063,14 +4425,14 @@ struct ec_params_cec_write {
-  * struct ec_params_cec_set - CEC parameters set
-  * @cmd: parameter type, can be CEC_CMD_ENABLE or CEC_CMD_LOGICAL_ADDRESS
-  * @val: in case cmd is CEC_CMD_ENABLE, this field can be 0 to disable CEC
-- *	or 1 to enable CEC functionality, in case cmd is CEC_CMD_LOGICAL_ADDRESS,
-- *	this field encodes the requested logical address between 0 and 15
-- *	or 0xff to unregister
-+ *	or 1 to enable CEC functionality, in case cmd is
-+ *	CEC_CMD_LOGICAL_ADDRESS, this field encodes the requested logical
-+ *	address between 0 and 15 or 0xff to unregister
-  */
- struct ec_params_cec_set {
- 	uint8_t cmd; /* enum cec_command */
- 	uint8_t val;
--} __packed;
-+} __ec_align1;
-
- /* Read various CEC parameters */
- #define EC_CMD_CEC_GET 0x00BB
-@@ -3081,7 +4443,7 @@ struct ec_params_cec_set {
-  */
- struct ec_params_cec_get {
- 	uint8_t cmd; /* enum cec_command */
--} __packed;
-+} __ec_align1;
-
- /**
-  * struct ec_response_cec_get - CEC parameters get response
-@@ -3092,10 +4454,10 @@ struct ec_params_cec_get {
-  */
- struct ec_response_cec_get {
- 	uint8_t val;
--} __packed;
-+} __ec_align1;
-
- /* CEC parameters command */
--enum ec_cec_command {
-+enum cec_command {
- 	/* CEC reading, writing and events enable */
- 	CEC_CMD_ENABLE,
- 	/* CEC logical address  */
-@@ -3110,6 +4472,135 @@ enum mkbp_cec_event {
- 	EC_MKBP_CEC_SEND_FAILED			= BIT(1),
- };
-
-+/*****************************************************************************/
-+
-+/* Commands for I2S recording on audio codec. */
-+
-+#define EC_CMD_CODEC_I2S 0x00BC
-+#define EC_WOV_I2S_SAMPLE_RATE 48000
-+
-+enum ec_codec_i2s_subcmd {
-+	EC_CODEC_SET_SAMPLE_DEPTH = 0x0,
-+	EC_CODEC_SET_GAIN = 0x1,
-+	EC_CODEC_GET_GAIN = 0x2,
-+	EC_CODEC_I2S_ENABLE = 0x3,
-+	EC_CODEC_I2S_SET_CONFIG = 0x4,
-+	EC_CODEC_I2S_SET_TDM_CONFIG = 0x5,
-+	EC_CODEC_I2S_SET_BCLK = 0x6,
-+	EC_CODEC_I2S_SUBCMD_COUNT = 0x7,
-+};
-+
-+enum ec_sample_depth_value {
-+	EC_CODEC_SAMPLE_DEPTH_16 = 0,
-+	EC_CODEC_SAMPLE_DEPTH_24 = 1,
-+};
-+
-+enum ec_i2s_config {
-+	EC_DAI_FMT_I2S = 0,
-+	EC_DAI_FMT_RIGHT_J = 1,
-+	EC_DAI_FMT_LEFT_J = 2,
-+	EC_DAI_FMT_PCM_A = 3,
-+	EC_DAI_FMT_PCM_B = 4,
-+	EC_DAI_FMT_PCM_TDM = 5,
-+};
-+
-+/*
-+ * For subcommand EC_CODEC_GET_GAIN.
-+ */
-+struct __ec_align1 ec_codec_i2s_gain {
-+	uint8_t left;
-+	uint8_t right;
-+};
-+
-+struct __ec_todo_unpacked ec_param_codec_i2s_tdm {
-+	int16_t ch0_delay; /* 0 to 496 */
-+	int16_t ch1_delay; /* -1 to 496 */
-+	uint8_t adjacent_to_ch0;
-+	uint8_t adjacent_to_ch1;
-+};
-+
-+struct __ec_todo_packed ec_param_codec_i2s {
-+	/* enum ec_codec_i2s_subcmd */
-+	uint8_t cmd;
-+	union {
-+		/*
-+		 * EC_CODEC_SET_SAMPLE_DEPTH
-+		 * Value should be one of ec_sample_depth_value.
-+		 */
-+		uint8_t depth;
-+
-+		/*
-+		 * EC_CODEC_SET_GAIN
-+		 * Value should be 0~43 for both channels.
-+		 */
-+		struct ec_codec_i2s_gain gain;
-+
-+		/*
-+		 * EC_CODEC_I2S_ENABLE
-+		 * 1 to enable, 0 to disable.
-+		 */
-+		uint8_t i2s_enable;
-+
-+		/*
-+		 * EC_CODEC_I2S_SET_CONFIG
-+		 * Value should be one of ec_i2s_config.
-+		 */
-+		uint8_t i2s_config;
-+
-+		/*
-+		 * EC_CODEC_I2S_SET_TDM_CONFIG
-+		 * Value should be one of ec_i2s_config.
-+		 */
-+		struct ec_param_codec_i2s_tdm tdm_param;
-+
-+		/*
-+		 * EC_CODEC_I2S_SET_BCLK
-+		 */
-+		uint32_t bclk;
-+	};
-+};
-+
-+
-+/*****************************************************************************/
-+
-+/* System commands */
-+
-+/*
-+ * TODO(crosbug.com/p/23747): This is a confusing name, since it doesn't
-+ * necessarily reboot the EC.  Rename to "image" or something similar?
-+ */
-+#define EC_CMD_REBOOT_EC 0x00D2
-+
-+/* Command */
-+enum ec_reboot_cmd {
-+	EC_REBOOT_CANCEL = 0,        /* Cancel a pending reboot */
-+	EC_REBOOT_JUMP_RO = 1,       /* Jump to RO without rebooting */
-+	EC_REBOOT_JUMP_RW = 2,       /* Jump to active RW without rebooting */
-+	/* (command 3 was jump to RW-B) */
-+	EC_REBOOT_COLD = 4,          /* Cold-reboot */
-+	EC_REBOOT_DISABLE_JUMP = 5,  /* Disable jump until next reboot */
-+	EC_REBOOT_HIBERNATE = 6,     /* Hibernate EC */
-+	EC_REBOOT_HIBERNATE_CLEAR_AP_OFF = 7, /* and clears AP_OFF flag */
-+};
-+
-+/* Flags for ec_params_reboot_ec.reboot_flags */
-+#define EC_REBOOT_FLAG_RESERVED0      BIT(0)  /* Was recovery request */
-+#define EC_REBOOT_FLAG_ON_AP_SHUTDOWN BIT(1)  /* Reboot after AP shutdown */
-+#define EC_REBOOT_FLAG_SWITCH_RW_SLOT BIT(2)  /* Switch RW slot */
-+
-+struct ec_params_reboot_ec {
-+	uint8_t cmd;           /* enum ec_reboot_cmd */
-+	uint8_t flags;         /* See EC_REBOOT_FLAG_* */
-+} __ec_align1;
-+
-+/*
-+ * Get information on last EC panic.
-+ *
-+ * Returns variable-length platform-dependent panic information.  See panic.h
-+ * for details.
-+ */
-+#define EC_CMD_GET_PANIC_INFO 0x00D3
-+
- /*****************************************************************************/
- /*
-  * Special commands
-@@ -3127,7 +4618,7 @@ enum mkbp_cec_event {
-  *
-  * Use EC_CMD_REBOOT_EC to reboot the EC more politely.
-  */
--#define EC_CMD_REBOOT 0xd1  /* Think "die" */
-+#define EC_CMD_REBOOT 0x00D1  /* Think "die" */
-
- /*
-  * Resend last response (not supported on LPC).
-@@ -3136,7 +4627,7 @@ enum mkbp_cec_event {
-  * there was no previous command, or the previous command's response was too
-  * big to save.
-  */
--#define EC_CMD_RESEND_RESPONSE 0xdb
-+#define EC_CMD_RESEND_RESPONSE 0x00DB
-
- /*
-  * This header byte on a command indicate version 0. Any header byte less
-@@ -3148,9 +4639,7 @@ enum mkbp_cec_event {
-  *
-  * The old EC interface must not use commands 0xdc or higher.
-  */
--#define EC_CMD_VERSION0 0xdc
--
--#endif  /* !__ACPI__ */
-+#define EC_CMD_VERSION0 0x00DC
-
- /*****************************************************************************/
- /*
-@@ -3160,21 +4649,56 @@ enum mkbp_cec_event {
-  */
-
- /* EC to PD MCU exchange status command */
--#define EC_CMD_PD_EXCHANGE_STATUS 0x100
-+#define EC_CMD_PD_EXCHANGE_STATUS 0x0100
-+#define EC_VER_PD_EXCHANGE_STATUS 2
-+
-+enum pd_charge_state {
-+	PD_CHARGE_NO_CHANGE = 0, /* Don't change charge state */
-+	PD_CHARGE_NONE,          /* No charging allowed */
-+	PD_CHARGE_5V,            /* 5V charging only */
-+	PD_CHARGE_MAX            /* Charge at max voltage */
-+};
-
- /* Status of EC being sent to PD */
-+#define EC_STATUS_HIBERNATING	BIT(0)
-+
- struct ec_params_pd_status {
--	int8_t batt_soc; /* battery state of charge */
--} __packed;
-+	uint8_t status;       /* EC status */
-+	int8_t batt_soc;      /* battery state of charge */
-+	uint8_t charge_state; /* charging state (from enum pd_charge_state) */
-+} __ec_align1;
-
- /* Status of PD being sent back to EC */
-+#define PD_STATUS_HOST_EVENT      BIT(0) /* Forward host event to AP */
-+#define PD_STATUS_IN_RW           BIT(1) /* Running RW image */
-+#define PD_STATUS_JUMPED_TO_IMAGE BIT(2) /* Current image was jumped to */
-+#define PD_STATUS_TCPC_ALERT_0    BIT(3) /* Alert active in port 0 TCPC */
-+#define PD_STATUS_TCPC_ALERT_1    BIT(4) /* Alert active in port 1 TCPC */
-+#define PD_STATUS_TCPC_ALERT_2    BIT(5) /* Alert active in port 2 TCPC */
-+#define PD_STATUS_TCPC_ALERT_3    BIT(6) /* Alert active in port 3 TCPC */
-+#define PD_STATUS_EC_INT_ACTIVE  (PD_STATUS_TCPC_ALERT_0 | \
-+				      PD_STATUS_TCPC_ALERT_1 | \
-+				      PD_STATUS_HOST_EVENT)
- struct ec_response_pd_status {
--	int8_t status;        /* PD MCU status */
--	uint32_t curr_lim_ma; /* input current limit */
--} __packed;
-+	uint32_t curr_lim_ma;       /* input current limit */
-+	uint16_t status;            /* PD MCU status */
-+	int8_t active_charge_port;  /* active charging port */
-+} __ec_align_size1;
-+
-+/* AP to PD MCU host event status command, cleared on read */
-+#define EC_CMD_PD_HOST_EVENT_STATUS 0x0104
-+
-+/* PD MCU host event status bits */
-+#define PD_EVENT_UPDATE_DEVICE     BIT(0)
-+#define PD_EVENT_POWER_CHANGE      BIT(1)
-+#define PD_EVENT_IDENTITY_RECEIVED BIT(2)
-+#define PD_EVENT_DATA_SWAP         BIT(3)
-+struct ec_response_host_event_status {
-+	uint32_t status;      /* PD MCU host event status */
-+} __ec_align4;
-
- /* Set USB type-C port role and muxes */
--#define EC_CMD_USB_PD_CONTROL 0x101
-+#define EC_CMD_USB_PD_CONTROL 0x0101
-
- enum usb_pd_control_role {
- 	USB_PD_CTRL_ROLE_NO_CHANGE = 0,
-@@ -3182,6 +4706,8 @@ enum usb_pd_control_role {
- 	USB_PD_CTRL_ROLE_TOGGLE_OFF = 2,
- 	USB_PD_CTRL_ROLE_FORCE_SINK = 3,
- 	USB_PD_CTRL_ROLE_FORCE_SOURCE = 4,
-+	USB_PD_CTRL_ROLE_FREEZE = 5,
-+	USB_PD_CTRL_ROLE_COUNT
- };
-
- enum usb_pd_control_mux {
-@@ -3191,6 +4717,7 @@ enum usb_pd_control_mux {
- 	USB_PD_CTRL_MUX_DP = 3,
- 	USB_PD_CTRL_MUX_DOCK = 4,
- 	USB_PD_CTRL_MUX_AUTO = 5,
-+	USB_PD_CTRL_MUX_COUNT
- };
-
- enum usb_pd_control_swap {
-@@ -3206,11 +4733,11 @@ struct ec_params_usb_pd_control {
- 	uint8_t role;
- 	uint8_t mux;
- 	uint8_t swap;
--} __packed;
-+} __ec_align1;
-
--#define PD_CTRL_RESP_ENABLED_COMMS      (1 << 0) /* Communication enabled */
--#define PD_CTRL_RESP_ENABLED_CONNECTED  (1 << 1) /* Device connected */
--#define PD_CTRL_RESP_ENABLED_PD_CAPABLE (1 << 2) /* Partner is PD capable */
-+#define PD_CTRL_RESP_ENABLED_COMMS      BIT(0) /* Communication enabled */
-+#define PD_CTRL_RESP_ENABLED_CONNECTED  BIT(1) /* Device connected */
-+#define PD_CTRL_RESP_ENABLED_PD_CAPABLE BIT(2) /* Partner is PD capable */
-
- #define PD_CTRL_RESP_ROLE_POWER         BIT(0) /* 0=SNK/1=SRC */
- #define PD_CTRL_RESP_ROLE_DATA          BIT(1) /* 0=UFP/1=DFP */
-@@ -3220,28 +4747,51 @@ struct ec_params_usb_pd_control {
- #define PD_CTRL_RESP_ROLE_USB_COMM      BIT(5) /* Partner USB comm capable */
- #define PD_CTRL_RESP_ROLE_EXT_POWERED   BIT(6) /* Partner externally powerd */
-
-+struct ec_response_usb_pd_control {
-+	uint8_t enabled;
-+	uint8_t role;
-+	uint8_t polarity;
-+	uint8_t state;
-+} __ec_align1;
-+
- struct ec_response_usb_pd_control_v1 {
- 	uint8_t enabled;
- 	uint8_t role;
- 	uint8_t polarity;
- 	char state[32];
--} __packed;
-+} __ec_align1;
-
--#define EC_CMD_USB_PD_PORTS 0x102
-+/* Values representing usbc PD CC state */
-+#define USBC_PD_CC_NONE		0 /* No accessory connected */
-+#define USBC_PD_CC_NO_UFP	1 /* No UFP accessory connected */
-+#define USBC_PD_CC_AUDIO_ACC	2 /* Audio accessory connected */
-+#define USBC_PD_CC_DEBUG_ACC	3 /* Debug accessory connected */
-+#define USBC_PD_CC_UFP_ATTACHED	4 /* UFP attached to usbc */
-+#define USBC_PD_CC_DFP_ATTACHED	5 /* DPF attached to usbc */
-+
-+struct ec_response_usb_pd_control_v2 {
-+	uint8_t enabled;
-+	uint8_t role;
-+	uint8_t polarity;
-+	char state[32];
-+	uint8_t cc_state; /* USBC_PD_CC_*Encoded cc state */
-+} __ec_align1;
-+
-+#define EC_CMD_USB_PD_PORTS 0x0102
-
- /* Maximum number of PD ports on a device, num_ports will be <= this */
- #define EC_USB_PD_MAX_PORTS 8
-
- struct ec_response_usb_pd_ports {
- 	uint8_t num_ports;
--} __packed;
-+} __ec_align1;
-
--#define EC_CMD_USB_PD_POWER_INFO 0x103
-+#define EC_CMD_USB_PD_POWER_INFO 0x0103
-
- #define PD_POWER_CHARGING_PORT 0xff
- struct ec_params_usb_pd_power_info {
- 	uint8_t port;
--} __packed;
-+} __ec_align1;
-
- enum usb_chg_type {
- 	USB_CHG_TYPE_NONE,
-@@ -3254,6 +4804,7 @@ enum usb_chg_type {
- 	USB_CHG_TYPE_OTHER,
- 	USB_CHG_TYPE_VBUS,
- 	USB_CHG_TYPE_UNKNOWN,
-+	USB_CHG_TYPE_DEDICATED,
- };
- enum usb_power_roles {
- 	USB_PD_PORT_POWER_DISCONNECTED,
-@@ -3267,7 +4818,7 @@ struct usb_chg_measures {
- 	uint16_t voltage_now;
- 	uint16_t current_max;
- 	uint16_t current_lim;
--} __packed;
-+} __ec_align2;
-
- struct ec_response_usb_pd_power_info {
- 	uint8_t role;
-@@ -3276,11 +4827,8 @@ struct ec_response_usb_pd_power_info {
- 	uint8_t reserved1;
- 	struct usb_chg_measures meas;
- 	uint32_t max_power;
--} __packed;
-+} __ec_align4;
-
--struct ec_params_usb_pd_info_request {
--	uint8_t port;
--} __packed;
-
- /*
-  * This command will return the number of USB PD charge port + the number
-@@ -3290,7 +4838,47 @@ struct ec_params_usb_pd_info_request {
- #define EC_CMD_CHARGE_PORT_COUNT 0x0105
- struct ec_response_charge_port_count {
- 	uint8_t port_count;
--} __packed;
-+} __ec_align1;
-+
-+/* Write USB-PD device FW */
-+#define EC_CMD_USB_PD_FW_UPDATE 0x0110
-+
-+enum usb_pd_fw_update_cmds {
-+	USB_PD_FW_REBOOT,
-+	USB_PD_FW_FLASH_ERASE,
-+	USB_PD_FW_FLASH_WRITE,
-+	USB_PD_FW_ERASE_SIG,
-+};
-+
-+struct ec_params_usb_pd_fw_update {
-+	uint16_t dev_id;
-+	uint8_t cmd;
-+	uint8_t port;
-+	uint32_t size;     /* Size to write in bytes */
-+	/* Followed by data to write */
-+} __ec_align4;
-+
-+/* Write USB-PD Accessory RW_HASH table entry */
-+#define EC_CMD_USB_PD_RW_HASH_ENTRY 0x0111
-+/* RW hash is first 20 bytes of SHA-256 of RW section */
-+#define PD_RW_HASH_SIZE 20
-+struct ec_params_usb_pd_rw_hash_entry {
-+	uint16_t dev_id;
-+	uint8_t dev_rw_hash[PD_RW_HASH_SIZE];
-+	uint8_t reserved;        /*
-+				  * For alignment of current_image
-+				  * TODO(rspangler) but it's not aligned!
-+				  * Should have been reserved[2].
-+				  */
-+	uint32_t current_image;  /* One of ec_current_image */
-+} __ec_align1;
-+
-+/* Read USB-PD Accessory info */
-+#define EC_CMD_USB_PD_DEV_INFO 0x0112
-+
-+struct ec_params_usb_pd_info_request {
-+	uint8_t port;
-+} __ec_align1;
-
- /* Read USB-PD Device discovery info */
- #define EC_CMD_USB_PD_DISCOVERY 0x0113
-@@ -3298,7 +4886,7 @@ struct ec_params_usb_pd_discovery_entry {
- 	uint16_t vid;  /* USB-IF VID */
- 	uint16_t pid;  /* USB-IF PID */
- 	uint8_t ptype; /* product type (hub,periph,cable,ama) */
--} __packed;
-+} __ec_align_size1;
-
- /* Override default charge behavior */
- #define EC_CMD_PD_CHARGE_PORT_OVERRIDE 0x0114
-@@ -3312,9 +4900,13 @@ enum usb_pd_override_ports {
-
- struct ec_params_charge_port_override {
- 	int16_t override_port; /* Override port# */
--} __packed;
-+} __ec_align2;
-
--/* Read (and delete) one entry of PD event log */
-+/*
-+ * Read (and delete) one entry of PD event log.
-+ * TODO(crbug.com/751742): Make this host command more generic to accommodate
-+ * future non-PD logs that use the same internal EC event_log.
-+ */
- #define EC_CMD_PD_GET_LOG_ENTRY 0x0115
-
- struct ec_response_pd_log {
-@@ -3323,7 +4915,7 @@ struct ec_response_pd_log {
- 	uint8_t size_port;  /* [7:5] port number [4:0] payload size in bytes */
- 	uint16_t data;      /* type-defined data payload */
- 	uint8_t payload[0]; /* optional additional data payload: 0..16 bytes */
--} __packed;
-+} __ec_align4;
-
- /* The timestamp is the microsecond counter shifted to get about a ms. */
- #define PD_LOG_TIMESTAMP_SHIFT 10 /* 1 LSB = 1024us */
-@@ -3389,35 +4981,698 @@ struct mcdp_version {
- 	uint8_t major;
- 	uint8_t minor;
- 	uint16_t build;
--} __packed;
-+} __ec_align4;
-
- struct mcdp_info {
- 	uint8_t family[2];
- 	uint8_t chipid[2];
- 	struct mcdp_version irom;
- 	struct mcdp_version fw;
--} __packed;
-+} __ec_align4;
-
- /* struct mcdp_info field decoding */
- #define MCDP_CHIPID(chipid) ((chipid[0] << 8) | chipid[1])
- #define MCDP_FAMILY(family) ((family[0] << 8) | family[1])
-
-+/* Get/Set USB-PD Alternate mode info */
-+#define EC_CMD_USB_PD_GET_AMODE 0x0116
-+struct ec_params_usb_pd_get_mode_request {
-+	uint16_t svid_idx; /* SVID index to get */
-+	uint8_t port;      /* port */
-+} __ec_align_size1;
-+
-+struct ec_params_usb_pd_get_mode_response {
-+	uint16_t svid;   /* SVID */
-+	uint16_t opos;    /* Object Position */
-+	uint32_t vdo[6]; /* Mode VDOs */
-+} __ec_align4;
-+
-+#define EC_CMD_USB_PD_SET_AMODE 0x0117
-+
-+enum pd_mode_cmd {
-+	PD_EXIT_MODE = 0,
-+	PD_ENTER_MODE = 1,
-+	/* Not a command.  Do NOT remove. */
-+	PD_MODE_CMD_COUNT,
-+};
-+
-+struct ec_params_usb_pd_set_mode_request {
-+	uint32_t cmd;  /* enum pd_mode_cmd */
-+	uint16_t svid; /* SVID to set */
-+	uint8_t opos;  /* Object Position */
-+	uint8_t port;  /* port */
-+} __ec_align4;
-+
-+/* Ask the PD MCU to record a log of a requested type */
-+#define EC_CMD_PD_WRITE_LOG_ENTRY 0x0118
-+
-+struct ec_params_pd_write_log_entry {
-+	uint8_t type; /* event type : see PD_EVENT_xx above */
-+	uint8_t port; /* port#, or 0 for events unrelated to a given port */
-+} __ec_align1;
-+
-+
-+/* Control USB-PD chip */
-+#define EC_CMD_PD_CONTROL 0x0119
-+
-+enum ec_pd_control_cmd {
-+	PD_SUSPEND = 0,      /* Suspend the PD chip (EC: stop talking to PD) */
-+	PD_RESUME,           /* Resume the PD chip (EC: start talking to PD) */
-+	PD_RESET,            /* Force reset the PD chip */
-+	PD_CONTROL_DISABLE,  /* Disable further calls to this command */
-+	PD_CHIP_ON,          /* Power on the PD chip */
-+};
-+
-+struct ec_params_pd_control {
-+	uint8_t chip;         /* chip id */
-+	uint8_t subcmd;
-+} __ec_align1;
-+
- /* Get info about USB-C SS muxes */
--#define EC_CMD_USB_PD_MUX_INFO 0x11a
-+#define EC_CMD_USB_PD_MUX_INFO 0x011A
-
- struct ec_params_usb_pd_mux_info {
- 	uint8_t port; /* USB-C port number */
--} __packed;
-+} __ec_align1;
-
- /* Flags representing mux state */
--#define USB_PD_MUX_USB_ENABLED       (1 << 0)
--#define USB_PD_MUX_DP_ENABLED        (1 << 1)
--#define USB_PD_MUX_POLARITY_INVERTED (1 << 2)
--#define USB_PD_MUX_HPD_IRQ           (1 << 3)
-+#define USB_PD_MUX_USB_ENABLED       BIT(0) /* USB connected */
-+#define USB_PD_MUX_DP_ENABLED        BIT(1) /* DP connected */
-+#define USB_PD_MUX_POLARITY_INVERTED BIT(2) /* CC line Polarity inverted */
-+#define USB_PD_MUX_HPD_IRQ           BIT(3) /* HPD IRQ is asserted */
-+#define USB_PD_MUX_HPD_LVL           BIT(4) /* HPD level is asserted */
-
- struct ec_response_usb_pd_mux_info {
- 	uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
--} __packed;
-+} __ec_align1;
-+
-+#define EC_CMD_PD_CHIP_INFO		0x011B
-+
-+struct ec_params_pd_chip_info {
-+	uint8_t port;	/* USB-C port number */
-+	uint8_t renew;	/* Force renewal */
-+} __ec_align1;
-+
-+struct ec_response_pd_chip_info {
-+	uint16_t vendor_id;
-+	uint16_t product_id;
-+	uint16_t device_id;
-+	union {
-+		uint8_t fw_version_string[8];
-+		uint64_t fw_version_number;
-+	};
-+} __ec_align2;
-+
-+struct ec_response_pd_chip_info_v1 {
-+	uint16_t vendor_id;
-+	uint16_t product_id;
-+	uint16_t device_id;
-+	union {
-+		uint8_t fw_version_string[8];
-+		uint64_t fw_version_number;
-+	};
-+	union {
-+		uint8_t min_req_fw_version_string[8];
-+		uint64_t min_req_fw_version_number;
-+	};
-+} __ec_align2;
-+
-+/* Run RW signature verification and get status */
-+#define EC_CMD_RWSIG_CHECK_STATUS	0x011C
-+
-+struct ec_response_rwsig_check_status {
-+	uint32_t status;
-+} __ec_align4;
-+
-+/* For controlling RWSIG task */
-+#define EC_CMD_RWSIG_ACTION	0x011D
-+
-+enum rwsig_action {
-+	RWSIG_ACTION_ABORT = 0,		/* Abort RWSIG and prevent jumping */
-+	RWSIG_ACTION_CONTINUE = 1,	/* Jump to RW immediately */
-+};
-+
-+struct ec_params_rwsig_action {
-+	uint32_t action;
-+} __ec_align4;
-+
-+/* Run verification on a slot */
-+#define EC_CMD_EFS_VERIFY	0x011E
-+
-+struct ec_params_efs_verify {
-+	uint8_t region;		/* enum ec_flash_region */
-+} __ec_align1;
-+
-+/*
-+ * Retrieve info from Cros Board Info store. Response is based on the data
-+ * type. Integers return a uint32. Strings return a string, using the response
-+ * size to determine how big it is.
-+ */
-+#define EC_CMD_GET_CROS_BOARD_INFO	0x011F
-+/*
-+ * Write info into Cros Board Info on EEPROM. Write fails if the board has
-+ * hardware write-protect enabled.
-+ */
-+#define EC_CMD_SET_CROS_BOARD_INFO	0x0120
-+
-+enum cbi_data_tag {
-+	CBI_TAG_BOARD_VERSION = 0, /* uint32_t or smaller */
-+	CBI_TAG_OEM_ID = 1,        /* uint32_t or smaller */
-+	CBI_TAG_SKU_ID = 2,        /* uint32_t or smaller */
-+	CBI_TAG_DRAM_PART_NUM = 3, /* variable length ascii, nul terminated. */
-+	CBI_TAG_OEM_NAME = 4,      /* variable length ascii, nul terminated. */
-+	CBI_TAG_MODEL_ID = 5,      /* uint32_t or smaller */
-+	CBI_TAG_COUNT,
-+};
-+
-+/*
-+ * Flags to control read operation
-+ *
-+ * RELOAD:  Invalidate cache and read data from EEPROM. Useful to verify
-+ *          write was successful without reboot.
-+ */
-+#define CBI_GET_RELOAD		BIT(0)
-+
-+struct ec_params_get_cbi {
-+	uint32_t tag;		/* enum cbi_data_tag */
-+	uint32_t flag;		/* CBI_GET_* */
-+} __ec_align4;
-+
-+/*
-+ * Flags to control write behavior.
-+ *
-+ * NO_SYNC: Makes EC update data in RAM but skip writing to EEPROM. It's
-+ *          useful when writing multiple fields in a row.
-+ * INIT:    Need to be set when creating a new CBI from scratch. All fields
-+ *          will be initialized to zero first.
-+ */
-+#define CBI_SET_NO_SYNC		BIT(0)
-+#define CBI_SET_INIT		BIT(1)
-+
-+struct ec_params_set_cbi {
-+	uint32_t tag;		/* enum cbi_data_tag */
-+	uint32_t flag;		/* CBI_SET_* */
-+	uint32_t size;		/* Data size */
-+	uint8_t data[];		/* For string and raw data */
-+} __ec_align1;
-+
-+/*
-+ * Information about resets of the AP by the EC and the EC's own uptime.
-+ */
-+#define EC_CMD_GET_UPTIME_INFO 0x0121
-+
-+struct ec_response_uptime_info {
-+	/*
-+	 * Number of milliseconds since the last EC boot. Sysjump resets
-+	 * typically do not restart the EC's time_since_boot epoch.
-+	 *
-+	 * WARNING: The EC's sense of time is much less accurate than the AP's
-+	 * sense of time, in both phase and frequency.  This timebase is similar
-+	 * to CLOCK_MONOTONIC_RAW, but with 1% or more frequency error.
-+	 */
-+	uint32_t time_since_ec_boot_ms;
-+
-+	/*
-+	 * Number of times the AP was reset by the EC since the last EC boot.
-+	 * Note that the AP may be held in reset by the EC during the initial
-+	 * boot sequence, such that the very first AP boot may count as more
-+	 * than one here.
-+	 */
-+	uint32_t ap_resets_since_ec_boot;
-+
-+	/*
-+	 * The set of flags which describe the EC's most recent reset.  See
-+	 * include/system.h RESET_FLAG_* for details.
-+	 */
-+	uint32_t ec_reset_flags;
-+
-+	/* Empty log entries have both the cause and timestamp set to zero. */
-+	struct ap_reset_log_entry {
-+		/*
-+		 * See include/chipset.h: enum chipset_{reset,shutdown}_reason
-+		 * for details.
-+		 */
-+		uint16_t reset_cause;
-+
-+		/* Reserved for protocol growth. */
-+		uint16_t reserved;
-+
-+		/*
-+		 * The time of the reset's assertion, in milliseconds since the
-+		 * last EC boot, in the same epoch as time_since_ec_boot_ms.
-+		 * Set to zero if the log entry is empty.
-+		 */
-+		uint32_t reset_time_ms;
-+	} recent_ap_reset[4];
-+} __ec_align4;
-+
-+/*
-+ * Add entropy to the device secret (stored in the rollback region).
-+ *
-+ * Depending on the chip, the operation may take a long time (e.g. to erase
-+ * flash), so the commands are asynchronous.
-+ */
-+#define EC_CMD_ADD_ENTROPY	0x0122
-+
-+enum add_entropy_action {
-+	/* Add entropy to the current secret. */
-+	ADD_ENTROPY_ASYNC = 0,
-+	/*
-+	 * Add entropy, and also make sure that the previous secret is erased.
-+	 * (this can be implemented by adding entropy multiple times until
-+	 * all rolback blocks have been overwritten).
-+	 */
-+	ADD_ENTROPY_RESET_ASYNC = 1,
-+	/* Read back result from the previous operation. */
-+	ADD_ENTROPY_GET_RESULT = 2,
-+};
-+
-+struct ec_params_rollback_add_entropy {
-+	uint8_t action;
-+} __ec_align1;
-+
-+/*
-+ * Perform a single read of a given ADC channel.
-+ */
-+#define EC_CMD_ADC_READ		0x0123
-+
-+struct ec_params_adc_read {
-+	uint8_t adc_channel;
-+} __ec_align1;
-+
-+struct ec_response_adc_read {
-+	int32_t adc_value;
-+} __ec_align4;
-+
-+/*
-+ * Read back rollback info
-+ */
-+#define EC_CMD_ROLLBACK_INFO		0x0124
-+
-+struct ec_response_rollback_info {
-+	int32_t id; /* Incrementing number to indicate which region to use. */
-+	int32_t rollback_min_version;
-+	int32_t rw_rollback_version;
-+} __ec_align4;
-+
-+
-+/* Issue AP reset */
-+#define EC_CMD_AP_RESET 0x0125
-+
-+/*****************************************************************************/
-+/* The command range 0x200-0x2FF is reserved for Rotor. */
-+
-+/*****************************************************************************/
-+/*
-+ * Reserve a range of host commands for the CR51 firmware.
-+ */
-+#define EC_CMD_CR51_BASE 0x0300
-+#define EC_CMD_CR51_LAST 0x03FF
-+
-+/*****************************************************************************/
-+/* Fingerprint MCU commands: range 0x0400-0x040x */
-+
-+/* Fingerprint SPI sensor passthru command: prototyping ONLY */
-+#define EC_CMD_FP_PASSTHRU 0x0400
-+
-+#define EC_FP_FLAG_NOT_COMPLETE 0x1
-+
-+struct ec_params_fp_passthru {
-+	uint16_t len;		/* Number of bytes to write then read */
-+	uint16_t flags;		/* EC_FP_FLAG_xxx */
-+	uint8_t data[];		/* Data to send */
-+} __ec_align2;
-+
-+/* Configure the Fingerprint MCU behavior */
-+#define EC_CMD_FP_MODE 0x0402
-+
-+/* Put the sensor in its lowest power mode */
-+#define FP_MODE_DEEPSLEEP      BIT(0)
-+/* Wait to see a finger on the sensor */
-+#define FP_MODE_FINGER_DOWN    BIT(1)
-+/* Poll until the finger has left the sensor */
-+#define FP_MODE_FINGER_UP      BIT(2)
-+/* Capture the current finger image */
-+#define FP_MODE_CAPTURE        BIT(3)
-+/* Finger enrollment session on-going */
-+#define FP_MODE_ENROLL_SESSION BIT(4)
-+/* Enroll the current finger image */
-+#define FP_MODE_ENROLL_IMAGE   BIT(5)
-+/* Try to match the current finger image */
-+#define FP_MODE_MATCH          BIT(6)
-+/* Reset and re-initialize the sensor. */
-+#define FP_MODE_RESET_SENSOR   BIT(7)
-+/* special value: don't change anything just read back current mode */
-+#define FP_MODE_DONT_CHANGE    BIT(31)
-+
-+#define FP_VALID_MODES (FP_MODE_DEEPSLEEP      | \
-+			FP_MODE_FINGER_DOWN    | \
-+			FP_MODE_FINGER_UP      | \
-+			FP_MODE_CAPTURE        | \
-+			FP_MODE_ENROLL_SESSION | \
-+			FP_MODE_ENROLL_IMAGE   | \
-+			FP_MODE_MATCH          | \
-+			FP_MODE_RESET_SENSOR   | \
-+			FP_MODE_DONT_CHANGE)
-+
-+/* Capture types defined in bits [30..28] */
-+#define FP_MODE_CAPTURE_TYPE_SHIFT 28
-+#define FP_MODE_CAPTURE_TYPE_MASK  (0x7 << FP_MODE_CAPTURE_TYPE_SHIFT)
-+/*
-+ * This enum must remain ordered, if you add new values you must ensure that
-+ * FP_CAPTURE_TYPE_MAX is still the last one.
-+ */
-+enum fp_capture_type {
-+	/* Full blown vendor-defined capture (produces 'frame_size' bytes) */
-+	FP_CAPTURE_VENDOR_FORMAT = 0,
-+	/* Simple raw image capture (produces width x height x bpp bits) */
-+	FP_CAPTURE_SIMPLE_IMAGE = 1,
-+	/* Self test pattern (e.g. checkerboard) */
-+	FP_CAPTURE_PATTERN0 = 2,
-+	/* Self test pattern (e.g. inverted checkerboard) */
-+	FP_CAPTURE_PATTERN1 = 3,
-+	/* Capture for Quality test with fixed contrast */
-+	FP_CAPTURE_QUALITY_TEST = 4,
-+	/* Capture for pixel reset value test */
-+	FP_CAPTURE_RESET_TEST = 5,
-+	FP_CAPTURE_TYPE_MAX,
-+};
-+/* Extracts the capture type from the sensor 'mode' word */
-+#define FP_CAPTURE_TYPE(mode) (((mode) & FP_MODE_CAPTURE_TYPE_MASK) \
-+				       >> FP_MODE_CAPTURE_TYPE_SHIFT)
-+
-+struct ec_params_fp_mode {
-+	uint32_t mode; /* as defined by FP_MODE_ constants */
-+} __ec_align4;
-+
-+struct ec_response_fp_mode {
-+	uint32_t mode; /* as defined by FP_MODE_ constants */
-+} __ec_align4;
-+
-+/* Retrieve Fingerprint sensor information */
-+#define EC_CMD_FP_INFO 0x0403
-+
-+/* Number of dead pixels detected on the last maintenance */
-+#define FP_ERROR_DEAD_PIXELS(errors) ((errors) & 0x3FF)
-+/* Unknown number of dead pixels detected on the last maintenance */
-+#define FP_ERROR_DEAD_PIXELS_UNKNOWN (0x3FF)
-+/* No interrupt from the sensor */
-+#define FP_ERROR_NO_IRQ    BIT(12)
-+/* SPI communication error */
-+#define FP_ERROR_SPI_COMM  BIT(13)
-+/* Invalid sensor Hardware ID */
-+#define FP_ERROR_BAD_HWID  BIT(14)
-+/* Sensor initialization failed */
-+#define FP_ERROR_INIT_FAIL BIT(15)
-+
-+struct ec_response_fp_info_v0 {
-+	/* Sensor identification */
-+	uint32_t vendor_id;
-+	uint32_t product_id;
-+	uint32_t model_id;
-+	uint32_t version;
-+	/* Image frame characteristics */
-+	uint32_t frame_size;
-+	uint32_t pixel_format; /* using V4L2_PIX_FMT_ */
-+	uint16_t width;
-+	uint16_t height;
-+	uint16_t bpp;
-+	uint16_t errors; /* see FP_ERROR_ flags above */
-+} __ec_align4;
-+
-+struct ec_response_fp_info {
-+	/* Sensor identification */
-+	uint32_t vendor_id;
-+	uint32_t product_id;
-+	uint32_t model_id;
-+	uint32_t version;
-+	/* Image frame characteristics */
-+	uint32_t frame_size;
-+	uint32_t pixel_format; /* using V4L2_PIX_FMT_ */
-+	uint16_t width;
-+	uint16_t height;
-+	uint16_t bpp;
-+	uint16_t errors; /* see FP_ERROR_ flags above */
-+	/* Template/finger current information */
-+	uint32_t template_size;  /* max template size in bytes */
-+	uint16_t template_max;   /* maximum number of fingers/templates */
-+	uint16_t template_valid; /* number of valid fingers/templates */
-+	uint32_t template_dirty; /* bitmap of templates with MCU side changes */
-+	uint32_t template_version; /* version of the template format */
-+} __ec_align4;
-+
-+/* Get the last captured finger frame or a template content */
-+#define EC_CMD_FP_FRAME 0x0404
-+
-+/* constants defining the 'offset' field which also contains the frame index */
-+#define FP_FRAME_INDEX_SHIFT       28
-+/* Frame buffer where the captured image is stored */
-+#define FP_FRAME_INDEX_RAW_IMAGE    0
-+/* First frame buffer holding a template */
-+#define FP_FRAME_INDEX_TEMPLATE     1
-+#define FP_FRAME_GET_BUFFER_INDEX(offset) ((offset) >> FP_FRAME_INDEX_SHIFT)
-+#define FP_FRAME_OFFSET_MASK       0x0FFFFFFF
-+
-+/* Version of the format of the encrypted templates. */
-+#define FP_TEMPLATE_FORMAT_VERSION 3
-+
-+/* Constants for encryption parameters */
-+#define FP_CONTEXT_NONCE_BYTES 12
-+#define FP_CONTEXT_USERID_WORDS (32 / sizeof(uint32_t))
-+#define FP_CONTEXT_TAG_BYTES 16
-+#define FP_CONTEXT_SALT_BYTES 16
-+#define FP_CONTEXT_TPM_BYTES 32
-+
-+struct ec_fp_template_encryption_metadata {
-+	/*
-+	 * Version of the structure format (N=3).
-+	 */
-+	uint16_t struct_version;
-+	/* Reserved bytes, set to 0. */
-+	uint16_t reserved;
-+	/*
-+	 * The salt is *only* ever used for key derivation. The nonce is unique,
-+	 * a different one is used for every message.
-+	 */
-+	uint8_t nonce[FP_CONTEXT_NONCE_BYTES];
-+	uint8_t salt[FP_CONTEXT_SALT_BYTES];
-+	uint8_t tag[FP_CONTEXT_TAG_BYTES];
-+};
-+
-+struct ec_params_fp_frame {
-+	/*
-+	 * The offset contains the template index or FP_FRAME_INDEX_RAW_IMAGE
-+	 * in the high nibble, and the real offset within the frame in
-+	 * FP_FRAME_OFFSET_MASK.
-+	 */
-+	uint32_t offset;
-+	uint32_t size;
-+} __ec_align4;
-+
-+/* Load a template into the MCU */
-+#define EC_CMD_FP_TEMPLATE 0x0405
-+
-+/* Flag in the 'size' field indicating that the full template has been sent */
-+#define FP_TEMPLATE_COMMIT 0x80000000
-+
-+struct ec_params_fp_template {
-+	uint32_t offset;
-+	uint32_t size;
-+	uint8_t data[];
-+} __ec_align4;
-+
-+/* Clear the current fingerprint user context and set a new one */
-+#define EC_CMD_FP_CONTEXT 0x0406
-+
-+struct ec_params_fp_context {
-+	uint32_t userid[FP_CONTEXT_USERID_WORDS];
-+} __ec_align4;
-+
-+#define EC_CMD_FP_STATS 0x0407
-+
-+#define FPSTATS_CAPTURE_INV  BIT(0)
-+#define FPSTATS_MATCHING_INV BIT(1)
-+
-+struct ec_response_fp_stats {
-+	uint32_t capture_time_us;
-+	uint32_t matching_time_us;
-+	uint32_t overall_time_us;
-+	struct {
-+		uint32_t lo;
-+		uint32_t hi;
-+	} overall_t0;
-+	uint8_t timestamps_invalid;
-+	int8_t template_matched;
-+} __ec_align2;
-+
-+#define EC_CMD_FP_SEED 0x0408
-+struct ec_params_fp_seed {
-+	/*
-+	 * Version of the structure format (N=3).
-+	 */
-+	uint16_t struct_version;
-+	/* Reserved bytes, set to 0. */
-+	uint16_t reserved;
-+	/* Seed from the TPM. */
-+	uint8_t seed[FP_CONTEXT_TPM_BYTES];
-+} __ec_align4;
-+
-+/*****************************************************************************/
-+/* Touchpad MCU commands: range 0x0500-0x05FF */
-+
-+/* Perform touchpad self test */
-+#define EC_CMD_TP_SELF_TEST 0x0500
-+
-+/* Get number of frame types, and the size of each type */
-+#define EC_CMD_TP_FRAME_INFO 0x0501
-+
-+struct ec_response_tp_frame_info {
-+	uint32_t n_frames;
-+	uint32_t frame_sizes[0];
-+} __ec_align4;
-+
-+/* Create a snapshot of current frame readings */
-+#define EC_CMD_TP_FRAME_SNAPSHOT 0x0502
-+
-+/* Read the frame */
-+#define EC_CMD_TP_FRAME_GET 0x0503
-+
-+struct ec_params_tp_frame_get {
-+	uint32_t frame_index;
-+	uint32_t offset;
-+	uint32_t size;
-+} __ec_align4;
-+
-+/*****************************************************************************/
-+/* EC-EC communication commands: range 0x0600-0x06FF */
-+
-+#define EC_COMM_TEXT_MAX 8
-+
-+/*
-+ * Get battery static information, i.e. information that never changes, or
-+ * very infrequently.
-+ */
-+#define EC_CMD_BATTERY_GET_STATIC 0x0600
-+
-+/**
-+ * struct ec_params_battery_static_info - Battery static info parameters
-+ * @index: Battery index.
-+ */
-+struct ec_params_battery_static_info {
-+	uint8_t index;
-+} __ec_align_size1;
-+
-+/**
-+ * struct ec_response_battery_static_info - Battery static info response
-+ * @design_capacity: Battery Design Capacity (mAh)
-+ * @design_voltage: Battery Design Voltage (mV)
-+ * @manufacturer: Battery Manufacturer String
-+ * @model: Battery Model Number String
-+ * @serial: Battery Serial Number String
-+ * @type: Battery Type String
-+ * @cycle_count: Battery Cycle Count
-+ */
-+struct ec_response_battery_static_info {
-+	uint16_t design_capacity;
-+	uint16_t design_voltage;
-+	char manufacturer[EC_COMM_TEXT_MAX];
-+	char model[EC_COMM_TEXT_MAX];
-+	char serial[EC_COMM_TEXT_MAX];
-+	char type[EC_COMM_TEXT_MAX];
-+	/* TODO(crbug.com/795991): Consider moving to dynamic structure. */
-+	uint32_t cycle_count;
-+} __ec_align4;
-+
-+/*
-+ * Get battery dynamic information, i.e. information that is likely to change
-+ * every time it is read.
-+ */
-+#define EC_CMD_BATTERY_GET_DYNAMIC 0x0601
-+
-+/**
-+ * struct ec_params_battery_dynamic_info - Battery dynamic info parameters
-+ * @index: Battery index.
-+ */
-+struct ec_params_battery_dynamic_info {
-+	uint8_t index;
-+} __ec_align_size1;
-+
-+/**
-+ * struct ec_response_battery_dynamic_info - Battery dynamic info response
-+ * @actual_voltage: Battery voltage (mV)
-+ * @actual_current: Battery current (mA); negative=discharging
-+ * @remaining_capacity: Remaining capacity (mAh)
-+ * @full_capacity: Capacity (mAh, might change occasionally)
-+ * @flags: Flags, see EC_BATT_FLAG_*
-+ * @desired_voltage: Charging voltage desired by battery (mV)
-+ * @desired_current: Charging current desired by battery (mA)
-+ */
-+struct ec_response_battery_dynamic_info {
-+	int16_t actual_voltage;
-+	int16_t actual_current;
-+	int16_t remaining_capacity;
-+	int16_t full_capacity;
-+	int16_t flags;
-+	int16_t desired_voltage;
-+	int16_t desired_current;
-+} __ec_align2;
-+
-+/*
-+ * Control charger chip. Used to control charger chip on the slave.
-+ */
-+#define EC_CMD_CHARGER_CONTROL 0x0602
-+
-+/**
-+ * struct ec_params_charger_control - Charger control parameters
-+ * @max_current: Charger current (mA). Positive to allow base to draw up to
-+ *     max_current and (possibly) charge battery, negative to request current
-+ *     from base (OTG).
-+ * @otg_voltage: Voltage (mV) to use in OTG mode, ignored if max_current is
-+ *     >= 0.
-+ * @allow_charging: Allow base battery charging (only makes sense if
-+ *     max_current > 0).
-+ */
-+struct ec_params_charger_control {
-+	int16_t max_current;
-+	uint16_t otg_voltage;
-+	uint8_t allow_charging;
-+} __ec_align_size1;
-+
-+/*****************************************************************************/
-+/*
-+ * Reserve a range of host commands for board-specific, experimental, or
-+ * special purpose features. These can be (re)used without updating this file.
-+ *
-+ * CAUTION: Don't go nuts with this. Shipping products should document ALL
-+ * their EC commands for easier development, testing, debugging, and support.
-+ *
-+ * All commands MUST be #defined to be 4-digit UPPER CASE hex values
-+ * (e.g., 0x00AB, not 0xab) for CONFIG_HOSTCMD_SECTION_SORTED to work.
-+ *
-+ * In your experimental code, you may want to do something like this:
-+ *
-+ *   #define EC_CMD_MAGIC_FOO 0x0000
-+ *   #define EC_CMD_MAGIC_BAR 0x0001
-+ *   #define EC_CMD_MAGIC_HEY 0x0002
-+ *
-+ *   DECLARE_PRIVATE_HOST_COMMAND(EC_CMD_MAGIC_FOO, magic_foo_handler,
-+ *      EC_VER_MASK(0);
-+ *
-+ *   DECLARE_PRIVATE_HOST_COMMAND(EC_CMD_MAGIC_BAR, magic_bar_handler,
-+ *      EC_VER_MASK(0);
-+ *
-+ *   DECLARE_PRIVATE_HOST_COMMAND(EC_CMD_MAGIC_HEY, magic_hey_handler,
-+ *      EC_VER_MASK(0);
-+ */
-+#define EC_CMD_BOARD_SPECIFIC_BASE 0x3E00
-+#define EC_CMD_BOARD_SPECIFIC_LAST 0x3FFF
-+
-+/*
-+ * Given the private host command offset, calculate the true private host
-+ * command value.
-+ */
-+#define EC_PRIVATE_HOST_COMMAND_VALUE(command) \
-+	(EC_CMD_BOARD_SPECIFIC_BASE + (command))
-
- /*****************************************************************************/
- /*
-@@ -3457,4 +5712,10 @@ struct ec_response_usb_pd_mux_info {
- #define EC_LPC_ADDR_OLD_PARAM   EC_HOST_CMD_REGION1
- #define EC_OLD_PARAM_SIZE       EC_HOST_CMD_REGION_SIZE
-
-+#endif  /* !__ACPI__ */
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
- #endif  /* __CROS_EC_COMMANDS_H */
--- 
-2.21.0.392.gf8f6787159e-goog
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--SUOF0GtieIMvvwua
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+l+653kFgvvNo9/kPfI2ettbdAQA=
+
+--SUOF0GtieIMvvwua--
