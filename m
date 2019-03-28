@@ -2,167 +2,129 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D12C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7312C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7135D20700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZMvf6fj"
+	by mail.kernel.org (Postfix) with ESMTP id 7E62D2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553763452;
+	bh=EROZdJfd6EE6W9XxTLeEb7P+1vhW3cEkXb4ZBDypzdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WiZpeamuNIZg5jQy0ZlF21Q1W1QUpaP0VayOWBaebqKg1OfgOiS1KRMwVQyvIF77i
+	 ncLE/2Ss8OsJRq5WwLgq7Ztu5oxeIBXYKVVZol/fnh4NwWF/FAVmxgXfpkcMc0rrlr
+	 v/Y0slXXt4eg6J7B2unhYnsHYaVkemgi+sHKC8P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfC1IyO (ORCPT
+        id S1726555AbfC1I5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:54:14 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43380 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfC1IyN (ORCPT
+        Thu, 28 Mar 2019 04:57:31 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42702 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfC1I5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:54:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d26so16452823ede.10;
-        Thu, 28 Mar 2019 01:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=46Byn9ex+ViYUukfUFDLIOxP1MiEtq1L0dVm0v4e4xM=;
-        b=HZMvf6fjfdIMXS4z1LgasrrD+T9XFThM55vD5St0rMGkT59Y6ubEcqLDT0mJoE5ZPI
-         /8eg3Lr3Cru772jvLBouA1WSfyStR/rR/v6ylBPHWY2oPiT4ts4Ma11VLnenvQJwul4z
-         H9woc8qboAnjcVqwEd269LZ29tjpFZK9ISASSuz2Og9VST2bwEszkazxEQMhVZpg4gGO
-         qT6m1TmNAgqsTJjz8CiHdBrDU1XAVXsF2sAuLlGdyZh1fWm8Cz8IM9Yh8rIxkYXmEcF+
-         2FEB4InIYQKf9r3csk/KZAUkp/dzGFYCXMknA8ctZ3lPKkx/SgIECItuOoiBhCiXHzLO
-         GitA==
+        Thu, 28 Mar 2019 04:57:31 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 103so17576860otd.9;
+        Thu, 28 Mar 2019 01:57:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=46Byn9ex+ViYUukfUFDLIOxP1MiEtq1L0dVm0v4e4xM=;
-        b=a7kMbPlWWXzsCq7aKQg2l58KgwGvbeP9YIYfpA34ls0Tg9+E3Dl4RHkyV/bHbs2WJk
-         nUIdCJ4tGfKTpT3eRDT4v7k0rAbx7Z/mJsGRfkyV8+NP778d91xpDh6koDH+r9ULrMCI
-         ylzmVCYG/slBYc4m9nyLxKeZ+b4wbwozHxWyTU3o6XaHE8xk94sDl7+GaMREI9KRUitl
-         vam3cnOQSxoIRC2G9uuG1zMUZkVXI0Px92GPTp6hgeqwVeEUTinFEYvQHpGDmW9102F0
-         flxY05MwIBRv/RoUh5xqaGEmSV6d2TGEgXc049jypBHgW4eFaPmaopeIYpvAACVhk+LI
-         naMA==
-X-Gm-Message-State: APjAAAU4dh8V/pUa6wuhhi4bmbs476DoUyS/CfzIhqDV2IPwa02nF7BM
-        8eY+mPG13KNYew13d9PWQ9DYvg2Sbff13VIkzQdJ2axQ
-X-Google-Smtp-Source: APXvYqx4nv0AlBHRExf5Bp5KVImfc2N+HjdduRzlT3LqlT7XceJ3OmKHb52aCJ7ErJ7SPiS6EicvELpcBkefOv9XkbE=
-X-Received: by 2002:a50:b615:: with SMTP id b21mr27194936ede.175.1553763251645;
- Thu, 28 Mar 2019 01:54:11 -0700 (PDT)
+        bh=EROZdJfd6EE6W9XxTLeEb7P+1vhW3cEkXb4ZBDypzdY=;
+        b=N/U4PtzzK2++sDcyLgaRGEyYfJdR2jxcTmrHMSeUera4VkVEgvNq5StoBxfTEapEqZ
+         e9tAfrfpLVLIs+mPROhfBFxPfNt/E42tBCsdpUbw+HB0DwK3Zrl7Vhjifjwnux9IEmVF
+         U0YvfX7f9xD00HsqAqd/x/Oqi0/04m8hSAdTHC3CQ2o7vnCmJdF6e6njQSxhjWhbS7KZ
+         tkvy98ki0IR0+YKSgIfwUQLrZjTsQfVhQakRnTLfTtErbbY2FXJMzmBrJzQbi04JO9tv
+         8VJAQeQsJTGNJ/Um/qA/o4o/UQaCuORslR9XDstbccsuhlMjGRPpGxNUGVpeyXm48ixu
+         HQ5Q==
+X-Gm-Message-State: APjAAAXqhVJ9Ve8eP5ywzJzihgw4In1cPAdZw/vSfa+4feVnuFjSEoT5
+        oloxeUGRHV6Eml+UFUg78i1x7k4agTec8Y5xSbE=
+X-Google-Smtp-Source: APXvYqyoefmmqWRgCK/1PUIUgOAIENnkD1IB672+QeDNWHD7w7aFsZ4pLeWc8nsF1natR3vfXJDzoBRFznMCE2ZwnOo=
+X-Received: by 2002:a9d:6498:: with SMTP id g24mr30755915otl.343.1553763450279;
+ Thu, 28 Mar 2019 01:57:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190327190244.9208-1-daniel.baluta@nxp.com> <20190327190244.9208-3-daniel.baluta@nxp.com>
- <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Thu, 28 Mar 2019 10:53:59 +0200
-Message-ID: <CAEnQRZB8f4rHhsUoefKUB6PN_aRPtSB4y8O_D8N0_s-Zq0_8Vw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Teo Hall <teo.hall@nxp.com>, yibin.gong@nxp.com
+References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
+ <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
+ <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com> <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com>
+In-Reply-To: <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 Mar 2019 09:57:18 +0100
+Message-ID: <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
+To:     Furquan Shaikh <furquan@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devel@acpica.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Evan Green <evgreen@google.com>,
+        Duncan Laurie <dlaurie@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 4:32 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+On Thu, Mar 28, 2019 at 1:46 AM Furquan Shaikh <furquan@google.com> wrote:
 >
-> > From: Daniel Baluta
-> > Sent: Thursday, March 28, 2019 3:03 AM
+> On Wed, Mar 27, 2019 at 5:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
 > >
-> > i.MX8QXP contains a total of 4 EDMA controllers of which two are primarily
-> > for audio components and the other two are for non-audio periperhals.
+> > On Thu, Mar 21, 2019 at 3:16 AM Furquan Shaikh <furquan@google.com> wrote:
+> > >
+> > > On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
+> > > > >
+> > > > > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
+> > > > > clearing ACPI IRQs during suspend/resume") was added to stop clearing
+> > > > > of event status bits unconditionally on suspend and resume paths. This
+> > > > > was done because of an issue
+> > > > > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
+> > > > > lid status stays closed even on resume (which happens because event
+> > > > > status bits are cleared unconditionally on resume). Though this change
+> > > > > fixed the issue on suspend path, it introduced regressions on several
+> > > > > resume paths.
+> > > > >
+> > > > > First regression was reported and fixed on S5 path by the following
+> > > > > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
+> > > > > entering S5"). Next regression was reported and fixed on all legacy
+> > > > > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
+> > > > > events when entering sleep states"). However, regression still exists
+> > > > > on S0ix sleep path since it does not follow the legacy sleep path.
+> > > >
+> > > > What exactly is failing?
+> > >
+> > > Here is the failure scenario:
+> > >
+> > > 1. Consider the case of trackpad which acts as a wake source.
+> > > 2. Since the pad is configured for SCI, GPE_STS gets set for that pad
+> > > during normal interrupts as well (i.e. during probe at boot or when
+> > > using the trackpad)
 > >
-> > This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+> > I don't quite understand this.
 > >
-> > EDMA0 contains channels for:
-> >       * ASRC0
-> >       * ESAI0
-> >       * SPDIF0
-> >       * SAI0, SAI1, SAI2, SAI3
-> >
-> > EDMA1 contains channels for:
-> >       * ASRC1
-> >       * SAI4, SAI5
-> >
-> > See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
-> >
-> > This patch is based on the dtsi file initially submitted by Teo Hall in i.MX NXP
-> > internal tree.
-> >
-> > [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
-> >
-> > Cc: Teo Hall <teo.hall@nxp.com>
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
-> > ++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > index 0cb939861a60..84c7c3eca1a1 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> > @@ -182,6 +182,78 @@
-> >                       #clock-cells = <1>;
-> >               };
-> >
-> > +             edma0: dma-controller@591f0000 {
-> > +                     compatible = "fsl,imx8qxp-edma";
-> > +                     reg = <0x59200000 0x10000>,   /* asrc0 pair A input req */
-> > +                             <0x59210000 0x10000>, /* asrc0 pair B input req */
-> > +                             <0x59220000 0x10000>, /* asrc0 pair C input req */
-> > +                             <0x59230000 0x10000>, /* asrc0 pair A output req */
-> > +                             <0x59240000 0x10000>, /* asrc0 pair B output req */
-> > +                             <0x59250000 0x10000>, /* asrc0 pair C output req */
-> > +                             <0x59260000 0x10000>, /* esai0 rx */
-> > +                             <0x59270000 0x10000>, /* esai0 tx */
-> > +                             <0x59280000 0x10000>, /* spdif0 rx */
-> > +                             <0x59290000 0x10000>, /* spdif0 tx */
-> > +                             <0x592c0000 0x10000>, /* sai0 rx */
-> > +                             <0x592d0000 0x10000>, /* sai0 tx */
-> > +                             <0x592e0000 0x10000>, /* sai1 rx */
-> > +                             <0x592f0000 0x10000>, /* sai1 tx */
-> > +                     #dma-cells = <3>;
+> > Is the same GPE used for signaling trackpad events in the system
+> > working state and for wakeup?
 >
-> In binding doc, it's 2.
-> - #dma-cells : Must be <2>.
->         The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
->         Specific request source can only be multiplexed by specific channels
->         group called DMAMUX.
->         The 2nd cell specifies the request source(slot) ID.
->
-> Need update binding doc?
->
-> > +                     shared-interrupt;
->
-> Undocumented property?
->
-> Checkpatch did not complain?
+> Yes. The same pad is being configured for interrupts (i.e. routed to
+> APIC) during S0 as well as configured for GPE (i.e. routed for SCI) to
+> cause wakes when in S0ix/S3. This pad is externally connected to
+> trackpad interrupt line.
 
-Thanks Aisheng for this comment. I think we might need to delay a little bit
-this patch because (as pointed by Yibin) on i.MX8 QXP/QM we use
-fsl-edma-v3 which *is not* yet upstream.
+And the way the system is wired up causes the GPE status to be set
+when it is enabled, I suppose?
 
-So, lets get back to adding the nodes after Yibin sends edma-v3 patches.
+So effectively, you need to disable the active-state IRQ, then clear
+the GPE status and enable it for wakeup.
 
-thanks,
-Daniel.
+OK, I'll queue up the patch (and talk to the upstream ACPICA people
+about taking it in there).
+
+Thanks!
