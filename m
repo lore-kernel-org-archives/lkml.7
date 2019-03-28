@@ -2,160 +2,154 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89171C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03375C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52243206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="eZpNA8cd"
+	by mail.kernel.org (Postfix) with ESMTP id C1F99206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553768692;
+	bh=36p/FkvvjEka8WK2i8cv1YDrl+xJsNptGsQUv7U7jHQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FNaf2lTt8iFp+2p/Bf7BtHZvMNXsFlVpYkxsMvnojD2gqEoBlnjrusmLEvWmjH3uK
+	 vQ5UqNfLVT2Dcnn/kLQpur/fJP4laH75b3funian8NKtCaoFgjHIAfZ7hxAcN6cZ1C
+	 wqMEPHm+cs7wezeLOWwvYN2UxD0Kfh3gomLIYync=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfC1KYf (ORCPT
+        id S1727093AbfC1KYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:24:35 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33220 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1KYf (ORCPT
+        Thu, 28 Mar 2019 06:24:51 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42606 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfC1KYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:24:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so22180072wrp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 03:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EWlYvfOObBZY1CN9rzeBvDWTjXjv0i6VqvWKQU37Yy0=;
-        b=eZpNA8cdzCGf2AtLKROLLZ9cxAOCS8zx0Du45GYbvDAGvdkxzoe3RHV5gP24rQxFsG
-         WA/MjlnTtKuRUjSzR1UP3T+5Nr2fkrn3WYuQnwci13oPt5QTXmR141L6s+zYWQNsy17L
-         NSqqQ5MmtJ4samK4xvaOL+g30/XZTZZ9zkpNIPGvYmmAOt0I2FO0LXw4aqWeIC6D+PC+
-         1dCJ6b29nuO9uK3baHJY3T37DRhhv0yR3+WdH/itCfT3EOaPNppzERE9438dFEMdtw1R
-         1X1JVle40QZ5AHLfy6GB7WIO/ac3wSKxFENi2D3obi3TN4bBNcA0LD/Zldb+3sfjS+md
-         pr8w==
+        Thu, 28 Mar 2019 06:24:51 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w139so15333484oie.9;
+        Thu, 28 Mar 2019 03:24:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EWlYvfOObBZY1CN9rzeBvDWTjXjv0i6VqvWKQU37Yy0=;
-        b=X5KWbgezngNlFT+h2F/1R2QL6J+xGKwO6S+eLfhle22NVJBKHt7F49bZlDZDAkbJs4
-         WI++Y+hdx8CUaf1N0t+Aag6HHCOXBqmPz/suedvVGEndMo4YcG5+k4/hfJna7ppXkd+I
-         5STuL2R/YJ9wnFfKOFU9O37bLf2MATsav0dIT+Nudz85D9dKnk4/5q9qjYpDnve4J+2o
-         RZV0ueMvNTZHg6qHYNNaIQ9YveHwMYjVXub+YREMSIYNBwmCHiRCIA52BxMo4gtKBn0y
-         sAaWW8Mh4OAX1mwzE8BtWYpJZxnwctwNgEuE8B7W8njKnCBZMIWEbIRQ+6hyO1ssab3r
-         JhPQ==
-X-Gm-Message-State: APjAAAWqHxLsTUKqDnLJ0NJAvC2MhbRWoB/7MeNsLNhv/ne+QOw6T/E8
-        xZeP5W7ajTpGU6fyL/JI1o8sAjovQMsRzO9+BLW4qA==
-X-Google-Smtp-Source: APXvYqwIUCm7BwmxyVm4IQN//+s5P94fUfjd32llHQkj6aF1tVknwU7UIi2AfK1ElwLziO+dcFq0lMmPhgbCQTuiars=
-X-Received: by 2002:a05:6000:120c:: with SMTP id e12mr13435721wrx.187.1553768672809;
- Thu, 28 Mar 2019 03:24:32 -0700 (PDT)
+        bh=cOoLOfscdDb4F8YP4gTl7EOMuBexDNHvnwwrxdjpBPA=;
+        b=Ewj4V3kpHV9HmWIAzJMZ09Ck9QEtoJ0HoSzyehkLGvcPhSIYqNC/o9nn8mOvUN7n51
+         BqrveN1M0JmZ87HPYpymYm3HuCRTUzX7TD4ioVIg4zLIKQmPCzrk0CuW6E+0oF5vLRxY
+         N4K4USvlX5e1nQubcnuEM5lWTYv9SbBXU02V1tuRQFT5Z65yKnVIDUY+FmmcnFhs50lx
+         pcx/hKeot8SEeM1VOrZakmq+8M+Ue8tORyH1Db7DzbLntnvVqx2JHKX+XY2oPH1CdFBe
+         arMO9f+nXJxodnyvE2HY1j8cqd8gJ5YTg/HfyVya57ESID/B3cec7md+PN+Oq8ELOtr3
+         Vd8Q==
+X-Gm-Message-State: APjAAAU7ion+BxdLUlclFofpMAf0/GoGQyDsEKTF6kj+J8f0d7RoC1Cj
+        sAf9a37mYN4QdXzgxnehAsalirrAaPHHNjl8nGQ=
+X-Google-Smtp-Source: APXvYqyxt0KObdeEdMPX0SrjjcEsEPGTf/SiTwWbTOy2LzdMAqufKUhdvrewmqxldZefswwMHhRdCotxW6x3jbopnH0=
+X-Received: by 2002:aca:5c55:: with SMTP id q82mr22611472oib.95.1553768690692;
+ Thu, 28 Mar 2019 03:24:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190325092234.5451-1-anup.patel@wdc.com> <20190325092234.5451-5-anup.patel@wdc.com>
- <20190325113935.GD27843@infradead.org> <CAAhSdy2dds7pp8=XX+zbKbMoWbgjPxP6r4aMZJeHyqHV2MP4CQ@mail.gmail.com>
- <20190325145919.GB14826@infradead.org> <CAAhSdy2je-_=AHPawbV-8cUR0P7WvqDZ5wNdEmDVQkR-a88Eog@mail.gmail.com>
- <20190327075441.GA29894@infradead.org> <20190328075526.GC14864@rapoport-lnx> <CAAhSdy3URWHVY_GPNb2yRBuctRELRtTTWPM2OpwUVSRFAyXyiA@mail.gmail.com>
-In-Reply-To: <CAAhSdy3URWHVY_GPNb2yRBuctRELRtTTWPM2OpwUVSRFAyXyiA@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 28 Mar 2019 15:54:21 +0530
-Message-ID: <CAAhSdy0iXct2L9g2+SGQMo-eBw3-LOveLiKFWh6Y8u42FsuAFw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] RISC-V: Allow booting kernel from any 4KB aligned address
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        me@anthonycoulter.name
+References: <11953735.uMqeHy63Iu@aspire.rjw.lan> <2864116.v8IU97Resm@aspire.rjw.lan>
+ <20190328094823.y6gyfb6ldq43gojw@queper01-lin>
+In-Reply-To: <20190328094823.y6gyfb6ldq43gojw@queper01-lin>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 Mar 2019 11:24:39 +0100
+Message-ID: <CAJZ5v0jx6ZsYaq=YtYfGFDACkT4Gg=mf+hSBOT_RQeMo7AaM3w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 3:22 PM Anup Patel <anup@brainfault.org> wrote:
+On Thu, Mar 28, 2019 at 10:48 AM Quentin Perret <quentin.perret@arm.com> wrote:
 >
-> On Thu, Mar 28, 2019 at 1:25 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> Hi Rafael,
+>
+> On Tuesday 26 Mar 2019 at 12:18:00 (+0100), Rafael J. Wysocki wrote:
+> > @@ -13,6 +13,8 @@
+> >  #include <linux/sched/cpufreq.h>
+> >  #include <trace/events/power.h>
 > >
-> > On Wed, Mar 27, 2019 at 12:54:41AM -0700, Christoph Hellwig wrote:
-> > > On Mon, Mar 25, 2019 at 09:46:59PM +0530, Anup Patel wrote:
-> > > > > Why do you even care about kernel mappings for non-existant ram.
-> > > >
-> > > > We care because there will always be some buggy kernel driver/code going
-> > > > out-of-bound and accessing non-existent RAM. If we by default map all
-> > > > possible kernel virtual address then behaviour of buggy accesses will be
-> > > > unpredictable.
-> > > >
-> > > > Further, I think we should also make .text and .rodata sections of kernel
-> > > > as read-only. This will protect kernel code and rodata.
-> > >
-> > > All of that is useful at the final_setup_vm() time - but none of it
-> > > matters during early setup_vm where life is complicated.
-> > >
-> > > Mike suggested on the previous iteration that you only do smaller
-> > > mappings when setting up the final mapping to avoid the ops churn,
-> > > and I fully agree with him.
-> > >
-> > > So I would suggest we avoid complicated the fiddly early boot changes
-> > > that just add complxity, and you instead redirect your efforts to
-> > > say implemented proper ro and non-executable sections using 4k mappings
-> > > in the final VM setup only.  That should actuall lead to less code
-> > > and complexity, and provide more benefits.
+> > +#define IOWAIT_BOOST_MIN     (SCHED_CAPACITY_SCALE / 8)
+> > +
+> >  struct sugov_tunables {
+> >       struct gov_attr_set     attr_set;
+> >       unsigned int            rate_limit_us;
+> > @@ -51,7 +53,6 @@ struct sugov_cpu {
+> >       u64                     last_update;
 > >
-> > It might be worth keeping trampoline_pg_dir if we are to split setup_vm().
-> > Then setup_vm() will only initialize the trampoline_pg_dir and
-> > final_setup_vm() will setup the swapper_pg_dir and switch to it.
-> > Otherwise final_setup_vm() would need to update live mappings which might
-> > be fragile.
+> >       unsigned long           bw_dl;
+> > -     unsigned long           min;
+> >       unsigned long           max;
+> >
+> >       /* The field below is for single-CPU policies only: */
+> > @@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct sua
+>
+> The comment above this function needs updating I think.
+>
+> >       if (delta_ns <= TICK_NSEC)
+> >               return false;
+> >
+> > -     sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
+> > +     sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
+> >       sg_cpu->iowait_boost_pending = set_iowait_boost;
+> >
+> >       return true;
+> > @@ -349,7 +350,7 @@ static void sugov_iowait_boost(struct su
+>
+> Ditto.
+
+I overlooked these two, thanks for pointing that out!
+
+Will send an update momentarily.
+
+> >       }
+> >
+> >       /* First wakeup after IO: start with minimum boost */
+> > -     sg_cpu->iowait_boost = sg_cpu->min;
+> > +     sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
+> >  }
+> >
+> >  /**
+> > @@ -389,7 +390,7 @@ static unsigned long sugov_iowait_apply(
+> >                * No boost pending; reduce the boost value.
+> >                */
+> >               sg_cpu->iowait_boost >>= 1;
+> > -             if (sg_cpu->iowait_boost < sg_cpu->min) {
+> > +             if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
+> >                       sg_cpu->iowait_boost = 0;
+> >                       return util;
+> >               }
+> > @@ -826,9 +827,6 @@ static int sugov_start(struct cpufreq_po
+> >               memset(sg_cpu, 0, sizeof(*sg_cpu));
+> >               sg_cpu->cpu                     = cpu;
+> >               sg_cpu->sg_policy               = sg_policy;
+> > -             sg_cpu->min                     =
+> > -                     (SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
+> > -                     policy->cpuinfo.max_freq;
+> >       }
+> >
+> >       for_each_cpu(cpu, policy->cpus) {
 > >
 >
-> We finally know the purpose trampoline_pg_dir page table.
->
-> The trampoline_pg_dir is suppose to contain only one 2M/4M mapping
-> to handle case where PAGE_OFFSET < load_address.
->
-> For 64bit systems, the PAGE_OFFSET is very high value typically
-> 0xFFFFxxxxxxxxxxxx compared to RAM start 0x80000000. It is very
-> unlikely that we will have enormous RAM ending somewhere
-> 0xFFFFxxxxxxxxxxxx.
->
-> For 32bit systems, it is quite possible that bootloader loads kernel at
-> load_address > 0x80000000. Let say PAGE_OFFSET = 0xC0000000
-> and load_address = 0xC0100000. Now the instruction which enables
-> MMU will be 0xC0100xxx and after enabling it will try to fetch next
-> instruction 0xC0100xxx + 4 but 0xC0100000 maps to 0xC0200000
-> as load_address > PAGE_OFFSET hence we will see wrong instruction
-> after enabling MMU.
->
-> (Note: Above explanation was provided by Anthony)
->
-> I guess we will have to keep both trampoline_pg_dir and swapper_pg_dir
-> init in setup_vm() because trampoline_pg_dir will only contain just
-> one 2M/4M mapping.
->
-> Regards,
-> Anup
+> Other than that, I tried a backport of this on a Pixel 3 with Snapdragon
+> 845 (which is relevant because it has tons of OPPs, so starting at 128
+> makes it ramp up faster) to check the impact on power, but the only
+> differences appeared to be in the noise margin, so it's all good :)
 
-I think we should go ahead with your suggestion but with additional
-constraint as follows:
+Cool. :-)
 
-1. The setup_vm() will map only vmlinux_start to vmlinux_end and
-FDT for early mapping in trampoline_pg_dir
-2. The setup_vm() will hit BUG_ON() if load_address is between
-vmlinux_start and vmlinux_end.
-3. The setup_vm_final() will create swapper_pg_dir from scratch
-to avoid updating live mappings
+> Full test results available at [1]. Note that I did enable the iowait
+> boost feature for these tests -- it is disabled by default on P3 ...
 
-The point2 above essentially means that on 32bit/64bit systems
-the bootloader cannot load kernel in physical address range
-PAGE_OFFSET to PAGE_OFFSET + (vmlinux_size) even if
-it is a valid RAM physical address range.
+Thanks!
 
-Suggestions??
-
-Regards,
-Anup
+> ---
+> [1] https://nbviewer.jupyter.org/gist/qperret/69c9bde13aad2d783689e78c9ba2d9bc
