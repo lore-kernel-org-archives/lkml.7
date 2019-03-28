@@ -2,144 +2,208 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C665C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765F4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B862075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E87D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfC1O5Z (ORCPT
+        id S1726394AbfC1O7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:57:25 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:51642 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbfC1O5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:57:25 -0400
-Received: from [IPv6:2001:420:44c1:2579:7126:11db:5076:31b1] ([IPv6:2001:420:44c1:2579:7126:11db:5076:31b1])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 9WT0h78xJNG8z9WT3hpefR; Thu, 28 Mar 2019 15:57:22 +0100
-Subject: Re: [PATCH] media: v4l-ctrl: add control for variable frame rate
-To:     Fish Lin <linfish@google.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Keiichi Watanabe <keiichiw@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Smitha T Murthy <smitha.t@samsung.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190320031022.174052-1-linfish@google.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <0aaba609-1551-e09d-a39f-111dbe99288e@xs4all.nl>
-Date:   Thu, 28 Mar 2019 15:57:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 10:59:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:45778 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726238AbfC1O7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:59:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F158F15AB;
+        Thu, 28 Mar 2019 07:59:21 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 069113F575;
+        Thu, 28 Mar 2019 07:59:19 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 14:59:17 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] kmemleak: survive in a low-memory situation
+Message-ID: <20190328145917.GC10283@arrakis.emea.arm.com>
+References: <20190327005948.24263-1-cai@lca.pw>
+ <20190327084432.GA11927@dhcp22.suse.cz>
+ <20190327172955.GB17247@arrakis.emea.arm.com>
+ <20190327182158.GS10344@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190320031022.174052-1-linfish@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN3T1JwF0DmMOjFvGykGubVOKkDNI9/gMP6lrUZNFpTCsbhaLlCZkm4cTqEYyS9o8GQg/x3jzOevMg/ekfYt9njhPqYTgbFJg11KrqF5DWcQo+Q1dgKx
- 11dffnzfiUaBJSvV2T10Rci6edHnyhPxmnqUTJ+huwdwdLEdhjcq8RQFm/dFk/G1NSyjqlWogCBF/7ydCay9P67Rarer2+aleVskxOpNuMfoFmNM2pONKDR2
- UvZsIFE47zNH/W76zA2NPmwEKE22ypS8IRW+WSb81yS0DscqYle6wzLIQIl8uxi0bC5SelUf+RsPfR+ZLWFefbJAtzcCN3S/m5MPWm1E5FwM1L1dXm22J8CL
- z1aRVAfhldfz9Ps5vfW9c4gh6+ZHgOjCmVSYqU/BRXqN0HGI/zo9F5j1F0w2RKLJrtsN9YnpRpISGsXW6Ft39BCuMouJwtvCgMUOZHzhzofdRNIpKkQVRY/O
- ePIQRtquAGma7Tor/qznW5pdVtNOye9JhxHBLWFFNrBFyze083SwxltLZmCJDblZ8lmIr4GtpejokR1aLOSjJDQchdaCtOyN8myGi8a9j62uds8HS3dpOYmk
- dOBxAgjFrMVjGtTCcn3dUw4xZlysj2he0P5bmhV6UUWMYH8VWrOGcAsnDQmk7NnYwh8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327182158.GS10344@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/20/19 4:10 AM, Fish Lin wrote:
-> These flag are added
-> * V4L2_CID_MPEG_VIDEO_VFR_ENABLE
-> * V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE
-> One is to set variable frame rate enable or not, another is to control
-> minimal frame rate that video encoder should keep per second.
+On Wed, Mar 27, 2019 at 11:21:58AM -0700, Matthew Wilcox wrote:
+> On Wed, Mar 27, 2019 at 05:29:57PM +0000, Catalin Marinas wrote:
+> > On Wed, Mar 27, 2019 at 09:44:32AM +0100, Michal Hocko wrote:
+> > > As long as there is an implicit __GFP_NOFAIL then kmemleak is simply
+> > > broken no matter what other gfp flags you play with. Has anybody looked
+> > > at some sort of preallocation where gfpflags_allow_blocking context
+> > > allocate objects into a pool that non-sleeping allocations can eat from?
+> > 
+> > Quick attempt below and it needs some more testing (pretty random pick
+> > of the EMERGENCY_POOL_SIZE value). Also, with __GFP_NOFAIL removed, are
+> > the other flags safe or we should trim them further?
 > 
-> Signed-off-by: Fish Lin <linfish@google.com>
-> ---
->  Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 9 +++++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c             | 3 +++
->  include/uapi/linux/v4l2-controls.h               | 3 +++
->  3 files changed, 15 insertions(+)
+> Why not use mempool?
+
+I had the wrong impression that it could sleep but it's only if
+__GFP_DIRECT_RECLAIM is passed. See below for an updated patch.
+
+> >  #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
+> >  				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
+> > -				 __GFP_NOWARN | __GFP_NOFAIL)
+> > +				 __GFP_NOWARN)
 > 
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> index c97fb7923be5..4bc013d71b67 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> @@ -620,7 +620,16 @@ enum v4l2_mpeg_video_bitrate_mode -
->      * - Bit 24:31
->        - Must be zero.
->  
-> +.. _v4l2-mpeg-video-variable-framerate:
->  
-> +``V4L2_CID_MPEG_VIDEO_VFR_ENABLE (boolean)``
-> +    Set variable framerate enable or not. When enabled, video encoder is able
-> +    to drop frames based on some mechanism, like frame similarity or bitrate
-> +    control (default disable).
-> +
-> +``V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE (integer)``
-> +    Minimal kept frame per second when variable framerate is enabled (default
-> +    is input framerate).
+> Why GFP_NORETRY?  And if I have specified one of the other retry policies
+> in my gfp flags, you should presumably clear that off before setting
+> GFP_NORETRY.
 
-You don't really have a concept of frames per second when encoding. What you
-are probably trying to say is something like: "don't drop more than one frame for
-every X frames" or something like that.
+It only preserves GFP_KERNEL|GFP_ATOMIC from the original flags
+while setting the NOWARN|NORETRY|NOMEMALLOC (the same flags seem to be
+set by mempool_alloc()). Anyway, with the changes below, I'll let
+mempool add the relevant flags while kmemleak only passes
+GFP_KERNEL|GFP_ATOMIC from the original caller.
 
-Which codecs support this? A decoder needs to know that a frame is missing, right?
+-----------------------8<------------------------------------------
+From 09eba8f0235eb16409931e6aad77a45a12bedc82 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Thu, 28 Mar 2019 13:26:07 +0000
+Subject: [PATCH] mm: kmemleak: Use mempool allocations for kmemleak objects
 
-What's the use-case for this?
+This patch adds mempool allocations for struct kmemleak_object and
+kmemleak_scan_area as slightly more resilient than kmem_cache_alloc()
+under memory pressure. The patch also masks out all the gfp flags passed
+to kmemleak other than GFP_KERNEL|GFP_ATOMIC.
 
-Sorry, just trying to understand this better.
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ mm/kmemleak.c | 34 +++++++++++++++++++++++++---------
+ 1 file changed, 25 insertions(+), 9 deletions(-)
 
-Regards,
-
-	Hans
-
->  
->  .. _v4l2-mpeg-video-dec-pts:
->  
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index b79d3bbd8350..566c6552c9a0 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -786,6 +786,8 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:			return "H264 MB Level Rate Control";
->  	case V4L2_CID_MPEG_VIDEO_HEADER_MODE:			return "Sequence Header Mode";
->  	case V4L2_CID_MPEG_VIDEO_MAX_REF_PIC:			return "Max Number of Reference Pics";
-> +	case V4L2_CID_MPEG_VIDEO_VFR_ENABLE:			return "Variable Frame Rate Enable";
-> +	case V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE:		return "VFR Minimal Frame Rate";
->  	case V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP:		return "H263 I-Frame QP Value";
->  	case V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP:		return "H263 P-Frame QP Value";
->  	case V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP:		return "H263 B-Frame QP Value";
-> @@ -1108,6 +1110,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_DECODER_SLICE_INTERFACE:
->  	case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MB_RC_ENABLE:
-> +	case V4L2_CID_MPEG_VIDEO_VFR_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_H264_8X8_TRANSFORM:
->  	case V4L2_CID_MPEG_VIDEO_H264_VUI_SAR_ENABLE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_QPEL:
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 06479f2fb3ae..f1bf52eb0152 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -404,6 +404,9 @@ enum v4l2_mpeg_video_multi_slice_mode {
->  #define V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE		(V4L2_CID_MPEG_BASE+228)
->  #define V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME		(V4L2_CID_MPEG_BASE+229)
->  
-> +#define V4L2_CID_MPEG_VIDEO_VFR_ENABLE (V4L2_CID_MPEG_BASE + 250)
-> +#define V4L2_CID_MPEG_VIDEO_VFR_MIN_FRAMERATE (V4L2_CID_MPEG_BASE + 251)
-> +
->  #define V4L2_CID_MPEG_VIDEO_H263_I_FRAME_QP		(V4L2_CID_MPEG_BASE+300)
->  #define V4L2_CID_MPEG_VIDEO_H263_P_FRAME_QP		(V4L2_CID_MPEG_BASE+301)
->  #define V4L2_CID_MPEG_VIDEO_H263_B_FRAME_QP		(V4L2_CID_MPEG_BASE+302)
-> 
-
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 6c318f5ac234..9755678e83b9 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -82,6 +82,7 @@
+ #include <linux/kthread.h>
+ #include <linux/rbtree.h>
+ #include <linux/fs.h>
++#include <linux/mempool.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+ #include <linux/cpumask.h>
+@@ -125,9 +126,7 @@
+ #define BYTES_PER_POINTER	sizeof(void *)
+ 
+ /* GFP bitmask for kmemleak internal allocations */
+-#define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
+-				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
+-				 __GFP_NOWARN | __GFP_NOFAIL)
++#define gfp_kmemleak_mask(gfp)	((gfp) & (GFP_KERNEL | GFP_ATOMIC))
+ 
+ /* scanning area inside a memory block */
+ struct kmemleak_scan_area {
+@@ -191,6 +190,9 @@ struct kmemleak_object {
+ #define HEX_ASCII		1
+ /* max number of lines to be printed */
+ #define HEX_MAX_LINES		2
++/* minimum memory pool sizes */
++#define MIN_OBJECT_POOL		(NR_CPUS * 4)
++#define MIN_SCAN_AREA_POOL	(NR_CPUS * 1)
+ 
+ /* the list of all allocated objects */
+ static LIST_HEAD(object_list);
+@@ -203,7 +205,9 @@ static DEFINE_RWLOCK(kmemleak_lock);
+ 
+ /* allocation caches for kmemleak internal data */
+ static struct kmem_cache *object_cache;
++static mempool_t *object_mempool;
+ static struct kmem_cache *scan_area_cache;
++static mempool_t *scan_area_mempool;
+ 
+ /* set if tracing memory operations is enabled */
+ static int kmemleak_enabled;
+@@ -483,9 +487,9 @@ static void free_object_rcu(struct rcu_head *rcu)
+ 	 */
+ 	hlist_for_each_entry_safe(area, tmp, &object->area_list, node) {
+ 		hlist_del(&area->node);
+-		kmem_cache_free(scan_area_cache, area);
++		mempool_free(area, scan_area_mempool);
+ 	}
+-	kmem_cache_free(object_cache, object);
++	mempool_free(object, object_mempool);
+ }
+ 
+ /*
+@@ -576,7 +580,7 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
+ 	struct rb_node **link, *rb_parent;
+ 	unsigned long untagged_ptr;
+ 
+-	object = kmem_cache_alloc(object_cache, gfp_kmemleak_mask(gfp));
++	object = mempool_alloc(object_mempool, gfp_kmemleak_mask(gfp));
+ 	if (!object) {
+ 		pr_warn("Cannot allocate a kmemleak_object structure\n");
+ 		kmemleak_disable();
+@@ -640,7 +644,7 @@ static struct kmemleak_object *create_object(unsigned long ptr, size_t size,
+ 			 * be freed while the kmemleak_lock is held.
+ 			 */
+ 			dump_object_info(parent);
+-			kmem_cache_free(object_cache, object);
++			mempool_free(object, object_mempool);
+ 			object = NULL;
+ 			goto out;
+ 		}
+@@ -798,7 +802,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
+ 		return;
+ 	}
+ 
+-	area = kmem_cache_alloc(scan_area_cache, gfp_kmemleak_mask(gfp));
++	area = mempool_alloc(scan_area_mempool, gfp_kmemleak_mask(gfp));
+ 	if (!area) {
+ 		pr_warn("Cannot allocate a scan area\n");
+ 		goto out;
+@@ -810,7 +814,7 @@ static void add_scan_area(unsigned long ptr, size_t size, gfp_t gfp)
+ 	} else if (ptr + size > object->pointer + object->size) {
+ 		kmemleak_warn("Scan area larger than object 0x%08lx\n", ptr);
+ 		dump_object_info(object);
+-		kmem_cache_free(scan_area_cache, area);
++		mempool_free(area, scan_area_mempool);
+ 		goto out_unlock;
+ 	}
+ 
+@@ -2049,6 +2053,18 @@ void __init kmemleak_init(void)
+ 
+ 	object_cache = KMEM_CACHE(kmemleak_object, SLAB_NOLEAKTRACE);
+ 	scan_area_cache = KMEM_CACHE(kmemleak_scan_area, SLAB_NOLEAKTRACE);
++	if (!object_cache || !scan_area_cache) {
++		kmemleak_disable();
++		return;
++	}
++	object_mempool = mempool_create_slab_pool(MIN_OBJECT_POOL,
++						  object_cache);
++	scan_area_mempool = mempool_create_slab_pool(MIN_SCAN_AREA_POOL,
++						     scan_area_cache);
++	if (!object_mempool || !scan_area_mempool) {
++		kmemleak_disable();
++		return;
++	}
+ 
+ 	if (crt_early_log > ARRAY_SIZE(early_log))
+ 		pr_warn("Early log buffer exceeded (%d), please increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE\n",
