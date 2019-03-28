@@ -2,93 +2,115 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8145C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2417AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1C721773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9D1206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfC1O2A (ORCPT
+        id S1726367AbfC1O33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:28:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57199 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfC1O2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:28:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:27:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="156050992"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Mar 2019 07:27:57 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h9W0a-0003RH-Cm; Thu, 28 Mar 2019 16:27:56 +0200
-Date:   Thu, 28 Mar 2019 16:27:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
-Message-ID: <20190328142756.GF9224@smile.fi.intel.com>
-References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
- <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
- <20190328130317.GG22720@zn.tnic>
- <20190328132153.GZ9224@smile.fi.intel.com>
- <20190328134213.GJ22720@zn.tnic>
- <20190328140039.GC9224@smile.fi.intel.com>
- <20190328141307.GM22720@zn.tnic>
+        Thu, 28 Mar 2019 10:29:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46578 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbfC1O33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:29:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A6318AB71;
+        Thu, 28 Mar 2019 14:29:27 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 15:29:27 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 6/6] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190328142927.uxd54bqdvrfbfbn7@pathway.suse.cz>
+References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
+ <20190326124106.27694-7-sakari.ailus@linux.intel.com>
+ <8c6accab-9e0c-c2d4-ce93-ea3ede60f34e@rasmusvillemoes.dk>
+ <20190326132450.GB9224@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190328141307.GM22720@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190326132450.GB9224@smile.fi.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 03:13:07PM +0100, Borislav Petkov wrote:
-> On Thu, Mar 28, 2019 at 04:00:39PM +0200, Andy Shevchenko wrote:
-> > If it's _non-standard_ serial interface (by meaning of I/O accessors and port
-> > addresses), user may consider to use this options in case the interface to
-> > communicate with kernel is serial one and its configuration is done by other
-> > means (firmware / bootloader / EFI / etc).
+On Tue 2019-03-26 15:24:50, Andy Shevchenko wrote:
+> On Tue, Mar 26, 2019 at 02:11:35PM +0100, Rasmus Villemoes wrote:
+> > On 26/03/2019 13.41, Sakari Ailus wrote:
+> > > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> > > support printing full path of the node, including its name ("f") and only
+> > > the node's name ("P") in the printk family of functions. The two flags
+> > > have equivalent functionality to existing %pOF with the same two modifiers
+> > > ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> > > based systems is added by this patch.
 > 
-> And is this non-standard interface out there in the wild or only at
-> Intel's labs?
-
-Of course in the wild.
-
-> Are there boxes like that out there?
-
-One at hand now is called Intel Edison.
-
-> If I go to the store and buy a box, how do I know whether that box would
-> need "nocfg"? Do I look in the BIOS or how do I find out I need to supply
-> "nocfg"?
-
-By reading some technical documentation I suppose.
-What is your point here? earlyprintk is a mechanism for _debugging_, I suppose
-the user should have slightly more knowledge than user.
-
-> > If by BIOS or by other means the serial port is configured
+> > > +	for (pass = false; strspn(fmt, modifiers); fmt++, pass = true) {
+> > > +		if (pass) {
+> > > +			if (buf < end)
+> > > +				*buf = ':';
+> > > +			buf++;
+> > > +		}
+> > > +
+> > > +		switch (*fmt) {
+> > > +		case 'f':	/* full_name */
+> > > +			buf = fwnode_gen_full_name(fwnode, buf, end);
+> > > +			break;
+> > > +		case 'P':	/* name */
+> > > +			buf = string(buf, end, fwnode_get_name(fwnode),
+> > > +				     str_spec);
+> > > +			break;
+> > > +		default:
+> > > +			break;
+> > > +		}
+> > > +	}
+> > 
+> > This seems awfully complicated. Why would anyone ever pass more than one
+> > of 'f' and 'P'? Why not just
+> > 
+> > switch(*fmt) {
+> > case 'P':
+> >    ...
+> > case 'f':
+> > default:
+> >    ...
+> > }
+> > 
+> > which avoids the loop and the strcspn. Or, drop the default: case and
+> > don't have logic at all for falling back to 'f' if neither is present.
+> > 
+> > > +	return widen_string(buf, buf - buf_start, end, spec);
+> > > +}
 > 
-> How do I find out that the serial port is configured?
+> My point as well (as per sent comments against previous version).
+> Sakari, can you add test cases at the same time?
+> 
+> > >  			return device_node_string(buf, end, ptr, spec, fmt + 1);
+> 
+> > > +			return fwnode_string(buf, end, ptr, spec, fmt + 1);
+> > 
+> > Why not pass fmt+2; we know that fmt+1 points at a 'w'. Just to avoid
+> > doing the fmt++ inside fwnode_string().
+> 
+> I guess in order to be consistent with existing %pOF case. But wouldn't be
+> better to fix %pOF for that sooner or later?
 
-If you _already_ connected via it and get firmware / bootloader messages.
+Good question. Are there any %pOF users that would want to use the for
+cycle and printk more values by single %pOF? Would the output be human
+readable without any delimiters or words around?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best Regards,
+Petr
