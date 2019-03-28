@@ -2,139 +2,143 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C850C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCABC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5792173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE25F218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 23:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iMJb67+f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kGyLsJRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfC1Xra (ORCPT
+        id S1728695AbfC1Xsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 19:47:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51820 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfC1Xra (ORCPT
+        Thu, 28 Mar 2019 19:48:38 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37215 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbfC1Xsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 19:47:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SNiDr2124232;
-        Thu, 28 Mar 2019 23:47:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=DCoXfwtDoQElNXOEfosWBeE/6jSxU0DiQdqtsDNUNdE=;
- b=iMJb67+fuQVNpdvgaj3dV0A+AKOE1Ws5y9ti9ugYJXb0jmPwNHSMgBZLJ2ghZf1RxYfY
- ZVKJxyvwPsX4deBz06LETu0pe7dW+HHRhb4ldKbzdy+iWE1HaofJhO5X844P+IoIoh+u
- Dtip/rPUMHoKAxeR27Ne9UR+hNrUE0LIZyBnbDtDoTsAC7ezawApX7XkHGYeqxMfaVWg
- 9FIm6sMgoRPA+9cvxQ8mhAb7vR4ooIc/eSMBx/KNKYRDphJTwW2kNOy2YkvbXN6S9BUd
- 57hmuqYfb6DRD/cpCBUo4ENRRvVTD9Xz8pBvgk+URNjn0o35llqnPu8I6C73cWuyAbMd vw== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by userp2130.oracle.com with ESMTP id 2re6g1hj1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:19 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2SNlJSq008392
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 23:47:19 GMT
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2SNlIn5018631;
-        Thu, 28 Mar 2019 23:47:18 GMT
-Received: from monkey.oracle.com (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Mar 2019 16:47:18 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH v2 1/2] huegtlbfs: on restore reserve error path retain subpool reservation
-Date:   Thu, 28 Mar 2019 16:47:03 -0700
-Message-Id: <20190328234704.27083-2-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190328234704.27083-1-mike.kravetz@oracle.com>
-References: <20190328234704.27083-1-mike.kravetz@oracle.com>
+        Thu, 28 Mar 2019 19:48:37 -0400
+Received: by mail-it1-f195.google.com with SMTP id u65so1098959itc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrG0xVXFW6lpwZPzipOxZqZ/XiI7RlykZHu1woLN+7c=;
+        b=kGyLsJReFwopGKFWbTKr1bVsq/gGxA0wF323f1/btuYXdqKZ1cCxszrv3onUCdRIPz
+         0P5DKM4Dw7GoXdGN+OYw7UsuoyJiMQriZ2+DhbVRYDi83z3JuyVvnfLZbfLY8EH40sBs
+         v0L8lUX131ZckJ06TuCrtJQE0ff84XJWDeihzx7VzQxPA4/CZ5w+EpFMk7oB+NR2sbds
+         n89/PW7Y/O8fto6UUzWqFs/FiEyzvRvZJZiokIgL/d7wQLWXCWLT/uhHRvXUEtOLf+Yu
+         TNWlA5Pp0m5VGS3nbpC/taEKBF8eVk8V5KOnFcrNxoO/oj0vLASOPvW67bgjRjSElcSq
+         00oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrG0xVXFW6lpwZPzipOxZqZ/XiI7RlykZHu1woLN+7c=;
+        b=SWpREFCbHxDDJaCxYoe95eJ6SEksms3hTurymWJgFPCcQFad8VGhUDbvm9ZTEF6H3Z
+         KF9UTUtdDlhYc+SddBs5B3HSS6AIk+ZSdx9Xcui4cO90DoJran7ymxTrHGkTUhz6JN24
+         XKgREgDWpMjzwocGpA1IMJY7+jX7/6QlwRWSjY5azm6tOZfUfmhIR4yy22v9LdZVrul+
+         84DOOtfPAyTEcVqDD/N6wVbnwtDy8+s+aI8988bXgUiF4CD3Bmme8z0Z1Bz7dhyL/OUD
+         FihCeVnEDomujnlIF3vrTYUKXAbpT3e37tg0aVLPSwDrF4mpTfuxUBNZUjQC7VSg5X7B
+         5j3w==
+X-Gm-Message-State: APjAAAV9xUs15zqfGWeniTKiahE5b0uB/+/exsRMUjr50ws1jmHKULbo
+        dTkpN6vKFt+LlLZUcfSXzUUZBWE6zN4YgwYomeMqmw==
+X-Google-Smtp-Source: APXvYqwNSAgl28Rjo0R/g8YaJI1KTruScuJ9Zrk59I8E9SNXHszjThPbCf7bvw8nqNEM5oC3KjUCRs+Gfdl2CiVP1Yo=
+X-Received: by 2002:a24:c106:: with SMTP id e6mr2302037itg.21.1553816916536;
+ Thu, 28 Mar 2019 16:48:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9209 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280154
+References: <20190320222844.134765-1-furquan@google.com> <CAJZ5v0h7dYEFHSOHengJ3OFyXBW+XZVbjCAegpzqg1VxeeaXog@mail.gmail.com>
+ <CAEGmHFEqhh_xYaTXsVHqSgNW-1Ao6-mtk0BPhgu3-8ua6cCZ-Q@mail.gmail.com>
+ <CAJZ5v0hxNA_KHjcqSL4XPpQpB1M4UuWJcYOknex=NOGavoooHA@mail.gmail.com>
+ <CAEGmHFHaFk6v=vcciU3QNaQfLriWSJtQ5QUjciY+O8dLh3DhJA@mail.gmail.com> <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jPJYM6n0OWBM17d3MF5h5B+an+LSRiXTHqboXZuXkcvw@mail.gmail.com>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Thu, 28 Mar 2019 16:48:24 -0700
+Message-ID: <CAEGmHFHvOJWOjgEz3mYBKGeb4+r_QfuLaWb=NW8mq7GTXdefVA@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Clear status of an event before enabling it
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Robert Moore <robert.moore@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devel@acpica.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Evan Green <evgreen@google.com>,
+        Duncan Laurie <dlaurie@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a huge page is allocated, PagePrivate() is set if the allocation
-consumed a reservation.  When freeing a huge page, PagePrivate is checked.
-If set, it indicates the reservation should be restored.  PagePrivate
-being set at free huge page time mostly happens on error paths.
+On Thu, Mar 28, 2019 at 1:57 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Thu, Mar 28, 2019 at 1:46 AM Furquan Shaikh <furquan@google.com> wrote:
+> >
+> > On Wed, Mar 27, 2019 at 5:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Thu, Mar 21, 2019 at 3:16 AM Furquan Shaikh <furquan@google.com> wrote:
+> > > >
+> > > > On Wed, Mar 20, 2019 at 5:11 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > > >
+> > > > > On Wed, Mar 20, 2019 at 11:34 PM Furquan Shaikh <furquan@google.com> wrote:
+> > > > > >
+> > > > > > Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally
+> > > > > > clearing ACPI IRQs during suspend/resume") was added to stop clearing
+> > > > > > of event status bits unconditionally on suspend and resume paths. This
+> > > > > > was done because of an issue
+> > > > > > reported (https://bugzilla.kernel.org/show_bug.cgi?id=196249) where
+> > > > > > lid status stays closed even on resume (which happens because event
+> > > > > > status bits are cleared unconditionally on resume). Though this change
+> > > > > > fixed the issue on suspend path, it introduced regressions on several
+> > > > > > resume paths.
+> > > > > >
+> > > > > > First regression was reported and fixed on S5 path by the following
+> > > > > > change: commit fa85015c0d95 ("ACPICA: Clear status of all events when
+> > > > > > entering S5"). Next regression was reported and fixed on all legacy
+> > > > > > sleep paths by the commit f317c7dc12b7 ("ACPICA: Clear status of all
+> > > > > > events when entering sleep states"). However, regression still exists
+> > > > > > on S0ix sleep path since it does not follow the legacy sleep path.
+> > > > >
+> > > > > What exactly is failing?
+> > > >
+> > > > Here is the failure scenario:
+> > > >
+> > > > 1. Consider the case of trackpad which acts as a wake source.
+> > > > 2. Since the pad is configured for SCI, GPE_STS gets set for that pad
+> > > > during normal interrupts as well (i.e. during probe at boot or when
+> > > > using the trackpad)
+> > >
+> > > I don't quite understand this.
+> > >
+> > > Is the same GPE used for signaling trackpad events in the system
+> > > working state and for wakeup?
+> >
+> > Yes. The same pad is being configured for interrupts (i.e. routed to
+> > APIC) during S0 as well as configured for GPE (i.e. routed for SCI) to
+> > cause wakes when in S0ix/S3. This pad is externally connected to
+> > trackpad interrupt line.
+>
+> And the way the system is wired up causes the GPE status to be set
+> when it is enabled, I suppose?
 
-When huge page reservations are created, a check is made to determine if
-the mapping is associated with an explicitly mounted filesystem.  If so,
-pages are also reserved within the filesystem.  The default action when
-freeing a huge page is to decrement the usage count in any associated
-explicitly mounted filesystem.  However, if the reservation is to be
-restored the reservation/use count within the filesystem should not be
-decrementd.  Otherwise, a subsequent page allocation and free for the same
-mapping location will cause the file filesystem usage to go 'negative'.
+That is correct.
 
-Filesystem                         Size  Used Avail Use% Mounted on
-nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
+>
+> So effectively, you need to disable the active-state IRQ, then clear
+> the GPE status and enable it for wakeup.
+>
+> OK, I'll queue up the patch (and talk to the upstream ACPICA people
+> about taking it in there).
 
-To fix, when freeing a huge page do not adjust filesystem usage if
-PagePrivate() is set to indicate the reservation should be restored.
+Thank you!
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- mm/hugetlb.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index f79ae4e42159..8651d6a602f9 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1268,12 +1268,23 @@ void free_huge_page(struct page *page)
- 	ClearPagePrivate(page);
- 
- 	/*
--	 * A return code of zero implies that the subpool will be under its
--	 * minimum size if the reservation is not restored after page is free.
--	 * Therefore, force restore_reserve operation.
-+	 * If PagePrivate() was set on page, page allocation consumed a
-+	 * reservation.  If the page was associated with a subpool, there
-+	 * would have been a page reserved in the subpool before allocation
-+	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
-+	 * reservtion, do not call hugepage_subpool_put_pages() as this will
-+	 * remove the reserved page from the subpool.
- 	 */
--	if (hugepage_subpool_put_pages(spool, 1) == 0)
--		restore_reserve = true;
-+	if (!restore_reserve) {
-+		/*
-+		 * A return code of zero implies that the subpool will be
-+		 * under its minimum size if the reservation is not restored
-+		 * after page is free.  Therefore, force restore_reserve
-+		 * operation.
-+		 */
-+		if (hugepage_subpool_put_pages(spool, 1) == 0)
-+			restore_reserve = true;
-+	}
- 
- 	spin_lock(&hugetlb_lock);
- 	clear_page_huge_active(page);
--- 
-2.20.1
-
+>
+> Thanks!
