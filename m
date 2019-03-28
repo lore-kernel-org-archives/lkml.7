@@ -8,67 +8,68 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B44C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6C4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8064B20693
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7FD20693
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnFCLF00"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTPSFmrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfC1Q3l (ORCPT
+        id S1727895AbfC1Q3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:29:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40204 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1Q3j (ORCPT
+        Thu, 28 Mar 2019 12:29:46 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42102 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1Q3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:29:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b11so5191134plr.7;
-        Thu, 28 Mar 2019 09:29:38 -0700 (PDT)
+        Thu, 28 Mar 2019 12:29:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cv12so5213673plb.9;
+        Thu, 28 Mar 2019 09:29:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a9AcgvuKPtKHshILZIGH+fAov1CFMoBA9bHKdlQRvsA=;
-        b=MnFCLF00fR8+JgQiueZsEhFKEPU0BLDD7GMu6FBWGhRa3lrYFHxL99GgbuEVgNulSO
-         DJZ/o0axFGhPPdRGVSSWoFBf/Ye9tBt9nN6Ixy3HLAxu/GiutVmXossTvNDF2gAfYRkU
-         LRGMNgylozuVhPUX1R57X7+Ou9ruBo66CsrPRVgcWIEg25jfNKf75/wlMh+5UUQJxiiz
-         wQ5x3GE0p7KT8RsoiK9kfbmb9QtD/5erzpjg+9vNgucrwmzD5b/IGUxh/wmiX1N1Az/C
-         Jp99CnTykDWVO0oUH7fuQzTFlPiSkL1/zkA0XaKiqDgyM+r4y2/Fo6AcYXxjzLidheAw
-         lt1Q==
+        bh=m/WU7k/aJWgwoXYp66T9noVQ1MhB2daWNprUl9GsYJc=;
+        b=MTPSFmrWXg+EusLlPYuWk1PUImZb+tmGxZgHUlHq/mXV1ZjLA7V+kHLnMachNgSdmx
+         xABPZXqUApcPxGExXIHTbm7KVcgQfn0bA9e+4rRJVidbPtgw7Fen+uADJRLIJ4W+6Yf7
+         G56tIOyVUWhUd5SLvxvmaTMKrONLPrf36PLggtnNlCGrLeGpfNVA5aL9jdq8iOEVAgcE
+         Uc63vGlvh7K6yS5aLSd44FksxOFaemMzjFGY5QbLtBzUIWLp4kY4qgsFxSAmNcT4/W+W
+         8UFc6ctfDSBI3p606tOeZxqHZi8VPEPC2APvIW4YCCv6Bj00NKxMR0SZUliQbNTJ1wNa
+         CWDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a9AcgvuKPtKHshILZIGH+fAov1CFMoBA9bHKdlQRvsA=;
-        b=J4RSZmMQJ8LGlXBEj3QS1E+PWoTRyQRUsMwFPK3G1yYTS8ALLU77e1EE6tE/4E3bUF
-         GcxDiufHvmwoYW5TocsRhQzu7a35D5DyIOnjTAoKcebjdbjj182YPB++0Q2B5sDz2zRx
-         gy0XaAoCkrgS/4FjJCgDo3zIo4ERIBQeaZ4IaOEDtRMDfxiKY8eQRl3aPjtgmvwmi3QB
-         g5gb389ZOgV/dDv30AIvMg1wZOqk44tvneT6HhMKeijJ++Vj6QPSEoZIAzPAcQS4IXF4
-         z8vemU6hVi6ySfwxBFxm+Q+hlkG0MParZplor8Y25Enh0ZcJvcwtAcoiaIeslQ3xVdAS
-         dPTw==
-X-Gm-Message-State: APjAAAUmE3XJMr7iHDVu1/xn4BJtmkOOjqPYkLCmaBU4dWfum61pmJ3B
-        3TFL7ppGa0y7+A4Q1l59TuRcsQIj4pE=
-X-Google-Smtp-Source: APXvYqwKkUeRH4ptfUv7ztiVC6j+yAwO/uWNPDdtddrbEHVkOe30fATq3/MIVNRUhcnvsYNQg+MOFg==
-X-Received: by 2002:a17:902:234b:: with SMTP id n11mr2871939plg.89.1553790578438;
-        Thu, 28 Mar 2019 09:29:38 -0700 (PDT)
+        bh=m/WU7k/aJWgwoXYp66T9noVQ1MhB2daWNprUl9GsYJc=;
+        b=Npr3audp5+l4oNTpRsYw+N8MkGYqld8x8Tta/ZcIwJJGTY8skmQYtvQ2TCMCZ2QgK/
+         nPt534qXtgEalesYThNsSA8zFaxChTOT6bzwWevHLqT1BsfbReHx+hRGTmjJ2QK/OsT/
+         PxFh4VjKJIuHAb+ZL8z3qJ/ygawugOzEbzUJ82wQjkWrWFWU7LObu04xdF8Egs5LXmyU
+         w5Gawqa6NnbIeIJneCBRMeFdq8eV6uBAGkvvVPWyDlX5XCxexWY/BRpGD37TC4wVkC53
+         tFrz7slb9SmB0LzoEmiF2YHpzKSK8gzPQTS1zDFmnTGrNRTgKWY5lwIhqd9ZRnlUztp4
+         kWjw==
+X-Gm-Message-State: APjAAAXJFJOkQfQkbaJiIS7fDT86+PoYqGi70oqbUAw1y9DBhwiqdCvU
+        OkLoDJxh1DmcBgut7kuudv4=
+X-Google-Smtp-Source: APXvYqypCimPzvrt4NVNqYgN0L87rVxJJaEBPzczzas/Ph93BW6VX7g6r7kvPc8iqDR8iMeo8MNY+g==
+X-Received: by 2002:a17:902:b484:: with SMTP id y4mr36520337plr.88.1553790583053;
+        Thu, 28 Mar 2019 09:29:43 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id y12sm42748885pgq.64.2019.03.28.09.29.33
+        by smtp.gmail.com with ESMTPSA id y12sm42748885pgq.64.2019.03.28.09.29.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 09:29:37 -0700 (PDT)
+        Thu, 28 Mar 2019 09:29:42 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 13/23] acpi doc: convert acpi/acpi-lid.txt to rst format
-Date:   Fri, 29 Mar 2019 00:27:11 +0800
-Message-Id: <20190328162721.26138-14-changbin.du@gmail.com>
+Subject: [PATCH 14/23] acpi doc: convert acpi/dsd/graph.txt to rst format
+Date:   Fri, 29 Mar 2019 00:27:12 +0800
+Message-Id: <20190328162721.26138-15-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328162721.26138-1-changbin.du@gmail.com>
 References: <20190328162721.26138-1-changbin.du@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,147 +81,257 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- .../acpi/{acpi-lid.txt => acpi-lid.rst}       | 47 ++++++++++++-------
- Documentation/acpi/index.rst                  |  1 +
- 2 files changed, 32 insertions(+), 16 deletions(-)
- rename Documentation/acpi/{acpi-lid.txt => acpi-lid.rst} (78%)
+ .../acpi/dsd/{graph.txt => graph.rst}         | 155 +++++++++---------
+ Documentation/acpi/index.rst                  |   1 +
+ 2 files changed, 79 insertions(+), 77 deletions(-)
+ rename Documentation/acpi/dsd/{graph.txt => graph.rst} (56%)
 
-diff --git a/Documentation/acpi/acpi-lid.txt b/Documentation/acpi/acpi-lid.rst
-similarity index 78%
-rename from Documentation/acpi/acpi-lid.txt
-rename to Documentation/acpi/acpi-lid.rst
-index effe7af3a5af..2f597ada7a68 100644
---- a/Documentation/acpi/acpi-lid.txt
-+++ b/Documentation/acpi/acpi-lid.rst
-@@ -1,25 +1,28 @@
--Special Usage Model of the ACPI Control Method Lid Device
-+.. include:: <isonum.txt>
+diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.rst
+similarity index 56%
+rename from Documentation/acpi/dsd/graph.txt
+rename to Documentation/acpi/dsd/graph.rst
+index b9ce910781dc..98a7a0cdf43e 100644
+--- a/Documentation/acpi/dsd/graph.txt
++++ b/Documentation/acpi/dsd/graph.rst
+@@ -1,8 +1,9 @@
++======
+ Graphs
+-
++======
  
--Copyright (C) 2016, Intel Corporation
--Author: Lv Zheng <lv.zheng@intel.com>
-+=========================================================
-+Special Usage Model of the ACPI Control Method Lid Device
-+=========================================================
+ _DSD
+-----
++====
  
-+:Copyright: |copy| 2016, Intel Corporation
- 
--Abstract:
-+:Author: Lv Zheng <lv.zheng@intel.com>
- 
--Platforms containing lids convey lid state (open/close) to OSPMs using a
--control method lid device. To implement this, the AML tables issue
--Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
--changed. The _LID control method for the lid device must be implemented to
--report the "current" state of the lid as either "opened" or "closed".
-+:Abstract: Platforms containing lids convey lid state (open/close) to OSPMs
-+  using a control method lid device. To implement this, the AML tables issue
-+  Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
-+  changed. The _LID control method for the lid device must be implemented to
-+  report the "current" state of the lid as either "opened" or "closed".
- 
--For most platforms, both the _LID method and the lid notifications are
--reliable. However, there are exceptions. In order to work with these
--exceptional buggy platforms, special restrictions and expections should be
--taken into account. This document describes the restrictions and the
--expections of the Linux ACPI lid device driver.
-+  For most platforms, both the _LID method and the lid notifications are
-+  reliable. However, there are exceptions. In order to work with these
-+  exceptional buggy platforms, special restrictions and expections should be
-+  taken into account. This document describes the restrictions and the
-+  expections of the Linux ACPI lid device driver.
+ _DSD (Device Specific Data) [7] is a predefined ACPI device
+ configuration object that can be used to convey information on
+@@ -30,7 +31,7 @@ hierarchical data extension array on each depth.
  
  
- 1. Restrictions of the returning value of the _LID control method
-+=================================================================
+ Ports and endpoints
+--------------------
++===================
  
- The _LID control method is described to return the "current" lid state.
- However the word of "current" has ambiguity, some buggy AML tables return
-@@ -31,6 +34,7 @@ with cached value, the initial returning value is likely not reliable.
- There are platforms always retun "closed" as initial lid state.
+ The port and endpoint concepts are very similar to those in Devicetree
+ [3]. A port represents an interface in a device, and an endpoint
+@@ -38,9 +39,9 @@ represents a connection to that interface.
  
- 2. Restrictions of the lid state change notifications
-+=====================================================
+ All port nodes are located under the device's "_DSD" node in the hierarchical
+ data extension tree. The data extension related to each port node must begin
+-with "port" and must be followed by the "@" character and the number of the port
+-as its key. The target object it refers to should be called "PRTX", where "X" is
+-the number of the port. An example of such a package would be:
++with "port" and must be followed by the "@" character and the number of the
++port as its key. The target object it refers to should be called "PRTX", where
++"X" is the number of the port. An example of such a package would be::
  
- There are buggy AML tables never notifying when the lid device state is
- changed to "opened". Thus the "opened" notification is not guaranteed. But
-@@ -40,17 +44,21 @@ trigger some system power saving operations on Windows. Since it is fully
- tested, it is reliable from all AML tables.
+     Package() { "port@4", PRT4 }
  
- 3. Expections for the userspace users of the ACPI lid device driver
-+===================================================================
+@@ -49,7 +50,7 @@ data extension key of the endpoint nodes must begin with
+ "endpoint" and must be followed by the "@" character and the number of the
+ endpoint. The object it refers to should be called "EPXY", where "X" is the
+ number of the port and "Y" is the number of the endpoint. An example of such a
+-package would be:
++package would be::
  
- The ACPI button driver exports the lid state to the userspace via the
--following file:
-+following file::
+     Package() { "endpoint@0", EP40 }
+ 
+@@ -62,85 +63,85 @@ of that port shall be zero. Similarly, if a port may only have a single
+ endpoint, the number of that endpoint shall be zero.
+ 
+ The endpoint reference uses property extension with "remote-endpoint" property
+-name followed by a reference in the same package. Such references consist of the
++name followed by a reference in the same package. Such references consist of
+ the remote device reference, the first package entry of the port data extension
+ reference under the device and finally the first package entry of the endpoint
+-data extension reference under the port. Individual references thus appear as:
++data extension reference under the port. Individual references thus appear as::
+ 
+     Package() { device, "port@X", "endpoint@Y" }
+ 
+-In the above example, "X" is the number of the port and "Y" is the number of the
+-endpoint.
++In the above example, "X" is the number of the port and "Y" is the number of
++the endpoint.
+ 
+ The references to endpoints must be always done both ways, to the
+ remote endpoint and back from the referred remote endpoint node.
+ 
+-A simple example of this is show below:
++A simple example of this is show below::
+ 
+     Scope (\_SB.PCI0.I2C2)
+     {
+-	Device (CAM0)
+-	{
+-	    Name (_DSD, Package () {
+-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+-		Package () {
+-		    Package () { "compatible", Package () { "nokia,smia" } },
+-		},
+-		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+-		Package () {
+-		    Package () { "port@0", PRT0 },
+-		}
+-	    })
+-	    Name (PRT0, Package() {
+-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+-		Package () {
+-		    Package () { "reg", 0 },
+-		},
+-		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+-		Package () {
+-		    Package () { "endpoint@0", EP00 },
+-		}
+-	    })
+-	    Name (EP00, Package() {
+-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+-		Package () {
+-		    Package () { "reg", 0 },
+-		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, "port@4", "endpoint@0" } },
+-		}
+-	    })
+-	}
++        Device (CAM0)
++        {
++            Name (_DSD, Package () {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                    Package () { "compatible", Package () { "nokia,smia" } },
++                },
++                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
++                Package () {
++                    Package () { "port@0", PRT0 },
++                }
++            })
++            Name (PRT0, Package() {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                    Package () { "reg", 0 },
++                },
++                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
++                Package () {
++                    Package () { "endpoint@0", EP00 },
++                }
++            })
++            Name (EP00, Package() {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                    Package () { "reg", 0 },
++                    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, "port@4", "endpoint@0" } },
++                }
++            })
++        }
+     }
+ 
+     Scope (\_SB.PCI0)
+     {
+-	Device (ISP)
+-	{
+-	    Name (_DSD, Package () {
+-		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+-		Package () {
+-		    Package () { "port@4", PRT4 },
+-		}
+-	    })
+-
+-	    Name (PRT4, Package() {
+-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+-		Package () {
+-		    Package () { "reg", 4 }, /* CSI-2 port number */
+-		},
+-		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+-		Package () {
+-		    Package () { "endpoint@0", EP40 },
+-		}
+-	    })
+-
+-	    Name (EP40, Package() {
+-		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+-		Package () {
+-		    Package () { "reg", 0 },
+-		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port@0", "endpoint@0" } },
+-		}
+-	    })
+-	}
++        Device (ISP)
++        {
++            Name (_DSD, Package () {
++                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
++                Package () {
++                    Package () { "port@4", PRT4 },
++                }
++            })
 +
-   /proc/acpi/button/lid/LID0/state
++            Name (PRT4, Package() {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                    Package () { "reg", 4 }, /* CSI-2 port number */
++                },
++                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
++                Package () {
++                    Package () { "endpoint@0", EP40 },
++                }
++            })
 +
- This file actually calls the _LID control method described above. And given
- the previous explanation, it is not reliable enough on some platforms. So
- it is advised for the userspace program to not to solely rely on this file
- to determine the actual lid state.
++            Name (EP40, Package() {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                    Package () { "reg", 0 },
++                    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port@0", "endpoint@0" } },
++                }
++            })
++        }
+     }
  
- The ACPI button driver emits the following input event to the userspace:
--  SW_LID
-+  * SW_LID
-+
- The ACPI lid device driver is implemented to try to deliver the platform
- triggered events to the userspace. However, given the fact that the buggy
- firmware cannot make sure "opened"/"closed" events are paired, the ACPI
-@@ -59,20 +67,25 @@ button driver uses the following 3 modes in order not to trigger issues.
- If the userspace hasn't been prepared to ignore the unreliable "opened"
- events and the unreliable initial state notification, Linux users can use
- the following kernel parameters to handle the possible issues:
-+
- A. button.lid_init_state=method:
-    When this option is specified, the ACPI button driver reports the
-    initial lid state using the returning value of the _LID control method
-    and whether the "opened"/"closed" events are paired fully relies on the
-    firmware implementation.
-+
-    This option can be used to fix some platforms where the returning value
-    of the _LID control method is reliable but the initial lid state
-    notification is missing.
-+
-    This option is the default behavior during the period the userspace
-    isn't ready to handle the buggy AML tables.
-+
- B. button.lid_init_state=open:
-    When this option is specified, the ACPI button driver always reports the
-    initial lid state as "opened" and whether the "opened"/"closed" events
-    are paired fully relies on the firmware implementation.
-+
-    This may fix some platforms where the returning value of the _LID
-    control method is not reliable and the initial lid state notification is
-    missing.
-@@ -80,6 +93,7 @@ B. button.lid_init_state=open:
- If the userspace has been prepared to ignore the unreliable "opened" events
- and the unreliable initial state notification, Linux users should always
- use the following kernel parameter:
-+
- C. button.lid_init_state=ignore:
-    When this option is specified, the ACPI button driver never reports the
-    initial lid state and there is a compensation mechanism implemented to
-@@ -89,6 +103,7 @@ C. button.lid_init_state=ignore:
-    notifications can be delivered to the userspace when the lid is actually
-    opens given that some AML tables do not send "opened" notifications
-    reliably.
-+
-    In this mode, if everything is correctly implemented by the platform
-    firmware, the old userspace programs should still work. Otherwise, the
-    new userspace programs are required to work with the ACPI button driver.
+ Here, the port 0 of the "CAM0" device is connected to the port 4 of
+@@ -148,27 +149,27 @@ the "ISP" device and vice versa.
+ 
+ 
+ References
+-----------
++==========
+ 
+ [1] _DSD (Device Specific Data) Implementation Guide.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
+     referenced 2016-10-03.
+ 
+-[2] Devicetree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
++[2] Devicetree. http://www.devicetree.org, referenced 2016-10-03.
+ 
+ [3] Documentation/devicetree/bindings/graph.txt
+ 
+ [4] Device Properties UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
+     referenced 2016-10-04.
+ 
+ [5] Hierarchical Data Extension UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
+     referenced 2016-10-04.
+ 
+ [6] Advanced Configuration and Power Interface Specification.
+-    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
++    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
+     referenced 2016-10-04.
+ 
+ [7] _DSD Device Properties Usage Rules.
+-    Documentation/acpi/DSD-properties-rules.txt
++    :doc:`../DSD-properties-rules`
 diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
-index 9bf84570c91b..a5251782e781 100644
+index a5251782e781..e10ce874269c 100644
 --- a/Documentation/acpi/index.rst
 +++ b/Documentation/acpi/index.rst
-@@ -12,6 +12,7 @@ Linux ACPI (Advanced Configuration and Power Interface)
+@@ -7,6 +7,7 @@ Linux ACPI (Advanced Configuration and Power Interface)
+ 
+    linuxized-acpica
+    namespace
++   dsd/graph
+    enumeration
+    osi
     DSD-properties-rules
-    gpio-properties
-    i2c-muxes
-+   acpi-lid
-    scan_handlers
-    method-customizing
-    initrd_table_override
 -- 
 2.20.1
 
