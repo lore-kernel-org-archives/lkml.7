@@ -2,135 +2,175 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97C1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37080C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE10D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46362177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="x2JnfuyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfC1IPW (ORCPT
+        id S1726224AbfC1IVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:15:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36949 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfC1IPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:15:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 01:15:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="286612961"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2019 01:15:16 -0700
-Subject: Re: [PATCH v4 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
- error during tuning
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
-Cc:     ulf.hansson@linaro.org, kishon@ti.com
-References: <20190326110057.7055-1-faiz_abbas@ti.com>
- <20190326110057.7055-3-faiz_abbas@ti.com>
- <508e9423-c1f9-f2cc-4aa9-2cc5b1cf40a8@intel.com>
- <05a2f5ef-1fee-15f4-6a9b-e3f3f3ee5a82@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ee4c90b8-aed8-ba3b-3aea-9e4257771cfe@intel.com>
-Date:   Thu, 28 Mar 2019 10:13:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Thu, 28 Mar 2019 04:21:16 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36346 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfC1IVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 04:21:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t206so15068409oib.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 01:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=77jRvNRDYvOYIIwmPFjd/sDUifx+fyO+d5UR0CetH+8=;
+        b=x2JnfuyNdHPAlLNql7+Hd+SIRPDYgD49+I3PBuwvdsWB3cuDoDV8QGLwo0NpqvN9/X
+         KrPk/6cdaxf6pXJdbxK2KC8FbkBvLIUjydhssTiKJxkHkM6k2uxmA21cWqC3biP6ZjVB
+         up/F6AENtCBV2rJmLVrvG9kSe64MIpMzf9J4WSvVOsJMWSAe567u30iM4Zb9aK7MaWoX
+         5K/9ejxMvEgEfPG+EMO353pkAwP9A0CFKoQHspa6bo6Q+bJXLBXGOnH9iQZrHJinQzGg
+         uobwkWeh8RhT7FoycdocpKohPG1l3ax2SjteWTsxWClXHOjmg2MJNzLvTMoI9xF9fo5C
+         n/GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=77jRvNRDYvOYIIwmPFjd/sDUifx+fyO+d5UR0CetH+8=;
+        b=XcwGsC1cHJ/Pv9UhC1PDzchCOyGDyu/uSdAbAzK93JeXLYH13mcZJ7elEQIYLZyHo9
+         iDyK+UB4RF1mBoiDmAIMmHttgxs0iHtmgG96KUPhK/EsNe9JaGGv8ZwILcFGHjbZNwql
+         nIcQROP0zH8jFcBlrXI9JaI2Ntf2xN02GPoDl4fotDjQAxwMhTp8ByKDnxZWQocUG03u
+         OGdbYQBLZWR98wisjnCQM5ZIlRk6FRwqxcnIV3hwrd+MmCCX7DHsvyo0qc+t+f7yU3kb
+         T3P7r5zyRQRM+oUTgPOQPqT7oin4YA0LLJgImw+Mcun7zZbaJWuoPbJAXILt6TAL+e0h
+         YMfw==
+X-Gm-Message-State: APjAAAUKMGHoitFEh51xs9u96qm9TF9DhdCVz5sD92n1xMGnhbCrX2Uu
+        B5lHHQjWs2hJZFQwi7h/hGlEck+qTQQPSX6H+hqKBg==
+X-Google-Smtp-Source: APXvYqwUDaQSZRlXkxLdn8Ktoc7WDC+3ppHol9nwM1pxOZhHFWsQT1TKlLs73I8ZPb5FRaOOtzcq5GgbEYyMY53kW3g=
+X-Received: by 2002:aca:e64f:: with SMTP id d76mr19187454oih.105.1553761275036;
+ Thu, 28 Mar 2019 01:21:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <05a2f5ef-1fee-15f4-6a9b-e3f3f3ee5a82@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1553316275-21985-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190326135837.GP28406@dhcp22.suse.cz> <43a1a59d-dc4a-6159-2c78-e1faeb6e0e46@linux.alibaba.com>
+ <20190326183731.GV28406@dhcp22.suse.cz> <f08fb981-d129-3357-e93a-a6b233aa9891@linux.alibaba.com>
+ <20190327090100.GD11927@dhcp22.suse.cz> <CAPcyv4heiUbZvP7Ewoy-Hy=-mPrdjCjEuSw+0rwdOUHdjwetxg@mail.gmail.com>
+ <c3690a19-e2a6-7db7-b146-b08aa9b22854@linux.alibaba.com> <20190327193918.GP11927@dhcp22.suse.cz>
+ <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
+In-Reply-To: <6f8b4c51-3f3c-16f9-ca2f-dbcd08ea23e6@linux.alibaba.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 28 Mar 2019 01:21:03 -0700
+Message-ID: <CAPcyv4g2FuormkwNNWy7kU4JF6_-sX3WnSVS7YggMJMMOCehMQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/10] Another Approach to Use PMEM as NUMA Node
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        "Du, Fan" <fan.du@intel.com>, "Huang, Ying" <ying.huang@intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/03/19 1:47 PM, Faiz Abbas wrote:
-> Hi Adrian,
-> 
-> On 27/03/19 4:45 PM, Adrian Hunter wrote:
->> On 26/03/19 1:00 PM, Faiz Abbas wrote:
->>> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
->>> callback") skips data resets during tuning operation. Because of this,
->>> a data error or data finish interrupt might still arrive after a command
->>> error has been handled and the mrq ended. This ends up with a "mmc0: Got
->>> data interrupt 0x00000002 even though no data operation was in progress"
->>> error message.
->>>
->>> Fix this by adding a platform specific callback for sdhci_irq. Mark the
->>> mrq as a failure but wait for a data interrupt instead of calling
->>> finish_mrq().
->>>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>> ---
->>>  drivers/mmc/host/sdhci-omap.c | 37 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 37 insertions(+)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
->>> index 5bbed477c9b1..9da2ff9ede8b 100644
->>> --- a/drivers/mmc/host/sdhci-omap.c
->>> +++ b/drivers/mmc/host/sdhci-omap.c
->>> @@ -797,6 +797,42 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
->>>  	sdhci_reset(host, mask);
->>>  }
->>>  
->>> +#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX |\
->>> +		      SDHCI_INT_TIMEOUT)
->>> +#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
->>> +
->>> +static irqreturn_t sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
->>> +{
->>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
->>> +
->>> +	if (omap_host->is_tuning && (intmask & CMD_ERR_MASK)) {
->>> +
->>> +		/*
->>> +		 * Since we are not resetting data lines during tuning
->>> +		 * operation, data error or data complete interrupts
->>> +		 * might still arrive. Mark this request as a failure
->>> +		 * but still wait for the data interrupt
->>> +		 */
->>> +		if (intmask & SDHCI_INT_TIMEOUT)
->>> +			host->cmd->error = -ETIMEDOUT;
->>> +		else
->>> +			host->cmd->error = -EILSEQ;
->>> +
->>> +		sdhci_finish_command(host);
->>
->> Would it be possible to set SDHCI_INT_RESPONSE instead of calling
->> sdhci_finish_command() directly?
->>
-> 
-> It should be possible. But what we are trying to do won't be very clear
-> from the code. Ideally an interrupt handler should not set any interrupt
-> bits, just handle and clear them. Also, setting the RESPONSE bit even
-> when there has been no response seems wrong and makes the code more
-> convoluted.
+On Wed, Mar 27, 2019 at 7:09 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> On 3/27/19 1:09 PM, Michal Hocko wrote:
+> > On Wed 27-03-19 11:59:28, Yang Shi wrote:
+> >>
+> >> On 3/27/19 10:34 AM, Dan Williams wrote:
+> >>> On Wed, Mar 27, 2019 at 2:01 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >>>> On Tue 26-03-19 19:58:56, Yang Shi wrote:
+> > [...]
+> >>>>> It is still NUMA, users still can see all the NUMA nodes.
+> >>>> No, Linux NUMA implementation makes all numa nodes available by default
+> >>>> and provides an API to opt-in for more fine tuning. What you are
+> >>>> suggesting goes against that semantic and I am asking why. How is pmem
+> >>>> NUMA node any different from any any other distant node in principle?
+> >>> Agree. It's just another NUMA node and shouldn't be special cased.
+> >>> Userspace policy can choose to avoid it, but typical node distance
+> >>> preference should otherwise let the kernel fall back to it as
+> >>> additional memory pressure relief for "near" memory.
+> >> In ideal case, yes, I agree. However, in real life world the performance is
+> >> a concern. It is well-known that PMEM (not considering NVDIMM-F or HBM) has
+> >> higher latency and lower bandwidth. We observed much higher latency on PMEM
+> >> than DRAM with multi threads.
+> > One rule of thumb is: Do not design user visible interfaces based on the
+> > contemporary technology and its up/down sides. This will almost always
+> > fire back.
+>
+> Thanks. It does make sense to me.
+>
+> >
+> > Btw. if you keep arguing about performance without any numbers. Can you
+> > present something specific?
+>
+> Yes, I did have some numbers. We did simple memory sequential rw latency
+> test with a designed-in-house test program on PMEM (bind to PMEM) and
+> DRAM (bind to DRAM). When running with 20 threads the result is as below:
+>
+>               Threads          w/lat            r/lat
+> PMEM      20                537.15         68.06
+> DRAM      20                14.19           6.47
+>
+> And, sysbench test with command: sysbench --time=600 memory
+> --memory-block-size=8G --memory-total-size=1024T --memory-scope=global
+> --memory-oper=read --memory-access-mode=rnd --rand-type=gaussian
+> --rand-pareto-h=0.1 --threads=1 run
+>
+> The result is:
+>                     lat/ms
+> PMEM      103766.09
+> DRAM      31946.30
+>
+> >
+> >> In real production environment we don't know what kind of applications would
+> >> end up on PMEM (DRAM may be full, allocation fall back to PMEM) then have
+> >> unexpected performance degradation. I understand to have mempolicy to choose
+> >> to avoid it. But, there might be hundreds or thousands of applications
+> >> running on the machine, it sounds not that feasible to me to have each
+> >> single application set mempolicy to avoid it.
+> > we have cpuset cgroup controller to help here.
+> >
+> >> So, I think we still need a default allocation node mask. The default value
+> >> may include all nodes or just DRAM nodes. But, they should be able to be
+> >> override by user globally, not only per process basis.
+> >>
+> >> Due to the performance disparity, currently our usecases treat PMEM as
+> >> second tier memory for demoting cold page or binding to not memory access
+> >> sensitive applications (this is the reason for inventing a new mempolicy)
+> >> although it is a NUMA node.
+> > If the performance sucks that badly then do not use the pmem as NUMA,
+> > really. There are certainly other ways to export the pmem storage. Use
+> > it as a fast swap storage. Or try to work on a swap caching mechanism
+> > that still allows much faster access than a slow swap storage. But do
+> > not try to pretend to abuse the NUMA interface while you are breaking
+> > some of its long term established semantics.
+>
+> Yes, we are looking into using it as a fast swap storage too and perhaps
+> other usecases.
+>
+> Anyway, though nobody thought it makes sense to restrict default
+> allocation nodes, it sounds over-engineered. I'm going to drop it.
+>
+> One question, when doing demote and promote we need define a path, for
+> example, DRAM <-> PMEM (assume two tier memory). When determining what
+> nodes are "DRAM" nodes, does it make sense to assume the nodes with both
+> cpu and memory are DRAM nodes since PMEM nodes are typically cpuless nodes?
 
-Well, I am not in favour of exporting sdhci_finish_command().
-So I had a look and it is not obvious why you need to call it.
-What about something this:
+For ACPI platforms the HMAT is effectively going to enforce "cpu-less"
+nodes for any memory range that has differentiated performance from
+the conventional memory pool, or differentiated performance for a
+specific initiator. So "memory-less == PMEM" is not a robust
+assumption.
 
-	if (omap_host->is_tuning && host->cmd && !host->data_early &&
-	    (intmask & CMD_ERR_MASK)) {
-
-		if (intmask & SDHCI_INT_TIMEOUT)
-			host->cmd->error = -ETIMEDOUT;
-		else
-			host->cmd->error = -EILSEQ;
-
-		host->cmd = NULL;
-
-		sdhci_writel(host, intmask & CMD_MASK, SDHCI_INT_STATUS);
-		intmask &= ~CMD_MASK;
-	}
+The plan is to use the HMAT to populate the default fallback order,
+but allow for an override if the HMAT information is missing or
+incorrect.
