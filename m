@@ -2,85 +2,96 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E076CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C35C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A8221773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3BE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TfWnzcWn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LVceLrCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfC1ORJ (ORCPT
+        id S1726481AbfC1OSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:17:09 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37033 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfC1ORH (ORCPT
+        Thu, 28 Mar 2019 10:18:00 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46994 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfC1OR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:17:07 -0400
-Received: by mail-it1-f196.google.com with SMTP id u65so6309152itc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qp+Dpr5cOYlTukhG8arWCLdHau5MAb5m/3soXMgxbz0=;
-        b=TfWnzcWnvBSSN1jAawy3+QJH1Nze83y3XScfpJW8edZeCWy/u8xHQa40HiEZGpdrSN
-         lCzMZtdKjD/yn+tTAKoEFNe2NIWzEgZfDGurZ9fdWhJIiQBCfxpDBUdWx3WrMjR3zBMf
-         1gWdIISfIfVFmgrlEr5UxN6D/OCFYahr88XqTapjbW1WMcxtY+uFr+s6bMbrGX5x2cD+
-         /x33w0TJrBRxzTZV4wFPawbzuYRDCfiIxQhrxnJjcEjwTdY8FG4GJqQ96fl5Arb10FMA
-         1i9rW8bS3LU28TLN29SaNj+Cnfu4h9QlqjY+i8fUd+UoPfbn0mW6uxEGDXludCJlRK/S
-         OEUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qp+Dpr5cOYlTukhG8arWCLdHau5MAb5m/3soXMgxbz0=;
-        b=Y7aYcCr+AdNxebAkAmWRNqq2tUCbE1auxhZQq9XugKtq6qhfLoZrocpPf0zhOIM9i/
-         Yy4DT0EyX4qzyqV4Lt3uDO543JgYaolgCuKT9gIcJGyVYl8EKtMDhfkwRg6zxB41SPvH
-         ve2LiuUFnuHFShSni3u03/GH5r2zzxyKupYp1fUfS3rZsSAXOOpkcqDhLHmmUuDHxj7p
-         5cXXFselrymHwIjCTkMtf2Z+UTEGB43XJlvR8MDANtLPH9XOuAWCC8JRhqrCvEerEDhB
-         hhLiejDCVSaYqRaPlLs0xE1TwPSCuXSGZQPL59TbStZu7QCGKZ41WOgYDNNbcNQTJK6w
-         fEOA==
-X-Gm-Message-State: APjAAAUXqs8VZbBQM5LdpwVa1wGckujVnU8QG1wzbrBom+4gCg+Z4gXp
-        tIEWd2hO33SF5jqRSn6S0qhEGxpaBk5WJA==
-X-Google-Smtp-Source: APXvYqxbaOI3W2t7hwTPlynHUZHXDPAHAHqkd2rRs7evgVo7BgycY6cH2XMYMgaJXNkZfK3XBuyVFg==
-X-Received: by 2002:a24:1f06:: with SMTP id d6mr180913itd.11.1553782625977;
-        Thu, 28 Mar 2019 07:17:05 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id s12sm1751550itj.41.2019.03.28.07.17.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 07:17:05 -0700 (PDT)
-Subject: Re: [PATCH] libata: fix using DMA buffers on stack
-To:     raymond pang <raymondpangxd@gmail.com>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190328121925.15488-1-raymondpangxd@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6c7d28e9-ac56-bffe-05c0-2ca7ea6ff37f@kernel.dk>
-Date:   Thu, 28 Mar 2019 08:17:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 10:17:59 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SE9Vj4038417;
+        Thu, 28 Mar 2019 14:17:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=97fBova06FBtMVNalMuq00CqX3eX38Wr++PqStloLTE=;
+ b=LVceLrCIfW+6AgQWp1/76H99Dd0B9zYBlk4pk3SMbvpeXKEPeyzUDmTptFPNeHUovH2a
+ z3y26QkQTksOeHFYPUoT1SyZfPFFk9J3sFkonCaXVntlvKPiAsNXtZNwsHJbUBjJek5F
+ KnnrVOvJkqWkl2ET/bJEeS+rKpo6MKEDfPXoQ99A8shiJMzKAdGzrEdsve2PC1Aato+w
+ tjr6mcIAW7g581+gCi2JLsgPLBo7HxUVKkCnMfOPrtR8WArrT6B+WA3B8iZNN/Yvrv97
+ yycY/KHKRvngpwRpbeQ7llrOacgmwfFsOcIgXCRF/QfGlCknfLrGoVKO4b4BxZ4BaS5m Sw== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by aserp2130.oracle.com with ESMTP id 2re6g16vu5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 14:17:57 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2SEHvwo021246
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 14:17:57 GMT
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SEHvVT026233;
+        Thu, 28 Mar 2019 14:17:57 GMT
+Received: from kadam (/41.202.241.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 Mar 2019 07:17:56 -0700
+Date:   Thu, 28 Mar 2019 17:17:42 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] vlynq: Fix uninitialized error code in probe()
+Message-ID: <20190328141742.GM32590@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20190328121925.15488-1-raymondpangxd@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=998 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903280097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 6:19 AM, raymond pang wrote:
-> When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-> a stack virtual address. Stack DMA buffers must be avoided.
+The "result" variable isn't initialized on this error path.
 
-Thanks, applied.
+Fixes: 55e331cf7ebe ("drivers: add support for the TI VLYNQ bus")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/vlynq/vlynq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/vlynq/vlynq.c b/drivers/vlynq/vlynq.c
+index c0227f9418eb..44d3485d1108 100644
+--- a/drivers/vlynq/vlynq.c
++++ b/drivers/vlynq/vlynq.c
+@@ -727,7 +727,8 @@ static int vlynq_probe(struct platform_device *pdev)
+ 	dev->local_irq = dev->irq_end - dev->irq_start;
+ 	dev->remote_irq = dev->local_irq - 1;
+ 
+-	if (device_register(&dev->dev))
++	result = device_register(&dev->dev);
++	if (result)
+ 		goto fail_register;
+ 	platform_set_drvdata(pdev, dev);
+ 
 -- 
-Jens Axboe
+2.17.1
 
