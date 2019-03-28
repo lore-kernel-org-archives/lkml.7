@@ -2,303 +2,149 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6288C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA742173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE46A2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="x/FJUTLw";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="CR5wHFmo"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="hpvK4fzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbfC1Hmq (ORCPT
+        id S1726375AbfC1Hmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 03:42:46 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:49892 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbfC1Hmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 03:42:45 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2S7Yu6C017688;
-        Thu, 28 Mar 2019 00:42:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=obAiuSO+7/eo9YNenzQjjodh6uD21XsZBcqidD22yGg=;
- b=x/FJUTLwVcIsyNFcrDHYtWtx8OuHB4+1r+GNb6mlV+CvMM7bp3cZCbFmw83HCzG/5Ut5
- Sw1b1frbBVdTUIdMuRFz/YNXBixnsGDDB5wDQNoSCazzH5q/SW6rdkxqbD89LISFHrIE
- B3atNGCFfC6IYzNlCds/aMnYhRqTkKc33Yk4aPyJisTNYRV4zgIR3PvwmoedOi0AKCex
- BJZRyqG0Hhf/qS8iPTq0vMU8klAL99K2HAc7yoZwyk6PTNueFftm87DfOjTT0/yAW9OH
- JuM1z6cMLJ8dVK4QEO6hSPey1muOc2ujG4q3V60UCpAMQeVXL8yr0aWDJ6rXcdWWYKjM jA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2rgfn59t35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 28 Mar 2019 00:42:22 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 28 Mar
- 2019 00:42:10 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.54) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 28 Mar 2019 00:42:10 -0700
+        Thu, 28 Mar 2019 03:42:55 -0400
+Received: from mail-eopbgr1300070.outbound.protection.outlook.com ([40.107.130.70]:32032
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbfC1Hmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 03:42:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=obAiuSO+7/eo9YNenzQjjodh6uD21XsZBcqidD22yGg=;
- b=CR5wHFmoN+3/ok3PcAzvHYxDxnDaAnWJRV4MuAQiO/aqihE2U/E00J5luyMcC6V4q5RGlAa0kbHA3veGbsqJ7G+S70JFtR7Fs5XoN2g8SC+pSrxsYoOfl3B0TMn0fI0HRKK1rAZnc1Is883yGCiH42hQLlEbjv+Mt0NSUrWvwcA=
-Received: from SN1PR18MB2320.namprd18.prod.outlook.com (52.132.199.158) by
- SN1PR18MB2272.namprd18.prod.outlook.com (52.132.199.146) with Microsoft SMTP
+ bh=Dg+VucJV0wWS2whYNvvsHoPrOk7N0c+siET1Nd3Pblg=;
+ b=hpvK4fzBVJuCgOGw7mPPidsr16Uu8eqBte70WAT78kEwWUhKlU547hhPWuzFC85hgody1ZDjtFpVGuRlm7PouvPMBQg0zUCTbfHmIozgzKlxf+rRvZ7R91YQoZxjWLyeOekv0ZpI/6VnAPCANKqChTepD60/tvr+2Z6YwqXOJrY=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB2715.apcprd02.prod.outlook.com (20.177.86.203) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.16; Thu, 28 Mar 2019 07:42:08 +0000
-Received: from SN1PR18MB2320.namprd18.prod.outlook.com
- ([fe80::b547:18dc:b293:a852]) by SN1PR18MB2320.namprd18.prod.outlook.com
- ([fe80::b547:18dc:b293:a852%7]) with mapi id 15.20.1750.017; Thu, 28 Mar 2019
- 07:42:08 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-CC:     Marcin Benka <mbenka@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>
-Subject: [PATCH v2] efi: Unify dmi setup code over architectures arm/arm64,
- io64 and x86
-Thread-Topic: [PATCH v2] efi: Unify dmi setup code over architectures
- arm/arm64, io64 and x86
-Thread-Index: AQHU3zDFNnKKbUDU3kuF2686cVhBGqYgtQWA
-Date:   Thu, 28 Mar 2019 07:42:07 +0000
-Message-ID: <20190328074150.10942-1-rrichter@marvell.com>
-References: <20190320152240.2eun63wqkbqmuqkg@rric.localdomain>
-In-Reply-To: <20190320152240.2eun63wqkbqmuqkg@rric.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
+ 15.20.1730.18; Thu, 28 Mar 2019 07:42:50 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1730.019; Thu, 28 Mar 2019
+ 07:42:50 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Page-allocation-failure
+Thread-Topic: Page-allocation-failure
+Thread-Index: AQHU5TnT8N2n2QVx4UqTmvmwHUsWlA==
+Date:   Thu, 28 Mar 2019 07:42:50 +0000
+Message-ID: <SG2PR02MB30984D7E43467F178C6EF7A2E8590@SG2PR02MB3098.apcprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6PR0502CA0065.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::42) To SN1PR18MB2320.namprd18.prod.outlook.com
- (2603:10b6:802:2f::30)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [78.54.12.151]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fafecce1-a725-49b3-a731-08d6b350e05d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:SN1PR18MB2272;
-x-ms-traffictypediagnostic: SN1PR18MB2272:
-x-microsoft-antispam-prvs: <SN1PR18MB22725CD41702B18CAAE50444D9590@SN1PR18MB2272.namprd18.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 0e9d2f5e-8fcd-4fca-eba2-08d6b350faf3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:SG2PR02MB2715;
+x-ms-traffictypediagnostic: SG2PR02MB2715:|SG2PR02MB2715:
+x-microsoft-antispam-prvs: <SG2PR02MB271594FCA0C39BE633A5ED43E8590@SG2PR02MB2715.apcprd02.prod.outlook.com>
 x-forefront-prvs: 0990C54589
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(366004)(376002)(136003)(189003)(199004)(486006)(53936002)(36756003)(446003)(26005)(6436002)(102836004)(2906002)(256004)(2616005)(8936002)(14454004)(11346002)(71200400001)(97736004)(7416002)(99286004)(86362001)(6512007)(478600001)(71190400001)(386003)(6506007)(66066001)(186003)(52116002)(5660300002)(476003)(6116002)(3846002)(54906003)(305945005)(110136005)(68736007)(2501003)(25786009)(316002)(7736002)(105586002)(50226002)(76176011)(1076003)(4326008)(81156014)(6486002)(81166006)(106356001)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR18MB2272;H:SN1PR18MB2320.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39850400004)(396003)(376002)(136003)(346002)(199004)(189003)(81156014)(81166006)(102836004)(8676002)(2501003)(53936002)(2906002)(476003)(52536014)(106356001)(6436002)(86362001)(7736002)(486006)(78486014)(305945005)(3480700005)(97736004)(99286004)(74316002)(44832011)(105586002)(316002)(6116002)(3846002)(33656002)(186003)(26005)(66066001)(14454004)(71190400001)(5024004)(25786009)(66574012)(110136005)(5660300002)(8936002)(55016002)(7696005)(478600001)(6506007)(9686003)(68736007)(55236004)(14444005)(71200400001)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2715;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: w2QemjSv+1XzYGJypjaK2luhTlmFcyFlrPXoUFXMirjrUfLyPBUJyALQ/2BvUJpzQcqPpP5UINz9yFl0ELSRHw7JyC4asb756OXq0eCT/sMibDl7ixI1VwP70g8Blcmzi8qc52E/ElNry9jwnq9W4HfqlLoznf9Ecs5n8bBmWFiSb7QrefuTVR/s9Xocqkds1Y9HKqu5vTlKRkKNyTccC6M0SXq3yPZkdq8zxe7rU1A0oZzdyVW9IPEZz9W9B14mSpgWxpG239zq9G+U0R7G9NppULRIDyTSYjw+n2kgQPtqxW8F7arVDrM+DubOpr7T3q+fZrPFzJqfGoyD293q7eQOGSi1onb+T2/M+gkWHAVlZYdnidDABsxr1I/oHkmebwsVZ5XEc2nZePzsX0n7dng2EVo6TvnWxJXVPtLrfBE=
+x-microsoft-antispam-message-info: rjajeezr7AjW+C4AYvToFB3w3BhEREjmpkskl+4XGtExrkU6TuT5uPB3qAGKc47XxUGCvHAMPkAZV6PNN8a0tOWfIoZacu9EWreI+idDVTXxjAXpqOeqUTyCv/42V/j3SNYSZyYJdHNdZbKZf6FoscmHlJPEgeenBER9Yrpkd6F2qwXmPVyE+8c92LWh8Ay+MHY9FwNz8TOiYe2BFGRBFtujfIlmEJ+6tXGcwtavw/QC+QS1dTdzYxl1a5aPS/I+0HAZqNn6iZYCKDl5sXpUTkhdB3h91rfHjJRyJYBogUfMqinBgmblTND6ix04zN1QNtjAx3zgFmUaAnkoVHBnvikT6ChpBvx79UIIy0LgBCLSiANqzD/MVV0Qy7Y8qggfMmDthZtJvifVo9Up+EgeJ2FLsNUG9cLJ9qdVGc9fR2Y=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fafecce1-a725-49b3-a731-08d6b350e05d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 07:42:08.1897
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e9d2f5e-8fcd-4fca-eba2-08d6b350faf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 07:42:50.7858
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR18MB2272
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_05:,,
- signatures=0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2715
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All architectures (arm/arm64, io64 and x86) do the same here, so unify
-the code.
+Hello ,
 
-Note: We do not need to call dump_stack_set_arch_desc() in case of
-!dmi_available. Both strings, dmi_ids_string and dump_stack_arch_
-desc_str are initialized zero and thus nothing would change.
+I am facing issue related to page allocation failure.
 
-Signed-off-by: Robert Richter <rrichter@marvell.com>
+If anyone is familiar with this issue, let me know what is the issue?
+How to solved/debug it.
+
+Failure logs -:
+
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
 ---
- arch/ia64/kernel/setup.c           |  4 +---
- arch/x86/kernel/setup.c            |  6 ++----
- drivers/firmware/dmi_scan.c        | 28 +++++++++++++++-------------
- drivers/firmware/efi/arm-runtime.c |  7 ++-----
- include/linux/dmi.h                |  8 ++------
- 5 files changed, 22 insertions(+), 31 deletions(-)
+[   45.073877] kswapd0: page allocation failure: order:0, mode:0x1080020(GF=
+P_ATOMIC), nodemask=3D(null)
+[   45.073897] CPU: 1 PID: 716 Comm: kswapd0 Tainted: P           O    4.14=
+.65 #3
+[   45.073899] Hardware name: Android (Flattened Device Tree)
+[   45.073901] Backtrace:
+[   45.073915] [<8020dbec>] (dump_backtrace) from [<8020ded0>] (show_stack+=
+0x18/0x1c)
+[   45.073920]  r6:600f0093 r5:8141bd5c r4:00000000 r3:3abdc664
+[   45.073928] [<8020deb8>] (show_stack) from [<80ba5e30>] (dump_stack+0x94=
+/0xa8)
+[   45.073936] [<80ba5d9c>] (dump_stack) from [<80350610>] (warn_alloc+0xe0=
+/0x194)
+[   45.073940]  r6:80e090cc r5:00000000 r4:81216588 r3:3abdc664
+[   45.073946] [<80350534>] (warn_alloc) from [<803514e0>] (__alloc_pages_n=
+odemask+0xd70/0x124c)
+[   45.073949]  r3:00000000 r2:80e090cc
+[   45.073952]  r6:00000001 r5:00000000 r4:8121696c
+[   45.073959] [<80350770>] (__alloc_pages_nodemask) from [<803a6c20>] (all=
+ocate_slab+0x364/0x3e4)
+[   45.073964]  r10:00000080 r9:00000000 r8:01081220 r7:ffffffff r6:0000000=
+0 r5:01080020
+[   45.073966]  r4:bd00d180
+[   45.073971] [<803a68bc>] (allocate_slab) from [<803a8c98>] (___slab_allo=
+c.constprop.6+0x420/0x4b8)
+[   45.073977]  r10:00000000 r9:00000000 r8:bd00d180 r7:01080020 r6:8121658=
+8 r5:be586360
+[   45.073978]  r4:00000000
+[   45.073984] [<803a8878>] (___slab_alloc.constprop.6) from [<803a8d54>] (=
+__slab_alloc.constprop.5+0x24/0x2c)
+[   45.073989]  r10:0004e299 r9:bd00d180 r8:01080020 r7:8147b954 r6:bd6e5a6=
+8 r5:00000000
+[   45.073991]  r4:600f0093
+[   45.073996] [<803a8d30>] (__slab_alloc.constprop.5) from [<803a9058>] (k=
+mem_cache_alloc+0x16c/0x2d0)
+[   45.073999]  r4:bd00d180 r3:be586360
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+-----
 
-diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
-index 583a3746d70b..c9cfa760cd57 100644
---- a/arch/ia64/kernel/setup.c
-+++ b/arch/ia64/kernel/setup.c
-@@ -1058,9 +1058,7 @@ check_bugs (void)
-=20
- static int __init run_dmi_scan(void)
- {
--	dmi_scan_machine();
--	dmi_memdev_walk();
--	dmi_set_dump_stack_arch_desc();
-+	dmi_setup();
- 	return 0;
- }
- core_initcall(run_dmi_scan);
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 3d872a527cd9..3773905cd2c1 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1005,13 +1005,11 @@ void __init setup_arch(char **cmdline_p)
- 	if (efi_enabled(EFI_BOOT))
- 		efi_init();
-=20
--	dmi_scan_machine();
--	dmi_memdev_walk();
--	dmi_set_dump_stack_arch_desc();
-+	dmi_setup();
-=20
- 	/*
- 	 * VMware detection requires dmi to be available, so this
--	 * needs to be done after dmi_scan_machine(), for the boot CPU.
-+	 * needs to be done after dmi_setup(), for the boot CPU.
- 	 */
- 	init_hypervisor_platform();
-=20
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index 099d83e4e910..fae2d5c43314 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -416,11 +416,8 @@ static void __init save_mem_devices(const struct dmi_h=
-eader *dm, void *v)
- 	nr++;
- }
-=20
--void __init dmi_memdev_walk(void)
-+static void __init dmi_memdev_walk(void)
- {
--	if (!dmi_available)
--		return;
--
- 	if (dmi_walk_early(count_mem_devices) =3D=3D 0 && dmi_memdev_nr) {
- 		dmi_memdev =3D dmi_alloc(sizeof(*dmi_memdev) * dmi_memdev_nr);
- 		if (dmi_memdev)
-@@ -614,7 +611,7 @@ static int __init dmi_smbios3_present(const u8 *buf)
- 	return 1;
- }
-=20
--void __init dmi_scan_machine(void)
-+static void __init dmi_scan_machine(void)
- {
- 	char __iomem *p, *q;
- 	char buf[32];
-@@ -769,15 +766,20 @@ static int __init dmi_init(void)
- subsys_initcall(dmi_init);
-=20
- /**
-- * dmi_set_dump_stack_arch_desc - set arch description for dump_stack()
-+ *	dmi_setup - scan and setup DMI system information
-  *
-- * Invoke dump_stack_set_arch_desc() with DMI system information so that
-- * DMI identifiers are printed out on task dumps.  Arch boot code should
-- * call this function after dmi_scan_machine() if it wants to print out DM=
-I
-- * identifiers on task dumps.
-+ *	Scan the DMI system information. This setups DMI identifiers
-+ *	(dmi_system_id) for printing it out on task dumps and prepares
-+ *	DIMM entry information (dmi_memdev_info) from the SMBIOS table
-+ *	for using this when reporting memory errors.
-  */
--void __init dmi_set_dump_stack_arch_desc(void)
-+void __init dmi_setup(void)
- {
-+	dmi_scan_machine();
-+	if (!dmi_available)
-+		return;
-+
-+	dmi_memdev_walk();
- 	dump_stack_set_arch_desc("%s", dmi_ids_string);
- }
-=20
-@@ -841,7 +843,7 @@ static bool dmi_is_end_of_table(const struct dmi_system=
-_id *dmi)
-  *	returns non zero or we hit the end. Callback function is called for
-  *	each successful match. Returns the number of matches.
-  *
-- *	dmi_scan_machine must be called before this function is called.
-+ *	dmi_setup must be called before this function is called.
-  */
- int dmi_check_system(const struct dmi_system_id *list)
- {
-@@ -871,7 +873,7 @@ EXPORT_SYMBOL(dmi_check_system);
-  *	Walk the blacklist table until the first match is found.  Return the
-  *	pointer to the matching entry or NULL if there's no match.
-  *
-- *	dmi_scan_machine must be called before this function is called.
-+ *	dmi_setup must be called before this function is called.
-  */
- const struct dmi_system_id *dmi_first_match(const struct dmi_system_id *li=
-st)
- {
-diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-=
-runtime.c
-index 4a0dfe4ab829..e2ac5fa5531b 100644
---- a/drivers/firmware/efi/arm-runtime.c
-+++ b/drivers/firmware/efi/arm-runtime.c
-@@ -162,14 +162,11 @@ void efi_virtmap_unload(void)
- static int __init arm_dmi_init(void)
- {
- 	/*
--	 * On arm64/ARM, DMI depends on UEFI, and dmi_scan_machine() needs to
-+	 * On arm64/ARM, DMI depends on UEFI, and dmi_setup() needs to
- 	 * be called early because dmi_id_init(), which is an arch_initcall
- 	 * itself, depends on dmi_scan_machine() having been called already.
- 	 */
--	dmi_scan_machine();
--	dmi_memdev_walk();
--	if (dmi_available)
--		dmi_set_dump_stack_arch_desc();
-+	dmi_setup();
- 	return 0;
- }
- core_initcall(arm_dmi_init);
-diff --git a/include/linux/dmi.h b/include/linux/dmi.h
-index c46fdb36700b..8de8c4f15163 100644
---- a/include/linux/dmi.h
-+++ b/include/linux/dmi.h
-@@ -102,9 +102,7 @@ const struct dmi_system_id *dmi_first_match(const struc=
-t dmi_system_id *list);
- extern const char * dmi_get_system_info(int field);
- extern const struct dmi_device * dmi_find_device(int type, const char *nam=
-e,
- 	const struct dmi_device *from);
--extern void dmi_scan_machine(void);
--extern void dmi_memdev_walk(void);
--extern void dmi_set_dump_stack_arch_desc(void);
-+extern void dmi_setup(void);
- extern bool dmi_get_date(int field, int *yearp, int *monthp, int *dayp);
- extern int dmi_get_bios_year(void);
- extern int dmi_name_in_vendors(const char *str);
-@@ -122,9 +120,7 @@ static inline int dmi_check_system(const struct dmi_sys=
-tem_id *list) { return 0;
- static inline const char * dmi_get_system_info(int field) { return NULL; }
- static inline const struct dmi_device * dmi_find_device(int type, const ch=
-ar *name,
- 	const struct dmi_device *from) { return NULL; }
--static inline void dmi_scan_machine(void) { return; }
--static inline void dmi_memdev_walk(void) { }
--static inline void dmi_set_dump_stack_arch_desc(void) { }
-+static inline void dmi_setup(void) { }
- static inline bool dmi_get_date(int field, int *yearp, int *monthp, int *d=
-ayp)
- {
- 	if (yearp)
---=20
-2.20.1
-
+Regards,
+Pankaj
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
