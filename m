@@ -2,92 +2,52 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC44C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0583C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD092173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8A920823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbfC1Tg2 (ORCPT
+        id S1726197AbfC1Tjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:36:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52983 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfC1Tg1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:36:27 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h9aou-0005ki-GG; Thu, 28 Mar 2019 20:36:12 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h9aos-0004vv-3w; Thu, 28 Mar 2019 20:36:10 +0100
-Date:   Thu, 28 Mar 2019 20:36:10 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V10 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190328193610.u7d7lywipq5u2237@pengutronix.de>
-References: <1553582817-29519-1-git-send-email-Anson.Huang@nxp.com>
- <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
+        Thu, 28 Mar 2019 15:39:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51431 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfC1Tjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 15:39:52 -0400
+Received: from hanvin-mobl2.amr.corp.intel.com ([192.55.54.43])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2SJdH8J3459445
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Thu, 28 Mar 2019 12:39:18 -0700
+Subject: Re: [PATCH v2] tty/serial: Add a serial port simulator
+To:     Randy Dunlap <rdunlap@infradead.org>, cminyard@mvista.com
+Cc:     minyard@acm.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190305171231.22133-1-minyard@acm.org>
+ <eea0ad95-8344-371a-1dd0-58c8366a355b@infradead.org>
+ <20190306015149.GD4290@minyard.net>
+ <041e137e-0b9d-04f9-255d-b1f402b23c17@infradead.org>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <447407be-0f49-f29d-6e81-bf4ed0a6e56b@zytor.com>
+Date:   Thu, 28 Mar 2019 12:39:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1553582817-29519-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <041e137e-0b9d-04f9-255d-b1f402b23c17@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 06:52:33AM +0000, Anson Huang wrote:
-> i.MX7ULP has TPM(Low Power Timer/Pulse Width Modulation Module)
-> inside, it can support multiple PWM channels, all the channels
-> share same counter and period setting, but each channel can
-> configure its duty and polarity independently.
-> 
-> There are several TPM modules in i.MX7ULP, the number of channels
-> in TPM modules are different, it can be read from each TPM module's
-> PARAM register.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Dumb question: this is basically a pty on steroids. Wouldn't this be
+better done by enhancing the pty devices?
 
-I'd like to review this round, but will have to delay it a bit. I will
-hopefully have time for that next week.
+	-0hpa
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
