@@ -2,98 +2,82 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D05C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FF2C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72062082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:48:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OEGEvVoX"
+	by mail.kernel.org (Postfix) with ESMTP id F32682173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfC1QsN (ORCPT
+        id S1726659AbfC1Qtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:48:13 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:42636 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfC1QsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:48:13 -0400
-Received: by mail-vk1-f193.google.com with SMTP id 195so223190vkx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WSfQ5OmEiKGqOCo/4yLiYapctHnWzr5rZnujV5KL38A=;
-        b=OEGEvVoX61AVG3rM40VKvHD3TYzBBLfWdY1+6HqXLePG8nOr4liT0RDO16iUgMxwyA
-         G+BesGmIebsIjBPWPrIKxwnT2FvHHtHWUkn5MSpI2Juy4g/cL/lFhnZinqL3IuBTj2e8
-         p7z4jPqepn7oNMkoUzwfXzog4gV1+kUR8F+Zs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WSfQ5OmEiKGqOCo/4yLiYapctHnWzr5rZnujV5KL38A=;
-        b=LUJ1SgryuR12gAhvtixpYCAnWKyc2YDm7YSTy6LRVEqyzbfITgx1W+Pu/ClVis6SiE
-         jBKAgObXC3oAo6GCtl8LozxhHvP/CerUXyuw8vJcNwYyH6Yiw8U8LC+D+91KGur7e66+
-         eXjHWXEZUhh21JR6/CRn5Tm8ztlldnnrz2ZZ8+h1polzVvTQ9bLqNRQy0ezAwtvWI4YY
-         nMD3HsygqF4i31k7+xp09fdCK9SQZ6TBRRviagbMizeSPL7sWtFpwZfec1DTHpbbYdMw
-         VVEa6VQxZpKGH9P/B+P5PoRKADEcfhi7AzaaCi8QGkIVBDY+fudJodl56jUxmSitv/vm
-         VXZA==
-X-Gm-Message-State: APjAAAW0vOZXgC/nkz95VzvCbuwEGXgNdbVyVVoeCIHwcsgLwrDNXynI
-        C2NhSAD7I/nEDemwzSoct92vAfyYYkU=
-X-Google-Smtp-Source: APXvYqy2djjuS0h5/WLJoAROVN2gG8DGFxuqcgZXRsYJKFrG2dWdN+D5atxaIJIvUj7gASVn/NNiSg==
-X-Received: by 2002:a1f:9991:: with SMTP id b139mr21941933vke.73.1553791691791;
-        Thu, 28 Mar 2019 09:48:11 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id m23sm20779002vsl.24.2019.03.28.09.48.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 09:48:09 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id e131so4647357vkf.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 09:48:08 -0700 (PDT)
-X-Received: by 2002:a1f:3458:: with SMTP id b85mr15309047vka.4.1553791688459;
- Thu, 28 Mar 2019 09:48:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190318094128.1488-1-elena.reshetova@intel.com>
- <CALCETrUxhzHyUQCAjPQcPNWwAw5UTxUX4ZaeGxpbf9VSCDdcPg@mail.gmail.com>
- <CAGXu5jLQaa2FYMOpQPLdRPmUPNY8jq7whM6Wa_YGjfH7oHwx4Q@mail.gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C19A55@IRSMSX102.ger.corp.intel.com>
- <CALCETrXnfk5zYWmpdLvYbcJ7hhFM13+LPq14MF7s99iqtS4-jg@mail.gmail.com>
- <CAGXu5j+r-NH5+QY=siE+6RTkUKoRF0Rso6KHM4NOMsCvpcjW5g@mail.gmail.com> <3F1480E2-3D58-4A79-8609-2A9F7991804F@amacapital.net>
-In-Reply-To: <3F1480E2-3D58-4A79-8609-2A9F7991804F@amacapital.net>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Thu, 28 Mar 2019 09:47:56 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
-Message-ID: <CAGXu5jLBP-95aEF2refYimAJ=ea42C_3Ywb+1dZAaVR1rbmP9Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>
+        Thu, 28 Mar 2019 12:49:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52484 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725849AbfC1Qtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:49:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E2B9ABDE;
+        Thu, 28 Mar 2019 16:49:44 +0000 (UTC)
+Message-ID: <1553791752.6310.2.camel@suse.com>
+Subject: Re: [PATCH] usb: uas: fix usb subsystem hang after power off hub
+ port
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     gregkh@linuxfoundation.org, usb-storage@lists.one-eyed-alien.net,
+        Jacky.Cao@sony.com, Kento.A.Kobayashi@sony.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Date:   Thu, 28 Mar 2019 17:49:12 +0100
+In-Reply-To: <Pine.LNX.4.44L0.1903281157070.1291-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1903281157070.1291-100000@iolanthe.rowland.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 9:29 AM Andy Lutomirski <luto@amacapital.net> wrote=
-:
-> Doesn=E2=80=99t this just leak some of the canary to user code through si=
-de channels?
+On Do, 2019-03-28 at 11:57 -0400, Alan Stern wrote:
+> On Thu, 28 Mar 2019, Oliver Neukum wrote:
+> 
+> > On Do, 2019-03-28 at 07:53 +0000, Kento.A.Kobayashi@sony.com wrote:
+> > > Hi,
+> > > 
+> > > > Sorry,
+> > > > 
+> > > > I thought this was clear. Your patch is making the assumption that the reset is triggered by the SCSI layer. You cannot make that assumption, as there is an ioctl for resetting a USB device.
+> > > > In case we are getting an error during the reset (our endpoints vanish), the device driver must report that to the USB layer, so the driver will always be disconnected.
+> > > > We cannot drop errors.
+> > > > 
+> > > >   Regards
+> > > >           Oliver
+> > > 
+> > > This patch modified uas_post_reset to skip rebind operation to avoid exception while -ENODEV happens not drop error.
+> > > If uas_post_reset happens -ENODEV, usb_reset_and_verify_device must happen error.
+> > > So,when we use ioctl(USBDEVFS_RESET) to reset device, if usb_reset_and_verify_device happens error, the error will be reported through ioctl return value. 
+> > 
+> > OK, It is possible that I am stupid. We must rebind if uas_post_reset()
+> > fails. The driver will crash without the endpoints. Can you please
+> > explain again in greater detail, what you are trying to achieve?
+> 
+> Actually no, the driver doesn't have to do anything if the post-reset 
+> method fails.  usbcore will take care of rebinding automatically.
 
-Erf, yes, good point. Let's just use prandom and be done with it.
+Yes, but the rebinding is not optional. Hence, either the post_reset()
+must fail to trigger it, or it will be triggered anyway.
+So if the rebinding hangs the machine, I cannot see how alter
+changing the return value of uas_post_reset() would help.
 
---=20
-Kees Cook
+It looks to me like the state transitions of SCSI are too
+restrictive.
+
+	Regards
+		Oliver
+
