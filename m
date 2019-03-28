@@ -2,128 +2,206 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32372C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA1F21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01229217F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:23:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LjmDLUau"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnPnitFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfC1MVG (ORCPT
+        id S1726453AbfC1MXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:21:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54886 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfC1MVG (ORCPT
+        Thu, 28 Mar 2019 08:23:35 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33398 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfC1MXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:21:06 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SC990c126397;
-        Thu, 28 Mar 2019 12:20:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=W9Enll0htYA1EXDV14AIj5B2PgkiEFBryMG52keRzrI=;
- b=LjmDLUauWNnWGr0Xm7jD3x6zGT6J0RxkRfv0Df4EqrkNPloXAvQBicK8Mc9g2Bj8s/5V
- RGtHOvIzP2bOumCNvxuy81+PwiUk3pQwc/qnmO1J44zrUjSUAwcHTzKnhu+LckAue8th
- yAJg3d6Yy15YNQDKmzxLEVBfIrOrEk9q9QJgRSjNH/dS6ZbYprLQ3Mrnfdfr3NDtqwgL
- Eq1aUEnwIVqBm+hCeNPdqiQ0BiNSFQnOYMoXAWHBdgR7BLpTvbN1JTGDhN6umIPUFNuB
- 4rGYv/F8P1MsB25cGmNayINpgIIzfz35KIEw9a1osj1rnou/ppWwvgZvQR+VuyhrIeHG 5Q== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2120.oracle.com with ESMTP id 2re6djp775-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 12:20:45 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2SCKhKJ006257
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 12:20:43 GMT
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SCKYmX030050;
-        Thu, 28 Mar 2019 12:20:35 GMT
-Received: from kadam (/41.202.241.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Mar 2019 05:20:34 -0700
-Date:   Thu, 28 Mar 2019 15:20:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     wen.yang99@zte.com.cn, yamada.masahiro@socionext.com,
-        Markus.Elfring@web.de, Gilles.Muller@lip6.fr,
-        nicolas.palix@imag.fr, michal.lkml@markovi.net,
-        yellowriver2010@hotmail.com, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: =?utf-8?B?562U5aSNOiBSZTogW3Y1?= =?utf-8?Q?=5D?= coccinelle:
- semantic code search for missing put_device()
-Message-ID: <20190328122022.GG32590@kadam>
-References: <201903281010336645826@zte.com.cn>
- <alpine.DEB.2.21.1903280708590.2756@hadrien>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903280708590.2756@hadrien>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=926 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903280087
+        Thu, 28 Mar 2019 08:23:35 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k189so11980569qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 05:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Zfb1rKeBLtVHVUw32/S4m5WUS/BSiXJ/wEQMyqmIJBU=;
+        b=jnPnitFsxjGqJZyK37N1W/MM23bZXgqCsFQ0HC6bjz314FXe4oMNXVi10c1oyvFf/Q
+         8IRT/AflNOxI163Msxqi9i6Z8JC2iGm0Zol2Mm0NJH+1+Gwe5scITUnVk3vSUj4b9Qvy
+         Nab67GoLOkEXEGtQv93Dk4m9VjX9Os0gW9LBDW3IynpfXApgnsAzBe0PDOC7w4HyjIYO
+         FVcfaktfSY+UyAR7zDDDVnU0v+/wFA9oMNsGg7/BIEGLOer+d3V+mVg3qpWvnS+sCs4j
+         mJ7/OjfhRK7lia5yY/m056UhCaCTPCfqeI+m3j9Ld1l/QQhAfVxefomgpKrAweru4Udc
+         CxYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Zfb1rKeBLtVHVUw32/S4m5WUS/BSiXJ/wEQMyqmIJBU=;
+        b=qXUJzBbQa3iS7we69DoJRz8W6zg525LMpqVzXIcAUGQE5jZAjK9CtY/+yhFsc8+fSs
+         pZMdLt+W1q/EKl+bUTA5jwU685uViRlkxSU4tL2US1eV99+0ZRquNA58diqdFhG3P2MH
+         q8goKu0XpFqncwMG+3DORHyJ0EWBBH3pYIfzErkS5/E0QNGsbBU5wnESsRrvImBucXn9
+         OVFlCO2ZxrJeVodJDAcprLHDoTJVGKp4Dc7POruE9HgJlW6eZVxMGz7jlmxfcOcwuNsd
+         1r9iPf26JdlunlW3aLBp/gR+6IRtjW7v/05aN3dpLC+qqsATXtz3bKLe3/3/1rFL3ehW
+         +7uQ==
+X-Gm-Message-State: APjAAAXc/mPmqnfcL10+XKjqsHTs0j39J0PlMcHrq+fIdd6c2IEdzNv4
+        hQiYdIBoqgM2bTLSamCoIz2jploJWd8=
+X-Google-Smtp-Source: APXvYqw0xAuq5pjK53NOZmfk0VkTufUErdqgrSygGob/95ifcXuNzNcH+Z7gacAA3aL1JOlABBFudg==
+X-Received: by 2002:ae9:e894:: with SMTP id a142mr26224562qkg.14.1553775813891;
+        Thu, 28 Mar 2019 05:23:33 -0700 (PDT)
+Received: from jfddesk.Sonatest.net (ipagstaticip-d73c7528-4de5-0861-800b-03d8b15e3869.sdsl.bell.ca. [174.94.156.236])
+        by smtp.gmail.com with ESMTPSA id e15sm12092362qkl.80.2019.03.28.05.23.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 05:23:33 -0700 (PDT)
+From:   Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
+Cc:     zbr@ioremap.net, manio@skyboo.net,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Subject: [PATCH v3] w1: ds2408: reset on output_write retry with readback
+Date:   Thu, 28 Mar 2019 08:22:44 -0400
+Message-Id: <20190328122244.32126-1-jeff.dagenais@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 07:09:22AM +0100, Julia Lawall wrote:
-> 
-> 
-> On Thu, 28 Mar 2019, wen.yang99@zte.com.cn wrote:
-> 
-> > > > > When I searched "Wen Yang", v6 did not show up for some reasons.
-> > > > > https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=22638&state=*&q=&archive=&delegate=
-> > > >
-> > > > I find such a situation also interesting somehow.
-> > > > I assume that there was another temporary technical difficulty involved
-> > > > with the Linux mailing list (and related information systems).
-> > >
-> > >
-> > > I think v6 fell into a crack somehow.
-> > >
-> > >
-> > > Check the LKML archive:
-> > > https://lkml.org/lkml/2019/2/16
-> > >
-> > >
-> > > I see your reply:
-> > >
-> > > Re: [v6] coccinelle: semantic code search for missing put_device()Markus Elfring
-> > >
-> > >
-> > > But, I cannot find the v6 patch itself.
-> > >
-> >
-> > I am sorry to bother you.
-> > I checked it again and  found that I can not send mail to <linux-kernel@vger.kernel.org>
-> > via my private mailbox <yellowriver2010@hotmail.com>.
-> > The reject reply like this:
-> >
-> > for your MAIL FROM address <yellowriver2010@hotmail.com> policy analysis reported: Your address is not liked source for email
-> >
-> > Is it looked my mail as spam mail?
-> > Who should I send to for help me resolving this problem?
-> 
-> Maybe Konstantin Ryabitsev?
-> 
+When we have success in 'Channel Access Write' but reading back latch
+states fails, a write is retried without doing a proper slave reset.
+This leads to protocol errors as the slave treats the next 'Channel
+Access Write' as the continuation of previous command.
 
-I think postmaster@vger.kernel.org is still Dave Miller, but I'm not
-positive.
+This commit is fixing this by making sure if the retry loop re-runs, a
+reset is performed, whatever the failure (CONFIRM_BYTE or the read
+back).
 
-Hotmail is not listed as a taboo thing:
-http://vger.kernel.org/majordomo-taboos.txt
+The loop was quite due for a cleanup and this change mandated it. By
+isolating the CONFIG_W1_SLAVE_DS2408_READBACK case into it's own
+function, we vastly reduce the visual and branching(runtime and
+compile-time) noise.
 
-regards,
-dan carpenter
+Reported-by: Mariusz Bialonczyk <manio@skyboo.net>
+Tested-by: Mariusz Bialonczyk <manio@skyboo.net>
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+---
+ drivers/w1/slaves/w1_ds2408.c | 76 ++++++++++++++++++++++---------------------
+ 1 file changed, 39 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/w1/slaves/w1_ds2408.c b/drivers/w1/slaves/w1_ds2408.c
+index b535d5ec35b6..92e8f0755b9a 100644
+--- a/drivers/w1/slaves/w1_ds2408.c
++++ b/drivers/w1/slaves/w1_ds2408.c
+@@ -138,14 +138,37 @@ static ssize_t status_control_read(struct file *filp, struct kobject *kobj,
+ 		W1_F29_REG_CONTROL_AND_STATUS, buf);
+ }
+ 
++#ifdef fCONFIG_W1_SLAVE_DS2408_READBACK
++static bool optional_read_back_valid(struct w1_slave *sl, u8 expected)
++{
++	u8 w1_buf[3];
++
++	if (w1_reset_resume_command(sl->master))
++		return false;
++
++	w1_buf[0] = W1_F29_FUNC_READ_PIO_REGS;
++	w1_buf[1] = W1_F29_REG_OUTPUT_LATCH_STATE;
++	w1_buf[2] = 0;
++
++	w1_write_block(sl->master, w1_buf, 3);
++
++	return (w1_read_8(sl->master) == expected);
++}
++#else
++static bool optional_read_back_valid(struct w1_slave *sl, u8 expected)
++{
++	return true;
++}
++#endif
++
+ static ssize_t output_write(struct file *filp, struct kobject *kobj,
+ 			    struct bin_attribute *bin_attr, char *buf,
+ 			    loff_t off, size_t count)
+ {
+ 	struct w1_slave *sl = kobj_to_w1_slave(kobj);
+ 	u8 w1_buf[3];
+-	u8 readBack;
+ 	unsigned int retries = W1_F29_RETRIES;
++	ssize_t bytes_written = -EIO;
+ 
+ 	if (count != 1 || off != 0)
+ 		return -EFAULT;
+@@ -155,54 +178,33 @@ static ssize_t output_write(struct file *filp, struct kobject *kobj,
+ 	dev_dbg(&sl->dev, "mutex locked");
+ 
+ 	if (w1_reset_select_slave(sl))
+-		goto error;
++		goto out;
+ 
+-	while (retries--) {
++	do {
+ 		w1_buf[0] = W1_F29_FUNC_CHANN_ACCESS_WRITE;
+ 		w1_buf[1] = *buf;
+ 		w1_buf[2] = ~(*buf);
+-		w1_write_block(sl->master, w1_buf, 3);
+ 
+-		readBack = w1_read_8(sl->master);
++		w1_write_block(sl->master, w1_buf, 3);
+ 
+-		if (readBack != W1_F29_SUCCESS_CONFIRM_BYTE) {
+-			if (w1_reset_resume_command(sl->master))
+-				goto error;
+-			/* try again, the slave is ready for a command */
+-			continue;
++		if (w1_read_8(sl->master) == W1_F29_SUCCESS_CONFIRM_BYTE &&
++		    optional_read_back_valid(sl, *buf)) {
++			bytes_written = 1;
++			goto out;
+ 		}
+ 
+-#ifdef CONFIG_W1_SLAVE_DS2408_READBACK
+-		/* here the master could read another byte which
+-		   would be the PIO reg (the actual pin logic state)
+-		   since in this driver we don't know which pins are
+-		   in and outs, there's no value to read the state and
+-		   compare. with (*buf) so end this command abruptly: */
+ 		if (w1_reset_resume_command(sl->master))
+-			goto error;
++			goto out; /* unrecoverable error */
++		/* try again, the slave is ready for a command */
++	} while (--retries);
+ 
+-		/* go read back the output latches */
+-		/* (the direct effect of the write above) */
+-		w1_buf[0] = W1_F29_FUNC_READ_PIO_REGS;
+-		w1_buf[1] = W1_F29_REG_OUTPUT_LATCH_STATE;
+-		w1_buf[2] = 0;
+-		w1_write_block(sl->master, w1_buf, 3);
+-		/* read the result of the READ_PIO_REGS command */
+-		if (w1_read_8(sl->master) == *buf)
+-#endif
+-		{
+-			/* success! */
+-			mutex_unlock(&sl->master->bus_mutex);
+-			dev_dbg(&sl->dev,
+-				"mutex unlocked, retries:%d", retries);
+-			return 1;
+-		}
+-	}
+-error:
++out:
+ 	mutex_unlock(&sl->master->bus_mutex);
+-	dev_dbg(&sl->dev, "mutex unlocked in error, retries:%d", retries);
+ 
+-	return -EIO;
++	dev_dbg(&sl->dev, "%s, mutex unlocked retries:%d\n",
++		(bytes_written > 0) ? "succeeded" : "error", retries);
++
++	return bytes_written;
+ }
+ 
+ 
+-- 
+2.11.0
+
