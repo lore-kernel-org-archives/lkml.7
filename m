@@ -2,70 +2,111 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2F9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D462C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21975206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC9206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfC1Qez (ORCPT
+        id S1727624AbfC1QfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:34:55 -0400
-Received: from smtprelay0232.hostedemail.com ([216.40.44.232]:37408 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726029AbfC1Qey (ORCPT
+        Thu, 28 Mar 2019 12:35:00 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.95]:19626 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726029AbfC1Qe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:34:54 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 29068180AA51A;
-        Thu, 28 Mar 2019 16:34:53 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: birth84_81c6b7977a304
-X-Filterd-Recvd-Size: 1655
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 28 Mar 2019 16:34:51 +0000 (UTC)
-Message-ID: <158b68a902139066f53d308cc5a428774445a05b.camel@perches.com>
-Subject: Re: [PATCH 00/23] Include linux ACPI docs into Sphinx TOC tree
-From:   Joe Perches <joe@perches.com>
-To:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Date:   Thu, 28 Mar 2019 09:34:50 -0700
-In-Reply-To: <20190328162721.26138-1-changbin.du@gmail.com>
-References: <20190328162721.26138-1-changbin.du@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Mar 2019 12:34:59 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id EFA3715FE4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:34:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9XzVhG3sB2PzO9XzVhYRcR; Thu, 28 Mar 2019 11:34:57 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.117.246] (port=34150 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h9Xyu-002VJq-IK; Thu, 28 Mar 2019 11:34:57 -0500
+Date:   Thu, 28 Mar 2019 11:34:19 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ice: Use struct_size() helper
+Message-ID: <20190328163419.GA5446@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.117.246
+X-Source-L: No
+X-Exim-ID: 1h9Xyu-002VJq-IK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.117.246]:34150
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-29 at 00:26 +0800, Changbin Du wrote:
-> Hi Corbet and All,
-> The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> from reStructuredText files. I converted most of the Linux ACPI docs to rst
-> format in this serias.
-[]
->  ...pio-properties.txt => gpio-properties.rst} |  76 +++--
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Please also update this MAINTAINERS entry
+struct foo {
+    int stuff;
+    struct boo entry[];
+};
 
-MAINTAINERS-GPIO ACPI SUPPORT
-MAINTAINERS-M:  Mika Westerberg <mika.westerberg@linux.intel.com>
-MAINTAINERS-M:  Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-MAINTAINERS-L:  linux-gpio@vger.kernel.org
-MAINTAINERS-L:  linux-acpi@vger.kernel.org
-MAINTAINERS-S:  Maintained
-MAINTAINERS:F:  Documentation/acpi/gpio-properties.txt
-MAINTAINERS-F:  drivers/gpio/gpiolib-acpi.c
-MAINTAINERS-
+size = sizeof(struct foo) + count * sizeof(struct boo);
+instance = alloc(size, GFP_KERNEL);
 
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+size = struct_size(instance, entry, count);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/intel/ice/ice_sched.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ice/ice_sched.c b/drivers/net/ethernet/intel/ice/ice_sched.c
+index e0218f4c8f0b..a2dd7c74bba3 100644
+--- a/drivers/net/ethernet/intel/ice/ice_sched.c
++++ b/drivers/net/ethernet/intel/ice/ice_sched.c
+@@ -664,10 +664,10 @@ ice_sched_add_elems(struct ice_port_info *pi, struct ice_sched_node *tc_node,
+ 	u16 i, num_groups_added = 0;
+ 	enum ice_status status = 0;
+ 	struct ice_hw *hw = pi->hw;
+-	u16 buf_size;
++	size_t buf_size;
+ 	u32 teid;
+ 
+-	buf_size = sizeof(*buf) + sizeof(*buf->generic) * (num_nodes - 1);
++	buf_size = struct_size(buf, generic, num_nodes - 1);
+ 	buf = devm_kzalloc(ice_hw_to_dev(hw), buf_size, GFP_KERNEL);
+ 	if (!buf)
+ 		return ICE_ERR_NO_MEMORY;
+-- 
+2.21.0
 
