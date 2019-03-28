@@ -2,119 +2,118 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED06C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7056C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5A42075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:21:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VM8lzwwA"
+	by mail.kernel.org (Postfix) with ESMTP id 89CFE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 08:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfC1IVq (ORCPT
+        id S1726506AbfC1IWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 04:21:46 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:33985 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfC1IVp (ORCPT
+        Thu, 28 Mar 2019 04:22:38 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43483 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfC1IWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 04:21:45 -0400
-Received: by mail-it1-f196.google.com with SMTP id l4so7698231ite.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 01:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2s0o2wptDgdU1RZ20vo/vyQzS4JpdfMk071h3j4mQfo=;
-        b=VM8lzwwArlqnDhvMa8tbC5yEvNN0g2LrTFRuW6RQMMKBNlbmwnnqzJNiRsmDL/8W1y
-         lmIb3eGigEXP2e6mA/mptlpgYHtM63pe+ZK2KOt/0BhPKW1KtqxKZEhZHsvRQcrIerfv
-         MOYe2xU1GSrcIiH7N2upE0F412SX+eQ2ztzEAboVJBkFJjiyKJXJKVbIkNW5zmUyE+1C
-         qEZLNa4PUx5aI1OhSnqhZuiJa2RxgVMpq/dcTFOyt4Ps0ldf1GCZjF/d6ihptNdZnOmK
-         7b66EPWszYSrGOPMu+0X/+uA1eCHQLnLPUeVoyvjvgXJ4D7BRRqn7X6Ce3QHJIamSDI6
-         PNlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2s0o2wptDgdU1RZ20vo/vyQzS4JpdfMk071h3j4mQfo=;
-        b=Z3sqXZkom+WLN9r0TjRcSPbHCl6T6Tt9snfuISf+5TLKidQZLlR80nxoP0Vxo6aOgx
-         yF3g4wsVLFhYnULjpUodpENu48jIlTbxG+gGbf2WYzyzFLE6b/QlOaSrW6EuAa5KRwhw
-         isoyfmDTOxToNkuqzxVQRRN+Hf6e9HoazBupW8vSXVQ2YaJCNc1Z3GT+34oyja2w2Il3
-         uv5VybnQXctwUIz2trdT+f+MsEAeaIdo0cL7rXb39bsztkaz5grFHmnO4ezwzD9pr2xZ
-         ojf++LSb0gwAFV63oZziZrlZxmb9xcQuQeOOkIBQmgO/CccyjHvHvJbC+Rzx8agOiaTt
-         Jikg==
-X-Gm-Message-State: APjAAAVIvJi2Mg4QBtDrt/78NGsC5T6/hGfTR5j6LHlJRUHofiE0xxND
-        fKAaYI1ULWSbS7hfRaODJHbRGyOcOwB8NeVaTDd4zw==
-X-Google-Smtp-Source: APXvYqyRpZNY8UmDVU/v8+MIYn+n34yz+4n6tPfZednK/MYGZlOTbgk55oq1DnL11+uiJA/lIhMUYeu5aFCpTwwVZRg=
-X-Received: by 2002:a24:605:: with SMTP id 5mr6223512itv.144.1553761304559;
- Thu, 28 Mar 2019 01:21:44 -0700 (PDT)
+        Thu, 28 Mar 2019 04:22:37 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h9QIy-0006T6-Tn; Thu, 28 Mar 2019 09:22:32 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h9QIx-0007I8-8G; Thu, 28 Mar 2019 09:22:31 +0100
+Date:   Thu, 28 Mar 2019 09:22:31 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Igor Plyatov <plyatov@gmail.com>
+Cc:     Andy Duan <fugang.duan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Clark Wang <xiaoning.wang@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dmaengine@vger.kernel.org, Han Xu <han.xu@nxp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Issues with i.MX SPI DMA transfers
+Message-ID: <20190328082231.zg4emm66mpbbfb6c@pengutronix.de>
+References: <08fcbd65-510f-84f8-d6d6-ff56aa9ca9ad@gmail.com>
+ <20190328065247.uz73lap7ljf5q3tb@pengutronix.de>
+ <b8e80127-e377-9ef9-2447-b0126fdad7dc@gmail.com>
 MIME-Version: 1.0
-References: <00000000000036e81e058507565b@google.com> <alpine.LNX.2.21.1903271021290.994@nippy.intranet>
-In-Reply-To: <alpine.LNX.2.21.1903271021290.994@nippy.intranet>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Mar 2019 09:21:33 +0100
-Message-ID: <CACT4Y+Ya21HPJVEcsGRgZLK+F+Q5kV-fEp3O755GC9WWB_D=DA@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in __perf_sw_event
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     syzbot <syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        funaho@jurai.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        jolsa@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org, Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8e80127-e377-9ef9-2447-b0126fdad7dc@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 12:28 AM Finn Thain <fthain@telegraphics.com.au> wrote:
->
-> On Tue, 26 Mar 2019, syzbot wrote:
->
-> > syzbot has bisected this bug to:
-> >
-> > commit cf85d89562f39cc7ae73de54639f1915a9195b7a
-> > Author: Finn Thain <fthain@telegraphics.com.au>
-> > Date:   Fri May 25 07:34:36 2018 +0000
-> >
-> >    m68k/mac: Enable PDMA for PowerBook 500 series
-> >
->
-> Looks like a false positive. But if you really are running syzkaller on a
-> PowerBook 500, you'll want to check that you have an FPU, otherwise a CPU
-> erratum will probably mess up your results.
+On Thu, Mar 28, 2019 at 10:04:21AM +0300, Igor Plyatov wrote:
+> Dear Uwe,
+> 
+> 
+> > Hello Igor,
+> > 
+> > On Wed, Mar 27, 2019 at 08:40:00PM +0300, Igor Plyatov wrote:
+> > > please, help to resolve two issues with SPI DMA transfers at i.MX6Q
+> > > platform.
+> > > 
+> > > First issue is
+> > >   [ 4465.008003] spi_master spi0: I/O Error in DMA RX
+> > > 
+> > > Second issue is duplication for one of received bytes.
+> > > 
+> > > Probably, these issues related to each one.
+> > This is probably the same problem I hit some time ago. Check ERR009165
+> > in the errata. You either need to disable DMA or need a fixed
+> > sdma-Script.
+> 
+> disabling of DMA is not an option, because high throughput required for SPI
+> bus to communicate with DSPs.
 
-Agree. I've included it into the big bisection analysis as "hard to
-reproduce" case:
-https://lkml.org/lkml/2019/3/27/788
+Is this a theoretical reasoning, or is that backed by testing? People
+here on the list already said things like:
 
+	The eCSPI appears to insert a 4 bit pause after each word in DMA
+	mode, not done in PIO mode, which can make DMA transfers 50%
+	slower than PIO.
 
-> --
->
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226cb8b200000
-> > start commit:   b0314565 Merge tag 'for_linus' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126cb8b200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1626cb8b200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=a41ac89a0712acde0e84
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1707cd2f400000
-> >
-> > Reported-by: syzbot+a41ac89a0712acde0e84@syzkaller.appspotmail.com
-> > Fixes: cf85d89562f3 ("m68k/mac: Enable PDMA for PowerBook 500 series")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/alpine.LNX.2.21.1903271021290.994%40nippy.intranet.
-> For more options, visit https://groups.google.com/d/optout.
+You might want to read the thread
+https://marc.info/?l=linux-spi&m=155191201208766&w=2
+.
+
+> I'm aware of ERR009165, but as I write some minutes earlier to list, spi0
+> (alias for ecspi1) and spi1 (alias for ecspi2) work flawless, while spi4
+> (alias for ecspi5) fails very fast.
+
+As the issue is a timing race, it might depend on things like length of
+the SPI lines, load on the data lines and other electrical properties.
+So you might just be happy that spi0 and spi1 don't show the issue for
+you. Or you didn't apply the "right" work load yet.
+
+> Does same SDMA script used for all SPI interfaces or scripts are different?
+
+As answered already before: The same script is used for all interfaces.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
