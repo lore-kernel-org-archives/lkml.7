@@ -2,129 +2,145 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC107C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC362184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0EE20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="MV4wnmG4"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="vgU63AKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbfC1T7d (ORCPT
+        id S1726596AbfC1UAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:59:33 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46004 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfC1T7d (ORCPT
+        Thu, 28 Mar 2019 16:00:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38158 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfC1UAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:59:33 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1EB7B886BF;
-        Fri, 29 Mar 2019 08:59:31 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1553803171;
-        bh=KyVf0XPYe/Sq2CeY/TstCYgQb42lVq35x7WJh3kz4AE=;
-        h=From:To:CC:Subject:Date:References;
-        b=MV4wnmG48tgxSpWpN+i9c/XAPIud2US33ZPG3nVR8XWPC5yFiBoVrQFz300pPWNEf
-         aINXu2DwRJH/tLydoJNXAdXx22imQCxFIS9hauQmbu10ig0RrC+QnSg772xDNz1w54
-         TG5Pytig9cVhr96cjpEi5HC78pWi/v4yD8L3AdJmtePhRkxTtx2OpgMTSZW36fny31
-         8fFBMmZO9j6PeHTz2DqQIblOjtk8aCigGj1l5VLj0sNZ22Oe6ZTCtO5+q1HCByNlB5
-         mpYST/a00kFUXPuQ7W7XdSabau4FsxQISG8wuOo6NDQQVdcmCQ1O5c7kdS1i2TNOqk
-         N0s3r5wtSDvaw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5c9d27a20001>; Fri, 29 Mar 2019 08:59:30 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 29 Mar 2019 08:59:30 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 29 Mar 2019 08:59:30 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-CC:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mtd: maps: physmap: Store gpio_values correctly
-Thread-Topic: [PATCH 1/2] mtd: maps: physmap: Store gpio_values correctly
-Thread-Index: AQHU5RsQWH5zn2hVsUSt8KG5kvMGiw==
-Date:   Thu, 28 Mar 2019 19:59:30 +0000
-Message-ID: <1ab4e2f0c6d4404895877ecf539504bd@svr-chch-ex1.atlnz.lc>
-References: <20190328040217.1895-1-chris.packham@alliedtelesis.co.nz>
- <20190328040217.1895-2-chris.packham@alliedtelesis.co.nz>
- <20190328093228.5ab79718@collabora.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Mar 2019 16:00:35 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e80so19567629ote.5;
+        Thu, 28 Mar 2019 13:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OM/8gXw0ruyBhM5nsJAfeWqS5Sp56wlwsUqgsT5UCMg=;
+        b=vgU63AKK5dDDYV4xlfEvUBM1yeSxlihzL+adhZo10iOkTQGS3Ju4lGEBcPbFmD3xFt
+         QqKX+DuDBrGkGB3uWY+JJnFfFWTQdgmfwGzE6ubMOIDO/l8F/oNcoVZTpJdskXBDW/Sv
+         svsVls78ajxswO7VQEwHxRtuNGEZXSJsCvHgzkvWwtAimUvgqxgGuPhZUHiA9tX+II5n
+         rS5vqfFQMRjAFuDvqxL/zgMHMbLvqfogiuEKMZEkOW2wDEYBMML0/3uxUU5+2pUzbCG0
+         Twr1OTQM/8GDoMrEmQ68nsUzuOZGAD/276KnaOKe1QTXBFsxY4xS44PhNWR/uWEpyNWd
+         uwqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OM/8gXw0ruyBhM5nsJAfeWqS5Sp56wlwsUqgsT5UCMg=;
+        b=jLzjGyqRRjn8LkkmPWiSKANbkQo5y2Kbz22eDxkC3MNaeN+umRIsZDtWtPdReOcioU
+         Pa8BiPVsZTN26v0DX/Pp3tUW8JAqyqoFFoCZUJ9vpGKqZhbpD0HquAHGDMMfsVzV4gqK
+         DfQ7W6hmLbsPAGFSVdEw75wn8bWZA59Ya9Es9qxJ+E5NtAD9+wCazTKPqW7PWrSscEiu
+         ZFlgvKfpZy2fx14jOdJV8umEqxWXAryNJ9Q+sRbde191/KGwo+dkznh3xHgRVy6Hvn27
+         Oi61E+Gdw1jFpGMDW+7ndc8i4Vx5JbXBtOKlVOGSR15BcwjAd/cRZvhgI30Imy7CZ3I0
+         8Y/A==
+X-Gm-Message-State: APjAAAWg8KbdO/uMBP70AIyWkJKDR8BgH9R2z7pAsyUPs2FxRBoZLitv
+        xVgWNhXIKDT1b5UmrmiGBCeTBU90wLtwYqXqr/k=
+X-Google-Smtp-Source: APXvYqwx7ABBvUDeDLLzu5sdiZdlGpI1MG0EPoXBF6ReVBJsGsLul+QpIgPRue2ncgpx6Qi0WEfr5lwbMdo3ekeofvU=
+X-Received: by 2002:a9d:e8f:: with SMTP id 15mr32821348otj.148.1553803234751;
+ Thu, 28 Mar 2019 13:00:34 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190306212431.5779-1-martin.blumenstingl@googlemail.com> <20190327234217.GA8346@bogus>
+In-Reply-To: <20190327234217.GA8346@bogus>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 28 Mar 2019 21:00:23 +0100
+Message-ID: <CAFBinCDzYDH8NTwedUMaaN-gxtP29FEmvPtrmnQ+d2_N_PZ+=A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
+To:     Rob Herring <robh@kernel.org>
+Cc:     hminas@synopsys.com, gregkh@linuxfoundation.org,
+        mark.rutland@arm.com, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        amelie.delaunay@st.com, felipe.balbi@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/19 9:32 PM, Boris Brezillon wrote:=0A=
-> On Thu, 28 Mar 2019 17:02:15 +1300=0A=
-> Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> When the gpio-addr-flash.c driver was merged with physmap-core.c the=0A=
->> code to store the current gpio_values was lost. This meant that once a=
-=0A=
->> gpio was asserted it was never de-asserted. Fix this by storing the=0A=
->> current offset in gpio_values like the old driver used to.=0A=
->>=0A=
->> Fixes: commit ba32ce95cbd9 ("mtd: maps: Merge gpio-addr-flash.c into phy=
-smap-core.c")=0A=
-> =0A=
-> You miss=0A=
-> =0A=
-> Cc: <stable@vger.kernel.org>=0A=
-> =0A=
-=0A=
-I wasn't sure. As the original commit said there are no in-tree users of =
-=0A=
-  addr-gpios so maybe no-one else noticed. I'll wait for any other =0A=
-comments and send a v2 with a Cc for stable.=0A=
-=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> =0A=
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>=0A=
-> =0A=
->> ---=0A=
->>   drivers/mtd/maps/physmap-core.c | 2 ++=0A=
->>   1 file changed, 2 insertions(+)=0A=
->>=0A=
->> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-=
-core.c=0A=
->> index d9a3e4bebe5d..21b556afc305 100644=0A=
->> --- a/drivers/mtd/maps/physmap-core.c=0A=
->> +++ b/drivers/mtd/maps/physmap-core.c=0A=
->> @@ -132,6 +132,8 @@ static void physmap_set_addr_gpios(struct physmap_fl=
-ash_info *info,=0A=
->>   =0A=
->>   		gpiod_set_value(info->gpios->desc[i], !!(BIT(i) & ofs));=0A=
->>   	}=0A=
->> +=0A=
->> +	info->gpio_values =3D ofs;=0A=
->>   }=0A=
->>   =0A=
->>   #define win_mask(order)		(BIT(order) - 1)=0A=
-> =0A=
-> =0A=
-=0A=
+Hi Rob,
+
+On Thu, Mar 28, 2019 at 12:42 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Mar 06, 2019 at 10:24:31PM +0100, Martin Blumenstingl wrote:
+> > Various boards have an external VBUS supply regulator. This regulator
+> > depends on the current mode of the controller which is defined as:
+> > - dr_mode set to either "host" or "peripheral" (fixed value)
+> > - dr_mode set to "otg", based on the OTG status the dwc2 controller
+> >   internally switches between "host" and "peripheral" mode (selection
+> >   happens at runtime)
+> >
+> > Based on the current mode the regulator has to be enabled or disabled:
+> > - host: provide power to the connected USB device, thus the regulator
+> >   has to be enabled
+> > - peripheral: the host device to which the controller is connected
+> >   provides power, thus the regulator has to be disabled
+> >
+> > Add the dt-bindings documentation for this property so .dts authors know
+> > that this property exists and how it behaves.
+> >
+> > Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> > index 6dc3c4a34483..1e8a775a0e72 100644
+> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> > @@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+> >  Optional properties:
+> >  - phys: phy provider specifier
+> >  - phy-names: shall be "usb2-phy"
+> > +- vbus-supply: reference to the VBUS regulator. Depending on the current mode
+> > +  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
+> > +  regulator is updated if the controller is configured in "otg" mode and the
+> > +  status changes between "host" and "peripheral".
+>
+> This is actually wrong IMO unless Vbus is powering the controller
+> itself. If it is just a regulator routed to the USB connector, then the
+> DT should use the usb-connector binding and put vbus-supply there. If
+> the driver needs it, then it can walk the tree/graph and get it. For
+> some reason folks seem to think everything the driver needs has to be in
+> the node associated with the driver.
+I didn't know about the usb-connector binding yet - thank you for
+pointing it out (rather than saying that this is bad without giving a
+reason)!
+
+do you want me to re-spin this with a notice (stating that this should
+be implemented in another way)?
+I'm asking because I suggested that Neil adds a "vbus-supply" property
+to "dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings" [0].
+He already added it and you reviewed it (it's easy to miss though, the
+patches are not merged yet though).
+
+> </rant>
+>
+> I guess given this is already in use:
+I know of at least two consumers:
+- arch/arm/boot/dts/meson8b-ec100.dts (I'm guilty of adding that
+because I thought that the only problem with this binding was the
+missing documentation)
+- (downstream) OpenWrt has switched the lantiq target to use this property: [1]
+
+
+Regards
+Martin
+
+
+[0] https://patchwork.kernel.org/patch/10868515/
+[1] https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=d8b475212bbf9e5f80c1c923a9701dca5ceb23e2
