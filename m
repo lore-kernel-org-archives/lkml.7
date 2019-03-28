@@ -2,220 +2,506 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15215C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A39C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2372173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0F82173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfC1URJ (ORCPT
+        id S1726318AbfC1UTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:17:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56122 "EHLO mx1.redhat.com"
+        Thu, 28 Mar 2019 16:19:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1086 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfC1URI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:17:08 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 67FD230084C9;
-        Thu, 28 Mar 2019 20:17:07 +0000 (UTC)
-Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 85C2B5C29A;
-        Thu, 28 Mar 2019 20:17:05 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 16:17:03 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Joao Moreira <jmoreira@suse.de>, Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
-        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
-        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
-Message-ID: <20190328201703.GA8658@redhat.com>
-References: <20190301141313.15057-1-jmoreira@suse.de>
- <20190301141313.15057-3-jmoreira@suse.de>
- <20190318191926.GA23138@redhat.com>
- <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz>
- <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de>
- <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
- <699e78da-36ba-8217-c509-2e9b443bd380@suse.de>
- <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com>
+        id S1725852AbfC1UTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:19:51 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 13:19:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,281,1549958400"; 
+   d="scan'208";a="286801858"
+Received: from rajeev-desktop.iind.intel.com (HELO intel.com) ([10.223.84.39])
+  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2019 13:19:47 -0700
+Date:   Fri, 29 Mar 2019 01:49:44 +0530
+From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
+        jettrink@chromium.org, gwendal@google.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-input@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] HID: intel-ish-hid: ISH firmware loader client driver
+Message-ID: <20190328201943.GA17404@intel.com>
+References: <1553339772-25012-1-git-send-email-rushikesh.s.kadam@intel.com>
+ <31755c704928710da998353192157ddfd903080c.camel@linux.intel.com>
+ <CAHX4x87iQgjX8wHOYNCD7nYQJZKoirgCimPax11bMX_DGMEudw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 28 Mar 2019 20:17:07 +0000 (UTC)
+In-Reply-To: <CAHX4x87iQgjX8wHOYNCD7nYQJZKoirgCimPax11bMX_DGMEudw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 04:53:12PM -0400, Joe Lawrence wrote:
-> On 3/26/19 2:13 PM, Joao Moreira wrote:
-> > 
-> > 
-> > On 3/26/19 1:15 PM, Joe Lawrence wrote:
-> >>
-> > > Hi Joao,
-> > > 
-> > > This change seems to work okay for (again) single object modules, but
-> > > I'm having issues with multi-object modules.
-> > > 
-> > 
-> > Hi Joe, thanks for the sources, this made everything much easier in my
-> > side :)
-> > 
-> > In the patch below I change a little bit the interface used to inform
-> > kbuild that a module is a livepatch. Instead of defining the flag
-> > LIVEPATCH_ per .o file, we define it per module (what actually makes
-> > much more sense). We later use $(basetarget) in the Makefile for
-> > checking the flags. By doing so, and invoking cmd_livepatch both from
-> > the $(single-used-m) and $(multi-used-m) we ensure that the .livepatch
-> > file is created for each module, what later in the pipeline flags the
-> > invocation of klp-convert.
-> > 
-> > I tested the following patch with the sources you provided (with little
-> > modifications, removing the .o from the LIVEPATCH_ definitions and using
-> > the module name instead of the object names), achieving successful
-> > compilation and conversion. I also tested against the sample
-> > livepatches, thus I think it might be ok now.
+Hi Nick
+Thanks once again for your time.
+
+I've addressed majority of the comments below.
+Will send a v2 shortly. Please see my replies
+inline below.
+
+On Tue, Mar 26, 2019 at 06:39:14PM -0600, Nick Crews wrote:
+> Hi Rushikesh, I know I've been reviewing this on Chromium, but I have
+> some more larges-scale design thoughts.
 > 
-> Cool thanks for taking a look -- I can confirm that the toy code I sent over
-> builds with those modifications and so does the sample and selftest I was
-> working on.  I'll set about refactoring that klp-convert selftest to combine
-> .o files into a more compact module.
+> > > diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+> > > b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
 
-Hmm, maybe I spoke too soon.
+> > > +/**
+> > > + * report_bad_packets() Report bad packets
+> > > + * @loader_ishtp_cl: Client instance to get stats
+> > > + * @recv_buf:                Raw received host interface message
+> > > + *
+> > > + * Dumps error in case bad packet is received
+> > > + */
+> > > +static void report_bad_packet(struct ishtp_cl *loader_ishtp_cl,
+> > > +                           void *recv_buf)
+> > > +{
+> > > +     struct loader_msg_hdr *hdr = recv_buf;
+> > > +     struct ishtp_cl_data *client_data =
+> > > +             ishtp_get_client_data(loader_ishtp_cl);
+> > > +
+> > > +     client_data->bad_recv_cnt++;
+> > > +     dev_err(cl_data_to_dev(client_data),
+> > > +             "BAD packet: command=%02lx is_response=%u status=%02x
+> > > total_bad=%u\n",
+> > > +             hdr->command & CMD_MASK,
+> > > +             hdr->command & IS_RESPONSE ? 1 : 0,
+> > > +             hdr->status,
+> > > +             client_data->bad_recv_cnt);
+> > > +}
+> 
+> I would remove this function. Whenever you call it, you already have
+> use dev_err() to print the reason for the error. Consider removing
+> bad_rcv_count too unless you do something with it other than debugging.
 
-I am having issues if I have a two-object livepatch module in which each
-object file needs to specify its own KLP_MODULE_RELOC for the same
-symbol name.
+> 
+> At the very least, you call this function when the ISH doesn't return enough
+> data, but in here you try to access the fields in hdr. This could be accessing
+> irrelevant/illegal data.
+> 
+> Also a nit: The docstring function name has a naughty trailing s.
 
-For example: I have test_klp_convert.ko which is comprised of 
-test_klp_convert_a.o. which needs to refer to state_show,1 and 
-test_klp_convert_b.o. which needs to refer to state_show,2.
+I think I'll take your inputs to drop this
+function.
 
-  % make
-  ...
-    KLP     lib/livepatch/test_klp_convert.ko
-  klp-convert: Conflicting KLP_SYMPOS definition: vmlinux.state_show,0 vs. vmlinux.state_show,1.
-  klp-convert: Unable to load user-provided sympos
-  make[2]: *** [scripts/Makefile.modpost:148: lib/livepatch/test_klp_convert.ko] Error 255
-  make[1]: *** [/home/cloud-user/disk/linux/Makefile:1282: modules] Error 2
-  make: *** [Makefile:170: sub-make] Error 2
+> 
+> > > +
+> > > +/**
+> > > + * loader_ish_hw_reset() - Reset ISH HW in bad state
+> > > + * @loader_ishtp_cl  Client instance to reset
+> > > + *
+> > > + * This function resets ISH hardware, which shall reload
+> > > + * the Shim firmware loader, initiate ISH-TP interface reset,
+> > > + * re-attach kernel loader driver, and repeat Host
+> > > + * firmware load.
+> > > + */
+> > > +static inline void loader_ish_hw_reset(struct ishtp_cl
+> > > *loader_ishtp_cl)
+> > > +{
+> > > +     struct ishtp_cl_data *client_data =
+> > > +             ishtp_get_client_data(loader_ishtp_cl);
+> > > +
+> > > +     dev_warn(cl_data_to_dev(client_data), "Reset the ISH
+> > > subsystem\n");
+> > > +     ish_hw_reset(ishtp_get_ishtp_device(loader_ishtp_cl));
+> > > +}
+> 
+> Delete this as a function. Before you actually called it in multiple places,
+> but now i's only called in one place, so just inline it there.
 
-I take a closer look next week, but in the meantime, see the source
-files below.
+Will drop this function as well.
 
--- Joe
+> 
+> > > +
+> > > +/**
+> > > + * loader_cl_send()  Send message from host to firmware
+> > > + * @client_data:     Client data instance
+> > > + * @msg                      Message buffer to send
+> > > + * @msg_size         Size of message
+> > > + *
+> > > + * Return: Received buffer size on success, negative error code on
+> > > failure.
+> > > + */
+> > > +static int loader_cl_send(struct ishtp_cl_data *client_data,
+> > > +                       u8 *msg, size_t msg_size)
+> > > +{
+> > > +     int rv;
+> > > +     size_t data_len;
+> > > +     struct loader_msg_hdr *in_hdr;
+> > > +     struct loader_msg_hdr *out_hdr = (struct loader_msg_hdr *)msg;
+> > > +     struct ishtp_cl *loader_ishtp_cl = client_data-
+> > > >loader_ishtp_cl;
+> > > +
+> > > +     dev_dbg(cl_data_to_dev(client_data),
+> > > +             "%s: command=%02lx is_response=%u status=%02x\n",
+> > > +             __func__,
+> > > +             out_hdr->command & CMD_MASK,
+> > > +             out_hdr->command & IS_RESPONSE ? 1 : 0,
+> > > +             out_hdr->status);
+> > > +
+> > > +     client_data->flag_response = false;
+> > > +     rv = ishtp_cl_send(loader_ishtp_cl, msg, msg_size);
+> > > +     if (rv < 0) {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "ishtp_cl_send error %d\n", rv);
+> > > +             return rv;
+> > > +     }
+> > > +
+> > > +     wait_event_interruptible_timeout(client_data->cmd_resp_wait,
+> > > +                                      client_data->flag_response,
+> > > +                                      ISHTP_SEND_TIMEOUT);
+> > > +     if (!client_data->flag_response) {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "Timed out for response to command=%02lx",
+> > > +                     out_hdr->command & CMD_MASK);
+> > > +             return -ETIMEDOUT;
+> > > +     }
+> > > +
+> > > +     /* All response messages will contain a header */
+> > > +     data_len = client_data->response_size;
+> > > +     in_hdr = (struct loader_msg_hdr *)client_data->response_data;
+> 
+> If process_recv() fails then client_data->response_data could be NULL.
+> This brings up the question of what to do if process_recv() fails. I would think
+> that you would want it to set something like client_data->response_error
+> and then you could check for that in here and return it. For instance
+> right now if the ISH
+> doesn't return sizeof(struct loader_msg_hdr) bytes then it would be nice to get
+> -EMSGSIZE returned from here.
+
+If the process_recv() fails, the flag_response
+stays false. We check for the flag in calling
+function and exit, so won't be accessing null
+data.
+
+But I do like your idea to add a resposne_error
+field to pass the error to the calling function.
+Will do so.
+
+> 
+> > > +
+> > > +     /* Sanity checks */
+> > > +     if (!(in_hdr->command & IS_RESPONSE)) {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "Invalid response to command\n");
+> > > +             return -EIO;
+> > > +     }
+> > > +
+> > > +     if (in_hdr->status) {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "Loader returned status %d\n",
+> > > +                     in_hdr->status);
+> > > +             return -EIO;
+> > > +     }
+> > > +
+> > > +     return data_len;
+> > > +}
+> 
+> So I think how you've changed this to handle where the data is stored is good,
+> but it could be better. I don't like how the users of loader_cl_send() need to
+> remember to kfree(client_data->response data), and that they just implicitly
+> assume that client_data->response data holds the result. Instead, make the
+> callers of loader_cl_send() allocate a buffer to hold the result, and then the
+> allocating and freeing happens in the same function. I think this is a much more
+> understandable form of memory management.
+
+Agreed
+
+> 
+> How about this function turns into:
+> /**
+>  * loader_cl_send()  Send message from host to firmware
+>  * @client_data: Client data instance
+>  * @in_data: Message buffer to send
+>  * @in_size: Size of sent data
+>  * @out_data: Buffer to fill with received data.
+>  * @out_size: Max number of bytes to place in out_data.
+>  *
+>  * Return: Number of bytes placed into out_data, negative error code on failure.
+>  */
+
+Sounds good. One comment - should the names
+out_msg & in_msg be interchanged? As in, the
+message from AP to firmware be out_msg, and
+firwmare to AP should be in_msg? 
+
+> static int loader_cl_send(struct ishtp_cl_data *client_data,
+>                                         u8 *in_data, size_t in_size,
+>                                         u8 *out_data, size_t out_size)
+> 
+> {
+> client_data->response_data = out_data;
+> client_data->response_size_max = out_size;
+> 
+> Send the command.
+> Tweak process_recv() so where it does the memcpy() into
+> client_data->response_data,
+> add the additional check to make sure it doesn't copy more than
+> client_data->response_size_max bytes.
+> Wait for the completion flag.
+> Continue with the rest.
+> }
+> 
+> With these suggestions there are now six pieces of info getting
+> transmitted between
+> process_recv() and loader_cl_send() via client data:
+> client_data->cmd_resp_wait
+> client_data->flag_response
+> client_data->response_error
+> client_data->response_size
+> client_data->response_size_max
+> client_data->response_data
+> Consider turning these into:
+> client_data->response_info->wait_queue
+> client_data->response_info->data_available // or some better name?
+> client_data->response_info->error
+> client_data->response_info->size
+> client_data->response_info->size_max
+> client_data->response_info->data
+> for some encapsulation?
+
+Will do.
+
+> 
+> I'm thinking about this more, and basically it seems like we're
+> writing a library function to
+> send a command to the ISH and receive a response. All the clients who
+> use loader_cl_send()
+> shouldn't know about the client_data->response_info stuff at all. It
+> almost seems like this
+> entire functionality should be part of the ISH core? It's really
+> limiting that ishtp_cl_send() only
+> allows sending and no receiving! It should?!
+>
+
+The way I see it is that the loader_cl_send() is
+an application specific implementation. We make
+assumptions here about the header (command,
+is_response, status fields), and that all command
+& response are serialized. Also this works well
+when the response buffer is small, and we don't
+mind copying content vs. passing pointer.
+
+On the other hand, the ISH core provides a basic
+but generic interface for ishtp_cl_send() and for
+managing ring buffers.
+
+If we could "standardize" loader_cl_send() and use
+in more applications (such as upcoming driver for
+cros_ec over ishtp), we may have a case to add as
+a core function. I'll keep it in this driver for
+the next revision (coming shortly). I'm open to
+further discussion.
+
+> > > +
+> > > +/**
+> > > + * process_recv() -  Receive and parse incoming packet
+> > > + * @loader_ishtp_cl: Client instance to get stats
+> > > + * @rb_in_proc:              ISH received message buffer
+> > > + *
+> > > + * Parse the incoming packet. If it is a response packet then it
+> > > will
+> > > + * update flag_response and wake up the caller waiting to for the
+> > > response.
+> > > + */
+> > > +static void process_recv(struct ishtp_cl *loader_ishtp_cl,
+> > > +                      struct ishtp_cl_rb *rb_in_proc)
+> > > +{
+> > > +     size_t data_len = rb_in_proc->buf_idx;
+> > > +     struct loader_msg_hdr *hdr =
+> > > +             (struct loader_msg_hdr *)rb_in_proc->buffer.data;
+> > > +     struct ishtp_cl_data *client_data =
+> > > +             ishtp_get_client_data(loader_ishtp_cl);
+> > > +
+> > > +     /*
+> > > +      * All firmware messages have a header. Check buffer size
+> > > +      * before accessing elements inside.
+> > > +      */
+> > > +     if (data_len < sizeof(struct loader_msg_hdr)) {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "data size %zu is less than header %zu\n",
+> > > +                     data_len, sizeof(struct loader_msg_hdr));
+> > > +             report_bad_packet(client_data->loader_ishtp_cl, hdr);
+> > > +             goto end_error;
+> > > +     }
+> > > +
+> > > +     dev_dbg(cl_data_to_dev(client_data),
+> > > +             "%s: command=%02lx is_response=%u status=%02x\n",
+> > > +             __func__,
+> > > +             hdr->command & CMD_MASK,
+> > > +             hdr->command & IS_RESPONSE ? 1 : 0,
+> > > +             hdr->status);
+> > > +
+> > > +     switch (hdr->command & CMD_MASK) {
+> > > +     case LOADER_CMD_XFER_QUERY:
+> > > +     case LOADER_CMD_XFER_FRAGMENT:
+> > > +     case LOADER_CMD_START:
+> > > +             /* Sanity check */
+> > > +             if (client_data->response_data || client_data-
+> > > >flag_response) {
+> 
+> Following advice above, how about checking
+> client_data->response_info->data_available instead?
+> Or with advice above, corrupting old data might not be an issue,
+> since the destination buffer changes? Also I wouldn't call this a buffer
+> overrun below, it's a different problem.
+
+I think I'll keep the check because even though
+we may not be corrupting the buffer from the
+previous call, it's still a bug that we got here
+before processing the previous call.
+
+> > > +/**
+> > > + * loader_cl_event_cb() - bus driver callback for incoming message
+> > > + * @device:          Pointer to the the ishtp client device for
+> > > which
+> > > + *                   this message is targeted
+> > > + *
+> > > + * Remove the packet from the list and process the message by
+> > > calling
+> > > + * process_recv
+> > > + */
+> > > +static void loader_cl_event_cb(struct ishtp_cl_device *cl_device)
+> > > +{
+> > > +     struct ishtp_cl_rb *rb_in_proc;
+> > > +     struct ishtp_cl_data *client_data;
+> > > +     struct ishtp_cl *loader_ishtp_cl =
+> > > ishtp_get_drvdata(cl_device);
+> > > +
+> > > +     client_data = ishtp_get_client_data(loader_ishtp_cl);
+> > > +
+> > > +     while ((rb_in_proc = ishtp_cl_rx_get_rb(loader_ishtp_cl)) !=
+> > > NULL) {
+> > > +             if (!rb_in_proc->buffer.data) {
+> > > +                     dev_warn(cl_data_to_dev(client_data),
+> > > +                              "rb_in_proc->buffer.data returned
+> > > null");
+> 
+> Maybe move this check into process_recv() and then you can set
+> client_data->response_info->error for it?
+
+Will do.
+
+> 
+> > > +                     continue;
+> > > +             }
+> > > +
+> > > +             /* Process the data packet from firmware */
+> > > +             process_recv(loader_ishtp_cl, rb_in_proc);
+> > > +     }
+> > > +}
+> > > +
+> > > +/**
+> > > + * ish_query_loader_prop() -  Query ISH Shim firmware loader
+> > > + * @client_data:     Client data instance
+> > > + * @fw:                      Poiner to fw data struct in host memory
+> > > + *
+> > > + * This function queries the ISH Shim firmware loader for
+> > > capabilities.
+> > > + *
+> > > + * Return: 0 for success, negative error code for failure.
+> > > + */
+> > > +static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
+> > > +                              const struct firmware *fw,
+> > > +                              struct shim_fw_info *fw_info)
+> > > +{
+> > > +     int rv;
+> > > +     size_t data_len;
+> > > +     struct loader_msg_hdr *hdr;
+> > > +     struct loader_xfer_query ldr_xfer_query;
+> > > +     struct loader_xfer_query_response *ldr_xfer_query_resp;
+> > > +
+> > > +     memset(&ldr_xfer_query, 0, sizeof(ldr_xfer_query));
+> > > +     ldr_xfer_query.hdr.command = LOADER_CMD_XFER_QUERY;
+> > > +     ldr_xfer_query.image_size = fw->size;
+> > > +     rv = loader_cl_send(client_data,
+> > > +                         (u8 *)&ldr_xfer_query,
+> > > +                         sizeof(ldr_xfer_query));
+> > > +     if (rv < 0) {
+> > > +             client_data->flag_retry = true;
+> > > +             goto end_error;
+> > > +     }
+> > > +
+> > > +     /* Check buffer size before accessing the elements */
+> > > +     data_len = client_data->response_size;
+> 
+> Use rv instead of client_data->response_size, we want to minimize weird
+> unexplainable accesses of the fileds of client_data.
 
 
-==> lib/livepatch/test_klp_convert_a.c <==
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/livepatch.h>
+> Also consider not using the variable data_len, it doesn't do too much besides
+> cause some indirection. With the change above it should be obvious
+> what is going on.
 
-/* klp-convert symbols - vmlinux */
-extern void *state_show;
-__used void print_state_show(void)
-{
-	pr_info("%s: state_show: %p\n", __func__, state_show);
-}
+I felt using data_len makes the code a bit easier
+to read because it reminds the reader that the
+returned value is the length of the received
+buffer. But I'll make the change :)
 
-KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_a[] = {
-	KLP_SYMPOS(state_show, 1)
-};
+> > > +     release_firmware(fw);
+> > > +     kfree(filename);
+> > > +     dev_info(cl_data_to_dev(client_data), "ISH firmware %s
+> > > loaded\n",
+> > > +              filename);
+> > > +     return 0;
+> > > +
+> > > +end_err_fw_release:
+> > > +     release_firmware(fw);
+> > > +end_err_filename_buf_release:
+> > > +     kfree(filename);
+> > > +end_error:
+> > > +     if (client_data->flag_retry) {
+> > > +             dev_warn(cl_data_to_dev(client_data),
+> > > +                      "ISH host firmware load failed %d. Reset ISH &
+> > > try again..\n",
+> > > +                      rv);
+> > > +             loader_ish_hw_reset(client_data->loader_ishtp_cl);
+> 
+> This could just keep failing infinitely, right? Do you want to add
+> some retry counter,
+> and after some limit then give up or something? What happens if the ISH firmware
+> never succeeds in loading?
 
-static struct klp_func funcs[] = {
-	{
-	}, { }
-};
+I'll add 3 attempts before we fail.
 
-static struct klp_object objs[] = {
-	{
-		/* name being NULL means vmlinux */
-		.funcs = funcs,
-	}, { }
-};
+> 
+> > > +     } else {
+> > > +             dev_err(cl_data_to_dev(client_data),
+> > > +                     "ISH host firmware load failed %d\n", rv);
+> > > +     }
+> > > +     return rv;
+> > > +}
+> 
+> And there were many typos in comments that I saw, comb through them
+> carefully again.
 
-static struct klp_patch patch = {
-	.mod = THIS_MODULE,
-	.objs = objs,
-};
+Let me scrub for them again.
 
-static int test_klp_convert_init(void)
-{
-	int ret;
+> 
+> Cheers,
+> Nick
 
-	ret = klp_enable_patch(&patch);
-	if (ret)
-		return ret;
-
-	return 0;
-}
-
-static void test_klp_convert_exit(void)
-{
-}
-
-module_init(test_klp_convert_init);
-module_exit(test_klp_convert_exit);
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Joe Lawrence <joe.lawrence@redhat.com>");
-MODULE_DESCRIPTION("Livepatch test: klp-convert");
-
-==> lib/livepatch/test_klp_convert_b.c <==
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/livepatch.h>
-
-/* klp-convert symbols - vmlinux */
-extern void *state_show;
-
-__used void print_state_show_b(void)
-{
-	pr_info("%s: state_show: %p\n", __func__, state_show);
-}
-
-KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
-	KLP_SYMPOS(state_show, 2)
-};
+Thanks
+Rushikesh
 
 
-==> lib/livepatch/Makefile <==
-# SPDX-License-Identifier: GPL-2.0
-#
-# Makefile for livepatch test code.
-
-LIVEPATCH_test_klp_atomic_replace := y
-LIVEPATCH_test_klp_callbacks_demo := y
-LIVEPATCH_test_klp_callbacks_demo2 := y
-LIVEPATCH_test_klp_convert := y
-LIVEPATCH_test_klp_livepatch := y
-
-obj-$(CONFIG_TEST_LIVEPATCH) += test_klp_atomic_replace.o \
-				test_klp_callbacks_demo.o \
-				test_klp_callbacks_demo2.o \
-				test_klp_callbacks_busy.o \
-				test_klp_callbacks_mod.o \
-				test_klp_convert.o \
-				test_klp_livepatch.o \
-				test_klp_shadow_vars.o
-
-test_klp_convert-y := \
-	test_klp_convert_a.o \
-	test_klp_convert_b.o
-
-# Target modules to be livepatched require CC_FLAGS_FTRACE
-CFLAGS_test_klp_callbacks_busy.o	+= $(CC_FLAGS_FTRACE)
-CFLAGS_test_klp_callbacks_mod.o		+= $(CC_FLAGS_FTRACE)
-CFLAGS_test_klp_convert_mod.o		+= $(CC_FLAGS_FTRACE)
+-- 
