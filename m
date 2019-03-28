@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1DAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B2EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C108F2075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F258D2075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfC1CUV (ORCPT
+        id S1730611AbfC1CUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:20:21 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53584 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728395AbfC1CTt (ORCPT
+        Wed, 27 Mar 2019 22:20:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:3598 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728466AbfC1CTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 Mar 2019 22:19:49 -0400
-X-UUID: 6c91c71aaadf404b878ab32976f5c106-20190328
-X-UUID: 6c91c71aaadf404b878ab32976f5c106-20190328
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+X-UUID: c9af5a97d1a644c88ce13d36f942a19c-20190328
+X-UUID: c9af5a97d1a644c88ce13d36f942a19c-20190328
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2112456065; Thu, 28 Mar 2019 10:19:37 +0800
+        with ESMTP id 630624168; Thu, 28 Mar 2019 10:19:37 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 28 Mar 2019 10:19:35 +0800
 Received: from mtkslt302.mediatek.inc (10.21.14.115) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -53,40 +53,76 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
         Frederic Chen <Frederic.Chen@mediatek.com>
-Subject: [PATCH v3 01/12] dt-binding: gce: remove thread-num property
-Date:   Thu, 28 Mar 2019 10:19:22 +0800
-Message-ID: <1553739573-19708-2-git-send-email-bibby.hsieh@mediatek.com>
+Subject: [PATCH v3 03/12] dt-binding: gce: add binding for gce event property
+Date:   Thu, 28 Mar 2019 10:19:24 +0800
+Message-ID: <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
 References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: B002AC8400A8AEEAD6CE15CFBC505B2C1AFA86E92D6FC970B1951A2650DD917F2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"thread-num" is an unused property so we remove it from example.
+Client hardware would send event to GCE hardware,
+so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
+present the event.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 ---
- Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 1 -
- 1 file changed, 1 deletion(-)
+ Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-index 7d72b21..cfe40b0 100644
+index 1f7f8f2..2f175d6 100644
 --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
 +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
-@@ -39,7 +39,6 @@ Example:
- 		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
+@@ -21,12 +21,21 @@ Required properties:
+ 	priority: Priority of GCE thread.
+ 	atomic_exec: GCE processing continuous packets of commands in atomic
+ 		way.
++- #event-cells: Should be 1.
++	<&phandle event_number>
++	phandle: Label name of a gce node.
++	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
++		      or 'dt-binding/gce/mt8183-gce.h'.
+ 
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+   property and list of phandle, mailbox specifiers.
+ - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+   to the register address.
++Optional propertier for a client device:
++- mediatek,gce-event-names: the event name can be defined by user.
++- mediatek,gce-events: u32, the event number defined in
++  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+ 
+ Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+ or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+@@ -40,6 +49,7 @@ Example:
  		clocks = <&infracfg CLK_INFRA_GCE>;
  		clock-names = "gce";
--		thread-num = CMDQ_THR_MAX_COUNT;
  		#mbox-cells = <3>;
++		#event-cells = <1>;
  	};
  
+ Example for a client device:
+@@ -49,8 +59,9 @@ Example for a client device:
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+ 		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+-		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+-				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+-
++		mediatek,gce-event-names = "rdma0_sof",
++					   "rsz0_sof";
++		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
++				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+ 		...
+ 	};
 -- 
 1.9.1
 
