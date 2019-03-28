@@ -1,94 +1,92 @@
 Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_RED
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87416C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECAFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB3A20700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D80B20700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0gJp+an"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfC1GJ0 (ORCPT
+        id S1726611AbfC1GJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:09:26 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:38043
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725809AbfC1GJY (ORCPT
+        Thu, 28 Mar 2019 02:09:40 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38160 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfC1GJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:09:24 -0400
-X-IronPort-AV: E=Sophos;i="5.60,278,1549926000"; 
-   d="scan'208";a="300976876"
-Received: from unknown (HELO hadrien) ([94.134.122.206])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:09:22 +0100
-Date:   Thu, 28 Mar 2019 07:09:22 +0100 (CET)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     wen.yang99@zte.com.cn
-cc:     yamada.masahiro@socionext.com, Markus.Elfring@web.de,
-        Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
-        michal.lkml@markovi.net, yellowriver2010@hotmail.com,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?GB2312?Q?Re=3A_=B4=F0=B8=B4=3A_Re=3A_=5Bv5=5D_coccinelle=3A_s?=
- =?GB2312?Q?emantic_code_search_for_missing_put=5Fdevice=28=29?=
-In-Reply-To: <201903281010336645826@zte.com.cn>
-Message-ID: <alpine.DEB.2.21.1903280708590.2756@hadrien>
-References: 1550217319-40418-1-git-send-email-wen.yang99@zte.com.cn,CAK7LNASVRbroW9_j1Kda3azHb6PzD3WyVAsKe0HfD1ri0RFPOQ@mail.gmail.com,CAK7LNATjAsiSeZoTZ57zBHse0j5ZYY_12ZQ0gaF_oCziUWheOQ@mail.gmail.com <201903281010336645826@zte.com.cn>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 28 Mar 2019 02:09:40 -0400
+Received: by mail-vs1-f66.google.com with SMTP id s2so10118910vsi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 23:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zN01lDppeJelvKU+xd6s8fuPB+NjVE6Txp2mdsUKQwU=;
+        b=Y0gJp+anuQFeV5y5+hUD/YRsN5pTtlIC6MVzogbRgkU1sm8dDPnDLcLgA6UuSC1h6M
+         aKrPtKzT/nwBBJw+89hNNlkIfbFk9pQn3VsG4nV3oqinn2TE/tUPzTIJ4MNkI8C1YdbA
+         1agfJ3aD9IHk9RbW4A8WY7IoJFG70BykZluS4srHafEiR1OxBtj7i/A1PZiUJTQvsdLz
+         MvfQewBp8yAzuycCBODf+Xxez9dsMOxyeBXt889ldEd63OVDddGM19T8OQWZOLqox0FU
+         bkOwa7X+pcewFMs5LJwBfbdQsKECC8/EYpqIMPt8Fmwj/HrkB9efKOPPH1rejfHUC/Rv
+         CAAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zN01lDppeJelvKU+xd6s8fuPB+NjVE6Txp2mdsUKQwU=;
+        b=N/UmF1/T/BNXPQ5vj9gVTiSiKnyZfI3luYank6JHvXvk4xMF1wGEk6ci7qJ6jB14WU
+         aNMLJrCBLpCJaibiTlBa7P/nAfX7kajjw+0dRI5O+uqnE6EhKJmGROORY9agMh+nTllw
+         qu3sjb6Q8SGLNKNLPqFX+m/x4CaAnbOScgIoFD69kGOKENi/05a/iFZpYQbp5ARQNMHb
+         8Mhi2l8o5wB/V4Am4guyuTfXVlvYb527qYU7CvHffS5Jv3C4MS5QuNtnWO7oq4ePT2X9
+         WEznM3/9uihGlydqNPwTTH5JvXvM169cbQ9zq0DdFihuvLk2NBhILQtsuPRlVKTyvGS9
+         RoiA==
+X-Gm-Message-State: APjAAAUJ6aniIuX37TEeQbVDXyJZpX4d4J7YqiHdHsA02P4pUUJFwBFd
+        xyd57JPBHqEjMWobwet7oh9AXTCsVCVAuywqyv0=
+X-Google-Smtp-Source: APXvYqxCvkXdpD2ECHlNyGQtzqHav6VS3b7Ya5rp82QEPUevd8H+fyyq7SltxyzeKdTYsiwpKPeVy9EiDpMz5q/UTJM=
+X-Received: by 2002:a67:ea18:: with SMTP id g24mr4484901vso.228.1553753379224;
+ Wed, 27 Mar 2019 23:09:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190326081335.GA4175@ogabbay-VM> <20190327010901.GA30198@kroah.com>
+In-Reply-To: <20190327010901.GA30198@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 28 Mar 2019 08:09:13 +0200
+Message-ID: <CAFCwf135COOzZmtJEGUFhJaOdBpETLB6VnSmXRabBtyLs3f6Kg@mail.gmail.com>
+Subject: Re: [git pull v2] habanalabs fixes for 5.1-rc3
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 28 Mar 2019, wen.yang99@zte.com.cn wrote:
-
-> > > > When I searched "Wen Yang", v6 did not show up for some reasons.
-> > > > https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=22638&state=*&q=&archive=&delegate=
-> > >
-> > > I find such a situation also interesting somehow.
-> > > I assume that there was another temporary technical difficulty involved
-> > > with the Linux mailing list (and related information systems).
-> >
-> >
-> > I think v6 fell into a crack somehow.
-> >
-> >
-> > Check the LKML archive:
-> > https://lkml.org/lkml/2019/2/16
-> >
-> >
-> > I see your reply:
-> >
-> > Re: [v6] coccinelle: semantic code search for missing put_device()Markus Elfring
-> >
-> >
-> > But, I cannot find the v6 patch itself.
-> >
+On Wed, Mar 27, 2019 at 3:09 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> I am sorry to bother you.
-> I checked it again and  found that I can not send mail to <linux-kernel@vger.kernel.org>
-> via my private mailbox <yellowriver2010@hotmail.com>.
-> The reject reply like this:
+> On Tue, Mar 26, 2019 at 10:13:35AM +0200, Oded Gabbay wrote:
+> > Hi Greg,
+> >
+> > A couple of important fixes for habanalabs driver:
+> >
+> > - Fix host crash upon resume after suspend
+> > - Fix MMU related bugs which result in user's jobs getting stuck
+> > - Fix race between user context cleanup and hard-reset which results in
+> >   host crash
+> > - Fix sparse warning
 >
-> for your MAIL FROM address <yellowriver2010@hotmail.com> policy analysis reported: Your address is not liked source for email
+> Much better, thanks, now pulled and pushed out.
 >
-> Is it looked my mail as spam mail?
-> Who should I send to for help me resolving this problem?
+> greg k-h
 
-Maybe Konstantin Ryabitsev?
+Hi Greg,
+In which branch do I see that ? I tried to find it in your char-misc
+repo but couldn't find it.
 
-julia
-
-
->
->
-> --
-> Best Regards
-> Wen
+Thanks,
+Oded
