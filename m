@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E70DC10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB9AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2667620823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E5F20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfC1NoP (ORCPT
+        id S1727175AbfC1NoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:44:15 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:48874 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfC1NoH (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
         Thu, 28 Mar 2019 09:44:07 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:44135 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbfC1NoE (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Thu, 28 Mar 2019 09:44:04 -0400
 Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Thu, 28 Mar 2019 14:44:06 +0100
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Thu, 28 Mar 2019 14:44:02 +0100
 Received: from d104.suse.de (nwb-a10-snat.microfocus.com [10.120.13.202])
-        by emea4-mta.ukb.novell.com with ESMTP (NOT encrypted); Thu, 28 Mar 2019 13:43:31 +0000
+        by emea4-mta.ukb.novell.com with ESMTP (NOT encrypted); Thu, 28 Mar 2019 13:43:30 +0000
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
 Cc:     mhocko@suse.com, david@redhat.com, dan.j.williams@intel.com,
         Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 4/4] mm, sparse: rename kmalloc_section_memmap, __kfree_section_memmap
-Date:   Thu, 28 Mar 2019 14:43:20 +0100
-Message-Id: <20190328134320.13232-5-osalvador@suse.de>
+Subject: [PATCH 1/4] mm, memory_hotplug: cleanup memory offline path
+Date:   Thu, 28 Mar 2019 14:43:17 +0100
+Message-Id: <20190328134320.13232-2-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20190328134320.13232-1-osalvador@suse.de>
 References: <20190328134320.13232-1-osalvador@suse.de>
@@ -43,84 +43,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michal Hocko <mhocko@suse.com>
 
-The sufix "kmalloc" is misleading.
-Rename it to alloc_section_memmap/free_section_memmap which
-better reflects the funcionality.
+check_pages_isolated_cb currently accounts the whole pfn range as being
+offlined if test_pages_isolated suceeds on the range. This is based on
+the assumption that all pages in the range are freed which is currently
+the case in most cases but it won't be with later changes, as pages
+marked as vmemmap won't be isolated.
+
+Move the offlined pages counting to offline_isolated_pages_cb and
+rely on __offline_isolated_pages to return the correct value.
+check_pages_isolated_cb will still do it's primary job and check the pfn
+range.
+
+While we are at it remove check_pages_isolated and offline_isolated_pages
+and use directly walk_system_ram_range as do in online_pages.
 
 Signed-off-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/sparse.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ include/linux/memory_hotplug.h |  2 +-
+ mm/memory_hotplug.c            | 45 +++++++++++-------------------------------
+ mm/page_alloc.c                | 11 +++++++++--
+ 3 files changed, 21 insertions(+), 37 deletions(-)
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 82c7b119eb1d..63c1d0bd4755 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -673,13 +673,13 @@ static void deferred_vmemmap_free(unsigned long start, unsigned long end)
- 		free_deferred_vmemmap_range(start, end);
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 8ade08c50d26..42ba7199f701 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -87,7 +87,7 @@ extern int add_one_highpage(struct page *page, int pfn, int bad_ppro);
+ extern int online_pages(unsigned long, unsigned long, int);
+ extern int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
+ 	unsigned long *valid_start, unsigned long *valid_end);
+-extern void __offline_isolated_pages(unsigned long, unsigned long);
++extern unsigned long __offline_isolated_pages(unsigned long, unsigned long);
+ 
+ typedef void (*online_page_callback_t)(struct page *page, unsigned int order);
+ 
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0082d699be94..5139b3bfd8b0 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1453,17 +1453,12 @@ static int
+ offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+ 			void *data)
+ {
+-	__offline_isolated_pages(start, start + nr_pages);
++	unsigned long offlined_pages;
++	offlined_pages = __offline_isolated_pages(start, start + nr_pages);
++	*(unsigned long *)data += offlined_pages;
+ 	return 0;
  }
  
--static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
-+static inline struct page *alloc_section_memmap(unsigned long pnum, int nid,
- 		struct vmem_altmap *altmap)
+-static void
+-offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+-{
+-	walk_system_ram_range(start_pfn, end_pfn - start_pfn, NULL,
+-				offline_isolated_pages_cb);
+-}
+-
+ /*
+  * Check all pages in range, recoreded as memory resource, are isolated.
+  */
+@@ -1471,26 +1466,7 @@ static int
+ check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
+ 			void *data)
  {
- 	/* This will make the necessary allocations eventually. */
- 	return sparse_mem_map_populate(pnum, nid, altmap);
- }
--static void __kfree_section_memmap(struct page *memmap,
-+static void free_section_memmap(struct page *memmap,
- 		struct vmem_altmap *altmap)
- {
- 	unsigned long start = (unsigned long)memmap;
-@@ -723,13 +723,13 @@ static struct page *__kmalloc_section_memmap(void)
- 	return ret;
+-	int ret;
+-	long offlined = *(long *)data;
+-	ret = test_pages_isolated(start_pfn, start_pfn + nr_pages, true);
+-	offlined = nr_pages;
+-	if (!ret)
+-		*(long *)data += offlined;
+-	return ret;
+-}
+-
+-static long
+-check_pages_isolated(unsigned long start_pfn, unsigned long end_pfn)
+-{
+-	long offlined = 0;
+-	int ret;
+-
+-	ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn, &offlined,
+-			check_pages_isolated_cb);
+-	if (ret < 0)
+-		offlined = (long)ret;
+-	return offlined;
++	return test_pages_isolated(start_pfn, start_pfn + nr_pages, true);
  }
  
--static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
-+static inline struct page *alloc_section_memmap(unsigned long pnum, int nid,
- 		struct vmem_altmap *altmap)
+ static int __init cmdline_parse_movable_node(char *p)
+@@ -1575,7 +1551,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 		  unsigned long end_pfn)
  {
- 	return __kmalloc_section_memmap();
- }
+ 	unsigned long pfn, nr_pages;
+-	long offlined_pages;
++	unsigned long offlined_pages = 0;
+ 	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	unsigned long valid_start, valid_end;
+@@ -1651,14 +1627,15 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 			goto failed_removal_isolated;
+ 		}
+ 		/* check again */
+-		offlined_pages = check_pages_isolated(start_pfn, end_pfn);
+-	} while (offlined_pages < 0);
++		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn, NULL,
++							check_pages_isolated_cb);
++	} while (ret);
  
--static void __kfree_section_memmap(struct page *memmap,
-+static void free_section_memmap(struct page *memmap,
- 		struct vmem_altmap *altmap)
+-	pr_info("Offlined Pages %ld\n", offlined_pages);
+ 	/* Ok, all of our target is isolated.
+ 	   We cannot do rollback at this point. */
+-	offline_isolated_pages(start_pfn, end_pfn);
+-
++	walk_system_ram_range(start_pfn, end_pfn - start_pfn, &offlined_pages,
++						offline_isolated_pages_cb);
++	pr_info("Offlined Pages %ld\n", offlined_pages);
+ 	/*
+ 	 * Onlining will reset pagetype flags and makes migrate type
+ 	 * MOVABLE, so just need to decrease the number of isolated
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d96ca5bc555b..d128f53888b8 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8374,7 +8374,7 @@ void zone_pcp_reset(struct zone *zone)
+  * All pages in the range must be in a single zone and isolated
+  * before calling this.
+  */
+-void
++unsigned long
+ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
  {
- 	if (is_vmalloc_addr(memmap))
-@@ -794,12 +794,12 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
- 	if (ret < 0 && ret != -EEXIST)
- 		return ret;
- 	ret = 0;
--	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
-+	memmap = alloc_section_memmap(section_nr, nid, altmap);
- 	if (!memmap)
- 		return -ENOMEM;
- 	usemap = __kmalloc_section_usemap();
- 	if (!usemap) {
--		__kfree_section_memmap(memmap, altmap);
-+		free_section_memmap(memmap, altmap);
- 		return -ENOMEM;
+ 	struct page *page;
+@@ -8382,12 +8382,15 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 	unsigned int order, i;
+ 	unsigned long pfn;
+ 	unsigned long flags;
++	unsigned long offlined_pages = 0;
++
+ 	/* find the first valid pfn */
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn++)
+ 		if (pfn_valid(pfn))
+ 			break;
+ 	if (pfn == end_pfn)
+-		return;
++		return offlined_pages;
++
+ 	offline_mem_sections(pfn, end_pfn);
+ 	zone = page_zone(pfn_to_page(pfn));
+ 	spin_lock_irqsave(&zone->lock, flags);
+@@ -8405,12 +8408,14 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 		if (unlikely(!PageBuddy(page) && PageHWPoison(page))) {
+ 			pfn++;
+ 			SetPageReserved(page);
++			offlined_pages++;
+ 			continue;
+ 		}
+ 
+ 		BUG_ON(page_count(page));
+ 		BUG_ON(!PageBuddy(page));
+ 		order = page_order(page);
++		offlined_pages += 1 << order;
+ #ifdef CONFIG_DEBUG_VM
+ 		pr_info("remove from free list %lx %d %lx\n",
+ 			pfn, 1 << order, end_pfn);
+@@ -8423,6 +8428,8 @@ __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+ 		pfn += (1 << order);
  	}
- 
-@@ -821,7 +821,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
- out:
- 	if (ret < 0) {
- 		kfree(usemap);
--		__kfree_section_memmap(memmap, altmap);
-+		free_section_memmap(memmap, altmap);
- 	}
- 	return ret;
+ 	spin_unlock_irqrestore(&zone->lock, flags);
++
++	return offlined_pages;
  }
-@@ -872,7 +872,7 @@ static void free_section_usemap(struct page *memmap, unsigned long *usemap,
- 	if (PageSlab(usemap_page) || PageCompound(usemap_page)) {
- 		kfree(usemap);
- 		if (memmap)
--			__kfree_section_memmap(memmap, altmap);
-+			free_section_memmap(memmap, altmap);
- 		return;
- 	}
+ #endif
  
 -- 
 2.13.7
