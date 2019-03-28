@@ -2,120 +2,115 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BE3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C388C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF76121773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553779964;
-	bh=Pq3cpm4ySy5KwLPxWSM1vwrv5NGNzl1FqDRRzb2qfpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IFRqYix8xKtLqmpr0J/Qngieoo3Wy6FDKo1fSypmQVrIaFBAKRQTBtXXgSM1gsHaM
-	 +kXRz2H2TZT0dvpnn/zgCRKuVP8/a4TGGDc2CTIl1yt54UfCaxtEvOa4cjwQ2M8llv
-	 HwPWPwRveaar0irqQRcdOwFMElYZr3ittkQAPS0c=
+	by mail.kernel.org (Postfix) with ESMTP id 3DAC9206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfC1Nco (ORCPT
+        id S1726520AbfC1NgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:32:44 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35524 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfC1Ncn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:32:43 -0400
-Received: by mail-oi1-f194.google.com with SMTP id j132so15773469oib.2;
-        Thu, 28 Mar 2019 06:32:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R0MuQabebR0D8wRamQEWKlpccqRnfgOFXuLdzlWOisk=;
-        b=Sr936U7YkMJshrtMuakvXudcf81jUSIPVrfu3hTY6YOdaBg5OYQSw/p4arJUqbNGOs
-         M1SsO9hvznm1VjcBgd6tGUHpOIKsVM/KyuYHfBxXyukeUqKRweMW0BjuwzywlxSTgtIf
-         mHvngHjdy6c7boJDEgyoXIr6wUMoR2rh39Q7gN3NsIfAhlKcizTC3uTjtJ6lgICSwie+
-         F8V0qTJyS6pkksIprbOwYBgs4eJ8jtlHajvW6PEK9b0r42nyW/GHnwL5XNh39+gSmZEI
-         3VNMLYz8WviLyuyhp3gUf8vq8MEQc0+1eqaFGXnAZK5ius0RB5MEY8tVXMLGQ1rdRXTJ
-         01/Q==
-X-Gm-Message-State: APjAAAWOKwjULw3a96PDDBIy3qiWSZCCOB1acATWJKKEuDzmx+1vxvWF
-        N/VFzyZpd2QKAbw92ovjSZEJsP0=
-X-Google-Smtp-Source: APXvYqwKX0Y8WDJ2ofAQO7UhuYwHp9HUEsH3aZC6BZSTPSLG/uRpSAQj4Ic2yvc0EJ+GoBItTPBFXg==
-X-Received: by 2002:aca:304e:: with SMTP id w75mr9161oiw.176.1553779962575;
-        Thu, 28 Mar 2019 06:32:42 -0700 (PDT)
-Received: from localhost ([70.231.7.113])
-        by smtp.gmail.com with ESMTPSA id j1sm7129850otn.59.2019.03.28.06.32.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 06:32:15 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 08:32:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v1 3/4] dt-bindings: drm/msm/gpu: Document a5xx / a6xx
- zap shader region
-Message-ID: <20190328133215.GA14020@bogus>
-References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
- <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
+        Thu, 28 Mar 2019 09:36:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39764 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfC1NgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:36:21 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A0C6AC0798F9;
+        Thu, 28 Mar 2019 13:36:19 +0000 (UTC)
+Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B353F5D73F;
+        Thu, 28 Mar 2019 13:36:17 +0000 (UTC)
+Subject: Re: [PATCH v2] kbuild: strip whitespace in cmd_record_mcount
+ findstring
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190325160438.8982-1-joe.lawrence@redhat.com>
+ <CAK7LNARyD=tG0JhwN_mjdyDRSPAF8UoZKvqAT3Ah_v7GfymCPg@mail.gmail.com>
+ <20190326173308.GA26546@redhat.com>
+ <CAK7LNAT4VTUOtjEvJfe9+7yNemkodUnDo6bMoKxSgqGq7H4mOQ@mail.gmail.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <4f13ecb6-9aa8-5037-a18e-150c026254c2@redhat.com>
+Date:   Thu, 28 Mar 2019 09:36:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK7LNAT4VTUOtjEvJfe9+7yNemkodUnDo6bMoKxSgqGq7H4mOQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 28 Mar 2019 13:36:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 12:13:41PM -0600, Jordan Crouse wrote:
-> Describe the zap-shader node that defines a reserved memory region
-> to store the zap shader.
+On 3/28/19 8:57 AM, Masahiro Yamada wrote:
+> Hi Joe,
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
+> OK, confirmed.
+ >
+ > [ ... snip .... ]
 > 
->  Documentation/devicetree/bindings/display/msm/gpu.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+> First, I was wondering why I could not reproduce this issue.
+> Then, I found the reason was I was using the latest GNU Make
+> compiled from the git source tree.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> index aad1aef..1e6d870 100644
-> --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-> @@ -25,6 +25,9 @@ Required properties:
->  - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
->    control the power for the GPU. Applicable targets:
->      - qcom,adreno-630.2
-> +- zap-shader: For a5xx and a6xx devices this node contains a memory-region that
-> +  points to reserved memory to store the zap shader that can be used to help
-> +  bring the GPU out of secure mode.
-
-This is the properties section and zap-shader is not a property.
-
-But why do you need a child node in the first place? Just add 
-'memory-region' to the parent.
-
->  
->  Example 3xx/4xx/a5xx:
->  
-> @@ -71,5 +74,9 @@ Example a6xx (with GMU):
->  		operating-points-v2 = <&gpu_opp_table>;
->  
->  		qcom,gmu = <&gmu>;
+> I found the following commit:
+> 
+> commit b90fabc8d6f34fb37d428dc0fb1b8b1951a9fbed
+> Author: Paul Smith <psmith@gnu.org>
+> Date:   Sat May 27 20:07:30 2017 -0400
+> 
+>      * NEWS: Do not insert a space during '+=' if the value is empty.
+> 
+>      * doc/make.texi (Appending): Document this behavior.
+>      * variable.c (do_variable_definition): Only add a space if the variable
+>      value is not empty.
+>      * tests/scripts/variables/flavors: Test this behavior.
+> 
+> diff --git a/NEWS b/NEWS
+> index e60644a..6e2c5c6 100644
+> --- a/NEWS
+> +++ b/NEWS
+> @@ -29,6 +29,12 @@
+> http://sv.gnu.org/bugs/index.php?group=make&report_id=111&fix_release_id=108&set
+>     This was claimed to be fixed in 3.81, but wasn't, for some reason.
+>     To detect this change search for 'nocomment' in the .FEATURES variable.
+> 
+> +* WARNING: Backward-incompatibility!
+> +  Previously appending using '+=' to an empty variable would result in a value
+> +  starting with a space.  Now the initial space is only added if the variable
+> +  already contains some value.  Similarly, appending an empty string does not
+> +  add a trailing space.
 > +
-> +		zap-shader {
-> +			memory-region = <&zap_shader_region>;
-> +		};
->  	};
->  };
-> -- 
-> 2.7.4
+>   * The previous limit of 63 jobs under -jN on MS-Windows is now
+>     increased to 4095.  That limit includes the subprocess started by
+>     the $(shell) function.
 > 
+> Applied to linux-kbuild/fixes with additional comments.
+> 
+> [Additional info by masahiro.yamada:
+> This issue only happens in the released versions of GNU Make.
+> CC_FLAGS_FTRACE will not contain the trailing space if you use
+> the latest GNU Make, which contains commit b90fabc8d6f3
+> ("* NEWS: Do not insert a space during '+=' if the value is empty.")
+> ]
+Wow, this one gets even more specific.  I had gone down the rabbit hole 
+on this one, I didn't care to learn how or why that extra space got 
+there :)  Now we know, thanks for running that down and adding the note 
+about GNU Make.
+
+-- Joe
