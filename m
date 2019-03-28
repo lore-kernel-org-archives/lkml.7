@@ -2,133 +2,116 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36DCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477C1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9819C20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553795499;
-	bh=NHUtwjRIFTvBhyozLmJJJws+hL5MUUljHuFRyyHy30E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=elJJRt6ZlAOHMhhTeICP1fS6PR0D0PSvqlDb/idjzF6rweO4+9jkvTh//5+qVPRHZ
-	 UyYjcD2kU8QR7Zza64woAQglj7QoLwG1De2q91n829GhfLfLq9SIDfA7uPqATWz33T
-	 o3NJLesnDqN8fVLH8VW7xsdsfD8oG7TFoi398lI8=
+	by mail.kernel.org (Postfix) with ESMTP id 2492020823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfC1Rvh (ORCPT
+        id S1727417AbfC1RwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:51:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37503 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfC1Rvh (ORCPT
+        Thu, 28 Mar 2019 13:52:25 -0400
+Received: from gateway30.websitewelcome.com ([192.185.149.4]:15627 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbfC1RwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:51:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c16so19176427otn.4;
-        Thu, 28 Mar 2019 10:51:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6nr15hFnrNU7DCIEqf1JuRuMjrJ40wiGfDteWVuhoY4=;
-        b=i97DyXYoNVgmhc2Hrxz7beYTpigz8e9ZCJABnXxT9YBQlZH8XaH44QiuipeOO47avo
-         HrdZ/JzKwTqSA0VXWe1dxBVTSEsKWKN67taUrC9xSPcG3kRnTHbSFVnSFdh9Shd784e9
-         aVTZz3jNGbraQ8w41rTRlk+aB65uAGyy0dlAIihLtUbtXKq+PG0pXXz8pjDT7BcpXjbO
-         sZEvE4KiJBln7Hj4LU/h3lUpH4zu8I9vqttJ6mN1yV1tyQsSPp8wUK2STrcSTdEKkHtX
-         ZjMWKvRQ+Eqwlxp40a/TfQApnlcduQhCMXO/MzGogG6+aY+T3qvACMmzNOM7q4z96uRX
-         81RA==
-X-Gm-Message-State: APjAAAXuXOXPLN2dxPSA7vVdS1K1r/esC0hRaBLRvb4LCNwN/zFaRuPx
-        1P0cbsMc/Ry0h/Umu2+5+w==
-X-Google-Smtp-Source: APXvYqzlwaeVmj5o9+QiNXlXr2/9CvnmCdP/yNsjqZrjyhvCmOzwbxSN0qtb1bZM0iyyKgKfFyhFtQ==
-X-Received: by 2002:a05:6830:2009:: with SMTP id e9mr6518039otp.142.1553795496390;
-        Thu, 28 Mar 2019 10:51:36 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o83sm8838149oif.33.2019.03.28.10.51.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 10:51:35 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 12:51:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        jic23@kernel.org, mark.rutland@arm.com, afaerber@suse.de,
-        arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org,
-        johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de,
-        lars@metafoo.de, linux-kernel@vger.kernel.org,
-        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
-        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
-        pmeerw@pmeerw.net, songqiang1304521@gmail.com, treding@nvidia.com,
-        techsupport@maxbotix.com
-Subject: Re: [PATCH v3 2/4] dt-bindings: maxbotix,mb1232: Add MaxBotix i2c
- ultrasonic rangers
-Message-ID: <20190328175134.GA15033@bogus>
-References: <20190317203526.4pcwo4gdrrng44v7@arbad>
+        Thu, 28 Mar 2019 13:52:25 -0400
+X-Greylist: delayed 411 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Mar 2019 13:52:25 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id D49C22693C
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 12:52:24 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9ZCSh4cDYdnCe9ZCShv5oW; Thu, 28 Mar 2019 12:52:24 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.117.246] (port=37584 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h9ZCS-003FY3-0e; Thu, 28 Mar 2019 12:52:24 -0500
+Date:   Thu, 28 Mar 2019 12:52:23 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] i40e: Use struct_size() in kzalloc()
+Message-ID: <20190328175223.GA18532@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190317203526.4pcwo4gdrrng44v7@arbad>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.117.246
+X-Source-L: No
+X-Exim-ID: 1h9ZCS-003FY3-0e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.117.246]:37584
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 17, 2019 at 09:35:27PM +0100, Andreas Klinger wrote:
-> Add doc for dt binding maxbotix,mb1232. This binding is for MaxBotix
-> I2CXL-MaxSonar ultrasonic rangers which share a common i2c interface.
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> new file mode 100644
-> index 000000000000..0e9df87eca1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> @@ -0,0 +1,31 @@
-> +* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> +  for ranging
-> +
-> +Required properties:
-> + - compatible:		"maxbotix,mb1202",
-> +			"maxbotix,mb1212",
-> +			"maxbotix,mb1222",
-> +			"maxbotix,mb1232",
-> +			"maxbotix,mb1242",
-> +			"maxbotix,mb7040" or
-> +			"maxbotix,mb7137"
-> +
-> + - reg:			i2c address of the device, see also i2c/i2c.txt
-> +
-> +Optional properties:
-> + - interrupt-parent:	Interrupt controller to use
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Don't need this as it is implied and could be in the parent.
+struct foo {
+    int stuff;
+    struct boo entry[];
+};
 
-Otherwise,
+size = sizeof(struct foo) + count * sizeof(struct boo);
+instance = kzalloc(size, GFP_KERNEL)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
 
-> +
-> + - interrupts:		Interrupt used to announce the preceding reading
-> +			request has finished and that data is available.
-> +			If no interrupt is specified the device driver
-> +			falls back to wait a fixed amount of time until
-> +			data can be retrieved.
-> +
-> +Example:
-> +proximity@70 {
-> +	compatible = "maxbotix,mb1232";
-> +	reg = <0x70>;
-> +	interrupt-parent = <&gpio2>;
-> +	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> -- 
-> 2.11.0
+instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
+
+Notice that, in this case, variable size is not necessary, hence it
+is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/intel/i40e/i40e_client.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_client.c b/drivers/net/ethernet/intel/i40e/i40e_client.c
+index 5f3b8b9ff511..e81530ca08d0 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_client.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_client.c
+@@ -578,11 +578,9 @@ static int i40e_client_setup_qvlist(struct i40e_info *ldev,
+ 	struct i40e_hw *hw = &pf->hw;
+ 	struct i40e_qv_info *qv_info;
+ 	u32 v_idx, i, reg_idx, reg;
+-	u32 size;
+ 
+-	size = sizeof(struct i40e_qvlist_info) +
+-	       (sizeof(struct i40e_qv_info) * (qvlist_info->num_vectors - 1));
+-	ldev->qvlist_info = kzalloc(size, GFP_KERNEL);
++	ldev->qvlist_info = kzalloc(struct_size(ldev->qvlist_info, qv_info,
++				    qvlist_info->num_vectors - 1), GFP_KERNEL);
+ 	if (!ldev->qvlist_info)
+ 		return -ENOMEM;
+ 	ldev->qvlist_info->num_vectors = qvlist_info->num_vectors;
+-- 
+2.21.0
+
