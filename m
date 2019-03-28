@@ -2,204 +2,87 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FBEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96016C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE4CE2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F2420823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CbE698Q6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfC1UrE (ORCPT
+        id S1727210AbfC1Url (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:47:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53176 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726243AbfC1UrE (ORCPT
+        Thu, 28 Mar 2019 16:47:41 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:34268 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfC1Url (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:47:04 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SKi8PN144769
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:47:03 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rh41xm5dq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:47:03 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 28 Mar 2019 20:47:02 -0000
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 20:47:00 -0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SKkt0I26869776
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 20:46:55 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 802087805E;
-        Thu, 28 Mar 2019 20:46:55 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5484C7805C;
-        Thu, 28 Mar 2019 20:46:54 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 20:46:54 +0000 (GMT)
-Subject: Re: [PATCH v6 4/7] vfio: ap: register IOMMU VFIO notifier
-To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-5-git-send-email-pmorel@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Thu, 28 Mar 2019 16:46:53 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 28 Mar 2019 16:47:41 -0400
+Received: by mail-wm1-f54.google.com with SMTP id o10so8130062wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:47:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tpONjlavF550NKmic2Y1k93QJBkOf1HPbHKeBcY7TQo=;
+        b=CbE698Q6MQ7/qD9EYaA9eN6og/aSmQrQiaIqH1rlMlbea9KTtHttQwK4JqIEM0Rgmb
+         7j9iezUTd0KscM+C22isyLMVwFrHrj2UoyGoaub94NeEA/rDjtnAXvyxXSSdfL09SmrR
+         4+pQrCnqvkAO/+KZ59I8LeVPBX+3m+eiX2IaqjNJLzuZlfCx2IwgrSOdCcgGVXgjKUbC
+         VS5LcvxNgTMdK/YJx4LfWrVEAsO0+NsNYH8gQ15nu1aws2FpugXYn4opWAKob0rVQtgG
+         +KLFKc0gNxhxq2bfPyXzjnlmbizFoMu7c6HA3EV12WTW4F+uZR0AIHlWl27Wf2LBrjwW
+         kXOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tpONjlavF550NKmic2Y1k93QJBkOf1HPbHKeBcY7TQo=;
+        b=mla4h8N9iefGdrFpGlMDc1ql7T+0XxyET+SCnTOCDJEbUJ3FrW3X6mUxa8tQFuHfa0
+         lOq0NQM7nH2Bh0VLu/d5Eek7wOOtQR4K02dtF/JFPHd0gkCtExgScGo+XEvj+LMvlqEm
+         0LKtZfAWCsL54VxKRnM2Kwn3mENBaeu9uRsDRp2v786Yd2esBS/8Syg7Yr66zMdEPEED
+         JZ1DyDl1QC5BMaM9nbdLnrFU3rK05Flw/RwIk0Ms2E+tHNTgOJdky8wyZwQQcoTzFFVv
+         QH49YJ7vFy6tbz0tSgYugsFYKLnTz91mkdLP7rHr2PF714Ls1p5Y4D9n3eJrlZ6j9Rd/
+         MkHw==
+X-Gm-Message-State: APjAAAUu4ayitbnT48mEy0qv7nDW54T4s+mwzCE6XtxJ4b9w0KlIBfSn
+        K4ing9CX5soiHewYWfHZOVA=
+X-Google-Smtp-Source: APXvYqwug30bln2Shxd4wIqjvrncOWW1bThOFMoQmXgqpNjyG3CsXEK5xk2eYKcn49FlmtWFUXM/kA==
+X-Received: by 2002:a1c:2394:: with SMTP id j142mr1220211wmj.111.1553806059516;
+        Thu, 28 Mar 2019 13:47:39 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300DCD73999007CF185662A5FF671.dip0.t-ipconnect.de. [2003:dc:d739:9900:7cf1:8566:2a5f:f671])
+        by smtp.googlemail.com with ESMTPSA id y9sm257173wrn.18.2019.03.28.13.47.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 13:47:38 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] gpio-line-names for Odroid-C1
+Date:   Thu, 28 Mar 2019 21:47:20 +0100
+Message-Id: <20190328204721.25970-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1553265828-27823-5-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032820-0004-0000-0000-000014F477B6
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010830; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01181039; UDB=6.00618119; IPR=6.00961757;
- MB=3.00026198; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 20:47:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032820-0005-0000-0000-00008B0FEA64
-Message-Id: <1731fb82-7877-9018-d12e-fd0e2406ac19@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280134
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/22/19 10:43 AM, Pierre Morel wrote:
-> To be able to use the VFIO interface to facilitate the
-> mediated device memory pinning/unpinning we need to register
-> a notifier for IOMMU.
-> 
-> While we will start to pin one guest page for the interrupt indicator
-> byte, this is still ok with ballooning as this page will never be
-> used by the guest virtio-balloon driver.
-> So the pinned page will never be freed. And even a broken guest does
-> so, that would not impact the host as the original page is still
-> in control by vfio.
+Similar to what we have on other Amlogic boards this adds the
+gpio-line-names to Odroid-C1.
+This makes it easy to compare the schematics with the actual .dts
+configuration by looking at the debugfs GPIO file.
 
-I apologize, but I do not understand what you are saying in the second
-sentence of the paragraph above. Why will the pinned page never be 
-freed? I understand that the pinned page is under the control of vfio
-until it is freed, but have no idea what you mean by "and even a broken
-guest does so"? A broken guest does what? Can you please reword this so
-it makes more sense?
 
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->   drivers/s390/crypto/vfio_ap_ops.c     | 38 +++++++++++++++++++++++++++++++++++
->   drivers/s390/crypto/vfio_ap_private.h |  2 ++
->   2 files changed, 40 insertions(+)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index bdb36e0..3478499 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -787,6 +787,35 @@ static const struct attribute_group *vfio_ap_mdev_attr_groups[] = {
->   	NULL
->   };
->   
-> +/**
-> + * vfio_ap_mdev_iommu_notifier: IOMMU notifier callback
-> + *
-> + * @nb: The notifier block
-> + * @action: Action to be taken
-> + * @data: data associated with the request
-> + *
-> + * For an UNMAP request, unpin the guest IOVA (the NIB guest address we
-> + * pinned before). Other requests are ignored.
-> + *
-> + */
-> +static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
-> +				       unsigned long action, void *data)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	matrix_mdev = container_of(nb, struct ap_matrix_mdev, iommu_notifier);
-> +
+Martin Blumenstingl (1):
+  ARM: dts: meson8b: odroidc1: add the GPIO line names
 
-I don't understand why we registered this notifier. I may be wrong, but
-AFAIU, this notifier will be invoked only when the VFIO_IOMMU_UNMAP_DMA
-ioctl is called from userspace. I did an experiment and inserted some
-printf's to see if this ever gets called and verified it does not. Maybe
-you have a good reason of which I'm not aware. Can you enlighten me
-here?
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 52 ++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-> +	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
-> +		struct vfio_iommu_type1_dma_unmap *unmap = data;
-> +		unsigned long g_pfn = unmap->iova >> PAGE_SHIFT;
-> +
-> +		vfio_unpin_pages(mdev_dev(matrix_mdev->mdev), &g_pfn, 1);
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
->   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->   				       unsigned long action, void *data)
->   {
-> @@ -897,6 +926,13 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
->   		goto free_notifier;
->   	}
->   
-> +	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
-> +	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
-> +	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-> +				     &events, &matrix_mdev->iommu_notifier);
-> +	if (ret)
-> +		goto free_notifier;
-> +
->   	ret = vfio_ap_mdev_set_kvm(matrix_mdev);
->   	if (!ret)
->   		goto unlock;
-> @@ -917,6 +953,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
->   
->   	mutex_lock(&matrix_dev->lock);
->   	vfio_ap_mdev_unset_kvm(matrix_mdev);
-> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-> +				 &matrix_mdev->iommu_notifier);
->   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
->   				 &matrix_mdev->group_notifier);
->   	module_put(THIS_MODULE);
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index 3e6940c..4a287c8 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -82,9 +82,11 @@ struct ap_matrix_mdev {
->   	struct list_head node;
->   	struct ap_matrix matrix;
->   	struct notifier_block group_notifier;
-> +	struct notifier_block iommu_notifier;
->   	struct kvm *kvm;
->   	struct kvm_s390_module_hook pqap_hook;
->   	struct list_head qlist;
-> +	struct mdev_device *mdev;
->   };
->   
->   extern int vfio_ap_mdev_register(void);
-> 
+-- 
+2.21.0
 
