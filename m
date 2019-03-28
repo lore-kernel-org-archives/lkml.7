@@ -2,101 +2,106 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE98C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D99C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A7A2184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553806074;
-	bh=OUdWJ1MxYstZr0ftO5djNGzo7jr42IwfteS8dZXzSsE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FB3Y2ZdSmGMP/Fr6XJkxyMjZQBd3+mBTTegdghUnlL7l2jHpZfncy5CW5uoemSqA8
-	 2FEgoBE4uTlv/LSmuiotGJ0hP/6JumiuNKzm/PgwbU+UFio9ybmRhrgyvC+9nUi9cL
-	 QVriuhiVJWa4Pd5n5S8Qzy6g/FThR8sEaGiE13Nk=
+	by mail.kernel.org (Postfix) with ESMTP id 8C24B20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfC1Urw (ORCPT
+        id S1727480AbfC1Us0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:47:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34194 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfC1Urw (ORCPT
+        Thu, 28 Mar 2019 16:48:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbfC1Us0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:47:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id j89so79120ljb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NjZ/SZzZnq6l1TMJe3kpk/VKFzOVkn/Odq6bLyzQxEY=;
-        b=KV4lM6DhP49I616Bal7K7sYU+clkXl1pcQpA/w0Jl6niInr803GJytaWdhIk/gEvnW
-         P2OIcd/xBth8ZjZH8RGMbwakjhD0RG1hPZ+roqu3VuHwIcEEWP9M1ko5jBYyg88+OqQA
-         5ZUTXLy0FFeDZZKSO61t+gPGnVASfzrS7xyPo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NjZ/SZzZnq6l1TMJe3kpk/VKFzOVkn/Odq6bLyzQxEY=;
-        b=nrNbq5BxyANt5P0qxil6mXXQqvkneEsVsMukSHl3pIXVQ3gjSurYFkqFqPojH/B4Lq
-         r2ePmBn7SqSyjjeHxjNPHu0uuaJB2yX4hKQIvCDLyuqbw2R2pxpAHe0BnbgcWkMYjf6T
-         rpjDTmvM1kRa5XYv+ZMhT8pV8ye0c1HoPbgGAWpXOdN9RhZLPJCII7Jgo2qI02Vxc9ZO
-         vZQMAFEGp2MvV2HAks4Vlg4AZJ3XIeQICpxOgDZuwdRxJ+yut8FyLap6VEKZpeVnmiz7
-         bQJtJifGYsDgL0Hl8V8zu5IHQ3vhsHgfk0+BhcwefrdqoTAD3UvpaSgSFqy8l2aETYQO
-         bAVg==
-X-Gm-Message-State: APjAAAXIs7ACd/Pkm70RpTLhsPtTSoHFMyXK+3n1SqsjV2cndAnTLHR0
-        asE6Ogma/f/3Coj6Eq7wAdUFoh0PJDw=
-X-Google-Smtp-Source: APXvYqxwcvlA8Un6texTsXZ2VX7FJS0gzOzSrOad+67k72eTiEt291zUCu2bD9d6EIhbKopIN2KqGg==
-X-Received: by 2002:a2e:81da:: with SMTP id s26mr4824142ljg.86.1553806069186;
-        Thu, 28 Mar 2019 13:47:49 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id z18sm66612lfi.57.2019.03.28.13.47.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 13:47:48 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id b7so10457847lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:47:47 -0700 (PDT)
-X-Received: by 2002:a19:4a49:: with SMTP id x70mr6932248lfa.11.1553806067495;
- Thu, 28 Mar 2019 13:47:47 -0700 (PDT)
+        Thu, 28 Mar 2019 16:48:26 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SKi8CG014517
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:48:25 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh4nn2cvn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 16:48:25 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 28 Mar 2019 20:48:24 -0000
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 20:48:20 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SKmJoL24641622
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 20:48:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D40A2B2065;
+        Thu, 28 Mar 2019 20:48:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B837DB2064;
+        Thu, 28 Mar 2019 20:48:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Mar 2019 20:48:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1DB9516C121C; Thu, 28 Mar 2019 13:48:21 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 13:48:21 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.03.27a 35/46] ERROR: "kfd_processes_srcu"
+ [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
+Reply-To: paulmck@linux.ibm.com
+References: <201903290446.NnAAr0g1%lkp@intel.com>
 MIME-Version: 1.0
-References: <20190328181106.22887-1-longman@redhat.com> <20190328181106.22887-13-longman@redhat.com>
-In-Reply-To: <20190328181106.22887-13-longman@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Mar 2019 13:47:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
-Message-ID: <CAHk-=wh7eanC+W7DpSpAsAAYeRTp3EB5qUxMnDFW3HqNQC0GFQ@mail.gmail.com>
-Subject: Re: [PATCH 12/12] locking/rwsem: Make MSbit of count as guard bit to
- fail readlock
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201903290446.NnAAr0g1%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19032820-0060-0000-0000-000003238952
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010830; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000283; SDB=6.01181039; UDB=6.00618119; IPR=6.00961758;
+ MB=3.00026198; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 20:48:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032820-0061-0000-0000-000048C23C1B
+Message-Id: <20190328204821.GR4102@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=790 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 11:12 AM Waiman Long <longman@redhat.com> wrote:
->
-> With the merging of owner into count for x86-64, there is only 16 bits
-> left for reader count. It is theoretically possible for an application to
-> cause more than 64k readers to acquire a rwsem leading to count overflow.
+On Fri, Mar 29, 2019 at 04:11:48AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.03.27a
+> head:   3833875fa13a3f442252a48784a18f27879a4551
+> commit: 016b9910f5db3d900066a0c3a8b42855f70bb1cf [35/46] drivers/gpu/drm/amd: Dynamically allocate kfd_processes_srcu
+> config: x86_64-rhel-7.6 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         git checkout 016b9910f5db3d900066a0c3a8b42855f70bb1cf
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "kfd_processes_srcu" [drivers/gpu/drm/amd/amdgpu/amdgpu.ko] undefined!
 
-Ahh, and here's the thing that makes 16 bits work for readers.
+When I drop your .config into my source tree, do an oldconfig, and then
+build, it creates amdgpu.ko without complaint.  What else should I be
+doing to try to reproduce this?
 
-I think this at a minimum needs to be made very clear in the patch
-that actually lowered the reader count bits, but preferably this just
-needs to be done *before* that patch, so that you don't have a point
-in history where rwlocks are simply not reliable.
+							Thanx, Paul
 
-               Linus
