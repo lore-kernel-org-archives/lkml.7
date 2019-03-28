@@ -2,89 +2,129 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D015C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C30C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0394206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553786784;
-	bh=oOwfSlxQcppO25DWRk5u3q+aHSqnaHmxWprpO3RwIE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u15ZvMThtMNPJy5t/Y3wHJmCpmZEnA0XipNOr3XQKi4oaciaFxito5dyvw47CxYB5
-	 HkrQe+ob7r1048xZza9O6O1cc+XPS/0oPx4PcMotMhWOTBS3Xxsv8VDPz/8uY1EQNI
-	 jbbu4qtjGsbFYsP5jK2sAkT1o7s7GaPQyJpstL+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3C6BB2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iVveKalM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lyX0fYTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfC1P0X (ORCPT
+        id S1726375AbfC1P2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:26:23 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33376 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1P0X (ORCPT
+        Thu, 28 Mar 2019 11:28:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51076 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfC1P2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:26:23 -0400
-Received: by mail-oi1-f195.google.com with SMTP id e5so4491276oii.0;
-        Thu, 28 Mar 2019 08:26:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P4iI5WXlMDM3+XrE7fOsF1r063RsIWJpQtQhD554+gM=;
-        b=U3DJuRyWMPHhXblOJIk+DsZOmHveGGr3m6XWed5e7os6jD9XIBYU1+3leyqXtUVqyN
-         u/eUy3RtHXIGmCOe94SP8UTPgVNzxUnJMqyNAVYkEi/IQKR/VGejl+9AeZhHPtA6uBB3
-         9+OZ5ygPm7Worc66U7bl12ijIoqPsW+HA2eKeNVH9yliNreiYBQq0GT8GoGKeq6M7dXc
-         quuP2yWk4k92WQR+v6R3m0lx3a0VyBBBhJQwvOL6oJwn51xchu8BrObw15mgVdYTwyCL
-         eKfdeABQmmFwRpCsNed+9CStBu98uHeYmJQ1G8f42YcLeKvy23ciXNORs4FM91+NiM6C
-         FGOg==
-X-Gm-Message-State: APjAAAUsmcOqJYbcwhXEWsJKj8DrXPaoOpzOoL7SkuVYx43PHW7Ob9LH
-        4+xxFDLa9dqClNHNCxeoLDJPiUw=
-X-Google-Smtp-Source: APXvYqxunEFyZV0gb6pIjteYxv6fDPQ22Yi0ku6pjidTNyXNR9wQdgx9hKliEz5jHJ1vNQnWnxVgxQ==
-X-Received: by 2002:aca:5904:: with SMTP id n4mr398279oib.122.1553786782371;
-        Thu, 28 Mar 2019 08:26:22 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a34sm2978767otc.46.2019.03.28.08.26.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 08:26:21 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:26:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 3/6] dt-bindings: hwlock: update STM32 #hwlock-cells value
-Message-ID: <20190328152621.GA1398@bogus>
-References: <1552492237-28810-1-git-send-email-fabien.dessenne@st.com>
- <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
+        Thu, 28 Mar 2019 11:28:40 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9187061576; Thu, 28 Mar 2019 15:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553786919;
+        bh=xum6ieznDZfBH+hlbErd+IO7fVPsgbzZh+x2tFodxH0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iVveKalMHXfEclY7JPh/1/xXuonGMA6XW+3qpqe0UfB9iR8CC9q0dWniw8X6qJsW1
+         tT3Zjs9TD/QGHq7G0PciLWtEIa/Jcr8VCrk+fgE47TAhRfSlCj+fwP3gS2tVciWeHr
+         jfm32N+i24Uc8e/s8ZQeUysmcY9PFhvEI7jJlpHE=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77278612F1;
+        Thu, 28 Mar 2019 15:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553786917;
+        bh=xum6ieznDZfBH+hlbErd+IO7fVPsgbzZh+x2tFodxH0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lyX0fYTNqvQIyLTR+wNm4EWpGfF4SnagAXdZEgdUyaNoYCSrpiT629nuwNatYqne4
+         RyXluRZqoYd2A/500lS7UKFTpcqGIHuO0e631XU7tfng+0++SidR5z+/irhrOGWCZF
+         zD0JMPjC+zKPv0sLatuaQel5R+Lo+o5EAVavLBes=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 77278612F1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     robh+dt@kernel.org, andy.gross@linaro.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        rjw@rjwysocki.net, viresh.kumar@linaro.org, nm@ti.com,
+        sboyd@kernel.org, georgi.djakov@linaro.org
+Cc:     bjorn.andersson@linaro.org, david.brown@linaro.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org, cw00.choi@samsung.com,
+        linux-pm@vger.kernel.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, dianders@chromium.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH RFC 0/9] Add CPU based scaling support to Passive governor
+Date:   Thu, 28 Mar 2019 20:58:13 +0530
+Message-Id: <20190328152822.532-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552492237-28810-4-git-send-email-fabien.dessenne@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 16:50:34 +0100, Fabien Dessenne wrote:
-> Use a value of 2, so users can share hwlocks.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
->  Documentation/devicetree/bindings/hwlock/st,stm32-hwspinlock.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+This RFC series aims to add cpu based scaling support to the passive
+governor and scale DDR with a generic interconnect bandwidth based
+devfreq driver on SDM845 SoC. This series achieves similar functionality
+to Georgi's Patch series (https://patchwork.kernel.org/cover/10850817/)
+and can be used with MSM8916/MSM8996/QCS404 SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[patches 1,6 - Add and export export helpers to get avg/peak bandwidth and
+ update voltage of an disabled opp respectively]
+
+[patch 3 - Adds cpu based scaling support to passive governor]
+To achieve this, it listens to CPU frequency transition notifiers
+to keep itself up to date on the current CPU frequency.
+To decide the frequency of the device, the governor depends one of
+the following:
+* Constructs a CPU frequency to device frequency mapping table from
+  required-opps property of the devfreq device's opp_table
+* Scales the device frequency in proportion to the CPU frequency by
+  performing interpolation.
+
+[patch 7 - Parses and updates opps from the frequency/voltage read from
+ the look up tables]
+
+The patch series depends on opp-bw-MBs bindings introduced in:
+https://patchwork.kernel.org/cover/10850817/
+
+Saravana Kannan (2):
+  PM / devfreq: Add cpu based scaling support to passive_governor
+  PM / devfreq: Add devfreq driver for interconnect bandwidth voting
+
+Sibi Sankar (7):
+  OPP: Add and export helpers to get avg/peak bw
+  OPP: Export a number of helpers to prevent code duplication
+  dt-bindings: devfreq: Add bindings for devfreq dev-icbw driver
+  OPP: Add and export helper to update voltage
+  cpufreq: qcom: Add support to update cpu node's OPP tables
+  arm64: dts: qcom: sdm845: Add cpu OPP tables
+  arm64: dts: qcom: sdm845: Add nodes for icbw driver and opp tables
+
+ .../devicetree/bindings/devfreq/icbw.txt      | 146 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 262 +++++++++++++++++
+ drivers/cpufreq/qcom-cpufreq-hw.c             |  29 +-
+ drivers/devfreq/Kconfig                       |  19 ++
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/devfreq_icbw.c                | 132 +++++++++
+ drivers/devfreq/governor_passive.c            | 276 +++++++++++++++++-
+ drivers/opp/core.c                            | 100 +++++++
+ drivers/opp/of.c                              |  13 +-
+ include/linux/devfreq.h                       |  43 ++-
+ include/linux/pm_opp.h                        |  35 +++
+ 11 files changed, 1044 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
+ create mode 100644 drivers/devfreq/devfreq_icbw.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
