@@ -2,106 +2,174 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ECDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CB5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEC720811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:13:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMpOiluC"
+	by mail.kernel.org (Postfix) with ESMTP id 43E4520657
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbfC1HNS (ORCPT
+        id S1726252AbfC1HS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 03:13:18 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39880 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1HNR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 03:13:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t124so2634961wma.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 00:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=o5qQElj085UdXWk7+JCaUV3vxKmvFFqhyu+aF7t2M9U=;
-        b=uMpOiluCzs1ZAPTIYCuL+YHUMT0PY2XL2qGC6we94kiBfZHZM+2b+7I5WX9yaz+Slh
-         gUDE7urqF2vaA2zbbou6kgbd6r58n9EXiYeHpqY6OQBEkT9gUV3wMWFXm5F9q2OkUlHi
-         A64r8n5FfcaulzFPrtkPmsY/7BHSPXsgyeChbHU320sVNU5z3/XsXg7YqwkvH4zZny0C
-         f4z+/a9BTHEjRrGVa6V6V20m5M1YzwAnW4wGBoR/jodjGlpBkLh16qKzrPV/1tnMBRm5
-         OcJEQ1Wxse7PdDiKePovuCIY4kidxqhKo6uYdwof8LQQgSCYY5qic+TH9sDlfWxS5Klb
-         tPxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=o5qQElj085UdXWk7+JCaUV3vxKmvFFqhyu+aF7t2M9U=;
-        b=s4WdHDPU2LFq406xutNJUDHZK718O+J8KwpDy1ukP7uwCvl9QI2DPbNSWZKO9GfI00
-         IRYmbwXXTqJ0O/67ispsKxEIqr1hC43gJaoflhpqdnh2DMpcr4PNaS7L4jol46BcJcN4
-         ZUlOmn8ffm7ENNz7rWrkmJnxytnAcAotlSgVGP+QyHAmDxDPFDUtPOYo5xtK3/lV6sdj
-         wQGtXV9i0zK6uhoKmEmKlv6t5Ir2utdOYooxTM1FhJ11yevO00XNVqZmNJXOp4n+kSjJ
-         EnxY3Q0FRju2pY/z5IxmsFYqmHI0YEjw3nh0s2uCuG0sBc7tBo/Arn+kekEylnAbywPB
-         F7lA==
-X-Gm-Message-State: APjAAAURUzcBC51rPW2pM+BRQ0VMuzqXykmYTeJ63nmZT8k6sbRlBjZl
-        mJPg9RDUGeEAHPNeUujeMaMlZBZN
-X-Google-Smtp-Source: APXvYqw/HCx/SWLwqefrQLuu9rbkKTCaCi3GvJE/xVEUkhyP0dqCLHddfR30Jj7LPtJHw8ejclk78g==
-X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr14043506wmf.56.1553757195821;
-        Thu, 28 Mar 2019 00:13:15 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id e193sm4309816wmg.18.2019.03.28.00.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 00:13:15 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: improve error messages
-Date:   Thu, 28 Mar 2019 09:13:13 +0200
-Message-Id: <20190328071313.5306-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 Mar 2019 03:18:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44590 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725779AbfC1HS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 03:18:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4A4CCAF25;
+        Thu, 28 Mar 2019 07:18:56 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 2EFDBE1404; Thu, 28 Mar 2019 08:18:53 +0100 (CET)
+Date:   Thu, 28 Mar 2019 08:18:53 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 12/22] ethtool: provide string sets with
+ GET_STRSET request
+Message-ID: <20190328071853.GY26076@unicorn.suse.cz>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <f5af581e33b4976b84eae7c7788e3fde9adfa83c.1553532199.git.mkubecek@suse.cz>
+ <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch improves two error messages to help the user to
-better understand what error occurred.
+On Wed, Mar 27, 2019 at 07:25:47PM -0700, Florian Fainelli wrote:
+> > +GET_STRSET
+> > +----------
+> > +
+> > +Requests contents of a string set as provided by ioctl commands
+> > +ETHTOOL_GSSET_INFO and ETHTOOL_GSTRINGS. String sets are not user writeable so
+> > +that the corresponding SET_STRSET message is only used in kernel replies.
+> > +There are two types of string sets: global (independent of a device, e.g.
+> > +device feature names) and device specific (e.g. device private flags).
+> > +
+> > +Request contents:
+> > +
+> > +    ETHA_STRSET_DEV		(nested)	device identification
+> > +    ETHA_STRSET_COUNTS		(flag)		request only string counts
+> 
+> Should not that be part of the nested attribute under
+> ETHA_STRSET_STRINGSET. We should probably think about adding another
+> flag which indicates that we want to get the stringset associated data,
+> see below why.
+> 
+> > +    ETHA_STRSET_STRINGSET	(nested)	string set to request
+> > +        ETHA_STRINGSET_ID		(u32)		set id
+> > +
+> > +Kernel response contents:
+> > +
+> > +    ETHA_STRSET_DEV		(nested)	device identification
+> > +    ETHA_STRSET_STRINGSET	(nested)	string set to request
+> 
+> string set requested?
+> 
+> > +        ETHA_STRINGSET_ID		(u32)		set id
+> > +        ETHA_STRINGSET_COUNT		(u32)		number of strings
+> > +        ETHA_STRINGSET_STRINGS		(nested)	array of strings
+> > +            ETHA_STRING_INDEX			(u32)		string index
+> > +            ETHA_STRING_VALUE			(string)	string value
+> 
+> This is one of the areas where the legacy ethtool ioctl() is painful
+> because we need to request a string set to know how many of those exist
+> to allocate space for those in both kernel and user space.
+> 
+> If we could find a way to have a single command that allows us to dump
+> stringset (count, values) and associated data, then we save ourselves a
+> context switch and having to pre-allocate memory accordingly.
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/command_submission.c | 3 ++-
- drivers/misc/habanalabs/memory.c             | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+The way the proposed interface is designed, we can get both without an
+extra roundtrip but it's done the other way around, i.e. passing the
+strings with the request for data. The API allows two modes of
+operation:
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index f908643f871f..02c48da0b645 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -261,7 +261,8 @@ static void cs_timedout(struct work_struct *work)
- 	ctx_asid = cs->ctx->asid;
- 
- 	/* TODO: add information about last signaled seq and last emitted seq */
--	dev_err(hdev->dev, "CS %d.%llu got stuck!\n", ctx_asid, cs->sequence);
-+	dev_err(hdev->dev, "User %d command submission %llu got stuck!\n",
-+		ctx_asid, cs->sequence);
- 
- 	cs_put(cs);
- 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index ce1fda40a8b8..39788b1cf8d0 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -109,7 +109,7 @@ static int alloc_device_memory(struct hl_ctx *ctx, struct hl_mem_in *args,
- 							page_size);
- 			if (!phys_pg_pack->pages[i]) {
- 				dev_err(hdev->dev,
--					"ioctl failed to allocate page\n");
-+					"Failed to allocate device memory (out of memory)\n");
- 				rc = -ENOMEM;
- 				goto page_err;
- 			}
--- 
-2.17.1
+1. One shot requests, e.g. typical ethtool use. We use "verbose" mode
+(no ETHA_*_COMPACT flag in the request) and data is provided together
+with the names. E.g. "ethtool eth2" request would look like
 
+  ETHA_SETTINGS_DEV
+      ETHA_DEV_NAME = "eth2"
+  ETHA_SETTINGS_INFO_MASK = ... | ETH_SETTINGS_IM_LINKMODES | ...
+
+and the reply would be
+
+  ETHA_SETTINGS_DEV = {
+      ETHA_DEV_INDEX = 4
+      ETHA_DEV_NAME = "eth2"
+  }
+  ETHA_SETTINGS_LINK_INFO = {
+      ...
+  }
+  ETHA_SETTRINGS_LINK_MODES = {
+      ETHA_LINKMODES_AUTONEG = 1 (AUTONEG_ENABLE)
+      ETHA_LINKMODES_OURS = {
+          ETHA_BITSET_SIZE = 67
+          ETHA_BITSET_BITS = {
+              ETHA_BITS_BIT = {
+                  ETHA_BIT_INDEX = 0 (ETHTOOL_LINK_MODE_10baseT_Half_BIT)
+                  ETHA_BIT_NAME = "10baseT/Half"
+              }
+              ETHA_BITS_BIT = {
+                  ETHA_BIT_INDEX = 1 (ETHTOOL_LINK_MODE_10baseT_Full_BIT)
+                  ETHA_BIT_NAME = "10baseT/Full"
+              }
+              ETHA_BITS_BIT = {
+                  ETHA_BIT_INDEX = 2 (ETHTOOL_LINK_MODE_100baseT_Half_BIT)
+                  ETHA_BIT_NAME = "100baseT/Half"
+                  ETHA_BIT_VALUE
+              }
+              ETHA_BITS_BIT = {
+                  ETHA_BIT_INDEX = 3 (ETHTOOL_LINK_MODE_100baseT_Full_BIT)
+                  ETHA_BIT_NAME = "100baseT/Full"
+                  ETHA_BIT_VALUE
+              }
+              ETHA_BITS_BIT = {
+                  ETHA_BIT_INDEX = 5 (ETHTOOL_LINK_MODE_1000baseT_Full_BIT)
+                  ETHA_BIT_NAME = "1000baseT/Full"
+                  ETHA_BIT_VALUE
+              }
+          }
+      }
+      ETHA_LINKMODES_PEER = {
+          ...
+      }
+      ETHA_LINKMODES_SPEED = 1000 (SPEED_1000)
+      ETHA_LINKMODES_DUPLEX = 1 (DUPLEX_FULL)
+  }
+  ...
+
+2. Long time running applications, e.g. "ethtool --monitor", wicked,
+systemd-networkd, ... For these, it would make sense to cache the
+strings and either retrieve them in advance (on start and when new
+device appears) or when they are needed for the first time. The request
+would then include the ETHA_SETTINGS_COMPACT flag and reply would be
+
+  ...
+  ETHA_LINKMODES_OURS = {
+      ETHA_BITSET_SIZE = 67
+      ETHA_BITSET_VALUE = 0x0000002c 0x00000000 0x00000000
+      ETHA_BITSET_MASK = 0x0000002f 0x00000000 0x00000000
+  }
+
+For "set" type requests, it's up to the application if it uses verbose
+or compact form. The verbose form is most useful when we want e.g. to
+set the values of one or two bits which may be identified by their names
+(on command line or in config file).
+
+Michal
