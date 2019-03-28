@@ -2,103 +2,92 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA4FC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23E42173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0EC2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553750867;
-	bh=sTepjNv+lCttaCr4VU9DFErARrxIXKIrE1XAT2yCnT4=;
+	s=default; t=1553750912;
+	bh=OivgbXJG+68tUwFH4XkMsfkEqPCFZVgWEvFNJtZgBMQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TIngBnV4j1sRjiJKoR+4pmN8vQnLhhAVa/QojQ4wU8FE2+cTQp6297clO2PpFi4Zt
-	 9qLFRE27UOdcpaaNG0Vc+Vpapis8XJ0scNkedyy2EdrIVKeFskM8J1r1MFn429MVEe
-	 XDbSRxwdGWz9HqnFpjmMTSK5FLzy4zFF/c/qA4A4=
+	b=1HbICfOuIRkRPEJNGdMd7NsIxv9dOF70/pJdlFuuAaYGKhYWB7ofzTvu5jBYmuSV+
+	 wXasq0Gy6zBgrOWr3a6OQIkTQKA7YX44GR+oCkknK61jyDwDEdr1ip3+uZjevXDrGw
+	 Vu1B4tPzYTI11inrnD/GZraa4sr/9QWKn/fuX1yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfC1F1q (ORCPT
+        id S1726140AbfC1F2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 01:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42094 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 01:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfC1F1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 01:27:46 -0400
-Received: from localhost (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
+        id S1725794AbfC1F2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 01:28:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF92E20811;
-        Thu, 28 Mar 2019 05:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA07820811;
+        Thu, 28 Mar 2019 05:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553750865;
-        bh=sTepjNv+lCttaCr4VU9DFErARrxIXKIrE1XAT2yCnT4=;
+        s=default; t=1553750910;
+        bh=OivgbXJG+68tUwFH4XkMsfkEqPCFZVgWEvFNJtZgBMQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ghQSSAHd696QGn+wXbUqndwaG1Dif8y9b+peZpRV5cVeKwvi4YBB1vQJsf1UgZi41
-         r7OYZYMqs7xwGxxyGhxp04tZw+7ZwLura3Ol9unj7rbFtODnaWiorTJYnLxq41wSoB
-         Tc8QfhCugiPR1FP5ITLNenpuTAdcDCTiTEaGx60s=
-Date:   Thu, 28 Mar 2019 06:27:42 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+370a6b0f11867bf13515@syzkaller.appspotmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: WARNING in arch_install_hw_breakpoint
-Message-ID: <20190328052741.GA29635@lenoir>
-References: <000000000000639f6a0584d11b82@google.com>
- <20190327132805.GG32571@zn.tnic>
- <CACT4Y+bHd938t-w++LBO-yHMWP1cXpn+U=AVL+8mMfTBYk86=g@mail.gmail.com>
- <20190327151725.GH32571@zn.tnic>
- <20190327174841.GI32571@zn.tnic>
+        b=QwHdwHGHW1zx4+VpcB/p1BmeKvDiOt4KRx4GyJDysK6fxCuoj9qc0HyvyB4NYGPVY
+         JuHyIcC7KN1V5CWZcWitXv07T0pi2qjFvLZvg2pV3zoNHEs0SZeHCiyuIiBH8mFZpG
+         UyxuWKoE3QIxCQ1nbNmSh9gDtJA9yEBuuvEMOLIU=
+Date:   Thu, 28 Mar 2019 06:28:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Zhang, Jun" <jun.zhang@intel.com>
+Cc:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "He, Bo" <bo.he@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Xiao, Jin" <jin.xiao@intel.com>,
+        "Bai, Jie A" <jie.a.bai@intel.com>
+Subject: Re: [PATCH 3.18 132/134] rcu: Do RCU GP kthread self-wakeup from
+ softirq and interrupt
+Message-ID: <20190328052826.GA18668@kroah.com>
+References: <20190322111210.465931067@linuxfoundation.org>
+ <20190322111220.102008032@linuxfoundation.org>
+ <CD6925E8781EFD4D8E11882D20FC406D52A646D1@SHSMSX104.ccr.corp.intel.com>
+ <20190323063315.GB31361@kroah.com>
+ <20190325160017.GD4102@linux.ibm.com>
+ <CD6925E8781EFD4D8E11882D20FC406D52A6526B@SHSMSX104.ccr.corp.intel.com>
+ <20190326155537.GO4102@linux.ibm.com>
+ <88DC34334CA3444C85D647DBFA962C2735B04EB8@SHSMSX104.ccr.corp.intel.com>
+ <20190327151012.GY4102@linux.ibm.com>
+ <88DC34334CA3444C85D647DBFA962C2735B0510F@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190327174841.GI32571@zn.tnic>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88DC34334CA3444C85D647DBFA962C2735B0510F@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 06:48:41PM +0100, Borislav Petkov wrote:
-> On Wed, Mar 27, 2019 at 04:17:25PM +0100, Borislav Petkov wrote:
-> Ok, after adding some debug output, it looks like this (newlines mine):
+On Thu, Mar 28, 2019 at 01:36:12AM +0000, Zhang, Jun wrote:
+> Hello, Paul
 > 
-> [  200.921625][ T8029]    repro-8029    0d..4 200923254us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
+> Yes, I only use original V3.18.136 to test. Because system run very slowly, I give up.
 > 
-> [  200.922507][ T8029]    repro-8029    0d..4 200923257us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-> [  200.923397][ T8029]    repro-8029    0d..4 200923259us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-> 
-> [  200.924294][ T8029]    repro-8029    0d..4 200923262us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-> [  200.925175][ T8029]    repro-8029    0d..4 200923264us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-> [  200.926054][ T8029]    repro-8029    0d..4 200923266us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
-> 
-> [  200.926933][ T8029]    repro-8029    0d..4 200923270us : arch_install_hw_breakpoint: i: 0, slot: ffff888069668080
-> [  200.927816][ T8029]    repro-8029    0d..4 200923271us : arch_install_hw_breakpoint: i: 1, slot: ffff888060200d40
-> [  200.928695][ T8029]    repro-8029    0d..4 200923273us : arch_install_hw_breakpoint: i: 2, slot: ffff8880602004c0
-> [  200.929573][ T8029]    repro-8029    0d..4 200923275us : arch_install_hw_breakpoint: i: 3, slot: ffff88806991ed00
-> 
-> which basically shows how this thread adds 4 breakpoints and hits the
-> warn on on the 5th.
-> 
-> Now, that code I've seen only once or twice so I don't have a very smart
-> guess but it looks to me like arch_install_hw_breakpoint() or something
-> scheduling the events above that, should check HBP_NUM and not schedule
-> more than 4 hw breakpoints. Or..?
-> 
-> Frederic, I know you know this code... :-)
+> Device: NUC (made in 2017)
+> OS:        ubuntu 16.04
+> Kernel: V3.18.136 (come from https://kernel.ubuntu.com/~kernel-ppa/mainline/v3.18.136/) 
+> System can boot, but run very slowly, and couldn't connect the network.
+> This make me not to work with terminal, because system very slowly. 
+> So I don’t use V3.18.136+patch to test.
 
-Ok, I finally managed to reproduce. The issue is unlikely to come from the
-architecture. Perf shouldn't commit more breakpoints than possible so it's
-probably perf events scheduling or hw breakpoint core constraints that are
-broken. I'm investigating...
+Please do not worry about 3.18.y if it is any problem, I only keep it
+alive for a few users and if they have not reported issues yet, it is
+fine.  Please do not do any extra work for this kernel tree at all, it
+is just too old :)
 
-Thanks.
+thanks,
+
+greg k-h
