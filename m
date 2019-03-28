@@ -2,94 +2,271 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CCBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A55206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858FB206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sUkexObA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuGBn7iq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfC1RLR (ORCPT
+        id S1727694AbfC1RLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:11:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41698 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1RLR (ORCPT
+        Thu, 28 Mar 2019 13:11:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45632 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727182AbfC1RLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:11:17 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w30so23964539qta.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:11:16 -0700 (PDT)
+        Thu, 28 Mar 2019 13:11:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e24so10786128pfi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qRYwax0kQAHs7i/AToycFYMMekLbKQthj/x21KvD3wA=;
-        b=sUkexObACcAfZD2urDVfEId6jq5nRGOxa7kyNdanirygu+PAyM6xKqmwIxl8PxXrtN
-         2Yxde0AuSyYlmUv2DXfwJ5qLGzS9psriTZkUBSyUlQKWfJCM1E7tSrB15ZMNtz+U3TlB
-         /S6Mw1VVrppcBwTG9ktcxLXlHdBAs0k9P61SP0Q3Jsj+4+Xq9OwToYf1MJukd73gEp1Y
-         +0IUOaFrzmCGuhmAMSQXZYyso7ARy4jONEaiShhZyrSRMikyVIiGx0ieuxpnh1/IIRsg
-         YgiPjUR2R2xJtzyeZxP9YVvw7cCq0pX/YGHZqbLRTeZPNfv7vkAldyv37IobhGSWYXuJ
-         W/+A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+luZLveOgW0ezcsj4kzoCAaYqh/zxiLbPom43ySTdYE=;
+        b=TuGBn7iqwM5v0B4Bm40K5s7yE4HVHgUiAGzeNUmTNkQX2u0Pac6aMuoldukAlxjlf0
+         C+MG9KzehokpacpUTzp1R9wt5XVszcEjV9gj9ch0CtYN717yHeg+68wvH6qo5bLetrh4
+         ELDKDq/OT+P6lgOQQKHV+q+h+9JdACVWYQnIhVg7aJn9WibEp70dyMZb5WA9kDC9rQ7w
+         IAjtcrvS/GjZ4eautGSBOSW+NDy19qBtJMA/d4x1oEdTy/GPz1uCuSssus3mhV6SSSed
+         1xNfA3y1WKGGO8DA8svueZGnozmXBqMGoqnG3sGF283Z8HdcFqUQjq8TiI2XeeapkGW5
+         g/og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qRYwax0kQAHs7i/AToycFYMMekLbKQthj/x21KvD3wA=;
-        b=W8iE0VTE/QnZrvv98Hy3Yo9JG+IswRGEN6vU6oAoS9+MJff1c7fRzLFE1XR0u0SbK4
-         ryZgpo5ZHbDZwgmGfUgLZAbFmTtUOUtQSoeY1pc4LQTsAutKPOY8p7e9vyzEmGu6dazE
-         IVh3drZUWEoHrve3fUnZmnMl3v3TE/TP3Ln2HK2hjVD5f5ebc2qYBu/NTStBKOzuzUHX
-         vLAkC5XPU48QhAapqdgfTICA7K2iD99PwNrTNtdyJU15RR3PrNHuzVHo6LAI54LyFe8Q
-         tvZApEUlHniskOlkVUOM/b2V875ptPub6yogw9Gda0dzILTb00siyAPqUx9sKxEiNYSu
-         QyjQ==
-X-Gm-Message-State: APjAAAXf4Q1HpvSLds75o0KB0O83Ab1gpWJHl55KTrs07f1cG18miAy4
-        JpRgIFawT9nAa56P0JbbCUY=
-X-Google-Smtp-Source: APXvYqxWEAKXKUFQlvzH03afcTgnT7YozgsDScCmbEfyFrG7LXsHGAVCQXNWBo0UJutgkYwWWnjGuA==
-X-Received: by 2002:a0c:d2b9:: with SMTP id q54mr36617006qvh.196.1553793076404;
-        Thu, 28 Mar 2019 10:11:16 -0700 (PDT)
-Received: from gravicappa.gravicappa.info (pool-72-74-132-209.bstnma.fios.verizon.net. [72.74.132.209])
-        by smtp.gmail.com with ESMTPSA id r53sm5386988qtr.80.2019.03.28.10.11.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+luZLveOgW0ezcsj4kzoCAaYqh/zxiLbPom43ySTdYE=;
+        b=JDWs+SMgvs/LLHQb0eRthw7QgA+3I/drBKTwWfWuhpKlpEWu8Hw7deGuibaSUONgRp
+         klJves3t3gmz2cLmVn1El9a78K+yZO7YMStJaP+uldrAakcXcOX9NKupLq6dcXQVIPob
+         tm8NR6dfNMrGLcZyGzXjv5DIs8FuYp8x4kmL/GC8S5sac+3buNvNZvFLsJyuy/0RIMXT
+         Ov5mJ1pcJV3kE+XOZyNGCC1MkDfX+4GCFg1o6yR5Hznu/tIlCLA7B0acKBXp4u0NPRm7
+         v854GeiYrmsIB8IkRKbKyiuzv1QKGLVBAzUZPlsNJvxRFX/wWaPR3gnoXg18d3d6qLPo
+         ZW2Q==
+X-Gm-Message-State: APjAAAXlhvVBuyKoVs5CaBsrowmUNVVltXTWmX0W/H9DKEgKSTtf/klG
+        /4VDJ3OCLlWcWIcYZl+YaFA=
+X-Google-Smtp-Source: APXvYqwoVGBdqOQrZ211qCAOLuoK3EBPGHId4CjdJALXQEp8Op4SFemamW5WUJRJXJcgL804P6WXtw==
+X-Received: by 2002:aa7:8694:: with SMTP id d20mr41695287pfo.81.1553793096585;
+        Thu, 28 Mar 2019 10:11:36 -0700 (PDT)
+Received: from CentOS76.localdomain ([49.205.222.128])
+        by smtp.gmail.com with ESMTPSA id n65sm89286677pfb.160.2019.03.28.10.11.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:11:15 -0700 (PDT)
-From:   Vitaly Mayatskikh <v.mayatskih@gmail.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] vhost/vsock: initialize vhost_vsock->hash
-Date:   Thu, 28 Mar 2019 13:10:57 -0400
-Message-Id: <1553793057-24002-1-git-send-email-v.mayatskih@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <CAGF4SLiZxXcWskZXmGbwO11MnwyMAK_Bpbn0ugZzK6jSMHdiog@mail.gmail.com>
-References: <CAGF4SLiZxXcWskZXmGbwO11MnwyMAK_Bpbn0ugZzK6jSMHdiog@mail.gmail.com>
+        Thu, 28 Mar 2019 10:11:35 -0700 (PDT)
+Date:   Fri, 29 Mar 2019 00:32:03 +0530
+From:   Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        a.hajda@samsung.com, airlied@linux.ie, daniel@ffwll.ch,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v2] gpu:drm: Remove duplicate headers
+Message-ID: <20190328190203.GA27353@CentOS76.localdomain>
+References: <1553721116-37832-1-git-send-email-jagdsh.linux@gmail.com>
+ <20190328065124.GB4846@pendragon.ideasonboard.com>
+ <20190328160206.GA94653@CentOS76.localdomain>
+ <20190328141210.GA4813@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20190328141210.GA4813@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no current valid use case when uninitialized hash can be read
-before being written, however let's keep every vhost_vsock field
-initialized just for clarity.
 
-Signed-off-by: Vitaly Mayatskikh <v.mayatskih@gmail.com>
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Mar 28, 2019 at 04:12:10PM +0200, Laurent Pinchart wrote:
+> Hi Jagadeesh,
+> 
+> On Thu, Mar 28, 2019 at 09:32:06PM +0530, Jagadeesh Pagadala wrote:
+> > On Thu, Mar 28, 2019 at 08:51:24AM +0200, Laurent Pinchart wrote:
+> > > On Thu, Mar 28, 2019 at 02:41:56AM +0530, jagdsh.linux@gmail.com wrote:
+> > > > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> > > > 
+> > > > Remove duplicate headers which are included twice.
+> > > 
+> > > Could you, while at it, also sort the existing #include statements
+> > > alphabetically ? This should help avoiding similar issues in the future.
+> > > 
+> > > > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> > > > ---
+> > > >  drivers/gpu/drm/bridge/panel.c       | 1 -
+> > > >  drivers/gpu/drm/i915/intel_display.c | 7 -------
+> > > >  2 files changed, 8 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> > > > index 38eeaf8..eb9567d 100644
+> > > > --- a/drivers/gpu/drm/bridge/panel.c
+> > > > +++ b/drivers/gpu/drm/bridge/panel.c
+> > > > @@ -15,7 +15,6 @@
+> > > >  #include <drm/drm_encoder.h>
+> > > >  #include <drm/drm_modeset_helper_vtables.h>
+> > > >  #include <drm/drm_probe_helper.h>
+> > > > -#include <drm/drm_panel.h>
+> > > >  
+> > > >  struct panel_bridge {
+> > > >  	struct drm_bridge bridge;
+> > > > diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+> > > > index ccb6163..1166342 100644
+> > > > --- a/drivers/gpu/drm/i915/intel_display.c
+> > > > +++ b/drivers/gpu/drm/i915/intel_display.c
+> > > > @@ -51,14 +51,7 @@
+> > > >  #include "intel_dsi.h"
+> > > >  #include "intel_frontbuffer.h"
+> > > >  
+> > > > -#include "intel_drv.h"
+> > > > -#include "intel_dsi.h"
+> > > > -#include "intel_frontbuffer.h"
+> > > > -
+> > > > -#include "i915_drv.h"
+> > > > -#include "i915_gem_clflush.h"
+> > > >  #include "i915_reset.h"
+> > > > -#include "i915_trace.h"
+> > > >  
+> > > >  /* Primary plane formats for gen <= 3 */
+> > > >  static const u32 i8xx_primary_formats[] = {
+> 
+> > From c9a68b204fe4bb013c2b8481ca8239c957dd69cc Mon Sep 17 00:00:00 2001
+> > From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> > Date: Thu, 28 Mar 2019 21:20:12 +0530
+> > Subject: [PATCH] gpu:drm: sort the existing #includes alphabetically
+> > 
+> > Hi Laurent,
+> > 
+> > Hopefully this helps.
+> 
+> It does, thanks. If you squash it with your original patch and send a
+> v2, you can add my
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> > Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+> > ---
+> >  drivers/gpu/drm/bridge/panel.c       | 2 +-
+> >  drivers/gpu/drm/i915/intel_display.c | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> > index eb9567d..000ba7c 100644
+> > --- a/drivers/gpu/drm/bridge/panel.c
+> > +++ b/drivers/gpu/drm/bridge/panel.c
+> > @@ -9,11 +9,11 @@
+> >   */
+> >  
+> >  #include <drm/drmP.h>
+> > -#include <drm/drm_panel.h>
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_connector.h>
+> >  #include <drm/drm_encoder.h>
+> >  #include <drm/drm_modeset_helper_vtables.h>
+> > +#include <drm/drm_panel.h>
+> >  #include <drm/drm_probe_helper.h>
+> >  
+> >  struct panel_bridge {
+> > diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+> > index 1166342..7956e89 100644
+> > --- a/drivers/gpu/drm/i915/intel_display.c
+> > +++ b/drivers/gpu/drm/i915/intel_display.c
+> > @@ -46,13 +46,13 @@
+> >  
+> >  #include "i915_drv.h"
+> >  #include "i915_gem_clflush.h"
+> > +#include "i915_reset.h"
+> >  #include "i915_trace.h"
+> > +
+> >  #include "intel_drv.h"
+> >  #include "intel_dsi.h"
+> >  #include "intel_frontbuffer.h"
+> >  
+> > -#include "i915_reset.h"
+> > -
+> >  /* Primary plane formats for gen <= 3 */
+> >  static const u32 i8xx_primary_formats[] = {
+> >  	DRM_FORMAT_C8,
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="0001-gpu-drm-Remove-duplicate-headers.patch"
+
+From 25776c74d289f8c2e6c89d8838f3110981ce2515 Mon Sep 17 00:00:00 2001
+From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Date: Fri, 29 Mar 2019 00:04:29 +0530
+Subject: [PATCH v2] gpu:drm: Remove duplicate headers
+
+1. Remove duplicate headers which are included twice.
+2. Sort the existing #includes alphabetically
+
+Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/vhost/vsock.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bridge/panel.c       | 3 +--
+ drivers/gpu/drm/i915/intel_display.c | 9 +--------
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index bb5fc0e..f43f4ed 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -537,6 +537,7 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
- 	spin_lock_init(&vsock->send_pkt_list_lock);
- 	INIT_LIST_HEAD(&vsock->send_pkt_list);
- 	vhost_work_init(&vsock->send_pkt_work, vhost_transport_send_pkt_work);
-+	INIT_HLIST_NODE(&vsock->hash);
- 	return 0;
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index 38eeaf8..000ba7c 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -9,13 +9,12 @@
+  */
  
- out:
+ #include <drm/drmP.h>
+-#include <drm/drm_panel.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_connector.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_modeset_helper_vtables.h>
+-#include <drm/drm_probe_helper.h>
+ #include <drm/drm_panel.h>
++#include <drm/drm_probe_helper.h>
+ 
+ struct panel_bridge {
+ 	struct drm_bridge bridge;
+diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+index ccb6163..7956e89 100644
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -46,20 +46,13 @@
+ 
+ #include "i915_drv.h"
+ #include "i915_gem_clflush.h"
++#include "i915_reset.h"
+ #include "i915_trace.h"
+-#include "intel_drv.h"
+-#include "intel_dsi.h"
+-#include "intel_frontbuffer.h"
+ 
+ #include "intel_drv.h"
+ #include "intel_dsi.h"
+ #include "intel_frontbuffer.h"
+ 
+-#include "i915_drv.h"
+-#include "i915_gem_clflush.h"
+-#include "i915_reset.h"
+-#include "i915_trace.h"
+-
+ /* Primary plane formats for gen <= 3 */
+ static const u32 i8xx_primary_formats[] = {
+ 	DRM_FORMAT_C8,
 -- 
 1.8.3.1
 
+
+--1yeeQ81UyVL57Vl7--
