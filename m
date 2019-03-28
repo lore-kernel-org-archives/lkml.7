@@ -2,127 +2,90 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E65C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E467C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D022173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A7721773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553779128;
+	bh=4/YwXwTMHzFUzuM78vsUxfC1Aq5VyGnNUXQ0rWeffIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EwrDwOXPVSOEr7QwTyPej3nspxGYLqoGp3S1jwdKOhIITk+G11wykh0z13+knyxfI
+	 JJtUV4EZsERDQeSSRlY8hJd8VB2MVR+SgXk4CUY2owy8oKlZJwZNyUHtGUmAaM638y
+	 6USByWLlznwv9eVvM68XAOdqclPnQemOi8gsNuKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfC1NS2 (ORCPT
+        id S1727217AbfC1NSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:18:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40767 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbfC1NS2 (ORCPT
+        Thu, 28 Mar 2019 09:18:47 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35747 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfC1NSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:18:28 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2SDGE1g3331780
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Mar 2019 06:16:14 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2SDG9TR3331769;
-        Thu, 28 Mar 2019 06:16:09 -0700
-Date:   Thu, 28 Mar 2019 06:16:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ralph Campbell <tipbot@zytor.com>
-Message-ID: <tip-92c77f7c4d5dfaaf45b2ce19360e69977c264766@git.kernel.org>
-Cc:     rcampbell@nvidia.com, linux@eikelenboom.it,
-        boris.ostrovsky@oracle.com, mchehab@s-opensource.com,
-        linux-kernel@vger.kernel.org, hans.verkuil@cisco.com,
-        mingo@kernel.org, tglx@linutronix.de, craigb@google.com,
-        hpa@zytor.com, torvalds@linux-foundation.org, sean@mess.org,
-        fengguang.wu@intel.com, peterz@infradead.org,
-        gregkh@linuxfoundation.org
-Reply-To: peterz@infradead.org, fengguang.wu@intel.com,
-          gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-          sean@mess.org, linux-kernel@vger.kernel.org,
-          mchehab@s-opensource.com, hans.verkuil@cisco.com,
-          mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com,
-          craigb@google.com, rcampbell@nvidia.com, linux@eikelenboom.it,
-          boris.ostrovsky@oracle.com
-In-Reply-To: <20190326001817.15413-2-rcampbell@nvidia.com>
-References: <20190326001817.15413-2-rcampbell@nvidia.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/mm: Don't exceed the valid physical address
- space
-Git-Commit-ID: 92c77f7c4d5dfaaf45b2ce19360e69977c264766
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Mar 2019 09:18:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m10so10644688otp.2;
+        Thu, 28 Mar 2019 06:18:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5d2lRqa+a7/fX6CpKJ87Bae8PMCaBCPpXzoplQctylA=;
+        b=tIk1BVaM8EH4AzNc49kDzWHPyD59jAzs72U7szhYD/iHU0OhJkx/Xwj31aE1UxiyGF
+         ZzLQPPIdpi2enc590yiUFrKk62g0z8P2JjblwLfpuZR3vMeSdoJ/dd8gXdQ+FM0e8pSR
+         5zZqcQ1hURSjgim/lo+JnMvXvX3+/KcPnWAWYtv/1bnwKdgfgHZBoE8a0O+oqf3Jy7S1
+         nGFuZ7BAWIrY2gMGygUBSJwvRtBWe4KN9Fntdic73u0jTryKODPVX23Ynk6zYCn3OkST
+         nFpIWZfEK/syDG2gUyWg4W94zdjiGPWa3gE2SSwME65x0hQzxw5lHStZ3CfiVw3x4TAt
+         Y3BA==
+X-Gm-Message-State: APjAAAX+ZLb3RzqQEvvslLt70vlpKiPXHOXbLceFYEoXr9tFjI7Y+e8t
+        Ad/F2n9ObjupAsqzZnfgMQ==
+X-Google-Smtp-Source: APXvYqwnIZK8cmA0YO3iFprGZzfXLkswL+QHCB4kYtvHSBHCzedrf8/b9bKJsZnkgklrnaIbOREtOg==
+X-Received: by 2002:a9d:560e:: with SMTP id e14mr9296432oti.31.1553779125497;
+        Thu, 28 Mar 2019 06:18:45 -0700 (PDT)
+Received: from localhost ([70.231.7.113])
+        by smtp.gmail.com with ESMTPSA id o1sm4519513otj.11.2019.03.28.06.18.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 06:18:44 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 08:18:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 03/14] dt-bindings: pinctrl: add compatible string for
+  Allwinner V3 pinctrl
+Message-ID: <20190328131843.GA30336@bogus>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-4-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190312152256.35574-4-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  92c77f7c4d5dfaaf45b2ce19360e69977c264766
-Gitweb:     https://git.kernel.org/tip/92c77f7c4d5dfaaf45b2ce19360e69977c264766
-Author:     Ralph Campbell <rcampbell@nvidia.com>
-AuthorDate: Mon, 25 Mar 2019 17:18:17 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 28 Mar 2019 14:13:51 +0100
+On Tue, 12 Mar 2019 23:22:45 +0800, Icenowy Zheng wrote:
+> The Allwinner V3 SoC, despite come with the same die with V3s, has more
+> GPIO pins than V3s, and a different compatible string for pinctrl is
+> needed.
+> 
+> Add the compatible string for V3 pinctrl.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  .../devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt      | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-x86/mm: Don't exceed the valid physical address space
-
-valid_phys_addr_range() is used to sanity check the physical address range
-of an operation, e.g., access to /dev/mem. It uses __pa(high_memory)
-internally.
-
-If memory is populated at the end of the physical address space, then
-__pa(high_memory) is outside of the physical address space because:
-
-   high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
-
-For the comparison in valid_phys_addr_range() this is not an issue, but if
-CONFIG_DEBUG_VIRTUAL is enabled, __pa() maps to __phys_addr(), which
-verifies that the resulting physical address is within the valid physical
-address space of the CPU. So in the case that memory is populated at the
-end of the physical address space, this is not true and triggers a
-VIRTUAL_BUG_ON().
-
-Use __pa(high_memory - 1) to prevent the conversion from going beyond
-the end of valid physical addresses.
-
-Fixes: be62a3204406 ("x86/mm: Limit mmap() of /dev/mem to valid physical addresses")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Craig Bergstrom <craigb@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Fengguang Wu <fengguang.wu@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sander Eikelenboom <linux@eikelenboom.it>
-Cc: Sean Young <sean@mess.org>
-
-Link: https://lkml.kernel.org/r/20190326001817.15413-2-rcampbell@nvidia.com
-
----
- arch/x86/mm/mmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index db3165714521..dc726e07d8ba 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -230,7 +230,7 @@ bool mmap_address_hint_valid(unsigned long addr, unsigned long len)
- /* Can we access it for direct reading/writing? Must be RAM: */
- int valid_phys_addr_range(phys_addr_t addr, size_t count)
- {
--	return addr + count <= __pa(high_memory);
-+	return addr + count - 1 <= __pa(high_memory - 1);
- }
- 
- /* Can we access it through mmap? Must be a valid physical address: */
+Reviewed-by: Rob Herring <robh@kernel.org>
