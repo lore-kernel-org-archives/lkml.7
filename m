@@ -2,133 +2,77 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6A2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA73C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F222075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E63A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfC1OKk (ORCPT
+        id S1726455AbfC1OLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:10:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40516 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725779AbfC1OKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:10:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 36141B991;
-        Thu, 28 Mar 2019 14:10:37 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 15:10:36 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] device property: Add functions for accessing
- node's parents
-Message-ID: <20190328141036.mbns3ei4agnginsg@pathway.suse.cz>
-References: <20190326124106.27694-1-sakari.ailus@linux.intel.com>
- <20190326124106.27694-2-sakari.ailus@linux.intel.com>
- <20190327122625.eaisnw776vqwhhnh@pathway.suse.cz>
- <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
+        Thu, 28 Mar 2019 10:11:35 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:51518 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725779AbfC1OLe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:11:34 -0400
+Received: (qmail 5642 invoked by uid 2102); 28 Mar 2019 10:11:33 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 28 Mar 2019 10:11:33 -0400
+Date:   Thu, 28 Mar 2019 10:11:33 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Sekhar Nori <nsekhar@ti.com>
+cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 0/3] ARM: davinci: ohci-da8xx: model the vbus GPIO as a
+ fixed regulator
+In-Reply-To: <3d7f7814-6184-96c6-8087-6373a489ebc0@ti.com>
+Message-ID: <Pine.LNX.4.44L0.1903281009430.1448-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327142036.jf6puc5uo2mjutbl@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-03-27 16:20:37, Sakari Ailus wrote:
-> Hi Petr,
-> 
-> On Wed, Mar 27, 2019 at 01:26:25PM +0100, Petr Mladek wrote:
-> > On Tue 2019-03-26 14:41:01, Sakari Ailus wrote:
-> > > Add two convenience functions for accessing node's parents:
-> > > 
-> > > fwnode_count_parents() returns the number of parent nodes a given node
-> > > has. fwnode_get_nth_parent() returns node's parent at a given distance
-> > > from the node itself.
-> > > 
-> > > Also reorder fwnode_get_parent() in property.c according to the same order
-> > > as in property.h.
-> > > 
-> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > index 8b91ab380d14..61eb6ceacc3f 100644
-> > > --- a/drivers/base/property.c
-> > > +++ b/drivers/base/property.c
-> > > @@ -554,17 +567,49 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
-> > >  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-> > >  
-> > >  /**
-> > > - * fwnode_get_parent - Return parent firwmare node
-> > > - * @fwnode: Firmware whose parent is retrieved
-> > > + * fwnode_count_parents - Return the number of parents a node has
-> > > + * @fwnode: The node the parents of which are to be counted
-> > >   *
-> > > - * Return parent firmware node of the given node if possible or %NULL if no
-> > > - * parent was available.
-> > > + * Returns the number of parents a node has.
-> > >   */
-> > > -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> > > +unsigned int fwnode_count_parents(struct fwnode_handle *fwnode)
-> > >  {
-> > > -	return fwnode_call_ptr_op(fwnode, get_parent);
-> > > +	unsigned int count;
-> > > +
-> > > +	fwnode_handle_get(fwnode);
-> > > +
-> > > +	for (count = 0; fwnode; count++)
-> > > +		fwnode = fwnode_get_next_parent(fwnode);
+On Thu, 28 Mar 2019, Sekhar Nori wrote:
+
+> >> Can you document why the current solution is not optimal? Is it to make
+> >> future device-tree conversion for these boards easier? Or?
+> >>
 > > 
-> > Is it guaranteed that all parents stay when
-> > fwnode_get_next_parent() releases the reference count
-> > for each counted member?
+> > It's sub-optimal from the HW modeling in SW PoV - it is in fact a
+> > regulator enabled/disabled by a GPIO. Also: it's code duplication as
+> > currently we check if the vbus GPIO exists and then use it or check if
+> > the regulator exists and use this as the second choice. The third
+> > patch actually shrinks the driver.
 > 
-> fwnode_get_next_parent() only releases the child node after it has acquired
-> the parent. The only implementation with refcounting for single nodes is
-> actually OF.
+> I see now that the driver supports controlling the VBUS gpio as
+> regulator already. Something I should have caught in review last time
+> around.
+> 
+> I agree this patch is an improvement. Lets see what Alan feels.
 
-I am still a bit confused. The function is later used the following way:
+I'm not an expert on this stuff, but the patch looks reasonable.  
+However, I do wish that in the devm_request_threaded_irq() call, the 
+indentation of the continuation lines was left unchanged.
 
-	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
-		struct fwnode_handle *__fwnode =
-			fwnode_get_nth_parent(fwnode, depth);
+Alan Stern
 
-		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
-			     default_str_spec);
-		buf = string(buf, end, fwnode_get_name(__fwnode),
-			     default_str_spec);
+> Also, reg_enabled member of da8xx_ohci_hcd structure seems to be pretty
+> useless considering regulator API already has use counting. Can you take
+> a look and remove that too as an added bonus.
+> 
+> Thanks,
+> Sekhar
 
-		fwnode_handle_put(__fwnode);
-	}
 
-It uses the number to walk the hierarchy over and over again to print
-the path from root.
-
-I would expect that parents could not get removed until all children
-are removed. And that the most bottom child (fwnode) must not get
-removed. Otherwise we would access freed memory in each cycle.
-
-Then there is a question why we need to get the reference of the
-parents
-at all.
-
-It might be because we do not need touch refcounting of the parents
-in this scenario. But we are re-using existing functions where
-the ref-counting hang-over is important.
-
-Or we really need to increase refcounting of parents. Then it looks
-suspicious because we want to traverse the same path several times
-and always have only one node locked (refcounted).
-
-Best Regards,
-Petr
