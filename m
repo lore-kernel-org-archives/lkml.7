@@ -2,254 +2,84 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3676AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86084C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEB6217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ctlBSpnc"
+	by mail.kernel.org (Postfix) with ESMTP id 5B794217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfC1Ohl (ORCPT
+        id S1726557AbfC1OiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:37:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40998 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfC1Ohl (ORCPT
+        Thu, 28 Mar 2019 10:38:04 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:53422 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726243AbfC1OiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:37:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so7576595pgs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B9wg2HRl7Rn47Y0Az2Vwu9zcMrg7Z+0YsDn/iIHOUeI=;
-        b=ctlBSpncwLQ0Vnab1eUTnCKY0aJFBSiuh4bP2aOUy34igBtvR0IYIFFSAsiRWJJbyn
-         WiCL0R9DksgI3NNPmGbFeU93fGd4CfGufUyq6b9Bw0uqL60UpXuL3D73DgD/Y7RMcYPe
-         ozugjTBF8V3x8vtgDiKoz4s/FGvjjN+yOokHA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B9wg2HRl7Rn47Y0Az2Vwu9zcMrg7Z+0YsDn/iIHOUeI=;
-        b=NI0wqKgwXEjj8Jnsn7Woed/X42LTwW5XZeJkmuds+Wj2cwaXfJPpdUm/CP2Jnu2sxx
-         50pi86PqLw0t4AUxtHYxVZ41fLZtlwRPzoqw3M1le3dwbHdL1S7ex4+QAv3fYCS82AGU
-         BrZbsRKAA+iB1j5aQ8fRtc6VMWbxGE+s/w9m1AzSB5hxc4O0kPXR6oSM6lWpDqAbiYwm
-         pXft3kq3iQCTXZjevCJVZYQpHZlzAkEAw98qOmj8PZwEPH1sMV8Hlft4zRtZarLSEIST
-         Lb+0rNDaQaODNnQBBlVWKpWUGHdLI2KCszPmlErOgzWqsy6JOjp7INi33xlABMmH6t1/
-         nHjg==
-X-Gm-Message-State: APjAAAWROqhiSjE0xtrb02f4hASNNDC4/eOzus08MJNAf4NfoBdM48+S
-        aK876w9ykuDDzoapKdzLHTDFLg==
-X-Google-Smtp-Source: APXvYqx7Nk1L0dSKDSLppeE6wRsEuWj4RVdWjQfzFxCvfEWe9zTRUdS1Kl80FX/yd6brO2hwUqbZZg==
-X-Received: by 2002:aa7:8b0c:: with SMTP id f12mr41307408pfd.154.1553783860459;
-        Thu, 28 Mar 2019 07:37:40 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id s6sm33936639pfe.37.2019.03.28.07.37.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 07:37:39 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:37:38 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-Message-ID: <20190328143738.GA261521@google.com>
-References: <20190327145331.215360-1-joel@joelfernandes.org>
- <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
- <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
- <20190328023432.GA93275@google.com>
- <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
+        Thu, 28 Mar 2019 10:38:03 -0400
+Received: (qmail 2706 invoked by uid 2102); 28 Mar 2019 10:38:02 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 28 Mar 2019 10:38:02 -0400
+Date:   Thu, 28 Mar 2019 10:38:02 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 0/3] ARM: davinci: ohci-da8xx: model the vbus GPIO as a
+ fixed regulator
+In-Reply-To: <CAMRc=Memgo9LwgmZqGcDZpGz02qSLst2xdMhED6_fxJkLDBowg@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1903281036290.1291-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 03:57:44AM +0100, Jann Horn wrote:
-> On Thu, Mar 28, 2019 at 3:34 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > On Thu, Mar 28, 2019 at 01:59:45AM +0100, Jann Horn wrote:
-> > > On Thu, Mar 28, 2019 at 1:06 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > On Wed, Mar 27, 2019 at 7:53 AM Joel Fernandes (Google)
-> > > > <joel@joelfernandes.org> wrote:
-> > > > >
-> > > > > struct pid's count is an atomic_t field used as a refcount. Use
-> > > > > refcount_t for it which is basically atomic_t but does additional
-> > > > > checking to prevent use-after-free bugs. No change in behavior if
-> > > > > CONFIG_REFCOUNT_FULL=n.
-> > > > >
-> > > > > Cc: keescook@chromium.org
-> > > > > Cc: kernel-team@android.com
-> > > > > Cc: kernel-hardening@lists.openwall.com
-> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > > > [...]
-> > > > > diff --git a/kernel/pid.c b/kernel/pid.c
-> > > > > index 20881598bdfa..2095c7da644d 100644
-> > > > > --- a/kernel/pid.c
-> > > > > +++ b/kernel/pid.c
-> > > > > @@ -37,7 +37,7 @@
-> > > > >  #include <linux/init_task.h>
-> > > > >  #include <linux/syscalls.h>
-> > > > >  #include <linux/proc_ns.h>
-> > > > > -#include <linux/proc_fs.h>
-> > > > > +#include <linux/refcount.h>
-> > > > >  #include <linux/sched/task.h>
-> > > > >  #include <linux/idr.h>
-> > > > >
-> > > > > @@ -106,8 +106,8 @@ void put_pid(struct pid *pid)
-> > > > >                 return;
-> > > > >
-> > > > >         ns = pid->numbers[pid->level].ns;
-> > > > > -       if ((atomic_read(&pid->count) == 1) ||
-> > > > > -            atomic_dec_and_test(&pid->count)) {
-> > > > > +       if ((refcount_read(&pid->count) == 1) ||
-> > > > > +            refcount_dec_and_test(&pid->count)) {
+On Thu, 28 Mar 2019, Bartosz Golaszewski wrote:
+
+> czw., 28 mar 2019 o 15:11 Alan Stern <stern@rowland.harvard.edu> napisał(a):
+> >
+> > On Thu, 28 Mar 2019, Sekhar Nori wrote:
+> >
+> > > >> Can you document why the current solution is not optimal? Is it to make
+> > > >> future device-tree conversion for these boards easier? Or?
+> > > >>
 > > > >
-> > > > Why is this (and the original code) safe in the face of a race against
-> > > > get_pid()? i.e. shouldn't this only use refcount_dec_and_test()? I
-> > > > don't see this code pattern anywhere else in the kernel.
+> > > > It's sub-optimal from the HW modeling in SW PoV - it is in fact a
+> > > > regulator enabled/disabled by a GPIO. Also: it's code duplication as
+> > > > currently we check if the vbus GPIO exists and then use it or check if
+> > > > the regulator exists and use this as the second choice. The third
+> > > > patch actually shrinks the driver.
 > > >
-> > > Semantically, it doesn't make a difference whether you do this or
-> > > leave out the "refcount_read(&pid->count) == 1". If you read a 1 from
-> > > refcount_read(), then you have the only reference to "struct pid", and
-> > > therefore you want to free it. If you don't get a 1, you have to
-> > > atomically drop a reference, which, if someone else is concurrently
-> > > also dropping a reference, may leave you with the last reference (in
-> > > the case where refcount_dec_and_test() returns true), in which case
-> > > you still have to take care of freeing it.
+> > > I see now that the driver supports controlling the VBUS gpio as
+> > > regulator already. Something I should have caught in review last time
+> > > around.
+> > >
+> > > I agree this patch is an improvement. Lets see what Alan feels.
 > >
-> > Also, based on Kees comment, I think it appears to me that get_pid and
-> > put_pid can race in this way in the original code right?
+> > I'm not an expert on this stuff, but the patch looks reasonable.
+> > However, I do wish that in the devm_request_threaded_irq() call, the
+> > indentation of the continuation lines was left unchanged.
 > >
-> > get_pid                 put_pid
-> >
-> >                         atomic_dec_and_test returns 1
 > 
-> This can't happen. get_pid() can only be called on an existing
-> reference. If you are calling get_pid() on an existing reference, and
-> someone else is dropping another reference with put_pid(), then when
-> both functions start running, the refcount must be at least 2.
+> I don't think it's possible - the function name is longer and the
+> first line exceeds the 80 characters limit. I can put all the
+> parameters below the function name if you prefer that?
 
-Sigh, you are right. Ok. I was quite tired last night when I wrote this.
-Obviously, I should have waited a bit and thought it through.
+Which line the arguments go on doesn't matter.  But increasing the 
+amount of indentation, like the patch did, makes the whole thing less 
+readable, IMO.  It makes everything end up crammed against the right 
+margin.
 
-Kees can you describe more the race you had in mind?
-
-> > atomic_inc
-> >                         kfree
-> >
-> > deref pid /* boom */
-> > -------------------------------------------------
-> >
-> > I think get_pid needs to call atomic_inc_not_zero() and put_pid should
-> > not test for pid->count == 1 as condition for freeing, but rather just do
-> > atomic_dec_and_test. So something like the following diff. (And I see a
-> > similar pattern used in drivers/net/mac.c)
-> 
-> get_pid() can only be called when you already have a refcounted
-> reference; in other words, when the reference count is at least one.
-> The lifetime management of struct pid differs from the lifetime
-> management of most other objects in the kernel; the usual patterns
-> don't quite apply here.
-> 
-> Look at put_pid(): When the refcount has reached zero, there is no RCU
-> grace period (unlike most other objects with RCU-managed lifetimes).
-> Instead, free_pid() has an RCU grace period *before* it invokes
-> delayed_put_pid() to drop a reference; and free_pid() is also the
-> function that removes a PID from the namespace's IDR, and it is used
-> by __change_pid() when a task loses its reference on a PID.
-> 
-> In other words: Most refcounted objects with RCU guarantee that the
-> object waits for a grace period after its refcount has reached zero;
-> and during the grace period, the refcount is zero and you're not
-> allowed to increment it again.
-
-Can you give an example of this "most refcounted objects with RCU" usecase?
-I could not find any good examples of such. I want to document this pattern
-and possibly submit to Documentation/RCU.
-
-> But for struct pid, the guarantee is
-> instead that there is an RCU grace period after it has been removed
-> from the IDRs and the task, and during the grace period, refcounting
-> is guaranteed to still work normally.
-
-Ok, thanks. Here I think in scrappy but simple pseudo code form, the struct
-pid flow is something like (replaced "pid" with data");
-
-get_data:
-	atomic_inc(data->refcount);
-
-some_user_of_data:
-	rcu_read_lock();
-	From X, obtain a ptr to data using rcu_dereference.
-	get_data(data);
-	rcu_read_unlock();
-
-free_data:
-	remove all references to data in all places in X
-	call_rcu(put_data)
-
-put_data:
-	if (atomic_dec_and_test(data->refcount)) {
-		free(data);
-	}
-
-create_data:
-	data = alloc(..)
-	atomic_set(data->refcount, 1);
-	set pointers to data in X.
-
-> > pud_pid to avoid such a race.
-> >
-> > ---8<-----------------------
-> >
-> > diff --git a/include/linux/pid.h b/include/linux/pid.h
-> > index 8cb86d377ff5..3d79834e3180 100644
-> > --- a/include/linux/pid.h
-> > +++ b/include/linux/pid.h
-> > @@ -69,8 +69,8 @@ extern struct pid init_struct_pid;
-> >
-> >  static inline struct pid *get_pid(struct pid *pid)
-> >  {
-> > -       if (pid)
-> > -               refcount_inc(&pid->count);
-> > +       if (!pid || !refcount_inc_not_zero(&pid->count))
-> > +               return NULL;
-> >         return pid;
-> >  }
-> 
-> Nope, this is wrong. Once the refcount is zero, the object goes away,
-> refcount_inc_not_zero() makes no sense here.
-
-Yeah ok, I think what you meant here is that references to the object from
-all places go away before the grace period starts, so a get_pid on an object
-with refcount of zero is impossible since there's no way to *get* to that
-object after the grace-period ends.
-
-So, yes you are right that refcount_inc is all that's needed.
-
-Also note to the on looker, the original patch I sent is not wrong, that
-still applies and is correct. We are just discussing here any possible issues
-with the *existing* code.
-
-thanks!
-
- - Joel
+Alan Stern
 
