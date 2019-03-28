@@ -2,91 +2,87 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4AEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E58C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF3205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7D921773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfC1RjB (ORCPT
+        id S1727149AbfC1RjJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:39:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59429 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfC1RjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:39:01 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 10:39:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,281,1549958400"; 
-   d="scan'208";a="159294324"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 28 Mar 2019 10:38:58 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 28 Mar 2019 19:38:57 +0200
-Date:   Thu, 28 Mar 2019 19:38:57 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] device property: fwnode_is_compatible() helper
-Message-ID: <20190328173857.GC9993@kuha.fi.intel.com>
-References: <20190327164339.31205-1-heikki.krogerus@linux.intel.com>
+        Thu, 28 Mar 2019 13:39:09 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53721 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1RjG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:39:06 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h9YzT-00072K-6b; Thu, 28 Mar 2019 18:38:59 +0100
+Date:   Thu, 28 Mar 2019 18:38:59 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Liu, Yongxin" <Yongxin.Liu@windriver.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "pagupta@redhat.com" <pagupta@redhat.com>,
+        "Gortmaker, Paul" <Paul.Gortmaker@windriver.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH RT] nvdimm: make lane acquirement RT aware
+Message-ID: <20190328173858.hpbtoep42ucomav2@linutronix.de>
+References: <20190306095709.23138-1-yongxin.liu@windriver.com>
+ <20190307143344.ytsnbmot5tjzjhip@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A52669@ALA-MBD.corp.ad.wrs.com>
+ <20190308094131.ge4wbsvz4p6xikdf@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A5643B@ALA-MBD.corp.ad.wrs.com>
+ <20190315164236.rzbwe7reeprjv3um@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A63C81@ALA-MBD.corp.ad.wrs.com>
+ <20190318114017.tazjaegln2obt3zg@linutronix.de>
+ <597B109EC20B76429F71A8A97770610D12A649C1@ALA-MBD.corp.ad.wrs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190327164339.31205-1-heikki.krogerus@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <597B109EC20B76429F71A8A97770610D12A649C1@ALA-MBD.corp.ad.wrs.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 07:43:36PM +0300, Heikki Krogerus wrote:
-> Hi,
+On 2019-03-18 11:48:28 [+0000], Liu, Yongxin wrote:
 > 
-> Basically the helper is just a generic version of the function
-> of_device_is_compatible() that should work also with ACPI and
-> software nodes.
+> > 
+> > Bummer. That would dead lock indeed.
+> > Is it easily possible to recognize the recursive case?
 > 
-> As the first user for the helper, I'm converting in this series the
-> USB role switch code to expect the "compatible" property to have the
-> value "usb-role-switch" instead of expecting a boolean property named
-> "usb-role-switch". I'm doing the same for the USB Type-C mux code.
-> 
-> thanks,
-> 
-> Heikki Krogerus (3):
->   device property: Add fwnode_is_compatible() and device_is_compatible()
->     helpers
->   usb: roles: Use the "compatible" property instead of a boolean
->     property
->   usb: typec: mux: Use the "compatible" property instead of a boolean
->     property
-> 
->  drivers/base/property.c   | 35 +++++++++++++++++++++++++++++++++++
->  drivers/usb/roles/class.c |  2 +-
->  drivers/usb/typec/mux.c   |  8 ++------
->  include/linux/property.h  |  3 +++
->  4 files changed, 41 insertions(+), 7 deletions(-)
+> Not easily. I don't have test case for recursive call. 
+> For now, just code analysis.
 
-Don't take this series yet. We are having a discussion on whether this
-is the correct approach with the USB mux or not in an other mail
-thread. The helper itself (patch 1/3) I guess is fine though.
+So I've been playing with qemu's nvdimm device. So I *think* the
+recursive case is here not possible because qemu only supports pmem
+while it would require the blk mode to trigger it. It is just a wild
+guess…
 
+On top of qemu's nvdimm device I can create a block device via
+	ndctl create-namespace  namespace0.0 --mode=sector
 
-thanks,
+and then I trigger the code path in question.
 
--- 
-heikki
+I would *really* prefer to understand the recursive case and avoid it.
+That way the recursive case is explicitly known and uses another path.
+The lock can then be always acquired which gives you always lockdep
+coverage (which is now missing unless you have more LANEs than CPUs).
+
+The local_lock thingy is completely unneeded: a simple get_cpu_light()
+would do the job.
+
+> Yongxin
+
+Sebastian
