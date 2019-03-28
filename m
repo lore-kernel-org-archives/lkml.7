@@ -2,159 +2,188 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53343C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995D9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27C8D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D2A206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfC1KfX (ORCPT
+        id S1726540AbfC1Kfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:35:23 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46106 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbfC1KfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:35:23 -0400
-Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id d18ff131ccb8c4c5; Thu, 28 Mar 2019 11:35:20 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>,
-        Quentin Perret <quentin.perret@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [Update][PATCH v3 3/4] cpufreq: schedutil: Simplify iowait boosting
-Date:   Thu, 28 Mar 2019 11:33:21 +0100
-Message-ID: <3714586.Xfz7sSM4fi@aspire.rjw.lan>
-In-Reply-To: <2864116.v8IU97Resm@aspire.rjw.lan>
-References: <11953735.uMqeHy63Iu@aspire.rjw.lan> <2864116.v8IU97Resm@aspire.rjw.lan>
+        Thu, 28 Mar 2019 06:35:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42176 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfC1Kfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 06:35:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F29015AB;
+        Thu, 28 Mar 2019 03:35:31 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B8F73F59C;
+        Thu, 28 Mar 2019 03:35:26 -0700 (PDT)
+Subject: Re: [RFC 0/7] cpuidle: Add poking mechanism to support non-IPI wakeup
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+References: <1553692845-20983-1-git-send-email-abel.vesa@nxp.com>
+ <1553701479.2561.38.camel@pengutronix.de>
+ <564216aa-1144-71de-e887-00c58f466bf5@arm.com>
+ <1553702767.2561.40.camel@pengutronix.de>
+ <85c91392-9cbf-a5fc-b037-3d58f2b0ac9c@arm.com>
+ <cb2e5521cc0d29b7c3ac42a6717256ec2e8d35e6.camel@nxp.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ mQINBE6Jf0UBEADLCxpix34Ch3kQKA9SNlVQroj9aHAEzzl0+V8jrvT9a9GkK+FjBOIQz4KE
+ g+3p+lqgJH4NfwPm9H5I5e3wa+Scz9wAqWLTT772Rqb6hf6kx0kKd0P2jGv79qXSmwru28vJ
+ t9NNsmIhEYwS5eTfCbsZZDCnR31J6qxozsDHpCGLHlYym/VbC199Uq/pN5gH+5JHZyhyZiNW
+ ozUCjMqC4eNW42nYVKZQfbj/k4W9xFfudFaFEhAf/Vb1r6F05eBP1uopuzNkAN7vqS8XcgQH
+ qXI357YC4ToCbmqLue4HK9+2mtf7MTdHZYGZ939OfTlOGuxFW+bhtPQzsHiW7eNe0ew0+LaL
+ 3wdNzT5abPBscqXWVGsZWCAzBmrZato+Pd2bSCDPLInZV0j+rjt7MWiSxEAEowue3IcZA++7
+ ifTDIscQdpeKT8hcL+9eHLgoSDH62SlubO/y8bB1hV8JjLW/jQpLnae0oz25h39ij4ijcp8N
+ t5slf5DNRi1NLz5+iaaLg4gaM3ywVK2VEKdBTg+JTg3dfrb3DH7ctTQquyKun9IVY8AsxMc6
+ lxl4HxrpLX7HgF10685GG5fFla7R1RUnW5svgQhz6YVU33yJjk5lIIrrxKI/wLlhn066mtu1
+ DoD9TEAjwOmpa6ofV6rHeBPehUwMZEsLqlKfLsl0PpsJwov8TQARAQABtCNNYXJjIFp5bmdp
+ ZXIgPG1hcmMuenluZ2llckBhcm0uY29tPokCOwQTAQIAJQIbAwYLCQgHAwIGFQgCCQoLBBYC
+ AwECHgECF4AFAk6NvYYCGQEACgkQI9DQutE9ekObww/+NcUATWXOcnoPflpYG43GZ0XjQLng
+ LQFjBZL+CJV5+1XMDfz4ATH37cR+8gMO1UwmWPv5tOMKLHhw6uLxGG4upPAm0qxjRA/SE3LC
+ 22kBjWiSMrkQgv5FDcwdhAcj8A+gKgcXBeyXsGBXLjo5UQOGvPTQXcqNXB9A3ZZN9vS6QUYN
+ TXFjnUnzCJd+PVI/4jORz9EUVw1q/+kZgmA8/GhfPH3xNetTGLyJCJcQ86acom2liLZZX4+1
+ 6Hda2x3hxpoQo7pTu+XA2YC4XyUstNDYIsE4F4NVHGi88a3N8yWE+Z7cBI2HjGvpfNxZnmKX
+ 6bws6RQ4LHDPhy0yzWFowJXGTqM/e79c1UeqOVxKGFF3VhJJu1nMlh+5hnW4glXOoy/WmDEM
+ UMbl9KbJUfo+GgIQGMp8mwgW0vK4HrSmevlDeMcrLdfbbFbcZLNeFFBn6KqxFZaTd+LpylIH
+ bOPN6fy1Dxf7UZscogYw5Pt0JscgpciuO3DAZo3eXz6ffj2NrWchnbj+SpPBiH4srfFmHY+Y
+ LBemIIOmSqIsjoSRjNEZeEObkshDVG5NncJzbAQY+V3Q3yo9og/8ZiaulVWDbcpKyUpzt7pv
+ cdnY3baDE8ate/cymFP5jGJK++QCeA6u6JzBp7HnKbngqWa6g8qDSjPXBPCLmmRWbc5j0lvA
+ 6ilrF8m5Ag0ETol/RQEQAM/2pdLYCWmf3rtIiP8Wj5NwyjSL6/UrChXtoX9wlY8a4h3EX6E3
+ 64snIJVMLbyr4bwdmPKULlny7T/R8dx/mCOWu/DztrVNQiXWOTKJnd/2iQblBT+W5W8ep/nS
+ w3qUIckKwKdplQtzSKeE+PJ+GMS+DoNDDkcrVjUnsoCEr0aK3cO6g5hLGu8IBbC1CJYSpple
+ VVb/sADnWF3SfUvJ/l4K8Uk4B4+X90KpA7U9MhvDTCy5mJGaTsFqDLpnqp/yqaT2P7kyMG2E
+ w+eqtVIqwwweZA0S+tuqput5xdNAcsj2PugVx9tlw/LJo39nh8NrMxAhv5aQ+JJ2I8UTiHLX
+ QvoC0Yc/jZX/JRB5r4x4IhK34Mv5TiH/gFfZbwxd287Y1jOaD9lhnke1SX5MXF7eCT3cgyB+
+ hgSu42w+2xYl3+rzIhQqxXhaP232t/b3ilJO00ZZ19d4KICGcakeiL6ZBtD8TrtkRiewI3v0
+ o8rUBWtjcDRgg3tWx/PcJvZnw1twbmRdaNvsvnlapD2Y9Js3woRLIjSAGOijwzFXSJyC2HU1
+ AAuR9uo4/QkeIrQVHIxP7TJZdJ9sGEWdeGPzzPlKLHwIX2HzfbdtPejPSXm5LJ026qdtJHgz
+ BAb3NygZG6BH6EC1NPDQ6O53EXorXS1tsSAgp5ZDSFEBklpRVT3E0NrDABEBAAGJAh8EGAEC
+ AAkFAk6Jf0UCGwwACgkQI9DQutE9ekMLBQ//U+Mt9DtFpzMCIHFPE9nNlsCm75j22lNiw6mX
+ mx3cUA3pl+uRGQr/zQC5inQNtjFUmwGkHqrAw+SmG5gsgnM4pSdYvraWaCWOZCQCx1lpaCOl
+ MotrNcwMJTJLQGc4BjJyOeSH59HQDitKfKMu/yjRhzT8CXhys6R0kYMrEN0tbe1cFOJkxSbV
+ 0GgRTDF4PKyLT+RncoKxQe8lGxuk5614aRpBQa0LPafkirwqkUtxsPnarkPUEfkBlnIhAR8L
+ kmneYLu0AvbWjfJCUH7qfpyS/FRrQCoBq9QIEcf2v1f0AIpA27f9KCEv5MZSHXGCdNcbjKw1
+ 39YxYZhmXaHFKDSZIC29YhQJeXWlfDEDq6nIhvurZy3mSh2OMQgaIoFexPCsBBOclH8QUtMk
+ a3jW/qYyrV+qUq9Wf3SKPrXf7B3xB332jFCETbyZQXqmowV+2b3rJFRWn5hK5B+xwvuxKyGq
+ qDOGjof2dKl2zBIxbFgOclV7wqCVkhxSJi/QaOj2zBqSNPXga5DWtX3ekRnJLa1+ijXxmdjz
+ hApihi08gwvP5G9fNGKQyRETePEtEAWt0b7dOqMzYBYGRVr7uS4uT6WP7fzOwAJC4lU7ZYWZ
+ yVshCa0IvTtp1085RtT3qhh9mobkcZ+7cQOY+Tx2RGXS9WeOh2jZjdoWUv6CevXNQyOUXMM=
+Organization: ARM Ltd
+Message-ID: <b90bd658-a29d-ea16-abf4-95b388467c8c@arm.com>
+Date:   Thu, 28 Mar 2019 10:35:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <cb2e5521cc0d29b7c3ac42a6717256ec2e8d35e6.camel@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 27/03/2019 18:40, Leonard Crestez wrote:
+> On Wed, 2019-03-27 at 17:45 +0000, Marc Zyngier wrote:
+>> On 27/03/2019 16:06, Lucas Stach wrote:
+>>> Am Mittwoch, den 27.03.2019, 15:57 +0000 schrieb Marc Zyngier:
+>>>> On 27/03/2019 15:44, Lucas Stach wrote:
+>>>>> Am Mittwoch, den 27.03.2019, 13:21 +0000 schrieb Abel Vesa:
+>>>>>> This work is a workaround I'm looking into (more as a background task)
+>>>>>> in order to add support for cpuidle on i.MX8MQ based platforms.
+>>>>>>
+>>>>>> The main idea here is getting around the missing GIC wake_request signal
+>>>>>> (due to integration design issue) by waking up a each individual core through
+>>>>>> some dedicated SW power-up bits inside the power controller (GPC) right before
+>>>>>> every IPI is requested for that each individual core.
+>>>>>
+>>>>> Just a general comment, without going into the details of this series:
+>>>>> this issue is not only affecting IPIs, but also MSIs terminated at the
+>>>>> GIC. Currently MSIs are terminated at the PCIe core, but terminating
+>>>>> them at the GIC is clearly preferable, as this allows assigning CPU
+>>>>> affinity to individual MSIs and lowers IRQ service overhead.
+>>>>>
+>>>>> I'm not sure what the consequences are for upstream Linux support yet,
+>>>>> but we should keep in mind that having a workaround for IPIs is only
+>>>>> solving part of the issue.
+>>>>
+>>>> If this erratum is affecting more than just IPIs, then indeed I don't
+>>>> see how this patch series solves anything.
+>>>>
+>>>> But the erratum documentation seems to imply that only SGIs are
+>>>> affected, and goes as far as suggesting to use an external interrupt
+>>>> would solve it. How comes this is not the case? Or is it that anything
+>>>> directly routed to a redistributor is also affected? This would break
+>>>> LPIs (and thus MSIs) and PPIs (the CPU timer, among others).
+>>>
+>>> Anything that isn't visible to the GPC and requires the GIC
+>>> wake_request signal to behave as specified is broken by this erratum.
+>>
+>> I really wonder how a timer interrupt (a PPI, hence not routed through
+>> the GPC) can wake up the CPU in this case. It really feels like
+>> something like "program CNTV_CVAL_EL0 to expire at some later point;
+>> WFI" could result in the CPU going to a deep sleep state, and not
+>> wake-up at all.
+> 
+> This is already a common issue for cpuidle implementions handled by the
+> "local-timer-stop" property. imx has other timer blocks in the SOC,
+> they generate SPIs which are connected to GPC.
+> 
+>> This would indicate that not only cpuidle is broken with this, but
+>> absolutely every interrupt that is not routed through the GPC.
+> 
+> Yes, cpuidle is broken for irqs not routed through GPC. However:
+> 
+> * All SPIs are connected to GPC in a 1:1 mapping
+> * This series deals with SGIs
+> * The timer PPIs are not required; covered by local-timer-stop
+> * LPIs are currently unused (I understand imx-pci uses SPI by default
+> from Lucas)
+> 
+> Anything missing?
+> 
+> My understanding is that this wake request feature via GIC is new in v3
+> and this is maybe why HW team missed it during integration. Older
+> imx6/7 has GICv2 and has deep idle states which always rely on GPC to
+> wakeup so the approach can work.
 
-There is not reason for the minimum iowait boost value in the
-schedutil cpufreq governor to depend on the available range of CPU
-frequencies.  In fact, that dependency is generally confusing,
-because it causes the iowait boost to behave somewhat differently
-on CPUs with the same maximum frequency and different minimum
-frequencies, for example.
+Certainly the approach can work. The question is whether we want to
+support this in a mainline kernel, spreading random hooks in the generic
+code and adding a firmware interface on top of that.
 
-For this reason, replace the min field in struct sugov_cpu
-with a constant and choose its values to be 1/8 of
-SCHED_CAPACITY_SCALE (for consistency with the intel_pstate
-driver's internal governor).
+By all accounts, this HW is broken. You can indeed impose limitations
+(dumb down PCI, mandate the use of a broadcast timer), or you can just
+flag cpuidle as unsupported on this HW. My vote is on the latter.
 
-[Note that policy->cpuinfo.max_freq will not be a constant any more
- after a subsequent change, so this change is depended on by it.]
+Thanks,
 
-Link: https://lore.kernel.org/lkml/20190305083202.GU32494@hirez.programming.kicks-ass.net/T/#ee20bdc98b7d89f6110c0d00e5c3ee8c2ced93c3d
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-As pointed out by Quentin, the original patch overlooked two kerneldoc
-comments that needed to be updated along with the code, so do that here.
-
-No other changes with respect to the original.
-
----
- kernel/sched/cpufreq_schedutil.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
-
-Index: linux-pm/kernel/sched/cpufreq_schedutil.c
-===================================================================
---- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
-+++ linux-pm/kernel/sched/cpufreq_schedutil.c
-@@ -13,6 +13,8 @@
- #include <linux/sched/cpufreq.h>
- #include <trace/events/power.h>
- 
-+#define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
-+
- struct sugov_tunables {
- 	struct gov_attr_set	attr_set;
- 	unsigned int		rate_limit_us;
-@@ -51,7 +53,6 @@ struct sugov_cpu {
- 	u64			last_update;
- 
- 	unsigned long		bw_dl;
--	unsigned long		min;
- 	unsigned long		max;
- 
- 	/* The field below is for single-CPU policies only: */
-@@ -291,8 +292,8 @@ static unsigned long sugov_get_util(stru
-  *
-  * The IO wait boost of a task is disabled after a tick since the last update
-  * of a CPU. If a new IO wait boost is requested after more then a tick, then
-- * we enable the boost starting from the minimum frequency, which improves
-- * energy efficiency by ignoring sporadic wakeups from IO.
-+ * we enable the boost starting from IOWAIT_BOOST_MIN, which improves energy
-+ * efficiency by ignoring sporadic wakeups from IO.
-  */
- static bool sugov_iowait_reset(struct sugov_cpu *sg_cpu, u64 time,
- 			       bool set_iowait_boost)
-@@ -303,7 +304,7 @@ static bool sugov_iowait_reset(struct su
- 	if (delta_ns <= TICK_NSEC)
- 		return false;
- 
--	sg_cpu->iowait_boost = set_iowait_boost ? sg_cpu->min : 0;
-+	sg_cpu->iowait_boost = set_iowait_boost ? IOWAIT_BOOST_MIN : 0;
- 	sg_cpu->iowait_boost_pending = set_iowait_boost;
- 
- 	return true;
-@@ -317,8 +318,9 @@ static bool sugov_iowait_reset(struct su
-  *
-  * Each time a task wakes up after an IO operation, the CPU utilization can be
-  * boosted to a certain utilization which doubles at each "frequent and
-- * successive" wakeup from IO, ranging from the utilization of the minimum
-- * OPP to the utilization of the maximum OPP.
-+ * successive" wakeup from IO, ranging from IOWAIT_BOOST_MIN to the utilization
-+ * of the maximum OPP.
-+ *
-  * To keep doubling, an IO boost has to be requested at least once per tick,
-  * otherwise we restart from the utilization of the minimum OPP.
-  */
-@@ -349,7 +351,7 @@ static void sugov_iowait_boost(struct su
- 	}
- 
- 	/* First wakeup after IO: start with minimum boost */
--	sg_cpu->iowait_boost = sg_cpu->min;
-+	sg_cpu->iowait_boost = IOWAIT_BOOST_MIN;
- }
- 
- /**
-@@ -389,7 +391,7 @@ static unsigned long sugov_iowait_apply(
- 		 * No boost pending; reduce the boost value.
- 		 */
- 		sg_cpu->iowait_boost >>= 1;
--		if (sg_cpu->iowait_boost < sg_cpu->min) {
-+		if (sg_cpu->iowait_boost < IOWAIT_BOOST_MIN) {
- 			sg_cpu->iowait_boost = 0;
- 			return util;
- 		}
-@@ -826,9 +828,6 @@ static int sugov_start(struct cpufreq_po
- 		memset(sg_cpu, 0, sizeof(*sg_cpu));
- 		sg_cpu->cpu			= cpu;
- 		sg_cpu->sg_policy		= sg_policy;
--		sg_cpu->min			=
--			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
--			policy->cpuinfo.max_freq;
- 	}
- 
- 	for_each_cpu(cpu, policy->cpus) {
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
