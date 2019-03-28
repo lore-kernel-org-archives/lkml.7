@@ -2,145 +2,218 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC107C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA91C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0EE20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0431D2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="vgU63AKK"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pgbuLrOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfC1UAg (ORCPT
+        id S1726648AbfC1UA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:00:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38158 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfC1UAf (ORCPT
+        Thu, 28 Mar 2019 16:00:57 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39546 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfC1UA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:00:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e80so19567629ote.5;
-        Thu, 28 Mar 2019 13:00:35 -0700 (PDT)
+        Thu, 28 Mar 2019 16:00:56 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b65so5448196plb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OM/8gXw0ruyBhM5nsJAfeWqS5Sp56wlwsUqgsT5UCMg=;
-        b=vgU63AKK5dDDYV4xlfEvUBM1yeSxlihzL+adhZo10iOkTQGS3Ju4lGEBcPbFmD3xFt
-         QqKX+DuDBrGkGB3uWY+JJnFfFWTQdgmfwGzE6ubMOIDO/l8F/oNcoVZTpJdskXBDW/Sv
-         svsVls78ajxswO7VQEwHxRtuNGEZXSJsCvHgzkvWwtAimUvgqxgGuPhZUHiA9tX+II5n
-         rS5vqfFQMRjAFuDvqxL/zgMHMbLvqfogiuEKMZEkOW2wDEYBMML0/3uxUU5+2pUzbCG0
-         Twr1OTQM/8GDoMrEmQ68nsUzuOZGAD/276KnaOKe1QTXBFsxY4xS44PhNWR/uWEpyNWd
-         uwqw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l4OXWYTQIq864f83sjGFJZxSf2xNN5tMm6PvqAXI1LE=;
+        b=pgbuLrOISsBiuUZbksBxinTCDw00UPqJTBAgWo53KMCXcveZr/Yu10xKIvUPFHTUcz
+         NVct/jSspa/sPtOfTtbWAfazqUJJu2a78CBBPN7smbqNbsm+bEKUiWF16slDt89kGPJP
+         fXOY7ZI6GR10fTzojsMFRIk4oH20S0TNNq3fs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OM/8gXw0ruyBhM5nsJAfeWqS5Sp56wlwsUqgsT5UCMg=;
-        b=jLzjGyqRRjn8LkkmPWiSKANbkQo5y2Kbz22eDxkC3MNaeN+umRIsZDtWtPdReOcioU
-         Pa8BiPVsZTN26v0DX/Pp3tUW8JAqyqoFFoCZUJ9vpGKqZhbpD0HquAHGDMMfsVzV4gqK
-         DfQ7W6hmLbsPAGFSVdEw75wn8bWZA59Ya9Es9qxJ+E5NtAD9+wCazTKPqW7PWrSscEiu
-         ZFlgvKfpZy2fx14jOdJV8umEqxWXAryNJ9Q+sRbde191/KGwo+dkznh3xHgRVy6Hvn27
-         Oi61E+Gdw1jFpGMDW+7ndc8i4Vx5JbXBtOKlVOGSR15BcwjAd/cRZvhgI30Imy7CZ3I0
-         8Y/A==
-X-Gm-Message-State: APjAAAWg8KbdO/uMBP70AIyWkJKDR8BgH9R2z7pAsyUPs2FxRBoZLitv
-        xVgWNhXIKDT1b5UmrmiGBCeTBU90wLtwYqXqr/k=
-X-Google-Smtp-Source: APXvYqwx7ABBvUDeDLLzu5sdiZdlGpI1MG0EPoXBF6ReVBJsGsLul+QpIgPRue2ncgpx6Qi0WEfr5lwbMdo3ekeofvU=
-X-Received: by 2002:a9d:e8f:: with SMTP id 15mr32821348otj.148.1553803234751;
- Thu, 28 Mar 2019 13:00:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l4OXWYTQIq864f83sjGFJZxSf2xNN5tMm6PvqAXI1LE=;
+        b=En+kX9u5OSsnktUB+hWPo3dFr4rNLJgeBZGt6PjMpNqR8fUgdHEaromufgjvnSpMUC
+         FYvdqSnm0Oojr0jm99GqddccnUwWAnCGJzGnxPimDnMx0e7BPAOeJlztVZM8VaIfJAkr
+         zBO9RWSNkqcaFFEBpYsx2TnS6/WruIb2DD4JSIu2IKn6IWTqFtoJX+Y4i27rrSO/TtPP
+         fCZhJ0/i7xY0TNsy/Z29SJCoLrJDWpuf3JXE4W5VTQdd8IF8HwiJ87RMOW+KdAFCx6e7
+         xOEzrHjF0wWjH5HpeGZEWm9zp1xg7wVHwRx5tBM4LGb8hE+mCyfexcn5mPf/5i2nUO2d
+         NBXw==
+X-Gm-Message-State: APjAAAWKMO472/DBZw7psy1ziUy3fgzDtWR/ErWXB27w+pIFFGEFilE3
+        RplOHFOA2fXJxiCrd9pfwuhGsA==
+X-Google-Smtp-Source: APXvYqwAFsvhAb76H5HASPWM5AYjb7R9zZwrxXboizpfJGrJDszGQp9aQKPm/TVlvZmOe1P0U/wB/w==
+X-Received: by 2002:a17:902:168:: with SMTP id 95mr45581553plb.212.1553803255611;
+        Thu, 28 Mar 2019 13:00:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n1sm28254pgv.19.2019.03.28.13.00.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 13:00:53 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 16:00:52 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH] Convert struct pid count to refcount_t
+Message-ID: <20190328200052.GA105221@google.com>
+References: <20190327145331.215360-1-joel@joelfernandes.org>
+ <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
+ <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
+ <20190328023432.GA93275@google.com>
+ <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
+ <20190328143738.GA261521@google.com>
+ <CAG48ez1-3dLvzQoxxoUzTUq8dc1wwvwPBBxX_X9FWMscWTS-FQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190306212431.5779-1-martin.blumenstingl@googlemail.com> <20190327234217.GA8346@bogus>
-In-Reply-To: <20190327234217.GA8346@bogus>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 28 Mar 2019 21:00:23 +0100
-Message-ID: <CAFBinCDzYDH8NTwedUMaaN-gxtP29FEmvPtrmnQ+d2_N_PZ+=A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: dwc2: document the vbus-supply property
-To:     Rob Herring <robh@kernel.org>
-Cc:     hminas@synopsys.com, gregkh@linuxfoundation.org,
-        mark.rutland@arm.com, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        amelie.delaunay@st.com, felipe.balbi@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1-3dLvzQoxxoUzTUq8dc1wwvwPBBxX_X9FWMscWTS-FQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On Thu, Mar 28, 2019 at 12:42 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Mar 06, 2019 at 10:24:31PM +0100, Martin Blumenstingl wrote:
-> > Various boards have an external VBUS supply regulator. This regulator
-> > depends on the current mode of the controller which is defined as:
-> > - dr_mode set to either "host" or "peripheral" (fixed value)
-> > - dr_mode set to "otg", based on the OTG status the dwc2 controller
-> >   internally switches between "host" and "peripheral" mode (selection
-> >   happens at runtime)
+On Thu, Mar 28, 2019 at 04:17:50PM +0100, Jann Horn wrote:
+> Since we're just talking about RCU stuff now, adding Paul McKenney to
+> the thread.
+> 
+> On Thu, Mar 28, 2019 at 3:37 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > On Thu, Mar 28, 2019 at 03:57:44AM +0100, Jann Horn wrote:
+> > > On Thu, Mar 28, 2019 at 3:34 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > On Thu, Mar 28, 2019 at 01:59:45AM +0100, Jann Horn wrote:
+> > > > > On Thu, Mar 28, 2019 at 1:06 AM Kees Cook <keescook@chromium.org> wrote:
+> > > > > > On Wed, Mar 27, 2019 at 7:53 AM Joel Fernandes (Google)
+> > > > > > <joel@joelfernandes.org> wrote:
+> > > > > > >
+> > > > > > > struct pid's count is an atomic_t field used as a refcount. Use
+> > > > > > > refcount_t for it which is basically atomic_t but does additional
+> > > > > > > checking to prevent use-after-free bugs. No change in behavior if
+> > > > > > > CONFIG_REFCOUNT_FULL=n.
+> > > > > > >
+> > > > > > > Cc: keescook@chromium.org
+> > > > > > > Cc: kernel-team@android.com
+> > > > > > > Cc: kernel-hardening@lists.openwall.com
+> > > > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > > > [...]
+> > > > > > > diff --git a/kernel/pid.c b/kernel/pid.c
+> > > > > > > index 20881598bdfa..2095c7da644d 100644
+> > > > > > > --- a/kernel/pid.c
+> > > > > > > +++ b/kernel/pid.c
+> > > > > > > @@ -37,7 +37,7 @@
+> > > > > > >  #include <linux/init_task.h>
+> > > > > > >  #include <linux/syscalls.h>
+> > > > > > >  #include <linux/proc_ns.h>
+> > > > > > > -#include <linux/proc_fs.h>
+> > > > > > > +#include <linux/refcount.h>
+> > > > > > >  #include <linux/sched/task.h>
+> > > > > > >  #include <linux/idr.h>
+> > > > > > >
+> > > > > > > @@ -106,8 +106,8 @@ void put_pid(struct pid *pid)
+> > > > > > >                 return;
+> > > > > > >
+> > > > > > >         ns = pid->numbers[pid->level].ns;
+> > > > > > > -       if ((atomic_read(&pid->count) == 1) ||
+> > > > > > > -            atomic_dec_and_test(&pid->count)) {
+> > > > > > > +       if ((refcount_read(&pid->count) == 1) ||
+> > > > > > > +            refcount_dec_and_test(&pid->count)) {
+> > > > > >
+> > > > > > Why is this (and the original code) safe in the face of a race against
+> > > > > > get_pid()? i.e. shouldn't this only use refcount_dec_and_test()? I
+> > > > > > don't see this code pattern anywhere else in the kernel.
+> > > > >
+> > > > > Semantically, it doesn't make a difference whether you do this or
+> > > > > leave out the "refcount_read(&pid->count) == 1". If you read a 1 from
+> > > > > refcount_read(), then you have the only reference to "struct pid", and
+> > > > > therefore you want to free it. If you don't get a 1, you have to
+> > > > > atomically drop a reference, which, if someone else is concurrently
+> > > > > also dropping a reference, may leave you with the last reference (in
+> > > > > the case where refcount_dec_and_test() returns true), in which case
+> > > > > you still have to take care of freeing it.
+> > > >
+> > > > Also, based on Kees comment, I think it appears to me that get_pid and
+> > > > put_pid can race in this way in the original code right?
+> > > >
+> > > > get_pid                 put_pid
+> > > >
+> > > >                         atomic_dec_and_test returns 1
+> > >
+> > > This can't happen. get_pid() can only be called on an existing
+> > > reference. If you are calling get_pid() on an existing reference, and
+> > > someone else is dropping another reference with put_pid(), then when
+> > > both functions start running, the refcount must be at least 2.
 > >
-> > Based on the current mode the regulator has to be enabled or disabled:
-> > - host: provide power to the connected USB device, thus the regulator
-> >   has to be enabled
-> > - peripheral: the host device to which the controller is connected
-> >   provides power, thus the regulator has to be disabled
+> > Sigh, you are right. Ok. I was quite tired last night when I wrote this.
+> > Obviously, I should have waited a bit and thought it through.
 > >
-> > Add the dt-bindings documentation for this property so .dts authors know
-> > that this property exists and how it behaves.
+> > Kees can you describe more the race you had in mind?
 > >
-> > Fixes: 531ef5ebea9639 ("usb: dwc2: add support for host mode external vbus supply")
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> > > > atomic_inc
+> > > >                         kfree
+> > > >
+> > > > deref pid /* boom */
+> > > > -------------------------------------------------
+> > > >
+> > > > I think get_pid needs to call atomic_inc_not_zero() and put_pid should
+> > > > not test for pid->count == 1 as condition for freeing, but rather just do
+> > > > atomic_dec_and_test. So something like the following diff. (And I see a
+> > > > similar pattern used in drivers/net/mac.c)
+> > >
+> > > get_pid() can only be called when you already have a refcounted
+> > > reference; in other words, when the reference count is at least one.
+> > > The lifetime management of struct pid differs from the lifetime
+> > > management of most other objects in the kernel; the usual patterns
+> > > don't quite apply here.
+> > >
+> > > Look at put_pid(): When the refcount has reached zero, there is no RCU
+> > > grace period (unlike most other objects with RCU-managed lifetimes).
+> > > Instead, free_pid() has an RCU grace period *before* it invokes
+> > > delayed_put_pid() to drop a reference; and free_pid() is also the
+> > > function that removes a PID from the namespace's IDR, and it is used
+> > > by __change_pid() when a task loses its reference on a PID.
+> > >
+> > > In other words: Most refcounted objects with RCU guarantee that the
+> > > object waits for a grace period after its refcount has reached zero;
+> > > and during the grace period, the refcount is zero and you're not
+> > > allowed to increment it again.
 > >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > index 6dc3c4a34483..1e8a775a0e72 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> > @@ -31,6 +31,10 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
-> >  Optional properties:
-> >  - phys: phy provider specifier
-> >  - phy-names: shall be "usb2-phy"
-> > +- vbus-supply: reference to the VBUS regulator. Depending on the current mode
-> > +  this is enabled (in "host" mode") or disabled (in "peripheral" mode). The
-> > +  regulator is updated if the controller is configured in "otg" mode and the
-> > +  status changes between "host" and "peripheral".
->
-> This is actually wrong IMO unless Vbus is powering the controller
-> itself. If it is just a regulator routed to the USB connector, then the
-> DT should use the usb-connector binding and put vbus-supply there. If
-> the driver needs it, then it can walk the tree/graph and get it. For
-> some reason folks seem to think everything the driver needs has to be in
-> the node associated with the driver.
-I didn't know about the usb-connector binding yet - thank you for
-pointing it out (rather than saying that this is bad without giving a
-reason)!
+> > Can you give an example of this "most refcounted objects with RCU" usecase?
+> > I could not find any good examples of such. I want to document this pattern
+> > and possibly submit to Documentation/RCU.
+> 
+> E.g. struct posix_acl is a relatively straightforward example:
+> posix_acl_release() is a wrapper around refcount_dec_and_test(); if
+> the refcount has dropped to zero, the object is released after an RCU
+> grace period using kfree_rcu().
+> get_cached_acl() takes an RCU read lock, does rcu_dereference() [with
+> a missing __rcu annotation, grmbl], and attempts to take a reference
+> with refcount_inc_not_zero().
 
-do you want me to re-spin this with a notice (stating that this should
-be implemented in another way)?
-I'm asking because I suggested that Neil adds a "vbus-supply" property
-to "dt-bindings: usb: dwc3: Add Amlogic G12A DWC3 Glue Bindings" [0].
-He already added it and you reviewed it (it's easy to miss though, the
-patches are not merged yet though).
+Ok I get it now. It is quite a subtle difference in usage, I have noted both
+these usecases in my private notes for my own sanity ;-). I wonder if Paul
+thinks this is too silly to document into Documentation/RCU/, or if I should
+write-up something.
 
-> </rant>
->
-> I guess given this is already in use:
-I know of at least two consumers:
-- arch/arm/boot/dts/meson8b-ec100.dts (I'm guilty of adding that
-because I thought that the only problem with this binding was the
-missing documentation)
-- (downstream) OpenWrt has switched the lantiq target to use this property: [1]
+One thing I wonder is if one usage pattern is faster than the other.
+Certainly in the {get,put}_pid case, it seems nice to be able to do a
+get_pid even though free_pid's grace period has still not completed. Where as
+in the posix_acl case, once the grace period starts then it is no longer
+possible to get a reference as you pointed and its basically game-over for
+that object.
 
+thank you!
 
-Regards
-Martin
+ - Joel
 
-
-[0] https://patchwork.kernel.org/patch/10868515/
-[1] https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=d8b475212bbf9e5f80c1c923a9701dca5ceb23e2
