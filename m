@@ -2,177 +2,108 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9FFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C1CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D461A20700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C154F2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="xyMgxJpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfC1Sva (ORCPT
+        id S1726318AbfC1SxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 14:51:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50052 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfC1Sva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 14:51:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4973415AB;
-        Thu, 28 Mar 2019 11:51:29 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 052393F614;
-        Thu, 28 Mar 2019 11:51:26 -0700 (PDT)
-Subject: Re: [PATCH v7 7/10] KVM: arm/arm64: context-switch ptrauth registers
-To:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1552984243-7689-1-git-send-email-amit.kachhap@arm.com>
- <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <9d929db6-2a24-b356-6c76-8f58341db4bc@arm.com>
-Date:   Thu, 28 Mar 2019 18:51:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 14:53:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35632 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfC1SxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 14:53:01 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h39so24413736qte.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=2+yVR/eXhUEiUjrePeNYCTy0DJkUbLGQw97cbREmMac=;
+        b=xyMgxJpIBqjdCLrPI+9R+Jpw86PrmPPBqJhbUAYbNRk0GojOgnyfPNID7hmxHOmsbm
+         OJwgAFVIlQpwuI86EOduv24+Thph9lSA++yjp97ao48qo3q8hs5e1CmymAzLEssIjG5o
+         zsKvjE/jFuAuFrk3Wgv9u28OKmi5A5nhjN7z9WWXzDwWFuqFLPuB2+iX7v9Y7OThTCsY
+         BAmC6cHNs0FkMZ7WkKgk0rlLB59FLWFFxNtt7uEXvixQkxPUa4AcM6AMS8+YfXOfFbk4
+         xBpdZ2lNFQ/S2zJQrAAqwKtFNN0fL1xOdopRu5+zs5HUK33xGeR13ov9KyZWhRXK+46T
+         96pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=2+yVR/eXhUEiUjrePeNYCTy0DJkUbLGQw97cbREmMac=;
+        b=TWvFi9pUYKt1/tgCPD+t6noaYPVeI6V0N7RVLo8zIalkOiMCbFVFhs1c1Kg6xw8vyV
+         QtcrLcAv6kp84fb2KH8fThbcOXxQN43qaVijkWVZAjUSpZU08902XCY1lunU0UIejXEC
+         GmHQ4WQaVcKJsQ5QKzph+7u93lLQBuShPtSA2a3BhXvJjBYYKODxWyR+y0yO6PpV8I3J
+         n1VJIXmo/tUcPpl6ITGGRqM5SqaKxtkLf4uFY+2Kef2w33tDr3v5Xbf7+57F3BRK9kQf
+         v4QT39PuWHQ8KigsAD+YBzuAKF1/mIaIGFU+6zV/SKgIVfetKeJjxHJS1q+2kFzqNNrJ
+         sWIQ==
+X-Gm-Message-State: APjAAAXeHEvuxtIapRZBOpRGtiVVxDnhTun7VbShOgvc2rsjJysyH8+Y
+        TU1YDPeb1Tz0HW/SN229YSsyhA==
+X-Google-Smtp-Source: APXvYqyQ5J6QlUKzzv9dntPAJFkFRNBeFRNWBQ21QpYKgoqKwPPUATbQ7OwlZTylZN832WqvUPZHTw==
+X-Received: by 2002:a0c:c950:: with SMTP id v16mr36267284qvj.204.1553799180940;
+        Thu, 28 Mar 2019 11:53:00 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id d17sm13741961qtl.43.2019.03.28.11.52.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 11:53:00 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 11:52:56 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Michal Kubecek <mkubecek@suse.cz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 12/22] ethtool: provide string sets with
+ GET_STRSET request
+Message-ID: <20190328115256.2a7cb952@cakuba.netronome.com>
+In-Reply-To: <20190328173524.GR14297@nanopsycho>
+References: <cover.1553532199.git.mkubecek@suse.cz>
+        <f5af581e33b4976b84eae7c7788e3fde9adfa83c.1553532199.git.mkubecek@suse.cz>
+        <2c29310b-a2a0-3867-a09f-51f2dc47ecd3@gmail.com>
+        <20190328071853.GY26076@unicorn.suse.cz>
+        <20190328134313.GO14297@nanopsycho>
+        <20190328140428.GG26076@unicorn.suse.cz>
+        <20190328173524.GR14297@nanopsycho>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <1552984243-7689-8-git-send-email-amit.kachhap@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
-
-On 19/03/2019 08:30, Amit Daniel Kachhap wrote:
-> From: Mark Rutland <mark.rutland@arm.com>
+On Thu, 28 Mar 2019 18:35:24 +0100, Jiri Pirko wrote:
+> Thu, Mar 28, 2019 at 03:04:28PM CET, mkubecek@suse.cz wrote:
+> >On Thu, Mar 28, 2019 at 02:43:13PM +0100, Jiri Pirko wrote:  
+> >> 
+> >> I don't like this. This should not be bitfield/set. This should be
+> >> simply nested array of enum values:
+> >> 
+> >> enum ethtool_link_mode {
+> >> 	ETHTOOL_LINK_MODE_10baseT_Half,
+> >> 	ETHTOOL_LINK_MODE_10baseT_Full,
+> >> 	ETHTOOL_LINK_MODE_100baseT_Half,
+> >> 	ETHTOOL_LINK_MODE_100baseT_Full,
+> >> 	ETHTOOL_LINK_MODE_1000baseT_Full,
+> >> };  
+> >
+> >We already have such enum. The problem with your "no string" approach is
+> >that it requires all userspace applications to (1) keep this enum in  
 > 
-> When pointer authentication is supported, a guest may wish to use it.
-> This patch adds the necessary KVM infrastructure for this to work, with
-> a semi-lazy context switch of the pointer auth state.
-> 
-> Pointer authentication feature is only enabled when VHE is built
-> in the kernel and present in the CPU implementation so only VHE code
-> paths are modified.
-> 
-> When we schedule a vcpu, we disable guest usage of pointer
-> authentication instructions and accesses to the keys. While these are
-> disabled, we avoid context-switching the keys. When we trap the guest
-> trying to use pointer authentication functionality, we change to eagerly
-> context-switching the keys, and enable the feature. The next time the
-> vcpu is scheduled out/in, we start again. However the host key save is
-> optimized and implemented inside ptrauth instruction/register access
-> trap.
-> 
-> Pointer authentication consists of address authentication and generic
-> authentication, and CPUs in a system might have varied support for
-> either. Where support for either feature is not uniform, it is hidden
-> from guests via ID register emulation, as a result of the cpufeature
-> framework in the host.
-> 
-> Unfortunately, address authentication and generic authentication cannot
-> be trapped separately, as the architecture provides a single EL2 trap
-> covering both. If we wish to expose one without the other, we cannot
-> prevent a (badly-written) guest from intermittently using a feature
-> which is not uniformly supported (when scheduled on a physical CPU which
-> supports the relevant feature). Hence, this patch expects both type of
-> authentication to be present in a cpu.
-> 
-> This switch of key is done from guest enter/exit assembly as preperation
-> for the upcoming in-kernel pointer authentication support. Hence, these
-> key switching routines are not implemented in C code as they may cause
-> pointer authentication key signing error in some situations.
+> That is how it is usually done. UAPI defines ATTRS and values, userspace
+> assigns appropriate strings.
 
-
-> diff --git a/arch/arm64/include/asm/kvm_ptrauth_asm.h b/arch/arm64/include/asm/kvm_ptrauth_asm.h
-> new file mode 100644
-> index 0000000..97bb040
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/kvm_ptrauth_asm.h
-
-> +.macro	ptrauth_save_state base, reg1, reg2
-> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
-> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
-> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
-
-A nice-to-have:
-Because you only use the 'LO' asm-offset definitions here, we have to just assume that the
-'HI' ones are adjacent. Is it possible to add a BUILD_BUG() somewhere (probably in
-asm-offsets.c) to check this? As its just an enum we'd expect the order to be arbitrary,
-and asm-offsets to take care of any re-ordering... (struct randomisation may one day come
-to enums!)
-
-
-> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-> index e2f0268..9f591ad 100644
-> --- a/arch/arm64/kvm/guest.c
-> +++ b/arch/arm64/kvm/guest.c
-> @@ -544,3 +544,17 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
->  
->  	return ret;
->  }
-> +
-> +/**
-> + * kvm_arm_vcpu_ptrauth_setup_lazy - setup lazy ptrauth for vcpu schedule
-> + *
-> + * @vcpu: The VCPU pointer
-> + *
-> + * This function may be used to disable ptrauth and use it in a lazy context
-> + * via traps.
-> + */
-> +void kvm_arm_vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
-> +{
-> +	if (vcpu_has_ptrauth(vcpu))
-> +		kvm_arm_vcpu_ptrauth_disable(vcpu);
-> +}
-
-Can you check my reasoning here, to make sure I've understood this properly?!:
-
-This clears the API/APK bits to enable the traps, if the system supports ptrauth, and if
-Qemu requested it for this vcpu. If any of those things aren't true, the guest gets
-HCR_GUEST_FLAGS, which also has the API/APK bits clear...
-
-What this is doing is clearing the API/APK bits that may have been left set by a previous
-run of a ptrauth-enabled vcpu.
-
-
-
-> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-> index f16a5f8..00f0639 100644
-> --- a/arch/arm64/kvm/reset.c
-> +++ b/arch/arm64/kvm/reset.c
-> @@ -128,6 +128,13 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->  	if (loaded)
->  		kvm_arch_vcpu_put(vcpu);
->
-> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
-> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
-> +		/* Verify that KVM startup matches the conditions for ptrauth */
-> +		if (WARN_ON(!vcpu_has_ptrauth(vcpu)))
-> +			return -EINVAL;
-> +	}
-
-Could this hunk go in the previous patch that added the vcpu definitions?
-It would be good if the uapi defines, the documentation and this validation logic came as
-one patch, it makes future archaeology easier!
-
-
-Looks good!
-
-Thanks,
-
-James
++1 FWIW, I'm with Jiri on the string situation.
