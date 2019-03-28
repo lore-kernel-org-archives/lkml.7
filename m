@@ -2,57 +2,57 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E167C10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A5C206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E81C206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D1+ItBRf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vl66ov/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfC1RR4 (ORCPT
+        id S1727481AbfC1RR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:17:56 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34564 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfC1RRz (ORCPT
+        Thu, 28 Mar 2019 13:17:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38832 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1RR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:17:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y6so5270094plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:17:55 -0700 (PDT)
+        Thu, 28 Mar 2019 13:17:56 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g37so5257414plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2bAOEoSwsgTtaogopy8ZMUfxYizv7aL/kVUJt6MbgFE=;
-        b=D1+ItBRfhkwjmY//AzpG4ko7/1mIo1GQ/3Whaf3y0UqKRqP5DYMnS70Gb5QPqqiRui
-         CkgfMiErgGTA93cq3t6SxA3DVaYNM5gJUowzt3Mw9MgCEt0HWHn6zrrwe9qWrlRxI0gP
-         PL6JACpoHOlB8PRjURTt4spQ/2C/KQqy1MOO8=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DBM+pB4CxpDj9X9ckxHYOhoSP8yGYbHTSKQhNQ0sly0=;
+        b=Vl66ov/rhi5WwNbU6h29eVKCrE9SYA5S7w092zAxp0qnZ/RAev8buplTe4QwSImPVn
+         Nwub8mYhk+gmVd1IoRtKYMBXyH9n00HMixzzFFTZuOQJrC/6Xr/tDLXeDyd5/yIEOwmS
+         BxRzOyKq+0v8okUlkF8GKhwM6u+20WSF6c60M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2bAOEoSwsgTtaogopy8ZMUfxYizv7aL/kVUJt6MbgFE=;
-        b=e2rggdaqlIZMzi/wi29xN8hbn3BpzG/SUkgl1o7NfjExXy0YkQONrhuAtBsQnndYNW
-         9O6+uNCzhHUgKcrVTpw82nJ7T+/n8qK6Zo1+SLODlR/vtbJ3zcb5Az8aUuPFpputNDDb
-         CDyYJURCtrlUlTcYD8OBNdTtOKKM9NeoQs9lly+2ycYyvbtQVGOVHZTxgsiHbyJMfQe4
-         bHlRHmYqbbWlZERQ0Io7vqNuqJrXpA8PUDA3/iXLIDFnmg6RZeUzJgFzaIcZkGS4iPJ7
-         uGbQA/+09r2Nzmtmoq6Mo4/6uC3eRfGs06wT3SH3jIKXtCuMvCbxA2F/mNKCdBF/jZQC
-         4bZA==
-X-Gm-Message-State: APjAAAXU2KghlR+6XW4xFt0Lul8x3sFWQSGJ8RUSgkfkwudP+CCnYK2l
-        tyicWREOcwtAg2OAsQcPJ/4WcQ==
-X-Google-Smtp-Source: APXvYqwDlu2rwdjW3HZKyXtwVyJanNnE8vfhkBMS+C6fEZXqoGetZFaGYWHjaCAKBfI7k1PDhglyyQ==
-X-Received: by 2002:a17:902:bd82:: with SMTP id q2mr14206516pls.201.1553793474736;
-        Thu, 28 Mar 2019 10:17:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DBM+pB4CxpDj9X9ckxHYOhoSP8yGYbHTSKQhNQ0sly0=;
+        b=KMWK7udZ4RM+BChqz0/WFEJdg1Yt1m0tsZTnXbxoZLyE3lzzrsAkBXnpDrsxESYbOi
+         sgLgj7C9l6++OLA+7YSqJZTSrCQ7bNcj6GdDYX8cvteLd/iDetC9BF8Hf8E+ShjQPztW
+         dwoIWBsbAtBlQMxxEV4lD/9EHr67zxALyjpzKPy1j+3tg2081Ic2OiTLwLTyecL3LJze
+         2jiwA69thpP3lAOh/oTk7NtxqD1WRUUQPNqXLqGg6MxTmeJ3q4QeDjlvGG5Oncl8XymR
+         19oO34V9Mu/mG8dq4Se09usiCBhG1N6VvN0aQkL3AU/AdPxdpljUZW8whnxxvFzZpgG+
+         vhCQ==
+X-Gm-Message-State: APjAAAUE4exHh0wkoxm2FqW/boL6C6XyHyXSDluKCLg02hnVJHzBT0uw
+        qnoBNg2e5cWiN2xmGH3jS3N1WA==
+X-Google-Smtp-Source: APXvYqwbitXH3ctsAeFOy7juR1bSYPkUK/OS67IB2OrZTp/oTxmqvWQJISOi6pjRnGsrAkbO/dpwsg==
+X-Received: by 2002:a17:902:7d81:: with SMTP id a1mr36554619plm.202.1553793475964;
+        Thu, 28 Mar 2019 10:17:55 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id r10sm31699414pfn.188.2019.03.28.10.17.53
+        by smtp.gmail.com with ESMTPSA id r10sm31699414pfn.188.2019.03.28.10.17.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:17:53 -0700 (PDT)
+        Thu, 28 Mar 2019 10:17:55 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Heiko Stuebner <heiko@sntech.de>,
@@ -64,20 +64,20 @@ Cc:     linux-rockchip@lists.infradead.org,
         Ezequiel Garcia <ezequiel@collabora.com>,
         =?UTF-8?q?Enric=20Balletb=C3=B2?= <enric.balletbo@collabora.com>,
         Rob Herring <robh+dt@kernel.org>, mka@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Doug Anderson <dianders@chromium.org>,
+        Eric Anholt <eric@anholt.net>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
         Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v4 0/7] drm/panel: simple: Add mode support to devicetree
-Date:   Thu, 28 Mar 2019 10:17:03 -0700
-Message-Id: <20190328171710.31949-1-dianders@chromium.org>
+Subject: [PATCH v4 1/7] dt-bindings: Add panel-timing subnode to simple-panel
+Date:   Thu, 28 Mar 2019 10:17:04 -0700
+Message-Id: <20190328171710.31949-2-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+In-Reply-To: <20190328171710.31949-1-dianders@chromium.org>
+References: <20190328171710.31949-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -86,72 +86,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm reviving Sean Paul's old patchset to get mode support in device
-tree.  The cover letter for his v3 is at:
-https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
+From: Sean Paul <seanpaul@chromium.org>
 
-I've pulled together the patches that didn't land in v3, addressed
-outstanding feedback, and reposted.  Atop them I've added patches for
-rk3288-veyron-jerry and rk3288-veryon-minnie.
-
-Please let me know how they look.
-
-In general I have added people to the whole series who I think would
-like the whole series and then let get_maintainer pick extra people it
-thinks are relevant to each individual patch.  If I see you respond to
-any of the patches in the series, though, I'll add you to the whole
-series Cc list next time.
-
-Changes in v4:
-- Simplify desc. for when override should be used (Thierry/Laurent)
-- Removed Rob H review since it's been a year and wording changed
-- Don't add mode from timing if override was specified (Thierry)
-- Add warning if timing and fixed mode was specified (Thierry)
-- Don't add fixed mode if timing was specified (Thierry)
-- Refactor/rename a bit to avoid extra indentation from "if" tests
-- i should be unsigned (Thierry)
-- Add annoying WARN_ONs for some cases (Thierry)
-- Simplify 'No display_timing found' handling (Thierry)
-- Rename to panel_simple_parse_override_mode() (Thierry)
-- Rebase to top of Heiko's tree
-- Converted changelog to after-the-cut for non-DRM change.
-- display_timing for Innolux n116bge new for v4.
-- display_timing for AUO b101ean01 new for v4.
-- rk3288-veyron-jerry patch new for v4.
-- rk3288-veyron-minnie patch new for v4.
-
-Changes in v3:
-- Go back to using the timing subnode directly, but rename to
-  panel-timing (Rob)
-- No longer parse display-timings subnode, use panel-timing (Rob)
-- Unwrap the timing from display-timings and rename panel-timing (Rob)
+This patch adds a new subnode to simple-panel allowing us to override
+the typical timing expressed in the panel's display_timing.
 
 Changes in v2:
-- Split out the binding into a new patch (Rob)
-- display-timings is a new section (Rob)
-- Use the full display-timings subnode instead of picking the timing
-  out (Rob/Thierry)
-- Parse the full display-timings node (using the native-mode) (Rob)
-- Wrap the timing in display-timings node to match binding (Rob/Thierry)
+ - Split out the binding into a new patch (Rob)
+ - display-timings is a new section (Rob)
+ - Use the full display-timings subnode instead of picking the timing
+   out (Rob/Thierry)
+Changes in v3:
+ - Go back to using the timing subnode directly, but rename to
+   panel-timing (Rob)
+Changes in v4:
+ - Simplify desc. for when override should be used (Thierry/Laurent)
+ - Removed Rob H review since it's been a year and wording changed
 
-Douglas Anderson (4):
-  drm/panel: simple: Use display_timing for Innolux n116bge
-  drm/panel: simple: Use display_timing for AUO b101ean01
-  ARM: dts: rockchip: Specify rk3288-veyron-jerry's display timings
-  ARM: dts: rockchip: Specify rk3288-veyron-minnie's display timings
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Eric Anholt <eric@anholt.net>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stéphane Marchesin <marcheu@chromium.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Sean Paul (3):
-  dt-bindings: Add panel-timing subnode to simple-panel
-  drm/panel: simple: Add ability to override typical timing
-  arm64: dts: rockchip: Specify override mode for kevin panel
+ .../bindings/display/panel/simple-panel.txt   | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
- .../bindings/display/panel/simple-panel.txt   |  24 +++
- .../boot/dts/rk3288-veyron-chromebook.dtsi    |  14 ++
- arch/arm/boot/dts/rk3288-veyron-minnie.dts    |  14 ++
- .../boot/dts/rockchip/rk3399-gru-kevin.dts    |  14 ++
- drivers/gpu/drm/panel/panel-simple.c          | 171 ++++++++++++++----
- 5 files changed, 205 insertions(+), 32 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+index b2b872c710f2..6157f86ddce4 100644
+--- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
++++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+@@ -15,6 +15,18 @@ Optional properties:
+   (hot plug detect) signal, but the signal isn't hooked up so we should
+   hardcode the max delay from the panel spec when powering up the panel.
+ 
++panel-timing subnode
++--------------------
++
++This optional subnode is for devices which require a mode differing
++from the panel's "typical" display timing.  The panel timings provided
++here will be ignored if they are found to be outside of allowable
++ranges for the given panel.
++
++Format information on the panel-timing subnode can be found in
++display-timing.txt.
++
++
+ Example:
+ 
+ 	panel: panel {
+@@ -25,4 +37,16 @@ Example:
+ 		enable-gpios = <&gpio 90 0>;
+ 
+ 		backlight = <&backlight>;
++
++		panel-timing {
++			clock-frequency = <266604720>;
++			hactive = <2400>;
++			hfront-porch = <48>;
++			hback-porch = <84>;
++			hsync-len = <32>;
++			vactive = <1600>;
++			vfront-porch = <3>;
++			vback-porch = <120>;
++			vsync-len = <10>;
++		};
+ 	};
 -- 
 2.21.0.392.gf8f6787159e-goog
 
