@@ -2,117 +2,152 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE107C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99809C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B051206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BP45Z85P"
+	by mail.kernel.org (Postfix) with ESMTP id 727A721773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfC1QoB (ORCPT
+        id S1727176AbfC1Qpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:44:01 -0400
-Received: from mail-eopbgr10063.outbound.protection.outlook.com ([40.107.1.63]:62215
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725849AbfC1QoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:44:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+/er7Q5Tt4a+6fEptQfsv2UImUz7V8125PRBD+T71Zo=;
- b=BP45Z85P0Bu9XEEDT0puWNKgqtenFG+RPOhHPCv4ERgilSlXzxGi1n9V+rzc+zcrcjJgWlHbA4DYvU4xkSAB8OW4rLBTAZdNgSBJQSTkIVUL6CsUcqHNUgE76ZWGY2rCM3qnKWhlgEDgX29pxa2txuyOQ1qoWuFOl0vN8jsXo0w=
-Received: from VI1PR04MB5533.eurprd04.prod.outlook.com (20.178.122.159) by
- VI1PR04MB6256.eurprd04.prod.outlook.com (20.179.25.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1730.18; Thu, 28 Mar 2019 16:43:55 +0000
-Received: from VI1PR04MB5533.eurprd04.prod.outlook.com
- ([fe80::35aa:e13a:52ea:e5e6]) by VI1PR04MB5533.eurprd04.prod.outlook.com
- ([fe80::35aa:e13a:52ea:e5e6%4]) with mapi id 15.20.1730.019; Thu, 28 Mar 2019
- 16:43:55 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <fabio.estevam@nxp.com>, Ye Li <ye.li@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [RESEND v2] soc: imx: Add generic i.MX8 SoC driver
-Thread-Topic: [RESEND v2] soc: imx: Add generic i.MX8 SoC driver
-Thread-Index: AQHU4M8x51owZIDO7UOOFQ/teNRhv6YhST0A
-Date:   Thu, 28 Mar 2019 16:43:55 +0000
-Message-ID: <8df8afc4a50512d28247743e06f9ed30534da921.camel@nxp.com>
-References: <1553273350-28852-1-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1553273350-28852-1-git-send-email-abel.vesa@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0632b7dd-d8f2-4bd1-61b9-08d6b39c9184
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB6256;
-x-ms-traffictypediagnostic: VI1PR04MB6256:
-x-microsoft-antispam-prvs: <VI1PR04MB62564F6718FA1332D72A6CA0EE590@VI1PR04MB6256.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0990C54589
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(396003)(39860400002)(136003)(189003)(199004)(26005)(305945005)(2906002)(97736004)(6486002)(71200400001)(102836004)(5660300002)(4326008)(229853002)(6506007)(186003)(76176011)(50226002)(6436002)(99286004)(8936002)(71190400001)(86362001)(81166006)(8676002)(81156014)(14454004)(53936002)(316002)(14444005)(6116002)(256004)(118296001)(2501003)(68736007)(36756003)(6512007)(105586002)(478600001)(6246003)(66066001)(446003)(6636002)(486006)(25786009)(54906003)(11346002)(3846002)(2616005)(106356001)(476003)(110136005)(44832011)(7736002)(41533002)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6256;H:VI1PR04MB5533.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: I+/0N0weurVq2az0lupEX7VEljh/LZNpGyNJ7GMV0qTzfeWVrMPhdX3+rXNnORRaNYOHuZV/xe+5hCbeUukNdSpLxBPXbvYKLbYoidxpeoNtusUsI2AZ/OtPpOv/pNl6xlRhQnbowYZrAGNzxzVzeyLgclcesDGTHrVIjAl7GCtBqFDdUz7nUnAExR9EFugkUpGYaTLvXJHwtwuX4GAk07eHEChH+7OdEcuofLt1B1wrTPeZDN86yR5kL028eOpSmZkwJkMbORsK0SjARrClBF0nxBHk1e/aH+eHyoyEauzskHSRzaQy9EFJm4VQgxrJCVs5WoR5g4U6vINVtaFIOqZh2fWGSKL+Ktz02bmQOMsoM6l9tYr1lPGqqxV0i+35U+k2lizt5oG0NS0X3ssDtYOT+Q6hNI0NJows1RZjrf0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C5739006320D594FB0C385565864E8A8@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 Mar 2019 12:45:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60424 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbfC1Qpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:45:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 09:45:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,281,1549958400"; 
+   d="scan'208";a="218460183"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga001.jf.intel.com with ESMTP; 28 Mar 2019 09:45:33 -0700
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH V3 0/7] Add FOLL_LONGTERM to GUP fast and use it
+Date:   Thu, 28 Mar 2019 01:44:15 -0700
+Message-Id: <20190328084422.29911-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0632b7dd-d8f2-4bd1-61b9-08d6b39c9184
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 16:43:55.6535
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTAzLTIyIGF0IDE2OjQ5ICswMDAwLCBBYmVsIFZlc2Egd3JvdGU6DQo+IEFk
-ZCBnZW5lcmljIGkuTVg4IFNvQyBkcml2ZXIgYWxvbmcgd2l0aCB0aGUgaS5NWDhNUSBTb0Mgc3Bl
-Y2lmaWMgY29kZS4NCj4gRm9yIG5vdywgb25seSBpLk1YOE1RIHJldmlzaW9uIEIxIGlzIHN1cHBv
-cnRlZC4gRm9yIGFueSBvdGhlciwgaS5NWDhNUQ0KPiByZXZpc2lvbiBpdCB3aWxsIHByaW50ICd1
-bmtub3duJy4NCg0KPiArI2RlZmluZSBSRVZfQjEJCQkJMHgyMQ0KPiArDQo+ICsjZGVmaW5lIElN
-WDhNUV9TV19JTkZPX0IxCQkweDQwDQo+ICsjZGVmaW5lIElNWDhNUV9TV19NQUdJQ19CMQkJMHhm
-ZjAwNTVhYQ0KPiArDQo+ICsJbnAgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxM
-LCAiZnNsLGlteDhtcS1vY290cCIpOysNCj4gKwlvY290cF9iYXNlID0gb2ZfaW9tYXAobnAsIDAp
-Ow0KPiArDQo+ICsJbWFnaWMgPSByZWFkbF9yZWxheGVkKG9jb3RwX2Jhc2UgKyBJTVg4TVFfU1df
-SU5GT19CMSk7DQo+ICsJaWYgKG1hZ2ljID09IElNWDhNUV9TV19NQUdJQ19CMSkNCj4gKwkJcmV2
-ID0gUkVWX0IxOw0KDQpUaGlzIGlzIGJhc2VkIG9uIEFURiBjb2RlIGluIHZlbmRvciB0cmVlLCBi
-dXQgc2hvdWxkbid0IHdlIGhhdmUgc29tZQ0Kc29ydCBvZiBleHBsYW5hdGlvbiBmb3IgdGhpcyAi
-bWFnaWMiPw0KDQpMb29raW5nIGF0IHRoZSBPQ09UUCBkcml2ZXIgcmVnIDB4NDAgaXMgSU1YX09D
-T1RQX0FERFJfREFUQTIgYW5kIGl0J3MNCnVzZWQgYXMgcGFydCBvZiBmdXNlIHdyaXRlcy4gQWNj
-b3JkaW5nIHRvIHRoZSBkcml2ZXIgY29kZSA4bXEgaXMNCmNvbXBhdGlibGUgd2l0aCA3ZCBhbmQg
-dGhpcyB3cml0ZSBwYXRoIGlzIGVuYWJsZWQgZm9yIGlteDhtcS1vY290cC4gDQoNCkxvb2tpbmcg
-YXQgdGhlIE9DT1RQIG1hbnVhbCByZWcgMHg0MCBpcyBPQ09UUF9IV19PQ09UUF9SRUFEX0ZVU0Vf
-REFUQQ0KYW5kIGl0J3MgbWVhbnQgdG8gYmUgdXNlZCB0b2dldGhlciB3aXRoIElNWF9PQ09UUF9B
-RERSX0NUUkwgdG8gcmVhZA0KaW5mby4gTWF5YmUgbXkgbWFudWFsIChyZXYwIDIwMTgtMDEpIGlz
-IGluY29ycmVjdD8NCg0KTG9va2luZyBhdCB0aGUgbWFudWFsIHRoaXMgd2lsbCByZXR1cm4gdGhl
-IHZhbHVlIG9mIHRoZSBmdXNlIGxhc3QNCnJlcXVlc3RlZCB2aWEgSU1YX09DT1RQX0FERFJfQ1RS
-TCBidXQgbm8gc3VjaCByZXF1ZXN0IGlzIG1hZGUgaW4gdGhpcw0KZHJpdmVyLiBTbyByZWFkaW5n
-IGZyb20gT0NPVFAgMHg0MCBtaWdodCByZXR1cm4gYW4gdW5yZWxhdGVkIHZhbHVlPyENCg0KVGhl
-IG1hbnVhbCBkb2VzIGRvY3VtZW50IHRoYXQgZnVzZSAweDQ0MFszOjBdIGlzIGEgInNpbGljb24g
-cmV2aXNpb24NCm51bWJlciI7IG1heWJlIHdlIHNob3VsZCByZWFkIHRoYXQ/DQoNCi0tDQpSZWdh
-cmRzLA0KTGVvbmFyZA0K
+From: Ira Weiny <ira.weiny@intel.com>
+
+Following discussion and review[1] here are the cleanups requested.
+
+The biggest change for V3 was the disabling of the ability to use FOLL_LONGTERM
+in get_user_pages[unlocked|locked|remote]
+
+Comments were also enhanced throughout to show potential users what
+FOLL_LONGTERM is all about and limitations it has.
+
+Minor review comments were fixed
+
+Original cover letter:
+
+HFI1, qib, and mthca, use get_user_pages_fast() due to it performance
+advantages.  These pages can be held for a significant time.  But
+get_user_pages_fast() does not protect against mapping FS DAX pages.
+
+Introduce FOLL_LONGTERM and use this flag in get_user_pages_fast() which
+retains the performance while also adding the FS DAX checks.  XDP has also
+shown interest in using this functionality.[1]
+
+In addition we change get_user_pages() to use the new FOLL_LONGTERM flag and
+remove the specialized get_user_pages_longterm call.
+
+[1] https://lkml.org/lkml/2019/3/19/939
+
+
+
+Ira Weiny (7):
+  mm/gup: Replace get_user_pages_longterm() with FOLL_LONGTERM
+  mm/gup: Change write parameter to flags in fast walk
+  mm/gup: Change GUP fast to use flags rather than a write 'bool'
+  mm/gup: Add FOLL_LONGTERM capability to GUP fast
+  IB/hfi1: Use the new FOLL_LONGTERM flag to get_user_pages_fast()
+  IB/qib: Use the new FOLL_LONGTERM flag to get_user_pages_fast()
+  IB/mthca: Use the new FOLL_LONGTERM flag to get_user_pages_fast()
+
+ arch/mips/mm/gup.c                          |  11 +-
+ arch/powerpc/kvm/book3s_64_mmu_hv.c         |   4 +-
+ arch/powerpc/kvm/e500_mmu.c                 |   2 +-
+ arch/powerpc/mm/mmu_context_iommu.c         |   3 +-
+ arch/s390/kvm/interrupt.c                   |   2 +-
+ arch/s390/mm/gup.c                          |  12 +-
+ arch/sh/mm/gup.c                            |  11 +-
+ arch/sparc/mm/gup.c                         |   9 +-
+ arch/x86/kvm/paging_tmpl.h                  |   2 +-
+ arch/x86/kvm/svm.c                          |   2 +-
+ drivers/fpga/dfl-afu-dma-region.c           |   2 +-
+ drivers/gpu/drm/via/via_dmablit.c           |   3 +-
+ drivers/infiniband/core/umem.c              |   5 +-
+ drivers/infiniband/hw/hfi1/user_pages.c     |   3 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.c |   3 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c  |   8 +-
+ drivers/infiniband/hw/qib/qib_user_sdma.c   |   2 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c    |   9 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c   |   6 +-
+ drivers/misc/genwqe/card_utils.c            |   2 +-
+ drivers/misc/vmw_vmci/vmci_host.c           |   2 +-
+ drivers/misc/vmw_vmci/vmci_queue_pair.c     |   6 +-
+ drivers/platform/goldfish/goldfish_pipe.c   |   3 +-
+ drivers/rapidio/devices/rio_mport_cdev.c    |   4 +-
+ drivers/sbus/char/oradax.c                  |   2 +-
+ drivers/scsi/st.c                           |   3 +-
+ drivers/staging/gasket/gasket_page_table.c  |   4 +-
+ drivers/tee/tee_shm.c                       |   2 +-
+ drivers/vfio/vfio_iommu_spapr_tce.c         |   3 +-
+ drivers/vfio/vfio_iommu_type1.c             |   3 +-
+ drivers/vhost/vhost.c                       |   2 +-
+ drivers/video/fbdev/pvr2fb.c                |   2 +-
+ drivers/virt/fsl_hypervisor.c               |   2 +-
+ drivers/xen/gntdev.c                        |   2 +-
+ fs/io_uring.c                               |   5 +-
+ fs/orangefs/orangefs-bufmap.c               |   2 +-
+ include/linux/mm.h                          |  45 ++-
+ kernel/futex.c                              |   2 +-
+ lib/iov_iter.c                              |   7 +-
+ mm/gup.c                                    | 288 +++++++++++++-------
+ mm/gup_benchmark.c                          |   5 +-
+ mm/util.c                                   |   8 +-
+ net/ceph/pagevec.c                          |   2 +-
+ net/rds/info.c                              |   2 +-
+ net/rds/rdma.c                              |   3 +-
+ net/xdp/xdp_umem.c                          |   4 +-
+ 46 files changed, 314 insertions(+), 200 deletions(-)
+
+-- 
+2.20.1
+
