@@ -2,166 +2,124 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDD2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CCAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE912177E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12B720700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="az5K5PI5";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JvWBn4nP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfC1Gns (ORCPT
+        id S1726242AbfC1GqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:43:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34030 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfC1Gns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:43:48 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 28 Mar 2019 02:46:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59082 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfC1GqC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 02:46:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2E5CF60850; Thu, 28 Mar 2019 06:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553755561;
+        bh=47bmnSigqol8Jggj4w+wPd+sqe8XXTSQCycP1p9Sh9o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=az5K5PI5hPIURomd4dGJ3VVstlQSkAWGCt5CQtlyMxuBs8HbbMdXsXrgjsv7jVksk
+         lcs3qYpczOkNK1T8dPSH2X+yYk4jXRRWAeEcXzwdIn7mLU1ckC3vzn4pN5k5X40k8F
+         kvHxlxL9+wgt0WHMy9X/HjWmD83ff1F2kFnoN8hI=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2F9FF330244;
-        Thu, 28 Mar 2019 06:43:48 +0000 (UTC)
-Received: from localhost (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 441E41001E69;
-        Thu, 28 Mar 2019 06:43:45 +0000 (UTC)
-Date:   Thu, 28 Mar 2019 14:43:43 +0800
-From:   "bhe@redhat.com" <bhe@redhat.com>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190328064343.GA1877@MiWiFi-R3L-srv>
-References: <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
- <20190325120149.GI12016@zn.tnic>
- <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
- <20190325123229.GL12016@zn.tnic>
- <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
- <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0678560237;
+        Thu, 28 Mar 2019 06:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553755560;
+        bh=47bmnSigqol8Jggj4w+wPd+sqe8XXTSQCycP1p9Sh9o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JvWBn4nPQN7cBDZrdJfAT1Hz9IpZnLm4ZdXrcPGs9RPsv2f9kJO5y9lLu2YusJB+U
+         X+aBAqVrSYrsCWrBWcMnLciTNxhEoCz1C67kAxdhDclwxcLDbzVaq2C+ljLinD2Tks
+         OXhujmCmh5UhE5UwpmOOkVSyEhO3g2uOuaf6Dd48=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0678560237
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] arch/powerpc: Remove duplicate headers
+To:     jagdsh.linux@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, npiggin@gmail.com, hristophe.leroy@c-s.fr,
+        arnd@arndb.de, anton@ozlabs.org, paul.burton@mips.com,
+        mikey@neuling.org, akpm@linux-foundation.org,
+        mwb@linux.vnet.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1553345455-32085-1-git-send-email-jagdsh.linux@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <39b75391-1c80-c205-a253-8390811bdcac@codeaurora.org>
+Date:   Thu, 28 Mar 2019 12:15:48 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 28 Mar 2019 06:43:48 +0000 (UTC)
+In-Reply-To: <1553345455-32085-1-git-send-email-jagdsh.linux@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/28/19 at 04:17am, Junichi Nomura wrote:
-> On 2019/03/27 10:48, bhe@redhat.com wrote:
-> >>> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
-> >>> least the loop towards the end gets carved out into a separate function
-> >>> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
-> >>> size as arguments and finds the RSDP address in the kexec-ed kernel.
-> >>
-> >> You need to carve out the loop at the end and make it into a separate
-> >> __efi_get_rsdp_addr() function which gets the physical or the virtual
-> >> address.
-> > 
-> > I guess Boris is suggesting code like below. Please correct me if I am
-> > wrong.
-> > 
-> > static acpi_physical_address _efi_get_rsdp_addr(efi_config_table tbl, ...)
-> > {
-> > 	/* Get EFI tables from systab. */
-> > 	for (i = 0; i < nr_tables; i++) {
-> > 		...
-> > 	}
-> > 	return rsdp_addr;
-> > }
-> > 
-> > static acpi_physical_address efi_get_rsdp_addr(void)
-> > {
-> > 	...
-> > 	/* Get systab from boot params. */		
-> > 	...
-> > 	/* Handle EFI bitness properly */
-> > 	...
-> > 	return _efi_get_rsdp_addr();
-> > }
-> > 
-> > 
-> > static acpi_physical_address kexec_get_rsdp_addr(void)
-> > {
-> > 	if (!is_kexec_booted)
-> > 		return 0;
-> > 
-> > 	efi_get_setup_data_addr();
-> > 	...
-> > 	/* Handle EFI bitness properly */
-> > 	...
-> > 	return _efi_get_rsdp_addr();
-> > }
-> 
-> I still don't get it... We still need systab for kexec case as well
-> to get nr_tables. Don't we?
 
-Yes, simpler.
+On 3/23/2019 6:20 PM, jagdsh.linux@gmail.com wrote:
+> From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+>
+> Remove duplicate headers which are included twice.
+>
+> Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-As Dave replied in another mail, efi/kexec is only added for x86_64. See
-how it does in setup_linux_system_parameters() of kexec_tools utility,
-and we only have bzImage64 handling in kernel for kexec_file loading,
-see prepare_add_efi_setup_data().
-
-You may only need to get kexec ei_info to use directly.
-
-> 
-> > acpi_physical_address get_rsdp_addr(void)
-> > {
-> >          acpi_physical_address pa;
-> > 
-> >          pa = get_acpi_rsdp();
-> > 
-> >          if (!pa)
-> >                  pa = boot_params->acpi_rsdp_addr;
-> > 
-> > 
-> > 	/**
-> > 	/*I think here we should check if it's kexec booted firstly.
-> > 	 * Skip it if not kexec. this can avoid the wrong kexec virt
-> > 	 * addr parsing./
-> >          if (!pa)
-> >                  pa = kexec_get_rdsp_addr();             <--- new function
-> > 
-> >          if (!pa)
-> >                  pa = efi_get_rsdp_addr();
-> > 
-> 
-> Shouldn't t efi_get_rsdp_addr() check "is_kexec_booted" and exit
-> early so that it never tries to use virtual config_tables pointer
-> if for some unknown resason kexec_get_rsdp_addr() failed.
-
-Well, you can just call your efi_get_setup_data_addr() in
-kexec_get_rdsp_addr(), if succeed, go ahead to read ei_info and call
-_efi_get_rsdp_addr(). If failed, return to try efi_get_rsdp_addr().
-
-> 
-> Currently I check "is_kexec_booted" by subset of efi_get_setup_data_addr().
-> Do you know a simpler way to check "is_kexec_booted"?
-
-There seems to be no another way to check, I think your way is good.
-Tryint to get it in kexec_get_rdsp_addr() earlier, you don't need to
-judge specifically in efi_get_rsdp_addr() again.
-
-> 
-> >          if (!pa)
-> >                  pa = bios_get_rsdp_addr();
-> > 
-> >          return pa;
-> > }
-> 
-> -- 
-> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
+-Mukesh
+> ---
+>   arch/powerpc/kernel/time.c       | 1 -
+>   arch/powerpc/lib/code-patching.c | 1 -
+>   arch/powerpc/mm/numa.c           | 1 -
+>   3 files changed, 3 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+> index bc0503e..6ef3247 100644
+> --- a/arch/powerpc/kernel/time.c
+> +++ b/arch/powerpc/kernel/time.c
+> @@ -43,7 +43,6 @@
+>   #include <linux/timex.h>
+>   #include <linux/kernel_stat.h>
+>   #include <linux/time.h>
+> -#include <linux/clockchips.h>
+>   #include <linux/init.h>
+>   #include <linux/profile.h>
+>   #include <linux/cpu.h>
+> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> index 506413a..587ff97 100644
+> --- a/arch/powerpc/lib/code-patching.c
+> +++ b/arch/powerpc/lib/code-patching.c
+> @@ -15,7 +15,6 @@
+>   #include <linux/cpuhotplug.h>
+>   #include <linux/slab.h>
+>   #include <linux/uaccess.h>
+> -#include <linux/kprobes.h>
+>   
+>   #include <asm/pgtable.h>
+>   #include <asm/tlbflush.h>
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index f976676..f3ee0e1 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -32,7 +32,6 @@
+>   #include <asm/sparsemem.h>
+>   #include <asm/prom.h>
+>   #include <asm/smp.h>
+> -#include <asm/cputhreads.h>
+>   #include <asm/topology.h>
+>   #include <asm/firmware.h>
+>   #include <asm/paca.h>
