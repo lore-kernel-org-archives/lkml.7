@@ -6,91 +6,89 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334B4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8145C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0894C21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1C721773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfC1O0h (ORCPT
+        id S1726332AbfC1O2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:26:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:24169 "EHLO mx1.redhat.com"
+        Thu, 28 Mar 2019 10:28:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57199 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfC1O0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:26:37 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05009C04FFF9;
-        Thu, 28 Mar 2019 14:26:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.68])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 981AD1001E69;
-        Thu, 28 Mar 2019 14:26:20 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 28 Mar 2019 15:26:24 +0100 (CET)
-Date:   Thu, 28 Mar 2019 15:26:19 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-Message-ID: <20190328142619.GA19441@redhat.com>
-References: <20190327145331.215360-1-joel@joelfernandes.org>
- <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
- <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
- <20190328023432.GA93275@google.com>
+        id S1725948AbfC1O2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:28:00 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:27:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="156050992"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Mar 2019 07:27:57 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h9W0a-0003RH-Cm; Thu, 28 Mar 2019 16:27:56 +0200
+Date:   Thu, 28 Mar 2019 16:27:56 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 7/7] x86/boot: Support nocfg parameter for earlyprintk
+Message-ID: <20190328142756.GF9224@smile.fi.intel.com>
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-8-andriy.shevchenko@linux.intel.com>
+ <20190328130317.GG22720@zn.tnic>
+ <20190328132153.GZ9224@smile.fi.intel.com>
+ <20190328134213.GJ22720@zn.tnic>
+ <20190328140039.GC9224@smile.fi.intel.com>
+ <20190328141307.GM22720@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190328023432.GA93275@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 28 Mar 2019 14:26:37 +0000 (UTC)
+In-Reply-To: <20190328141307.GM22720@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/27, Joel Fernandes wrote:
->
-> Also, based on Kees comment, I think it appears to me that get_pid and
-> put_pid can race in this way in the original code right?
->
-> get_pid			put_pid
->
-> 			atomic_dec_and_test returns 1
-> atomic_inc
-> 			kfree
->
-> deref pid /* boom */
-> -------------------------------------------------
->
-> I think get_pid needs to call atomic_inc_not_zero()
+On Thu, Mar 28, 2019 at 03:13:07PM +0100, Borislav Petkov wrote:
+> On Thu, Mar 28, 2019 at 04:00:39PM +0200, Andy Shevchenko wrote:
+> > If it's _non-standard_ serial interface (by meaning of I/O accessors and port
+> > addresses), user may consider to use this options in case the interface to
+> > communicate with kernel is serial one and its configuration is done by other
+> > means (firmware / bootloader / EFI / etc).
+> 
+> And is this non-standard interface out there in the wild or only at
+> Intel's labs?
 
-No.
+Of course in the wild.
 
-get_pid() should only be used if you already have a reference or you do
-something like
+> Are there boxes like that out there?
 
-	rcu_read_lock();
-	pid = find_vpid();
-	get_pid();
-	rcu_read_lock();
+One at hand now is called Intel Edison.
 
-in this case we rely on call_rcu(delayed_put_pid) which drops the initial
-reference.
+> If I go to the store and buy a box, how do I know whether that box would
+> need "nocfg"? Do I look in the BIOS or how do I find out I need to supply
+> "nocfg"?
 
-If put_pid() sees pid->count == 1, then a) nobody else has a reference and
-b) nobody else can find this pid on rcu-protected lists, so it is safe to
-free it.
+By reading some technical documentation I suppose.
+What is your point here? earlyprintk is a mechanism for _debugging_, I suppose
+the user should have slightly more knowledge than user.
 
-Oleg.
+> > If by BIOS or by other means the serial port is configured
+> 
+> How do I find out that the serial port is configured?
+
+If you _already_ connected via it and get firmware / bootloader messages.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
