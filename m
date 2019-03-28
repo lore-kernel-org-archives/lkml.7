@@ -2,117 +2,152 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BD7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62CAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A1620700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvuEp5ew"
+	by mail.kernel.org (Postfix) with ESMTP id B60012064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553798669;
+	bh=YsfzhjrkUZ/MjGqmaOjabUWDsk+FXglaXDC1SWzXiPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xJXc3iDl4DNI/PW4N4ulhxiZ01b7i8cRcUwdgF+dwjQsslEvXkX+F/t9L21Kv8jTy
+	 iwgqPtAr8zwizNug4ltsYPaHzy2xIkZ5z+uEV3kIOvPBBtt8SmzP+ns43Smv4aYg92
+	 kRnLicJPa0S6C4JTVvW6108xrOXuvBY0ZuTSnKxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfC1SnS (ORCPT
+        id S1726211AbfC1So2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 14:43:18 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:40660 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfC1SnR (ORCPT
+        Thu, 28 Mar 2019 14:44:28 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39009 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfC1So1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 14:43:17 -0400
-Received: by mail-io1-f41.google.com with SMTP id d201so18114456iof.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t/WuzjoNOQ6c9tAFS917wzoGwLcNxDKz5cpHigmYgfA=;
-        b=KvuEp5ewGZI1r7cmc2c9M0CmM7Vuxe4ltM6EwjDZPf6GO8IfT6Ryx5pKD6Y0LvY34d
-         GVg28mNpYqBDOVTNzKPfYUufbDnhhhstTpg5+cZtrQpukClo1QQkUTODcCelMFC7x7Qo
-         b++zafnQpfID9inBmKLBRKoxfJPJR89Bxid1PLWXBV6bQOMPeqF+YsQFi9tbXttRCcLI
-         fSHuRyw/3yA7fbWbZ4a0vnLrvTtMg5poRT6k3ZskipHfK88Dp7XqmxO6bHa9CTrHUKhd
-         kj5T7Jdd9yXVPCkiA9m8LThY9ttlJW0zzigmau/jAG25QssomvWl8J0nlpFHMnOeiO3v
-         raIg==
+        Thu, 28 Mar 2019 14:44:27 -0400
+Received: by mail-oi1-f195.google.com with SMTP id n187so13800294oih.6;
+        Thu, 28 Mar 2019 11:44:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/WuzjoNOQ6c9tAFS917wzoGwLcNxDKz5cpHigmYgfA=;
-        b=mYu4ulU9uYXrVCwsmnMOqgEl2lVtMOZsUfi3sudDZ1ABRmWLkbWx3Pn39DmN1FofBV
-         Gl4lTv1lzUqWScm6Xf7xor7XClD6rjpX4P/UyejHUk6x42b5ShMe6kRqEUbm1gTH5/XQ
-         S5RCdXGgHSDSBplnuxNQ6hoGWjUweFj7My0jbwfvBSg+FftNkfsbkWM0ewK5nqv7P0gV
-         2fjq6eyjodENA/QAaSeooAOwfrJXX3s/k/C0pIXbH/utfjlLoVROp5MESFcFcsIIz9AW
-         C4eBkxejy6xP3OHFYYTn8jhHWQrl4O0+P8aqcTLRMwzFtgJA21QAxhyw9gRgwaLmEqrV
-         yZ8w==
-X-Gm-Message-State: APjAAAXMZfrKERITQHe1Lhv/7yVOqKERO8Gj0BcFAR6jtRB7LfbADP26
-        oBFcMSZo7n23Ue84mzrIfiWRth56jaw3uiUZvtk=
-X-Google-Smtp-Source: APXvYqylcPhV8AOgZLxaOep+Gr+8t9WUvZHJFvUjCV+mQRZIIKPetWn9elyPMP/4zMssTC9yzxeetcjIUWCjkNlb4PA=
-X-Received: by 2002:a6b:3f86:: with SMTP id m128mr13570481ioa.275.1553798596579;
- Thu, 28 Mar 2019 11:43:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CX+Ec3c8yzrgasul+E+SqcQqDwlxjCw7tIRt6TNfviM=;
+        b=KgjXcp9ahVyhf5eqDITUiqyEaWVe1EfcD2auO7F1FlVoPVIkbLUvvMqkwo1kQ8vqXa
+         O+48ieXgcfsTjpLygFxse9PIX3lRAiuSLvcUu81nkv+Z0lGzYzAx/DDoWwk9NPUAACKq
+         dXzqX1K41tDIhj27ENYj2AhXSsJ2Qq6512XOu4C/tVnskwB3QL7ESZMFkHpjhkRK7mOn
+         SKMWl/Sd+ay09gga8++6KIzkeW8cqBPCY7miNXAkDR7YDxNjO+eGMS64ZzqaiVzuj6Wp
+         EXTkRwCUQUO3O5AJT8x4gzmotebSoiXK7xPLOYleXu4pj+rgaf9Opep8KQV97j6aZShQ
+         bAvg==
+X-Gm-Message-State: APjAAAV8aMMXae2cfS0pq2nSb9kgx/vFuBZDS1Ev4rOH2kFQOL+7pSfH
+        9paGz46mtyE9MUoekeYXkQ==
+X-Google-Smtp-Source: APXvYqytZgxu6mMm43rBuRhAWDggagDdy0plDNdFz71Wp7xRW7xT6LJjdaMt2f6tezFEim8Kv+298w==
+X-Received: by 2002:aca:4b03:: with SMTP id y3mr1019403oia.21.1553798667157;
+        Thu, 28 Mar 2019 11:44:27 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q23sm10366855oic.45.2019.03.28.11.44.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 11:44:26 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 13:44:25 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        ginny.chen@mediatek.com, kendrick.hsu@mediatek.com,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Subject: Re: [PATCH v3 03/12] dt-binding: gce: add binding for gce event
+ property
+Message-ID: <20190328184425.GA21602@bogus>
+References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
+ <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-References: <CAKdAkRQj=bSSL2Cw3gAqi5f12yP3+KsvtrMvU4Lcfta_JYxMYQ@mail.gmail.com>
- <20190328180503.GA16249@mail.hallyn.com> <CAKdAkRRf+7UkmwbWNEnR3cNhc2t-kspRQNy4uOYRdcwBofXwtA@mail.gmail.com>
- <20190328183707.GA16570@mail.hallyn.com>
-In-Reply-To: <20190328183707.GA16570@mail.hallyn.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Thu, 28 Mar 2019 11:43:05 -0700
-Message-ID: <CAKdAkRSMCucS96ghj6vDtz31Vsa19AjuTsqAEYUTRUOZe7ZOwQ@mail.gmail.com>
-Subject: Re: Allowing mapping supplemental groups in user namespace?
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553739573-19708-4-git-send-email-bibby.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 11:37 AM Serge E. Hallyn <serge@hallyn.com> wrote:
->
-> On Thu, Mar 28, 2019 at 11:30:52AM -0700, Dmitry Torokhov wrote:
-> > Hi Serge,
-> >
-> > On Thu, Mar 28, 2019 at 11:05 AM Serge E. Hallyn <serge@hallyn.com> wrote:
-> > >
-> > > On Thu, Feb 28, 2019 at 11:27:38AM -0800, Dmitry Torokhov wrote:
-> > > > Hi Eric,
-> > > >
-> > > > Currently, unless caller has CAP_SETGID in parent namespace, we can
-> > > > only map effective group id in the new user namespace. Would it be
-> > > > possible to relax this rule to also allow mapping of supplemental
-> > > > groups (1:1) of the caller?
-> > > >
-> > > > Thanks.
-> > > >
-> > > > --
-> > > > Dmitry
-> > >
-> > > Hi,
-> > >
-> > > Is there a use case where adding those to /etc/subgid is onerous?
-> > > (There probably is, just would like to see yours)
-> >
-> > We on Chrome OS limit number of suid binaries installed on the system,
-> > so newgidmap does not have necessary privileges to carry out this
->
-> <shrug> good goal in general so long as you don't take a few huge
-> monolithic suid binaries instad of more simpler ones :)
->
-> > operation. Also we are looking for a solution that we can use with our
-> > minijail package where spawning additional binary is challenging even
-> > if it was suid.
->
-> Ok.  So fwiw I think what you propose should be ok.  I think you should
-> post a patch to do it.  It's very possible that seeing that patch will
-> remind us of the reason why it *is* a bad idea, but seeing the patch may
-> be a required shock to elicit that memory.
+On Thu, Mar 28, 2019 at 10:19:24AM +0800, Bibby Hsieh wrote:
+> Client hardware would send event to GCE hardware,
+> so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
+> present the event.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 1f7f8f2..2f175d6 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -21,12 +21,21 @@ Required properties:
+>  	priority: Priority of GCE thread.
+>  	atomic_exec: GCE processing continuous packets of commands in atomic
+>  		way.
+> +- #event-cells: Should be 1.
+> +	<&phandle event_number>
+> +	phandle: Label name of a gce node.
+> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+> +		      or 'dt-binding/gce/mt8183-gce.h'.
 
-OK, I will cook up something.
+You only need to have a #*-cells if the number is variable.
 
-Thanks.
+What are 'events' here? Sounds like interrupts or MSI?
 
--- 
-Dmitry
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+>    property and list of phandle, mailbox specifiers.
+>  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+>    to the register address.
+> +Optional propertier for a client device:
+> +- mediatek,gce-event-names: the event name can be defined by user.
+> +- mediatek,gce-events: u32, the event number defined in
+> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+>  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> @@ -40,6 +49,7 @@ Example:
+>  		clocks = <&infracfg CLK_INFRA_GCE>;
+>  		clock-names = "gce";
+>  		#mbox-cells = <3>;
+> +		#event-cells = <1>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -49,8 +59,9 @@ Example for a client device:
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+>  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> -
+> +		mediatek,gce-event-names = "rdma0_sof",
+> +					   "rsz0_sof";
+> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+>  		...
+>  	};
+> -- 
+> 1.9.1
+> 
