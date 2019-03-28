@@ -2,104 +2,94 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F44C10F03
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296EDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B626206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA59206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:08:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smkGQZIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfC1RIr (ORCPT
+        id S1727592AbfC1RIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:08:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48670 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfC1RIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:08:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31BFE80D;
-        Thu, 28 Mar 2019 10:08:46 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C766A3F557;
-        Thu, 28 Mar 2019 10:08:44 -0700 (PDT)
-Subject: Re: [PATCH v3 3/5] PCI: dwc: Free MSI in the error code path of
- dw_pcie_host_init()
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190318174415.74fd25a5@xhacker.debian>
- <20190318174841.522fb6fd@xhacker.debian>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <689f8a0f-ba79-da80-d0e3-24ef6814a9aa@arm.com>
-Date:   Thu, 28 Mar 2019 17:08:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 13:08:51 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44424 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfC1RIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:08:48 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w5so23909622qtb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 10:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qd0t00eC2iONuirdaj+w0zePjQU67FNRgdalc2QG/ew=;
+        b=smkGQZIfUdf8DLhjPEu/U/ToZj4WmH6Z8k2l4BH3th9CJAbRIhUVJRvoZN4qITUR2q
+         PwmOMtkwqpHrW+a7aqtk1ZYNaWhQE333A17h4eDgSB47wS41uquXV7p9sm9SjFbwMkb+
+         lBqhXm6f3KEC+ROYcljg24f9nJm/n18Y88sjaIZNugcIRR2xyVje8x0OjtKTZNnnZ+N9
+         Oq4+4S8DPKjqc+9g0Wfo1aB5N3vuaQD7adPUUPNcI9/NE1lcWhNEfIuk4D8cLUY6ZDjN
+         kScEIaIALkqpFy01q6JnmgjIDv3xuKe6rp98M8wJLtdA8RPVK7QzLhQmnvga2RbK6aX3
+         HFTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qd0t00eC2iONuirdaj+w0zePjQU67FNRgdalc2QG/ew=;
+        b=JemP4TDJmHI04BM38eLlORMQKkgNbj1UQB4CMCN1tCEWme/PqvRLbM3P6wX2TpKVYg
+         w6ihLIhpPL3VYpboby2wQ/kPYhMGfCQ9XFUbYIvotboWEfda95Vu+WpqXtzi/4y3aXxC
+         oasH34Gg81wRecy+Ww+830+gjtlQ13lcQT8oRoEefb777cPWrF7bKKWrKEUtLAuiMHGT
+         g9mfqmJoXOJe0iBPCKoR63oA8qFxBILXRs/CgkuPKLYB/GIFYweNLe5LsWGjke/2mSYL
+         pq1hM9pBlZV9OhOY+qi2xYmJPhcv/aM1QmWPsLeLdKry2FWAsEJ3x3JVlmqp/jFswY/5
+         X6WA==
+X-Gm-Message-State: APjAAAXSMCb1KpzGKaEKfOvy+MdFIQ2tMH5Qu5VU+QDv/ltcO9piYWKK
+        //0Prm2u0I4WeS/OaQRsucbH9LZHb/b2yZTZPOk=
+X-Google-Smtp-Source: APXvYqzRHPDL0XKHPVzxDwLSdiloeJ1PA5f7Gqn9M/FfRO3hhGmC7zRjeRJufgig/9mHqfVc/tJ1q5jZyWRFtJ1SlqE=
+X-Received: by 2002:a0c:bec4:: with SMTP id f4mr2459467qvj.17.1553792927732;
+ Thu, 28 Mar 2019 10:08:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190318174841.522fb6fd@xhacker.debian>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1553648174-24913-1-git-send-email-v.mayatskih@gmail.com>
+ <20190327164914.GE27283@stefanha-x1.localdomain> <CAGF4SLiKv06rzuGprfpWg-EOi8y+DW+cTybCkoT_9OoE+y8tcQ@mail.gmail.com>
+ <20190328163647.GE18536@stefanha-x1.localdomain>
+In-Reply-To: <20190328163647.GE18536@stefanha-x1.localdomain>
+From:   Vitaly Mayatskih <v.mayatskih@gmail.com>
+Date:   Thu, 28 Mar 2019 13:08:36 -0400
+Message-ID: <CAGF4SLiZxXcWskZXmGbwO11MnwyMAK_Bpbn0ugZzK6jSMHdiog@mail.gmail.com>
+Subject: Re: [PATCH] vhost: zero vhost_vsock memory on allocation
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2019 09:56, Jisheng Zhang wrote:
-> If we ever did some msi related initializations, we need to call
-> dw_pcie_free_msi() in the error code path.
-> 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->   drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index a71b874ae3c0..585080699675 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -483,7 +483,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   	if (pp->ops->host_init) {
->   		ret = pp->ops->host_init(pp);
->   		if (ret)
-> -			goto error;
-> +			goto err_free_msi;
->   	}
->   
->   	pp->root_bus_nr = pp->busn->start;
-> @@ -497,7 +497,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   
->   	ret = pci_scan_root_bus_bridge(bridge);
->   	if (ret)
-> -		goto error;
-> +		goto err_free_msi;
->   
->   	bus = bridge->bus;
->   
-> @@ -513,6 +513,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   	pci_bus_add_devices(bus);
->   	return 0;
->   
-> +err_free_msi:
-> +	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_enabled() &&
+On Thu, Mar 28, 2019 at 12:36 PM Stefan Hajnoczi <stefanha@redhat.com> wrote:
 
-pci_msi_enabled() already has a stub for !CONFIG_PCI_MSI, so you 
-shouldn't need an explicit IS_ENABLED() here.
+> vsock->hash is only read if vsock->guest_cid has already been set and
+> hence vsock->hash has been initialized too.  I don't see where the
+> problem is.
+>
+> Was your tree missing commit a72b69dc083a931422cc8a5e33841aff7d5312f2
+> ("vhost/vsock: fix uninitialized vhost_vsock->guest_cid")?
+>
+> Are you sure the crash can be reproduced on linux.git/master?
 
-Robin.
+You are right: we hit it on 4.14.91 while the guest_cid fix was
+backported in 4.14.93.
+Thus not a real issue. Sorry for confusion, vhost is something still new to me.
 
-> +			!pp->ops->msi_host_init)
-> +		dw_pcie_free_msi(pp);
->   error:
->   	pci_free_host_bridge(bridge);
->   	return ret;
-> 
+> Sounds good.  Please send a v2 that also removes the explicit zero
+> initialization since it's no longer needed with zalloc.
+
+I changed my mind, all the rest is initialized explicitly, let's keep
+it that way.
+Will send the patch shortly.
+
+-- 
+wbr, Vitaly
