@@ -2,115 +2,175 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8A2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D82C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980F6206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E41E5206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 04:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAN5zy/f"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="buNzBGJP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GmkKPNbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfC1EjH (ORCPT
+        id S1726596AbfC1ErV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 00:39:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34930 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfC1EjH (ORCPT
+        Thu, 28 Mar 2019 00:47:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33156 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfC1ErU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 00:39:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p19so4366718plo.2;
-        Wed, 27 Mar 2019 21:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H8r/rPDIdp1bYLW9wSNX+D8mlHRpDf4FGN+0AbSvEfE=;
-        b=RAN5zy/f+G552WpqxoPnHecVTkvPuGC+b15Dnkn2RfGy+vGXdf/vxJrgCf1Xpu5d+1
-         o5yzxCkTOk2C/dyvyioPdb72xfzNkOBwT2o+oLpNCElU4+Be+CZNOyvZrQ2xwa4NHXzF
-         BTcwsyRRz1OJ7OabkOhVsxARsrNgijsy83/7hP9UQjR8ClNLp04RtfKUepxmBuu7neyC
-         ecIfLSjnVPmmwy7oo6EBskUhReSiu95d5wRZDNeYgOggBxp7P99TXh41Yc9+vu0iZ2pg
-         svrIGDxBGGWrZvaYSIt+0wevscM5R5iGrdLKD+XHLNff8LBe6asbG1AMGmViSWlslk59
-         Aexw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H8r/rPDIdp1bYLW9wSNX+D8mlHRpDf4FGN+0AbSvEfE=;
-        b=NWSctY5ZxYzvIx+JEj0va6bYdUiO/y7pOm2QQ59pwjRgAYwtd6dtHyOttwzT9cC4k9
-         3k+5wiAPVglK9qtQX9+G21B1FLXR4KFYSe2LutTBmL3MGgSTxalC/Tyklm7io3zrxyyX
-         d3ZhHDH8a5tN6TkDK8BRxMWfFeldwJVQRhBwC2ilFFWTOSz+H02P4QHVp9FbPp7hIbyY
-         bOS2ZRweCqalQD11Tpq7KifOTpyp/yllouhrXdd7QizprxyycmMa9wOe1/KbGQRNlytp
-         dV4bMiAn//qn9KUVxOCAFEwPNGR9ZxbxwN0yLQOpaW72QBoA04jP9PGVE5b/+oNlNyCq
-         B9Fw==
-X-Gm-Message-State: APjAAAUSnnAdrFrXe77qYnaYcW07RmbQ55FPc2Y7k13knCYSm99FTyDy
-        0RSn1GynoKIq0By5sNHugwg=
-X-Google-Smtp-Source: APXvYqw4+w4/HVQXdw9bX68V9rDSUG5OrUi5kuPGYvGmmtQmQyp4oqkB4ZR9X8HLZ9xgRfOJtlw8Mg==
-X-Received: by 2002:a17:902:b58f:: with SMTP id a15mr26648596pls.36.1553747946345;
-        Wed, 27 Mar 2019 21:39:06 -0700 (PDT)
-Received: from icarus ([2001:268:c0a2:ad41:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id e21sm20915179pfd.177.2019.03.27.21.38.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Mar 2019 21:39:05 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 13:40:04 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rasmusvillemoes.dk, yamada.masahiro@socionext.com,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        geert@linux-m68k.org, preid@electromag.com.au,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v13 10/11] gpio: 74x164: Utilize the for_each_set_clump8
- macro
-Message-ID: <20190328044004.GB3251@icarus>
-References: <cover.1553661964.git.vilhelm.gray@gmail.com>
- <645f16f1d1ad3f215e34a82f457e06725fcf8f56.1553661964.git.vilhelm.gray@gmail.com>
- <20190327123314.GJ9224@smile.fi.intel.com>
+        Thu, 28 Mar 2019 00:47:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4883460779; Thu, 28 Mar 2019 04:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553748439;
+        bh=E/Kj+m5Iz2fY4+uTj+tjvg8EY5eik+6c4Lu0MYkKzU4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=buNzBGJPGK9g3f5TY2QiGmLbwiQopmH0vQ3F1nFh0thXPJAwNTI6nkCZcqzmqW5Zg
+         5+Qa7aurjxYJsy0eB/BjAwFSFG+pLNH3FxJt0+qhchBLGNsCcMF+DjPJCBGDLJSCs2
+         OM9BXVgInemkdhODXIv82MjbS7VbmYHaVbWLxg2o=
+Received: from lingutla-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: clingutla@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31E88602FC;
+        Thu, 28 Mar 2019 04:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553748438;
+        bh=E/Kj+m5Iz2fY4+uTj+tjvg8EY5eik+6c4Lu0MYkKzU4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GmkKPNbBofhsMeokyue3kRToxttyxM/X4zd0yNCL/RF3IjeJoyesvTIBg57zvOuPQ
+         nbyxf4MvBOycIp8lT8capG7AUMYCb0xi1yQZhb33c01Hctvoa4fC+rODyD4DOZwmCu
+         yntxYIuEpvE+JtcF3I2SLuPQw9/+amsJOw727oaE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31E88602FC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clingutla@codeaurora.org
+From:   Lingutla Chandrasekhar <clingutla@codeaurora.org>
+To:     gregkh@linuxfoundation.org, quentin.perret@arm.com,
+        sudeep.holla@arm.com, dietmar.eggemann@arm.com
+Cc:     juri.lelli@gmail.com, catalin.marinas@arm.com,
+        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lingutla Chandrasekhar <clingutla@codeaurora.org>
+Subject: [PATCH v2] arch_topology: Make cpu_capacity sysfs node as ready-only
+Date:   Thu, 28 Mar 2019 10:17:05 +0530
+Message-Id: <20190328044705.16838-1-clingutla@codeaurora.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190327123314.GJ9224@smile.fi.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 02:33:14PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 27, 2019 at 02:02:39PM +0900, William Breathitt Gray wrote:
-> > Replace verbose implementation in set_multiple callback with
-> > for_each_set_clump8 macro to simplify code and improve clarity.
-> 
-> > +	for_each_set_clump8(offset, bankmask, mask, chip->registers * 8) {
-> 
-> > +		bank = (chip->registers - 1) - (offset / 8);
-> 
-> Excessive parens, but it's minor.
+If user updates any cpu's cpu_capacity, then the new value is going to
+be applied to all its online sibling cpus. But this need not to be correct
+always, as sibling cpus (in ARM, same micro architecture cpus) would have
+different cpu_capacity with different performance characteristics.
+So, updating the user supplied cpu_capacity to all cpu siblings
+is not correct.
 
-Fair point, this could do without parens around (chip->registers - 1).
+And another problem is, current code assumes that 'all cpus in a cluster
+or with same package_id (core_siblings), would have same cpu_capacity'.
+But with commit '5bdd2b3f0f8 ("arm64: topology: add support to remove
+cpu topology sibling masks")', when a cpu hotplugged out, the cpu
+information gets cleared in its sibling cpus. So, user supplied
+cpu_capacity would be applied to only online sibling cpus at the time.
+After that, if any cpu hotplugged in, it would have different cpu_capacity
+than its siblings, which breaks the above assumption.
 
-Since this and renaming 'idx' to 'index' in find_bit.c are such a minor
-changes, I'll wait first to see if something else comes up to be fixed
-in this review. If so, I'll add these changes to the next version of
-this patchset.
+So, instead of mucking around the core sibling mask for user supplied
+value, use device-tree to set cpu capacity. And make the cpu_capacity
+node as read-only to know the asymmetry between cpus in the system.
+While at it, remove cpu_scale_mutex usage, which used for sysfs write
+protection.
 
-William Breathitt Gray
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-by: Quentin Perret <quentin.perret@arm.com>
+Reviewed-by: Quentin Perret <quentin.perret@arm.com>
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Lingutla Chandrasekhar <clingutla@codeaurora.org>
 
-> 
-> > +		bitmask = bitmap_get_value8(bits, offset) & bankmask;
-> >  
-> >  		chip->buffer[bank] &= ~bankmask;
-> > +		chip->buffer[bank] |= bitmask;
-> >  	}
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index edfcf8d982e4..1739d7e1952a 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -7,7 +7,6 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/arch_topology.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
+ #include <linux/device.h>
+@@ -31,7 +30,6 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+ 		per_cpu(freq_scale, i) = scale;
+ }
+ 
+-static DEFINE_MUTEX(cpu_scale_mutex);
+ DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
+ 
+ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+@@ -51,37 +49,7 @@ static ssize_t cpu_capacity_show(struct device *dev,
+ static void update_topology_flags_workfn(struct work_struct *work);
+ static DECLARE_WORK(update_topology_flags_work, update_topology_flags_workfn);
+ 
+-static ssize_t cpu_capacity_store(struct device *dev,
+-				  struct device_attribute *attr,
+-				  const char *buf,
+-				  size_t count)
+-{
+-	struct cpu *cpu = container_of(dev, struct cpu, dev);
+-	int this_cpu = cpu->dev.id;
+-	int i;
+-	unsigned long new_capacity;
+-	ssize_t ret;
+-
+-	if (!count)
+-		return 0;
+-
+-	ret = kstrtoul(buf, 0, &new_capacity);
+-	if (ret)
+-		return ret;
+-	if (new_capacity > SCHED_CAPACITY_SCALE)
+-		return -EINVAL;
+-
+-	mutex_lock(&cpu_scale_mutex);
+-	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
+-		topology_set_cpu_scale(i, new_capacity);
+-	mutex_unlock(&cpu_scale_mutex);
+-
+-	schedule_work(&update_topology_flags_work);
+-
+-	return count;
+-}
+-
+-static DEVICE_ATTR_RW(cpu_capacity);
++static DEVICE_ATTR_RO(cpu_capacity);
+ 
+ static int register_cpu_capacity_sysctl(void)
+ {
+@@ -141,7 +109,6 @@ void topology_normalize_cpu_scale(void)
+ 		return;
+ 
+ 	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
+-	mutex_lock(&cpu_scale_mutex);
+ 	for_each_possible_cpu(cpu) {
+ 		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
+ 			 cpu, raw_capacity[cpu]);
+@@ -151,7 +118,6 @@ void topology_normalize_cpu_scale(void)
+ 		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
+ 			cpu, topology_get_cpu_scale(NULL, cpu));
+ 	}
+-	mutex_unlock(&cpu_scale_mutex);
+ }
+ 
+ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+ a Linux Foundation Collaborative Project.
+
