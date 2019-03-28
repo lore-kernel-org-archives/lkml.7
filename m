@@ -1,68 +1,94 @@
 Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_RED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45BFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87416C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB5720700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB3A20700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfC1GJB (ORCPT
+        id S1726587AbfC1GJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:09:01 -0400
-Received: from orcrist.hmeau.com ([104.223.48.154]:53940 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfC1GJB (ORCPT
+        Thu, 28 Mar 2019 02:09:26 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:38043
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbfC1GJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:09:01 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1h9OCw-0003s0-RK; Thu, 28 Mar 2019 14:08:10 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1h9OCl-0007nh-9O; Thu, 28 Mar 2019 14:07:59 +0800
-Date:   Thu, 28 Mar 2019 14:07:59 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     leitao@debian.org, nayna@linux.ibm.com, pfsmorigo@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH -next] crypto: vmx - Make p8_init and p8_exit static
-Message-ID: <20190328060759.ibwxcivx3unnpip4@gondor.apana.org.au>
-References: <20190321151148.19128-1-yuehaibing@huawei.com>
+        Thu, 28 Mar 2019 02:09:24 -0400
+X-IronPort-AV: E=Sophos;i="5.60,278,1549926000"; 
+   d="scan'208";a="300976876"
+Received: from unknown (HELO hadrien) ([94.134.122.206])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:09:22 +0100
+Date:   Thu, 28 Mar 2019 07:09:22 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     wen.yang99@zte.com.cn
+cc:     yamada.masahiro@socionext.com, Markus.Elfring@web.de,
+        Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, yellowriver2010@hotmail.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?GB2312?Q?Re=3A_=B4=F0=B8=B4=3A_Re=3A_=5Bv5=5D_coccinelle=3A_s?=
+ =?GB2312?Q?emantic_code_search_for_missing_put=5Fdevice=28=29?=
+In-Reply-To: <201903281010336645826@zte.com.cn>
+Message-ID: <alpine.DEB.2.21.1903280708590.2756@hadrien>
+References: 1550217319-40418-1-git-send-email-wen.yang99@zte.com.cn,CAK7LNASVRbroW9_j1Kda3azHb6PzD3WyVAsKe0HfD1ri0RFPOQ@mail.gmail.com,CAK7LNATjAsiSeZoTZ57zBHse0j5ZYY_12ZQ0gaF_oCziUWheOQ@mail.gmail.com <201903281010336645826@zte.com.cn>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190321151148.19128-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:11:48PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> Fix sparse warnings:
-> 
-> drivers/crypto/vmx/vmx.c:44:12: warning:
->  symbol 'p8_init' was not declared. Should it be static?
-> drivers/crypto/vmx/vmx.c:70:13: warning:
->  symbol 'p8_exit' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/crypto/vmx/vmx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+On Thu, 28 Mar 2019, wen.yang99@zte.com.cn wrote:
+
+> > > > When I searched "Wen Yang", v6 did not show up for some reasons.
+> > > > https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=22638&state=*&q=&archive=&delegate=
+> > >
+> > > I find such a situation also interesting somehow.
+> > > I assume that there was another temporary technical difficulty involved
+> > > with the Linux mailing list (and related information systems).
+> >
+> >
+> > I think v6 fell into a crack somehow.
+> >
+> >
+> > Check the LKML archive:
+> > https://lkml.org/lkml/2019/2/16
+> >
+> >
+> > I see your reply:
+> >
+> > Re: [v6] coccinelle: semantic code search for missing put_device()Markus Elfring
+> >
+> >
+> > But, I cannot find the v6 patch itself.
+> >
+>
+> I am sorry to bother you.
+> I checked it again and  found that I can not send mail to <linux-kernel@vger.kernel.org>
+> via my private mailbox <yellowriver2010@hotmail.com>.
+> The reject reply like this:
+>
+> for your MAIL FROM address <yellowriver2010@hotmail.com> policy analysis reported: Your address is not liked source for email
+>
+> Is it looked my mail as spam mail?
+> Who should I send to for help me resolving this problem?
+
+Maybe Konstantin Ryabitsev?
+
+julia
+
+
+>
+>
+> --
+> Best Regards
+> Wen
