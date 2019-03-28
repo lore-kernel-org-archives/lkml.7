@@ -2,106 +2,117 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F21C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AABCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0C421773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0341E2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0Cj5ef94"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CMJ/Z1TD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfC1OFi (ORCPT
+        id S1726243AbfC1OIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:05:38 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38049 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfC1OFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:05:38 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d13so18485003qth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:05:37 -0700 (PDT)
+        Thu, 28 Mar 2019 10:08:37 -0400
+Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:11141
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726059AbfC1OIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:08:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OZsN+KjF6P0mNOSjgzFw3fqkoVmkhJo6T0apoMNZd18=;
-        b=0Cj5ef94+CRYvijQ1AKj4UAqc1sd4cV79FVilXIDCXG80htX0gpXBVJh72zcQtcJlO
-         83oIVfRWYgGi6lHslyDtBI3ISnwIp+M5c97aBdGGSBoOLO7P0Kq8VgRgXDXrDFSj6+Ly
-         Fh1kQXuELevRdHZlCwh6RbGwkyggA16Rmaen1DQAvAgsDUxHHE4m5zGtKKuYRdDomMbS
-         p/aamlRNU+LM7rc6ak7M6DGzDhKOv3Bos/DVp1U6uVikCyCEn5ZD5js8unIeQTNtJZZM
-         TmQIYr/CClYewtDHXV+F6YqaE9UWtU8KTpv5bB3oZQlejMPBoKJYTh5o/oDASbqx/6V7
-         Gx+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OZsN+KjF6P0mNOSjgzFw3fqkoVmkhJo6T0apoMNZd18=;
-        b=hqxdep5nPMG2Fa0WRdahXBigwLnMV/4VDBW9lMg6wQnleHjxMjA58mjVunsECG3rvr
-         SXivONh9ACuiMIbxZpFZUy11nyar8dGZCLsXWhq2OQf4CYnGNOK6lRrJIRcQJ0LwXyAB
-         ToAF44xlzh2VM7kGQJYA4y6WGgrL/pKnC00mmCoqBDUj+KK1xGguc2oG/DwaV4zq6zQa
-         Pt2TXZXL69snviNafiUAOWUqNuBjKLKp1jIBg7SFuEguPX8Gg0TjmuoZue0MeU5SRt8C
-         DQeKKXzOuO/X5Kycz5WLLs8mFLH0ibgkSRZUz4rAjcnKTuRYqtCgTch+igEZvCSv3yyQ
-         t2Yw==
-X-Gm-Message-State: APjAAAV/X3sa1NKFKeR+9j0ekyNMvz/IsDECOe5Dn3DgESuvxamYDDvI
-        DRSssLDYCznQMh9uOVR4bFNmBg==
-X-Google-Smtp-Source: APXvYqzhlNfyJWYewSPQn9Q2ZGgaGwby4p0a0N5/E0M0U5RjcC3vbzUObNwUIUTLX3Be4ykk3m8SjQ==
-X-Received: by 2002:ac8:3fbc:: with SMTP id d57mr34297897qtk.96.1553781937336;
-        Thu, 28 Mar 2019 07:05:37 -0700 (PDT)
-Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
-        by smtp.gmail.com with ESMTPSA id b37sm10221707qtb.92.2019.03.28.07.05.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Mar 2019 07:05:36 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:05:35 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Greg Thelen <gthelen@google.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Tejun Heo <tj@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mNBpEDMlWzwBDruFmJE7DaYiYUm24nIqcuLAY9mLsJk=;
+ b=CMJ/Z1TDxw06qtCki4cyaXhJH7GP/27QQ/ne1NmMakLeSfCQ8z3C10djZW0qyBFt27n2ivyHbvni/2xiMTK3obUoQtAEGYpXEBcF3cLXZJtmn50qvpeNiQ8eBrHUwZ7u8oeIofbLbGi1i311iUg0atqNXgF3M2+jYtQTYCpYrdE=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
+ DM6PR12MB2875.namprd12.prod.outlook.com (20.179.71.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.15; Thu, 28 Mar 2019 14:08:33 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::4dd7:e79:1607:b755]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::4dd7:e79:1607:b755%5]) with mapi id 15.20.1730.019; Thu, 28 Mar 2019
+ 14:08:33 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] writeback: sum memcg dirty counters as needed
-Message-ID: <20190328140535.GA15622@cmpxchg.org>
-References: <20190307165632.35810-1-gthelen@google.com>
- <20190322181517.GA12378@tower.DHCP.thefacebook.com>
- <CAHH2K0ZqTXhdA+RSZU0a4kjeJexQ5Kh+rMaspzhMCwjKjJvHug@mail.gmail.com>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] KVM: SVM: move the SEV command handling into a
+ separate file
+Thread-Topic: [PATCH 0/2] KVM: SVM: move the SEV command handling into a
+ separate file
+Thread-Index: AQHUuk3H4gJB1J4DqUi+VYhv1rGmf6YhatUA
+Date:   Thu, 28 Mar 2019 14:08:33 +0000
+Message-ID: <43882998-afca-3245-b376-19cdaab2e490@amd.com>
+References: <20190201164654.3888-1-brijesh.singh@amd.com>
+In-Reply-To: <20190201164654.3888-1-brijesh.singh@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0401CA0034.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::20) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:4a::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d1f1e0f1-af2d-42c5-ec91-08d6b386dccd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB2875;
+x-ms-traffictypediagnostic: DM6PR12MB2875:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR12MB28756A7E0806E4933C47F0F0E5590@DM6PR12MB2875.namprd12.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(136003)(39860400002)(396003)(199004)(189003)(478694002)(14454004)(52116002)(2501003)(6306002)(4326008)(68736007)(86362001)(6486002)(66066001)(256004)(6436002)(31696002)(8676002)(81156014)(81166006)(102836004)(99286004)(6512007)(6506007)(53546011)(3846002)(106356001)(6116002)(97736004)(105586002)(8936002)(386003)(76176011)(26005)(186003)(305945005)(53936002)(446003)(229853002)(25786009)(5660300002)(36756003)(11346002)(110136005)(316002)(54906003)(486006)(478600001)(966005)(2906002)(2616005)(71190400001)(71200400001)(31686004)(6246003)(7736002)(476003)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2875;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pDNfixd7xwhqYE86m+c7Ie7dqxnI94Qmo72Ytgig+WfBOKegUG1YU8U6J4HmCuCKUawexHCMml9yxHD0du1w7RDOQmhhGLlCPmZWp2UOK6AVkBTSBoGpN1BgrKg38j4KXgL4HbHSU227QZqpF9KFXiVbonv36IGpPGVhUUfzIG9qtuMhELhCTfYRK0j8xWURyd+G6mRa8V4RUJrtjulKZR6tnzJ8tRO7/oqR8mIqMJUZ/aWCxAIm/V5DS7mvrTXzmL7vOYmL9plPCYxXQ2IwcahoWmDpYgNlZhziwZ2p3ZL72sfQ1SjVOk7VrJVaBzZyjFznnSKKbZVIXjWYh9kw0qupk8Aac6XQb/ZyfxyGRDzuzieLA8b76UoRAm8dkukaXXr14JRqvXQbJb15osZ0xdmKyCv8WSOl7aUwPO8vaRw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <76BD16CABBD01D4FBCFF307916C88B6C@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHH2K0ZqTXhdA+RSZU0a4kjeJexQ5Kh+rMaspzhMCwjKjJvHug@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1f1e0f1-af2d-42c5-ec91-08d6b386dccd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 14:08:33.5179
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2875
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 03:29:47PM -0700, Greg Thelen wrote:
-> On Fri, Mar 22, 2019 at 11:15 AM Roman Gushchin <guro@fb.com> wrote:
-> > On Thu, Mar 07, 2019 at 08:56:32AM -0800, Greg Thelen wrote:
-> > > +     int cpu;
-> > > +
-> > > +     for_each_online_cpu(cpu)
-> > > +             x += per_cpu_ptr(memcg->stat_cpu, cpu)->count[idx];
-> > > +     if (x < 0)
-> > > +             x = 0;
-> > > +#endif
-> > > +     return x;
-> > > +}
-> >
-> > Also, isn't it worth it to generalize memcg_page_state() instead?
-> > By adding an bool exact argument? I believe dirty balance is not
-> > the only place, where we need a better accuracy.
-> 
-> Nod.  I'll provide a more general version of memcg_page_state().  I'm
-> testing updated (forthcoming v2) patch set now with feedback from
-> Andrew and Roman.
-
-I'm working on a patch series that reworks the memcg_page_state() API
-and by far the most callers do NOT need the exact numbers. So I'd ask
-to please keep this a separate function so I don't have to update tens
-of callsites to pass "false". Thanks!
+SGkgUGFvbG8gYW5kIFJhZGltLA0KDQoNCk9uIDIvMS8xOSAxMDo0NyBBTSwgU2luZ2gsIEJyaWpl
+c2ggd3JvdGU6DQo+IHN2bS5jIGlzIHByZXR0eSBodWdlLCBiZWZvcmUgd2UgYWRkIG1vcmUgU0VW
+IHNwZWNpZmljIGNvbW1hbmRzIChlLmcgU0VWLUVTLA0KPiBTRVYtTWlncmF0aW9uIGV0YykgbGV0
+cyBtb3ZlIHRoZSBTRVYgY29tbWFuZCBoYW5kbGluZyBpbnRvIGEgc2VwYXJhdGUgZmlsZS4NCj4g
+VGhlcmUgaXMgbm8gbG9naWNhbCBjaGFuZ2VzIGluIHRoaXMgc2VyaWVzLg0KPiANCg0KQW55IHRo
+b3VnaHRzIG9uIHRoaXMgc2VyaWVzID8NCg0KDQo+IFRoZSBwYXRjaCBpcyBiYXNlZCBvbiBtb3Rp
+dmF0aW9uIGZyb20gdGhpcyB0aHJlYWQ6DQo+IGh0dHBzOi8vbWFyYy5pbmZvLz9sPWxpbnV4LWtl
+cm5lbCZtPTE1MzkxMDI0MDUwNzM5OSZ3PTINCj4gDQo+IENjOiBCb3Jpc2xhdiBQZXRrb3YgPGJw
+QGFsaWVuOC5kZT4NCj4gQ2M6IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5jb20+DQo+
+IENjOiAiUmFkaW0gS3LEjW3DocWZIiA8cmtyY21hckByZWRoYXQuY29tPg0KPiBDYzogSm9lcmcg
+Um9lZGVsIDxqb3JvQDhieXRlcy5vcmc+DQo+IENjOiBUb20gTGVuZGFja3kgPFRob21hcy5MZW5k
+YWNreUBhbWQuY29tPg0KPiANCj4gQnJpamVzaCBTaW5naCAoMik6DQo+ICAgIEtWTTogU1ZNOiBt
+b3ZlIGNvbW1vbiBzdHJ1Y3QgZGVmaW5pdGlvbnMgdG8gaGVhZGVyIGZpbGUNCj4gICAgS1ZNOiBT
+Vk06IG1vdmUgdGhlIFNFViBzcGVjaWZpYyBmdW5jdGlvbiBpbiBhIHNlcGFyYXRlIGZpbGUNCj4g
+DQo+ICAgYXJjaC94ODYvaW5jbHVkZS9hc20vc3ZtLmggfCAgMTU1ICsrKysrDQo+ICAgYXJjaC94
+ODYva3ZtL01ha2VmaWxlICAgICAgfCAgICAyICsNCj4gICBhcmNoL3g4Ni9rdm0vc2V2LmMgICAg
+ICAgICB8IDEwNzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgIGFyY2gveDg2
+L2t2bS9zZXYuaCAgICAgICAgIHwgICA0MCArKw0KPiAgIGFyY2gveDg2L2t2bS9zdm0uYyAgICAg
+ICAgIHwgMTIzNCArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gICA1IGZp
+bGVzIGNoYW5nZWQsIDEyOTYgaW5zZXJ0aW9ucygrKSwgMTIxMSBkZWxldGlvbnMoLSkNCj4gICBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC94ODYva3ZtL3Nldi5jDQo+ICAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGFyY2gveDg2L2t2bS9zZXYuaA0KPiANCg0KDQotQnJpamVzaA0K
