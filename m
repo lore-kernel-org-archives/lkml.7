@@ -2,139 +2,106 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC28C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5BDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29E2206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7788C206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="So+zrwn8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6F3B+bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfC1CEx (ORCPT
+        id S1728401AbfC1CFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:04:53 -0400
-Received: from ozlabs.org ([203.11.71.1]:44925 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfC1CEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 22:04:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44V7VB65pJz9sPP;
-        Thu, 28 Mar 2019 13:04:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1553738690;
-        bh=1PCXjpmLPgl+TKF83cTdCR1lVSCMYgT52sJCb1ZsutU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=So+zrwn8BQ5tLT//Hrjaq7BwXP7NBCnrkKNstE3X+oPbR1NbaPLwmyEj5G0HxSYuz
-         fp6P3UA2lFH6CpcfM3h3RIrR0vgEkO72UXNx7SV9IrxXN5ptHW0Jg4VltEIhKsr1yy
-         kRrgdJJ4p7GZE7+QX8A+Y9cKJ+yV8RXL0r5nBMX5nbPQZLf2VgC5bicpczv4rAlEdb
-         Ooy9tMGRffV7leHVJipmXvxxhdfqW5zLEVOlR6ZZ/0HF54BRFmmLfnlXTWpaJBiB1/
-         jOoErzQgzRR7anmd2p69wyiCwOhG7Qql3zjwFMoHO8fqLcCzkE+GMBvCDixFZPpi26
-         2pgwe4kGIQp2w==
-Date:   Thu, 28 Mar 2019 13:04:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the pidfd tree
-Message-ID: <20190328130449.1b6334b6@canb.auug.org.au>
+        Wed, 27 Mar 2019 22:05:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43149 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfC1CFV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 22:05:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m10so4196898plt.10;
+        Wed, 27 Mar 2019 19:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=guzd6o9wUY5BocD6FHf8NbFcEpn822XgsgtY5eNNa1s=;
+        b=E6F3B+boJJWqw2YdfePXq/YvuXTRbLZ6mr6WhMO+aFogESED+PyYiJ4amhmvi0iJXc
+         mKh+S5lMIFsGLOeDR63fF0ZzXti3IfU5m2nUiLEjFKEm0OqWswl/oPc2HKsZweLzaD+Q
+         ivVh+KlqHZCYGJa7fAfKBbXghqWNxS6gJzDaOlaq3Hu9/2+M8zqft6IanD+B9fX1CD3N
+         2lV/mqmCL69u6AFHYQipCJKB0vnLBy5xgl7EF2PpiGJbTwSGXgtkr3y2TnWjept0DajK
+         9XpEqjKSgu/IrSoMO+0qZ2VaH3eUN0d/qbNJg1lPOHOqIZ0fLaTlVp7z/QABaUY7R944
+         ttcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=guzd6o9wUY5BocD6FHf8NbFcEpn822XgsgtY5eNNa1s=;
+        b=JREcpzHUk0WOC6pjmrv9qFokHMJFGhv2c7/oS0A90OP9qQZLa5tW+iKgIgpJcySInV
+         Yf4CwcD8ds1LSjAlpN9Px6SpOpeNBttJx/Out4wJOXQwrbywISkfA98l6Q1KJBw67N5H
+         2auFjYE6QbC64/S//AXMrMrgNke0IRfk5U8zzPvGhaLWKfdOc5uG1pjVxrywNFqcf/h8
+         A8UL3x1XukG4iO7sG2nQCCOqBgyPYZsjHjbdwaT1CfO/BLEJ5pA0speDnPXfeVOet2Jw
+         zF/i+dL+OSysH5Hbm6NbLzERSktB+Qo4Kr1je0bVJkJZQVcbdCbNDR5UvWf1sn5cb4yE
+         DUHA==
+X-Gm-Message-State: APjAAAX9HM4eNJiXB/aSnfOKV3psPZxZj8j+MajIHiMcXoat81r3/5gv
+        5hHVGQtW4POl0yIwXnKlYnDQOvEv
+X-Google-Smtp-Source: APXvYqzxGu1jOvCJ6dhkNKVLuV3S82O7CPQeLCcjJdJy859zr4OhtiNsM6muEUTYXGytMYu6Ggf2IA==
+X-Received: by 2002:a17:902:7441:: with SMTP id e1mr6585603plt.13.1553738720275;
+        Wed, 27 Mar 2019 19:05:20 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id i64sm33682607pfb.112.2019.03.27.19.05.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Mar 2019 19:05:19 -0700 (PDT)
+Subject: Re: [PATCH net-next v5 05/22] ethtool: introduce ethtool netlink
+ interface
+To:     Jiri Pirko <jiri@resnulli.us>, Michal Kubecek <mkubecek@suse.cz>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-kernel@vger.kernel.org
+References: <cover.1553532199.git.mkubecek@suse.cz>
+ <8795d07d3315b232b4e7ebc7d109c9aa3185e555.1553532199.git.mkubecek@suse.cz>
+ <20190326120909.GF2230@nanopsycho> <20190326132427.GK26076@unicorn.suse.cz>
+ <20190326134251.GA5181@nanopsycho.orion>
+ <20190327092604.GP26076@unicorn.suse.cz> <20190327095023.GC6979@nanopsycho>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <7e883a7c-7f1a-b1a0-4735-0ad368998c65@gmail.com>
+Date:   Wed, 27 Mar 2019 19:05:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//=5FdznmUlmW7Bpp8qftFJQ"; protocol="application/pgp-signature"
+In-Reply-To: <20190327095023.GC6979@nanopsycho>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//=5FdznmUlmW7Bpp8qftFJQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Christian,
 
-After merging the pidfd tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+On 3/27/2019 2:50 AM, Jiri Pirko wrote:
+> 
+> Why don't you have ETHTOOL_MSG_SET_FOO for set? I think that for
+> kerne->userspace the ETHTOOL_MSG_FOO if fine. I would change the
+> ordering of words thought, but it is cosmetics:
+> ETHTOOL_MSG_FOO /* kernel->userspace messages - replies, notifications */
+> ETHTOOL_MSG_FOO_GET
+> ETHTOOL_MSG_FOO_SET
+> ETHTOOL_MSG_FOO_ACT
+> 
+> What do you think?
 
-kernel/pid.c: In function '__do_sys_pidfd_open':
-kernel/pid.c:652:7: error: 'fd' redeclared as different kind of symbol
-  long fd =3D -EINVAL;
-       ^~
-In file included from kernel/pid.c:40:
-kernel/pid.c:649:46: note: previous definition of 'fd' was here
- SYSCALL_DEFINE4(pidfd_open, pid_t, pid, int, fd, int, pidfd,
-                                         ~~~~~^~
-include/linux/syscalls.h:117:27: note: in definition of macro '__SC_DECL'
- #define __SC_DECL(t, a) t a
-                           ^
-include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP3'
- #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
-                                   ^~~~~~
-include/linux/syscalls.h:115:22: note: in expansion of macro '__MAP4'
- #define __MAP(n,...) __MAP##n(__VA_ARGS__)
-                      ^~~~~
-include/linux/syscalls.h:253:36: note: in expansion of macro '__MAP'
-  static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
-                                    ^~~~~
-include/linux/syscalls.h:226:2: note: in expansion of macro '__SYSCALL_DEFI=
-NEx'
-  __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~
-include/linux/syscalls.h:218:36: note: in expansion of macro 'SYSCALL_DEFIN=
-Ex'
- #define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name, __VA_ARGS__)
-                                    ^~~~~~~~~~~~~~~
-kernel/pid.c:649:1: note: in expansion of macro 'SYSCALL_DEFINE4'
- SYSCALL_DEFINE4(pidfd_open, pid_t, pid, int, fd, int, pidfd,
- ^~~~~~~~~~~~~~~
-kernel/pid.c:663:7: error: 'procfd' undeclared (first use in this function)=
-; did you mean 'pidfd'?
-   if (procfd !=3D -1 || pidfd !=3D -1)
-       ^~~~~~
-       pidfd
-kernel/pid.c:663:7: note: each undeclared identifier is reported only once =
-for each function it appears in
-
-Caused by commit
-
-  9170fba40db0 ("pid: add pidfd_open()")
-
-I have used the version of the pifd tree from next-20190327 for today.
-
-Please do *not* use linux-next as a development tree (I have seen several
-different version of this code over the past few days :-().  The rules
-for linux-next included code include:
-"
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch)."
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_//=5FdznmUlmW7Bpp8qftFJQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlycK8EACgkQAVBC80lX
-0Gz/Mwf/ft0Rk8vI7Foboq9hZ5mME9ACTbQsNk0x6104F/aQBEkPvryIsACJanv9
-BZMeeoRmlFmQoVS6Oef7gidSDcvwNcm9xVygyoI0z37elPVZBN+ycvkhG32nz4I4
-dt4jeWyWi73eMv0/OlqCFgHU29OW2OpcwBuTWQPjtBj/JPsGG85sYQXFIdn2HW1m
-Zi8MO7PH/JMyBdgFrGTZei64ZqJkWSsNX3mAQlbwPeHsa2jiaMwqMz5fyU3k2nEl
-5LnZIbV7mWPFFFYIFso87SzP9twmYIGY17IF30A1rl3EOQAlzvxjQYrLahhrL0zW
-FHPm/F3MxUZQHCgl1muqNh2vlR+HTg==
-=5XrG
------END PGP SIGNATURE-----
-
---Sig_//=5FdznmUlmW7Bpp8qftFJQ--
+We could even name the notification explicitly with: ETHTOOL_MSG_NOTIF
+or ETHTOOL_MSG_NTF just so we spell out exactly what those messages are.
+-- 
+Florian
