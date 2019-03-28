@@ -2,152 +2,142 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA325C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869CEC10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7B02064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573FA2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 18:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="e9IQL+46"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="ClF61nAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfC1Smv (ORCPT
+        id S1726311AbfC1Sm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 14:42:51 -0400
-Received: from mail-eopbgr780139.outbound.protection.outlook.com ([40.107.78.139]:62112
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726045AbfC1Smv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 14:42:51 -0400
+        Thu, 28 Mar 2019 14:42:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46786 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfC1Sm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 14:42:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so11730661pfj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0uzUQsUJ6tPn/o5/o02t6aqYJdl0ciWfrIXTTeXtZ7c=;
- b=e9IQL+46B4viC069cTtwor1FfwQ5mzB7lwlZ9M82TnTYNRHvtasAU+aL7H4CFyPlc47ekTcSYIYIubcozCa+kKCR3Y5dg95vzyZMStUNSIA1z4Iqhh6thhrJIMbBm7XZqIh5qIpMxLbLMXZkDS38JZuPMjb+EhZkcGHzB6nFcOU=
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com (10.171.214.23) by
- CY4PR2201MB1398.namprd22.prod.outlook.com (10.171.210.144) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Thu, 28 Mar 2019 18:42:48 +0000
-Received: from CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::3814:18cc:d558:6039]) by CY4PR2201MB1272.namprd22.prod.outlook.com
- ([fe80::3814:18cc:d558:6039%11]) with mapi id 15.20.1730.019; Thu, 28 Mar
- 2019 18:42:48 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH fixes] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000
- enabled
-Thread-Topic: [PATCH fixes] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000
- enabled
-Thread-Index: AQHU4/Xm66kUt/wyf0OS9JvhPam+e6YhZCYA
-Date:   Thu, 28 Mar 2019 18:42:47 +0000
-Message-ID: <20190328184245.43siejnjlvv6oyue@pburton-laptop>
-References: <20190326170335.8031-1-f.fainelli@gmail.com>
-In-Reply-To: <20190326170335.8031-1-f.fainelli@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR04CA0024.namprd04.prod.outlook.com
- (2603:10b6:a03:40::37) To CY4PR2201MB1272.namprd22.prod.outlook.com
- (2603:10b6:910:6e::23)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2601:647:4100:4687:76db:7cfe:65a3:6aea]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a288a8e9-e621-4dbe-1852-08d6b3ad2c6b
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:CY4PR2201MB1398;
-x-ms-traffictypediagnostic: CY4PR2201MB1398:
-x-microsoft-antispam-prvs: <CY4PR2201MB1398279DF70780A607604D16C1590@CY4PR2201MB1398.namprd22.prod.outlook.com>
-x-forefront-prvs: 0990C54589
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(376002)(136003)(346002)(366004)(39840400004)(51444003)(199004)(189003)(6246003)(11346002)(46003)(102836004)(4326008)(446003)(386003)(6506007)(186003)(256004)(105586002)(53936002)(106356001)(42882007)(33716001)(9686003)(58126008)(81166006)(81156014)(316002)(76176011)(68736007)(97736004)(54906003)(8676002)(6512007)(44832011)(229853002)(71190400001)(1076003)(99286004)(7416002)(71200400001)(52116002)(8936002)(14454004)(6116002)(6486002)(478600001)(7736002)(5660300002)(25786009)(476003)(6436002)(2906002)(486006)(305945005)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR2201MB1398;H:CY4PR2201MB1272.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CrNT15OXLmMi0+wYv+b9ttRaPKgYS1l8MeXsHrSSTreafCBZuEE6G6zGw8ZwGyyMO09AoqJR9RpPhPyX8KXfY+mKvF8i9pps3M6QIco2b6sEygDs0r1Z57wEdC2b+5R1xwj3XYjE1f/KxolnFCQRb8ea8JU9remNjC1rsdFuIEhcQIGLDtsgVTecSDM4/v3WSqfSmrHPJk5pwMDSEhOj1VXZLXIhozuuDcFYurZfsFg5In8fMclU1TQPpKX4Q9xR6wJ7FNdywYvzyXhA+BPPFbU7ANVi95jIqwSXIusw8u2/+gFABhgo9FjNK8H+Da/+6ZGaWbdSbAYcm7qpE/oOiQKHBSZFS7zT8JSfX4cPsXm82CaiXGCz7dq5UlAfa0UGdj2SXtAzHaVIYxqHcP2WxNHI1mfjfwcoK/uuljDrKB0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5DD929C52977A14A86E2AA4F8A613023@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Rv3xOx06ONzKcqZs5Vl4PEhFLYUziQzUKeg/lcUkaFg=;
+        b=ClF61nAn6JlYF+ABRyLt4Q61GZXPIwMEVSXO/n9HVR/1x5MjQFAWKH+SS89+m4fiW5
+         nXUjiJH2iwC+RrQevjfz3vA3HttX4aN1OY7eG52ewZbj6LHmCOPXfX73NX7d1x0rQN8k
+         guStPH/EFj0xK8qJ0eW+b9ePGpUsQqK4S6I7hugLgEusn2iE07mO17MfZOnHgNtnLhQR
+         THRzUUuG8dVMVMVpyUU4/Jx7bIgbH2INpgstJ3zZX4SN12B9vpcepxvNiKyKYsLXEE2Q
+         OGfCfahytXVLBvod52rZBHSoT/a6ZAc9U8WVgPj78yKPBv43SquvTsLKia0T/Bsra2SC
+         FEqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Rv3xOx06ONzKcqZs5Vl4PEhFLYUziQzUKeg/lcUkaFg=;
+        b=LfRw7e4a1xHxUuOIWZxIDqvNJLxgIIaUFKFR3xzvySF+tDc1UA7k3mBCL0Jry0qb8u
+         6kfSq1+lg+xmyAge+T2Y4U3qMnvFKgZB68+Ypt05so5sMO/hN9FEwBI8H7D5OZP079r1
+         Ch+byeWbmllBUfGaIWqfd56oihnbtmTE7dVSE7WplSc6OMzi+kfRg0hD8KQM0DfJbeVt
+         AJ95taLNT4cEfHl2DkRz4bt3PKwtCOJvmbrQf06L2rXwyaV1/gEHkM2vJKXEAVR/l2tL
+         enqa9tC0EI6tONBt4oN+yeD030MYFH3wuFl7lLpAGikDY9+4wrF45qU6sjh74zBVwoZQ
+         UBsg==
+X-Gm-Message-State: APjAAAXjpv0t3hvjWnp9bohRCoGDWw/BSEW0AgcjcK5JKyv70sZNpNST
+        NSfMMFQzwdpbBUEpmpB8DhNigQ==
+X-Google-Smtp-Source: APXvYqy9+kORcXfx75V6DJD6VzSSY0PkjZX3Y6cM46xFjVgMWs4S25b3/kdVr76xHP5yQyTXwmJVZw==
+X-Received: by 2002:a63:c00a:: with SMTP id h10mr41632938pgg.272.1553798576742;
+        Thu, 28 Mar 2019 11:42:56 -0700 (PDT)
+Received: from shemminger-XPS-13-9360 (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id i64sm37086434pfb.112.2019.03.28.11.42.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 11:42:56 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 11:42:52 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Kimberly Brown <kimbrownkd@gmail.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] Drivers: hv: vmbus: Fix race condition with new
+ ring_buffer_info mutex
+Message-ID: <20190328114252.141bbcd5@shemminger-XPS-13-9360>
+In-Reply-To: <20190328043057.GA2258@ubu-Virtual-Machine>
+References: <cover.1550806305.git.kimbrownkd@gmail.com>
+        <cover.1552592620.git.kimbrownkd@gmail.com>
+        <262046fa9e89d5f483ecd5972d86f4f9608dbcc3.1552592620.git.kimbrownkd@gmail.com>
+        <20190314154533.17c8a362@shemminger-XPS-13-9360>
+        <20190317014927.GA60356@ubu-Virtual-Machine>
+        <20190320130619.07e49c97@shemminger-XPS-13-9360>
+        <20190321034752.GA6828@ubu-Virtual-Machine>
+        <DM5PR2101MB091851BC7C55093D388514D9D7420@DM5PR2101MB0918.namprd21.prod.outlook.com>
+        <20190328043057.GA2258@ubu-Virtual-Machine>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a288a8e9-e621-4dbe-1852-08d6b3ad2c6b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 18:42:47.8566
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR2201MB1398
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+On Thu, 28 Mar 2019 00:30:57 -0400
+Kimberly Brown <kimbrownkd@gmail.com> wrote:
 
-On Tue, Mar 26, 2019 at 10:03:34AM -0700, Florian Fainelli wrote:
-> The 'event' variable may be unused in case only CONFIG_CPU_BMIPS5000
-> being enabled:
->=20
-> arch/mips/kernel/perf_event_mipsxx.c: In function 'mipsxx_pmu_enable_even=
-t':
-> arch/mips/kernel/perf_event_mipsxx.c:326:21: error: unused variable 'even=
-t' [-Werror=3Dunused-variable]
->   struct perf_event *event =3D container_of(evt, struct perf_event, hw);
->                      ^~~~~
+> On Thu, Mar 21, 2019 at 04:04:20PM +0000, Michael Kelley wrote:
+> > From: Kimberly Brown <kimbrownkd@gmail.com>  Sent: Wednesday, March 20, 2019 8:48 PM  
+> > > > > > Adding more locks will solve the problem but it seems like overkill.
+> > > > > > Why not either use a reference count or an RCU style access for the
+> > > > > > ring buffer?  
+> > > > >
+> > > > > I agree that a reference count or RCU could also solve this problem.
+> > > > > Using mutex locks seemed like the most straightforward solution, but
+> > > > > I'll certainly switch to a different approach if it's better!
+> > > > >
+> > > > > Are you concerned about the extra memory required for the mutex locks,
+> > > > > read performance, or something else?  
+> > > >
+> > > > Locks in control path are ok, but my concern is performance of the
+> > > > data path which puts packets in/out of rings. To keep reasonable performance,
+> > > > no additional locking should be added in those paths.
+> > > >
+> > > > So if data path is using RCU, can/should the control operations also
+> > > > use it?  
+> > >   
+> 
+> 
+> Hi Stephen,
+> 
+> Do you have any additional questions or suggestions for this race
+> condition and the mutex locks? I think that your initial questions were
+> addressed in the responses below. If there's anything else, please let
+> me know!
+> 
+> Thanks,
+> Kim
+> 
+> 
+> > > The data path doesn't use RCU to protect the ring buffers.  
+> > 
+> > My $.02:  The mutex is obtained only in the sysfs path and the "delete
+> > ringbuffers" path, neither of which is performance or concurrency sensitive. 
+> > There's no change to any path that reads or writes data from/to the ring
+> > buffers.  It seems like the mutex is the most straightforward solution to
+> > preventing sysfs from accessing the ring buffer info while the memory is
+> > being freed as part of "delete ringbuffers".
+> > 
+> > Michael  
 
-Ah - nice catch :)
 
-Could we fix it by replacing the existing #ifdef with an
+I have no problems with the patch you did.
+My discussion was more around the general issues with ringbuffers being detached
+from the device. Not sure if it was even a good design choice but that is
+something that is hard to fix now.
 
-  if (IS_ENABLED(CONFIG_CPU_BMIPS5000)) {
-
-instead? The same could be done for the CONFIG_MIPS_MT_SMP #ifdefs too.
-
-I think that would leave us with more readable code.
-
-Thanks,
-    Paul
-
-> Fixes: 84002c88599d ("MIPS: perf: Fix perf with MT counting other threads=
-")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  arch/mips/kernel/perf_event_mipsxx.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf=
-_event_mipsxx.c
-> index 413863508f6f..739b7ff9fdab 100644
-> --- a/arch/mips/kernel/perf_event_mipsxx.c
-> +++ b/arch/mips/kernel/perf_event_mipsxx.c
-> @@ -323,7 +323,9 @@ static int mipsxx_pmu_alloc_counter(struct cpu_hw_eve=
-nts *cpuc,
-> =20
->  static void mipsxx_pmu_enable_event(struct hw_perf_event *evt, int idx)
->  {
-> +#ifndef CONFIG_CPU_BMIPS5000
->  	struct perf_event *event =3D container_of(evt, struct perf_event, hw);
-> +#endif
->  	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
->  #ifdef CONFIG_MIPS_MT_SMP
->  	unsigned int range =3D evt->event_base >> 24;
-> --=20
-> 2.17.1
->=20
