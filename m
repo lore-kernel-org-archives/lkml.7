@@ -2,193 +2,120 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33322C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1430C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0335A20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Srj0h6GV"
+	by mail.kernel.org (Postfix) with ESMTP id 6904021773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:07:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1553789242;
+	bh=uNRQ1idrX6acdSjurH3GL/sdvkByEkto7sJ96brLO8M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pc8VO6mCJtoWJQz1SkwkX9LA2SNks2peU7mcEDFmI5U80TgYNhDWMZl0Wj45LXiw+
+	 N/0hrJKNXQTaSljqVrDVWvWNslhB9iajk042YjaDWPUjuQZaOCoSFHQxVcVZ4WXqTp
+	 7WCklAubYWDUfMlWhhxwccG/SmaYQDuFK1esDQxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfC1QGV (ORCPT
+        id S1727188AbfC1QHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:06:21 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44756 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfC1QGT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:06:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i21so16177855oib.11;
-        Thu, 28 Mar 2019 09:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J2YnF4j3XKMHvgYMrtOtaTfN5SnS3wNUPDSLACqrJC8=;
-        b=Srj0h6GVrZLToj12j8htEi2KLXrdj2pQhRHLDPOoF0TJUkA5ilRx3W3E4CK58n+soJ
-         Hsz4gQ1LIWwjEvZWRqbIhY8anPAKX7aOF6BGYSdPpYgGsuOsjrkZHfYfDiatPFuf3Fv1
-         pBLg7auZG3c9UNxF9FZC/ahPFPiiLbeTMg7H7VjoH1k2id43NDG04PM9eHdOGmwy8p9h
-         Ya6UBP6XtwbLLhA9PHlyMo+ztRb2xoGbnOpeF9tHJ2TKZzMIfesMPU6MJre6Hc81v0UN
-         wtD5z/EUXOuHSfbtbYNQxGx4+JckDKuB6XXWM3wygaxA8Xqk/XyYwygUUQrriggYb2gl
-         Yfsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J2YnF4j3XKMHvgYMrtOtaTfN5SnS3wNUPDSLACqrJC8=;
-        b=f8tqRdAvF42TcZ9crvuumLOlf8PemVVV4WwYeKW+IpCymxraXNwffiYmN/wdShgvJU
-         +zK97nMSGQqVVyZTm5chw6E7IcDT1+tDQc5Lw2MclfyVIkM4TNuLxxeuyzFyxQcxJ55z
-         5DgdKuUuIPs+ZmnPILfMifvFKBNObOwWAiL+aMwz6qIEvuCtiTZfFYnYjEGQnknwylmR
-         HI9Vu+s/jCv5tfgq9b0+HBJu4KOb2ivng9hCU/onIIjJRokZpfhppU4MbICH2r41iljW
-         pYQ3Yw+zx/0vD2chDBzUf9wThD22J5rWt/lAQM80B1H8SYYmRPxxK4Cz6BTRMCyWm5gp
-         9a9Q==
-X-Gm-Message-State: APjAAAU0JoiYqngwvO4Z2en6rffZB/t3dghu4+gek8eA2ceLL3elktaf
-        t1ILq+VXeUVqG1eu2btz5byV1COYyYevKTgP20s=
-X-Google-Smtp-Source: APXvYqycU1o1ldnqB15PgpXFB9zdTWPJNGcTklAAHTLIu/9LPEUTaUsKN3pjLs35oM3l4Cg894pzUPc8R2UsiORNqm4=
-X-Received: by 2002:aca:d4d8:: with SMTP id l207mr531154oig.29.1553789177972;
- Thu, 28 Mar 2019 09:06:17 -0700 (PDT)
+        Thu, 28 Mar 2019 12:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfC1QHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:07:20 -0400
+Received: from [192.168.1.3] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E854920823;
+        Thu, 28 Mar 2019 16:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1553789239;
+        bh=uNRQ1idrX6acdSjurH3GL/sdvkByEkto7sJ96brLO8M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=w7t+HvFmB5OmSPBCVyvZDGEVcjOSc+2+4BaJ/SpThryycrD2by5vKpLydzVvZyZGq
+         VuKPQpzs4Tub6+RJ/8ohFutmeHrC5EgjpI6XKi18VXJun5+vgMZfF6sgBBfykyvR+s
+         Fp6CIs8HfMCvOVwFIXm2rkN10IPzaS8gAkBjTglc=
+Subject: Re: [PATCH v2] ARM: socfpga_defconfig: enable support for large block
+ devices
+To:     Andrey Zhizhikin <andrey.z@gmail.com>
+Cc:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190227165018.12911-1-andrey.z@gmail.com>
+ <CAHtQpK7h=kAOJHa1K7+mzq09=nAd3XSN-FxAPkjts1WrADKnCQ@mail.gmail.com>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d3f69e34-f408-c163-f85f-bd3e9338507b@kernel.org>
+Date:   Thu, 28 Mar 2019 11:07:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190314132210.654-1-sergio.paracuellos@gmail.com>
- <20190314132210.654-3-sergio.paracuellos@gmail.com> <20190328154238.GA20934@bogus>
-In-Reply-To: <20190328154238.GA20934@bogus>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 28 Mar 2019 17:06:05 +0100
-Message-ID: <CAMhs-H8akrBVWf5G2unAYmEAv852jvGdieZVk=o59LWW8FnxSw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: phy: Add binding for Mediatek MT7621
- PCIe PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     kishon@ti.com, linux-kernel <linux-kernel@vger.kernel.org>,
-        driverdev-devel@linuxdriverproject.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>,
-        linux-mips@vger.kernel.org, NeilBrown <neil@brown.name>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHtQpK7h=kAOJHa1K7+mzq09=nAd3XSN-FxAPkjts1WrADKnCQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-Thanks for the review.
 
-On Thu, Mar 28, 2019 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Mar 14, 2019 at 02:22:10PM +0100, Sergio Paracuellos wrote:
-> > Add bindings to describe Mediatek MT7621 PCIe PHY.
->
-> Binding should come before the driver.
+On 3/7/19 1:43 AM, Andrey Zhizhikin wrote:
+> Hello Dinh,
+> 
+> Just a short ping on this patch - do yo think you can accept this
+> patch and have it merged? I'd like to know whether it is planned to be
+> integrated, as it might be beneficial for a lot of socfpga users...
+> 
+> Thanks a lot!
+> 
 
-Do you mean this should be PATCH 1 of the series?
+Sorry I missed this. I've applied this.
 
->
-> >
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > ---
-> >  .../bindings/phy/mediatek,mt7621-pci-phy.txt  | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
-> > new file mode 100644
-> > index 000000000000..8addedbe815e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/mediatek,mt7621-pci-phy.txt
-> > @@ -0,0 +1,54 @@
-> > +Mediatek Mt7621 PCIe PHY
-> > +
-> > +Required properties:
-> > +- compatible: must be "mediatek,mt7621-pci-phy"
-> > +- reg: base address and length of the PCIe PHY block
-> > +- #address-cells: must be 1
-> > +- #size-cells: must be 0
-> > +
-> > +Each PCIe PHY should be represented by a child node
-> > +
-> > +Required properties For the child node:
-> > +- reg: the PHY ID
-> > +0 - PCIe RC 0
-> > +1 - PCIe RC 1
-> > +- #phy-cells: must be 0
-> > +
-> > +Example:
-> > +     pcie0_phy: pcie-phy@1e149000 {
-> > +             compatible = "mediatek,mt7621-pci-phy";
-> > +             reg = <0x1e149000 0x0700>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             pcie0_port: pcie-phy@0 {
-> > +                     reg = <0>;
-> > +                     #phy-cells = <0>;
-> > +             };
-> > +
-> > +             pcie1_port: pcie-phy@1 {
-> > +                     reg = <1>;
-> > +                     #phy-cells = <0>;
-> > +             };
->
-> If each phy port doesn't have its own resources, then you don't need
-> child nodes. Just set #phy-cells to 1.
-
-I see. I will change those two into:
-
-pcie0_phy: pcie-phy@1e149000 {
-     compatible = "mediatek,mt7621-pci-phy";
-     reg = <0x1e149000 0x0700>;
-     #phy-cells = <1>;
-};
-
-pcie1_phy: pcie-phy@1e14a000 {
-     compatible = "mediatek,mt7621-pci-phy";
-     reg = <0x1e14a000 0x0700>;
-     #phy-cells = <0>;
-};
-
->
-> > +     };
-> > +
-> > +     pcie1_phy: pcie-phy@1e14a000 {
-> > +             compatible = "mediatek,mt7621-pci-phy";
-> > +             reg = <0x1e14a000 0x0700>;
-> > +             #address-cells = <1>;
-> > +             #size-cells = <0>;
-> > +
-> > +             pcie2_port: pcie-phy@0 {
-> > +                     reg = <0>;
-> > +                     #phy-cells = <0>;
-> > +             };
-> > +     };
-> > +
-> > +     /* users of the PCIe phy */
-> > +
-> > +     pcie: pcie@1e140000 {
-> > +             ...
-> > +             ...
-> > +             phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
-> > +             phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-> > +     };
-
-I think changing the previous one as you suggested make clients to do now:
-
-pcie: pcie@1e140000 {
-      phys = <&pcie0_phy 0>, <&pcie0_phy 1>, <&pcie1_phy>;
-      phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-};
-
-Am I right?
-
-I have to figure out how to change the driver to achieve this changes
-also to properly get the phy.
-
-Thanks, I will make the changes in staging to be tested by Neil a send
-v2 PATCHEs for this with your suggested changes.
-
-Best regards and thanks again for your time.
-
-Sergio Paracuellos
+Thanks,
+Dinh
