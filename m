@@ -2,207 +2,111 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0860AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AA8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CB5205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2BB20685
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 19:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LwC6HNS+";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SnRWy6bE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfC1T27 (ORCPT
+        id S1726227AbfC1TeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 15:28:59 -0400
-Received: from a2nlsmtp01-05.prod.iad2.secureserver.net ([198.71.225.49]:57982
-        "EHLO a2nlsmtp01-05.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725885AbfC1T26 (ORCPT
+        Thu, 28 Mar 2019 15:34:17 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49736 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfC1TeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 15:28:58 -0400
-X-Greylist: delayed 675 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Mar 2019 15:28:58 EDT
-Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
-        by : HOSTING RELAY : with ESMTP
-        id 9aW2hv8iAO8d99aW2hfRls; Thu, 28 Mar 2019 12:16:42 -0700
-x-originating-ip: 107.180.71.197
-Received: from haiyangz by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
-        (envelope-from <haiyangz@linuxonhyperv2.linuxonhyperv.com>)
-        id 1h9aW2-0001kg-8E; Thu, 28 Mar 2019 12:16:42 -0700
-From:   Haiyang Zhang <haiyangz@linuxonhyperv.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH hyperv-fixes,v2] hv_netvsc: Fix unwanted wakeup after tx_disable
-Date:   Thu, 28 Mar 2019 19:16:37 +0000
-Message-Id: <20190328191637.6698-1-haiyangz@linuxonhyperv.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 28 Mar 2019 15:34:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 103E860790; Thu, 28 Mar 2019 19:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553801656;
+        bh=aa5y1wanFPJFPrSX/rtLYSSyhLC+I69Lm2O8WNFDsSI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LwC6HNS+tbVuIZ352HsMXdvY9y6CACJwy0pB/mSD4xN7PrwyRKux0pY3mCpDJHk40
+         vcTZMwWTodpAbklfb/HQvQDPzeqPXrrP2InAR86zrsvnAaUYpVBIwnWHtigytqoAMc
+         rIkTNTf/Wj7B6Mv8C153QGO6bUhKKhpAZNOrfR70=
+Received: from [10.79.174.182] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86CC760159;
+        Thu, 28 Mar 2019 19:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553801653;
+        bh=aa5y1wanFPJFPrSX/rtLYSSyhLC+I69Lm2O8WNFDsSI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SnRWy6bEPhWI6sqaLlpweSRXM4xr9khQ3J36ou8d19jNgjSKeVRqYuVJDEhjBsrgd
+         ik0KGUeuvEOG3gOiwiN+4kIWJOWTLi+9/c7hfmZkTQznM9EKNHhUngYO7ZxJxDnMZB
+         BoA4tw6BmNA54KOwccEoxt+w1oSE3feId+ld4AVw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86CC760159
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] n_tty: check for negative and zero space return from
+ tty_write_room
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190328171005.5822-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <e5f8282c-60e0-cefe-8ee6-2690a24e3b60@codeaurora.org>
+Date:   Fri, 29 Mar 2019 01:04:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfHnRjMqhpcL5yd3zLhFpxwp6QiyLwtVgV6++hxTnPSgFOJqcQzeJ11YqFaNJTPA9MBxNYjCgSrVYSngfFjELSUsHBokeiVIkAzAluOZW4TD9vsWdRBVH
- 9DRaAkMRClKGIkpYsjT++rQxerug1opm0RGhs5hRRK8N2Qw391veUT3+u3O0yoUw8MLDWAUvhM4n/wG7Px2407ttdlDxApmgiUC8b4cdQT5CvX8i8MntRs5G
- gR/lirCO5ib9g5I71FbFSoP2Ne9qpQlhkzhbdyoVu1PakuLHmZioNpJ6T5vPgayVXUyA5PvnBq2ObjdZSBjsqydcBd2DdFHdpbBZ2CFhSeaLxzaevu5d8b+y
- uVOIQKlIfbBBG5MomJNeJerc3AbE/0vqNTQzbDddNF9qS3Q6Nl+moWo48jMiJ5F7sXS3rsFNpqg/hxB49W70ROIlndXxlLvQW3q2PkyJHKm9hV9VKIuBzi28
- aShPKi/WQ3t+ypGe7TGbYe84zTRKCsYTBHKR1O+ZEqSXshr69YeVttVSiQ4=
+In-Reply-To: <20190328171005.5822-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
 
-After queue stopped, the wakeup mechanism may wake it up again
-when ring buffer usage is lower than a threshold. This may cause
-send path panic on NULL pointer when we stopped all tx queues in
-netvsc_detach and start removing the netvsc device.
+On 3/28/2019 10:40 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The return from tty_write_room could potentially be negative if
+> a tty write_room driver returns an error number (not that any seem
+> to do). Rather than just check for a zero return, also check for
+> a -ve return. This avoids the unsigned nr being set to a large unsigned
+> value on the assignment from variable space and can lead to overflowing
+> the buffer buf.  Better to be safe than assume all write_room
+> implementations in tty drivers are going to do the right thing.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-This patch fix it by adding a tx_disable flag to prevent unwanted
-queue wakeup.
 
-Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
-Reported-by: Mohammed Gamal <mgamal@redhat.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/hyperv_net.h |  1 +
- drivers/net/hyperv/netvsc.c     |  6 ++++--
- drivers/net/hyperv/netvsc_drv.c | 32 ++++++++++++++++++++++++++------
- 3 files changed, 31 insertions(+), 8 deletions(-)
+Looks reasonable to me.
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index e859ae2..49f41b6 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -987,6 +987,7 @@ struct netvsc_device {
- 
- 	wait_queue_head_t wait_drain;
- 	bool destroy;
-+	bool tx_disable; /* if true, do not wake up queue again */
- 
- 	/* Receive buffer allocated by us but manages by NetVSP */
- 	void *recv_buf;
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 813d195..e0dce37 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -110,6 +110,7 @@ static struct netvsc_device *alloc_net_device(void)
- 
- 	init_waitqueue_head(&net_device->wait_drain);
- 	net_device->destroy = false;
-+	net_device->tx_disable = false;
- 
- 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
- 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
-@@ -719,7 +720,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 	} else {
- 		struct netdev_queue *txq = netdev_get_tx_queue(ndev, q_idx);
- 
--		if (netif_tx_queue_stopped(txq) &&
-+		if (netif_tx_queue_stopped(txq) && !net_device->tx_disable &&
- 		    (hv_get_avail_to_write_percent(&channel->outbound) >
- 		     RING_AVAIL_PERCENT_HIWATER || queue_sends < 1)) {
- 			netif_tx_wake_queue(txq);
-@@ -874,7 +875,8 @@ static inline int netvsc_send_pkt(
- 	} else if (ret == -EAGAIN) {
- 		netif_tx_stop_queue(txq);
- 		ndev_ctx->eth_stats.stop_queue++;
--		if (atomic_read(&nvchan->queue_sends) < 1) {
-+		if (atomic_read(&nvchan->queue_sends) < 1 &&
-+		    !net_device->tx_disable) {
- 			netif_tx_wake_queue(txq);
- 			ndev_ctx->eth_stats.wake_queue++;
- 			ret = -ENOSPC;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 1a08679..ffb7922 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -109,6 +109,15 @@ static void netvsc_set_rx_mode(struct net_device *net)
- 	rcu_read_unlock();
- }
- 
-+static inline void netvsc_tx_enable(struct netvsc_device *nvscdev,
-+				    struct net_device *ndev)
-+{
-+	nvscdev->tx_disable = false;
-+	virt_wmb(); /* ensure queue wake up mechanism is on */
-+
-+	netif_tx_wake_all_queues(ndev);
-+}
-+
- static int netvsc_open(struct net_device *net)
- {
- 	struct net_device_context *ndev_ctx = netdev_priv(net);
-@@ -129,7 +138,7 @@ static int netvsc_open(struct net_device *net)
- 	rdev = nvdev->extension;
- 	if (!rdev->link_state) {
- 		netif_carrier_on(net);
--		netif_tx_wake_all_queues(net);
-+		netvsc_tx_enable(nvdev, net);
- 	}
- 
- 	if (vf_netdev) {
-@@ -184,6 +193,17 @@ static int netvsc_wait_until_empty(struct netvsc_device *nvdev)
- 	}
- }
- 
-+static inline void netvsc_tx_disable(struct netvsc_device *nvscdev,
-+				     struct net_device *ndev)
-+{
-+	if (nvscdev) {
-+		nvscdev->tx_disable = true;
-+		virt_wmb(); /* ensure txq will not wake up after stop */
-+	}
-+
-+	netif_tx_disable(ndev);
-+}
-+
- static int netvsc_close(struct net_device *net)
- {
- 	struct net_device_context *net_device_ctx = netdev_priv(net);
-@@ -192,7 +212,7 @@ static int netvsc_close(struct net_device *net)
- 	struct netvsc_device *nvdev = rtnl_dereference(net_device_ctx->nvdev);
- 	int ret;
- 
--	netif_tx_disable(net);
-+	netvsc_tx_disable(nvdev, net);
- 
- 	/* No need to close rndis filter if it is removed already */
- 	if (!nvdev)
-@@ -918,7 +938,7 @@ static int netvsc_detach(struct net_device *ndev,
- 
- 	/* If device was up (receiving) then shutdown */
- 	if (netif_running(ndev)) {
--		netif_tx_disable(ndev);
-+		netvsc_tx_disable(nvdev, ndev);
- 
- 		ret = rndis_filter_close(nvdev);
- 		if (ret) {
-@@ -1906,7 +1926,7 @@ static void netvsc_link_change(struct work_struct *w)
- 		if (rdev->link_state) {
- 			rdev->link_state = false;
- 			netif_carrier_on(net);
--			netif_tx_wake_all_queues(net);
-+			netvsc_tx_enable(net_device, net);
- 		} else {
- 			notify = true;
- 		}
-@@ -1916,7 +1936,7 @@ static void netvsc_link_change(struct work_struct *w)
- 		if (!rdev->link_state) {
- 			rdev->link_state = true;
- 			netif_carrier_off(net);
--			netif_tx_stop_all_queues(net);
-+			netvsc_tx_disable(net_device, net);
- 		}
- 		kfree(event);
- 		break;
-@@ -1925,7 +1945,7 @@ static void netvsc_link_change(struct work_struct *w)
- 		if (!rdev->link_state) {
- 			rdev->link_state = true;
- 			netif_carrier_off(net);
--			netif_tx_stop_all_queues(net);
-+			netvsc_tx_disable(net_device, net);
- 			event->event = RNDIS_STATUS_MEDIA_CONNECT;
- 			spin_lock_irqsave(&ndev_ctx->lock, flags);
- 			list_add(&event->list, &ndev_ctx->reconfig_events);
--- 
-1.8.3.1
 
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh.
+
+
+> ---
+>   drivers/tty/n_tty.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+> index 9cdb0fa3c4bf..66630787fbf9 100644
+> --- a/drivers/tty/n_tty.c
+> +++ b/drivers/tty/n_tty.c
+> @@ -550,7 +550,7 @@ static ssize_t process_output_block(struct tty_struct *tty,
+>   	mutex_lock(&ldata->output_lock);
+>   
+>   	space = tty_write_room(tty);
+> -	if (!space) {
+> +	if (space <= 0) {
+>   		mutex_unlock(&ldata->output_lock);
+>   		return 0;
+>   	}
