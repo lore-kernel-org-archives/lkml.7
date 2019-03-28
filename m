@@ -2,181 +2,189 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4944CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1897C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2072F2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83102082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfC1Mkd (ORCPT
+        id S1727972AbfC1Mkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:40:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55286 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727586AbfC1Mkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:40:32 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BB45A4A01DC6FFD809E5;
-        Thu, 28 Mar 2019 20:40:29 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Mar 2019
- 20:40:20 +0800
-Subject: Re: [PATCH 3/4] arm_pmu: acpi: spe: Add initial MADT/SPE probing
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190326223938.5365-1-jeremy.linton@arm.com>
- <20190326223938.5365-4-jeremy.linton@arm.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <mark.rutland@arm.com>,
-        <sudeep.holla@arm.com>, <james.morse@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2b53e957-6d36-fdfe-20e4-1664108c07ef@huawei.com>
-Date:   Thu, 28 Mar 2019 12:40:12 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 28 Mar 2019 08:40:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9515 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbfC1Mgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 08:36:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="145991017"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 28 Mar 2019 05:36:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 1C898709; Thu, 28 Mar 2019 14:36:34 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 07/36] thunderbolt: Enable TMU access when accessing port space on legacy devices
+Date:   Thu, 28 Mar 2019 15:36:04 +0300
+Message-Id: <20190328123633.42882-8-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190326223938.5365-4-jeremy.linton@arm.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/2019 22:39, Jeremy Linton wrote:
-> ACPI 6.3 adds additional fields to the MADT GICC
-> structure to describe SPE PPI's. We pick these out
-> of the cached reference to the madt_gicc structure
-> similarly to the core PMU code. We then create a platform
-> device referring to the IRQ and let the user/module loader
-> decide whether to load the SPE driver.
->
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->  arch/arm64/include/asm/acpi.h |  3 ++
->  drivers/perf/arm_pmu_acpi.c   | 69 +++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-> index 7628efbe6c12..d10399b9f998 100644
-> --- a/arch/arm64/include/asm/acpi.h
-> +++ b/arch/arm64/include/asm/acpi.h
-> @@ -41,6 +41,9 @@
->  	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
->  	(unsigned long)(entry) + (entry)->header.length > (end))
->
-> +#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
-> +	spe_interrupt) + sizeof(u16))
-> +
->  /* Basic configuration for ACPI */
->  #ifdef	CONFIG_ACPI
->  pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
-> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
-> index 0f197516d708..a2418108eab2 100644
-> --- a/drivers/perf/arm_pmu_acpi.c
-> +++ b/drivers/perf/arm_pmu_acpi.c
-> @@ -74,6 +74,73 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
->  	acpi_unregister_gsi(gsi);
->  }
->
-> +static struct resource spe_resources[] = {
-> +	{
-> +		/* irq */
-> +		.flags          = IORESOURCE_IRQ,
-> +	}
-> +};
-> +
-> +static struct platform_device spe_dev = {
-> +	.name = "arm,spe-v1",
-> +	.id = -1,
-> +	.resource = spe_resources,
-> +	.num_resources = ARRAY_SIZE(spe_resources)
-> +};
-> +
-> +/*
-> + * For lack of a better place,
+Light Ridge and Eagle Ridge both need to have TMU access enabled before
+port space can be fully accessed so make sure it happens on those. This
+allows us to get rid of the offset quirk in tb_port_find_cap().
 
-It seems that the kernel Image size can now increase due to this part of 
-SPE support even if ARM_SPE_PMU config is disabled.
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/thunderbolt/cap.c | 69 +++++++++++++++++++++++++++++----------
+ drivers/thunderbolt/tb.h  | 10 ++++++
+ 2 files changed, 62 insertions(+), 17 deletions(-)
 
-And I don't even think that ARM_SPE_PMU depends on ARM_PMU (which 
-ARM_PMU_ACPI depends on).
-
-Thanks,
-John
-
-hook the normal PMU MADT walk
-> + * and create a SPE device if we detect a recent MADT with
-> + * a homogeneous PPI mapping.
-> + */
-> +static int arm_spe_acpi_parse_irqs(void)
-> +{
-> +	int cpu, ret, irq;
-> +	int hetid;
-> +	u16 gsi = 0;
-> +	bool first = true;
-> +
-> +	struct acpi_madt_generic_interrupt *gicc;
-> +
-> +	/*
-> +	 * sanity check all the GICC tables for the same interrupt number
-> +	 * for now we only support homogeneous ACPI/SPE machines.
-> +	 */
-> +	for_each_possible_cpu(cpu) {
-> +		gicc = acpi_cpu_get_madt_gicc(cpu);
-> +
-> +		if (gicc->header.length < ACPI_MADT_GICC_SPE)
-> +			return -ENODEV;
-> +		if (first) {
-> +			gsi = gicc->spe_interrupt;
-> +			if (!gsi)
-> +				return -ENODEV;
-> +			hetid = find_acpi_cpu_topology_hetero_id(cpu);
-> +			first = false;
-> +		} else if ((gsi != gicc->spe_interrupt) ||
-> +			   (hetid != find_acpi_cpu_topology_hetero_id(cpu))) {
-> +			pr_warn("ACPI: SPE must be homogeneous\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	irq = acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE,
-> +				ACPI_ACTIVE_HIGH);
-> +	if (irq < 0) {
-> +		pr_warn("ACPI: SPE Unable to register interrupt: %d\n", gsi);
-> +		return irq;
-> +	}
-> +
-> +	spe_resources[0].start = irq;
-> +	ret = platform_device_register(&spe_dev);
-> +	if (ret < 0) {
-> +		pr_warn("ACPI: SPE: Unable to register device\n");
-> +		acpi_unregister_gsi(gsi);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int arm_pmu_acpi_parse_irqs(void)
->  {
->  	int irq, cpu, irq_cpu, err;
-> @@ -279,6 +346,8 @@ static int arm_pmu_acpi_init(void)
->  	if (acpi_disabled)
->  		return 0;
->
-> +	arm_spe_acpi_parse_irqs(); /* failures are expected */
-> +
->  	ret = arm_pmu_acpi_parse_irqs();
->  	if (ret)
->  		return ret;
->
-
+diff --git a/drivers/thunderbolt/cap.c b/drivers/thunderbolt/cap.c
+index 9553305c63ea..a58585b4e6d9 100644
+--- a/drivers/thunderbolt/cap.c
++++ b/drivers/thunderbolt/cap.c
+@@ -13,6 +13,7 @@
+ 
+ #define CAP_OFFSET_MAX		0xff
+ #define VSE_CAP_OFFSET_MAX	0xffff
++#define TMU_ACCESS_EN		BIT(20)
+ 
+ struct tb_cap_any {
+ 	union {
+@@ -22,28 +23,38 @@ struct tb_cap_any {
+ 	};
+ } __packed;
+ 
+-/**
+- * tb_port_find_cap() - Find port capability
+- * @port: Port to find the capability for
+- * @cap: Capability to look
+- *
+- * Returns offset to start of capability or %-ENOENT if no such
+- * capability was found. Negative errno is returned if there was an
+- * error.
+- */
+-int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
++static int tb_port_enable_tmu(struct tb_port *port, bool enable)
+ {
+-	u32 offset;
++	struct tb_switch *sw = port->sw;
++	u32 value, offset;
++	int ret;
+ 
+ 	/*
+-	 * DP out adapters claim to implement TMU capability but in
+-	 * reality they do not so we hard code the adapter specific
+-	 * capability offset here.
++	 * Legacy devices need to have TMU access enabled before port
++	 * space can be fully accessed.
+ 	 */
+-	if (port->config.type == TB_TYPE_DP_HDMI_OUT)
+-		offset = 0x39;
++	if (tb_switch_is_lr(sw))
++		offset = 0x26;
++	else if (tb_switch_is_er(sw))
++		offset = 0x2a;
++	else
++		return 0;
++
++	ret = tb_sw_read(sw, &value, TB_CFG_SWITCH, offset, 1);
++	if (ret)
++		return ret;
++
++	if (enable)
++		value |= TMU_ACCESS_EN;
+ 	else
+-		offset = 0x1;
++		value &= ~TMU_ACCESS_EN;
++
++	return tb_sw_write(sw, &value, TB_CFG_SWITCH, offset, 1);
++}
++
++static int __tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
++{
++	u32 offset = 1;
+ 
+ 	do {
+ 		struct tb_cap_any header;
+@@ -62,6 +73,30 @@ int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
+ 	return -ENOENT;
+ }
+ 
++/**
++ * tb_port_find_cap() - Find port capability
++ * @port: Port to find the capability for
++ * @cap: Capability to look
++ *
++ * Returns offset to start of capability or %-ENOENT if no such
++ * capability was found. Negative errno is returned if there was an
++ * error.
++ */
++int tb_port_find_cap(struct tb_port *port, enum tb_port_cap cap)
++{
++	int ret;
++
++	ret = tb_port_enable_tmu(port, true);
++	if (ret)
++		return ret;
++
++	ret = __tb_port_find_cap(port, cap);
++
++	tb_port_enable_tmu(port, false);
++
++	return ret;
++}
++
+ static int tb_switch_find_cap(struct tb_switch *sw, enum tb_switch_cap cap)
+ {
+ 	int offset = sw->config.first_cap_offset;
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index 93c1ea21feeb..a166265dfcf9 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -436,6 +436,16 @@ static inline struct tb_switch *tb_to_switch(struct device *dev)
+ 	return NULL;
+ }
+ 
++static inline bool tb_switch_is_lr(const struct tb_switch *sw)
++{
++	return sw->config.device_id == PCI_DEVICE_ID_INTEL_LIGHT_RIDGE;
++}
++
++static inline bool tb_switch_is_er(const struct tb_switch *sw)
++{
++	return sw->config.device_id == PCI_DEVICE_ID_INTEL_EAGLE_RIDGE;
++}
++
+ int tb_wait_for_port(struct tb_port *port, bool wait_if_unplugged);
+ int tb_port_add_nfc_credits(struct tb_port *port, int credits);
+ int tb_port_clear_counter(struct tb_port *port, int counter);
+-- 
+2.20.1
 
