@@ -2,239 +2,128 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429F3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8976E204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA1F21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="usr4vJrQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LjmDLUau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfC1MUN (ORCPT
+        id S1727075AbfC1MVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:20:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37265 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfC1MUN (ORCPT
+        Thu, 28 Mar 2019 08:21:06 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54886 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfC1MVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:20:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w10so22623447wrm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 05:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w729XfcWa280YbjvvtMLFS8tEwV4jIbYSPvQEm+Pk7k=;
-        b=usr4vJrQenZYPTPV0ujBlAzQf9E5A+6cwO8FYgiKnadirjg8lsWFEMGEv4m6Tvvr8f
-         rmo3Iv+KWV6SaihBAor+8i5jd0CXfhygzV0RdZeM8nRtr3qBeavop5ErxZ2qMpjbpe3m
-         0vp99EfpPbIXLNz2wTq4I3ZyVu6bpcrYbLLZSdYatqsi/5laOfdLyEv3uQ2ttCC0/4J0
-         w5zOUE/p+VyMxVWRWs5fxs0mf0rkqhgoQAaarEWY8UCoIQgQmkbQf3f6JkkJhT82Lxmr
-         vtcrPWWETH3cftrcpCXnWpGx4G4ypQfOgeNySGQk7m409MugYJL/iStFTKuCWTOi9JnY
-         WmQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w729XfcWa280YbjvvtMLFS8tEwV4jIbYSPvQEm+Pk7k=;
-        b=EX6fTt2OGkeGEVYI8ZZVu64Ezx/bDPcIIUhy2Izy8K7MMu/7b2pCSeBSrZpYQ0kEM7
-         L1GKbdQMZSdnS/sBGpGBSsXN7uQmV3k/1bma4Q8NPL7zrYh663ZdVfEL8yo2AsRycI24
-         TaQpJR+WJZZp0P0nxV4Sq+a9kP07DeSDgDwwqrscCB8oT1c/oyGcNHGLIomWvPxrQOGS
-         rKwMOIw9Hf/15MS11tO9/ZY30kuiLBY3iELmcWgUM8zf4BU4UWhOcJ1o+SJ0O2mLmQSu
-         PqHIOq6fKwd/f5CbEdTnesOiEXxWSad6KxHcJobppK+ZXvYb5gLjcHoBUGxMB5opYuF8
-         TU/g==
-X-Gm-Message-State: APjAAAUA6pCLjz8I1I5UwOvxELLMY1P5xOP+y/JKVDNkTgIL9kqEY1Pn
-        edbpwqEEJvwzM2JgrhAvP1G3EkOD+wWUdLZ+w5Au+A==
-X-Google-Smtp-Source: APXvYqzVa7hJ90MP5OhuidVebrznMsJioEu6sY9jf9V5Ktvsnsq1PHqd8NdnV8ACl0QAIqwjKBS/PRVpUEkrgB4veNs=
-X-Received: by 2002:a5d:4a43:: with SMTP id v3mr28782485wrs.126.1553775610847;
- Thu, 28 Mar 2019 05:20:10 -0700 (PDT)
+        Thu, 28 Mar 2019 08:21:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2SC990c126397;
+        Thu, 28 Mar 2019 12:20:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=W9Enll0htYA1EXDV14AIj5B2PgkiEFBryMG52keRzrI=;
+ b=LjmDLUauWNnWGr0Xm7jD3x6zGT6J0RxkRfv0Df4EqrkNPloXAvQBicK8Mc9g2Bj8s/5V
+ RGtHOvIzP2bOumCNvxuy81+PwiUk3pQwc/qnmO1J44zrUjSUAwcHTzKnhu+LckAue8th
+ yAJg3d6Yy15YNQDKmzxLEVBfIrOrEk9q9QJgRSjNH/dS6ZbYprLQ3Mrnfdfr3NDtqwgL
+ Eq1aUEnwIVqBm+hCeNPdqiQ0BiNSFQnOYMoXAWHBdgR7BLpTvbN1JTGDhN6umIPUFNuB
+ 4rGYv/F8P1MsB25cGmNayINpgIIzfz35KIEw9a1osj1rnou/ppWwvgZvQR+VuyhrIeHG 5Q== 
+Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
+        by userp2120.oracle.com with ESMTP id 2re6djp775-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 12:20:45 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2SCKhKJ006257
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 12:20:43 GMT
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2SCKYmX030050;
+        Thu, 28 Mar 2019 12:20:35 GMT
+Received: from kadam (/41.202.241.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 Mar 2019 05:20:34 -0700
+Date:   Thu, 28 Mar 2019 15:20:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     wen.yang99@zte.com.cn, yamada.masahiro@socionext.com,
+        Markus.Elfring@web.de, Gilles.Muller@lip6.fr,
+        nicolas.palix@imag.fr, michal.lkml@markovi.net,
+        yellowriver2010@hotmail.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: =?utf-8?B?562U5aSNOiBSZTogW3Y1?= =?utf-8?Q?=5D?= coccinelle:
+ semantic code search for missing put_device()
+Message-ID: <20190328122022.GG32590@kadam>
+References: <201903281010336645826@zte.com.cn>
+ <alpine.DEB.2.21.1903280708590.2756@hadrien>
 MIME-Version: 1.0
-References: <CAB4CAwc-SFtw4+74Qe-vX57JRGDjJMt9xM2+ev3OiipzwxBPBw@mail.gmail.com>
- <20171116124431.GS17200@lahna.fi.intel.com> <CAB4CAwfHx8DgCYk0piVnrTa7YP2=6A8Le4ekoENFPyNVF9g1rw@mail.gmail.com>
- <20171117064904.GZ17200@lahna.fi.intel.com> <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
- <20171121105205.GP22431@lahna.fi.intel.com> <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
- <20171121120422.GR22431@lahna.fi.intel.com> <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
- <20190327172940.GR3622@lahna.fi.intel.com> <20190328091729.GV9224@smile.fi.intel.com>
- <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
-In-Reply-To: <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Thu, 28 Mar 2019 20:19:59 +0800
-Message-ID: <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over suspend/resume
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903280708590.2756@hadrien>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9208 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=926 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903280087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 5:38 PM Daniel Drake <drake@endlessm.com> wrote:
->
-> On Thu, Mar 28, 2019 at 5:17 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > Hmm... Can you confirm that laptop you declared as a fixed case and the
-> > mentioned here is the same one?
->
-> They are definitely not the same exact unit - originally we had a
-> pre-production sample, and now we briefly diagnosed a real production
-> unit that was sold to a customer. There could be subtle motherboard
-> variations as you mention.
->
-> > If it's the case, I recommend to ping Asus again and make them check and fix.
->
-> We'll keep an eye open for any opportunities to go deeper here.
-> However further investigation on both our side and theirs is blocked
-> by not having any of the affected hardware (since the models are now
-> so old), so I'm not very optimistic that we'll be able to make
-> progress there.
->
-> > Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
-> > implement this later on.
->
-> Chris will work on implementing this for your consideration.
->
-> Thanks for the quick feedback!
-> Daniel
+On Thu, Mar 28, 2019 at 07:09:22AM +0100, Julia Lawall wrote:
+> 
+> 
+> On Thu, 28 Mar 2019, wen.yang99@zte.com.cn wrote:
+> 
+> > > > > When I searched "Wen Yang", v6 did not show up for some reasons.
+> > > > > https://lore.kernel.org/patchwork/project/lkml/list/?series=&submitter=22638&state=*&q=&archive=&delegate=
+> > > >
+> > > > I find such a situation also interesting somehow.
+> > > > I assume that there was another temporary technical difficulty involved
+> > > > with the Linux mailing list (and related information systems).
+> > >
+> > >
+> > > I think v6 fell into a crack somehow.
+> > >
+> > >
+> > > Check the LKML archive:
+> > > https://lkml.org/lkml/2019/2/16
+> > >
+> > >
+> > > I see your reply:
+> > >
+> > > Re: [v6] coccinelle: semantic code search for missing put_device()Markus Elfring
+> > >
+> > >
+> > > But, I cannot find the v6 patch itself.
+> > >
+> >
+> > I am sorry to bother you.
+> > I checked it again and  found that I can not send mail to <linux-kernel@vger.kernel.org>
+> > via my private mailbox <yellowriver2010@hotmail.com>.
+> > The reject reply like this:
+> >
+> > for your MAIL FROM address <yellowriver2010@hotmail.com> policy analysis reported: Your address is not liked source for email
+> >
+> > Is it looked my mail as spam mail?
+> > Who should I send to for help me resolving this problem?
+> 
+> Maybe Konstantin Ryabitsev?
+> 
 
-What if I modify the patch as follows? It doesn't save HOSTSW_OWN register.
-It just toggles the bit specifically for the IRQ GPIO pin after resume when DMI
-matches.
+I think postmaster@vger.kernel.org is still Dave Miller, but I'm not
+positive.
 
----
- drivers/pinctrl/intel/pinctrl-intel.c | 67 +++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+Hotmail is not listed as a taboo thing:
+http://vger.kernel.org/majordomo-taboos.txt
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c
-b/drivers/pinctrl/intel/pinctrl-intel.c
-index 8cda7b535b02..994abc5ecd32 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -19,6 +19,7 @@
- #include <linux/pinctrl/pinmux.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/dmi.h>
-
- #include "../core.h"
- #include "pinctrl-intel.h"
-@@ -73,6 +74,8 @@
-
- #define DEBOUNCE_PERIOD                        31250 /* ns */
-
-+#define PINCTRL_QUIRK_KEEP_HOSTOWN     BIT(0)
-+
- struct intel_pad_context {
-        u32 padcfg0;
-        u32 padcfg1;
-@@ -112,11 +115,37 @@ struct intel_pinctrl {
-        size_t ncommunities;
-        struct intel_pinctrl_context context;
-        int irq;
-+       u32 quirks;
- };
-
- #define pin_to_padno(c, p)     ((p) - (c)->pin_base)
- #define padgroup_offset(g, p)  ((p) - (g)->base)
-
-+static const struct dmi_system_id dmi_retain_hostown_table[] = {
-+       {
-+               .ident = "ASUSTeK COMPUTER INC. ASUS E403NA",
-+               .matches = {
-+                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+                       DMI_MATCH(DMI_BOARD_NAME, "E403NA"),
-+               },
-+       },
-+       {
-+               .ident = "ASUSTeK COMPUTER INC. ASUS X540NA",
-+               .matches = {
-+                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+                       DMI_MATCH(DMI_BOARD_NAME, "X540NA"),
-+               },
-+       },
-+       {
-+               .ident = "ASUSTeK COMPUTER INC. ASUS X541NA",
-+               .matches = {
-+                       DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
-+                       DMI_MATCH(DMI_BOARD_NAME, "X541NA"),
-+               },
-+       },
-+       { }
-+};
-+
- static struct intel_community *intel_get_community(struct intel_pinctrl *pctrl,
-                                                   unsigned int pin)
- {
-@@ -219,6 +248,32 @@ static bool intel_pad_acpi_mode(struct
-intel_pinctrl *pctrl, unsigned int pin)
-        return !(readl(hostown) & BIT(gpp_offset));
- }
-
-+static void intel_pad_force_hostown(struct intel_pinctrl *pctrl,
-unsigned int pin)
-+{
-+       const struct intel_community *community;
-+       const struct intel_padgroup *padgrp;
-+       unsigned int offset, gpp_offset;
-+       void __iomem *hostown;
-+
-+       community = intel_get_community(pctrl, pin);
-+       if (!community)
-+               return;
-+       if (!community->hostown_offset)
-+               return;
-+
-+       padgrp = intel_community_get_padgroup(community, pin);
-+       if (!padgrp)
-+               return;
-+
-+       gpp_offset = padgroup_offset(padgrp, pin);
-+       offset = community->hostown_offset + padgrp->reg_num * 4;
-+       hostown = community->regs + offset;
-+
-+       writel(readl(hostown) | BIT(gpp_offset), hostown);
-+
-+       return;
-+}
-+
- static bool intel_pad_locked(struct intel_pinctrl *pctrl, unsigned int pin)
- {
-        struct intel_community *community;
-@@ -1318,6 +1373,11 @@ int intel_pinctrl_probe(struct platform_device *pdev,
-        pctrl->soc = soc_data;
-        raw_spin_lock_init(&pctrl->lock);
-
-+       if (dmi_first_match(dmi_retain_hostown_table)) {
-+               pctrl->quirks |= PINCTRL_QUIRK_KEEP_HOSTOWN;
-+               dev_info(&pdev->dev, "enabling KEEP_HOSTOWN quirk on
-this hw\n");
-+       }
-+
-        /*
-         * Make a copy of the communities which we can use to hold pointers
-         * to the registers.
-@@ -1549,6 +1609,13 @@ int intel_pinctrl_resume(struct device *dev)
-                if (!intel_pinctrl_should_save(pctrl, desc->number))
-                        continue;
-
-+               if ((pctrl->quirks & PINCTRL_QUIRK_KEEP_HOSTOWN) &&
-+                   intel_pad_acpi_mode(pctrl, desc->number)) {
-+                       intel_pad_force_hostown(pctrl, desc->number);
-+                       dev_dbg(dev, "restored hostown for pin %d\n",
-+                               desc->number);
-+               }
-+
-                padcfg = intel_get_padcfg(pctrl, desc->number, PADCFG0);
-                val = readl(padcfg) & ~PADCFG0_GPIORXSTATE;
-                if (val != pads[i].padcfg0) {
---
-2.21.0
+regards,
+dan carpenter
