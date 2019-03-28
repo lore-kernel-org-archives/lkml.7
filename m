@@ -2,224 +2,148 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2E9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C69C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4C620700
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jSL2WTLt"
+	by mail.kernel.org (Postfix) with ESMTP id 7D12220700
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 11:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfC1Lsr (ORCPT
+        id S1727058AbfC1Ltg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 07:48:47 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44271 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfC1Lsr (ORCPT
+        Thu, 28 Mar 2019 07:49:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48706 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726117AbfC1Ltf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 07:48:47 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190328114844euoutp02e7f54045bb4ea4b07c7eca25c3e969c1~QHPhlAgx03046030460euoutp02B
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:48:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190328114844euoutp02e7f54045bb4ea4b07c7eca25c3e969c1~QHPhlAgx03046030460euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1553773724;
-        bh=tp3m+q1epNtYfS/t5nFXhIWhJzSj5o8anq2dCYU5gYQ=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=jSL2WTLtTvn5RoD5BfzM2NomeudeWapuIxJqiXWA17mVzEcIHUVztQPl5I1LNF3S0
-         2YTqfZg0G33KuPPu+0wrYsQYvHY5vIVXIQEZMqjYVaxqq7i7eD4Dwpb1swK/CdZRmM
-         Ln2eksHW8+K58xJ/klfl6n8i8qX3QmLBPkyQgecs=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190328114843eucas1p1b5cc766859f6650ba2ee86b466baff8a~QHPg3DZ3L1961319613eucas1p1p;
-        Thu, 28 Mar 2019 11:48:43 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4B.8C.04325.B94BC9C5; Thu, 28
-        Mar 2019 11:48:43 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190328114843eucas1p20c9d870a68006ae9fc0f0699b867f896~QHPgLjH-z1606316063eucas1p2H;
-        Thu, 28 Mar 2019 11:48:43 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190328114842eusmtrp168cb47d2f7020deefd091fbcb3b1d192~QHPf9c0EI1968119681eusmtrp1c;
-        Thu, 28 Mar 2019 11:48:42 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-c8-5c9cb49bbdd5
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 83.3A.04140.A94BC9C5; Thu, 28
-        Mar 2019 11:48:42 +0000 (GMT)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190328114842eusmtip2ef2abb7c43b589931d2b6dbbabc5c10c~QHPfX4ppd3139731397eusmtip2F;
-        Thu, 28 Mar 2019 11:48:42 +0000 (GMT)
-Subject: Re: Re: [PATCH v3 1/4] drm/bridge: sil_sii8620: depend on INPUT
- instead of selecting it.
-To:     "Life is hard, and then you die" <ronald@innovation.ch>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Inki Dae <inki.dae@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <35bf8a61-b84c-3aae-00de-14637d37547b@samsung.com>
-Date:   Thu, 28 Mar 2019 12:48:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.5.1
+        Thu, 28 Mar 2019 07:49:35 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SBeirN116843
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:49:34 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rgwkhr9w9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:49:33 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 28 Mar 2019 11:49:32 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 11:49:28 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SBnRYN38207632
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 11:49:27 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 259E2AE045;
+        Thu, 28 Mar 2019 11:49:27 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72F92AE04D;
+        Thu, 28 Mar 2019 11:49:26 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 28 Mar 2019 11:49:26 +0000 (GMT)
+Date:   Thu, 28 Mar 2019 13:49:24 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 2/7] RISC-V: doc: Add file describing the virtual memory
+ map
+References: <20190327213643.23789-1-logang@deltatee.com>
+ <20190327213643.23789-3-logang@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328000743.GB24753@innovation.ch>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89tR9nkOI09rDCdFGSklYUHu6BRcaA+WJ+6GHXSg0o6ZUcr
-        LcxKcrObWl6atsos5zAM22ZqGqh4yS5afshRTcjUhGE1JwUVbZ4ufvs9z/N//u/zh5fGlS5S
-        TadpswWdlk/XUP6Evff7y9XV1prENS214eyls5UY2107hdgRzwzFPvX8pNhzd5ootsxZQrCj
-        X+dI9nVbDcVOTS5hb8yW4+zUexfGdurHMLZ/rgJj77s/yOICOLdlmuRaje9kXGGnQ8ZdMwDX
-        bDFQnGlgN/fkRqOMc17ow7jLVgviOt5bCc7dHMJVFdnJBPl+/03JQnraMUEXteWwf2rpRAuW
-        VRly4kK/RVaAeqAY+dHArIfHd59ixcifVjJmBN1Vn5BUzCLo+TZNSIUbQaHZhP1bGXb9UdUj
-        aC6toKTCheB7kwH3qYKYJNDXOeY5mNnoFY2QPsaZNgKKxjb7mGJWws+Ho5SPFcwWmDAa5jUE
-        sxxeFduRjxcze2HmYzshaQJh4Pr4PPsx0XD5eQEmeS6Dc7ZqXGIVOMZvzgcCppwG85fPXiPa
-        W2yDFuMOKUEQTPdZZRIvhcGrFwmJT4PTXIhLu3oEtgetuDTYCN19w6TPB/ce3dQWJbXjwVTX
-        QEj2AfDGFSidEABl9kpcaitAf14pqcPA+dz2x1AFd4c8VAnSGBcEMy4IY1wQxvj/3VuIsCCV
-        kCNmpAhitFY4HinyGWKONiUyKTOjGXk/4eCvPs8j1PnjSBdiaKSRK0IzqxOVJH9MzM3oQkDj
-        mmCFo6EmUalI5nPzBF3mIV1OuiB2oSU0oVEpTi4aO6BkUvhs4aggZAm6v1OM9lMXoIgDjSgm
-        9kqe8GLctoyNTR60800HR+s6do2F7un9rDbVz9lMI+3x34SR7a7dRH7Eu69Wh5pueHGEca/T
-        5r1pT4iZdLzcHBay6nYFyQ/lX4zTyE9t0KcuwmNWhBelqbDls/LYZ9FnlPtUQ1uzo2ruMzsD
-        tTasylPruIe/jfQc0hBiKr82AteJ/G+S3XzGgAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42I5/e/4Pd1ZW+bEGHz9YWjR2zSdyeLwoheM
-        Fle+vmezOPX1L5tF8+L1bBaT7k9gsbj56RurxeVdc9gsXjyXtpj7ZSqzxYt7b5ks9nU8YLI4
-        8W0ak8Xaz4/ZHfg8Pq96xeqxc9Zddo+WfbfYPaZ0SnhsWtXJ5jHvZKDH/rlr2D3udx9n8ujb
-        sorRY++9LSwenzfJecxo38YawBOlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2Vk
-        qqRvZ5OSmpNZllqkb5eglzHx2XamgulyFd0nVrE3MB6R6GLk5JAQMJHYc/EtYxcjF4eQwFJG
-        iRt3e5ghEuISu+e/hbKFJf5c62KDKHrNKHH35CJWkISwQLJEx5JbYEUiAtYSmyZeYQUpYhbY
-        xyLR92ApC0THTCaJ2T8ng1WxCWhK/N18kw3E5hWwk3g2qxNsEouAqsSlrm2MILaoQITE3Ysv
-        WCBqBCVOznwCZnMKGEv0nW1gArGZBdQl/sy7xAxhy0s0b50NZYtL3Hoyn2kCo9AsJO2zkLTM
-        QtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHxv+3Yzy07GLveBR9iFOBgVOLh
-        VcifHSPEmlhWXJl7iFGCg1lJhPfWyjkxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTE15
-        JfGGpobmFpaG5sbmxmYWSuK85w0qo4QE0hNLUrNTUwtSi2D6mDg4pRoY+1dKb5VrvlB0yk/3
-        2ZsWmSc2Gik1ek+Wctlq3dl1pF2Z2T1ksa1B99LY279M91b+uP+qwifZQ23Wp7t+e+ctal6d
-        WnTp38flG790V2/6eWXbf7a0znx/M/ffDVyHwo8dZijr9W2MUkmbyjjj4uPjt3vrWT99+u90
-        4q+EJ4/Q5+7nOmHTlvhpKbEUZyQaajEXFScCAJxqpUMVAwAA
-X-CMS-MailID: 20190328114843eucas1p20c9d870a68006ae9fc0f0699b867f896
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190327014824epcas2p1f79a41c58f76150f7324169805f506f0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190327014824epcas2p1f79a41c58f76150f7324169805f506f0
-References: <20190327014807.7472-1-ronald@innovation.ch>
-        <CGME20190327014824epcas2p1f79a41c58f76150f7324169805f506f0@epcas2p1.samsung.com>
-        <20190327014807.7472-2-ronald@innovation.ch>
-        <9fd8af5b-20ed-5dca-7d5c-98f2926b9b0c@samsung.com>
-        <20190328000743.GB24753@innovation.ch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327213643.23789-3-logang@deltatee.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19032811-0016-0000-0000-000002686884
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032811-0017-0000-0000-000032C3AAF6
+Message-Id: <20190328114924.GD14864@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.03.2019 01:07, Life is hard, and then you die wrote:
->   Hi Andrzej,
->
-> On Wed, Mar 27, 2019 at 03:13:37PM +0100, Andrzej Hajda wrote:
->> +cc: dri-devel
->>
->> On 27.03.2019 02:48, Ronald Tschalär wrote:
->>> commit d6abe6df706c66d803e6dd4fe98c1b6b7f125a56 (drm/bridge:
->>> sil_sii8620: do not have a dependency of RC_CORE) added a dependency on
->>> INPUT. However, this causes problems with other drivers, in particular
->>> an input driver that depends on MFD_INTEL_LPSS_PCI (to be added in a
->>> future commit):
->>>
->>>   drivers/clk/Kconfig:9:error: recursive dependency detected!
->>>   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
->>>   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
->>>   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
->>>   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
->>>   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
->>>   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
->>>   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
->>>   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
->>>
->>> According to the docs, select should only be used for non-visible
->>> symbols. Furthermore almost all other references to INPUT throughout the
->>> kernel config are depends, not selects. Hence this change.
->>>
->>> CC: Inki Dae <inki.dae@samsung.com>
->>> CC: Andrzej Hajda <a.hajda@samsung.com>
->>> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
->> This is drm bridge driver, next time please cc it to dri-devel ML also.
-> Ok. Though as noted in the cover letter, the patch here is meant as a
-> placeholder till the real thing being discussed on dri-devel is
-> finalized. I was trying to avoid cross-posting too much, hence the
-> separate submission on dri-devel.
->
->> Anyway this is not the solution we have agreed to.
->>
->> Why have you abandoned the patch [1]? It needed just some minor
->> polishing, as I wrote in response to this mail.
->>
->> [1]:
->> https://lore.kernel.org/lkml/20190124082423.23139-1-ronald@innovation.ch/T/#mf620df0b1583096a214d8e2e690387078583472f
-> It seems your mail client doesn't like me :-) I got neither of your
-> responses. Sorry, I should've checked the archives when I didn't hear
-> anything. In any case thank you for your review, and I will update
-> that patch and send out a new version shortly.
+Hi,
 
+On Wed, Mar 27, 2019 at 03:36:38PM -0600, Logan Gunthorpe wrote:
+> This file is similar to the x86_64 equivalent (in
+> Documentation/x86/x86_64/mm.txt) and describes the virtuas address space
+> usage for RISC-V.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> ---
+>  Documentation/riscv/mm.txt | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/riscv/mm.txt
+> 
+> diff --git a/Documentation/riscv/mm.txt b/Documentation/riscv/mm.txt
+> new file mode 100644
+> index 000000000000..725dc85f2c65
+> --- /dev/null
+> +++ b/Documentation/riscv/mm.txt
+> @@ -0,0 +1,24 @@
+> +Sv32:
+> +
+> +00000000 - 7fffffff   user space, different per mm (2G)
+> +80000000 - 81ffffff   virtual memory map (32MB)
+> +82000000 - bfffffff   vmalloc/ioremap space (1GB - 32MB)
+> +c0000000 - ffffffff   direct mapping of lower phys. memory (1GB)
+> +
+> +Sv39:
+> +
+> +0000000000000000 - 0000003fffffffff  user space, different per mm (256GB)
+> +hole caused by [38:63] sign extension
+> +ffffffc000000000 - ffffffc0ffffffff  virtual memory map (4GB)
+> +ffffffc100000000 - ffffffd0ffffffff  vmalloc/ioremap spac (64GB)
+> +ffffffd100000000 - ffffffffffffffff  linear mapping of physical space (188GB)
+> +  ffffffd200000000 - 0xfffffff200000000 linear mapping of all physical memory
+> +
+> +The RISC-V architecture defines virtual address bits in multiples of nine
+> +starting from 39. These are referred to as Sv39, Sv48, Sv57 and Sv64.
+> +Currently only Sv39 is supported. Bits 63 through to the most-significant
+> +implemented bit are sign extended. This causes a hole between user space
+> +and kernel addresses if you interpret them as unsigned.
+> +
+> +The direct mapping covers as much of the physical memory space as
+> +possible so that it may cover some IO memory.
 
-I see where is the problem: Your mail client (mutt I suppose) sets
-Mail-Followup-To header to all recipients (To and Cc) without the
-sender. And my client (thunderbird) after pressing "Reply-All" checks
-for Mail-Followup-To field, if present it uses only it to set
-recipients, so in your case it does not response to the original author.
+Please move the text before the tables, so that meaning of Sv32 and Sv39
+would be clear.
 
-I do not know which mail client works incorrectly in this case, but for
-sure it is not what we want :)
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
 
-I do not know how to solve the issue in thunderbird, maybe mutt is more
-configurable?
-
-
-Regards
-
-Andrzej
-
-
->
->
->   Cheers,
->
->   Ronald
->
->
->>> ---
->>>  drivers/gpu/drm/bridge/Kconfig | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
->>> index 2fee47b0d50b..eabedc83f25c 100644
->>> --- a/drivers/gpu/drm/bridge/Kconfig
->>> +++ b/drivers/gpu/drm/bridge/Kconfig
->>> @@ -83,9 +83,9 @@ config DRM_PARADE_PS8622
->>>  config DRM_SIL_SII8620
->>>  	tristate "Silicon Image SII8620 HDMI/MHL bridge"
->>>  	depends on OF
->>> +	depends on INPUT
->>>  	select DRM_KMS_HELPER
->>>  	imply EXTCON
->>> -	select INPUT
->>>  	select RC_CORE
->>>  	help
->>>  	  Silicon Image SII8620 HDMI/MHL bridge chip driver.
->>
->
+-- 
+Sincerely yours,
+Mike.
 
