@@ -2,95 +2,118 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542A1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F417C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14385217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B29F2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LZIBSxgP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LZIBSxgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfC1NLp (ORCPT
+        id S1727018AbfC1NL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:11:45 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4272 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbfC1NLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:11:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 06:11:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="126627882"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga007.jf.intel.com with ESMTP; 28 Mar 2019 06:11:41 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h9Uom-0002i8-D1; Thu, 28 Mar 2019 15:11:40 +0200
-Date:   Thu, 28 Mar 2019 15:11:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] x86/boot: Introduce helpers for serial I/O
-Message-ID: <20190328131140.GX9224@smile.fi.intel.com>
-References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
- <20190319184325.72807-3-andriy.shevchenko@linux.intel.com>
- <20190328123250.GE22720@zn.tnic>
+        Thu, 28 Mar 2019 09:11:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35674 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbfC1NL5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:11:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4B73F6083E; Thu, 28 Mar 2019 13:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553778717;
+        bh=lPWWY36gpiSPZu8B8aHT5/M73OwzVr/dYFR8bY2BPMQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LZIBSxgP1cTaqCzYh5L2QE17XmU9ss5qRPfWyEpfB0ySC9znZd/JufXp30rbNO5iZ
+         r7MmXD9TrwbH0zkN+7jSfBewKlUzNPmpPP4/DqdWGC9Ll7IltcX3sHEjo+7ITGL2Nl
+         3bQ0cOijqCHPzYSYwXlLJ88Ej+pmZYGHzf5FnIFw=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A24066053B;
+        Thu, 28 Mar 2019 13:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553778717;
+        bh=lPWWY36gpiSPZu8B8aHT5/M73OwzVr/dYFR8bY2BPMQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LZIBSxgP1cTaqCzYh5L2QE17XmU9ss5qRPfWyEpfB0ySC9znZd/JufXp30rbNO5iZ
+         r7MmXD9TrwbH0zkN+7jSfBewKlUzNPmpPP4/DqdWGC9Ll7IltcX3sHEjo+7ITGL2Nl
+         3bQ0cOijqCHPzYSYwXlLJ88Ej+pmZYGHzf5FnIFw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A24066053B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] gpio: mockup: use simple_read_from_buffer() in debugfs
+ read callback
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190328110043.13391-1-brgl@bgdev.pl>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <c3ecb2d9-55eb-fc74-a08a-bbd5c5018cb8@codeaurora.org>
+Date:   Thu, 28 Mar 2019 18:41:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328123250.GE22720@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190328110043.13391-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 01:32:50PM +0100, Borislav Petkov wrote:
-> On Tue, Mar 19, 2019 at 09:43:20PM +0300, Andy Shevchenko wrote:
-> > As preparatory to enable earlyprintk on non-standard ports on x86,
-> > introduce serial_in() and serial_out() helpers to perform serial I/O.
-> > 
-> > No functional change intended.
-> 
-> ...
-> 
-> > +/* Assign serial I/O accessors */
-> > +static void early_serial_use_io_accessors(void)
-> > +{
-> > +	/* These will always be IO based ports */
-> > +	serial_in = io_serial_in;
-> > +	serial_out = io_serial_out;
-> > +}
-> 
-> This and the early_serial_use_mmio_accessors() in a later patch is just
-> silly because you need to export and forward-declare those serial_in and
-> serial_out function pointers in a bunch of places.
 
-This is the same approach as it's done in earlyprintk support in the main part
-of the kernel. Besides the fact that many drivers do it in the same way.
-
-And I wouldn't call 'few' a 'bunch'...
-
-> Just define exactly *two* simple functions serial_in() and serial_out()
-> which have enough logic to decide whether to do serial IO or MMIO and
-> put all that logic in those functions. 
-
-Any idea how it can be done?
-
-> No need for all that function
-> pointer assignment "fun".
-
--- 
-With Best Regards,
-Andy Shevchenko
+On 3/28/2019 4:30 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Calling read() for a single byte read will return 2 currently. Use
+> simple_read_from_buffer() which correctly handles all sizes.
+>
+> Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>   drivers/gpio/gpio-mockup.c | 7 +------
+>   1 file changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index 74ba8b1d71d8..859585dce5c9 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -219,12 +219,7 @@ static ssize_t gpio_mockup_debugfs_read(struct file *file,
+>   	val = gpio_mockup_get(gc, priv->offset);
+>   	cnt = snprintf(buf, sizeof(buf), "%d\n", val);
 
 
+why \n is inserted in the buf..
+
+rv variable is unused now.
+
+>   
+> -	rv = copy_to_user(usr_buf, buf, cnt);
+> -	if (rv)
+> -		return rv;
+> -
+> -	*ppos += cnt;
+> -	return cnt;
+> +	return simple_read_from_buffer(usr_buf, size, ppos, buf, cnt);
+
+
+
+Looks good to me.
+Remove the unused variable.
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
+>   }
+>   
+>   static ssize_t gpio_mockup_debugfs_write(struct file *file,
