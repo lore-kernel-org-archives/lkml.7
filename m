@@ -3,35 +3,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC629C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A56C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EA5206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC3621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:03:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfC1NCz (ORCPT
+        id S1726679AbfC1NDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:02:55 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:55950 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbfC1NCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:02:55 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 54E4A15061; Thu, 28 Mar 2019 13:02:53 +0000 (GMT)
-From:   Mans Rullgard <mans@mansr.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
-Date:   Thu, 28 Mar 2019 13:02:49 +0000
-Message-Id: <20190328130249.19356-1-mans@mansr.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190326194907.6lekrewcdiuteomp@flea>
-References: <20190326194907.6lekrewcdiuteomp@flea>
+        Thu, 28 Mar 2019 09:03:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42352 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbfC1NDJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:03:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id g3so19307691wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 06:03:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wxSLTenBfnmz724y4L8PsmflSaCsaPmD4w20OUV9oBQ=;
+        b=luCeC2FgguqfeVYvPrWbQlCN7imh3o1ivz1ut5O+z1dVo06XZPIdKEBLQ9lJK8yXmL
+         OvHRuuZatkPIlNf6o8dIOQ7qOJTsmtqp6mt2yB2F1mHUsHreW8SwbBD2mR0BJ4B2tviD
+         m3d3kExbniq22Z5mkxwgccS/03xVFOdWhPbQs57T3YDfJQsuZFSonSWl4GkkyYSZwseZ
+         Y/Aiwb5ij9QobUXFQdWfHbU3fGwQzKzGNNqno36zzWjSGAA3RelqCVrfZMFEmeFY5E2x
+         FpVHKCL68Z4yXglo4/R0JI4XYscXF/0pZl6p9Ajdq/z1KhvIpCBwK6d2TKIsgf2GJS5a
+         C7Dg==
+X-Gm-Message-State: APjAAAVWPYufiU2lEVhdWEPuLLRD12ri56W8AZyNy2EjJXEUihoPv+Gi
+        hHLd/hdAqTz9n52mLbtf52pnlg==
+X-Google-Smtp-Source: APXvYqyCbkCrDJviJGwRn0vQmGhPpIDygsYHFC4Cnxeid5LCqs1qAXYFGp60wqWMlu5qLazNchuwHA==
+X-Received: by 2002:adf:edca:: with SMTP id v10mr25908161wro.157.1553778187933;
+        Thu, 28 Mar 2019 06:03:07 -0700 (PDT)
+Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
+        by smtp.gmail.com with ESMTPSA id z7sm3071512wml.40.2019.03.28.06.03.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 06:03:07 -0700 (PDT)
+From:   Matteo Croce <mcroce@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
+Date:   Thu, 28 Mar 2019 14:03:06 +0100
+Message-Id: <20190328130306.25384-1-mcroce@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -39,123 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is desirabled to use a separate i2c controller for ddc
-access.  This adds support for the ddc-i2c-bus property of the
-hdmi-connector node, using the specified controller if provided.
+fs.file-max sysctl uses proc_doulongvec_minmax() as proc handler, which
+accesses *extra1 and *extra2 as unsigned long, but commit 32a5ad9c2285
+("sysctl: handle overflow for file-max") assigns &zero, which is an int,
+to extra1, generating the following KASAN report.
+Fix this by changing 'zero' to long, which does not need to be duplicated
+like 'one' and 'one_ul' for two data types.
 
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
-Changed in v2:
-- Return ERR_PTR(-ENODEV) instead of NULL when property is absent
----
- drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 40 ++++++++++++++++++++++++--
- 2 files changed, 38 insertions(+), 3 deletions(-)
+==================================================================
+BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x2f9/0x600
+Read of size 8 at addr ffffffff8233dc20 by task systemd/1
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index b685ee11623d..b08c4453d47c 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -269,6 +269,7 @@ struct sun4i_hdmi {
- 	struct clk		*tmds_clk;
+CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc2-kvm+ #22
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+Call Trace:
+ print_address_description+0x67/0x23d
+ kasan_report.cold.3+0x1c/0x36
+ __do_proc_doulongvec_minmax+0x2f9/0x600
+ proc_doulongvec_minmax+0x3a/0x50
+ proc_sys_call_handler+0x11d/0x170
+ vfs_write+0xd7/0x200
+ ksys_write+0x93/0x110
+ do_syscall_64+0x57/0x140
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f67d33e8804
+Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 48 8d 05 f9 5e 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89 f5 53
+RSP: 002b:00007fffd9992ed8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f67d33e8804
+RDX: 0000000000000015 RSI: 00005586ce2607b0 RDI: 0000000000000004
+RBP: 00007fffd9992f30 R08: 000000000000c0c0 R09: ffffffffffff0000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+R13: 0000000000000015 R14: 00005586ce2607c4 R15: 00007fffd9992f70
+
+The buggy address belongs to the variable:
+ 0xffffffff8233dc20
+
+Memory state around the buggy address:
+ ffffffff8233db00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
+ ffffffff8233db80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
+>ffffffff8233dc00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
+                               ^
+ ffffffff8233dc80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+ ffffffff8233dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
+
+Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+---
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index e5da394d1ca3..3e959d67d619 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -124,7 +124,7 @@ static int sixty = 60;
  
- 	struct i2c_adapter	*i2c;
-+	struct i2c_adapter	*ddc_i2c;
+ static int __maybe_unused neg_one = -1;
  
- 	/* Regmap fields for I2C adapter */
- 	struct regmap_field	*field_ddc_en;
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 416da5376701..a99523e9651f 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -216,7 +216,7 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
- 	struct edid *edid;
- 	int ret;
- 
--	edid = drm_get_edid(connector, hdmi->i2c);
-+	edid = drm_get_edid(connector, hdmi->ddc_i2c ?: hdmi->i2c);
- 	if (!edid)
- 		return 0;
- 
-@@ -232,6 +232,28 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
- 	return ret;
- }
- 
-+static struct i2c_adapter *sun4i_hdmi_get_ddc(struct device *dev)
-+{
-+	struct device_node *phandle, *remote;
-+	struct i2c_adapter *ddc;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return ERR_PTR(-EINVAL);
-+
-+	phandle = of_parse_phandle(remote, "ddc-i2c-bus", 0);
-+	of_node_put(remote);
-+	if (!phandle)
-+		return ERR_PTR(-ENODEV);
-+
-+	ddc = of_get_i2c_adapter_by_node(phandle);
-+	of_node_put(phandle);
-+	if (!ddc)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return ddc;
-+}
-+
- static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs = {
- 	.get_modes	= sun4i_hdmi_get_modes,
- };
-@@ -579,6 +601,15 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 		goto err_disable_mod_clk;
- 	}
- 
-+	hdmi->ddc_i2c = sun4i_hdmi_get_ddc(dev);
-+	if (IS_ERR(hdmi->ddc_i2c)) {
-+		ret = PTR_ERR(hdmi->ddc_i2c);
-+		if (ret == -ENODEV)
-+			hdmi->ddc_i2c = NULL;
-+		else
-+			goto err_del_i2c_adapter;
-+	}
-+
- 	drm_encoder_helper_add(&hdmi->encoder,
- 			       &sun4i_hdmi_helper_funcs);
- 	ret = drm_encoder_init(drm,
-@@ -588,14 +619,14 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- 			       NULL);
- 	if (ret) {
- 		dev_err(dev, "Couldn't initialise the HDMI encoder\n");
--		goto err_del_i2c_adapter;
-+		goto err_put_ddc_i2c;
- 	}
- 
- 	hdmi->encoder.possible_crtcs = drm_of_find_possible_crtcs(drm,
- 								  dev->of_node);
- 	if (!hdmi->encoder.possible_crtcs) {
- 		ret = -EPROBE_DEFER;
--		goto err_del_i2c_adapter;
-+		goto err_put_ddc_i2c;
- 	}
- 
- #ifdef CONFIG_DRM_SUN4I_HDMI_CEC
-@@ -634,6 +665,8 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
- err_cleanup_connector:
- 	cec_delete_adapter(hdmi->cec_adap);
- 	drm_encoder_cleanup(&hdmi->encoder);
-+err_put_ddc_i2c:
-+	i2c_put_adapter(hdmi->ddc_i2c);
- err_del_i2c_adapter:
- 	i2c_del_adapter(hdmi->i2c);
- err_disable_mod_clk:
-@@ -654,6 +687,7 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
- 	drm_connector_cleanup(&hdmi->connector);
- 	drm_encoder_cleanup(&hdmi->encoder);
- 	i2c_del_adapter(hdmi->i2c);
-+	i2c_put_adapter(hdmi->ddc_i2c);
- 	clk_disable_unprepare(hdmi->mod_clk);
- 	clk_disable_unprepare(hdmi->bus_clk);
- }
+-static int zero;
++static long zero;
+ static int __maybe_unused one = 1;
+ static int __maybe_unused two = 2;
+ static int __maybe_unused four = 4;
 -- 
-2.21.0
+2.20.1
 
