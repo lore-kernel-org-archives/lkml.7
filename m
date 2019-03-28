@@ -2,96 +2,75 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354A2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187C5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0582720823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAF220823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 13:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Kgp4IY2R";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Kgp4IY2R"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Bl6PgPm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfC1NjS (ORCPT
+        id S1727623AbfC1Nj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 09:39:18 -0400
-Received: from node.akkea.ca ([192.155.83.177]:39802 "EHLO node.akkea.ca"
+        Thu, 28 Mar 2019 09:39:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58854 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbfC1NjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 09:39:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 764A54E2058;
-        Thu, 28 Mar 2019 13:39:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1553780342; bh=yFSGJbOa0Wo51XYLFbexPfJIE+WP2x0UvwGBtXXasLc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Kgp4IY2RjK+EYve6iO0+8TQ1TgnaMtewRND2VfrAFwcoHaSTup0mCjKUQZIVYT4sH
-         xI8qumIEzru0vdHFDyuPQaUyjmTBD0LViOIL8TQUagWOn/4BCRF1fTsx+zeyB4UXMW
-         JDC13dMdB3F+uUPRfStJMbR6Pg+TF7Ues+7TwNbQ=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jlDY3_WlXXBi; Thu, 28 Mar 2019 13:39:02 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 72BD74E204D;
-        Thu, 28 Mar 2019 13:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1553780342; bh=yFSGJbOa0Wo51XYLFbexPfJIE+WP2x0UvwGBtXXasLc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Kgp4IY2RjK+EYve6iO0+8TQ1TgnaMtewRND2VfrAFwcoHaSTup0mCjKUQZIVYT4sH
-         xI8qumIEzru0vdHFDyuPQaUyjmTBD0LViOIL8TQUagWOn/4BCRF1fTsx+zeyB4UXMW
-         JDC13dMdB3F+uUPRfStJMbR6Pg+TF7Ues+7TwNbQ=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus@akkea.ca
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Carlo Caione <ccaione@baylibre.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH 3/4] dt-bindings: Document the new imx8mq-sdma compatible string
-Date:   Thu, 28 Mar 2019 06:38:27 -0700
-Message-Id: <20190328133828.20999-4-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190328133828.20999-1-angus@akkea.ca>
-References: <20190328133828.20999-1-angus@akkea.ca>
+        id S1727275AbfC1NjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 09:39:02 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D0A501EC0985;
+        Thu, 28 Mar 2019 14:39:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553780340;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YBlB0v+Rk04BC3L113uctbUpy5NUBaHaUzKGpUyyHoY=;
+        b=Bl6PgPm9WQ3+npY0ILuwqO2UQKH+yY/5oHMagkJmWrIdGUpvZGv2aRqebcCV4pEMJetq4B
+        K5tW8dYaGIHWHjO57B0qaAjGle9o1Vd3QLsgWE7oo5br3JhAsCwPh6qzfMyVLbWIt1hcJw
+        fCCBbnC3dXws2+bbTif5CffQXEJmnl4=
+Date:   Thu, 28 Mar 2019 14:39:07 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Joe Perches <joe@perches.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] x86/boot: Split out parse_serial_port() helper
+ for earlyprintk
+Message-ID: <20190328133907.GI22720@zn.tnic>
+References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
+ <20190319184325.72807-4-andriy.shevchenko@linux.intel.com>
+ <20190328123504.GF22720@zn.tnic>
+ <20190328131557.GY9224@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190328131557.GY9224@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The imx8mq needs to be specified to check the clk ratio.
+On Thu, Mar 28, 2019 at 03:15:57PM +0200, Andy Shevchenko wrote:
+> kstrtox() simple can't cover _all_ simple_strtox() cases.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- 1 file changed, 1 insertion(+)
+I see only one case here. Are you saying kstrtoull() cannot work
+here?
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 3c9a57a8443b..9d8bbac27d8b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -9,6 +9,7 @@ Required properties:
-       "fsl,imx53-sdma"
-       "fsl,imx6q-sdma"
-       "fsl,imx7d-sdma"
-+      "fsl,imx8mq-sdma"
-   The -to variants should be preferred since they allow to determine the
-   correct ROM script addresses needed for the driver to work without additional
-   firmware.
+> I don't feel like uglifying code to satisfy a tool producing a silly
+warning.
+
+Uglifying how?
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
