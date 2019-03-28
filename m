@@ -2,73 +2,95 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6BEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73778C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD02A20811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCAF20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfC1KQt convert rfc822-to-8bit (ORCPT
+        id S1727123AbfC1KRa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:16:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52093 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfC1KQt (ORCPT
+        Thu, 28 Mar 2019 06:17:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:52697 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfC1KRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:16:49 -0400
-Received: from 79.184.253.239.ipv4.supernova.orange.pl (79.184.253.239) (HELO aspire.rjw.lan)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 985856673ac3a6de; Thu, 28 Mar 2019 11:16:46 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Vincent =?ISO-8859-1?Q?Stehl=E9?= <vincent.stehle@laposte.net>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] cpufreq: scpi: fix use after free
-Date:   Thu, 28 Mar 2019 11:14:47 +0100
-Message-ID: <3545642.ato4ToQdI5@aspire.rjw.lan>
-In-Reply-To: <20190327220642.8117-1-vincent.stehle@laposte.net>
-References: <20190327220642.8117-1-vincent.stehle@laposte.net>
+        Thu, 28 Mar 2019 06:17:30 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1h9S6A-0001wj-QL; Thu, 28 Mar 2019 11:17:26 +0100
+Date:   Thu, 28 Mar 2019 11:17:26 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Juri Lelli <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190328101726.u2y7v46mo66i5aoi@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20190326093421.GA29508@localhost.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, March 27, 2019 11:06:42 PM CET Vincent Stehlé wrote:
-> Free the priv structure only after we are done using it.
-> 
-> Fixes: 1690d8bb91e370ab ("cpufreq: scpi/scmi: Fix freeing of dynamic OPPs")
-> Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/scpi-cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
-> index 3f49427766b88..2b51e0718c9f6 100644
-> --- a/drivers/cpufreq/scpi-cpufreq.c
-> +++ b/drivers/cpufreq/scpi-cpufreq.c
-> @@ -189,8 +189,8 @@ static int scpi_cpufreq_exit(struct cpufreq_policy *policy)
->  
->  	clk_put(priv->clk);
->  	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
-> -	kfree(priv);
->  	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
-> +	kfree(priv);
->  
->  	return 0;
->  }
-> 
+On 2019-03-26 10:34:21 [+0100], Juri Lelli wrote:
+> Hi,
+Hi,
 
-I've queued this one up, thanks!
+â€¦
+>  # for I in `seq 10`; do fsfreeze -f ./testmount; sleep 1; fsfreeze -u ./testmount; done
+> 
+>  ------------[ cut here ]------------
+>  DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) != current)
+>  WARNING: CPU: 10 PID: 1226 at kernel/locking/rtmutex-debug.c:145 debug_rt_mutex_unlock+0x9b/0xb0
+>  Modules linked in: xfs [...]
+>  CPU: 10 PID: 1226 Comm: fsfreeze Not tainted 4.19.25-rt16 #2
+>  Hardware name: LENOVO 30B6S2F900/1030, BIOS S01KT61A 09/28/2018
+>  RIP: 0010:debug_rt_mutex_unlock+0x9b/0xb0
+â€¦
+>   __rt_mutex_unlock+0x45/0x80
+>   percpu_up_write+0x4b/0x60
+>   thaw_super_locked+0xdb/0x110
+â€¦
+> AFAIU, this is a legit warning, since
+> 
+>  fsfreeze -f ./testmount grabs rt_mutexes embedded into
+>  sb->s_writers.rw_sem[SB_FREEZE_LEVELS] (rt-rwsem) as part of executing
+>  sb_wait_write() (for each FREEZE_LEVEL) in freeze_super().
+> 
+>  We then return to userspace.
+> 
+>  fsfreeze -u ./testmount unlocks the rt_mutexes while doing
+>  sb_freeze_unlock() in thaw_super_locked(). This is a different process
+>  w.r.t. the one that did the freeze above.
+> 
+> I noticed that a very similar problem was fixed (for !rt rwsem) by
+> 5a817641f68a ("locking/percpu-rwsem: Annotate rwsem ownership transfer
+> by setting RWSEM_OWNER_UNKNOWN"). However, RT has of course to deal with
+> PI, so I wonder if there is an easy fix for this problem.
+> 
+> Suggestions?
 
+So we leave to userland with an acquired rtmutex. And lockdep doesn't
+complain because lockdep_sb_freeze_release() /
+lockdep_sb_freeze_acquire() informs that everything is okay.
+I have no idea, PeterZ? The rwsem is not ownerless afaik.
 
+> Thanks,
+> 
+> - Juri
+
+Sebastian
