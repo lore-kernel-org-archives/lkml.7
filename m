@@ -2,227 +2,125 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAABBC10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE40C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9BC2184C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACAD2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BFuqPlz2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xw3yv7uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfC1UyF (ORCPT
+        id S1727566AbfC1Uyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:54:05 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18847 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727521AbfC1UyE (ORCPT
+        Thu, 28 Mar 2019 16:54:55 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44851 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfC1Uyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:54:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9d346d0001>; Thu, 28 Mar 2019 13:54:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Mar 2019 13:54:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 13:54:02 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Mar
- 2019 20:54:02 +0000
-Subject: Re: [PATCH v2 10/11] mm/hmm: add helpers for driver to safely take
- the mmap_sem v2
-To:     <jglisse@redhat.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20190325144011.10560-1-jglisse@redhat.com>
- <20190325144011.10560-11-jglisse@redhat.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <9df742eb-61ca-3629-a5f4-8ad1244ff840@nvidia.com>
-Date:   Thu, 28 Mar 2019 13:54:01 -0700
+        Thu, 28 Mar 2019 16:54:54 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h16so48875ljg.11;
+        Thu, 28 Mar 2019 13:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jr4NPlCQ0dB7/OxX6a3n/TlV+U+V8P/4RfcjP08szW8=;
+        b=Xw3yv7uoqE2kfIpS42NQRb9iPhzTgx9LF26YLrsJvbkT+nykqNqkHJfLrvK4qhGu/r
+         W1xgbsIE8VR476/L4wrngMkBFPiD7VQqdZHpzKhR6PxTwxhlJ9hvktdXNx1q9P/dh89u
+         5tWY9vja2O6WYj11Nvq24ArDg1PZZ9owfeSbE0+r6BrzcQFG3gP6XCRNMhfIRfJGvy50
+         MBdyBfNEFYOLSF4wPPk93+YMe6z2RWhzcbM0y7QRtR8wK6xisx4SA+t2Y1t1gZGbwWXc
+         cHb52telouoPS1FMerYT949HzukbHYn/fghUoumQoqI8p2WG26aXCrhWoLtp5F6bIW+J
+         Uyiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jr4NPlCQ0dB7/OxX6a3n/TlV+U+V8P/4RfcjP08szW8=;
+        b=r6rLKU2BY4kAc7XrQSs/dIfgrU0Tq0xp2oevwYMXVwRvWyslUCDukBijBqsf0KPGld
+         5t51pW/jeqH2iEiRu8J5XMbrgLsFd5fbSVPx1fZS+XBdsp//E/0f5qZOlmymeWHe6I1a
+         z+juFKCzT5qm6qnYE5I7rmFrwBFknAHTyqVEV5zs65oRusieW7qNvxjaz10fn77tfi16
+         M+akmaFM1JDZEIqTMVL7ftva0vhTYMWkQnpjAXR+Gso4zC5JDVDU9vStW0g5hgL2o2tY
+         bwvqGbqSlj9bXOIFWf77hFBWeDh7ViGCU5c8IjH9Uca/5V9xXQDs0LLQqtAMk00WmtG0
+         S98A==
+X-Gm-Message-State: APjAAAWBt7n9KTTc4juPj7W4ZTHMArfKPlUXpuspBKevR8kjcGw5WK3c
+        sJaFx3Ftqv8yUPX5BJ3+H08=
+X-Google-Smtp-Source: APXvYqzneoANKsExD2adTNfZet6/BYCaryiaJ6NqNMhWRBhaS5DyihN5qNJ/3cSQX9jss2vCrRXicg==
+X-Received: by 2002:a2e:9a49:: with SMTP id k9mr24909058ljj.84.1553806492050;
+        Thu, 28 Mar 2019 13:54:52 -0700 (PDT)
+Received: from [192.168.1.19] (blb244.neoplus.adsl.tpnet.pl. [83.28.195.244])
+        by smtp.gmail.com with ESMTPSA id 77sm27532ljc.69.2019.03.28.13.54.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Mar 2019 13:54:51 -0700 (PDT)
+Subject: Re: [PATCH v2 00/25] Add generic support for composing LED class
+ device name
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pavel@ucw.cz
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190328001930.GA22901@bogus>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <46cf838b-ae41-4c0e-ba73-9a55b0ca03c0@gmail.com>
+Date:   Thu, 28 Mar 2019 21:54:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190325144011.10560-11-jglisse@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553806446; bh=66ATySaHlVECGh1E7+UM9QuEPXamIu3gtSuhG9bf+E8=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BFuqPlz2E3sxwSyIDD9EWu/eD+fvDokJzqkj9BM3Dd7891jCCptci248hOcEuLhLf
-         Ozn4DDhBLtg2swX3xez9IbLAnDq3F0fVZTwvNL4Tvvuhid1Rburr1dU3p30nMktUSS
-         e4H3lB4yQQ7tPrT3S1TtKHIiQyzrsFB0KvE6IUzBhJY368xVGl4oNlLpNaj3BhMw9R
-         NJkiGuKFLft21ll+xlAYtB5J8L/IrbUX+G5YBVMDf0Yd+BST/uebj9PZSVlarH+s1Y
-         SGR8bxM1Fq2m+OZi/SSHg99kBM+UnoXv6F4STZN8cDbq/cDcw2LZpkxo+N+ZXRFjB8
-         2iquhi8a6waBg==
+In-Reply-To: <20190328001930.GA22901@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 7:40 AM, jglisse@redhat.com wrote:
-> From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->=20
-> The device driver context which holds reference to mirror and thus to
-> core hmm struct might outlive the mm against which it was created. To
-> avoid every driver to check for that case provide an helper that check
-> if mm is still alive and take the mmap_sem in read mode if so. If the
-> mm have been destroy (mmu_notifier release call back did happen) then
-> we return -EINVAL so that calling code knows that it is trying to do
-> something against a mm that is no longer valid.
->=20
-> Changes since v1:
->     - removed bunch of useless check (if API is use with bogus argument
->       better to fail loudly so user fix their code)
->=20
-> Signed-off-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/hmm.h | 50 ++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 47 insertions(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index f3b919b04eda..5f9deaeb9d77 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -438,6 +438,50 @@ struct hmm_mirror {
->  int hmm_mirror_register(struct hmm_mirror *mirror, struct mm_struct *mm)=
-;
->  void hmm_mirror_unregister(struct hmm_mirror *mirror);
-> =20
-> +/*
-> + * hmm_mirror_mm_down_read() - lock the mmap_sem in read mode
-> + * @mirror: the HMM mm mirror for which we want to lock the mmap_sem
-> + * Returns: -EINVAL if the mm is dead, 0 otherwise (lock taken).
-> + *
-> + * The device driver context which holds reference to mirror and thus to=
- core
-> + * hmm struct might outlive the mm against which it was created. To avoi=
-d every
-> + * driver to check for that case provide an helper that check if mm is s=
-till
-> + * alive and take the mmap_sem in read mode if so. If the mm have been d=
-estroy
-> + * (mmu_notifier release call back did happen) then we return -EINVAL so=
- that
-> + * calling code knows that it is trying to do something against a mm tha=
-t is
-> + * no longer valid.
-> + */
-> +static inline int hmm_mirror_mm_down_read(struct hmm_mirror *mirror)
+On 3/28/19 1:19 AM, Rob Herring wrote:
+> On Sun, Mar 10, 2019 at 07:28:11PM +0100, Jacek Anaszewski wrote:
+>> Changes from v1:
+>>
+>> - improved led_parse_properties() to parse label property at first
+>>    and return immediately after parsing succeeds
+>> - added tool get_led_device_info.sh for retrieving LED class device's
+>>    parent device related information
+>> - extended LED naming section of Documentation/leds/leds-class.txt
+>> - adjusted the list of LED_FUNCTION definitions according to the v1 review
+>>    remarks
+>> - added standard LED_COLOR_NAME definitions
+>> - removed functions.h and moved both LED_FUNCTION and LED_COLOR_NAME
+>>    definitions to include/dt-bindings/common.h
+>> - rebased leds-as3645a changes on top of the patch switching to fwnode
+>>    property API
+>> - updated DT bindings to use new LED_COLOR_NAME definitions
+>> - improved common LED bindings to not use address unit for sub-nodes
+>>    without reg property
+>>
+>> Generally I still insist on deprecating label property and devicename
+>> section of LED name. The tool I added for obtaining LED device name
+>> proves availability of the related information in other places in
+>> the sysfs. Other discussed use cases are covered in the updated
+>> Documentation/leds/leds-class.txt.
+>>
+>> Beside that, I tried also to create macros for automatic composition
+>> of "-N" suffixed LED functions, so that it would not be necessary
+>> to pollute common.h with plenty repetitions of the same function,
+>> differing only with the postfix. Unfortunately, the preprocessor
+>> of the dtc compiler seems not to accept string concatenetation.
+>> I.e. it is not possible to to the following assighment:
+>>
+>> function = "hdd""-1"
+>>
+>> If anyone knows how to obviate this shortocoming please let me know.
+> 
+> Raise the question on devicetree-compiler list. I've done my share of
+> dtc patches, but the parsing side is generally not an area I touch.
 
-Hi Jerome,
+I'll probably come up with additional property function-enumerator.
 
-Let's please not do this. There are at least two problems here:
-
-1. The hmm_mirror_mm_down_read() wrapper around down_read() requires a=20
-return value. This is counter to how locking is normally done: callers do
-not normally have to check the return value of most locks (other than
-trylocks). And sure enough, your own code below doesn't check the return va=
-lue.
-That is a pretty good illustration of why not to do this.
-
-2. This is a weird place to randomly check for semi-unrelated state, such=20
-as "is HMM still alive". By that I mean, if you have to detect a problem
-at down_read() time, then the problem could have existed both before and
-after the call to this wrapper. So it is providing a false sense of securit=
-y,
-and it is therefore actually undesirable to add the code.
-
-If you insist on having this wrapper, I think it should have approximately=
-=20
-this form:
-
-void hmm_mirror_mm_down_read(...)
-{
-	WARN_ON(...)
-	down_read(...)
-}=20
-
-> +{
-> +	struct mm_struct *mm;
-> +
-> +	/* Sanity check ... */
-> +	if (!mirror || !mirror->hmm)
-> +		return -EINVAL;
-> +	/*
-> +	 * Before trying to take the mmap_sem make sure the mm is still
-> +	 * alive as device driver context might outlive the mm lifetime.
-
-Let's find another way, and a better place, to solve this problem.
-Ref counting?
-
-> +	 *
-> +	 * FIXME: should we also check for mm that outlive its owning
-> +	 * task ?
-> +	 */
-> +	mm =3D READ_ONCE(mirror->hmm->mm);
-> +	if (mirror->hmm->dead || !mm)
-> +		return -EINVAL;
-> +
-> +	down_read(&mm->mmap_sem);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * hmm_mirror_mm_up_read() - unlock the mmap_sem from read mode
-> + * @mirror: the HMM mm mirror for which we want to lock the mmap_sem
-> + */
-> +static inline void hmm_mirror_mm_up_read(struct hmm_mirror *mirror)
-> +{
-> +	up_read(&mirror->hmm->mm->mmap_sem);
-> +}
-> +
-> =20
->  /*
->   * To snapshot the CPU page table you first have to call hmm_range_regis=
-ter()
-> @@ -463,7 +507,7 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror)=
-;
->   *          if (ret)
->   *              return ret;
->   *
-> - *          down_read(mm->mmap_sem);
-> + *          hmm_mirror_mm_down_read(mirror);
-
-See? The normal down_read() code never needs to check a return value, so wh=
-en
-someone does a "simple" upgrade, it introduces a fatal bug here: if the wra=
-pper
-returns early, then the caller proceeds without having acquired the mmap_se=
-m.
-
->   *      again:
->   *
->   *          if (!hmm_range_wait_until_valid(&range, TIMEOUT)) {
-> @@ -476,13 +520,13 @@ void hmm_mirror_unregister(struct hmm_mirror *mirro=
-r);
->   *
->   *          ret =3D hmm_range_snapshot(&range); or hmm_range_fault(&rang=
-e);
->   *          if (ret =3D=3D -EAGAIN) {
-> - *              down_read(mm->mmap_sem);
-> + *              hmm_mirror_mm_down_read(mirror);
-
-Same problem here.
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+-- 
+Best regards,
+Jacek Anaszewski
