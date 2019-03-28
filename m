@@ -2,114 +2,196 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AF8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F69C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3EC20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776022184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Lr+SGaAw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lEsCIYTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfC1Uvx (ORCPT
+        id S1727236AbfC1UxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:51:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37920 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfC1Uvu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:51:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w15so299909wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SRINBXOdsguAhW1lpNf0zzWQ04z0gK/+bA+ikvUAsbc=;
-        b=Lr+SGaAwV1LdP1i7z1M9LtYXP+qnw3USKe+qZBb0lQYqUtkB8s8OHsJX/AMh/1C76w
-         aZnxTc68qZ13bZ8dd8xZZhtlVOBevfOsxfHNEfJriY0jajluPueGcEhGNAlJuPq6kwMh
-         RvL4R8+BDePLUQrMaNLnxlSUP6V9ixiMFkd2lhskEGad0zNOm7AE59YoqVzWSP1NKfIg
-         QAE65Hak5joKFek+M9MUpwTAVF/zkGBDGMt7NX2GVOkj0AAjIV0ls/92EJyK/v6cDi39
-         EDSho2P7Elu4Ow5TkucJQDFXfFp6xKsAOa0UzhArjvnkHAd2cfdTB2qfLpQxQDxRCyr5
-         bx2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SRINBXOdsguAhW1lpNf0zzWQ04z0gK/+bA+ikvUAsbc=;
-        b=KTyxlt7UGRHYRXu/C3z5wBQZgoQ7BjtAN6pi0TXf/BPMRZUW0/FMT+1HUPsETj3sC2
-         +zBKqu5PtReSWkLReGujfneltdbXhHnQpg5LVNxHNHUPTeal+jX71dcN8O+Vs6Pd20VV
-         we+maFuznCwGzMElAflXh53dqxMA0xzMlVMrYBlcmW0O7vXpHjvZlb6fsNySvzQyDXgM
-         F4nyMN0XT8rAlX+HefK/ETVuIqUK6NQrEEWEhx+4vXvycV9ZMX4jRqpqgd7XRhOetdR7
-         uHNmh8rJHOh60rNlOfYyEy5p7GH++ULRqYj259UgEbxQMtkul0UF9fVGm4Pj3ErJQRYz
-         fuyQ==
-X-Gm-Message-State: APjAAAWZhHCr2i7Hyys9OX+0eixpLEEBUo9FZv6W3ARHNUwIbUzI4UOX
-        duIC1V+hWiq6LdEXQVDtSSgd83wF
-X-Google-Smtp-Source: APXvYqyZ6gqUSyeG4LWVaS0KscFbkPFC14RiljD2DJ4F5E6PGRrdlQHxSFQj6crx69hA2pMl+yNfFw==
-X-Received: by 2002:a1c:c68e:: with SMTP id w136mr1206916wmf.111.1553806308566;
-        Thu, 28 Mar 2019 13:51:48 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300DCD73999007CF185662A5FF671.dip0.t-ipconnect.de. [2003:dc:d739:9900:7cf1:8566:2a5f:f671])
-        by smtp.googlemail.com with ESMTPSA id c10sm94375wrt.65.2019.03.28.13.51.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 13:51:47 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] ARM: multi_v7_defconfig: enable the Amlogic Meson ADC and eFuse drivers
-Date:   Thu, 28 Mar 2019 21:51:22 +0100
-Message-Id: <20190328205122.27092-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190328205122.27092-1-martin.blumenstingl@googlemail.com>
-References: <20190328205122.27092-1-martin.blumenstingl@googlemail.com>
+        Thu, 28 Mar 2019 16:53:06 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43140 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbfC1UxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 16:53:05 -0400
+Received: from zn.tnic (p200300EC2F098000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:8000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 241181EC0985;
+        Thu, 28 Mar 2019 21:53:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1553806383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=smEX/KW7hecQPFiuL1QnBeS5MYgty/UWrmLWl/eibXQ=;
+        b=lEsCIYTRpI5Pmdu9B8EmlmRn6kUzKD4kwyimMovp32V8a3kzR8ObiTAOpisaOD9nGAJZIz
+        5uHBk0igL2ynQeqMPCqJpdC1Druh15a2ePgu/X8aFO5W9DNJT+PjNE1FKMbsTyYgn/CHj/
+        UxzjrVlLujN0SDqOdY82CA68mzjcFWg=
+Date:   Thu, 28 Mar 2019 21:53:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Phillips, Kim" <kim.phillips@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Pu Wen <puwen@hygon.cn>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] x86/events: add event map for AMD Family 17h
+Message-ID: <20190328205305.GR22720@zn.tnic>
+References: <20190321211515.20756-1-kim.phillips@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190321211515.20756-1-kim.phillips@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the SAR ADC driver ADC measurements can be taken though the IIO
-framework. Additionally the SAR ADC has a channel which is connected to
-an internal temperature sensor. The calibration data for this internal
-temperature sensor is stored in the eFuse.
+On Thu, Mar 21, 2019 at 09:15:22PM +0000, Phillips, Kim wrote:
+> From: Kim Phillips <kim.phillips@amd.com>
+> 
+> Family 17h differs from prior families by:
+>  - not supporting an L2 cache miss event
+>  - having re-enumerated PMC counters for:
+>    - L2 cache references
+>    - front & back end stalled cycles
+> 
+> So we add a new amd_f17h_perfmon_event_map so that the generic
+> perf event names will resolve to the correct h/w events on
+> family 17h and above processors.
+> 
+> Reference sections 2.1.13.3.3 (stalls) and 2.1.13.3.6 (L2):
+> https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+> 
+> Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Cc: Martin Liška <mliska@suse.cz>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Pu Wen <puwen@hygon.cn>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/x86/events/amd/core.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 7d2d7c801dba..764d181afa18 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -127,8 +127,25 @@ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
+>    [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
+>  };
+>  
+> +/*
+> + * AMD Performance Monitor Family 17h
+> + */
+> +static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
+> +{
+> +  [PERF_COUNT_HW_CPU_CYCLES]			= 0x0076,
+> +  [PERF_COUNT_HW_INSTRUCTIONS]			= 0x00c0,
+> +  [PERF_COUNT_HW_CACHE_REFERENCES]		= 0xff60,
+> +  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]		= 0x00c2,
+> +  [PERF_COUNT_HW_BRANCH_MISSES]			= 0x00c3,
+> +  [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
+> +  [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x0187,
+> +};
+> +
+>  static u64 amd_pmu_event_map(int hw_event)
+>  {
+> +	if (boot_cpu_data.x86 >= 0x17)
+> +		return amd_f17h_perfmon_event_map[hw_event];
+> +
+>  	return amd_perfmon_event_map[hw_event];
+>  }
+>  
+> --
 
-Enable the SAR ADC driver and the eFuse driver for the 32-bit Amlogic
-Meson SoCs so we can expose the chip temperature to userspace through
-the IIO hwmon driver (whose config option is already enabled:
-CONFIG_SENSORS_IIO_HWMON=y).
+Your patch has some style problems, see below. Please run it through
+checkpatch before submitting.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+And yeah, that amd_perfmon_event_map in that file has some wrong
+formatting too - preceding whitespace instead of tabs - so you can
+submit a cleanup patch ontop to fix that up too.
+
+Thx.
+
 ---
- arch/arm/configs/multi_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ERROR: that open brace { should be on the previous line
+#70: FILE: arch/x86/events/amd/core.c:134:
++static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
++{
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index c75051b9392c..11d0395f3f0c 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -925,6 +925,7 @@ CONFIG_AT91_SAMA5D2_ADC=m
- CONFIG_BERLIN2_ADC=m
- CONFIG_CPCAP_ADC=m
- CONFIG_EXYNOS_ADC=m
-+CONFIG_MESON_SARADC=m
- CONFIG_STM32_ADC_CORE=m
- CONFIG_STM32_ADC=m
- CONFIG_STM32_DFSDM_ADC=m
-@@ -979,6 +980,7 @@ CONFIG_PHY_UNIPHIER_USB2=y
- CONFIG_OMAP_USB2=y
- CONFIG_TI_PIPE3=y
- CONFIG_TWL4030_USB=m
-+CONFIG_MESON_MX_EFUSE=m
- CONFIG_NVMEM_IMX_OCOTP=y
- CONFIG_NVMEM_SUNXI_SID=y
- CONFIG_NVMEM_VF610_OCOTP=y
+WARNING: please, no spaces at the start of a line
+#71: FILE: arch/x86/events/amd/core.c:135:
++  [PERF_COUNT_HW_CPU_CYCLES]^I^I^I= 0x0076,$
+
+WARNING: please, no spaces at the start of a line
+#72: FILE: arch/x86/events/amd/core.c:136:
++  [PERF_COUNT_HW_INSTRUCTIONS]^I^I^I= 0x00c0,$
+
+WARNING: please, no spaces at the start of a line
+#73: FILE: arch/x86/events/amd/core.c:137:
++  [PERF_COUNT_HW_CACHE_REFERENCES]^I^I= 0xff60,$
+
+WARNING: please, no spaces at the start of a line
+#74: FILE: arch/x86/events/amd/core.c:138:
++  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]^I^I= 0x00c2,$
+
+WARNING: please, no spaces at the start of a line
+#75: FILE: arch/x86/events/amd/core.c:139:
++  [PERF_COUNT_HW_BRANCH_MISSES]^I^I^I= 0x00c3,$
+
+WARNING: please, no spaces at the start of a line
+#76: FILE: arch/x86/events/amd/core.c:140:
++  [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]^I= 0x0287,$
+
+WARNING: please, no spaces at the start of a line
+#77: FILE: arch/x86/events/amd/core.c:141:
++  [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]^I= 0x0187,$
+
+total: 1 errors, 8 warnings, 25 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+Your patch has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
