@@ -2,97 +2,160 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57585C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 382962146F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXgTpaaM"
+	by mail.kernel.org (Postfix) with ESMTP id 2ADF02075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfC1CRR (ORCPT
+        id S1728087AbfC1CTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:17:17 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39765 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfC1CRQ (ORCPT
+        Wed, 27 Mar 2019 22:19:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:19218 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727376AbfC1CTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 22:17:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k3so7153709pga.6;
-        Wed, 27 Mar 2019 19:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n7ZPy+nfr7LsIdBcP4vxC3YGgaxtIQPIfYYaw1em+hU=;
-        b=QXgTpaaMoJrlaxdjTmOXIvH2CKyd5a2RmG+FNMWjvdzJB3vOpafXpQ1PAAYowtzZEX
-         So9LpAf+ybxg1HymouDdqbmUfb5ay5e7qGCxj9y0PQrzH1L8Zx3A8TfUKXFvEpF0SQwg
-         YvMooLsJ0nm8p6HsRce5r5w33o9K1LUMGZAKDC1upUq37gZFEEKjKS+bz0a7pxmHKJeo
-         9M/7pKctELsbdPcwEjmTA2t3AkHGrYJvvfdWtiVJCCq2T7MuUDBBluBQaRFu0ZWs1WfN
-         9pC18A5EEmmPLj+TS1SmSiWuoMDpm0REcq2ZRKycmAgcqA8G3h/k+qGmnU28wqGBifAM
-         DA6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n7ZPy+nfr7LsIdBcP4vxC3YGgaxtIQPIfYYaw1em+hU=;
-        b=ER6yniw3ZYgrGM/VdqIT2JlxaUJH0Da9WlgJgyw2bEhTVXH+E30pIb20SZFIqpk/Gs
-         FzTWge8czOGGRKAfCLFS/96/wzb58utKi2eezQxBI4/X0aL/2KEvC4XtIBfbNGh3QzMb
-         d/EDZSdepfloYrZbuaE8E8FhzX7i1OqDIYKKsfLgRbNFV5KVWY14bQsh0oca/kIlJlih
-         wPj8VLEim0/WuYkSPIOFiWe2DqW0SQ1E//ryQe9sFUXk+NlWa3VV0zCV2We15whRthsa
-         gAZz7UlIVyfef7slPj6s08T0QH5uC1C0CoRC06G184HeG1IyOUCIpDP1xybEQ6EQzeHA
-         T0PQ==
-X-Gm-Message-State: APjAAAXLc2bJrAS6dC43Kq2H8iCxBO7xJa018Gxx5qANjJ0iQrEEGsg6
-        t/v5Wa5iEe5s/7+VxzBGyob+pRpW
-X-Google-Smtp-Source: APXvYqx+iFhxEyqnmOXjc/GrqxICLpXqseQto4txbPX8OJygLkOcK2nxJkTEkwvrK5EnOb4BOJvSZA==
-X-Received: by 2002:a63:bd42:: with SMTP id d2mr21160629pgp.319.1553739435684;
-        Wed, 27 Mar 2019 19:17:15 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id i31sm42322786pgi.36.2019.03.27.19.17.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 19:17:14 -0700 (PDT)
-Subject: Re: [PATCH net-next v5 11/22] ethtool: move string arrays into common
- file
-To:     Michal Kubecek <mkubecek@suse.cz>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <0a1c4ac67996792b422532fdf3b0f1d6c8a2b6cc.1553532199.git.mkubecek@suse.cz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <c476e6bf-de05-5fb3-f9fe-f5c1eb7ba207@gmail.com>
-Date:   Wed, 27 Mar 2019 19:17:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 27 Mar 2019 22:19:43 -0400
+X-UUID: 0d900753885149c7a1599df327908de6-20190328
+X-UUID: 0d900753885149c7a1599df327908de6-20190328
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 858169249; Thu, 28 Mar 2019 10:19:37 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 28 Mar 2019 10:19:36 +0800
+Received: from mtkslt302.mediatek.inc (10.21.14.115) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 28 Mar 2019 10:19:36 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+CC:     Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Subject: [PATCH v3 09/12] soc: mediatek: cmdq: add polling function
+Date:   Thu, 28 Mar 2019 10:19:30 +0800
+Message-ID: <1553739573-19708-10-git-send-email-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
+References: <1553739573-19708-1-git-send-email-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <0a1c4ac67996792b422532fdf3b0f1d6c8a2b6cc.1553532199.git.mkubecek@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 228A412A6FD40993DDDC54B45B777082A2473DD0EE5D266C67E69EF74B2F0D202000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+add polling function in cmdq helper functions
 
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+ include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++++
+ 3 files changed, 46 insertions(+)
 
-On 3/25/2019 10:08 AM, Michal Kubecek wrote:
-> Introduce file net/ethtool/common.c for code shared by ioctl and netlink
-> ethtool interface. Move name tables of features, RSS hash functions,
-> tunables and PHY tunables into this file.
-> 
-> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index d3873ab..80856b8 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -231,6 +231,36 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
+ 
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask)
++{
++	int err;
++
++	if (mask != 0xffffffff) {
++		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
++					      CMDQ_GET_ARG_B(~mask),
++					      CMDQ_IMMEDIATE_VALUE,
++					      CMDQ_IMMEDIATE_VALUE,
++					      CMDQ_IMMEDIATE_VALUE,
++					      CMDQ_IMMEDIATE_VALUE,
++					      CMDQ_IMMEDIATE_VALUE,
++					      CMDQ_CODE_MASK);
++
++		if (err != 0)
++			return err;
++	}
++	offset = offset | 0x1;
++
++	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
++				       CMDQ_GET_ARG_B(value),
++				       offset, subsys,
++				       CMDQ_IMMEDIATE_VALUE,
++				       CMDQ_IMMEDIATE_VALUE,
++				       CMDQ_IMMEDIATE_VALUE,
++				       CMDQ_CODE_POLL);
++}
++EXPORT_SYMBOL(cmdq_pkt_poll);
++
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+ {
+ 	int err;
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index f21801d..1dfd5ed 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -46,6 +46,7 @@
+ enum cmdq_code {
+ 	CMDQ_CODE_MASK = 0x02,
+ 	CMDQ_CODE_WRITE = 0x04,
++	CMDQ_CODE_POLL = 0x08,
+ 	CMDQ_CODE_JUMP = 0x10,
+ 	CMDQ_CODE_WFE = 0x20,
+ 	CMDQ_CODE_EOC = 0x40,
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 52f69c8..0651a0b 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -100,6 +100,21 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+ 
+ /**
++ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
++ *		     execute an instruction that wait for a specified hardware
++ *		     register to check for the value. All GCE hardware
++ *		     threads will be blocked by this instruction.
++ * @pkt:	the CMDQ packet
++ * @subsys:	the CMDQ sub system code
++ * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
++ * @mask:	the specified target register mask
++ *
++ * Return: 0 for success; else the error code is returned
++ */
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask);
++/**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+  *                          packet and call back at the end of done packet
+  * @pkt:	the CMDQ packet
 -- 
-Florian
+1.9.1
+
