@@ -2,167 +2,73 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CA0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75460C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29972206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYS2q/11"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA92206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfC1RKF (ORCPT
+        id S1727682AbfC1RKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:10:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36180 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfC1RKF (ORCPT
+        Thu, 28 Mar 2019 13:10:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39086 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727474AbfC1RKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:10:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y13so6166827wrd.3;
-        Thu, 28 Mar 2019 10:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=nPCFzUJnrLwfTHXgaehhT7OlM6k66qhIj2xZuLJSMts=;
-        b=oYS2q/11oi1zXmxooJ/F7NrroxcvAKk5OWoSFNApar9dlhdBiowZCyqedGhYll5+BL
-         qtP3+7bKCqMhq+0l3KZ7UmBfcuQmcvoSlVbSTYqNpw3mvKh1WT7keCyqo7RMddvVQXk2
-         /UyTaiHbE1s+T/Szhwyoxja8DVvqzJmCwbmrAe7rbRbjil142r5uNUYjEmX1VDlY6s+s
-         PnhmYbpW+P35uqHefbR64GdN6zWeILnV+vw+fnq/7YTW3VzeSeLJdNH1v2uacIrFaxdM
-         6N7oh1eCO64Ncx6uRUh99tc1qPWsYukUjZDuXMFRMziN8LpUgfNKRwdt/Rq1faWszqRS
-         pFZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=nPCFzUJnrLwfTHXgaehhT7OlM6k66qhIj2xZuLJSMts=;
-        b=VooN9CbnKjh3ANOWSejAVnoHYxxF3HP0L+RfJgWpSfn1Ay/HtBVXak7g6PmlATemnV
-         IE/O/Fjj/cTlz4PxDLGVAXJasiy7j+kLsXgulQ2OmDzVyCSFmF48vZE6ZS+N9wcRrEKR
-         N7tqWb9Q3CKeF0NkkJ2ncKWcqUNyPtrHb/1RSLyjpY5lMmkl2mr2DGt/3nzqvd1TbQTn
-         eDQ4pW9gw8KfJGvfdHRNpHynIfMRTZxZ8Psd+THforzQlkjN4aqVFFaub82NI2VohE7X
-         7y7kY0n25Le19oE/RBxz5kyC4GUXEmMDMOegKOqJtIapdKoEe+sOdxRkxsiPLVfpyUxJ
-         1Pog==
-X-Gm-Message-State: APjAAAVGgcDpibA5wp46yP8CUQpcIHTAOAy/visvT4FKZyl0YvahmkGr
-        8fLReqOWcz4JUI8QGix3CkvVejjw
-X-Google-Smtp-Source: APXvYqwyjkrRNK9VDO9y9amfAdPu744a+CjdPpkV2a5xwhli1XPIIStcDFBOP0mYukGFsdF3EMaalg==
-X-Received: by 2002:adf:eb02:: with SMTP id s2mr9189981wrn.29.1553793002606;
-        Thu, 28 Mar 2019 10:10:02 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id a82sm4803048wmf.11.2019.03.28.10.10.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 10:10:01 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] kvm: move KVM_CAP_NR_MEMSLOTS to common code
-Date:   Thu, 28 Mar 2019 18:10:00 +0100
-Message-Id: <1553793000-53968-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 28 Mar 2019 13:10:08 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h9YXW-0003S1-3c; Thu, 28 Mar 2019 17:10:06 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] n_tty: check for negative and zero space return from tty_write_room
+Date:   Thu, 28 Mar 2019 17:10:05 +0000
+Message-Id: <20190328171005.5822-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All architectures except MIPS were defining it in the same way,
-and memory slots are handled entirely by common code so there
-is no point in keeping the definition per-architecture.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The return from tty_write_room could potentially be negative if
+a tty write_room driver returns an error number (not that any seem
+to do). Rather than just check for a zero return, also check for
+a -ve return. This avoids the unsigned nr being set to a large unsigned
+value on the assignment from variable space and can lead to overflowing
+the buffer buf.  Better to be safe than assume all write_room
+implementations in tty drivers are going to do the right thing.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- Documentation/virtual/kvm/api.txt | 5 ++---
- arch/powerpc/kvm/powerpc.c        | 3 ---
- arch/s390/kvm/kvm-s390.c          | 3 ---
- arch/x86/kvm/x86.c                | 3 ---
- virt/kvm/arm/arm.c                | 3 ---
- virt/kvm/kvm_main.c               | 2 ++
- 6 files changed, 4 insertions(+), 15 deletions(-)
+ drivers/tty/n_tty.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index 67068c47c591..b62ad0d94234 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -1117,9 +1117,8 @@ struct kvm_userspace_memory_region {
- This ioctl allows the user to create, modify or delete a guest physical
- memory slot.  Bits 0-15 of "slot" specify the slot id and this value
- should be less than the maximum number of user memory slots supported per
--VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS,
--if this capability is supported by the architecture.  Slots may not
--overlap in guest physical address space.
-+VM.  The maximum allowed slots can be queried using KVM_CAP_NR_MEMSLOTS.
-+Slots may not overlap in guest physical address space.
+diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+index 9cdb0fa3c4bf..66630787fbf9 100644
+--- a/drivers/tty/n_tty.c
++++ b/drivers/tty/n_tty.c
+@@ -550,7 +550,7 @@ static ssize_t process_output_block(struct tty_struct *tty,
+ 	mutex_lock(&ldata->output_lock);
  
- If KVM_CAP_MULTI_ADDRESS_SPACE is available, bits 16-31 of "slot"
- specifies the address space which is being modified.  They must be
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index 8885377ec3e0..92910b7c5bcc 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -644,9 +644,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		else
- 			r = num_online_cpus();
- 		break;
--	case KVM_CAP_NR_MEMSLOTS:
--		r = KVM_USER_MEM_SLOTS;
--		break;
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 4638303ba6a8..28f35d2b06cb 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -513,9 +513,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		else if (sclp.has_esca && sclp.has_64bscao)
- 			r = KVM_S390_ESCA_CPU_SLOTS;
- 		break;
--	case KVM_CAP_NR_MEMSLOTS:
--		r = KVM_USER_MEM_SLOTS;
--		break;
- 	case KVM_CAP_S390_COW:
- 		r = MACHINE_HAS_ESOP;
- 		break;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 099b851dabaf..9b64d3359c93 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3073,9 +3073,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
--	case KVM_CAP_NR_MEMSLOTS:
--		r = KVM_USER_MEM_SLOTS;
--		break;
- 	case KVM_CAP_PV_MMU:	/* obsolete */
- 		r = 0;
- 		break;
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 99c37384ba7b..be4ec5f3ba5f 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -224,9 +224,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
- 		break;
--	case KVM_CAP_NR_MEMSLOTS:
--		r = KVM_USER_MEM_SLOTS;
--		break;
- 	case KVM_CAP_MSI_DEVID:
- 		if (!kvm)
- 			r = -EINVAL;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 55fe8e20d8fd..31c28e0b067c 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3061,6 +3061,8 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- #endif
- 	case KVM_CAP_MAX_VCPU_ID:
- 		return KVM_MAX_VCPU_ID;
-+	case KVM_CAP_NR_MEMSLOTS:
-+		return KVM_USER_MEM_SLOTS;
- 	default:
- 		break;
+ 	space = tty_write_room(tty);
+-	if (!space) {
++	if (space <= 0) {
+ 		mutex_unlock(&ldata->output_lock);
+ 		return 0;
  	}
 -- 
-1.8.3.1
+2.20.1
 
