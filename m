@@ -2,88 +2,157 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA42CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82F2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A616720823
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAD621773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfC1OXG (ORCPT
+        id S1726287AbfC1OYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:23:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:61110 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfC1OXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:23:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 07:23:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="159237906"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Mar 2019 07:23:03 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h9Vvq-0003Ow-FN; Thu, 28 Mar 2019 16:23:02 +0200
-Date:   Thu, 28 Mar 2019 16:23:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Joe Perches <joe@perches.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] x86/boot: Split out parse_serial_port() helper
- for earlyprintk
-Message-ID: <20190328142302.GE9224@smile.fi.intel.com>
-References: <20190319184325.72807-1-andriy.shevchenko@linux.intel.com>
- <20190319184325.72807-4-andriy.shevchenko@linux.intel.com>
- <20190328123504.GF22720@zn.tnic>
- <20190328131557.GY9224@smile.fi.intel.com>
- <20190328133907.GI22720@zn.tnic>
- <20190328135015.GA9224@smile.fi.intel.com>
- <20190328140329.GK22720@zn.tnic>
+        Thu, 28 Mar 2019 10:24:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57632 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbfC1OYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 10:24:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CFD2DAEF2;
+        Thu, 28 Mar 2019 14:24:44 +0000 (UTC)
+Subject: Re: [Qemu-devel] megasas: Unexpected response from lun 1 while
+ scanning, scan aborted
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     qemu-block@nongnu.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org
+References: <9c3849cf-86c6-4568-bff5-1050b445322d@default>
+ <c3a8f877-82bc-44ab-72e8-51f62c0a65ed@suse.de>
+ <442316ee-8800-275c-85e9-a5d054a28e63@oracle.com>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <78e04dbb-de4f-3d1b-973d-6cb906a13e42@suse.de>
+Date:   Thu, 28 Mar 2019 15:24:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328140329.GK22720@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <442316ee-8800-275c-85e9-a5d054a28e63@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 03:03:29PM +0100, Borislav Petkov wrote:
-> On Thu, Mar 28, 2019 at 03:50:15PM +0200, Andy Shevchenko wrote:
-> > Can, but with code uglifying to workaround kstrtox() restrictions.
-> > simple_strtox() _just works_ as expected.
+On 3/28/19 1:47 AM, Dongli Zhang wrote:
 > 
-> simple_strtox() also has its problems.
-
-Yes! And point here: we do not care.
-
-> > Requires buffer copying, finding digits there, making a proper termination. And
 > 
-> It needs a single kstrtoull() call to parse the port. 
+> On 3/27/19 7:31 PM, Hannes Reinecke wrote:
+>> On 3/26/19 5:47 PM, Dongli Zhang wrote:
+>>> I am reporting an error that the scsi lun cannot initialize successfully when I
+>>> am emulating megasas scsi controller with qemu.
+>>>
+>>> I am not sure if this is issue in qemu or linux kernel.
+>>>
+>>> When 'lun=1' is specified, there is "Unexpected response from lun 1 while
+>>> scanning, scan aborted".
+>>>
+>>> Everything works well if 'lun=0' is specified.
+>>>
+>>>
+>>> Below is the qemu cmdline involved:
+>>>
+>>> -device megasas,id=scsi0 \
+>>> -device scsi-hd,drive=drive0,bus=scsi0.0,lun=1 \
+>>> -drive file=/home/zhang/img/test.img,if=none,id=drive0,format=raw
+>>>
+>>>
+>>> Below is the syslog related to 'scsi|SCSI'
+>>>
+>>> # dmesg | grep SCSI
+>>> [    0.392494] SCSI subsystem initialized
+>>> [    0.460666] Block layer SCSI generic (bsg) driver version 0.4 loaded (major
+>>> 251)
+>>> [    0.706788] sd 1:0:0:0: [sda] Attached SCSI disk
+>>> # dmesg | grep scsi
+>>> [    0.511643] scsi host0: Avago SAS based MegaRAID driver
+>>> [    0.523302] scsi 0:2:0:0: Unexpected response from lun 1 while scanning,
+>>> scan aborted
+>>> [    0.540364] scsi host1: ata_piix
+>>> [    0.540780] scsi host2: ata_piix
+>>> [    0.702396] scsi 1:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
+>>> PQ: 0 ANSI: 5
+>>>
+>>> When 'lun=1' is changed to 'lun=0', there is no issue.
+>>>
+>>> Thank you very much!
+>>>
+>> That's an artifact from the megasas emulation in quemu.
+>> Megasas (internally) can't handle LUN numbers (the RAID part only knows about
+>> 'disks'), so I took the decision to not expose devices with LUN != 0.
+>> Please use a different SCSI target number, not a non-zero LUN number.
+> 
+> The guest kernel is able to detect the disk if lun is always 0, while target
+> number is changed:
+> 
+> -device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0
+> -device scsi-hd,drive=drive1,bus=scsi0.0,channel=0,scsi-id=1,lun=0
+> 
+> # dmesg | grep scsi
+> [    0.935999] scsi host0: ata_piix
+> [    0.936401] scsi host1: ata_piix
+> [    1.100945] scsi 0:0:0:0: Direct-Access     ATA      QEMU HARDDISK    2.5+
+> PQ: 0 ANSI: 5
+> [    1.102409] sd 0:0:0:0: Attached scsi generic sg0 type 0
+> [    1.672952] scsi host2: Avago SAS based MegaRAID driver
+> [    1.683886] scsi 2:2:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
+> PQ: 0 ANSI: 5
+> [    1.684915] scsi 2:2:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+
+> PQ: 0 ANSI: 5
+> [    1.701529] sd 2:2:0:0: Attached scsi generic sg1 type 0
+> [    1.704795] sd 2:2:1:0: Attached scsi generic sg2 type 0
+> # dmesg | grep SCSI
+> [    0.111015] SCSI subsystem initialized
+> [    0.904712] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
+> [    1.121174] sd 0:0:0:0: [sda] Attached SCSI disk
+> [    1.703739] sd 2:2:0:0: [sdb] Attached SCSI disk
+> [    1.706964] sd 2:2:1:0: [sdc] Attached SCSI disk
+> 
+> 
+> 
+> If device with LUN != 0 will not be exposed, why not set max_lun = 0 as what
+> qemu lsi is doing?
+> 
+> diff --git a/hw/scsi/megasas.c b/hw/scsi/megasas.c
+> index a56317e..c966ee0 100644
+> --- a/hw/scsi/megasas.c
+> +++ b/hw/scsi/megasas.c
+> @@ -2298,7 +2298,7 @@ static void megasas_scsi_uninit(PCIDevice *d)
+>   static const struct SCSIBusInfo megasas_scsi_info = {
+>       .tcq = true,
+>       .max_target = MFI_MAX_LD,
+> -    .max_lun = 255,
+> +    .max_lun = 0,
+> 
+>       .transfer_data = megasas_xfer_complete,
+>       .get_sg_list = megasas_get_sg_list,
+> 
+Hmm. Good point.
 
-No, it does not. It needs more as I described. Have you investigated a topic?
-Have you seen all possible combinations of input here?
+In _theory_ one could just jbod mode, in which case _all_ LUNs are 
+exposed. But then we could probably adjust it, based on which mode is 
+selected.
+I'll check.
 
-> And we have
-> kstrtoull() available in the compressed stage so pls do the conversion
-> ontop.
+Cheers,
 
-If it's strong opinion, I consider this rather as NAK.
-Thank you for review.
-
+Hannes
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Dr. Hannes Reinecke		   Teamlead Storage & Networking
+hare@suse.de			               +49 911 74053 688
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
