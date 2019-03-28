@@ -2,145 +2,175 @@ Return-Path: <SRS0=SA5R=SA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21220C43381
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6855CC10F06
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E424221850
-	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:05:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FRvCg0fM"
+	by mail.kernel.org (Postfix) with ESMTP id 4184221850
+	for <linux-kernel@archiver.kernel.org>; Fri, 29 Mar 2019 02:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfC2CFY (ORCPT
+        id S1728641AbfC2CFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 22:05:24 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12214 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbfC2CFY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 22:05:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c9d7d650000>; Thu, 28 Mar 2019 19:05:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Mar 2019 19:05:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Mar 2019 19:05:22 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 29 Mar
- 2019 02:05:21 +0000
-Subject: Re: [PATCH v2 07/11] mm/hmm: add default fault flags to avoid the
- need to pre-fill pfns arrays.
-To:     Jerome Glisse <jglisse@redhat.com>, Ben Skeggs <bskeggs@redhat.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
+        Thu, 28 Mar 2019 22:05:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:55750 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbfC2CFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 22:05:34 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 19:05:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,282,1549958400"; 
+   d="scan'208";a="138333451"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Mar 2019 19:05:32 -0700
+Date:   Thu, 28 Mar 2019 11:04:26 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     jglisse@redhat.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20190328221203.GF13560@redhat.com>
- <555ad864-d1f9-f513-9666-0d3d05dbb85d@nvidia.com>
- <20190328223153.GG13560@redhat.com>
- <768f56f5-8019-06df-2c5a-b4187deaac59@nvidia.com>
- <20190328232125.GJ13560@redhat.com>
- <d2008b88-962f-b7b4-8351-9e1df95ea2cc@nvidia.com>
- <20190328164231.GF31324@iweiny-DESK2.sc.intel.com>
- <20190329011727.GC16680@redhat.com>
- <f053e75e-25b5-d95a-bb3c-73411ba49e3e@nvidia.com>
- <20190329014259.GD16680@redhat.com> <20190329015919.GF16680@redhat.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f7710f64-c17e-feef-f453-e01340461e7e@nvidia.com>
-Date:   Thu, 28 Mar 2019 19:05:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Dan Williams <dan.j.williams@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 09/11] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem v2
+Message-ID: <20190328180425.GI31324@iweiny-DESK2.sc.intel.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-10-jglisse@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190329015919.GF16680@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1553825125; bh=+1O9YpiNfEVCCc+AeXkWqW7U0Khy1QDft89NTnXa5GY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FRvCg0fME4TeQCUKe5tlbRFfjI9Gn+fL4I/dhgs3fcXV6xp3Bc1c8DDtPW/Opm+nb
-         ae6YdMCZGFdkBREzXTd6995PTV+YFxEMWfQ5JbJkcFTibqmpasyWda4MuxekUso0Dw
-         GV4Gw0twubnHa5WN4YG413vAcrTP7YSnkTqJRS6q2UrKUq7IEhq21G0OLwgeW/73uI
-         ZnDXrV1pgRtf8m83kzsqcTuBgSsvwGgCM507T4p7cW53J71HhOQOoRpXMDZ3fkBYbE
-         yDSEpTSfDqkJodqYtcnYAC0vFdVebPl88NFleKIe26mGoF9ZRhYq3W0u8SUeiNQbyb
-         +8E48ZXB/twoA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325144011.10560-10-jglisse@redhat.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 6:59 PM, Jerome Glisse wrote:
->>>>>> [...]
->>>>> Indeed I did not realize there is an hmm "pfn" until I saw this function:
->>>>>
->>>>> /*
->>>>>  * hmm_pfn_from_pfn() - create a valid HMM pfn value from pfn
->>>>>  * @range: range use to encode HMM pfn value
->>>>>  * @pfn: pfn value for which to create the HMM pfn
->>>>>  * Returns: valid HMM pfn for the pfn
->>>>>  */
->>>>> static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
->>>>>                                         unsigned long pfn)
->>>>>
->>>>> So should this patch contain some sort of helper like this... maybe?
->>>>>
->>>>> I'm assuming the "hmm_pfn" being returned above is the device pfn being
->>>>> discussed here?
->>>>>
->>>>> I'm also thinking calling it pfn is confusing.  I'm not advocating a new type
->>>>> but calling the "device pfn's" "hmm_pfn" or "device_pfn" seems like it would
->>>>> have shortened the discussion here.
->>>>>
->>>>
->>>> That helper is also use today by nouveau so changing that name is not that
->>>> easy it does require the multi-release dance. So i am not sure how much
->>>> value there is in a name change.
->>>>
->>>
->>> Once the dust settles, I would expect that a name change for this could go
->>> via Andrew's tree, right? It seems incredible to claim that we've built something
->>> that effectively does not allow any minor changes!
->>>
->>> I do think it's worth some *minor* trouble to improve the name, assuming that we
->>> can do it in a simple patch, rather than some huge maintainer-level effort.
->>
->> Change to nouveau have to go through nouveau tree so changing name means:
-
-Yes, I understand the guideline, but is that always how it must be done? Ben (+cc)?
-
->>  -  release N add function with new name, maybe make the old function just
->>     a wrapper to the new function
->>  -  release N+1 update user to use the new name
->>  -  release N+2 remove the old name
->>
->> So it is do-able but it is painful so i rather do that one latter that now
->> as i am sure people will then complain again about some little thing and it
->> will post pone this whole patchset on that new bit. To avoid post-poning
->> RDMA and bunch of other patchset that build on top of that i rather get
->> this patchset in and then do more changes in the next cycle.
->>
->> This is just a capacity thing.
+On Mon, Mar 25, 2019 at 10:40:09AM -0400, Jerome Glisse wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
 > 
-> Also for clarity changes to API i am doing in this patchset is to make
-> the ODP convertion easier and thus they bring a real hard value. Renaming
-> those function is esthetic, i am not saying it is useless, i am saying it
-> does not have the same value as those other changes and i would rather not
-> miss another merge window just for esthetic changes.
+> HMM mirror is a device driver helpers to mirror range of virtual address.
+> It means that the process jobs running on the device can access the same
+> virtual address as the CPU threads of that process. This patch adds support
+> for mirroring mapping of file that are on a DAX block device (ie range of
+> virtual address that is an mmap of a file in a filesystem on a DAX block
+> device). There is no reason to not support such case when mirroring virtual
+> address on a device.
 > 
+> Note that unlike GUP code we do not take page reference hence when we
+> back-off we have nothing to undo.
+> 
+> Changes since v1:
+>     - improved commit message
+>     - squashed: Arnd Bergmann: fix unused variable warning in hmm_vma_walk_pud
+> 
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  mm/hmm.c | 132 ++++++++++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 111 insertions(+), 21 deletions(-)
+> 
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 64a33770813b..ce33151c6832 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -325,6 +325,7 @@ EXPORT_SYMBOL(hmm_mirror_unregister);
+>  
+>  struct hmm_vma_walk {
+>  	struct hmm_range	*range;
+> +	struct dev_pagemap	*pgmap;
+>  	unsigned long		last;
+>  	bool			fault;
+>  	bool			block;
+> @@ -499,6 +500,15 @@ static inline uint64_t pmd_to_hmm_pfn_flags(struct hmm_range *range, pmd_t pmd)
+>  				range->flags[HMM_PFN_VALID];
+>  }
+>  
+> +static inline uint64_t pud_to_hmm_pfn_flags(struct hmm_range *range, pud_t pud)
+> +{
+> +	if (!pud_present(pud))
+> +		return 0;
+> +	return pud_write(pud) ? range->flags[HMM_PFN_VALID] |
+> +				range->flags[HMM_PFN_WRITE] :
+> +				range->flags[HMM_PFN_VALID];
+> +}
+> +
+>  static int hmm_vma_handle_pmd(struct mm_walk *walk,
+>  			      unsigned long addr,
+>  			      unsigned long end,
+> @@ -520,8 +530,19 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+>  		return hmm_vma_walk_hole_(addr, end, fault, write_fault, walk);
+>  
+>  	pfn = pmd_pfn(pmd) + pte_index(addr);
+> -	for (i = 0; addr < end; addr += PAGE_SIZE, i++, pfn++)
+> +	for (i = 0; addr < end; addr += PAGE_SIZE, i++, pfn++) {
+> +		if (pmd_devmap(pmd)) {
+> +			hmm_vma_walk->pgmap = get_dev_pagemap(pfn,
+> +					      hmm_vma_walk->pgmap);
+> +			if (unlikely(!hmm_vma_walk->pgmap))
+> +				return -EBUSY;
+> +		}
+>  		pfns[i] = hmm_pfn_from_pfn(range, pfn) | cpu_flags;
+> +	}
+> +	if (hmm_vma_walk->pgmap) {
+> +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> +		hmm_vma_walk->pgmap = NULL;
+> +	}
+>  	hmm_vma_walk->last = end;
+>  	return 0;
+>  }
+> @@ -608,10 +629,24 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+>  	if (fault || write_fault)
+>  		goto fault;
+>  
+> +	if (pte_devmap(pte)) {
+> +		hmm_vma_walk->pgmap = get_dev_pagemap(pte_pfn(pte),
+> +					      hmm_vma_walk->pgmap);
+> +		if (unlikely(!hmm_vma_walk->pgmap))
+> +			return -EBUSY;
+> +	} else if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL) && pte_special(pte)) {
+> +		*pfn = range->values[HMM_PFN_SPECIAL];
+> +		return -EFAULT;
+> +	}
+> +
+>  	*pfn = hmm_pfn_from_pfn(range, pte_pfn(pte)) | cpu_flags;
 
-Agreed, that this minor point should not hold up this patch.
+	<tag>
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+>  	return 0;
+>  
+>  fault:
+> +	if (hmm_vma_walk->pgmap) {
+> +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> +		hmm_vma_walk->pgmap = NULL;
+> +	}
+>  	pte_unmap(ptep);
+>  	/* Fault any virtual address we were asked to fault */
+>  	return hmm_vma_walk_hole_(addr, end, fault, write_fault, walk);
+> @@ -699,12 +734,83 @@ static int hmm_vma_walk_pmd(pmd_t *pmdp,
+>  			return r;
+>  		}
+>  	}
+> +	if (hmm_vma_walk->pgmap) {
+> +		put_dev_pagemap(hmm_vma_walk->pgmap);
+> +		hmm_vma_walk->pgmap = NULL;
+> +	}
+
+
+Why is this here and not in hmm_vma_handle_pte()?  Unless I'm just getting
+tired this is the corresponding put when hmm_vma_handle_pte() returns 0 above
+at <tag> above.
+
+Ira
+
