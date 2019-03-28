@@ -2,88 +2,96 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D633C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5507BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DF2206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C53521773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 10:22:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NkTukKYy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ONeM8Rn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfC1KWN (ORCPT
+        id S1726516AbfC1KWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 06:22:13 -0400
-Received: from foss.arm.com ([217.140.101.70]:42024 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfC1KWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 06:22:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4513D15AB;
-        Thu, 28 Mar 2019 03:22:12 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE3443F59C;
-        Thu, 28 Mar 2019 03:22:09 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:22:08 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com
-Cc:     daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
-Message-ID: <20190328102206.doqj5fykqlld7jkd@queper01-lin>
-References: <20190328101352.25657-1-quentin.perret@arm.com>
- <20190328101352.25657-2-quentin.perret@arm.com>
+        Thu, 28 Mar 2019 06:22:50 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43774 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfC1KWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 06:22:50 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 61D7E61215; Thu, 28 Mar 2019 10:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553768569;
+        bh=ob7RqlO5/sU2c3rqISRrnIe5pO5ErUNNMzQrLigmU9g=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=NkTukKYyktt7rdnaTX0lR3pb1tsiar0ewY0aJTJVPwedPIETUa8o++Q2paGrQapdy
+         8m/Uuxo+mEEEN7jis72t3ondytVfVNajtp82P+GhZZGMSYF+4PbLoEicYkdDZuAO4P
+         zcmMCCBPK/JQXd7E4ojPQJ/kzpXUdiohQlpnsnOQ=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E217615E7;
+        Thu, 28 Mar 2019 10:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1553768565;
+        bh=ob7RqlO5/sU2c3rqISRrnIe5pO5ErUNNMzQrLigmU9g=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=ONeM8Rn8yRcpBJ7mZA3f6Jv0mIE2bH6PkzNFi8AI+CajF+x3RRUNA3c0shObdeCKq
+         XLavIEBW0/1Zwjyo0yCKmvX8SNrcAGRZvBSJEA0IOeaQRxeFTMOVy7c6wUMIw5N+Zq
+         m+rZB5/Up7lPgz9jVbh3lJXuE50iwkD49l+9iyZY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E217615E7
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] drivers/fmc: remove unneeded NULL check
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>, rubini@gnudd.com,
+        linux-kernel@vger.kernel.org
+References: <1553764997-26484-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <9a0194ef-2c45-3a29-2297-ee632779adb0@codeaurora.org>
+Date:   Thu, 28 Mar 2019 15:52:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190328101352.25657-2-quentin.perret@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1553764997-26484-1-git-send-email-dingxiang@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 28 Mar 2019 at 10:13:50 (+0000), Quentin Perret wrote:
-> The recently introduced Energy Model (EM) framework manages power cost
-> tables for the CPUs of the system. Its only user right now is the
-> scheduler, in the context of Energy Aware Scheduling (EAS).
-> 
-> However, the EM framework also offers a generic infrastructure that
-> could replace subsystem-specific implementations of the same concepts,
-> as this is the case in the thermal framework.
-> 
-> So, in order to prepare the migration of the thermal subsystem to use
-> the EM framework, enable it in the default arm64 defconfig, which is the
-> most commonly used architecture for IPA. This will also compile-in all
-> of the EAS code, although it won't be enabled by default -- EAS requires
-> to use the 'schedutil' CPUFreq governor while arm64 defaults to
-> 'performance'.
-> 
-> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
+
+On 3/28/2019 2:53 PM, Ding Xiang wrote:
+> The variable will check in debugfs_remove_recursive, so
+> the NULL check here is not needed
+>
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+-Mukesh
+
 > ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 2d9c39033c1a..3c09bdaaefd3 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -97,6 +97,7 @@ CONFIG_XEN=y
->  CONFIG_COMPAT=y
->  CONFIG_HIBERNATION=y
->  CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
-> +CONFIG_ENERGY_MODEL=n
-
-Hmm, sorry I turned this to '=n' for testing and forgot to update the
-patch. This obviously should be '=y' ...
-
->  CONFIG_ARM_CPUIDLE=y
->  CONFIG_CPU_FREQ=y
->  CONFIG_CPU_FREQ_STAT=y
-> -- 
-> 2.21.0
-> 
+>   drivers/fmc/fmc-debug.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/fmc/fmc-debug.c b/drivers/fmc/fmc-debug.c
+> index 3293072..ab868a3 100644
+> --- a/drivers/fmc/fmc-debug.c
+> +++ b/drivers/fmc/fmc-debug.c
+> @@ -168,6 +168,5 @@ int fmc_debug_init(struct fmc_device *fmc)
+>   
+>   void fmc_debug_exit(struct fmc_device *fmc)
+>   {
+> -	if (fmc->dbg_dir)
+> -		debugfs_remove_recursive(fmc->dbg_dir);
+> +	debugfs_remove_recursive(fmc->dbg_dir);
+>   }
