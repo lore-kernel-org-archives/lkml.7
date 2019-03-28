@@ -2,190 +2,213 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585CDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED1DC10F03
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B1521773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="T6rpsWw7"
+	by mail.kernel.org (Postfix) with ESMTP id 492EB21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfC1PnC (ORCPT
+        id S1727730AbfC1PnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:43:02 -0400
-Received: from mail.efficios.com ([167.114.142.138]:51626 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfC1PnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:43:01 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 486C51CD79D;
-        Thu, 28 Mar 2019 11:42:59 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id fnKaFNyfPasC; Thu, 28 Mar 2019 11:42:58 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id B605B1CD78A;
-        Thu, 28 Mar 2019 11:42:58 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B605B1CD78A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1553787778;
-        bh=FidRhHuUylCMIeDUa3RnsDu6V0BrdwQGm9mYZntS4io=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=T6rpsWw7qUTNugoRgx8xwF1AN5mZO8OF8BL6M4lKFisak0n9FEgI/DXnxMqxgN0IL
-         wlRRCLFkqhxQfxE5fdEb1imuv/BSOShA/C5nwpqpX9Xpw5owZ3hDZg7mSkbpespGbt
-         sCMyrxifoLgFFYS/4xrBGfRccyXUjfhQ3jY0GZ8CA5sYnVs5jDkbYJFEAs88Gs//f8
-         /VHBkJu7OHACzFZlTEKKegOlrpzu3XMPq7JQEh8v4k71hsFe/I2wz87nf4CT2gHtTb
-         h9tEvKNx8EzJhZYSe7VK5JQByBeEb2aTf2ukqrHYMdaZamhqzATz5FYVfMk0XOw3fc
-         iaZnUfHgX2HGw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id YE_uXmkiNZzW; Thu, 28 Mar 2019 11:42:58 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 8EE921CD783;
-        Thu, 28 Mar 2019 11:42:58 -0400 (EDT)
-Date:   Thu, 28 Mar 2019 11:42:58 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Carlos O'Donell <codonell@redhat.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        heiko carstens <heiko.carstens@de.ibm.com>,
-        gor <gor@linux.ibm.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <37506383.12659.1553787778500.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190328084948.6486fa67@mschwideX1>
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com> <20190212194253.1951-2-mathieu.desnoyers@efficios.com> <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com> <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com> <20190327101608.77b0de6f@mschwideX1> <4021516e-6a1e-166d-a4f6-e961e6f94cc4@redhat.com> <20190328084948.6486fa67@mschwideX1>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup
- and thread creation (v7)
+        Thu, 28 Mar 2019 11:43:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55504 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfC1PnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 11:43:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 08:43:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="p7s'?scan'208";a="126671779"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga007.jf.intel.com with ESMTP; 28 Mar 2019 08:43:10 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.133]) by
+ ORSMSX108.amr.corp.intel.com ([169.254.2.134]) with mapi id 14.03.0415.000;
+ Thu, 28 Mar 2019 08:43:10 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
+        <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: Re: [PATCH 04/16] block: sed-opal: unify space check in add_token_*
+Thread-Topic: [PATCH 04/16] block: sed-opal: unify space check in add_token_*
+Thread-Index: AQHUw/qb5kq+x19s2UaFiwg5ylQWJKYh5y8A
+Date:   Thu, 28 Mar 2019 15:43:08 +0000
+Message-ID: <be50dc915987e880eaefbd52d7b324464c4dea07.camel@intel.com>
+References: <1550103368-4605-1-git-send-email-zub@linux.fjfi.cvut.cz>
+         <1550103368-4605-5-git-send-email-zub@linux.fjfi.cvut.cz>
+In-Reply-To: <1550103368-4605-5-git-send-email-zub@linux.fjfi.cvut.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.112.25]
+Content-Type: multipart/signed; micalg=sha-1;
+        protocol="application/x-pkcs7-signature"; boundary="=-cQj3br6aN+FDWlTdeT09"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - FF65 (Linux)/8.8.11_GA_3787)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v7)
-Thread-Index: 47pHvCs5LKLGndmcTvKNeBlWa+S57Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 28, 2019, at 3:49 AM, schwidefsky schwidefsky@de.ibm.com wrote:
+--=-cQj3br6aN+FDWlTdeT09
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, 27 Mar 2019 16:38:32 -0400
-> "Carlos O'Donell" <codonell@redhat.com> wrote:
-> 
->> On 3/27/19 5:16 AM, Martin Schwidefsky wrote:
->> > On Mon, 25 Mar 2019 11:54:32 -0400 (EDT)
->> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
->> >   
->> >>>> +++ b/sysdeps/unix/sysv/linux/s390/bits/rseq.h
->> >> [...]
->> >>>> +
->> >>>> +/* Signature required before each abort handler code.  */
->> >>>> +#define RSEQ_SIG 0x53053053
->> >>>
->> >>> Why not a s390 specific value here?
->> >>
->> >> s390 also has the abort handler in a __rseq_failure section:
->> >>
->> >> #define RSEQ_ASM_DEFINE_ABORT(label, teardown, abort_label)             \
->> >>                  ".pushsection __rseq_failure, \"ax\"\n\t"               \
->> >>                  ".long " __rseq_str(RSEQ_SIG) "\n\t"                    \
->> >>                  __rseq_str(label) ":\n\t"                               \
->> >>                  teardown                                                \
->> >>                  "j %l[" __rseq_str(abort_label) "]\n\t"                 \
->> >>                  ".popsection\n\t"
->> >>
->> >> Same question applies as powerpc: since disassemblers will try to decode
->> >> that instruction, would it be better to define it as a valid one ?
->> >>
->> >> [...]
->> > 
->> > A 4-byte sequence starting with 0x53 is decoded as a "diebr" instruction.
->> > And please replace that "j %l[...]" with a "jg %l[...]", the branch target
->> > range of the "j" instruction is 64K, not enough for the general case.
->> 
->> Why was this particular operated selected?
+Looks good
 
-The 0x53053053 signature was selected by myself on x86, where it is a
-4-byte operand to a no-op instruction. That value looks like "SEQSEQSE"
-in hexadecimal. The goal was to have an uncommon code signature value.
+Acked-by: Jon Derrick <jonathan.derrick@intel.com>
 
-Then it has been used as-is on arm and mips within literal pools (which seems
-fine), and also on s390 and powerpc where those seem to generate invalid
-instruction within a separate code section.
+On Thu, 2019-02-14 at 01:15 +0100, David Kozub wrote:
+> From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+>=20
+> All add_token_* functions have a common set of conditions that have
+> to
+> be checked. Use a common function for those checks in order to avoid
+> different behaviour as well as code duplication.
+>=20
+> Co-authored-by: David Kozub <zub@linux.fjfi.cvut.cz>
+> Signed-off-by: Jonas Rabenstein <
+> jonas.rabenstein@studium.uni-erlangen.de>
+> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+> ---
+>  block/sed-opal.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/block/sed-opal.c b/block/sed-opal.c
+> index e59ae364f1ef..d285bd4b2b9b 100644
+> --- a/block/sed-opal.c
+> +++ b/block/sed-opal.c
+> @@ -510,15 +510,24 @@ static int opal_discovery0(struct opal_dev
+> *dev, void *data)
+>  	return opal_discovery0_end(dev);
+>  }
+> =20
+> -static void add_token_u8(int *err, struct opal_dev *cmd, u8 tok)
+> +static bool can_add(int *err, struct opal_dev *cmd, size_t len)
+>  {
+>  	if (*err)
+> -		return;
+> -	if (cmd->pos >=3D IO_BUFFER_LENGTH - 1) {
+> -		pr_debug("Error adding u8: end of buffer.\n");
+> +		return false;
+> +
+> +	if (len > IO_BUFFER_LENGTH || cmd->pos > IO_BUFFER_LENGTH -
+> len) {
+> +		pr_debug("Error adding %zu bytes: end of buffer.\n",
+> len);
+>  		*err =3D -ERANGE;
+> -		return;
+> +		return false;
+>  	}
+> +
+> +	return true;
+> +}
+> +
+> +static void add_token_u8(int *err, struct opal_dev *cmd, u8 tok)
+> +{
+> +	if (!can_add(err, cmd, 1))
+> +		return;
+>  	cmd->cmd[cmd->pos++] =3D tok;
+>  }
+> =20
+> @@ -562,9 +571,8 @@ static void add_token_u64(int *err, struct
+> opal_dev *cmd, u64 number)
+>  	msb =3D fls64(number);
+>  	len =3D DIV_ROUND_UP(msb, 8);
+> =20
+> -	if (cmd->pos >=3D IO_BUFFER_LENGTH - len - 1) {
+> +	if (!can_add(err, cmd, len + 1)) {
+>  		pr_debug("Error adding u64: end of buffer.\n");
+> -		*err =3D -ERANGE;
+>  		return;
+>  	}
+>  	add_short_atom_header(cmd, false, false, len);
+> @@ -586,9 +594,8 @@ static void add_token_bytestring(int *err, struct
+> opal_dev *cmd,
+>  		is_short_atom =3D false;
+>  	}
+> =20
+> -	if (len >=3D IO_BUFFER_LENGTH - cmd->pos - header_len) {
+> +	if (!can_add(err, cmd, header_len + len)) {
+>  		pr_debug("Error adding bytestring: end of buffer.\n");
+> -		*err =3D -ERANGE;
+>  		return;
+>  	}
+> =20
 
-I'm mainly concerned about the choice of this value on s390 and powerpc.
+--=-cQj3br6aN+FDWlTdeT09
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
->>   
->> So on s390 the RSEQ_SIG will show up as an unexpected "divide to integer"
->> instruction that can't be reached by any control flow?
->> 
->> Can we use a NOP with a unique value in an immediate operand?
->> 
->> The goal being to have something that won't confuse during a debug
->> session, or that the debugger can ignore (like constant pools on Arm)
-> 
-> I was looking at the wrong table in regard to opcode 0x53. The pattern
-> 0x53...... is not a known instruction as far as the disassembler is
-> concerned. As Mathieu pointed out "diebr" is actually 0xb353....
-> Sorry about the confusion.
-> 
-> But why do we need this value in the first place if it can not be reached?
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIKeTCCBOsw
+ggPToAMCAQICEFLpAsoR6ESdlGU4L6MaMLswDQYJKoZIhvcNAQEFBQAwbzELMAkGA1UEBhMCU0Ux
+FDASBgNVBAoTC0FkZFRydXN0IEFCMSYwJAYDVQQLEx1BZGRUcnVzdCBFeHRlcm5hbCBUVFAgTmV0
+d29yazEiMCAGA1UEAxMZQWRkVHJ1c3QgRXh0ZXJuYWwgQ0EgUm9vdDAeFw0xMzAzMTkwMDAwMDBa
+Fw0yMDA1MzAxMDQ4MzhaMHkxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEUMBIGA1UEBxMLU2Fu
+dGEgQ2xhcmExGjAYBgNVBAoTEUludGVsIENvcnBvcmF0aW9uMSswKQYDVQQDEyJJbnRlbCBFeHRl
+cm5hbCBCYXNpYyBJc3N1aW5nIENBIDRBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+4LDMgJ3YSVX6A9sE+jjH3b+F3Xa86z3LLKu/6WvjIdvUbxnoz2qnvl9UKQI3sE1zURQxrfgvtP0b
+Pgt1uDwAfLc6H5eqnyi+7FrPsTGCR4gwDmq1WkTQgNDNXUgb71e9/6sfq+WfCDpi8ScaglyLCRp7
+ph/V60cbitBvnZFelKCDBh332S6KG3bAdnNGB/vk86bwDlY6omDs6/RsfNwzQVwo/M3oPrux6y6z
+yIoRulfkVENbM0/9RrzQOlyK4W5Vk4EEsfW2jlCV4W83QKqRccAKIUxw2q/HoHVPbbETrrLmE6RR
+Z/+eWlkGWl+mtx42HOgOmX0BRdTRo9vH7yeBowIDAQABo4IBdzCCAXMwHwYDVR0jBBgwFoAUrb2Y
+ejS0Jvf6xCZU7wO94CTLVBowHQYDVR0OBBYEFB5pKrTcKP5HGE4hCz+8rBEv8Jj1MA4GA1UdDwEB
+/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMDYGA1UdJQQvMC0GCCsGAQUFBwMEBgorBgEEAYI3
+CgMEBgorBgEEAYI3CgMMBgkrBgEEAYI3FQUwFwYDVR0gBBAwDjAMBgoqhkiG+E0BBQFpMEkGA1Ud
+HwRCMEAwPqA8oDqGOGh0dHA6Ly9jcmwudHJ1c3QtcHJvdmlkZXIuY29tL0FkZFRydXN0RXh0ZXJu
+YWxDQVJvb3QuY3JsMDoGCCsGAQUFBwEBBC4wLDAqBggrBgEFBQcwAYYeaHR0cDovL29jc3AudHJ1
+c3QtcHJvdmlkZXIuY29tMDUGA1UdHgQuMCygKjALgQlpbnRlbC5jb20wG6AZBgorBgEEAYI3FAID
+oAsMCWludGVsLmNvbTANBgkqhkiG9w0BAQUFAAOCAQEAKcLNo/2So1Jnoi8G7W5Q6FSPq1fmyKW3
+sSDf1amvyHkjEgd25n7MKRHGEmRxxoziPKpcmbfXYU+J0g560nCo5gPF78Wd7ZmzcmCcm1UFFfIx
+fw6QA19bRpTC8bMMaSSEl8y39Pgwa+HENmoPZsM63DdZ6ziDnPqcSbcfYs8qd/m5d22rpXq5IGVU
+tX6LX7R/hSSw/3sfATnBLgiJtilVyY7OGGmYKCAS2I04itvSS1WtecXTt9OZDyNbl7LtObBrgMLh
+ZkpJW+pOR9f3h5VG2S5uKkA7Th9NC9EoScdwQCAIw+UWKbSQ0Isj2UFL7fHKvmqWKVTL98sRzvI3
+seNC4DCCBYYwggRuoAMCAQICEzMAAMamAkocC+WQNPgAAAAAxqYwDQYJKoZIhvcNAQEFBQAweTEL
+MAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBDbGFyYTEaMBgGA1UEChMR
+SW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFsIEJhc2ljIElzc3Vpbmcg
+Q0EgNEEwHhcNMTgxMDE3MTgxODQzWhcNMTkxMDEyMTgxODQzWjBHMRowGAYDVQQDExFEZXJyaWNr
+LCBKb25hdGhhbjEpMCcGCSqGSIb3DQEJARYaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb20wggEi
+MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCjUTRFAcK/fny1Eh3T7Q0iD+MSCPo7ZnIoW/hI
+/jifxPTtccOjZgp1NsXP5uPvpZERSz/VK5pyHJ5H0YZhkP17F4Ccdap2yL3cmfBwBNUeyNUsQ9AL
+1kBq1JfsUb+VDAEYwXLAY7Yuame4VsqAU24ZqQ1FOee+a1sPRPnJwfdtbJDP6qtS2sLMlahOlMrz
+s64sbhqEEXyCKujbQdpMupaSkBIqBsOXpqKgFZJrD1A/ZC5jE4SF27Y98C6FOfrA7VGDdX5lxwH0
+PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
+AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
+HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
+b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
+JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
+bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
+SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
+MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
+gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
+AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
+gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
+ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
+p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
+7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
+NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
+CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
+FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
+bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
+IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDMyODE1NDI1MFowIwYJ
+KoZIhvcNAQkEMRYEFFR021jJeug6gawg/B0CMY6qCfZxMA0GCSqGSIb3DQEBAQUABIIBAA1XDiNj
+vWA007L6C6k99MsC3zwBXCYhjHpZO23rTHyCBvXOhENK8oVPm7dVHzBXGaZ2WsV2GSUq50gQHfO9
+G56eOMEB25L0yDLSpAHKHSet8eYzzTG2S4XZJDH3JP7nso3CDBdJYXaDGDkxWw9b6WK8f+MmursF
+59t4KHYNMyv5PxVIs9PXXoxZBDHjWrbHACV9VZLADDaXFqfGCL+ubqKkb67YuFYSj4dGhvM1+l2h
+wlk0ZvxrK35N4p2+JC5V0ALVs+gf9mtdAvqY5t8K1zZJdiUruFtdlgke+v5kFCtTJ89AGSYaWXs7
+BBb0VxQf2jdOHb2cY6fSpwObArs9GvMAAAAAAAA=
 
-One reason is to help disassemblers in tools like objdump, gdb, and so on.
 
-Another reason for making this a valid instruction is if the CPU speculative
-execution can be helped by making this instruction a valid one, even though
-it's not reachable through normal execution. (this appears to be important
-at least on aarch64)
-
-However, we want that instruction to be an uncommon one, to reduce the chances
-that an attacker can use the rseq abort mechanism to redirect execution to
-an unrelated code block that would happen to follow that same 4-byte signature.
-For instance, I would not use a no-op which is typically generated by compilers
-there.
-
-In summary:
-
-* x86: Uses a no-op instruction ending with a 4-byte operand.
-* aarch64: Uses a trap instruction which also has a seldom-used operand value.
-* arm: The signature is in a literal pool (there is a jump over the signature).
-* mips: The signature is in a literal pool (there is a jump over the signature).
-* powerpc: the signature is an unreachable invalid(?) instruction within an
-  executable section.
-* s390: the signature is an unreachable invalid instruction within an executable
-  section.
-
-Thanks,
-
-Mathieu
-
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+--=-cQj3br6aN+FDWlTdeT09--
