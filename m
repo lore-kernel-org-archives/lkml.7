@@ -2,148 +2,238 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333B5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00875C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05202075C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64E02075C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 02:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBSBq9lI"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qD69Lc+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfC1CaQ (ORCPT
+        id S1728776AbfC1Cbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Mar 2019 22:30:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34611 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbfC1CaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Mar 2019 22:30:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v12so10895245pgq.1;
-        Wed, 27 Mar 2019 19:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pLmlnQQV3axGzNMMxyRd6miDdTXw854xqHJbc6RqKHo=;
-        b=PBSBq9lI8QtyybLxSNoNfiXx0NMm8pf+AxsFADe9r9c5AnTSgiE4l+yWEyB8b3Pw5s
-         SLoeCXDspCh+FjdVYd6bB7LCN9tCyZwBi9XOKIXTCJ1SMW3PONj9811Z9ZRsKIYxBhYF
-         IO1ybfhVnfb+tEbWmLauN5kO2Fd23zZdguc0VMPB6L0vVChRv0V60nmnimNQBO3T3kid
-         CR1WumjjPLT4SXHYjwnaIUlVWfZp15ZEQE259a2N4OiMvSo6bFdZbiNaxG5dVi7QQYyl
-         634n5Omutie/Vl2/z0keQi36uQ/BvfQiRIQp2STjVP07OGs1gQrwyKd43l/RctT87zv6
-         wmcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pLmlnQQV3axGzNMMxyRd6miDdTXw854xqHJbc6RqKHo=;
-        b=jk31Ae03JPYYHJILqIUG7HbXnxxmyZx0noiWngnoB82PcUH/TBzu+OcvTE2Dol3lUm
-         9IcxYRFgEULlldY+OSegJHNj4Do1nuhD3HBmooKqR0t1hpVAsM2ZxxksM/WLlTKXp17o
-         8a6HF8k6fJJsH4le/VvfCNmY98cO9srP5mzvWaUL5U241AtdPSk3g/HcL0FGuXIH1KA6
-         yBMJv4H1DGLn8KXw6doYcuLKd0nDcM0ICbbif4GZKeHHtIRXn6br341Euq+hb7dJsdVQ
-         cIBgqn3WNxGcOnL2VZrZUzpa8cRXz+sZVkKEelIeMhsLinrZ+0MAjotQtImIMDMwMq8F
-         CL+Q==
-X-Gm-Message-State: APjAAAVJYDMbm0sLlWeHv+ZWY5YVskctLG57d8U9CTDDX8QRFS1+6SHF
-        pQkC0WMP+gs4tFRGnIh4FsKrfB2i
-X-Google-Smtp-Source: APXvYqw1WgwPUX8EnmqFyZH5Sgg8YSmoVPZevWFdhGVeeuP3d4VHi43gZf7CxHypYdtuv7MUIU+4ZQ==
-X-Received: by 2002:a62:121c:: with SMTP id a28mr38056868pfj.58.1553740214048;
-        Wed, 27 Mar 2019 19:30:14 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.gmail.com with ESMTPSA id k72sm64732238pfb.122.2019.03.27.19.30.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Mar 2019 19:30:13 -0700 (PDT)
-Subject: Re: [PATCH net-next v5 13/22] ethtool: provide driver/device
- information in GET_INFO request
-To:     Michal Kubecek <mkubecek@suse.cz>, Jiri Pirko <jiri@resnulli.us>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1553532199.git.mkubecek@suse.cz>
- <b7aea4b2642b2fe6f12cfb843a03154f584f3bf6.1553532199.git.mkubecek@suse.cz>
- <20190327201411.GH14297@nanopsycho> <20190327222554.GV26076@unicorn.suse.cz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <6e5fd327-d2ba-1b8d-44ce-fa975c73bffb@gmail.com>
-Date:   Wed, 27 Mar 2019 19:30:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190327222554.GV26076@unicorn.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Wed, 27 Mar 2019 22:31:31 -0400
+Received: from mail-eopbgr150070.outbound.protection.outlook.com ([40.107.15.70]:39482
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727662AbfC1Cbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Mar 2019 22:31:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/f1q63gGg6+wg5krEPGTM0oOmDjgnntMCmrNXmyXpe8=;
+ b=qD69Lc+ahhmtrXbrhbsdFP1JEN9EDTesKC9PKVb/tlwbbApCOdrHIj8IH1Hez2L+yQi8jUASXlcIL1toHLUDMto4aVfsHDpGafD7ImBMinFJHl71bFbLkf3zh5iXgjQdDNNdY41fFHz0YG5FQLNxzIAadvHYaAVnKhJxoDU9c4I=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB5923.eurprd04.prod.outlook.com (20.178.117.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1730.18; Thu, 28 Mar 2019 02:31:25 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::4514:91e2:16b7:ee2b]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::4514:91e2:16b7:ee2b%4]) with mapi id 15.20.1750.014; Thu, 28 Mar 2019
+ 02:31:25 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Teo Hall <teo.hall@nxp.com>
+Subject: RE: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
+Thread-Topic: [PATCH v2 2/2] arm64: dts: imx8qxp: Add EDMA0/EDMA1 nodes
+Thread-Index: AQHU5M+7DOoA/eJp7kqEHAMC8ZrFEaYgUZAQ
+Date:   Thu, 28 Mar 2019 02:31:25 +0000
+Message-ID: <AM0PR04MB4211B89650EA1AC9133F4EBE80590@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20190327190244.9208-1-daniel.baluta@nxp.com>
+ <20190327190244.9208-3-daniel.baluta@nxp.com>
+In-Reply-To: <20190327190244.9208-3-daniel.baluta@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bc3eb123-cc04-4974-2412-08d6b325798f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5923;
+x-ms-traffictypediagnostic: AM0PR04MB5923:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB5923FA0E24189B9C09799C0B80590@AM0PR04MB5923.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0990C54589
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(136003)(39860400002)(396003)(199004)(189003)(7696005)(9686003)(106356001)(105586002)(53936002)(6306002)(55016002)(14444005)(6116002)(110136005)(478600001)(5660300002)(3846002)(14454004)(54906003)(6246003)(52536014)(305945005)(25786009)(2906002)(74316002)(316002)(97736004)(86362001)(7736002)(44832011)(966005)(256004)(229853002)(81166006)(8936002)(102836004)(33656002)(6506007)(66066001)(2501003)(26005)(68736007)(486006)(81156014)(8676002)(76176011)(446003)(99286004)(71190400001)(6436002)(186003)(71200400001)(4326008)(11346002)(476003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5923;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sRRnVEPzjxKkV/wqSeKIwDdAtPJqRhZpyCy05timCZWuxVzVqdYVwqlT8wT1nYtVCDi+FnH+4p4WY+jNOrbcxgKCEGA8BO6DMhIMsxM65MoEQ0++xm3lLDLGf4q77OVHhLgH43+j3LWanDxpwWaAr+UOzAiymCgBs7IEiVoQwQpcaNnk7qaVfifdX36XywxwoEze8e4gD20vm8Zg+5noDbl8jYYQEfDaxp+mjRhv9eS+YNuZDFagQFsrk1yRSxtqKsxoReelh1FtmBRyuZsnmPxwjknARa4Kj29ahuQqbd98pfErgM6mbvaLriehvI0KPAYXDjaJ7ELNi8DTYm6RUdJ5cgRj4Q7RRhSAp/4YZc5gpf8HZNDTV3o6+aIKZCA6wVv+hYvDtAcpI+T8N8E844z5N1ONzg9q3/V84wWG9Tw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc3eb123-cc04-4974-2412-08d6b325798f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 02:31:25.3049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5923
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Daniel Baluta
+> Sent: Thursday, March 28, 2019 3:03 AM
+>=20
+> i.MX8QXP contains a total of 4 EDMA controllers of which two are primaril=
+y
+> for audio components and the other two are for non-audio periperhals.
+>=20
+> This patch adds the EDMA0/EDMA1 nodes used by audio peripherals.
+>=20
+> EDMA0 contains channels for:
+> 	* ASRC0
+> 	* ESAI0
+> 	* SPDIF0
+> 	* SAI0, SAI1, SAI2, SAI3
+>=20
+> EDMA1 contains channels for:
+> 	* ASRC1
+> 	* SAI4, SAI5
+>=20
+> See chapter Audio DMA Memory Maps (2.2.3) from i.MX8QXP RM [1]
+>=20
+> This patch is based on the dtsi file initially submitted by Teo Hall in i=
+.MX NXP
+> internal tree.
+>=20
+> [1] https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+>=20
+> Cc: Teo Hall <teo.hall@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 72
+> ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 0cb939861a60..84c7c3eca1a1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -182,6 +182,78 @@
+>  			#clock-cells =3D <1>;
+>  		};
+>=20
+> +		edma0: dma-controller@591f0000 {
+> +			compatible =3D "fsl,imx8qxp-edma";
+> +			reg =3D <0x59200000 0x10000>,   /* asrc0 pair A input req */
+> +				<0x59210000 0x10000>, /* asrc0 pair B input req */
+> +				<0x59220000 0x10000>, /* asrc0 pair C input req */
+> +				<0x59230000 0x10000>, /* asrc0 pair A output req */
+> +				<0x59240000 0x10000>, /* asrc0 pair B output req */
+> +				<0x59250000 0x10000>, /* asrc0 pair C output req */
+> +				<0x59260000 0x10000>, /* esai0 rx */
+> +				<0x59270000 0x10000>, /* esai0 tx */
+> +				<0x59280000 0x10000>, /* spdif0 rx */
+> +				<0x59290000 0x10000>, /* spdif0 tx */
+> +				<0x592c0000 0x10000>, /* sai0 rx */
+> +				<0x592d0000 0x10000>, /* sai0 tx */
+> +				<0x592e0000 0x10000>, /* sai1 rx */
+> +				<0x592f0000 0x10000>, /* sai1 tx */
+> +			#dma-cells =3D <3>;
 
+In binding doc, it's 2.
+- #dma-cells : Must be <2>.
+        The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
+        Specific request source can only be multiplexed by specific channel=
+s
+        group called DMAMUX.
+        The 2nd cell specifies the request source(slot) ID.
 
-On 3/27/2019 3:25 PM, Michal Kubecek wrote:
-> On Wed, Mar 27, 2019 at 09:14:11PM +0100, Jiri Pirko wrote:
->> Mon, Mar 25, 2019 at 06:08:33PM CET, mkubecek@suse.cz wrote:
->>> +
->>> +Kernel response contents:
->>> +
->>> +    ETHA_INFO_DEV		(nested)	device identification
->>> +    ETHA_INFO_DRVINFO		(nested)	driver information
->>> +        ETHA_DRVINFO_DRIVER		(string)	driver name
->>> +        ETHA_DRVINFO_FWVERSION		(string)	firmware version
->>> +        ETHA_DRVINFO_BUSINFO		(string)	device bus address
->>> +        ETHA_DRVINFO_EROM_VER		(string)	expansion ROM version
->>
->> These are already very nicely supported in devlink. No need to duplicate
->> here.
-> 
-> They are supported by devlink as an interface. But devlink itself is
-> only supported by few NIC drivers at the moment:
-> 
-> mike@unicorn:~/work/git/net-next> grep -r devlink_ops drivers/net/
+Need update binding doc?
 
-You might want to include net/ in your list too.
+> +			shared-interrupt;
 
-> drivers/net/ethernet/mellanox/mlx4/main.c:static const struct devlink_ops mlx4_devlink_ops = {
-> drivers/net/ethernet/mellanox/mlx4/main.c:      devlink = devlink_alloc(&mlx4_devlink_ops, sizeof(*priv));
-> drivers/net/ethernet/mellanox/mlxsw/core.c:static const struct devlink_ops mlxsw_devlink_ops = {
-> drivers/net/ethernet/mellanox/mlxsw/core.c:             devlink = devlink_alloc(&mlxsw_devlink_ops, alloc_size);
-> drivers/net/ethernet/mellanox/mlx5/core/main.c:static const struct devlink_ops mlx5_devlink_ops = {
-> drivers/net/ethernet/mellanox/mlx5/core/main.c: devlink = devlink_alloc(&mlx5_devlink_ops, sizeof(*dev));
-> drivers/net/ethernet/cavium/liquidio/lio_main.c:static const struct devlink_ops liquidio_devlink_ops = {
-> drivers/net/ethernet/cavium/liquidio/lio_main.c:        devlink = devlink_alloc(&liquidio_devlink_ops,
-> drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c:static const struct devlink_ops bnxt_dl_ops = {
-> drivers/net/ethernet/netronome/nfp/nfp_main.c:  devlink = devlink_alloc(&nfp_devlink_ops, sizeof(*pf));
-> drivers/net/ethernet/netronome/nfp/nfp_main.h:extern const struct devlink_ops nfp_devlink_ops;
-> drivers/net/ethernet/netronome/nfp/nfp_devlink.c:const struct devlink_ops nfp_devlink_ops = {
-> drivers/net/netdevsim/devlink.c:static const struct devlink_ops nsim_devlink_ops = {
-> drivers/net/netdevsim/devlink.c:        devlink = devlink_alloc(&nsim_devlink_ops, 0);
-> 
-> That's 6 drivers from 4 vendors (if I don't count netdevsim). And I did
-> not check if all of them do actually provide the information shown
-> above. On the other hand:
-> 
-> mike@unicorn:~/work/git/net-next> egrep -r '\.get_drvinfo' drivers/net/ | wc -l
-> 240
-> 
-> Some of these 240 lines assign the same handler but not enough to make
-> me optimistic about being able to implement "ethtool -i <dev>" using
-> devlink interface in near future (say few months or one year).
-> 
-> I'm all for implementing new features which are are related to physical
-> device (ASIC) rather than network interface only in devlink (at the
-> level of kernel-userspace interface). But for features already provided
-> by ethtool (userspace utility) I can't help seeing the state of devlink
-> support in NIC drivers as a serious blocker.
+Undocumented property?
 
-Can't we just interrogate devlink first if there is a devlink <->
-net_device mapping and fallback to ethtool_ops::get_drvinfo if that did
-not work? Maybe issue a (rate-limited) warning "use devlink instead".
--- 
-Florian
+Checkpatch did not complain?
+
+Regards
+Dong Aisheng
+
+> +			dma-channels =3D <14>;
+> +			interrupts =3D <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,    /* asrc 0
+> */
+> +					<GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 376 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 377 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 378 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>, /* esai0 */
+> +					<GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>, /* spdif0 */
+> +					<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>, /* sai0 */
+> +					<GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>, /* sai1 */
+> +					<GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
+> +			interrupt-names =3D "edma0-chan0-rx", "edma0-chan1-rx", /*
+> asrc0 */
+> +					"edma0-chan2-rx", "edma0-chan3-tx",
+> +					"edma0-chan4-tx", "edma0-chan5-tx",
+> +					"edma0-chan6-rx", "edma0-chan7-tx",   /* esai0 */
+> +					"edma0-chan8-rx", "edma0-chan9-tx",   /* spdif0 */
+> +					"edma0-chan12-rx", "edma0-chan13-tx", /* sai0 */
+> +					"edma0-chan14-rx", "edma0-chan15-tx", /* sai1 */
+> +		};
+> +
+> +		edma1: dma-controller@599F0000 {
+> +			compatible =3D "fsl,imx8qxp-edma";
+> +			reg =3D <0x0 0x59A00000 0x0 0x10000>, /* asrc1 */
+> +				<0x0 0x59A10000 0x0 0x10000>,
+> +				<0x0 0x59A20000 0x0 0x10000>,
+> +				<0x0 0x59A30000 0x0 0x10000>,
+> +				<0x0 0x59A40000 0x0 0x10000>,
+> +				<0x0 0x59A50000 0x0 0x10000>,
+> +				<0x0 0x59A80000 0x0 0x10000>, /* sai4 rx */
+> +				<0x0 0x59A90000 0x0 0x10000>, /* sai4 tx */
+> +				<0x0 0x59AA0000 0x0 0x10000>; /* sai5 tx */
+> +			#dma-cells =3D <3>;
+> +			shared-interrupt;
+> +			dma-channels =3D <9>;
+> +			interrupts =3D <GIC_SPI 382 IRQ_TYPE_LEVEL_HIGH>, /* asrc 1 */
+> +					<GIC_SPI 383 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 384 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 385 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 386 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 387 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>, /* sai4 */
+> +					<GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+> +					<GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>; /* sai5 */
+> +			interrupt-names =3D "edma1-chan0-rx", "edma1-chan1-rx", /*
+> asrc1 */
+> +					"edma1-chan2-rx", "edma1-chan3-tx",
+> +					"edma1-chan4-tx", "edma1-chan5-tx",
+> +					"edma1-chan8-rx", "edma1-chan9-tx", /* sai4 */
+> +					"edma1-chan10-tx"; /* sai5 */
+> +		};
+> +
+>  		adma_lpuart0: serial@5a060000 {
+>  			compatible =3D "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+>  			reg =3D <0x5a060000 0x1000>;
+> --
+> 2.17.1
+
