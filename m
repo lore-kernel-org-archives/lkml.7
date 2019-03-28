@@ -2,111 +2,254 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45FEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3676AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7108A2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEB6217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 14:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VjrIjovF";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aM0Bw8VT"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ctlBSpnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfC1Og2 (ORCPT
+        id S1726242AbfC1Ohl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 10:36:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37804 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725849AbfC1Og2 (ORCPT
+        Thu, 28 Mar 2019 10:37:41 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40998 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1Ohl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 10:36:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 794F26087A; Thu, 28 Mar 2019 14:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553783787;
-        bh=sBRUGr4QtW5Bk45iBhvdyNhyKiNESDR7U1nKNggJRBY=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=VjrIjovFaFO/R0KsbsHXIRnZ0U4mmd9WnJYj1p8oTwp82Xp734rxxiDR64ihQZcvN
-         V+IMrL9t+OJ84GBn4RhtKB8NpvRg/1jXpMVoBIYNgcMDoZPOKVActWTdtxo3YkYpY1
-         wgSgcaSvR7Q2k3oMGBZgpvcuDpO1GEo01W7Tx2B0=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DF0F6053B;
-        Thu, 28 Mar 2019 14:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1553783778;
-        bh=sBRUGr4QtW5Bk45iBhvdyNhyKiNESDR7U1nKNggJRBY=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=aM0Bw8VTAw5R9vY58a89Ym3SdRH21TQln4tOklIUVrmdNmXXE2xCgE1oIRC5mEeK7
-         X/eXoB8+UpQhr4CsH3EhABpE6NnmCBNH92y99JOeQLbKRft2org2zQnyJmxFLP/YVG
-         2r0d+B1YH1h/hHPvByXVi5AhMCvF0l/NY1n+xpco=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DF0F6053B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYnBmOiBicGZ0b29sOiBjb252ZXJ0IOKAmGNvbnN0?=
- =?UTF-8?Q?_char_*=e2=80=99_type_into_=27char_*=27_in_assignment?=
-To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, jakub.kicinski@netronome.com,
-        df@google.com, quentin.monnet@netronome.com,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190328141652.wssqboyekxmp6tkw@yubo-2>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <9846e3b1-1878-990a-61ef-464eb71fe048@codeaurora.org>
-Date:   Thu, 28 Mar 2019 20:06:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 28 Mar 2019 10:37:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f6so7576595pgs.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 07:37:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B9wg2HRl7Rn47Y0Az2Vwu9zcMrg7Z+0YsDn/iIHOUeI=;
+        b=ctlBSpncwLQ0Vnab1eUTnCKY0aJFBSiuh4bP2aOUy34igBtvR0IYIFFSAsiRWJJbyn
+         WiCL0R9DksgI3NNPmGbFeU93fGd4CfGufUyq6b9Bw0uqL60UpXuL3D73DgD/Y7RMcYPe
+         ozugjTBF8V3x8vtgDiKoz4s/FGvjjN+yOokHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B9wg2HRl7Rn47Y0Az2Vwu9zcMrg7Z+0YsDn/iIHOUeI=;
+        b=NI0wqKgwXEjj8Jnsn7Woed/X42LTwW5XZeJkmuds+Wj2cwaXfJPpdUm/CP2Jnu2sxx
+         50pi86PqLw0t4AUxtHYxVZ41fLZtlwRPzoqw3M1le3dwbHdL1S7ex4+QAv3fYCS82AGU
+         BrZbsRKAA+iB1j5aQ8fRtc6VMWbxGE+s/w9m1AzSB5hxc4O0kPXR6oSM6lWpDqAbiYwm
+         pXft3kq3iQCTXZjevCJVZYQpHZlzAkEAw98qOmj8PZwEPH1sMV8Hlft4zRtZarLSEIST
+         Lb+0rNDaQaODNnQBBlVWKpWUGHdLI2KCszPmlErOgzWqsy6JOjp7INi33xlABMmH6t1/
+         nHjg==
+X-Gm-Message-State: APjAAAWROqhiSjE0xtrb02f4hASNNDC4/eOzus08MJNAf4NfoBdM48+S
+        aK876w9ykuDDzoapKdzLHTDFLg==
+X-Google-Smtp-Source: APXvYqx7Nk1L0dSKDSLppeE6wRsEuWj4RVdWjQfzFxCvfEWe9zTRUdS1Kl80FX/yd6brO2hwUqbZZg==
+X-Received: by 2002:aa7:8b0c:: with SMTP id f12mr41307408pfd.154.1553783860459;
+        Thu, 28 Mar 2019 07:37:40 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s6sm33936639pfe.37.2019.03.28.07.37.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 07:37:39 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:37:38 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>
+Subject: Re: [PATCH] Convert struct pid count to refcount_t
+Message-ID: <20190328143738.GA261521@google.com>
+References: <20190327145331.215360-1-joel@joelfernandes.org>
+ <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
+ <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
+ <20190328023432.GA93275@google.com>
+ <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190328141652.wssqboyekxmp6tkw@yubo-2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 28, 2019 at 03:57:44AM +0100, Jann Horn wrote:
+> On Thu, Mar 28, 2019 at 3:34 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > On Thu, Mar 28, 2019 at 01:59:45AM +0100, Jann Horn wrote:
+> > > On Thu, Mar 28, 2019 at 1:06 AM Kees Cook <keescook@chromium.org> wrote:
+> > > > On Wed, Mar 27, 2019 at 7:53 AM Joel Fernandes (Google)
+> > > > <joel@joelfernandes.org> wrote:
+> > > > >
+> > > > > struct pid's count is an atomic_t field used as a refcount. Use
+> > > > > refcount_t for it which is basically atomic_t but does additional
+> > > > > checking to prevent use-after-free bugs. No change in behavior if
+> > > > > CONFIG_REFCOUNT_FULL=n.
+> > > > >
+> > > > > Cc: keescook@chromium.org
+> > > > > Cc: kernel-team@android.com
+> > > > > Cc: kernel-hardening@lists.openwall.com
+> > > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > > [...]
+> > > > > diff --git a/kernel/pid.c b/kernel/pid.c
+> > > > > index 20881598bdfa..2095c7da644d 100644
+> > > > > --- a/kernel/pid.c
+> > > > > +++ b/kernel/pid.c
+> > > > > @@ -37,7 +37,7 @@
+> > > > >  #include <linux/init_task.h>
+> > > > >  #include <linux/syscalls.h>
+> > > > >  #include <linux/proc_ns.h>
+> > > > > -#include <linux/proc_fs.h>
+> > > > > +#include <linux/refcount.h>
+> > > > >  #include <linux/sched/task.h>
+> > > > >  #include <linux/idr.h>
+> > > > >
+> > > > > @@ -106,8 +106,8 @@ void put_pid(struct pid *pid)
+> > > > >                 return;
+> > > > >
+> > > > >         ns = pid->numbers[pid->level].ns;
+> > > > > -       if ((atomic_read(&pid->count) == 1) ||
+> > > > > -            atomic_dec_and_test(&pid->count)) {
+> > > > > +       if ((refcount_read(&pid->count) == 1) ||
+> > > > > +            refcount_dec_and_test(&pid->count)) {
+> > > >
+> > > > Why is this (and the original code) safe in the face of a race against
+> > > > get_pid()? i.e. shouldn't this only use refcount_dec_and_test()? I
+> > > > don't see this code pattern anywhere else in the kernel.
+> > >
+> > > Semantically, it doesn't make a difference whether you do this or
+> > > leave out the "refcount_read(&pid->count) == 1". If you read a 1 from
+> > > refcount_read(), then you have the only reference to "struct pid", and
+> > > therefore you want to free it. If you don't get a 1, you have to
+> > > atomically drop a reference, which, if someone else is concurrently
+> > > also dropping a reference, may leave you with the last reference (in
+> > > the case where refcount_dec_and_test() returns true), in which case
+> > > you still have to take care of freeing it.
+> >
+> > Also, based on Kees comment, I think it appears to me that get_pid and
+> > put_pid can race in this way in the original code right?
+> >
+> > get_pid                 put_pid
+> >
+> >                         atomic_dec_and_test returns 1
+> 
+> This can't happen. get_pid() can only be called on an existing
+> reference. If you are calling get_pid() on an existing reference, and
+> someone else is dropping another reference with put_pid(), then when
+> both functions start running, the refcount must be at least 2.
 
-On 3/28/2019 7:46 PM, Bo YU wrote:
-> When compiling with check flag: make -C tools/bpf/bpftool/
-> gcc will warning:
->
-> jit_disasm.c:119:29: warning: assignment discards ‘const’ qualifier 
-> from pointer target type [-Wdiscarded-qualifiers]
->   info.disassembler_options = disassembler_options;
->
-> So convert 'const char *' type into 'char *' to fix the warning.
->
-> Fixes:3ddeac6705aba(tools: bpftool: use 4 context mode for the NFP 
-> disasm)
-> Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Sigh, you are right. Ok. I was quite tired last night when I wrote this.
+Obviously, I should have waited a bit and thought it through.
 
+Kees can you describe more the race you had in mind?
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> > atomic_inc
+> >                         kfree
+> >
+> > deref pid /* boom */
+> > -------------------------------------------------
+> >
+> > I think get_pid needs to call atomic_inc_not_zero() and put_pid should
+> > not test for pid->count == 1 as condition for freeing, but rather just do
+> > atomic_dec_and_test. So something like the following diff. (And I see a
+> > similar pattern used in drivers/net/mac.c)
+> 
+> get_pid() can only be called when you already have a refcounted
+> reference; in other words, when the reference count is at least one.
+> The lifetime management of struct pid differs from the lifetime
+> management of most other objects in the kernel; the usual patterns
+> don't quite apply here.
+> 
+> Look at put_pid(): When the refcount has reached zero, there is no RCU
+> grace period (unlike most other objects with RCU-managed lifetimes).
+> Instead, free_pid() has an RCU grace period *before* it invokes
+> delayed_put_pid() to drop a reference; and free_pid() is also the
+> function that removes a PID from the namespace's IDR, and it is used
+> by __change_pid() when a task loses its reference on a PID.
+> 
+> In other words: Most refcounted objects with RCU guarantee that the
+> object waits for a grace period after its refcount has reached zero;
+> and during the grace period, the refcount is zero and you're not
+> allowed to increment it again.
 
--Mukesh
+Can you give an example of this "most refcounted objects with RCU" usecase?
+I could not find any good examples of such. I want to document this pattern
+and possibly submit to Documentation/RCU.
 
-> ---
-> tools/bpf/bpftool/jit_disasm.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/bpf/bpftool/jit_disasm.c 
-> b/tools/bpf/bpftool/jit_disasm.c
-> index 3ef3093560ba..40b46e46454a 100644
-> --- a/tools/bpf/bpftool/jit_disasm.c
-> +++ b/tools/bpf/bpftool/jit_disasm.c
-> @@ -116,7 +116,7 @@ void disasm_print_insn(unsigned char *image, 
-> ssize_t len, int opcodes,
->     info.arch = bfd_get_arch(bfdf);
->     info.mach = bfd_get_mach(bfdf);
->     if (disassembler_options)
-> -        info.disassembler_options = disassembler_options;
-> +        info.disassembler_options = (char *)disassembler_options;
->     info.buffer = image;
->     info.buffer_length = len;
->
+> But for struct pid, the guarantee is
+> instead that there is an RCU grace period after it has been removed
+> from the IDRs and the task, and during the grace period, refcounting
+> is guaranteed to still work normally.
+
+Ok, thanks. Here I think in scrappy but simple pseudo code form, the struct
+pid flow is something like (replaced "pid" with data");
+
+get_data:
+	atomic_inc(data->refcount);
+
+some_user_of_data:
+	rcu_read_lock();
+	From X, obtain a ptr to data using rcu_dereference.
+	get_data(data);
+	rcu_read_unlock();
+
+free_data:
+	remove all references to data in all places in X
+	call_rcu(put_data)
+
+put_data:
+	if (atomic_dec_and_test(data->refcount)) {
+		free(data);
+	}
+
+create_data:
+	data = alloc(..)
+	atomic_set(data->refcount, 1);
+	set pointers to data in X.
+
+> > pud_pid to avoid such a race.
+> >
+> > ---8<-----------------------
+> >
+> > diff --git a/include/linux/pid.h b/include/linux/pid.h
+> > index 8cb86d377ff5..3d79834e3180 100644
+> > --- a/include/linux/pid.h
+> > +++ b/include/linux/pid.h
+> > @@ -69,8 +69,8 @@ extern struct pid init_struct_pid;
+> >
+> >  static inline struct pid *get_pid(struct pid *pid)
+> >  {
+> > -       if (pid)
+> > -               refcount_inc(&pid->count);
+> > +       if (!pid || !refcount_inc_not_zero(&pid->count))
+> > +               return NULL;
+> >         return pid;
+> >  }
+> 
+> Nope, this is wrong. Once the refcount is zero, the object goes away,
+> refcount_inc_not_zero() makes no sense here.
+
+Yeah ok, I think what you meant here is that references to the object from
+all places go away before the grace period starts, so a get_pid on an object
+with refcount of zero is impossible since there's no way to *get* to that
+object after the grace-period ends.
+
+So, yes you are right that refcount_inc is all that's needed.
+
+Also note to the on looker, the original patch I sent is not wrong, that
+still applies and is correct. We are just discussing here any possible issues
+with the *existing* code.
+
+thanks!
+
+ - Joel
+
