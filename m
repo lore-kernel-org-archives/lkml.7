@@ -2,170 +2,218 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B141C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8994FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06182075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3921F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 06:29:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="njbrBmW5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbfC1G1m (ORCPT
+        id S1726185AbfC1G3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 02:27:42 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:42479 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725875AbfC1G1m (ORCPT
+        Thu, 28 Mar 2019 02:29:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38830 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfC1G3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 02:27:42 -0400
-X-IronPort-AV: E=Sophos;i="5.60,278,1549900800"; 
-   d="scan'208";a="57898735"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 28 Mar 2019 14:27:36 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 3A70F4CD5D25;
-        Thu, 28 Mar 2019 14:27:34 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Thu, 28 Mar 2019 14:27:40 +0800
-Date:   Thu, 28 Mar 2019 14:26:45 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-CC:     "bhe@redhat.com" <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Young <dyoung@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use EFI setup data if provided
-Message-ID: <20190328062645.GG4234@localhost.localdomain>
-References: <51D9A7D1-49BF-4679-B102-0FC5AC300C9F@alien8.de>
- <20190325101509.GA13160@dhcp-128-65.nay.redhat.com>
- <701c8e69-e1d4-c653-1d87-1c41789d3d54@ce.jp.nec.com>
- <20190325120149.GI12016@zn.tnic>
- <20190325122302.GC13160@dhcp-128-65.nay.redhat.com>
- <20190325123229.GL12016@zn.tnic>
- <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
- <20190326135714.GG1867@zn.tnic>
- <20190327014852.GA3659@MiWiFi-R3L-srv>
- <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+        Thu, 28 Mar 2019 02:29:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w15so2558316wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Mar 2019 23:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WHI5lsOf5xW8J86nqQCpKYOyKYcjxk3VbdXPr/wbqAs=;
+        b=njbrBmW5t0u+VavJ0412k/ceO79/fQNiGS95FUdo2JOCvrxx8DopB1ERYy6PptL5xQ
+         VohfSYdpWBVj/WfKZhj974MnLFrWfapGodCsTMAKzLnZcPZQisqtY2yrLyco/Z1L1Lv8
+         jJNrQGxOQifexu88rGpkvmu1ojTzZxQQ5zLyVXeY+fRI0JK4t3jJVcuJnPoomDN9cnGJ
+         N70Rn95Nk9Ut67HWQ2wQNjPNxa/F+1798aauaeLioD9CH4OpetUOA9Z/PHR+eOOE2dR/
+         CX16VFckuaAptNFPgWFbfP5g4R5m0cTsVXx96+VCsh5GfOYD0Uz3jdpJvObAvlDemAFw
+         u/rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WHI5lsOf5xW8J86nqQCpKYOyKYcjxk3VbdXPr/wbqAs=;
+        b=px77ezVN9tW+UfT5+2fWZL5F2ut8+X/7HbNrwOQV7eYGurEOcqIfjO5ITXbF7a2ScG
+         SBvHjJOc+VxiGNExcx7W8m0n8SVCW9t6k/07VI/eykyN8KE2i2BwcyF5Z6wysHFmPkU/
+         sEXCzYnkBBmiQtVJ6lzAeFyqfHMNjxkiIgYycLqq7MszrH4NIBMULSy9uRrRk3jADvII
+         fW6fd5OB6v7zS3+Ux2S32CzLLS9rf27VgQyp7+yuoZEn7qGuhy8gvzsV7eZ4LwRGn0GZ
+         00JpL/VB8MZfSUwTCMdLHLFpTpy5Z6HL/PvLzNveRSMXqqg7M556QwUfFoDPXgEmb9Ro
+         YfEA==
+X-Gm-Message-State: APjAAAU2VWc5ZYm4iagRPmQdg5KyPA7SKoaCpbowpZc71ZZnB9AGKS4H
+        xnAhnKr6pSZjclwQiG99krQKAESB6oCSFXT0vTNCFQ==
+X-Google-Smtp-Source: APXvYqzs4aS1CeGoPk0xoQCqxqnuWWEd1RcZq14orAqIKXaPecNl37WRHUKrY4oMB1itaEPC9tuq+UitC/UadKKIwkw=
+X-Received: by 2002:a1c:9c14:: with SMTP id f20mr14645718wme.16.1553754547845;
+ Wed, 27 Mar 2019 23:29:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: 3A70F4CD5D25.AC066
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+References: <20190327213643.23789-4-logang@deltatee.com> <mhng-fca98e1a-ad61-40b6-abd8-60b0e752dcf2@palmer-si-x1c4>
+In-Reply-To: <mhng-fca98e1a-ad61-40b6-abd8-60b0e752dcf2@palmer-si-x1c4>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 28 Mar 2019 11:58:56 +0530
+Message-ID: <CAAhSdy1UoiGaAph3MnmnBfxhTpscjd5jYrrzr0ES6ZPcz8tH4w@mail.gmail.com>
+Subject: Re: [PATCH 3/7] RISC-V: Rework kernel's virtual address space mapping
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     logang@deltatee.com,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, sbates@raithlin.com,
+        Christoph Hellwig <hch@lst.de>,
+        Albert Ou <aou@eecs.berkeley.edu>, antonynpavlov@gmail.com,
+        sorear2@gmail.com, Anup Patel <anup.patel@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 04:17:16AM +0000, Junichi Nomura wrote:
->On 2019/03/27 10:48, bhe@redhat.com wrote:
->>>> So efi_get_rsdp_addr() needs to be refactored in such a way so that at
->>>> least the loop towards the end gets carved out into a separate function
->>>> - __efi_get_rsdp_addr() or so - which gets config_tables, nr_tables and
->>>> size as arguments and finds the RSDP address in the kexec-ed kernel.
->>>
->>> You need to carve out the loop at the end and make it into a separate
->>> __efi_get_rsdp_addr() function which gets the physical or the virtual
->>> address.
->> 
->> I guess Boris is suggesting code like below. Please correct me if I am
->> wrong.
->> 
->> static acpi_physical_address _efi_get_rsdp_addr(efi_config_table tbl, ...)
->> {
->> 	/* Get EFI tables from systab. */
->> 	for (i = 0; i < nr_tables; i++) {
->> 		...
->> 	}
->> 	return rsdp_addr;
->> }
->> 
->> static acpi_physical_address efi_get_rsdp_addr(void)
->> {
->> 	...
->> 	/* Get systab from boot params. */		
->> 	...
->> 	/* Handle EFI bitness properly */
->> 	...
->> 	return _efi_get_rsdp_addr();
->> }
->> 
->> 
->> static acpi_physical_address kexec_get_rsdp_addr(void)
->> {
->> 	if (!is_kexec_booted)
->> 		return 0;
->> 
->> 	efi_get_setup_data_addr();
->> 	...
->> 	/* Handle EFI bitness properly */
->> 	...
->> 	return _efi_get_rsdp_addr();
->> }
+On Thu, Mar 28, 2019 at 11:09 AM Palmer Dabbelt <palmer@sifive.com> wrote:
 >
->I still don't get it... We still need systab for kexec case as well
->to get nr_tables. Don't we?
+> On Wed, 27 Mar 2019 14:36:39 PDT (-0700), logang@deltatee.com wrote:
+> > The motivation for this is to support P2P transactions. P2P requires
+> > having struct pages for IO memory which means the linear mapping must
+> > be able to cover all of the IO regions. Unfortunately with Sv39 we are
+> > not able to cover all the IO regions available on existing hardware,
+> > but we can do better than what we currently do (which only cover's
+> > physical memory).
+> >
+> > To this end, we restructure the kernel's virtual address space region.
+> > We position the vmemmap at the beginning of the region (based on how
+> > many virtual address bits we have) and the VMALLOC region comes
+> > immediately after. The linear mapping then takes up the remaining space.
+> > PAGE_OFFSET will need to be within the linear mapping but may not be
+> > the start of the mapping seeing many machines don't have RAM at address
+> > zero and we may still want to access lower addresses through the
+> > linear mapping.
+> >
+> > With these changes, on a 64-bit system the virtual memory map (with
+> > sparsemem enabled) will be:
+> >
+> > 32-bit:
+> >
+> > 00000000 - 7fffffff   user space, different per mm (2G)
+> > 80000000 - 81ffffff   virtual memory map (32MB)
+> > 82000000 - bfffffff   vmalloc/ioremap space (1GB - 32MB)
+> > c0000000 - ffffffff   direct mapping of all phys. memory (1GB)
+> >
+> > 64-bit, Sv39:
+> >
+> > 0000000000000000 - 0000003fffffffff  user space, different per mm (256GB)
+> > hole caused by [38:63] sign extension
+> > ffffffc000000000 - ffffffc0ffffffff  virtual memory map (4GB)
+> > ffffffc100000000 - ffffffd0ffffffff  vmalloc/ioremap spac (64GB)
+> > ffffffd100000000 - ffffffffffffffff  linear mapping of phys. space (188GB)
+> >
+> > On the Sifive hardware this allows us to provide struct pages for
+> > the lower I/O TileLink address ranges, the 32-bit and 34-bit DRAM areas
+> > and 172GB of 240GB of the high I/O TileLink region. Once we progress to
+> > Sv48 we should be able to cover all the available memory regions..
+> >
+> > For the MAXPHYSMEM_2GB case, the physical memory must be in the highest
+> > 2GB of address space, so we cannot cover the any of the I/O regions
+> > that are higher than it but we do cover the lower I/O TileLink range.
 >
->> acpi_physical_address get_rsdp_addr(void)
->> {
->>          acpi_physical_address pa;
->> 
->>          pa = get_acpi_rsdp();
->> 
->>          if (!pa)
->>                  pa = boot_params->acpi_rsdp_addr;
->> 
->> 
->> 	/**
->> 	/*I think here we should check if it's kexec booted firstly.
->> 	 * Skip it if not kexec. this can avoid the wrong kexec virt
->> 	 * addr parsing./
->>          if (!pa)
->>                  pa = kexec_get_rdsp_addr();             <--- new function
->> 
->>          if (!pa)
->>                  pa = efi_get_rsdp_addr();
->> 
->
->Shouldn't t efi_get_rsdp_addr() check "is_kexec_booted" and exit
->early so that it never tries to use virtual config_tables pointer
->if for some unknown resason kexec_get_rsdp_addr() failed.
+> IIRC there was another patch floating around to fix an issue with overlapping
+> regions in the 32-bit port, did you also fix that issue?  It's somewhere in my
+> email queue...
 
-In my understanding, in EFI issue, RSDP is from efi_get_rsdp_addr() or
-kexec_get_rdsp_addr()(only in kexec environment). So in these two functions
-only one can be excuted, so how about this:
+That was a patch I submitted to fix overlapping FIXMAP and VMALLOC
+regions.
 
-if (is_kexec_booted)
-	pa = kexec_get_rdsp_addr();	<--- new function
-else
-	pa = efi_get_rsdp_addr();
+This patch does not consider FIXMAP region.
 
-And also split the same code as _efi_get_rsdp_addr().
-If there is something wrong in my understanding, please let me know.
-
-Thanks,
-Chao Fan
+I suggest we introduce asm/memory.h where we have all critical defines
+related to virtual memory layout. Also, this header should have detailed
+comments about virtual memory layout.
 
 >
->Currently I check "is_kexec_booted" by subset of efi_get_setup_data_addr().
->Do you know a simpler way to check "is_kexec_booted"?
->
->>          if (!pa)
->>                  pa = bios_get_rsdp_addr();
->> 
->>          return pa;
->> }
->
->-- 
->Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
->
+> > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > Cc: Albert Ou <aou@eecs.berkeley.edu>
+> > Cc: Antony Pavlov <antonynpavlov@gmail.com>
+> > Cc: "Stefan O'Rear" <sorear2@gmail.com>
+> > Cc: Anup Patel <anup.patel@wdc.com>
+> > ---
+> >  arch/riscv/Kconfig               |  2 +-
+> >  arch/riscv/include/asm/page.h    |  2 --
+> >  arch/riscv/include/asm/pgtable.h | 27 ++++++++++++++++++---------
+> >  3 files changed, 19 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index 76fc340ae38e..d21e6a12e8b6 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -71,7 +71,7 @@ config PAGE_OFFSET
+> >       hex
+> >       default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+> >       default 0xffffffff80000000 if 64BIT && MAXPHYSMEM_2GB
+> > -     default 0xffffffe000000000 if 64BIT && MAXPHYSMEM_128GB
+> > +     default 0xffffffd200000000 if 64BIT && MAXPHYSMEM_128GB
+> >
+> >  config ARCH_FLATMEM_ENABLE
+> >       def_bool y
+> > diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> > index 2a546a52f02a..fa0b8058a246 100644
+> > --- a/arch/riscv/include/asm/page.h
+> > +++ b/arch/riscv/include/asm/page.h
+> > @@ -31,8 +31,6 @@
+> >   */
+> >  #define PAGE_OFFSET          _AC(CONFIG_PAGE_OFFSET, UL)
+> >
+> > -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
+> > -
+> >  #ifndef __ASSEMBLY__
+> >
+> >  #define PAGE_UP(addr)        (((addr)+((PAGE_SIZE)-1))&(~((PAGE_SIZE)-1)))
+> > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> > index 5a9fea00ba09..2a5070540996 100644
+> > --- a/arch/riscv/include/asm/pgtable.h
+> > +++ b/arch/riscv/include/asm/pgtable.h
+> > @@ -89,22 +89,31 @@ extern pgd_t swapper_pg_dir[];
+> >  #define __S110       PAGE_SHARED_EXEC
+> >  #define __S111       PAGE_SHARED_EXEC
+> >
+> > -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+> > -#define VMALLOC_END      (PAGE_OFFSET - 1)
+> > -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+> > +#define KERN_SPACE_START     (-1UL << (CONFIG_VA_BITS - 1))
+> >
+> >  /*
+> >   * Roughly size the vmemmap space to be large enough to fit enough
+> >   * struct pages to map half the virtual address space. Then
+> >   * position vmemmap directly below the VMALLOC region.
+> >   */
+> > -#define VMEMMAP_SHIFT \
+> > -     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> > -#define VMEMMAP_SIZE (1UL << VMEMMAP_SHIFT)
+> > -#define VMEMMAP_END  (VMALLOC_START - 1)
+> > -#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
+> > -
+> > +#ifdef CONFIG_SPARSEMEM
+> > +#define VMEMMAP_SIZE (UL(1) << (CONFIG_VA_BITS - PAGE_SHIFT - 1 + \
+> > +                                STRUCT_PAGE_MAX_SHIFT))
+> > +#define VMEMMAP_START        (KERN_SPACE_START)
+> > +#define VMEMMAP_END  (VMEMMAP_START + VMEMMAP_SIZE - 1)
+> >  #define vmemmap              ((struct page *)VMEMMAP_START)
+> > +#else
+> > +#define VMEMMAP_END  KERN_SPACE_START
+> > +#endif
+> > +
+> > +#ifdef CONFIG_32BIT
+> > +#define VMALLOC_SIZE ((1UL << 30) - VMEMMAP_SIZE)
+> > +#else
+> > +#define VMALLOC_SIZE (64UL << 30)
+> > +#endif
+> > +
+> > +#define VMALLOC_START        (VMEMMAP_END + 1)
+> > +#define VMALLOC_END  (VMALLOC_START + VMALLOC_SIZE - 1)
+> >
+> >  /*
+> >   * ZERO_PAGE is a global shared page that is always zero,
 
-
+Regards,
+Anup
