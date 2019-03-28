@@ -2,160 +2,119 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBC7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FAEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94882173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2675D21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 07:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="Kv/s6nSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfC1HuI (ORCPT
+        id S1726440AbfC1HxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 03:50:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32904 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725779AbfC1HuH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 03:50:07 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2S7nvBO048834
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 03:50:06 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rgq2wqjp7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 03:50:05 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Thu, 28 Mar 2019 07:49:59 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 07:49:51 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2S7noY654722630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 07:49:50 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB9BA4203F;
-        Thu, 28 Mar 2019 07:49:50 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAF6942041;
-        Thu, 28 Mar 2019 07:49:49 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.145.176.227])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 07:49:49 +0000 (GMT)
-Date:   Thu, 28 Mar 2019 08:49:48 +0100
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     "Carlos O'Donell" <codonell@redhat.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup
- and thread creation (v7)
-In-Reply-To: <4021516e-6a1e-166d-a4f6-e961e6f94cc4@redhat.com>
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
-        <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
-        <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
-        <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
-        <20190327101608.77b0de6f@mschwideX1>
-        <4021516e-6a1e-166d-a4f6-e961e6f94cc4@redhat.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 28 Mar 2019 03:53:20 -0400
+Received: from mail-eopbgr710122.outbound.protection.outlook.com ([40.107.71.122]:6160
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725779AbfC1HxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 03:53:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector1-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ATZCSTfNBLMWNfzr4Mi4KrMDdTG+o/oUeWVYggcOjtw=;
+ b=Kv/s6nSx/EhYZy6rmOoIIici2rA7GH8kYgLqvtohP0kZ4/N3szPmOd0FZ0snKp3Sd8bJyiw/f2jCJXhRju8XKztbwcpFfirriK12dDovPIcykfwtKI+ED/rf9CnM3G3zXIGI5awOp5Sf6u55MZgpB5GCe37rrVIN0H//Gnj7NHg=
+Received: from CY4PR13CA0086.namprd13.prod.outlook.com (2603:10b6:903:152::24)
+ by CY4PR13MB1464.namprd13.prod.outlook.com (2603:10b6:903:13c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1771.6; Thu, 28 Mar
+ 2019 07:53:17 +0000
+Received: from BL2NAM02FT015.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::202) by CY4PR13CA0086.outlook.office365.com
+ (2603:10b6:903:152::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1750.15 via Frontend
+ Transport; Thu, 28 Mar 2019 07:53:17 +0000
+Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
+ 117.103.190.41 as permitted sender) receiver=protection.outlook.com;
+ client-ip=117.103.190.41; helo=jp.sony.com;
+Received: from jp.sony.com (117.103.190.41) by
+ BL2NAM02FT015.mail.protection.outlook.com (10.152.77.167) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1750.16 via Frontend Transport; Thu, 28 Mar 2019 07:53:17 +0000
+Received: from JPYOKXHT201.jp.sony.com (117.103.191.79) by
+ JPYOKXEG101.jp.sony.com (117.103.190.41) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 28 Mar 2019 07:53:15 +0000
+Received: from JPYOKXMS103.jp.sony.com ([169.254.3.107]) by
+ JPYOKXHT201.jp.sony.com ([180.12.183.209]) with mapi id 14.03.0439.000; Thu,
+ 28 Mar 2019 07:53:14 +0000
+From:   <Kento.A.Kobayashi@sony.com>
+To:     <oneukum@suse.com>, <gregkh@linuxfoundation.org>,
+        <stern@rowland.harvard.edu>
+CC:     <usb-storage@lists.one-eyed-alien.net>, <Jacky.Cao@sony.com>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <Kento.A.Kobayashi@sony.com>
+Subject: RE: [PATCH] usb: uas: fix usb subsystem hang after power off hub
+ port
+Thread-Topic: [PATCH] usb: uas: fix usb subsystem hang after power off hub
+ port
+Thread-Index: AdTVjvFIkAhaIt3DQTSj1OrTHxvrsgAQFLsAAIWEBcAAQQqsgAB7RvcAAgdcBTAAAJSpAACOr4UQ
+Date:   Thu, 28 Mar 2019 07:53:14 +0000
+Message-ID: <AE5419EAB4965843B3C0C1FE29F1FFE588FCC9@JPYOKXMS103.jp.sony.com>
+References: <AE5419EAB4965843B3C0C1FE29F1FFE5872241@JPYOKXMS103.jp.sony.com>
+         <1552063928.29776.2.camel@suse.com>
+         <AE5419EAB4965843B3C0C1FE29F1FFE587268B@JPYOKXMS103.jp.sony.com>
+         <1552405047.21557.7.camel@suse.com>
+         <AE5419EAB4965843B3C0C1FE29F1FFE5873FFB@JPYOKXMS103.jp.sony.com>
+         <AE5419EAB4965843B3C0C1FE29F1FFE588EA40@JPYOKXMS103.jp.sony.com>
+ <1553510086.2668.2.camel@suse.com>
+In-Reply-To: <1553510086.2668.2.camel@suse.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [43.22.105.123]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032807-4275-0000-0000-000003205DBC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032807-4276-0000-0000-0000382EFA53
-Message-Id: <20190328084948.6486fa67@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=913 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280059
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:117.103.190.41;IPV:NLI;CTRY:JP;EFV:NLI;SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(136003)(376002)(2980300002)(199004)(189003)(110136005)(6246003)(8676002)(2171002)(86362001)(55016002)(8936002)(107886003)(4326008)(86152003)(2906002)(316002)(6116002)(3846002)(37786003)(5660300002)(2201001)(93886005)(106466001)(2876002)(14444005)(229853002)(47776003)(66066001)(126002)(476003)(486006)(446003)(11346002)(54906003)(426003)(436003)(336012)(55846006)(7636002)(7736002)(2486003)(23676004)(305945005)(4744005)(356004)(26005)(50466002)(6346003)(77096007)(106002)(33656002)(246002)(72206003)(478600001)(102836004)(76176011)(186003)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR13MB1464;H:jp.sony.com;FPR:;SPF:Pass;LANG:en;PTR:jpyokxeg101.jp.sony.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8e5fd21d-9a61-46c3-6f3e-08d6b3527087
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:CY4PR13MB1464;
+X-MS-TrafficTypeDiagnostic: CY4PR13MB1464:
+X-Microsoft-Antispam-PRVS: <CY4PR13MB1464CA1961CB9F6B24F258D0C9590@CY4PR13MB1464.namprd13.prod.outlook.com>
+X-Forefront-PRVS: 0990C54589
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: xcGhHgagv5yIHipubH9T4I04dLHu//j1HBObdaJFIMDGWBd94q2TicPhWkbk0ZJoEgdGQs0/cBcan46gXPgmEfrvDR1i7CeHfZUqVmBUyoRZYqRWa/mqUW08oZt+xutnNlPV81RVJK6mCZkH343adHyRzYV1PzdNC8p2/3M+Qjp5vtHYGD3a4tuzBJfgzwEc21Dn8XgE+Am2kC/oeGdihqTJMBENZdz5YSGFeV2u4fP91Dz0zYJEIp5Yo/ffXjbW82TUvwNLTa74tSdkPpmwLNK1gtPAVfqs3RuKD/7hnCSxRZTOb4DcoTRxm9Tjq44raACWPFOule1N8CMsU/whxJqfQ51Brh0eLbMqMB6FTTHvbSgJvy6ZG+klF3kfmFw/Nf9H/filHUlbCboQoBy75470i2IX6KgymurjjD1HhIE=
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2019 07:53:17.1254
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e5fd21d-9a61-46c3-6f3e-08d6b3527087
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[117.103.190.41];Helo=[jp.sony.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR13MB1464
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 16:38:32 -0400
-"Carlos O'Donell" <codonell@redhat.com> wrote:
-
-> On 3/27/19 5:16 AM, Martin Schwidefsky wrote:
-> > On Mon, 25 Mar 2019 11:54:32 -0400 (EDT)
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> >   
-> >>>> +++ b/sysdeps/unix/sysv/linux/s390/bits/rseq.h  
-> >> [...]  
-> >>>> +
-> >>>> +/* Signature required before each abort handler code.  */
-> >>>> +#define RSEQ_SIG 0x53053053  
-> >>>
-> >>> Why not a s390 specific value here?  
-> >>
-> >> s390 also has the abort handler in a __rseq_failure section:
-> >>
-> >> #define RSEQ_ASM_DEFINE_ABORT(label, teardown, abort_label)             \
-> >>                  ".pushsection __rseq_failure, \"ax\"\n\t"               \
-> >>                  ".long " __rseq_str(RSEQ_SIG) "\n\t"                    \
-> >>                  __rseq_str(label) ":\n\t"                               \
-> >>                  teardown                                                \
-> >>                  "j %l[" __rseq_str(abort_label) "]\n\t"                 \
-> >>                  ".popsection\n\t"
-> >>
-> >> Same question applies as powerpc: since disassemblers will try to decode
-> >> that instruction, would it be better to define it as a valid one ?
-> >>
-> >> [...]  
-> > 
-> > A 4-byte sequence starting with 0x53 is decoded as a "diebr" instruction.
-> > And please replace that "j %l[...]" with a "jg %l[...]", the branch target
-> > range of the "j" instruction is 64K, not enough for the general case.  
-> 
-> Why was this particular operated selected?
->   
-> So on s390 the RSEQ_SIG will show up as an unexpected "divide to integer"
-> instruction that can't be reached by any control flow?
-> 
-> Can we use a NOP with a unique value in an immediate operand?
-> 
-> The goal being to have something that won't confuse during a debug
-> session, or that the debugger can ignore (like constant pools on Arm)
-
-I was looking at the wrong table in regard to opcode 0x53. The pattern
-0x53...... is not a known instruction as far as the disassembler is
-concerned. As Mathieu pointed out "diebr" is actually 0xb353....
-Sorry about the confusion.
-
-But why do we need this value in the first place if it can not be reached?
-
--- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
-
+SGksDQoNCj5Tb3JyeSwNCj4NCj5JIHRob3VnaHQgdGhpcyB3YXMgY2xlYXIuIFlvdXIgcGF0Y2gg
+aXMgbWFraW5nIHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIHJlc2V0IGlzIHRyaWdnZXJlZCBieSB0
+aGUgU0NTSSBsYXllci4gWW91IGNhbm5vdCBtYWtlIHRoYXQgYXNzdW1wdGlvbiwgYXMgdGhlcmUg
+aXMgYW4gaW9jdGwgZm9yIHJlc2V0dGluZyBhIFVTQiBkZXZpY2UuDQo+SW4gY2FzZSB3ZSBhcmUg
+Z2V0dGluZyBhbiBlcnJvciBkdXJpbmcgdGhlIHJlc2V0IChvdXIgZW5kcG9pbnRzIHZhbmlzaCks
+IHRoZSBkZXZpY2UgZHJpdmVyIG11c3QgcmVwb3J0IHRoYXQgdG8gdGhlIFVTQiBsYXllciwgc28g
+dGhlIGRyaXZlciB3aWxsIGFsd2F5cyBiZSBkaXNjb25uZWN0ZWQuDQo+V2UgY2Fubm90IGRyb3Ag
+ZXJyb3JzLg0KPg0KPglSZWdhcmRzDQo+CQlPbGl2ZXINCg0KVGhpcyBwYXRjaCBtb2RpZmllZCB1
+YXNfcG9zdF9yZXNldCB0byBza2lwIHJlYmluZCBvcGVyYXRpb24gdG8gYXZvaWQgZXhjZXB0aW9u
+IHdoaWxlIC1FTk9ERVYgaGFwcGVucyBub3QgZHJvcCBlcnJvci4NCklmIHVhc19wb3N0X3Jlc2V0
+IGhhcHBlbnMgLUVOT0RFViwgdXNiX3Jlc2V0X2FuZF92ZXJpZnlfZGV2aWNlIG11c3QgaGFwcGVu
+IGVycm9yLg0KU28sd2hlbiB3ZSB1c2UgaW9jdGwoVVNCREVWRlNfUkVTRVQpIHRvIHJlc2V0IGRl
+dmljZSwgaWYgdXNiX3Jlc2V0X2FuZF92ZXJpZnlfZGV2aWNlIGhhcHBlbnMgZXJyb3IsIHRoZSBl
+cnJvciB3aWxsIGJlIHJlcG9ydGVkIHRocm91Z2ggaW9jdGwgcmV0dXJuIHZhbHVlLiANCg0KUmVn
+YXJkcywNCktlbnRvIEtvYmF5YXNoaQ0K
