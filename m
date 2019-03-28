@@ -2,120 +2,245 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1430C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6904021773
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1553789242;
-	bh=uNRQ1idrX6acdSjurH3GL/sdvkByEkto7sJ96brLO8M=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=pc8VO6mCJtoWJQz1SkwkX9LA2SNks2peU7mcEDFmI5U80TgYNhDWMZl0Wj45LXiw+
-	 N/0hrJKNXQTaSljqVrDVWvWNslhB9iajk042YjaDWPUjuQZaOCoSFHQxVcVZ4WXqTp
-	 7WCklAubYWDUfMlWhhxwccG/SmaYQDuFK1esDQxY=
+	by mail.kernel.org (Postfix) with ESMTP id 7850E20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfC1QHV (ORCPT
+        id S1727012AbfC1QIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45874 "EHLO mail.kernel.org"
+        Thu, 28 Mar 2019 12:08:14 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:43348 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfC1QHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:07:20 -0400
-Received: from [192.168.1.3] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E854920823;
-        Thu, 28 Mar 2019 16:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1553789239;
-        bh=uNRQ1idrX6acdSjurH3GL/sdvkByEkto7sJ96brLO8M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=w7t+HvFmB5OmSPBCVyvZDGEVcjOSc+2+4BaJ/SpThryycrD2by5vKpLydzVvZyZGq
-         VuKPQpzs4Tub6+RJ/8ohFutmeHrC5EgjpI6XKi18VXJun5+vgMZfF6sgBBfykyvR+s
-         Fp6CIs8HfMCvOVwFIXm2rkN10IPzaS8gAkBjTglc=
-Subject: Re: [PATCH v2] ARM: socfpga_defconfig: enable support for large block
- devices
-To:     Andrey Zhizhikin <andrey.z@gmail.com>
-Cc:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190227165018.12911-1-andrey.z@gmail.com>
- <CAHtQpK7h=kAOJHa1K7+mzq09=nAd3XSN-FxAPkjts1WrADKnCQ@mail.gmail.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <d3f69e34-f408-c163-f85f-bd3e9338507b@kernel.org>
-Date:   Thu, 28 Mar 2019 11:07:18 -0500
+        id S1726076AbfC1QIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 12:08:13 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 357DA209A8;
+        Thu, 28 Mar 2019 17:08:11 +0100 (CET)
+Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 2040D1FF4B;
+        Thu, 28 Mar 2019 17:08:11 +0100 (CET)
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Subject: [PATCH v3 1/2] phy: qcom-qmp: Add msm8998 PCIe QMP PHY support
+To:     Kishon Vijay Abraham <kishon@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <6acbdd28-b64a-0074-8d88-0e3930bacd7e@free.fr>
+Date:   Thu, 28 Mar 2019 17:08:11 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAHtQpK7h=kAOJHa1K7+mzq09=nAd3XSN-FxAPkjts1WrADKnCQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Mar 28 17:08:11 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Copy init sequence from downstream:
+https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/arch/arm/boot/dts/qcom/msm8998-v2.dtsi?h=LE.UM.1.3.r3.25#n372
 
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+---
+Changes from v2: Toggle 2 (not 3) reset knobs
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 110 ++++++++++++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h |  12 +++
+ 2 files changed, 122 insertions(+)
 
-On 3/7/19 1:43 AM, Andrey Zhizhikin wrote:
-> Hello Dinh,
-> 
-> Just a short ping on this patch - do yo think you can accept this
-> patch and have it merged? I'd like to know whether it is planned to be
-> integrated, as it might be beneficial for a lot of socfpga users...
-> 
-> Thanks a lot!
-> 
-
-Sorry I missed this. I've applied this.
-
-Thanks,
-Dinh
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 08d6f6f7f039..25ac9badd6f4 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -242,6 +242,88 @@ static const struct qmp_phy_init_tbl msm8996_pcie_pcs_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M3P5DB_V0, 0x0e),
+ };
+ 
++static const struct qmp_phy_init_tbl msm8998_pcie_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_RESETSM_CNTRL, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE2_MODE0, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE1_MODE0, 0xc9),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER1, 0xff),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_TIMER2, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_EP_DIV, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x90),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x82),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0d),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x08),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x34),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x33),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x09),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_EN_CENTER, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER1, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_PER2, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER1, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_ADJ_PER2, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE1, 0x7e),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SSC_STEP_SIZE2, 0x15),
++};
++
++static const struct qmp_phy_init_tbl msm8998_pcie_tx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RCV_DETECT_LVL_2, 0x12),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_HIGHZ_DRVR_EN, 0x10),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_LANE_MODE_1, 0x06),
++};
++
++static const struct qmp_phy_init_tbl msm8998_pcie_rx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_CNTRL, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_ENABLES, 0x1c),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_SIGDET_DEGLITCH_CNTRL, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_SO_GAIN_HALF, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_INTERFACE_MODE, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_PI_CONTROLS, 0x71),
++	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_COUNT_LOW, 0x40),
++};
++
++static const struct qmp_phy_init_tbl msm8998_pcie_pcs_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_ENDPOINT_REFCLK_DRIVE, 0x04),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_OSC_DTCT_ACTIONS, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK, 0x01),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB, 0x20),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x00),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK, 0x01),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME, 0x73),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x99),
++	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
++};
++
+ static const struct qmp_phy_init_tbl msm8996_usb3_serdes_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0x14),
+ 	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x08),
+@@ -1146,6 +1228,31 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
+ 	.no_pcs_sw_reset	= true,
+ };
+ 
++static const struct qmp_phy_cfg msm8998_pciephy_cfg = {
++	.type			= PHY_TYPE_PCIE,
++	.nlanes			= 1,
++
++	.serdes_tbl		= msm8998_pcie_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(msm8998_pcie_serdes_tbl),
++	.tx_tbl			= msm8998_pcie_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(msm8998_pcie_tx_tbl),
++	.rx_tbl			= msm8998_pcie_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(msm8998_pcie_rx_tbl),
++	.pcs_tbl		= msm8998_pcie_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(msm8998_pcie_pcs_tbl),
++	.clk_list		= msm8996_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(msm8996_phy_clk_l),
++	.reset_list		= ipq8074_pciephy_reset_l,
++	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= pciephy_regs_layout,
++
++	.start_ctrl             = SERDES_START | PCS_START,
++	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.mask_com_pcs_ready	= PCS_READY,
++};
++
+ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
+ 	.type                   = PHY_TYPE_USB3,
+ 	.nlanes                 = 1,
+@@ -1872,6 +1979,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible = "qcom,msm8996-qmp-usb3-phy",
+ 		.data = &msm8996_usb3phy_cfg,
++	}, {
++		.compatible = "qcom,msm8998-qmp-pcie-phy",
++		.data = &msm8998_pciephy_cfg,
+ 	}, {
+ 		.compatible = "qcom,msm8998-qmp-ufs-phy",
+ 		.data = &sdm845_ufsphy_cfg,
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+index a1b6cdee9a08..335ea5d7ef40 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.h
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+@@ -241,6 +241,7 @@
+ #define QSERDES_V3_RX_RX_BAND				0x110
+ #define QSERDES_V3_RX_RX_INTERFACE_MODE			0x11c
+ #define QSERDES_V3_RX_RX_MODE_00			0x164
++#define QSERDES_V3_RX_RX_MODE_01			0x168
+ 
+ /* Only for QMP V3 PHY - PCS registers */
+ #define QPHY_V3_PCS_POWER_DOWN_CONTROL			0x004
+@@ -280,6 +281,7 @@
+ #define QPHY_V3_PCS_TSYNC_RSYNC_TIME			0x08c
+ #define QPHY_V3_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x0a0
+ #define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK		0x0a4
++#define QPHY_V3_PCS_PLL_LOCK_CHK_DLY_TIME		0x0a8
+ #define QPHY_V3_PCS_LFPS_TX_ECSTART_EQTLOCK		0x0b0
+ #define QPHY_V3_PCS_RXEQTRAINING_WAIT_TIME		0x0b8
+ #define QPHY_V3_PCS_RXEQTRAINING_RUN_TIME		0x0bc
+@@ -292,13 +294,23 @@
+ #define QPHY_V3_PCS_RX_MIN_HIBERN8_TIME			0x138
+ #define QPHY_V3_PCS_RX_SIGDET_CTRL1			0x13c
+ #define QPHY_V3_PCS_RX_SIGDET_CTRL2			0x140
++#define QPHY_V3_PCS_LP_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1a8
++#define QPHY_V3_PCS_OSC_DTCT_ACTIONS			0x1ac
++#define QPHY_V3_PCS_SIGDET_CNTRL			0x1b0
+ #define QPHY_V3_PCS_TX_MID_TERM_CTRL1			0x1bc
+ #define QPHY_V3_PCS_MULTI_LANE_CTRL1			0x1c4
+ #define QPHY_V3_PCS_RX_SIGDET_LVL			0x1d8
++#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB	0x1dc
++#define QPHY_V3_PCS_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB	0x1e0
+ #define QPHY_V3_PCS_REFGEN_REQ_CONFIG1			0x20c
+ #define QPHY_V3_PCS_REFGEN_REQ_CONFIG2			0x210
+ 
+ /* Only for QMP V3 PHY - PCS_MISC registers */
+ #define QPHY_V3_PCS_MISC_CLAMP_ENABLE			0x0c
++#define QPHY_V3_PCS_MISC_OSC_DTCT_CONFIG2		0x2c
++#define QPHY_V3_PCS_MISC_PCIE_INT_AUX_CLK_CONFIG1	0x44
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG2		0x54
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG4		0x5c
++#define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
+ 
+ #endif
+-- 
+2.17.1
