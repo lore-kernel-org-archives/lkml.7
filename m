@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11485C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E83DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFBE2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097152082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krexpkg6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmmUPmKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfC1QaF (ORCPT
+        id S1727985AbfC1QaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 12:30:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35522 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbfC1QaD (ORCPT
+        Thu, 28 Mar 2019 12:30:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34119 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727565AbfC1QaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:30:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t21so11608467pfe.2;
-        Thu, 28 Mar 2019 09:30:02 -0700 (PDT)
+        Thu, 28 Mar 2019 12:30:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v12so11884874pgq.1;
+        Thu, 28 Mar 2019 09:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XIGe2RPu4qPmkyYxXUmN0kAZKsBi8v+SGtrW5NOMqvs=;
-        b=krexpkg6zQQMK4WnyFalzPiOZypdV2uxK/xobL7Kqr+Dva+WgH3ayuHkq+XO4821x3
-         yi7q0wdX6H9EOGFwKCI9Bl/O0tWUIFyXtUL2jRQX0jBv3cQl8AB3aylL1AZ8TCBeFffc
-         z50dsOzyzHaMvbTNmNPSrsRzPYDWRkITaH23X5V3WEeeFVBcEZXZgCKfKKcuDKzc2mKf
-         2ytJi1Yf93z0vTG1Ic/FVbGJYiH80LkXDI7ruV7YafhPbnvBu51NEUB38mv1Mm0ePkIj
-         ChAI1fynjBN7FRAkTsqOHqYNtS3w8G3vTe3GUAt1sznL0O0e8pFWuqkioF/Q3x1z8YF2
-         QLPg==
+        bh=PjNEfEYTf6s9KeUSssjHuq0I9t5Xjv7xQtckxkfxVEU=;
+        b=VmmUPmKbVNPtCHjSheO+axCyzuJlwujHac5HOZJ+Nu55uFvFSQX9ZVvNUxyYg7g8fZ
+         6I2aHOB3+fBt6xaYc3O1hxhDD+0hjAV+CRL6b9y8pvtTI4hCwQPOcrgrhtgAIRS3KG6q
+         bPaH22FvFQl4BAOOIM/yYqU6IJv8NjqspUIGhUcuXFhY/G5QUNghJnWoPJ9W0W3vAS/S
+         SCbj1BiRwqipLAAhmIQLIWU5t9Gw6AMhlSASWnoUGaNNiCyaGs8mmQVaFX/JGoY/MQTV
+         JEkDY7qe8tVtF3LRpQB/ln3L30WS/JkGmIV9pzBX46qVKEIFP3H2J4FFrnvPs8txD9EY
+         BJWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XIGe2RPu4qPmkyYxXUmN0kAZKsBi8v+SGtrW5NOMqvs=;
-        b=udxush+FJJ4qTNJSBctaq6f54+IO9Irs48HTtSFNjsl41UuY8EHzPQeiGY+2+KMn63
-         PEhjy3FgLyRqN8pQILUXZ1/hv/ESqGHYyIcHcZNozbZzs0GLSLvshP4bwe+aL1fe3f51
-         xtilcM0xUmuAGYgZqW36z0Bz94iAkJAcAtioYNtzdT1HXnXeShHc8Ys62LlN7b9RaUkg
-         eiExUgHATmZl7pGbfpW1MMiS38b0EQ/ndv6w8EtdiVtEvhwd3RpKyfibJ5CgGLjugLJ4
-         evcQbArE382EMi6xbmKoR+jkWWQ56fdu/l7C/64jATIChvZcFYpccFGhyrUobWg/UMrG
-         WgRQ==
-X-Gm-Message-State: APjAAAXCNizGzYFiHEW2mDUdxg7pyVCsgflmujdscwGAkK+1uDgFV02E
-        dYSOOVpVvI3sKkYdAHXGVhE=
-X-Google-Smtp-Source: APXvYqzaThib1tRkkCeYOuFnclsppADNFEliOxDLbBSTmRj1uXrLrmqfc0q5l1rk6vEGstN4CuA68g==
-X-Received: by 2002:a65:5049:: with SMTP id k9mr27689868pgo.229.1553790602090;
-        Thu, 28 Mar 2019 09:30:02 -0700 (PDT)
+        bh=PjNEfEYTf6s9KeUSssjHuq0I9t5Xjv7xQtckxkfxVEU=;
+        b=pw+Dd3pup/V0wgBloCXqMds0UhpK0gVDBX5I8JNZ7XXeVynAXCIdxaYMEqohlRYWWW
+         49goSp7oJU16gACYDqedbM5ZHpiVWOXxdyAUCChQ6Pd0/qcZKpAY0MbFLIE/7Cpbpbu+
+         /UeDxItrTReeVnzEjhZ7mKXBY2CL6Gey3e0Td3/nMPPMatdPkUNVMF6/DC8UsNYQ789b
+         Gxxrqx7o2aJZCVd9pLGxmOJIOrJn2d/CTfPTw/8jdWGN5P8xG83iugN8E3Z7iBdD6WOK
+         W9uEdc5VmsPsgSDN885FyUwcfwPYdRPrIZgQAlhckOY8i09Z65YH6q/OGsSxik5Fkhag
+         XAHg==
+X-Gm-Message-State: APjAAAV8RnB7LpgKqud/QGeN+Qyh8P50lnzaTbFZY6HEGwNP+J1wePio
+        GQEPQN5LT5vivMATdDcgdLjHOyAYpGs=
+X-Google-Smtp-Source: APXvYqzHA6Qg79jskbPPY2vuiPbQ6OGRoYito7Fbz2srb+2Dt0SKGj+BqHHnVm8dhqt7dsbNDRfTqA==
+X-Received: by 2002:a63:87c1:: with SMTP id i184mr40816174pge.265.1553790607450;
+        Thu, 28 Mar 2019 09:30:07 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id y12sm42748885pgq.64.2019.03.28.09.29.57
+        by smtp.gmail.com with ESMTPSA id y12sm42748885pgq.64.2019.03.28.09.30.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Mar 2019 09:30:01 -0700 (PDT)
+        Thu, 28 Mar 2019 09:30:06 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 18/23] acpi doc: convert acpi/apei/output_format.txt to rst format
-Date:   Fri, 29 Mar 2019 00:27:16 +0800
-Message-Id: <20190328162721.26138-19-changbin.du@gmail.com>
+Subject: [PATCH 19/23] acpi doc: convert acpi/apei/einj.txt to rst format
+Date:   Fri, 29 Mar 2019 00:27:17 +0800
+Message-Id: <20190328162721.26138-20-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328162721.26138-1-changbin.du@gmail.com>
 References: <20190328162721.26138-1-changbin.du@gmail.com>
@@ -79,329 +79,179 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/acpi/apei/output_format.rst | 148 ++++++++++++++++++++++
- Documentation/acpi/apei/output_format.txt | 147 ---------------------
- Documentation/acpi/index.rst              |   1 +
- 3 files changed, 149 insertions(+), 147 deletions(-)
- create mode 100644 Documentation/acpi/apei/output_format.rst
- delete mode 100644 Documentation/acpi/apei/output_format.txt
+ .../acpi/apei/{einj.txt => einj.rst}          | 96 ++++++++++---------
+ Documentation/acpi/index.rst                  |  1 +
+ 2 files changed, 51 insertions(+), 46 deletions(-)
+ rename Documentation/acpi/apei/{einj.txt => einj.rst} (68%)
 
-diff --git a/Documentation/acpi/apei/output_format.rst b/Documentation/acpi/apei/output_format.rst
-new file mode 100644
-index 000000000000..7183cb8d9fcd
---- /dev/null
-+++ b/Documentation/acpi/apei/output_format.rst
-@@ -0,0 +1,148 @@
-+==================
-+APEI output format
-+==================
-+
-+APEI uses printk as hardware error reporting interface, the output
-+format is as follow::
-+
-+        <error record> :=
-+        APEI generic hardware error status
-+        severity: <integer>, <severity string>
-+        section: <integer>, severity: <integer>, <severity string>
-+        flags: <integer>
-+        <section flags strings>
-+        fru_id: <uuid string>
-+        fru_text: <string>
-+        section_type: <section type string>
-+        <section data>
-+
-+        <severity string>* := recoverable | fatal | corrected | info
-+
-+        <section flags strings># :=
-+        [primary][, containment warning][, reset][, threshold exceeded]\
-+        [, resource not accessible][, latent error]
-+
-+        <section type string> := generic processor error | memory error | \
-+        PCIe error | unknown, <uuid string>
-+
-+        <section data> :=
-+        <generic processor section data> | <memory section data> | \
-+        <pcie section data> | <null>
-+
-+        <generic processor section data> :=
-+        [processor_type: <integer>, <proc type string>]
-+        [processor_isa: <integer>, <proc isa string>]
-+        [error_type: <integer>
-+        <proc error type strings>]
-+        [operation: <integer>, <proc operation string>]
-+        [flags: <integer>
-+        <proc flags strings>]
-+        [level: <integer>]
-+        [version_info: <integer>]
-+        [processor_id: <integer>]
-+        [target_address: <integer>]
-+        [requestor_id: <integer>]
-+        [responder_id: <integer>]
-+        [IP: <integer>]
-+
-+        <proc type string>* := IA32/X64 | IA64
-+
-+        <proc isa string>* := IA32 | IA64 | X64
-+
-+        <processor error type strings># :=
-+        [cache error][, TLB error][, bus error][, micro-architectural error]
-+
-+        <proc operation string>* := unknown or generic | data read | data write | \
-+        instruction execution
-+
-+        <proc flags strings># :=
-+        [restartable][, precise IP][, overflow][, corrected]
-+
-+        <memory section data> :=
-+        [error_status: <integer>]
-+        [physical_address: <integer>]
-+        [physical_address_mask: <integer>]
-+        [node: <integer>]
-+        [card: <integer>]
-+        [module: <integer>]
-+        [bank: <integer>]
-+        [device: <integer>]
-+        [row: <integer>]
-+        [column: <integer>]
-+        [bit_position: <integer>]
-+        [requestor_id: <integer>]
-+        [responder_id: <integer>]
-+        [target_id: <integer>]
-+        [error_type: <integer>, <mem error type string>]
-+
-+        <mem error type string>* :=
-+        unknown | no error | single-bit ECC | multi-bit ECC | \
-+        single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
-+        target abort | parity error | watchdog timeout | invalid address | \
-+        mirror Broken | memory sparing | scrub corrected error | \
-+        scrub uncorrected error
-+
-+        <pcie section data> :=
-+        [port_type: <integer>, <pcie port type string>]
-+        [version: <integer>.<integer>]
-+        [command: <integer>, status: <integer>]
-+        [device_id: <integer>:<integer>:<integer>.<integer>
-+        slot: <integer>
-+        secondary_bus: <integer>
-+        vendor_id: <integer>, device_id: <integer>
-+        class_code: <integer>]
-+        [serial number: <integer>, <integer>]
-+        [bridge: secondary_status: <integer>, control: <integer>]
-+        [aer_status: <integer>, aer_mask: <integer>
-+        <aer status string>
-+        [aer_uncor_severity: <integer>]
-+        aer_layer=<aer layer string>, aer_agent=<aer agent string>
-+        aer_tlp_header: <integer> <integer> <integer> <integer>]
-+
-+        <pcie port type string>* := PCIe end point | legacy PCI end point | \
-+        unknown | unknown | root port | upstream switch port | \
-+        downstream switch port | PCIe to PCI/PCI-X bridge | \
-+        PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
-+        root complex event collector
-+
-+        if section severity is fatal or recoverable
-+        <aer status string># :=
-+        unknown | unknown | unknown | unknown | Data Link Protocol | \
-+        unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
-+        Poisoned TLP | Flow Control Protocol | Completion Timeout | \
-+        Completer Abort | Unexpected Completion | Receiver Overflow | \
-+        Malformed TLP | ECRC | Unsupported Request
-+        else
-+        <aer status string># :=
-+        Receiver Error | unknown | unknown | unknown | unknown | unknown | \
-+        Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
-+        Replay Timer Timeout | Advisory Non-Fatal
-+        fi
-+
-+        <aer layer string> :=
-+        Physical Layer | Data Link Layer | Transaction Layer
-+
-+        <aer agent string> :=
-+        Receiver ID | Requester ID | Completer ID | Transmitter ID
-+
-+Where, [] designate corresponding content is optional
-+
-+All <field string> description with * has the following format::
-+
-+        field: <integer>, <field string>
-+
-+Where value of <integer> should be the position of "string" in <field
-+string> description. Otherwise, <field string> will be "unknown".
-+
-+All <field strings> description with # has the following format::
-+
-+        field: <integer>
-+        <field strings>
-+
-+Where each string in <fields strings> corresponding to one set bit of
-+<integer>. The bit position is the position of "string" in <field
-+strings> description.
-+
-+For more detailed explanation of every field, please refer to UEFI
-+specification version 2.3 or later, section Appendix N: Common
-+Platform Error Record.
-diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
-deleted file mode 100644
-index 0c49c197c47a..000000000000
---- a/Documentation/acpi/apei/output_format.txt
-+++ /dev/null
-@@ -1,147 +0,0 @@
--                     APEI output format
--                     ~~~~~~~~~~~~~~~~~~
+diff --git a/Documentation/acpi/apei/einj.txt b/Documentation/acpi/apei/einj.rst
+similarity index 68%
+rename from Documentation/acpi/apei/einj.txt
+rename to Documentation/acpi/apei/einj.rst
+index e550c8b98139..541787d81767 100644
+--- a/Documentation/acpi/apei/einj.txt
++++ b/Documentation/acpi/apei/einj.rst
+@@ -1,13 +1,14 @@
+-			APEI Error INJection
+-			~~~~~~~~~~~~~~~~~~~~
++====================
++APEI Error INJection
++====================
+ 
+ EINJ provides a hardware error injection mechanism. It is very useful
+ for debugging and testing APEI and RAS features in general.
+ 
+ You need to check whether your BIOS supports EINJ first. For that, look
+-for early boot messages similar to this one:
++for early boot messages similar to this one::
+ 
+-ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
++  ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
+ 
+ which shows that the BIOS is exposing an EINJ table - it is the
+ mechanism through which the injection is done.
+@@ -23,11 +24,11 @@ order to see the APEI,EINJ,... functionality supported and exposed by
+ the BIOS menu.
+ 
+ To use EINJ, make sure the following are options enabled in your kernel
+-configuration:
++configuration::
+ 
+-CONFIG_DEBUG_FS
+-CONFIG_ACPI_APEI
+-CONFIG_ACPI_APEI_EINJ
++  CONFIG_DEBUG_FS
++  CONFIG_ACPI_APEI
++  CONFIG_ACPI_APEI_EINJ
+ 
+ The EINJ user interface is in <debugfs mount point>/apei/einj.
+ 
+@@ -35,22 +36,22 @@ The following files belong to it:
+ 
+ - available_error_type
+ 
+-  This file shows which error types are supported:
 -
--APEI uses printk as hardware error reporting interface, the output
--format is as follow.
--
--<error record> :=
--APEI generic hardware error status
--severity: <integer>, <severity string>
--section: <integer>, severity: <integer>, <severity string>
--flags: <integer>
--<section flags strings>
--fru_id: <uuid string>
--fru_text: <string>
--section_type: <section type string>
--<section data>
--
--<severity string>* := recoverable | fatal | corrected | info
--
--<section flags strings># :=
--[primary][, containment warning][, reset][, threshold exceeded]\
--[, resource not accessible][, latent error]
--
--<section type string> := generic processor error | memory error | \
--PCIe error | unknown, <uuid string>
--
--<section data> :=
--<generic processor section data> | <memory section data> | \
--<pcie section data> | <null>
--
--<generic processor section data> :=
--[processor_type: <integer>, <proc type string>]
--[processor_isa: <integer>, <proc isa string>]
--[error_type: <integer>
--<proc error type strings>]
--[operation: <integer>, <proc operation string>]
--[flags: <integer>
--<proc flags strings>]
--[level: <integer>]
--[version_info: <integer>]
--[processor_id: <integer>]
--[target_address: <integer>]
--[requestor_id: <integer>]
--[responder_id: <integer>]
--[IP: <integer>]
--
--<proc type string>* := IA32/X64 | IA64
--
--<proc isa string>* := IA32 | IA64 | X64
--
--<processor error type strings># :=
--[cache error][, TLB error][, bus error][, micro-architectural error]
--
--<proc operation string>* := unknown or generic | data read | data write | \
--instruction execution
--
--<proc flags strings># :=
--[restartable][, precise IP][, overflow][, corrected]
--
--<memory section data> :=
--[error_status: <integer>]
--[physical_address: <integer>]
--[physical_address_mask: <integer>]
--[node: <integer>]
--[card: <integer>]
--[module: <integer>]
--[bank: <integer>]
--[device: <integer>]
--[row: <integer>]
--[column: <integer>]
--[bit_position: <integer>]
--[requestor_id: <integer>]
--[responder_id: <integer>]
--[target_id: <integer>]
--[error_type: <integer>, <mem error type string>]
--
--<mem error type string>* :=
--unknown | no error | single-bit ECC | multi-bit ECC | \
--single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
--target abort | parity error | watchdog timeout | invalid address | \
--mirror Broken | memory sparing | scrub corrected error | \
--scrub uncorrected error
--
--<pcie section data> :=
--[port_type: <integer>, <pcie port type string>]
--[version: <integer>.<integer>]
--[command: <integer>, status: <integer>]
--[device_id: <integer>:<integer>:<integer>.<integer>
--slot: <integer>
--secondary_bus: <integer>
--vendor_id: <integer>, device_id: <integer>
--class_code: <integer>]
--[serial number: <integer>, <integer>]
--[bridge: secondary_status: <integer>, control: <integer>]
--[aer_status: <integer>, aer_mask: <integer>
--<aer status string>
--[aer_uncor_severity: <integer>]
--aer_layer=<aer layer string>, aer_agent=<aer agent string>
--aer_tlp_header: <integer> <integer> <integer> <integer>]
--
--<pcie port type string>* := PCIe end point | legacy PCI end point | \
--unknown | unknown | root port | upstream switch port | \
--downstream switch port | PCIe to PCI/PCI-X bridge | \
--PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
--root complex event collector
--
--if section severity is fatal or recoverable
--<aer status string># :=
--unknown | unknown | unknown | unknown | Data Link Protocol | \
--unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
--Poisoned TLP | Flow Control Protocol | Completion Timeout | \
--Completer Abort | Unexpected Completion | Receiver Overflow | \
--Malformed TLP | ECRC | Unsupported Request
--else
--<aer status string># :=
--Receiver Error | unknown | unknown | unknown | unknown | unknown | \
--Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
--Replay Timer Timeout | Advisory Non-Fatal
--fi
--
--<aer layer string> :=
--Physical Layer | Data Link Layer | Transaction Layer
--
--<aer agent string> :=
--Receiver ID | Requester ID | Completer ID | Transmitter ID
--
--Where, [] designate corresponding content is optional
--
--All <field string> description with * has the following format:
--
--field: <integer>, <field string>
--
--Where value of <integer> should be the position of "string" in <field
--string> description. Otherwise, <field string> will be "unknown".
--
--All <field strings> description with # has the following format:
--
--field: <integer>
--<field strings>
--
--Where each string in <fields strings> corresponding to one set bit of
--<integer>. The bit position is the position of "string" in <field
--strings> description.
--
--For more detailed explanation of every field, please refer to UEFI
--specification version 2.3 or later, section Appendix N: Common
--Platform Error Record.
+-  Error Type Value	Error Description
+-  ================	=================
+-  0x00000001		Processor Correctable
+-  0x00000002		Processor Uncorrectable non-fatal
+-  0x00000004		Processor Uncorrectable fatal
+-  0x00000008		Memory Correctable
+-  0x00000010		Memory Uncorrectable non-fatal
+-  0x00000020		Memory Uncorrectable fatal
+-  0x00000040		PCI Express Correctable
+-  0x00000080		PCI Express Uncorrectable fatal
+-  0x00000100		PCI Express Uncorrectable non-fatal
+-  0x00000200		Platform Correctable
+-  0x00000400		Platform Uncorrectable non-fatal
+-  0x00000800		Platform Uncorrectable fatal
++  This file shows which error types are supported::
++
++    Error Type Value	Error Description
++    ================	=================
++    0x00000001		Processor Correctable
++    0x00000002		Processor Uncorrectable non-fatal
++    0x00000004		Processor Uncorrectable fatal
++    0x00000008		Memory Correctable
++    0x00000010		Memory Uncorrectable non-fatal
++    0x00000020		Memory Uncorrectable fatal
++    0x00000040		PCI Express Correctable
++    0x00000080		PCI Express Uncorrectable fatal
++    0x00000100		PCI Express Uncorrectable non-fatal
++    0x00000200		Platform Correctable
++    0x00000400		Platform Uncorrectable non-fatal
++    0x00000800		Platform Uncorrectable fatal
+ 
+   The format of the file contents are as above, except present are only
+   the available error types.
+@@ -73,9 +74,12 @@ The following files belong to it:
+   injection. Value is a bitmask as specified in ACPI5.0 spec for the
+   SET_ERROR_TYPE_WITH_ADDRESS data structure:
+ 
+-	Bit 0 - Processor APIC field valid (see param3 below).
+-	Bit 1 - Memory address and mask valid (param1 and param2).
+-	Bit 2 - PCIe (seg,bus,dev,fn) valid (see param4 below).
++    Bit 0
++      Processor APIC field valid (see param3 below).
++    Bit 1
++      Memory address and mask valid (param1 and param2).
++    Bit 2
++      PCIe (seg,bus,dev,fn) valid (see param4 below).
+ 
+   If set to zero, legacy behavior is mimicked where the type of
+   injection specifies just one bit set, and param1 is multiplexed.
+@@ -121,7 +125,7 @@ BIOS versions based on the ACPI 5.0 specification have more control over
+ the target of the injection. For processor-related errors (type 0x1, 0x2
+ and 0x4), you can set flags to 0x3 (param3 for bit 0, and param1 and
+ param2 for bit 1) so that you have more information added to the error
+-signature being injected. The actual data passed is this:
++signature being injected. The actual data passed is this::
+ 
+ 	memory_address = param1;
+ 	memory_address_range = param2;
+@@ -131,7 +135,7 @@ signature being injected. The actual data passed is this:
+ For memory errors (type 0x8, 0x10 and 0x20) the address is set using
+ param1 with a mask in param2 (0x0 is equivalent to all ones). For PCI
+ express errors (type 0x40, 0x80 and 0x100) the segment, bus, device and
+-function are specified using param1:
++function are specified using param1::
+ 
+          31     24 23    16 15    11 10      8  7        0
+ 	+-------------------------------------------------+
+@@ -152,26 +156,26 @@ documentation for details (and expect changes to this API if vendors
+ creativity in using this feature expands beyond our expectations).
+ 
+ 
+-An error injection example:
++An error injection example::
+ 
+-# cd /sys/kernel/debug/apei/einj
+-# cat available_error_type		# See which errors can be injected
+-0x00000002	Processor Uncorrectable non-fatal
+-0x00000008	Memory Correctable
+-0x00000010	Memory Uncorrectable non-fatal
+-# echo 0x12345000 > param1		# Set memory address for injection
+-# echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
+-# echo 0x8 > error_type			# Choose correctable memory error
+-# echo 1 > error_inject			# Inject now
++  # cd /sys/kernel/debug/apei/einj
++  # cat available_error_type		# See which errors can be injected
++  0x00000002	Processor Uncorrectable non-fatal
++  0x00000008	Memory Correctable
++  0x00000010	Memory Uncorrectable non-fatal
++  # echo 0x12345000 > param1		# Set memory address for injection
++  # echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
++  # echo 0x8 > error_type			# Choose correctable memory error
++  # echo 1 > error_inject			# Inject now
+ 
+-You should see something like this in dmesg:
++You should see something like this in dmesg::
+ 
+-[22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
+-[22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
+-[22715.834759] EDAC sbridge MC3: TSC 0
+-[22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
+-[22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
+-[22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
++  [22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
++  [22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
++  [22715.834759] EDAC sbridge MC3: TSC 0
++  [22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
++  [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
++  [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
+ 
+ For more information about EINJ, please refer to ACPI specification
+ version 4.0, section 17.5 and ACPI 5.0, section 18.6.
 diff --git a/Documentation/acpi/index.rst b/Documentation/acpi/index.rst
-index 241723643468..6ecd7736449f 100644
+index 6ecd7736449f..431edc664135 100644
 --- a/Documentation/acpi/index.rst
 +++ b/Documentation/acpi/index.rst
-@@ -22,3 +22,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
-    debug
+@@ -23,3 +23,4 @@ Linux ACPI (Advanced Configuration and Power Interface)
     method-tracing
     aml-debugger
-+   apei/output_format
+    apei/output_format
++   apei/einj
 -- 
 2.20.1
 
