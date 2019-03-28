@@ -2,115 +2,126 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D692C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FDBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3DA2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC792082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 16:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INaVkyoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfC1QeU (ORCPT
+        id S1727409AbfC1QeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 28 Mar 2019 12:34:22 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37822 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfC1QeU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Mar 2019 12:34:20 -0400
-Received: from mga01.intel.com ([192.55.52.88]:51403 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfC1QeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 12:34:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 09:34:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="129492543"
-Received: from tstruk-mobl1.jf.intel.com ([10.7.196.61])
-  by orsmga008.jf.intel.com with ESMTP; 28 Mar 2019 09:34:18 -0700
-Subject: Re: [PATCH v4] tpm: fix an invalid condition in tpm_common_poll
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     grawity@gmail.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <155371155820.17863.10580533125620125669.stgit@tstruk-mobl1.jf.intel.com>
- <20190328123428.GF7094@linux.intel.com>
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tadeusz.struk@intel.com; prefer-encrypt=mutual; keydata=
- mQGiBEiLICMRBADteQacQxypsuFvAw6IwYzbD8pgQi+kLYBcqfGgVAUN/cO+sLl6u1lVdaDB
- fhAArdbV9lpoqcWnmhQFTb4A+W569EpydBr6nuatWkEB+fmmx8YoUtuZfXt7v+1l1rc09kaW
- LY+TkwQkvFCeuvdasgmBLnmRWymEGWi1E12hUgTw/wCgtK24geC7XkiuANMv0gpr+raOgQMD
- /2yJZ0SeXQApWyTRaeIYN8GgYHZTWuBp/ofN+viEkhrDxahcaGPP5B/Nv6VS1+M0e5m8OzHj
- qPUbgfyOeJcslC5aoZdqqqzVWVLaA/+Jy+O+6T3k3R/IryVVATldBlwnGFDhET0mKQsd15zt
- cIdQBBbfSFR5VlugZuWV5q442IpPA/4g7nen9FFPxh45Te8D54hAsOCywjm6xUE0UJGYHeJ/
- MXCPtuXfVCbYcOxZVH7kUS2Vtk5d3bF40IE2WnVq1ZScNANF4ZjikxYhYGfNWX3HXak1gSoj
- UrY87rMSjPIAry4L0BoIx2qgL/k4iV/3QcXL4t5wosU0iw++suf1zGGcKLQuVGFkZXVzeiBT
- dHJ1ayAod29yaykgPHRhZGV1c3ouc3RydWtAaW50ZWwuY29tPohiBBMRAgAiBQJPOYEXAhsD
- BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAxbMH7JKvccpmVAJ9KOTJnkyupInXw7/2s
- G469irq9JACeLvHF1HOpgEJNgtdt+1xn1GRXCOe5Ag0ESIsgMBAIAIDfdGrBABsQrEc6Fox5
- n4fgNbh6cjXV+yc/EgnmwJ6270XiXBfPOgXfEVQSWAZeNhMHTKFT5o609Cu1iKxgOr/20ZWG
- /SdzuQOnoGFG3TfWWHCFq4UgCnIBjSHWwjyDsa7zOmQmyM0pueyTbc21ZUtAUsZJSFX5+OKZ
- TxYiiZZLxO3oJ0WzYfUtmv+pwIU5DSxvXM3zurkggYyn2Hw+Ol+26Lfx+c38yNLaDQN/mzgE
- mwvDIXS6ZmHulornKAqcihOf/smwHe1lpodkCQ4JvPf9ipaD+PgbSLJP3DfN4F9mfKH1WLxF
- XQC6fU3OtjSz/1f0AI+lZRVzYxxWw/3rKT8AAwUH/R3et5k7oD7JJ0VVMT5k8BCCSvdwppSO
- Hmp1zBfsqjH+3aqIBQjAK4vWVkXUAu62qTyys/CIswL3IqwiCojAYi5F3LGHTCh+7pNKvMsP
- +mOd8+7bdwGUy5I4TQBal7tRJCwbpbIMFiZQD5o/7ZE3T7/ssNEaDQM2WUDKjc+ATX7dHGZ4
- yEb72BUnOWX7Qrrx/XiB6WV0CQ8W237qIxE3b5H2BCNLPd5XBlJk8gHe85D9afns2L3Nc9y+
- gDFNZaXLdjaa73/72c1kUh3JrgeFXviFTHi6b3+1ciqYJZ6ZbPWhZMCukr4f1NzUDJPA1prD
- Y20KCVxI8+X7SEvl7pRgHluISQQYEQIACQUCSIsgMAIbDAAKCRAxbMH7JKvcci0DAJ9D911m
- VvKf+rydpacx/kt2N/Qr3gCgnd/dnToSezxToaeylW8s9j1v7WG5Ag0EWrs08AEQAOFdOOZ0
- RfQj6APAkyfa8a5Y4PQK/wMXtKXT5pdnWQ8si3tYp7vyitvMFsAdwcNP7NzthdBXpStcH8EZ
- AO+eP+HmlkfLFUBs5gdo3r0g/xkFKjukwJ4Xobkmy6CZQhyCbfNEN5XElOdCK56+/4xvMhFO
- 9wX+0PfcidcWVl4MsDAxVO8LcLuoSIbDOEI6AweKbCpT4bgUd1JKE7sBmy/FSPQ0fH7zobQd
- p3YA0aTcncxGkMCMO0K8M+1shqVrBjAria14l/dbhNzRR7xWlqpNqQEpPRah/PbZMBE1ANsQ
- HL7stnStSRLH9ewuVOmqpgzAwCoQpdbeB+tuO+kx1o/zoK9SrzVMTYW3PXavLJ5KZuA2Oz7j
- 70HR/wi3Bk1RFb2czDOr3UP0BLzfzw2gNzgm696Nzx+hu6MpnfkJKTHhtsXG3oDdQo4a6vbD
- vcRrv5sKwzJWt1zBIQS1gtYAz21mZwLpBTx5QwHylS2jyGUBplnmGqyTjMJaYKfM35xHzq+k
- gJHVnfrz3Q2kqmfWxzr1kLA+QUtMBYmuWgx1pSY8tk9Ew+2MYSrhNiIjd7yBUdSJ9LeLQj7t
- DdgUhUQkgil2pHyxXaXs1O4NJ8GR5nlBnRkT+VKE0qlbXcGEoLcO9+w5zgcn7+aZ5BGa4Sc/
- sUqe0HhXcHm/neqc7J+SxMxIM6HhABEBAAGJAm4EGBECAA8FAlq7NPACGwIFCQlmAYACKQkQ
- MWzB+ySr3HLBXSAEGQECAAYFAlq7NPAACgkQ7u1fVWjr9tq6IBAAyT2dtdBa/CLsC9SmBjmp
- wDpPsqaLBUbbPYCv5zxuCuJ4it+4bC4bCOpkH06gCcuyeiT65LK/gF5odwSzSkuV/56V4n6e
- Q3pYbRECir0zAk4JF7Jf7Lf+6HbQiFO+JPd+fgAAZoXAwFyXpvsuq+7CRXg7sX/9B+fB8rQK
- 4ichCN0oZdOGQ/KsJr0/x+B5g2wXY0tGMvngy7j6zFSz5qfGtjn3z4sj/SEduhi/ZpH/Nyna
- gu1uPQWSBY4doMR3YCwsviJSGWBLjA90GpAv/JSuY+dn4MxveF18TficPE5zDE4oo48/47ka
- b6+TxxfKKm/uJu+PTwYWineGvPdk+YQRl7izzzczpJDexgCGsPORLxCHy8gL34l+Mx3lLhFM
- JCgDWc8TA0YLtfk2dmxFVpu7fBh+ixxR3muOwS7C0oi9R2LeAavby48OPGyxBli8Qh1CQUrl
- EaYEel3paGk3w87e6xu52uq4CfW9FiaHgdBGjaJiCnBGeH+jhqHW2kjaWJHTSkFsEVCEaPOX
- pseG+H3f5BlKNfPPJIOPNbMpXuIKsp4+qWnNG1+Mkr1HNP2ze1MZ05CQwvRSyaY2to5lWx/K
- 9NvOvHCJ0dJQf72bu9+hxIEXzg80hB7x+H44stZJUF3LbFhQbUV1uorvWLh1U9JcBZO7JKjQ
- K3GSYQYlenJHivxWJACdEQt5NkgDO/agZO0rlUu0i679/4oAmgIPC9J0OgF4hQqlrDP5kJ5O
- d8OTuQINBFq7NSUBEACqRZEv8icQ+egYyD+DD8JFoMFogGAyy8hyCEjvF68jOmV5e3qMoeCF
- IGigf7NpPuqLi7aCSA+fih2wRHdGb3heCtkmCiqWzoSkoxakk0Y/gdN5iDKSF+xk4tfyKNRu
- NMz9Kb91lWjppigEvb5yInDKX5m3cynq6ff8Za7pwD3TTlXnSlGo7uM9OVUIeLZt51wQR/kM
- Oxgm//c7Pz/gulJ/oEvoGW2N5lVrbLTd1MyYPTfUlMf467ImbXKHvZkdbGGVg1c6/q4UklWv
- 6lpCOsCwFUhgqErbhsP64YnEubwA32Lv9KL7Zh5Kxe8pSGT2YigUGdRUWjrdzOJFNylG7+Re
- AMBu6PA3zyrK0Ry+ERkdLoH293Cz6WFOmiUSOQsKTPRjn3PgWz2ysrJCRE37C12IuCvDINbe
- vIArFwOY66YZZ5sPGlo4j+kGGuVL3ceYOW+PsmaBNRThr82HAjd1eHmmfwVnNnJVd7cpzdu7
- lPdQALu7O2KewC8IlBLqMZlateZeSpiRotdA7DrV4idaOvTXMT/MNsSZ0k8zT69r+C1nH1O0
- bGvg+mNuqzCoKK5ssNldkeHm6oCs+/+L4Txpciw1JM3pGuqzWP1iAM0AuSyJu/r61cfew6UJ
- SCO5mAkff6z+adoC2JXatn9aUfXl3qd3S6INJmsqGVH6Dg0cyHXO0QARAQABiE8EGBECAA8F
- Alq7NSUCGwwFCQlmAYAACgkQMWzB+ySr3HJ+/wCgjxo+skKgzSHlY4+QrEyY8Q8fNQ0An2ME
- FheFfUJaD4iEjuL98uUjS/AI
-Message-ID: <b29aaf62-2ea0-d6c6-32ee-44bc3fe8f03f@intel.com>
-Date:   Thu, 28 Mar 2019 09:34:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+Received: by mail-wm1-f65.google.com with SMTP id v14so4818329wmf.2;
+        Thu, 28 Mar 2019 09:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T+iO7ohGXHp+0kpXpbw3kD77dcAQPkX6pAr+iFKatJQ=;
+        b=INaVkyoSh31TCdsn2NmmeXjfHBYnxHcFSplcBYhojI4TcHPIjUKqT87XCJIkTJqwCy
+         jgDaNx2xdI8GJdoUdcGlLMwvzG3TNy7rT5r7HER40Z1ZAXrSnaPLKN4flDZV2oGOAad9
+         73hNDSWbsnxavVqLIBqNM9Zjs3vsImlKZV0ikqYlV8ipTkugy7o7ilUiG7gCd/+pMcrU
+         InSqqgr6f4VOhjJ9i2Ad4EFdx4Ww2UWJ5r3rgssr/22kvnB+ScdORx3N0aY3jkxhRlJH
+         LuIGHzjbihfAc1ZI9UGeVndWwlnTXhjqubOX23yEZxOn8FM4T0WaoO4RpOi3XfA+YfT+
+         fSow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T+iO7ohGXHp+0kpXpbw3kD77dcAQPkX6pAr+iFKatJQ=;
+        b=A9r3Z5bRF/PtZMjXSJPkUrS07RxWegTY9HKiWmKn2lT3zwdjKM0qo8JqxTV3qeWRrQ
+         wIbVvkPcNF2Kz5tpDYO2hvf60jTHvFVBg3w1oQeYu97Wc4sUVCgH8/barU1a9171dxRr
+         BSwnBeMdePEgfEixjBc3hjKMVfrEVEixqFIy0qd8IfFwJZ0GLKogcWdliCbRH5P2F8O7
+         yg1Lwxz4dUVPAWxz5/tgcSN2wFgXCfYZ99DBURfPw1+h75Bd2OSD+K/aulfx3uIC7LJ3
+         Hp+EvbkJgG3l+r6WNOQPQFcZZZsnkZMjIHfmOKQNMMHR/1aqxXp1d71q/v8ennqiNUN4
+         xobA==
+X-Gm-Message-State: APjAAAWHqgELz7q/+ozoHdBA/yj0x9tLhOT1DM5w4NcU3bp+WlwMHod9
+        pnNCGJ9GG3A90JGjcnbQ6X0=
+X-Google-Smtp-Source: APXvYqyU3t72sp/G7BJXvw8BPMmpw+MQa2xn9jxud6ONtiQi7Bl/N18hicjggZC+yjTIuBY4DR02XA==
+X-Received: by 2002:a1c:16:: with SMTP id 22mr535813wma.91.1553790858329;
+        Thu, 28 Mar 2019 09:34:18 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id t15sm23781474wrx.22.2019.03.28.09.34.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 09:34:17 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 17:34:16 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Randolph =?utf-8?Q?Maa=C3=9Fen?= <gaireg@gaireg.de>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: tegra20-slink: change chip select action order
+Message-ID: <20190328163416.GA31762@ulmo>
+References: <20190326143050.26232-1-gaireg@gaireg.de>
 MIME-Version: 1.0
-In-Reply-To: <20190328123428.GF7094@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Disposition: inline
+In-Reply-To: <20190326143050.26232-1-gaireg@gaireg.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 5:34 AM, Jarkko Sakkinen wrote:
-> Thank you, it is applied.
 
-Thank you Jarkko.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Tadeusz
+On Tue, Mar 26, 2019 at 03:30:50PM +0100, Randolph Maa=C3=9Fen wrote:
+> To transfer via SPI the tegra20-slink driver first sets the command
+> register, which contains the chip select value, and after that the
+> command2 register, which contains the chip select line. This leads to a
+> small spike in the chip selct 0 line between the set of the value and
+> the selection of the chip select line.
+>=20
+> This commit changes the order of the register writes so that first the
+> chip select line is chosen and then the value is set, removing the
+> spike.
+>=20
+> Signed-off-by: Randolph Maa=C3=9Fen <gaireg@gaireg.de>
+> ---
+>  drivers/spi/spi-tegra20-slink.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+
+With the typofix that Sowjanya pointed out, this patch is:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyc94gACgkQ3SOs138+
+s6HshA//eM/HQvj5Ayl7EEKWD9wFOAT0N4ETiqkZHwoTO/ZNMSht7QdKprY9KLHp
+ey3Dm6iLdiBTz8HZnArG37J4dh7gEsbEAy3sd2cDn72+ogHgf2+35G1wVNpsBzM6
+zV2EpgRlzIVGHYv5nIZnlEAeIQ4l+5/UxuHZr15yRJkdJnPhrbTRLAnOEvqM92G/
+hw0xr3EuMmddR3UCaX7BCrcZ/XNluEHzGCPxr0qnr9vB7EPztbgGMYysdbcMe88J
+s5KCjPq8pJV35hKP5+3JG/1UGDA4tqzsw+4lqwvr+VBSqDn0kD4qw40ToYKh3bWK
+aGcxSkHIkLzMbJWtvQ+9JPlZjg8Xrfz/FAuGbptlwCYSFK+tM8dP9s4b8ir7fJo8
+L0B6hHpLucdmnPOmSiT8zQkhjRfeCmUuVJacdwAafYfqvW4OVXCcnrqsOaBiX/2E
+OoXMLmFaloaQqTmsO2a4XtHv2JYoLQ9SgKUl4R01yU+CPq/CT3r1deEwkCIKOdme
+Th+zXTJiaksmbPZv+XDHt8o+X18NBtH/us8Z+3gB4iD9s7eBQadlrQQ+cpSXVIpx
+ZvamTQPeBmADB7r1UhhI3YBxXS5tyjImouqP94KkngdWjoq+O8Dbqqe1PSTRUaEH
+vCbw2MNNHgPPkxiAyRIggzcgv2ZAmaimp//GeGWm6MgBx5l49F4=
+=554g
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
