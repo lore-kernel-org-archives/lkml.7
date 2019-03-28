@@ -2,118 +2,375 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0ABC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66685C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A89A21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcqB8L/6"
+	by mail.kernel.org (Postfix) with ESMTP id 329492184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 21:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfC1VeK (ORCPT
+        id S1727670AbfC1VjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 17:34:10 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54448 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfC1VeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 17:34:10 -0400
-Received: by mail-it1-f196.google.com with SMTP id w18so600234itj.4;
-        Thu, 28 Mar 2019 14:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BwJ3ahE9qKEzbgRpb2OvUo1z5D/jo/o/M5wFIL1CiC8=;
-        b=vcqB8L/6O308V8thCNonQWMtwVOfoHxnu4a0MnxWmfzP/m8jOybmSO/xj42trCQIk+
-         O0yJkMdbThmKA/h+7Hk4i8Cftza4gVLypu+0zFcrz8j15m8CL8fTlvPzPLZDSPYlJrUS
-         OjG4XXVdNjyuWOfs2oQtYl96Enx3xqw3qifk9aEhpYE65cBmarYVxoRx88rnWQmqEf61
-         +PCKTt7y5YXWg8MljOjtktzGfZcVMSC8pOZXhAFwM+cj/U5eFguxcbBd2sUdxq7bhIWl
-         azhzx2tOsylMIws807slbs/zJS+Xh49i3xVXI1iGsXITJVi0zudz7549bqWkiF8iJwVQ
-         QTAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BwJ3ahE9qKEzbgRpb2OvUo1z5D/jo/o/M5wFIL1CiC8=;
-        b=tZuvt3QENu5KQqCXv+a039RgsvfSoLOHoiYfR/U020fQvKyy2CKKa/6X2Ubp8sRTgM
-         OAJj4Fg6hgwtcVkyFaBpwrVi28kAjU4B9gTgztvCJu0jaBuln9Zca1lXWHBdatvq7ir0
-         7k3bDzaJqWJs95AGmWU0exYmPeP2g2CO1LOPTxECsIfpLUGD8wPm4/29VU5QajuS0wsh
-         ZqF4I/Wyg8Hk4SgMLTnal2Vv5c2xoJtTh7LFz56PnE2WbTJssontzd1OybcBy8qJADkf
-         0E7BbTDoJ8/9Kpa5wDoiucFHYesZ6nQj48ktr7xQ4tV7zth4RVrTYjGarW1cmgyD4G6k
-         uy9g==
-X-Gm-Message-State: APjAAAXYVcSp71/kYnnNTfsF5NJj06ud7HvoaBelciFOIwoGrxJEe7Yb
-        WFcSZcHvdnpNdj+5vVEA1qRIePC3+1MboHx3hzg=
-X-Google-Smtp-Source: APXvYqxB99IOVRQ9Y/gCc3Zy3JvgkUuUnsinjxjYxuImQIZiT6RIR0r6ZFd5+FThUPxvLd7NilDy3mWHaW/ICjHOOqw=
-X-Received: by 2002:a02:5541:: with SMTP id e62mr10689867jab.88.1553808848380;
- Thu, 28 Mar 2019 14:34:08 -0700 (PDT)
+        Thu, 28 Mar 2019 17:39:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48036 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbfC1VjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 17:39:19 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8426531688E1;
+        Thu, 28 Mar 2019 21:39:18 +0000 (UTC)
+Received: from redhat.com (ovpn-121-118.rdu2.redhat.com [10.10.121.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F77B8389E;
+        Thu, 28 Mar 2019 21:39:16 +0000 (UTC)
+Date:   Thu, 28 Mar 2019 17:39:14 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 06/11] mm/hmm: improve driver API to work and wait
+ over a range v2
+Message-ID: <20190328213913.GC13560@redhat.com>
+References: <20190325144011.10560-1-jglisse@redhat.com>
+ <20190325144011.10560-7-jglisse@redhat.com>
+ <20190328131154.GB31324@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20190315101013.GN8455@Legion-PC.fortress> <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
- <20190326172411.GA15936@Legion-PC.fortress> <20190327154025.GB23293@linux-8ccs>
- <CAKi4VA+14kihzGFbMT623BwMbZEzgYU6+jz8MpR9jqoC059oog@mail.gmail.com> <20190328184546.GB23800@kroah.com>
-In-Reply-To: <20190328184546.GB23800@kroah.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Thu, 28 Mar 2019 14:33:56 -0700
-Message-ID: <CAKdAkRTxvJjuocVgENDPsmTjV+uNbD81wgReLRyF4CUFqzTF0Q@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
- modules in separate file
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:ABI/API" <linux-api@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        linux-modules <linux-modules@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190328131154.GB31324@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 28 Mar 2019 21:39:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 11:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Mar 28, 2019 at 10:41:59AM -0700, Lucas De Marchi wrote:
-> > On Wed, Mar 27, 2019 at 8:40 AM Jessica Yu <jeyu@kernel.org> wrote:
-> > > >No. There are definitely not all modules. I have a builtin sha256_generic,
-> > > >but I can't find him in the /sys/module.
-> > >
-> > > Yeah, you'll only find builtin modules under /sys/module/ if it has any module
-> > > parameters, otherwise you won't find it there. As Masahiro already mentioned,
-> > > if a builtin module has any parameters, they would be accessible under /sys/module/.
-> >
-> > Could we please change that and add the sysfs entry regardless of
-> > what's being discussed here? Not having the entry there simply because
-> > we don't have parameters for that module always annoyed me.
+On Thu, Mar 28, 2019 at 06:11:54AM -0700, Ira Weiny wrote:
+> On Mon, Mar 25, 2019 at 10:40:06AM -0400, Jerome Glisse wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
+> > 
+> > A common use case for HMM mirror is user trying to mirror a range
+> > and before they could program the hardware it get invalidated by
+> > some core mm event. Instead of having user re-try right away to
+> > mirror the range provide a completion mechanism for them to wait
+> > for any active invalidation affecting the range.
+> > 
+> > This also changes how hmm_range_snapshot() and hmm_range_fault()
+> > works by not relying on vma so that we can drop the mmap_sem
+> > when waiting and lookup the vma again on retry.
+> > 
+> > Changes since v1:
+> >     - squashed: Dan Carpenter: potential deadlock in nonblocking code
+> > 
+> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > ---
+> >  include/linux/hmm.h | 208 ++++++++++++++---
+> >  mm/hmm.c            | 528 +++++++++++++++++++++-----------------------
+> >  2 files changed, 428 insertions(+), 308 deletions(-)
+> > 
+> > diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> > index e9afd23c2eac..79671036cb5f 100644
+> > --- a/include/linux/hmm.h
+> > +++ b/include/linux/hmm.h
+> > @@ -77,8 +77,34 @@
+> >  #include <linux/migrate.h>
+> >  #include <linux/memremap.h>
+> >  #include <linux/completion.h>
+> > +#include <linux/mmu_notifier.h>
+> >  
+> > -struct hmm;
+> > +
+> > +/*
+> > + * struct hmm - HMM per mm struct
+> > + *
+> > + * @mm: mm struct this HMM struct is bound to
+> > + * @lock: lock protecting ranges list
+> > + * @ranges: list of range being snapshotted
+> > + * @mirrors: list of mirrors for this mm
+> > + * @mmu_notifier: mmu notifier to track updates to CPU page table
+> > + * @mirrors_sem: read/write semaphore protecting the mirrors list
+> > + * @wq: wait queue for user waiting on a range invalidation
+> > + * @notifiers: count of active mmu notifiers
+> > + * @dead: is the mm dead ?
+> > + */
+> > +struct hmm {
+> > +	struct mm_struct	*mm;
+> > +	struct kref		kref;
+> > +	struct mutex		lock;
+> > +	struct list_head	ranges;
+> > +	struct list_head	mirrors;
+> > +	struct mmu_notifier	mmu_notifier;
+> > +	struct rw_semaphore	mirrors_sem;
+> > +	wait_queue_head_t	wq;
+> > +	long			notifiers;
+> > +	bool			dead;
+> > +};
+> >  
+> >  /*
+> >   * hmm_pfn_flag_e - HMM flag enums
+> > @@ -155,6 +181,38 @@ struct hmm_range {
+> >  	bool			valid;
+> >  };
+> >  
+> > +/*
+> > + * hmm_range_wait_until_valid() - wait for range to be valid
+> > + * @range: range affected by invalidation to wait on
+> > + * @timeout: time out for wait in ms (ie abort wait after that period of time)
+> > + * Returns: true if the range is valid, false otherwise.
+> > + */
+> > +static inline bool hmm_range_wait_until_valid(struct hmm_range *range,
+> > +					      unsigned long timeout)
+> > +{
+> > +	/* Check if mm is dead ? */
+> > +	if (range->hmm == NULL || range->hmm->dead || range->hmm->mm == NULL) {
+> > +		range->valid = false;
+> > +		return false;
+> > +	}
+> > +	if (range->valid)
+> > +		return true;
+> > +	wait_event_timeout(range->hmm->wq, range->valid || range->hmm->dead,
+> > +			   msecs_to_jiffies(timeout));
+> > +	/* Return current valid status just in case we get lucky */
+> > +	return range->valid;
+> > +}
+> > +
+> > +/*
+> > + * hmm_range_valid() - test if a range is valid or not
+> > + * @range: range
+> > + * Returns: true if the range is valid, false otherwise.
+> > + */
+> > +static inline bool hmm_range_valid(struct hmm_range *range)
+> > +{
+> > +	return range->valid;
+> > +}
+> > +
+> >  /*
+> >   * hmm_pfn_to_page() - return struct page pointed to by a valid HMM pfn
+> >   * @range: range use to decode HMM pfn value
+> > @@ -357,51 +415,133 @@ void hmm_mirror_unregister(struct hmm_mirror *mirror);
+> >  
+> >  
+> >  /*
+> > - * To snapshot the CPU page table, call hmm_vma_get_pfns(), then take a device
+> > - * driver lock that serializes device page table updates, then call
+> > - * hmm_vma_range_done(), to check if the snapshot is still valid. The same
+> > - * device driver page table update lock must also be used in the
+> > - * hmm_mirror_ops.sync_cpu_device_pagetables() callback, so that CPU page
+> > - * table invalidation serializes on it.
+> > + * To snapshot the CPU page table you first have to call hmm_range_register()
+> > + * to register the range. If hmm_range_register() return an error then some-
+> > + * thing is horribly wrong and you should fail loudly. If it returned true then
+> > + * you can wait for the range to be stable with hmm_range_wait_until_valid()
+> > + * function, a range is valid when there are no concurrent changes to the CPU
+> > + * page table for the range.
+> > + *
+> > + * Once the range is valid you can call hmm_range_snapshot() if that returns
+> > + * without error then you can take your device page table lock (the same lock
+> > + * you use in the HMM mirror sync_cpu_device_pagetables() callback). After
+> > + * taking that lock you have to check the range validity, if it is still valid
+> > + * (ie hmm_range_valid() returns true) then you can program the device page
+> > + * table, otherwise you have to start again. Pseudo code:
+> > + *
+> > + *      mydevice_prefault(mydevice, mm, start, end)
+> > + *      {
+> > + *          struct hmm_range range;
+> > + *          ...
+> >   *
+> > - * YOU MUST CALL hmm_vma_range_done() ONCE AND ONLY ONCE EACH TIME YOU CALL
+> > - * hmm_range_snapshot() WITHOUT ERROR !
+> > + *          ret = hmm_range_register(&range, mm, start, end);
+> > + *          if (ret)
+> > + *              return ret;
+> >   *
+> > - * IF YOU DO NOT FOLLOW THE ABOVE RULE THE SNAPSHOT CONTENT MIGHT BE INVALID !
+> > - */
+> > -long hmm_range_snapshot(struct hmm_range *range);
+> > -bool hmm_vma_range_done(struct hmm_range *range);
+> > -
+> > -
+> > -/*
+> > - * Fault memory on behalf of device driver. Unlike handle_mm_fault(), this will
+> > - * not migrate any device memory back to system memory. The HMM pfn array will
+> > - * be updated with the fault result and current snapshot of the CPU page table
+> > - * for the range.
+> > + *          down_read(mm->mmap_sem);
+> > + *      again:
+> > + *
+> > + *          if (!hmm_range_wait_until_valid(&range, TIMEOUT)) {
+> > + *              up_read(&mm->mmap_sem);
+> > + *              hmm_range_unregister(range);
+> > + *              // Handle time out, either sleep or retry or something else
+> > + *              ...
+> > + *              return -ESOMETHING; || goto again;
+> > + *          }
+> > + *
+> > + *          ret = hmm_range_snapshot(&range); or hmm_range_fault(&range);
+> > + *          if (ret == -EAGAIN) {
+> > + *              down_read(mm->mmap_sem);
+> > + *              goto again;
+> > + *          } else if (ret == -EBUSY) {
+> > + *              goto again;
+> > + *          }
+> > + *
+> > + *          up_read(&mm->mmap_sem);
+> > + *          if (ret) {
+> > + *              hmm_range_unregister(range);
+> > + *              return ret;
+> > + *          }
+> > + *
+> > + *          // It might not have snap-shoted the whole range but only the first
+> > + *          // npages, the return values is the number of valid pages from the
+> > + *          // start of the range.
+> > + *          npages = ret;
+> >   *
+> > - * The mmap_sem must be taken in read mode before entering and it might be
+> > - * dropped by the function if the block argument is false. In that case, the
+> > - * function returns -EAGAIN.
+> > + *          ...
+> >   *
+> > - * Return value does not reflect if the fault was successful for every single
+> > - * address or not. Therefore, the caller must to inspect the HMM pfn array to
+> > - * determine fault status for each address.
+> > + *          mydevice_page_table_lock(mydevice);
+> > + *          if (!hmm_range_valid(range)) {
+> > + *              mydevice_page_table_unlock(mydevice);
+> > + *              goto again;
+> > + *          }
+> >   *
+> > - * Trying to fault inside an invalid vma will result in -EINVAL.
+> > + *          mydevice_populate_page_table(mydevice, range, npages);
+> > + *          ...
+> > + *          mydevice_take_page_table_unlock(mydevice);
+> > + *          hmm_range_unregister(range);
+> >   *
+> > - * See the function description in mm/hmm.c for further documentation.
+> > + *          return 0;
+> > + *      }
+> > + *
+> > + * The same scheme apply to hmm_range_fault() (ie replace hmm_range_snapshot()
+> > + * with hmm_range_fault() in above pseudo code).
+> > + *
+> > + * YOU MUST CALL hmm_range_unregister() ONCE AND ONLY ONCE EACH TIME YOU CALL
+> > + * hmm_range_register() AND hmm_range_register() RETURNED TRUE ! IF YOU DO NOT
+> > + * FOLLOW THIS RULE MEMORY CORRUPTION WILL ENSUE !
+> >   */
+> > +int hmm_range_register(struct hmm_range *range,
+> > +		       struct mm_struct *mm,
+> > +		       unsigned long start,
+> > +		       unsigned long end);
+> > +void hmm_range_unregister(struct hmm_range *range);
+> > +long hmm_range_snapshot(struct hmm_range *range);
+> >  long hmm_range_fault(struct hmm_range *range, bool block);
+> >  
+> > +/*
+> > + * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
+> > + *
+> > + * When waiting for mmu notifiers we need some kind of time out otherwise we
+> > + * could potentialy wait for ever, 1000ms ie 1s sounds like a long time to
+> > + * wait already.
+> > + */
+> > +#define HMM_RANGE_DEFAULT_TIMEOUT 1000
+> > +
+> >  /* This is a temporary helper to avoid merge conflict between trees. */
+> > +static inline bool hmm_vma_range_done(struct hmm_range *range)
+> > +{
+> > +	bool ret = hmm_range_valid(range);
+> > +
+> > +	hmm_range_unregister(range);
+> > +	return ret;
+> > +}
+> > +
+> >  static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> >  {
+> > -	long ret = hmm_range_fault(range, block);
+> > -	if (ret == -EBUSY)
+> > -		ret = -EAGAIN;
+> > -	else if (ret == -EAGAIN)
+> > -		ret = -EBUSY;
+> > -	return ret < 0 ? ret : 0;
+> > +	long ret;
+> > +
+> > +	ret = hmm_range_register(range, range->vma->vm_mm,
+> > +				 range->start, range->end);
+> > +	if (ret)
+> > +		return (int)ret;
+> > +
+> > +	if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+> > +		up_read(&range->vma->vm_mm->mmap_sem);
+> 
+> Where is the down_read() which correspond to this?
+> 
+> > +		return -EAGAIN;
+> > +	}
+> > +
+> > +	ret = hmm_range_fault(range, block);
+> > +	if (ret <= 0) {
+> > +		if (ret == -EBUSY || !ret) {
+> > +			up_read(&range->vma->vm_mm->mmap_sem);
+> 
+> Or this...?
+> 
+> > +			ret = -EBUSY;
+> > +		} else if (ret == -EAGAIN)
+> > +			ret = -EBUSY;
+> > +		hmm_range_unregister(range);
+> > +		return ret;
+> > +	}
+> 
+> And is the side effect of this call that the mmap_sem has been taken?
+> Or is the side effect that the mmap_sem was released?
+> 
+> I'm not saying this is wrong, but I can't tell so it seems like a comment on
+> the function would help.
+> 
 
-What is the benefit compared to wasting some memory for the directory?
+The comments above:
 
->
-> What is the sysfs directory going to show?  Will it just be empty?
->
-> Feel free to send a patch for this, but from what I remember, it wasn't
-> the easiest thing to do for some reason.  But given that the code was
-> implemented before git was, I can't quite remember.
+/* This is a temporary helper to avoid merge conflict between trees. */
 
-I am pretty sure we allow empty attribute groups, so it is probbaly as
-simple as removing "If (!params) return 0;" form
-module_param_sysfs_setup() and making sure we always create
-"parameters" group instead of doing it on first visible parameter in
-add_sysfs_param(). I suppose we no longer want to skip over parameters
-that are not readable nor writable either?
+Do matter, here i am updating HMM API and thus the old API which is
+hmm_vma_fault() no longer exist and is replaced internaly by the new
+API hmm_range_register() and hmm_range_fault().
 
-Thanks.
+To avoid complex cross tree merging i introduce this inline function
+that reproduce the old API on top of the new API. The intent is that
+once this is merged, then the next merge window i will drop the old
+API from the upstream user (ie update the nouveau driver) and convert
+them to the new API. Then i will remove this inline function.
 
--- 
-Dmitry
+This was discuss extensively already. Cross tree synchronization is
+painfull and it is best to do this dance. Upstream something in at
+relase N, update everyone in each indepedent tree in N+1, cleanup if
+any in N+2
+
+
+If you want to check that the above code is valid then you need to
+look at the comment above the old API function which describe the
+old API and also probably look at the code to understand all the cases.
+
+Then you can compare against what this _temporary_ wrapper do with
+the new API and that it does match the old API.
+
+
+I have tested all this with nouveau which is upstream and nouveau
+keep working unmodified before and after this patch.
+
+
+Cheers,
+Jérôme
