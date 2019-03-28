@@ -2,130 +2,173 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0524C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB34C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7850B2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482F22173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="LioPs6i1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfC1JRf (ORCPT
+        id S1726357AbfC1JV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 05:17:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12794 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfC1JRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 05:17:34 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 02:17:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="311094368"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga005.jf.intel.com with ESMTP; 28 Mar 2019 02:17:31 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1h9RA9-0000TT-VO; Thu, 28 Mar 2019 11:17:29 +0200
-Date:   Thu, 28 Mar 2019 11:17:29 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over
- suspend/resume
-Message-ID: <20190328091729.GV9224@smile.fi.intel.com>
-References: <CAB4CAwc-SFtw4+74Qe-vX57JRGDjJMt9xM2+ev3OiipzwxBPBw@mail.gmail.com>
- <20171116124431.GS17200@lahna.fi.intel.com>
- <CAB4CAwfHx8DgCYk0piVnrTa7YP2=6A8Le4ekoENFPyNVF9g1rw@mail.gmail.com>
- <20171117064904.GZ17200@lahna.fi.intel.com>
- <CAB4CAwdGQjXc6gsswyCgLTfFRN9CgcC=OJ6pz4rX-HCn8AT-TQ@mail.gmail.com>
- <20171121105205.GP22431@lahna.fi.intel.com>
- <CAB4CAwcjXi=YX+0PEC6wBdfAZ=am+BceB4HCFzTXzdts_FE2vQ@mail.gmail.com>
- <20171121120422.GR22431@lahna.fi.intel.com>
- <CAD8Lp444FNHZh6fLUfhfp1i_UBpMbS5QuvJ4FuZn7PKH1Ucy=A@mail.gmail.com>
- <20190327172940.GR3622@lahna.fi.intel.com>
+        Thu, 28 Mar 2019 05:21:26 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44231 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfC1JV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 05:21:26 -0400
+Received: by mail-ed1-f68.google.com with SMTP id x10so16475069edh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 02:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dthA24exXBdVdwNPMINaQPNMYrI6kaqq3CGd2cJRnVM=;
+        b=LioPs6i1LkKjlEldVmTEnUDNCqqudksyP5enmwrVZv5dEEhOVcqqiLjxqN34Z1lL/U
+         w1NFjG7SFxvVYXg981mFGBHLBlXC/UI0fXXolD4RtZ0OYQlPdsQmzU6B8zxivCivf2iu
+         xfXBezSPCktU/Eb8GutYtR6vFcVklAV4qq1cSW5yXxXADpf1BFGfwc1/P374eSZnsdkA
+         SYIkgHy1kOBF+M2L7wGioAWxLdtluC1yXXLdw4U2dHZUgvjVoPXd2WUWPsE8mYknbySJ
+         twFEoFkOfU5zyKvau3DC2b59AzgMId5F6yAEhqsAkIrav2BLf8VJB+cRXBQ75yXDs8KO
+         7xiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dthA24exXBdVdwNPMINaQPNMYrI6kaqq3CGd2cJRnVM=;
+        b=bcNCzBL5Zh4CBM87DbbcC5VBBPDLGQnwVcEDw/JQvhKUBvlSPsj5W02xtLTeRlemh+
+         MXtbvPgS6/BJ7wrydz0C+iD1ehtl8GOeKolv2xdRxaFpizd4kMWUg+BD1pGAb8m1UAIQ
+         83L9pD02pU6DnjZFconwJQY3pqbjgHQxxz1ZUWyeu3ftKnbHBQHDzKNk3kIPXRzPMGwQ
+         tP25MnWfbFiemIp2lKkoSCEGx2+ewXHmZvbtWCo50uaHjYneeq6ehqiibrTk0/yAaWGi
+         +AhGcIHu5aJd4AU5/OrBycl3BQq0X5m3NufIIi/uSDZ0n+oTmyDmRU5g48DvxDG4h09Y
+         EVZQ==
+X-Gm-Message-State: APjAAAVQ0ToQJ1vn0PIvCobE1xXq86d+xTOqBU1Qo1xjdsjYqcIvlgZ6
+        2Km3ODwGbZhcdxBo0ZLxmDQIrA==
+X-Google-Smtp-Source: APXvYqyigINdqSkbxjNAzSJxg98BtMSdT++AXcyNNoZGfp71kIMq/vTBQ0pc0WEJoqIRlEhTJWA2JA==
+X-Received: by 2002:a50:a5e5:: with SMTP id b34mr15502306edc.260.1553764883571;
+        Thu, 28 Mar 2019 02:21:23 -0700 (PDT)
+Received: from brauner.io ([193.96.224.243])
+        by smtp.gmail.com with ESMTPSA id a25sm2048698edc.55.2019.03.28.02.21.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 28 Mar 2019 02:21:22 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 10:21:21 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        kernel-team <kernel-team@android.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: pidfd design
+Message-ID: <20190328092119.bzyjp4a6mk7yfoep@brauner.io>
+References: <20190320191412.5ykyast3rgotz3nu@brauner.io>
+ <CAKOZuesRwQ4=Svu1KgHWY=HZSS8mF8uFmuzuVOSH0QpJoy7a5w@mail.gmail.com>
+ <CALCETrUFrFKC2YTLH7ViM_7XPYk3LNmNiaz6s8wtWo1pmJQXzg@mail.gmail.com>
+ <CAG48ez3VMjLJBC_F3BxC2sc2s-28NdsrUduR=jX66XH0w2O-Qg@mail.gmail.com>
+ <CAKOZueuNGn31QYpRa5G-OP_S=G3f9TBQ-w27giABn7UVgPQ8Ng@mail.gmail.com>
+ <CALCETrV-52TXKbAim06Fr7vvFeOvk0SczneeV_Rtqr6-LN7-GQ@mail.gmail.com>
+ <20190325234547.wo6lyimrp52qie5p@brauner.io>
+ <CALCETrXfNV5marXSEDGm6F03DNC2a_M+NE94=GxEbH9oJyWkYA@mail.gmail.com>
+ <20190326001231.3tnhhlvzg26mof33@brauner.io>
+ <CALCETrUSaj+iTEOgEvy30eiCi2+FoN8+bq2BjJmamCjJ4yeBjA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190327172940.GR3622@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALCETrUSaj+iTEOgEvy30eiCi2+FoN8+bq2BjJmamCjJ4yeBjA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 07:29:40PM +0200, Mika Westerberg wrote:
-> On Wed, Mar 27, 2019 at 04:22:04PM +0800, Daniel Drake wrote:
-> > On Tue, Nov 21, 2017 at 8:13 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Tue, Nov 21, 2017 at 07:54:26PM +0800, Chris Chiu wrote:
-> > > > Yup, I checked the value of the corresponded pin. It shows following before
-> > > > suspend
-> > > > pin 18 (GPIO_18) GPIO 0x40800102 0x00024075
+On Mon, Mar 25, 2019 at 05:24:49PM -0700, Andy Lutomirski wrote:
+> On Mon, Mar 25, 2019 at 5:12 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > On Mon, Mar 25, 2019 at 05:00:17PM -0700, Andy Lutomirski wrote:
+> > > On Mon, Mar 25, 2019 at 4:45 PM Christian Brauner <christian@brauner.io> wrote:
 > > > >
-> > > > Then after resume
-> > > > pin 18 (GPIO_18) GPIO 0x40800102 0x00024075 [ACPI]
+> > > > On Mon, Mar 25, 2019 at 04:42:14PM -0700, Andy Lutomirski wrote:
+> > > > > On Mon, Mar 25, 2019 at 1:23 PM Daniel Colascione <dancol@google.com> wrote:
+> > > > > >
+> > > > > > On Mon, Mar 25, 2019 at 1:14 PM Jann Horn <jannh@google.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Mar 25, 2019 at 8:44 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > > > >
+> > > > > > > One ioctl on procfs roots to translate pidfds into that procfs,
+> > > > > > > subject to both the normal lookup permission checks and only working
+> > > > > > > if the pidfd has a translation into the procfs:
+> > > > > > >
+> > > > > > > int proc_root_fd = open("/proc", O_RDONLY);
+> > > > > > > int proc_dir_fd = ioctl(proc_root_fd, PROC_PIDFD_TO_PROCFSFD, pidfd);
+> > > > > > >
+> > > > > > > And one ioctl on procfs directories to translate from PGIDs and PIDs to pidfds:
+> > > > > > >
+> > > > > > > int proc_pgid_fd = open("/proc/self", O_RDONLY);
+> > > > > > > int self_pg_pidfd = ioctl(proc_pgid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
+> > > > > > > int proc_pid_fd = open("/proc/thread-self", O_RDONLY);
+> > > > > > > int self_p_pidfd = ioctl(proc_pid_fd, PROC_PROCFSFD_TO_PIDFD, 0);
+> > > > > > >
+> > > > >
+> > > > > This sounds okay to me.  Or we could make it so that a procfs
+> > > > > directory fd also works as a pidfd, but that seems more likely to be
+> > > > > problematic than just allowing two-way translation like this
+> > > > >
+> > > > > > >
+> > > > > > > And then, as you proposed, the new sys_clone() can just return a
+> > > > > > > pidfd, and you can convert it into a procfs fd yourself if you want.
+> > > > > >
+> > > > > > I think that's the consensus we reached on the other thread. The
+> > > > > > O_DIRECTORY open on /proc/self/fd/mypidfd seems like it'd work well
+> > > > > > enough.
+> > > > >
+> > > > > I must have missed this particular email.
+> > > > >
+> > > > > IMO, if /proc/self/fd/mypidfd allows O_DIRECTORY open to work, then it
+> > > > > really ought to do function just like /proc/self/fd/mypidfd/. and
+> > > > > /proc/self/fd/mypidfd/status should work.  And these latter two
+> > > > > options seem nutty.
+> > > > >
+> > > > > Also, this O_DIRECTORY thing is missing the entire point of the ioctl
+> > > > > interface -- it doesn't require procfs access.
+> > > >
+> > > > The other option was to encode the pid in the callers pid namespace into
+> > > > the pidfd's fdinfo so that you can parse it out and open /proc/<pid>.
+> > > > You'd just need an event on the pidfd to tell you when the process has
+> > > > died. Jonathan and I just discussed this.
 > > >
-> > > OK, so ownership is changed to ACPI.
-> > >
-> > > > What else register do you suggest me to compare? The PADCFG2 is invalid
-> > >
-> > > It's fine APL does not have PADCFG2.
-> > >
-> > > Hmm, I don't understand how this can work in Windows either. The Windows
-> > > people told me that they don't save and restore anything else than
-> > > padcfg registers + ie. If the ownership is changed to ACPI it means you
-> > > don't get interrupts anymore (only GPEs) and that applies to Windows as
-> > > well.
-> > 
-> > In the mails after the one quoted above, we reported back to you that
-> > the new BIOS from Asus solved the issue.
-> > 
-> > However, during the time that has followed, we have had numerous user
-> > reports from Asus E403NA, X540NA, and X541NA laptops (basically the
-> > same models that we originally discussed) where the touchpad stops
-> > working after suspend/resume, even with the latest BIOS. We managed to
-> > get an affected E403NA unit in-hands again, and confirmed that
-> > HOSTSW_OWN was being lost like we had observed before.
-
-Hmm... Can you confirm that laptop you declared as a fixed case and the
-mentioned here is the same one?
-
-If they are different, I have a theory that PCBs of those two are not the same
-and used GPIO pin can be also not the same, therefore the BIOS fixes only one
-revision of the model, but didn't consider the rest.
-
-If it's the case, I recommend to ping Asus again and make them check and fix.
-
-Meanwhile, Mika's proposal sounds feasible and not so intrusive. We may
-implement this later on.
-
-> > 
-> > Unfortunately as this was a customer laptop we had to return it
-> > immediately, before we could investigate further. We don't have access
-> > to any more units since they are old models now.
-> > 
-> > However I'm wondering if you have any other ideas or if you think
-> > something like our workaround patch might be acceptable under these
-> > circumstances:
-> > https://github.com/endlessm/linux/commit/f391452299f62a3d0cbe5333be90f69e9895d8ff
+> > > From an application developer's POV, the ioctl interface sounds much,
+> > > much nicer.
+> >
+> > Some people are strongly against ioctl()s some don't. I'm not against
+> > them so both options are fine with me if people can agree.
+> >
 > 
-> I wonder if it would be simpler to save it always and then upon resume
-> compare them and if changed, log this in dmesg and restore the saved
-> one.
+> There are certainly non-ioctl equivalents that are functionally
+> equivalent.  For example, there could be a syscall
+> procfs_open_pidfd(procfs_fd, pid_fd).  I personally don't really mind
+> ioctl() when it's really an operation on an fd.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I totally missed that mail somehow.
+Yes, I agree that an ioctl() makes sense for that.
