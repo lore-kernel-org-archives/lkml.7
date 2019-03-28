@@ -6,302 +6,87 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85488C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4AEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476232173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBF3205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbfC1RhP (ORCPT
+        id S1726522AbfC1RjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:37:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725816AbfC1RhO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:37:14 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SHYre2003641
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:37:13 -0400
-Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rh2sx83fw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:37:13 -0400
-Received: from localhost
-        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 28 Mar 2019 17:37:12 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 17:37:07 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SHb6fq21299288
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 17:37:06 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A482FB2065;
-        Thu, 28 Mar 2019 17:37:06 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CB83B206B;
-        Thu, 28 Mar 2019 17:37:06 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 17:37:06 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 9BC6316C3629; Thu, 28 Mar 2019 10:37:07 -0700 (PDT)
-Date:   Thu, 28 Mar 2019 10:37:07 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Jann Horn <jannh@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-Reply-To: paulmck@linux.ibm.com
-References: <20190327145331.215360-1-joel@joelfernandes.org>
- <CAGXu5j+nhsL_s36R0k5APUfP6cNiH-BGEJu6mV6UcsP0i3gtyA@mail.gmail.com>
- <CAG48ez1vZ5cngEKVtWTL9rz_K8K25b1sMKYrNs+jn4Va3KYucw@mail.gmail.com>
- <20190328023432.GA93275@google.com>
- <CAG48ez2bbSYpNHcC4oucx_AG=5y4K5pZfSOfN3mxGadJGpHuQQ@mail.gmail.com>
- <20190328143738.GA261521@google.com>
- <CAG48ez1-3dLvzQoxxoUzTUq8dc1wwvwPBBxX_X9FWMscWTS-FQ@mail.gmail.com>
- <20190328162641.GC19441@redhat.com>
+        Thu, 28 Mar 2019 13:39:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59429 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfC1RjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:39:01 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 10:39:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,281,1549958400"; 
+   d="scan'208";a="159294324"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 28 Mar 2019 10:38:58 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 28 Mar 2019 19:38:57 +0200
+Date:   Thu, 28 Mar 2019 19:38:57 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] device property: fwnode_is_compatible() helper
+Message-ID: <20190328173857.GC9993@kuha.fi.intel.com>
+References: <20190327164339.31205-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190328162641.GC19441@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19032817-0068-0000-0000-000003AC7ADA
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010829; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01180976; UDB=6.00618081; IPR=6.00961694;
- MB=3.00026196; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 17:37:10
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032817-0069-0000-0000-000047F72A7D
-Message-Id: <20190328173707.GP4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280115
+In-Reply-To: <20190327164339.31205-1-heikki.krogerus@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 05:26:42PM +0100, Oleg Nesterov wrote:
-> On 03/28, Jann Horn wrote:
-> >
-> > Since we're just talking about RCU stuff now, adding Paul McKenney to
-> > the thread.
+On Wed, Mar 27, 2019 at 07:43:36PM +0300, Heikki Krogerus wrote:
+> Hi,
 > 
-> Since you added Paul let me add more confusion to this thread ;)
-
-Woo-hoo!!!  More confusion!  Bring it on!!!  ;-)
-
-> There were some concerns about the lack of barriers in put_pid(), but I can't
-> find that old discussion and I forgot the result of that discussion...
+> Basically the helper is just a generic version of the function
+> of_device_is_compatible() that should work also with ACPI and
+> software nodes.
 > 
-> Paul, could you confirm that this code
+> As the first user for the helper, I'm converting in this series the
+> USB role switch code to expect the "compatible" property to have the
+> value "usb-role-switch" instead of expecting a boolean property named
+> "usb-role-switch". I'm doing the same for the USB Type-C mux code.
 > 
-> 	CPU_0		CPU_1
+> thanks,
 > 
-> 	X = 1;		if (READ_ONCE(Y))
-> 	mb();			X = 2;
-> 	Y = 1;		BUG_ON(X != 2);
+> Heikki Krogerus (3):
+>   device property: Add fwnode_is_compatible() and device_is_compatible()
+>     helpers
+>   usb: roles: Use the "compatible" property instead of a boolean
+>     property
+>   usb: typec: mux: Use the "compatible" property instead of a boolean
+>     property
 > 
-> 
-> is correct? I think it is, control dependency pairs with mb(), right?
+>  drivers/base/property.c   | 35 +++++++++++++++++++++++++++++++++++
+>  drivers/usb/roles/class.c |  2 +-
+>  drivers/usb/typec/mux.c   |  8 ++------
+>  include/linux/property.h  |  3 +++
+>  4 files changed, 41 insertions(+), 7 deletions(-)
 
-The BUG_ON() is supposed to happen at the end of time, correct?
-As written, there is (in the strict sense) a data race between the load
-of X in the BUG_ON() and CPU_0's store to X.  In a less strict sense,
-you could of course argue that this data race is harmless, especially
-if X is a single byte.  But the more I talk to compiler writers, the
-less comfortable I become with data races in general.  :-/
+Don't take this series yet. We are having a discussion on whether this
+is the correct approach with the USB mux or not in an other mail
+thread. The helper itself (patch 1/3) I guess is fine though.
 
-So I would also feel better if the "Y = 1" was WRITE_ONCE().
 
-On the other hand, this is a great opportunity to try out Alan Stern's
-prototype plain-accesses patch to the Linux Kernel Memory Model (LKMM)!
+thanks,
 
-https://lkml.kernel.org/r/Pine.LNX.4.44L0.1903191459270.1593-200000@iolanthe.rowland.org
-
-Also adding Alan on CC.
-
-Here is what I believe is the litmus test that your are interested in:
-
-------------------------------------------------------------------------
-C OlegNesterov-put_pid
-
-{}
-
-P0(int *x, int *y)
-{
-	*x = 1;
-	smp_mb();
-	*y = 1;
-}
-
-P1(int *x, int *y)
-{
-	int r1;
-
-	r1 = READ_ONCE(*y);
-	if (r1)
-		*x = 2;
-}
-
-exists (1:r1=1 /\ ~x=2)
-------------------------------------------------------------------------
-
-Running this through herd with Alan's patch detects the data race
-and says that the undesired outcome is allowed:
-
-	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid.litmus 
-	Test OlegNesterov-put_pid Allowed
-	States 3
-	1:r1=0; x=1;
-	1:r1=1; x=1;
-	1:r1=1; x=2;
-	Ok
-	Witnesses
-	Positive: 1 Negative: 2
-	Flag data-race
-	Condition exists (1:r1=1 /\ not (x=2))
-	Observation OlegNesterov-put_pid Sometimes 1 2
-	Time OlegNesterov-put_pid 0.00
-	Hash=a3e0043ad753effa860fea37eeba0a76
-
-Using WRITE_ONCE() for P0()'s store to y still allows this outcome,
-although it does remove the "Flag data-race".
-
-Using WRITE_ONCE() for both P0()'s store to y and P1()'s store to x
-gets rid of both the "Flag data-race" and the undesired outcome:
-
-	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-WO-WO.litmus 
-	Test OlegNesterov-put_pid-WO-WO Allowed
-	States 2
-	1:r1=0; x=1;
-	1:r1=1; x=2;
-	No
-	Witnesses
-	Positive: 0 Negative: 2
-	Condition exists (1:r1=1 /\ not (x=2))
-	Observation OlegNesterov-put_pid-WO-WO Never 0 2
-	Time OlegNesterov-put_pid-WO-WO 0.01
-	Hash=6e1643e3c5e4739b590bde0a8e8a918e
-
-Here is the corresponding litmus test, in case I messed something up:
-
-------------------------------------------------------------------------
-C OlegNesterov-put_pid-WO-WO
-
-{}
-
-P0(int *x, int *y)
-{
-	*x = 1;
-	smp_mb();
-	WRITE_ONCE(*y, 1);
-}
-
-P1(int *x, int *y)
-{
-	int r1;
-
-	r1 = READ_ONCE(*y);
-	if (r1)
-		WRITE_ONCE(*x, 2);
-}
-
-exists (1:r1=1 /\ ~x=2)
-------------------------------------------------------------------------
-
-> If not, then put_pid() needs atomic_read_acquire() as it was proposed in that
-> discussion.
-
-Good point, let's try with smp_load_acquire() in P1():
-
-	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-WO-sla.litmus 
-	Test OlegNesterov-put_pid-WO-sla Allowed
-	States 2
-	1:r1=0; x=1;
-	1:r1=1; x=2;
-	No
-	Witnesses
-	Positive: 0 Negative: 2
-	Condition exists (1:r1=1 /\ not (x=2))
-	Observation OlegNesterov-put_pid-WO-sla Never 0 2
-	Time OlegNesterov-put_pid-WO-sla 0.01
-	Hash=4fb0276eabf924793dec1970199db3a6
-
-This also works.  Here is the litmus test:
-
-------------------------------------------------------------------------
-C OlegNesterov-put_pid-WO-sla
-
-{}
-
-P0(int *x, int *y)
-{
-	*x = 1;
-	smp_mb();
-	WRITE_ONCE(*y, 1);
-}
-
-P1(int *x, int *y)
-{
-	int r1;
-
-	r1 = smp_load_acquire(y);
-	if (r1)
-		*x = 2;
-}
-
-exists (1:r1=1 /\ ~x=2)
-------------------------------------------------------------------------
-
-Demoting P0()'s WRITE_ONCE() to a plain write while leaving P1()'s
-smp_load_acquire() gets us a data race and allows the undesired
-outcome:
-
-	$ herd7  -conf linux-kernel.cfg /tmp/OlegNesterov-put_pid-sla.litmus 
-	Test OlegNesterov-put_pid-sla Allowed
-	States 3
-	1:r1=0; x=1;
-	1:r1=1; x=1;
-	1:r1=1; x=2;
-	Ok
-	Witnesses
-	Positive: 1 Negative: 2
-	Flag data-race
-	Condition exists (1:r1=1 /\ not (x=2))
-	Observation OlegNesterov-put_pid-sla Sometimes 1 2
-	Time OlegNesterov-put_pid-sla 0.01
-	Hash=ec6f71f3d9f7cd6e45a874c872e3d946
-
-But what if you are certain that the compiler cannot mess up your use
-of plain C-language loads and stores?  Then simply tell LKMM that they
-are READ_ONCE() and WRITE_ONCE(), respectively.  LKMM is admittedly
-somewhat paranoid, but real C compilers really do tear stores of certain
-constants on systems (like x86) that have store-immediate instructions,
-so a bit of paranoia is not misplaced here.  ;-)
-
-Plus please note that this patch to LKMM is prototype and thus subject
-to change.
-
-							Thanx, Paul
-
+-- 
+heikki
