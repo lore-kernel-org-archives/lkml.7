@@ -2,112 +2,96 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F170C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CED5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749442082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB662082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 09:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfC1JAt (ORCPT
+        id S1726555AbfC1JD0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 05:00:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34010 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725779AbfC1JAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 05:00:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 76184ABCB;
-        Thu, 28 Mar 2019 09:00:46 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7D59F1E424A; Thu, 28 Mar 2019 10:00:45 +0100 (CET)
-Date:   Thu, 28 Mar 2019 10:00:45 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+7a8ba368b47fdefca61e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: KASAN: use-after-free Read in path_lookupat
-Message-ID: <20190328090045.GA22915@quack2.suse.cz>
-References: <CAHk-=wiijJMTw=nTj_ED+YWMCrvHzh3ezfVYRxvzcW6+trgyPA@mail.gmail.com>
- <20190325045744.GK2217@ZenIV.linux.org.uk>
- <CAHk-=wg4iJsMHBzK52WzP+5_92HbwvX_vh_s4mMUuN0FJGdM5A@mail.gmail.com>
- <20190325194332.GO2217@ZenIV.linux.org.uk>
- <20190325224823.GF26298@dastard>
- <20190325230211.GR2217@ZenIV.linux.org.uk>
- <CAGe7X7mb=gK7zhSwmT_6mmmkcbjhZAOb=wj31BdUcHkNUPsm2Q@mail.gmail.com>
- <20190326041509.GZ2217@ZenIV.linux.org.uk>
- <20190327165831.GB6742@quack2.suse.cz>
- <20190327185948.GC2217@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Thu, 28 Mar 2019 05:03:26 -0400
+Received: from prv1-mh.provo.novell.com ([137.65.248.33]:39311 "EHLO
+        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbfC1JD0 (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:5:1>);
+        Thu, 28 Mar 2019 05:03:26 -0400
+Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
+        with Novell_GroupWise; Thu, 28 Mar 2019 03:03:25 -0600
+Message-Id: <5C9C8DDC0200007800222606@prv1-mh.provo.novell.com>
+X-Mailer: Novell GroupWise Internet Agent 18.1.0 
+Date:   Thu, 28 Mar 2019 03:03:24 -0600
+From:   "Jan Beulich" <JBeulich@suse.com>
+To:     "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Cc:     "Stefano Stabellini" <sstabellini@kernel.org>,
+        "xen-devel" <xen-devel@lists.xenproject.org>,
+        "Juergen Gross" <jgross@suse.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/Xen: streamline (and fix) PV CPU enumeration
+References: <5C9B92EA020000780022227B@prv1-mh.provo.novell.com>
+ <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
+In-Reply-To: <2f027b4b-dce2-3e90-dc1b-c824bc8eb355@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Content-Disposition: inline
-In-Reply-To: <20190327185948.GC2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 27-03-19 18:59:48, Al Viro wrote:
-> On Wed, Mar 27, 2019 at 05:58:31PM +0100, Jan Kara wrote:
-> > On Tue 26-03-19 04:15:10, Al Viro wrote:
-> > > On Mon, Mar 25, 2019 at 08:18:25PM -0700, Mark Fasheh wrote:
-> > > 
-> > > > Hey Al,
-> > > > 
-> > > > It's been a while since I've looked at that bit of code but it looks like
-> > > > Ocfs2 is syncing the inode to disk and disposing of it's memory
-> > > > representation (which would include the cluster locks held) so that other
-> > > > nodes get a chance to delete the potentially orphaned inode. In Ocfs2 we
-> > > > won't delete an inode if it exists in another nodes cache.
-> > > 
-> > > Wait a sec - what's the reason for forcing that write_inode_now(); why
-> > > doesn't the normal mechanism work?  I'm afraid I still don't get it -
-> > > we do wait for writeback in evict_inode(), or the local filesystems
-> > > wouldn't work.
-> > 
-> > I'm just guessing here but they don't want an inode cached once its last
-> > dentry goes away (it makes cluster wide synchronization easier for them and
-> > they do play tricks with cluster lock on dentries).
+>>> On 27.03.19 at 18:07, <boris.ostrovsky@oracle.com> wrote:
+> On 3/27/19 11:12 AM, Jan Beulich wrote:
+>> -
+>> -static void __init xen_filter_cpu_maps(void)
+>> +static void __init _get_smp_config(unsigned int early)
+>>  {
+>>  	int i, rc;
+>>  	unsigned int subtract = 0;
+>>  
+>> -	if (!xen_initial_domain())
+>> +	if (early)
+>>  		return;
+>>  
+>>  	num_processors = 0;
 > 
-> Sure, but that's as simple as "return 1 from ->drop_inode()".
-
-Right.
-
-> > There is some info in
-> > 513e2dae9422 "ocfs2: flush inode data to disk and free inode when i_count
-> > becomes zero" which adds this ocfs2_drop_inode() implementation. So when
-> > the last inode reference is dropped, they want to flush any dirty data to
-> > disk and evict the inode. But AFAICT they should be fine with flushing the
-> > inode from their ->evict_inode method. I_FREEING just stops the flusher
-> > thread from touching the inode but explicit writeback through
-> > write_inode_now(inode, 1) should go through just fine.
 > 
-> Umm...  Why is that write_inode_now() needed in either place?  I agree that
-> moving it to ->evict_inode() ought to be safe, but what makes it necessary
-> in the first place?  Put it another way, what dirties the data and/or
-> metadata without marking it dirty?
+> Is there a reason to set_cpu_possible() here (not in the diff, but in
+> this routine)? This will be called from setup_arch() before
+> prefill_possible_map(), which will clear and then re-initialize
+> __cpu_possible_mask.
 
-Well, the inode & pages are marked dirty and they are dirty when we get to
-iput_final(). But if ->drop_inode() returns 1 (which normally happens only
-for unlinked files), we will not write out the inode in iput_final() and
-the dirty data just gets discarded in ->evict_inode(). OCFS2 doesn't want
-this so they have to write-out by hand.
+I don't think it's needed before my change either, so I'd call
+removing this an orthogonal change. As said in the commit
+message, the goal was to leave this function alone as far as
+possible.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Before my patch, xen_filter_cpu_maps() gets called long after
+prefill_possible_map(), and by the purpose of the latter function
+the possible map shouldn't be altered anymore once that has
+run. Adding bits to it is surely not going to have the intended
+effect (setup_per_cpu_areas() has already run), while removing
+bits may have some effect, but comes too late at least for
+setup_per_cpu_areas().
+
+And if we were to remove this, I think the CONFIG_HOTPLUG_CPU
+section should go away as well. After all prefill_possible_map()
+also sets nr_cpu_ids. To be honest, it was largely this code
+fragment which made me want not touch the function more than
+necessary: The comment there makes not clear to me at all why
+all of this needs to be in an #ifdef in the first place.
+
+Let me know whether you really want me to fold this extra
+cleanup into this patch. If so, I'd then wonder whether the
+set_cpu_present() from xen_pv_smp_prepare_cpus() shouldn't
+be moved here, too. And the fiddling with the possible map
+there looks bogus as well: Bring-up of CPUs past the command
+line option should be avoided at boot time, but they shouldn't
+be excluded from getting brought up later on. Note how
+native_smp_prepare_cpus() ignores its parameter altogether.
+
+Jan
+
+
