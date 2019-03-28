@@ -2,232 +2,85 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE46C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4872C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753B1206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9169B206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 15:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfC1Pcq (ORCPT
+        id S1727528AbfC1PdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 11:32:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39824 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbfC1Pcq (ORCPT
+        Thu, 28 Mar 2019 11:33:13 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:27779 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfC1PdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 11:32:46 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2SFVEFb070262
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:32:44 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rgy3h6pb9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 11:32:42 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 28 Mar 2019 15:32:14 -0000
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Mar 2019 15:32:11 -0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2SFW5Wj22609922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Mar 2019 15:32:06 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B01278060;
-        Thu, 28 Mar 2019 15:32:05 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B3357805C;
-        Thu, 28 Mar 2019 15:32:04 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Mar 2019 15:32:03 +0000 (GMT)
-Subject: Re: [PATCH v6 2/7] s390: ap: new vfio_ap_queue structure
-To:     pmorel@linux.ibm.com, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1553265828-27823-1-git-send-email-pmorel@linux.ibm.com>
- <1553265828-27823-3-git-send-email-pmorel@linux.ibm.com>
- <169eec34-6397-3150-27df-9985c9e711b8@linux.ibm.com>
- <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Thu, 28 Mar 2019 11:32:03 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 28 Mar 2019 11:33:12 -0400
+X-IronPort-AV: E=Sophos;i="5.60,280,1549954800"; 
+   d="scan'208";a="29203181"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 28 Mar 2019 08:33:12 -0700
+Received: from tenerife.corp.atmel.com (10.10.76.4) by
+ chn-sv-exch06.mchp-main.com (10.10.76.107) with Microsoft SMTP Server id
+ 14.3.352.0; Thu, 28 Mar 2019 08:33:11 -0700
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+CC:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH] ARM: at91: remove HAVE_FB_ATMEL for sama5 SoC as they use DRM
+Date:   Thu, 28 Mar 2019 16:33:07 +0100
+Message-ID: <20190328153307.24689-1-nicolas.ferre@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1b64ad7b-2a7c-b604-1adb-af400e7be516@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19032815-0016-0000-0000-000009985453
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010829; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000283; SDB=6.01180934; UDB=6.00618056; IPR=6.00961652;
- MB=3.00026195; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-28 15:32:13
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19032815-0017-0000-0000-0000429CF909
-Message-Id: <0477b20a-c882-c23d-5373-d461ef721f2c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903280104
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/19 9:06 AM, Pierre Morel wrote:
-> On 26/03/2019 21:45, Tony Krowiak wrote:
->> On 3/22/19 10:43 AM, Pierre Morel wrote:
->>> The AP interruptions are assigned on a queue basis and
->>> the GISA structure is handled on a VM basis, so that
->>> we need to add a structure we can retrieve from both side
->>
->> s/side/sides/
-> OK
-> 
->>
->>> holding the information we need to handle PQAP/AQIC interception
->>> and setup the GISA.
->>
->> s/setup/set up/
-> 
-> OK
-> 
-> ...snip...
-> 
->>> +
->>> +static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
->>> +{
->>> +    struct ap_queue_status status;
->>> +    int retry = 1;
->>> +
->>> +    do {
->>> +        status = ap_zapq(q->apqn);
->>> +        switch (status.response_code) {
->>> +        case AP_RESPONSE_NORMAL:
->>> +            return 0;
->>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
->>> +        case AP_RESPONSE_BUSY:
->>> +            msleep(20);
->>> +            break;
->>> +        default:
->>> +            /* things are really broken, give up */
->>
->> I'm not sure things are necessarily broken. We could end up here if
->> the AP is removed from the configuration via the SE or SCLP Deconfigure
->> Adjunct Processor command.
-> 
-> OK, but note that it is your original comment I just moved the function 
-> here ;)
+SAMA5 devices use the newer DRM driver for LCD. They don't need
+the older FB driver: remove the Kconfig option for them.
 
-Yes, it is. I'm smarter now;)
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ arch/arm/mach-at91/Kconfig | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> 
->>
->>> +            return -EIO;
->>> +        }
->>> +    } while (retry--);
->>> +
->>> +    return -EBUSY;
->>> +}
->>> +
->>>   static void vfio_ap_matrix_init(struct ap_config_info *info,
->>>                   struct ap_matrix *matrix)
->>>   {
->>> @@ -45,6 +107,7 @@ static int vfio_ap_mdev_create(struct kobject 
->>> *kobj, struct mdev_device *mdev)
->>>           return -ENOMEM;
->>>       }
->>> +    INIT_LIST_HEAD(&matrix_mdev->qlist);
->>>       vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
->>>       mdev_set_drvdata(mdev, matrix_mdev);
->>>       mutex_lock(&matrix_dev->lock);
->>> @@ -113,162 +176,189 @@ static struct attribute_group 
->>> *vfio_ap_mdev_type_groups[] = {
->>>       NULL,
->>>   };
->>> -struct vfio_ap_queue_reserved {
->>> -    unsigned long *apid;
->>> -    unsigned long *apqi;
->>> -    bool reserved;
->>> -};
->>> +static void vfio_ap_free_queue(int apqn, struct ap_matrix_mdev 
->>> *matrix_mdev)
->>> +{
->>> +    struct vfio_ap_queue *q;
->>> +
->>> +    q = vfio_ap_get_queue(apqn, &matrix_mdev->qlist);
->>> +    if (!q)
->>> +        return;
->>> +    q->matrix_mdev = NULL;
->>> +    vfio_ap_mdev_reset_queue(q);
->>
->> I'm wondering if it's necessary to reset the queue here. The only time
->> a queue is used is when a guest using the mdev device is started. When
->> that guest is terminated, the fd for the mdev device is /* Bits 41-47 must all be zeros */closed and the
->> mdev device's release callback is invoked. The release callback resets
->> the queues assigned to the mdev device. Is it really necessary to
->> reset the queue again when it is unassigned even if there would have
->> been no subsequent activity?
-> 
-> Yes, it is necessary, the queue can be re-assigned to another guest later.
-> Release will only be called when unbinding the queue from the driver.
-
-That is true, but if the queue is never used, there is nothing to reset.
-
-> 
->>
->>> +    list_move(&q->list, &matrix_dev->free_list);
->>> +}
-> 
-> ...snip...
-> 
->>> +    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, AP_DEVICES) {
->>> +        apqn = AP_MKQID(apid, apqi);
->>> +        q = vfio_ap_find_queue(apqn);
->>> +        if (!q) {
->>> +            ret = -EADDRNOTAVAIL;
->>> +            goto rewind;
->>> +        }
->>> +        if (q->matrix_mdev) {
->>
->> If somebody assigns the same domain a second time, the assignment will
->> fail because the matrix_mdev will already have been associated with the
->> queue. I don't think it is appropriate to fail the assignment if the
-> 
-> It is usual to report a failure in the case the operation requested has 
-> already be done.
-> But we can do as you want. Any other opinion?
-> 
->> q->matrix_mdev is the same as the input matrix_mdev. This should be
->> changed to:
->>
->>      if (q->matrix_mdev != matrix_mdev)
-> 
-> You surely want to say: add this, not change to this. ;)
-
-Yes
-
-> 
->>
-> 
-> Thanks for commenting,
-> 
-> Regards,
-> Pierre
-> 
-> 
+diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+index 903f23c309df..01b1bdb4fb6e 100644
+--- a/arch/arm/mach-at91/Kconfig
++++ b/arch/arm/mach-at91/Kconfig
+@@ -21,7 +21,6 @@ config SOC_SAMA5D2
+ 	depends on ARCH_MULTI_V7
+ 	select SOC_SAMA5
+ 	select CACHE_L2X0
+-	select HAVE_FB_ATMEL
+ 	select HAVE_AT91_UTMI
+ 	select HAVE_AT91_USB_CLK
+ 	select HAVE_AT91_H32MX
+@@ -36,7 +35,6 @@ config SOC_SAMA5D3
+ 	bool "SAMA5D3 family"
+ 	depends on ARCH_MULTI_V7
+ 	select SOC_SAMA5
+-	select HAVE_FB_ATMEL
+ 	select HAVE_AT91_UTMI
+ 	select HAVE_AT91_SMD
+ 	select HAVE_AT91_USB_CLK
+@@ -50,7 +48,6 @@ config SOC_SAMA5D4
+ 	depends on ARCH_MULTI_V7
+ 	select SOC_SAMA5
+ 	select CACHE_L2X0
+-	select HAVE_FB_ATMEL
+ 	select HAVE_AT91_UTMI
+ 	select HAVE_AT91_SMD
+ 	select HAVE_AT91_USB_CLK
+-- 
+2.17.1
 
