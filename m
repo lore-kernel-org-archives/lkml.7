@@ -2,129 +2,263 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A41C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28D3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D92722173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9506217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfC1MkH (ORCPT
+        id S1726613AbfC1MkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:40:07 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57161 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfC1MkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:40:03 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2SCdIvB3318890
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Mar 2019 05:39:18 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2SCdIqB3318887;
-        Thu, 28 Mar 2019 05:39:18 -0700
-Date:   Thu, 28 Mar 2019 05:39:18 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-bebd024e4815b1a170fcd21ead9c2222b23ce9e6@git.kernel.org>
-Cc:     michael.h.kelley@microsoft.com, jkosina@suse.cz,
-        linux-kernel@vger.kernel.org, luto@kernel.org, riel@surriel.com,
-        kys@microsoft.com, mingo@kernel.org, mojha@codeaurora.org,
-        Tianyu.Lan@microsoft.com, peterz@infradead.org, hpa@zytor.com,
-        jpoimboe@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, bp@alien8.de,
-        konrad.wilk@oracle.com, gregkh@linuxfoundation.org
-Reply-To: mingo@kernel.org, mojha@codeaurora.org,
-          michael.h.kelley@microsoft.com, linux-kernel@vger.kernel.org,
-          jkosina@suse.cz, luto@kernel.org, riel@surriel.com,
-          kys@microsoft.com, konrad.wilk@oracle.com,
-          gregkh@linuxfoundation.org, peterz@infradead.org,
-          Tianyu.Lan@microsoft.com, torvalds@linux-foundation.org,
-          tglx@linutronix.de, hpa@zytor.com, jpoimboe@redhat.com,
-          bp@alien8.de
-In-Reply-To: <20190326163811.598166056@linutronix.de>
-References: <20190326163811.598166056@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:smp/urgent] x86/smp: Enforce CONFIG_HOTPLUG_CPU when SMP=y
-Git-Commit-ID: bebd024e4815b1a170fcd21ead9c2222b23ce9e6
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Mar 2019 08:40:24 -0400
+Received: from mga05.intel.com ([192.55.52.43]:49140 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbfC1Mgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 08:36:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
+   d="scan'208";a="218369177"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 28 Mar 2019 05:36:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 3B591880; Thu, 28 Mar 2019 14:36:34 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 10/36] thunderbolt: Configure lanes when switch is initialized
+Date:   Thu, 28 Mar 2019 15:36:07 +0300
+Message-Id: <20190328123633.42882-11-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bebd024e4815b1a170fcd21ead9c2222b23ce9e6
-Gitweb:     https://git.kernel.org/tip/bebd024e4815b1a170fcd21ead9c2222b23ce9e6
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Tue, 26 Mar 2019 17:36:06 +0100
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 28 Mar 2019 13:34:58 +0100
+Thunderbolt 2 devices and beyond need to have additional bits set in
+link controller specific registers. This includes two bits in LC_SX_CTRL
+that tell the link controller which lane is connected and whether it is
+upstream facing or not.
 
-x86/smp: Enforce CONFIG_HOTPLUG_CPU when SMP=y
-
-The SMT disable 'nosmt' command line argument is not working properly when
-CONFIG_HOTPLUG_CPU is disabled. The teardown of the sibling CPUs which are
-required to be brought up due to the MCE issues, cannot work. The CPUs are
-then kept in a half dead state.
-
-As the 'nosmt' functionality has become popular due to the speculative
-hardware vulnerabilities, the half torn down state is not a proper solution
-to the problem.
-
-Enforce CONFIG_HOTPLUG_CPU=y when SMP is enabled so the full operation is
-possible.
-
-Reported-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Konrad Wilk <konrad.wilk@oracle.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Micheal Kelley <michael.h.kelley@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190326163811.598166056@linutronix.de
-
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/Kconfig | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/thunderbolt/lc.c      | 114 ++++++++++++++++++++++++++++++++++
+ drivers/thunderbolt/switch.c  |   9 +++
+ drivers/thunderbolt/tb.h      |   2 +
+ drivers/thunderbolt/tb_regs.h |  11 ++++
+ 4 files changed, 136 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index c1f9b3cf437c..5ad92419be19 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2217,14 +2217,8 @@ config RANDOMIZE_MEMORY_PHYSICAL_PADDING
- 	   If unsure, leave at the default value.
+diff --git a/drivers/thunderbolt/lc.c b/drivers/thunderbolt/lc.c
+index 2134a55ed837..a5dddf176546 100644
+--- a/drivers/thunderbolt/lc.c
++++ b/drivers/thunderbolt/lc.c
+@@ -19,3 +19,117 @@ int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid)
+ 		return -EINVAL;
+ 	return tb_sw_read(sw, uuid, TB_CFG_SWITCH, sw->cap_lc + TB_LC_FUSE, 4);
+ }
++
++static int read_lc_desc(struct tb_switch *sw, u32 *desc)
++{
++	if (!sw->cap_lc)
++		return -EINVAL;
++	return tb_sw_read(sw, desc, TB_CFG_SWITCH, sw->cap_lc + TB_LC_DESC, 1);
++}
++
++static int find_port_lc_cap(struct tb_port *port)
++{
++	struct tb_switch *sw = port->sw;
++	int start, phys, ret, size;
++	u32 desc;
++
++	ret = read_lc_desc(sw, &desc);
++	if (ret)
++		return ret;
++
++	/* Start of port LC registers */
++	start = (desc & TB_LC_DESC_SIZE_MASK) >> TB_LC_DESC_SIZE_SHIFT;
++	size = (desc & TB_LC_DESC_PORT_SIZE_MASK) >> TB_LC_DESC_PORT_SIZE_SHIFT;
++	phys = tb_phy_port_from_link(port->port);
++
++	return sw->cap_lc + start + phys * size;
++}
++
++static int tb_lc_configure_lane(struct tb_port *port, bool configure)
++{
++	bool upstream = tb_is_upstream_port(port);
++	struct tb_switch *sw = port->sw;
++	u32 ctrl, lane;
++	int cap, ret;
++
++	if (sw->generation < 2)
++		return 0;
++
++	cap = find_port_lc_cap(port);
++	if (cap < 0)
++		return cap;
++
++	ret = tb_sw_read(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
++	if (ret)
++		return ret;
++
++	/* Resolve correct lane */
++	if (port->port % 2)
++		lane = TB_LC_SX_CTRL_L1C;
++	else
++		lane = TB_LC_SX_CTRL_L2C;
++
++	if (configure) {
++		ctrl |= lane;
++		if (upstream)
++			ctrl |= TB_LC_SX_CTRL_UPSTREAM;
++	} else {
++		ctrl &= ~lane;
++		if (upstream)
++			ctrl &= ~TB_LC_SX_CTRL_UPSTREAM;
++	}
++
++	return tb_sw_write(sw, &ctrl, TB_CFG_SWITCH, cap + TB_LC_SX_CTRL, 1);
++}
++
++/**
++ * tb_lc_configure_link() - Let LC know about configured link
++ * @sw: Switch that is being added
++ *
++ * Informs LC of both parent switch and @sw that there is established
++ * link between the two.
++ */
++int tb_lc_configure_link(struct tb_switch *sw)
++{
++	struct tb_port *up, *down;
++	int ret;
++
++	if (!sw->config.enabled || !tb_route(sw))
++		return 0;
++
++	up = tb_upstream_port(sw);
++	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
++
++	/* Configure parent link toward this switch */
++	ret = tb_lc_configure_lane(down, true);
++	if (ret)
++		return ret;
++
++	/* Configure upstream link from this switch to the parent */
++	ret = tb_lc_configure_lane(up, true);
++	if (ret)
++		tb_lc_configure_lane(down, false);
++
++	return ret;
++}
++
++/**
++ * tb_lc_unconfigure_link() - Let LC know about unconfigured link
++ * @sw: Switch to unconfigure
++ *
++ * Informs LC of both parent switch and @sw that the link between the
++ * two does not exist anymore.
++ */
++void tb_lc_unconfigure_link(struct tb_switch *sw)
++{
++	struct tb_port *up, *down;
++
++	if (sw->is_unplugged || !sw->config.enabled || !tb_route(sw))
++		return;
++
++	up = tb_upstream_port(sw);
++	down = tb_port_at(tb_route(sw), tb_to_switch(sw->dev.parent));
++
++	tb_lc_configure_lane(up, false);
++	tb_lc_configure_lane(down, false);
++}
+diff --git a/drivers/thunderbolt/switch.c b/drivers/thunderbolt/switch.c
+index 63ff4c753d89..dd218dc4781b 100644
+--- a/drivers/thunderbolt/switch.c
++++ b/drivers/thunderbolt/switch.c
+@@ -1276,6 +1276,10 @@ int tb_switch_configure(struct tb_switch *sw)
+ 	if (ret)
+ 		return ret;
  
- config HOTPLUG_CPU
--	bool "Support for hot-pluggable CPUs"
-+	def_bool y
- 	depends on SMP
--	---help---
--	  Say Y here to allow turning CPUs off and on. CPUs can be
--	  controlled through /sys/devices/system/cpu.
--	  ( Note: power management support will enable this option
--	    automatically on SMP systems. )
--	  Say N if you want to disable CPU hotplug.
++	ret = tb_lc_configure_link(sw);
++	if (ret)
++		return ret;
++
+ 	return tb_plug_events_active(sw, true);
+ }
  
- config BOOTPARAM_HOTPLUG_CPU0
- 	bool "Set default setting of cpu0_hotpluggable"
+@@ -1486,6 +1490,7 @@ void tb_switch_remove(struct tb_switch *sw)
+ 
+ 	if (!sw->is_unplugged)
+ 		tb_plug_events_active(sw, false);
++	tb_lc_unconfigure_link(sw);
+ 
+ 	tb_switch_nvm_remove(sw);
+ 
+@@ -1545,6 +1550,10 @@ int tb_switch_resume(struct tb_switch *sw)
+ 	if (err)
+ 		return err;
+ 
++	err = tb_lc_configure_link(sw);
++	if (err)
++		return err;
++
+ 	err = tb_plug_events_active(sw, true);
+ 	if (err)
+ 		return err;
+diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
+index e52d39b25266..69e0534224d8 100644
+--- a/drivers/thunderbolt/tb.h
++++ b/drivers/thunderbolt/tb.h
+@@ -465,6 +465,8 @@ int tb_drom_read(struct tb_switch *sw);
+ int tb_drom_read_uid_only(struct tb_switch *sw, u64 *uid);
+ 
+ int tb_lc_read_uuid(struct tb_switch *sw, u32 *uuid);
++int tb_lc_configure_link(struct tb_switch *sw);
++void tb_lc_unconfigure_link(struct tb_switch *sw);
+ 
+ static inline int tb_route_length(u64 route)
+ {
+diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+index 4895ae9f0b40..e0f867dad5cf 100644
+--- a/drivers/thunderbolt/tb_regs.h
++++ b/drivers/thunderbolt/tb_regs.h
+@@ -238,6 +238,17 @@ struct tb_regs_hop {
+ } __packed;
+ 
+ /* Common link controller registers */
++#define TB_LC_DESC			0x02
++#define TB_LC_DESC_SIZE_SHIFT		8
++#define TB_LC_DESC_SIZE_MASK		GENMASK(15, 8)
++#define TB_LC_DESC_PORT_SIZE_SHIFT	16
++#define TB_LC_DESC_PORT_SIZE_MASK	GENMASK(27, 16)
+ #define TB_LC_FUSE			0x03
+ 
++/* Link controller registers */
++#define TB_LC_SX_CTRL			0x96
++#define TB_LC_SX_CTRL_L1C		BIT(16)
++#define TB_LC_SX_CTRL_L2C		BIT(20)
++#define TB_LC_SX_CTRL_UPSTREAM		BIT(30)
++
+ #endif
+-- 
+2.20.1
+
