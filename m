@@ -2,185 +2,169 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E340C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757C020811
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EFD20811
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 20:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tXOVtHwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfC1Ulx (ORCPT
+        id S1727246AbfC1Ul5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 16:41:53 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.5]:26258 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726095AbfC1Ulx (ORCPT
+        Thu, 28 Mar 2019 16:41:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44451 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727188AbfC1Ulz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 16:41:53 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 6803FB843
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 15:41:52 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9bqSh8MeydnCe9bqShyott; Thu, 28 Mar 2019 15:41:52 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.117.246] (port=38392 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h9bqR-000R0h-Rn; Thu, 28 Mar 2019 15:41:52 -0500
-Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190131004622.GA30261@embeddedor>
- <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
-Date:   Thu, 28 Mar 2019 15:41:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 16:41:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y13so5768332pfm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 13:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8By5OSotSuT4GJqP67uaJWemZ0EgShCc8LjQId4k3Rc=;
+        b=tXOVtHwDPUUtgapGGO9kXhC64m6Muf9WfJvydhPhC4nkOGrxKkEx41Daatgf0ejBle
+         IFImpN15g33BQTTAoDlV3ihA4wXCtldSyT3dy5jiluo8H+Jt2nn0OAQsEWvtIfgJHfme
+         reHuIo62eIM9eldUVz3y5MY1L5zzXta5mIRbIg4cS5kr/u+5u8J6Cb9VOhhB162AexHW
+         kWwt4YGW+8D1GgWEt0bUODXbzU9pYedUXKtJPvZ0quEkw1x3fY54r7Ygdu7KTkJmx6eT
+         rL7sIgrLMkqs2sTJqFwzpRvUW+J3SVrnR7r9sleviRUy0NWp/JvA0F33aRoOa9w3lwDb
+         UFzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8By5OSotSuT4GJqP67uaJWemZ0EgShCc8LjQId4k3Rc=;
+        b=hLlw/P2mlUSWLi/ddaOKOR/Jknm/epvi20CtLE1SJNYbFThrLcg5JamZ7x1Z5uG5+q
+         gwfexfKxVH/Lg69S4POLGwTHSZwWV0Q3nLvhhmTeO1dzyC2kDHsczawaGfVWwBYeVKYa
+         XRv/pMi0qSXPjLEXpcWrSq2I47CMTvzWl4U3ocJpgj8AV3vmMUa1H8NiklQb4KfPEhDX
+         Czp4XBYes8WvvviYGF8bP3sHNWI6SN+6z5x9Seu5neFtmXZko6TixpNy8VS43MXmMiBy
+         NJDyr3ws7PonhNGWMiqWqs+uaKmNGmhw9WIn3FRB6pQQXCptgy2jz9VH8krQqQ7S+wE/
+         CWSw==
+X-Gm-Message-State: APjAAAX1tlEc2ipdERS/rzQGr7DlrDVA+b6Xaqc5zAR1A4lFS1oie2wX
+        FXHy15EupeIOMtizACBP+bJhCg==
+X-Google-Smtp-Source: APXvYqzuvOHSRpY6JBeyHb6ix0zBYaSPOK/RbkLGW9cxfwyk2KtngBHMB1hIV4IOfdJP6y+ZaUujKQ==
+X-Received: by 2002:a63:2c4a:: with SMTP id s71mr2995307pgs.373.1553805714899;
+        Thu, 28 Mar 2019 13:41:54 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id q11sm63621pgs.94.2019.03.28.13.41.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 13:41:54 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 14:41:51 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, coresight@lists.linaro.org,
+        mike.leach@linaro.org, robert.walker@arm.com,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 23/25] coresight: stm: ACPI support for parsing stimulus
+ base
+Message-ID: <20190328204151.GA7163@xps15>
+References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
+ <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.117.246
-X-Source-L: No
-X-Exim-ID: 1h9bqR-000R0h-Rn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.117.246]:38392
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, Mar 20, 2019 at 06:49:40PM +0000, Suzuki K Poulose wrote:
+> The stimulus base for STM device must be listed as the second memory
+> resource, followed by the programming base address. Add support for
+> parsing the information for ACPI.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-stm.c | 43 +++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+> index d94ae22..995443a 100644
+> --- a/drivers/hwtracing/coresight/coresight-stm.c
+> +++ b/drivers/hwtracing/coresight/coresight-stm.c
+> @@ -16,6 +16,7 @@
+>   * (C) 2015-2016 Chunyan Zhang <zhang.chunyan@linaro.org>
+>   */
+>  #include <asm/local.h>
+> +#include <linux/acpi.h>
+>  #include <linux/amba/bus.h>
+>  #include <linux/bitmap.h>
+>  #include <linux/clk.h>
+> @@ -717,10 +718,52 @@ static inline int of_stm_get_stimulus_area(struct device *dev,
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_ACPI
+> +static int acpi_stm_get_stimulus_area(struct device *dev, struct resource *res)
+> +{
+> +	int rc;
+> +	bool found_base = false;
+> +	struct resource_entry *rent;
+> +	LIST_HEAD(res_list);
+> +
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +
+> +	if (!adev)
+> +		return -ENODEV;
+> +	rc = acpi_dev_get_resources(adev, &res_list, NULL, NULL);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	rc = -ENOENT;
+> +	list_for_each_entry(rent, &res_list, node) {
+> +		if (resource_type(rent->res) != IORESOURCE_MEM)
+> +			continue;
+> +		if (found_base) {
+> +			*res = *rent->res;
+> +			rc = 0;
+> +			break;
+> +		}
+> +
+> +		found_base = true;
 
-Friendly ping:
+Is the ACPI binding crystal clear on the fact that the second resource region
+has to be for stimulus ports?
 
-Who can take this?
+> +	}
+> +
+> +	acpi_dev_free_resource_list(&res_list);
+> +	return rc;
+> +}
+> +#else
+> +static inline int acpi_stm_get_stimulus_area(struct device *dev,
+> +					     struct resource *res)
+> +{
+> +	return -ENOENT;
+> +}
+> +#endif
+> +
+>  static int stm_get_stimulus_area(struct device *dev, struct resource *res)
+>  {
+>  	if (dev->of_node)
 
-Thanks
---
-Gustavo
+Wouldn't it be better to use is_of_node()?
 
-On 1/31/19 8:11 AM, Chuck Lever wrote:
-> 
-> 
->> On Jan 30, 2019, at 7:46 PM, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
->>
->> One of the more common cases of allocation size calculations is finding
->> the size of a structure that has a zero-sized array at the end, along
->> with memory for some number of elements for that array. For example:
->>
->> struct foo {
->>    int stuff;
->>    struct boo entry[];
->> };
->>
->> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
->>
->> Instead of leaving these open-coded and prone to type mistakes, we can
->> now use the new struct_size() helper:
->>
->> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
->>
->> This code was detected with the help of Coccinelle.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-> 
-> 
->> ---
->> net/sunrpc/xprtrdma/verbs.c | 3 +--
->> 1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->> index 4994e75945b8..9e8cf7456840 100644
->> --- a/net/sunrpc/xprtrdma/verbs.c
->> +++ b/net/sunrpc/xprtrdma/verbs.c
->> @@ -811,8 +811,7 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ia *ia)
->> {
->> 	struct rpcrdma_sendctx *sc;
->>
->> -	sc = kzalloc(sizeof(*sc) +
->> -		     ia->ri_max_send_sges * sizeof(struct ib_sge),
->> +	sc = kzalloc(struct_size(sc, sc_sges, ia->ri_max_send_sges),
->> 		     GFP_KERNEL);
->> 	if (!sc)
->> 		return NULL;
->> -- 
->> 2.20.1
->>
-> 
-> --
-> Chuck Lever
-> 
-> 
+>  		return of_stm_get_stimulus_area(dev, res);
+> +	else if (is_acpi_node(dev->fwnode)
+
+is_acpi_device_node()?
+
+> +		return acpi_stm_get_stimulus_area(dev, res);
+>  	return -ENOENT;
+>  }
+>  
+> -- 
+> 2.7.4
 > 
