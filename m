@@ -2,493 +2,209 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56598C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98118C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9442082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="kB5S8num"
+	by mail.kernel.org (Postfix) with ESMTP id 667C82082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfC1MjS (ORCPT
+        id S1727897AbfC1Mj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 08:39:18 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:55424 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfC1MjO (ORCPT
+        Thu, 28 Mar 2019 08:39:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57259 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbfC1MjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:39:14 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 4A6ED25B791;
-        Thu, 28 Mar 2019 23:39:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1553776751; bh=Z9crQ9U1LXicVsQnVnEb3KoFUl3NwGnxEZ8Bf62HpWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kB5S8num9gaL3JnqFqecBu8MeBO1fAhYe6BlcmXjgM83oSsrwRJEc3/ZYZreNYffG
-         GBr0iAENUH/knPs9SIP+DcYHLdkrgXjaLTcgAEGmm+NPUfNYb/AC/6tACSRmhT6PW2
-         JvNj6LBxl1RNHJnR7jyoHbp2LhJOIv48wuGlkjK4=
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 915199403A7; Thu, 28 Mar 2019 13:39:09 +0100 (CET)
-Date:   Thu, 28 Mar 2019 13:39:09 +0100
-From:   Simon Horman <horms@verge.net.au>
-To:     Jacky Hu <hengqing.hu@gmail.com>
-Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCH v7] ipvs: allow tunneling with gue encapsulation
-Message-ID: <20190328123909.5uqvokkcxh2sjvfl@verge.net.au>
-References: <20190326103121.31083-1-hengqing.hu@gmail.com>
- <20190328095950.66xhna76xndokdp6@verge.net.au>
- <20190328114708.GA10198@i716>
+        Thu, 28 Mar 2019 08:39:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x2SCcb4A3318555
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 28 Mar 2019 05:38:37 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x2SCcblE3318552;
+        Thu, 28 Mar 2019 05:38:37 -0700
+Date:   Thu, 28 Mar 2019 05:38:37 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-206b92353c839c0b27a0b9bec24195f93fd6cf7a@git.kernel.org>
+Cc:     peterz@infradead.org, hpa@zytor.com, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, bp@alien8.de, michael.h.kelley@microsoft.com,
+        linux-kernel@vger.kernel.org, jkosina@suse.cz,
+        Tianyu.Lan@microsoft.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, konrad.wilk@oracle.com,
+        mojha@codeaurora.org, luto@kernel.org, riel@surriel.com,
+        kys@microsoft.com, jpoimboe@redhat.com
+Reply-To: riel@surriel.com, luto@kernel.org, mojha@codeaurora.org,
+          jpoimboe@redhat.com, kys@microsoft.com, bp@alien8.de,
+          tglx@linutronix.de, hpa@zytor.com, gregkh@linuxfoundation.org,
+          peterz@infradead.org, konrad.wilk@oracle.com,
+          torvalds@linux-foundation.org, Tianyu.Lan@microsoft.com,
+          jkosina@suse.cz, mingo@kernel.org, linux-kernel@vger.kernel.org,
+          michael.h.kelley@microsoft.com
+In-Reply-To: <20190326163811.503390616@linutronix.de>
+References: <20190326163811.503390616@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/urgent] cpu/hotplug: Prevent crash when CPU bringup fails
+ on CONFIG_HOTPLUG_CPU=n
+Git-Commit-ID: 206b92353c839c0b27a0b9bec24195f93fd6cf7a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190328114708.GA10198@i716>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 07:47:08PM +0800, Jacky Hu wrote:
-> Hi Simon,
-> On Thu, Mar 28, 2019 at 10:59:50AM +0100, Simon Horman wrote:
-> > Hi Jacky,
-> > 
-> > On Tue, Mar 26, 2019 at 06:31:21PM +0800, Jacky Hu wrote:
-> > > ipip packets are blocked in some public cloud environments, this patch
-> > > allows gue encapsulation with the tunneling method, which would make
-> > > tunneling working in those environments.
-> > > 
-> > > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-> > 
-> > It would help a lot if you provided a short summary
-> > of what changed between versions of this patch.
-> > 
-> 
-> Here is the summary:
-> 
->     v7->v6:
->       1) pass proper gso type mask to gso_inner_segment for gue tunnel
-> 
->     v6->v5:
->       1) simply using an if statement for tun_type discrimination
-> 
->     v5->v4:
->       1) use __be16 for tun_port and __u16 for tun_type and avoid any
->          atomic_t usage
->       2) fixed sparse warnings
-> 
->     v4->v3:
->       1) removed changes to setsockopt interface
->       2) use correct nla_get/put function for tun_port
->       3) moved cp->dest null check to __ip_vs_get_out_rt() and
->          __ip_vs_get_out_rt_v6()
->       4) account the added header when calculating mtu
->       5) use net instead of dev_net(tdev)
->       6) set udest->tun_type to IP_VS_CONN_F_TUNNEL_TYPE_IPIP in
->          ip_vs_copy_udest_compat()
->       7) renamed __build_gue_header to ipvs_gue_encap
->       8) make ip_vs_add_dest() and ip_vs_edit_dest() return EINVAL when
->          GUE comes with port 0.
->       9) feed AF_INET6 to __tun_gso_type_mask in ip_vs_tunnel_xmit_v6
-> 
->     v3->v2:
->       1) added missing break statements to a few switch cases
-> 
->     v2->v1:
->       1) pass tun_type and tun_port as new optional parameters
->          instead of a few bits in existing conn_flags parameters
-> 
-> > > ---
-> > >  include/net/ip_vs.h             |  5 ++
-> > >  include/uapi/linux/ip_vs.h      | 11 +++++
-> > >  net/netfilter/ipvs/ip_vs_ctl.c  | 35 +++++++++++++-
-> > >  net/netfilter/ipvs/ip_vs_xmit.c | 84 +++++++++++++++++++++++++++++++--
-> > >  4 files changed, 130 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> > > index 047f9a5ccaad..2ac40135b576 100644
-> > > --- a/include/net/ip_vs.h
-> > > +++ b/include/net/ip_vs.h
-> > > @@ -600,6 +600,9 @@ struct ip_vs_dest_user_kern {
-> > >  
-> > >  	/* Address family of addr */
-> > >  	u16			af;
-> > > +
-> > > +	u16			tun_type;	/* tunnel type */
-> > > +	__be16			tun_port;	/* tunnel port */
-> > >  };
-> > >  
-> > >  
-> > > @@ -660,6 +663,8 @@ struct ip_vs_dest {
-> > >  	atomic_t		conn_flags;	/* flags to copy to conn */
-> > >  	atomic_t		weight;		/* server weight */
-> > >  	atomic_t		last_weight;	/* server latest weight */
-> > > +	__u16			tun_type;	/* tunnel type */
-> > > +	__be16			tun_port;	/* tunnel port */
-> > >  
-> > >  	refcount_t		refcnt;		/* reference counter */
-> > >  	struct ip_vs_stats      stats;          /* statistics */
-> > > diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-> > > index 1c916b2f89dc..e34f436fc79d 100644
-> > > --- a/include/uapi/linux/ip_vs.h
-> > > +++ b/include/uapi/linux/ip_vs.h
-> > > @@ -124,6 +124,13 @@
-> > >  
-> > >  #define IP_VS_PEDATA_MAXLEN     255
-> > >  
-> > > +/* Tunnel types */
-> > > +enum {
-> > > +	IP_VS_CONN_F_TUNNEL_TYPE_IPIP = 0,	/* IPIP */
-> > > +	IP_VS_CONN_F_TUNNEL_TYPE_GUE,		/* GUE */
-> > > +	IP_VS_CONN_F_TUNNEL_TYPE_MAX,
-> > > +};
-> > > +
-> > >  /*
-> > >   *	The struct ip_vs_service_user and struct ip_vs_dest_user are
-> > >   *	used to set IPVS rules through setsockopt.
-> > > @@ -392,6 +399,10 @@ enum {
-> > >  
-> > >  	IPVS_DEST_ATTR_STATS64,		/* nested attribute for dest stats */
-> > >  
-> > > +	IPVS_DEST_ATTR_TUN_TYPE,	/* tunnel type */
-> > > +
-> > > +	IPVS_DEST_ATTR_TUN_PORT,	/* tunnel port */
-> > > +
-> > >  	__IPVS_DEST_ATTR_MAX,
-> > >  };
-> > >  
-> > > diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-> > > index 053cd96b9c76..328683452229 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_ctl.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_ctl.c
-> > > @@ -831,6 +831,10 @@ __ip_vs_update_dest(struct ip_vs_service *svc, struct ip_vs_dest *dest,
-> > >  	conn_flags = udest->conn_flags & IP_VS_CONN_F_DEST_MASK;
-> > >  	conn_flags |= IP_VS_CONN_F_INACTIVE;
-> > >  
-> > > +	/* set the tunnel info */
-> > > +	dest->tun_type = udest->tun_type;
-> > > +	dest->tun_port = udest->tun_port;
-> > > +
-> > >  	/* set the IP_VS_CONN_F_NOOUTPUT flag if not masquerading/NAT */
-> > >  	if ((conn_flags & IP_VS_CONN_F_FWD_MASK) != IP_VS_CONN_F_MASQ) {
-> > >  		conn_flags |= IP_VS_CONN_F_NOOUTPUT;
-> > > @@ -987,6 +991,13 @@ ip_vs_add_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> > >  		return -ERANGE;
-> > >  	}
-> > >  
-> > > +	if (udest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE) {
-> > > +		if (udest->tun_port == 0) {
-> > > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +	}
-> > > +
-> > >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> > >  
-> > >  	/* We use function that requires RCU lock */
-> > > @@ -1051,6 +1062,13 @@ ip_vs_edit_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest)
-> > >  		return -ERANGE;
-> > >  	}
-> > >  
-> > > +	if (udest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE) {
-> > > +		if (udest->tun_port == 0) {
-> > > +			pr_err("%s(): tunnel port is zero\n", __func__);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +	}
-> > > +
-> > >  	ip_vs_addr_copy(udest->af, &daddr, &udest->addr);
-> > >  
-> > >  	/* We use function that requires RCU lock */
-> > > @@ -2333,6 +2351,7 @@ static void ip_vs_copy_udest_compat(struct ip_vs_dest_user_kern *udest,
-> > >  	udest->u_threshold	= udest_compat->u_threshold;
-> > >  	udest->l_threshold	= udest_compat->l_threshold;
-> > >  	udest->af		= AF_INET;
-> > > +	udest->tun_type		= IP_VS_CONN_F_TUNNEL_TYPE_IPIP;
-> > >  }
-> > >  
-> > >  static int
-> > > @@ -2890,6 +2909,8 @@ static const struct nla_policy ip_vs_dest_policy[IPVS_DEST_ATTR_MAX + 1] = {
-> > >  	[IPVS_DEST_ATTR_PERSIST_CONNS]	= { .type = NLA_U32 },
-> > >  	[IPVS_DEST_ATTR_STATS]		= { .type = NLA_NESTED },
-> > >  	[IPVS_DEST_ATTR_ADDR_FAMILY]	= { .type = NLA_U16 },
-> > > +	[IPVS_DEST_ATTR_TUN_TYPE]	= { .type = NLA_U8 },
-> > > +	[IPVS_DEST_ATTR_TUN_PORT]	= { .type = NLA_U16 },
-> > >  };
-> > >  
-> > >  static int ip_vs_genl_fill_stats(struct sk_buff *skb, int container_type,
-> > > @@ -3193,6 +3214,10 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
-> > >  			 IP_VS_CONN_F_FWD_MASK)) ||
-> > >  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
-> > >  			atomic_read(&dest->weight)) ||
-> > > +	    nla_put_u8(skb, IPVS_DEST_ATTR_TUN_TYPE,
-> > > +		       dest->tun_type) ||
-> > > +	    nla_put_be16(skb, IPVS_DEST_ATTR_TUN_PORT,
-> > > +			 dest->tun_port) ||
-> > >  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
-> > >  	    nla_put_u32(skb, IPVS_DEST_ATTR_L_THRESH, dest->l_threshold) ||
-> > >  	    nla_put_u32(skb, IPVS_DEST_ATTR_ACTIVE_CONNS,
-> > > @@ -3315,12 +3340,14 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> > >  	/* If a full entry was requested, check for the additional fields */
-> > >  	if (full_entry) {
-> > >  		struct nlattr *nla_fwd, *nla_weight, *nla_u_thresh,
-> > > -			      *nla_l_thresh;
-> > > +			      *nla_l_thresh, *nla_tun_type, *nla_tun_port;
-> > >  
-> > >  		nla_fwd		= attrs[IPVS_DEST_ATTR_FWD_METHOD];
-> > >  		nla_weight	= attrs[IPVS_DEST_ATTR_WEIGHT];
-> > >  		nla_u_thresh	= attrs[IPVS_DEST_ATTR_U_THRESH];
-> > >  		nla_l_thresh	= attrs[IPVS_DEST_ATTR_L_THRESH];
-> > > +		nla_tun_type	= attrs[IPVS_DEST_ATTR_TUN_TYPE];
-> > > +		nla_tun_port	= attrs[IPVS_DEST_ATTR_TUN_PORT];
-> > >  
-> > >  		if (!(nla_fwd && nla_weight && nla_u_thresh && nla_l_thresh))
-> > >  			return -EINVAL;
-> > > @@ -3330,6 +3357,12 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
-> > >  		udest->weight = nla_get_u32(nla_weight);
-> > >  		udest->u_threshold = nla_get_u32(nla_u_thresh);
-> > >  		udest->l_threshold = nla_get_u32(nla_l_thresh);
-> > > +
-> > > +		if (nla_tun_type)
-> > > +			udest->tun_type = nla_get_u8(nla_tun_type);
-> > > +
-> > > +		if (nla_tun_port)
-> > > +			udest->tun_port = nla_get_be16(nla_tun_port);
-> > >  	}
-> > >  
-> > >  	return 0;
-> > > diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-> > > index 175349fcf91f..8d6f94b67772 100644
-> > > --- a/net/netfilter/ipvs/ip_vs_xmit.c
-> > > +++ b/net/netfilter/ipvs/ip_vs_xmit.c
-> > > @@ -32,6 +32,7 @@
-> > >  #include <linux/slab.h>
-> > >  #include <linux/tcp.h>                  /* for tcphdr */
-> > >  #include <net/ip.h>
-> > > +#include <net/gue.h>
-> > >  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
-> > >  #include <net/udp.h>
-> > >  #include <net/icmp.h>                   /* for icmp_send */
-> > > @@ -382,6 +383,10 @@ __ip_vs_get_out_rt(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> > >  		mtu = dst_mtu(&rt->dst);
-> > >  	} else {
-> > >  		mtu = dst_mtu(&rt->dst) - sizeof(struct iphdr);
-> > > +		if (!dest)
-> > > +			goto err_put;
-> > > +		if (dest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> > >  		if (mtu < 68) {
-> > >  			IP_VS_DBG_RL("%s(): mtu less than 68\n", __func__);
-> > >  			goto err_put;
-> > > @@ -533,6 +538,10 @@ __ip_vs_get_out_rt_v6(struct netns_ipvs *ipvs, int skb_af, struct sk_buff *skb,
-> > >  		mtu = dst_mtu(&rt->dst);
-> > >  	else {
-> > >  		mtu = dst_mtu(&rt->dst) - sizeof(struct ipv6hdr);
-> > > +		if (!dest)
-> > > +			goto err_put;
-> > > +		if (dest->tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +			mtu -= sizeof(struct udphdr) + sizeof(struct guehdr);
-> > >  		if (mtu < IPV6_MIN_MTU) {
-> > >  			IP_VS_DBG_RL("%s(): mtu less than %d\n", __func__,
-> > >  				     IPV6_MIN_MTU);
-> > > @@ -989,6 +998,41 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
-> > >  	}
-> > >  }
-> > >  
-> > > +static int
-> > > +ipvs_gue_encap(struct net *net, struct sk_buff *skb,
-> > > +	       struct ip_vs_conn *cp, __u8 *next_protocol)
-> > > +{
-> > > +	__be16 dport;
-> > > +	__be16 sport = udp_flow_src_port(net, skb, 0, 0, false);
-> > > +	struct udphdr  *udph;	/* Our new UDP header */
-> > > +	struct guehdr  *gueh;	/* Our new GUE header */
-> > > +
-> > > +	skb_push(skb, sizeof(struct guehdr));
-> > > +
-> > > +	gueh = (struct guehdr *)skb->data;
-> > > +
-> > > +	gueh->control = 0;
-> > > +	gueh->version = 0;
-> > > +	gueh->hlen = 0;
-> > > +	gueh->flags = 0;
-> > > +	gueh->proto_ctype = *next_protocol;
-> > > +
-> > > +	skb_push(skb, sizeof(struct udphdr));
-> > > +	skb_reset_transport_header(skb);
-> > > +
-> > > +	udph = udp_hdr(skb);
-> > > +
-> > > +	dport = cp->dest->tun_port;
-> > > +	udph->dest = dport;
-> > > +	udph->source = sport;
-> > > +	udph->len = htons(skb->len);
-> > > +	udph->check = 0;
-> > > +
-> > > +	*next_protocol = IPPROTO_UDP;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  /*
-> > >   *   IP Tunneling transmitter
-> > >   *
-> > > @@ -1025,6 +1069,7 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  	struct iphdr  *iph;			/* Our new IP header */
-> > >  	unsigned int max_headroom;		/* The extra header space needed */
-> > >  	int ret, local;
-> > > +	int tun_type, gso_type;
-> > >  
-> > >  	EnterFunction(10);
-> > >  
-> > > @@ -1046,6 +1091,11 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  	 */
-> > >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
-> > >  
-> > > +	tun_type = cp->dest->tun_type;
-> > > +
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > > +
-> > >  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
-> > >  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
-> > >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> > > @@ -1054,11 +1104,20 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  	if (IS_ERR(skb))
-> > >  		goto tx_error;
-> > >  
-> > > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-> > > +	gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		gso_type |= SKB_GSO_UDP_TUNNEL;
-> > 
-> > Should the gso_type really be __tun_gso_type_mask() | SKB_GSO_UDP_TUNNEL.
-> > It seems tome that SKB_GSO_UDP_TUNNEL would be more appropriate.
-> > 
-> Do you mean you want me to change the code above to:
-> 	gso_type = __tun_gso_type_mask(AF_INET, cp->af);
-> 	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> 		gso_type = __tun_gso_type_mask(AF_INET, cp->af) | SKB_GSO_UDP_TUNNEL;
+Commit-ID:  206b92353c839c0b27a0b9bec24195f93fd6cf7a
+Gitweb:     https://git.kernel.org/tip/206b92353c839c0b27a0b9bec24195f93fd6cf7a
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Tue, 26 Mar 2019 17:36:05 +0100
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 28 Mar 2019 13:34:58 +0100
 
-I am more thinking of:
+cpu/hotplug: Prevent crash when CPU bringup fails on CONFIG_HOTPLUG_CPU=n
 
-	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-		gso_type = SKB_GSO_UDP_TUNNEL;
-	else
-		gso_type = __tun_gso_type_mask(AF_INET, cp->af);
+Tianyu reported a crash in a CPU hotplug teardown callback when booting a
+kernel which has CONFIG_HOTPLUG_CPU disabled with the 'nosmt' boot
+parameter.
 
-I think you intentionally changed this since an earlier version
-of this patch but I'm not sure why.
+It turns out that the SMP=y CONFIG_HOTPLUG_CPU=n case has been broken
+forever in case that a bringup callback fails. Unfortunately this issue was
+not recognized when the CPU hotplug code was reworked, so the shortcoming
+just stayed in place.
 
-> > Also, should there be a mechanism to enable cums in the outer header,
-> > and thus use SKB_GSO_UDP_TUNNEL_CSUM?
-> > 
-> Yep, that we can definitely do it in a follow up patch later, by adding
-> some new parameters for check sum control.
+When a bringup callback fails, the CPU hotplug code rolls back the
+operation and takes the CPU offline.
 
-Thanks, I think that would be a good follow-up.
+The 'nosmt' command line argument uses a bringup failure to abort the
+bringup of SMT sibling CPUs. This partial bringup is required due to the
+MCE misdesign on Intel CPUs.
 
-> > > +
-> > > +	if (iptunnel_handle_offloads(skb, gso_type))
-> > >  		goto tx_error;
-> > >  
-> > >  	skb->transport_header = skb->network_header;
-> > >  
-> > > +	skb_set_inner_ipproto(skb, next_protocol);
-> > > +
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > > +
-> > >  	skb_push(skb, sizeof(struct iphdr));
-> > >  	skb_reset_network_header(skb);
-> > >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > > @@ -1102,6 +1161,8 @@ int
-> > >  ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  		     struct ip_vs_protocol *pp, struct ip_vs_iphdr *ipvsh)
-> > >  {
-> > > +	struct netns_ipvs *ipvs = cp->ipvs;
-> > > +	struct net *net = ipvs->net;
-> > >  	struct rt6_info *rt;		/* Route to the other host */
-> > >  	struct in6_addr saddr;		/* Source for tunnel */
-> > >  	struct net_device *tdev;	/* Device to other host */
-> > > @@ -1112,10 +1173,11 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  	struct ipv6hdr  *iph;		/* Our new IP header */
-> > >  	unsigned int max_headroom;	/* The extra header space needed */
-> > >  	int ret, local;
-> > > +	int tun_type, gso_type;
-> > >  
-> > >  	EnterFunction(10);
-> > >  
-> > > -	local = __ip_vs_get_out_rt_v6(cp->ipvs, cp->af, skb, cp->dest,
-> > > +	local = __ip_vs_get_out_rt_v6(ipvs, cp->af, skb, cp->dest,
-> > >  				      &cp->daddr.in6,
-> > >  				      &saddr, ipvsh, 1,
-> > >  				      IP_VS_RT_MODE_LOCAL |
-> > > @@ -1134,17 +1196,31 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  	 */
-> > >  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
-> > >  
-> > > +	tun_type = cp->dest->tun_type;
-> > > +
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-> > > +
-> > >  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-> > >  					 &next_protocol, &payload_len,
-> > >  					 &dsfield, &ttl, NULL);
-> > >  	if (IS_ERR(skb))
-> > >  		goto tx_error;
-> > >  
-> > > -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-> > > +	gso_type = __tun_gso_type_mask(AF_INET6, cp->af);
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		gso_type |= SKB_GSO_UDP_TUNNEL;
-> > > +
-> > > +	if (iptunnel_handle_offloads(skb, gso_type))
-> > >  		goto tx_error;
-> > >  
-> > >  	skb->transport_header = skb->network_header;
-> > >  
-> > > +	skb_set_inner_ipproto(skb, next_protocol);
-> > 
-> > Is the above needed in the non-GUE case?
-> Looking at implementation of ipip6_tunnel_xmit and ipip_tunnel_xmit,
-> this seems to be needed also.
-> > 
-> > > +
-> > > +	if (tun_type == IP_VS_CONN_F_TUNNEL_TYPE_GUE)
-> > > +		ipvs_gue_encap(net, skb, cp, &next_protocol);
-> > > +
-> > >  	skb_push(skb, sizeof(struct ipv6hdr));
-> > >  	skb_reset_network_header(skb);
-> > >  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-> > > @@ -1167,7 +1243,7 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
-> > >  
-> > >  	ret = ip_vs_tunnel_xmit_prepare(skb, cp);
-> > >  	if (ret == NF_ACCEPT)
-> > > -		ip6_local_out(cp->ipvs->net, skb->sk, skb);
-> > > +		ip6_local_out(net, skb->sk, skb);
-> > >  	else if (ret == NF_DROP)
-> > >  		kfree_skb(skb);
-> > >  
-> > > -- 
-> > > 2.21.0
-> > > 
-> Thanks and Best Regards,
-> Jacky
-> 
+With CONFIG_HOTPLUG_CPU=y the rollback works perfectly fine, but
+CONFIG_HOTPLUG_CPU=n lacks essential mechanisms to exercise the low level
+teardown of a CPU including the synchronizations in various facilities like
+RCU, NOHZ and others.
+
+As a consequence the teardown callbacks which must be executed on the
+outgoing CPU within stop machine with interrupts disabled are executed on
+the control CPU in interrupt enabled and preemptible context causing the
+kernel to crash and burn. The pre state machine code has a different
+failure mode which is more subtle and resulting in a less obvious use after
+free crash because the control side frees resources which are still in use
+by the undead CPU.
+
+But this is not a x86 only problem. Any architecture which supports the
+SMP=y HOTPLUG_CPU=n combination suffers from the same issue. It's just less
+likely to be triggered because in 99.99999% of the cases all bringup
+callbacks succeed.
+
+The easy solution of making HOTPLUG_CPU mandatory for SMP is not working on
+all architectures as the following architectures have either no hotplug
+support at all or not all subarchitectures support it:
+
+ alpha, arc, hexagon, openrisc, riscv, sparc (32bit), mips (partial).
+
+Crashing the kernel in such a situation is not an acceptable state
+either.
+
+Implement a minimal rollback variant by limiting the teardown to the point
+where all regular teardown callbacks have been invoked and leave the CPU in
+the 'dead' idle state. This has the following consequences:
+
+ - the CPU is brought down to the point where the stop_machine takedown
+   would happen.
+
+ - the CPU stays there forever and is idle
+
+ - The CPU is cleared in the CPU active mask, but not in the CPU online
+   mask which is a legit state.
+
+ - Interrupts are not forced away from the CPU
+
+ - All facilities which only look at online mask would still see it, but
+   that is the case during normal hotplug/unplug operations as well. It's
+   just a (way) longer time frame.
+
+This will expose issues, which haven't been exposed before or only seldom,
+because now the normally transient state of being non active but online is
+a permanent state. In testing this exposed already an issue vs. work queues
+where the vmstat code schedules work on the almost dead CPU which ends up
+in an unbound workqueue and triggers 'preemtible context' warnings. This is
+not a problem of this change, it merily exposes an already existing issue.
+Still this is better than crashing fully without a chance to debug it.
+
+This is mainly thought as workaround for those architectures which do not
+support HOTPLUG_CPU. All others should enforce HOTPLUG_CPU for SMP.
+
+Fixes: 2e1a3483ce74 ("cpu/hotplug: Split out the state walk into functions")
+Reported-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Konrad Wilk <konrad.wilk@oracle.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Micheal Kelley <michael.h.kelley@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190326163811.503390616@linutronix.de
+
+---
+ kernel/cpu.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 025f419d16f6..6754f3ecfd94 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -564,6 +564,20 @@ static void undo_cpu_up(unsigned int cpu, struct cpuhp_cpu_state *st)
+ 		cpuhp_invoke_callback(cpu, st->state, false, NULL, NULL);
+ }
+ 
++static inline bool can_rollback_cpu(struct cpuhp_cpu_state *st)
++{
++	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
++		return true;
++	/*
++	 * When CPU hotplug is disabled, then taking the CPU down is not
++	 * possible because takedown_cpu() and the architecture and
++	 * subsystem specific mechanisms are not available. So the CPU
++	 * which would be completely unplugged again needs to stay around
++	 * in the current state.
++	 */
++	return st->state <= CPUHP_BRINGUP_CPU;
++}
++
+ static int cpuhp_up_callbacks(unsigned int cpu, struct cpuhp_cpu_state *st,
+ 			      enum cpuhp_state target)
+ {
+@@ -574,8 +588,10 @@ static int cpuhp_up_callbacks(unsigned int cpu, struct cpuhp_cpu_state *st,
+ 		st->state++;
+ 		ret = cpuhp_invoke_callback(cpu, st->state, true, NULL, NULL);
+ 		if (ret) {
+-			st->target = prev_state;
+-			undo_cpu_up(cpu, st);
++			if (can_rollback_cpu(st)) {
++				st->target = prev_state;
++				undo_cpu_up(cpu, st);
++			}
+ 			break;
+ 		}
+ 	}
