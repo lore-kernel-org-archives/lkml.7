@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A78AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A28AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD20B217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F84217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 12:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfC1Mgu (ORCPT
+        id S1727512AbfC1Mgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Mar 2019 08:36:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9515 "EHLO mga04.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:34158 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727327AbfC1Mgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 08:36:47 -0400
+        id S1727363AbfC1Mgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 08:36:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:46 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Mar 2019 05:36:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,280,1549958400"; 
-   d="scan'208";a="286671465"
+   d="scan'208";a="138136897"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 28 Mar 2019 05:36:42 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 28 Mar 2019 05:36:45 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 6C73E17DC; Thu, 28 Mar 2019 14:36:35 +0200 (EET)
+        id 8036A187E; Thu, 28 Mar 2019 14:36:35 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Michael Jamet <michael.jamet@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Michael Jamet <michael.jamet@intel.com>,
         Mario.Limonciello@dell.com,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         netdev@vger.kernel.org
-Subject: [PATCH v3 33/36] thunderbolt: Make __TB_[SW|PORT]_PRINT take const parameters
-Date:   Thu, 28 Mar 2019 15:36:30 +0300
-Message-Id: <20190328123633.42882-34-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 35/36] thunderbolt: Reword output of tb_dump_hop()
+Date:   Thu, 28 Mar 2019 15:36:32 +0300
+Message-Id: <20190328123633.42882-36-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
 References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
@@ -55,45 +55,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The printing macros do not modify the passed object so make them
-const. While there make tb_route() to take const parameter as well.
+While tb_dump_hop() prints out necessary information it is in format
+that is quite hard to read from the logs especially when one needs to
+follow the path to see that the setup is correct.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/thunderbolt/tb.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/thunderbolt/path.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/thunderbolt/tb.h b/drivers/thunderbolt/tb.h
-index ca53ec145e27..535ddd77138c 100644
---- a/drivers/thunderbolt/tb.h
-+++ b/drivers/thunderbolt/tb.h
-@@ -287,7 +287,7 @@ static inline bool tb_is_upstream_port(const struct tb_port *port)
- 	return port == upstream_port || port->dual_link_port == upstream_port;
- }
+diff --git a/drivers/thunderbolt/path.c b/drivers/thunderbolt/path.c
+index 2dbfb3e1c3fc..44bdf08f3f68 100644
+--- a/drivers/thunderbolt/path.c
++++ b/drivers/thunderbolt/path.c
+@@ -13,21 +13,22 @@
  
--static inline u64 tb_route(struct tb_switch *sw)
-+static inline u64 tb_route(const struct tb_switch *sw)
+ #include "tb.h"
+ 
+-static void tb_dump_hop(struct tb_port *port, struct tb_regs_hop *hop)
++static void tb_dump_hop(const struct tb_path_hop *hop, const struct tb_regs_hop *regs)
  {
- 	return ((u64) sw->config.route_hi) << 32 | sw->config.route_lo;
+-	tb_port_dbg(port, " Hop through port %d to hop %d (%s)\n",
+-		    hop->out_port, hop->next_hop,
+-		    hop->enable ? "enabled" : "disabled");
++	const struct tb_port *port = hop->in_port;
++
++	tb_port_dbg(port, " In HopID: %d => Out port: %d Out HopID: %d\n",
++		    hop->in_hop_index, regs->out_port, regs->next_hop);
+ 	tb_port_dbg(port, "  Weight: %d Priority: %d Credits: %d Drop: %d\n",
+-		    hop->weight, hop->priority,
+-		    hop->initial_credits, hop->drop_packages);
++		    regs->weight, regs->priority,
++		    regs->initial_credits, regs->drop_packages);
+ 	tb_port_dbg(port, "   Counter enabled: %d Counter index: %d\n",
+-		    hop->counter_enable, hop->counter);
++		    regs->counter_enable, regs->counter);
+ 	tb_port_dbg(port, "  Flow Control (In/Eg): %d/%d Shared Buffer (In/Eg): %d/%d\n",
+-		    hop->ingress_fc, hop->egress_fc,
+-		    hop->ingress_shared_buffer, hop->egress_shared_buffer);
++		    regs->ingress_fc, regs->egress_fc,
++		    regs->ingress_shared_buffer, regs->egress_shared_buffer);
+ 	tb_port_dbg(port, "  Unknown1: %#x Unknown2: %#x Unknown3: %#x\n",
+-		    hop->unknown1, hop->unknown2, hop->unknown3);
++		    regs->unknown1, regs->unknown2, regs->unknown3);
  }
-@@ -410,7 +410,7 @@ static inline int tb_port_write(struct tb_port *port, const void *buffer,
  
- #define __TB_SW_PRINT(level, sw, fmt, arg...)           \
- 	do {                                            \
--		struct tb_switch *__sw = (sw);          \
-+		const struct tb_switch *__sw = (sw);    \
- 		level(__sw->tb, "%llx: " fmt,           \
- 		      tb_route(__sw), ## arg);          \
- 	} while (0)
-@@ -421,7 +421,7 @@ static inline int tb_port_write(struct tb_port *port, const void *buffer,
+ static struct tb_port *tb_path_find_dst_port(struct tb_port *src, int src_hopid,
+@@ -503,9 +504,8 @@ int tb_path_activate(struct tb_path *path)
+ 					    & out_mask;
+ 		hop.unknown3 = 0;
  
- #define __TB_PORT_PRINT(level, _port, fmt, arg...)                      \
- 	do {                                                            \
--		struct tb_port *__port = (_port);                       \
-+		const struct tb_port *__port = (_port);                 \
- 		level(__port->sw->tb, "%llx:%x: " fmt,                  \
- 		      tb_route(__port->sw), __port->port, ## arg);      \
- 	} while (0)
+-		tb_port_dbg(path->hops[i].in_port, "Writing hop %d, index %d",
+-			    i, path->hops[i].in_hop_index);
+-		tb_dump_hop(path->hops[i].in_port, &hop);
++		tb_port_dbg(path->hops[i].in_port, "Writing hop %d\n", i);
++		tb_dump_hop(&path->hops[i], &hop);
+ 		res = tb_port_write(path->hops[i].in_port, &hop, TB_CFG_HOPS,
+ 				    2 * path->hops[i].in_hop_index, 2);
+ 		if (res) {
 -- 
 2.20.1
 
