@@ -2,152 +2,209 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35522C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658752075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:53:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="cqOU7Y3O";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="IMM+PHUD"
+	by mail.kernel.org (Postfix) with ESMTP id ED84F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 05:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbfC1Fxc (ORCPT
+        id S1726172AbfC1Fzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 01:53:32 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:39708 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725794AbfC1Fxb (ORCPT
+        Thu, 28 Mar 2019 01:55:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42588 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725806AbfC1Fzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 01:53:31 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2S5nnf4014546;
-        Wed, 27 Mar 2019 22:53:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=fvSa0BqjY6V2PBnPW0sW8ETSPHbDNf+5u4BwfLNcf+E=;
- b=cqOU7Y3OEu8HWh8CLK4HfNigykFz4ZwZdwdtaPiAbbHBk1PapfiYC4Sn/LPD6M3IFLsJ
- o5WbwmJrZ/On0MBg+r28fWQkIljY59wcxiMxo8ikSMjeTJ1yIYKPnrgfl7CGQV7/8IJS
- ji9ehPQA7NTQT5kMxS5OtQKIXZ57fnR0/bVPuHBVWYrhUPW3W3xiKfavSKDibl7rdUL6
- SkGlm6zZtloW7vOQdpn9AwCJdIc6uUTMLGf9e2s09FS1KzDPphu7fIprBOBlf4zblQHV
- vIgKuvaMWU7XyzkaD3xlSzSbY0Xueyo0/yG0pYGLDN4yukJIqdhhOgSntnVJmMsZLGKR YA== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2rgr9fr0uy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 27 Mar 2019 22:53:28 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 27 Mar
- 2019 22:53:21 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.59) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 27 Mar 2019 22:53:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fvSa0BqjY6V2PBnPW0sW8ETSPHbDNf+5u4BwfLNcf+E=;
- b=IMM+PHUDzqdGLO7SI8c9y99aW2fs2wlun5BZVvLDQaoMI+yKAba2CCBg0HP45Bh2vwDJdVjNgp+ZUDgGjCQoa05mWAVLk1yecd4LmLarjPyfyM7u9ajPyBmpGG3zaeoMFtXntf8okh591HqxNntctxnxBVr0HV614idla1FSJZ4=
-Received: from BYAPR18MB2485.namprd18.prod.outlook.com (20.179.92.143) by
- BYAPR18MB2902.namprd18.prod.outlook.com (20.179.58.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Thu, 28 Mar 2019 05:53:15 +0000
-Received: from BYAPR18MB2485.namprd18.prod.outlook.com
- ([fe80::2d57:671d:82c7:14e0]) by BYAPR18MB2485.namprd18.prod.outlook.com
- ([fe80::2d57:671d:82c7:14e0%4]) with mapi id 15.20.1730.019; Thu, 28 Mar 2019
- 05:53:15 +0000
-From:   Manish Rangankar <mrangankar@marvell.com>
-To:     Colin King <colin.king@canonical.com>,
-        "QLogic-Storage-Upstream@cavium.com" 
-        <QLogic-Storage-Upstream@cavium.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: qedi: remove declaration of nvm_image from stack
-Thread-Topic: [PATCH] scsi: qedi: remove declaration of nvm_image from stack
-Thread-Index: AQHU5MiGMiYnk6lOEkq9sKMvSMXYq6Ygizxg
-Date:   Thu, 28 Mar 2019 05:53:15 +0000
-Message-ID: <BYAPR18MB2485E6EE1193DE82178C05A3D8590@BYAPR18MB2485.namprd18.prod.outlook.com>
-References: <20190327181103.15677-1-colin.king@canonical.com>
-In-Reply-To: <20190327181103.15677-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.143.185.87]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2d9c5e1f-ffde-48e7-a5fd-08d6b341abe3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:BYAPR18MB2902;
-x-ms-traffictypediagnostic: BYAPR18MB2902:
-x-microsoft-antispam-prvs: <BYAPR18MB290264FAC0C21A36C804E7F2D8590@BYAPR18MB2902.namprd18.prod.outlook.com>
-x-forefront-prvs: 0990C54589
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(39850400004)(396003)(376002)(189003)(13464003)(199004)(71190400001)(486006)(14444005)(8936002)(99286004)(316002)(14454004)(6116002)(54906003)(110136005)(33656002)(66066001)(71200400001)(68736007)(2501003)(256004)(81156014)(3846002)(478600001)(9686003)(8676002)(229853002)(81166006)(97736004)(6436002)(7696005)(4326008)(6506007)(76176011)(2906002)(53546011)(74316002)(26005)(5660300002)(25786009)(305945005)(106356001)(53936002)(476003)(105586002)(52536014)(86362001)(11346002)(446003)(186003)(55016002)(7736002)(6246003)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2902;H:BYAPR18MB2485.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oV7wSMxFd6mxIa+hL1xugTq2QYrVLWdUv3tu7//kHc/KQ2kR+9fdq4eh2OFJopqPKPwtiN+81pZgbbJ55XVgDx9eB8XACMFj24XtdG0c7FOwm4WumKDdiHoN6cQ/r1QiGWLH4F2k+bZnOeTKsmG5/l6ZQZLgATnWFi8yT2Ir3nBUQwGrSMJbMavy0CLFU9++6zg1J6MRDD4K284iPc9cFmUXFizPYhdcj8hts4QqBkW4tbD3NJgss979DucQAKJTcV4H7VetQeZrrPQpfgM6rjrSUzsm/ngMfIgcqAROcVDGeDmrYuGH7z6EJMGpT+jB9KjgfOYYryiFH8vcsrH3wKMwwJsdIEpo7ZV+RB0Tv+defqFiCzOsYMSpHZvESZz6jPNCXzOL+SQYm1kVRr6NZkzP6tye4D6WQao1RxiNspY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 Mar 2019 01:55:39 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2S5nIHE072437
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 01:55:37 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rgq2wkdek-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Mar 2019 01:55:37 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 28 Mar 2019 05:55:35 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Mar 2019 05:55:26 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2S5tOJu54198406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Mar 2019 05:55:25 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2EBD4C046;
+        Thu, 28 Mar 2019 05:55:24 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 517B94C05C;
+        Thu, 28 Mar 2019 05:55:22 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 28 Mar 2019 05:55:22 +0000 (GMT)
+Date:   Thu, 28 Mar 2019 07:55:20 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Zhou <dennis@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Guo Ren <ren_guo@c-sky.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Paul Burton <paul.burton@mips.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rich Felker <dalias@libc.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH AUTOSEL 5.0 008/262] swiotlb: add checks for the return
+ value of memblock_alloc*()
+References: <20190327180158.10245-1-sashal@kernel.org>
+ <20190327180158.10245-8-sashal@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d9c5e1f-ffde-48e7-a5fd-08d6b341abe3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2019 05:53:15.5641
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2902
-X-OriginatorOrg: marvell.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327180158.10245-8-sashal@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19032805-0012-0000-0000-0000030830CD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19032805-0013-0000-0000-0000213F6046
+Message-Id: <20190328055520.GA14864@rapoport-lnx>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-28_04:,,
  signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=52 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903280044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IENvbGluIEtpbmcgPGNvbGlu
-LmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBNYXJjaCAyNywgMjAxOSAx
-MTo0MSBQTQ0KPiBUbzogUUxvZ2ljLVN0b3JhZ2UtVXBzdHJlYW1AY2F2aXVtLmNvbTsgSmFtZXMg
-RSAuIEogLiBCb3R0b21sZXkNCj4gPGplamJAbGludXguaWJtLmNvbT47IE1hcnRpbiBLIC4gUGV0
-ZXJzZW4gPG1hcnRpbi5wZXRlcnNlbkBvcmFjbGUuY29tPjsNCj4gbGludXgtc2NzaUB2Z2VyLmtl
-cm5lbC5vcmcNCj4gQ2M6IGtlcm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIXSBzY3NpOiBxZWRpOiByZW1v
-dmUgZGVjbGFyYXRpb24gb2YgbnZtX2ltYWdlIGZyb20gc3RhY2sNCj4gDQo+IEZyb206IENvbGlu
-IElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IA0KPiBUaGUgbnZtX2ltYWdl
-IGlzIGEgbGFyZ2Ugc3RydWN0IHFlZGlfbnZtX2lzY3NpX2ltYWdlIG9iamVjdCBvZiBvdmVyIDI0
-Sw0KPiBzbyBkb24ndCBkZWNsYXJlIGl0IG9uIHRoZSBzdGFjayBqdXN0IGZvciBhIHNpemVvZiBy
-ZXF1aXJlbWVudDsgdXNlIHNpemVvZiBvbg0KPiBzdHJ1Y3QgcWVkaV9udm1faXNjc2lfaW1hZ2Ug
-aW5zdGVhZC4NCj4gDQo+IEZpeGVzOiBjNzdhMmZhM2ZmOGYgKCJzY3NpOiBxZWRpOiBBZGQgdGhl
-IENSQyBzaXplIHdpdGhpbiBpU0NTSSBOVk0gaW1hZ2UiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBDb2xp
-biBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
-c2NzaS9xZWRpL3FlZGlfbWFpbi5jIHwgNyArKy0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBp
-bnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-c2NzaS9xZWRpL3FlZGlfbWFpbi5jIGIvZHJpdmVycy9zY3NpL3FlZGkvcWVkaV9tYWluLmMNCj4g
-aW5kZXggZTc0YTYyNDQ4YmE0Li5lNWRiOWE5OTU0ZGMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
-c2NzaS9xZWRpL3FlZGlfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvc2NzaS9xZWRpL3FlZGlfbWFp
-bi5jDQo+IEBAIC0xMzkyLDEwICsxMzkyLDggQEAgc3RhdGljIHZvaWQgcWVkaV9mcmVlX252bV9p
-c2NzaV9jZmcoc3RydWN0DQo+IHFlZGlfY3R4ICpxZWRpKQ0KPiANCj4gIHN0YXRpYyBpbnQgcWVk
-aV9hbGxvY19udm1faXNjc2lfY2ZnKHN0cnVjdCBxZWRpX2N0eCAqcWVkaSkgIHsNCj4gLQlzdHJ1
-Y3QgcWVkaV9udm1faXNjc2lfaW1hZ2UgbnZtX2ltYWdlOw0KPiAtDQo+ICAJcWVkaS0+aXNjc2lf
-aW1hZ2UgPSBkbWFfYWxsb2NfY29oZXJlbnQoJnFlZGktPnBkZXYtPmRldiwNCj4gLQkJCQkJICAg
-ICAgIHNpemVvZihudm1faW1hZ2UpLA0KPiArCQkJCQkgICAgICAgc2l6ZW9mKHN0cnVjdA0KPiBx
-ZWRpX252bV9pc2NzaV9pbWFnZSksDQo+ICAJCQkJCSAgICAgICAmcWVkaS0+bnZtX2J1Zl9kbWEs
-DQo+IEdGUF9LRVJORUwpOw0KPiAgCWlmICghcWVkaS0+aXNjc2lfaW1hZ2UpIHsNCj4gIAkJUUVE
-SV9FUlIoJnFlZGktPmRiZ19jdHgsICJDb3VsZCBub3QgYWxsb2NhdGUgTlZNDQo+IEJVRi5cbiIp
-OyBAQCAtMjIzNiwxNCArMjIzNCwxMyBAQCBzdGF0aWMgdm9pZCBxZWRpX2Jvb3RfcmVsZWFzZSh2
-b2lkDQo+ICpkYXRhKSAgc3RhdGljIGludCBxZWRpX2dldF9ib290X2luZm8oc3RydWN0IHFlZGlf
-Y3R4ICpxZWRpKSAgew0KPiAgCWludCByZXQgPSAxOw0KPiAtCXN0cnVjdCBxZWRpX252bV9pc2Nz
-aV9pbWFnZSBudm1faW1hZ2U7DQo+IA0KPiAgCVFFRElfSU5GTygmcWVkaS0+ZGJnX2N0eCwgUUVE
-SV9MT0dfSU5GTywNCj4gIAkJICAiR2V0IE5WTSBpU0NTSSBDRkcgaW1hZ2VcbiIpOw0KPiAgCXJl
-dCA9IHFlZGlfb3BzLT5jb21tb24tPm52bV9nZXRfaW1hZ2UocWVkaS0+Y2RldiwNCj4gIAkJCQkJ
-ICAgICAgUUVEX05WTV9JTUFHRV9JU0NTSV9DRkcsDQo+ICAJCQkJCSAgICAgIChjaGFyICopcWVk
-aS0+aXNjc2lfaW1hZ2UsDQo+IC0JCQkJCSAgICAgIHNpemVvZihudm1faW1hZ2UpKTsNCj4gKwkJ
-CQkJICAgICAgc2l6ZW9mKHN0cnVjdA0KPiBxZWRpX252bV9pc2NzaV9pbWFnZSkpOw0KPiAgCWlm
-IChyZXQpDQo+ICAJCVFFRElfRVJSKCZxZWRpLT5kYmdfY3R4LA0KPiAgCQkJICJDb3VsZCBub3Qg
-Z2V0IE5WTSBpbWFnZS4gcmV0ID0gJWRcbiIsIHJldCk7DQo+IC0tDQo+IDIuMjAuMQ0KDQpUaGFu
-a3MsDQpBY2tlZC1ieTogTWFuaXNoIFJhbmdhbmthciA8bXJhbmdhbmthckBtYXJ2ZWxsLmNvbT4N
-Cg==
+Hi,
+
+On Wed, Mar 27, 2019 at 01:57:43PM -0400, Sasha Levin wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> [ Upstream commit a0bf842e89a3842162aa8514b9bf4611c86fee10 ]
+> 
+> Add panic() calls if memblock_alloc() returns NULL.
+> 
+> The panic() format duplicates the one used by memblock itself and in
+> order to avoid explosion with long parameters list replace open coded
+> allocation size calculations with a local variable.
+
+This patch is a part of a series that removes panic() calls from memblock
+allocators rather than a fix.
+ 
+> Link: http://lkml.kernel.org/r/1548057848-15136-19-git-send-email-rppt@linux.ibm.com
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Guan Xuetao <gxt@pku.edu.cn>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: Guo Ren <ren_guo@c-sky.com>				[c-sky]
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Juergen Gross <jgross@suse.com>			[Xen]
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Stafford Horne <shorne@gmail.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  kernel/dma/swiotlb.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index c873f9cc2146..41224f0ec40e 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -191,6 +191,7 @@ void __init swiotlb_update_mem_attributes(void)
+>  int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+>  {
+>  	unsigned long i, bytes;
+> +	size_t alloc_size;
+>  
+>  	bytes = nslabs << IO_TLB_SHIFT;
+>  
+> @@ -203,12 +204,18 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose)
+>  	 * to find contiguous free memory regions of size up to IO_TLB_SEGSIZE
+>  	 * between io_tlb_start and io_tlb_end.
+>  	 */
+> -	io_tlb_list = memblock_alloc(
+> -				PAGE_ALIGN(io_tlb_nslabs * sizeof(int)),
+> -				PAGE_SIZE);
+> -	io_tlb_orig_addr = memblock_alloc(
+> -				PAGE_ALIGN(io_tlb_nslabs * sizeof(phys_addr_t)),
+> -				PAGE_SIZE);
+> +	alloc_size = PAGE_ALIGN(io_tlb_nslabs * sizeof(int));
+> +	io_tlb_list = memblock_alloc(alloc_size, PAGE_SIZE);
+> +	if (!io_tlb_list)
+> +		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
+> +		      __func__, alloc_size, PAGE_SIZE);
+> +
+> +	alloc_size = PAGE_ALIGN(io_tlb_nslabs * sizeof(phys_addr_t));
+> +	io_tlb_orig_addr = memblock_alloc(alloc_size, PAGE_SIZE);
+> +	if (!io_tlb_orig_addr)
+> +		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
+> +		      __func__, alloc_size, PAGE_SIZE);
+> +
+>  	for (i = 0; i < io_tlb_nslabs; i++) {
+>  		io_tlb_list[i] = IO_TLB_SEGSIZE - OFFSET(i, IO_TLB_SEGSIZE);
+>  		io_tlb_orig_addr[i] = INVALID_PHYS_ADDR;
+> -- 
+> 2.19.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
