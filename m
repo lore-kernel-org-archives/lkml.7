@@ -2,168 +2,123 @@ Return-Path: <SRS0=Qu8K=R7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D12C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5960C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766842183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96367206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Mar 2019 17:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBLlj7QM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfC1RSi (ORCPT
+        id S1727565AbfC1RTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Mar 2019 13:18:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48908 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfC1RSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Mar 2019 13:18:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86B5380D;
-        Thu, 28 Mar 2019 10:18:36 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79C4C3F557;
-        Thu, 28 Mar 2019 10:18:33 -0700 (PDT)
-Subject: Re: Unexpected interrupt received in Guest OS when booting after
- "system_reset"
-To:     Heyi Guo <guoheyi@huawei.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org,
-        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
-References: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <9a6ece7e-9984-dc9e-8fa2-df9736393dd2@arm.com>
-Date:   Thu, 28 Mar 2019 17:18:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Mar 2019 13:19:35 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:38674 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726235AbfC1RTf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Mar 2019 13:19:35 -0400
+Received: by mail-yw1-f68.google.com with SMTP id m207so6281838ywd.5;
+        Thu, 28 Mar 2019 10:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WQ87d/GuSsWiqz7wsRpRdGNX/3V6XiBVfMQ4WOhh/Pc=;
+        b=CBLlj7QM/GTMmzd2/M9Xrsd0iVZKEH8sG0mMixMpOwzxNmedbGCLvfbddUZJeF0nuA
+         gex/+A/Q9IgQt5yhjsDUNccjn5o0jTqKZqG6Hc+ItsL7yNoTRaZrx7Ceb8bGwV0/Fbp8
+         feoddE1j3YJnGCX4en5iRVIBPvxgkmzQGjkU9kSBVOln9Rlch/X37LCCC+hqZdcTMMDg
+         uXvBiLALzTkNBo6vTK7UxQGzKzMjVVTfD4Q41M6TkCFXLZVv19OPlrScM6L0e+m9w338
+         MU53htOkAv/fszYj6lgFtJ3u5LG+30sog6ahPYNuz8GGwJ8qLyZKqDaF7J60BEibPWxW
+         EgVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WQ87d/GuSsWiqz7wsRpRdGNX/3V6XiBVfMQ4WOhh/Pc=;
+        b=jnR+jXt5veB+7NqmeR3QBXgaPKEwIv9c6cZyx9L9XSlwSe9nYC8v8o7JAEJ8bmVuzY
+         tuAVEMeAtiMYW3ymwtp8pOXUGNIDt0xLKurJQFuWkFBX7W18EUzlQ0Qblv3oVs0BS+/w
+         OMYuIGTwJspR69RqWNZfeVoAu7AR+ovGOjvRrdSmiu4km48swANddsHLLmwt9Qm+8G2l
+         H8BwftMFOvQkLSiwa5rFj3rKKp96fJWX1DQOC1XOoKro27/yUkspNV8RqpkKMcS+XkPH
+         jtr9ChwUnvtidGd03VygyQgannf9o0dvQEY2A3AnsrvQ2rqcKwS8nKrypftR9x1gRbWh
+         1gmg==
+X-Gm-Message-State: APjAAAXiNfxZFPp89U8nFtH7DEYPErK22wt6VdTxdGSGAvawZuiCH6He
+        OQavTheJoHXhSBDrT9XX7Tc=
+X-Google-Smtp-Source: APXvYqzrOweucTnr518KqxIPEqSjlGFWNSIfmXeMH9WanONcWQqZeFIjP17a2igimoHTrsvK6seLpA==
+X-Received: by 2002:a81:2183:: with SMTP id h125mr29049696ywh.455.1553793574328;
+        Thu, 28 Mar 2019 10:19:34 -0700 (PDT)
+Received: from dumbo ([83.137.6.243])
+        by smtp.gmail.com with ESMTPSA id l123sm9030422ywe.85.2019.03.28.10.19.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Mar 2019 10:19:33 -0700 (PDT)
+Date:   Thu, 28 Mar 2019 18:19:26 +0100
+From:   Domenico Andreoli <domenico.andreoli@linux.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, pauldzim@gmail.com,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: turn on TPM on suspend for TPM 1.x
+Message-ID: <20190328171926.4luwqofh67uwgt5e@dumbo>
+References: <20190322105120.8441-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <e8ffbc4e-f7b7-14a1-7614-a3db85c9152f@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190322105120.8441-1-jarkko.sakkinen@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please do not send HTML emails]
-
-On 28/03/2019 15:44, Heyi Guo wrote:
-> Hi Marc and Christoffer,
+On Fri, Mar 22, 2019 at 12:51:20PM +0200, Jarkko Sakkinen wrote:
+> tpm_chip_start/stop() should be also called for TPM 1.x devices on
+> suspend. Add that functionality back. Do not lock the chip because
+> it is unnecessary as there are no multiple threads using it when
+> doing the suspend.
 > 
-> When we issue "system_reset" from qemu monitor to a running VM, guest
-> Linux will occasionally get "Unexpected interrupt" after rebooting, with
-> kernel message at the bottom.
+> Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> Reported-by: Paul Zimmerman <pauldzim@gmail.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  drivers/char/tpm/tpm-interface.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
 > 
-> After some investigation, we found it might be caused by the
-> preservation of virtual LPI during system reset: it seems the virtual
-> LPI remains in the ap_list during VM reset, as well as its "enabled" and
-> "pending_latch" status, and this causes the virtual LPI to be injected
-> wrongly after VCPU reboots and enables interrupt.
-> 
-> We propose to clear "enabled" flag of virtual LPI when PROPBASER (or
-> GICR_CTRL) of virtual GICR is written to 0, and update virtual LPI
-> properties when GICR_CTRL.enableLPIs is set to 1 again.
-> 
-> Any advice? Or did we miss something?
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index 83ece5639f86..ae1030c9b086 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -402,15 +402,13 @@ int tpm_pm_suspend(struct device *dev)
+>  	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
+>  		return 0;
+>  
+> -	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> -		mutex_lock(&chip->tpm_mutex);
+> -		if (!tpm_chip_start(chip)) {
+> +	if (!tpm_chip_start(chip)) {
+> +		if (chip->flags & TPM_CHIP_FLAG_TPM2)
+>  			tpm2_shutdown(chip, TPM2_SU_STATE);
+> -			tpm_chip_stop(chip);
+> -		}
+> -		mutex_unlock(&chip->tpm_mutex);
+> -	} else {
+> -		rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
+> +		else
+> +			rc = tpm1_pm_suspend(chip, tpm_suspend_pcr);
+> +
+> +		tpm_chip_stop(chip);
+>  	}
+>  
+>  	return rc;
 
-We're clearly missing a trick here, but I'm not convinced of your 
-approach. What should happend is that the redistributors should be reset 
-as well, and that this should recall any LPI that has been made pending. 
-Unfortunately, we don't seem to have such code in place, which is 
-embarrassing.
-
-Can you give the following, untested patch a go? It isn't right either, 
-but it should have the right effect. If you confirm that it solves your 
-problem, we can look at adding the right hooks...
-
-Thanks,
-
-	M.
-
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index ab3f47745d9c..bd9a9250f323 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -2403,8 +2403,32 @@ static int vgic_its_commit_v0(struct vgic_its *its)
- 	return 0;
- }
- 
-+static void vgic_nuke_pending_lpis(struct kvm_vcpu *vcpu)
-+{
-+	struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
-+	struct vgic_irq *irq, *tmp;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
-+
-+	list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
-+		if (irq->intid >= VGIC_MIN_LPI) {
-+			list_del(&irq->ap_list);
-+			vgic_put_irq(vcpu->kvm, irq);
-+		}
-+	}
-+
-+	raw_spin_unlock_irqrestore(&vcpu->arch.vgic_cpu.ap_list_lock, flags);
-+}
-+
- static void vgic_its_reset(struct kvm *kvm, struct vgic_its *its)
- {
-+	struct kvm_vcpu *vcpu;
-+	int c;
-+
-+	kvm_for_each_vcpu(c, vcpu, kvm)
-+		vgic_nuke_pending_lpis(vcpu);
-+
- 	/* We need to keep the ABI specific field values */
- 	its->baser_coll_table &= ~GITS_BASER_VALID;
- 	its->baser_device_table &= ~GITS_BASER_VALID;
+Tested-by: Domenico Andreoli <domenico.andreoli@linux.com>
 
 -- 
-Jazz is not dead. It just smells funny...
+3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
